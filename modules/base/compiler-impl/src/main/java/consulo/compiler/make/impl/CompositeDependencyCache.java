@@ -42,8 +42,8 @@ public class CompositeDependencyCache implements DependencyCache {
   private final DependencyCache[] myDependencyCaches;
 
   public CompositeDependencyCache(Project project, String cacheDir) {
-    DependencyCacheEP[] extensions = EP_NAME.getExtensions();
-    List<DependencyCache> list = new ArrayList<DependencyCache>(extensions.length);
+    List<DependencyCacheEP> extensions = EP_NAME.getExtensionList();
+    List<DependencyCache> list = new ArrayList<>(extensions.size());
     for (DependencyCacheEP extension : extensions) {
       list.add(extension.create(project, cacheDir));
     }

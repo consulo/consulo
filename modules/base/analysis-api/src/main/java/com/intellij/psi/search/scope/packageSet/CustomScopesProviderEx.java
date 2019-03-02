@@ -49,7 +49,7 @@ public abstract class CustomScopesProviderEx implements CustomScopesProvider {
   public static void filterNoSettingsScopes(Project project, List<NamedScope> scopes) {
     for (Iterator<NamedScope> iterator = scopes.iterator(); iterator.hasNext(); ) {
       final NamedScope scope = iterator.next();
-      for (CustomScopesProvider provider : Extensions.getExtensions(CUSTOM_SCOPES_PROVIDER, project)) {
+      for (CustomScopesProvider provider : CUSTOM_SCOPES_PROVIDER.getExtensionList(project)) {
         if (provider instanceof CustomScopesProviderEx && ((CustomScopesProviderEx)provider).isVetoed(scope, ScopePlace.SETTING)) {
           iterator.remove();
           break;

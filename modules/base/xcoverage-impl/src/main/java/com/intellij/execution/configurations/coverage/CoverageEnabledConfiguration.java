@@ -6,14 +6,13 @@ import com.intellij.coverage.CoverageSuite;
 import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 
 /**
@@ -114,7 +113,7 @@ public abstract class CoverageEnabledConfiguration implements JDOMExternalizable
   }
 
   public boolean canHavePerTestCoverage() {
-    for (CoverageEngine engine : CoverageEngine.EP_NAME.getExtensions()) {
+    for (CoverageEngine engine : CoverageEngine.EP_NAME.getExtensionList()) {
       if (engine.isApplicableTo(myConfiguration)) {
         return engine.canHavePerTestCoverage(myConfiguration);
       }
@@ -129,7 +128,7 @@ public abstract class CoverageEnabledConfiguration implements JDOMExternalizable
       return true;
     }
 
-    for (CoverageEngine engine : CoverageEngine.EP_NAME.getExtensions()) {
+    for (CoverageEngine engine : CoverageEngine.EP_NAME.getExtensionList()) {
       if (engine.isApplicableTo(runConfiguration)) {
         return true;
       }
@@ -142,7 +141,7 @@ public abstract class CoverageEnabledConfiguration implements JDOMExternalizable
   public static CoverageEnabledConfiguration getOrCreate(@Nonnull final RunConfigurationBase runConfiguration) {
     CoverageEnabledConfiguration configuration = runConfiguration.getCopyableUserData(COVERAGE_KEY);
     if (configuration == null) {
-      for (CoverageEngine engine : CoverageEngine.EP_NAME.getExtensions()) {
+      for (CoverageEngine engine : CoverageEngine.EP_NAME.getExtensionList()) {
         if (engine.isApplicableTo(runConfiguration)) {
           configuration = engine.createCoverageEnabledConfiguration(runConfiguration);
           break;
@@ -187,7 +186,7 @@ public abstract class CoverageEnabledConfiguration implements JDOMExternalizable
     if (runnerId != null) {
       myRunnerId = runnerId;
       myCoverageRunner = null;
-      for (CoverageRunner coverageRunner : Extensions.getExtensions(CoverageRunner.EP_NAME)) {
+      for (CoverageRunner coverageRunner : CoverageRunner.EP_NAME.getExtensionList()) {
         if (Comparing.strEqual(coverageRunner.getId(), myRunnerId)) {
           myCoverageRunner = coverageRunner;
           break;

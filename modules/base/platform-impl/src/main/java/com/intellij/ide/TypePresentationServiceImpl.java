@@ -17,7 +17,6 @@ package com.intellij.ide;
 
 import com.intellij.ide.presentation.Presentation;
 import com.intellij.ide.presentation.PresentationProvider;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.openapi.util.text.StringUtil;
@@ -94,10 +93,10 @@ public class TypePresentationServiceImpl extends TypePresentationService {
   }
 
   public TypePresentationServiceImpl() {
-    for (TypeIconEP ep : Extensions.getExtensions(TypeIconEP.EP_NAME)) {
+    for (TypeIconEP ep : TypeIconEP.EP_NAME.getExtensionList()) {
       myIcons.put(ep.className, ep.getIcon());
     }
-    for (TypeNameEP ep : Extensions.getExtensions(TypeNameEP.EP_NAME)) {
+    for (TypeNameEP ep : TypeNameEP.EP_NAME.getExtensionList()) {
       myNames.put(ep.className, ep.getTypeName());
     }
   }

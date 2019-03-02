@@ -74,8 +74,8 @@ public class XBreakpointUtil {
     return null;
   }
 
-  public static XBreakpointType<?,?>[] getBreakpointTypes() {
-    return XBreakpointType.EXTENSION_POINT_NAME.getExtensions();
+  public static List<XBreakpointType> getBreakpointTypes() {
+    return XBreakpointType.EXTENSION_POINT_NAME.getExtensionList();
   }
 
   @Nonnull
@@ -83,7 +83,7 @@ public class XBreakpointUtil {
     int offset = editor.getCaretModel().getOffset();
     Document editorDocument = editor.getDocument();
 
-    DebuggerSupport[] debuggerSupports = DebuggerSupport.getDebuggerSupports();
+    List<DebuggerSupport> debuggerSupports = DebuggerSupport.getDebuggerSupports();
     for (DebuggerSupport debuggerSupport : debuggerSupports) {
       final BreakpointPanelProvider<?> provider = debuggerSupport.getBreakpointPanelProvider();
 
@@ -117,9 +117,8 @@ public class XBreakpointUtil {
 
   @Nullable
   public static DebuggerSupport getDebuggerSupport(Project project, BreakpointItem breakpointItem) {
-    DebuggerSupport[] debuggerSupports = DebuggerSupport.getDebuggerSupports();
     List<BreakpointItem> items = new ArrayList<BreakpointItem>();
-    for (DebuggerSupport support : debuggerSupports) {
+    for (DebuggerSupport support : DebuggerSupport.getDebuggerSupports()) {
       support.getBreakpointPanelProvider().provideBreakpointItems(project, items);
       if (items.contains(breakpointItem))
         return support;

@@ -19,14 +19,13 @@ import com.intellij.ide.impl.DataValidator;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.vfs.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.lang.reflect.Array;
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -101,7 +100,7 @@ public class DataValidators {
     map.put(PlatformDataKeys.VIRTUAL_FILE_ARRAY, new DataValidators.ArrayValidator<>(DataValidators.VIRTUAL_FILE_VALIDATOR));
     map.put(CommonDataKeys.PROJECT, DataValidators.PROJECT_VALIDATOR);
 
-    for (DataValidator validator : Extensions.getExtensions(DataValidator.EP_NAME)) {
+    for (DataValidator validator : DataValidator.EP_NAME.getExtensionList()) {
       map.put(validator.getKey(), validator);
     }
     return map;

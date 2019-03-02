@@ -16,7 +16,6 @@
 package com.intellij.codeInspection.reference;
 
 import com.intellij.codeInsight.daemon.ImplicitUsageProvider;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
 import javax.annotation.Nonnull;

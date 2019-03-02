@@ -47,7 +47,7 @@ final class DelegatingHttpRequestHandler extends DelegatingHttpRequestHandlerBas
       prevHandlerAttribute.set(null);
     }
 
-    for (HttpRequestHandler handler : HttpRequestHandler.EP_NAME.getExtensions()) {
+    for (HttpRequestHandler handler : HttpRequestHandler.EP_NAME.getExtensionList()) {
       try {
         if (checkAndProcess.fun(handler)) {
           prevHandlerAttribute.set(handler);

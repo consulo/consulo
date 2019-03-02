@@ -17,7 +17,6 @@ package com.intellij.openapi.vcs.checkout;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Ref;
@@ -28,6 +27,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * to be called after checkout - notifiers extenders on checkout completion
@@ -76,13 +76,13 @@ public class CompositeCheckoutListener implements CheckoutProvider.Listener {
   }
 
   private void notifyCheckoutListeners(final File directory, final ExtensionPointName<CheckoutListener> epName) {
-    final CheckoutListener[] listeners = Extensions.getExtensions(epName);
+    final List<CheckoutListener> listeners = epName.getExtensionList();
     for (CheckoutListener listener: listeners) {
       myFoundProject = listener.processCheckedOutDirectory(myProject, directory);
       if (myFoundProject) break;
     }
     if (!myFoundProject && !epName.equals(CheckoutListener.COMPLETED_EP_NAME)) {
-      final VcsAwareCheckoutListener[] vcsAwareExtensions = Extensions.getExtensions(VcsAwareCheckoutListener.EP_NAME);
+      final List<VcsAwareCheckoutListener> vcsAwareExtensions = VcsAwareCheckoutListener.EP_NAME.getExtensionList();
       for (VcsAwareCheckoutListener extension : vcsAwareExtensions) {
         myFoundProject = extension.processCheckedOutDirectory(myProject, directory, myVcsKey);
         if (myFoundProject) break;

@@ -48,7 +48,7 @@ public class ExternalSystemStartupActivity implements StartupActivity {
         }
       }
       if (project.getUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT) != Boolean.TRUE) {
-        for (ExternalSystemManager manager : ExternalSystemManager.EP_NAME.getExtensions()) {
+        for (ExternalSystemManager manager : ExternalSystemManager.EP_NAME.getExtensionList()) {
           ExternalSystemUtil.refreshProjects(project, manager.getSystemId(), false);
         }
       }

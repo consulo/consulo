@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.breakpoints.ui.grouping;
 
-import com.intellij.util.ArrayUtil;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.breakpoints.XBreakpointType;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroup;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointUtil;
@@ -55,6 +55,6 @@ public class XBreakpointTypeGroup extends XBreakpointGroup {
   }
 
   private static int indexOfType(XBreakpointType type) {
-    return ArrayUtil.find(XBreakpointUtil.getBreakpointTypes(), type);
+    return ContainerUtil.indexOf(XBreakpointUtil.getBreakpointTypes(), type);
   }
 }

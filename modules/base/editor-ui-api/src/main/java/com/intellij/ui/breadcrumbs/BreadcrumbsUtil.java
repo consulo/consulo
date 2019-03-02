@@ -17,11 +17,12 @@ package com.intellij.ui.breadcrumbs;
 
 import com.intellij.lang.Language;
 import javax.annotation.Nonnull;
+import java.util.List;
 
 public class BreadcrumbsUtil {
 
   public static BreadcrumbsProvider getInfoProvider(@Nonnull Language language) {
-    BreadcrumbsProvider[] providers = BreadcrumbsProvider.EP_NAME.getExtensions();
+    List<BreadcrumbsProvider> providers = BreadcrumbsProvider.EP_NAME.getExtensionList();
     while (language != null) {
       for (BreadcrumbsProvider provider : providers) {
         Language supported = provider.getLanguage();

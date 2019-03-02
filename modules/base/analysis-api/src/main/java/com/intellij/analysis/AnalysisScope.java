@@ -377,7 +377,7 @@ public class AnalysisScope {
   }
 
   private static boolean isInGeneratedSources(@Nonnull VirtualFile file, @Nonnull Project project) {
-    for (GeneratedSourcesFilter filter : GeneratedSourcesFilter.EP_NAME.getExtensions()) {
+    for (GeneratedSourcesFilter filter : GeneratedSourcesFilter.EP_NAME.getExtensionList()) {
       if (filter.isGeneratedSource(file, project)) {
         return true;
       }

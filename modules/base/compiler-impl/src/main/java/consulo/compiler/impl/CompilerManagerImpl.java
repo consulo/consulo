@@ -335,7 +335,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   @Override
   @Nonnull
   public CompileScope createModuleCompileScope(@Nonnull final Module module, final boolean includeDependentModules) {
-    for (CompileModuleScopeFactory compileModuleScopeFactory : CompileModuleScopeFactory.EP_NAME.getExtensions()) {
+    for (CompileModuleScopeFactory compileModuleScopeFactory : CompileModuleScopeFactory.EP_NAME.getExtensionList()) {
       FileIndexCompileScope scope = compileModuleScopeFactory.createScope(module, includeDependentModules);
       if (scope != null) {
         return scope;

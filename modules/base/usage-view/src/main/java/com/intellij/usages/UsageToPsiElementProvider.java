@@ -28,14 +28,14 @@ import javax.annotation.Nullable;
  * @author Konstantin Bulenkov
  */
 public abstract class UsageToPsiElementProvider {
-  public static final ExtensionPointName<UsageToPsiElementProvider> EP_NAME = new ExtensionPointName<UsageToPsiElementProvider>("com.intellij.usageToPsiElementProvider");
+  public static final ExtensionPointName<UsageToPsiElementProvider> EP_NAME = ExtensionPointName.create("com.intellij.usageToPsiElementProvider");
 
   @Nullable
   public abstract PsiElement getAppropriateParentFrom(PsiElement element);
 
-  @javax.annotation.Nullable
+  @Nullable
   public static PsiElement findAppropriateParentFrom(@Nonnull PsiElement element) {
-    for (UsageToPsiElementProvider provider : EP_NAME.getExtensions()) {
+    for (UsageToPsiElementProvider provider : EP_NAME.getExtensionList()) {
       final PsiElement parent = provider.getAppropriateParentFrom(element);
       if (parent != null) {
         return parent;

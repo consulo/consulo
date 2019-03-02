@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public interface XLocalAttachDebuggerProvider {
-  ExtensionPointName<XLocalAttachDebuggerProvider> EP = ExtensionPointName.create("com.intellij.xdebugger.localAttachDebuggerProvider");
+  ExtensionPointName<XLocalAttachDebuggerProvider> EP_NAME = ExtensionPointName.create("com.intellij.xdebugger.localAttachDebuggerProvider");
 
   /**
    * @return a group in which the supported processes should be visually organized.

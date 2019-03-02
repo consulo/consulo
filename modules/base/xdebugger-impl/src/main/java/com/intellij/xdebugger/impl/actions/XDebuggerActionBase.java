@@ -85,8 +85,7 @@ public abstract class XDebuggerActionBase extends AnAction implements AnAction.T
       return true;
     }
 
-    DebuggerSupport[] debuggerSupports = DebuggerSupport.getDebuggerSupports();
-    for (DebuggerSupport support : debuggerSupports) {
+    for (DebuggerSupport support : DebuggerSupport.getDebuggerSupports()) {
       if (isEnabled(project, e, support)) {
         perform(project, e, support);
         return true;

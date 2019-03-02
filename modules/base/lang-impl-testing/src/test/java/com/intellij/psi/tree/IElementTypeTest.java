@@ -10,7 +10,6 @@ import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
 import com.intellij.mock.MockPsiFile;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import gnu.trove.THashMap;
@@ -18,6 +17,7 @@ import gnu.trove.TObjectIntHashMap;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author gregsh
@@ -29,8 +29,8 @@ public abstract class IElementTypeTest extends LightPlatformCodeInsightFixtureTe
   public void testCount() throws Exception {
     int count = IElementType.getAllocatedTypesCount();
     System.out.println("Preloaded: " + count +" element types");
-    LanguageExtensionPoint[] extensions = Extensions.getExtensions(new ExtensionPointName<LanguageExtensionPoint>("com.intellij.lang.parserDefinition"));
-    System.out.println("ParserDefinitions: " + extensions.length);
+    List<LanguageExtensionPoint> extensions = new ExtensionPointName<LanguageExtensionPoint>("com.intellij.lang.parserDefinition").getExtensionList();
+    System.out.println("ParserDefinitions: " + extensions.size());
 
     THashMap<Language, String> languageMap = new THashMap<Language, String>();
     languageMap.put(Language.ANY, "platform");

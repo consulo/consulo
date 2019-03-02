@@ -17,9 +17,9 @@ package com.intellij.ide.util;
 
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.xmlb.annotations.Attribute;
+
 import javax.annotation.Nullable;
 
 /**
@@ -36,7 +36,7 @@ public class TipAndTrickBean extends AbstractExtensionPointBean {
 
   @Nullable
   public static TipAndTrickBean findByFileName(String tipFileName) {
-    for (TipAndTrickBean tip : Extensions.getExtensions(EP_NAME)) {
+    for (TipAndTrickBean tip : EP_NAME.getExtensionList()) {
       if (Comparing.equal(tipFileName, tip.fileName)) {
         return tip;
       }

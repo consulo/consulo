@@ -4,7 +4,6 @@ import com.intellij.coverage.*;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.Project;
@@ -29,8 +28,8 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * User: anna
@@ -124,7 +123,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
 
   @Nullable
   private static CoverageRunner getCoverageRunner(VirtualFile file) {
-    for (CoverageRunner runner : Extensions.getExtensions(CoverageRunner.EP_NAME)) {
+    for (CoverageRunner runner : CoverageRunner.EP_NAME.getExtensionList()) {
       if (Comparing.strEqual(file.getExtension(), runner.getDataFileExtension())) return runner;
     }
     return null;

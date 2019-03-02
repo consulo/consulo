@@ -19,14 +19,14 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.Key;
 import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 public abstract class EditorAction extends AnAction implements DumbAware {
   private EditorActionHandler myHandler;
@@ -59,9 +59,9 @@ public abstract class EditorAction extends AnAction implements DumbAware {
     if (!myHandlersLoaded) {
       myHandlersLoaded = true;
       final String id = ActionManager.getInstance().getId(this);
-      EditorActionHandlerBean[] extensions = Extensions.getExtensions(EditorActionHandlerBean.EP_NAME);
-      for (int i = extensions.length - 1; i >= 0; i--) {
-        final EditorActionHandlerBean handlerBean = extensions[i];
+      List<EditorActionHandlerBean> extensions = EditorActionHandlerBean.EP_NAME.getExtensionList();
+      for (int i = extensions.size() - 1; i >= 0; i--) {
+        final EditorActionHandlerBean handlerBean = extensions.get(i);
         if (handlerBean.action.equals(id)) {
           myHandler = handlerBean.getHandler(myHandler);
           myHandler.setWorksInInjected(isInInjectedContext());

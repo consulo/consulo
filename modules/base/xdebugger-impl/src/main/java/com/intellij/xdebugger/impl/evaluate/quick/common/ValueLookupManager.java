@@ -39,6 +39,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import java.awt.*;
+import java.util.List;
 
 @Singleton
 public class ValueLookupManager extends EditorMouseAdapter implements EditorMouseMotionListener {
@@ -50,7 +51,7 @@ public class ValueLookupManager extends EditorMouseAdapter implements EditorMous
   private final Project myProject;
   private final Alarm myAlarm;
   private AbstractValueHint myRequest = null;
-  private final DebuggerSupport[] mySupports;
+  private final List<DebuggerSupport> mySupports;
   private boolean myListening;
 
   @Inject

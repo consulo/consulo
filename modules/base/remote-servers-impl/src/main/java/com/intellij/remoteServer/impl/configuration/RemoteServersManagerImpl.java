@@ -117,7 +117,7 @@ public class RemoteServersManagerImpl extends RemoteServersManager implements Pe
 
   @javax.annotation.Nullable
   private static ServerType<?> findServerType(@Nonnull String typeId) {
-    for (ServerType serverType : ServerType.EP_NAME.getExtensions()) {
+    for (ServerType serverType : ServerType.EP_NAME.getExtensionList()) {
       if (serverType.getId().equals(typeId)) {
         return serverType;
       }

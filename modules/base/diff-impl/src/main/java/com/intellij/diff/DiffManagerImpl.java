@@ -30,12 +30,11 @@ import com.intellij.diff.tools.simple.SimpleDiffTool;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
-
-import consulo.ui.RequiredUIAccess;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -98,7 +97,7 @@ public class DiffManagerImpl extends DiffManagerEx {
   @Override
   public List<DiffTool> getDiffTools() {
     List<DiffTool> result = new ArrayList<DiffTool>();
-    Collections.addAll(result, DiffTool.EP_NAME.getExtensions());
+    result.addAll(DiffTool.EP_NAME.getExtensionList());
     result.add(SimpleDiffTool.INSTANCE);
     result.add(UnifiedDiffTool.INSTANCE);
     result.add(BinaryDiffTool.INSTANCE);
@@ -110,7 +109,7 @@ public class DiffManagerImpl extends DiffManagerEx {
   @Override
   public List<MergeTool> getMergeTools() {
     List<MergeTool> result = new ArrayList<MergeTool>();
-    Collections.addAll(result, MergeTool.EP_NAME.getExtensions());
+    result.addAll(MergeTool.EP_NAME.getExtensionList());
     result.add(TextMergeTool.INSTANCE);
     result.add(BinaryMergeTool.INSTANCE);
     return result;

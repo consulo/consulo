@@ -25,7 +25,7 @@ public class ServersToolWindow {
   public ServersToolWindow(final Project project) {
     myProject = project;
 
-    for (RemoteServersViewContributor contributor : RemoteServersViewContributor.EP_NAME.getExtensions()) {
+    for (RemoteServersViewContributor contributor : RemoteServersViewContributor.EP_NAME.getExtensionList()) {
       contributor.setupAvailabilityListener(project, new Runnable() {
         @Override
         public void run() {
@@ -74,7 +74,7 @@ public class ServersToolWindow {
     if (!RemoteServersManager.getInstance().getServers().isEmpty()) {
       return true;
     }
-    for (RemoteServersViewContributor contributor : RemoteServersViewContributor.EP_NAME.getExtensions()) {
+    for (RemoteServersViewContributor contributor : RemoteServersViewContributor.EP_NAME.getExtensionList()) {
       if (contributor.canContribute(myProject)) {
         return true;
       }

@@ -15,7 +15,6 @@
  */
 package com.intellij.usages.impl.rules;
 
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
@@ -60,14 +59,13 @@ public class UsageTypeGroupingRule extends SingleParentUsageGroupingRule {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private static UsageType getUsageType(PsiElement element, @Nonnull UsageTarget[] targets) {
     if (element == null) return null;
 
     if (PsiTreeUtil.getParentOfType(element, PsiComment.class, false) != null) { return UsageType.COMMENT_USAGE; }
 
-    UsageTypeProvider[] providers = Extensions.getExtensions(UsageTypeProvider.EP_NAME);
-    for(UsageTypeProvider provider: providers) {
+    for(UsageTypeProvider provider: UsageTypeProvider.EP_NAME.getExtensionList()) {
       UsageType usageType;
       if (provider instanceof UsageTypeProviderEx) {
         usageType = ((UsageTypeProviderEx) provider).getUsageType(element, targets);

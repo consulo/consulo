@@ -36,7 +36,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.impl.EditorComponentImpl;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
@@ -151,7 +150,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       return;
     }
 
-    if (Extensions.getExtensions(FileEditorAssociateFinder.EP_NAME).length > 0) {
+    if (FileEditorAssociateFinder.EP_NAME.hasAnyExtensions()) {
       myListenerList.add(new FileEditorManagerListener() {
         @Override
         public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
@@ -674,7 +673,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     EditorWindow[] windows = splitters.getWindows();
 
     if (file != null && windows.length == 2) {
-      for (FileEditorAssociateFinder finder : Extensions.getExtensions(FileEditorAssociateFinder.EP_NAME)) {
+      for (FileEditorAssociateFinder finder : FileEditorAssociateFinder.EP_NAME.getExtensionList()) {
         VirtualFile associatedFile = finder.getAssociatedFileToOpen(myProject, file);
 
         if (associatedFile != null) {
@@ -1464,7 +1463,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     final boolean editorsEqual = oldData.second == null ? newData.second == null : oldData.second.equals(newData.second);
     if (!filesEqual || !editorsEqual) {
       if (oldData.first != null && newData.first != null) {
-        for (FileEditorAssociateFinder finder : Extensions.getExtensions(FileEditorAssociateFinder.EP_NAME)) {
+        for (FileEditorAssociateFinder finder : FileEditorAssociateFinder.EP_NAME.getExtensionList()) {
           VirtualFile associatedFile = finder.getAssociatedFileToOpen(myProject, oldData.first);
 
           if (Comparing.equal(associatedFile, newData.first)) {
@@ -1758,7 +1757,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     private void handleRootChange(UIAccess uiAccess) {
-      EditorFileSwapper[] swappers = Extensions.getExtensions(EditorFileSwapper.EP_NAME);
+      List<EditorFileSwapper> swappers = EditorFileSwapper.EP_NAME.getExtensionList();
 
       for (EditorWindow eachWindow : getWindows()) {
         EditorWithProviderComposite selected = eachWindow.getSelectedEditor();

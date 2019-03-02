@@ -26,16 +26,15 @@ import com.intellij.internal.statistic.connect.StatisticsService;
 import com.intellij.internal.statistic.persistence.SentUsagesPersistence;
 import com.intellij.internal.statistic.persistence.UsageStatisticsPersistenceComponent;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 public class StatisticsUploadAssistant {
@@ -223,7 +222,7 @@ public class StatisticsUploadAssistant {
   public static Map<GroupDescriptor, Set<UsageDescriptor>> getAllUsages(@Nullable Project project, @Nonnull Set<String> disabledGroups) {
     Map<GroupDescriptor, Set<UsageDescriptor>> usageDescriptors = new LinkedHashMap<GroupDescriptor, Set<UsageDescriptor>>();
 
-    for (UsagesCollector usagesCollector : Extensions.getExtensions(UsagesCollector.EP_NAME)) {
+    for (UsagesCollector usagesCollector : UsagesCollector.EP_NAME.getExtensionList()) {
       final GroupDescriptor groupDescriptor = usagesCollector.getGroupId();
 
       if (!disabledGroups.contains(groupDescriptor.getId())) {

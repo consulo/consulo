@@ -122,7 +122,7 @@ public class XBreakpointPanelProvider extends BreakpointPanelProvider<XBreakpoin
 
   @Override
   public void provideBreakpointItems(Project project, Collection<BreakpointItem> items) {
-    final XBreakpointType<?, ?>[] types = XBreakpointUtil.getBreakpointTypes();
+    final List<XBreakpointType> types = XBreakpointUtil.getBreakpointTypes();
     final XBreakpointManager manager = XDebuggerManager.getInstance(project).getBreakpointManager();
     for (XBreakpointType<?, ?> type : types) {
       final Collection<? extends XBreakpoint<?>> breakpoints = manager.getBreakpoints(type);

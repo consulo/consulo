@@ -116,7 +116,7 @@ public abstract class PsiAnchor {
 
   @Nonnull
   private static PsiAnchor wrapperOrHardReference(@Nonnull PsiElement element) {
-    for (SmartPointerAnchorProvider provider : SmartPointerAnchorProvider.EP_NAME.getExtensions()) {
+    for (SmartPointerAnchorProvider provider : SmartPointerAnchorProvider.EP_NAME.getExtensionList()) {
       PsiElement anchorElement = provider.getAnchor(element);
       if (anchorElement != null && anchorElement != element) {
         PsiAnchor wrappedAnchor = create(anchorElement);

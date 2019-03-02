@@ -19,6 +19,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * This filters can be used to prevent error highlighting (invalid code, unresolved references etc.) in files outside of project scope.
@@ -50,7 +51,7 @@ public abstract class ProblemHighlightFilter {
   private static boolean shouldProcess(PsiFile psiFile, boolean onTheFly) {
     if (psiFile == null) return true;
 
-    final ProblemHighlightFilter[] filters = EP_NAME.getExtensions();
+    final List<ProblemHighlightFilter> filters = EP_NAME.getExtensionList();
     for (ProblemHighlightFilter filter : filters) {
       if (onTheFly ? !filter.shouldHighlight(psiFile) : !filter.shouldProcessInBatch(psiFile)) return false;
     }

@@ -101,7 +101,7 @@ public class ServersTreeStructure extends AbstractTreeStructureBase {
     @Override
     public Collection<? extends AbstractTreeNode> getChildren() {
       List<AbstractTreeNode<?>> result = new ArrayList<AbstractTreeNode<?>>();
-      for (RemoteServersViewContributor contributor : RemoteServersViewContributor.EP_NAME.getExtensions()) {
+      for (RemoteServersViewContributor contributor : RemoteServersViewContributor.EP_NAME.getExtensionList()) {
         result.addAll(contributor.createServerNodes(doGetProject()));
       }
       for (RemoteServer<?> server : RemoteServersManager.getInstance().getServers()) {

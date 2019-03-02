@@ -83,7 +83,7 @@ public class OpenExternalConfigAction extends AnAction implements DumbAware {
     }
 
     VirtualFile toOpen = externalSystemConfigPath;
-    for (ExternalSystemConfigLocator locator : ExternalSystemConfigLocator.EP_NAME.getExtensions()) {
+    for (ExternalSystemConfigLocator locator : ExternalSystemConfigLocator.EP_NAME.getExtensionList()) {
       if (externalSystemId.equals(locator.getTargetExternalSystemId())) {
         toOpen = locator.adjust(toOpen);
         if (toOpen == null) {

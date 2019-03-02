@@ -28,7 +28,6 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
@@ -80,8 +79,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 @State(name = "ProjectLevelVcsManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 @Singleton
@@ -245,9 +244,8 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   public void projectOpened() {
     addInitializationRequest(VcsInitObject.AFTER_COMMON, () -> {
       if (!ApplicationManager.getApplication().isUnitTestMode()) {
-        VcsRootChecker[] checkers = Extensions.getExtensions(VcsRootChecker.EXTENSION_POINT_NAME);
-        if (checkers.length != 0) {
-          VcsRootScanner.start(myProject, checkers);
+        if (VcsRootChecker.EXTENSION_POINT_NAME.hasAnyExtensions()) {
+          VcsRootScanner.start(myProject, VcsRootChecker.EXTENSION_POINT_NAME.getExtensionList());
         }
       }
     });

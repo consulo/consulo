@@ -93,7 +93,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
   @Override
   public XLineBreakpointType<?>[] getLineBreakpointTypes() {
     if (myLineBreakpointTypes == null) {
-      XBreakpointType[] types = XBreakpointUtil.getBreakpointTypes();
+      List<XBreakpointType> types = XBreakpointUtil.getBreakpointTypes();
       List<XLineBreakpointType<?>> lineBreakpointTypes = new ArrayList<XLineBreakpointType<?>>();
       for (XBreakpointType type : types) {
         if (type instanceof XLineBreakpointType<?>) {

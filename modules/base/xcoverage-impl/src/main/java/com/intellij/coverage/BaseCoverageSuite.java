@@ -3,7 +3,6 @@ package com.intellij.coverage;
 import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.InvalidDataException;
@@ -13,9 +12,9 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.rt.coverage.data.ProjectData;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.lang.ref.SoftReference;
 
@@ -94,7 +93,7 @@ public abstract class BaseCoverageSuite  implements CoverageSuite, JDOMExternali
   public static CoverageRunner readRunnerAttribute(Element element) {
     final String runner = element.getAttributeValue(COVERAGE_RUNNER);
     if (runner != null) {
-      for (CoverageRunner coverageRunner : Extensions.getExtensions(CoverageRunner.EP_NAME)) {
+      for (CoverageRunner coverageRunner : CoverageRunner.EP_NAME.getExtensionList()) {
         if (Comparing.strEqual(coverageRunner.getId(), runner)) {
           return coverageRunner;
         }

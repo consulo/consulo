@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.vcs.roots;
 
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vcs.AbstractVcs;
@@ -23,10 +22,10 @@ import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsRoot;
 import com.intellij.openapi.vcs.VcsRootChecker;
 import com.intellij.openapi.vfs.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.util.*;
 
 /**
@@ -43,7 +42,7 @@ public class VcsRootDetectorImpl implements VcsRootDetector {
   @Nonnull
   private final ProjectLevelVcsManager myVcsManager;
   @Nonnull
-  private final VcsRootChecker[] myCheckers;
+  private final List<VcsRootChecker> myCheckers;
 
   @Inject
   public VcsRootDetectorImpl(@Nonnull Project project,
@@ -52,7 +51,7 @@ public class VcsRootDetectorImpl implements VcsRootDetector {
     myProject = project;
     myProjectManager = projectRootManager;
     myVcsManager = projectLevelVcsManager;
-    myCheckers = Extensions.getExtensions(VcsRootChecker.EXTENSION_POINT_NAME);
+    myCheckers = VcsRootChecker.EXTENSION_POINT_NAME.getExtensionList();
   }
 
   @Nonnull
@@ -62,7 +61,7 @@ public class VcsRootDetectorImpl implements VcsRootDetector {
 
   @Nonnull
   public Collection<VcsRoot> detect(@javax.annotation.Nullable VirtualFile startDir) {
-    if (startDir == null || myCheckers.length == 0) {
+    if (startDir == null || myCheckers.isEmpty()) {
       return Collections.emptyList();
     }
 

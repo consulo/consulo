@@ -131,7 +131,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager {
       }
 
       CoverageSuite suite = null;
-      for (CoverageEngine engine : CoverageEngine.EP_NAME.getExtensions()) {
+      for (CoverageEngine engine : CoverageEngine.EP_NAME.getExtensionList()) {
         if (coverageRunner.acceptsCoverageEngine(engine)) {
           suite = engine.createEmptyCoverageSuite(coverageRunner);
           if (suite != null) {
@@ -616,7 +616,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager {
                                             final CoverageRunner coverageRunner,
                                             final DefaultCoverageFileProvider fileProvider) {
     CoverageSuite suite = null;
-    for (CoverageEngine engine : CoverageEngine.EP_NAME.getExtensions()) {
+    for (CoverageEngine engine : CoverageEngine.EP_NAME.getExtensionList()) {
       if (coverageRunner.acceptsCoverageEngine(engine) && engine.isApplicableTo(config.getConfiguration())) {
         suite = engine.createCoverageSuite(coverageRunner, name, fileProvider, config);
         if (suite != null) {
@@ -639,7 +639,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager {
                                             final boolean tracingEnabled) {
 
     CoverageSuite suite = null;
-    for (CoverageEngine engine : CoverageEngine.EP_NAME.getExtensions()) {
+    for (CoverageEngine engine : CoverageEngine.EP_NAME.getExtensionList()) {
       if (coverageRunner.acceptsCoverageEngine(engine)) {
         suite = engine.createCoverageSuite(coverageRunner, name, fileProvider, filters, lastCoverageTimeStamp,
                                            suiteToMergeWith, collectLineInfo, tracingEnabled, false, myProject);

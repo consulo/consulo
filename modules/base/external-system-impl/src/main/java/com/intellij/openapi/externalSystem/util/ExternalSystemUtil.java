@@ -307,7 +307,7 @@ public class ExternalSystemUtil {
 
   private static long getTimeStamp(@Nonnull ExternalProjectSettings externalProjectSettings, @Nonnull ProjectSystemId externalSystemId) {
     long timeStamp = 0;
-    for (ExternalSystemConfigLocator locator : ExternalSystemConfigLocator.EP_NAME.getExtensions()) {
+    for (ExternalSystemConfigLocator locator : ExternalSystemConfigLocator.EP_NAME.getExtensionList()) {
       if (!externalSystemId.equals(locator.getTargetExternalSystemId())) {
         continue;
       }

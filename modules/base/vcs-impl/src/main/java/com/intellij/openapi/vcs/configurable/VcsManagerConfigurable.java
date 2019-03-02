@@ -147,7 +147,7 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
       result.add(new ChangelistConflictConfigurable(ChangeListManagerImpl.getInstanceImpl(myProject)));
     }
 
-    for (VcsConfigurableProvider provider : VcsConfigurableProvider.EP_NAME.getExtensions()) {
+    for (VcsConfigurableProvider provider : VcsConfigurableProvider.EP_NAME.getExtensionList()) {
       final Configurable configurable = provider.getConfigurable(myProject);
       if (configurable != null) {
         result.add(configurable);

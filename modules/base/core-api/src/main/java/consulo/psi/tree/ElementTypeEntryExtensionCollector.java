@@ -41,7 +41,7 @@ public class ElementTypeEntryExtensionCollector<E extends Predicate<IElementType
 
   private final Map<IElementType, E> myMap = ConcurrentFactoryMap.createMap(elementType -> {
     E factory = null;
-    for (E e : myExtensionPointName.getExtensions()) {
+    for (E e : myExtensionPointName.getExtensionList()) {
       if (e.test(elementType)) {
         factory = e;
         break;

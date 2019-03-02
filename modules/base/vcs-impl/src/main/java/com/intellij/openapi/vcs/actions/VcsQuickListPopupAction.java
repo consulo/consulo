@@ -61,7 +61,7 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     if (vcs != null) {
       // replace general vcs actions if necessary
 
-      for (VcsQuickListContentProvider provider : VcsQuickListContentProvider.EP_NAME.getExtensions()) {
+      for (VcsQuickListContentProvider provider : VcsQuickListContentProvider.EP_NAME.getExtensionList()) {
         if (provider.replaceVcsActionsFor(vcs, dataContext)) {
           final List<AnAction> actionsToReplace = provider.getVcsActions(project, vcs, dataContext);
           if (actionsToReplace != null) {
@@ -86,7 +86,7 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
 
     // include all custom actions in general popup
     final List<AnAction> actions = new ArrayList<AnAction>();
-    for (VcsQuickListContentProvider provider : VcsQuickListContentProvider.EP_NAME.getExtensions()) {
+    for (VcsQuickListContentProvider provider : VcsQuickListContentProvider.EP_NAME.getExtensionList()) {
       final List<AnAction> providerActions = provider.getVcsActions(project, vcs, dataContext);
       if (providerActions != null) {
         actions.addAll(providerActions);
@@ -122,7 +122,7 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
                                    @Nonnull final DefaultActionGroup group,
                                    @javax.annotation.Nullable final DataContext dataContext) {
     // add custom vcs actions
-    for (VcsQuickListContentProvider provider : VcsQuickListContentProvider.EP_NAME.getExtensions()) {
+    for (VcsQuickListContentProvider provider : VcsQuickListContentProvider.EP_NAME.getExtensionList()) {
       final List<AnAction> actions = provider.getNotInVcsActions(project, dataContext);
       if (actions != null) {
         addActions(actions, group);

@@ -33,7 +33,6 @@ import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.PrioritizedDocumentListener;
 import com.intellij.openapi.editor.impl.EditorFactoryImpl;
 import com.intellij.openapi.editor.impl.TrailingSpacesStripper;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.impl.text.DesktopTextEditorImpl;
 import com.intellij.openapi.fileTypes.BinaryFileTypeDecompilers;
@@ -75,8 +74,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.nio.charset.Charset;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 @Singleton
 public class FileDocumentManagerImpl extends FileDocumentManager implements VirtualFileListener, ProjectManagerListener, SafeWriteRequestor {
@@ -398,8 +397,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
   }
 
   private boolean maySaveDocument(VirtualFile file, Document document, boolean isExplicit) {
-    return !myConflictResolver.hasConflict(file) &&
-           Arrays.stream(Extensions.getExtensions(FileDocumentSynchronizationVetoer.EP_NAME)).allMatch(vetoer -> vetoer.maySaveDocument(document, isExplicit));
+    return !myConflictResolver.hasConflict(file) && FileDocumentSynchronizationVetoer.EP_NAME.getExtensionList().stream().allMatch(vetoer -> vetoer.maySaveDocument(document, isExplicit));
   }
 
   private void doSaveDocumentInWriteAction(@Nonnull final Document document, @Nonnull final VirtualFile file) throws IOException {
@@ -727,7 +725,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
   }
 
   private boolean fireBeforeFileContentReload(final VirtualFile file, @Nonnull Document document) {
-    for (FileDocumentSynchronizationVetoer vetoer : Extensions.getExtensions(FileDocumentSynchronizationVetoer.EP_NAME)) {
+    for (FileDocumentSynchronizationVetoer vetoer : FileDocumentSynchronizationVetoer.EP_NAME.getExtensionList()) {
       try {
         if (!vetoer.mayReloadFileContent(file, document)) {
           return false;

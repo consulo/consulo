@@ -18,7 +18,6 @@ package com.intellij.xdebugger.impl;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.AbstractDebuggerSession;
 import com.intellij.xdebugger.XDebuggerManager;
@@ -30,11 +29,12 @@ import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointPanelProvider;
 import com.intellij.xdebugger.impl.evaluate.quick.common.AbstractValueHint;
 import com.intellij.xdebugger.impl.evaluate.quick.common.QuickEvaluateHandler;
 import com.intellij.xdebugger.impl.evaluate.quick.common.ValueHintType;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 /**
  * @author nik
@@ -57,8 +57,8 @@ public abstract class DebuggerSupport {
   }
 
   @Nonnull
-  public static DebuggerSupport[] getDebuggerSupports() {
-    return Extensions.getExtensions(EXTENSION_POINT);
+  public static List<DebuggerSupport> getDebuggerSupports() {
+    return EXTENSION_POINT.getExtensionList();
   }
 
   @Nonnull

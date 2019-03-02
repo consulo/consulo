@@ -21,7 +21,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbAwareRunnable;
@@ -332,7 +331,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   }
 
   protected void registerToolWindowsFromBeans(List<FinalizableCommand> list) {
-    final ToolWindowEP[] beans = Extensions.getExtensions(ToolWindowEP.EP_NAME);
+    final List<ToolWindowEP> beans = ToolWindowEP.EP_NAME.getExtensionList();
     for (final ToolWindowEP bean : beans) {
       if (checkCondition(myProject, bean)) {
         list.add(new FinalizableCommand(EmptyRunnable.INSTANCE) {

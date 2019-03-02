@@ -25,7 +25,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.fileTypes.ex.*;
@@ -854,7 +853,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
               text = null;
             }
 
-            FileTypeDetector[] detectors = Extensions.getExtensions(FileTypeDetector.EP_NAME);
+            List<FileTypeDetector> detectors = FileTypeDetector.EP_NAME.getExtensionList();
             if (FileTypeManagerImpl.this.toLog()) {
               log("F: detectFromContentAndCache.processFirstBytes(" +
                   file.getName() +
@@ -865,8 +864,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
                   isText +
                   "; text='" +
                   (text == null ? null : StringUtil.first(text, 100, true)) +
-                  "', detectors=" +
-                  Arrays.toString(detectors));
+                  "', detectors=" + detectors);
             }
             FileType detected = null;
             for (FileTypeDetector detector : detectors) {

@@ -16,7 +16,6 @@
 package com.intellij.xdebugger.impl.actions;
 
 import com.intellij.execution.ExecutionException;
-import com.intellij.execution.process.OSProcessUtil;
 import com.intellij.execution.process.ProcessInfo;
 import com.intellij.execution.runners.ExecutionUtil;
 import com.intellij.internal.statistic.UsageTrigger;
@@ -24,7 +23,6 @@ import com.intellij.internal.statistic.beans.ConvertUsagesUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.progress.PerformInBackgroundOption;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
@@ -47,6 +45,7 @@ import com.intellij.xdebugger.attach.XLocalAttachDebugger;
 import com.intellij.xdebugger.attach.XLocalAttachDebuggerProvider;
 import com.intellij.xdebugger.attach.XLocalAttachGroup;
 import consulo.awt.TargetAWT;
+import consulo.execution.process.OSProcessUtil;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.intellij.lang.annotations.MagicConstant;
@@ -73,7 +72,7 @@ public class AttachToLocalProcessAction extends AnAction {
     super.update(e);
 
     Project project = getEventProject(e);
-    boolean enabled = project != null && Extensions.getExtensions(XLocalAttachDebuggerProvider.EP).length > 0;
+    boolean enabled = project != null && XLocalAttachDebuggerProvider.EP_NAME.hasAnyExtensions();
     e.getPresentation().setEnabledAndVisible(enabled);
   }
 
@@ -83,7 +82,7 @@ public class AttachToLocalProcessAction extends AnAction {
     final Project project = getEventProject(e);
     if (project == null) return;
 
-    XLocalAttachDebuggerProvider[] providers = Extensions.getExtensions(XLocalAttachDebuggerProvider.EP);
+    List<XLocalAttachDebuggerProvider> providers = XLocalAttachDebuggerProvider.EP_NAME.getExtensionList();
 
     new Task.Backgroundable(project, XDebuggerBundle.message("xdebugger.attach.toLocal.action.collectingProcesses"), true, PerformInBackgroundOption.DEAF) {
       @Override
@@ -130,7 +129,7 @@ public class AttachToLocalProcessAction extends AnAction {
   public static List<AttachItem> collectAttachItems(@Nonnull final Project project,
                                                     @Nonnull ProcessInfo[] processList,
                                                     @Nonnull ProgressIndicator indicator,
-                                                    @Nonnull XLocalAttachDebuggerProvider... providers) {
+                                                    @Nonnull List<XLocalAttachDebuggerProvider> providers) {
     MultiMap<XLocalAttachGroup, Pair<ProcessInfo, ArrayList<XLocalAttachDebugger>>> groupWithItems = new MultiMap<>();
 
     UserDataHolderBase dataHolder = new UserDataHolderBase();

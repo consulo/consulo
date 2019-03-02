@@ -16,15 +16,14 @@
 package com.intellij.usages;
 
 import com.intellij.codeInsight.highlighting.ReadWriteAccessDetector;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -134,7 +133,7 @@ public class UsageInfoToUsageConverter {
   @Nonnull
   public static Usage convert(@Nonnull PsiElement[] primaryElements, @Nonnull UsageInfo usageInfo) {
     PsiElement usageElement = usageInfo.getElement();
-    for(ReadWriteAccessDetector detector: Extensions.getExtensions(ReadWriteAccessDetector.EP_NAME)) {
+    for(ReadWriteAccessDetector detector: ReadWriteAccessDetector.EP_NAME.getExtensionList()) {
       if (isReadWriteAccessibleElements(primaryElements, detector)) {
         final ReadWriteAccessDetector.Access rwAccess = detector.getExpressionAccess(usageElement);
         return new ReadWriteAccessUsageInfo2UsageAdapter(usageInfo,

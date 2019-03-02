@@ -224,8 +224,8 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
   }
 
   private static void addActionsFromExtensions(@Nonnull AnnotationPresentation presentation, @Nonnull FileAnnotation fileAnnotation) {
-    AnnotationGutterActionProvider[] extensions = AnnotationGutterActionProvider.EP_NAME.getExtensions();
-    if (extensions.length > 0) {
+    List<AnnotationGutterActionProvider> extensions = AnnotationGutterActionProvider.EP_NAME.getExtensionList();
+    if (extensions.size() > 0) {
       presentation.addAction(new AnSeparator());
     }
     for (AnnotationGutterActionProvider provider : extensions) {
@@ -298,7 +298,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
 
   @javax.annotation.Nullable
   private static Provider getProvider(AnActionEvent e) {
-    for (Provider provider : EP_NAME.getExtensions()) {
+    for (Provider provider : EP_NAME.getExtensionList()) {
       if (provider.isEnabled(e)) return provider;
     }
     return null;

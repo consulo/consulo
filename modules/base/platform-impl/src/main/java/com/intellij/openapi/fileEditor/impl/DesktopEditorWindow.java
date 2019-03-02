@@ -25,7 +25,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.ScrollingModel;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.fileEditor.TextEditor;
@@ -52,13 +51,13 @@ import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.DeprecationInfo;
+import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 import consulo.fileEditor.impl.*;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -66,8 +65,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.intellij.openapi.wm.IdeFocusManager.getGlobalInstance;
@@ -740,7 +739,7 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
           final VirtualFile file = selectedEditor.getFile();
 
           if (virtualFile == null) {
-            for (FileEditorAssociateFinder finder : Extensions.getExtensions(FileEditorAssociateFinder.EP_NAME)) {
+            for (FileEditorAssociateFinder finder : FileEditorAssociateFinder.EP_NAME.getExtensionList()) {
               VirtualFile associatedFile = finder.getAssociatedFileToOpen(fileEditorManager.getProject(), file);
 
               if (associatedFile != null) {

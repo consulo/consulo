@@ -149,7 +149,7 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
 
   @Override
   public boolean isVisible() {
-    return XBreakpointType.EXTENSION_POINT_NAME.getExtensions().length != 0;
+    return XBreakpointType.EXTENSION_POINT_NAME.hasAnyExtensions();
   }
 
   @RequiredUIAccess

@@ -158,7 +158,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
     final Module module = getModuleByFile(file);
     if (module != null) {
-      for (AdditionalOutputDirectoriesProvider provider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensions()) {
+      for (AdditionalOutputDirectoriesProvider provider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensionList()) {
         for (String path : provider.getOutputDirectories(getProject(), module)) {
           if (path != null && VfsUtilCore.isAncestor(new File(path), new File(file.getPath()), true)) {
             return true;

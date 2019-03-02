@@ -161,7 +161,7 @@ public class CompileDriver {
         myGenerationCompilerModuleToOutputDirMap.put(pair, outputs);
       }
 
-      for (AdditionalOutputDirectoriesProvider provider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensions()) {
+      for (AdditionalOutputDirectoriesProvider provider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensionList()) {
         final String[] outputDirectories = provider.getOutputDirectories(project, module);
         if (outputDirectories.length > 0) {
           for (String path : outputDirectories) {
@@ -402,7 +402,7 @@ public class CompileDriver {
     final LocalFileSystem lfs = LocalFileSystem.getInstance();
     final Set<Module> affected = new HashSet<>(Arrays.asList(context.getCompileScope().getAffectedModules()));
     for (Module module : affected) {
-      for (AdditionalOutputDirectoriesProvider provider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensions()) {
+      for (AdditionalOutputDirectoriesProvider provider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensionList()) {
         for (String path : provider.getOutputDirectories(myProject, module)) {
           final VirtualFile vFile = lfs.findFileByPath(path);
           if (vFile == null) {
@@ -595,8 +595,7 @@ public class CompileDriver {
       }
 
       final Set<File> genSourceRoots = new THashSet<>(FileUtil.FILE_HASHING_STRATEGY);
-      for (AdditionalOutputDirectoriesProvider additionalOutputDirectoriesProvider : AdditionalOutputDirectoriesProvider.EP_NAME
-        .getExtensions()) {
+      for (AdditionalOutputDirectoriesProvider additionalOutputDirectoriesProvider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensionList()) {
         for (Module module : affectedModules) {
           for (String path : additionalOutputDirectoriesProvider.getOutputDirectories(myProject, module)) {
             genSourceRoots.add(new File(path));
@@ -1031,7 +1030,7 @@ public class CompileDriver {
       int processed = 0;
       for (final Chunk<Module> currentChunk : sortedChunks) {
         TranslatingCompiler[] translators = original.clone();
-        for (CompilerSorter compilerSorter : CompilerSorter.EP_NAME.getExtensions()) {
+        for (CompilerSorter compilerSorter : CompilerSorter.EP_NAME.getExtensionList()) {
           compilerSorter.sort(currentChunk, translators, TranslatingCompiler.class);
         }
         final TranslatorsOutputSink sink = new TranslatorsOutputSink(context, translators);
@@ -1466,7 +1465,7 @@ public class CompileDriver {
       outputDirs.add(new File(CompilerPaths.getGenerationOutputPath(pair.getFirst(), pair.getSecond(), true)));
     }
 
-    for (AdditionalOutputDirectoriesProvider provider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensions()) {
+    for (AdditionalOutputDirectoriesProvider provider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensionList()) {
       for (Module module : modules) {
         for (String path : provider.getOutputDirectories(myProject, module)) {
           outputDirs.add(new File(path));
@@ -2059,7 +2058,7 @@ CompilerManagerImpl.addDeletedPath(outputPath.getPath());
           }
         }
 
-        for (AdditionalOutputDirectoriesProvider provider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensions()) {
+        for (AdditionalOutputDirectoriesProvider provider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensionList()) {
           for (String path : provider.getOutputDirectories(myProject, module)) {
             if (path == null) {
               final CompilerConfiguration extension = CompilerConfiguration.getInstance(module.getProject());

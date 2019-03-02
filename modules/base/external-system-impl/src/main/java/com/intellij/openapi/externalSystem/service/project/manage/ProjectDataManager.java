@@ -49,7 +49,7 @@ public class ProjectDataManager {
       @Override
       protected Map<Key<?>, List<ProjectDataService<?, ?>>> compute() {
         Map<Key<?>, List<ProjectDataService<?, ?>>> result = ContainerUtilRt.newHashMap();
-        for (ProjectDataService<?, ?> service : ProjectDataService.EP_NAME.getExtensions()) {
+        for (ProjectDataService<?, ?> service : ProjectDataService.EP_NAME.getExtensionList()) {
           List<ProjectDataService<?, ?>> services = result.get(service.getTargetDataKey());
           if (services == null) {
             result.put(service.getTargetDataKey(), services = ContainerUtilRt.newArrayList());

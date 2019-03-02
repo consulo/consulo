@@ -92,11 +92,11 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
   }
 
   public static boolean isEquals(@Nonnull Change change1, @Nonnull Change change2) {
-    for (ChangeDiffViewerWrapperProvider provider : ChangeDiffViewerWrapperProvider.EP_NAME.getExtensions()) {
+    for (ChangeDiffViewerWrapperProvider provider : ChangeDiffViewerWrapperProvider.EP_NAME.getExtensionList()) {
       ThreeState equals = provider.isEquals(change1, change2);
       if (equals == ThreeState.NO) return false;
     }
-    for (ChangeDiffRequestProvider provider : ChangeDiffRequestProvider.EP_NAME.getExtensions()) {
+    for (ChangeDiffRequestProvider provider : ChangeDiffRequestProvider.EP_NAME.getExtensionList()) {
       ThreeState equals = provider.isEquals(change1, change2);
       if (equals == ThreeState.YES) return true;
       if (equals == ThreeState.NO) return false;
@@ -133,10 +133,10 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
   }
 
   public static boolean canCreate(@Nullable Project project, @Nonnull Change change) {
-    for (ChangeDiffViewerWrapperProvider provider : ChangeDiffViewerWrapperProvider.EP_NAME.getExtensions()) {
+    for (ChangeDiffViewerWrapperProvider provider : ChangeDiffViewerWrapperProvider.EP_NAME.getExtensionList()) {
       if (provider.canCreate(project, change)) return true;
     }
-    for (ChangeDiffRequestProvider provider : ChangeDiffRequestProvider.EP_NAME.getExtensions()) {
+    for (ChangeDiffRequestProvider provider : ChangeDiffRequestProvider.EP_NAME.getExtensionList()) {
       if (provider.canCreate(project, change)) return true;
     }
 
@@ -177,7 +177,7 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
 
     DiffViewerWrapper wrapper = null;
     try {
-      for (ChangeDiffViewerWrapperProvider provider : ChangeDiffViewerWrapperProvider.EP_NAME.getExtensions()) {
+      for (ChangeDiffViewerWrapperProvider provider : ChangeDiffViewerWrapperProvider.EP_NAME.getExtensionList()) {
         if (provider.canCreate(myProject, myChange)) {
           wrapper = provider.process(this, context, indicator);
           break;
@@ -190,7 +190,7 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
 
     DiffRequest request = null;
     try {
-      for (ChangeDiffRequestProvider provider : ChangeDiffRequestProvider.EP_NAME.getExtensions()) {
+      for (ChangeDiffRequestProvider provider : ChangeDiffRequestProvider.EP_NAME.getExtensionList()) {
         if (provider.canCreate(myProject, myChange)) {
           request = provider.process(this, context, indicator);
           break;

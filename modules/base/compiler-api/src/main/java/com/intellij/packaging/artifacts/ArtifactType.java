@@ -34,7 +34,7 @@ import java.util.List;
 public abstract class ArtifactType {
   @Nullable
   public static ArtifactType findById(@Nonnull @NonNls String id) {
-    for (ArtifactType type : EP_NAME.getExtensions()) {
+    for (ArtifactType type : EP_NAME.getExtensionList()) {
       if (id.equals(type.getId())) {
         return type;
       }

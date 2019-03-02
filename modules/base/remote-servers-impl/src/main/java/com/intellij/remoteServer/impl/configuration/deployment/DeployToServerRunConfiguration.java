@@ -41,6 +41,7 @@ import com.intellij.util.xmlb.annotations.Tag;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
@@ -82,7 +83,7 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
     return new DeployToServerSettingsEditor(myServerType, myDeploymentConfigurator, getProject());
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment env) throws ExecutionException {
     String serverName = getServerName();
@@ -150,9 +151,9 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
     }
   }
 
-  @javax.annotation.Nullable
-  private static DeploymentSourceType<?> findDeploymentSourceType(@javax.annotation.Nullable String id) {
-    for (DeploymentSourceType<?> type : DeploymentSourceType.EP_NAME.getExtensions()) {
+  @Nullable
+  private static DeploymentSourceType<?> findDeploymentSourceType(@Nullable String id) {
+    for (DeploymentSourceType<?> type : DeploymentSourceType.EP_NAME.getExtensionList()) {
       if (type.getId().equals(id)) {
         return type;
       }

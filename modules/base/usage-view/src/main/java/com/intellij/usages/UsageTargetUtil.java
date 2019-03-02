@@ -20,7 +20,6 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 
@@ -51,7 +50,7 @@ public class UsageTargetUtil {
 
   public static UsageTarget[] findUsageTargets(Editor editor, PsiFile file) {
     List<UsageTarget> result = new ArrayList<>();
-    for (UsageTargetProvider provider : Extensions.getExtensions(EP_NAME)) {
+    for (UsageTargetProvider provider : EP_NAME.getExtensionList()) {
       UsageTarget[] targets = provider.getTargets(editor, file);
       if (targets != null) Collections.addAll(result, targets);
     }
@@ -60,7 +59,7 @@ public class UsageTargetUtil {
 
   public static UsageTarget[] findUsageTargets(PsiElement psiElement) {
     List<UsageTarget> result = new ArrayList<>();
-    for (UsageTargetProvider provider : Extensions.getExtensions(EP_NAME)) {
+    for (UsageTargetProvider provider : EP_NAME.getExtensionList()) {
       UsageTarget[] targets = provider.getTargets(psiElement);
       if (targets != null) Collections.addAll(result, targets);
     }

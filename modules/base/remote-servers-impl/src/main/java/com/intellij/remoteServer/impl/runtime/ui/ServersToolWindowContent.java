@@ -95,7 +95,7 @@ public class ServersToolWindowContent extends JPanel implements Disposable {
 
     setupBuilder(project);
 
-    for (RemoteServersViewContributor contributor : RemoteServersViewContributor.EP_NAME.getExtensions()) {
+    for (RemoteServersViewContributor contributor : RemoteServersViewContributor.EP_NAME.getExtensionList()) {
       contributor.setupTree(myProject, myTree, myBuilder);
     }
 
@@ -226,7 +226,7 @@ public class ServersToolWindowContent extends JPanel implements Disposable {
         if (KEY == dataId) {
           return ServersToolWindowContent.this;
         }
-        for (RemoteServersViewContributor contributor : RemoteServersViewContributor.EP_NAME.getExtensions()) {
+        for (RemoteServersViewContributor contributor : RemoteServersViewContributor.EP_NAME.getExtensionList()) {
           Object data = contributor.getData(dataId, ServersToolWindowContent.this);
           if (data != null) {
             return data;

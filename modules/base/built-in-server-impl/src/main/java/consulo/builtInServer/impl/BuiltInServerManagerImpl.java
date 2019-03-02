@@ -155,7 +155,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
       return;
     }
 
-    for (CustomPortServerManager customPortServerManager : CustomPortServerManager.EP_NAME.getExtensions()) {
+    for (CustomPortServerManager customPortServerManager : CustomPortServerManager.EP_NAME.getExtensionList()) {
       try {
         new SubServer(customPortServerManager, server).bind(customPortServerManager.getPort());
       }

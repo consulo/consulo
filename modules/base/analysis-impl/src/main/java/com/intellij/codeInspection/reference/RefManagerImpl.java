@@ -380,7 +380,7 @@ public class RefManagerImpl extends RefManager {
   }
 
   public void initializeAnnotators() {
-    for (RefGraphAnnotator annotator : RefGraphAnnotator.EP_NAME.getExtensions()) {
+    for (RefGraphAnnotator annotator : RefGraphAnnotator.EP_NAME.getExtensionList()) {
       registerGraphAnnotator(annotator);
     }
     for (RefGraphAnnotator graphAnnotator : myGraphAnnotators) {

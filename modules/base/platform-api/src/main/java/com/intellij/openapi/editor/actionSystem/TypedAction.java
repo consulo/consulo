@@ -22,9 +22,9 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.reporting.FreezeLogger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -47,7 +47,7 @@ public class TypedAction {
   private void ensureHandlersLoaded() {
     if (!myHandlersLoaded) {
       myHandlersLoaded = true;
-      for (EditorTypedHandlerBean handlerBean : Extensions.getExtensions(EditorTypedHandlerBean.EP_NAME)) {
+      for (EditorTypedHandlerBean handlerBean : EditorTypedHandlerBean.EP_NAME.getExtensionList()) {
         myHandler = handlerBean.getHandler(myHandler);
       }
     }

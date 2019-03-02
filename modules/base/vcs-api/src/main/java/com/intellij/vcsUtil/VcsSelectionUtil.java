@@ -17,8 +17,10 @@ package com.intellij.vcsUtil;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.vcs.actions.VcsContext;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author yole
@@ -27,14 +29,14 @@ public class VcsSelectionUtil {
   private VcsSelectionUtil() {
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static VcsSelection getSelection(VcsContext context) {
 
     VcsSelection selectionFromEditor = getSelectionFromEditor(context);
     if (selectionFromEditor != null) {
       return selectionFromEditor;
     }
-    final VcsSelectionProvider[] providers = Extensions.getExtensions(VcsSelectionProvider.EP_NAME);
+    final List<VcsSelectionProvider> providers = VcsSelectionProvider.EP_NAME.getExtensionList();
     for(VcsSelectionProvider provider: providers) {
       final VcsSelection vcsSelection = provider.getSelection(context);
       if (vcsSelection != null) return vcsSelection;
@@ -42,7 +44,7 @@ public class VcsSelectionUtil {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private static VcsSelection getSelectionFromEditor(VcsContext context) {
     Editor editor = context.getEditor();
     if (editor == null) return null;

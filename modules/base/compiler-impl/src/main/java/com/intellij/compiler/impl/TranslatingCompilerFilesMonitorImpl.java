@@ -1354,7 +1354,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
       conn.subscribe(ModuleExtension.CHANGE_TOPIC, new ModuleExtensionChangeListener() {
         @Override
         public void beforeExtensionChanged(@Nonnull ModuleExtension<?> oldExtension, @Nonnull ModuleExtension<?> newExtension) {
-          for (TranslatingCompilerFilesMonitorHelper helper : TranslatingCompilerFilesMonitorHelper.EP_NAME.getExtensions()) {
+          for (TranslatingCompilerFilesMonitorHelper helper : TranslatingCompilerFilesMonitorHelper.EP_NAME.getExtensionList()) {
             if (helper.isModuleExtensionAffectToCompilation(newExtension)) {
               myForceCompiling = true;
               break;
@@ -1828,7 +1828,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   private VirtualFile[] getRootsForScan(Project project) {
     List<VirtualFile> list = new ArrayList<VirtualFile>();
     Module[] modules = ModuleManager.getInstance(project).getModules();
-    TranslatingCompilerFilesMonitorHelper[] extensions = TranslatingCompilerFilesMonitorHelper.EP_NAME.getExtensions();
+    List<TranslatingCompilerFilesMonitorHelper> extensions = TranslatingCompilerFilesMonitorHelper.EP_NAME.getExtensionList();
     for (Module module : modules) {
       for (TranslatingCompilerFilesMonitorHelper extension : extensions) {
         VirtualFile[] rootsForModule = extension.getRootsForModule(module);

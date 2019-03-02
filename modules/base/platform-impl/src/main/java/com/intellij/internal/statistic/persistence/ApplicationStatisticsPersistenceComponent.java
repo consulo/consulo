@@ -23,7 +23,6 @@ import com.intellij.internal.statistic.beans.GroupDescriptor;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -34,9 +33,9 @@ import com.intellij.util.containers.HashSet;
 import com.intellij.util.messages.MessageBus;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -195,7 +194,7 @@ public class ApplicationStatisticsPersistenceComponent extends ApplicationStatis
 
   private static void doPersistProjectUsages(@Nonnull Project project) {
     if (DumbService.isDumb(project)) return;
-    for (UsagesCollector usagesCollector : Extensions.getExtensions(UsagesCollector.EP_NAME)) {
+    for (UsagesCollector usagesCollector : UsagesCollector.EP_NAME.getExtensionList()) {
       if (usagesCollector instanceof AbstractApplicationUsagesCollector) {
         ((AbstractApplicationUsagesCollector)usagesCollector).persistProjectUsages(project);
       }

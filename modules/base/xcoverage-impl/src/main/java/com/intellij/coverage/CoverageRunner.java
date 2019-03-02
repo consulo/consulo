@@ -5,17 +5,17 @@
 package com.intellij.coverage;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.rt.coverage.data.ProjectData;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 
 public abstract class CoverageRunner {
   public static final ExtensionPointName<CoverageRunner> EP_NAME = ExtensionPointName.create("com.intellij.coverageRunner");
 
-  public abstract ProjectData loadCoverageData(@Nonnull final File sessionDataFile, @javax.annotation.Nullable final CoverageSuite baseCoverageSuite);
+  public abstract ProjectData loadCoverageData(@Nonnull final File sessionDataFile, @Nullable final CoverageSuite baseCoverageSuite);
 
   public abstract String getPresentableName();
 
@@ -28,7 +28,7 @@ public abstract class CoverageRunner {
   public abstract boolean acceptsCoverageEngine(@Nonnull final CoverageEngine engine);
 
   public static <T extends CoverageRunner> T getInstance(@Nonnull Class<T> coverageRunnerClass) {
-    for (CoverageRunner coverageRunner : Extensions.getExtensions(EP_NAME)) {
+    for (CoverageRunner coverageRunner : EP_NAME.getExtensionList()) {
       if (coverageRunnerClass.isInstance(coverageRunner)) {
         return coverageRunnerClass.cast(coverageRunner);
       }

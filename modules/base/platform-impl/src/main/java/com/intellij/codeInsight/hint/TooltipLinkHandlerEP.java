@@ -19,9 +19,9 @@ import com.intellij.codeInsight.highlighting.TooltipLinkHandler;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.LazyInstance;
 import com.intellij.util.xmlb.annotations.Attribute;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -45,7 +45,7 @@ public class TooltipLinkHandlerEP extends AbstractExtensionPointBean {
   };
 
   public static boolean handleLink(@Nonnull final String ref, @Nonnull final Editor editor) {
-    for (final TooltipLinkHandlerEP handlerEP : Extensions.getExtensions(EP_NAME)) {
+    for (final TooltipLinkHandlerEP handlerEP : EP_NAME.getExtensionList()) {
       if (ref.startsWith(handlerEP.prefix)) {
         final String refSuffix = ref.substring(handlerEP.prefix.length());
         return handlerEP.myHandler.getValue().handleLink(refSuffix.replaceAll("<br/>", "\n"), editor);
@@ -56,7 +56,7 @@ public class TooltipLinkHandlerEP extends AbstractExtensionPointBean {
 
   @Nullable
   public static String getDescription(@Nonnull final String ref, @Nonnull final Editor editor) {
-    for (final TooltipLinkHandlerEP handlerEP : Extensions.getExtensions(EP_NAME)) {
+    for (final TooltipLinkHandlerEP handlerEP : EP_NAME.getExtensionList()) {
       if (ref.startsWith(handlerEP.prefix)) {
         final String refSuffix = ref.substring(handlerEP.prefix.length());
         return handlerEP.myHandler.getValue().getDescription(refSuffix, editor);

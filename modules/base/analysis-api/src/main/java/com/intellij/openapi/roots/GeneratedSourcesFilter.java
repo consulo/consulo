@@ -32,7 +32,7 @@ public abstract class GeneratedSourcesFilter {
 
   @RequiredReadAction
   public static boolean isGenerated(@Nonnull Project project, @Nonnull VirtualFile file) {
-    for (GeneratedSourcesFilter filter : GeneratedSourcesFilter.EP_NAME.getExtensions()) {
+    for (GeneratedSourcesFilter filter : GeneratedSourcesFilter.EP_NAME.getExtensionList()) {
       if (filter.isGeneratedSource(file, project)) {
         return true;
       }

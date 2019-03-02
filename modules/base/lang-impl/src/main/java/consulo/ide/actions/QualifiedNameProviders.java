@@ -15,10 +15,8 @@
  */
 package consulo.ide.actions;
 
-import consulo.codeInsight.TargetElementUtil;
 import com.intellij.ide.actions.QualifiedNameProvider;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Pair;
@@ -30,6 +28,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.LogicalRoot;
 import com.intellij.util.LogicalRootsManager;
+import consulo.codeInsight.TargetElementUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -67,7 +67,7 @@ public class QualifiedNameProviders {
   @Nullable
   public static String getQualifiedNameFromProviders(@Nullable com.intellij.psi.PsiElement element) {
     if (element == null) return null;
-    for (QualifiedNameProvider provider : Extensions.getExtensions(QualifiedNameProvider.EP_NAME)) {
+    for (QualifiedNameProvider provider : QualifiedNameProvider.EP_NAME.getExtensionList()) {
       String result = provider.getQualifiedName(element);
       if (result != null) return result;
     }
@@ -78,7 +78,7 @@ public class QualifiedNameProviders {
   public static Pair<PsiElement, QualifiedNameProvider> findElementByQualifiedName(@Nullable String qName, @Nonnull Project project) {
     QualifiedNameProvider theProvider = null;
     PsiElement element = null;
-    for(QualifiedNameProvider provider: QualifiedNameProvider.EP_NAME.getExtensions()) {
+    for(QualifiedNameProvider provider: QualifiedNameProvider.EP_NAME.getExtensionList()) {
       element = provider.qualifiedNameToElement(qName, project);
       if (element != null) {
         theProvider = provider;

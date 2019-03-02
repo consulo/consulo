@@ -219,7 +219,7 @@ public class ExternalSystemApiUtil {
 
   @javax.annotation.Nullable
   public static ExternalSystemManager<?, ?, ?, ?, ?> getManager(@Nonnull ProjectSystemId externalSystemId) {
-    for (ExternalSystemManager manager : ExternalSystemManager.EP_NAME.getExtensions()) {
+    for (ExternalSystemManager manager : ExternalSystemManager.EP_NAME.getExtensionList()) {
       if (externalSystemId.equals(manager.getSystemId())) {
         return manager;
       }
@@ -231,7 +231,7 @@ public class ExternalSystemApiUtil {
   @Nonnull
   public static Collection<ExternalSystemManager<?, ?, ?, ?, ?>> getAllManagers() {
     List<ExternalSystemManager<?, ?, ?, ?, ?>> result = ContainerUtilRt.newArrayList();
-    for (ExternalSystemManager manager : ExternalSystemManager.EP_NAME.getExtensions()) {
+    for (ExternalSystemManager manager : ExternalSystemManager.EP_NAME.getExtensionList()) {
       result.add(manager);
     }
     return result;

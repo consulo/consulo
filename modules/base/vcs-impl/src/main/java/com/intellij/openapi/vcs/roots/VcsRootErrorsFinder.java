@@ -1,7 +1,6 @@
 package com.intellij.openapi.vcs.roots;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.io.FileUtil;
@@ -10,8 +9,8 @@ import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -85,8 +84,7 @@ public class VcsRootErrorsFinder {
     if (StringUtil.isEmptyOrSpaces(vcs)) {
       return false;
     }
-    VcsRootChecker[] checkers = Extensions.getExtensions(VcsRootChecker.EXTENSION_POINT_NAME);
-    for (VcsRootChecker checker : checkers) {
+    for (VcsRootChecker checker : VcsRootChecker.EXTENSION_POINT_NAME.getExtensionList()) {
       if (vcs.equalsIgnoreCase(checker.getSupportedVcs().getName())) {
         return true;
       }
@@ -128,7 +126,7 @@ public class VcsRootErrorsFinder {
   }
 
   private boolean isRoot(@Nonnull final VcsDirectoryMapping mapping) {
-    VcsRootChecker[] checkers = Extensions.getExtensions(VcsRootChecker.EXTENSION_POINT_NAME);
+    List<VcsRootChecker> checkers = VcsRootChecker.EXTENSION_POINT_NAME.getExtensionList();
     final String pathToCheck = mapping.isDefaultMapping() ? myProject.getBasePath() : mapping.getDirectory();
     return ContainerUtil.find(checkers, new Condition<VcsRootChecker>() {
       @Override

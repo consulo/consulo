@@ -144,7 +144,7 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
 
   @Override
   public boolean needDisplay() {
-    return ServerType.EP_NAME.getExtensions().length > 0;
+    return ServerType.EP_NAME.hasAnyExtensions();
   }
 
   @Override
@@ -182,10 +182,11 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
     @Nonnull
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
-      ServerType[] serverTypes = ServerType.EP_NAME.getExtensions();
-      AnAction[] actions = new AnAction[serverTypes.length];
-      for (int i = 0; i < serverTypes.length; i++) {
-        actions[i] = new AddRemoteServerAction(serverTypes[i], serverTypes[i].getIcon());
+      List<ServerType> serverTypes = ServerType.EP_NAME.getExtensionList();
+      AnAction[] actions = new AnAction[serverTypes.size()];
+      for (int i = 0; i < serverTypes.size(); i++) {
+        ServerType serverType = serverTypes.get(i);
+        actions[i] = new AddRemoteServerAction(serverType, serverType.getIcon());
       }
       return actions;
     }

@@ -19,19 +19,17 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBDimension;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.Collections;
 import java.util.List;
 
 public class TipPanel extends JPanel {
@@ -79,7 +77,7 @@ public class TipPanel extends JPanel {
     southPanel.add(myPoweredByLabel, BorderLayout.EAST);
     add(southPanel, BorderLayout.SOUTH);
 
-    Collections.addAll(myTips, Extensions.getExtensions(TipAndTrickBean.EP_NAME));
+    myTips.addAll(TipAndTrickBean.EP_NAME.getExtensionList());
   }
 
   @Override

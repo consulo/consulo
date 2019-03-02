@@ -65,14 +65,14 @@ public class ListOfElementsEP {
   public static Collection<String> getValuesOf(String name) {
     if (ourCache == null) {
       ourCache = new MultiMap<String, String>();
-      for (ListOfElementsEP listOfElementsEP : EP_NAME.getExtensions()) {
+      for (ListOfElementsEP listOfElementsEP : EP_NAME.getExtensionList()) {
         if (listOfElementsEP.defaultValues != null) {
           for (ElementEP s : listOfElementsEP.defaultValues) {
             ourCache.putValue(LIST_VARIABLE_START + listOfElementsEP.myName, s.myValue);
           }
         }
 
-        for (AddToElementEP addElementEP : AddToElementEP.EP_NAME.getExtensions()) {
+        for (AddToElementEP addElementEP : AddToElementEP.EP_NAME.getExtensionList()) {
           if (addElementEP.myName.equals(listOfElementsEP.myName)) {
             ourCache.putValue(LIST_VARIABLE_START + listOfElementsEP.myName, addElementEP.myValue);
           }

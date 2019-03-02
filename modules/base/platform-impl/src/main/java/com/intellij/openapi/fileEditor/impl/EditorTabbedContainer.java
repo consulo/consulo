@@ -27,7 +27,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.UniqueVFilePathBuilder;
@@ -58,8 +57,8 @@ import com.intellij.util.BitUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.TimedDeadzone;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.RequiredUIAccess;
 import consulo.fileEditor.impl.EditorWindow;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -365,7 +364,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
   }
 
   public static String calcTabTitle(final Project project, final VirtualFile file) {
-    for (EditorTabTitleProvider provider : Extensions.getExtensions(EditorTabTitleProvider.EP_NAME)) {
+    for (EditorTabTitleProvider provider : EditorTabTitleProvider.EP_NAME.getExtensionList()) {
       final String result = provider.getEditorTabTitle(project, file);
       if (result != null) {
         return result;
@@ -376,7 +375,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
   }
 
   public static String calcFileName(final Project project, final VirtualFile file) {
-    for (EditorTabTitleProvider provider : Extensions.getExtensions(EditorTabTitleProvider.EP_NAME)) {
+    for (EditorTabTitleProvider provider : EditorTabTitleProvider.EP_NAME.getExtensionList()) {
       final String result = provider.getEditorTabTitle(project, file);
       if (result != null) {
         return result;
@@ -387,7 +386,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
 
   @Nullable
   public static Color calcTabColor(@Nonnull Project project, @Nonnull VirtualFile file) {
-    for (EditorTabColorProvider provider : Extensions.getExtensions(EditorTabColorProvider.EP_NAME)) {
+    for (EditorTabColorProvider provider : EditorTabColorProvider.EP_NAME.getExtensionList()) {
       final Color result = provider.getEditorTabColor(project, file);
       if (result != null) {
         return result;

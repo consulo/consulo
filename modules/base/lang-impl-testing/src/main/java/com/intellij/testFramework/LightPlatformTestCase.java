@@ -45,7 +45,6 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.impl.EditorFactoryImpl;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import com.intellij.openapi.fileTypes.FileType;
@@ -467,8 +466,8 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     final InspectionProfileEntry[] tools = new InspectionProfileEntry[classes.length];
 
     final List<InspectionEP> eps = ContainerUtil.newArrayList();
-    ContainerUtil.addAll(eps, Extensions.getExtensions(LocalInspectionEP.LOCAL_INSPECTION));
-    ContainerUtil.addAll(eps, Extensions.getExtensions(InspectionEP.GLOBAL_INSPECTION));
+    ContainerUtil.addAll(eps, LocalInspectionEP.LOCAL_INSPECTION.getExtensionList());
+    ContainerUtil.addAll(eps, InspectionEP.GLOBAL_INSPECTION.getExtensionList());
 
     next:
     for (int i = 0; i < classes.length; i++) {

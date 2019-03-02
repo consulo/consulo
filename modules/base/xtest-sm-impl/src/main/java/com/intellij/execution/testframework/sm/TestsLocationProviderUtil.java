@@ -137,8 +137,7 @@ public class TestsLocationProviderUtil {
   public static List<FileInfo> collectCandidates(final Project project, final String fileName,
                                                  final boolean includeNonProjectItems) {
     final List<FileInfo> filesInfo = new ArrayList<FileInfo>();
-    final ChooseByNameContributor[] contributors = Extensions.getExtensions(ChooseByNameContributor.FILE_EP_NAME);
-    for (ChooseByNameContributor contributor : contributors) {
+    for (ChooseByNameContributor contributor : ChooseByNameContributor.FILE_EP_NAME.getExtensionList()) {
       // let's find files with same name in project and libraries
       final NavigationItem[] navigationItems = contributor.getItemsByName(fileName, fileName, project, includeNonProjectItems);
       for (NavigationItem navigationItem : navigationItems) {

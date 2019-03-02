@@ -37,17 +37,17 @@ public class VcsRootScanner implements BulkFileListener, ModuleRootListener, Vcs
   @Nonnull
   private final VcsRootProblemNotifier myRootProblemNotifier;
   @Nonnull
-  private final VcsRootChecker[] myCheckers;
+  private final List<VcsRootChecker> myCheckers;
 
   @Nonnull
   private final Alarm myAlarm;
   private static final long WAIT_BEFORE_SCAN = TimeUnit.SECONDS.toMillis(1);
 
-  public static void start(@Nonnull Project project, @Nonnull VcsRootChecker[] checkers) {
+  public static void start(@Nonnull Project project, @Nonnull List<VcsRootChecker> checkers) {
     new VcsRootScanner(project, checkers).scheduleScan();
   }
 
-  private VcsRootScanner(@Nonnull Project project, @Nonnull VcsRootChecker[] checkers) {
+  private VcsRootScanner(@Nonnull Project project, @Nonnull List<VcsRootChecker> checkers) {
     myRootProblemNotifier = VcsRootProblemNotifier.getInstance(project);
     myCheckers = checkers;
 

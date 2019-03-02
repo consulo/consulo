@@ -140,7 +140,7 @@ public class LocalServerRunConfiguration<S extends ServerConfiguration, D extend
 
   @Nullable
   private static DeploymentSourceType<?> findDeploymentSourceType(@Nullable String id) {
-    for (DeploymentSourceType<?> type : DeploymentSourceType.EP_NAME.getExtensions()) {
+    for (DeploymentSourceType<?> type : DeploymentSourceType.EP_NAME.getExtensionList()) {
       if (type.getId().equals(id)) {
         return type;
       }

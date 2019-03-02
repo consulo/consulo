@@ -1472,7 +1472,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
   @Override
   public boolean isIgnoredFile(@Nonnull VirtualFile file) {
     FilePath filePath = VcsUtil.getFilePath(file);
-    return ContainerUtil.exists(IgnoredFileProvider.IGNORE_FILE.getExtensions(), it -> it.isIgnoredFile(myProject, filePath));
+    return ContainerUtil.exists(IgnoredFileProvider.IGNORE_FILE.getExtensionList(), it -> it.isIgnoredFile(myProject, filePath));
   }
 
   public static class DefaultIgnoredFileProvider implements IgnoredFileProvider {

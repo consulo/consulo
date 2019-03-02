@@ -63,7 +63,7 @@ public class ShowDiagramAction extends AnAction {
       state = false;
       if (psiElement != null) {
         state = false;
-        for (GraphProvider graphProvider : GraphProvider.EP_NAME.getExtensions()) {
+        for (GraphProvider graphProvider : GraphProvider.EP_NAME.getExtensionList()) {
           if (graphProvider.isSupported(psiElement)) {
             state = true;
             break;

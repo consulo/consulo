@@ -94,7 +94,7 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
     actionGroup.add(actionsManager.createPrevOccurenceAction(myOccurenceNavigator));
     actionGroup.add(actionsManager.createNextOccurenceAction(myOccurenceNavigator));
 
-    for (ToggleModelActionProvider actionProvider : Extensions.getExtensions(ToggleModelActionProvider.EP_NAME)) {
+    for (ToggleModelActionProvider actionProvider : ToggleModelActionProvider.EP_NAME.getExtensionList()) {
       final ToggleModelAction toggleModelAction = actionProvider.createToggleModelAction(properties);
       myActions.add(toggleModelAction);
       actionGroup.add(toggleModelAction);

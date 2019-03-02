@@ -31,7 +31,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.Project;
@@ -56,11 +55,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class UndoManagerImpl implements UndoManager, Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.command.impl.UndoManagerImpl");
+  private static final Logger LOG = Logger.getInstance(UndoManagerImpl.class);
 
   private static final int COMMANDS_TO_KEEP_LIVE_QUEUES = 100;
   private static final int COMMAND_TO_RUN_COMPACT = 20;
@@ -70,7 +69,7 @@ public class UndoManagerImpl implements UndoManager, Disposable {
   private final ProjectEx myProject;
   private final CommandProcessor myCommandProcessor;
 
-  private UndoProvider[] myUndoProviders;
+  private List<UndoProvider> myUndoProviders;
   private CurrentEditorProvider myEditorProvider;
 
   private final UndoRedoStacksHolder myUndoStacksHolder = new UndoRedoStacksHolder(true);
@@ -165,8 +164,8 @@ public class UndoManagerImpl implements UndoManager, Disposable {
     Disposer.register(this, new DocumentUndoProvider(myProject));
 
     myUndoProviders = myProject == null
-                      ? Extensions.getExtensions(UndoProvider.EP_NAME)
-                      : Extensions.getExtensions(UndoProvider.PROJECT_EP_NAME, myProject);
+                      ? UndoProvider.EP_NAME.getExtensionList()
+                      : UndoProvider.PROJECT_EP_NAME.getExtensionList(myProject);
     for (UndoProvider undoProvider : myUndoProviders) {
       if (undoProvider instanceof Disposable) {
         Disposer.register(this, (Disposable)undoProvider);

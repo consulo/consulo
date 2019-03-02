@@ -18,12 +18,13 @@ package com.intellij.openapi.vcs.checkout;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.vcs.CheckoutProvider;
-import javax.annotation.Nonnull;
+import com.intellij.util.containers.ContainerUtil;
 
-import java.util.Arrays;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class CheckoutActionGroup extends ActionGroup implements DumbAware {
 
@@ -31,20 +32,19 @@ public class CheckoutActionGroup extends ActionGroup implements DumbAware {
 
   public void update(AnActionEvent e) {
     super.update(e);
-    final CheckoutProvider[] providers = Extensions.getExtensions(CheckoutProvider.EXTENSION_POINT_NAME);
-    if (providers.length == 0) {
+    if (!CheckoutProvider.EXTENSION_POINT_NAME.hasAnyExtensions()) {
       e.getPresentation().setVisible(false);
     }
   }
 
   @Nonnull
-  public AnAction[] getChildren(@javax.annotation.Nullable AnActionEvent e) {
+  public AnAction[] getChildren(@Nullable AnActionEvent e) {
     if (myChildren == null) {
-      final CheckoutProvider[] providers = Extensions.getExtensions(CheckoutProvider.EXTENSION_POINT_NAME);
-      Arrays.sort(providers, new CheckoutProvider.CheckoutProviderComparator());
-      myChildren = new AnAction[providers.length];
-      for (int i = 0; i < providers.length; i++) {
-        CheckoutProvider provider = providers[i];
+      final List<CheckoutProvider> providers = CheckoutProvider.EXTENSION_POINT_NAME.getExtensionList();
+      ContainerUtil.sort(providers, new CheckoutProvider.CheckoutProviderComparator());
+      myChildren = new AnAction[providers.size()];
+      for (int i = 0; i < providers.size(); i++) {
+        CheckoutProvider provider = providers.get(i);
         myChildren[i] = new CheckoutAction(provider);
       }
     }

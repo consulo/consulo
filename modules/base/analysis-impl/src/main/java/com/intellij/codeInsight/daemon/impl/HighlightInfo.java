@@ -273,7 +273,7 @@ public class HighlightInfo implements Segment {
   }
 
   private static class Holder {
-    private static final HighlightInfoFilter[] FILTERS = HighlightInfoFilter.EXTENSION_POINT_NAME.getExtensions();
+    private static final List<HighlightInfoFilter> FILTERS = HighlightInfoFilter.EXTENSION_POINT_NAME.getExtensionList();
   }
 
   boolean needUpdateOnTyping() {

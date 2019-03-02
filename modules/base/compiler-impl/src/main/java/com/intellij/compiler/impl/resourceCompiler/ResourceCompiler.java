@@ -48,7 +48,7 @@ import java.util.*;
 public class ResourceCompiler implements TranslatingCompiler {
   public static final Logger LOGGER = Logger.getInstance(ResourceCompiler.class);
 
-  private final ResourceCompilerExtension[] myResourceCompilerExtensions = ResourceCompilerExtension.EP_NAME.getExtensions();
+  private final List<ResourceCompilerExtension> myResourceCompilerExtensions = ResourceCompilerExtension.EP_NAME.getExtensionList();
   private final ResourceCompilerConfiguration myResourceCompilerConfiguration;
   private final ProjectFileIndex myProjectFileIndex;
 
