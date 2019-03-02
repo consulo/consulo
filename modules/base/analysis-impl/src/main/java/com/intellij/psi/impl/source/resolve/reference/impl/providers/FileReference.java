@@ -527,7 +527,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
   }
 
   @Nonnull
-  protected static FileReferenceHelper[] getHelpers() {
+  protected static List<FileReferenceHelper> getHelpers() {
     return FileReferenceHelperRegistrar.getHelpers();
   }
 

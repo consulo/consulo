@@ -34,8 +34,7 @@ public class RefUtil {
   private RefUtil() {}
 
   public static boolean isImplicitUsage(PsiElement element) {
-    final ImplicitUsageProvider[] implicitUsageProviders = Extensions.getExtensions(ImplicitUsageProvider.EP_NAME);
-    for (ImplicitUsageProvider provider : implicitUsageProviders) {
+    for (ImplicitUsageProvider provider : ImplicitUsageProvider.EP_NAME.getExtensionList()) {
       if (provider.isImplicitUsage(element)) return true;
     }
     return false;

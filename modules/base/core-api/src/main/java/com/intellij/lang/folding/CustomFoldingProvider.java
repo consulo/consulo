@@ -15,9 +15,7 @@
  */
 package com.intellij.lang.folding;
 
-import com.intellij.codeInsight.folding.CodeFoldingSettings;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 
 /**
  * Base class and extension point for custom folding providers.
@@ -26,10 +24,6 @@ import com.intellij.openapi.extensions.Extensions;
  */
 public abstract class CustomFoldingProvider {
   public static final ExtensionPointName<CustomFoldingProvider> EP_NAME = ExtensionPointName.create("com.intellij.customFoldingProvider");
-
-  public static CustomFoldingProvider[] getAllProviders() {
-    return Extensions.getExtensions(EP_NAME);
-  }
 
   public abstract boolean isCustomRegionStart(String elementText);
   public abstract boolean isCustomRegionEnd(String elementText);

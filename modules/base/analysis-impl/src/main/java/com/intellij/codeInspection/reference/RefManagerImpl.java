@@ -35,7 +35,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtilCore;
@@ -50,9 +49,9 @@ import com.intellij.psi.impl.light.LightElement;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -90,7 +89,7 @@ public class RefManagerImpl extends RefManager {
     myPsiManager = PsiManager.getInstance(project);
     myRefProject = new RefProjectImpl(this);
     myProjectIterator = new ProjectIterator();
-    for (InspectionExtensionsFactory factory : Extensions.getExtensions(InspectionExtensionsFactory.EP_NAME)) {
+    for (InspectionExtensionsFactory factory : InspectionExtensionsFactory.EP_NAME.getExtensionList()) {
       final RefManagerExtension extension = factory.createRefManagerExtension(this);
       if (extension != null) {
         myExtensions.put(extension.getID(), extension);

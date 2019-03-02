@@ -363,7 +363,7 @@ public class CompileDriver {
   private CompileScope addAdditionalRoots(CompileScope originalScope, final Condition<Compiler>  filter) {
     CompileScope scope = attachIntermediateOutputDirectories(originalScope, filter);
 
-    final AdditionalCompileScopeProvider[] scopeProviders = Extensions.getExtensions(AdditionalCompileScopeProvider.EXTENSION_POINT_NAME);
+    final List<AdditionalCompileScopeProvider>scopeProviders = AdditionalCompileScopeProvider.EXTENSION_POINT_NAME.getExtensionList();
     CompileScope baseScope = scope;
     for (AdditionalCompileScopeProvider scopeProvider : scopeProviders) {
       final CompileScope additionalScope = scopeProvider.getAdditionalScope(baseScope, filter, myProject);

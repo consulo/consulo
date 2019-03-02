@@ -17,7 +17,6 @@
 package com.intellij.psi.impl.meta;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
@@ -33,10 +32,10 @@ import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.containers.ContainerUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
-
 import java.util.List;
 
 /**
@@ -104,7 +103,7 @@ public class MetaRegistry extends MetaDataRegistrar {
     if (!ourContributorsLoaded) {
       synchronized (ourBindings) {
         if (!ourContributorsLoaded) {
-          for (MetaDataContributor contributor : Extensions.getExtensions(MetaDataContributor.EP_NAME)) {
+          for (MetaDataContributor contributor : MetaDataContributor.EP_NAME.getExtensionList()) {
             contributor.contributeMetaData(MetaDataRegistrar.getInstance());
           }
           ourContributorsLoaded = true;

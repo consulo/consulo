@@ -16,7 +16,6 @@
 package com.intellij.packaging.elements;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.ui.ArtifactEditorContext;
@@ -64,7 +63,7 @@ public abstract class PackagingElementType<E extends PackagingElement<?>> {
   public abstract E createEmpty(@Nonnull Project project);
 
   protected static <T extends PackagingElementType<?>> T getInstance(final Class<T> aClass) {
-    for (PackagingElementType type : Extensions.getExtensions(EP_NAME)) {
+    for (PackagingElementType type : EP_NAME.getExtensionList()) {
       if (aClass.isInstance(type)) {
         return aClass.cast(type);
       }

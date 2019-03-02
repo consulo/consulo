@@ -16,10 +16,9 @@
 
 package com.intellij.execution.configurations;
 
-import com.intellij.openapi.extensions.Extensions;
 import javax.annotation.Nonnull;
-
-import java.util.Arrays;
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author yole
@@ -30,24 +29,23 @@ public class ConfigurationTypeUtil {
 
   @Nonnull
   public static <T extends ConfigurationType> T findConfigurationType(@Nonnull Class<T> configurationTypeClass) {
-    ConfigurationType[] types = Extensions.getExtensions(ConfigurationType.CONFIGURATION_TYPE_EP);
-    for (ConfigurationType type : types) {
+    List<ConfigurationType> extensionList = ConfigurationType.CONFIGURATION_TYPE_EP.getExtensionList();
+    for (ConfigurationType type : extensionList) {
       if (configurationTypeClass.isInstance(type)) {
         //noinspection unchecked
         return (T)type;
       }
     }
-    throw new AssertionError(Arrays.toString(types) + " loader: " + configurationTypeClass.getClassLoader() +
-                             ", " + configurationTypeClass);
+    throw new AssertionError(extensionList + " loader: " + configurationTypeClass.getClassLoader() + ", " + configurationTypeClass);
   }
 
   public static boolean equals(@Nonnull ConfigurationType type1, @Nonnull ConfigurationType type2) {
     return type1.getId().equals(type2.getId());
   }
 
+  @Nullable
   public static ConfigurationType findConfigurationType(String configurationId) {
-    ConfigurationType[] types = Extensions.getExtensions(ConfigurationType.CONFIGURATION_TYPE_EP);
-    for (ConfigurationType type : types) {
+    for (ConfigurationType type : ConfigurationType.CONFIGURATION_TYPE_EP.getExtensionList()) {
       if (type.getId().equals(configurationId)) {
         return type;
       }

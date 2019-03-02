@@ -23,13 +23,13 @@ package com.intellij.codeInsight.completion;
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.actions.CodeInsightAction;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
-import javax.annotation.Nonnull;
-
 import consulo.ui.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class NextPrevParameterAction extends CodeInsightAction {
   private final boolean myNext;
@@ -53,9 +53,9 @@ public abstract class NextPrevParameterAction extends CodeInsightAction {
     return findSuitableTraversalPolicy(editor, file) != null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private static TemplateParameterTraversalPolicy findSuitableTraversalPolicy(Editor editor, PsiFile file) {
-    for (TemplateParameterTraversalPolicy policy : Extensions.getExtensions(TemplateParameterTraversalPolicy.EP_NAME)) {
+    for (TemplateParameterTraversalPolicy policy : TemplateParameterTraversalPolicy.EP_NAME.getExtensionList()) {
       if (policy.isValidForFile(editor, file)) {
         return policy;
       }

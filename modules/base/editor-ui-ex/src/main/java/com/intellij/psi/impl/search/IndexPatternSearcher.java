@@ -18,10 +18,8 @@ package com.intellij.psi.impl.search;
 
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageParserDefinitions;
-import consulo.lang.LanguageVersion;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
@@ -41,9 +39,10 @@ import com.intellij.util.Processor;
 import com.intellij.util.QueryExecutor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharSequenceSubSequence;
+import consulo.lang.LanguageVersion;
 import gnu.trove.TIntArrayList;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -133,7 +132,7 @@ public class IndexPatternSearcher implements QueryExecutor<IndexPatternOccurrenc
         Lexer lexer = syntaxHighlighter.getHighlightingLexer();
         TokenSet commentTokens = null;
         IndexPatternBuilder builderForFile = null;
-        for (IndexPatternBuilder builder : Extensions.getExtensions(IndexPatternBuilder.EP_NAME)) {
+        for (IndexPatternBuilder builder : IndexPatternBuilder.EP_NAME.getExtensionList()) {
           Lexer lexerFromBuilder = builder.getIndexingLexer(file);
           if (lexerFromBuilder != null) {
             lexer = lexerFromBuilder;

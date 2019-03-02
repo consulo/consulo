@@ -34,7 +34,6 @@ import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.externalSystem.ExternalSystemManager;
 import com.intellij.openapi.externalSystem.importing.ImportSpec;
 import com.intellij.openapi.externalSystem.importing.ImportSpecBuilder;
@@ -98,8 +97,8 @@ import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.RequiredUIAccess;
 import consulo.wm.impl.ToolWindowBase;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -164,8 +163,7 @@ public class ExternalSystemUtil {
     if (window != null) {
       return;
     }
-    ToolWindowEP[] beans = Extensions.getExtensions(ToolWindowEP.EP_NAME);
-    for (final ToolWindowEP bean : beans) {
+    for (final ToolWindowEP bean : ToolWindowEP.EP_NAME.getExtensionList()) {
       if (id.equals(bean.id)) {
         managerEx.initToolWindow(bean);
       }
@@ -207,7 +205,7 @@ public class ExternalSystemUtil {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static ToolWindow ensureToolWindowContentInitialized(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
     final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
     if (toolWindowManager == null) return null;
@@ -368,7 +366,7 @@ public class ExternalSystemUtil {
             init();
           }
 
-          @javax.annotation.Nullable
+          @Nullable
           @Override
           protected JComponent createCenterPanel() {
             return new JBScrollPane(content);
@@ -398,7 +396,7 @@ public class ExternalSystemUtil {
   }
 
   @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
-  @javax.annotation.Nullable
+  @Nullable
   private static String extractDetails(@Nonnull Throwable e) {
     final Throwable unwrapped = RemoteUtil.unwrap(e);
     if (unwrapped instanceof ExternalSystemException) {
@@ -575,7 +573,7 @@ public class ExternalSystemUtil {
                              @Nonnull final String executorId,
                              @Nonnull final Project project,
                              @Nonnull final ProjectSystemId externalSystemId,
-                             @javax.annotation.Nullable final TaskCallback callback,
+                             @Nullable final TaskCallback callback,
                              @Nonnull final ProgressExecutionMode progressExecutionMode) {
     final Pair<ProgramRunner, ExecutionEnvironment> pair = createRunner(taskSettings, executorId, project, externalSystemId);
     if (pair == null) return;
@@ -684,7 +682,7 @@ public class ExternalSystemUtil {
     });
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static Pair<ProgramRunner, ExecutionEnvironment> createRunner(@Nonnull ExternalSystemTaskExecutionSettings taskSettings,
                                                                        @Nonnull String executorId,
                                                                        @Nonnull Project project,
@@ -714,9 +712,9 @@ public class ExternalSystemUtil {
     return Pair.create(runner, new ExecutionEnvironment(executor, runner, settings, project));
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static AbstractExternalSystemTaskConfigurationType findConfigurationType(@Nonnull ProjectSystemId externalSystemId) {
-    for (ConfigurationType type : Extensions.getExtensions(ConfigurationType.CONFIGURATION_TYPE_EP)) {
+    for (ConfigurationType type : ConfigurationType.CONFIGURATION_TYPE_EP.getExtensionList()) {
       if (type instanceof AbstractExternalSystemTaskConfigurationType) {
         AbstractExternalSystemTaskConfigurationType candidate = (AbstractExternalSystemTaskConfigurationType)type;
         if (externalSystemId.equals(candidate.getExternalSystemId())) {
@@ -751,7 +749,7 @@ public class ExternalSystemUtil {
     settings.setRecentTasks(recentTasksList.getModel().getTasks());
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static String getRunnerId(@Nonnull String executorId) {
     return RUNNER_IDS.get(executorId);
   }
@@ -829,13 +827,13 @@ public class ExternalSystemUtil {
   public static void linkExternalProject(@Nonnull final ProjectSystemId externalSystemId,
                                          @Nonnull final ExternalProjectSettings projectSettings,
                                          @Nonnull final Project project,
-                                         @javax.annotation.Nullable final Consumer<Boolean> executionResultCallback,
+                                         @Nullable final Consumer<Boolean> executionResultCallback,
                                          boolean isPreviewMode,
                                          @Nonnull final ProgressExecutionMode progressExecutionMode) {
     ExternalProjectRefreshCallback callback = new ExternalProjectRefreshCallback() {
       @SuppressWarnings("unchecked")
       @Override
-      public void onSuccess(@javax.annotation.Nullable final DataNode<ProjectData> externalProject) {
+      public void onSuccess(@Nullable final DataNode<ProjectData> externalProject) {
         if (externalProject == null) {
           if (executionResultCallback != null) {
             executionResultCallback.consume(false);
@@ -875,8 +873,8 @@ public class ExternalSystemUtil {
     refreshProject(project, externalSystemId, projectSettings.getExternalProjectPath(), callback, isPreviewMode, progressExecutionMode);
   }
 
-  @javax.annotation.Nullable
-  public static VirtualFile waitForTheFile(@javax.annotation.Nullable final String path) {
+  @Nullable
+  public static VirtualFile waitForTheFile(@Nullable final String path) {
     if (path == null) return null;
 
     final VirtualFile[] file = new VirtualFile[1];
@@ -921,7 +919,7 @@ public class ExternalSystemUtil {
     }
 
     @Override
-    public void onSuccess(@javax.annotation.Nullable final DataNode<ProjectData> externalProject) {
+    public void onSuccess(@Nullable final DataNode<ProjectData> externalProject) {
       if (externalProject == null) {
         return;
       }
@@ -949,7 +947,7 @@ public class ExternalSystemUtil {
     }
 
     @Override
-    public void onFailure(@Nonnull String errorMessage, @javax.annotation.Nullable String errorDetails) {
+    public void onFailure(@Nonnull String errorMessage, @Nullable String errorDetails) {
       myCounter[0] = Integer.MAX_VALUE; // Don't process orphan modules if there was an error on refresh.
     }
 

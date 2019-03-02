@@ -17,15 +17,17 @@
 package com.intellij.lang.documentation;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
 
-import java.util.*;
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class CompositeDocumentationProvider extends DocumentationProviderEx implements ExternalDocumentationProvider, ExternalDocumentationHandler {
 
@@ -52,7 +54,7 @@ public class CompositeDocumentationProvider extends DocumentationProviderEx impl
 
   @Nonnull
   public List<DocumentationProvider> getAllProviders() {
-    return ContainerUtil.concat(getProviders(), Arrays.asList(Extensions.getExtensions(EP_NAME)));
+    return ContainerUtil.concat(getProviders(), EP_NAME.getExtensionList());
   }
 
   @Nonnull

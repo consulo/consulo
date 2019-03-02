@@ -18,7 +18,6 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.util.Condition;
 import com.intellij.psi.PsiElement;
@@ -27,9 +26,9 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.containers.Stack;
 import gnu.trove.TIntStack;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,7 +70,7 @@ public class CollectHighlightsUtil {
   private static List<PsiElement> getElementsToHighlight(@Nonnull PsiElement commonParent, final int startOffset, final int endOffset) {
     final List<PsiElement> result = new ArrayList<PsiElement>();
     final int currentOffset = commonParent.getTextRange().getStartOffset();
-    final Condition<PsiElement>[] filters = Extensions.getExtensions(EP_NAME);
+    final List<Condition<PsiElement>> filters = EP_NAME.getExtensionList();
 
     int offset = currentOffset;
 

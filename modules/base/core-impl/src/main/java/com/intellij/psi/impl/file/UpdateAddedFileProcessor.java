@@ -17,9 +17,9 @@
 package com.intellij.psi.impl.file;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
+
 import javax.annotation.Nullable;
 
 /**
@@ -36,7 +36,7 @@ public abstract class UpdateAddedFileProcessor {
 
   @Nullable
   public static UpdateAddedFileProcessor forElement(PsiFile element) {
-    for(UpdateAddedFileProcessor processor: Extensions.getExtensions(EP_NAME)) {
+    for(UpdateAddedFileProcessor processor: EP_NAME.getExtensionList()) {
       if (processor.canProcessElement(element)) {
         return processor;
       }

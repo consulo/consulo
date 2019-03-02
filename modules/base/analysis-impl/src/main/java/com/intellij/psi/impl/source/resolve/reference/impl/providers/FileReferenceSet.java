@@ -352,7 +352,7 @@ public class FileReferenceSet {
   protected Collection<PsiFileSystemItem> getContextByFileSystemItem(@Nonnull PsiFileSystemItem file) {
     VirtualFile virtualFile = file.getVirtualFile();
     if (virtualFile != null) {
-      final FileReferenceHelper[] helpers = FileReferenceHelperRegistrar.getHelpers();
+      final List<FileReferenceHelper> helpers = FileReferenceHelperRegistrar.getHelpers();
       final ArrayList<PsiFileSystemItem> list = new ArrayList<>();
       final Project project = file.getProject();
       for (FileReferenceHelper helper : helpers) {

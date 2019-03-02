@@ -20,14 +20,13 @@
 package com.intellij.lang;
 
 import com.intellij.lang.annotation.ExternalAnnotator;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.Condition;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
 
 import java.util.List;
 
-public class ExternalLanguageAnnotators extends LanguageExtension<ExternalAnnotator>{
+public class ExternalLanguageAnnotators extends LanguageExtension<ExternalAnnotator> {
 
   private static final ExternalLanguageAnnotators INSTANCE = new ExternalLanguageAnnotators();
 
@@ -37,7 +36,7 @@ public class ExternalLanguageAnnotators extends LanguageExtension<ExternalAnnota
 
   public static List<ExternalAnnotator> allForFile(Language language, final PsiFile file) {
     List<ExternalAnnotator> annotators = INSTANCE.allForLanguage(language);
-    final ExternalAnnotatorsFilter[] filters = Extensions.getExtensions(ExternalAnnotatorsFilter.EXTENSION_POINT_NAME);
+    final List<ExternalAnnotatorsFilter> filters = ExternalAnnotatorsFilter.EXTENSION_POINT_NAME.getExtensionList();
     return ContainerUtil.findAll(annotators, new Condition<ExternalAnnotator>() {
       @Override
       public boolean value(ExternalAnnotator annotator) {

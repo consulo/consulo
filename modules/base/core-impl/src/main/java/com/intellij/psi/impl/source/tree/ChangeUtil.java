@@ -18,7 +18,6 @@ package com.intellij.psi.impl.source.tree;
 
 import com.intellij.lang.ASTFactory;
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.pom.PomManager;
 import com.intellij.pom.PomModel;
 import com.intellij.pom.event.PomModelEvent;
@@ -36,9 +35,9 @@ import com.intellij.psi.impl.source.codeStyle.CodeEditUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.CharTable;
 import com.intellij.util.containers.HashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Map;
 
 public class ChangeUtil {
@@ -58,7 +57,7 @@ public class ChangeUtil {
   }
 
   private static void encodeInformation(TreeElement element, ASTNode original, Map<Object, Object> state) {
-    for (TreeCopyHandler handler : Extensions.getExtensions(TreeCopyHandler.EP_NAME)) {
+    for (TreeCopyHandler handler : TreeCopyHandler.EP_NAME.getExtensionList()) {
       handler.encodeInformation(element, original, state);
     }
 
@@ -90,7 +89,7 @@ public class ChangeUtil {
       child = child.getTreeNext();
     }
 
-    for (TreeCopyHandler handler : Extensions.getExtensions(TreeCopyHandler.EP_NAME)) {
+    for (TreeCopyHandler handler : TreeCopyHandler.EP_NAME.getExtensionList()) {
       final TreeElement handled = handler.decodeInformation(element, state);
       if (handled != null) return handled;
     }
@@ -151,7 +150,7 @@ public class ChangeUtil {
       return copyElement((TreeElement)SourceTreeToPsiMap.psiElementToTree(original), table);
     }
     else {
-      for (TreeGenerator generator : Extensions.getExtensions(TreeGenerator.EP_NAME)) {
+      for (TreeGenerator generator : TreeGenerator.EP_NAME.getExtensionList()) {
         final TreeElement element = generator.generateTreeFor(original, table, manager);
         if (element != null) return element;
       }

@@ -16,12 +16,10 @@
 package com.intellij.navigation;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.extensions.Extensions;
 
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Collections;
 
 /**
  * Registry of components which contribute items to "Goto Class" and "Goto Symbol" lists.
@@ -83,7 +81,7 @@ public class ChooseByNameRegistry {
   public ChooseByNameContributor[] getClassModelContributors() {
     if (!myGotoClassExtensionsLoaded) {
       myGotoClassExtensionsLoaded = true;
-      Collections.addAll(myGotoClassContributors, Extensions.getExtensions(ChooseByNameContributor.CLASS_EP_NAME));
+      myGotoClassContributors.addAll(ChooseByNameContributor.CLASS_EP_NAME.getExtensionList());
     }
     return myGotoClassContributors.toArray(new ChooseByNameContributor[myGotoClassContributors.size()]);
   }
@@ -96,7 +94,7 @@ public class ChooseByNameRegistry {
   public ChooseByNameContributor[] getSymbolModelContributors() {
     if (!myGotoSymbolExtensionsLoaded) {
       myGotoSymbolExtensionsLoaded = true;
-      Collections.addAll(myGotoSymbolContributors, Extensions.getExtensions(ChooseByNameContributor.SYMBOL_EP_NAME));
+      myGotoSymbolContributors.addAll(ChooseByNameContributor.SYMBOL_EP_NAME.getExtensionList());
     }
     return myGotoSymbolContributors.toArray(new ChooseByNameContributor[myGotoSymbolContributors.size()]);
   }

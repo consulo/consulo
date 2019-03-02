@@ -24,7 +24,6 @@ import com.intellij.codeInspection.reference.*;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.progress.util.ProgressWrapper;
 import com.intellij.openapi.project.DumbService;
@@ -47,9 +46,9 @@ import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 public class GlobalInspectionContextBase extends UserDataHolderBase implements GlobalInspectionContext {
@@ -87,7 +86,7 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
   public GlobalInspectionContextBase(@Nonnull Project project) {
     myProject = project;
 
-    for (InspectionExtensionsFactory factory : Extensions.getExtensions(InspectionExtensionsFactory.EP_NAME)) {
+    for (InspectionExtensionsFactory factory : InspectionExtensionsFactory.EP_NAME.getExtensionList()) {
       final GlobalInspectionContextExtension extension = factory.createGlobalInspectionContextExtension();
       myExtensions.put(extension.getID(), extension);
     }

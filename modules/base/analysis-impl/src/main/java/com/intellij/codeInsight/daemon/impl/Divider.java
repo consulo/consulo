@@ -16,7 +16,6 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Key;
@@ -30,8 +29,8 @@ import com.intellij.reference.SoftReference;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.Stack;
 import gnu.trove.TIntStack;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.List;
@@ -114,7 +113,7 @@ public class Divider {
     int startOffset = restrictRange.getStartOffset();
     int endOffset = restrictRange.getEndOffset();
 
-    final Condition<PsiElement>[] filters = Extensions.getExtensions(CollectHighlightsUtil.EP_NAME);
+    final List<Condition<PsiElement>> filters = CollectHighlightsUtil.EP_NAME.getExtensionList();
 
     final TIntStack starts = new TIntStack(STARTING_TREE_HEIGHT);
     starts.push(startOffset);

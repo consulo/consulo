@@ -89,7 +89,7 @@ public class ExecutorAction extends AnAction {
   private static List<ConfigurationFromContext> calcConfigurations(DataContext dataContext) {
     final ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
     if (context.getLocation() == null) return Collections.emptyList();
-    List<RunConfigurationProducer<?>> producers = RunConfigurationProducer.getProducers(context.getProject());
+    List<RunConfigurationProducer> producers = RunConfigurationProducer.getProducers(context.getProject());
     return ContainerUtil.mapNotNull(producers, producer -> createConfiguration(producer, context));
   }
 

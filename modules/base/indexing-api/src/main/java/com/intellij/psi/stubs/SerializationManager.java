@@ -20,7 +20,6 @@
 package com.intellij.psi.stubs;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.StubFileElementType;
 
@@ -44,7 +43,7 @@ public abstract class SerializationManager {
     if (mySerializersLoaded) return;
     synchronized (this) {
       if (mySerializersLoaded) return;
-      for (StubElementTypeHolderEP holderEP : Extensions.getExtensions(StubElementTypeHolderEP.EP_NAME)) {
+      for (StubElementTypeHolderEP holderEP : StubElementTypeHolderEP.EP_NAME.getExtensionList()) {
         holderEP.initialize();
       }
       final IElementType[] stubElementTypes = IElementType.enumerate(type -> type instanceof StubSerializer);

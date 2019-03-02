@@ -21,7 +21,6 @@ import com.intellij.lang.Commenter;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageCommenters;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.NullableComputable;
@@ -32,9 +31,9 @@ import com.intellij.psi.PsiParserFacade;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -187,7 +186,7 @@ public class SuppressionUtil {
 
   public static boolean isSuppressed(@Nonnull PsiElement psiElement, String id) {
     if (id == null) return false;
-    for (InspectionExtensionsFactory factory : Extensions.getExtensions(InspectionExtensionsFactory.EP_NAME)) {
+    for (InspectionExtensionsFactory factory : InspectionExtensionsFactory.EP_NAME.getExtensionList()) {
       if (!factory.isToCheckMember(psiElement, id)) {
         return true;
       }

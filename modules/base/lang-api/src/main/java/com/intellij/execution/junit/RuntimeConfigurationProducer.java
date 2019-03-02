@@ -21,7 +21,6 @@ import com.intellij.execution.actions.ConfigurationContext;
 import com.intellij.execution.configurations.*;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
@@ -29,9 +28,9 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.psi.PsiElement;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -152,14 +151,7 @@ public abstract class RuntimeConfigurationProducer implements Comparable, Clonea
   }
 
   public static <T extends RuntimeConfigurationProducer> T getInstance(final Class<T> aClass) {
-    final RuntimeConfigurationProducer[] configurationProducers = Extensions.getExtensions(RUNTIME_CONFIGURATION_PRODUCER);
-    for (RuntimeConfigurationProducer configurationProducer : configurationProducers) {
-      if (configurationProducer.getClass() == aClass) {
-        //noinspection unchecked
-        return (T) configurationProducer;
-      }
-    }
-    return null;
+    return RUNTIME_CONFIGURATION_PRODUCER.findExtension(aClass);
   }
 
   private static class ProducerComparator implements Comparator<RuntimeConfigurationProducer> {

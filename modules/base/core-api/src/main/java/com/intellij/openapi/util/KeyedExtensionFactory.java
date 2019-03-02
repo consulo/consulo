@@ -16,7 +16,6 @@
 package com.intellij.openapi.util;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.extensions.KeyedFactoryEPBean;
 import consulo.injecting.InjectingContainerOwner;
 
@@ -25,6 +24,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.List;
 
 /**
  * @author yole
@@ -42,7 +42,7 @@ public abstract class KeyedExtensionFactory<T, KeyT> {
 
   @Nonnull
   public T get() {
-    final KeyedFactoryEPBean[] epBeans = Extensions.getExtensions(myEpName);
+    final List<KeyedFactoryEPBean> epBeans = myEpName.getExtensionList();
     InvocationHandler handler = new InvocationHandler() {
       @Override
       public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -62,7 +62,7 @@ public abstract class KeyedExtensionFactory<T, KeyT> {
 
   @SuppressWarnings("unchecked")
   public T getByKey(@Nonnull KeyT key) {
-    final KeyedFactoryEPBean[] epBeans = Extensions.getExtensions(myEpName);
+    final List<KeyedFactoryEPBean> epBeans = myEpName.getExtensionList();
     for (KeyedFactoryEPBean epBean : epBeans) {
       if (Comparing.strEqual(getKey(key), epBean.key)) {
         try {
@@ -79,7 +79,7 @@ public abstract class KeyedExtensionFactory<T, KeyT> {
   }
 
   @SuppressWarnings("unchecked")
-  private T getByKey(final KeyedFactoryEPBean[] epBeans, final String key, final Method method, final Object[] args) {
+  private T getByKey(final List<KeyedFactoryEPBean> epBeans, final String key, final Method method, final Object[] args) {
     Object result = null;
     for (KeyedFactoryEPBean epBean : epBeans) {
       if (Comparing.strEqual(epBean.key, key, true)) {

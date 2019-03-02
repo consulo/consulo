@@ -15,19 +15,20 @@
  */
 package com.intellij.execution.actions;
 
-import com.intellij.execution.*;
+import com.intellij.execution.Location;
+import com.intellij.execution.PsiLocation;
+import com.intellij.execution.RunManager;
+import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.execution.configurations.ConfigurationType;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
-import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -42,10 +43,9 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
   private static final Logger LOG = Logger.getInstance(RunConfigurationProducer.class.getName());
 
   @Nonnull
-  public static List<RunConfigurationProducer<?>> getProducers(@Nonnull Project project) {
-    RunConfigurationProducer[] producers = Extensions.getExtensions(EP_NAME);
+  public static List<RunConfigurationProducer> getProducers(@Nonnull Project project) {
     // no filter. IDEA have filter for it.
-    return ContainerUtil.newArrayList(producers);
+    return EP_NAME.getExtensionList();
   }
 
   private final ConfigurationFactory myConfigurationFactory;
@@ -213,7 +213,7 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
 
   @Nonnull
   public static <T extends RunConfigurationProducer> T getInstance(Class<? extends T> aClass) {
-    for (RunConfigurationProducer producer : Extensions.getExtensions(EP_NAME)) {
+    for (RunConfigurationProducer producer : EP_NAME.getExtensionList()) {
       if (aClass.isInstance(producer)) {
         return (T)producer;
       }

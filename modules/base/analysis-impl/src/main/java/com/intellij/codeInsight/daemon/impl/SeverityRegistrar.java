@@ -19,7 +19,6 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizable;
@@ -37,13 +36,13 @@ import gnu.trove.TObjectIntHashMap;
 import gnu.trove.TObjectIntProcedure;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * User: anna
@@ -365,7 +364,7 @@ public class SeverityRegistrar implements JDOMExternalizable, Comparator<Highlig
   }
 
   public static boolean isGotoBySeverityEnabled(@Nonnull HighlightSeverity minSeverity) {
-    for (SeveritiesProvider provider : Extensions.getExtensions(SeveritiesProvider.EP_NAME)) {
+    for (SeveritiesProvider provider : SeveritiesProvider.EP_NAME.getExtensionList()) {
       if (provider.isGotoBySeverityEnabled(minSeverity)) return true;
     }
     return minSeverity != HighlightSeverity.INFORMATION;

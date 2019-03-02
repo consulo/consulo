@@ -15,18 +15,13 @@
  */
 package com.intellij.psi.impl.cache.impl;
 
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.psi.search.IndexPattern;
 import com.intellij.psi.search.IndexPatternProvider;
 
 public class IndexPatternUtil {
-  public static IndexPatternProvider[] getIndexPatternProviders() {
-    return Extensions.getExtensions(IndexPatternProvider.EP_NAME);
-  }
-
   public static int getIndexPatternCount() {
     int patternsCount = 0;
-    for(IndexPatternProvider provider: getIndexPatternProviders()) {
+    for(IndexPatternProvider provider: IndexPatternProvider.EP_NAME.getExtensionList()) {
       patternsCount += provider.getIndexPatterns().length;
     }
     return patternsCount;
@@ -35,7 +30,7 @@ public class IndexPatternUtil {
   public static IndexPattern[] getIndexPatterns() {
     IndexPattern[] result = new IndexPattern[getIndexPatternCount()];
     int destIndex = 0;
-    for(IndexPatternProvider provider: getIndexPatternProviders()) {
+    for(IndexPatternProvider provider: IndexPatternProvider.EP_NAME.getExtensionList()) {
       for(IndexPattern pattern: provider.getIndexPatterns()) {
         result [destIndex++] = pattern;
       }

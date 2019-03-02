@@ -452,7 +452,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
 
   private boolean forceHighlightParents() {
     boolean forceHighlightParents = false;
-    for(HighlightRangeExtension extension: Extensions.getExtensions(HighlightRangeExtension.EP_NAME)) {
+    for(HighlightRangeExtension extension: HighlightRangeExtension.EP_NAME.getExtensionList()) {
       if (extension.isForceHighlightParents(getFile())) {
         forceHighlightParents = true;
         break;
@@ -462,7 +462,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
   }
 
   protected HighlightInfoHolder createInfoHolder(@Nonnull PsiFile file) {
-    final HighlightInfoFilter[] filters = HighlightInfoFilter.EXTENSION_POINT_NAME.getExtensions();
+    final List<HighlightInfoFilter> filters = HighlightInfoFilter.EXTENSION_POINT_NAME.getExtensionList();
     return new CustomHighlightInfoHolder(file, getColorsScheme(), filters);
   }
 
@@ -475,7 +475,6 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
                              @Nonnull Collection<HighlightInfo> insideResult,
                              @Nonnull Collection<HighlightInfo> outsideResult) {
     PsiTodoSearchHelper helper = PsiTodoSearchHelper.getInstance(file.getProject());
-    if (helper == null) return;
     TodoItem[] todoItems = helper.findTodoItems(file, startOffset, endOffset);
     if (todoItems.length == 0) return;
 

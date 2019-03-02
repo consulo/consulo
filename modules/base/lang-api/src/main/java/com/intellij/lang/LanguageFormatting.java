@@ -21,8 +21,8 @@ package com.intellij.lang;
 
 import com.intellij.formatting.CustomFormattingModelBuilder;
 import com.intellij.formatting.FormattingModelBuilder;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.psi.PsiElement;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -40,7 +40,7 @@ public class LanguageFormatting extends LanguageExtension<FormattingModelBuilder
 
   @Nullable
   public FormattingModelBuilder forContext(@Nonnull Language language, @Nonnull PsiElement context) {
-    for (LanguageFormattingRestriction each : Extensions.getExtensions(LanguageFormattingRestriction.EXTENSION)) {
+    for (LanguageFormattingRestriction each : LanguageFormattingRestriction.EXTENSION.getExtensionList()) {
       if (!each.isFormatterAllowed(context)) return null;
     }
     for (FormattingModelBuilder builder : allForLanguage(language)) {

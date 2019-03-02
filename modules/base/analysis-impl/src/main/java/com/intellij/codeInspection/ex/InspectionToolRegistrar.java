@@ -17,19 +17,15 @@
 package com.intellij.codeInspection.ex;
 
 import com.intellij.codeInspection.*;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.Factory;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
-import javax.inject.Singleton;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -48,31 +44,19 @@ public class InspectionToolRegistrar {
 
   public void ensureInitialized() {
     if (!myInspectionComponentsLoaded.getAndSet(true)) {
-      registerTools(InspectionToolProvider.EXTENSION_POINT_NAME.getExtensions());
-      for (final LocalInspectionEP ep : Extensions.getExtensions(LocalInspectionEP.LOCAL_INSPECTION)) {
-        myInspectionToolFactories.add(new Factory<InspectionToolWrapper>() {
-          @Override
-          public InspectionToolWrapper create() {
-            return new LocalInspectionToolWrapper(ep);
-          }
-        });
+      registerTools(InspectionToolProvider.EXTENSION_POINT_NAME.getExtensionList());
+
+      for (final LocalInspectionEP ep : LocalInspectionEP.LOCAL_INSPECTION.getExtensionList()) {
+        myInspectionToolFactories.add(() -> new LocalInspectionToolWrapper(ep));
       }
-      for (final InspectionEP ep : Extensions.getExtensions(InspectionEP.GLOBAL_INSPECTION)) {
-        myInspectionToolFactories.add(new Factory<InspectionToolWrapper>() {
-          @Override
-          public InspectionToolWrapper create() {
-            return new GlobalInspectionToolWrapper(ep);
-          }
-        });
+
+      for (final InspectionEP ep : InspectionEP.GLOBAL_INSPECTION.getExtensionList()) {
+        myInspectionToolFactories.add(() -> new GlobalInspectionToolWrapper(ep));
       }
-      for (InspectionToolsFactory factory : Extensions.getExtensions(InspectionToolsFactory.EXTENSION_POINT_NAME)) {
+
+      for (InspectionToolsFactory factory : InspectionToolsFactory.EXTENSION_POINT_NAME.getExtensionList()) {
         for (final InspectionProfileEntry profileEntry : factory.createTools()) {
-          myInspectionToolFactories.add(new Factory<InspectionToolWrapper>() {
-            @Override
-            public InspectionToolWrapper create() {
-              return wrapTool(profileEntry);
-            }
-          });
+          myInspectionToolFactories.add(() -> wrapTool(profileEntry));
         }
       }
     }
@@ -89,7 +73,7 @@ public class InspectionToolRegistrar {
     throw new RuntimeException("unknown inspection class: " + profileEntry + "; "+profileEntry.getClass());
   }
 
-  public void registerTools(@Nonnull InspectionToolProvider[] providers) {
+  public void registerTools(@Nonnull List<InspectionToolProvider> providers) {
     for (InspectionToolProvider provider : providers) {
       Class[] classes = provider.getInspectionClasses();
       for (Class aClass : classes) {
@@ -126,22 +110,12 @@ public class InspectionToolRegistrar {
 
   @Nonnull
   private Factory<InspectionToolWrapper> registerLocalInspection(final Class toolClass, boolean store) {
-    return registerInspectionToolFactory(new Factory<InspectionToolWrapper>() {
-      @Override
-      public InspectionToolWrapper create() {
-        return new LocalInspectionToolWrapper((LocalInspectionTool)InspectionToolsRegistrarCore.instantiateTool(toolClass));
-      }
-    }, store);
+    return registerInspectionToolFactory(() -> new LocalInspectionToolWrapper((LocalInspectionTool)InspectionToolsRegistrarCore.instantiateTool(toolClass)), store);
   }
 
   @Nonnull
   private Factory<InspectionToolWrapper> registerGlobalInspection(@Nonnull final Class aClass, boolean store) {
-    return registerInspectionToolFactory(new Factory<InspectionToolWrapper>() {
-      @Override
-      public InspectionToolWrapper create() {
-        return new GlobalInspectionToolWrapper((GlobalInspectionTool) InspectionToolsRegistrarCore.instantiateTool(aClass));
-      }
-    }, store);
+    return registerInspectionToolFactory(() -> new GlobalInspectionToolWrapper((GlobalInspectionTool) InspectionToolsRegistrarCore.instantiateTool(aClass)), store);
   }
 
   @Nonnull

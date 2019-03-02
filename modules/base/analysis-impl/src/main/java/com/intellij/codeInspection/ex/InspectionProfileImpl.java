@@ -26,7 +26,6 @@ import com.intellij.codeInspection.ModifiableModel;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.options.ExternalInfo;
 import com.intellij.openapi.options.ExternalizableScheme;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -53,10 +52,10 @@ import com.intellij.util.xmlb.annotations.Transient;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.*;
 
@@ -123,7 +122,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
   private static synchronized Map<String, InspectionElementsMerger> getMergers() {
     if (ourMergers == null) {
       ourMergers = new LinkedHashMap<String, InspectionElementsMerger>();
-      for (InspectionElementsMerger merger : Extensions.getExtensions(InspectionElementsMerger.EP_NAME)) {
+      for (InspectionElementsMerger merger : InspectionElementsMerger.EP_NAME.getExtensionList()) {
         ourMergers.put(merger.getMergedToolName(), merger);
       }
     }

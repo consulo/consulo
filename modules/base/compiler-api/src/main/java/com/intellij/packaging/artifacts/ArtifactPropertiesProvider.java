@@ -43,13 +43,9 @@ public abstract class ArtifactPropertiesProvider {
   @Nonnull
   public abstract ArtifactProperties<?> createProperties(@Nonnull ArtifactType artifactType);
 
-  public static ArtifactPropertiesProvider[] getProviders() {
-    return Extensions.getExtensions(EP_NAME);
-  }
-
   @Nullable
   public static ArtifactPropertiesProvider findById(@Nonnull @NonNls String id) {
-    for (ArtifactPropertiesProvider provider : getProviders()) {
+    for (ArtifactPropertiesProvider provider : EP_NAME.getExtensionList()) {
       if (provider.getId().equals(id)) {
         return provider;
       }

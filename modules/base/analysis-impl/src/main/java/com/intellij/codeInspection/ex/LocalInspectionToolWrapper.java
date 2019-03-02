@@ -16,16 +16,18 @@
 
 package com.intellij.codeInspection.ex;
 
-import com.intellij.codeInspection.*;
-import com.intellij.openapi.extensions.Extensions;
+import com.intellij.codeInspection.GlobalInspectionContext;
+import com.intellij.codeInspection.InspectionProfile;
+import com.intellij.codeInspection.LocalInspectionEP;
+import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.psi.PsiElement;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -81,15 +83,15 @@ public class LocalInspectionToolWrapper extends InspectionToolWrapper<LocalInspe
     @Nonnull
     @Override
     protected Map<String, LocalInspectionEP> compute() {
-      HashMap<String, LocalInspectionEP> map = new HashMap<String, LocalInspectionEP>();
-      for (LocalInspectionEP ep : Extensions.getExtensions(LocalInspectionEP.LOCAL_INSPECTION)) {
+      HashMap<String, LocalInspectionEP> map = new HashMap<>();
+      for (LocalInspectionEP ep : LocalInspectionEP.LOCAL_INSPECTION.getExtensionList()) {
         map.put(ep.getShortName(), ep);
       }
       return map;
     }
   };
 
-  public static InspectionToolWrapper findTool2RunInBatch(@Nonnull Project project, @javax.annotation.Nullable PsiElement element, @Nonnull String name) {
+  public static InspectionToolWrapper findTool2RunInBatch(@Nonnull Project project, @Nullable PsiElement element, @Nonnull String name) {
     final InspectionProfile inspectionProfile = InspectionProjectProfileManager.getInstance(project).getInspectionProfile();
     final InspectionToolWrapper toolWrapper = element == null
                                               ? inspectionProfile.getInspectionTool(name, project)

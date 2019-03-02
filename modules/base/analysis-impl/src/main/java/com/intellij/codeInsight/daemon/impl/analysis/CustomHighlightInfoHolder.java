@@ -20,7 +20,10 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.TextAttributesScheme;
 import com.intellij.psi.PsiFile;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author Alexey
@@ -29,13 +32,13 @@ public class CustomHighlightInfoHolder extends HighlightInfoHolder {
   private final EditorColorsScheme myCustomColorsScheme;
 
   public CustomHighlightInfoHolder(@Nonnull final PsiFile contextFile,
-                                   @Nonnull final HighlightInfoFilter... filters) {
+                                   @Nonnull final List<HighlightInfoFilter> filters) {
     this(contextFile, null, filters);
   }
 
   public CustomHighlightInfoHolder(@Nonnull final PsiFile contextFile,
-                                   @javax.annotation.Nullable final EditorColorsScheme customColorsScheme,
-                                   @Nonnull final HighlightInfoFilter... filters) {
+                                   @Nullable final EditorColorsScheme customColorsScheme,
+                                   @Nonnull final List<HighlightInfoFilter> filters) {
     super(contextFile, filters);
     myCustomColorsScheme = customColorsScheme;
   }

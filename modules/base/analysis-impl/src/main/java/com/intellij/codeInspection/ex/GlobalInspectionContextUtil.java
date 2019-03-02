@@ -21,12 +21,12 @@ import com.intellij.codeInspection.lang.InspectionExtensionsFactory;
 import com.intellij.codeInspection.reference.RefElement;
 import com.intellij.codeInspection.reference.RefElementImpl;
 import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.profile.ProfileManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
+
 import javax.annotation.Nonnull;
 
 public class GlobalInspectionContextUtil {
@@ -63,7 +63,7 @@ public class GlobalInspectionContextUtil {
 
 
   public static boolean canRunInspections(@Nonnull Project project, final boolean online) {
-    for (InspectionExtensionsFactory factory : Extensions.getExtensions(InspectionExtensionsFactory.EP_NAME)) {
+    for (InspectionExtensionsFactory factory : InspectionExtensionsFactory.EP_NAME.getExtensionList()) {
       if (!factory.isProjectConfiguredToRunInspections(project, online)) {
         return false;
       }

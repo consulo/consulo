@@ -21,13 +21,11 @@ import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.configurations.ConfigurationType;
 import com.intellij.execution.impl.ConfigurationFromContextWrapper;
 import com.intellij.execution.junit.RuntimeConfigurationProducer;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionException;
-import com.intellij.openapi.extensions.Extensions;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -38,7 +36,7 @@ class PreferredProducerFind {
 
   private PreferredProducerFind() {}
 
-  @javax.annotation.Nullable
+  @Nullable
   public static RunnerAndConfigurationSettings createConfiguration(@Nonnull Location location, final ConfigurationContext context) {
     final ConfigurationFromContext fromContext = findConfigurationFromContext(location, context);
     return fromContext != null ? fromContext.getConfigurationSettings() : null;
@@ -46,6 +44,7 @@ class PreferredProducerFind {
 
   @Nullable
   @Deprecated
+  @SuppressWarnings("deprecation")
   public static List<RuntimeConfigurationProducer> findPreferredProducers(final Location location, final ConfigurationContext context, final boolean strict) {
     if (location == null) {
       return null;
@@ -67,12 +66,13 @@ class PreferredProducerFind {
     return producers;
   }
 
+  @Deprecated
+  @SuppressWarnings("deprecation")
   private static List<RuntimeConfigurationProducer> findAllProducers(Location location, ConfigurationContext context) {
     //todo load configuration types if not already loaded
-    Extensions.getExtensions(ConfigurationType.CONFIGURATION_TYPE_EP);
-    final RuntimeConfigurationProducer[] configurationProducers =
-            ApplicationManager.getApplication().getExtensions(RuntimeConfigurationProducer.RUNTIME_CONFIGURATION_PRODUCER);
-    final ArrayList<RuntimeConfigurationProducer> producers = new ArrayList<RuntimeConfigurationProducer>();
+    ConfigurationType.CONFIGURATION_TYPE_EP.getExtensionList();
+    final List<RuntimeConfigurationProducer> configurationProducers = RuntimeConfigurationProducer.RUNTIME_CONFIGURATION_PRODUCER.getExtensionList();
+    final ArrayList<RuntimeConfigurationProducer> producers = new ArrayList<>();
     for (final RuntimeConfigurationProducer prototype : configurationProducers) {
       final RuntimeConfigurationProducer producer;
       try {
@@ -97,12 +97,12 @@ class PreferredProducerFind {
       return null;
     }
 
-    final ArrayList<ConfigurationFromContext> configurationsFromContext = new ArrayList<ConfigurationFromContext>();
+    final ArrayList<ConfigurationFromContext> configurationsFromContext = new ArrayList<>();
     for (RuntimeConfigurationProducer producer : findAllProducers(location, context)) {
       configurationsFromContext.add(new ConfigurationFromContextWrapper(producer));
     }
 
-    for (RunConfigurationProducer producer : Extensions.getExtensions(RunConfigurationProducer.EP_NAME)) {
+    for (RunConfigurationProducer producer : RunConfigurationProducer.EP_NAME.getExtensionList()) {
       ConfigurationFromContext fromContext = producer.findOrCreateConfigurationFromContext(context);
       if (fromContext != null) {
         configurationsFromContext.add(fromContext);
@@ -126,7 +126,7 @@ class PreferredProducerFind {
   }
 
 
-  @javax.annotation.Nullable
+  @Nullable
   private static ConfigurationFromContext findConfigurationFromContext(final Location location, final ConfigurationContext context) {
     final List<ConfigurationFromContext> producers = getConfigurationsFromContext(location, context, true);
     if (producers != null){

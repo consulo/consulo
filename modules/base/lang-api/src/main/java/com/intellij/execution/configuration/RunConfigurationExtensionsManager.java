@@ -22,7 +22,6 @@ import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.execution.configurations.RunnerSettings;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.options.SettingsEditorGroup;
 import com.intellij.openapi.util.InvalidDataException;
@@ -33,8 +32,8 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -171,7 +170,7 @@ public class RunConfigurationExtensionsManager<U extends RunConfigurationBase, T
   @Nonnull
   protected List<T> getApplicableExtensions(@Nonnull U configuration) {
     List<T> extensions = new SmartList<>();
-    for (T extension : Extensions.getExtensions(myExtensionPointName)) {
+    for (T extension : myExtensionPointName.getExtensionList()) {
       if (extension.isApplicableFor(configuration)) {
         extensions.add(extension);
       }
@@ -182,7 +181,7 @@ public class RunConfigurationExtensionsManager<U extends RunConfigurationBase, T
   @Nonnull
   protected List<T> getEnabledExtensions(@Nonnull U configuration, @javax.annotation.Nullable RunnerSettings runnerSettings) {
     List<T> extensions = new SmartList<>();
-    for (T extension : Extensions.getExtensions(myExtensionPointName)) {
+    for (T extension : myExtensionPointName.getExtensionList()) {
       if (extension.isApplicableFor(configuration) && extension.isEnabledFor(configuration, runnerSettings)) {
         extensions.add(extension);
       }

@@ -25,13 +25,14 @@ import com.intellij.psi.util.PsiTreeUtil;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;
+import java.util.Collections;
 
 public class CheckLevelHighlightInfoHolder extends HighlightInfoHolder {
   private final HighlightInfoHolder myHolder;
   private PsiElement myLevel;
 
   public CheckLevelHighlightInfoHolder(PsiFile file, HighlightInfoHolder holder) {
-    super(file);
+    super(file, Collections.emptyList());
     myHolder = holder;
   }
 

@@ -161,7 +161,7 @@ class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
       }
       final HighlightInfo info = builder.create();
       if (info != null) {
-        for(ErrorQuickFixProvider provider: Extensions.getExtensions(ErrorQuickFixProvider.EP_NAME)) {
+        for(ErrorQuickFixProvider provider: ErrorQuickFixProvider.EP_NAME.getExtensionList()) {
           provider.registerErrorQuickFix(element, info);
         }
       }

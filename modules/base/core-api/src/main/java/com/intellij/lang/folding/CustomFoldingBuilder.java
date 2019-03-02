@@ -51,7 +51,7 @@ public abstract class CustomFoldingBuilder extends FoldingBuilderEx implements P
     List<FoldingDescriptor> descriptors = new ArrayList<FoldingDescriptor>();
     ourCustomRegionElements.set(new HashSet<ASTNode>());
     try {
-      if (CustomFoldingProvider.getAllProviders().length > 0) {
+      if (CustomFoldingProvider.EP_NAME.hasAnyExtensions()) {
         myDefaultProvider = null;
         ASTNode rootNode = root.getNode();
         if (rootNode != null) {
@@ -199,7 +199,7 @@ public abstract class CustomFoldingBuilder extends FoldingBuilderEx implements P
   @Nullable
   private CustomFoldingProvider getDefaultProvider(String elementText) {
     if (myDefaultProvider == null) {
-      for (CustomFoldingProvider provider : CustomFoldingProvider.getAllProviders()) {
+      for (CustomFoldingProvider provider : CustomFoldingProvider.EP_NAME.getExtensionList()) {
         if (provider.isCustomRegionStart(elementText) || provider.isCustomRegionEnd(elementText)) {
           myDefaultProvider = provider;
         }

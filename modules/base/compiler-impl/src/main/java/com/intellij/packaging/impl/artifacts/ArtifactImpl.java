@@ -23,10 +23,10 @@ import com.intellij.packaging.artifacts.*;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.impl.elements.ArchivePackagingElement;
 import com.intellij.util.EventDispatcher;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -63,7 +63,7 @@ public class ArtifactImpl extends UserDataHolderBase implements ModifiableArtifa
 
   private void resetProperties() {
     myProperties.clear();
-    for (ArtifactPropertiesProvider provider : ArtifactPropertiesProvider.getProviders()) {
+    for (ArtifactPropertiesProvider provider : ArtifactPropertiesProvider.EP_NAME.getExtensionList()) {
       if (provider.isAvailableFor(myArtifactType)) {
         myProperties.put(provider, provider.createProperties(myArtifactType));
       }

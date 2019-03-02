@@ -15,14 +15,12 @@
  */
 package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -33,8 +31,8 @@ public class FileReferenceHelperRegistrar {
   private FileReferenceHelperRegistrar() {
   }
 
-  public static FileReferenceHelper[] getHelpers() {
-    return Extensions.getExtensions(FileReferenceHelper.EP_NAME);
+  public static List<FileReferenceHelper> getHelpers() {
+    return FileReferenceHelper.EP_NAME.getExtensionList();
   }
 
   /**
@@ -47,8 +45,8 @@ public class FileReferenceHelperRegistrar {
     if (helper != null) {
       return helper;
     }
-    FileReferenceHelper[] helpers = getHelpers();
-    return helpers[helpers.length-1];
+    List<FileReferenceHelper> helpers = getHelpers();
+    return ContainerUtil.getLastItem(helpers);
   }
 
   /**
@@ -59,24 +57,14 @@ public class FileReferenceHelperRegistrar {
     final VirtualFile file = psiFileSystemItem.getVirtualFile();
     if (file == null) return null;
     final Project project = psiFileSystemItem.getProject();
-    return ContainerUtil.find(getHelpers(), new Condition<FileReferenceHelper>() {
-      @Override
-      public boolean value(final FileReferenceHelper fileReferenceHelper) {
-        return fileReferenceHelper.isMine(project, file);
-      }
-    });
+    return ContainerUtil.find(getHelpers(), fileReferenceHelper -> fileReferenceHelper.isMine(project, file));
   }
 
   public static <T extends PsiFileSystemItem> List<FileReferenceHelper> getHelpers(@Nonnull final T psiFileSystemItem) {
     final VirtualFile file = psiFileSystemItem.getVirtualFile();
     if (file == null) return null;
     final Project project = psiFileSystemItem.getProject();
-    return ContainerUtil.findAll(getHelpers(), new Condition<FileReferenceHelper>() {
-      @Override
-      public boolean value(final FileReferenceHelper fileReferenceHelper) {
-        return fileReferenceHelper.isMine(project, file);
-      }
-    });
+    return ContainerUtil.findAll(getHelpers(), fileReferenceHelper -> fileReferenceHelper.isMine(project, file));
   }
 
   public static boolean areElementsEquivalent(@Nonnull final PsiFileSystemItem element1, @Nonnull final PsiFileSystemItem element2) {

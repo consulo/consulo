@@ -17,7 +17,6 @@
 package com.intellij.codeInsight.highlighting;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 
@@ -32,7 +31,7 @@ public abstract class ReadWriteAccessDetector {
   @Nullable
   public static ReadWriteAccessDetector findDetector(final PsiElement element) {
     ReadWriteAccessDetector detector = null;
-    for(ReadWriteAccessDetector accessDetector: Extensions.getExtensions(EP_NAME)) {
+    for(ReadWriteAccessDetector accessDetector: EP_NAME.getExtensionList()) {
       if (accessDetector.isReadWriteAccessible(element)) {
         detector = accessDetector;
         break;

@@ -28,8 +28,7 @@ public class TodoIndexPatternProvider implements IndexPatternProvider {
   private final TodoConfiguration myConfiguration;
 
   public static TodoIndexPatternProvider getInstance() {
-    final IndexPatternProvider[] providers = Extensions.getExtensions(EP_NAME);
-    for (IndexPatternProvider provider : providers) {
+    for (IndexPatternProvider provider : EP_NAME.getExtensionList()) {
       if (provider instanceof TodoIndexPatternProvider) {
         return (TodoIndexPatternProvider) provider;
       }

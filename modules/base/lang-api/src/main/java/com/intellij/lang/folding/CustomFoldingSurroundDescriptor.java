@@ -51,7 +51,7 @@ public class CustomFoldingSurroundDescriptor implements SurroundDescriptor {
 
   static {
     List<CustomFoldingRegionSurrounder> surrounderList = new ArrayList<CustomFoldingRegionSurrounder>();
-    for (CustomFoldingProvider provider : CustomFoldingProvider.getAllProviders()) {
+    for (CustomFoldingProvider provider : CustomFoldingProvider.EP_NAME.getExtensionList()) {
       surrounderList.add(new CustomFoldingRegionSurrounder(provider));
     }
     SURROUNDERS = surrounderList.toArray(new CustomFoldingRegionSurrounder[surrounderList.size()]);
