@@ -57,8 +57,7 @@ public abstract class XDebuggerActionBase extends AnAction implements AnAction.T
   protected boolean isEnabled(final AnActionEvent e) {
     Project project = e.getData(CommonDataKeys.PROJECT);
     if (project != null) {
-      DebuggerSupport[] debuggerSupports = DebuggerSupport.getDebuggerSupports();
-      for (DebuggerSupport support : debuggerSupports) {
+      for (DebuggerSupport support : DebuggerSupport.getDebuggerSupports()) {
         if (isEnabled(project, e, support)) {
           return true;
         }
