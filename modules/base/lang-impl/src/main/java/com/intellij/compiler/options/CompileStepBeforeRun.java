@@ -33,10 +33,12 @@ import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.concurrency.Semaphore;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 
@@ -110,9 +112,11 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
     return task;
   }
 
+  @Nonnull
+  @RequiredUIAccess
   @Override
-  public boolean configureTask(RunConfiguration runConfiguration, MakeBeforeRunTask task) {
-    return false;
+  public AsyncResult<Void> configureTask(RunConfiguration runConfiguration, MakeBeforeRunTask task) {
+    return AsyncResult.rejected();
   }
 
   @Override

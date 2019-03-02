@@ -24,7 +24,9 @@ import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -33,8 +35,7 @@ import javax.inject.Inject;
 /**
  * User: Vassiliy.Kudryashov
  */
-public class CompileStepBeforeRunNoErrorCheck
-  extends BeforeRunTaskProvider<CompileStepBeforeRunNoErrorCheck.MakeBeforeRunTaskNoErrorCheck> {
+public class CompileStepBeforeRunNoErrorCheck extends BeforeRunTaskProvider<CompileStepBeforeRunNoErrorCheck.MakeBeforeRunTaskNoErrorCheck> {
   public static final Key<MakeBeforeRunTaskNoErrorCheck> ID = Key.create("MakeNoErrorCheck");
   @Nonnull
   private final Project myProject;
@@ -65,14 +66,14 @@ public class CompileStepBeforeRunNoErrorCheck
 
   @Override
   public MakeBeforeRunTaskNoErrorCheck createTask(RunConfiguration runConfiguration) {
-    return /*!(runConfiguration instanceof RemoteConfiguration) && */runConfiguration instanceof RunProfileWithCompileBeforeLaunchOption
-           ? new MakeBeforeRunTaskNoErrorCheck()
-           : null;
+    return runConfiguration instanceof RunProfileWithCompileBeforeLaunchOption ? new MakeBeforeRunTaskNoErrorCheck() : null;
   }
 
+  @Nonnull
+  @RequiredUIAccess
   @Override
-  public boolean configureTask(RunConfiguration runConfiguration, MakeBeforeRunTaskNoErrorCheck task) {
-    return false;
+  public AsyncResult<Void> configureTask(RunConfiguration runConfiguration, MakeBeforeRunTaskNoErrorCheck task) {
+    return AsyncResult.rejected();
   }
 
   @Override
@@ -91,10 +92,7 @@ public class CompileStepBeforeRunNoErrorCheck
   }
 
   @Override
-  public boolean executeTask(DataContext context,
-                             RunConfiguration configuration,
-                             ExecutionEnvironment env,
-                             MakeBeforeRunTaskNoErrorCheck task) {
+  public boolean executeTask(DataContext context, RunConfiguration configuration, ExecutionEnvironment env, MakeBeforeRunTaskNoErrorCheck task) {
     return CompileStepBeforeRun.doMake(myProject, configuration, env, true);
   }
 

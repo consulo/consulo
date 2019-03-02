@@ -26,15 +26,17 @@ import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
-  public static final ExtensionPointName<BeforeRunTaskProvider<BeforeRunTask>> EXTENSION_POINT_NAME = new ExtensionPointName<BeforeRunTaskProvider<BeforeRunTask>>("com.intellij.stepsBeforeRunProvider");
+  public static final ExtensionPointName<BeforeRunTaskProvider<BeforeRunTask>> EP_NAME = ExtensionPointName.create("com.intellij.stepsBeforeRunProvider");
 
   public static final String RUNNER_ID = "RunnerId";
 
@@ -60,13 +62,15 @@ public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
   /**
    * @return 'before run' task for the configuration or null, if the task from this provider is not applicable to the specified configuration 
    */
-  @javax.annotation.Nullable
+  @Nullable
   public abstract T createTask(final RunConfiguration runConfiguration);
 
   /**
    * @return <code>true</code> if task configuration is changed
    */
-  public abstract boolean configureTask(final RunConfiguration runConfiguration, T task);
+  @Nonnull
+  @RequiredUIAccess
+  public abstract AsyncResult<Void> configureTask(final RunConfiguration runConfiguration, T task);
 
   public abstract boolean canExecuteTask(RunConfiguration configuration, T task);
 
@@ -81,9 +85,9 @@ public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
   }
 
   @Nullable
+  @SuppressWarnings("unchecked")
   public static <T extends BeforeRunTask> BeforeRunTaskProvider<T> getProvider(Project project, Key<T> key) {
-    BeforeRunTaskProvider<BeforeRunTask>[] providers = Extensions.getExtensions(BeforeRunTaskProvider.EXTENSION_POINT_NAME, project);
-    for (BeforeRunTaskProvider<BeforeRunTask> provider : providers) {
+    for (BeforeRunTaskProvider<BeforeRunTask> provider : BeforeRunTaskProvider.EP_NAME.getExtensionList(project)) {
       if (provider.getId() == key)
         return (BeforeRunTaskProvider<T>)provider;
     }

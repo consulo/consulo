@@ -1167,7 +1167,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   @Nonnull
   private List<BeforeRunTask> getHardcodedBeforeRunTasks(@Nonnull RunConfiguration settings) {
     List<BeforeRunTask> _tasks = new SmartList<>();
-    for (BeforeRunTaskProvider<? extends BeforeRunTask> provider : Extensions.getExtensions(BeforeRunTaskProvider.EXTENSION_POINT_NAME, myProject)) {
+    for (BeforeRunTaskProvider<? extends BeforeRunTask> provider : BeforeRunTaskProvider.EP_NAME.getExtensionList(myProject)) {
       BeforeRunTask task = provider.createTask(settings);
       if (task != null && task.isEnabled()) {
         Key<? extends BeforeRunTask> providerID = provider.getId();
@@ -1316,7 +1316,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   private void initProviderMaps() {
     myBeforeStepsMap = new LinkedHashMap<>();
     myProviderKeysMap = new LinkedHashMap<>();
-    for (BeforeRunTaskProvider<? extends BeforeRunTask> provider : Extensions.getExtensions(BeforeRunTaskProvider.EXTENSION_POINT_NAME, myProject)) {
+    for (BeforeRunTaskProvider<? extends BeforeRunTask> provider : Extensions.getExtensions(BeforeRunTaskProvider.EP_NAME, myProject)) {
       final Key<? extends BeforeRunTask> id = provider.getId();
       myBeforeStepsMap.put(id, provider);
       myProviderKeysMap.put(id.toString(), id);

@@ -22,13 +22,10 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogBuilder;
-import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
-import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.artifacts.ArtifactAdapter;
-import com.intellij.packaging.artifacts.ArtifactManager;
-import com.intellij.packaging.artifacts.ArtifactPointer;
-import consulo.packaging.artifacts.ArtifactPointerUtil;
+import com.intellij.packaging.artifacts.*;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import gnu.trove.THashSet;
 
@@ -48,7 +45,7 @@ public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractA
   public AbstractArtifactsBeforeRunTaskProvider(Project project, Key<T> id) {
     myProject = project;
     myId = id;
-    project.getMessageBus().connect().subscribe(ArtifactManager.TOPIC, new ArtifactAdapter() {
+    project.getMessageBus().connect().subscribe(ArtifactManager.TOPIC, new ArtifactListener() {
       @Override
       public void artifactRemoved(@Nonnull Artifact artifact) {
         final RunManagerEx runManager = RunManagerEx.getInstanceEx(myProject);
@@ -95,15 +92,17 @@ public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractA
     return true;
   }
 
+  @RequiredUIAccess
+  @Nonnull
   @Override
-  public boolean configureTask(RunConfiguration runConfiguration, T task) {
+  public AsyncResult<Void> configureTask(RunConfiguration runConfiguration, T task) {
     final Artifact[] artifacts = ArtifactManager.getInstance(myProject).getArtifacts();
-    Set<ArtifactPointer> pointers = new THashSet<ArtifactPointer>();
+    Set<ArtifactPointer> pointers = new THashSet<>();
     for (Artifact artifact : artifacts) {
-      pointers.add(ArtifactPointerUtil.getPointerManager(myProject).create(artifact));
+      pointers.add(ArtifactPointerManager.getInstance(myProject).create(artifact));
     }
     pointers.addAll(task.getArtifactPointers());
-    ArtifactChooser chooser = new ArtifactChooser(new ArrayList<ArtifactPointer>(pointers));
+    ArtifactChooser chooser = new ArtifactChooser(new ArrayList<>(pointers));
     chooser.markElements(task.getArtifactPointers());
     chooser.setPreferredSize(new Dimension(400, 300));
 
@@ -114,11 +113,10 @@ public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractA
     builder.addCancelAction();
     builder.setCenterPanel(chooser);
     builder.setPreferredFocusComponent(chooser);
-    if (builder.show() == DialogWrapper.OK_EXIT_CODE) {
-      task.setArtifactPointers(chooser.getMarkedElements());
-      return true;
-    }
-    return false;
+
+    AsyncResult<Void> result = builder.showAsync();
+    result.doWhenDone(() -> task.setArtifactPointers(chooser.getMarkedElements()));
+    return result;
   }
 
   @Override

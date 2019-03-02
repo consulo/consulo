@@ -21,8 +21,12 @@ import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author traff
@@ -35,23 +39,35 @@ public abstract class AbstractToolBeforeRunTaskProvider<T extends AbstractToolBe
     return AllIcons.General.ExternalToolsSmall;
   }
 
+  @Nonnull
+  @RequiredUIAccess
   @Override
-  public boolean configureTask(RunConfiguration runConfiguration, T task) {
+  public AsyncResult<Void> configureTask(RunConfiguration runConfiguration, T task) {
     final ToolSelectDialog dialog = new ToolSelectDialog(runConfiguration.getProject(), task.getToolActionId(), createToolsPanel());
-    dialog.show();
-    if (!dialog.isOK()) {
-      return false;
-    }
-    boolean isModified = dialog.isModified();
-    Tool selectedTool = dialog.getSelectedTool();
-    LOG.assertTrue(selectedTool != null);
-    String selectedToolId = selectedTool.getActionId();
-    String oldToolId = task.getToolActionId();
-    if (oldToolId != null && oldToolId.equals(selectedToolId)) {
-      return isModified;
-    }
-    task.setToolActionId(selectedToolId);
-    return true;
+
+    AsyncResult<Void> result = AsyncResult.undefined();
+
+    AsyncResult<Void> subResult = dialog.showAsync();
+    subResult.doWhenDone(() -> {
+      boolean isModified = dialog.isModified();
+      Tool selectedTool = dialog.getSelectedTool();
+      LOG.assertTrue(selectedTool != null);
+      String selectedToolId = selectedTool.getActionId();
+      String oldToolId = task.getToolActionId();
+      if (oldToolId != null && oldToolId.equals(selectedToolId)) {
+        if(isModified) {
+          subResult.setDone();
+        }
+        else {
+          subResult.setRejected();
+        }
+        return;
+      }
+      task.setToolActionId(selectedToolId);
+      subResult.setDone();
+    });
+    subResult.doWhenRejected((Runnable)result::setRejected);
+    return result;
   }
 
   protected abstract BaseToolsPanel createToolsPanel();
@@ -73,8 +89,7 @@ public abstract class AbstractToolBeforeRunTaskProvider<T extends AbstractToolBe
       return ToolsBundle.message("tools.unknown.external.tool");
     }
     String groupName = tool.getGroup();
-    return ToolsBundle
-      .message("tools.before.run.description", StringUtil.isEmpty(groupName) ? tool.getName() : groupName + "/" + tool.getName());
+    return ToolsBundle.message("tools.before.run.description", StringUtil.isEmpty(groupName) ? tool.getName() : groupName + "/" + tool.getName());
   }
 
   @Override

@@ -32,13 +32,14 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.concurrency.Semaphore;
-import consulo.awt.TargetAWT;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.jdom.Attribute;
 import org.jdom.Element;
@@ -50,8 +51,8 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author Vassiliy Kudryashov
@@ -121,19 +122,17 @@ public class RunConfigurationBeforeRunProvider
     return new RunConfigurableBeforeRunTask();
   }
 
+  @Nonnull
+  @RequiredUIAccess
   @Override
-  public boolean configureTask(RunConfiguration runConfiguration, RunConfigurableBeforeRunTask task) {
-    SelectionDialog dialog =
-      new SelectionDialog(task.getSettings(), getAvailableConfigurations(runConfiguration));
-    dialog.show();
-    RunnerAndConfigurationSettings settings = dialog.getSelectedSettings();
-    if (settings != null) {
+  public AsyncResult<Void> configureTask(RunConfiguration runConfiguration, RunConfigurableBeforeRunTask task) {
+    SelectionDialog dialog = new SelectionDialog(task.getSettings(), getAvailableConfigurations(runConfiguration));
+    AsyncResult<Void> result = dialog.showAsync();
+    result.doWhenDone(() -> {
+      RunnerAndConfigurationSettings settings = dialog.getSelectedSettings();
       task.setSettings(settings);
-      return true;
-    }
-    else {
-      return false;
-    }
+    });
+    return result;
   }
 
   @Nonnull
@@ -380,9 +379,8 @@ public class RunConfigurationBeforeRunProvider
       return new JBScrollPane(myJBList);
     }
 
-    @Nullable
-    RunnerAndConfigurationSettings getSelectedSettings() {
-      return isOK() ? mySelectedSettings : null;
+    public RunnerAndConfigurationSettings getSelectedSettings() {
+      return mySelectedSettings;
     }
   }
 }

@@ -17,16 +17,17 @@ package com.intellij.openapi.ui;
 
 import com.intellij.CommonBundle;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.RequiredUIAccess;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -37,8 +38,6 @@ import java.util.ArrayList;
  * There is no need to create a subclass (which is needed in the DialogWrapper), which can be nice for simple dialogs.
  */
 public class DialogBuilder implements Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.ui.DialogBuilder");
-
   @NonNls public static final String REQUEST_FOCUS_ENABLED = "requestFocusEnabled";
 
   private JComponent myCenterPanel;
@@ -57,6 +56,12 @@ public class DialogBuilder implements Disposable {
 
   public boolean showAndGet() {
     return showImpl(true).isOK();
+  }
+
+  @Nonnull
+  @RequiredUIAccess
+  public AsyncResult<Void> showAsync() {
+    return showAsync(true);
   }
 
   public void showNotModal() {
@@ -79,6 +84,13 @@ public class DialogBuilder implements Disposable {
 
   @Override
   public void dispose() {
+  }
+
+  private AsyncResult<Void> showAsync(boolean isModal) {
+    myDialogWrapper.setTitle(myTitle);
+    myDialogWrapper.init();
+    myDialogWrapper.setModal(isModal);
+    return myDialogWrapper.showAsync();
   }
 
   private MyDialogWrapper showImpl(boolean isModal) {

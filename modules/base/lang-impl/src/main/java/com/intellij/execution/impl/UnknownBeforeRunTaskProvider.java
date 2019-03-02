@@ -22,11 +22,14 @@ import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Key;
+import consulo.ui.RequiredUIAccess;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -55,9 +58,11 @@ public class UnknownBeforeRunTaskProvider extends BeforeRunTaskProvider<UnknownB
     return ExecutionBundle.message("before.launch.run.unknown.task") + " " + myId.toString();
   }
 
+  @Nonnull
+  @RequiredUIAccess
   @Override
-  public boolean configureTask(RunConfiguration runConfiguration, UnknownTask task) {
-    return false;
+  public AsyncResult<Void> configureTask(RunConfiguration runConfiguration, UnknownTask task) {
+    return AsyncResult.rejected();
   }
 
   @Override

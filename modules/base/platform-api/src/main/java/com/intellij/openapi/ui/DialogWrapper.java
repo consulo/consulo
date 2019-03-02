@@ -1634,9 +1634,9 @@ public abstract class DialogWrapper {
   @Nonnull
   @RequiredUIAccess
   public AsyncResult<Void> showAsync() {
-    UIAccess uiAccess = UIAccess.get();
+    UIAccess uiAccess = UIAccess.current();
 
-    AsyncResult<Void> result = new AsyncResult<>();
+    AsyncResult<Void> result = AsyncResult.undefined();
     showInternal().doWhenProcessed(() -> {
       if (isOK()) {
         result.setDone();
