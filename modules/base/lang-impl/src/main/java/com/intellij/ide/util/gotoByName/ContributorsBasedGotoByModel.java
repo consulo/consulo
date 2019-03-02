@@ -38,11 +38,11 @@ import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FindSymbolParameters;
 import com.intellij.util.indexing.IdFilter;
+import consulo.annotations.RequiredReadAction;
 import gnu.trove.THashSet;
 import gnu.trove.TIntHashSet;
-import javax.annotation.Nonnull;
-import consulo.annotations.RequiredReadAction;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -55,12 +55,12 @@ import java.util.concurrent.ConcurrentMap;
  * Contributor-based goto model
  */
 public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelEx {
-  public static final Logger LOG = Logger.getInstance("#com.intellij.ide.util.gotoByName.ContributorsBasedGotoByModel");
+  public static final Logger LOG = Logger.getInstance(ContributorsBasedGotoByModel.class);
 
   protected final Project myProject;
-  private final ChooseByNameContributor[] myContributors;
+  private final List<ChooseByNameContributor> myContributors;
 
-  protected ContributorsBasedGotoByModel(@Nonnull Project project, @Nonnull ChooseByNameContributor[] contributors) {
+  protected ContributorsBasedGotoByModel(@Nonnull Project project, @Nonnull List<ChooseByNameContributor> contributors) {
     myProject = project;
     myContributors = contributors;
     assert !Arrays.asList(contributors).contains(null);
@@ -175,9 +175,9 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
     return ArrayUtil.toStringArray(allNames);
   }
 
-  private List<ChooseByNameContributor> filterDumb(ChooseByNameContributor[] contributors) {
-    if (!DumbService.getInstance(myProject).isDumb()) return Arrays.asList(contributors);
-    List<ChooseByNameContributor> answer = new ArrayList<ChooseByNameContributor>(contributors.length);
+  private List<ChooseByNameContributor> filterDumb(List<ChooseByNameContributor> contributors) {
+    if (!DumbService.getInstance(myProject).isDumb()) return contributors;
+    List<ChooseByNameContributor> answer = new ArrayList<>(contributors.size());
     for (ChooseByNameContributor contributor : contributors) {
       if (DumbService.isDumbAware(contributor)) {
         answer.add(contributor);
@@ -289,7 +289,7 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
     return null;
   }
 
-  protected ChooseByNameContributor[] getContributors() {
+  protected List<ChooseByNameContributor> getContributors() {
     return myContributors;
   }
 

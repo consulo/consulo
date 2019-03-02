@@ -19,7 +19,6 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.lang.Language;
 import com.intellij.navigation.ChooseByNameContributor;
-import com.intellij.navigation.ChooseByNameRegistry;
 import com.intellij.navigation.GotoClassContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
@@ -27,18 +26,19 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FileBasedIndex;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class GotoClassModel2 extends FilteringGotoByModel<Language> {
   private String[] mySeparators;
 
   public GotoClassModel2(@Nonnull Project project) {
-    super(project, ChooseByNameRegistry.getInstance().getClassModelContributors());
+    super(project, ChooseByNameContributor.CLASS_EP_NAME.getExtensionList());
   }
 
   @Override
@@ -125,7 +125,7 @@ public class GotoClassModel2 extends FilteringGotoByModel<Language> {
     return mySeparators;
   }
 
-  public static String[] getSeparatorsFromContributors(ChooseByNameContributor[] contributors) {
+  public static String[] getSeparatorsFromContributors(List<ChooseByNameContributor> contributors) {
     final Set<String> separators = new HashSet<>();
     separators.add(".");
     for(ChooseByNameContributor c: contributors) {

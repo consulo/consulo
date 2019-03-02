@@ -20,13 +20,14 @@ import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.ide.util.EditSourceUtil;
 import com.intellij.ide.util.gotoByName.*;
 import com.intellij.lang.Language;
-import com.intellij.navigation.ChooseByNameRegistry;
+import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
+
 import javax.annotation.Nonnull;
 
 public class GotoSymbolAction extends GotoActionBase {
@@ -52,7 +53,7 @@ public class GotoSymbolAction extends GotoActionBase {
 
   @Override
   protected boolean hasContributors(DataContext dataContext) {
-    return ChooseByNameRegistry.getInstance().getSymbolModelContributors().length > 0;
+    return ChooseByNameContributor.SYMBOL_EP_NAME.hasAnyExtensions();
   }
 
 }

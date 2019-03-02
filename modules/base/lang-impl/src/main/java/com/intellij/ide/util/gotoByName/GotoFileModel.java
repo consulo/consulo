@@ -22,7 +22,6 @@ import com.intellij.ide.util.PsiElementListCellRenderer;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
@@ -31,9 +30,9 @@ import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.util.indexing.FileBasedIndex;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 
 /**
@@ -43,7 +42,7 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> {
   private final int myMaxSize;
 
   public GotoFileModel(@Nonnull Project project) {
-    super(project, Extensions.getExtensions(ChooseByNameContributor.FILE_EP_NAME));
+    super(project, ChooseByNameContributor.FILE_EP_NAME.getExtensionList());
     myMaxSize = ApplicationManager.getApplication().isUnitTestMode() ? Integer.MAX_VALUE : WindowManagerEx.getInstance().getFrame(project).getSize().width;
   }
 

@@ -18,16 +18,15 @@ package com.intellij.ide.util.gotoByName;
 import com.intellij.ide.IdeBundle;
 import com.intellij.lang.Language;
 import com.intellij.navigation.ChooseByNameContributor;
-import com.intellij.navigation.ChooseByNameRegistry;
 import com.intellij.navigation.GotoClassContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.presentation.java.SymbolPresentationUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -35,7 +34,7 @@ public class GotoSymbolModel2 extends FilteringGotoByModel<Language> {
   private String[] mySeparators;
 
   public GotoSymbolModel2(@Nonnull Project project) {
-    super(project, ChooseByNameRegistry.getInstance().getSymbolModelContributors());
+    super(project, ChooseByNameContributor.SYMBOL_EP_NAME.getExtensionList());
   }
 
   @Override

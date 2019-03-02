@@ -27,10 +27,7 @@ import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageStructureViewBuilder;
 import com.intellij.lang.PsiStructureViewFactory;
-import com.intellij.navigation.AnonymousElementProvider;
-import com.intellij.navigation.ChooseByNameRegistry;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.navigation.NavigationItem;
+import com.intellij.navigation.*;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileEditor;
@@ -219,6 +216,6 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
 
   @Override
   protected boolean hasContributors(DataContext dataContext) {
-    return ChooseByNameRegistry.getInstance().getClassModelContributors().length > 0;
+    return ChooseByNameContributor.CLASS_EP_NAME.hasAnyExtensions();
   }
 }

@@ -18,11 +18,12 @@ package com.intellij.ide.util.gotoByName;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -32,7 +33,7 @@ public abstract class FilteringGotoByModel<T> extends ContributorsBasedGotoByMod
   /** current file types */
   private Set<T> myFilterItems;
 
-  protected FilteringGotoByModel(@Nonnull Project project, @Nonnull ChooseByNameContributor[] contributors) {
+  protected FilteringGotoByModel(@Nonnull Project project, @Nonnull List<ChooseByNameContributor> contributors) {
     super(project, contributors);
   }
 
