@@ -21,16 +21,19 @@ import com.intellij.execution.BeforeRunTaskProvider;
 import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Key;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.image.Image;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -54,6 +57,12 @@ public class UnknownBeforeRunTaskProvider extends BeforeRunTaskProvider<UnknownB
   @Override
   public String getName() {
     return ExecutionBundle.message("before.launch.run.unknown.task");
+  }
+
+  @Nullable
+  @Override
+  public Image getIcon() {
+    return AllIcons.Actions.Help;
   }
 
   @Nonnull
