@@ -24,6 +24,8 @@ import com.intellij.execution.ui.RunContentManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.Topic;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -47,19 +49,6 @@ public abstract class ExecutionManager {
   public abstract RunContentManager getContentManager();
 
   /**
-   * Executes the before launch tasks for a run configuration.
-   *
-   * @param startRunnable    the runnable to actually start the process for the run configuration.
-   * @param environment              the execution environment describing the process to be started.
-   * @param state            the ready-to-start process
-   * @param onCancelRunnable the callback to call if one of the before launch tasks cancels the process execution.
-   */
-  public abstract void compileAndRun(@Nonnull Runnable startRunnable,
-                                     @Nonnull ExecutionEnvironment environment,
-                                     @Nullable RunProfileState state,
-                                     @Nullable Runnable onCancelRunnable);
-
-  /**
    * Returns the list of processes managed by all open run and debug tabs.
    *
    * @return the list of processes.
@@ -74,6 +63,7 @@ public abstract class ExecutionManager {
    * @param state   the ready-to-start process
    * @param environment     the execution environment describing the process to be started.
    */
+  @RequiredUIAccess
   public abstract void startRunProfile(@Nonnull RunProfileStarter starter,
                                        @Nonnull RunProfileState state,
                                        @Nonnull ExecutionEnvironment environment);

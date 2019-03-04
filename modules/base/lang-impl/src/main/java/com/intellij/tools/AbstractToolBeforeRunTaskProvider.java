@@ -24,6 +24,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -55,7 +56,7 @@ public abstract class AbstractToolBeforeRunTaskProvider<T extends AbstractToolBe
       String selectedToolId = selectedTool.getActionId();
       String oldToolId = task.getToolActionId();
       if (oldToolId != null && oldToolId.equals(selectedToolId)) {
-        if(isModified) {
+        if (isModified) {
           subResult.setDone();
         }
         else {
@@ -77,6 +78,7 @@ public abstract class AbstractToolBeforeRunTaskProvider<T extends AbstractToolBe
     return task.isExecutable();
   }
 
+  @Nonnull
   @Override
   public String getDescription(T task) {
     final String actionId = task.getToolActionId();
@@ -97,11 +99,13 @@ public abstract class AbstractToolBeforeRunTaskProvider<T extends AbstractToolBe
     return true;
   }
 
+  @Nonnull
   @Override
-  public boolean executeTask(DataContext context, RunConfiguration configuration, ExecutionEnvironment env, T task) {
+  @SuppressWarnings("unchecked")
+  public AsyncResult<Void> executeTaskAsync(UIAccess uiAccess, DataContext context, RunConfiguration configuration, ExecutionEnvironment env, T task) {
     if (!task.isExecutable()) {
-      return false;
+      return AsyncResult.rejected();
     }
-    return task.execute(context, env.getExecutionId());
+    return task.execute(uiAccess, context, env.getExecutionId());
   }
 }

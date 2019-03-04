@@ -18,14 +18,18 @@ package com.intellij.tools;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.openapi.util.Key;
 
+import javax.annotation.Nonnull;
+
 public class ToolBeforeRunTaskProvider extends AbstractToolBeforeRunTaskProvider<ToolBeforeRunTask> {
   static final Key<ToolBeforeRunTask> ID = Key.create("ToolBeforeRunTask");
 
+  @Nonnull
   @Override
   public Key<ToolBeforeRunTask> getId() {
     return ID;
   }
 
+  @Nonnull
   @Override
   public String getName() {
     return ToolsBundle.message("tools.before.run.provider.name");

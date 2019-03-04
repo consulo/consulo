@@ -15,19 +15,25 @@
  */
 package consulo.sandboxPlugin.ide.compiler;
 
-import com.intellij.openapi.compiler.*;
+import com.intellij.openapi.compiler.CompileContext;
+import com.intellij.openapi.compiler.CompileScope;
+import com.intellij.openapi.compiler.CompilerMessageCategory;
+import com.intellij.openapi.compiler.TranslatingCompiler;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Chunk;
-import javax.annotation.Nonnull;
 import consulo.sandboxPlugin.lang.SandFileType;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 17.05.14
  */
 public class SandCompiler implements TranslatingCompiler {
+  private boolean myAddError = false;
+
   @Override
   public boolean isCompilableFile(VirtualFile file, CompileContext context) {
     return file.getFileType() == SandFileType.INSTANCE;
@@ -42,7 +48,11 @@ public class SandCompiler implements TranslatingCompiler {
     catch (InterruptedException e) {
       e.printStackTrace();
     }
-    context.addMessage(CompilerMessageCategory.ERROR, "my error", null, -1, -1);
+
+    if (myAddError) {
+      context.addMessage(CompilerMessageCategory.ERROR, "my error", null, -1, -1);
+    }
+    myAddError = !myAddError;
   }
 
   @Nonnull

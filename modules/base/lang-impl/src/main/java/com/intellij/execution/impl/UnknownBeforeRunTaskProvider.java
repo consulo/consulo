@@ -26,6 +26,7 @@ import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Key;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
@@ -43,16 +44,19 @@ public class UnknownBeforeRunTaskProvider extends BeforeRunTaskProvider<UnknownB
     myId = Key.create(mirrorProviderName);
   }
 
+  @Nonnull
   @Override
   public Key<UnknownTask> getId() {
     return myId;
   }
 
+  @Nonnull
   @Override
   public String getName() {
     return ExecutionBundle.message("before.launch.run.unknown.task");
   }
 
+  @Nonnull
   @Override
   public String getDescription(UnknownTask task) {
     return ExecutionBundle.message("before.launch.run.unknown.task") + " " + myId.toString();
@@ -70,14 +74,10 @@ public class UnknownBeforeRunTaskProvider extends BeforeRunTaskProvider<UnknownB
     return false;
   }
 
+  @Nonnull
   @Override
-  public boolean executeTask(DataContext context, RunConfiguration configuration, ExecutionEnvironment env, UnknownTask task) {
-    return true;
-  }
-
-  @Override
-  public boolean isConfigurable() {
-    return false;
+  public AsyncResult<Void> executeTaskAsync(UIAccess uiAccess, DataContext context, RunConfiguration configuration, ExecutionEnvironment env, UnknownTask task) {
+    return AsyncResult.resolved();
   }
 
   @Override

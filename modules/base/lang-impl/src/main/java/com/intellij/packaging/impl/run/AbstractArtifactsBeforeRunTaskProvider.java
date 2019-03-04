@@ -66,6 +66,7 @@ public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractA
     });
   }
 
+  @Nonnull
   @Override
   public Key<T> getId() {
     return myId;

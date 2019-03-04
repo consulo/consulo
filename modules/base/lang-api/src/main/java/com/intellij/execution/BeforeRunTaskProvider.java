@@ -29,7 +29,9 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
+import consulo.annotations.DeprecationInfo;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -38,26 +40,35 @@ import javax.annotation.Nullable;
 public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
   public static final ExtensionPointName<BeforeRunTaskProvider<BeforeRunTask>> EP_NAME = ExtensionPointName.create("com.intellij.stepsBeforeRunProvider");
 
-  public static final String RUNNER_ID = "RunnerId";
-
+  @Nonnull
   public abstract Key<T> getId();
 
+  @Nonnull
   public abstract String getName();
 
   @Nullable
-  public Image getIcon() {
-    return null;
+  public abstract Image getIcon();
+
+  @Nonnull
+  public String getDescription(T task) {
+    return getName();
   }
-
-  public abstract String getDescription(T task);
-
 
   @Nullable
   public Image getTaskIcon(T task) {
-    return null;
+    return getIcon();
   }
 
-  public abstract boolean isConfigurable();
+  public boolean isConfigurable() {
+    return false;
+  }
+
+  /**
+   * @return <code>true</code> if at most one task may be configured
+   */
+  public boolean isSingleton() {
+    return false;
+  }
 
   /**
    * @return 'before run' task for the configuration or null, if the task from this provider is not applicable to the specified configuration 
@@ -72,16 +83,20 @@ public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
   @RequiredUIAccess
   public abstract AsyncResult<Void> configureTask(final RunConfiguration runConfiguration, T task);
 
-  public abstract boolean canExecuteTask(RunConfiguration configuration, T task);
+  public boolean canExecuteTask(RunConfiguration configuration, T task) {
+    return true;
+  }
 
-  public abstract boolean executeTask(DataContext context, RunConfiguration configuration, ExecutionEnvironment env, T task);
+  @Deprecated
+  @DeprecationInfo("See executeTaskAsync()")
+  public boolean executeTask(DataContext context, RunConfiguration configuration, ExecutionEnvironment env, T task) {
+    throw new AbstractMethodError();
+  }
 
-  /**
-   *
-   * @return <code>true</code> if at most one task may be configured
-   */
-  public boolean isSingleton() {
-    return false;
+  @Nonnull
+  @SuppressWarnings("deprecation")
+  public AsyncResult<Void> executeTaskAsync(UIAccess uiAccess, DataContext context, RunConfiguration configuration, ExecutionEnvironment env, T task) {
+    return executeTask(context, configuration, env, task) ? AsyncResult.resolved() : AsyncResult.rejected();
   }
 
   @Nullable

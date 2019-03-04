@@ -18,7 +18,6 @@ package com.intellij.compiler.options;
 import com.intellij.execution.BeforeRunTask;
 import com.intellij.execution.BeforeRunTaskProvider;
 import com.intellij.execution.ExecutionBundle;
-import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.execution.configurations.RunProfileWithCompileBeforeLaunchOption;
@@ -26,7 +25,6 @@ import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.TransactionGuard;
-import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.CompileStatusNotification;
 import com.intellij.openapi.compiler.CompilerManager;
@@ -36,14 +34,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.Ref;
-import com.intellij.util.concurrency.Semaphore;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 /**
@@ -57,15 +53,11 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
 
   }
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.options.CompileStepBeforeRun");
+  private static final Logger LOG = Logger.getInstance(CompileStepBeforeRun.class);
   public static final Key<MakeBeforeRunTask> ID = Key.create("Make");
 
-  public static final Key<RunConfiguration> RUN_CONFIGURATION = Key.create("RUN_CONFIGURATION");
-  public static final Key<String> RUN_CONFIGURATION_TYPE_ID = Key.create("RUN_CONFIGURATION_TYPE_ID");
-  public static final Key<String> RUNNER_ID = Key.create("RUNNER_ID");
-  public static final Key<Executor> EXECUTOR = Key.create("EXECUTOR");
-
-  @NonNls protected static final String MAKE_PROJECT_ON_RUN_KEY = "makeProjectOnRun";
+  @NonNls
+  protected static final String MAKE_PROJECT_ON_RUN_KEY = "makeProjectOnRun";
 
   private final Project myProject;
 
@@ -74,16 +66,19 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
     myProject = project;
   }
 
+  @Nonnull
   @Override
   public Key<MakeBeforeRunTask> getId() {
     return ID;
   }
 
+  @Nonnull
   @Override
   public String getName() {
     return ExecutionBundle.message("before.launch.compile.step");
   }
 
+  @Nonnull
   @Override
   public String getDescription(MakeBeforeRunTask task) {
     return ExecutionBundle.message("before.launch.compile.step");
@@ -119,100 +114,68 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
     return AsyncResult.rejected();
   }
 
+  @Nonnull
   @Override
-  public boolean canExecuteTask(RunConfiguration configuration, MakeBeforeRunTask task) {
-    return true;
+  public AsyncResult<Void> executeTaskAsync(UIAccess uiAccess, DataContext context, RunConfiguration configuration, ExecutionEnvironment env, MakeBeforeRunTask task) {
+    return doMake(uiAccess, myProject, configuration, false);
   }
 
-  @Override
-  public boolean executeTask(DataContext context, final RunConfiguration configuration, final ExecutionEnvironment env, MakeBeforeRunTask task) {
-    return doMake(myProject, configuration, env, false);
-  }
-
-  static boolean doMake(final Project myProject, final RunConfiguration configuration, final ExecutionEnvironment env, final boolean ignoreErrors) {
+  static AsyncResult<Void> doMake(UIAccess uiAccess, final Project myProject, final RunConfiguration configuration, final boolean ignoreErrors) {
     if (!(configuration instanceof RunProfileWithCompileBeforeLaunchOption)) {
-      return true;
+      return AsyncResult.rejected();
     }
 
     if (configuration instanceof RunConfigurationBase && ((RunConfigurationBase)configuration).excludeCompileBeforeLaunchOption()) {
-      return true;
+      return AsyncResult.resolved();
     }
 
     final RunProfileWithCompileBeforeLaunchOption runConfiguration = (RunProfileWithCompileBeforeLaunchOption)configuration;
-    final Ref<Boolean> result = new Ref<Boolean>(Boolean.FALSE);
+    AsyncResult<Void> result = AsyncResult.undefined();
     try {
-
-      final Semaphore done = new Semaphore();
-      done.down();
-      final CompileStatusNotification callback = new CompileStatusNotification() {
-        @Override
-        public void finished(final boolean aborted, final int errors, final int warnings, CompileContext compileContext) {
-          if ((errors == 0 || ignoreErrors) && !aborted) {
-            result.set(Boolean.TRUE);
-          }
-          done.up();
+      final CompileStatusNotification callback = (aborted, errors, warnings, compileContext) -> {
+        if ((errors == 0 || ignoreErrors) && !aborted) {
+          result.setDone();
+        }
+        else {
+          result.setRejected();
         }
       };
 
-      TransactionGuard.submitTransaction(myProject, new Runnable() {
-        @Override
-        public void run() {
-          CompileScope scope;
-          final CompilerManager compilerManager = CompilerManager.getInstance(myProject);
-          if (Comparing.equal(Boolean.TRUE.toString(), System.getProperty(MAKE_PROJECT_ON_RUN_KEY))) {
-            // user explicitly requested whole-project make
+      TransactionGuard.submitTransaction(myProject, () -> {
+        CompileScope scope;
+        final CompilerManager compilerManager = CompilerManager.getInstance(myProject);
+        if (Comparing.equal(Boolean.TRUE.toString(), System.getProperty(MAKE_PROJECT_ON_RUN_KEY))) {
+          // user explicitly requested whole-project make
+          scope = compilerManager.createProjectCompileScope();
+        }
+        else {
+          final Module[] modules = runConfiguration.getModules();
+          if (modules.length > 0) {
+            for (Module module : modules) {
+              if (module == null) {
+                LOG.error("RunConfiguration should not return null modules. Configuration=" + runConfiguration.getName() + "; class=" + runConfiguration.getClass().getName());
+              }
+            }
+            scope = compilerManager.createModulesCompileScope(modules, true);
+          }
+          else {
             scope = compilerManager.createProjectCompileScope();
           }
-          else {
-            final Module[] modules = runConfiguration.getModules();
-            if (modules.length > 0) {
-              for (Module module : modules) {
-                if (module == null) {
-                  LOG.error("RunConfiguration should not return null modules. Configuration=" + runConfiguration.getName() + "; class=" +
-                            runConfiguration.getClass().getName());
-                }
-              }
-              scope = compilerManager.createModulesCompileScope(modules, true);
-            }
-            else {
-              scope = compilerManager.createProjectCompileScope();
-            }
-          }
+        }
 
-          if (!myProject.isDisposed()) {
-            scope.putUserData(RUN_CONFIGURATION, configuration);
-            scope.putUserData(RUN_CONFIGURATION_TYPE_ID, configuration.getType().getId());
-            scope.putUserData(RUNNER_ID, env.getRunnerId());
-            scope.putUserData(EXECUTOR, env.getExecutor());
-            compilerManager.make(scope, callback);
-          }
-          else {
-            done.up();
-          }
+        if (!myProject.isDisposed()) {
+          compilerManager.make(scope, callback);
+        }
+        else {
+          result.setRejected();
         }
       });
-      done.waitFor();
     }
     catch (Exception e) {
-      return false;
+      result.rejectWithThrowable(e);
     }
 
-    return result.get();
-  }
-
-  @Override
-  public boolean isConfigurable() {
-    return false;
-  }
-
-  @Nullable
-  public static RunConfiguration getRunConfiguration(final CompileContext context) {
-    return getRunConfiguration(context.getCompileScope());
-  }
-
-  @Nullable
-  public static RunConfiguration getRunConfiguration(final CompileScope compileScope) {
-    return compileScope.getUserData(RUN_CONFIGURATION);
+    return result;
   }
 
   public static class MakeBeforeRunTask extends BeforeRunTask<MakeBeforeRunTask> {

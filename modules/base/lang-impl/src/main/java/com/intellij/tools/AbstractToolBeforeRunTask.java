@@ -19,16 +19,15 @@ import com.intellij.execution.BeforeRunTask;
 import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.Ref;
-import com.intellij.util.concurrency.Semaphore;
+import consulo.ui.UIAccess;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -76,35 +75,28 @@ public abstract class AbstractToolBeforeRunTask<ToolBeforeRunTask extends Abstra
     return myToolActionId != null;
   }
 
-  public boolean execute(final DataContext context, final long executionId) {
-    final Semaphore targetDone = new Semaphore();
-    final Ref<Boolean> result = new Ref<Boolean>(false);
-
-    try {
-      ApplicationManager.getApplication().invokeAndWait(new Runnable() {
+  @Nonnull
+  public AsyncResult<Void> execute(UIAccess uiAccess, final DataContext context, final long executionId) {
+    AsyncResult<Void> result = AsyncResult.undefined();
+    uiAccess.give(() -> {
+      boolean runToolResult = ToolAction.runTool(myToolActionId, context, null, executionId, new ProcessAdapter() {
         @Override
-        public void run() {
-          targetDone.down();
-          boolean runToolResult = ToolAction.runTool(myToolActionId, context, null, executionId, new ProcessAdapter() {
-            @Override
-            public void processTerminated(ProcessEvent event) {
-              result.set(event.getExitCode() == 0);
-              targetDone.up();
-            }
-          });
-          if (!runToolResult) {
-            result.set(false);
-            targetDone.up();
+        public void processTerminated(ProcessEvent event) {
+          if(event.getExitCode() == 0) {
+            result.setDone();
+          }
+          else {
+            result.setRejected();
           }
         }
-      }, ModalityState.NON_MODAL);
-    }
-    catch (Exception e) {
-      LOG.error(e);
-      return false;
-    }
-    targetDone.waitFor();
-    return result.get();
+      });
+
+      if(!runToolResult) {
+        result.setRejected();
+      }
+    }).doWhenRejectedWithThrowable(result::rejectWithThrowable);
+
+    return result;
   }
 
   @Nullable

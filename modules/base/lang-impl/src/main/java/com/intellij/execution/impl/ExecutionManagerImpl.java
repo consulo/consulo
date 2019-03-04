@@ -36,6 +36,7 @@ import com.intellij.ide.SaveAndSyncHandler;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.TransactionGuard;
@@ -46,10 +47,7 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.Trinity;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.docking.DockManager;
@@ -57,12 +55,13 @@ import com.intellij.util.Alarm;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.swing.*;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -77,6 +76,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
   private static final Logger LOG = Logger.getInstance(ExecutionManagerImpl.class);
   private static final ProcessHandler[] EMPTY_PROCESS_HANDLERS = new ProcessHandler[0];
 
+  private final Application myApplication;
   private final Project myProject;
 
   private RunContentManagerImpl myContentManager;
@@ -90,7 +90,8 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
   }
 
   @Inject
-  ExecutionManagerImpl(@Nonnull Project project) {
+  ExecutionManagerImpl(@Nonnull Application application, @Nonnull Project project) {
+    myApplication = application;
     myProject = project;
   }
 
@@ -157,8 +158,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
     return handlers == null ? EMPTY_PROCESS_HANDLERS : handlers.toArray(new ProcessHandler[handlers.size()]);
   }
 
-  @Override
-  public void compileAndRun(@Nonnull final Runnable startRunnable, @Nonnull final ExecutionEnvironment environment, @Nullable final RunProfileState state, @Nullable final Runnable onCancelRunnable) {
+  private void compileAndRun(@Nonnull UIAccess uiAccess, @Nonnull Runnable startRunnable, @Nonnull ExecutionEnvironment environment, @Nullable Runnable onCancelRunnable) {
     long id = environment.getExecutionId();
     if (id == 0) {
       id = environment.assignNewExecutionId();
@@ -178,45 +178,70 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
     else {
       DataContext context = environment.getDataContext();
       final DataContext projectContext = context != null ? context : SimpleDataContext.getProjectContext(myProject);
-      final long finalId = id;
-      final Long executionSessionId = new Long(id);
-      ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-        /** @noinspection SSBasedInspection*/
-        @Override
-        public void run() {
-          for (BeforeRunTask task : beforeRunTasks) {
-            if (myProject.isDisposed()) {
-              return;
-            }
-            @SuppressWarnings("unchecked") BeforeRunTaskProvider<BeforeRunTask> provider = BeforeRunTaskProvider.getProvider(myProject, task.getProviderId());
-            if (provider == null) {
-              LOG.warn("Cannot find BeforeRunTaskProvider for id='" + task.getProviderId() + "'");
-              continue;
-            }
-            ExecutionEnvironment taskEnvironment = new ExecutionEnvironmentBuilder(environment).contentToReuse(null).build();
-            taskEnvironment.setExecutionId(finalId);
-            EXECUTION_SESSION_ID_KEY.set(taskEnvironment, executionSessionId);
-            if (!provider.executeTask(projectContext, runConfiguration, taskEnvironment, task)) {
-              if (onCancelRunnable != null) {
-                SwingUtilities.invokeLater(onCancelRunnable);
-              }
-              return;
-            }
+
+      AsyncResult<Void> result = AsyncResult.undefined();
+
+      runBeforeTask(beforeRunTasks, 0, id, environment, uiAccess, projectContext, runConfiguration, result);
+
+      if (onCancelRunnable != null) {
+        result.doWhenRejected(() -> uiAccess.give(onCancelRunnable));
+      }
+
+      result.doWhenDone(() -> {
+        // important! Do not use DumbService.smartInvokeLater here because it depends on modality state
+        // and execution of startRunnable could be skipped if modality state check fails
+        uiAccess.give(() -> {
+          if (!myProject.isDisposed()) {
+            DumbService.getInstance(myProject).runWhenSmart(startRunnable);
           }
-          // important! Do not use DumbService.smartInvokeLater here because it depends on modality state
-          // and execution of startRunnable could be skipped if modality state check fails
-          SwingUtilities.invokeLater(() -> {
-            if (!myProject.isDisposed()) {
-              DumbService.getInstance(myProject).runWhenSmart(startRunnable);
-            }
-          });
-        }
+        });
       });
     }
   }
 
+  @SuppressWarnings("unchecked")
+  private void runBeforeTask(@Nonnull List<BeforeRunTask> beforeRunTasks,
+                             int index,
+                             long executionSessionId,
+                             @Nonnull ExecutionEnvironment environment,
+                             @Nonnull UIAccess uiAccess,
+                             @Nonnull DataContext dataContext,
+                             @Nonnull RunConfiguration runConfiguration,
+                             @Nonnull AsyncResult<Void> finishResult) {
+    if (beforeRunTasks.size() == index) {
+      finishResult.setDone();
+      return;
+    }
+
+    if (myProject.isDisposed()) {
+      return;
+    }
+
+    BeforeRunTask task = beforeRunTasks.get(index);
+
+    BeforeRunTaskProvider<BeforeRunTask> provider = BeforeRunTaskProvider.getProvider(myProject, task.getProviderId());
+    if (provider == null) {
+      LOG.warn("Cannot find BeforeRunTaskProvider for id='" + task.getProviderId() + "'");
+      runBeforeTask(beforeRunTasks, index + 1, executionSessionId, environment, uiAccess, dataContext, runConfiguration, finishResult);
+      return;
+    }
+
+    myApplication.executeOnPooledThread(() -> {
+      ExecutionEnvironment taskEnvironment = new ExecutionEnvironmentBuilder(environment).contentToReuse(null).build();
+      taskEnvironment.setExecutionId(executionSessionId);
+      taskEnvironment.putUserData(EXECUTION_SESSION_ID_KEY, executionSessionId);
+
+      AsyncResult<Void> result = provider.executeTaskAsync(uiAccess, dataContext, runConfiguration, taskEnvironment, task);
+      result.doWhenDone(() -> runBeforeTask(beforeRunTasks, index + 1, executionSessionId, environment, uiAccess, dataContext, runConfiguration, finishResult));
+      result.doWhenRejected((Runnable)finishResult::setRejected);
+    });
+  }
+
+  @RequiredUIAccess
   @Override
   public void startRunProfile(@Nonnull final RunProfileStarter starter, @Nonnull final RunProfileState state, @Nonnull final ExecutionEnvironment environment) {
+    UIAccess.assertIsUIThread();
+
     final Project project = environment.getProject();
     RunContentDescriptor reuseContent = getContentManager().getReuseContent(environment);
     if (reuseContent != null) {
@@ -293,11 +318,11 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
       }
     };
 
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
+    if (myApplication.isUnitTestMode()) {
       startRunnable.run();
     }
     else {
-      compileAndRun(() -> TransactionGuard.submitTransaction(project, startRunnable), environment, state, () -> {
+      compileAndRun(UIAccess.current(), () -> TransactionGuard.submitTransaction(project, startRunnable), environment, () -> {
         if (!project.isDisposed()) {
           project.getMessageBus().syncPublisher(EXECUTION_TOPIC).processNotStarted(executor.getId(), environment);
         }

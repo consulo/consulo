@@ -27,6 +27,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -36,6 +37,13 @@ import javax.inject.Inject;
  * User: Vassiliy.Kudryashov
  */
 public class CompileStepBeforeRunNoErrorCheck extends BeforeRunTaskProvider<CompileStepBeforeRunNoErrorCheck.MakeBeforeRunTaskNoErrorCheck> {
+
+  public static class MakeBeforeRunTaskNoErrorCheck extends BeforeRunTask<MakeBeforeRunTaskNoErrorCheck> {
+    private MakeBeforeRunTaskNoErrorCheck() {
+      super(ID);
+    }
+  }
+
   public static final Key<MakeBeforeRunTaskNoErrorCheck> ID = Key.create("MakeNoErrorCheck");
   @Nonnull
   private final Project myProject;
@@ -45,10 +53,13 @@ public class CompileStepBeforeRunNoErrorCheck extends BeforeRunTaskProvider<Comp
     myProject = project;
   }
 
+  @Nonnull
+  @Override
   public Key<MakeBeforeRunTaskNoErrorCheck> getId() {
     return ID;
   }
 
+  @Nonnull
   @Override
   public String getDescription(MakeBeforeRunTaskNoErrorCheck task) {
     return ExecutionBundle.message("before.launch.compile.step.no.error.check");
@@ -81,24 +92,15 @@ public class CompileStepBeforeRunNoErrorCheck extends BeforeRunTaskProvider<Comp
     return false;
   }
 
+  @Nonnull
   @Override
   public String getName() {
     return ExecutionBundle.message("before.launch.compile.step.no.error.check");
   }
 
+  @Nonnull
   @Override
-  public boolean canExecuteTask(RunConfiguration configuration, MakeBeforeRunTaskNoErrorCheck task) {
-    return true;
-  }
-
-  @Override
-  public boolean executeTask(DataContext context, RunConfiguration configuration, ExecutionEnvironment env, MakeBeforeRunTaskNoErrorCheck task) {
-    return CompileStepBeforeRun.doMake(myProject, configuration, env, true);
-  }
-
-  public static class MakeBeforeRunTaskNoErrorCheck extends BeforeRunTask<MakeBeforeRunTaskNoErrorCheck> {
-    private MakeBeforeRunTaskNoErrorCheck() {
-      super(ID);
-    }
+  public AsyncResult<Void> executeTaskAsync(UIAccess uiAccess, DataContext context, RunConfiguration configuration, ExecutionEnvironment env, MakeBeforeRunTaskNoErrorCheck task) {
+    return CompileStepBeforeRun.doMake(uiAccess, myProject, configuration, true);
   }
 }

@@ -18,6 +18,8 @@ package com.intellij.openapi.application;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.progress.ProcessCanceledException;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -117,7 +119,7 @@ public abstract class TransactionGuard {
    *                         and so it won't be run after it has been disposed
    * @param transaction code to execute inside a transaction.
    */
-  public static void submitTransaction(@Nonnull Disposable parentDisposable, @Nonnull Runnable transaction) {
+  public static void submitTransaction(@Nonnull Disposable parentDisposable, @Nonnull @RequiredUIAccess Runnable transaction) {
     TransactionGuard guard = getInstance();
     guard.submitTransaction(parentDisposable, guard.getContextTransaction(), transaction);
   }

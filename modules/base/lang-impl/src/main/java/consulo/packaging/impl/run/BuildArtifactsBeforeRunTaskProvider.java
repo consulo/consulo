@@ -22,14 +22,12 @@ import com.intellij.execution.impl.ConfigurationSettingsEditorWrapper;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.Compiler;
+import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.Ref;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactPointer;
 import com.intellij.packaging.impl.compiler.ArtifactAwareCompiler;
@@ -37,9 +35,9 @@ import com.intellij.packaging.impl.compiler.ArtifactCompileScope;
 import com.intellij.packaging.impl.compiler.ArtifactsCompiler;
 import com.intellij.packaging.impl.run.AbstractArtifactsBeforeRunTask;
 import com.intellij.packaging.impl.run.AbstractArtifactsBeforeRunTaskProvider;
-import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
+import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -70,11 +68,13 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
     return new BuildArtifactsBeforeRunTask(myProject);
   }
 
+  @Nonnull
   @Override
   public String getName() {
     return CompilerBundle.message("build.artifacts.before.run.description.empty");
   }
 
+  @Nonnull
   @Override
   public String getDescription(BuildArtifactsBeforeRunTask task) {
     final List<ArtifactPointer> pointers = task.getArtifactPointers();
@@ -87,43 +87,35 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
     return CompilerBundle.message("build.artifacts.before.run.description.multiple", pointers.size());
   }
 
+  @Nonnull
   @Override
-  public boolean executeTask(DataContext context, RunConfiguration configuration, ExecutionEnvironment env, final BuildArtifactsBeforeRunTask task) {
-    final Ref<Boolean> result = Ref.create(false);
-    final Semaphore finished = new Semaphore();
+  public AsyncResult<Void> executeTaskAsync(UIAccess uiAccess, DataContext context, RunConfiguration configuration, ExecutionEnvironment env, BuildArtifactsBeforeRunTask task) {
+    AsyncResult<Void> result = AsyncResult.undefined();
 
-    final List<Artifact> artifacts = new ArrayList<Artifact>();
+    final List<Artifact> artifacts = new ArrayList<>();
     AccessRule.read(() -> {
       for (ArtifactPointer pointer : task.getArtifactPointers()) {
         ContainerUtil.addIfNotNull(artifacts, pointer.get());
       }
     });
 
-    final CompileStatusNotification callback = new CompileStatusNotification() {
-      @Override
-      public void finished(boolean aborted, int errors, int warnings, CompileContext compileContext) {
-        result.set(!aborted && errors == 0);
-        finished.up();
+    final CompileStatusNotification callback = (aborted, errors, warnings, compileContext) -> {
+      if(!aborted && errors == 0) {
+        result.setDone();
       }
-    };
-    final Condition<Compiler> compilerFilter = new Condition<Compiler>() {
-      @Override
-      public boolean value(com.intellij.openapi.compiler.Compiler compiler) {
-        return compiler instanceof ArtifactsCompiler || compiler instanceof ArtifactAwareCompiler && ((ArtifactAwareCompiler)compiler).shouldRun(artifacts);
+      else {
+        result.setRejected();
       }
     };
 
-    ApplicationManager.getApplication().invokeAndWait(new Runnable() {
-      @Override
-      public void run() {
-        final CompilerManager manager = CompilerManager.getInstance(myProject);
-        finished.down();
-        manager.make(ArtifactCompileScope.createArtifactsScope(myProject, artifacts), compilerFilter, callback);
-      }
-    }, ModalityState.NON_MODAL);
+    final Condition<Compiler> compilerFilter = compiler -> compiler instanceof ArtifactsCompiler || compiler instanceof ArtifactAwareCompiler && ((ArtifactAwareCompiler)compiler).shouldRun(artifacts);
 
-    finished.waitFor();
-    return result.get();
+    uiAccess.give(() -> {
+      final CompilerManager manager = CompilerManager.getInstance(myProject);
+      manager.make(ArtifactCompileScope.createArtifactsScope(myProject, artifacts), compilerFilter, callback);
+    }).doWhenRejectedWithThrowable(result::rejectWithThrowable);
+
+    return result;
   }
 
   public static void setBuildArtifactBeforeRunOption(@Nonnull JComponent runConfigurationEditorComponent, Project project, @Nonnull Artifact artifact, final boolean enable) {
@@ -131,7 +123,7 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
     final ConfigurationSettingsEditorWrapper editor = dataContext.getData(ConfigurationSettingsEditorWrapper.CONFIGURATION_EDITOR_KEY);
     if (editor != null) {
       List<BeforeRunTask> tasks = editor.getStepsBeforeLaunch();
-      List<AbstractArtifactsBeforeRunTask> myTasks = new ArrayList<AbstractArtifactsBeforeRunTask>();
+      List<AbstractArtifactsBeforeRunTask> myTasks = new ArrayList<>();
       for (BeforeRunTask task : tasks) {
         if (task instanceof AbstractArtifactsBeforeRunTask) {
           myTasks.add((AbstractArtifactsBeforeRunTask)task);
