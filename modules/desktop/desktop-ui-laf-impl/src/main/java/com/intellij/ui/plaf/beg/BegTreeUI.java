@@ -15,26 +15,19 @@
  */
 package com.intellij.ui.plaf.beg;
 
-import java.awt.*;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.metal.MetalComboBoxIcon;
-import javax.swing.plaf.metal.MetalComboBoxUI;
+import javax.swing.plaf.metal.MetalTreeUI;
+import java.awt.event.MouseEvent;
 
-public class BegComboBoxUI extends MetalComboBoxUI {
+public class BegTreeUI extends MetalTreeUI {
+
+  /* Invoked by reflection */
   public static ComponentUI createUI(JComponent c) {
-    return new BegComboBoxUI();
+    return new BegTreeUI();
   }
 
-  protected JButton createArrowButton() {
-    JButton button = new BegComboBoxButton(
-      comboBox, new MetalComboBoxIcon(), comboBox.isEditable() ? true : false,
-      currentValuePane, listBox
-    );
-    button.setFocusPainted(false);
-    button.setMargin(new Insets(0, 1, 1, 3));
-//    button.setMargin(new Insets(0, 0, 0, 0));
-    button.setDefaultCapable(false);
-    return button;
+  protected boolean isToggleSelectionEvent(MouseEvent e) {
+    return SwingUtilities.isLeftMouseButton(e) && e.isControlDown() && !e.isPopupTrigger();
   }
 }

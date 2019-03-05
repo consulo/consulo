@@ -17,10 +17,10 @@ package com.intellij.ui.plaf.beg;
 
 import com.intellij.util.ui.UIUtil;
 
-import java.awt.*;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.metal.MetalRadioButtonUI;
+import java.awt.*;
 
 public class BegRadioButtonUI extends MetalRadioButtonUI {
   private static final BegRadioButtonUI begRadioButtonUI = new BegRadioButtonUI();

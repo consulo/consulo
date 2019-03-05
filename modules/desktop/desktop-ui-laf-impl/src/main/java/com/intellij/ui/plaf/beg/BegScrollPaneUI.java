@@ -18,7 +18,6 @@ package com.intellij.ui.plaf.beg;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.metal.MetalScrollBarUI;
 import javax.swing.plaf.metal.MetalScrollPaneUI;

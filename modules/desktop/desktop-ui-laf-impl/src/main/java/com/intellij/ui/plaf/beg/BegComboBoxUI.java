@@ -15,22 +15,26 @@
  */
 package com.intellij.ui.plaf.beg;
 
-import com.intellij.util.ui.UIUtil;
-
-import java.awt.*;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.metal.MetalCheckBoxUI;
+import javax.swing.plaf.metal.MetalComboBoxIcon;
+import javax.swing.plaf.metal.MetalComboBoxUI;
+import java.awt.*;
 
-public class BegCheckBoxUI extends MetalCheckBoxUI {
-  private static final BegCheckBoxUI begCheckBoxUI = new BegCheckBoxUI();
-
+public class BegComboBoxUI extends MetalComboBoxUI {
   public static ComponentUI createUI(JComponent c) {
-    return begCheckBoxUI;
+    return new BegComboBoxUI();
   }
 
-  protected void paintFocus(Graphics g, Rectangle t, Dimension d) {
-    g.setColor(getFocusColor());
-    UIUtil.drawDottedRectangle(g, t.x - 2, t.y - 1, t.x + t.width + 1, t.y + t.height);
+  protected JButton createArrowButton() {
+    JButton button = new BegComboBoxButton(
+      comboBox, new MetalComboBoxIcon(), comboBox.isEditable() ? true : false,
+      currentValuePane, listBox
+    );
+    button.setFocusPainted(false);
+    button.setMargin(new Insets(0, 1, 1, 3));
+//    button.setMargin(new Insets(0, 0, 0, 0));
+    button.setDefaultCapable(false);
+    return button;
   }
 }

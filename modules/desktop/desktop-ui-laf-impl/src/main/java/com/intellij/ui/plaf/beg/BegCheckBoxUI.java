@@ -15,20 +15,22 @@
  */
 package com.intellij.ui.plaf.beg;
 
+import com.intellij.util.ui.UIUtil;
+
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.metal.MetalTreeUI;
-import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeListener;
+import javax.swing.plaf.metal.MetalCheckBoxUI;
+import java.awt.*;
 
-public class BegTreeUI extends MetalTreeUI {
+public class BegCheckBoxUI extends MetalCheckBoxUI {
+  private static final BegCheckBoxUI begCheckBoxUI = new BegCheckBoxUI();
 
-  /* Invoked by reflection */
   public static ComponentUI createUI(JComponent c) {
-    return new BegTreeUI();
+    return begCheckBoxUI;
   }
 
-  protected boolean isToggleSelectionEvent(MouseEvent e) {
-    return SwingUtilities.isLeftMouseButton(e) && e.isControlDown() && !e.isPopupTrigger();
+  protected void paintFocus(Graphics g, Rectangle t, Dimension d) {
+    g.setColor(getFocusColor());
+    UIUtil.drawDottedRectangle(g, t.x - 2, t.y - 1, t.x + t.width + 1, t.y + t.height);
   }
 }
