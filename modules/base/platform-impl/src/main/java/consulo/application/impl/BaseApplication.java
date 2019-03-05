@@ -431,12 +431,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   }
 
   protected boolean canExit() {
-    for (ApplicationListener applicationListener : myDispatcher.getListeners()) {
-      if (!applicationListener.canExitApplication()) {
-        return false;
-      }
-    }
-
     ProjectManagerEx projectManager = (ProjectManagerEx)ProjectManager.getInstance();
     Project[] projects = projectManager.getOpenProjects();
     for (Project project : projects) {

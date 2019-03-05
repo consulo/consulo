@@ -16,7 +16,6 @@
 package com.intellij.openapi.application;
 
 import javax.annotation.Nonnull;
-
 import java.util.EventListener;
 
 /**
@@ -24,33 +23,32 @@ import java.util.EventListener;
  */
 public interface ApplicationListener extends EventListener {
   /**
-   * This method is called to check whether the Application is ready to exit.
-   * @return true or false
-   */
-  boolean canExitApplication();
-
-  /**
    * Is called when application is exiting.
    */
-  void applicationExiting();
+  default void applicationExiting() {
+  }
 
   /**
    * Is called before action start.
    */
-  void beforeWriteActionStart(@Nonnull Object action);
+  default void beforeWriteActionStart(@Nonnull Object action) {
+  }
 
   /**
    * Is called on action start.
    */
-  void writeActionStarted(@Nonnull Object action);
+  default void writeActionStarted(@Nonnull Object action) {
+  }
 
   /**
-   *  Is called on before action finish, while while lock is still being hold
+   * Is called on before action finish, while while lock is still being hold
    */
-  void writeActionFinished(@Nonnull Object action);
+  default void writeActionFinished(@Nonnull Object action) {
+  }
 
   /**
-   *  Is called after action finish and lock is released
+   * Is called after action finish and lock is released
    */
-  void afterWriteActionFinished(@Nonnull Object action);
+  default void afterWriteActionFinished(@Nonnull Object action) {
+  }
 }

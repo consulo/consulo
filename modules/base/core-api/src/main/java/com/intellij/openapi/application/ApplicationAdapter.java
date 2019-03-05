@@ -15,31 +15,6 @@
  */
 package com.intellij.openapi.application;
 
-import javax.annotation.Nonnull;
-
+@Deprecated
 public abstract class ApplicationAdapter implements ApplicationListener {
-  @Override
-  public boolean canExitApplication() {
-    return true;
-  }
-
-  @Override
-  public void applicationExiting() {
-  }
-
-  @Override
-  public void beforeWriteActionStart(@Nonnull Object action) {
-  }
-
-  @Override
-  public void writeActionStarted(@Nonnull Object action) {
-  }
-
-  @Override
-  public void writeActionFinished(@Nonnull Object action) {
-  }
-
-  @Override
-  public void afterWriteActionFinished(@Nonnull Object action) {
-  }
 }
