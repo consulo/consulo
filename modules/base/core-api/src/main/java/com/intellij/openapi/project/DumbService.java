@@ -340,7 +340,5 @@ public abstract class DumbService {
      * The event arrives on EDT
      */
     default void exitDumbMode() {}
-
   }
-
 }
