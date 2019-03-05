@@ -172,7 +172,22 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
       }
     }
 
-    throw new IllegalArgumentException(window + " is not FromSwingWindowWrapper");
+    StringBuilder builder = new StringBuilder();
+    builder.append("Window class: ");
+    builder.append(window.getClass().getName());
+    if(window instanceof RootPaneContainer) {
+      JRootPane rootPane = ((RootPaneContainer)window).getRootPane();
+      if(rootPane != null) {
+        builder.append(", rootPane: ");
+        builder.append(rootPane.getClass().getName());
+        builder.append("/");
+        builder.append(rootPane);
+      }
+    }
+    builder.append(", window.toString(): ");
+    builder.append(window.toString());
+    builder.append(" is not FromSwingWindowWrapper");
+    throw new IllegalArgumentException(builder.toString());
   }
 
   @Override
