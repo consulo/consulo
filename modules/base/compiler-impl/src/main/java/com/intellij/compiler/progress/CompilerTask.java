@@ -53,15 +53,14 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.MessageCategory;
 import com.intellij.util.ui.UIUtil;
 import consulo.compiler.impl.CompilerManagerImpl;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.awt.*;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 public class CompilerTask extends Task.Backgroundable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.progress.CompilerProgressIndicator");
+  private static final Logger LOG = Logger.getInstance(CompilerTask.class);
   private static final String APP_ICON_ID = "compiler";
 
   private final Object myMessageViewLock = new Object();
@@ -74,13 +73,7 @@ public class CompilerTask extends Task.Backgroundable {
 
   private volatile ProgressIndicator myIndicator = new EmptyProgressIndicator();
   private Runnable myCompileWork;
-  private Runnable myRestartWork;
   private final boolean myCompilationStartedAutomatically;
-
-  @Deprecated
-  public CompilerTask(@Nonnull Project project, String contentName, final boolean headlessMode, boolean forceAsync, boolean waitForPreviousSession) {
-    this(project, contentName, headlessMode, forceAsync, waitForPreviousSession, false);
-  }
 
   public CompilerTask(@Nonnull Project project,
                       String contentName,
@@ -234,8 +227,6 @@ public class CompilerTask extends Task.Backgroundable {
       doAddMessage(message);
     }
     else {
-      final Window window = getWindow();
-      final ModalityState modalityState = window != null ? ModalityState.stateForComponent(window) : ModalityState.NON_MODAL;
       ApplicationManager.getApplication().invokeLater(new Runnable() {
         @Override
         public void run() {
@@ -243,7 +234,7 @@ public class CompilerTask extends Task.Backgroundable {
             doAddMessage(message);
           }
         }
-      }, modalityState);
+      }, ModalityState.NON_MODAL);
     }
   }
 
@@ -287,9 +278,8 @@ public class CompilerTask extends Task.Backgroundable {
     return 0;
   }
 
-  public void start(Runnable compileWork, Runnable restartWork) {
+  public void start(Runnable compileWork) {
     myCompileWork = compileWork;
-    myRestartWork = restartWork;
     queue();
   }
 
@@ -303,8 +293,6 @@ public class CompilerTask extends Task.Backgroundable {
     if (isHeadlessMode()) {
       return;
     }
-    Window window = getWindow();
-    ModalityState modalityState = window != null ? ModalityState.stateForComponent(window) : ModalityState.NON_MODAL;
     final Application application = ApplicationManager.getApplication();
     application.invokeLater(new Runnable() {
       @Override
@@ -319,11 +307,7 @@ public class CompilerTask extends Task.Backgroundable {
           }
         }
       }
-    }, modalityState);
-  }
-
-  public Window getWindow() {
-    return null;
+    }, ModalityState.NON_MODAL);
   }
 
   @Override

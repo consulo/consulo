@@ -15,20 +15,14 @@
  */
 package com.intellij.compiler;
 
-import com.intellij.compiler.progress.CompilerTask;
-import com.intellij.openapi.compiler.CompilerMessage;
-import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.ArrayUtil;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -58,18 +52,6 @@ public abstract class ProblemsView {
                                   @Nullable String exportTextPrefix,
                                   @Nullable String rendererTextPrefix);
 
-  public final void addMessage(CompilerMessage message) {
-    final VirtualFile file = message.getVirtualFile();
-    Navigatable navigatable = message.getNavigatable();
-    if (navigatable == null && file != null) {
-      navigatable = new OpenFileDescriptor(myProject, file, -1, -1);
-    }
-    final CompilerMessageCategory category = message.getCategory();
-    final int type = CompilerTask.translateCategory(category);
-    final String[] text = convertMessage(message.getMessage());
-    final String groupName = file != null? file.getPresentableUrl() : category.getPresentableText();
-    addMessage(type, text, groupName, navigatable, message.getExportTextPrefix(), message.getRenderTextPrefix());
-  }
 
   @RequiredUIAccess
   public abstract void showOrHide(boolean hide);
@@ -88,12 +70,11 @@ public abstract class ProblemsView {
     if (!text.contains("\n")) {
       return new String[]{text};
     }
-    final List<String> lines = new ArrayList<String>();
+    final List<String> lines = new ArrayList<>();
     StringTokenizer tokenizer = new StringTokenizer(text, "\n", false);
     while (tokenizer.hasMoreTokens()) {
       lines.add(tokenizer.nextToken());
     }
     return ArrayUtil.toStringArray(lines);
   }
-  
 }

@@ -25,10 +25,11 @@ import com.intellij.compiler.CompilerMessageImpl;
 import com.intellij.compiler.ProblemsView;
 import com.intellij.compiler.progress.CompilerTask;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.Compiler;
+import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -285,14 +286,27 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
     Collection<CompilerMessage> messages = myMessages.get(msg.getCategory());
     if (messages == null) {
-      messages = new LinkedHashSet<CompilerMessage>();
+      messages = new LinkedHashSet<>();
       myMessages.put(msg.getCategory(), messages);
     }
     if (messages.add(msg)) {
       myTask.addMessage(msg);
     }
 
-    ProblemsView.getInstance(myProject).addMessage(msg);
+    addMessageToProblemsView(msg);
+  }
+
+  private void addMessageToProblemsView(CompilerMessage message) {
+    final VirtualFile file = message.getVirtualFile();
+    Navigatable navigatable = message.getNavigatable();
+    if (navigatable == null && file != null) {
+      navigatable = new OpenFileDescriptor(myProject, file, -1, -1);
+    }
+    final CompilerMessageCategory category = message.getCategory();
+    final int type = CompilerTask.translateCategory(category);
+    final String[] text = ProblemsView.convertMessage(message.getMessage());
+    final String groupName = file != null ? file.getPresentableUrl() : category.getPresentableText();
+    ProblemsView.getInstance(myProject).addMessage(type, text, groupName, navigatable, message.getExportTextPrefix(), message.getRenderTextPrefix());
   }
 
   @Override
