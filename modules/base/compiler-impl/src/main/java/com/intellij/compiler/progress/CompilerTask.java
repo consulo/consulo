@@ -22,21 +22,17 @@
 package com.intellij.compiler.progress;
 
 import com.intellij.compiler.ProblemsView;
-import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.compiler.*;
-import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.compiler.CompilerManager;
+import com.intellij.openapi.compiler.CompilerMessage;
+import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase;
-import com.intellij.openapi.project.DumbModeAction;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.project.ProjectManagerListener;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.AppIconScheme;
@@ -44,12 +40,6 @@ import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.pom.Navigatable;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.ui.AppIcon;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentManager;
-import com.intellij.ui.content.ContentManagerAdapter;
-import com.intellij.ui.content.ContentManagerEvent;
-import com.intellij.util.messages.MessageBusConnection;
-import com.intellij.util.ui.MessageCategory;
 import com.intellij.util.ui.UIUtil;
 import consulo.compiler.impl.CompilerManagerImpl;
 import consulo.ui.RequiredUIAccess;
@@ -61,11 +51,8 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 public class CompilerTask extends Task.Backgroundable {
-  private static final Logger LOG = Logger.getInstance(CompilerTask.class);
   private static final String APP_ICON_ID = "compiler";
 
-  private final boolean myHeadlessMode;
-  private final boolean myForceAsyncExecution;
   private final boolean myWaitForPreviousSession;
   private int myErrorCount = 0;
   private int myWarningCount = 0;
@@ -75,24 +62,13 @@ public class CompilerTask extends Task.Backgroundable {
   private Runnable myCompileWork;
   private final boolean myCompilationStartedAutomatically;
 
-  public CompilerTask(@Nonnull Project project, String contentName, final boolean headlessMode, boolean forceAsync, boolean waitForPreviousSession, boolean compilationStartedAutomatically) {
+  public CompilerTask(@Nonnull Project project, String contentName, boolean waitForPreviousSession, boolean compilationStartedAutomatically) {
     super(project, contentName);
-    myHeadlessMode = headlessMode;
-    myForceAsyncExecution = forceAsync;
     myWaitForPreviousSession = waitForPreviousSession;
     myCompilationStartedAutomatically = compilationStartedAutomatically;
   }
 
-  @Override
-  public DumbModeAction getDumbModeAction() {
-    return DumbModeAction.WAIT;
-  }
-
-  @Override
-  public boolean shouldStartInBackground() {
-    return true;
-  }
-
+  @Nonnull
   public ProgressIndicator getIndicator() {
     return myIndicator;
   }
@@ -106,10 +82,6 @@ public class CompilerTask extends Task.Backgroundable {
   @Override
   public void run(@Nonnull final ProgressIndicator indicator) {
     myIndicator = indicator;
-
-    final ProjectManager projectManager = ProjectManager.getInstance();
-    CloseListener closeListener;
-    projectManager.addProjectManagerListener(myProject, closeListener = new CloseListener());
 
     final Semaphore semaphore = ((CompilerManagerImpl)CompilerManager.getInstance(myProject)).getCompilationSemaphore();
     boolean acquired = false;
@@ -139,7 +111,6 @@ public class CompilerTask extends Task.Backgroundable {
     finally {
       try {
         indicator.stop();
-        projectManager.removeProjectManagerListener(myProject, closeListener);
       }
       finally {
         if (acquired) {
@@ -253,23 +224,6 @@ public class CompilerTask extends Task.Backgroundable {
     }
   }
 
-  public static int translateCategory(CompilerMessageCategory category) {
-    if (CompilerMessageCategory.ERROR.equals(category)) {
-      return MessageCategory.ERROR;
-    }
-    if (CompilerMessageCategory.WARNING.equals(category)) {
-      return MessageCategory.WARNING;
-    }
-    if (CompilerMessageCategory.STATISTICS.equals(category)) {
-      return MessageCategory.STATISTICS;
-    }
-    if (CompilerMessageCategory.INFORMATION.equals(category)) {
-      return MessageCategory.INFORMATION;
-    }
-    LOG.error("Unknown message category: " + category);
-    return 0;
-  }
-
   public void start(Runnable compileWork) {
     myCompileWork = compileWork;
     queue();
@@ -281,9 +235,6 @@ public class CompilerTask extends Task.Backgroundable {
   }
 
   private void closeUI() {
-    if (isHeadlessMode()) {
-      return;
-    }
     Application application = Application.get();
     application.invokeLater(() -> {
       final boolean shouldRetainView = myErrorCount > 0 || myWarningCount > 0 && !ProblemsView.getInstance(myProject).isHideWarnings();
@@ -294,15 +245,6 @@ public class CompilerTask extends Task.Backgroundable {
         ProblemsView.getInstance(myProject).showOrHide(true);
       }
     }, ModalityState.NON_MODAL);
-  }
-
-  @Override
-  public boolean isHeadless() {
-    return myHeadlessMode && !myForceAsyncExecution;
-  }
-
-  private boolean isHeadlessMode() {
-    return myHeadlessMode;
   }
 
   private static VirtualFile getVirtualFile(final CompilerMessage message) {
@@ -324,88 +266,4 @@ public class CompilerTask extends Task.Backgroundable {
     }
     return TextRange.EMPTY_RANGE;
   }
-
-  private class CloseListener extends ContentManagerAdapter implements ProjectManagerListener {
-    private Content myContent;
-    private ContentManager myContentManager;
-    private boolean myIsApplicationExitingOrProjectClosing = false;
-    private boolean myUserAcceptedCancel = false;
-
-    @Override
-    public boolean canCloseProject(final Project project) {
-      assert project != null;
-      if (!project.equals(myProject)) {
-        return true;
-      }
-      if (shouldAskUser()) {
-        int result = Messages.showOkCancelDialog(myProject, CompilerBundle.message("warning.compiler.running.on.project.close"), CompilerBundle.message("compiler.running.dialog.title"),
-                                                 Messages.getQuestionIcon());
-        if (result != 0) {
-          return false; // veto closing
-        }
-        myUserAcceptedCancel = true;
-
-        final MessageBusConnection connection = project.getMessageBus().connect();
-        connection.subscribe(CompilerTopics.COMPILATION_STATUS, new CompilationStatusAdapter() {
-          @Override
-          public void compilationFinished(boolean aborted, int errors, int warnings, final CompileContext compileContext) {
-            connection.disconnect();
-            ProjectUtil.closeAndDispose(project);
-          }
-        });
-        cancel();
-        return false; // cancel compiler and let it finish, after compilation close the project, but currently - veto closing
-      }
-      return !myIndicator.isRunning();
-    }
-
-    public void setContent(Content content, ContentManager contentManager) {
-      myContent = content;
-      myContentManager = contentManager;
-      contentManager.addContentManagerListener(this);
-    }
-
-    @Override
-    public void contentRemoved(ContentManagerEvent event) {
-      if (event.getContent() == myContent) {
-        myContentManager.removeContentManagerListener(this);
-        myContent.release();
-        myContent = null;
-      }
-    }
-
-    @Override
-    public void contentRemoveQuery(ContentManagerEvent event) {
-      if (event.getContent() == myContent) {
-        if (!myIndicator.isCanceled() && shouldAskUser()) {
-          int result = Messages.showOkCancelDialog(myProject, CompilerBundle.message("warning.compiler.running.on.toolwindow.close"), CompilerBundle.message("compiler.running.dialog.title"),
-                                                   Messages.getQuestionIcon());
-          if (result != 0) {
-            event.consume(); // veto closing
-          }
-          myUserAcceptedCancel = true;
-        }
-      }
-    }
-
-    private boolean shouldAskUser() {
-      // do not ask second time if user already accepted closing
-      return !myUserAcceptedCancel && !myIsApplicationExitingOrProjectClosing && myIndicator.isRunning();
-    }
-
-    @Override
-    public void projectClosed(Project project) {
-      if (project.equals(myProject) && myContent != null) {
-        myContentManager.removeContent(myContent, true);
-      }
-    }
-
-    @Override
-    public void projectClosing(Project project) {
-      if (project.equals(myProject)) {
-        myIsApplicationExitingOrProjectClosing = true;
-      }
-    }
-  }
 }
-                                      

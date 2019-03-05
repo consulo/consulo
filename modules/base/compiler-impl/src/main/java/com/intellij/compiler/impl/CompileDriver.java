@@ -94,7 +94,6 @@ import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TIntHashSet;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -201,7 +200,7 @@ public class CompileDriver {
     }
     scope = addAdditionalRoots(scope, ALL_EXCEPT_SOURCE_PROCESSING);
 
-    final CompilerTask task = new CompilerTask(myProject, "Classes up-to-date check", true, false, false, isCompilationStartedAutomatically(scope));
+    final CompilerTask task = new CompilerTask(myProject, "Classes up-to-date check", false, isCompilationStartedAutomatically(scope));
     final CompositeDependencyCache cache = createDependencyCache();
     final CompileContextImpl compileContext = new CompileContextImpl(myProject, task, scope, cache, true, false);
 
@@ -422,7 +421,7 @@ public class CompileDriver {
 
     final String contentName = forceCompile ? CompilerBundle.message("compiler.content.name.compile") : CompilerBundle.message("compiler.content.name.make");
     final boolean isUnitTestMode = ApplicationManager.getApplication().isUnitTestMode();
-    final CompilerTask compileTask = new CompilerTask(myProject, contentName, isUnitTestMode, true, true, isCompilationStartedAutomatically(scope));
+    final CompilerTask compileTask = new CompilerTask(myProject, contentName, true, isCompilationStartedAutomatically(scope));
 
     StatusBar.Info.set("", myProject, "Compiler");
     PsiDocumentManager.getInstance(myProject).commitAllDocuments();
@@ -1881,7 +1880,7 @@ CompilerManagerImpl.addDeletedPath(outputPath.getPath());
   }
 
   public void executeCompileTask(final CompileTask compileTask, final CompileScope scope, final String contentName, final Runnable onTaskFinished) {
-    final CompilerTask task = new CompilerTask(myProject, contentName, false, false, true, isCompilationStartedAutomatically(scope));
+    final CompilerTask task = new CompilerTask(myProject, contentName, true, isCompilationStartedAutomatically(scope));
     final CompileContextImpl compileContext = new CompileContextImpl(myProject, task, scope, null, false, false);
 
     FileDocumentManager.getInstance().saveAllDocuments();

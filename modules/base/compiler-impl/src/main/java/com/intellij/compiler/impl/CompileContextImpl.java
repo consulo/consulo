@@ -49,6 +49,7 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.containers.OrderedSet;
 import com.intellij.util.indexing.FileBasedIndex;
+import com.intellij.util.ui.MessageCategory;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.compiler.impl.AdditionalOutputDirectoriesProvider;
 import consulo.compiler.make.impl.CompositeDependencyCache;
@@ -303,10 +304,27 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
       navigatable = new OpenFileDescriptor(myProject, file, -1, -1);
     }
     final CompilerMessageCategory category = message.getCategory();
-    final int type = CompilerTask.translateCategory(category);
+    final int type = translateCategory(category);
     final String[] text = ProblemsView.convertMessage(message.getMessage());
     final String groupName = file != null ? file.getPresentableUrl() : category.getPresentableText();
     ProblemsView.getInstance(myProject).addMessage(type, text, groupName, navigatable, message.getExportTextPrefix(), message.getRenderTextPrefix());
+  }
+
+  private static int translateCategory(CompilerMessageCategory category) {
+    if (CompilerMessageCategory.ERROR.equals(category)) {
+      return MessageCategory.ERROR;
+    }
+    if (CompilerMessageCategory.WARNING.equals(category)) {
+      return MessageCategory.WARNING;
+    }
+    if (CompilerMessageCategory.STATISTICS.equals(category)) {
+      return MessageCategory.STATISTICS;
+    }
+    if (CompilerMessageCategory.INFORMATION.equals(category)) {
+      return MessageCategory.INFORMATION;
+    }
+    LOG.error("Unknown message category: " + category);
+    return 0;
   }
 
   @Override
