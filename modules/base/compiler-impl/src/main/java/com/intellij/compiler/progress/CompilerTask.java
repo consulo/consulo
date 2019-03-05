@@ -24,7 +24,6 @@ package com.intellij.compiler.progress;
 import com.intellij.compiler.ProblemsView;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.diagnostic.Logger;
@@ -53,6 +52,8 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.MessageCategory;
 import com.intellij.util.ui.UIUtil;
 import consulo.compiler.impl.CompilerManagerImpl;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -63,7 +64,6 @@ public class CompilerTask extends Task.Backgroundable {
   private static final Logger LOG = Logger.getInstance(CompilerTask.class);
   private static final String APP_ICON_ID = "compiler";
 
-  private final Object myMessageViewLock = new Object();
   private final boolean myHeadlessMode;
   private final boolean myForceAsyncExecution;
   private final boolean myWaitForPreviousSession;
@@ -75,12 +75,7 @@ public class CompilerTask extends Task.Backgroundable {
   private Runnable myCompileWork;
   private final boolean myCompilationStartedAutomatically;
 
-  public CompilerTask(@Nonnull Project project,
-                      String contentName,
-                      final boolean headlessMode,
-                      boolean forceAsync,
-                      boolean waitForPreviousSession,
-                      boolean compilationStartedAutomatically) {
+  public CompilerTask(@Nonnull Project project, String contentName, final boolean headlessMode, boolean forceAsync, boolean waitForPreviousSession, boolean compilationStartedAutomatically) {
     super(project, contentName);
     myHeadlessMode = headlessMode;
     myForceAsyncExecution = forceAsync;
@@ -105,8 +100,7 @@ public class CompilerTask extends Task.Backgroundable {
   @Override
   @Nullable
   public NotificationInfo getNotificationInfo() {
-    return new NotificationInfo(myErrorCount > 0 ? "Compiler (errors)" : "Compiler (success)", "Compilation Finished",
-                                myErrorCount + " Errors, " + myWarningCount + " Warnings", true);
+    return new NotificationInfo(myErrorCount > 0 ? "Compiler (errors)" : "Compiler (success)", "Compilation Finished", myErrorCount + " Errors, " + myWarningCount + " Warnings", true);
   }
 
   @Override
@@ -194,6 +188,7 @@ public class CompilerTask extends Task.Backgroundable {
           }
         });
       }
+
       @Override
       public void setFraction(final double fraction) {
         super.setFraction(fraction);
@@ -223,16 +218,16 @@ public class CompilerTask extends Task.Backgroundable {
       informWolf(message);
     }
 
-    if (ApplicationManager.getApplication().isDispatchThread()) {
+    Application application = Application.get();
+    if (application.isDispatchThread()) {
+      // implicit ui thread
+      //noinspection RequiredXAction
       doAddMessage(message);
     }
     else {
-      ApplicationManager.getApplication().invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          if (!myProject.isDisposed()) {
-            doAddMessage(message);
-          }
+      application.invokeLater(() -> {
+        if (!myProject.isDisposed()) {
+          doAddMessage(message);
         }
       }, ModalityState.NON_MODAL);
     }
@@ -244,22 +239,19 @@ public class CompilerTask extends Task.Backgroundable {
     wolf.queue(file);
   }
 
+  @RequiredUIAccess
   private void doAddMessage(final CompilerMessage message) {
-    synchronized (myMessageViewLock) {
-      final CompilerMessageCategory category = message.getCategory();
+    UIAccess.assertIsUIThread();
 
+    final CompilerMessageCategory category = message.getCategory();
 
-      final boolean shouldAutoActivate = !myMessagesAutoActivated &&
-                                         (CompilerMessageCategory.ERROR.equals(category) ||
-                                          (CompilerMessageCategory.WARNING.equals(category) &&
-                                           !ProblemsView.getInstance(myProject).isHideWarnings()));
-      if (shouldAutoActivate) {
-        myMessagesAutoActivated = true;
-        activateMessageView();
-      }
+    final boolean shouldAutoActivate =
+            !myMessagesAutoActivated && (CompilerMessageCategory.ERROR.equals(category) || (CompilerMessageCategory.WARNING.equals(category) && !ProblemsView.getInstance(myProject).isHideWarnings()));
+    if (shouldAutoActivate) {
+      myMessagesAutoActivated = true;
+      activateMessageView();
     }
   }
-
 
   public static int translateCategory(CompilerMessageCategory category) {
     if (CompilerMessageCategory.ERROR.equals(category)) {
@@ -283,29 +275,23 @@ public class CompilerTask extends Task.Backgroundable {
     queue();
   }
 
+  @RequiredUIAccess
   private void activateMessageView() {
-    synchronized (myMessageViewLock) {
-      ProblemsView.getInstance(myProject).showOrHide(false);
-    }
+    ProblemsView.getInstance(myProject).showOrHide(false);
   }
 
   private void closeUI() {
     if (isHeadlessMode()) {
       return;
     }
-    final Application application = ApplicationManager.getApplication();
-    application.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        synchronized (myMessageViewLock) {
-          final boolean shouldRetainView = myErrorCount > 0 || myWarningCount > 0 && !ProblemsView.getInstance(myProject).isHideWarnings();
-          if (shouldRetainView) {
-            ProblemsView.getInstance(myProject).selectFirstMessage();
-          }
-          else {
-            ProblemsView.getInstance(myProject).showOrHide(true);
-          }
-        }
+    Application application = Application.get();
+    application.invokeLater(() -> {
+      final boolean shouldRetainView = myErrorCount > 0 || myWarningCount > 0 && !ProblemsView.getInstance(myProject).isHideWarnings();
+      if (shouldRetainView) {
+        ProblemsView.getInstance(myProject).selectFirstMessage();
+      }
+      else {
+        ProblemsView.getInstance(myProject).showOrHide(true);
       }
     }, ModalityState.NON_MODAL);
   }
@@ -352,8 +338,8 @@ public class CompilerTask extends Task.Backgroundable {
         return true;
       }
       if (shouldAskUser()) {
-        int result = Messages.showOkCancelDialog(myProject, CompilerBundle.message("warning.compiler.running.on.project.close"),
-                                                 CompilerBundle.message("compiler.running.dialog.title"), Messages.getQuestionIcon());
+        int result = Messages.showOkCancelDialog(myProject, CompilerBundle.message("warning.compiler.running.on.project.close"), CompilerBundle.message("compiler.running.dialog.title"),
+                                                 Messages.getQuestionIcon());
         if (result != 0) {
           return false; // veto closing
         }
@@ -392,8 +378,8 @@ public class CompilerTask extends Task.Backgroundable {
     public void contentRemoveQuery(ContentManagerEvent event) {
       if (event.getContent() == myContent) {
         if (!myIndicator.isCanceled() && shouldAskUser()) {
-          int result = Messages.showOkCancelDialog(myProject, CompilerBundle.message("warning.compiler.running.on.toolwindow.close"),
-                                                   CompilerBundle.message("compiler.running.dialog.title"), Messages.getQuestionIcon());
+          int result = Messages.showOkCancelDialog(myProject, CompilerBundle.message("warning.compiler.running.on.toolwindow.close"), CompilerBundle.message("compiler.running.dialog.title"),
+                                                   Messages.getQuestionIcon());
           if (result != 0) {
             event.consume(); // veto closing
           }
