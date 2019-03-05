@@ -18,8 +18,8 @@ package consulo.packaging.impl.elements;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.packaging.impl.elements.ArchivePackagingElement;
 import consulo.packaging.elements.ArchivePackageWriter;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -51,8 +51,7 @@ public class ZipArchivePackagingElement extends ArchivePackagingElement {
     }
 
     @Override
-    public void addFile(@Nonnull ZipOutputStream zipOutputStream, @Nonnull InputStream stream, @Nonnull String relativePath, long fileLength, long lastModified)
-            throws IOException {
+    public void addFile(@Nonnull ZipOutputStream zipOutputStream, @Nonnull InputStream stream, @Nonnull String relativePath, long fileLength, long lastModified) throws IOException {
       ZipEntry e = new ZipEntry(relativePath);
       e.setTime(lastModified);
       e.setSize(fileLength);
@@ -63,8 +62,7 @@ public class ZipArchivePackagingElement extends ArchivePackagingElement {
     }
 
     @Override
-    public void
-    close(@Nonnull ZipOutputStream zipOutputStream) throws IOException {
+    public void close(@Nonnull ZipOutputStream zipOutputStream) throws IOException {
       zipOutputStream.close();
     }
   }
