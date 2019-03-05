@@ -37,12 +37,6 @@ public abstract class ProblemsView {
     return ServiceManager.getService(project, ProblemsView.class);
   }
 
-  protected final Project myProject;
-
-  protected ProblemsView(Project project) {
-    myProject = project;
-  }
-
   public abstract void clearOldMessages();
 
   public abstract void addMessage(int type,

@@ -80,18 +80,21 @@ public class ProblemsViewImpl extends ProblemsView {
 
   private static final Key<Boolean> ourViewKey = Key.create("ProblemsViewImpl");
 
-  private List<TempMessage> myTempMessages = new CopyOnWriteArrayList<TempMessage>();
+  private List<TempMessage> myTempMessages = new CopyOnWriteArrayList<>();
 
   @Nullable
   private ProblemsViewPanel myPanel;
 
   private final ExecutorService myViewUpdater = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("ProblemsView pool");
 
+  private final Project myProject;
+
   @Inject
   public ProblemsViewImpl(final Project project) {
-    super(project);
+    myProject = project;
   }
 
+  @RequiredUIAccess
   @Override
   public void clearOldMessages() {
     myTempMessages.clear();
@@ -108,6 +111,7 @@ public class ProblemsViewImpl extends ProblemsView {
   }
 
 
+  @RequiredUIAccess
   @Override
   public void addMessage(final int type,
                          @Nonnull final String[] text,
