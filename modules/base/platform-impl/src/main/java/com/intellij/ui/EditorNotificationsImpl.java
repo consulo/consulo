@@ -15,6 +15,7 @@
  */
 package com.intellij.ui;
 
+import com.intellij.ProjectTopics;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.fileEditor.*;
@@ -26,6 +27,8 @@ import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import com.intellij.openapi.progress.util.ReadTask;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ModuleRootEvent;
+import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.reference.SoftReference;
@@ -60,7 +63,7 @@ public class EditorNotificationsImpl extends EditorNotifications {
     myProject = project;
     myUpdateMerger = new MergingUpdateQueue("EditorNotifications update merger", 100, true, null, project);
     MessageBusConnection connection = project.getMessageBus().connect(project);
-    connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerAdapter() {
+    connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
       @Override
       public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
         updateNotifications(file);
@@ -77,7 +80,12 @@ public class EditorNotificationsImpl extends EditorNotifications {
         updateAllNotifications();
       }
     });
-
+    connection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+      @Override
+      public void rootsChanged(ModuleRootEvent event) {
+        updateAllNotifications();
+      }
+    });
   }
 
   @Override
@@ -112,9 +120,8 @@ public class EditorNotificationsImpl extends EditorNotifications {
 
   @Nullable
   private ReadTask createTask(@Nonnull final ProgressIndicator indicator, @Nonnull final VirtualFile file) {
-    List<FileEditor> editors = ContainerUtil.filter(
-            FileEditorManager.getInstance(myProject).getAllEditors(file),
-            editor -> !(editor instanceof TextEditor) || DesktopAsyncEditorLoader.isEditorLoaded(((TextEditor) editor).getEditor()));
+    List<FileEditor> editors = ContainerUtil.filter(FileEditorManager.getInstance(myProject).getAllEditors(file),
+                                                    editor -> !(editor instanceof TextEditor) || DesktopAsyncEditorLoader.isEditorLoaded(((TextEditor)editor).getEditor()));
 
     if (editors.isEmpty()) return null;
 
@@ -139,7 +146,7 @@ public class EditorNotificationsImpl extends EditorNotifications {
       public Continuation performInReadAction(@Nonnull ProgressIndicator indicator) throws ProcessCanceledException {
         if (isOutdated()) return null;
 
-        final List<EditorNotificationProvider<?>> providers = DumbService.getInstance(myProject). filterByDumbAwareness(EditorNotificationProvider.EP_NAME.getExtensionList());
+        final List<EditorNotificationProvider<?>> providers = DumbService.getInstance(myProject).filterByDumbAwareness(EditorNotificationProvider.EP_NAME.getExtensionList());
 
         final List<Runnable> updates = ContainerUtil.newArrayList();
         for (final FileEditor editor : editors) {
