@@ -17,6 +17,8 @@ package com.intellij.openapi.util.objectTree;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Disposer;
+import consulo.disposer.internal.DisposerInternal;
+import consulo.disposer.internal.impl.DisposerInternalImpl;
 import junit.framework.TestCase;
 import org.jetbrains.annotations.NonNls;
 
@@ -108,7 +110,7 @@ public class DisposerTest extends TestCase {
     assertDisposed(myFolder1);
     assertDisposed(myFolder2);
 
-    assertEquals(0, Disposer.getTree().getNodesInExecution().size());
+    assertEquals(0, getTree().getNodesInExecution().size());
   }
 
   public void testDirectCallOfUnregisteredSelfDisposable() throws Exception {
@@ -210,9 +212,13 @@ public class DisposerTest extends TestCase {
 
   private void assertDisposed(MyDisposable disposable) {
     assertTrue(disposable.isDisposed());
-    assertFalse(disposable.toString(), Disposer.getTree().containsKey(disposable));
+    assertFalse(disposable.toString(), getTree().containsKey(disposable));
 
-    Disposer.getTree().assertNoReferenceKeptInTree(disposable);
+    getTree().assertNoReferenceKeptInTree(disposable);
+  }
+
+  private ObjectTree<Disposable> getTree() {
+    return ((DisposerInternalImpl)DisposerInternal.ourInstance).getTree();
   }
 
   private class MyDisposable implements Disposable {
