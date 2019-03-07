@@ -15,14 +15,15 @@
  */
 package consulo.awt.impl;
 
+import com.intellij.idea.Main;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.BitUtil;
 import com.intellij.util.ui.JBUI;
 import consulo.awt.TargetAWT;
 import consulo.awt.TargetAWTFacade;
-import consulo.ui.*;
 import consulo.ui.Component;
 import consulo.ui.Window;
+import consulo.ui.*;
 import consulo.ui.desktop.internal.window.WindowOverAWTWindow;
 import consulo.ui.image.Image;
 import consulo.ui.shared.ColorValue;
@@ -142,6 +143,10 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
   @Override
   @Contract("null -> null")
   public Window from(@Nullable java.awt.Window window) {
+    if (Main.hasStartUpError()) {
+      return null;
+    }
+
     if (window == null) {
       return null;
     }

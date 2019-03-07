@@ -209,7 +209,7 @@ public class FocusManagerImpl implements ApplicationIdeFocusManager, Disposable 
   @Nonnull
   @Override
   public AsyncResult<Void> requestFocus(@Nonnull consulo.ui.Component c, boolean forced) {
-    if(c instanceof consulo.ui.Window) {
+    if (c instanceof consulo.ui.Window) {
       return requestFocus(TargetAWT.to((consulo.ui.Window)c), forced);
     }
     throw new UnsupportedOperationException();

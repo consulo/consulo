@@ -40,6 +40,7 @@ public class Main {
   private static boolean isHeadless;
   private static boolean isCommandLine;
   private static boolean hasGraphics = true;
+  private static boolean hasStartUpError = false;
 
   private Main() {
   }
@@ -116,8 +117,14 @@ public class Main {
     return null;
   }
 
+  public static boolean hasStartUpError() {
+    return hasStartUpError;
+  }
+
   @SuppressWarnings({"UseJBColor", "UndesirableClassUsage", "UseOfSystemOutOrSystemErr"})
   public static void showMessage(String title, String message, boolean error) {
+    hasStartUpError = true;
+
     PrintStream stream = error ? System.err : System.out;
     stream.println("\n" + title + ": " + message);
 
@@ -135,8 +142,7 @@ public class Main {
         textPane.setText(message.replaceAll("\t", "    "));
         textPane.setBackground(UIManager.getColor("Panel.background"));
         textPane.setCaretPosition(0);
-        JScrollPane scrollPane =
-                new JScrollPane(textPane, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        JScrollPane scrollPane = new JScrollPane(textPane, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBorder(null);
 
         int maxHeight = Toolkit.getDefaultToolkit().getScreenSize().height / 2;
