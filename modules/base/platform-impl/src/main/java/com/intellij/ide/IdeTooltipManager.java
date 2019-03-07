@@ -167,8 +167,10 @@ public class IdeTooltipManager implements Disposable, AWTEventListener {
       // The case when a tooltip is going to appear on the Component but the MOUSE_ENTERED event comes to the Component before it,
       // we dont want to hide the tooltip in that case (IDEA-194208)
       Point tooltipPoint = myQueuedTooltip.getPoint();
-      Component realQueuedComponent = SwingUtilities.getDeepestComponentAt(myQueuedTooltip.getComponent(), tooltipPoint.x, tooltipPoint.y);
-      return eventComponent != realQueuedComponent;
+      if (tooltipPoint != null) {
+        Component realQueuedComponent = SwingUtilities.getDeepestComponentAt(myQueuedTooltip.getComponent(), tooltipPoint.x, tooltipPoint.y);
+        return eventComponent != realQueuedComponent;
+      }
     }
 
     return true;
