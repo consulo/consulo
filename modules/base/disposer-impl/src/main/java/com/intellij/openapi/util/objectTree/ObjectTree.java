@@ -17,11 +17,11 @@ package com.intellij.openapi.util.objectTree;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.WeakHashMap;
+import consulo.disposer.internal.impl.DisposerInternalImpl;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -30,7 +30,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 public final class ObjectTree<T> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.util.objectTree.ObjectTree");
+  private static final Logger LOG = Logger.getInstance(ObjectTree.class);
 
   private final List<ObjectTreeListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
@@ -45,6 +45,12 @@ public final class ObjectTree<T> {
   final Object treeLock = new Object();
 
   private final AtomicLong myModification = new AtomicLong(0);
+
+  private final DisposerInternalImpl myDisposerInternal;
+
+  public ObjectTree(DisposerInternalImpl disposerInternal) {
+    myDisposerInternal = disposerInternal;
+  }
 
   ObjectNode<T> getNode(@Nonnull T object) {
     return myObject2NodeMap.get(object);
@@ -114,7 +120,7 @@ public final class ObjectTree<T> {
 
   @Nonnull
   private ObjectNode<T> createNodeFor(@Nonnull T object, @Nullable ObjectNode<T> parentNode) {
-    final ObjectNode<T> newNode = new ObjectNode<T>(this, parentNode, object, getNextModification());
+    final ObjectNode<T> newNode = new ObjectNode<T>(myDisposerInternal, this, parentNode, object, getNextModification());
     if (parentNode == null) {
       myRootObjects.add(object);
     }
@@ -266,7 +272,7 @@ public final class ObjectTree<T> {
 
   private void rememberDisposedTrace(@Nonnull Object object) {
     synchronized (treeLock) {
-      myDisposedObjects.put(object, Disposer.isDebugMode() ? ThrowableInterner.intern(new Throwable()) : Boolean.TRUE);
+      myDisposedObjects.put(object, myDisposerInternal.isDebugMode() ? ThrowableInterner.intern(new Throwable()) : Boolean.TRUE);
     }
   }
 

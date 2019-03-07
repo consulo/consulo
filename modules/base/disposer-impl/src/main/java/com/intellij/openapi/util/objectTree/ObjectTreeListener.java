@@ -13,24 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.intellij.openapi.util.objectTree;
 
-/*
- * @author max
- */
-package com.intellij.util.messages;
-
-import com.intellij.util.messages.impl.MessageBusImpl;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-public class MessageBusFactory {
-  private MessageBusFactory() {}
+public interface ObjectTreeListener {
 
-  public static MessageBus newMessageBus(@Nonnull Object owner) {
-    return new MessageBusImpl.RootBus(owner);
-  }
+  void objectRegistered(@Nonnull Object node);
 
-  public static MessageBus newMessageBus(@Nonnull Object owner, @Nullable MessageBus parentBus) {
-    return parentBus == null ? newMessageBus(owner) : new MessageBusImpl(owner, parentBus);
-  }
+  void objectExecuted(@Nonnull Object node);
 }

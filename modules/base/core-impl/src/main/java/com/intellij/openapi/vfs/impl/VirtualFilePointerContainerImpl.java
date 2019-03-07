@@ -19,6 +19,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.TraceableDisposable;
 import com.intellij.openapi.util.Trinity;
@@ -32,9 +33,9 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -42,7 +43,7 @@ import java.util.List;
 /**
  * @author dsl
  */
-public class VirtualFilePointerContainerImpl extends TraceableDisposable implements VirtualFilePointerContainer, Disposable {
+public class VirtualFilePointerContainerImpl implements VirtualFilePointerContainer, Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.pointers.VirtualFilePointerContainer");
   @Nonnull
   private final List<VirtualFilePointer> myList = ContainerUtil.createLockFreeCopyOnWriteList();
@@ -53,17 +54,24 @@ public class VirtualFilePointerContainerImpl extends TraceableDisposable impleme
   private final VirtualFilePointerListener myListener;
   private volatile Trinity<String[], VirtualFile[], VirtualFile[]> myCachedThings;
   private volatile long myTimeStampOfCachedThings = -1;
-  @NonNls public static final String URL_ATTR = "url";
+  @NonNls
+  public static final String URL_ATTR = "url";
   private boolean myDisposed;
   private static final boolean TRACE_CREATION = LOG.isDebugEnabled() || ApplicationManager.getApplication().isUnitTestMode();
-  public VirtualFilePointerContainerImpl(@Nonnull VirtualFilePointerManager manager,
-                                         @Nonnull Disposable parentDisposable,
-                                         @Nullable VirtualFilePointerListener listener) {
+
+  private final TraceableDisposable myTraceableDisposable;
+
+  public VirtualFilePointerContainerImpl(@Nonnull VirtualFilePointerManager manager, @Nonnull Disposable parentDisposable, @Nullable VirtualFilePointerListener listener) {
     //noinspection HardCodedStringLiteral
-    super(TRACE_CREATION && !ApplicationInfoImpl.isInPerformanceTest());
+    myTraceableDisposable = Disposer.newTraceDisposable(TRACE_CREATION && !ApplicationInfoImpl.isInPerformanceTest());
+
     myVirtualFilePointerManager = manager;
     myParent = parentDisposable;
     myListener = listener;
+  }
+
+  public TraceableDisposable getTraceableDisposable() {
+    return myTraceableDisposable;
   }
 
   @Override
@@ -178,8 +186,7 @@ public class VirtualFilePointerContainerImpl extends TraceableDisposable impleme
     return timeStamp == myVirtualFilePointerManager.getModificationCount() ? cached : cacheThings();
   }
 
-  private static final Trinity<String[], VirtualFile[], VirtualFile[]> EMPTY =
-          Trinity.create(ArrayUtil.EMPTY_STRING_ARRAY, VirtualFile.EMPTY_ARRAY, VirtualFile.EMPTY_ARRAY);
+  private static final Trinity<String[], VirtualFile[], VirtualFile[]> EMPTY = Trinity.create(ArrayUtil.EMPTY_STRING_ARRAY, VirtualFile.EMPTY_ARRAY, VirtualFile.EMPTY_ARRAY);
 
   @Nonnull
   private Trinity<String[], VirtualFile[], VirtualFile[]> cacheThings() {
@@ -302,6 +309,6 @@ public class VirtualFilePointerContainerImpl extends TraceableDisposable impleme
   public void dispose() {
     assert !myDisposed;
     myDisposed = true;
-    kill(null);
+    myTraceableDisposable.kill(null);
   }
 }

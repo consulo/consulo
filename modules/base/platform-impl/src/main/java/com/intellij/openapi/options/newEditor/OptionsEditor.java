@@ -49,15 +49,16 @@ import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;
 import com.intellij.ui.speedSearch.ElementFilter;
 import com.intellij.ui.treeStructure.SimpleNode;
+import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.util.ui.update.Update;
-import consulo.ui.RequiredUIAccess;
 import consulo.application.ApplicationProperties;
 import consulo.options.ConfigurableUIMigrationUtil;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.SwingUIDecorator;
 import consulo.util.ProtectedRunnable;
 import org.jetbrains.annotations.Nls;
@@ -71,8 +72,8 @@ import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.awt.event.*;
 import java.lang.reflect.Field;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class OptionsEditor implements DataProvider, Place.Navigator, Disposable, AWTEventListener, UISettingsListener {
@@ -1068,7 +1069,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       }
     });
 
-    Disposer.clearOwnFields(this, Conditions.<Field>alwaysTrue());
+    ReflectionUtil.clearOwnFields(this, Conditions.<Field>alwaysTrue());
   }
 
   private static void visitRecursive(Configurable[] configurables, Consumer<Configurable> consumer) {

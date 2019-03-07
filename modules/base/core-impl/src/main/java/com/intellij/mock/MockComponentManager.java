@@ -22,7 +22,7 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.util.messages.MessageBus;
-import com.intellij.util.messages.MessageBusFactory;
+import com.intellij.util.messages.impl.MessageBusFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

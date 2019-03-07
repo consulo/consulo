@@ -39,6 +39,7 @@ import com.intellij.openapi.fileEditor.impl.EditorWindowHolder;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.DisposerUtil;
 import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
@@ -51,8 +52,8 @@ import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.DeprecationInfo;
-import consulo.ui.RequiredUIAccess;
 import consulo.editor.impl.DesktopEditorErrorPanel;
+import consulo.ui.RequiredUIAccess;
 import gnu.trove.THashSet;
 import gnu.trove.TIntIntHashMap;
 
@@ -406,7 +407,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
 
   @Override
   public void addErrorMarkerListener(@Nonnull final ErrorStripeListener listener, @Nonnull Disposable parent) {
-    ContainerUtil.add(listener, myErrorMarkerListeners, parent);
+    DisposerUtil.add(listener, myErrorMarkerListeners, parent);
   }
 
   @Override

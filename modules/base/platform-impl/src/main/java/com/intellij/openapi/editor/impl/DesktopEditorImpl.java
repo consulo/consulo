@@ -161,7 +161,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   private final EditorComponentImpl myEditorComponent;
   @Nonnull
   private final EditorGutterComponentImpl myGutterComponent;
-  private final TraceableDisposable myTraceableDisposable = new TraceableDisposable(true);
+  private final TraceableDisposable myTraceableDisposable = Disposer.newTraceDisposable(true);
 
   private static final Cursor EMPTY_CURSOR;
 
@@ -2580,7 +2580,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
   @Override
   public void addFocusListener(@Nonnull FocusChangeListener listener, @Nonnull Disposable parentDisposable) {
-    ContainerUtil.add(listener, myFocusListeners, parentDisposable);
+    DisposerUtil.add(listener, myFocusListeners, parentDisposable);
   }
 
   @Override

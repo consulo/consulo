@@ -32,6 +32,11 @@
       <artifactId>consulo-util-rt</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-disposer-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
     <!--internal dependencies-->
     <dependency>
       <groupId>consulo.internal</groupId>

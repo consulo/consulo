@@ -21,15 +21,16 @@ import com.intellij.openapi.progress.StandardProgressIndicator;
 import com.intellij.openapi.progress.util.AbstractProgressIndicatorBase;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.TraceableDisposable;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author cdr
  */
 public class DaemonProgressIndicator extends AbstractProgressIndicatorBase implements StandardProgressIndicator, Disposable {
   private static boolean debug;
-  private final TraceableDisposable myTraceableDisposable = new TraceableDisposable(debug);
+  private final TraceableDisposable myTraceableDisposable = Disposer.newTraceDisposable(debug);
   private volatile boolean myDisposed;
 
   @Override

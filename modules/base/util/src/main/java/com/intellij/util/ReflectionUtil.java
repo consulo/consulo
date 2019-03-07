@@ -585,4 +585,17 @@ public class ReflectionUtil {
     }
     return true;
   }
+
+  public static void clearOwnFields(@Nullable Object object, @Nonnull Condition<? super Field> selectCondition) {
+    if (object == null) return;
+    for (Field each : ReflectionUtil.collectFields(object.getClass())) {
+      if ((each.getModifiers() & (Modifier.FINAL | Modifier.STATIC)) > 0) continue;
+      if (!selectCondition.value(each)) continue;
+      try {
+        ReflectionUtil.resetField(object, each);
+      }
+      catch (Exception ignore) {
+      }
+    }
+  }
 }

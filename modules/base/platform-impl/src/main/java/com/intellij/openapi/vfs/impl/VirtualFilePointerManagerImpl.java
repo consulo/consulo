@@ -269,7 +269,7 @@ public class VirtualFilePointerManagerImpl extends VirtualFilePointerManager imp
       if (!pointers.isEmpty()) {
         VirtualFilePointerImpl p = pointers.get(0);
         try {
-          p.throwDisposalError("Not disposed pointer: " + p);
+          p.getTraceableDisposable().throwDisposalError("Not disposed pointer: " + p);
         }
         finally {
           for (VirtualFilePointerImpl pointer : pointers) {
@@ -282,7 +282,7 @@ public class VirtualFilePointerManagerImpl extends VirtualFilePointerManager imp
     synchronized (myContainers) {
       if (!myContainers.isEmpty()) {
         VirtualFilePointerContainerImpl container = myContainers.iterator().next();
-        container.throwDisposalError("Not disposed container");
+        container.getTraceableDisposable().throwDisposalError("Not disposed container");
       }
     }
   }
@@ -302,7 +302,7 @@ public class VirtualFilePointerManagerImpl extends VirtualFilePointerManager imp
     try {
       for (VirtualFilePointerImpl pointer : pointers) {
         if (!myStoredPointers.contains(pointer)) {
-          pointer.throwDisposalError("Virtual pointer hasn't been disposed: " + pointer);
+          pointer.getTraceableDisposable().throwDisposalError("Virtual pointer hasn't been disposed: " + pointer);
         }
       }
     }

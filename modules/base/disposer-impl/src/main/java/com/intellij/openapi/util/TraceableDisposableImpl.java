@@ -33,20 +33,22 @@ import java.util.List;
  * In constructor it saves creation stacktrace
  * In kill() it saves disposal stacktrace
  */
-public class TraceableDisposable {
+public class TraceableDisposableImpl implements TraceableDisposable {
   private final Throwable CREATE_TRACE;
   private Throwable KILL_TRACE;
 
-  public TraceableDisposable(boolean debug) {
+  public TraceableDisposableImpl(boolean debug) {
     CREATE_TRACE = debug ? ThrowableInterner.intern(new Throwable()) : null;
   }
 
+  @Override
   public void kill(@NonNls @Nullable String msg) {
     if (CREATE_TRACE != null) {
       KILL_TRACE = ThrowableInterner.intern(new Throwable(msg));
     }
   }
 
+  @Override
   public void killExceptionally(@Nonnull Throwable throwable) {
     if (CREATE_TRACE != null) {
       KILL_TRACE = throwable;
@@ -56,6 +58,7 @@ public class TraceableDisposable {
   /**
    * Call when object is not disposed while it should
    */
+  @Override
   public void throwObjectNotDisposedError(@NonNls @Nonnull final String msg) {
     throw new ObjectNotDisposedException(msg);
   }
@@ -79,6 +82,7 @@ public class TraceableDisposable {
   /**
    * in case of "object not disposed" use {@link #throwObjectNotDisposedError(String)} instead
    */
+  @Override
   public void throwDisposalError(@NonNls String msg) throws RuntimeException {
     throw new DisposalException(msg);
   }
@@ -118,6 +122,7 @@ public class TraceableDisposable {
     }
   }
 
+  @Override
   @Nonnull
   public String getStackTrace() {
     StringWriter out = new StringWriter();

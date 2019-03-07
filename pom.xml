@@ -61,6 +61,8 @@
     <module>modules/base/compiler-impl</module>
     <module>modules/base/diff-api</module>
     <module>modules/base/diff-impl</module>
+    <module>modules/base/disposer-api</module>
+    <module>modules/base/disposer-impl</module>
     <module>modules/base/dvcs-api</module>
     <module>modules/base/dvcs-impl</module>
     <module>modules/base/dvcs-impl-testing</module>

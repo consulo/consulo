@@ -15,17 +15,15 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.containers.SoftHashMap;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.TestOnly;
-
 import java.util.*;
 
 /**
@@ -347,16 +345,15 @@ public class RecursionManager {
 
   }
 
-  @TestOnly
-  public static void assertOnRecursionPrevention(@Nonnull Disposable parentDisposable) {
-    ourAssertOnPrevention = true;
-    Disposer.register(parentDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        //noinspection AssignmentToStaticFieldFromInstanceMethod
-        ourAssertOnPrevention = false;
-      }
-    });
-  }
-
+  //@TestOnly
+  //public static void assertOnRecursionPrevention(@Nonnull Disposable parentDisposable) {
+  //  ourAssertOnPrevention = true;
+  //  Disposer.register(parentDisposable, new Disposable() {
+  //    @Override
+  //    public void dispose() {
+  //      //noinspection AssignmentToStaticFieldFromInstanceMethod
+  //      ourAssertOnPrevention = false;
+  //    }
+  //  });
+  //}
 }

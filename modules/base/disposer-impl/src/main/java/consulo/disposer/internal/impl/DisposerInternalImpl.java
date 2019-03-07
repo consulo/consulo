@@ -1,0 +1,180 @@
+/*
+ * Copyright 2000-2015 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.disposer.internal.impl;
+
+import com.intellij.openapi.Disposable;
+import com.intellij.openapi.util.TraceableDisposable;
+import com.intellij.openapi.util.TraceableDisposableImpl;
+import com.intellij.openapi.util.objectTree.ObjectTree;
+import com.intellij.openapi.util.objectTree.ObjectTreeAction;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.disposer.internal.DisposerInternal;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.TestOnly;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Map;
+
+public class DisposerInternalImpl extends DisposerInternal {
+  private final ObjectTree<Disposable> myTree;
+
+  public DisposerInternalImpl() {
+    try {
+      myTree = new ObjectTree<Disposable>(this);
+    }
+    catch (NoClassDefFoundError e) {
+      throw new RuntimeException("loader=" + DisposerInternalImpl.class.getClassLoader(), e);
+    }
+  }
+
+  private static final ObjectTreeAction<Disposable> ourDisposeAction = new ObjectTreeAction<Disposable>() {
+    @Override
+    public void execute(@Nonnull final Disposable each) {
+      //noinspection SSBasedInspection
+      each.dispose();
+    }
+
+    @Override
+    public void beforeTreeExecution(@Nonnull final Disposable parent) {
+      if (parent instanceof Disposable.Parent) {
+        ((Disposable.Parent)parent).beforeTreeDispose();
+      }
+    }
+  };
+
+  private final Map<String, Disposable> myKeyDisposables = ContainerUtil.createConcurrentWeakMap();
+
+  private final static String debugDisposer = System.getProperty("idea.disposer.debug");
+
+  public static boolean isDebugDisposerOn() {
+    return "on".equals(debugDisposer);
+  }
+
+  private static boolean ourDebugMode;
+
+  @Nonnull
+  public static Disposable newDisposable() {
+    return newDisposable(null);
+  }
+
+  @Nonnull
+  public static Disposable newDisposable(@Nullable final String debugName) {
+    return new Disposable() {
+      @Override
+      public void dispose() {
+      }
+
+      @Override
+      public String toString() {
+        return debugName == null ? super.toString() : debugName;
+      }
+    };
+  }
+
+  public void register(@Nonnull Disposable parent, @Nonnull Disposable child) {
+    register(parent, child, null);
+  }
+
+  @Override
+  public void register(@Nonnull Disposable parent, @Nonnull Disposable child, @NonNls @Nullable final String key) {
+    myTree.register(parent, child);
+
+    if (key != null) {
+      Disposable v = get(key);
+      if (v != null) throw new IllegalArgumentException("Key " + key + " already registered: " + v);
+      myKeyDisposables.put(key, child);
+
+      register(child, () -> myKeyDisposables.remove(key));
+    }
+  }
+
+  @Override
+  public boolean isDisposed(@Nonnull Disposable disposable) {
+    return myTree.getDisposalInfo(disposable) != null;
+  }
+
+  @Override
+  public Disposable get(@Nonnull String key) {
+    return myKeyDisposables.get(key);
+  }
+
+  public void dispose(@Nonnull Disposable disposable) {
+    dispose(disposable, true);
+  }
+
+  @Override
+  public void dispose(@Nonnull Disposable disposable, boolean processUnregistered) {
+    myTree.executeAll(disposable, ourDisposeAction, processUnregistered);
+  }
+
+  @Override
+  public void disposeChildAndReplace(@Nonnull Disposable toDispose, @Nonnull Disposable toReplace) {
+    myTree.executeChildAndReplace(toDispose, toReplace, ourDisposeAction);
+  }
+
+  @Override
+  public TraceableDisposable newTraceDisposable(boolean debug) {
+    return new TraceableDisposableImpl(debug);
+  }
+
+  @Nonnull
+  public ObjectTree<Disposable> getTree() {
+    return myTree;
+  }
+
+  @Override
+  public void assertIsEmpty() {
+    assertIsEmpty(false);
+  }
+
+  public void assertIsEmpty(boolean throwError) {
+    if (ourDebugMode) {
+      myTree.assertIsEmpty(throwError);
+    }
+  }
+
+  @TestOnly
+  public boolean isEmpty() {
+    return ourDebugMode && myTree.isEmpty();
+  }
+
+  /**
+   * @return old value
+   */
+  @Override
+  public boolean setDebugMode(boolean debugMode) {
+    if (debugMode) {
+      debugMode = !"off".equals(debugDisposer);
+    }
+    boolean oldValue = ourDebugMode;
+    ourDebugMode = debugMode;
+    return oldValue;
+  }
+
+  @Override
+  public boolean isDebugMode() {
+    return ourDebugMode;
+  }
+
+  /**
+   * @return object registered on parentDisposable which is equal to object, or null if not found
+   */
+  @Nullable
+  public <T extends Disposable> T findRegisteredObject(@Nonnull Disposable parentDisposable, @Nonnull T object) {
+    return myTree.findRegisteredObject(parentDisposable, object);
+  }
+}

@@ -18,14 +18,14 @@ package com.intellij.openapi.util.objectTree;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.disposer.internal.impl.DisposerInternalImpl;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -45,15 +45,12 @@ final class ObjectNode<T> {
 
   private final long myOwnModification;
 
-  ObjectNode(@Nonnull ObjectTree<T> tree,
-             @Nullable ObjectNode<T> parentNode,
-             @Nonnull T object,
-             long modification) {
+  ObjectNode(@Nonnull DisposerInternalImpl disposerInternal, @Nonnull ObjectTree<T> tree, @Nullable ObjectNode<T> parentNode, @Nonnull T object, long modification) {
     myTree = tree;
     myParent = parentNode;
     myObject = object;
 
-    myTrace = Disposer.isDebugMode() ? ThrowableInterner.intern(new Throwable()) : null;
+    myTrace = disposerInternal.isDebugMode() ? ThrowableInterner.intern(new Throwable()) : null;
     myOwnModification = modification;
   }
 
@@ -201,7 +198,7 @@ final class ObjectNode<T> {
     assert getObject() != aDisposable;
     synchronized (myTree.treeLock) {
       if (myChildren != null) {
-        for (ObjectNode<T> node: myChildren) {
+        for (ObjectNode<T> node : myChildren) {
           node.assertNoReferencesKept(aDisposable);
         }
       }

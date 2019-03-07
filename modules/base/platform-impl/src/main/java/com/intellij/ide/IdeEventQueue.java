@@ -280,7 +280,7 @@ public class IdeEventQueue extends EventQueue {
 
   public void addActivityListener(@Nonnull final Runnable runnable, Disposable parentDisposable) {
     synchronized (myLock) {
-      ContainerUtil.add(runnable, myActivityListeners, parentDisposable);
+      DisposerUtil.add(runnable, myActivityListeners, parentDisposable);
     }
   }
 

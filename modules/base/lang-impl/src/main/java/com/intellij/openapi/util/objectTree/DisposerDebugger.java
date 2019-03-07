@@ -43,6 +43,8 @@ import com.intellij.ui.treeStructure.filtered.FilteringTreeBuilder;
 import com.intellij.util.ui.TextTransferable;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
+import consulo.disposer.internal.DisposerInternal;
+import consulo.disposer.internal.impl.DisposerInternalImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -84,11 +86,16 @@ public class DisposerDebugger implements UiDebuggerExtension, Disposable {
 
     myComponent.setLayout(new BorderLayout());
     myComponent.add(splitter, BorderLayout.CENTER);
-    JLabel countLabel = new JLabel("Total disposable count: " + Disposer.getTree().size());
+    JLabel countLabel = new JLabel("Total disposable count: " + getDisposerTree().size());
     myComponent.add(countLabel, BorderLayout.SOUTH);
 
     addTree(new DisposerTree(this), "All", false);
     addTree(new DisposerTree(this), "Watch", true);
+  }
+
+  private static ObjectTree<Disposable> getDisposerTree() {
+    DisposerInternalImpl disposerInternal = (DisposerInternalImpl)DisposerInternal.ourInstance;
+    return disposerInternal.getTree();
   }
 
   private void addTree(DisposerTree tree, String name, boolean canClear) {
@@ -246,7 +253,7 @@ public class DisposerDebugger implements UiDebuggerExtension, Disposable {
       setLayout(new BorderLayout());
       add(ScrollPaneFactory.createScrollPane(myTree), BorderLayout.CENTER);
 
-      Disposer.getTree().addListener(this);
+      getDisposerTree().addListener(this);
 
       Disposer.register(parent, this);
     }
@@ -278,7 +285,7 @@ public class DisposerDebugger implements UiDebuggerExtension, Disposable {
 
     @Override
     public void dispose() {
-      Disposer.getTree().removeListener(this);
+      getDisposerTree().removeListener(this);
     }
 
     @Nullable
@@ -292,7 +299,7 @@ public class DisposerDebugger implements UiDebuggerExtension, Disposable {
     }
 
     public void clear() {
-      myModificationToFilter = Disposer.getTree().getModification();
+      myModificationToFilter = getDisposerTree().getModification();
       myTreeBuilder.refilter();
     }
   }
@@ -365,7 +372,7 @@ public class DisposerDebugger implements UiDebuggerExtension, Disposable {
         return children;
       }
       else {
-        final ObjectTree<Disposable> tree = Disposer.getTree();
+        final ObjectTree<Disposable> tree = getDisposerTree();
         final Set<Disposable> root = tree.getRootObjects();
         ArrayList<DisposerNode> children = new ArrayList<DisposerNode>(root.size());
         for (Disposable each : root) {

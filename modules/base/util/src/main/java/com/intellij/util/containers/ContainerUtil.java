@@ -15,7 +15,6 @@
  */
 package com.intellij.util.containers;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.*;
@@ -25,11 +24,11 @@ import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Array;
-import java.util.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -1963,17 +1962,6 @@ public class ContainerUtil extends ContainerUtilRt {
   public static <K, V> void putIfNotNull(final K key, @Nullable V value, @Nonnull final MultiMap<K, V> result) {
     if (value != null) {
       result.putValue(key, value);
-    }
-  }
-
-  public static <T> void add(final T element, @Nonnull final Collection<T> result, @Nonnull final Disposable parentDisposable) {
-    if (result.add(element)) {
-      Disposer.register(parentDisposable, new Disposable() {
-        @Override
-        public void dispose() {
-          result.remove(element);
-        }
-      });
     }
   }
 

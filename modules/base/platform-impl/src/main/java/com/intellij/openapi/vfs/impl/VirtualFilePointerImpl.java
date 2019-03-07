@@ -19,6 +19,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TraceableDisposable;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -26,9 +27,10 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerListener;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.PathUtil;
+
 import javax.annotation.Nonnull;
 
-class VirtualFilePointerImpl extends TraceableDisposable implements VirtualFilePointer {
+class VirtualFilePointerImpl implements VirtualFilePointer {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.impl.VirtualFilePointerImpl");
 
   private final VirtualFilePointerListener myListener;
@@ -36,9 +38,15 @@ class VirtualFilePointerImpl extends TraceableDisposable implements VirtualFileP
 
   volatile FilePointerPartNode myNode; // null means disposed
 
+  private final TraceableDisposable myTraceableDisposable;
+
   VirtualFilePointerImpl(VirtualFilePointerListener listener, @Nonnull Disposable parentDisposable, Pair<VirtualFile, String> fileAndUrl) {
-    super(TRACE_CREATION);
+    myTraceableDisposable = Disposer.newTraceDisposable(TRACE_CREATION);
     myListener = listener;
+  }
+
+  public TraceableDisposable getTraceableDisposable() {
+    return myTraceableDisposable;
   }
 
   @Override
@@ -106,7 +114,7 @@ class VirtualFilePointerImpl extends TraceableDisposable implements VirtualFileP
   public void dispose() {
     checkDisposed();
     if (myNode.incrementUsageCount(-1) == 0) {
-      kill("URL when die: "+ toString());
+      myTraceableDisposable.kill("URL when die: "+ toString());
       VirtualFilePointerManager pointerManager = VirtualFilePointerManager.getInstance();
       if (pointerManager instanceof VirtualFilePointerManagerImpl) {
         ((VirtualFilePointerManagerImpl)pointerManager).removeNode(myNode, myListener); // remove from the tree

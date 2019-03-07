@@ -19,6 +19,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.DisposerUtil;
 import com.intellij.profile.ApplicationProfileManager;
 import com.intellij.profile.Profile;
 import com.intellij.profile.ProfileChangeAdapter;
@@ -27,8 +28,8 @@ import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.List;
 
@@ -62,7 +63,7 @@ public abstract class InspectionProfileManager extends ApplicationProfileManager
 
   @Override
   public void addProfileChangeListener(@Nonnull ProfileChangeAdapter listener, @Nonnull Disposable parentDisposable) {
-    ContainerUtil.add(listener, myProfileChangeAdapters, parentDisposable);
+    DisposerUtil.add(listener, myProfileChangeAdapters, parentDisposable);
   }
 
   @Override

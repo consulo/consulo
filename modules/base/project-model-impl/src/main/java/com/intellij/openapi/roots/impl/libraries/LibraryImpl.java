@@ -52,7 +52,7 @@ import static com.intellij.openapi.vfs.VirtualFileVisitor.SKIP_ROOT;
 /**
  * @author dsl
  */
-public class LibraryImpl extends TraceableDisposable implements LibraryEx.ModifiableModelEx, LibraryEx {
+public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.impl.impl.LibraryImpl");
   @NonNls public static final String LIBRARY_NAME_ATTR = "name";
   @NonNls public static final String LIBRARY_TYPE_ATTR = "type";
@@ -64,8 +64,7 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
   private String myName;
   private final LibraryTable myLibraryTable;
   private final Map<OrderRootType, VirtualFilePointerContainer> myRoots;
-  private @javax.annotation.Nullable
-  VirtualFilePointerContainer myExcludedRoots;
+  @Nullable private VirtualFilePointerContainer myExcludedRoots;
   private final JarDirectories myJarDirectories = new JarDirectories();
   private final LibraryImpl mySource;
   private PersistentLibraryKind<?> myKind;
@@ -77,6 +76,8 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
   private final Disposable myPointersDisposable = Disposer.newDisposable();
   private final JarDirectoryWatcher myRootsWatcher = JarDirectoryWatcherFactory.getInstance().createWatcher(myJarDirectories, myRootProvider);
 
+  private final TraceableDisposable myTraceableDisposable;
+
   LibraryImpl(LibraryTable table, Element element, ModuleRootLayerImpl rootModel) throws InvalidDataException {
     this(table, rootModel, null, element.getAttributeValue(LIBRARY_NAME_ATTR),
          (PersistentLibraryKind<?>)LibraryKind.findById(element.getAttributeValue(LIBRARY_TYPE_ATTR)));
@@ -86,7 +87,7 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
     myRootsWatcher.updateWatchedRoots();
   }
 
-  LibraryImpl(String name, @javax.annotation.Nullable final PersistentLibraryKind<?> kind, LibraryTable table, ModuleRootLayerImpl rootModel) {
+  LibraryImpl(String name, @Nullable final PersistentLibraryKind<?> kind, LibraryTable table, ModuleRootLayerImpl rootModel) {
     this(table, rootModel, null, name, kind);
     if (kind != null) {
       myProperties = kind.createDefaultProperties();
@@ -119,7 +120,7 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
                       LibraryImpl newSource,
                       String name,
                       @Nullable final PersistentLibraryKind<?> kind) {
-    super(true);
+    myTraceableDisposable = Disposer.newTraceDisposable(true);
     myLibraryTable = table;
     myModuleRootLayer = moduleRootLayer;
     mySource = newSource;
@@ -135,12 +136,12 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
     checkDisposed();
 
     myDisposed = true;
-    kill(null);
+    myTraceableDisposable. kill(null);
   }
 
   private void checkDisposed() {
     if (isDisposed()) {
-      throwDisposalError("'" + myName + "' already disposed:");
+      myTraceableDisposable.throwDisposalError("'" + myName + "' already disposed:");
     }
   }
 
@@ -347,7 +348,7 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
     return mySource != null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public PersistentLibraryKind<?> getKind() {
     return myKind;

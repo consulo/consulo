@@ -16,15 +16,15 @@ package org.jdom;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.util.IncorrectOperationException;
+import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.filter.ElementFilter;
 import org.jdom.filter.Filter;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -35,7 +35,7 @@ class ImmutableElement extends Element {
   private final List<Attribute> myAttributes;
 
   ImmutableElement(@Nonnull Element origin, @Nonnull final JDOMInterner interner) {
-    Disposer.clearOwnFields(this, Conditions.<Field>alwaysTrue());
+    ReflectionUtil.clearOwnFields(this, Conditions.<Field>alwaysTrue());
     name = interner.internString(origin.getName());
 
     List<Attribute> originAttributes = origin.getAttributes();

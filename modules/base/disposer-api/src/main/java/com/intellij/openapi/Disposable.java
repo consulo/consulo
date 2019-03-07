@@ -29,5 +29,4 @@ public interface Disposable {
   interface Parent extends Disposable {
     void beforeTreeDispose();
   }
-
 }

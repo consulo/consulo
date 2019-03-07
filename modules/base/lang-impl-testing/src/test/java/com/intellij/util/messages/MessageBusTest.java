@@ -20,6 +20,7 @@
 package com.intellij.util.messages;
 
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.messages.impl.MessageBusFactory;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;

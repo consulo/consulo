@@ -33,7 +33,7 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.util.messages.MessageBus;
-import com.intellij.util.messages.MessageBusFactory;
+import com.intellij.util.messages.impl.MessageBusFactory;
 import consulo.application.ApplicationProperties;
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerBuilder;
