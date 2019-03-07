@@ -1,6 +1,6 @@
 package com.intellij.openapi.externalSystem.service;
 
-import com.intellij.execution.rmi.RemoteServer;
+import consulo.util.rmi.RemoteServer;
 import com.intellij.openapi.externalSystem.model.settings.ExternalSystemExecutionSettings;
 import com.intellij.openapi.externalSystem.model.task.*;
 import com.intellij.openapi.externalSystem.service.project.ExternalSystemProjectResolver;

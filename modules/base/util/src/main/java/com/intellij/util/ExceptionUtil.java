@@ -77,7 +77,7 @@ public class ExceptionUtil {
   public static String getThrowableText(@Nonnull Throwable aThrowable, @Nonnull String stackFrameSkipPattern) {
     final String prefix = "\tat ";
     final String prefixProxy = prefix + "$Proxy";
-    final String prefixRemoteUtil = prefix + "com.intellij.execution.rmi.RemoteUtil";
+    final String prefixRemoteUtil = prefix + "consulo.util.rmi.RemoteUtil";
     final String skipPattern = prefix + stackFrameSkipPattern;
 
     final StringWriter stringWriter = new StringWriter();

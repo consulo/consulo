@@ -13,56 +13,57 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.execution.rmi;
+package consulo.util.rmi;
 
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.ThrowableComputable;
-import com.intellij.util.ObjectUtil;
-import com.intellij.util.containers.ConcurrentFactoryMap;
-import gnu.trove.THashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.lang.reflect.*;
 import java.rmi.Remote;
 import java.rmi.ServerError;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author Gregory.Shrago
  */
 public class RemoteUtil {
-  RemoteUtil() {
+  private RemoteUtil() {
   }
 
-  private static final ConcurrentFactoryMap<Pair<Class<?>, Class<?>>, Map<Method, Method>> ourRemoteToLocalMap =
-    new ConcurrentFactoryMap<Pair<Class<?>, Class<?>>, Map<Method, Method>>() {
-      @Override
-      protected Map<Method, Method> create(Pair<Class<?>, Class<?>> key) {
-        final THashMap<Method, Method> map = new THashMap<Method, Method>();
-        for (Method method : key.second.getMethods()) {
-          Method m = null;
-          main:
-          for (Method candidate : key.first.getMethods()) {
-            if (!candidate.getName().equals(method.getName())) continue;
-            Class<?>[] cpts = candidate.getParameterTypes();
-            Class<?>[] mpts = method.getParameterTypes();
-            if (cpts.length != mpts.length) continue;
-            for (int i = 0; i < mpts.length; i++) {
-              Class<?> mpt = mpts[i];
-              Class<?> cpt = cpts[i];
-              if (!cpt.isAssignableFrom(mpt)) continue main;
-            }
-            m = candidate;
-            break;
-          }
-          if (m != null) map.put(method, m);
+  private static final ConcurrentMap<Map.Entry<Class<?>, Class<?>>, Map<Method, Method>> ourRemoteToLocalMap = new ConcurrentHashMap<Map.Entry<Class<?>, Class<?>>, Map<Method, Method>>();
+
+  @Nonnull
+  private static Map<Method, Method> getOrCreateRemoteToLocal(Map.Entry<Class<?>, Class<?>> key) {
+    Map<Method, Method> methods = ourRemoteToLocalMap.get(key);
+    if (methods != null) {
+      return methods;
+    }
+
+    final Map<Method, Method> map = new HashMap<Method, Method>();
+    for (Method method : key.getValue().getMethods()) {
+      Method m = null;
+      main:
+      for (Method candidate : key.getKey().getMethods()) {
+        if (!candidate.getName().equals(method.getName())) continue;
+        Class<?>[] cpts = candidate.getParameterTypes();
+        Class<?>[] mpts = method.getParameterTypes();
+        if (cpts.length != mpts.length) continue;
+        for (int i = 0; i < mpts.length; i++) {
+          Class<?> mpt = mpts[i];
+          Class<?> cpt = cpts[i];
+          if (!cpt.isAssignableFrom(mpt)) continue main;
         }
-        return map;
+        m = candidate;
+        break;
       }
-    };
+      if (m != null) map.put(method, m);
+    }
+
+    ourRemoteToLocalMap.putIfAbsent(key, map);
+    return map;
+  }
 
   @Nullable
   public static <T> T castToRemote(final Object object, final Class<T> clazz) {
@@ -93,12 +94,15 @@ public class RemoteUtil {
   }
 
   public static <T> T substituteClassLoader(final T remote, final ClassLoader classLoader) throws Exception {
-    return executeWithClassLoader(new ThrowableComputable<T, Exception>() {
-      public T compute() {
+    return executeWithClassLoader(new Callable<T>() {
+      @Override
+      public T call() {
         Object proxy = Proxy.newProxyInstance(classLoader, remote.getClass().getInterfaces(), new InvocationHandler() {
+          @Override
           public Object invoke(Object proxy, final Method method, final Object[] args) throws Throwable {
-            return executeWithClassLoader(new ThrowableComputable<Object, Exception>() {
-              public Object compute() throws Exception {
+            return executeWithClassLoader(new Callable<Object>() {
+              @Override
+              public Object call() throws Exception {
                 try {
                   return handleRemoteResult(method.invoke(remote, args), method.getReturnType(), classLoader, true);
                 }
@@ -119,7 +123,7 @@ public class RemoteUtil {
   }
 
   public static <T> T handleRemoteResult(Object value, Class<? super T> clazz, Object requestor) throws Exception {
-    return RemoteUtil.<T>handleRemoteResult(value, clazz, requestor.getClass().getClassLoader(), false);
+    return handleRemoteResult(value, clazz, requestor.getClass().getClassLoader(), false);
   }
 
   private static <T> T handleRemoteResult(Object value, Class<?> methodReturnType, ClassLoader classLoader, boolean substituteClassLoader) throws Exception {
@@ -129,7 +133,7 @@ public class RemoteUtil {
         result = castToLocal(value, tryFixReturnType(value, methodReturnType, classLoader));
       }
       else {
-        result = substituteClassLoader? substituteClassLoader(value, classLoader) : value;
+        result = substituteClassLoader ? substituteClassLoader(value, classLoader) : value;
       }
     }
     else if (value instanceof List && methodReturnType.isInterface()) {
@@ -138,7 +142,7 @@ public class RemoteUtil {
     else if (value instanceof Object[]) {
       Object[] array = (Object[])value;
       for (int i = 0; i < array.length; i++) {
-         array[i] = handleRemoteResult(array[i], Object.class, classLoader, substituteClassLoader);
+        array[i] = handleRemoteResult(array[i], Object.class, classLoader, substituteClassLoader);
       }
       result = array;
     }
@@ -155,13 +159,12 @@ public class RemoteUtil {
     return false;
   }
 
-  public static <T> T executeWithClassLoader(final ThrowableComputable<T, Exception> action, final ClassLoader classLoader)
-    throws Exception {
+  public static <T> T executeWithClassLoader(final Callable<T> action, final ClassLoader classLoader) throws Exception {
     final Thread thread = Thread.currentThread();
     final ClassLoader prev = thread.getContextClassLoader();
     try {
       thread.setContextClassLoader(classLoader);
-      return action.compute();
+      return action.call();
     }
     finally {
       thread.setContextClassLoader(prev);
@@ -173,9 +176,9 @@ public class RemoteUtil {
    * levels then - {@link InvocationTargetException}, {@link UndeclaredThrowableException} etc.
    * <p/>
    * This method tries to extract the 'real exception' from the given potentially wrapped one.
-   * 
-   * @param e  exception to process
-   * @return   extracted 'real exception' if any; given exception otherwise
+   *
+   * @param e exception to process
+   * @return extracted 'real exception' if any; given exception otherwise
    */
   @Nonnull
   public static Throwable unwrap(@Nonnull Throwable e) {
@@ -199,19 +202,20 @@ public class RemoteUtil {
       myLoader = loader;
     }
 
+    @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
       if (method.getDeclaringClass() == Object.class) {
         return method.invoke(myRemote, args);
       }
       else {
-        Method m = ourRemoteToLocalMap.get(Pair.<Class<?>, Class<?>>create(myRemote.getClass(), myClazz)).get(method);
+        Method m = getOrCreateRemoteToLocal(new AbstractMap.SimpleEntry<Class<?>, Class<?>>(myRemote.getClass(), myClazz)).get(method);
         if (m == null) throw new NoSuchMethodError(method.getName() + " in " + myRemote.getClass());
         try {
           return handleRemoteResult(m.invoke(myRemote, args), method.getReturnType(), myLoader, false);
         }
         catch (InvocationTargetException e) {
           Throwable cause = e.getCause(); // root cause may go deeper than we need, so leave it like this
-          if (cause instanceof ServerError) cause = ObjectUtil.chooseNotNull(cause.getCause(), cause);
+          if (cause instanceof ServerError) cause = cause.getCause() == null ? cause : cause.getCause();
           if (cause instanceof RuntimeException) throw cause;
           if (cause instanceof Error) throw cause;
           if (canThrow(cause, method)) throw cause;

@@ -33,10 +33,12 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.util.rmi.RemoteDeadHand;
+import consulo.util.rmi.RemoteServer;
+import consulo.util.rmi.RemoteUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,6 +48,7 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * @author Gregory.Shrago
@@ -216,9 +219,9 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
   }
 
   private EntryPoint acquire(final RunningInfo port) throws Exception {
-    EntryPoint result = RemoteUtil.executeWithClassLoader(new ThrowableComputable<EntryPoint, Exception>() {
+    EntryPoint result = RemoteUtil.executeWithClassLoader(new Callable<EntryPoint>() {
       @Override
-      public EntryPoint compute() throws Exception {
+      public EntryPoint call() throws Exception {
         Registry registry = LocateRegistry.getRegistry("localhost", port.port);
         Remote remote = registry.lookup(port.name);
         if (Remote.class.isAssignableFrom(myValueClass)) {

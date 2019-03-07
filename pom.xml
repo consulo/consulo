@@ -48,6 +48,7 @@
     <module>jre9-stub</module>
 
     <module>modules/autonomic/async-api</module>
+    <module>modules/autonomic/util-rmi</module>
 
     <module>modules/base/annotations</module>
     <module>modules/base/analysis-api</module>

@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.execution.rmi;
+package consulo.util.rmi;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import com.intellij.util.containers.ContainerUtilRt;
 
 import java.lang.ref.WeakReference;
 import java.rmi.Remote;
@@ -68,7 +67,10 @@ public class RemoteObject implements Remote, Unreferenced {
     if (children.isEmpty()) return;
     final ArrayList<RemoteObject> list = new ArrayList<RemoteObject>(children.size());
     for (WeakReference<? extends RemoteObject> child : children) {
-      ContainerUtilRt.addIfNotNull(child.get(), list);
+      RemoteObject remoteObject = child.get();
+      if(remoteObject != null) {
+        list.add(remoteObject);
+      }
     }
     myChildren.keySet().removeAll(list);
     for (RemoteObject child : list) {

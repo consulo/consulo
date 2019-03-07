@@ -1,6 +1,6 @@
 package com.intellij.openapi.externalSystem.service.remote;
 
-import com.intellij.execution.rmi.RemoteObject;
+import consulo.util.rmi.RemoteObject;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationEvent;
 import com.intellij.openapi.externalSystem.service.notification.ExternalSystemProgressNotificationManager;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener;

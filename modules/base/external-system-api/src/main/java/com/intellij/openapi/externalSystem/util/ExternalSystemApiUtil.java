@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.externalSystem.util;
 
-import com.intellij.execution.rmi.RemoteUtil;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.diagnostic.Logger;
@@ -52,10 +51,11 @@ import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.lang.UrlClassLoader;
 import com.intellij.util.ui.UIUtil;
 import consulo.externalSystem.module.extension.ExternalSystemModuleExtension;
+import consulo.util.rmi.RemoteUtil;
 import consulo.vfs.util.ArchiveVfsUtil;
 import org.jetbrains.annotations.Contract;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.PrintWriter;

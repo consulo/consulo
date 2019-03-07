@@ -1,6 +1,6 @@
 package com.intellij.openapi.externalSystem.service.notification;
 
-import com.intellij.execution.rmi.RemoteUtil;
+import consulo.util.rmi.RemoteUtil;
 import com.intellij.ide.errorTreeView.*;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationGroup;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.execution.rmi;
+package consulo.util.rmi;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
