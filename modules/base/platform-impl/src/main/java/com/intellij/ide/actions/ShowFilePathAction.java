@@ -44,22 +44,21 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.SystemProperties;
-import com.intellij.util.ui.EmptyIcon;
 import com.sun.jna.Native;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinDef;
 import consulo.annotations.Exported;
+import consulo.awt.TargetAWT;
+import consulo.platform.Platform;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.image.Image;
 import consulo.vfs.ArchiveFileSystem;
 import consulo.vfs.util.ArchiveVfsUtil;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.*;
@@ -69,6 +68,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ShowFilePathAction extends AnAction {
@@ -180,12 +180,14 @@ public class ShowFilePathAction extends AnAction {
       eachParent = eachParent.getParent();
     }
 
+    Platform.FileSystem fs = Platform.current().fs();
     Application.get().executeOnPooledThread(() -> {
-      List<Icon> icons = new ArrayList<>();
+      List<Image> icons = new ArrayList<>();
       for (String url : fileUrls) {
         File ioFile = new File(url);
-        icons.add(ioFile.exists() ? FileSystemView.getFileSystemView().getSystemIcon(ioFile) : EmptyIcon.ICON_16);
+        icons.add(ioFile.exists() ? fs.getImage(ioFile) : Image.empty(16));
       }
+
       Application.get().invokeLater(() -> action.accept(createPopup(files, icons)));
     });
   }
@@ -198,8 +200,8 @@ public class ShowFilePathAction extends AnAction {
     return url;
   }
 
-  private static ListPopup createPopup(List<VirtualFile> files, List<Icon> icons) {
-    final BaseListPopupStep<VirtualFile> step = new BaseListPopupStep<VirtualFile>("File Path", files, icons) {
+  private static ListPopup createPopup(List<VirtualFile> files, List<Image> icons) {
+    final BaseListPopupStep<VirtualFile> step = new BaseListPopupStep<VirtualFile>("File Path", files, icons.stream().map(TargetAWT::to).collect(Collectors.toList())) {
       @Nonnull
       @Override
       public String getTextFor(final VirtualFile value) {
