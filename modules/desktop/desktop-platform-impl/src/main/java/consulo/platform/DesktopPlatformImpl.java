@@ -16,14 +16,37 @@
 package consulo.platform;
 
 import com.intellij.openapi.util.io.win32.WindowsElevationUtil;
+import consulo.ui.desktop.internal.image.DesktopImageOverIconImpl;
+import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
+import java.io.File;
 
 /**
  * @author VISTALL
  * @since 15-Sep-17
  */
 class DesktopPlatformImpl extends PlatformBase {
+  static class DesktopFileSystemImpl extends FileSystemImpl {
+    @Nullable
+    @Override
+    public Image getImage(File file) {
+      Icon systemIcon = FileSystemView.getFileSystemView().getSystemIcon(file);
+      return systemIcon == null ? null : new DesktopImageOverIconImpl(systemIcon);
+    }
+  }
+
   public DesktopPlatformImpl() {
     super("consulo.platform.desktop");
+  }
+
+  @Nonnull
+  @Override
+  protected FileSystem createFS() {
+    return new DesktopFileSystemImpl();
   }
 
   @Override

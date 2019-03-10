@@ -18,8 +18,11 @@ package consulo.platform;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.util.ObjectUtil;
 import consulo.annotations.DeprecationInfo;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.File;
 
 /**
  * @author VISTALL
@@ -51,7 +54,7 @@ public interface Platform {
   @DeprecationInfo("This is marker for future unify. In most case unified variant works good, but need more tests")
   @SuppressWarnings("deprecation")
   static void onlyAtDesktop(@Nonnull Runnable runnable) {
-    if(current().isDesktop()) {
+    if (current().isDesktop()) {
       runnable.run();
     }
   }
@@ -62,10 +65,36 @@ public interface Platform {
   }
   //endregion
 
+  interface FileSystem {
+    boolean isCaseSensitive();
+
+    boolean areSymLinksSupported();
+
+    /**
+     * @return image filemanager image for file. If return null it will use default icon from IDE
+     */
+    @Nullable
+    default Image getImage(File file) {
+      return null;
+    }
+  }
+
+  interface OperatingSystem {
+    boolean isWindows();
+
+    boolean isMac();
+  }
+
   @Nonnull
   static Platform current() {
     return PlatformInternal.current();
   }
+
+  @Nonnull
+  FileSystem fs();
+
+  @Nonnull
+  OperatingSystem os();
 
   @Nonnull
   PluginId getPluginId();

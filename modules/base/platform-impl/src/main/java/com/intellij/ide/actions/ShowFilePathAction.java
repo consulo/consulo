@@ -22,6 +22,7 @@ import com.intellij.execution.process.CapturingProcessHandler;
 import com.intellij.execution.util.ExecUtil;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.IdeBundle;
+import com.intellij.idea.ActionsBundle;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -51,6 +52,7 @@ import consulo.annotations.Exported;
 import consulo.ui.RequiredUIAccess;
 import consulo.vfs.ArchiveFileSystem;
 import consulo.vfs.util.ArchiveVfsUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
@@ -138,11 +140,13 @@ public class ShowFilePathAction extends AnAction {
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    if (SystemInfo.isMac || !isSupported()) {
-      e.getPresentation().setVisible(false);
-      return;
+    boolean visible = !SystemInfo.isMac && isSupported();
+    e.getPresentation().setVisible(visible);
+    if (visible) {
+      VirtualFile file = getFile(e);
+      e.getPresentation().setEnabled(file != null);
+      e.getPresentation().setText(ActionsBundle.message("action.ShowFilePath.tuned", file != null && file.isDirectory() ? 1 : 0));
     }
-    e.getPresentation().setEnabled(getFile(e) != null);
   }
 
   @RequiredUIAccess
