@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.model;
+package consulo.ui.impl.model;
+
+import consulo.ui.model.ListModel;
 
 import javax.annotation.Nonnull;
 
