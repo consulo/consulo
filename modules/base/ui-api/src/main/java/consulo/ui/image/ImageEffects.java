@@ -15,6 +15,7 @@
  */
 package consulo.ui.image;
 
+import consulo.annotations.DeprecationInfo;
 import consulo.ui.UIInternal;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.shared.ColorValue;
@@ -65,13 +66,17 @@ public final class ImageEffects {
   }
 
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use Image#empty")
   public static Image empty(int widthAndHeight) {
-    return empty(widthAndHeight, widthAndHeight);
+    return Image.empty(widthAndHeight, widthAndHeight);
   }
 
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use Image#empty")
   public static Image empty(int width, int height) {
-    return UIInternal.get()._ImageEffects_empty(width, height);
+    return Image.empty(width, height);
   }
 
   @Nonnull

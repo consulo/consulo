@@ -39,7 +39,6 @@ import consulo.awt.TargetAWT;
 import consulo.module.extension.ModuleExtensionProviderEP;
 import consulo.module.extension.impl.ModuleExtensionProviders;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
 
 import javax.swing.*;
 import java.awt.*;
@@ -258,7 +257,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
               p.add(path, BorderLayout.SOUTH);
 
               List<String> extensions = ((ReopenProjectAction)value).getExtensions();
-              Image moduleMainIcon = ImageEffects.empty(16, 16);
+              Image moduleMainIcon = Image.empty(16);
               if (!extensions.isEmpty()) {
                 for (String extensionId : extensions) {
                   ModuleExtensionProviderEP provider = ModuleExtensionProviders.findProvider(extensionId);

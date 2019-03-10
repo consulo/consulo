@@ -80,7 +80,7 @@ public class IconDescriptor {
     }
 
     if(myRightIcon == null) {
-      return mainIcon == null ? ImageEffects.empty(16, 16) : mainIcon;
+      return mainIcon == null ? Image.empty(16) : mainIcon;
     }
     else {
       return ImageEffects.appendRight(mainIcon, myRightIcon);

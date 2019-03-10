@@ -22,7 +22,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.diff.impl.dir.DirDiffTableModel;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
 
 /**
  * @author Konstantin Bulenkov
@@ -30,7 +29,7 @@ import consulo.ui.image.ImageEffects;
 class ChangeCompareModeAction extends AnAction {
   private final static Image ON = AllIcons.Actions.Checked;
   private final static Image ON_SELECTED = AllIcons.Actions.Checked_selected;
-  private final static Image OFF = ImageEffects.empty(ON.getHeight());
+  private final static Image OFF = Image.empty(ON.getHeight());
 
   private final DirDiffTableModel myModel;
   private final DirDiffSettings.CompareMode myMode;

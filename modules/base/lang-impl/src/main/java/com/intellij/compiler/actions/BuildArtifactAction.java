@@ -81,7 +81,7 @@ public class BuildArtifactAction extends DumbAwareAction {
 
     List<ArtifactPopupItem> items = new ArrayList<ArtifactPopupItem>();
     if (artifacts.size() > 1) {
-      items.add(0, new ArtifactPopupItem(null, "All Artifacts", ImageEffects.empty(16)));
+      items.add(0, new ArtifactPopupItem(null, "All Artifacts", Image.empty(16)));
     }
     Set<Artifact> selectedArtifacts = new HashSet<Artifact>(ArtifactsWorkspaceSettings.getInstance(project).getArtifactsToBuild());
     TIntArrayList selectedIndices = new TIntArrayList();

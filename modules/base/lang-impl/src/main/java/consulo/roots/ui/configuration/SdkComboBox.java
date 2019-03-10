@@ -50,7 +50,6 @@ import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -113,7 +112,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
     setRenderer(new ColoredListCellRendererWrapper<SdkComboBoxItem>() {
       @Override
       public void doCustomize(JList list, SdkComboBoxItem value, int index, boolean selected, boolean hasFocus) {
-        setIcon(ImageEffects.empty(16));    // to fix vertical size
+        setIcon(Image.empty(16));    // to fix vertical size
         if (value instanceof InvalidSdkComboBoxItem) {
           setIcon(AllIcons.Toolbar.Unknown);
           append(value.getSdkName(), SimpleTextAttributes.ERROR_ATTRIBUTES);

@@ -38,7 +38,6 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -51,9 +50,9 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 
 public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DesktopDeferredIconImpl<T>> implements DeferredIcon, RetrievableIcon, consulo.ui.image.Image {
-  private static final consulo.ui.image.Image EMPTY_ICON = ImageEffects.empty(16, 16);
+  private static final consulo.ui.image.Image EMPTY_ICON = Image.empty(16);
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ui.DeferredIconImpl");
+  private static final Logger LOG = Logger.getInstance(DesktopDeferredIconImpl.class);
   private static final int MIN_AUTO_UPDATE_MILLIS = 950;
   private static final RepaintScheduler ourRepaintScheduler = new RepaintScheduler();
   @Nonnull

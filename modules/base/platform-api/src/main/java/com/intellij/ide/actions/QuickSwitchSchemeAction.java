@@ -23,7 +23,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
 import consulo.ui.migration.SwingImageRef;
 
 import javax.annotation.Nonnull;
@@ -33,7 +32,7 @@ import javax.annotation.Nonnull;
  */
 public abstract class QuickSwitchSchemeAction extends AnAction implements DumbAware {
   protected static final SwingImageRef ourCurrentAction = AllIcons.Diff.CurrentLine;
-  protected static final Image ourNotCurrentAction = ImageEffects.empty(ourCurrentAction.getIconWidth(), ourCurrentAction.getIconHeight());
+  protected static final Image ourNotCurrentAction = Image.empty(ourCurrentAction.getIconWidth(), ourCurrentAction.getIconHeight());
   @Nonnull
   protected String myActionPlace = ActionPlaces.UNKNOWN;
 

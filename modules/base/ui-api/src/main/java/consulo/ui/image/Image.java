@@ -49,6 +49,16 @@ public interface Image {
     return UIInternal.get()._Image_lazy(imageSupplier);
   }
 
+  @Nonnull
+  static Image empty(int widthAndHeight) {
+    return UIInternal.get()._ImageEffects_empty(widthAndHeight, widthAndHeight);
+  }
+
+  @Nonnull
+  static Image empty(int width, int height) {
+    return UIInternal.get()._ImageEffects_empty(width, height);
+  }
+
   int getHeight();
 
   int getWidth();

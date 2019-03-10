@@ -35,7 +35,6 @@ import com.intellij.usages.impl.UsageViewManagerImpl;
 import com.intellij.usages.rules.UsageInFile;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -106,7 +105,7 @@ class ShowUsagesTableCellRenderer implements TableCellRenderer {
 
       if (column == 1) {
         final Image icon = presentation.getIcon();
-        textChunks.setIcon(icon == null ? ImageEffects.empty(16) : icon);
+        textChunks.setIcon(icon == null ? Image.empty(16) : icon);
         if (text.length != 0) {
           SimpleTextAttributes attributes = isSelected ?
                                             new SimpleTextAttributes(bg, fg, fg, SimpleTextAttributes.STYLE_ITALIC) :
