@@ -28,6 +28,7 @@ import consulo.ui.shared.Rectangle2D;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.swing.*;
 import java.io.File;
 
 /**
@@ -41,6 +42,11 @@ class DesktopWelcomeIdeFrame implements IdeFrameEx {
   public DesktopWelcomeIdeFrame(Runnable clearInstance) {
     myFrame = new FlatWelcomeFrame(clearInstance);
     myFrame.toUIWindow().putUserData(IdeFrame.KEY, this);
+  }
+
+  @Override
+  public JComponent getComponent() {
+    return myFrame.getRootPane();
   }
 
   @Nonnull
