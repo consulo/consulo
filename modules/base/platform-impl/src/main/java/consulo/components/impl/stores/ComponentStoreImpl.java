@@ -28,7 +28,6 @@ import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.containers.SmartHashSet;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.xmlb.JDOMXIncluder;
-import consulo.application.AccessRule;
 import consulo.components.impl.stores.storage.StateStorageManager.ExternalizationSession;
 import gnu.trove.THashMap;
 import org.jdom.Element;
@@ -60,7 +59,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     }
 
     try {
-      AccessRule.read(() -> loadState(componentInfo, null, false));
+      loadState(componentInfo, null, false);
     }
     catch (StateStorageException | ProcessCanceledException e) {
       throw e;

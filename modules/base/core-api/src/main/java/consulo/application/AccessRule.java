@@ -23,6 +23,7 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ThrowableRunnable;
+import consulo.annotations.RequiredReadAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,7 +34,7 @@ import javax.annotation.Nullable;
  */
 public final class AccessRule {
   @SuppressWarnings("deprecation")
-  public static <E extends Throwable> void read(@Nonnull ThrowableRunnable<E> action) throws E {
+  public static <E extends Throwable> void read(@RequiredReadAction @Nonnull ThrowableRunnable<E> action) throws E {
     try (AccessToken ignored = Application.get().acquireReadActionLock()) {
       action.run();
     }
@@ -41,7 +42,7 @@ public final class AccessRule {
 
   @Nullable
   @SuppressWarnings("deprecation")
-  public static <T, E extends Throwable> T read(@Nonnull ThrowableComputable<T, E> action) throws E {
+  public static <T, E extends Throwable> T read(@RequiredReadAction @Nonnull ThrowableComputable<T, E> action) throws E {
     try (AccessToken ignored = Application.get().acquireReadActionLock()) {
       return action.compute();
     }

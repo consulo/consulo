@@ -14,6 +14,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Tag;
 import com.intellij.util.xmlb.annotations.Transient;
+import consulo.application.AccessRule;
 import consulo.util.pointers.NamedPointer;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -50,7 +51,7 @@ public class RunConfigurationModule implements JDOMExternalizable {
       // we are unable to set 'null' module from 'not null' one
       String moduleName = modules.get(0).getAttributeValue(ATTRIBUTE);
       if (!StringUtil.isEmpty(moduleName)) {
-        myModulePointer = ModulePointerManager.getInstance(myProject).create(moduleName);
+        myModulePointer = AccessRule.read(() -> ModulePointerManager.getInstance(myProject).create(moduleName));
       }
     }
   }
