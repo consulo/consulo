@@ -15,54 +15,23 @@
  */
 package consulo.test.light.impl;
 
-import com.intellij.concurrency.JobLauncher;
-import com.intellij.ide.UiActivityMonitor;
-import com.intellij.ide.ui.UISettings;
-import com.intellij.ide.util.treeView.TreeAnchorizer;
-import com.intellij.lang.LanguageExtensionPoint;
-import com.intellij.lang.LanguageParserDefinitions;
-import com.intellij.lang.PsiBuilderFactory;
-import com.intellij.lang.impl.PsiBuilderFactoryImpl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.impl.ModalityStateEx;
 import com.intellij.openapi.components.ExtensionAreas;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
-import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.impl.ExtensionPointImpl;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
-import com.intellij.openapi.extensions.impl.UndefinedPluginDescriptor;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.ThrowableComputable;
-import com.intellij.openapi.vfs.encoding.EncodingManager;
-import com.intellij.psi.LanguageFileViewProviders;
-import com.intellij.psi.LanguageSubstitutors;
-import com.intellij.ui.ExpandableItemsHandlerFactory;
-import com.intellij.ui.TreeUIHelper;
-import com.intellij.util.KeyedLazyInstanceEP;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
-import consulo.application.options.PathMacrosService;
-import consulo.extensions.ExtensionExtender;
 import consulo.injecting.InjectingContainerBuilder;
-import consulo.lang.LanguageVersionDefines;
-import consulo.lang.LanguageVersionResolvers;
-import consulo.psi.tree.ASTCompositeFactory;
-import consulo.psi.tree.ASTLazyFactory;
-import consulo.psi.tree.ASTLeafFactory;
-import consulo.psi.tree.impl.DefaultASTCompositeFactory;
-import consulo.psi.tree.impl.DefaultASTLazyFactory;
-import consulo.psi.tree.impl.DefaultASTLeafFactory;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
-import java.lang.reflect.Modifier;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
@@ -72,12 +41,14 @@ import java.util.concurrent.Future;
  */
 public class LightApplication extends ComponentManagerImpl implements Application {
   private final Disposable myLastDisposable;
+  private final LightExtensionRegistrator myRegistrator;
 
   private ModalityState myNoneModalityState;
 
-  public LightApplication(Disposable lastDisposable) {
+  public LightApplication(Disposable lastDisposable, LightExtensionRegistrator registrator) {
     super(null, "LightApplication", ExtensionAreas.APPLICATION);
     myLastDisposable = lastDisposable;
+    myRegistrator = registrator;
 
     ApplicationManager.setApplication(this, myLastDisposable);
   }
@@ -91,49 +62,12 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
 
   @Override
   protected void registerExtensionPointsAndExtensions(ExtensionsAreaImpl area) {
-    registerExtensionPoint(area, ASTLazyFactory.EP.getExtensionPointName(), ASTLazyFactory.class);
-    registerExtension(area, ASTLazyFactory.EP.getExtensionPointName(), new DefaultASTLazyFactory());
-
-    registerExtensionPoint(area, ASTLeafFactory.EP.getExtensionPointName(), ASTLeafFactory.class);
-    registerExtension(area, ASTLeafFactory.EP.getExtensionPointName(), new DefaultASTLeafFactory());
-
-    registerExtensionPoint(area, ASTCompositeFactory.EP.getExtensionPointName(), ASTCompositeFactory.class);
-    registerExtension(area, ASTCompositeFactory.EP.getExtensionPointName(), new DefaultASTCompositeFactory());
-
-    registerExtensionPoint(area, LanguageParserDefinitions.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
-    registerExtensionPoint(area, LanguageSubstitutors.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
-    registerExtensionPoint(area, LanguageVersionResolvers.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
-    registerExtensionPoint(area, LanguageVersionDefines.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
-    registerExtensionPoint(area, LanguageFileViewProviders.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
-
-    registerExtensionPoint(area, PathMacroFilter.EP_NAME, PathMacroFilter.class);
-    registerExtensionPoint(area, ExtensionExtender.EP_NAME, KeyedLazyInstanceEP.class);
-  }
-
-  private <T> void registerExtension(ExtensionsAreaImpl area, ExtensionPointName<T> extensionPointName, T value) {
-    ExtensionPointImpl<T> point = (ExtensionPointImpl<T>)area.getExtensionPoint(extensionPointName);
-    point.registerExtensionAdapter(new SimpleInstanceComponentAdapter<>(value));
-  }
-
-  private void registerExtensionPoint(ExtensionsAreaImpl area, ExtensionPointName name, Class aClass) {
-    ExtensionPoint.Kind kind = aClass.isInterface() || (aClass.getModifiers() & Modifier.ABSTRACT) != 0 ? ExtensionPoint.Kind.INTERFACE : ExtensionPoint.Kind.BEAN_CLASS;
-    area.registerExtensionPoint(name.getName(), aClass.getName(), new UndefinedPluginDescriptor(), kind);
+    myRegistrator.registerExtensionPointsAndExtensions(area);
   }
 
   @Override
   protected void registerServices(InjectingContainerBuilder builder) {
-    builder.bind(PsiBuilderFactory.class).to(PsiBuilderFactoryImpl.class);
-    builder.bind(FileTypeRegistry.class).to(LightFileTypeRegistry.class);
-    builder.bind(FileDocumentManager.class).to(LightFileDocumentManager.class);
-    builder.bind(JobLauncher.class).to(LightJobLauncher.class);
-    builder.bind(EncodingManager.class).to(LightEncodingManager.class);
-    builder.bind(PathMacrosService.class).to(LightPathMacrosService.class);
-    builder.bind(PathMacros.class).to(LightPathMacros.class);
-    builder.bind(UISettings.class);
-    builder.bind(ExpandableItemsHandlerFactory.class).to(LightExpandableItemsHandlerFactory.class);
-    builder.bind(TreeUIHelper.class).to(LightTreeUIHelper.class);
-    builder.bind(UiActivityMonitor.class).to(LightUiActivityMonitor.class);
-    builder.bind(TreeAnchorizer.class).to(TreeAnchorizer.class);
+    myRegistrator.registerServices(builder);
   }
 
   @Override

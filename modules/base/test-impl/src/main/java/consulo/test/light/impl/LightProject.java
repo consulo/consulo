@@ -20,14 +20,7 @@ import com.intellij.openapi.components.ExtensionAreas;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFileFactory;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.impl.PsiFileFactoryImpl;
-import com.intellij.psi.impl.PsiManagerImpl;
-import com.intellij.psi.impl.PsiModificationTrackerImpl;
-import com.intellij.psi.util.PsiModificationTracker;
 import consulo.injecting.InjectingContainerBuilder;
 
 import javax.annotation.Nonnull;
@@ -40,22 +33,23 @@ import javax.annotation.Nullable;
 public class LightProject extends ComponentManagerImpl implements Project {
   @Nonnull
   private final String myName;
+  @Nonnull
+  private final LightExtensionRegistrator myRegistrator;
 
-  public LightProject(@Nullable ComponentManager parent, @Nonnull String name) {
+  public LightProject(@Nullable ComponentManager parent, @Nonnull String name, @Nonnull LightExtensionRegistrator registrator) {
     super(parent, name, ExtensionAreas.PROJECT);
     myName = name;
+    myRegistrator = registrator;
   }
 
   @Override
   protected void registerExtensionPointsAndExtensions(ExtensionsAreaImpl area) {
+    myRegistrator.registerExtensionPointsAndExtensions(area);
   }
 
   @Override
   protected void registerServices(InjectingContainerBuilder builder) {
-    builder.bind(PsiFileFactory.class).to(PsiFileFactoryImpl.class);
-    builder.bind(PsiManager.class).to(PsiManagerImpl.class);
-    builder.bind(FileIndexFacade.class).to(LightFileIndexFacade.class);
-    builder.bind(PsiModificationTracker.class).to(PsiModificationTrackerImpl.class);
+    myRegistrator.registerServices(builder);
   }
 
   @Override
