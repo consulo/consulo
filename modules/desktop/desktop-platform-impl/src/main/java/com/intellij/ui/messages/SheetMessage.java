@@ -26,6 +26,7 @@ import com.intellij.ui.mac.MacMainFrameDecorator;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ui.Animator;
 import consulo.awt.TargetAWT;
+import consulo.ui.desktop.internal.window.JDialogAsUIWindow;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -84,7 +85,9 @@ public class SheetMessage {
 
     maximizeIfNeeded(owner);
 
-    myWindow = new JDialog(owner, "This should not be shown", Dialog.ModalityType.APPLICATION_MODAL);
+    myWindow = new JDialogAsUIWindow(uiOwner, true);
+    myWindow.setTitle("This should not be shown");
+    myWindow.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
     myWindow.getRootPane().putClientProperty("apple.awt.draggableWindowBackground", Boolean.FALSE);
 
     myWindow.addWindowListener(new WindowAdapter() {
