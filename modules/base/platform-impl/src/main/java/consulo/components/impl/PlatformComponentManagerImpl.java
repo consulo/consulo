@@ -57,7 +57,7 @@ public abstract class PlatformComponentManagerImpl extends ComponentManagerImpl 
     if (stateStore != null) {
       StateComponentInfo<Object> info = stateStore.loadStateIfStorable(component);
       if (info != null) {
-        if (LOGGER.isDebugEnabled() && Application.get().isWriteAccessAllowed()) {
+        if (Application.get().isWriteAccessAllowed()) {
           LOGGER.warn(new Throwable("Getting service from write-action leads to possible deadlock. Service implementation " + component.getClass().getName()));
         }
 
