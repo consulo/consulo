@@ -156,15 +156,17 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   private Map<Class<?>, Object> myChecker = new ConcurrentHashMap<>();
 
-  protected ComponentManagerImpl(@Nullable ComponentManager parent, @Nonnull String name, @Nullable String extensionAreaId) {
+  protected ComponentManagerImpl(@Nullable ComponentManager parent, @Nonnull String name, @Nullable String extensionAreaId, boolean buildInjectionContainer) {
     myParent = parent;
     myName = name;
     myExtensionAreaId = extensionAreaId;
 
-    buildInjectingContainer();
+    if (buildInjectionContainer) {
+      buildInjectingContainer();
+    }
   }
 
-  private void buildInjectingContainer() {
+  protected void buildInjectingContainer() {
     myMessageBus = MessageBusFactory.newMessageBus(myName, myParent == null ? null : myParent.getMessageBus());
 
     myExtensionsArea = new ExtensionsAreaImpl(this);

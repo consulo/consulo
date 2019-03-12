@@ -37,9 +37,11 @@ public class LightProject extends ComponentManagerImpl implements Project {
   private final LightExtensionRegistrator myRegistrator;
 
   public LightProject(@Nullable ComponentManager parent, @Nonnull String name, @Nonnull LightExtensionRegistrator registrator) {
-    super(parent, name, ExtensionAreas.PROJECT);
+    super(parent, name, ExtensionAreas.PROJECT, false);
     myName = name;
     myRegistrator = registrator;
+
+    buildInjectingContainer();
   }
 
   @Override

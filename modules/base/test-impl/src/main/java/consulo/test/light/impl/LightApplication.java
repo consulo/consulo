@@ -46,11 +46,13 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
   private ModalityState myNoneModalityState;
 
   public LightApplication(Disposable lastDisposable, LightExtensionRegistrator registrator) {
-    super(null, "LightApplication", ExtensionAreas.APPLICATION);
+    super(null, "LightApplication", ExtensionAreas.APPLICATION, false);
     myLastDisposable = lastDisposable;
     myRegistrator = registrator;
 
     ApplicationManager.setApplication(this, myLastDisposable);
+
+    buildInjectingContainer();
   }
 
   @Override
