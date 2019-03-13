@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.components;
 
-import com.intellij.openapi.extensions.PluginDescriptor;
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.xmlb.annotations.MapAnnotation;
@@ -40,7 +40,7 @@ public class ComponentConfig {
   public Map<String, String> options = new HashMap<String, String>();
 
   @Transient
-  public PluginDescriptor pluginDescriptor;
+  public IdeaPluginDescriptor pluginDescriptor;
 
   @Transient
   public ClassLoader getClassLoader() {

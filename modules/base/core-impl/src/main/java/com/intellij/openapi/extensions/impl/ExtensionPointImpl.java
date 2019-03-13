@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.extensions.impl;
 
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.LoadingOrder;
-import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.util.KeyedLazyInstanceEP;
 import com.intellij.util.SmartList;
@@ -28,6 +28,7 @@ import com.intellij.util.containers.StringInterner;
 import consulo.extensions.ExtensionExtender;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,7 +57,7 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
   private final String myName;
   private final String myClassName;
   private final Kind myKind;
-  private final PluginDescriptor myDescriptor;
+  private final IdeaPluginDescriptor myDescriptor;
 
   private Class<T> myExtensionClass;
 
@@ -64,7 +65,7 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
 
   private boolean myLocked;
 
-  public ExtensionPointImpl(@Nonnull String name, @Nonnull String className, @Nonnull Kind kind, ComponentManager componentManager, @Nonnull PluginDescriptor descriptor) {
+  public ExtensionPointImpl(@Nonnull String name, @Nonnull String className, @Nonnull Kind kind, ComponentManager componentManager, @Nullable IdeaPluginDescriptor descriptor) {
     myName = INTERNER.intern(name);
     myClassName = className;
     myKind = kind;
@@ -96,8 +97,8 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
     return myKind;
   }
 
-  @Nonnull
-  public PluginDescriptor getDescriptor() {
+  @Nullable
+  public IdeaPluginDescriptor getDescriptor() {
     return myDescriptor;
   }
 
@@ -230,7 +231,7 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
     Class<T> extensionClass = myExtensionClass;
     if (extensionClass == null) {
       try {
-        ClassLoader pluginClassLoader = myDescriptor.getPluginClassLoader();
+        ClassLoader pluginClassLoader = myDescriptor == null ? getClass().getClassLoader() : myDescriptor.getPluginClassLoader();
         @SuppressWarnings("unchecked") Class<T> extClass = pluginClassLoader == null ? (Class<T>)Class.forName(myClassName) : (Class<T>)Class.forName(myClassName, true, pluginClassLoader);
         myExtensionClass = extensionClass = extClass;
       }

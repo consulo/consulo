@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.vcs.changes.ui;
 
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.PluginAware;
-import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.xmlb.annotations.Attribute;
@@ -39,11 +39,11 @@ public class ChangesViewContentEP implements PluginAware {
 
   @Attribute("predicateClassName") public String predicateClassName;
 
-  private PluginDescriptor myPluginDescriptor;
+  private IdeaPluginDescriptor myPluginDescriptor;
   private ChangesViewContentProvider myInstance;
 
   @Override
-  public void setPluginDescriptor(PluginDescriptor pluginDescriptor) {
+  public void setPluginDescriptor(IdeaPluginDescriptor pluginDescriptor) {
     myPluginDescriptor = pluginDescriptor;
   }
 

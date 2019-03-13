@@ -19,7 +19,6 @@ import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.impl.ExtensionPointImpl;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
-import com.intellij.openapi.extensions.impl.UndefinedPluginDescriptor;
 import consulo.injecting.InjectingContainerBuilder;
 
 import javax.annotation.Nonnull;
@@ -37,7 +36,7 @@ public abstract class LightExtensionRegistrator {
 
   protected void registerExtensionPoint(ExtensionsAreaImpl area, ExtensionPointName name, Class aClass) {
     ExtensionPoint.Kind kind = aClass.isInterface() || (aClass.getModifiers() & Modifier.ABSTRACT) != 0 ? ExtensionPoint.Kind.INTERFACE : ExtensionPoint.Kind.BEAN_CLASS;
-    area.registerExtensionPoint(name.getName(), aClass.getName(), new UndefinedPluginDescriptor(), kind);
+    area.registerExtensionPoint(name.getName(), aClass.getName(), null, kind);
   }
 
   public abstract void registerExtensionPointsAndExtensions(@Nonnull ExtensionsAreaImpl area);

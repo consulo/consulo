@@ -16,11 +16,11 @@
 
 package com.intellij.openapi.components;
 
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.extensions.PluginAware;
-import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.util.xmlb.annotations.Attribute;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class ServiceBean implements PluginAware {
 
   @Attribute("serviceInterface")
   public String serviceInterface;
-  private PluginDescriptor myPluginDescriptor;
+  private IdeaPluginDescriptor myPluginDescriptor;
 
   public static <T> List<T> loadServicesFromBeans(final ExtensionPointName<ServiceBean> epName, Class<T> componentClass) {
     final List<T> components = new ArrayList<T>();
@@ -66,11 +66,11 @@ public class ServiceBean implements PluginAware {
     return components;
   }
 
-  public void setPluginDescriptor(final PluginDescriptor pluginDescriptor) {
+  public void setPluginDescriptor(final IdeaPluginDescriptor pluginDescriptor) {
     myPluginDescriptor = pluginDescriptor;
   }
 
-  public PluginDescriptor getPluginDescriptor() {
+  public IdeaPluginDescriptor getPluginDescriptor() {
     return myPluginDescriptor;
   }
 }

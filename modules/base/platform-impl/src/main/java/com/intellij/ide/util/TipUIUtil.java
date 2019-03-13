@@ -26,7 +26,6 @@ import com.intellij.openapi.actionSystem.Shortcut;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
@@ -68,10 +67,8 @@ public class TipUIUtil {
 
   @Nonnull
   public static String getPoweredByText(@Nonnull TipAndTrickBean tip) {
-    PluginDescriptor descriptor = tip.getPluginDescriptor();
-    return descriptor instanceof IdeaPluginDescriptor && !PluginManagerCore.CORE_PLUGIN_ID.equals(descriptor.getPluginId().getIdString())
-           ? ((IdeaPluginDescriptor)descriptor).getName()
-           : "";
+    IdeaPluginDescriptor descriptor = tip.getPluginDescriptor();
+    return !PluginManagerCore.CORE_PLUGIN_ID.equals(descriptor.getPluginId().getIdString()) ? descriptor.getName() : "";
   }
 
   public static void openTipInBrowser(String tipFileName, JEditorPane browser, Class providerClass) {
@@ -86,10 +83,8 @@ public class TipUIUtil {
   public static void openTipInBrowser(@Nullable TipAndTrickBean tip, JEditorPane browser) {
     if (tip == null) return;
     try {
-      PluginDescriptor pluginDescriptor = tip.getPluginDescriptor();
-      ClassLoader tipLoader = pluginDescriptor == null
-                              ? TipUIUtil.class.getClassLoader()
-                              : ObjectUtils.notNull(pluginDescriptor.getPluginClassLoader(), TipUIUtil.class.getClassLoader());
+      IdeaPluginDescriptor pluginDescriptor = tip.getPluginDescriptor();
+      ClassLoader tipLoader = pluginDescriptor == null ? TipUIUtil.class.getClassLoader() : ObjectUtils.notNull(pluginDescriptor.getPluginClassLoader(), TipUIUtil.class.getClassLoader());
 
       URL url = ResourceUtil.getResource(tipLoader, "/tips/", tip.fileName);
 

@@ -16,19 +16,19 @@
 package com.intellij.ide.fileTemplates.impl;
 
 import com.intellij.ide.fileTemplates.FileTemplateManager;
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.IdeaPluginDescriptorImpl;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.plugins.cl.PluginClassLoader;
 import com.intellij.openapi.application.PathManager;
-import consulo.components.impl.stores.StorageUtil;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.UriUtil;
 import com.intellij.util.lang.UrlClassLoader;
+import consulo.components.impl.stores.StorageUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -131,8 +131,8 @@ public class FileTemplatesLoader {
 
   private void loadDefaultTemplates() {
     final Set<URL> processedUrls = new HashSet<>();
-    for (PluginDescriptor plugin : PluginManagerCore.getPlugins()) {
-      if (plugin instanceof IdeaPluginDescriptorImpl && ((IdeaPluginDescriptorImpl)plugin).isEnabled()) {
+    for (IdeaPluginDescriptor plugin : PluginManagerCore.getPlugins()) {
+      if (plugin instanceof IdeaPluginDescriptorImpl && plugin.isEnabled()) {
         final ClassLoader loader = plugin.getPluginClassLoader();
         if (loader instanceof PluginClassLoader && ((PluginClassLoader)loader).getUrls().isEmpty()) {
           continue; // development mode, when IDEA_CORE's loader contains all the classpath

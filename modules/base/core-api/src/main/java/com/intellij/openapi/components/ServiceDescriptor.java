@@ -16,8 +16,8 @@
 
 package com.intellij.openapi.components;
 
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.openapi.extensions.PluginAware;
-import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.util.xmlb.annotations.Attribute;
 
 public class ServiceDescriptor implements PluginAware {
@@ -30,7 +30,7 @@ public class ServiceDescriptor implements PluginAware {
   @Attribute("lazy")
   public boolean lazy = true;
 
-  private PluginDescriptor myPluginDescriptor;
+  private IdeaPluginDescriptor myPluginDescriptor;
 
   public String getInterface() {
     return serviceInterface != null ? serviceInterface : getImplementation();
@@ -45,11 +45,11 @@ public class ServiceDescriptor implements PluginAware {
   }
 
   @Override
-  public void setPluginDescriptor(PluginDescriptor pluginDescriptor) {
+  public void setPluginDescriptor(IdeaPluginDescriptor pluginDescriptor) {
     myPluginDescriptor = pluginDescriptor;
   }
 
-  public PluginDescriptor getPluginDescriptor() {
+  public IdeaPluginDescriptor getPluginDescriptor() {
     return myPluginDescriptor;
   }
 }

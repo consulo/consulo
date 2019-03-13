@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.extensions.impl;
 
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.*;
@@ -24,6 +25,7 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Map;
 
 public class ExtensionsAreaImpl implements ExtensionsArea {
@@ -48,7 +50,7 @@ public class ExtensionsAreaImpl implements ExtensionsArea {
     myAreaInstance = areaInstance;
   }
 
-  public void registerExtensionPoint(@Nonnull PluginDescriptor pluginDescriptor, @Nonnull Element extensionPointElement) {
+  public void registerExtensionPoint(@Nonnull IdeaPluginDescriptor pluginDescriptor, @Nonnull Element extensionPointElement) {
     assert pluginDescriptor.getPluginId() != null;
     final String pluginId = pluginDescriptor.getPluginId().getIdString();
     String epName = extensionPointElement.getAttributeValue("qualifiedName");
@@ -82,7 +84,7 @@ public class ExtensionsAreaImpl implements ExtensionsArea {
     registerExtensionPoint(epName, className, pluginDescriptor, kind);
   }
 
-  public void registerExtension(@Nonnull final PluginDescriptor pluginDescriptor, @Nonnull final Element extensionElement) {
+  public void registerExtension(@Nonnull final IdeaPluginDescriptor pluginDescriptor, @Nonnull final Element extensionElement) {
     final PluginId pluginId = pluginDescriptor.getPluginId();
 
     String epName = extractEPName(extensionElement);
@@ -137,7 +139,7 @@ public class ExtensionsAreaImpl implements ExtensionsArea {
     return myCreationTrace;
   }
 
-  public void registerExtensionPoint(@Nonnull String extensionPointName, @Nonnull String extensionPointBeanClass, @Nonnull PluginDescriptor descriptor, @Nonnull ExtensionPoint.Kind kind) {
+  public void registerExtensionPoint(@Nonnull String extensionPointName, @Nonnull String extensionPointBeanClass, @Nullable IdeaPluginDescriptor descriptor, @Nonnull ExtensionPoint.Kind kind) {
     if (hasExtensionPoint(extensionPointName)) {
       if (DEBUG_REGISTRATION) {
         final ExtensionPointImpl oldEP = getExtensionPoint(extensionPointName);

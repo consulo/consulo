@@ -23,7 +23,6 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.ExtensionsArea;
-import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.extensions.impl.ExtensionPointImpl;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -256,7 +255,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     }
   }
 
-  private static ClassLoader getTargetClassLoader(PluginDescriptor pluginDescriptor) {
+  private static ClassLoader getTargetClassLoader(IdeaPluginDescriptor pluginDescriptor) {
     return pluginDescriptor != null ? pluginDescriptor.getPluginClassLoader() : ComponentManagerImpl.class.getClassLoader();
   }
 
@@ -277,7 +276,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     LOG.error(ex);
   }
 
-  private void registerComponent(ComponentConfig config, PluginDescriptor pluginDescriptor) {
+  private void registerComponent(ComponentConfig config, IdeaPluginDescriptor pluginDescriptor) {
     config.prepareClasses();
 
     config.pluginDescriptor = pluginDescriptor;

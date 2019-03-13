@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.extensions.impl;
 
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.openapi.extensions.LoadingOrder;
 import com.intellij.openapi.extensions.PluginAware;
-import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.util.xmlb.XmlSerializer;
@@ -38,10 +38,10 @@ public class ExtensionComponentAdapter<T> implements LoadingOrder.Orderable {
 
   private final String myImplementationClassName;
   private final Element myExtensionElement;
-  private final PluginDescriptor myPluginDescriptor;
+  private final IdeaPluginDescriptor myPluginDescriptor;
   private final boolean myDeserializeInstance;
 
-  public ExtensionComponentAdapter(@Nonnull String implementationClass, Element extensionElement, PluginDescriptor pluginDescriptor, boolean deserializeInstance) {
+  public ExtensionComponentAdapter(@Nonnull String implementationClass, Element extensionElement, IdeaPluginDescriptor pluginDescriptor, boolean deserializeInstance) {
     myImplementationClassName = implementationClass;
     myExtensionElement = extensionElement;
     myPluginDescriptor = pluginDescriptor;
@@ -118,7 +118,7 @@ public class ExtensionComponentAdapter<T> implements LoadingOrder.Orderable {
     return myPluginDescriptor.getPluginId();
   }
 
-  public PluginDescriptor getPluginDescriptor() {
+  public IdeaPluginDescriptor getPluginDescriptor() {
     return myPluginDescriptor;
   }
 

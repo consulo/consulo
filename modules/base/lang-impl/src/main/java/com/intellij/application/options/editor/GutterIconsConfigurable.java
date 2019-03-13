@@ -21,7 +21,6 @@ import com.intellij.lang.LanguageExtensionPoint;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
@@ -40,8 +39,8 @@ import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.containers.hash.HashSet;
 import com.intellij.util.ui.EmptyIcon;
-import consulo.ui.RequiredUIAccess;
 import consulo.awt.TargetAWT;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.TestOnly;
 
@@ -50,8 +49,8 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author Dmitry Avdeev
@@ -63,7 +62,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
   private CheckBoxList<GutterIconDescriptor> myList;
   private JBCheckBox myShowGutterIconsJBCheckBox;
   private List<GutterIconDescriptor> myDescriptors;
-  private Map<GutterIconDescriptor, PluginDescriptor> myFirstDescriptors = new HashMap<>();
+  private Map<GutterIconDescriptor, IdeaPluginDescriptor> myFirstDescriptors = new HashMap<>();
 
   @Nls
   @Override
@@ -84,16 +83,16 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
     ExtensionPoint<LineMarkerProvider> point = Extensions.getRootArea().getExtensionPoint(LineMarkerProviders.EP_NAME);
     @SuppressWarnings("unchecked")
     LanguageExtensionPoint<LineMarkerProvider>[] extensions = (LanguageExtensionPoint<LineMarkerProvider>[])point.getExtensions();
-    NullableFunction<LanguageExtensionPoint<LineMarkerProvider>, PluginDescriptor> function =
+    NullableFunction<LanguageExtensionPoint<LineMarkerProvider>, IdeaPluginDescriptor> function =
             point1 -> {
               LineMarkerProvider instance = point1.getInstance();
               return instance instanceof LineMarkerProviderDescriptor && ((LineMarkerProviderDescriptor)instance).getName() != null ? point1.getPluginDescriptor() : null;
             };
-    MultiMap<PluginDescriptor, LanguageExtensionPoint<LineMarkerProvider>> map = ContainerUtil.groupBy(Arrays.asList(extensions), function);
-    Map<GutterIconDescriptor, PluginDescriptor> pluginDescriptorMap = ContainerUtil.newHashMap();
+    MultiMap<IdeaPluginDescriptor, LanguageExtensionPoint<LineMarkerProvider>> map = ContainerUtil.groupBy(Arrays.asList(extensions), function);
+    Map<GutterIconDescriptor, IdeaPluginDescriptor> pluginDescriptorMap = ContainerUtil.newHashMap();
     Set<String> ids = new HashSet<>();
     myDescriptors = new ArrayList<>();
-    for (final PluginDescriptor descriptor : map.keySet()) {
+    for (final IdeaPluginDescriptor descriptor : map.keySet()) {
       Collection<LanguageExtensionPoint<LineMarkerProvider>> points = map.get(descriptor);
       for (LanguageExtensionPoint<LineMarkerProvider> extensionPoint : points) {
         GutterIconDescriptor instance = (GutterIconDescriptor)extensionPoint.getInstance();
@@ -128,9 +127,9 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
       if (pluginDescriptorMap.get(o1) != pluginDescriptorMap.get(o2)) return 0;
       return Comparing.compare(o1.getName(), o2.getName());
     });
-    PluginDescriptor current = null;
+    IdeaPluginDescriptor current = null;
     for (GutterIconDescriptor descriptor : myDescriptors) {
-      PluginDescriptor pluginDescriptor = pluginDescriptorMap.get(descriptor);
+      IdeaPluginDescriptor pluginDescriptor = pluginDescriptorMap.get(descriptor);
       if (pluginDescriptor != current) {
         myFirstDescriptors.put(descriptor, pluginDescriptor);
         current = pluginDescriptor;
@@ -209,13 +208,11 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
         }
         checkBox.setBorder(null);
 
-        PluginDescriptor pluginDescriptor = myFirstDescriptors.get(descriptor);
-        if (pluginDescriptor instanceof IdeaPluginDescriptor) {
-          SeparatorWithText separator = new SeparatorWithText();
-          String name = ((IdeaPluginDescriptor)pluginDescriptor).getName();
-          separator.setCaption("IDEA CORE".equals(name) ? "Common" : name);
-          panel.add(separator, BorderLayout.NORTH);
-        }
+        IdeaPluginDescriptor pluginDescriptor = myFirstDescriptors.get(descriptor);
+        SeparatorWithText separator = new SeparatorWithText();
+        String name = pluginDescriptor.getName();
+        separator.setCaption("IDEA CORE".equals(name) ? "Common" : name);
+        panel.add(separator, BorderLayout.NORTH);
 
         return panel;
       }

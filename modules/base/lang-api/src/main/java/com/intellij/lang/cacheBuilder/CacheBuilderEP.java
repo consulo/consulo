@@ -16,10 +16,10 @@
 
 package com.intellij.lang.cacheBuilder;
 
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.PluginAware;
-import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.util.xmlb.annotations.Attribute;
 
 /**
@@ -36,7 +36,7 @@ public class CacheBuilderEP implements PluginAware {
   @Attribute("wordsScannerClass")
   public String wordsScannerClass;
   private WordsScanner myWordsScanner;
-  private PluginDescriptor myPluginDescriptor;
+  private IdeaPluginDescriptor myPluginDescriptor;
 
   public String getFileType() {
     return fileType;
@@ -46,9 +46,8 @@ public class CacheBuilderEP implements PluginAware {
     this.fileType = fileType;
   }
 
-
   @Override
-  public void setPluginDescriptor(PluginDescriptor pluginDescriptor) {
+  public void setPluginDescriptor(IdeaPluginDescriptor pluginDescriptor) {
     myPluginDescriptor = pluginDescriptor;
   }
 

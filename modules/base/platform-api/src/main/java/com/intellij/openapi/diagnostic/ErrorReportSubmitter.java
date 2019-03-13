@@ -15,31 +15,11 @@
  */
 package com.intellij.openapi.diagnostic;
 
-import com.intellij.openapi.extensions.PluginAware;
-import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.util.Consumer;
 
 import java.awt.*;
 
-public abstract class ErrorReportSubmitter implements PluginAware {
-  private PluginDescriptor myPlugin;
-
-  /**
-   * Called by the framework. Allows to identify the plugin that provided this extension.
-   *
-   * @param plugin
-   */
-  @Override
-  public void setPluginDescriptor(PluginDescriptor plugin) {
-    myPlugin = plugin;
-  }
-
-  /**
-   * @return plugin that provided this particular extension
-   */
-  public PluginDescriptor getPluginDescriptor() {
-    return myPlugin;
-  }
+public abstract class ErrorReportSubmitter {
 
   public boolean trySubmitAsync(IdeaLoggingEvent[] events, String additionalInfo, Component parentComponent, Consumer<SubmittedReportInfo> consumer) {
     return true;

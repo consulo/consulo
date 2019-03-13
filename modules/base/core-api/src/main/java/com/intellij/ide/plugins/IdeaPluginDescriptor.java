@@ -16,13 +16,12 @@
 package com.intellij.ide.plugins;
 
 import com.intellij.openapi.components.ComponentConfig;
-import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.extensions.PluginId;
 import consulo.ide.plugins.SimpleExtension;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
@@ -30,7 +29,11 @@ import java.util.List;
 /**
  * @author max
  */
-public interface IdeaPluginDescriptor extends PluginDescriptor {
+public interface IdeaPluginDescriptor {
+  PluginId getPluginId();
+
+  ClassLoader getPluginClassLoader();
+
   @Nullable
   File getPath();
 

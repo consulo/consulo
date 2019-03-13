@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.extensions;
 
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.openapi.diagnostic.Logger;
 import consulo.injecting.InjectingContainer;
 
@@ -26,14 +27,14 @@ import javax.annotation.Nullable;
  */
 public abstract class AbstractExtensionPointBean implements PluginAware {
   private static final Logger LOG = Logger.getInstance(AbstractExtensionPointBean.class);
-  protected PluginDescriptor myPluginDescriptor;
+  protected IdeaPluginDescriptor myPluginDescriptor;
 
   @Override
-  public final void setPluginDescriptor(PluginDescriptor pluginDescriptor) {
+  public final void setPluginDescriptor(IdeaPluginDescriptor pluginDescriptor) {
     myPluginDescriptor = pluginDescriptor;
   }
 
-  public PluginDescriptor getPluginDescriptor() {
+  public IdeaPluginDescriptor getPluginDescriptor() {
     return myPluginDescriptor;
   }
 
