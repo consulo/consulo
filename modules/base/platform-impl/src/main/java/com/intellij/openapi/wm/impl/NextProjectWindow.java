@@ -15,18 +15,32 @@
  */
 package com.intellij.openapi.wm.impl;
 
+import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAware;
+import consulo.ui.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 public class NextProjectWindow extends AnAction implements DumbAware {
+  private final ActionManager myActionManager;
 
-  public void actionPerformed(AnActionEvent e) {
-    WindowDressing.getWindowActionGroup().activateNextWindow(e);
+  @Inject
+  public NextProjectWindow(ActionManager actionManager) {
+    myActionManager = actionManager;
   }
 
+  @RequiredUIAccess
   @Override
-  public void update(AnActionEvent e) {
-    e.getPresentation().setEnabled(WindowDressing.getWindowActionGroup().isEnabled());
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    WindowDressing.getWindowActionGroup(myActionManager).activateNextWindow(e);
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void update(@Nonnull AnActionEvent e) {
+    e.getPresentation().setEnabled(WindowDressing.getWindowActionGroup(myActionManager).isEnabled());
   }
 }

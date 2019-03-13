@@ -1208,6 +1208,7 @@
     <projectService serviceInterface="consulo.util.ProjectPropertiesComponent"
                     serviceImplementation="com.intellij.ide.util.ProjectPropertiesComponentImpl"/>
 
+    <applicationService serviceImplementation="com.intellij.openapi.wm.impl.WindowDressing" lazy="false" />
 
     <applicationService serviceInterface="com.intellij.openapi.vfs.tracker.VirtualFileTracker"
                         serviceImplementation="com.intellij.openapi.vfs.tracker.VirtualFileTrackerImpl"/>

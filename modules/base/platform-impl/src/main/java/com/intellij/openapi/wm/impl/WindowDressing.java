@@ -16,8 +16,11 @@
 package com.intellij.openapi.wm.impl;
 
 import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.components.ProjectComponent;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ProjectManagerListener;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -27,26 +30,23 @@ import javax.inject.Singleton;
  * @author Bas Leijdekkers
  */
 @Singleton
-public class WindowDressing implements ProjectComponent {
-
-  private Project myProject;
-
+public class WindowDressing {
   @Inject
-  public WindowDressing(@Nonnull Project project) {
-    myProject = project;
+  public WindowDressing(@Nonnull Application application, @Nonnull ActionManager actionManager) {
+    application.getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+      @Override
+      public void projectOpened(Project project, UIAccess uiAccess) {
+        getWindowActionGroup(actionManager).addProject(project);
+      }
+
+      @Override
+      public void projectClosed(Project project) {
+        getWindowActionGroup(actionManager).removeProject(project);
+      }
+    });
   }
 
-  @Override
-  public void projectOpened() {
-    getWindowActionGroup().addProject(myProject);
-  }
-
-  @Override
-  public void projectClosed() {
-    getWindowActionGroup().removeProject(myProject);
-  }
-
-  public static ProjectWindowActionGroup getWindowActionGroup() {
-    return (ProjectWindowActionGroup)ActionManager.getInstance().getAction("OpenProjectWindows");
+  public static ProjectWindowActionGroup getWindowActionGroup(ActionManager actionManager1) {
+    return (ProjectWindowActionGroup)actionManager1.getAction("OpenProjectWindows");
   }
 }

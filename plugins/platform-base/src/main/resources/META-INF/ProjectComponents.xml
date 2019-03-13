@@ -57,11 +57,6 @@
     </component>
 
     <component>
-      <implementation-class>com.intellij.openapi.wm.impl.WindowDressing</implementation-class>
-      <skipForDefaultProject/>
-    </component>
-
-    <component>
       <implementation-class>com.intellij.openapi.fileEditor.impl.EditorHistoryManager</implementation-class>
     </component>
     <component>
