@@ -74,7 +74,6 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
 
   private ActionGroup myAdditionalGearActions;
 
-
   private DesktopToolWindowHeader myHeader;
   private ActionGroup myToggleToolbarGroup;
 

@@ -15,13 +15,20 @@
  */
 package consulo.sandboxPlugin.ide.toolwindow;
 
+import com.intellij.icons.AllIcons;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
+import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
+import consulo.ui.Label;
+import consulo.ui.RequiredUIAccess;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,10 +36,34 @@ import javax.swing.*;
  */
 public class SandToolWindowFactory implements ToolWindowFactory {
   @Override
-  public void createToolWindowContent(Project project, ToolWindow toolWindow) {
+  public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
     ContentFactory contentFactory = ContentFactory.getInstance();
 
-    Content content = contentFactory.createContent(new JLabel("test"), "Test", false);
+    Content content = contentFactory.createUIContent(Label.create("test"), "Test", false);
     toolWindow.getContentManager().addContent(content);
+
+    ((ToolWindowEx)toolWindow).setTitleActions(new AnAction("Expand All", null, AllIcons.Actions.Expandall) {
+      @RequiredUIAccess
+      @Override
+      public void actionPerformed(@Nonnull AnActionEvent e) {
+        Messages.showInfoMessage("Expand All", "Consulo");
+      }
+    });
+
+    ((ToolWindowEx)toolWindow).setTabActions(new AnAction("Add Tab", null, AllIcons.ToolbarDecorator.Add) {
+      @RequiredUIAccess
+      @Override
+      public void actionPerformed(@Nonnull AnActionEvent e) {
+        Content content = contentFactory.createUIContent(Label.create("test"), "Test", false);
+        content.setCloseable(true);
+
+        toolWindow.getContentManager().addContent(content);
+      }
+    });
+  }
+
+  @Override
+  public boolean isUnified() {
+    return true;
   }
 }

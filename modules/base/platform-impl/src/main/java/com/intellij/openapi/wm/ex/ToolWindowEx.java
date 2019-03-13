@@ -28,12 +28,17 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public interface ToolWindowEx extends ToolWindow {
-  @NonNls String PROP_AVAILABLE = "available";
-  @NonNls String PROP_ICON = "icon";
-  @NonNls String PROP_TITLE = "title";
-  @NonNls String PROP_STRIPE_TITLE = "stripe-title";
+  @NonNls
+  String PROP_AVAILABLE = "available";
+  @NonNls
+  String PROP_ICON = "icon";
+  @NonNls
+  String PROP_TITLE = "title";
+  @NonNls
+  String PROP_STRIPE_TITLE = "stripe-title";
 
   void addPropertyChangeListener(final PropertyChangeListener l);
+
   /**
    * Removes specified property change listener.
    *
@@ -43,8 +48,7 @@ public interface ToolWindowEx extends ToolWindow {
 
   /**
    * @return type of internal decoration of tool window.
-   * @throws IllegalStateException
-   *          if tool window isn't installed.
+   * @throws IllegalStateException if tool window isn't installed.
    */
   @RequiredUIAccess
   ToolWindowType getInternalType();
@@ -60,6 +64,8 @@ public interface ToolWindowEx extends ToolWindow {
   void setTitleActions(@Nonnull AnAction... actions);
 
   void setTabActions(@Nonnull AnAction... actions);
+
+  void setTabDoubleClickActions(@Nonnull AnAction... actions);
 
   void setUseLastFocusedOnActivation(boolean focus);
 

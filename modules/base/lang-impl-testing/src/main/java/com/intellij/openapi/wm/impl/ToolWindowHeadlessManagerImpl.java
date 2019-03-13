@@ -493,6 +493,11 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
     }
 
     @Override
+    public void setTabDoubleClickActions(@Nonnull AnAction... actions) {
+
+    }
+
+    @Override
     public void setUseLastFocusedOnActivation(boolean focus) {
     }
 

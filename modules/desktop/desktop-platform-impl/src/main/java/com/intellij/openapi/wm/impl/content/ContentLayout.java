@@ -16,30 +16,16 @@
 package com.intellij.openapi.wm.impl.content;
 
 import com.intellij.openapi.ui.popup.ListPopup;
-import com.intellij.ui.Gray;
 import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManagerEvent;
 import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
 import java.awt.*;
 
 abstract class ContentLayout {
-
-  static final Color TAB_BORDER_ACTIVE_WINDOW = new Color(38, 63, 106);
-  static final Color TAB_BORDER_PASSIVE_WINDOW = new Color(130, 120, 111);
-
-  static final Color TAB_BG_ACTIVE_WND_SELECTED_FROM = Gray._111;
-  static final Color TAB_BG_ACTIVE_WND_SELECTED_TO = Gray._164;
-  static final Color TAB_BG_ACTIVE_WND_UNSELECTED_FROM = Gray._130;
-  static final Color TAB_BG_ACTIVE_WND_UNSELECTED_TO = Gray._85;
-  static final Color TAB_BG_PASSIVE_WND_FROM = new Color(152, 143, 134);
-  static final Color TAB_BG_PASSIVE_WND_TO = new Color(165, 157, 149);
-
   static final int TAB_ARC = 2;
-  static final int TAB_SHIFT = 2;
 
   DesktopToolWindowContentUi myUi;
   BaseLabel myIdLabel;
@@ -95,22 +81,6 @@ abstract class ContentLayout {
       default:
         return ":";
     }
-  }
-
-  protected void fillTabShape(Graphics2D g2d, Shape shape, boolean isSelected, Rectangle bounds) {
-    if (myUi.myWindow.isActive()) {
-      if (isSelected) {
-        g2d.setPaint(UIUtil.getGradientPaint(bounds.x, bounds.y, TAB_BG_ACTIVE_WND_SELECTED_FROM, bounds.x, (float)bounds.getMaxY(), TAB_BG_ACTIVE_WND_SELECTED_TO));
-      }
-      else {
-        g2d.setPaint(UIUtil.getGradientPaint(bounds.x, bounds.y, TAB_BG_ACTIVE_WND_UNSELECTED_FROM, bounds.x, (float)bounds.getMaxY(), TAB_BG_ACTIVE_WND_UNSELECTED_TO));
-      }
-    }
-    else {
-      g2d.setPaint(UIUtil.getGradientPaint(bounds.x, bounds.y, TAB_BG_PASSIVE_WND_FROM, bounds.x, (float)bounds.getMaxY(), TAB_BG_PASSIVE_WND_TO));
-    }
-
-    g2d.fill(shape);
   }
 
   public abstract void showContentPopup(ListPopup listPopup);

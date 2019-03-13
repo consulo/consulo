@@ -68,12 +68,8 @@ class TabContentLayout extends ContentLayout {
   public void init() {
     reset();
 
-    myIdLabel = new BaseLabel(myUi, false) {
-      @Override
-      protected boolean allowEngravement() {
-        return myUi.myWindow.isActive();
-      }
-    };
+    myIdLabel = new BaseLabel(myUi, false);
+
     for (int i = 0; i < myUi.myManager.getContentCount(); i++) {
       contentAdded(new ContentManagerEvent(this, myUi.myManager.getContent(i), i));
     }
@@ -128,14 +124,12 @@ class TabContentLayout extends ContentLayout {
       }
     }
 
-
     if (data.fullLayout) {
       for (ContentTabLabel eachTab : myTabs) {
         final Dimension eachSize = eachTab.getPreferredSize();
         data.requiredWidth += eachSize.width;
         data.toLayout.add(eachTab);
       }
-
 
       data.moreRectWidth = calcMoreIconWidth();
       data.toFitWidth = bounds.getSize().width - data.eachX;
@@ -211,14 +205,10 @@ class TabContentLayout extends ContentLayout {
         result += insets.left + insets.right;
       }
     }
-
-    Content selected = myUi.myManager.getSelectedContent();
-    if (selected == null && myUi.myManager.getContents().length > 0) {
-      selected = myUi.myManager.getContents()[0];
+    if (myLastLayout != null) {
+      result += myLastLayout.moreRectWidth + myLastLayout.requiredWidth;
+      result -= myLastLayout.toLayout.size() > 1 ? myLastLayout.moreRectWidth + 1 : -14;
     }
-
-    result += selected != null ? myContent2Tabs.get(selected).getMinimumSize().width + (myTabs.size() > 1 ? calcMoreIconWidth() : 0) : 0;
-
     return result;
   }
 
@@ -312,11 +302,11 @@ class TabContentLayout extends ContentLayout {
     myUi.removeAll();
 
     myUi.add(myIdLabel);
-    myUi.initMouseListeners(myIdLabel, myUi, true);
+    DesktopToolWindowContentUi.initMouseListeners(myIdLabel, myUi, true);
 
     for (ContentTabLabel each : myTabs) {
       myUi.add(each);
-      myUi.initMouseListeners(each, myUi, false);
+      DesktopToolWindowContentUi.initMouseListeners(each, myUi, false);
     }
   }
 
@@ -334,7 +324,7 @@ class TabContentLayout extends ContentLayout {
     myContent2Tabs.put(content, tab);
     if (content instanceof DnDTarget) {
       DnDTarget target = (DnDTarget)content;
-      DnDSupport.createBuilder(tab).setDropHandler(target).setTargetChecker(target).setCleanUpOnLeaveCallback(() -> target.cleanUpOnLeave()).install();
+      DnDSupport.createBuilder(tab).setDropHandler(target).setTargetChecker(target).setCleanUpOnLeaveCallback(target::cleanUpOnLeave).install();
     }
   }
 

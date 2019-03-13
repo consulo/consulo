@@ -38,6 +38,7 @@ import com.intellij.ui.content.tabs.PinToolwindowTabAction;
 import com.intellij.ui.content.tabs.TabbedContentAction;
 import com.intellij.util.Alarm;
 import com.intellij.util.ContentUtilEx;
+import com.intellij.util.Function;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
@@ -58,6 +59,68 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class DesktopToolWindowContentUi extends JPanel implements ToolWindowContentUI, PropertyChangeListener, DataProvider {
+  class MyLayoutManager extends FlowLayout {
+    MyLayoutManager() {
+      super(FlowLayout.CENTER, 0, 0);
+    }
+
+    @Override
+    public void layoutContainer(Container target) {
+      getCurrentLayout().layout();
+    }
+
+    @Override
+    public Dimension minimumLayoutSize(Container target) {
+      return calcSize(target, Component::getMinimumSize);
+    }
+
+    @Override
+    public Dimension preferredLayoutSize(Container target) {
+      return calcSize(target, Component::getPreferredSize);
+    }
+
+    @Nonnull
+    private Dimension calcSize(Container target, Function<Component, Dimension> dimensionSupplier) {
+      synchronized (target.getTreeLock()) {
+        Dimension dim = new Dimension(0, 0);
+        int nmembers = target.getComponentCount();
+        boolean firstVisibleComponent = true;
+        boolean useBaseline = getAlignOnBaseline();
+        int maxAscent = 0;
+        int maxDescent = 0;
+
+        for (int i = 0; i < nmembers; i++) {
+          Component m = target.getComponent(i);
+          if (m.isVisible()) {
+            Dimension d = dimensionSupplier.fun(m);
+            dim.height = Math.max(dim.height, d.height);
+            if (firstVisibleComponent) {
+              firstVisibleComponent = false;
+            }
+            else {
+              dim.width += 0;
+            }
+            dim.width += d.width;
+            if (useBaseline) {
+              int baseline = m.getBaseline(d.width, d.height);
+              if (baseline >= 0) {
+                maxAscent = Math.max(maxAscent, baseline);
+                maxDescent = Math.max(maxDescent, d.height - baseline);
+              }
+            }
+          }
+        }
+        if (useBaseline) {
+          dim.height = Math.max(maxAscent + maxDescent, dim.height);
+        }
+        Insets insets = target.getInsets();
+        dim.width += insets.left + insets.right;
+        dim.height += insets.top + insets.bottom + 5 * 2;
+        return dim;
+      }
+    }
+  }
+
   public static final String POPUP_PLACE = ToolWindowContentUI.POPUP_PLACE;
   // when client property is put in toolwindow component, hides toolwindow label
   public static final String HIDE_ID_LABEL = ToolWindowContentUI.HIDE_ID_LABEL;
@@ -73,22 +136,23 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
 
   ShowContentAction myShowContent;
 
-  ContentLayout myTabsLayout = new TabContentLayout(this);
-  ContentLayout myComboLayout = new ComboContentLayout(this);
+  TabContentLayout myTabsLayout = new TabContentLayout(this);
+  ComboContentLayout myComboLayout = new ComboContentLayout(this);
 
   private ToolWindowContentUiType myType = ToolWindowContentUiType.TABBED;
   private boolean myShouldNotShowPopup;
   public Predicate<Point> isResizableArea = p -> true;
 
   public DesktopToolWindowContentUi(DesktopToolWindowImpl window) {
+    setLayout(new MyLayoutManager());
+    setBorder(JBUI.Borders.empty(0, 0, 0, 5));
+    setOpaque(false);
+
     myWindow = window;
     myContent.setOpaque(false);
     myContent.setFocusable(false);
-    setOpaque(false);
 
     myShowContent = new ShowContentAction(myWindow, myContent);
-
-    setBorder(JBUI.Borders.empty(0, 0, 0, 2));
   }
 
   public void setType(@Nonnull ToolWindowContentUiType type) {
@@ -120,6 +184,10 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
       }
     }
     return false;
+  }
+
+  public void setTabDoubleClickActions(@Nonnull AnAction... actions) {
+    myTabsLayout.setTabDoubleClickActions(actions);
   }
 
   private boolean isResizeable(@Nonnull Point point) {
@@ -223,12 +291,6 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
   }
 
   @Override
-  public void doLayout() {
-    getCurrentLayout().layout();
-  }
-
-
-  @Override
   protected void paintComponent(final Graphics g) {
     super.paintComponent(g);
     getCurrentLayout().paintComponent(g);
@@ -244,17 +306,6 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
   public Dimension getMinimumSize() {
     Insets insets = getInsets();
     return new Dimension(insets.left + insets.right + getCurrentLayout().getMinimumWidth(), super.getMinimumSize().height);
-  }
-
-  @Override
-  public Dimension getPreferredSize() {
-    Dimension size = super.getPreferredSize();
-    size.height = 0;
-    for (int i = 0; i < getComponentCount(); i++) {
-      final Component each = getComponent(i);
-      size.height = Math.max(each.getPreferredSize().height, size.height);
-    }
-    return size;
   }
 
   @Override
@@ -373,8 +424,8 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
         if (!e.isPopupTrigger()) {
           if (!UIUtil.isCloseClick(e)) {
             myLastPoint.set(info != null ? info.getLocation() : e.getLocationOnScreen());
+            myPressPoint.set(myLastPoint.get());
             if (allowResize && ui.isResizeable()) {
-              myPressPoint.set(myLastPoint.get());
               arm(c.getComponentAt(e.getPoint()) == c && ui.isResizeable(e.getPoint()) ? c : null);
             }
             ui.myWindow.fireActivated();
@@ -394,9 +445,13 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
 
       @Override
       public void mouseMoved(MouseEvent e) {
-        c.setCursor(allowResize && ui.isResizeable() && getActualSplitter() != null && c.getComponentAt(e.getPoint()) == c && ui.isResizeable(e.getPoint())
-                    ? Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR)
-                    : Cursor.getDefaultCursor());
+        c.setCursor(allowResize && ui.isResizeable() && getActualSplitter() != null && c.getComponentAt(e.getPoint()) == c && ui.isResizeable(e.getPoint()) ? Cursor
+                .getPredefinedCursor(Cursor.N_RESIZE_CURSOR) : Cursor.getDefaultCursor());
+      }
+
+      @Override
+      public void mouseExited(MouseEvent e) {
+        c.setCursor(null);
       }
 
       @Override
@@ -412,7 +467,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
         consulo.ui.Window uiWindow = TargetAWT.from(awtWindow);
 
         IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
-        if(ideFrame == null) {
+        if (ideFrame == null) {
           final Point windowLocation = awtWindow.getLocationOnScreen();
           windowLocation.translate(newPoint.x - p.x, newPoint.y - p.y);
           awtWindow.setLocation(windowLocation);
@@ -496,8 +551,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
       group.addAll(toolWindowGroup);
     }
 
-    final ActionPopupMenu popupMenu =
-            ((ActionManagerImpl)ActionManager.getInstance()).createActionPopupMenu(POPUP_PLACE, group, new MenuItemPresentationFactory(true));
+    final ActionPopupMenu popupMenu = ((ActionManagerImpl)ActionManager.getInstance()).createActionPopupMenu(POPUP_PLACE, group, new MenuItemPresentationFactory(true));
     popupMenu.getComponent().show(comp, x, y);
   }
 
@@ -549,12 +603,14 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
       if (tab.getContent() != null) {
         if (myManager.canCloseContents() && tab.getContent().isCloseable()) {
           myManager.removeContent(tab.getContent(), true, true, true);
-        } else {
+        }
+        else {
           if (myManager.getContentCount() == 1) {
             hideWindow(e);
           }
         }
-      } else {
+      }
+      else {
         hideWindow(e);
       }
     }
@@ -664,7 +720,8 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
             selectedTab.set(tabActions[selectedIndex]);
           }
         }
-      } else {
+      }
+      else {
         actions[i] = new DumbAwareAction(content.getTabName()) {
           @RequiredUIAccess
           @Override
@@ -678,25 +735,18 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
       }
     }
 
-    final ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(null, new DefaultActionGroup(actions),
-                                                                                DataManager.getInstance()
-                                                                                        .getDataContext(myManager.getComponent()), false, true,
-                                                                                true, null, -1, new Condition<AnAction>() {
-      @Override
-      public boolean value(AnAction action) {
-        return action == selected.get() || action == selectedTab.get();
-      }
-    });
+    final ListPopup popup = JBPopupFactory.getInstance()
+            .createActionGroupPopup(null, new DefaultActionGroup(actions), DataManager.getInstance().getDataContext(myManager.getComponent()), false, true, true, null, -1, new Condition<AnAction>() {
+              @Override
+              public boolean value(AnAction action) {
+                return action == selected.get() || action == selectedTab.get();
+              }
+            });
 
     getCurrentLayout().showContentPopup(popup);
 
     if (selectedContent instanceof TabbedContent) {
-      new Alarm(Alarm.ThreadToUse.SWING_THREAD, popup).addRequest(new Runnable() {
-        @Override
-        public void run() {
-          popup.handleSelect(true);
-        }
-      }, 30);
+      new Alarm(Alarm.ThreadToUse.SWING_THREAD, popup).addRequest(() -> popup.handleSelect(true), 30);
     }
   }
 }

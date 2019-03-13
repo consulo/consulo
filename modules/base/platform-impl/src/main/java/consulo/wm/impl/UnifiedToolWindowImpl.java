@@ -15,6 +15,7 @@
  */
 package consulo.wm.impl;
 
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
@@ -70,6 +71,11 @@ public class UnifiedToolWindowImpl extends ToolWindowBase {
 
   @Override
   public void stretchHeight(int value) {
+
+  }
+
+  @Override
+  public void setTabDoubleClickActions(@Nonnull AnAction... actions) {
 
   }
 }

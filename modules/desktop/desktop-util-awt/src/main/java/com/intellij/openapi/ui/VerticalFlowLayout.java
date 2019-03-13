@@ -27,8 +27,6 @@ public class VerticalFlowLayout extends FlowLayout implements Serializable {
   public static final int TOP = 0;
   private boolean myVerticalFill;
   private boolean myHorizontalFill;
-  private final int vGap;
-  private final int hGap;
 
   @MagicConstant(intValues = {TOP, MIDDLE, BOTTOM})
   public @interface VerticalFlowAlignment {}
@@ -55,8 +53,8 @@ public class VerticalFlowLayout extends FlowLayout implements Serializable {
 
   public VerticalFlowLayout(@VerticalFlowAlignment int alignment, int hGap, int vGap, boolean fillHorizontally, boolean fillVertically) {
     setAlignment(alignment);
-    this.hGap = hGap;
-    this.vGap = vGap;
+    setHgap(hGap);
+    setVgap(vGap);
     myHorizontalFill = fillHorizontally;
     myVerticalFill = fillVertically;
   }
@@ -64,10 +62,10 @@ public class VerticalFlowLayout extends FlowLayout implements Serializable {
   @Override
   public void layoutContainer(Container container) {
     Insets insets = container.getInsets();
-    int i = container.getSize().height - (insets.top + insets.bottom + vGap * 2);
-    int j = container.getSize().width - (insets.left + insets.right + hGap * 2);
+    int i = container.getSize().height - (insets.top + insets.bottom + getVgap() * 2);
+    int j = container.getSize().width - (insets.left + insets.right + getHgap() * 2);
     int componentCount = container.getComponentCount();
-    int l = insets.left + hGap;
+    int l = insets.left + getHgap();
     int i1 = 0;
     int j1 = 0;
     int k1 = 0;
@@ -86,21 +84,21 @@ public class VerticalFlowLayout extends FlowLayout implements Serializable {
         component.setSize(dimension.width, dimension.height);
       }
       if (i1 + dimension.height > i){
-        a(container, l, insets.top + vGap, j1, i - i1, k1, l1);
+        a(container, l, insets.top + getVgap(), j1, i - i1, k1, l1);
         i1 = dimension.height;
-        l += hGap + j1;
+        l += getHgap() + j1;
         j1 = dimension.width;
         k1 = l1;
         continue;
       }
       if (i1 > 0){
-        i1 += vGap;
+        i1 += getVgap();
       }
       i1 += dimension.height;
       j1 = Math.max(j1, dimension.width);
     }
 
-    a(container, l, insets.top + vGap, j1, i - i1, k1, componentCount);
+    a(container, l, insets.top + getVgap(), j1, i - i1, k1, componentCount);
   }
 
   private void a(Container container, int i, int j, int k, int l, int i1, int j1) {
@@ -117,7 +115,7 @@ public class VerticalFlowLayout extends FlowLayout implements Serializable {
       if (component.isVisible()){
         int i2 = i + (k - dimension.width) / 2;
         component.setLocation(i2, j);
-        j += vGap + dimension.height;
+        j += getVgap() + dimension.height;
       }
     }
   }
@@ -147,13 +145,13 @@ public class VerticalFlowLayout extends FlowLayout implements Serializable {
       Dimension dimension1 = component.getMinimumSize();
       dimension.width = Math.max(dimension.width, dimension1.width);
       if (i > 0){
-        dimension.height += vGap;
+        dimension.height += getVgap();
       }
       dimension.height += dimension1.height;
     }
     Insets insets = container.getInsets();
-    dimension.width += insets.left + insets.right + hGap * 2;
-    dimension.height += insets.top + insets.bottom + vGap * 2;
+    dimension.width += insets.left + insets.right + getHgap() * 2;
+    dimension.height += insets.top + insets.bottom + getVgap() * 2;
     return dimension;
   }
 
@@ -166,13 +164,13 @@ public class VerticalFlowLayout extends FlowLayout implements Serializable {
       Dimension dimension1 = component.getPreferredSize();
       dimension.width = Math.max(dimension.width, dimension1.width);
       if (i > 0){
-        dimension.height += hGap;
+        dimension.height += getHgap();
       }
       dimension.height += dimension1.height;
     }
     Insets insets = container.getInsets();
-    dimension.width += insets.left + insets.right + hGap * 2;
-    dimension.height += insets.top + insets.bottom + vGap * 2;
+    dimension.width += insets.left + insets.right + getHgap() * 2;
+    dimension.height += insets.top + insets.bottom + getVgap() * 2;
     return dimension;
   }
 }

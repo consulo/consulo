@@ -18,7 +18,11 @@ package com.intellij.ui.content;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.content.impl.ContentImpl;
 import com.intellij.ui.content.impl.DesktopContentManagerImpl;
+import consulo.ui.Component;
+import consulo.wm.impl.UnifiedContentImpl;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Singleton;
 
 @Singleton
@@ -33,6 +37,12 @@ public class ContentFactoryImpl implements ContentFactory {
   @Override
   public ContentManager createContentManager(boolean canCloseContents, @Nonnull Project project) {
     return createContentManager(new TabbedPaneContentUI(), canCloseContents, project);
+  }
+
+  @Nonnull
+  @Override
+  public Content createUIContent(@Nullable Component component, String displayName, boolean isLockable) {
+    return new UnifiedContentImpl(component, displayName, isLockable);
   }
 
   // TODO [VISTALL] AWT & Swing dependency

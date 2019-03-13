@@ -257,7 +257,6 @@ class ContentTabLabel extends BaseLabel {
     updateTextAndIcon(myContent, isSelected());
   }
 
-
   @Override
   public Dimension getPreferredSize() {
     final Dimension size = super.getPreferredSize();

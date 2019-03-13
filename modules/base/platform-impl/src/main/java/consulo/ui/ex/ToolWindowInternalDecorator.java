@@ -22,6 +22,7 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.WindowInfo;
 import com.intellij.openapi.wm.impl.InternalDecoratorListener;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

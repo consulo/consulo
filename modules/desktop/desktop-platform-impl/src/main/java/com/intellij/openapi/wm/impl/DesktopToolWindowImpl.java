@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.wm.impl;
 
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.BusyObject;
 import com.intellij.openapi.util.Disposer;
@@ -87,7 +88,7 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
   @Nonnull
   @Override
   public AsyncResult<Void> getReady(@Nonnull final Object requestor) {
-    final AsyncResult<Void> result = new AsyncResult<>();
+    final AsyncResult<Void> result = AsyncResult.undefined();
     myShowing.getReady(this).doWhenDone(() -> {
       ArrayList<FinalizableCommand> cmd = new ArrayList<>();
       cmd.add(new FinalizableCommand(null) {
@@ -102,6 +103,11 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
       myToolWindowManager.execute(cmd);
     });
     return result;
+  }
+
+  @Override
+  public void setTabDoubleClickActions(@Nonnull AnAction... actions) {
+    myContentUI.setTabDoubleClickActions(actions);
   }
 
   // to avoid ensureContentInitialized call - myContentManager can report canCloseContents without full initialization

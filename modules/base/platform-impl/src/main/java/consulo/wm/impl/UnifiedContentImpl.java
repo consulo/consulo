@@ -25,6 +25,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.ui.content.AlertIcon;
 import com.intellij.ui.content.ContentManager;
+import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -39,7 +40,7 @@ import javax.swing.*;
 public class UnifiedContentImpl extends UserDataHolderBase implements ContentEx {
   private String myDisplayName;
   private String myDescription;
-  private consulo.ui.Component myComponent;
+  private Component myComponent;
 
   private Image myIcon;
   private Image myLayeredIcon;
@@ -67,7 +68,7 @@ public class UnifiedContentImpl extends UserDataHolderBase implements ContentEx 
   private Image myPopupIcon;
   private long myExecutionId;
 
-  public UnifiedContentImpl(consulo.ui.Component component, String displayName, boolean isPinnable) {
+  public UnifiedContentImpl(Component component, String displayName, boolean isPinnable) {
     myComponent = component;
     myDisplayName = displayName;
     myPinnable = isPinnable;
@@ -75,8 +76,18 @@ public class UnifiedContentImpl extends UserDataHolderBase implements ContentEx 
 
   @Nullable
   @Override
-  public consulo.ui.Component getUIComponent() {
+  public Component getUIComponent() {
     return myComponent;
+  }
+
+  @Override
+  public JComponent getComponent() {
+    return (JComponent)TargetAWT.to(getUIComponent());
+  }
+
+  @Override
+  public JComponent getPreferredFocusableComponent() {
+    return (JComponent)TargetAWT.to(getUIPreferredFocusableComponent());
   }
 
   @Override
