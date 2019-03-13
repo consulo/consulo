@@ -21,6 +21,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.vcs.CheckoutProvider;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,13 +31,16 @@ public class CheckoutActionGroup extends ActionGroup implements DumbAware {
 
   private AnAction[] myChildren;
 
-  public void update(AnActionEvent e) {
+  @RequiredUIAccess
+  @Override
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     if (!CheckoutProvider.EXTENSION_POINT_NAME.hasAnyExtensions()) {
       e.getPresentation().setVisible(false);
     }
   }
 
+  @Override
   @Nonnull
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     if (myChildren == null) {
