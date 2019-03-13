@@ -20,7 +20,6 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.vcs.CheckoutProvider;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -44,13 +43,8 @@ public class CheckoutActionGroup extends ActionGroup implements DumbAware {
   @Nonnull
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     if (myChildren == null) {
-      final List<CheckoutProvider> providers = CheckoutProvider.EXTENSION_POINT_NAME.getExtensionList();
-      ContainerUtil.sort(providers, new CheckoutProvider.CheckoutProviderComparator());
-      myChildren = new AnAction[providers.size()];
-      for (int i = 0; i < providers.size(); i++) {
-        CheckoutProvider provider = providers.get(i);
-        myChildren[i] = new CheckoutAction(provider);
-      }
+      List<CheckoutProvider> extensionList = CheckoutProvider.EXTENSION_POINT_NAME.getExtensionList();
+      myChildren = extensionList.stream().sorted(new CheckoutProvider.CheckoutProviderComparator()).map(CheckoutAction::new).toArray(AnAction[]::new);
     }
     return myChildren;
   }
