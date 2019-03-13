@@ -15,7 +15,7 @@
  */
 package consulo.lang;
 
-import com.intellij.openapi.extensions.CustomLoadingExtensionPointBean;
+import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.util.KeyedLazyInstance;
@@ -26,7 +26,7 @@ import consulo.ui.image.Image;
  * @author VISTALL
  * @since 12:27/08.10.13
  */
-public class LanguageElementIcon extends CustomLoadingExtensionPointBean implements KeyedLazyInstance<Image> {
+public class LanguageElementIcon extends AbstractExtensionPointBean implements KeyedLazyInstance<Image> {
 
   // these must be public for scrambling compatibility
   @Attribute("language")

@@ -21,7 +21,7 @@ import com.intellij.CommonBundle;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.CustomLoadingExtensionPointBean;
+import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.annotations.Tag;
@@ -29,8 +29,8 @@ import com.intellij.util.xmlb.annotations.Tag;
 import javax.annotation.Nullable;
 import java.util.ResourceBundle;
 
-public class IntentionActionBean extends CustomLoadingExtensionPointBean {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.intention.IntentionActionBean");
+public class IntentionActionBean extends AbstractExtensionPointBean {
+  private static final Logger LOG = Logger.getInstance(IntentionActionBean.class);
   @Tag("className")
   public String className;
   @Tag("category")
@@ -45,7 +45,7 @@ public class IntentionActionBean extends CustomLoadingExtensionPointBean {
   @Nullable
   public String[] getCategories() {
     if (categoryKey != null) {
-      final String baseName = bundleName != null ? bundleName : ((IdeaPluginDescriptor)myPluginDescriptor).getResourceBundleBaseName();
+      final String baseName = bundleName != null ? bundleName : myPluginDescriptor.getResourceBundleBaseName();
       if (baseName == null) {
         LOG.error("No resource bundle specified for "+myPluginDescriptor);
       }
@@ -72,7 +72,7 @@ public class IntentionActionBean extends CustomLoadingExtensionPointBean {
   }
 
   public IntentionAction instantiate() throws ClassNotFoundException {
-    return instantiateExtension(className, Application.get().getInjectingContainer());
+    return instantiate(className, Application.get().getInjectingContainer());
   }
 
   public ClassLoader getMetadataClassLoader() {

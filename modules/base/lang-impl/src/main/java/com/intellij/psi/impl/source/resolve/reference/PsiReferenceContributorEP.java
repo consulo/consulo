@@ -17,7 +17,7 @@ package com.intellij.psi.impl.source.resolve.reference;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.extensions.CustomLoadingExtensionPointBean;
+import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.psi.PsiReferenceContributor;
 import com.intellij.util.KeyedLazyInstance;
@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 /**
  * @author Dmitry Avdeev
  */
-public class PsiReferenceContributorEP extends CustomLoadingExtensionPointBean implements KeyedLazyInstance<PsiReferenceContributor> {
+public class PsiReferenceContributorEP extends AbstractExtensionPointBean implements KeyedLazyInstance<PsiReferenceContributor> {
 
   @Attribute("language")
   public String language = Language.ANY.getID();
@@ -41,7 +41,7 @@ public class PsiReferenceContributorEP extends CustomLoadingExtensionPointBean i
     @Nonnull
     protected PsiReferenceContributor compute() {
       try {
-        return instantiateExtension(implementationClass, Application.get().getInjectingContainer());
+        return instantiate(implementationClass, Application.get().getInjectingContainer());
       }
       catch (ClassNotFoundException e) {
         throw new RuntimeException(e);

@@ -16,7 +16,7 @@
 package com.intellij.lang;
 
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.extensions.CustomLoadingExtensionPointBean;
+import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.KeyedLazyInstance;
 import com.intellij.util.xmlb.annotations.Attribute;
@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 /**
  * @author yole
  */
-public class LanguageExtensionPoint<T> extends CustomLoadingExtensionPointBean implements KeyedLazyInstance<T> {
+public class LanguageExtensionPoint<T> extends AbstractExtensionPointBean implements KeyedLazyInstance<T> {
 
   // these must be public for scrambling compatibility
   @Attribute("language")
@@ -40,7 +40,7 @@ public class LanguageExtensionPoint<T> extends CustomLoadingExtensionPointBean i
     @Nonnull
     protected T compute() {
       try {
-        return instantiateExtension(implementationClass, Application.get().getInjectingContainer());
+        return instantiate(implementationClass, Application.get().getInjectingContainer());
       }
       catch (ClassNotFoundException e) {
         throw new RuntimeException(e);

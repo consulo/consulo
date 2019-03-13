@@ -16,34 +16,24 @@
 
 package com.intellij.openapi.extensions;
 
-import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.annotations.DeprecationInfo;
 import consulo.injecting.InjectingContainer;
 
 /**
  * @author yole
  */
+@Deprecated
+@DeprecationInfo("Use com.intellij.openapi.extensions.AbstractExtensionPointBean")
 public class CustomLoadingExtensionPointBean extends AbstractExtensionPointBean {
-  @Attribute("factoryClass")
-  public String factoryClass;
-
-  @Attribute("factoryArgument")
-  public String factoryArgument;
-
   @SuppressWarnings("unchecked")
   protected <T> T instantiateExtension(final String implementationClass, final InjectingContainer injectingContainer) throws ClassNotFoundException {
-    if (factoryClass != null) {
-      ExtensionFactory factory = instantiate(factoryClass, injectingContainer);
-      return (T)factory.createInstance(factoryArgument, implementationClass);
+    if (implementationClass == null) {
+      throw new RuntimeException("implementation class is not specified for unknown language extension point, " +
+                                 "plugin id: " +
+                                 (myPluginDescriptor == null ? "<not available>" : myPluginDescriptor.getPluginId()) + ". " +
+                                 "Check if 'implementationClass' attribute is specified");
     }
-    else {
-      if (implementationClass == null) {
-        throw new RuntimeException("implementation class is not specified for unknown language extension point, " +
-                                   "plugin id: " +
-                                   (myPluginDescriptor == null ? "<not available>" : myPluginDescriptor.getPluginId()) + ". " +
-                                   "Check if 'implementationClass' attribute is specified");
-      }
-      //noinspection unchecked
-      return instantiate(implementationClass, injectingContainer);
-    }
+    //noinspection unchecked
+    return instantiate(implementationClass, injectingContainer);
   }
 }
