@@ -132,7 +132,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
   }
 
   @Override
-  public void setCompilerOutputUrl(@javax.annotation.Nullable String compilerOutputUrl) {
+  public void setCompilerOutputUrl(@Nullable String compilerOutputUrl) {
     myOutputDirPointer = compilerOutputUrl == null ? null : VirtualFilePointerManager.getInstance().create(compilerOutputUrl, myProject, null);
 
     myCompilerOutputWatchRequest =
