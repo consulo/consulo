@@ -21,7 +21,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.ComponentConfig;
-import com.intellij.openapi.components.ExtensionAreas;
+import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
@@ -35,6 +35,7 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.containers.StringInterner;
 import com.intellij.util.xmlb.JDOMXIncluder;
 import com.intellij.util.xmlb.XmlSerializer;
+import consulo.annotations.Exported;
 import gnu.trove.THashMap;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -54,7 +55,7 @@ import java.util.*;
  */
 public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   public static final IdeaPluginDescriptorImpl[] EMPTY_ARRAY = new IdeaPluginDescriptorImpl[0];
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.plugins.PluginDescriptor");
+  private static final Logger LOG = Logger.getInstance(IdeaPluginDescriptorImpl.class);
   private final NullableLazyValue<String> myDescription = new NullableLazyValue<String>() {
     @Override
     protected String compute() {
@@ -88,7 +89,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   @Nullable
   private MultiMap<String, Element> myExtensions;
   @Nullable
-  private MultiMap<String, Element> myExtensionsPoints;
+  private MultiMap<ExtensionAreaId, Element> myExtensionsPoints;
   private String myDescriptionChildText;
   private String myDownloadCounter;
   private long myDate;
@@ -219,8 +220,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     }
 
     myDependencies = dependentPlugins.isEmpty() ? PluginId.EMPTY_ARRAY : dependentPlugins.toArray(new PluginId[dependentPlugins.size()]);
-    myOptionalDependencies =
-            optionalDependentPlugins.isEmpty() ? PluginId.EMPTY_ARRAY : optionalDependentPlugins.toArray(new PluginId[optionalDependentPlugins.size()]);
+    myOptionalDependencies = optionalDependentPlugins.isEmpty() ? PluginId.EMPTY_ARRAY : optionalDependentPlugins.toArray(new PluginId[optionalDependentPlugins.size()]);
 
     if (pluginBean.helpSets == null || pluginBean.helpSets.length == 0) {
       myHelpSets = HelpSetPath.EMPTY;
@@ -253,22 +253,28 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     if (extensionPoints != null) {
       myExtensionsPoints = MultiMap.createSmart();
       for (Element extensionPoint : extensionPoints) {
-        String areaId = StringUtil.notNullize(extensionPoint.getAttributeValue(ExtensionsAreaImpl.ATTRIBUTE_AREA), ExtensionAreas.APPLICATION);
+        String areaId = extensionPoint.getAttributeValue(ExtensionsAreaImpl.ATTRIBUTE_AREA);
+        ExtensionAreaId area = null;
         if ("CONSULO_PROJECT".equals(areaId)) {
           LOG.warn("Deprecated areaId '" + areaId + "' for extensionPoint: " + buildEpId(extensionPoint));
-          areaId = ExtensionAreas.PROJECT;
+          area = ExtensionAreaId.PROJECT;
         }
         else if ("CONSULO_MODULE".equals(areaId)) {
           LOG.warn("Deprecated areaId '" + areaId + "' for extensionPoint: " + buildEpId(extensionPoint));
-          areaId = ExtensionAreas.MODULE;
+          area = ExtensionAreaId.MODULE;
         }
 
-        if (!ArrayUtil.contains(areaId, ExtensionAreas.ourAllowedAres)) {
+        // if we found deprecated area
+        if (area == null) {
+          area = StringUtil.isEmpty(areaId) ? ExtensionAreaId.APPLICATION : StringUtil.parseEnum(areaId, null, ExtensionAreaId.class);
+        }
+
+        if (area == null) {
           LOG.error("Bad areaId for extensionPoint: " + buildEpId(extensionPoint));
           continue;
         }
 
-        myExtensionsPoints.putValue(areaId, extensionPoint);
+        myExtensionsPoints.putValue(area, extensionPoint);
       }
     }
 
@@ -288,9 +294,9 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     return epName;
   }
 
-  public void registerExtensionPoints(String areaId, @Nonnull ExtensionsAreaImpl area) {
+  public void registerExtensionPoints(ExtensionAreaId areaId, @Nonnull ExtensionsAreaImpl area) {
     if (myExtensionsPoints != null) {
-      for (Element element : myExtensionsPoints.get(StringUtil.notNullize(areaId))) {
+      for (Element element : myExtensionsPoints.get(areaId)) {
         area.registerExtensionPoint(this, element);
       }
     }
@@ -371,9 +377,9 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     myCategory = category;
   }
 
-  @SuppressWarnings("UnusedDeclaration")
   @Nullable
-  public MultiMap<String, Element> getExtensionsPoints() {
+  @Exported
+  public MultiMap<ExtensionAreaId, Element> getExtensionsPoints() {
     return myExtensionsPoints;
   }
 

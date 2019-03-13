@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.module.impl;
 
-import com.intellij.openapi.components.ExtensionAreas;
+import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.impl.ModulePathMacroManager;
 import consulo.components.impl.PlatformComponentManagerImpl;
@@ -55,7 +55,7 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
   private final VirtualFilePointer myDirVirtualFilePointer;
 
   public ModuleImpl(@Nonnull String name, @Nullable String dirUrl, @Nonnull Project project) {
-    super(project, "Module " + name, ExtensionAreas.MODULE);
+    super(project, "Module " + name, ExtensionAreaId.MODULE);
     myName = name;
     myProject = project;
     myModuleScopeProvider = new ModuleScopeProviderImpl(this);

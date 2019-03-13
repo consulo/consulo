@@ -23,6 +23,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
+import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.PluginId;
@@ -954,7 +955,7 @@ public class PluginManagerCore {
     ourPlugins = pluginDescriptors;
   }
 
-  public static void registerExtensionPointsAndExtensions(String areaId, ExtensionsAreaImpl area) {
+  public static void registerExtensionPointsAndExtensions(ExtensionAreaId areaId, ExtensionsAreaImpl area) {
     IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
     List<IdeaPluginDescriptor> list = new ArrayList<>(plugins.length);
     for (IdeaPluginDescriptor plugin : plugins) {
@@ -966,7 +967,7 @@ public class PluginManagerCore {
     registerExtensionPointsAndExtensions(areaId, area, list);
   }
 
-  private static void registerExtensionPointsAndExtensions(String areaId, ExtensionsAreaImpl area, List<IdeaPluginDescriptor> pluginDescriptors) {
+  private static void registerExtensionPointsAndExtensions(ExtensionAreaId areaId, ExtensionsAreaImpl area, List<IdeaPluginDescriptor> pluginDescriptors) {
     for (IdeaPluginDescriptor descriptor : pluginDescriptors) {
       ((IdeaPluginDescriptorImpl)descriptor).registerExtensionPoints(areaId, area);
     }

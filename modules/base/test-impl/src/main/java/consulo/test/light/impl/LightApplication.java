@@ -18,7 +18,7 @@ package consulo.test.light.impl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.impl.ModalityStateEx;
-import com.intellij.openapi.components.ExtensionAreas;
+import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.util.Computable;
@@ -46,7 +46,7 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
   private ModalityState myNoneModalityState;
 
   public LightApplication(Disposable lastDisposable, LightExtensionRegistrator registrator) {
-    super(null, "LightApplication", ExtensionAreas.APPLICATION, false);
+    super(null, "LightApplication", ExtensionAreaId.APPLICATION, false);
     myLastDisposable = lastDisposable;
     myRegistrator = registrator;
 

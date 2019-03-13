@@ -16,7 +16,7 @@
 package consulo.test.light.impl;
 
 import com.intellij.openapi.components.ComponentManager;
-import com.intellij.openapi.components.ExtensionAreas;
+import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.project.Project;
@@ -37,7 +37,7 @@ public class LightProject extends ComponentManagerImpl implements Project {
   private final LightExtensionRegistrator myRegistrator;
 
   public LightProject(@Nullable ComponentManager parent, @Nonnull String name, @Nonnull LightExtensionRegistrator registrator) {
-    super(parent, name, ExtensionAreas.PROJECT, false);
+    super(parent, name, ExtensionAreaId.PROJECT, false);
     myName = name;
     myRegistrator = registrator;
 

@@ -22,6 +22,7 @@ import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
+import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import consulo.components.impl.stores.IComponentStore;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.io.storage.HeavyProcessLatch;
@@ -39,7 +40,7 @@ public abstract class PlatformComponentManagerImpl extends ComponentManagerImpl 
   private boolean myHandlingInitComponentError;
   private AtomicInteger myCreatedNotLazyServicesCount = new AtomicInteger();
 
-  protected PlatformComponentManagerImpl(ComponentManager parent, @Nonnull String name, @Nullable String areaId) {
+  protected PlatformComponentManagerImpl(ComponentManager parent, @Nonnull String name, @Nullable ExtensionAreaId areaId) {
     super(parent, name, areaId, true);
   }
 

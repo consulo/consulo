@@ -23,6 +23,7 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.ExtensionsArea;
+import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.extensions.impl.ExtensionPointImpl;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -149,13 +150,13 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   @Nonnull
   private final String myName;
   @Nullable
-  private final String myExtensionAreaId;
+  private final ExtensionAreaId myExtensionAreaId;
 
   private List<Class> myNotLazyServices = new ArrayList<>();
 
   private Map<Class<?>, Object> myChecker = new ConcurrentHashMap<>();
 
-  protected ComponentManagerImpl(@Nullable ComponentManager parent, @Nonnull String name, @Nullable String extensionAreaId, boolean buildInjectionContainer) {
+  protected ComponentManagerImpl(@Nullable ComponentManager parent, @Nonnull String name, @Nullable ExtensionAreaId extensionAreaId, boolean buildInjectionContainer) {
     myParent = parent;
     myName = name;
     myExtensionAreaId = extensionAreaId;

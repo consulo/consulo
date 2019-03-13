@@ -33,7 +33,7 @@ import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.application.impl.ReadMostlyRWLock;
 import com.intellij.openapi.components.ComponentConfig;
-import com.intellij.openapi.components.ExtensionAreas;
+import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
@@ -189,7 +189,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   private final AtomicBoolean mySaveSettingsIsInProgress = new AtomicBoolean(false);
 
   public BaseApplication(@Nonnull Ref<? extends StartupProgress> splashRef) {
-    super(null, "Application", ExtensionAreas.APPLICATION);
+    super(null, "Application", ExtensionAreaId.APPLICATION);
     mySplashRef = splashRef;
     myStartTime = System.currentTimeMillis();
 

@@ -23,6 +23,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.components.*;
+import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
@@ -84,7 +85,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   private final List<ProjectComponent> myProjectComponents = new CopyOnWriteArrayList<>();
 
   protected ProjectImpl(@Nonnull ProjectManager manager, @Nonnull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName, boolean noUIThread) {
-    super(ApplicationManager.getApplication(), "Project " + (projectName == null ? dirPath : projectName), ExtensionAreas.PROJECT);
+    super(ApplicationManager.getApplication(), "Project " + (projectName == null ? dirPath : projectName), ExtensionAreaId.PROJECT);
 
     putUserData(CREATION_TIME, System.nanoTime());
 
