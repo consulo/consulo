@@ -49,6 +49,7 @@ import com.intellij.util.ui.*;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.ui.RequiredUIAccess;
 import consulo.awt.TargetAWT;
+import consulo.ui.desktop.internal.window.JDialogAsUIWindow;
 import consulo.ui.image.ImageEffects;
 import net.miginfocom.swing.MigLayout;
 import javax.annotation.Nonnull;
@@ -125,7 +126,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
     }
   }
 
-  private static class InspectorWindow extends JDialog {
+  private static class InspectorWindow extends JDialogAsUIWindow {
     private InspectorTable myInspectorTable;
     private Component myComponent;
     private List<PropertyBean> myInfo;
@@ -135,7 +136,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
     private final JPanel myWrapperPanel;
 
     private InspectorWindow(@Nonnull Component component) throws HeadlessException {
-      super(findWindow(component));
+      super(TargetAWT.from(findWindow(component)), false);
       Window window = findWindow(component);
       setModal(window instanceof JDialog && ((JDialog)window).isModal());
       myComponent = component;
