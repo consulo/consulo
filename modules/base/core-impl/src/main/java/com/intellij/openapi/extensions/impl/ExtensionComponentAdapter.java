@@ -105,19 +105,6 @@ public class ExtensionComponentAdapter<T> implements LoadingOrder.Orderable {
     return myExtensionElement.getAttributeValue("id");
   }
 
-  private Element getExtensionElement() {
-    return myExtensionElement;
-  }
-
-  @Override
-  public Element getDescribingElement() {
-    return getExtensionElement();
-  }
-
-  public PluginId getPluginName() {
-    return myPluginDescriptor.getPluginId();
-  }
-
   public IdeaPluginDescriptor getPluginDescriptor() {
     return myPluginDescriptor;
   }
