@@ -30,6 +30,7 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.io.URLUtil;
 import consulo.annotations.RequiredReadAction;
+import consulo.application.AccessRule;
 import consulo.compiler.impl.ModuleCompilerPathsManagerImpl;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
@@ -153,7 +154,6 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
     }
   }
 
-  @RequiredReadAction
   public void loadState(Element element) {
     String url = element.getAttributeValue(URL);
     if (url != null) {
@@ -165,7 +165,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
       if (name == null) {
         continue;
       }
-      Module module = myModuleManager.findModuleByName(name);
+      Module module = AccessRule.read(() -> myModuleManager.findModuleByName(name));
       if (module != null) {
         ModuleCompilerPathsManagerImpl moduleCompilerPathsManager = (ModuleCompilerPathsManagerImpl)ModuleCompilerPathsManager.getInstance(module);
         moduleCompilerPathsManager.loadState(moduleElement);
