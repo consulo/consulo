@@ -36,15 +36,15 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.application.AccessRule;
 import consulo.compiler.ModuleCompilerPathsManager;
+import consulo.roots.ContentFolderScopes;
+import consulo.roots.ContentFolderTypeProvider;
 import consulo.util.pointers.NamedPointer;
 import consulo.util.pointers.NamedPointerUtil;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
-
-import consulo.roots.ContentFolderScopes;
-import consulo.roots.ContentFolderTypeProvider;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -140,7 +140,7 @@ public class ModuleOutputPackagingElementImpl
   @Override
   public void loadState(ArtifactManager artifactManager, ModuleOutputPackagingElementState state) {
     final String moduleName = state.getModuleName();
-    myModulePointer = moduleName != null ? ModuleUtilCore.createPointer(myProject, moduleName) : null;
+    myModulePointer = moduleName != null ? AccessRule.read(() -> ModuleUtilCore.createPointer(myProject, moduleName)) : null;
   }
 
   @Override
