@@ -22,11 +22,7 @@
       <action id="FileChooser.TogglePathShowing" class="com.intellij.openapi.fileChooser.actions.TogglePathShowingAction"/>
     </group>
 
-    <action internal="true" id="ShowStartupManagerAction" class="consulo.internal.actions.ShowStartupManagerAction" text="Show Startup Manager">
-      <add-to-group group-id="Internal" anchor="after" relative-to-action="RestartInfo"/>
-    </action>
-
-    <group id="Internal" text="Internal Actions" internal="true" popup="true">
+    <group id="Internal.Desktop" text="Internal Actions" internal="true" popup="false">
       <group id="Internal.Errors" popup="true" text="Exceptions">
         <action id="DropAnError" internal="true" class="com.intellij.diagnostic.DropAnErrorAction"/>
         <action id="DropAnErrorWithAttachments" internal="true" class="com.intellij.diagnostic.DropAnErrorWithAttachmentsAction"/>
@@ -74,8 +70,55 @@
       <reference ref="MaintenanceGroup"/>
 
       <action internal="true" id="SendStatistics" class="com.intellij.internal.statistic.tmp.SendStatisticsAction" text="Send statistics"/>
-      <add-to-group group-id="ToolsMenu" anchor="last"/>
+
+      <add-to-group group-id="Internal"/>
     </group>
+
+    <group id="Internal1" text="IDEA Internal Actions" internal="true">
+      <separator/>
+      <action id="Merge3Files" internal="true" class="com.intellij.openapi.diff.actions.MergeFilesAction"/>
+      <separator/>
+      <action internal="true" id="DecodeBytesAction" class="com.intellij.internal.encodings.DecodeBytesAction"/>
+      <group id="Internal.Dump" text="Dump" internal="true" popup="true">
+        <action id="DumpExtensions" internal="true" text="Dump Extensions" class="com.intellij.internal.DumpExtensionsAction"/>
+        <action id="DumpInspectionDescriptions" internal="true" class="com.intellij.internal.DumpInspectionDescriptionsAction"/>
+        <action id="DumpIntentionsDescriptions" internal="true" class="com.intellij.internal.DumpIntentionsAction"/>
+        <action id="DumpConfigurationTypes" internal="true" class="com.intellij.internal.DumpConfigurationTypesAction"/>
+        <action id="DumpDirectoryIndex" internal="true" class="com.intellij.internal.DumpDirectoryInfoAction"/>
+        <action id="ScanSourceCommentsAction" internal="true" class="com.intellij.tools.ScanSourceCommentsAction"
+                text="Dump all comments in the project"/>
+      </group>
+
+      <separator/>
+      <group id="Internal.VFS" text="VFS" popup="true">
+        <action id="VirtualFileInfo" internal="true" class="com.intellij.openapi.vfs.impl.local.VirtualFileInfoAction"/>
+        <action id="MarkFileDirty" internal="true" class="com.intellij.openapi.vcs.changes.actions.MarkFileDirtyAction"
+                text="Mark File Dirty"/>
+        <separator/>
+        <action id="CheckVfsSanity" internal="true" class="com.intellij.openapi.vfs.newvfs.persistent.CheckSanityAction"
+                text="Check VFS sanity"/>
+        <action id="LoadAllContent" internal="true" class="com.intellij.internal.LoadAllContentsAction" text="Load all files content"/>
+        <action id="LoadAllVFSContent" internal="true" class="com.intellij.internal.LoadAllVfsStoredContentsAction"
+                text="Load all VFS stored files content"/>
+        <action id="ComputeVFStatistics" internal="true" class="com.intellij.internal.ComputeVirtualFileNameStatAction"/>
+        <separator/>
+        <action internal="true" id="PruneEmptyDirectories" class="com.intellij.ide.actions.PruneEmptyDirectoriesAction"
+                text="Prune Empty Directories"/>
+        <action internal="true" id="FixLineSeparators" class="com.intellij.ide.actions.FixLineSeparatorsAction" text="Fix Line Separators"/>
+      </group>
+
+      <separator/>
+
+      <action internal="true" id="CompilerTest" class="com.intellij.openapi.actionSystem.EmptyAction"
+              text="Test Rebuild Performance"/>
+      <!--com.intellij.compiler.impl.javaCompiler.api.CompilerPerfTestAction-->
+
+      <add-to-group group-id="Internal" anchor="last"/>
+    </group>
+
+    <action internal="true" id="ShowStartupManagerAction" class="consulo.internal.actions.ShowStartupManagerAction" text="Show Startup Manager">
+      <add-to-group group-id="Internal" anchor="after" relative-to-action="RestartInfo"/>
+    </action>
   </actions>
 
   <application-components>
@@ -137,7 +180,7 @@
                         serviceImplementation="com.intellij.ide.actions.DesktopShowSettingsUtilImpl"/>
 
     <applicationService serviceInterface="com.intellij.ide.DataManager"
-                        serviceImplementation="com.intellij.ide.impl.DesktopDataManagerImpl" />
+                        serviceImplementation="com.intellij.ide.impl.DesktopDataManagerImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.ui.FrameWrapperPeerFactory" serviceImplementation="consulo.desktop.impl.ui.FrameWrapperPeerFactoryImpl"/>
     <applicationService serviceInterface="consulo.ide.actions.AboutManager" serviceImplementation="consulo.desktop.impl.ide.actions.DesktopAboutManager"/>
