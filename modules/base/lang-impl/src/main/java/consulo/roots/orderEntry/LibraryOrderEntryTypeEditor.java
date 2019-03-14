@@ -15,20 +15,19 @@
  */
 package consulo.roots.orderEntry;
 
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.impl.LibraryOrderEntryImpl;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.libraries.Library;
-import consulo.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.FileAppearanceService;
 import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
-import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
-import consulo.roots.ui.configuration.ProjectStructureDialog;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathTableItem;
 import com.intellij.openapi.roots.ui.configuration.classpath.LibraryClasspathTableItem;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
-import com.intellij.util.Consumer;
+import consulo.roots.types.BinariesOrderRootType;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -39,12 +38,7 @@ public class LibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<Library
   @Override
   public void navigate(@Nonnull final LibraryOrderEntryImpl orderEntry) {
     Project project = orderEntry.getModuleRootLayer().getProject();
-    ProjectStructureDialog.show(project, new Consumer<ProjectStructureConfigurable>() {
-      @Override
-      public void consume(ProjectStructureConfigurable config) {
-        config.select(orderEntry, true);
-      }
-    });
+    ShowSettingsUtil.getInstance().showProjectStructureDialog(project, config -> config.select(orderEntry, true));
   }
 
   @Nonnull
@@ -55,13 +49,13 @@ public class LibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<Library
     }
     Library library = orderEntry.getLibrary();
     assert library != null : orderEntry;
-    return OrderEntryAppearanceService.getInstance().forLibrary(orderEntry.getModuleRootLayer().getProject(), library,
-                                                                !((LibraryEx)library).getInvalidRootUrls(BinariesOrderRootType.getInstance()).isEmpty());
+    return OrderEntryAppearanceService.getInstance()
+            .forLibrary(orderEntry.getModuleRootLayer().getProject(), library, !((LibraryEx)library).getInvalidRootUrls(BinariesOrderRootType.getInstance()).isEmpty());
   }
 
   @Nonnull
   @Override
   public ClasspathTableItem<LibraryOrderEntryImpl> createTableItem(@Nonnull LibraryOrderEntryImpl orderEntry, @Nonnull StructureConfigurableContext context) {
-    return new LibraryClasspathTableItem<LibraryOrderEntryImpl>(orderEntry, context);
+    return new LibraryClasspathTableItem<>(orderEntry, context);
   }
 }

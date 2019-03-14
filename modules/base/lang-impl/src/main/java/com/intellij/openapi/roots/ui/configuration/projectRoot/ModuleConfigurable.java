@@ -31,11 +31,9 @@ import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
 import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ModuleProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import consulo.roots.ui.configuration.projectRoot.moduleLayerActions.DeleteLayerAction;
-import consulo.roots.ui.configuration.projectRoot.moduleLayerActions.NewLayerAction;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.LabeledComponent;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.MutableCollectionComboBoxModel;
@@ -43,11 +41,13 @@ import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;
+import consulo.roots.ui.configuration.projectRoot.moduleLayerActions.DeleteLayerAction;
+import consulo.roots.ui.configuration.projectRoot.moduleLayerActions.NewLayerAction;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -211,7 +211,7 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
   }
 
   @Override
-  public ActionCallback navigateTo(@Nullable final Place place, final boolean requestFocus) {
+  public AsyncResult<Void> navigateTo(@Nullable final Place place, final boolean requestFocus) {
     return getModuleEditor().navigateTo(place, requestFocus);
   }
 

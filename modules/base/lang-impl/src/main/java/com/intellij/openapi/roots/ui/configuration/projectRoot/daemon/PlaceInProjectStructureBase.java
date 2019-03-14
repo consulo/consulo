@@ -17,8 +17,9 @@ package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.ui.navigation.Place;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -48,7 +49,7 @@ public class PlaceInProjectStructureBase extends PlaceInProjectStructure {
 
   @Nonnull
   @Override
-  public ActionCallback navigate() {
+  public AsyncResult<Void> navigate() {
     return ProjectStructureConfigurable.getInstance(myProject).navigateTo(myPlace, true);
   }
 }

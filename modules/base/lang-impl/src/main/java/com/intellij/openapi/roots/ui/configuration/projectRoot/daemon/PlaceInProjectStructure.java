@@ -15,7 +15,8 @@
  */
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -30,5 +31,5 @@ public abstract class PlaceInProjectStructure {
   public abstract String getPlacePath();
 
   @Nonnull
-  public abstract ActionCallback navigate();
+  public abstract AsyncResult<Void> navigate();
 }

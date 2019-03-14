@@ -17,15 +17,19 @@ package com.intellij.ide.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
-import consulo.roots.ui.configuration.ProjectStructureDialog;
+import consulo.ui.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
 
 public class TemplateProjectStructureAction extends AnAction implements DumbAware {
+  @RequiredUIAccess
   @Override
-  public void actionPerformed(final AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Project defaultProject = ProjectManagerEx.getInstanceEx().getDefaultProject();
-    ProjectStructureDialog.show(defaultProject);
+    ShowSettingsUtil.getInstance().showProjectStructureDialog(defaultProject);
   }
 }

@@ -25,7 +25,7 @@ import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.ui.BaseSdkEditor;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;
 import consulo.bundle.SdkUtil;
@@ -129,7 +129,7 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> im
   }
 
   @Override
-  public ActionCallback navigateTo(@Nullable final Place place, final boolean requestFocus) {
+  public AsyncResult<Void> navigateTo(@Nullable final Place place, final boolean requestFocus) {
     return mySdkEditor.navigateTo(place, requestFocus);
   }
 

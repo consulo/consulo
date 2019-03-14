@@ -21,7 +21,8 @@ import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.impl.OrderEntryUtil;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -72,7 +73,7 @@ public class PlaceInModuleClasspath extends PlaceInProjectStructure {
 
   @Nonnull
   @Override
-  public ActionCallback navigate() {
+  public AsyncResult<Void> navigate() {
     return ProjectStructureConfigurable.getInstance(myContext.getProject()).selectOrderEntry(myModule, myOrderEntry);
   }
 }

@@ -19,12 +19,14 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.SystemInfo;
+import consulo.options.ProjectStructureSelector;
 import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
+import java.util.function.Consumer;
 
 public abstract class ShowSettingsUtil {
   public static final String DIMENSION_KEY = "OptionsEditor";
@@ -47,6 +49,14 @@ public abstract class ShowSettingsUtil {
 
   @RequiredUIAccess
   public abstract void showSettingsDialog(@Nonnull final Project project, final Configurable toSelect);
+
+  @RequiredUIAccess
+  public void showProjectStructureDialog(@Nonnull Project project) {
+    showProjectStructureDialog(project, projectStructureSelector -> {});
+  }
+
+  @RequiredUIAccess
+  public abstract void showProjectStructureDialog(@Nonnull Project project, @Nonnull Consumer<ProjectStructureSelector> consumer);
 
   @RequiredUIAccess
   public AsyncResult<Void> editConfigurable(Project project, Configurable configurable) {

@@ -19,6 +19,9 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
+import consulo.ui.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -26,7 +29,9 @@ import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
  */
 public class ShowModulePropertiesAction extends AnAction{
 
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  @Override
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) {
@@ -39,7 +44,9 @@ public class ShowModulePropertiesAction extends AnAction{
     ModulesConfigurator.showDialog(project, module.getName(), null);
   }
 
-  public void update(AnActionEvent e) {
+  @RequiredUIAccess
+  @Override
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     final DataContext dataContext = e.getDataContext();
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);

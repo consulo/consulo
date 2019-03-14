@@ -22,14 +22,14 @@ import com.intellij.openapi.projectRoots.ui.BaseSdkEditor;
 import com.intellij.openapi.projectRoots.ui.SdkPathEditor;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.ui.TabbedPaneWrapper;
 import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -80,10 +80,10 @@ public class SdkEditor extends BaseSdkEditor {
   }
 
   @Override
-  public ActionCallback navigateTo(@Nullable final Place place, final boolean requestFocus) {
-    if (place == null) return new ActionCallback.Done();
+  public AsyncResult<Void> navigateTo(@Nullable final Place place, final boolean requestFocus) {
+    if (place == null) return AsyncResult.resolved();
     myTabbedPane.setSelectedTitle((String)place.getPath(SDK_TAB));
-    return new ActionCallback.Done();
+    return AsyncResult.resolved();
   }
 
   @Override

@@ -17,13 +17,14 @@ package com.intellij.util.net;
 
 import com.intellij.CommonBundle;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Ref;
 import com.intellij.ui.GuiUtils;
 import com.intellij.util.ObjectUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -60,7 +61,7 @@ public class IOExceptionDialog extends DialogWrapper {
       new AbstractAction(CommonBundle.message("dialog.ioexception.proxy")) {
         @Override
         public void actionPerformed(@Nonnull ActionEvent e) {
-          HttpConfigurable.editConfigurable(ObjectUtil.tryCast(e.getSource(), JComponent.class));
+          ShowSettingsUtil.getInstance().editConfigurable(ObjectUtil.tryCast(e.getSource(), JComponent.class), new HttpProxyConfigurable());
         }
       }
     };

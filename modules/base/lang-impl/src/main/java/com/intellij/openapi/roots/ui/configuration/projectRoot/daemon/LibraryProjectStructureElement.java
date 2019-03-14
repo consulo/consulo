@@ -23,6 +23,7 @@ import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
+import com.intellij.openapi.util.AsyncResult;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.DocumentationOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
@@ -123,7 +124,7 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
     return getSourceOrThis() == (((LibraryProjectStructureElement)o).getSourceOrThis());
   }
 
-  public ActionCallback navigate() {
+  public AsyncResult<Void> navigate() {
     return createPlace().navigate();
   }
 

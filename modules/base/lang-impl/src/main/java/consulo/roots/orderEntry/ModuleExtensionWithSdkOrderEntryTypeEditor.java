@@ -15,16 +15,14 @@
  */
 package consulo.roots.orderEntry;
 
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.impl.ModuleExtensionWithSdkOrderEntryImpl;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
-import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.Consumer;
 import consulo.bundle.SdkUtil;
-import consulo.roots.ui.configuration.ProjectStructureDialog;
 
 import javax.annotation.Nonnull;
 
@@ -40,13 +38,7 @@ public class ModuleExtensionWithSdkOrderEntryTypeEditor implements OrderEntryTyp
       return;
     }
     Project project = orderEntry.getModuleRootLayer().getProject();
-    final ProjectStructureConfigurable config = ProjectStructureConfigurable.getInstance(project);
-    ProjectStructureDialog.show(project, new Consumer<ProjectStructureConfigurable>() {
-      @Override
-      public void consume(ProjectStructureConfigurable configurable) {
-        config.select(sdk, true);
-      }
-    });
+    ShowSettingsUtil.getInstance().showProjectStructureDialog(project, config -> config.select(sdk, true));
   }
 
   @Nonnull

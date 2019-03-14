@@ -18,17 +18,15 @@ package consulo.roots.orderEntry;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.KeyedFactoryEPBean;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
-import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathTableItem;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
 import com.intellij.openapi.util.KeyedExtensionFactory;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.Consumer;
-import consulo.roots.ui.configuration.ProjectStructureDialog;
 
 import javax.annotation.Nonnull;
 
@@ -67,12 +65,6 @@ public abstract interface OrderEntryTypeEditor<T extends OrderEntry> {
 
   default void navigate(@Nonnull final T orderEntry) {
     Project project = orderEntry.getOwnerModule().getProject();
-    final ProjectStructureConfigurable config = ProjectStructureConfigurable.getInstance(project);
-    ProjectStructureDialog.show(project, new Consumer<ProjectStructureConfigurable>() {
-      @Override
-      public void consume(ProjectStructureConfigurable configurable) {
-        config.selectOrderEntry(orderEntry.getOwnerModule(), orderEntry);
-      }
-    });
+    ShowSettingsUtil.getInstance().showProjectStructureDialog(project, config -> config.selectOrderEntry(orderEntry.getOwnerModule(), orderEntry));
   }
 }

@@ -29,6 +29,7 @@ import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -50,18 +51,17 @@ import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.graph.GraphGenerator;
-import consulo.ui.RequiredUIAccess;
 import consulo.ide.newProject.NewProjectDialog;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
 import consulo.roots.ContentFolderScopes;
-import consulo.roots.ui.configuration.ProjectStructureDialog;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author Eugene Zhuravlev
@@ -531,18 +531,19 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     return myModified;
   }
 
-  public static boolean showArtifactSettings(@Nonnull Project project, @Nullable final Artifact artifact) {
-    final ProjectStructureConfigurable configurable = ProjectStructureConfigurable.getInstance(project);
-    return ProjectStructureDialog.show(project, config -> configurable.select(artifact, true));
+  @RequiredUIAccess
+  public static void showArtifactSettings(@Nonnull Project project, @Nullable final Artifact artifact) {
+    ShowSettingsUtil.getInstance().showProjectStructureDialog(project, config -> config.select(artifact, true));
   }
 
-  public static boolean showSdkSettings(@Nonnull Project project, @Nonnull final Sdk sdk) {
-    final ProjectStructureConfigurable configurable = ProjectStructureConfigurable.getInstance(project);
-    return ProjectStructureDialog.show(project, config -> configurable.select(sdk, true));
+  @RequiredUIAccess
+  public static void showSdkSettings(@Nonnull Project project, @Nonnull final Sdk sdk) {
+    ShowSettingsUtil.getInstance().showProjectStructureDialog(project, config -> config.select(sdk, true));
   }
 
-  public static boolean showDialog(Project project, @Nullable final String moduleToSelect, @Nullable final String editorNameToSelect) {
-    return ProjectStructureDialog.show(project, config -> config.select(moduleToSelect, editorNameToSelect, true));
+  @RequiredUIAccess
+  public static void showDialog(Project project, @Nullable final String moduleToSelect, @Nullable final String editorNameToSelect) {
+    ShowSettingsUtil.getInstance().showProjectStructureDialog(project, config -> config.select(moduleToSelect, editorNameToSelect, true));
   }
 
   public void moduleRenamed(Module module, final String oldName, final String name) {

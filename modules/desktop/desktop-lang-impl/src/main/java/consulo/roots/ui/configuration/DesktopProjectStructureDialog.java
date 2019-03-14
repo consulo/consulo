@@ -46,7 +46,7 @@ import java.util.List;
  * @author VISTALL
  * @since 28.07.2015
  */
-public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
+public class DesktopProjectStructureDialog extends WholeWestSingleConfigurableEditor {
   private static final Key<Configurable> CONFIGURABLE_KEY = Key.create("configurable.key");
 
   private final List<Configurable> myName2Config = new ArrayList<Configurable>();
@@ -60,10 +60,10 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
 
   public static boolean show(@Nonnull Project project, final Consumer<ProjectStructureConfigurable> configurableConsumer) {
     final ProjectStructureConfigurable configurable = ProjectStructureConfigurable.getInstance(project);
-    ProjectStructureDialog dialog =
-            new ProjectStructureDialog(project, configurable, ShowSettingsUtil.DIMENSION_KEY, true, IdeModalityType.PROJECT, configurable);
+    DesktopProjectStructureDialog dialog =
+            new DesktopProjectStructureDialog(project, configurable, ShowSettingsUtil.DIMENSION_KEY, true, IdeModalityType.PROJECT, configurable);
     if (configurableConsumer != null) {
-      new UiNotifyConnector.Once(dialog.getContentPane(), new Activatable.Adapter() {
+      new UiNotifyConnector.Once(dialog.getContentPane(), new Activatable() {
         @Override
         public void showNotify() {
           configurableConsumer.consume(configurable);
@@ -73,12 +73,12 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
     return dialog.showAndGet();
   }
 
-  public ProjectStructureDialog(@Nonnull Project project,
-                                Configurable configurable,
-                                @NonNls String dimensionKey,
-                                boolean showApplyButton,
-                                IdeModalityType ideModalityType,
-                                ProjectStructureConfigurable structureConfigurable) {
+  public DesktopProjectStructureDialog(@Nonnull Project project,
+                                       Configurable configurable,
+                                       @NonNls String dimensionKey,
+                                       boolean showApplyButton,
+                                       IdeModalityType ideModalityType,
+                                       ProjectStructureConfigurable structureConfigurable) {
     super(project, configurable, dimensionKey, showApplyButton, ideModalityType, true);
     myStructureConfigurable = structureConfigurable;
 
@@ -98,7 +98,7 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
 
     structureConfigurable.setConfigurablesForDispose(myName2Config);
 
-    structureConfigurable.setProjectStructureDialog(this);
+    structureConfigurable.setProjectStructureDialog(this::select);
 
     init();
 

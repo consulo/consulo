@@ -20,6 +20,7 @@ import com.intellij.openapi.project.DefaultProjectFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import consulo.ide.base.BaseShowSettingsUtil;
+import consulo.options.ProjectStructureSelector;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.app.impl.settings.SettingsDialog;
 import org.jetbrains.annotations.NonNls;
@@ -29,6 +30,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.awt.*;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -74,6 +76,12 @@ public class WebShowSettingsUtil extends BaseShowSettingsUtil {
   @Override
   public void showSettingsDialog(@Nonnull Project project, Configurable toSelect) {
     showSettingsDialog(project);
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void showProjectStructureDialog(@Nonnull Project project, @Nonnull Consumer<ProjectStructureSelector> consumer) {
+
   }
 
   @RequiredUIAccess

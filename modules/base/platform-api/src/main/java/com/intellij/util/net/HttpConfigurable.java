@@ -24,17 +24,13 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.WaitForProgressToShow;
 import com.intellij.util.containers.ContainerUtil;
@@ -55,7 +51,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.crypto.spec.SecretKeySpec;
 import javax.inject.Singleton;
-import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -67,7 +62,7 @@ import java.util.stream.Collectors;
 @State(name = "HttpConfigurable", storages = @Storage("proxy.settings.xml"))
 @Singleton
 public class HttpConfigurable implements PersistentStateComponent<HttpConfigurable>, Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.net.HttpConfigurable");
+  private static final Logger LOG = Logger.getInstance(HttpConfigurable.class);
   private static final File PROXY_CREDENTIALS_FILE = new File(PathManager.getOptionsPath(), "proxy.settings.pwd");
   public static final int CONNECTION_TIMEOUT = SystemProperties.getIntProperty("idea.connection.timeout", 10000);
   public static final int READ_TIMEOUT = SystemProperties.getIntProperty("idea.read.timeout", 60000);
@@ -115,10 +110,6 @@ public class HttpConfigurable implements PersistentStateComponent<HttpConfigurab
 
   public static HttpConfigurable getInstance() {
     return ApplicationManager.getApplication().getComponent(HttpConfigurable.class);
-  }
-
-  public static AsyncResult<Void> editConfigurable(@Nullable JComponent parent) {
-    return ShowSettingsUtil.getInstance().editConfigurable(parent, new HttpProxyConfigurable());
   }
 
   @Override
@@ -357,30 +348,6 @@ public class HttpConfigurable implements PersistentStateComponent<HttpConfigurab
     else {
       Application app = ApplicationManager.getApplication();
       app.invokeAndWait(runnable, ModalityState.any());
-    }
-  }
-
-  //these methods are preserved for compatibility with com.intellij.openapi.project.impl.IdeaServerSettings
-  @Deprecated
-  public void readExternal(Element element) throws InvalidDataException {
-    //noinspection ConstantConditions
-    loadState(XmlSerializer.deserialize(element, HttpConfigurable.class));
-  }
-
-  @Deprecated
-  public void writeExternal(Element element) throws WriteExternalException {
-    XmlSerializer.serializeInto(getState(), element);
-    if (USE_PROXY_PAC && USE_HTTP_PROXY && !ApplicationManager.getApplication().isDisposed()) {
-      ApplicationManager.getApplication().invokeLater(() -> {
-        IdeFrame frame = IdeFocusManager.findInstance().getLastFocusedFrame();
-        if (frame != null) {
-          USE_PROXY_PAC = false;
-          Messages.showMessageDialog(frame.getComponent(),
-                                     "Proxy: both 'use proxy' and 'autodetect proxy' settings were set." + "\nOnly one of these options should be selected.\nPlease re-configure.", "Proxy Setup",
-                                     Messages.getWarningIcon());
-          editConfigurable(frame.getComponent());
-        }
-      }, ModalityState.NON_MODAL);
     }
   }
 

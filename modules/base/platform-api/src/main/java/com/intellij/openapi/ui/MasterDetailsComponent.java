@@ -25,10 +25,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.ui.popup.ListPopupStep;
-import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Conditions;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.*;
@@ -75,7 +72,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
 
     @Override
     @Nullable
-    public ActionCallback navigateTo(@Nullable final Place place, final boolean requestFocus) {
+    public AsyncResult<Void> navigateTo(@Nullable final Place place, final boolean requestFocus) {
       return null;
     }
 

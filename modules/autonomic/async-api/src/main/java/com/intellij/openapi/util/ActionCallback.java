@@ -117,7 +117,7 @@ public class ActionCallback {
   }
 
   @Nonnull
-  public final ActionCallback doWhenDone(@Nonnull final Runnable runnable) {
+  public ActionCallback doWhenDone(@Nonnull final Runnable runnable) {
     myDone.doWhenExecuted(runnable);
     return this;
   }

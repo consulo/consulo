@@ -32,6 +32,8 @@ import com.intellij.openapi.util.AsyncResult;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.ide.base.BaseShowSettingsUtil;
+import consulo.options.ProjectStructureSelector;
+import consulo.roots.ui.configuration.DesktopProjectStructureDialog;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
@@ -42,6 +44,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 /**
  * @author max
@@ -207,6 +210,12 @@ public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil {
   @Override
   public void showSettingsDialog(@Nonnull final Project project, final Configurable toSelect) {
     _showSettingsDialog(project, buildConfigurables(project), toSelect);
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void showProjectStructureDialog(@Nonnull Project project, @Nonnull Consumer<ProjectStructureSelector> consumer) {
+    DesktopProjectStructureDialog.show(project, consumer::accept);
   }
 
   @RequiredUIAccess

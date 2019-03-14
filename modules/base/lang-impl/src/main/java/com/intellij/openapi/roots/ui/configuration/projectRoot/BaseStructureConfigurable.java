@@ -28,17 +28,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
-import consulo.roots.ui.configuration.WholeWestConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureDaemonAnalyzerListener;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.ui.MasterDetailsState;
 import com.intellij.openapi.ui.MasterDetailsStateService;
 import com.intellij.openapi.ui.NamedConfigurable;
-import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.*;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.awt.RelativePoint;
@@ -48,15 +44,16 @@ import com.intellij.util.IconUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.ui.tree.TreeUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.roots.ui.configuration.WholeWestConfigurable;
 import consulo.ui.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public abstract class BaseStructureConfigurable extends MasterDetailsComponent
         implements SearchableConfigurable, Disposable, Place.Navigator, WholeWestConfigurable {
@@ -109,18 +106,18 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent
   }
 
   @Override
-  public ActionCallback navigateTo(@Nullable final Place place, final boolean requestFocus) {
-    if (place == null) return new ActionCallback.Done();
+  public AsyncResult<Void> navigateTo(@Nullable final Place place, final boolean requestFocus) {
+    if (place == null) return AsyncResult.resolved();
 
     final Object object = place.getPath(TREE_OBJECT);
     final String byName = (String)place.getPath(TREE_NAME);
 
-    if (object == null && byName == null) return new ActionCallback.Done();
+    if (object == null && byName == null) return AsyncResult.resolved();
 
     final MyNode node = object == null ? null : findNodeByObject(myRoot, object);
     final MyNode nodeByName = byName == null ? null : findNodeByName(myRoot, byName);
 
-    if (node == null && nodeByName == null) return new ActionCallback.Done();
+    if (node == null && nodeByName == null) return AsyncResult.resolved();
 
     final NamedConfigurable config;
     if (node != null) {
@@ -130,12 +127,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent
       config = nodeByName.getConfigurable();
     }
 
-    final ActionCallback result = new ActionCallback().doWhenDone(new Runnable() {
-      @Override
-      public void run() {
-        myAutoScrollEnabled = true;
-      }
-    });
+    AsyncResult<Void> result = AsyncResult.<Void>undefined().doWhenDone(() -> myAutoScrollEnabled = true);
 
     myAutoScrollEnabled = false;
     myAutoScrollHandler.cancelAllRequests();

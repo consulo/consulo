@@ -23,6 +23,7 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.TextEditor;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -31,7 +32,7 @@ import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
 import com.intellij.openapi.vfs.impl.http.RemoteFileInfo;
 import com.intellij.openapi.vfs.impl.http.RemoteFileState;
 import com.intellij.util.EventDispatcher;
-import com.intellij.util.net.HttpConfigurable;
+import com.intellij.util.net.HttpProxyConfigurable;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
@@ -99,7 +100,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
     });
     myChangeProxySettingsButton.addActionListener(new ActionListener() {
       public void actionPerformed(final ActionEvent e) {
-        HttpConfigurable.editConfigurable(myMainPanel);
+        ShowSettingsUtil.getInstance().editConfigurable(myMainPanel, new HttpProxyConfigurable());
       }
     });
     showCard(DOWNLOADING_CARD);

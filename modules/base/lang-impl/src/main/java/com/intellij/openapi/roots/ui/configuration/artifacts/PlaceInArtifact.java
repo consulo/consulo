@@ -18,9 +18,10 @@ package com.intellij.openapi.roots.ui.configuration.artifacts;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.PlaceInProjectStructure;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.elements.PackagingElement;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -58,7 +59,7 @@ public class PlaceInArtifact extends PlaceInProjectStructure {
 
   @Nonnull
   @Override
-  public ActionCallback navigate() {
+  public AsyncResult<Void> navigate() {
     final Artifact artifact = myContext.getArtifactModel().getArtifactByOriginal(myArtifact);
     return ProjectStructureConfigurable.getInstance(myContext.getProject()).select(myArtifact, true).doWhenDone(new Runnable() {
       @Override

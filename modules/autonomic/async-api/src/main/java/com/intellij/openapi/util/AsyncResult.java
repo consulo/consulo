@@ -145,6 +145,13 @@ public class AsyncResult<T> extends ActionCallback {
   }
 
   @Nonnull
+  @Override
+  public AsyncResult<T> doWhenDone(@Nonnull Runnable runnable) {
+    super.doWhenDone(runnable);
+    return this;
+  }
+
+  @Nonnull
   public AsyncResult<T> doWhenDone(@Nonnull final Consumer<T> consumer) {
     doWhenDone(() -> consumer.accept(myResult));
     return this;

@@ -4,12 +4,12 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleConfigurationEditor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.ui.TabbedPaneWrapper;
 import com.intellij.ui.navigation.Place;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 
@@ -66,11 +66,11 @@ public abstract class TabbedModuleEditor extends ModuleEditor {
   }
 
   @Override
-  public ActionCallback navigateTo(@Nullable final Place place, final boolean requestFocus) {
+  public AsyncResult<Void> navigateTo(@Nullable final Place place, final boolean requestFocus) {
     if (place != null) {
       selectEditor((String)place.getPath(SELECTED_EDITOR_NAME));
     }
-    return new ActionCallback.Done();
+    return AsyncResult.resolved();
   }
 
   @Override

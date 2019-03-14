@@ -2431,8 +2431,7 @@
     <projectService serviceInterface="com.intellij.psi.impl.file.PsiPackageHelper"
                     serviceImplementation="com.intellij.psi.impl.file.PsiPackageHelperImpl"/>
 
-    <projectService serviceInterface="com.intellij.openapi.roots.ui.configuration.ProjectSettingsService"
-                    serviceImplementation="com.intellij.openapi.roots.ui.configuration.IdeaProjectSettingsService"/>
+    <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.ProjectSettingsService" />
 
     <projectService serviceInterface="com.intellij.refactoring.RefactoringFactory"
                     serviceImplementation="com.intellij.refactoring.openapi.impl.RefactoringFactoryImpl"/>

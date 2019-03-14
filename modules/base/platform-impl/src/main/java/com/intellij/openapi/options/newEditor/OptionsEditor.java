@@ -1022,11 +1022,11 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
   }
 
   @Override
-  public ActionCallback navigateTo(@Nullable final Place place, final boolean requestFocus) {
+  public AsyncResult<Void> navigateTo(@Nullable final Place place, final boolean requestFocus) {
     final Configurable config = (Configurable)place.getPath("configurable");
     final String filter = (String)place.getPath("filter");
 
-    final ActionCallback result = new ActionCallback();
+    final AsyncResult<Void> result = AsyncResult.undefined();
 
     myFilter.refilterFor(filter, false, true).doWhenDone(() -> myTree.select(config).notifyWhenDone(result));
 

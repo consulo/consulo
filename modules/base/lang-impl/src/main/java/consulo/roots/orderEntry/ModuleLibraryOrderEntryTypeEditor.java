@@ -15,20 +15,19 @@
  */
 package consulo.roots.orderEntry;
 
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.impl.ModuleLibraryOrderEntryImpl;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.libraries.Library;
-import consulo.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.FileAppearanceService;
 import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
-import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
-import consulo.roots.ui.configuration.ProjectStructureDialog;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathTableItem;
 import com.intellij.openapi.roots.ui.configuration.classpath.LibraryClasspathTableItem;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
-import com.intellij.util.Consumer;
+import consulo.roots.types.BinariesOrderRootType;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -39,12 +38,7 @@ public class ModuleLibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<M
   @Override
   public void navigate(@Nonnull final ModuleLibraryOrderEntryImpl orderEntry) {
     Project project = orderEntry.getModuleRootLayer().getProject();
-    ProjectStructureDialog.show(project, new Consumer<ProjectStructureConfigurable>() {
-      @Override
-      public void consume(ProjectStructureConfigurable config) {
-        config.select(orderEntry, true);
-      }
-    });
+    ShowSettingsUtil.getInstance().showProjectStructureDialog(project, config -> config.select(orderEntry, true));
   }
 
   @Nonnull

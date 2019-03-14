@@ -18,11 +18,11 @@ package com.intellij.ide.actions;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import consulo.ui.RequiredUIAccess;
-import consulo.roots.ui.configuration.ProjectStructureDialog;
 
 public class ShowStructureSettingsAction extends AnAction implements DumbAware {
   @Override
@@ -38,6 +38,6 @@ public class ShowStructureSettingsAction extends AnAction implements DumbAware {
       project = ProjectManager.getInstance().getDefaultProject();
     }
 
-    ProjectStructureDialog.show(project);
+    ShowSettingsUtil.getInstance().showProjectStructureDialog(project);
   }
 }

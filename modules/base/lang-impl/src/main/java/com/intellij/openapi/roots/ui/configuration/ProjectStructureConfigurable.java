@@ -33,27 +33,28 @@ import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactsStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.*;
 import com.intellij.openapi.ui.MasterDetailsComponent;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
-import consulo.roots.ui.configuration.ProjectStructureDialog;
+import consulo.options.ProjectStructureSelector;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 @Singleton
-public class ProjectStructureConfigurable implements SearchableConfigurable, Configurable.HoldPreferredFocusedComponent, Place.Navigator {
+public class ProjectStructureConfigurable implements SearchableConfigurable, Configurable.HoldPreferredFocusedComponent, Place.Navigator, ProjectStructureSelector {
 
   public static final Key<ProjectStructureConfigurable> KEY = Key.create("ProjectStructureConfiguration");
 
@@ -85,7 +86,7 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
   private final ModulesConfigurator myModuleConfigurator;
   private SdkListConfigurable mySdkListConfigurable;
 
-  private ProjectStructureDialog myProjectStructureDialog;
+  private Consumer<Configurable> myProjectStructureDialog;
 
   @Inject
   public ProjectStructureConfigurable(final Project project,
@@ -101,7 +102,7 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
 
     myProjectLibrariesConfig = projectLibrariesConfigurable;
     myModulesConfig = moduleStructureConfigurable;
-    
+
     myProjectLibrariesConfig.init(myContext);
     myModulesConfig.init(myContext);
     if (!project.isDefault()) {
@@ -113,7 +114,7 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
     myUiState.lastEditedConfigurable = propertiesComponent.getValue("project.structure.last.edited");
   }
 
-  public void setProjectStructureDialog(ProjectStructureDialog projectStructureDialog) {
+  public void setProjectStructureDialog(Consumer<Configurable> projectStructureDialog) {
     myProjectStructureDialog = projectStructureDialog;
   }
 
@@ -249,12 +250,16 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
     Place.queryFurther(mySelectedConfigurable, place);
   }
 
-  public ActionCallback selectProjectGeneralSettings(final boolean requestFocus) {
+  @Nonnull
+  @Override
+  public AsyncResult<Void> selectProjectGeneralSettings(final boolean requestFocus) {
     Place place = createPlaceFor(myProjectConfig);
     return navigateTo(place, requestFocus);
   }
 
-  public ActionCallback select(@Nullable final String moduleToSelect, @Nullable String editorNameToSelect, final boolean requestFocus) {
+  @Nonnull
+  @Override
+  public AsyncResult<Void> select(@Nullable final String moduleToSelect, @Nullable String editorNameToSelect, final boolean requestFocus) {
     Place place = createModulesPlace();
     if (moduleToSelect != null) {
       final Module module = ModuleManager.getInstance(myProject).findModuleByName(moduleToSelect);
@@ -272,13 +277,17 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
     return createModulesPlace().putPath(ModuleStructureConfigurable.TREE_OBJECT, module);
   }
 
-  public ActionCallback select(@Nonnull Sdk sdk, final boolean requestFocus) {
+  @Nonnull
+  @Override
+  public AsyncResult<Void> select(@Nonnull Sdk sdk, final boolean requestFocus) {
     Place place = createPlaceFor(mySdkListConfigurable);
     place.putPath(BaseStructureConfigurable.TREE_NAME, sdk.getName());
     return navigateTo(place, requestFocus);
   }
 
-  public ActionCallback selectProjectOrGlobalLibrary(@Nonnull Library library, boolean requestFocus) {
+  @Nonnull
+  @Override
+  public AsyncResult<Void> selectProjectOrGlobalLibrary(@Nonnull Library library, boolean requestFocus) {
     Place place = createProjectOrGlobalLibraryPlace(library);
     return navigateTo(place, requestFocus);
   }
@@ -289,7 +298,9 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
     return place;
   }
 
-  public ActionCallback select(@Nullable Artifact artifact, boolean requestFocus) {
+  @Nonnull
+  @Override
+  public AsyncResult<Void> select(@Nullable Artifact artifact, boolean requestFocus) {
     Place place = createArtifactPlace(artifact);
     return navigateTo(place, requestFocus);
   }
@@ -302,7 +313,9 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
     return place;
   }
 
-  public ActionCallback select(@Nonnull LibraryOrderEntry libraryOrderEntry, final boolean requestFocus) {
+  @Nonnull
+  @Override
+  public AsyncResult<Void> select(@Nonnull LibraryOrderEntry libraryOrderEntry, final boolean requestFocus) {
     final Library lib = libraryOrderEntry.getLibrary();
     if (lib == null || lib.getTable() == null) {
       return selectOrderEntry(libraryOrderEntry.getOwnerModule(), libraryOrderEntry);
@@ -312,14 +325,16 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
     return navigateTo(place, requestFocus);
   }
 
-  public ActionCallback selectOrderEntry(@Nonnull final Module module, @Nullable final OrderEntry orderEntry) {
+  @Nonnull
+  @Override
+  public AsyncResult<Void> selectOrderEntry(@Nonnull final Module module, @Nullable final OrderEntry orderEntry) {
     return ModuleStructureConfigurable.getInstance(myProject).selectOrderEntry(module, orderEntry);
   }
 
   @Override
-  public ActionCallback navigateTo(@Nullable final Place place, final boolean requestFocus) {
+  public AsyncResult<Void> navigateTo(@Nullable final Place place, final boolean requestFocus) {
     if(myProjectStructureDialog == null) {
-      return ActionCallback.REJECTED;
+      return AsyncResult.rejected();
     }
     final Configurable toSelect = (Configurable)place.getPath(CATEGORY);
 
@@ -330,7 +345,7 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
       removeSelected();
 
       if (toSelect != null) {
-        myProjectStructureDialog.select(toSelect);
+        myProjectStructureDialog.accept(toSelect);
       }
 
       setSelectedConfigurable(toSelect);
@@ -346,7 +361,7 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
       }
     }
 
-    final ActionCallback result = new ActionCallback();
+    final AsyncResult<Void> result = AsyncResult.undefined();
     Place.goFurther(toSelect, place, requestFocus).notifyWhenDone(result);
 
     if (!myHistory.isNavigatingNow() && mySelectedConfigurable != null) {

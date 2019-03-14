@@ -45,22 +45,19 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStr
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.NamedConfigurable;
-import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.navigation.Place;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.awt.TargetAWT;
-import consulo.ui.RequiredUIAccess;
 import consulo.moduleImport.ModuleImportProviders;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
@@ -69,8 +66,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * User: anna
@@ -380,7 +377,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     return "reference.settingsdialog.project.structure.module";
   }
 
-  public ActionCallback selectOrderEntry(@Nonnull final Module module, @Nullable final OrderEntry orderEntry) {
+  public AsyncResult<Void> selectOrderEntry(@Nonnull final Module module, @Nullable final OrderEntry orderEntry) {
     Place p = new Place();
     p.putPath(ProjectStructureConfigurable.CATEGORY, this);
     Runnable r = null;
@@ -402,7 +399,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
         }
       };
     }
-    final ActionCallback result = ProjectStructureConfigurable.getInstance(myProject).navigateTo(p, true);
+    final AsyncResult<Void> result = ProjectStructureConfigurable.getInstance(myProject).navigateTo(p, true);
     return r != null ? result.doWhenDone(r) : result;
   }
 

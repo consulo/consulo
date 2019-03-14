@@ -16,12 +16,12 @@
 
 package com.intellij.ui.navigation;
 
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.util.ui.update.ComparableObject;
 import com.intellij.util.ui.update.ComparableObjectCheck;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
@@ -86,26 +86,22 @@ public class Place implements ComparableObject {
 
     }
 
-
     return true;
   }
 
-
   public interface Navigator {
-
     void setHistory(History history);
 
-    ActionCallback navigateTo(@Nullable Place place, final boolean requestFocus);
+    AsyncResult<Void> navigateTo(@Nullable Place place, final boolean requestFocus);
 
     void queryPlace(@Nonnull Place place);
-
   }
 
-  public static ActionCallback goFurther(Object object, Place place, final boolean requestFocus) {
+  public static AsyncResult<Void> goFurther(Object object, Place place, final boolean requestFocus) {
     if (object instanceof Navigator) {
       return ((Navigator)object).navigateTo(place, requestFocus);
     }
-    return ActionCallback.DONE;
+    return AsyncResult.resolved();
   }
 
   public static void queryFurther(final Object object, final Place place) {
@@ -113,5 +109,4 @@ public class Place implements ComparableObject {
       ((Navigator)object).queryPlace(place);
     }
   }
-
 }

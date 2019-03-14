@@ -53,8 +53,8 @@ import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReentrantLock;
@@ -1065,12 +1065,20 @@ public class AbstractTreeUi {
           final NodeDescriptor descriptor = getDescriptorFrom(path.getLastPathComponent());
           if (descriptor != null) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
-            maybeYield((AsyncRunnable)() -> (AsyncResult<Void>)update(descriptor, false).doWhenDone(new TreeRunnable("AbstractTreeUi.updateRow: inner") {
-              @Override
-              public void perform() {
-                updateRow(row + 1, pass);
-              }
-            }), pass, node);
+            maybeYield(() -> {
+              AsyncResult<Void> result = AsyncResult.undefined();
+              AsyncResult<Boolean> update = update(descriptor, false);
+              update.doWhenDone((c) -> result.setDone());
+              update.doWhenRejected((c) -> result.setRejected());
+
+              update.doWhenDone(new TreeRunnable("AbstractTreeUi.updateRow: inner") {
+                @Override
+                public void perform() {
+                  updateRow(row + 1, pass);
+                }
+              });
+              return result;
+            }, pass, node);
           }
         }
       }
@@ -1621,12 +1629,12 @@ public class AbstractTreeUi {
 
   @Nonnull
   private AsyncResult<Void> processExistingNodes(@Nonnull final DefaultMutableTreeNode node,
-                                              @Nonnull final MutualMap<Object, Integer> elementToIndexMap,
-                                              @Nonnull final TreeUpdatePass pass,
-                                              final boolean canSmartExpand,
-                                              final boolean forceUpdate,
-                                              final boolean wasExpaned,
-                                              @Nullable final LoadedChildren preloaded) {
+                                                 @Nonnull final MutualMap<Object, Integer> elementToIndexMap,
+                                                 @Nonnull final TreeUpdatePass pass,
+                                                 final boolean canSmartExpand,
+                                                 final boolean forceUpdate,
+                                                 final boolean wasExpaned,
+                                                 @Nullable final LoadedChildren preloaded) {
     final List<TreeNode> childNodes = TreeUtil.listChildren(node);
     return maybeYield((AsyncRunnable)() -> {
       if (pass.isExpired()) return AsyncResult.rejected();
@@ -2913,13 +2921,13 @@ public class AbstractTreeUi {
 
   @Nonnull
   private AsyncResult<Void> processExistingNode(@Nonnull final DefaultMutableTreeNode childNode,
-                                             final NodeDescriptor childDescriptor,
-                                             @Nonnull final DefaultMutableTreeNode parentNode,
-                                             @Nonnull final MutualMap<Object, Integer> elementToIndexMap,
-                                             @Nonnull final TreeUpdatePass pass,
-                                             final boolean canSmartExpand,
-                                             final boolean forceUpdate,
-                                             @Nullable LoadedChildren parentPreloadedChildren) {
+                                                final NodeDescriptor childDescriptor,
+                                                @Nonnull final DefaultMutableTreeNode parentNode,
+                                                @Nonnull final MutualMap<Object, Integer> elementToIndexMap,
+                                                @Nonnull final TreeUpdatePass pass,
+                                                final boolean canSmartExpand,
+                                                final boolean forceUpdate,
+                                                @Nullable LoadedChildren parentPreloadedChildren) {
     if (pass.isExpired()) {
       return AsyncResult.rejected();
     }
