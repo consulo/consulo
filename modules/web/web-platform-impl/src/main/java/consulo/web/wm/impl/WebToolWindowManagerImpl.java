@@ -74,7 +74,7 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     MessageBusConnection busConnection = project.getMessageBus().connect();
     busConnection.subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
       @Override
-      public void projectOpened(Project project) {
+      public void projectOpened(Project project, UIAccess uiAccess) {
         if (project == myProject) {
           WebToolWindowManagerImpl.this.projectOpened();
         }

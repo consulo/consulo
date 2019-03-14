@@ -20,6 +20,7 @@ import com.intellij.openapi.util.Key;
 import consulo.ui.Component;
 import consulo.ui.MenuSeparator;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.image.Image;
 import consulo.ui.shared.Size;
 import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.shared.border.BorderStyle;
@@ -41,6 +42,11 @@ class DesktopMenuSeparatorImpl implements MenuSeparator {
   @Override
   public String getText() {
     return "";
+  }
+
+  @Override
+  public void setIcon(@Nullable Image icon) {
+    throw new UnsupportedOperationException();
   }
 
   @RequiredUIAccess

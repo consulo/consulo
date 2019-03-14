@@ -33,6 +33,29 @@ import java.awt.*;
  * @since 2019-02-21
  */
 public class TargetAWTFacadeStub implements TargetAWTFacade {
+  private static class IconWrapper implements Icon {
+    private final Image myImage;
+
+    private IconWrapper(Image image) {
+      myImage = image;
+    }
+
+    @Override
+    public void paintIcon(Component c, Graphics g, int x, int y) {
+
+    }
+
+    @Override
+    public int getIconWidth() {
+      return myImage.getWidth();
+    }
+
+    @Override
+    public int getIconHeight() {
+      return myImage.getHeight();
+    }
+  }
+
   @Nonnull
   @Override
   public Dimension to(@Nonnull Size size) {
@@ -67,12 +90,12 @@ public class TargetAWTFacadeStub implements TargetAWTFacade {
 
   @Override
   public Window to(@Nullable consulo.ui.Window component) {
-    throw new UnsupportedOperationException();
+    return null;
   }
 
   @Override
   public consulo.ui.Window from(@Nullable Window component) {
-    throw new UnsupportedOperationException();
+    return null;
   }
 
   @Override
@@ -95,7 +118,7 @@ public class TargetAWTFacadeStub implements TargetAWTFacade {
       return (Icon)image;
     }
 
-    throw new UnsupportedOperationException(image.getClass().getName());
+    return new IconWrapper(image);
   }
 
   @Override
@@ -104,11 +127,15 @@ public class TargetAWTFacadeStub implements TargetAWTFacade {
       return null;
     }
 
-    if(icon instanceof Image) {
+    if(icon instanceof IconWrapper) {
+      return ((IconWrapper)icon).myImage;
+    }
+
+    if (icon instanceof Image) {
       return (Image)icon;
     }
 
-    throw new UnsupportedOperationException(icon.getClass().getName());
+    return null;
   }
 
   @Override

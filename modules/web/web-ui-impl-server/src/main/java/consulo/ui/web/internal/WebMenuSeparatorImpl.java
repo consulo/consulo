@@ -16,10 +16,12 @@
 package consulo.ui.web.internal;
 
 import consulo.ui.MenuSeparator;
+import consulo.ui.image.Image;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 import consulo.ui.web.internal.base.VaadinComponent;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -39,6 +41,11 @@ public class WebMenuSeparatorImpl extends UIComponentWithVaadinComponent<WebMenu
   @Nonnull
   @Override
   public String getText() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void setIcon(@Nullable Image icon) {
     throw new UnsupportedOperationException();
   }
 }

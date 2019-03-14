@@ -32,7 +32,7 @@ public class WebImportantFolderLocker implements ImportantFolderLocker {
   @Nonnull
   @Override
   public ActivateStatus lock(String[] args) throws Exception {
-    return ActivateStatus.ACTIVATED;
+    return ActivateStatus.NO_INSTANCE;
   }
 
   @Override

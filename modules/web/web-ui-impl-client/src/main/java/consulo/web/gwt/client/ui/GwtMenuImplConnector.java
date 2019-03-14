@@ -19,6 +19,7 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.ui.Connect;
 import consulo.web.gwt.client.util.GwtUIUtil;
+import consulo.web.gwt.shared.ui.state.menu.MenuState;
 
 /**
  * @author VISTALL
@@ -30,7 +31,12 @@ public class GwtMenuImplConnector extends GwtLayoutConnector {
   public void onStateChanged(StateChangeEvent stateChangeEvent) {
     super.onStateChanged(stateChangeEvent);
 
-    getWidget().getMenu().setText(getState().caption);
+    getWidget().getMenu().setHTML(GwtMenuItemImplConnector.createTextLayout(getState().caption, getState().myImageState).getElement().getString());
+  }
+
+  @Override
+  public MenuState getState() {
+    return (MenuState)super.getState();
   }
 
   @Override

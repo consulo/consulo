@@ -16,10 +16,14 @@
 package consulo.ui.web.internal;
 
 import consulo.ui.MenuItem;
+import consulo.ui.image.Image;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 import consulo.ui.web.internal.base.VaadinComponent;
+import consulo.ui.web.servlet.WebImageUrlCache;
+import consulo.web.gwt.shared.ui.state.menu.MenuItemState;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -27,7 +31,10 @@ import javax.annotation.Nonnull;
  */
 public class WebMenuItemImpl extends UIComponentWithVaadinComponent<WebMenuItemImpl.Vaadin> implements MenuItem {
   public static class Vaadin extends VaadinComponent {
-
+    @Override
+    public MenuItemState getState() {
+      return (MenuItemState)super.getState();
+    }
   }
 
   public WebMenuItemImpl(String text) {
@@ -38,6 +45,13 @@ public class WebMenuItemImpl extends UIComponentWithVaadinComponent<WebMenuItemI
   @Override
   public String getText() {
     return getVaadinComponent().getCaption();
+  }
+
+  @Override
+  public void setIcon(@Nullable Image icon) {
+    Vaadin vaadinComponent = getVaadinComponent();
+    vaadinComponent.getState().myImageState = icon == null ? null : WebImageUrlCache.map(icon).getState();
+    vaadinComponent.markAsDirty();
   }
 
   @Nonnull

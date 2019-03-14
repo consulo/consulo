@@ -18,6 +18,11 @@ package consulo.web.gwt.client.ui;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.client.ui.image.ImageConverter;
+import consulo.web.gwt.shared.ui.state.image.MultiImageState;
+import consulo.web.gwt.shared.ui.state.menu.MenuItemState;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,11 +34,31 @@ public class GwtMenuItemImplConnector extends AbstractComponentConnector {
   public void onStateChanged(StateChangeEvent stateChangeEvent) {
     super.onStateChanged(stateChangeEvent);
 
-    getWidget().getItem().setText(getState().caption);
+    getWidget().getItem().setHTML(createTextLayout(getState().caption, getState().myImageState).getElement().getString());
+  }
+
+  @Override
+  public MenuItemState getState() {
+    return (MenuItemState)super.getState();
   }
 
   @Override
   public GwtMenuItemImpl getWidget() {
     return (GwtMenuItemImpl)super.getWidget();
+  }
+
+  @Nonnull
+  public static GwtHorizontalLayoutImpl createTextLayout(String text, MultiImageState state) {
+    GwtHorizontalLayoutImpl layout = new GwtHorizontalLayoutImpl();
+    layout.setHorizontalAlignment(GwtHorizontalLayoutImpl.ALIGN_LEFT);
+
+    if (state != null) {
+      layout.add(ImageConverter.create(state));
+    }
+
+    GwtLabelImpl label = new GwtLabelImpl();
+    label.setText(text);
+    layout.add(label);
+    return layout;
   }
 }

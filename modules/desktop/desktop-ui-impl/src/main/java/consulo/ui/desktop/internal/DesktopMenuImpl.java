@@ -19,8 +19,10 @@ import consulo.awt.TargetAWT;
 import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.ui.*;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -42,6 +44,11 @@ class DesktopMenuImpl extends SwingComponentDelegate<JMenu> implements Menu {
 
   public DesktopMenuImpl(String text) {
     myComponent = new MyJMenu(text);
+  }
+
+  @Override
+  public void setIcon(@Nullable Image icon) {
+    myComponent.setIcon(TargetAWT.to(icon));
   }
 
   @RequiredUIAccess

@@ -19,10 +19,14 @@ import com.vaadin.ui.Component;
 import consulo.ui.Menu;
 import consulo.ui.MenuItem;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.image.Image;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 import consulo.ui.web.internal.base.VaadinComponentContainer;
+import consulo.ui.web.servlet.WebImageUrlCache;
+import consulo.web.gwt.shared.ui.state.menu.MenuState;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -42,6 +46,10 @@ public class WebMenuImpl extends UIComponentWithVaadinComponent<WebMenuImpl.Vaad
       addComponent(vaadinComponent);
     }
 
+    @Override
+    public MenuState getState() {
+      return (MenuState)super.getState();
+    }
 
     @Override
     public int getComponentCount() {
@@ -62,6 +70,13 @@ public class WebMenuImpl extends UIComponentWithVaadinComponent<WebMenuImpl.Vaad
   @Nonnull
   public Vaadin createVaadinComponent() {
     return new Vaadin();
+  }
+
+  @Override
+  public void setIcon(@Nullable Image icon) {
+    Vaadin vaadinComponent = getVaadinComponent();
+    vaadinComponent.getState().myImageState = icon == null ? null : WebImageUrlCache.map(icon).getState();
+    vaadinComponent.markAsDirty();
   }
 
   @RequiredUIAccess

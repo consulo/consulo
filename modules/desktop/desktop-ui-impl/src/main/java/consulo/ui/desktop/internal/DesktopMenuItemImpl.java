@@ -15,12 +15,15 @@
  */
 package consulo.ui.desktop.internal;
 
+import consulo.awt.TargetAWT;
 import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.MenuItem;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -48,5 +51,10 @@ class DesktopMenuItemImpl extends SwingComponentDelegate<JMenuItem> implements M
   @Override
   public String getText() {
     return myComponent.getText();
+  }
+
+  @Override
+  public void setIcon(@Nullable Image icon) {
+    myComponent.setIcon(TargetAWT.to(icon));
   }
 }
