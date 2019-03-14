@@ -46,6 +46,7 @@
                 anchor="right"
                 requireModuleExtensions="sand"
                 icon="/toolwindows/toolWindowCommander.png"
+                canCloseContents="true"
                 factoryClass="consulo.sandboxPlugin.ide.toolwindow.SandToolWindowFactory"/>
     <newModuleBuilder implementation="consulo.sandboxPlugin.ide.module.SandNewModuleBuilder"/>
 
