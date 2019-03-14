@@ -42,7 +42,7 @@ public class WebBorderBuilder {
 
       ColorValue colorValue = info.getColorKey() == null ? null : currentStyle.getColor(info.getColorKey());
 
-      borderState.myColor = colorValue.toRGB();
+      borderState.myColor = colorValue == null ? null : colorValue.toRGB();
       borderState.myWidth = info.getWidth();
 
       borderListState.myBorders.add(borderState);
