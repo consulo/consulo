@@ -19,6 +19,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.util.messages.Topic;
+import consulo.annotations.DeprecationInfo;
 import consulo.ui.RequiredUIAccess;
 import org.jdom.JDOMException;
 import javax.annotation.Nonnull;
@@ -30,7 +31,7 @@ import java.io.IOException;
  * Provides project management.
  */
 public abstract class ProjectManager {
-  public static final Topic<ProjectManagerListener> TOPIC = new Topic<ProjectManagerListener>("Project open and close events", ProjectManagerListener.class);
+  public static final Topic<ProjectManagerListener> TOPIC = Topic.create("Project open and close events", ProjectManagerListener.class);
 
   /**
    * Gets <code>ProjectManager</code> instance.
@@ -46,7 +47,12 @@ public abstract class ProjectManager {
    *
    * @param listener listener to add
    */
+  @Deprecated
+  @DeprecationInfo("Use ProjectManager#TOPIC")
   public abstract void addProjectManagerListener(@Nonnull ProjectManagerListener listener);
+
+  @Deprecated
+  @DeprecationInfo("Use ProjectManager#TOPIC")
   public abstract void addProjectManagerListener(@Nonnull ProjectManagerListener listener, @Nonnull Disposable parentDisposable);
 
   /**
@@ -54,6 +60,8 @@ public abstract class ProjectManager {
    *
    * @param listener listener to remove
    */
+  @Deprecated
+  @DeprecationInfo("Use ProjectManager#TOPIC")
   public abstract void removeProjectManagerListener(@Nonnull ProjectManagerListener listener);
 
   /**
@@ -135,6 +143,6 @@ public abstract class ProjectManager {
    *
    * @return newly crated project
    */
-  @javax.annotation.Nullable
+  @Nullable
   public abstract Project createProject(String name, String path);
 }
