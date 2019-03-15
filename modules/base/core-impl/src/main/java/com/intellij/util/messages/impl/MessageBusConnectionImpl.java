@@ -19,6 +19,7 @@
  */
 package com.intellij.util.messages.impl;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.Disposer;
@@ -32,8 +33,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Queue;
 
-public class MessageBusConnectionImpl implements MessageBusConnection {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.messages.impl.MessageBusConnectionImpl");
+public class MessageBusConnectionImpl implements MessageBusConnection, Disposable {
+  private static final Logger LOG = Logger.getInstance(MessageBusConnectionImpl.class);
 
   private final MessageBusImpl myBus;
   @SuppressWarnings("SSBasedInspection")

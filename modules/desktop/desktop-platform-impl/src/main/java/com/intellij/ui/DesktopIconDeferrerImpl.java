@@ -19,6 +19,7 @@
  */
 package com.intellij.ui;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.impl.ProjectLifecycleListener;
@@ -35,7 +36,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Singleton
-public class DesktopIconDeferrerImpl extends IconDeferrer {
+public class DesktopIconDeferrerImpl extends IconDeferrer implements Disposable{
   private static final ThreadLocal<Boolean> ourEvaluationIsInProgress = ThreadLocal.withInitial(() -> Boolean.FALSE);
 
   private final Object LOCK = new Object();
@@ -59,7 +60,7 @@ public class DesktopIconDeferrerImpl extends IconDeferrer {
         clear();
       }
     });
-    LowMemoryWatcher.register(this::clear, connection);
+    LowMemoryWatcher.register(this::clear, this);
   }
 
   protected final void clear() {
@@ -67,6 +68,11 @@ public class DesktopIconDeferrerImpl extends IconDeferrer {
       myIconsCache.clear();
       myLastClearTimestamp++;
     }
+  }
+
+  @Override
+  public void dispose() {
+    clear();
   }
 
   @Override

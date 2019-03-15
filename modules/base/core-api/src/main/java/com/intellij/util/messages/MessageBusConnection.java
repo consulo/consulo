@@ -19,7 +19,6 @@
  */
 package com.intellij.util.messages;
 
-import com.intellij.openapi.Disposable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -28,7 +27,7 @@ import javax.annotation.Nullable;
  * listen for messages it should grab appropriate connection (or create a new one) and {@link #subscribe(Topic, Object) subscribe}
  * to particular endpoint.
  */
-public interface MessageBusConnection extends Disposable {
+public interface MessageBusConnection {
 
   /**
    * Subscribes given handler to the target endpoint within the current connection.

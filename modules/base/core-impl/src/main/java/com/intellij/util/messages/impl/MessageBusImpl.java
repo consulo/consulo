@@ -213,7 +213,7 @@ public class MessageBusImpl implements MessageBus {
   @Nonnull
   public MessageBusConnection connect(@Nonnull Disposable parentDisposable) {
     checkNotDisposed();
-    final MessageBusConnection connection = new MessageBusConnectionImpl(this);
+    final MessageBusConnectionImpl connection = new MessageBusConnectionImpl(this);
     Disposer.register(parentDisposable, connection);
     return connection;
   }

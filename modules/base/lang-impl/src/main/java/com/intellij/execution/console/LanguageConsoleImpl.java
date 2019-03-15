@@ -421,7 +421,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     myHistoryViewer.getDocument().removeDocumentListener(myDocumentAdapter);
 
     myBusConnection.deliverImmediately();
-    Disposer.dispose(myBusConnection);
+    Disposer.dispose(myBusConnection::disconnect);
 
     EditorFactory editorFactory = EditorFactory.getInstance();
     editorFactory.releaseEditor(myConsoleEditor);

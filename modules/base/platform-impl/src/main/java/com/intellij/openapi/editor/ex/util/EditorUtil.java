@@ -739,7 +739,7 @@ public final class EditorUtil {
     DocumentEx document = ObjectUtils.tryCast(editor.getDocument(), DocumentEx.class);
     if (document != null && document.isInBulkUpdate()) {
       MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect();
-      disposeWithEditor(editor, connection);
+      disposeWithEditor(editor, connection::disconnect);
       connection.subscribe(DocumentBulkUpdateListener.TOPIC, new DocumentBulkUpdateListener.Adapter() {
         @Override
         public void updateFinished(@Nonnull Document doc) {
