@@ -20,6 +20,7 @@ import com.intellij.CommonBundle;
 import com.intellij.application.options.CodeStyle;
 import com.intellij.codeStyle.CodeStyleFacade;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.WriteAction;
@@ -38,7 +39,11 @@ import com.intellij.openapi.fileEditor.impl.text.DesktopTextEditorImpl;
 import com.intellij.openapi.fileTypes.BinaryFileTypeDecompilers;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.UnknownFileType;
-import com.intellij.openapi.project.*;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectLocator;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ProjectUtil;
+import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
@@ -78,7 +83,7 @@ import java.util.List;
 import java.util.*;
 
 @Singleton
-public class FileDocumentManagerImpl extends FileDocumentManager implements VirtualFileListener, ProjectManagerListener, SafeWriteRequestor {
+public class FileDocumentManagerImpl extends FileDocumentManager implements VirtualFileListener, SafeWriteRequestor {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl");
 
   public static final Key<Document> HARD_REF_TO_DOCUMENT_KEY = Key.create("HARD_REF_TO_DOCUMENT_KEY");
@@ -112,8 +117,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
       }
       final Runnable currentCommand = CommandProcessor.getInstance().getCurrentCommand();
       Project project = currentCommand == null ? null : CommandProcessor.getInstance().getCurrentCommandProject();
-      if (project == null)
-        project = ProjectUtil.guessProjectForFile(getFile(document));
+      if (project == null) project = ProjectUtil.guessProjectForFile(getFile(document));
       String lineSeparator = CodeStyleFacade.getInstance(project).getLineSeparator();
       document.putUserData(LINE_SEPARATOR_KEY, lineSeparator);
 
@@ -125,11 +129,23 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
   };
 
   @Inject
-  public FileDocumentManagerImpl(@Nonnull VirtualFileManager virtualFileManager, @Nonnull ProjectManager projectManager) {
+  public FileDocumentManagerImpl(@Nonnull Application application, @Nonnull VirtualFileManager virtualFileManager, @Nonnull ProjectManager projectManager) {
     virtualFileManager.addVirtualFileListener(this);
-    projectManager.addProjectManagerListener(this);
 
-    myBus = ApplicationManager.getApplication().getMessageBus();
+    ((ProjectManagerEx)projectManager).registerCloseProjectVeto(project -> {
+      if (!myUnsavedDocuments.isEmpty()) {
+        myOnClose = true;
+        try {
+          saveAllDocuments();
+        }
+        finally {
+          myOnClose = false;
+        }
+      }
+      return myUnsavedDocuments.isEmpty();
+    });
+
+    myBus = application.getMessageBus();
     InvocationHandler handler = (proxy, method, args) -> {
       multiCast(method, args);
       return null;
@@ -155,7 +171,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
       method.invoke(myBus.syncPublisher(AppTopics.FILE_DOCUMENT_SYNC), args);
     }
     catch (ClassCastException e) {
-      LOG.error("Arguments: "+ Arrays.toString(args), e);
+      LOG.error("Arguments: " + Arrays.toString(args), e);
     }
     catch (Exception e) {
       unwrapAndRethrow(e);
@@ -370,7 +386,8 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
     }
   }
 
-  private static class SaveVetoException extends Exception {}
+  private static class SaveVetoException extends Exception {
+  }
 
   private void doSaveDocument(@Nonnull final Document document, boolean isExplicit) throws IOException, SaveVetoException {
     VirtualFile file = getFile(document);
@@ -603,28 +620,26 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
     final Project project = ProjectLocator.getInstance().guessProjectForFile(file);
     boolean[] isReloadable = {isReloadable(file, document, project)};
     if (isReloadable[0]) {
-      CommandProcessor.getInstance().executeCommand(project, () -> ApplicationManager.getApplication().runWriteAction(
-              new ExternalChangeAction.ExternalDocumentChange(document, project) {
-                @Override
-                public void run() {
-                  if (!isBinaryWithoutDecompiler(file)) {
-                    LoadTextUtil.setCharsetWasDetectedFromBytes(file, null);
-                    file.setBOM(null); // reset BOM in case we had one and the external change stripped it away
-                    file.setCharset(null, null, false);
-                    boolean wasWritable = document.isWritable();
-                    document.setReadOnly(false);
-                    boolean tooLarge = FileUtilRt.isTooLarge(file.getLength());
-                    CharSequence reloaded = tooLarge ? LoadTextUtil.loadText(file, getPreviewCharCount(file)) : LoadTextUtil.loadText(file);
-                    isReloadable[0] = isReloadable(file, document, project);
-                    if (isReloadable[0]) {
-                      DocumentEx documentEx = (DocumentEx)document;
-                      documentEx.replaceText(reloaded, file.getModificationStamp());
-                    }
-                    document.setReadOnly(!wasWritable);
-                  }
-                }
-              }
-      ), UIBundle.message("file.cache.conflict.action"), null, UndoConfirmationPolicy.REQUEST_CONFIRMATION);
+      CommandProcessor.getInstance().executeCommand(project, () -> ApplicationManager.getApplication().runWriteAction(new ExternalChangeAction.ExternalDocumentChange(document, project) {
+        @Override
+        public void run() {
+          if (!isBinaryWithoutDecompiler(file)) {
+            LoadTextUtil.setCharsetWasDetectedFromBytes(file, null);
+            file.setBOM(null); // reset BOM in case we had one and the external change stripped it away
+            file.setCharset(null, null, false);
+            boolean wasWritable = document.isWritable();
+            document.setReadOnly(false);
+            boolean tooLarge = FileUtilRt.isTooLarge(file.getLength());
+            CharSequence reloaded = tooLarge ? LoadTextUtil.loadText(file, getPreviewCharCount(file)) : LoadTextUtil.loadText(file);
+            isReloadable[0] = isReloadable(file, document, project);
+            if (isReloadable[0]) {
+              DocumentEx documentEx = (DocumentEx)document;
+              documentEx.replaceText(reloaded, file.getModificationStamp());
+            }
+            document.setReadOnly(!wasWritable);
+          }
+        }
+      }), UIBundle.message("file.cache.conflict.action"), null, UndoConfirmationPolicy.REQUEST_CONFIRMATION);
     }
     if (isReloadable[0]) {
       myMultiCaster.fileContentReloaded(file, document);
@@ -638,8 +653,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
 
   private static boolean isReloadable(@Nonnull VirtualFile file, @Nonnull Document document, @Nullable Project project) {
     PsiFile cachedPsiFile = project == null ? null : PsiDocumentManager.getInstance(project).getCachedPsiFile(document);
-    return !(FileUtilRt.isTooLarge(file.getLength()) && file.getFileType().isBinary()) &&
-           (cachedPsiFile == null || cachedPsiFile instanceof PsiFileImpl || isBinaryWithDecompiler(file));
+    return !(FileUtilRt.isTooLarge(file.getLength()) && file.getFileType().isBinary()) && (cachedPsiFile == null || cachedPsiFile instanceof PsiFileImpl || isBinaryWithDecompiler(file));
   }
 
   @TestOnly
@@ -680,20 +694,6 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
       return true;
     }
     return false;
-  }
-
-  @Override
-  public boolean canCloseProject(Project project) {
-    if (!myUnsavedDocuments.isEmpty()) {
-      myOnClose = true;
-      try {
-        saveAllDocuments();
-      }
-      finally {
-        myOnClose = false;
-      }
-    }
-    return myUnsavedDocuments.isEmpty();
   }
 
   private void fireUnsavedDocumentsDropped() {
@@ -750,8 +750,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
       @Override
       protected void createDefaultActions() {
         super.createDefaultActions();
-        myOKAction.putValue(Action.NAME, UIBundle
-                .message(myOnClose ? "cannot.save.files.dialog.ignore.changes" : "cannot.save.files.dialog.revert.changes"));
+        myOKAction.putValue(Action.NAME, UIBundle.message(myOnClose ? "cannot.save.files.dialog.ignore.changes" : "cannot.save.files.dialog.revert.changes"));
         myOKAction.putValue(DEFAULT_ACTION, null);
 
         if (!myOnClose) {
@@ -769,8 +768,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
         area.setText(text);
         area.setEditable(false);
         area.setMinimumSize(new Dimension(area.getMinimumSize().width, 50));
-        panel.add(new JBScrollPane(area, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER),
-                  BorderLayout.CENTER);
+        panel.add(new JBScrollPane(area, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
 
         return panel;
       }
@@ -784,6 +782,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Virt
   }
 
   private final Map<VirtualFile, Document> myDocumentCache = ContainerUtil.createConcurrentWeakValueMap();
+
   // used in Upsource
   protected void cacheDocument(@Nonnull VirtualFile file, @Nonnull Document document) {
     myDocumentCache.put(file, document);

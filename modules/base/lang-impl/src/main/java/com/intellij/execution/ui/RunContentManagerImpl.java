@@ -40,6 +40,7 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
+import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
@@ -606,11 +607,27 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     private Content myContent;
     private final Executor myExecutor;
 
+    private final Disposable myCloseRegisterVetoRemover;
+
     private CloseListener(@Nonnull final Content content, @Nonnull Executor executor) {
       myContent = content;
       content.getManager().addContentManagerListener(this);
-      ProjectManager.getInstance().addProjectManagerListener(this);
+      ProjectManager projectManager = ProjectManager.getInstance();
       myExecutor = executor;
+
+      projectManager.addProjectManagerListener(this);
+      myCloseRegisterVetoRemover = ((ProjectManagerEx)projectManager).registerCloseProjectVeto(project -> {
+        if (project != myProject) return true;
+
+        if (myContent == null) return true;
+
+        final boolean canClose = closeQuery(true);
+        if (canClose) {
+          myContent.getManager().removeContent(myContent, true);
+          myContent = null;
+        }
+        return canClose;
+      });
     }
 
     @Override
@@ -635,6 +652,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
       finally {
         content.getManager().removeContentManagerListener(this);
         ProjectManager.getInstance().removeProjectManagerListener(this);
+        myCloseRegisterVetoRemover.dispose();
         content.release(); // don't invoke myContent.release() because myContent becomes null after destroyProcess()
         myContent = null;
       }
@@ -656,20 +674,6 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
         myContent.getManager().removeContent(myContent, true);
         dispose(); // Dispose content even if content manager refused to.
       }
-    }
-
-    @Override
-    public boolean canCloseProject(final Project project) {
-      if (project != myProject) return true;
-
-      if (myContent == null) return true;
-
-      final boolean canClose = closeQuery(true);
-      if (canClose) {
-        myContent.getManager().removeContent(myContent, true);
-        myContent = null;
-      }
-      return canClose;
     }
 
     private boolean closeQuery(boolean modal) {

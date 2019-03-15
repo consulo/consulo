@@ -34,7 +34,6 @@ public interface ProjectManagerListener extends EventListener {
     projectOpened(project);
   }
 
-
   /**
    * Invoked on project open.
    *
@@ -42,16 +41,6 @@ public interface ProjectManagerListener extends EventListener {
    */
   @Deprecated
   default void projectOpened(Project project) {
-  }
-
-  /**
-   * Checks whether the project can be closed.
-   *
-   * @param project project to check
-   * @return true or false
-   */
-  default boolean canCloseProject(Project project) {
-    return true;
   }
 
   /**

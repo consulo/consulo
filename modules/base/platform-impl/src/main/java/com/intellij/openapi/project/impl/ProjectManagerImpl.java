@@ -79,6 +79,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 
 @Singleton
 public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
@@ -89,6 +90,8 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
   private Project[] myOpenProjects = {}; // guarded by lock
   private final Object lock = new Object();
   private final List<ProjectManagerListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+
+  private final List<Predicate<Project>> myCloseProjectVetos = ContainerUtil.createLockFreeCopyOnWriteList();
 
   private final MultiMap<Project, StateStorage> myChangedProjectFiles = MultiMap.createSet();
   private final SingleAlarm myChangedFilesAlarm;
@@ -135,16 +138,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
 
         ZipHandler.clearFileAccessorCache();
         LaterInvocator.purgeExpiredItems();
-      }
-
-      @Override
-      public boolean canCloseProject(Project project) {
-        for (ProjectManagerListener listener : getListeners(project)) {
-          if (!listener.canCloseProject(project)) {
-            return false;
-          }
-        }
-        return true;
       }
 
       @Override
@@ -936,9 +929,9 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
       LOG.debug("enter: canClose()");
     }
 
-    for (ProjectManagerListener listener : myListeners) {
+    for (Predicate<Project> listener : myCloseProjectVetos) {
       try {
-        if (!listener.canCloseProject(project)) return false;
+        if (!listener.test(project)) return false;
       }
       catch (Throwable e) {
         LOG.warn(e); // DO NOT LET ANY PLUGIN to prevent closing due to exception
@@ -946,6 +939,13 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
     }
 
     return true;
+  }
+
+  @Nonnull
+  @Override
+  public Disposable registerCloseProjectVeto(@Nonnull Predicate<Project> projectVeto) {
+    myCloseProjectVetos.add(projectVeto);
+    return () -> myCloseProjectVetos.remove(projectVeto);
   }
 
   private static boolean ensureCouldCloseIfUnableToSave(@Nonnull final Project project) {
