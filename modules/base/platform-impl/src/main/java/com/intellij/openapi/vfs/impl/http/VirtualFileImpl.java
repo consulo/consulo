@@ -18,20 +18,17 @@ package com.intellij.openapi.vfs.impl.http;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.VirtualFileSystem;
-import com.intellij.openapi.vfs.newvfs.events.VFilePropertyChangeEvent;
-import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.FileContentUtilCore;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Collections;
 
 class VirtualFileImpl extends HttpVirtualFile {
   private final HttpFileSystemBase myFileSystem;
@@ -55,9 +52,7 @@ class VirtualFileImpl extends HttpVirtualFile {
               VirtualFileImpl file = VirtualFileImpl.this;
               FileDocumentManager.getInstance().reloadFiles(file);
               if (!localFile.getFileType().equals(myInitialFileType)) {
-                VFilePropertyChangeEvent event = new VFilePropertyChangeEvent(this, file, PROP_NAME, file.getName(), file.getName(), false);
-                BulkFileListener publisher = ApplicationManager.getApplication().getMessageBus().asyncPublisher(VirtualFileManager.VFS_CHANGES);
-                publisher.after(Collections.singletonList(event));
+                FileContentUtilCore.reparseFiles(file);
               }
             }
           });
