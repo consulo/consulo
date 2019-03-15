@@ -56,12 +56,7 @@ import java.util.*;
 public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   public static final IdeaPluginDescriptorImpl[] EMPTY_ARRAY = new IdeaPluginDescriptorImpl[0];
   private static final Logger LOG = Logger.getInstance(IdeaPluginDescriptorImpl.class);
-  private final NullableLazyValue<String> myDescription = new NullableLazyValue<String>() {
-    @Override
-    protected String compute() {
-      return computeDescription();
-    }
-  };
+  private final NullableLazyValue<String> myDescription = NullableLazyValue.of(this::computeDescription);
 
   private String myName;
   private PluginId myId;
