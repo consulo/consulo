@@ -16,9 +16,10 @@
 package com.intellij.ide.plugins;
 
 import com.intellij.openapi.extensions.PluginId;
+import consulo.application.ApplicationProperties;
 import gnu.trove.TObjectIntHashMap;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,27 +28,46 @@ import java.util.List;
  * @author peter
  */
 class PluginClassCache {
-  private static final Object ourLock = new Object();
-  private final TObjectIntHashMap<PluginId> myClassCounts = new TObjectIntHashMap<>();
+  private static class InternalPluginClassCache extends PluginClassCache {
+    private static final Object ourLock = new Object();
+    private final TObjectIntHashMap<PluginId> myClassCounts = new TObjectIntHashMap<>();
 
-  void addPluginClass(@Nonnull PluginId pluginId) {
-    synchronized(ourLock) {
-      myClassCounts.put(pluginId, myClassCounts.get(pluginId) + 1);
+    private InternalPluginClassCache() {
+    }
+
+    @Override
+    void addPluginClass(@Nonnull PluginId pluginId) {
+      synchronized (ourLock) {
+        myClassCounts.put(pluginId, myClassCounts.get(pluginId) + 1);
+      }
+    }
+
+    @Override
+    void dumpPluginClassStatistics() {
+      List<PluginId> counters;
+      synchronized (ourLock) {
+        //noinspection unchecked
+        counters = new ArrayList(Arrays.asList(myClassCounts.keys()));
+      }
+
+      counters.sort((o1, o2) -> myClassCounts.get(o2) - myClassCounts.get(o1));
+      for (PluginId id : counters) {
+        PluginManagerCore.getLogger().info(id + " loaded " + myClassCounts.get(id) + " classes");
+      }
     }
   }
 
+  @Nonnull
+  static PluginClassCache create() {
+    return ApplicationProperties.isInternal() ? new InternalPluginClassCache() : new PluginClassCache();
+  }
+
+  PluginClassCache() {
+  }
+
+  void addPluginClass(@Nonnull PluginId pluginId) {
+  }
+
   void dumpPluginClassStatistics() {
-    if (!Boolean.valueOf(System.getProperty("idea.is.internal")).booleanValue()) return;
-
-    List<PluginId> counters;
-    synchronized (ourLock) {
-      //noinspection unchecked
-      counters = new ArrayList(Arrays.asList(myClassCounts.keys()));
-    }
-
-    counters.sort((o1, o2) -> myClassCounts.get(o2) - myClassCounts.get(o1));
-    for (PluginId id : counters) {
-      PluginManagerCore.getLogger().info(id + " loaded " + myClassCounts.get(id) + " classes");
-    }
   }
 }

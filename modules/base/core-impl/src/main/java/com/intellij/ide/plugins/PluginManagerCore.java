@@ -76,7 +76,7 @@ public class PluginManagerCore {
   public static final String PLUGIN_XML = "plugin.xml";
   public static final float PLUGINS_PROGRESS_MAX_VALUE = 0.3f;
   static final Map<PluginId, Integer> ourId2Index = new THashMap<>();
-  static final PluginClassCache ourPluginClasses = new PluginClassCache();
+  static final PluginClassCache ourPluginClasses = PluginClassCache.create();
 
   static final String DISABLE = "disable";
   static final String ENABLE = "enable";
