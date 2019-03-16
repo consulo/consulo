@@ -39,12 +39,11 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredReadAction;
-
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -177,14 +176,9 @@ public abstract class HTMLComposerImpl extends HTMLComposer {
 
   @Override
   public void appendElementReference(final StringBuffer buf, RefElement refElement, String linkText, @NonNls String frameName) {
-    if (myExporter == null) {
-      final URL url = ((RefElementImpl)refElement).getURL();
-      if (url != null) {
-        appendElementReference(buf, url.toString(), linkText, frameName);
-      }
-    }
-    else {
-      appendElementReference(buf, myExporter.getURL(refElement), linkText, frameName);
+    final String url = ((RefElementImpl)refElement).getURL();
+    if (url != null) {
+      appendElementReference(buf, url, linkText, frameName);
     }
   }
 
@@ -218,24 +212,19 @@ public abstract class HTMLComposerImpl extends HTMLComposer {
 
     if (extension != null) {
       extension.appendReferencePresentation(refElement, buf, isPackageIncluded);
-    } else if (refElement instanceof RefFile) {
+    }
+    else if (refElement instanceof RefFile) {
       buf.append(A_HREF_OPENING);
 
-      if (myExporter == null) {
-        buf.append(((RefElementImpl)refElement).getURL());
-      }
-      else {
-        buf.append(myExporter.getURL(refElement));
-      }
+      buf.append(((RefElementImpl)refElement).getURL());
 
       buf.append("\">");
       String refElementName = refElement.getName();
-      final PsiElement element = refElement.getElement();
+      final PsiElement element = refElement.getPsiElement();
       if (element != null) {
-        final VirtualFile virtualFile = PsiUtilCore.getVirtualFile(element);
-        if (virtualFile != null) {
-          refElementName = ProjectUtilCore.displayUrlRelativeToProject(virtualFile, virtualFile.getPresentableUrl(), element.getProject(),
-                                                                       true, false);
+        VirtualFile file = PsiUtilCore.getVirtualFile(element);
+        if (file != null) {
+          refElementName = ProjectUtilCore.displayUrlRelativeToProject(file, file.getPresentableUrl(), element.getProject(), true, false);
         }
       }
       buf.append(refElementName);
