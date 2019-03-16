@@ -23,12 +23,14 @@ import com.intellij.util.xmlb.SmartSerializer;
 import com.intellij.util.xmlb.annotations.OptionTag;
 import com.intellij.util.xmlb.annotations.Transient;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 
 /**
  * User: anna
  * Date: 01-Dec-2005
  */
+@Deprecated
 public abstract class ProfileEx implements Profile {
   private static final Logger LOG = Logger.getInstance(ProfileEx.class);
 

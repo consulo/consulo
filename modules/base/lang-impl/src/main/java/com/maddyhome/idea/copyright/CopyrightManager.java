@@ -32,8 +32,6 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.psi.PsiFile;
@@ -132,7 +130,7 @@ public class CopyrightManager implements PersistentStateComponent<Element> {
     return project.getComponent(CopyrightManager.class);
   }
 
-  private void readExternal(Element element) throws InvalidDataException {
+  private void readExternal(Element element) {
     clearCopyrights();
     final Element module2copyright = element.getChild(MODULE2COPYRIGHT);
     if (module2copyright != null) {
@@ -151,7 +149,7 @@ public class CopyrightManager implements PersistentStateComponent<Element> {
     myCopyrightFileConfigManager.readExternal(element);
   }
 
-  private void writeExternal(Element element) throws WriteExternalException {
+  private void writeExternal(Element element) {
     for (CopyrightProfile copyright : myCopyrights.values()) {
       final Element copyrightElement = new Element(COPYRIGHT);
       copyright.writeExternal(copyrightElement);
@@ -171,25 +169,14 @@ public class CopyrightManager implements PersistentStateComponent<Element> {
 
   @Override
   public Element getState() {
-    try {
-      final Element e = new Element("settings");
-      writeExternal(e);
-      return e;
-    }
-    catch (WriteExternalException e1) {
-      LOG.error(e1);
-      return null;
-    }
+    final Element e = new Element("state");
+    writeExternal(e);
+    return e;
   }
 
   @Override
   public void loadState(Element state) {
-    try {
-      readExternal(state);
-    }
-    catch (InvalidDataException e) {
-      LOG.error(e);
-    }
+    readExternal(state);
   }
 
   public Map<String, String> getCopyrightsMapping() {
