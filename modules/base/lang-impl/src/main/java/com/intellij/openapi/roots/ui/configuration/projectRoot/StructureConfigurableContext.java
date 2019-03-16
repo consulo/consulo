@@ -180,5 +180,4 @@ public class StructureConfigurableContext implements Disposable, LibraryEditorLi
   public void clear() {
     myLevel2Providers.clear();
   }
-
 }

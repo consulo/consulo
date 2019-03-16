@@ -16,7 +16,6 @@
 package consulo.roots.ui.configuration;
 
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.options.ex.WholeWestSingleConfigurableEditor;
 import com.intellij.openapi.options.newEditor.DesktopSettingsDialog;
 import com.intellij.openapi.project.Project;
@@ -24,14 +23,10 @@ import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.border.CustomLineBorder;
-import com.intellij.util.Consumer;
-import com.intellij.util.EmptyConsumer;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;
-import com.intellij.util.ui.update.Activatable;
-import com.intellij.util.ui.update.UiNotifyConnector;
-import consulo.ui.RequiredUIAccess;
 import consulo.roots.ui.StripeTabPanel;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -49,37 +44,13 @@ import java.util.List;
 public class DesktopProjectStructureDialog extends WholeWestSingleConfigurableEditor {
   private static final Key<Configurable> CONFIGURABLE_KEY = Key.create("configurable.key");
 
-  private final List<Configurable> myName2Config = new ArrayList<Configurable>();
+  private final List<Configurable> myName2Config = new ArrayList<>();
   private JPanel myRightPanel;
   private StripeTabPanel myStripeTabPanel;
   private ProjectStructureConfigurable myStructureConfigurable;
 
-  public static boolean show(@Nonnull Project project) {
-    return show(project, EmptyConsumer.<ProjectStructureConfigurable>getInstance());
-  }
-
-  public static boolean show(@Nonnull Project project, final Consumer<ProjectStructureConfigurable> configurableConsumer) {
-    final ProjectStructureConfigurable configurable = ProjectStructureConfigurable.getInstance(project);
-    DesktopProjectStructureDialog dialog =
-            new DesktopProjectStructureDialog(project, configurable, ShowSettingsUtil.DIMENSION_KEY, true, IdeModalityType.PROJECT, configurable);
-    if (configurableConsumer != null) {
-      new UiNotifyConnector.Once(dialog.getContentPane(), new Activatable() {
-        @Override
-        public void showNotify() {
-          configurableConsumer.consume(configurable);
-        }
-      });
-    }
-    return dialog.showAndGet();
-  }
-
-  public DesktopProjectStructureDialog(@Nonnull Project project,
-                                       Configurable configurable,
-                                       @NonNls String dimensionKey,
-                                       boolean showApplyButton,
-                                       IdeModalityType ideModalityType,
-                                       ProjectStructureConfigurable structureConfigurable) {
-    super(project, configurable, dimensionKey, showApplyButton, ideModalityType, true);
+  public DesktopProjectStructureDialog(@Nonnull Project project, Configurable configurable, @NonNls String dimensionKey, ProjectStructureConfigurable structureConfigurable) {
+    super(project, configurable, dimensionKey, true, IdeModalityType.PROJECT, true);
     myStructureConfigurable = structureConfigurable;
 
     boolean isDefaultProject = project.isDefault();
@@ -140,7 +111,7 @@ public class DesktopProjectStructureDialog extends WholeWestSingleConfigurableEd
   @Override
   protected JComponent createSouthPanel() {
     JComponent southPanel = super.createSouthPanel();
-    if(southPanel != null) {
+    if (southPanel != null) {
       southPanel.setBorder(JBUI.Borders.empty(ourDefaultBorderInsets));
       BorderLayoutPanel borderLayoutPanel = JBUI.Panels.simplePanel(southPanel);
       borderLayoutPanel.setBorder(new CustomLineBorder(JBUI.scale(1), 0, 0, 0));
@@ -194,7 +165,7 @@ public class DesktopProjectStructureDialog extends WholeWestSingleConfigurableEd
     List<StripeTabPanel.TabInfo> tabs = myStripeTabPanel.getTabs();
     for (StripeTabPanel.TabInfo tab : tabs) {
       Configurable other = tab.getUserData(CONFIGURABLE_KEY);
-      if(other == configurable) {
+      if (other == configurable) {
         tab.select();
         break;
       }
@@ -205,7 +176,7 @@ public class DesktopProjectStructureDialog extends WholeWestSingleConfigurableEd
   public Configurable getSelectedConfigurable() {
     List<StripeTabPanel.TabInfo> tabs = myStripeTabPanel.getTabs();
     for (StripeTabPanel.TabInfo tab : tabs) {
-      if(tab.isSelected()) {
+      if (tab.isSelected()) {
         Configurable data = tab.getUserData(CONFIGURABLE_KEY);
         assert data != null;
         return data;

@@ -19,6 +19,7 @@ import com.intellij.CommonBundle;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;
 import com.intellij.openapi.options.newEditor.DesktopSettingsDialog;
 import com.intellij.openapi.options.newEditor.OptionsEditor;
@@ -27,6 +28,7 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DefaultProjectFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.util.ui.update.Activatable;
@@ -35,7 +37,6 @@ import consulo.ide.base.BaseShowSettingsUtil;
 import consulo.options.ProjectStructureSelector;
 import consulo.roots.ui.configuration.DesktopProjectStructureDialog;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.UIAccess;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
 
 import javax.annotation.Nonnull;
@@ -65,11 +66,11 @@ public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil {
   @RequiredUIAccess
   @Override
   public void showSettingsDialog(@Nullable Project project) {
-    showSettingsImpl(project, UIAccess.current(), null);
+    showSettingsImpl(project, null);
   }
 
   @SuppressWarnings("deprecation")
-  private void showSettingsImpl(@Nullable Project tempProject, @Nonnull UIAccess uiAccess, @Nullable Configurable toSelect) {
+  private void showSettingsImpl(@Nullable Project tempProject, @Nullable Configurable toSelect) {
     Project actualProject = tempProject != null ? tempProject : myDefaultProjectFactory.getDefaultProject();
 
     new Task.Backgroundable(actualProject, "Opening " + CommonBundle.settingsTitle() + "...") {
@@ -215,7 +216,27 @@ public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil {
   @RequiredUIAccess
   @Override
   public void showProjectStructureDialog(@Nonnull Project project, @Nonnull Consumer<ProjectStructureSelector> consumer) {
-    DesktopProjectStructureDialog.show(project, consumer::accept);
+    new Task.Backgroundable(project, "Opening Project Structure...") {
+      private ProjectStructureConfigurable myConfigurable;
+
+      @Override
+      public void run(@Nonnull ProgressIndicator indicator) {
+        myConfigurable = ProjectStructureConfigurable.getInstance(project);
+      }
+
+      @RequiredUIAccess
+      @Override
+      public void onFinished() {
+        DesktopProjectStructureDialog dialog = new DesktopProjectStructureDialog(project, myConfigurable, ShowSettingsUtil.DIMENSION_KEY, myConfigurable);
+        new UiNotifyConnector.Once(dialog.getContentPane(), new Activatable() {
+          @Override
+          public void showNotify() {
+            consumer.accept(myConfigurable);
+          }
+        });
+        dialog.showAsync();
+      }
+    }.queue();
   }
 
   @RequiredUIAccess

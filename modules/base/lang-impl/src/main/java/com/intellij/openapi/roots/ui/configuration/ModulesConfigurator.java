@@ -65,10 +65,10 @@ import java.util.*;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Dec 15, 2003
+ * Date: Dec 15, 2003
  */
 public class ModulesConfigurator implements ModulesProvider, ModuleEditor.ChangeListener {
-  private static final Logger LOG = Logger.getInstance("#" + ModulesConfigurator.class.getName());
+  private static final Logger LOG = Logger.getInstance(ModulesConfigurator.class);
 
   private final Project myProject;
   private final List<ModuleEditor> myModuleEditors = new ArrayList<>();
@@ -93,7 +93,6 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
 
   public ModulesConfigurator(Project project) {
     myProject = project;
-    myModuleModel = ModuleManager.getInstance(myProject).getModifiableModel();
   }
 
   public void setContext(final StructureConfigurableContext context) {
@@ -171,7 +170,6 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     return moduleEditor;
   }
 
-
   @RequiredUIAccess
   public void resetModuleEditors() {
     myModuleModel = ModuleManager.getInstance(myProject).getModifiableModel();
@@ -231,8 +229,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
         final String moduleName = moduleEditor.getName();
         final String previousName = contentRootToModuleNameMap.put(contentRoot, moduleName);
         if (previousName != null && !previousName.equals(moduleName)) {
-          throw new ConfigurationException(
-                  ProjectBundle.message("module.paths.validation.duplicate.content.error", contentRoot.getPresentableUrl(), previousName, moduleName));
+          throw new ConfigurationException(ProjectBundle.message("module.paths.validation.duplicate.content.error", contentRoot.getPresentableUrl(), previousName, moduleName));
         }
 
         final VirtualFile[] sourceAndTestFiles = contentEntry.getFolderFiles(ContentFolderScopes.all(false));
@@ -249,8 +246,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
               problematicModule = contentRootToModuleNameMap.get(contentRoot);
               correctModule = contentRootToModuleNameMap.get(anotherContentRoot);
             }
-            throw new ConfigurationException(ProjectBundle.message("module.paths.validation.duplicate.source.root.error", problematicModule,
-                                                                   srcRoot.getPresentableUrl(), correctModule));
+            throw new ConfigurationException(ProjectBundle.message("module.paths.validation.duplicate.source.root.error", problematicModule, srcRoot.getPresentableUrl(), correctModule));
           }
         }
       }
@@ -261,14 +257,10 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
       final VirtualFile correspondingContent = entry.getValue();
       final String expectedModuleName = contentRootToModuleNameMap.get(correspondingContent);
 
-      for (VirtualFile candidateContent = srcRoot;
-           candidateContent != null && !candidateContent.equals(correspondingContent);
-           candidateContent = candidateContent.getParent()) {
+      for (VirtualFile candidateContent = srcRoot; candidateContent != null && !candidateContent.equals(correspondingContent); candidateContent = candidateContent.getParent()) {
         final String moduleName = contentRootToModuleNameMap.get(candidateContent);
         if (moduleName != null && !moduleName.equals(expectedModuleName)) {
-          throw new ConfigurationException(ProjectBundle
-                                                   .message("module.paths.validation.source.root.belongs.to.another.module.error", srcRoot.getPresentableUrl(),
-                                                            expectedModuleName, moduleName));
+          throw new ConfigurationException(ProjectBundle.message("module.paths.validation.source.root.belongs.to.another.module.error", srcRoot.getPresentableUrl(), expectedModuleName, moduleName));
         }
       }
     }
@@ -336,8 +328,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
         assert importProvider != null;
         assert importContext != null;
 
-        final ModifiableArtifactModel artifactModel =
-                ProjectStructureConfigurable.getInstance(myProject).getArtifactsStructureConfigurable().getModifiableArtifactModel();
+        final ModifiableArtifactModel artifactModel = ProjectStructureConfigurable.getInstance(myProject).getArtifactsStructureConfigurable().getModifiableArtifactModel();
         List<Module> commitedModules = importProvider.commit(importContext, myProject, myModuleModel, this, artifactModel);
 
         ApplicationManager.getApplication().runWriteAction(() -> {
