@@ -25,8 +25,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootAdapter;
 import com.intellij.openapi.roots.ModuleRootEvent;
+import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.util.Disposer;
@@ -73,14 +73,14 @@ public class DirectoryIndexImpl extends DirectoryIndex {
   }
 
   private void subscribeToFileChanges() {
-    myConnection.subscribe(FileTypeManager.TOPIC, new FileTypeListener.Adapter() {
+    myConnection.subscribe(FileTypeManager.TOPIC, new FileTypeListener() {
       @Override
       public void fileTypesChanged(@Nonnull FileTypeEvent event) {
         myRootIndex = null;
       }
     });
 
-    myConnection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
+    myConnection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         myRootIndex = null;

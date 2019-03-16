@@ -18,6 +18,7 @@ package com.intellij.openapi.roots;
 /**
  * @author nik
  */
+@Deprecated
 public abstract class ModuleRootAdapter implements ModuleRootListener {
   @Override
   public void beforeRootsChange(ModuleRootEvent event) {
