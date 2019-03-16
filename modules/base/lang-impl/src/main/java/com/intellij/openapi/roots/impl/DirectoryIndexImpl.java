@@ -16,7 +16,6 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.ProjectTopics;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileTypeEvent;
 import com.intellij.openapi.fileTypes.FileTypeListener;
@@ -37,7 +36,7 @@ import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.Query;
 import com.intellij.util.containers.ConcurrentIntObjectMap;
-import com.intellij.util.containers.StripedLockIntObjectConcurrentHashMap;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.roots.ContentFolderTypeProvider;
 
@@ -63,12 +62,9 @@ public class DirectoryIndexImpl extends DirectoryIndex {
     myConnection = project.getMessageBus().connect(project);
     subscribeToFileChanges();
     markContentRootsForRefresh();
-    Disposer.register(project, new Disposable() {
-      @Override
-      public void dispose() {
-        myDisposed = true;
-        myRootIndex = null;
-      }
+    Disposer.register(project, () -> {
+      myDisposed = true;
+      myRootIndex = null;
     });
   }
 
@@ -88,10 +84,6 @@ public class DirectoryIndexImpl extends DirectoryIndex {
     });
 
     myConnection.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
-      @Override
-      public void before(@Nonnull List<? extends VFileEvent> events) {
-      }
-
       @Override
       public void after(@Nonnull List<? extends VFileEvent> events) {
         RootIndex rootIndex = myRootIndex;
@@ -136,7 +128,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
   protected RootIndex.InfoCache createRootInfoCache() {
     return new RootIndex.InfoCache() {
       // Upsource can't use int-mapping because different files may have the same id there
-      private final ConcurrentIntObjectMap<DirectoryInfo> myInfoCache = new StripedLockIntObjectConcurrentHashMap<DirectoryInfo>();
+      private final ConcurrentIntObjectMap<DirectoryInfo> myInfoCache = ContainerUtil.createConcurrentIntObjectMap();
       @Override
       public void cacheInfo(@Nonnull VirtualFile dir, @Nonnull DirectoryInfo info) {
         myInfoCache.put(((NewVirtualFile)dir).getId(), info);
