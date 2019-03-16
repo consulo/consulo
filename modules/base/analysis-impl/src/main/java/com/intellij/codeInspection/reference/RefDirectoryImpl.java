@@ -35,7 +35,7 @@ public class RefDirectoryImpl extends RefElementImpl implements RefDirectory {
   }
 
   @Override
-  protected void initialize() {
+  public void initialize() {
     PsiDirectory psiElement = ObjectUtils.tryCast(getPsiElement(), PsiDirectory.class);
     LOG.assertTrue(psiElement != null);
     final PsiDirectory parentDirectory = psiElement.getParentDirectory();

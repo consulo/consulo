@@ -248,7 +248,7 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
     return virtualFile.getUrl() + "#" + element.getTextOffset();
   }
 
-  protected abstract void initialize();
+  public abstract void initialize();
 
   @Override
   public void addSuppression(final String text) {

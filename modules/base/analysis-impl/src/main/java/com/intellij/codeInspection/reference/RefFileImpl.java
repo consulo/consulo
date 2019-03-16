@@ -49,7 +49,7 @@ public class RefFileImpl extends RefElementImpl implements RefFile {
   }
 
   @Override
-  protected void initialize() {
+  public void initialize() {
     final VirtualFile vFile = getVirtualFile();
     if (vFile == null) return;
     final VirtualFile parentDirectory = vFile.getParent();
