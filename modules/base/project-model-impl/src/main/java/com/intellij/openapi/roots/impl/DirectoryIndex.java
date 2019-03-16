@@ -36,6 +36,7 @@ public abstract class DirectoryIndex {
   /**
    * The same as {@link #getInfoForFile} but works only for directories or file roots and returns {@code null} for directories
    * which aren't included in project content or libraries
+   *
    * @deprecated use {@link #getInfoForFile(com.intellij.openapi.vfs.VirtualFile)} instead
    */
   @Deprecated
@@ -48,8 +49,7 @@ public abstract class DirectoryIndex {
   public abstract ContentFolderTypeProvider getContentFolderType(@Nonnull DirectoryInfo info);
 
   @Nonnull
-  public abstract
-  Query<VirtualFile> getDirectoriesByPackageName(@Nonnull String packageName, boolean includeLibrarySources);
+  public abstract Query<VirtualFile> getDirectoriesByPackageName(@Nonnull String packageName, boolean includeLibrarySources);
 
   @Nullable
   public abstract String getPackageName(@Nonnull VirtualFile dir);

@@ -42,6 +42,7 @@ import com.intellij.psi.impl.file.PsiPackageHelper;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.PathUtil;
 import consulo.fileTypes.impl.VfsIconUtil;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -176,7 +177,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
 
     ProjectSettingsService service = ProjectSettingsService.getInstance(myProject);
     return file != null && ((ProjectRootsUtil.isModuleContentRoot(file, project) && service.canOpenModuleSettings()) ||
-                            (ProjectRootsUtil.isSourceOrTestRoot(file, project)  && service.canOpenContentEntriesSettings()) ||
+                            (ProjectRootsUtil.isModuleSourceRoot(file, project)  && service.canOpenContentEntriesSettings()) ||
                             (ProjectRootsUtil.isLibraryRoot(file, project) && service.canOpenModuleLibrarySettings()));
   }
 
@@ -186,6 +187,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
   }
 
   @Override
+  @RequiredUIAccess
   public void navigate(final boolean requestFocus) {
     Module module = ModuleUtil.findModuleForPsiElement(getValue());
     if (module != null) {

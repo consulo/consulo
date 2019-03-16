@@ -23,9 +23,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiCodeFragment;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
+import consulo.roots.ContentFolderScopes;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.roots.ContentFolderScopes;
 
 /**
  * @author anna
@@ -74,7 +75,18 @@ public class ProjectRootsUtil {
   }
 
   @Nullable
-  public static ContentFolder getContentFolderIfIs(@Nonnull VirtualFile virtualFile, final Project project) {
+  public static ContentFolder getModuleSourceRoot(@Nonnull VirtualFile root, @Nonnull Project project) {
+    final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+    final Module module = projectFileIndex.getModuleForFile(root);
+    return module != null && !module.isDisposed() ? findContentFolderForDirectory(root, project) : null;
+  }
+
+  public static boolean isModuleSourceRoot(@Nonnull VirtualFile virtualFile, @Nonnull final Project project) {
+    return getModuleSourceRoot(virtualFile, project) != null;
+  }
+
+  @Nullable
+  public static ContentFolder findContentFolderForDirectory(@Nonnull VirtualFile virtualFile, final Project project) {
     final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     final Module module = projectFileIndex.getModuleForFile(virtualFile);
     if (module == null) {

@@ -36,7 +36,7 @@ public class GeneratedOnRootSourcesFilter extends GeneratedSourcesFilter {
     if(contentRootForFile == null) {
       return false;
     }
-    ContentFolder contentFolder = ProjectRootsUtil.getContentFolderIfIs(contentRootForFile, project);
+    ContentFolder contentFolder = ProjectRootsUtil.findContentFolderForDirectory(contentRootForFile, project);
     if(contentFolder == null) {
       return false;
     }

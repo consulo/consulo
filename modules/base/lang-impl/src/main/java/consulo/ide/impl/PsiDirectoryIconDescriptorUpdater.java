@@ -68,7 +68,7 @@ public class PsiDirectoryIconDescriptorUpdater implements IconDescriptorUpdater 
           symbolIcon = AllIcons.Modules.ExcludeRoot;
         }
         else {
-          ContentFolder contentFolder = ProjectRootsUtil.getContentFolderIfIs(virtualFile, project);
+          ContentFolder contentFolder = ProjectRootsUtil.findContentFolderForDirectory(virtualFile, project);
           if (contentFolder != null) {
             symbolIcon = contentFolder.getType().getIcon(contentFolder.getProperties());
           }
