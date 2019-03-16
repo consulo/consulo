@@ -51,13 +51,10 @@ import java.util.*;
 public class RootIndex {
   public static final Logger LOGGER = Logger.getInstance(RootIndex.class);
 
-  public static final Comparator<OrderEntry> BY_OWNER_MODULE = new Comparator<OrderEntry>() {
-    @Override
-    public int compare(OrderEntry o1, OrderEntry o2) {
-      String name1 = o1.getOwnerModule().getName();
-      String name2 = o2.getOwnerModule().getName();
-      return name1.compareTo(name2);
-    }
+  public static final Comparator<OrderEntry> BY_OWNER_MODULE = (o1, o2) -> {
+    String name1 = o1.getOwnerModule().getName();
+    String name2 = o2.getOwnerModule().getName();
+    return name1.compareTo(name2);
   };
 
   public interface InfoCache {
@@ -76,10 +73,10 @@ public class RootIndex {
   };
 
   private final Map<String, List<VirtualFile>> myDirectoriesByPackageNameCache = ContainerUtil.newConcurrentMap();
-  private final Set<String> myNonExistentPackages = new ConcurrentHashSet<String>();
+  private final Set<String> myNonExistentPackages = new ConcurrentHashSet<>();
   private final InfoCache myInfoCache;
   private final List<ContentFolderTypeProvider> myRootTypes = ContainerUtil.newArrayList();
-  private final TObjectIntHashMap<ContentFolderTypeProvider> myRootTypeId = new TObjectIntHashMap<ContentFolderTypeProvider>();
+  private final TObjectIntHashMap<ContentFolderTypeProvider> myRootTypeId = new TObjectIntHashMap<>();
   @Nonnull
   private final Project myProject;
   private volatile Map<VirtualFile, OrderEntry[]> myOrderEntries;
@@ -102,7 +99,7 @@ public class RootIndex {
       List<VirtualFile> hierarchy = getHierarchy(root, allRoots, info);
       Pair<DirectoryInfo, String> pair = hierarchy != null
                                          ? calcDirectoryInfo(root, hierarchy, info)
-                                         : new Pair<DirectoryInfo, String>(NonProjectDirectoryInfo.IGNORED, null);
+                                         : new Pair<>(NonProjectDirectoryInfo.IGNORED, null);
       cacheInfos(root, root, pair.first);
       myPackagePrefixRoots.putValue(pair.second, root);
       if (info.shouldMarkAsProjectExcluded(root, hierarchy)) {
@@ -196,9 +193,9 @@ public class RootIndex {
     Map<VirtualFile, OrderEntry[]> result = myOrderEntries;
     if (result != null) return result;
 
-    MultiMap<VirtualFile, OrderEntry> libClassRootEntries = MultiMap.createSmartList();
-    MultiMap<VirtualFile, OrderEntry> libSourceRootEntries = MultiMap.createSmartList();
-    MultiMap<VirtualFile, OrderEntry> depEntries = MultiMap.createSmartList();
+    MultiMap<VirtualFile, OrderEntry> libClassRootEntries = MultiMap.createSmart();
+    MultiMap<VirtualFile, OrderEntry> libSourceRootEntries = MultiMap.createSmart();
+    MultiMap<VirtualFile, OrderEntry> depEntries = MultiMap.createSmart();
 
     for (final Module module : ModuleManager.getInstance(myProject).getModules()) {
       final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
@@ -242,7 +239,7 @@ public class RootIndex {
                                                @Nonnull MultiMap<VirtualFile, OrderEntry> libClassRootEntries,
                                                @Nonnull MultiMap<VirtualFile, OrderEntry> libSourceRootEntries,
                                                @Nonnull List<VirtualFile> hierarchy) {
-    @javax.annotation.Nullable VirtualFile libraryClassRoot = info.findLibraryRootInfo(hierarchy, false);
+    @Nullable VirtualFile libraryClassRoot = info.findLibraryRootInfo(hierarchy, false);
     @Nullable VirtualFile librarySourceRoot = info.findLibraryRootInfo(hierarchy, true);
     Set<OrderEntry> orderEntries = ContainerUtil.newLinkedHashSet();
     orderEntries.addAll(info.getLibraryOrderEntries(hierarchy, libraryClassRoot, librarySourceRoot, libClassRootEntries, libSourceRootEntries));
@@ -329,7 +326,7 @@ public class RootIndex {
   }
 
   @Nonnull
-  private DirectoryInfo cacheInfos(VirtualFile dir, @javax.annotation.Nullable VirtualFile stopAt, @Nonnull DirectoryInfo info) {
+  private DirectoryInfo cacheInfos(VirtualFile dir, @Nullable VirtualFile stopAt, @Nonnull DirectoryInfo info) {
     while (dir != null) {
       myInfoCache.cacheInfo(dir, info);
       if (dir.equals(stopAt)) {
@@ -379,18 +376,15 @@ public class RootIndex {
     }
 
     if (!includeLibrarySources) {
-      result = ContainerUtil.filter(result, new Condition<VirtualFile>() {
-        @Override
-        public boolean value(VirtualFile file) {
-          DirectoryInfo info = getInfoForFile(file);
-          return info.isInProject() && (!info.isInLibrarySource() || info.isInModuleSource() || info.hasLibraryClassRoot());
-        }
+      result = ContainerUtil.filter(result, file -> {
+        DirectoryInfo info = getInfoForFile(file);
+        return info.isInProject() && (!info.isInLibrarySource() || info.isInModuleSource() || info.hasLibraryClassRoot());
       });
     }
-    return new CollectionQuery<VirtualFile>(result);
+    return new CollectionQuery<>(result);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public String getPackageName(@Nonnull final VirtualFile dir) {
     if (dir.isDirectory()) {
       if (isIgnored(dir)) {
@@ -418,7 +412,7 @@ public class RootIndex {
     return parentPackageName.isEmpty() ? subdirName : parentPackageName + "." + subdirName;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public ContentFolderTypeProvider getContentFolderType(@Nonnull DirectoryInfo directoryInfo) {
     return myRootTypes.get(directoryInfo.getSourceRootTypeId());
   }
@@ -433,7 +427,7 @@ public class RootIndex {
     return false;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private static List<VirtualFile> getHierarchy(VirtualFile dir, @Nonnull Set<VirtualFile> allRoots, @Nonnull RootInfo info) {
     List<VirtualFile> hierarchy = ContainerUtil.newArrayList();
     boolean hasContentRoots = false;
@@ -468,13 +462,13 @@ public class RootIndex {
     @Nonnull
     final MultiMap<VirtualFile, Module> sourceRootOf = MultiMap.createSet();
     @Nonnull
-    final TObjectIntHashMap<VirtualFile> rootTypeId = new TObjectIntHashMap<VirtualFile>();
+    final TObjectIntHashMap<VirtualFile> rootTypeId = new TObjectIntHashMap<>();
     @Nonnull
-    final MultiMap<VirtualFile, Library> excludedFromLibraries = MultiMap.createSmartList();
+    final MultiMap<VirtualFile, Library> excludedFromLibraries = MultiMap.createSmart();
     @Nonnull
-    final MultiMap<VirtualFile, Library> classOfLibraries = MultiMap.createSmartList();
+    final MultiMap<VirtualFile, Library> classOfLibraries = MultiMap.createSmart();
     @Nonnull
-    final MultiMap<VirtualFile, Library> sourceOfLibraries = MultiMap.createSmartList();
+    final MultiMap<VirtualFile, Library> sourceOfLibraries = MultiMap.createSmart();
     @Nonnull
     final Set<VirtualFile> excludedFromProject = ContainerUtil.newHashSet();
     @Nonnull
@@ -493,18 +487,13 @@ public class RootIndex {
       return result;
     }
 
-    private boolean shouldMarkAsProjectExcluded(@Nonnull VirtualFile root, @javax.annotation.Nullable List<VirtualFile> hierarchy) {
+    private boolean shouldMarkAsProjectExcluded(@Nonnull VirtualFile root, @Nullable List<VirtualFile> hierarchy) {
       if (hierarchy == null) return false;
       if (!excludedFromProject.contains(root) && !excludedFromModule.containsKey(root)) return false;
-      return ContainerUtil.find(hierarchy, new Condition<VirtualFile>() {
-        @Override
-        public boolean value(VirtualFile ancestor) {
-          return contentRootOf.containsKey(ancestor);
-        }
-      }) == null;
+      return ContainerUtil.find(hierarchy, ancestor -> contentRootOf.containsKey(ancestor)) == null;
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     private VirtualFile findModuleRootInfo(@Nonnull List<VirtualFile> hierarchy) {
       for (VirtualFile root : hierarchy) {
         Module module = contentRootOf.get(root);
@@ -519,7 +508,7 @@ public class RootIndex {
       return null;
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     private VirtualFile findNearestContentRootForExcluded(@Nonnull List<VirtualFile> hierarchy) {
       for (VirtualFile root : hierarchy) {
         if (contentRootOf.containsKey(root)) {
@@ -529,7 +518,7 @@ public class RootIndex {
       return null;
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     private VirtualFile findLibraryRootInfo(@Nonnull List<VirtualFile> hierarchy, boolean source) {
       Set<Library> librariesToIgnore = ContainerUtil.newHashSet();
       for (VirtualFile root : hierarchy) {
@@ -560,7 +549,7 @@ public class RootIndex {
       return prefix;
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     private VirtualFile findPackageRootInfo(@Nonnull List<VirtualFile> hierarchy,
                                             VirtualFile moduleContentRoot,
                                             VirtualFile libraryClassRoot,
@@ -583,8 +572,8 @@ public class RootIndex {
 
     @Nonnull
     private LinkedHashSet<OrderEntry> getLibraryOrderEntries(@Nonnull List<VirtualFile> hierarchy,
-                                                             @javax.annotation.Nullable VirtualFile libraryClassRoot,
-                                                             @javax.annotation.Nullable VirtualFile librarySourceRoot,
+                                                             @Nullable VirtualFile libraryClassRoot,
+                                                             @Nullable VirtualFile librarySourceRoot,
                                                              @Nonnull MultiMap<VirtualFile, OrderEntry> libClassRootEntries,
                                                              @Nonnull MultiMap<VirtualFile, OrderEntry> libSourceRootEntries) {
       LinkedHashSet<OrderEntry> orderEntries = ContainerUtil.newLinkedHashSet();
@@ -602,7 +591,7 @@ public class RootIndex {
       return orderEntries;
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     private ModuleSourceOrderEntry getModuleSourceEntry(@Nonnull List<VirtualFile> hierarchy,
                                                         @Nonnull VirtualFile moduleContentRoot,
                                                         @Nonnull MultiMap<VirtualFile, OrderEntry> libClassRootEntries) {
@@ -632,7 +621,7 @@ public class RootIndex {
     else {
       nearestContentRoot = info.findNearestContentRootForExcluded(hierarchy);
       if (nearestContentRoot == null) {
-        return new Pair<DirectoryInfo, String>(NonProjectDirectoryInfo.EXCLUDED, null);
+        return Pair.create(NonProjectDirectoryInfo.EXCLUDED, null);
       }
     }
 
