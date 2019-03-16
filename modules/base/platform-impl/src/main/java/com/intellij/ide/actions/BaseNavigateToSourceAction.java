@@ -19,7 +19,11 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.pom.Navigatable;
 import com.intellij.pom.NavigatableWithText;
+import com.intellij.pom.PomTargetPsiElement;
 import com.intellij.util.OpenSourceUtil;
+import consulo.ui.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class BaseNavigateToSourceAction extends AnAction implements DumbAware {
@@ -29,52 +33,39 @@ public abstract class BaseNavigateToSourceAction extends AnAction implements Dum
     myFocusEditor = focusEditor;
   }
 
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  @Override
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
     OpenSourceUtil.navigate(myFocusEditor, getNavigatables(dataContext));
   }
 
-
-  public void update(AnActionEvent event) {
-    DataContext dataContext = event.getDataContext();
-    final Navigatable target = getTarget(dataContext);
+  @RequiredUIAccess
+  @Override
+  public void update(@Nonnull AnActionEvent e) {
+    boolean inPopup = ActionPlaces.isPopupPlace(e.getPlace());
+    Navigatable target = findTargetForUpdate(e.getDataContext());
     boolean enabled = target != null;
-    if (ActionPlaces.isPopupPlace(event.getPlace())) {
-      event.getPresentation().setVisible(enabled);
+    if (inPopup && !(this instanceof OpenModuleSettingsAction) && OpenModuleSettingsAction.isModuleInProjectViewPopup(e)) {
+      e.getPresentation().setVisible(false);
+      return;
     }
-    else {
-      event.getPresentation().setEnabled(enabled);
-    }
-    if (target != null && target instanceof NavigatableWithText) {
-       //as myFocusEditor is always ignored - Main Menu|View always contains 2 actions with the same name and actually same behaviour
-      if (!myFocusEditor) {
-        event.getPresentation().setVisible(false);
-        return;
-      }
-      final String navigateActionText = ((NavigatableWithText)target).getNavigateActionText(myFocusEditor);
-      if (navigateActionText != null) {
-        event.getPresentation().setText(navigateActionText);
-      }
-      else {
-        event.getPresentation().setText(getTemplatePresentation().getText());
-      }
-    }
-    else {
-      event.getPresentation().setText(getTemplatePresentation().getText());
-    }
+    //as myFocusEditor is always ignored - Main Menu|View always contains 2 actions with the same name and actually same behaviour
+    e.getPresentation().setVisible((enabled || !inPopup) && (myFocusEditor || !(target instanceof NavigatableWithText)));
+    e.getPresentation().setEnabled(enabled);
+
+    String navigateActionText = myFocusEditor && target instanceof NavigatableWithText ? ((NavigatableWithText)target).getNavigateActionText(true) : null;
+    e.getPresentation().setText(navigateActionText == null ? getTemplatePresentation().getText() : navigateActionText);
   }
 
   @Nullable
-  private Navigatable getTarget(final DataContext dataContext) {
-    if (!myFocusEditor && dataContext.getData(PlatformDataKeys.EDITOR) != null) {
-      // makes no sense in editor and conflicts with another action there (ctrl+enter)
-      return null;
-    }
-
+  private Navigatable findTargetForUpdate(@Nonnull DataContext dataContext) {
     Navigatable[] navigatables = getNavigatables(dataContext);
-    if (navigatables != null) {
-      for (Navigatable navigatable : navigatables) {
-        if (navigatable.canNavigate()) return navigatable;
+    if (navigatables == null) return null;
+
+    for (Navigatable navigatable : navigatables) {
+      if (navigatable.canNavigate()) {
+        return navigatable instanceof PomTargetPsiElement ? ((PomTargetPsiElement)navigatable).getTarget() : navigatable;
       }
     }
     return null;

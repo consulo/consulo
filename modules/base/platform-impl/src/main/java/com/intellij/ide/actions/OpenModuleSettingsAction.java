@@ -16,15 +16,15 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
-import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionPlaces;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleNavigatable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.pom.Navigatable;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -38,28 +38,23 @@ public class OpenModuleSettingsAction extends EditSourceAction {
     }
   }
 
-  @Nullable
-  @Override
-  protected Navigatable[] getNavigatables(DataContext dataContext) {
-    Module data = dataContext.getData(LangDataKeys.MODULE);
-    if(data == null) {
-      return NavigationItem.EMPTY_ARRAY;
+  protected static boolean isModuleInProjectViewPopup(@Nonnull AnActionEvent e) {
+    if (ActionPlaces.PROJECT_VIEW_POPUP.equals(e.getPlace())) {
+      return isModuleInContext(e);
     }
-    return new Navigatable[]{new ModuleNavigatable(data)};
+    return false;
   }
 
-  protected static boolean isModuleInProjectViewPopup(AnActionEvent e) {
-    if (ActionPlaces.PROJECT_VIEW_POPUP.equals(e.getPlace())) {
-      final Project project = getEventProject(e);
-      final Module module = e.getDataContext().getData(LangDataKeys.MODULE);
-      if (project != null && module != null) {
-        final VirtualFile moduleFolder = e.getDataContext().getData(PlatformDataKeys.VIRTUAL_FILE);
-        if (moduleFolder == null) {
-          return false;
-        }
-        if (ProjectRootsUtil.isModuleContentRoot(moduleFolder, project) || ProjectRootsUtil.isSourceOrTestRoot(moduleFolder, project)) {
-          return true;
-        }
+  public static boolean isModuleInContext(@Nonnull AnActionEvent e) {
+    final Project project = getEventProject(e);
+    final Module module = e.getData(LangDataKeys.MODULE);
+    if (project != null && module != null) {
+      final VirtualFile moduleFolder = e.getData(CommonDataKeys.VIRTUAL_FILE);
+      if (moduleFolder == null) {
+        return false;
+      }
+      if (ProjectRootsUtil.isModuleContentRoot(moduleFolder, project) || ProjectRootsUtil.isModuleSourceRoot(moduleFolder, project)) {
+        return true;
       }
     }
     return false;
