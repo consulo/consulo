@@ -155,7 +155,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
     }
 
     PsiManager psiManager = PsiManager.getInstance(myProject);
-    for (PsiPackageSupportProvider p : PsiPackageSupportProvider.EP_NAME.getExtensions()) {
+    for (PsiPackageSupportProvider p : PsiPackageSupportProvider.EP_NAME.getExtensionList()) {
       if (p.isSupported(extension) && p.acceptVirtualFile(moduleForFile, virtualFile)) {
         return p.createPackage(psiManager, this, extensionClass, qualifiedName);
       }
@@ -174,7 +174,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
         Module ownerModule = orderEntry.getOwnerModule();
         ModuleExtension extension = ModuleUtilCore.getExtension(ownerModule, extensionClass);
         if (extension != null) {
-          for (PsiPackageSupportProvider p : PsiPackageSupportProvider.EP_NAME.getExtensions()) {
+          for (PsiPackageSupportProvider p : PsiPackageSupportProvider.EP_NAME.getExtensionList()) {
             if (p.isSupported(extension)) {
               return p.createPackage(psiManager, this, extensionClass, qualifiedName);
             }
@@ -274,11 +274,11 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
   @RequiredReadAction
   @Override
   public boolean isValidPackageName(@Nonnull Module module, @Nonnull String packageName) {
-    PsiPackageSupportProvider[] extensions = PsiPackageSupportProvider.EP_NAME.getExtensions();
+    List<PsiPackageSupportProvider> extensionList = PsiPackageSupportProvider.EP_NAME.getExtensionList();
 
     ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
     for (ModuleExtension<?> moduleExtension : rootManager.getExtensions()) {
-      for (PsiPackageSupportProvider provider : extensions) {
+      for (PsiPackageSupportProvider provider : extensionList) {
         if (provider.isSupported(moduleExtension)) {
           return provider.isValidPackageName(module, packageName);
         }
