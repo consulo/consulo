@@ -46,7 +46,8 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class InspectionEngine {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.InspectionEngine");
+  private static final Logger LOG = Logger.getInstance(InspectionEngine.class);
+  private static final Set<Class<? extends LocalInspectionTool>> RECURSIVE_VISITOR_TOOL_CLASSES = ContainerUtil.newConcurrentSet();
 
   /**
    *
@@ -72,8 +73,9 @@ public class InspectionEngine {
     if(visitor == null) {
       LOG.error("Tool " + tool + " (" + tool.getClass()+ ") must not return null from the buildVisitor() method");
     }
-    assert !(visitor instanceof PsiRecursiveElementVisitor || visitor instanceof PsiRecursiveElementWalkingVisitor)
-            : "The visitor returned from LocalInspectionTool.buildVisitor() must not be recursive. "+tool;
+    else if (visitor instanceof PsiRecursiveVisitor && RECURSIVE_VISITOR_TOOL_CLASSES.add(tool.getClass())) {
+      LOG.error("The visitor returned from LocalInspectionTool.buildVisitor() must not be recursive: " + tool);
+    }
 
     tool.inspectionStarted(session, isOnTheFly);
     acceptElements(elements, visitor, elementDialectIds, dialectIdsSpecifiedForTool);

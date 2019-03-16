@@ -177,8 +177,7 @@ public abstract class LocalInspectionTool extends InspectionProfileEntry {
     final ProblemsHolder holder = new ProblemsHolder(manager, file, false);
     LocalInspectionToolSession session = new LocalInspectionToolSession(file, 0, file.getTextLength());
     final PsiElementVisitor customVisitor = buildVisitor(holder, false, session);
-    LOG.assertTrue(!(customVisitor instanceof PsiRecursiveElementVisitor),
-                   "The visitor returned from LocalInspectionTool.buildVisitor() must not be recursive");
+    LOG.assertTrue(!(customVisitor instanceof PsiRecursiveVisitor), "The visitor returned from LocalInspectionTool.buildVisitor() must not be recursive: " + customVisitor);
 
     inspectionStarted(session, false);
 

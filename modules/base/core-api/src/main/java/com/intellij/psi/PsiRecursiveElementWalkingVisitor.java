@@ -16,17 +16,17 @@
 package com.intellij.psi;
 
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
  * Represents a PSI element visitor which recursively visits the children of the element
  * on which the visit was started.
  */
-public abstract class PsiRecursiveElementWalkingVisitor extends PsiElementVisitor  {
+public abstract class PsiRecursiveElementWalkingVisitor extends PsiElementVisitor implements PsiRecursiveVisitor {
   private final boolean myVisitAllFileRoots;
-  private final PsiWalkingState myWalkingState = new PsiWalkingState(this){
+  private final PsiWalkingState myWalkingState = new PsiWalkingState(this) {
     @Override
     public void elementFinished(@Nonnull PsiElement element) {
       PsiRecursiveElementWalkingVisitor.this.elementFinished(element);
@@ -49,7 +49,7 @@ public abstract class PsiRecursiveElementWalkingVisitor extends PsiElementVisito
   }
 
   protected void elementFinished(PsiElement element) {
-                 
+
   }
 
   @Override
