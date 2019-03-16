@@ -24,11 +24,9 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootEvent;
-import com.intellij.openapi.roots.ModuleRootListener;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.OrderEntry;
+import com.intellij.openapi.roots.*;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.LowMemoryWatcher;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;
@@ -48,7 +46,7 @@ import java.util.List;
 
 @Singleton
 public class DirectoryIndexImpl extends DirectoryIndex {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.impl.DirectoryIndexImpl");
+  private static final Logger LOG = Logger.getInstance(DirectoryIndexImpl.class);
 
   private final Project myProject;
   private final MessageBusConnection myConnection;
@@ -60,15 +58,6 @@ public class DirectoryIndexImpl extends DirectoryIndex {
   public DirectoryIndexImpl(@Nonnull Project project) {
     myProject = project;
     myConnection = project.getMessageBus().connect(project);
-    subscribeToFileChanges();
-    markContentRootsForRefresh();
-    Disposer.register(project, () -> {
-      myDisposed = true;
-      myRootIndex = null;
-    });
-  }
-
-  private void subscribeToFileChanges() {
     myConnection.subscribe(FileTypeManager.TOPIC, new FileTypeListener() {
       @Override
       public void fileTypesChanged(@Nonnull FileTypeEvent event) {
@@ -91,6 +80,20 @@ public class DirectoryIndexImpl extends DirectoryIndex {
           myRootIndex = null;
         }
       }
+    });
+
+    LowMemoryWatcher.register(() -> {
+      RootIndex index = myRootIndex;
+      if (index != null) {
+        index.onLowMemory();
+      }
+    }, project);
+
+    markContentRootsForRefresh();
+
+    Disposer.register(project, () -> {
+      myDisposed = true;
+      myRootIndex = null;
     });
   }
 
@@ -129,6 +132,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
     return new RootIndex.InfoCache() {
       // Upsource can't use int-mapping because different files may have the same id there
       private final ConcurrentIntObjectMap<DirectoryInfo> myInfoCache = ContainerUtil.createConcurrentIntObjectMap();
+
       @Override
       public void cacheInfo(@Nonnull VirtualFile dir, @Nonnull DirectoryInfo info) {
         myInfoCache.put(((NewVirtualFile)dir).getId(), info);
@@ -144,7 +148,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
   @Override
   public DirectoryInfo getInfoForDirectory(@Nonnull VirtualFile dir) {
     DirectoryInfo info = getInfoForFile(dir);
-    return info.isInProject() ? info : null;
+    return info.isInProject(dir) ? info : null;
   }
 
   @Nonnull
@@ -156,6 +160,15 @@ public class DirectoryIndexImpl extends DirectoryIndex {
     if (!(file instanceof NewVirtualFile)) return NonProjectDirectoryInfo.NOT_SUPPORTED_VIRTUAL_FILE_IMPLEMENTATION;
 
     return getRootIndex().getInfoForFile(file);
+  }
+
+  @Nullable
+  @Override
+  public ContentFolder getContentFolder(@Nonnull DirectoryInfo info) {
+    if (info.isInModuleSource()) {
+      return info.getContentFolder();
+    }
+    return null;
   }
 
   @Override

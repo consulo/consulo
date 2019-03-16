@@ -16,7 +16,10 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.roots.ContentFolderTypeProvider;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -24,34 +27,39 @@ import javax.annotation.Nullable;
  * @author nik
  */
 public class DirectoryInfoImpl extends DirectoryInfo {
-  public static final int MAX_ROOT_TYPE_ID = Byte.MAX_VALUE;
   protected final VirtualFile myRoot;//original project root for which this information is calculated
   private final Module module; // module to which content it belongs or null
   private final VirtualFile libraryClassRoot; // class root in library
   private final VirtualFile contentRoot;
   private final VirtualFile sourceRoot;
+  private final ContentFolder myContentFolder;
   protected final boolean myInModuleSource;
   protected final boolean myInLibrarySource;
   protected final boolean myExcluded;
-  private final byte mySourceRootTypeId;
+  private final ContentFolderTypeProvider mySourceRootTypeId;
   private final String myUnloadedModuleName;
 
-  DirectoryInfoImpl(@Nonnull VirtualFile root, Module module, VirtualFile contentRoot, VirtualFile sourceRoot, VirtualFile libraryClassRoot,
-                    boolean inModuleSource, boolean inLibrarySource, boolean isExcluded, int sourceRootTypeId, @Nullable String unloadedModuleName) {
+  DirectoryInfoImpl(@Nonnull VirtualFile root,
+                    Module module,
+                    VirtualFile contentRoot,
+                    VirtualFile sourceRoot,
+                    ContentFolder contentFolder,
+                    VirtualFile libraryClassRoot,
+                    boolean inModuleSource,
+                    boolean inLibrarySource,
+                    boolean isExcluded, ContentFolderTypeProvider sourceRootTypeId,
+                    @Nullable String unloadedModuleName) {
     myRoot = root;
     this.module = module;
     this.libraryClassRoot = libraryClassRoot;
+    myContentFolder = contentFolder;
     this.contentRoot = contentRoot;
     this.sourceRoot = sourceRoot;
     myInModuleSource = inModuleSource;
     myInLibrarySource = inLibrarySource;
     myExcluded = isExcluded;
     myUnloadedModuleName = unloadedModuleName;
-    if (sourceRootTypeId > MAX_ROOT_TYPE_ID) {
-      throw new IllegalArgumentException(
-              "Module source root type id " + sourceRootTypeId + " exceeds the maximum allowable value (" + MAX_ROOT_TYPE_ID + ")");
-    }
-    mySourceRootTypeId = (byte)sourceRootTypeId;
+    mySourceRootTypeId = sourceRootTypeId;
   }
 
   @Override
@@ -67,18 +75,22 @@ public class DirectoryInfoImpl extends DirectoryInfo {
     return myRoot.hashCode();
   }
 
-  @SuppressWarnings({"HardCodedStringLiteral"})
+  @Override
   public String toString() {
-    return "DirectoryInfo{" +
-           "module=" + getModule() +
-           ", isInModuleSource=" + myInModuleSource +
-           ", rootTypeId=" + getSourceRootTypeId() +
-           ", isInLibrarySource=" + isInLibrarySource() +
-           ", isExcludedFromModule=" + myExcluded +
-           ", libraryClassRoot=" + getLibraryClassRoot() +
-           ", contentRoot=" + getContentRoot() +
-           ", sourceRoot=" + getSourceRoot() +
-           "}";
+    final StringBuilder sb = new StringBuilder("DirectoryInfoImpl{");
+    sb.append("myRoot=").append(myRoot);
+    sb.append(", module=").append(module);
+    sb.append(", libraryClassRoot=").append(libraryClassRoot);
+    sb.append(", contentRoot=").append(contentRoot);
+    sb.append(", sourceRoot=").append(sourceRoot);
+    sb.append(", myContentFolder=").append(myContentFolder);
+    sb.append(", myInModuleSource=").append(myInModuleSource);
+    sb.append(", myInLibrarySource=").append(myInLibrarySource);
+    sb.append(", myExcluded=").append(myExcluded);
+    sb.append(", mySourceRootTypeId=").append(mySourceRootTypeId);
+    sb.append(", myUnloadedModuleName='").append(myUnloadedModuleName).append('\'');
+    sb.append('}');
+    return sb.toString();
   }
 
   @Override
@@ -100,6 +112,12 @@ public class DirectoryInfoImpl extends DirectoryInfo {
   @Nullable
   public VirtualFile getSourceRoot() {
     return sourceRoot;
+  }
+
+  @Nullable
+  @Override
+  public ContentFolder getContentFolder() {
+    return myContentFolder;
   }
 
   @Override
@@ -149,7 +167,7 @@ public class DirectoryInfoImpl extends DirectoryInfo {
   }
 
   @Override
-  public int getSourceRootTypeId() {
+  public ContentFolderTypeProvider getSourceRootTypeId() {
     return mySourceRootTypeId;
   }
 

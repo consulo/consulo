@@ -17,13 +17,13 @@ package com.intellij.ide.projectView.impl;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.*;
-import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.roots.ContentFolder;
+import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiCodeFragment;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
-import consulo.roots.ContentFolderScopes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -76,9 +76,7 @@ public class ProjectRootsUtil {
 
   @Nullable
   public static ContentFolder getModuleSourceRoot(@Nonnull VirtualFile root, @Nonnull Project project) {
-    final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
-    final Module module = projectFileIndex.getModuleForFile(root);
-    return module != null && !module.isDisposed() ? findContentFolderForDirectory(root, project) : null;
+    return findContentFolderForDirectory(root, project);
   }
 
   public static boolean isModuleSourceRoot(@Nonnull VirtualFile virtualFile, @Nonnull final Project project) {
@@ -92,15 +90,12 @@ public class ProjectRootsUtil {
     if (module == null) {
       return null;
     }
-    final ContentEntry[] contentEntries = ModuleRootManager.getInstance(module).getContentEntries();
-    for (ContentEntry contentEntry : contentEntries) {
-      for (ContentFolder sourceFolder : contentEntry.getFolders(ContentFolderScopes.all())) {
-        if (Comparing.equal(virtualFile, sourceFolder.getFile())) {
-          return sourceFolder;
-        }
-      }
+
+    ContentFolder contentFolder = projectFileIndex.getContentFolder(virtualFile);
+    if(contentFolder == null) {
+      return null;
     }
-    return null;
+    return virtualFile.equals(contentFolder.getFile()) ? contentFolder : null;
   }
 
   public static boolean isLibraryRoot(final VirtualFile directoryFile, final Project project) {

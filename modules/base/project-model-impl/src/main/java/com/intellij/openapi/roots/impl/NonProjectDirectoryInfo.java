@@ -16,7 +16,10 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.roots.ContentFolderTypeProvider;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -81,6 +84,12 @@ class NonProjectDirectoryInfo extends DirectoryInfo {
     return null;
   }
 
+  @Nullable
+  @Override
+  public ContentFolder getContentFolder() {
+    return null;
+  }
+
   @Override
   public VirtualFile getLibraryClassRoot() {
     return null;
@@ -133,7 +142,7 @@ class NonProjectDirectoryInfo extends DirectoryInfo {
   }
 
   @Override
-  public int getSourceRootTypeId() {
-    return 0;
+  public ContentFolderTypeProvider getSourceRootTypeId() {
+    return null;
   }
 }

@@ -65,6 +65,12 @@ public interface ProjectFileIndex extends FileIndex {
   Module getModuleForFile(@Nonnull VirtualFile file, boolean honorExclusion);
 
   /**
+   * Return content folder if virtual file equal to content folder directory (don't check parent directories)
+   */
+  @Nullable
+  ContentFolder getContentFolder(@Nonnull VirtualFile file);
+
+  /**
    * Returns the order entries which contain the specified file (either in CLASSES or SOURCES).
    *
    * @param file the file for which the order entries are requested.

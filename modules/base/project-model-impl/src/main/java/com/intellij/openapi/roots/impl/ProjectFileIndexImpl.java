@@ -22,6 +22,7 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ProjectFileIndex;
@@ -112,6 +113,13 @@ public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIn
       return info.getModule();
     }
     return null;
+  }
+
+  @Nullable
+  @Override
+  public ContentFolder getContentFolder(@Nonnull VirtualFile file) {
+    DirectoryInfo info = getInfoForFileOrDirectory(file);
+    return info.getContentFolder();
   }
 
   @Override
