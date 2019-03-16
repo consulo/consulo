@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,78 +14,77 @@
  * limitations under the License.
  */
 
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Nov 15, 2001
- * Time: 5:14:35 PM
- * To change template for new interface use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package com.intellij.codeInspection.reference;
 
-import com.intellij.codeInspection.InspectionsBundle;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Key;
+import com.intellij.util.BitUtil;
+import com.intellij.util.ObjectUtils;
+import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public abstract class RefEntityImpl implements RefEntity {
-  private static final String NO_NAME = InspectionsBundle.message("inspection.reference.noname");
-  private RefEntityImpl myOwner;
-  protected ArrayList<RefEntity> myChildren;
+public abstract class RefEntityImpl implements RefEntity, WritableRefEntity {
+  private volatile WritableRefEntity myOwner;
+  protected List<RefEntity> myChildren;  // guarded by this
   private final String myName;
-  private THashMap myUserMap = null;
-  protected int myFlags = 0;
+  private Map<Key, Object> myUserMap;    // guarded by this
+  protected long myFlags; // guarded by this
   protected final RefManagerImpl myManager;
 
-  protected RefEntityImpl(String name, final RefManager manager) {
+  protected RefEntityImpl(@Nonnull String name, @Nonnull RefManager manager) {
     myManager = (RefManagerImpl)manager;
-    myName = name != null ? name : NO_NAME;
-    myOwner = null;
-    myChildren = null;
+    myName = myManager.internName(name);
   }
 
+  @Nonnull
   @Override
   public String getName() {
     return myName;
   }
 
+  @Nonnull
   @Override
   public String getQualifiedName() {
     return myName;
   }
 
+  @Nonnull
   @Override
-  public List<RefEntity> getChildren() {
-    return myChildren;
+  public synchronized List<RefEntity> getChildren() {
+    return ObjectUtils.notNull(myChildren, ContainerUtil.emptyList());
   }
 
   @Override
-  public RefEntity getOwner() {
+  public WritableRefEntity getOwner() {
     return myOwner;
   }
 
-  protected void setOwner(RefEntityImpl owner) {
+  @Override
+  public void setOwner(@Nullable final WritableRefEntity owner) {
     myOwner = owner;
   }
 
-  public void add(RefEntity child) {
-    if (myChildren == null) {
-      myChildren = new ArrayList<RefEntity>();
+  @Override
+  public synchronized void add(@Nonnull final RefEntity child) {
+    List<RefEntity> children = myChildren;
+    if (children == null) {
+      myChildren = children = new ArrayList<>(1);
     }
-
-    myChildren.add(child);
+    children.add(child);
     ((RefEntityImpl)child).setOwner(this);
   }
 
-  protected void removeChild(RefEntity child) {
+  @Override
+  public synchronized void removeChild(@Nonnull final RefEntity child) {
     if (myChildren != null) {
       myChildren.remove(child);
-      ((RefEntityImpl)child).setOwner(null);
+      ((WritableRefEntity)child).setOwner(null);
     }
   }
 
@@ -93,10 +92,10 @@ public abstract class RefEntityImpl implements RefEntity {
     return getName();
   }
 
- @Override
- @javax.annotation.Nullable
-  public <T> T getUserData(@Nonnull Key<T> key){
-    synchronized(this){
+  @Override
+  @Nullable
+  public <T> T getUserData(@Nonnull Key<T> key) {
+    synchronized (this) {
       if (myUserMap == null) return null;
       //noinspection unchecked
       return (T)myUserMap.get(key);
@@ -104,46 +103,36 @@ public abstract class RefEntityImpl implements RefEntity {
   }
 
   @Override
-  public void accept(final RefVisitor refVisitor) {
-    ApplicationManager.getApplication().runReadAction(new Runnable() {
-      @Override
-      public void run() {
-        refVisitor.visitElement(RefEntityImpl.this);
-      }
-    });
+  public void accept(@Nonnull final RefVisitor refVisitor) {
+    ApplicationManager.getApplication().runReadAction(() -> refVisitor.visitElement(this));
   }
 
   @Override
-  public <T> void putUserData(@Nonnull Key<T> key, T value){
-    synchronized(this){
-      if (myUserMap == null){
+  public <T> void putUserData(@Nonnull Key<T> key, T value) {
+    synchronized (this) {
+      Map<Key, Object> userMap = myUserMap;
+      if (userMap == null) {
         if (value == null) return;
-        myUserMap = new THashMap();
+        myUserMap = userMap = new THashMap<>();
       }
-      if (value != null){
-        //noinspection unchecked
-        myUserMap.put(key, value);
+      if (value != null) {
+        userMap.put(key, value);
       }
-      else{
-        myUserMap.remove(key);
-        if (myUserMap.isEmpty()){
+      else {
+        userMap.remove(key);
+        if (userMap.isEmpty()) {
           myUserMap = null;
         }
       }
     }
   }
 
-  public boolean checkFlag(int mask) {
-    return (myFlags & mask) != 0;
+  public synchronized boolean checkFlag(long mask) {
+    return BitUtil.isSet(myFlags, mask);
   }
 
-  public void setFlag(boolean b, int mask) {
-    if (b) {
-      myFlags |= mask;
-    }
-    else {
-      myFlags &= ~mask;
-    }
+  public synchronized void setFlag(final boolean value, final long mask) {
+    myFlags = BitUtil.set(myFlags, mask, value);
   }
 
   @Override
@@ -151,6 +140,7 @@ public abstract class RefEntityImpl implements RefEntity {
     return myName;
   }
 
+  @Nonnull
   @Override
   public RefManagerImpl getRefManager() {
     return myManager;

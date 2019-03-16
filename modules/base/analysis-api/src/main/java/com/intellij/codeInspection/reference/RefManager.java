@@ -1,27 +1,16 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2017 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInspection.reference;
 
 import com.intellij.analysis.AnalysisScope;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
+import com.intellij.psi.PsiNamedElement;
 import org.jdom.Element;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.util.List;
@@ -31,7 +20,6 @@ import java.util.List;
  *
  * @author anna
  * @see com.intellij.codeInspection.GlobalInspectionContext#getRefManager()
- * @since 6.0
  */
 public abstract class RefManager {
   /**
@@ -39,13 +27,14 @@ public abstract class RefManager {
    *
    * @param visitor the visitor to run.
    */
-  public abstract void iterate(RefVisitor visitor);
+  public abstract void iterate(@Nonnull RefVisitor visitor);
 
   /**
    * Returns the analysis scope for which the reference graph has been built.
    *
    * @return the analysis scope.
    */
+  @Nullable
   public abstract AnalysisScope getScope();
 
   /**
@@ -53,6 +42,7 @@ public abstract class RefManager {
    *
    * @return the project instance.
    */
+  @Nonnull
   public abstract Project getProject();
 
   /**
@@ -61,16 +51,17 @@ public abstract class RefManager {
    *
    * @return the node for the project.
    */
+  @Nonnull
   public abstract RefProject getRefProject();
 
   /**
    * Creates (if necessary) and returns the reference graph node for the specified module.
    *
    * @param module the module for which the reference graph node is requested.
-   * @return the node for the module, or null if <code>module</code> is null.
+   * @return the node for the module, or null if {@code module} is null.
    */
   @Nullable
-  public abstract RefModule getRefModule(Module module);
+  public abstract RefModule getRefModule(@Nullable Module module);
 
   /**
    * Creates (if necessary) and returns the reference graph node for the specified PSI element.
@@ -79,39 +70,66 @@ public abstract class RefManager {
    * @return the node for the element, or null if the element is not valid or does not have
    * a corresponding reference graph node type (is not a field, method, class or file).
    */
-  @javax.annotation.Nullable
-  public abstract RefElement getReference(PsiElement elem);
+  @Nullable
+  public abstract RefElement getReference(@Nullable PsiElement elem);
 
   /**
    * Creates (if necessary) and returns the reference graph node for the PSI element specified by its type and FQName.
    *
-   * @param type   {@link SmartRefElementPointer.FILE, etc.}
+   * @param type   {@link SmartRefElementPointer#FILE, etc.}
    * @param fqName fully qualified name for the element
    * @return the node for the element, or null if the element is not found or does not have
-   *         a corresponding reference graph node type.
+   * a corresponding reference graph node type.
    */
   @Nullable
   public abstract RefEntity getReference(String type, String fqName);
 
-  public abstract int getLastUsedMask();
+  public abstract long getLastUsedMask();
 
-  public abstract <T> T getExtension(Key<T> key);
+  public abstract <T> T getExtension(@Nonnull Key<T> key);
 
   @Nullable
-  public abstract String getType(final RefEntity ref);
+  public abstract String getType(@Nonnull RefEntity ref);
 
-  public abstract RefEntity getRefinedElement(final RefEntity ref);
+  @Nonnull
+  public abstract RefEntity getRefinedElement(@Nonnull RefEntity ref);
 
-  public abstract Element export(RefEntity entity, Element element, final int actualLine);
+  @Nullable
+  public Element export(@Nonnull RefEntity entity, @Nonnull Element parent, final int actualLine) {
+    Element element = export(entity, actualLine);
+    if (element == null) return null;
+    parent.addContent(element);
+    return element;
+  }
 
-  @javax.annotation.Nullable
-  public abstract String getGroupName(final RefElement entity);
+  @Nullable
+  public Element export(@Nonnull RefEntity entity, final int actualLine) {
+    throw new UnsupportedOperationException();
+  }
 
-  public abstract boolean belongsToScope(PsiElement psiElement);
+  @Nullable
+  public abstract String getGroupName(@Nonnull RefElement entity);
 
-  public abstract String getQualifiedName(RefEntity refEntity);
+  public abstract boolean belongsToScope(@Nullable PsiElement psiElement);
 
-  public abstract void removeRefElement(RefElement refElement, List<RefElement> deletedRefs);
+  @Nullable
+  public abstract String getQualifiedName(@Nullable RefEntity refEntity);
 
+  public abstract void removeRefElement(@Nonnull RefElement refElement, @Nonnull List<RefElement> deletedRefs);
+
+  @Nonnull
   public abstract PsiManager getPsiManager();
+
+  /**
+   * @return false if no {@link com.intellij.codeInspection.lang.RefManagerExtension} was registered for language and is not covered by default implementation for PsiClassOwner
+   * true, otherwise
+   */
+  public boolean isInGraph(VirtualFile file) {
+    return true;
+  }
+
+  @Nullable
+  public PsiNamedElement getContainerElement(@Nonnull PsiElement element) {
+    return null;
+  }
 }

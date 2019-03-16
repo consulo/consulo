@@ -18,6 +18,7 @@ package com.intellij.codeInspection.reference;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPsiElementPointer;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -25,7 +26,6 @@ import java.util.Collection;
  * A node in the reference graph corresponding to a PSI element.
  *
  * @author anna
- * @since 6.0
  */
 public interface RefElement extends RefEntity {
   /**
@@ -34,7 +34,7 @@ public interface RefElement extends RefEntity {
    * @return the node for the module, or null if the element is not valid or the module
    * was not found.
    */
-  @javax.annotation.Nullable
+  @Nullable
   RefModule getModule();
 
   /**
@@ -42,7 +42,14 @@ public interface RefElement extends RefEntity {
    *
    * @return the PSI element.
    */
-  PsiElement getElement();
+  default PsiElement getPsiElement() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Deprecated
+  default PsiElement getElement() {
+    return getPsiElement();
+  }
 
   SmartPsiElementPointer getPointer();
 

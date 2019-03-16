@@ -1,64 +1,88 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-/*
- * User: anna
- * Date: 20-Dec-2007
- */
 package com.intellij.codeInspection.lang;
 
+import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.reference.RefElement;
 import com.intellij.codeInspection.reference.RefEntity;
 import com.intellij.codeInspection.reference.RefVisitor;
 import com.intellij.lang.Language;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiNamedElement;
 import org.jdom.Element;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.stream.Stream;
+
 public interface RefManagerExtension<T> {
+  @Nonnull
   Key<T> getID();
 
+  @Nonnull
+  default Collection<Language> getLanguages() {
+    return Collections.singleton(getLanguage());
+  }
+
+  @Deprecated
+  @Nonnull
   Language getLanguage();
 
-  void iterate(RefVisitor visitor);
+  void iterate(@Nonnull RefVisitor visitor);
 
   void cleanup();
 
-  void removeReference(RefElement refElement);
+  void removeReference(@Nonnull RefElement refElement);
 
   @Nullable
-  RefElement createRefElement(PsiElement psiElement);
+  RefElement createRefElement(@Nonnull PsiElement psiElement);
 
-  @javax.annotation.Nullable
-  RefEntity getReference(final String type, final String fqName);
+  /**
+   * The method finds problem container (ex: method, class, file) that used to be shown as inspection view tree node.
+   * This method will be called if  {@link LocalInspectionTool#getProblemElement(PsiElement)} returns null or PsiFile instance for specific inspection tool.
+   *
+   * @param psiElement
+   * @return container element for given psiElement
+   */
+  @Nullable
+  default PsiNamedElement getElementContainer(@Nonnull PsiElement psiElement) {
+    return null;
+  }
 
-  @javax.annotation.Nullable
-  String getType(RefEntity entity);
+  @Nullable
+  RefEntity getReference(String type, String fqName);
 
-  RefEntity getRefinedElement(final RefEntity ref);
+  @Nullable
+  String getType(@Nonnull RefEntity entity);
 
-  void visitElement(final PsiElement element);
+  @Nonnull
+  RefEntity getRefinedElement(@Nonnull RefEntity ref);
 
-  @javax.annotation.Nullable
-  String getGroupName(final RefEntity entity);
+  void visitElement(@Nonnull PsiElement element);
 
-  boolean belongsToScope(final PsiElement psiElement);
+  @Nullable
+  String getGroupName(@Nonnull RefEntity entity);
 
-  void export(final RefEntity refEntity, final Element element);
+  boolean belongsToScope(@Nonnull PsiElement psiElement);
 
-  void onEntityInitialized(RefElement refEntity, PsiElement psiElement);
+  void export(@Nonnull RefEntity refEntity, @Nonnull Element element);
+
+  void onEntityInitialized(@Nonnull RefElement refEntity, @Nonnull PsiElement psiElement);
+
+  default boolean shouldProcessExternalFile(@Nonnull PsiFile file) {
+    return false;
+  }
+
+  @Nonnull
+  default Stream<? extends PsiElement> extractExternalFileImplicitReferences(@Nonnull PsiFile psiFile) {
+    return Stream.empty();
+  }
+
+  default void markExternalReferencesProcessed(@Nonnull RefElement file) {
+
+  }
 }

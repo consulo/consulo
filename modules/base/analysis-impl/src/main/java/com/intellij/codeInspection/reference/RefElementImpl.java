@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,46 +14,33 @@
  * limitations under the License.
  */
 
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Oct 21, 2001
- * Time: 4:28:53 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package com.intellij.codeInspection.reference;
 
 import com.intellij.codeInspection.SuppressionUtil;
-import consulo.awt.TargetAWT;
-import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
+import com.intellij.util.ObjectUtils;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.awt.TargetAWT;
+import consulo.ide.IconDescriptorUpdaters;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import javax.swing.*;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
-public abstract class RefElementImpl extends RefEntityImpl implements RefElement {
-  private static final ArrayList<RefElement> EMPTY_REFERNCES_LIST = new ArrayList<RefElement>(0);
-  @Deprecated
-  public static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.reference.RefElement");
-
-  private static final Logger LOGGER = Logger.getInstance(RefElementImpl.class);
+public abstract class RefElementImpl extends RefEntityImpl implements RefElement, WritableRefElement {
+  protected static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.reference.RefElement");
 
   private static final int IS_ENTRY_MASK = 0x80;
   private static final int IS_PERMANENT_ENTRY_MASK = 0x100;
@@ -61,56 +48,55 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
 
   private final SmartPsiElementPointer myID;
 
-  private ArrayList<RefElement> myOutReferences;
-  private ArrayList<RefElement> myInReferences;
+  private List<RefElement> myOutReferences; // guarded by this
+  private List<RefElement> myInReferences; // guarded by this
 
-  private String[] mySuppressions = null;
+  private String[] mySuppressions;
 
-  private boolean myIsDeleted ;
-  private final Module myModule;
+  private volatile boolean myIsDeleted;
   protected static final int IS_REACHABLE_MASK = 0x40;
 
-  protected RefElementImpl(String name, RefElement owner) {
+  protected RefElementImpl(@Nonnull String name, @Nonnull RefElement owner) {
     super(name, owner.getRefManager());
     myID = null;
     myFlags = 0;
-    myModule = ModuleUtilCore.findModuleForPsiElement(owner.getElement());
   }
 
   protected RefElementImpl(PsiFile file, RefManager manager) {
     this(file.getName(), file, manager);
   }
 
-  protected RefElementImpl(String name, PsiElement element, RefManager manager) {
+  protected RefElementImpl(@Nonnull String name, @Nonnull PsiElement element, @Nonnull RefManager manager) {
     super(name, manager);
     myID = SmartPointerManager.getInstance(manager.getProject()).createSmartPsiElementPointer(element);
     myFlags = 0;
-    myModule = ModuleUtilCore.findModuleForPsiElement(element);
+  }
+
+  protected boolean isDeleted() {
+    return myIsDeleted;
   }
 
   @Override
   public boolean isValid() {
     if (myIsDeleted) return false;
-    return ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
-      @Override
-      public Boolean compute() {
+    return ReadAction.compute(() -> {
+      if (getRefManager().getProject().isDisposed()) return false;
 
-        final PsiFile file = myID.getContainingFile();
-        //no need to check resolve in offline mode
-        if (ApplicationManager.getApplication().isHeadlessEnvironment()) {
-          return file != null && file.isPhysical();
-        }
-
-        final PsiElement element = getElement();
-        return element != null && element.isPhysical();
+      final PsiFile file = myID.getContainingFile();
+      //no need to check resolve in offline mode
+      if (ApplicationManager.getApplication().isHeadlessEnvironment()) {
+        return file != null && file.isPhysical();
       }
-    }).booleanValue();
+
+      final PsiElement element = getPsiElement();
+      return element != null && element.isPhysical();
+    });
   }
 
   @Override
   @Nullable
   public Icon getIcon(final boolean expanded) {
-    final PsiElement element = getElement();
+    final PsiElement element = getPsiElement();
     if (element != null && element.isValid()) {
       return TargetAWT.to(IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS));
     }
@@ -119,7 +105,8 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
 
   @Override
   public RefModule getModule() {
-    return myManager.getRefModule(myModule);
+    final RefEntity owner = getOwner();
+    return owner instanceof RefElement ? ((RefElement)owner).getModule() : null;
   }
 
   @Override
@@ -129,7 +116,7 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
 
   @Override
   @Nullable
-  public PsiElement getElement() {
+  public PsiElement getPsiElement() {
     return myID.getElement();
   }
 
@@ -155,6 +142,10 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
     return checkFlag(IS_REACHABLE_MASK);
   }
 
+  public void setReachable(boolean reachable) {
+    setFlag(reachable, IS_REACHABLE_MASK);
+  }
+
   @Override
   public boolean isReferenced() {
     return !getInReferences().isEmpty();
@@ -170,37 +161,35 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
 
   @Override
   @Nonnull
-  public Collection<RefElement> getOutReferences() {
-    if (myOutReferences == null){
-      return EMPTY_REFERNCES_LIST;
-    }
-    return myOutReferences;
+  public synchronized Collection<RefElement> getOutReferences() {
+    return ObjectUtils.notNull(myOutReferences, ContainerUtil.emptyList());
   }
 
   @Override
   @Nonnull
-  public Collection<RefElement> getInReferences() {
-    if (myInReferences == null){
-      return EMPTY_REFERNCES_LIST;
-    }
-    return myInReferences;
+  public synchronized Collection<RefElement> getInReferences() {
+    return ObjectUtils.notNull(myInReferences, ContainerUtil.emptyList());
   }
 
-  public void addInReference(RefElement refElement) {
-    if (!getInReferences().contains(refElement)) {
-      if (myInReferences == null){
-        myInReferences = new ArrayList<RefElement>(1);
-      }
-      myInReferences.add(refElement);
+  @Override
+  public synchronized void addInReference(RefElement refElement) {
+    List<RefElement> inReferences = myInReferences;
+    if (inReferences == null) {
+      myInReferences = inReferences = new ArrayList<>(1);
+    }
+    if (!inReferences.contains(refElement)) {
+      inReferences.add(refElement);
     }
   }
 
-  public void addOutReference(RefElement refElement) {
-    if (!getOutReferences().contains(refElement)) {
-      if (myOutReferences == null){
-        myOutReferences = new ArrayList<RefElement>(1);
-      }
-      myOutReferences.add(refElement);
+  @Override
+  public synchronized void addOutReference(RefElement refElement) {
+    List<RefElement> outReferences = myOutReferences;
+    if (outReferences == null) {
+      myOutReferences = outReferences = new ArrayList<>(1);
+    }
+    if (!outReferences.contains(refElement)) {
+      outReferences.add(refElement);
     }
   }
 
@@ -236,7 +225,7 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
   public void referenceRemoved() {
     myIsDeleted = true;
     if (getOwner() != null) {
-      ((RefEntityImpl)getOwner()).removeChild(this);
+      getOwner().removeChild(this);
     }
 
     for (RefElement refCallee : getOutReferences()) {
@@ -249,35 +238,30 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
   }
 
   @Nullable
-  public URL getURL() {
-    try {
-      final PsiElement element = getElement();
-      if (element == null) return null;
-      final PsiFile containingFile = element.getContainingFile();
-      if (containingFile == null) return null;
-      final VirtualFile virtualFile = containingFile.getVirtualFile();
-      if (virtualFile == null) return null;
-      return new URL(virtualFile.getUrl() + "#" + element.getTextOffset());
-    } catch (MalformedURLException e) {
-      LOGGER.error(e);
-    }
-
-    return null;
+  public String getURL() {
+    final PsiElement element = getPsiElement();
+    if (element == null || !element.isPhysical()) return null;
+    final PsiFile containingFile = element.getContainingFile();
+    if (containingFile == null) return null;
+    final VirtualFile virtualFile = containingFile.getVirtualFile();
+    if (virtualFile == null) return null;
+    return virtualFile.getUrl() + "#" + element.getTextOffset();
   }
 
   protected abstract void initialize();
 
+  @Override
   public void addSuppression(final String text) {
     mySuppressions = text.split("[, ]");
   }
 
-  public boolean isSuppressed(final String... toolId) {
+  public boolean isSuppressed(@Nonnull String... toolId) {
     if (mySuppressions != null) {
       for (@NonNls String suppression : mySuppressions) {
         for (String id : toolId) {
           if (suppression.equals(id)) return true;
         }
-        if (suppression.equalsIgnoreCase(SuppressionUtil.ALL)){
+        if (suppression.equalsIgnoreCase(SuppressionUtil.ALL)) {
           return true;
         }
       }

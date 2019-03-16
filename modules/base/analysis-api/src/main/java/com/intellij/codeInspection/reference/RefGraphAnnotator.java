@@ -16,13 +16,13 @@
 package com.intellij.codeInspection.reference;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.psi.PsiElement;
 
 /**
  * Callback which gets called while a reference graph is being built during a global
  * inspection run.
  *
  * @author anna
- * @since 6.0
  * @see com.intellij.codeInspection.GlobalInspectionTool#getAnnotator
  */
 public abstract class RefGraphAnnotator {
@@ -40,7 +40,7 @@ public abstract class RefGraphAnnotator {
    *
    * @param refElement the element the references to which have been collected.
    */
-  public void onReferencesBuild(RefElement refElement){
+  public void onReferencesBuild(RefElement refElement) {
   }
 
   /**
@@ -48,12 +48,10 @@ public abstract class RefGraphAnnotator {
    *
    * @param refWhat                        the referenced element.
    * @param refFrom                        the referencing element.
-   * @param referencedFromClassInitializer if true, <code>refFrom</code> is a class and the reference
+   * @param referencedFromClassInitializer if true, {@code refFrom} is a class and the reference
    *                                       has been found in its initializer block.
    */
-  public void onMarkReferenced(RefElement refWhat,
-                               RefElement refFrom,
-                               boolean referencedFromClassInitializer) {
+  public void onMarkReferenced(RefElement refWhat, RefElement refFrom, boolean referencedFromClassInitializer) {
   }
 
   /**
@@ -61,17 +59,40 @@ public abstract class RefGraphAnnotator {
    *
    * @param refWhat                        the referenced element.
    * @param refFrom                        the referencing element.
-   * @param referencedFromClassInitializer if true, <code>refFrom</code> is a class and the reference
+   * @param referencedFromClassInitializer if true, {@code refFrom} is a class and the reference
+   *                                       has been found in its initializer block.
+   * @param forReading                     used for reading
+   * @param forWriting                     used for writing
+   * @param referenceElement               reference element in refFrom
+   */
+  public void onMarkReferenced(RefElement refWhat, RefElement refFrom, boolean referencedFromClassInitializer, boolean forReading, boolean forWriting, PsiElement referenceElement) {
+    onMarkReferenced(refWhat, refFrom, referencedFromClassInitializer, forReading, forWriting);
+  }
+
+  /**
+   * Called when a reference to the specified element has been found.
+   *
+   * @param refWhat                        the referenced element.
+   * @param refFrom                        the referencing element.
+   * @param referencedFromClassInitializer if true, {@code refFrom} is a class and the reference
    *                                       has been found in its initializer block.
    * @param forReading                     used for reading
    * @param forWriting                     used for writing
    */
-  public void onMarkReferenced(RefElement refWhat,
-                               RefElement refFrom,
-                               boolean referencedFromClassInitializer,
-                               boolean forReading,
-                               boolean forWriting) {
+  public void onMarkReferenced(RefElement refWhat, RefElement refFrom, boolean referencedFromClassInitializer, boolean forReading, boolean forWriting) {
     onMarkReferenced(refWhat, refFrom, referencedFromClassInitializer);
+  }
+
+
+  /**
+   * Called when 'what' element doesn't belong to the selected scope.
+   *
+   * @param what                           the referenced element
+   * @param from                           the referencing element
+   * @param referencedFromClassInitializer if true, {@code refFrom} is a class and the reference
+   *                                       has been found in its initializer block.
+   */
+  public void onMarkReferenced(PsiElement what, PsiElement from, boolean referencedFromClassInitializer) {
   }
 
 }
