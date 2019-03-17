@@ -169,7 +169,7 @@ public class CopyrightManager implements PersistentStateComponent<Element> {
 
   @Override
   public Element getState() {
-    final Element e = new Element("state");
+    final Element e = new Element("settings");
     writeExternal(e);
     return e;
   }
