@@ -23,6 +23,7 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.AccessRule;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 
@@ -91,7 +92,7 @@ public class ProjectRunConfigurationManager implements PersistentStateComponent<
       for (final RunConfiguration configuration : allConfigurations) {
         final RunnerAndConfigurationSettings settings = myManager.getSettings(allConfigurations.get(0));
         if (!(configuration instanceof UnknownRunConfiguration)) {
-          myManager.setSelectedConfiguration(settings);
+          AccessRule.read(() -> myManager.setSelectedConfiguration(settings));
           break;
         }
       }
