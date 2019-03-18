@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 
-class RefModuleImpl extends RefEntityImpl implements RefModule {
+public class RefModuleImpl extends RefEntityImpl implements RefModule {
   private final Module myModule;
 
   RefModuleImpl(@Nonnull Module module, @Nonnull RefManager manager) {
