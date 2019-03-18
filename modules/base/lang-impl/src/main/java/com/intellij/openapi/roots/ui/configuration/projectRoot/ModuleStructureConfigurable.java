@@ -142,12 +142,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
   }
 
   @Override
-  @Nonnull
-  protected List<? extends AnAction> createCopyActions(boolean fromPopup) {
-    return Collections.emptyList();//singletonList(new MyCopyAction());
-  }
-
-  @Override
   protected void loadTree() {
     createProjectNodes();
 
@@ -225,12 +219,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     if (myProject.isDefault()) {  //do not add modules node in case of template project
       myRoot.removeAllChildren();
     }
-
-    //final LibraryTable table = LibraryTablesRegistrar.getInstance().getLibraryTable(myProject);
-    //final LibrariesModifiableModel projectLibrariesProvider = new LibrariesModifiableModel(table);
-    //myLevel2Providers.put(LibraryTablesRegistrar.PROJECT_LEVEL, projectLibrariesProvider);
-    //
-    //myProjectNode.add(myLevel2Nodes.get(LibraryTablesRegistrar.PROJECT_LEVEL));
   }
 
 
@@ -584,7 +572,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     }
   }
 
-
   private class MyGroupAction extends ToggleAction implements DumbAware {
 
     public MyGroupAction() {
@@ -669,7 +656,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     };
   }
 
-
   @Override
   protected boolean removeModule(final Module module) {
     ModulesConfigurator modulesConfigurator = myContext.myModulesConfigurator;
@@ -686,106 +672,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
   protected String getEmptySelectionString() {
     return ProjectBundle.message("empty.module.selection.string");
   }
-
-  /*private class MyCopyAction extends AnAction implements DumbAware {
-    private MyCopyAction() {
-      super(CommonBundle.message("button.copy"), CommonBundle.message("button.copy"), AllIcons.Actions.Copy);
-    }
-
-    @Override
-    public void actionPerformed(final AnActionEvent e) {
-      final NamedConfigurable namedConfigurable = getSelectedConfigurable();
-      if (namedConfigurable instanceof ModuleConfigurable) {
-        try {
-          final ModuleEditor moduleEditor = ((ModuleConfigurable)namedConfigurable).getModuleEditor();
-          final String modulePresentation = IdeBundle.message("project.new.wizard.module.identification");
-          final NamePathComponent component = new NamePathComponent(IdeBundle.message("label.module.name"), IdeBundle.message("label.component.file.location", StringUtil.capitalize(modulePresentation)), IdeBundle.message("title.select.project.file.directory", modulePresentation),
-                                                                    IdeBundle.message("description.select.project.file.directory", StringUtil.capitalize(modulePresentation)), true,
-                                                                    false);
-          final Module originalModule = moduleEditor.getModule();
-          if (originalModule != null) {
-            component.setPath(FileUtil.toSystemDependentName(originalModule.getModuleDirPath()));
-          }
-
-          final DialogBuilder dialogBuilder = new DialogBuilder(myTree);
-          dialogBuilder.setTitle(ProjectBundle.message("copy.module.dialog.title"));
-          dialogBuilder.setCenterPanel(component);
-          dialogBuilder.setPreferredFocusComponent(component.getNameComponent());
-          dialogBuilder.setOkOperation(new Runnable() {
-            @Override
-            public void run() {
-              final String name = component.getNameValue();
-              if (name.length() == 0) {
-                Messages.showErrorDialog(ProjectBundle.message("enter.module.copy.name.error.message"), CommonBundle.message("title.error"));
-                return;
-              }
-              if (getModule(name) != null) {
-                Messages.showErrorDialog(ProjectBundle.message("module.0.already.exists.error.message", name), CommonBundle.message("title.error"));
-                return;
-              }
-
-              if (component.getPath().length() == 0) {
-                Messages.showErrorDialog(IdeBundle.message("prompt.enter.project.file.location", modulePresentation),
-                                         CommonBundle.message("title.error"));
-                return;
-              }
-              if (!ProjectWizardUtil
-                 .createDirectoryIfNotExists(IdeBundle.message("directory.project.file.directory", modulePresentation), component.getPath(),
-                                             true)) {
-                Messages.showErrorDialog(ProjectBundle.message("path.0.is.invalid.error.message", component.getPath()), CommonBundle.message("title.error"));
-                 return;
-              }
-              dialogBuilder.getDialogWrapper().close(DialogWrapper.OK_EXIT_CODE);
-            }
-          });
-          if (dialogBuilder.show() != DialogWrapper.OK_EXIT_CODE) return;
-
-          final ModifiableRootModel rootModel = moduleEditor.getModifiableRootModel();
-          final String path = component.getPath();
-          final ModuleBuilder builder = new ModuleBuilder() {
-            @Override
-            public void setupRootModel(final ModifiableRootModel modifiableRootModel) throws ConfigurationException {
-              for (OrderEntry entry : rootModel.getOrderEntries()) {
-                if (entry instanceof SdkOrderEntry) continue;
-                if (entry instanceof ModuleSourceOrderEntry) continue;
-                if (entry instanceof ClonableOrderEntry) {
-                  modifiableRootModel.addOrderEntry(((ClonableOrderEntry)entry).cloneEntry((RootModelImpl)modifiableRootModel,
-                                                                                           (ProjectRootManagerImpl)ProjectRootManager
-                                                                                             .getInstance(myProject)));
-                }
-              }
-
-              VirtualFile content = LocalFileSystem.getInstance().findFileByPath(component.getPath());
-              if (content == null) {
-                content = LocalFileSystem.getInstance().refreshAndFindFileByPath(component.getPath());
-              }
-              modifiableRootModel.addContentEntry(content);
-            }
-          };
-          builder.setName(component.getNameValue());
-          builder.setModuleDirPath(path);
-          final Module module = myContext.myModulesConfigurator.addModule(builder);
-          if (module != null) {
-            addModuleNode(module);
-          }
-        }
-        catch (Exception e1) {
-          LOG.error(e1);
-        }
-      }
-    }
-
-    @Override
-    public void update(final AnActionEvent e) {
-      TreePath[] selectionPaths = myTree.getSelectionPaths();
-      if (selectionPaths == null || selectionPaths.length != 1) {
-        e.getPresentation().setEnabled(false);
-      } else {
-        final NamedConfigurable selectedConfigurable = getSelectedConfigurable();
-        e.getPresentation().setEnabled(selectedConfigurable instanceof ModuleConfigurable);
-      }
-    }
-  }     */
 
   private class AddModuleAction extends AnAction implements DumbAware {
 
