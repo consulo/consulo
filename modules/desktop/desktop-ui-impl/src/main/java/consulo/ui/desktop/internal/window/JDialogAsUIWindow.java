@@ -22,7 +22,6 @@ import consulo.ui.Window;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
-import java.awt.Frame;
 
 /**
  * @author VISTALL
@@ -33,7 +32,9 @@ public class JDialogAsUIWindow extends JDialog implements FromSwingWindowWrapper
   private WindowOverAWTWindow myWindowOverAWTWindow;
 
   public JDialogAsUIWindow(Window owner, boolean modal) {
-    super((Frame)TargetAWT.to(owner), modal);
+    super(TargetAWT.to(owner), (String) null);
+
+    setModal(modal);
 
     myWindowOverAWTWindow = new WindowOverAWTWindow(this) {
       @RequiredUIAccess
