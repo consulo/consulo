@@ -89,9 +89,8 @@ public class XmlSerializer {
   @Nullable
   public static <T> T deserialize(URL url, Class<T> aClass) throws XmlSerializationException {
     try {
-      Document document = JDOMUtil.loadDocument(url);
-      document = JDOMXIncluder.resolve(document, url.toExternalForm());
-      return deserialize(document.getRootElement(), aClass);
+      Element rootElement = JDOMUtil.loadDocument(url).detachRootElement();
+      return deserialize(rootElement, aClass);
     }
     catch (IOException e) {
       throw new XmlSerializationException(e);

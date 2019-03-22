@@ -27,7 +27,6 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.containers.SmartHashSet;
 import com.intellij.util.messages.MessageBus;
-import com.intellij.util.xmlb.JDOMXIncluder;
 import consulo.components.impl.stores.storage.StateStorageManager.ExternalizationSession;
 import gnu.trove.THashMap;
 import org.jdom.Element;
@@ -236,7 +235,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     }
 
     try {
-      Element documentElement = JDOMXIncluder.resolve(JDOMUtil.loadDocument(url), url.toExternalForm()).detachRootElement();
+      Element documentElement = JDOMUtil.loadDocument(url).detachRootElement();
 
       PathMacroManager pathMacroManager = getPathMacroManagerForDefaults();
       if (pathMacroManager != null) {
