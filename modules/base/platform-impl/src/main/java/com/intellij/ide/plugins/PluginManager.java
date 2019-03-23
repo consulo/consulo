@@ -36,6 +36,7 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.Exported;
 import consulo.application.ApplicationProperties;
 import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.NonNls;
@@ -205,6 +206,7 @@ public class PluginManager extends PluginManagerCore {
   }
 
   @Nullable
+  @Exported
   public static File getPluginPath(@Nonnull Class<?> pluginClass) {
     ClassLoader temp = pluginClass.getClassLoader();
     assert temp instanceof PluginClassLoader : "classloader is not plugin";

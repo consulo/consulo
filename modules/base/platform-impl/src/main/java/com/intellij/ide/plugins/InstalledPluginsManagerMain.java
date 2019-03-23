@@ -35,13 +35,12 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.io.ZipUtil;
 import com.intellij.util.ui.StatusText;
-import consulo.ui.RequiredUIAccess;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.ide.plugins.AvailablePluginsDialog;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -49,8 +48,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * User: anna
@@ -125,20 +124,18 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
 
   @Nullable
   public static IdeaPluginDescriptorImpl loadDescriptionFromJar(final File file) throws IOException {
-    IdeaPluginDescriptorImpl descriptor = PluginManagerCore.loadDescriptorFromJar(file, false);
-    if (descriptor == null) {
-      if (file.getName().endsWith(".zip")) {
-        final File outputDir = FileUtil.createTempDirectory("plugin", "");
-        try {
-          ZipUtil.extract(file, outputDir, null);
-          final File[] files = outputDir.listFiles();
-          if (files != null && files.length == 1) {
-            descriptor = PluginManagerCore.loadDescriptor(files[0], PluginManagerCore.PLUGIN_XML, false);
-          }
+    IdeaPluginDescriptorImpl descriptor = null;
+    if (file.getName().endsWith(".zip")) {
+      final File outputDir = FileUtil.createTempDirectory("plugin", "");
+      try {
+        ZipUtil.extract(file, outputDir, null);
+        final File[] files = outputDir.listFiles();
+        if (files != null && files.length == 1) {
+          descriptor = PluginManagerCore.loadDescriptor(files[0], PluginManagerCore.PLUGIN_XML, false, false);
         }
-        finally {
-          FileUtil.delete(outputDir);
-        }
+      }
+      finally {
+        FileUtil.delete(outputDir);
       }
     }
     return descriptor;
@@ -162,11 +159,9 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
       }
     }
     if (!notInstalled.isEmpty()) {
-      Messages.showWarningDialog("Plugin " +
-                                 pluginDescriptor.getName() +
-                                 " depends on unknown plugin" +
-                                 (notInstalled.size() > 1 ? "s " : " ") +
-                                 StringUtil.join(notInstalled, PluginId::toString, ", "), CommonBundle.getWarningTitle());
+      Messages.showWarningDialog(
+              "Plugin " + pluginDescriptor.getName() + " depends on unknown plugin" + (notInstalled.size() > 1 ? "s " : " ") + StringUtil.join(notInstalled, PluginId::toString, ", "),
+              CommonBundle.getWarningTitle());
     }
     if (!disabledIds.isEmpty()) {
       final Set<IdeaPluginDescriptor> dependencies = new HashSet<>();
@@ -201,8 +196,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
     myPluginTable = new PluginTable(myPluginsModel);
     myPluginTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-    JScrollPane installedScrollPane = ScrollPaneFactory
-            .createScrollPane(myPluginTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    JScrollPane installedScrollPane = ScrollPaneFactory.createScrollPane(myPluginTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     myPluginTable.registerKeyboardAction(e -> {
       final int column = InstalledPluginsTableModel.getCheckboxColumn();
       final int[] selectedRows = myPluginTable.getSelectedRows();

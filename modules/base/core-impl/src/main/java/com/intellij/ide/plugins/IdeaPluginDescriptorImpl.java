@@ -19,7 +19,6 @@ import com.intellij.AbstractBundle;
 import com.intellij.CommonBundle;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
@@ -28,6 +27,7 @@ import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.NullableLazyValue;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
@@ -69,7 +69,8 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   private String myVendorUrl;
   private String myCategory;
   private String url;
-  private File myPath;
+  private final File myPath;
+  private final boolean myIsPreInstalled;
   private PluginId[] myDependencies = PluginId.EMPTY_ARRAY;
   private PluginId[] myOptionalDependencies = PluginId.EMPTY_ARRAY;
   private Map<PluginId, String> myOptionalConfigs;
@@ -86,14 +87,12 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   @Nullable
   private MultiMap<ExtensionAreaId, Element> myExtensionsPoints;
   private String myDescriptionChildText;
-  private String myDownloadCounter;
-  private long myDate;
   private boolean myEnabled = true;
   private Boolean mySkipped;
-  private List<String> myModules = null;
 
-  public IdeaPluginDescriptorImpl(@Nonnull File pluginPath) {
+  public IdeaPluginDescriptorImpl(@Nonnull File pluginPath, boolean isPreInstalled) {
     myPath = pluginPath;
+    myIsPreInstalled = isPreInstalled;
   }
 
   @Nullable
@@ -130,14 +129,6 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   @Override
   public File getPath() {
     return myPath;
-  }
-
-  public void setPath(@Nonnull File path) {
-    myPath = path;
-  }
-
-  public void setName(String name) {
-    myName = name;
   }
 
   public void readExternal(@Nonnull Document document, @Nonnull URL url) throws InvalidDataException, FileNotFoundException {
@@ -337,10 +328,6 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     return myVendor;
   }
 
-  public void setVendor(final String val) {
-    myVendor = val;
-  }
-
   @Override
   public String getVersion() {
     return myVersion;
@@ -384,36 +371,16 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     return myExtensions;
   }
 
-  @SuppressWarnings({"HardCodedStringLiteral"})
   @Nonnull
   public List<File> getClassPath() {
-    // special hack for unit test loader
-    if (PluginManagerCore.UNIT_TEST_PLUGIN.equals(getPluginId())) {
-      final List<File> result = new ArrayList<>();
-      String testClasspath = System.getProperty("consulo.test.classpath");
-      if (!StringUtil.isEmpty(testClasspath)) {
-        List<String> paths = StringUtil.split(testClasspath, ";");
-        for (String path : paths) {
-          result.add(new File(path));
-        }
-      }
-      return result;
-    }
-
     if (myPath.isDirectory()) {
       final List<File> result = new ArrayList<>();
-      final File classesDir = new File(myPath, "classes");
-
-      if (classesDir.exists()) {
-        result.add(classesDir);
-      }
 
       final File[] files = new File(myPath, "lib").listFiles();
       if (files != null && files.length > 0) {
         for (final File f : files) {
           if (f.isFile()) {
-            final String name = f.getName();
-            if (StringUtil.endsWithIgnoreCase(name, ".jar") || StringUtil.endsWithIgnoreCase(name, ".zip")) {
+            if (FileUtil.isJarOrZip(f)) {
               result.add(f);
             }
           }
@@ -453,26 +420,14 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     return myVendorEmail;
   }
 
-  public void setVendorEmail(final String val) {
-    myVendorEmail = val;
-  }
-
   @Override
   public String getVendorUrl() {
     return myVendorUrl;
   }
 
-  public void setVendorUrl(final String val) {
-    myVendorUrl = val;
-  }
-
   @Override
   public String getUrl() {
     return url;
-  }
-
-  public void setUrl(final String val) {
-    url = val;
   }
 
   @Override
@@ -519,31 +474,13 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     return myId;
   }
 
-  /*
-     This setter was explicitly defined to be able to set downloads count for a
-     descriptor outside its loading from the xml file since this information
-     is available only from the site.
-  */
-  public void setDownloadsCount(String downloadsCount) {
-    myDownloadCounter = downloadsCount;
-  }
-
   @Override
   public String getDownloads() {
-    return myDownloadCounter;
+    return null;
   }
 
   public long getDate() {
-    return myDate;
-  }
-
-  /*
-     This setter was explicitly defined to be able to set date for a
-     descriptor outside its loading from the xml file since this information
-     is available only from the site.
-  */
-  public void setDate(long date) {
-    myDate = date;
+    return 0;
   }
 
   @Override
@@ -567,14 +504,6 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     }
 
     return CommonBundle.messageOrDefault(bundle, createDescriptionKey(myId), myDescriptionChildText == null ? "" : myDescriptionChildText);
-  }
-
-  public void setId(PluginId id) {
-    myId = id;
-  }
-
-  public void setDependencies(PluginId[] dependencies) {
-    myDependencies = dependencies;
   }
 
   @Override
@@ -637,19 +566,6 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
 
   @Override
   public boolean isBundled() {
-    String path;
-    try {
-      //to avoid paths like this /home/kb/IDEA/bin/../config/plugins/APlugin
-      path = getPath().getCanonicalPath();
-    }
-    catch (IOException e) {
-      path = getPath().getAbsolutePath();
-    }
-    return path.startsWith(PathManager.getPreInstalledPluginsPath());
-  }
-
-  @Nullable
-  public List<String> getModules() {
-    return myModules;
+    return myIsPreInstalled;
   }
 }
