@@ -17,7 +17,7 @@ package com.intellij.ide.plugins;
 
 import com.intellij.ide.ClassUtilCore;
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.plugins.cl.PluginClassLoader;
+import com.intellij.ide.plugins.cl.IdeaPluginClassLoader;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.Main;
 import com.intellij.notification.Notification;
@@ -209,8 +209,8 @@ public class PluginManager extends PluginManagerCore {
   @Exported
   public static File getPluginPath(@Nonnull Class<?> pluginClass) {
     ClassLoader temp = pluginClass.getClassLoader();
-    assert temp instanceof PluginClassLoader : "classloader is not plugin";
-    PluginClassLoader classLoader = (PluginClassLoader)temp;
+    assert temp instanceof IdeaPluginClassLoader : "classloader is not plugin";
+    IdeaPluginClassLoader classLoader = (IdeaPluginClassLoader)temp;
     PluginId pluginId = classLoader.getPluginId();
     IdeaPluginDescriptor plugin = getPlugin(pluginId);
     assert plugin != null : "plugin is not found";

@@ -25,7 +25,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.ide.plugins.cl.PluginClassLoader;
+import com.intellij.ide.plugins.cl.IdeaPluginClassLoader;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.Application;
@@ -200,8 +200,8 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
     IdeaPluginDescriptor pluginDescriptor = null;
     ClassLoader classLoader = aClass.getClassLoader();
 
-    if(classLoader instanceof PluginClassLoader) {
-      pluginDescriptor = PluginManager.getPlugin(((PluginClassLoader)classLoader).getPluginId());
+    if(classLoader instanceof IdeaPluginClassLoader) {
+      pluginDescriptor = PluginManager.getPlugin(((IdeaPluginClassLoader)classLoader).getPluginId());
     }
 
     if (pluginDescriptor != null && !PluginManagerCore.CORE_PLUGIN.equals(pluginDescriptor.getPluginId())) {

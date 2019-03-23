@@ -35,13 +35,13 @@ import java.util.*;
  * @author Eugene Zhuravlev
  * @since 6.03.2003
  */
-public class PluginClassLoader extends UrlClassLoader {
+public class IdeaPluginClassLoader extends UrlClassLoader {
   private final ClassLoader[] myParents;
   private final PluginId myPluginId;
   private final String myPluginVersion;
   private final File myLibDirectory;
 
-  public PluginClassLoader(@Nonnull List<URL> urls, @Nonnull ClassLoader[] parents, PluginId pluginId, String version, File pluginRoot) {
+  public IdeaPluginClassLoader(@Nonnull List<URL> urls, @Nonnull ClassLoader[] parents, PluginId pluginId, String version, File pluginRoot) {
     super(build().urls(urls).allowLock().useCache());
     myParents = parents;
     myPluginId = pluginId;
@@ -86,8 +86,8 @@ public class PluginClassLoader extends UrlClassLoader {
         continue;
       }
 
-      if (parent instanceof PluginClassLoader) {
-        Class c = ((PluginClassLoader)parent).tryLoadingClass(name, false, visited);
+      if (parent instanceof IdeaPluginClassLoader) {
+        Class c = ((IdeaPluginClassLoader)parent).tryLoadingClass(name, false, visited);
         if (c != null) {
           return c;
         }
@@ -179,7 +179,7 @@ public class PluginClassLoader extends UrlClassLoader {
       return findResource != null ? (URL)findResource.invoke(cl, resourceName) : null;
     }
     catch (Exception e) {
-      Logger.getInstance(PluginClassLoader.class).error(e);
+      Logger.getInstance(IdeaPluginClassLoader.class).error(e);
       return null;
     }
   }
@@ -191,7 +191,7 @@ public class PluginClassLoader extends UrlClassLoader {
       return e;
     }
     catch (Exception e) {
-      Logger.getInstance(PluginClassLoader.class).error(e);
+      Logger.getInstance(IdeaPluginClassLoader.class).error(e);
       return null;
     }
   }

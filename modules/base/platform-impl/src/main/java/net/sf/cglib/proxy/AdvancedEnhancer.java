@@ -16,7 +16,7 @@
 package net.sf.cglib.proxy;
 
 import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.ide.plugins.cl.PluginClassLoader;
+import com.intellij.ide.plugins.cl.IdeaPluginClassLoader;
 import com.intellij.util.ReflectionUtil;
 import net.sf.cglib.asm.$ClassVisitor;
 import net.sf.cglib.asm.$Label;
@@ -367,8 +367,8 @@ public class AdvancedEnhancer extends AbstractClassGenerator {
     if (interfaces != null && interfaces.length > 0) {
       for (final Class anInterface : interfaces) {
         final ClassLoader loader = anInterface.getClassLoader();
-        if (loader instanceof PluginClassLoader) {
-          final int order = PluginManagerCore.getPluginLoadingOrder(((PluginClassLoader)loader).getPluginId());
+        if (loader instanceof IdeaPluginClassLoader) {
+          final int order = PluginManagerCore.getPluginLoadingOrder(((IdeaPluginClassLoader)loader).getPluginId());
           if (maxIndex < order) {
             maxIndex = order;
             bestLoader = loader;
@@ -382,7 +382,7 @@ public class AdvancedEnhancer extends AbstractClassGenerator {
     ClassLoader superLoader = null;
     if (superclass != null) {
       superLoader = superclass.getClassLoader();
-      if (superLoader instanceof PluginClassLoader && maxIndex < PluginManagerCore.getPluginLoadingOrder(((PluginClassLoader)superLoader).getPluginId())) {
+      if (superLoader instanceof IdeaPluginClassLoader && maxIndex < PluginManagerCore.getPluginLoadingOrder(((IdeaPluginClassLoader)superLoader).getPluginId())) {
         return superLoader;
       }
     }

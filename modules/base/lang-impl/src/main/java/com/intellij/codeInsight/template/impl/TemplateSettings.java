@@ -17,7 +17,7 @@ package com.intellij.codeInsight.template.impl;
 
 import com.intellij.AbstractBundle;
 import com.intellij.codeInsight.template.Template;
-import com.intellij.ide.plugins.cl.PluginClassLoader;
+import com.intellij.ide.plugins.cl.IdeaPluginClassLoader;
 import com.intellij.openapi.application.ex.DecodeDefaultsUtil;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
@@ -525,7 +525,7 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
     String groupName = root.getAttributeValue(GROUP);
     if (StringUtil.isEmpty(groupName)) {
       groupName = path.substring(path.lastIndexOf("/") + 1);
-      LOG.warn("Group attribute is empty. Path '" + path + "'. Plugin: " + ((PluginClassLoader)classLoader).getPluginId());
+      LOG.warn("Group attribute is empty. Path '" + path + "'. Plugin: " + ((IdeaPluginClassLoader)classLoader).getPluginId());
     }
 
     TemplateGroup result = new TemplateGroup(groupName, root.getAttributeValue("REPLACE"));

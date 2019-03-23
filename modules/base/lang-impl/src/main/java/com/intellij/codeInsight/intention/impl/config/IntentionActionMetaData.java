@@ -20,7 +20,7 @@
 package com.intellij.codeInsight.intention.impl.config;
 
 import com.intellij.codeInsight.intention.IntentionAction;
-import com.intellij.ide.plugins.cl.PluginClassLoader;
+import com.intellij.ide.plugins.cl.IdeaPluginClassLoader;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.fileTypes.FileType;
@@ -210,8 +210,8 @@ public final class IntentionActionMetaData {
   }
 
   @Nullable public PluginId getPluginId() {
-    if (myIntentionLoader instanceof PluginClassLoader) {
-      return ((PluginClassLoader)myIntentionLoader).getPluginId();
+    if (myIntentionLoader instanceof IdeaPluginClassLoader) {
+      return ((IdeaPluginClassLoader)myIntentionLoader).getPluginId();
     }
     return null;
   }

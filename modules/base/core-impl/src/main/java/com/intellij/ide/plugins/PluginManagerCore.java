@@ -18,7 +18,7 @@ package com.intellij.ide.plugins;
 import com.intellij.ide.ClassUtilCore;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.StartupProgress;
-import com.intellij.ide.plugins.cl.PluginClassLoader;
+import com.intellij.ide.plugins.cl.IdeaPluginClassLoader;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
@@ -230,10 +230,10 @@ public class PluginManagerCore {
   @Nullable
   public static PluginId getPluginId(@Nonnull Class<?> clazz) {
     ClassLoader loader = clazz.getClassLoader();
-    if (!(loader instanceof PluginClassLoader)) {
+    if (!(loader instanceof IdeaPluginClassLoader)) {
       return null;
     }
-    return ((PluginClassLoader)loader).getPluginId();
+    return ((IdeaPluginClassLoader)loader).getPluginId();
   }
 
   public static void dumpPluginClassStatistics() {
@@ -282,7 +282,7 @@ public class PluginManagerCore {
         final File file = aClassPath.getCanonicalFile(); // it is critical not to have "." and ".." in classpath elements
         urls.add(file.toURI().toURL());
       }
-      return new PluginClassLoader(urls, parentLoaders, pluginId, pluginDescriptor.getVersion(), pluginRoot);
+      return new IdeaPluginClassLoader(urls, parentLoaders, pluginId, pluginDescriptor.getVersion(), pluginRoot);
     }
     catch (IOException e) {
       e.printStackTrace();

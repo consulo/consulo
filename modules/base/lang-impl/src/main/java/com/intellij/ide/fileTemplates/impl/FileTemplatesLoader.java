@@ -19,7 +19,7 @@ import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.IdeaPluginDescriptorImpl;
 import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.ide.plugins.cl.PluginClassLoader;
+import com.intellij.ide.plugins.cl.IdeaPluginClassLoader;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -134,7 +134,7 @@ public class FileTemplatesLoader {
     for (IdeaPluginDescriptor plugin : PluginManagerCore.getPlugins()) {
       if (plugin instanceof IdeaPluginDescriptorImpl && plugin.isEnabled()) {
         final ClassLoader loader = plugin.getPluginClassLoader();
-        if (loader instanceof PluginClassLoader && ((PluginClassLoader)loader).getUrls().isEmpty()) {
+        if (loader instanceof IdeaPluginClassLoader && ((IdeaPluginClassLoader)loader).getUrls().isEmpty()) {
           continue; // development mode, when IDEA_CORE's loader contains all the classpath
         }
         try {
