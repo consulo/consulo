@@ -27,9 +27,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.SystemInfo;
 
+import javax.inject.Inject;
+
 public class ShowSettingsAction extends AnAction implements DumbAware {
   private final ShowSettingsUtil myShowSettingsUtil;
 
+  @Inject
   public ShowSettingsAction(ShowSettingsUtil showSettingsUtil) {
     super(CommonBundle.settingsAction(), CommonBundle.settingsActionDescription(), AllIcons.General.Settings);
     myShowSettingsUtil = showSettingsUtil;
