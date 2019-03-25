@@ -20,6 +20,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.diff.impl.dir.DirDiffTableModel;
 import com.intellij.ui.IdeBorderFactory;
+import consulo.actionSystem.ex.ComboBoxButton;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -33,7 +34,7 @@ import java.util.ArrayList;
 public class ChangeCompareModeGroup extends ComboBoxAction implements ShortcutProvider{
   private final DefaultActionGroup myGroup;
   private DirDiffSettings mySettings;
-  private JButton myButton;
+  private ComboBoxButton myButton;
 
   public ChangeCompareModeGroup(DirDiffTableModel model) {
     mySettings = model.getSettings();
@@ -54,7 +55,7 @@ public class ChangeCompareModeGroup extends ComboBoxAction implements ShortcutPr
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    myButton.doClick();
+    myButton.showPopup();
   }
 
   @RequiredUIAccess
@@ -72,8 +73,8 @@ public class ChangeCompareModeGroup extends ComboBoxAction implements ShortcutPr
     final JLabel label = new JLabel("Compare by:");
     label.setDisplayedMnemonicIndex(0);
     panel.add(label, BorderLayout.WEST);
-    myButton = (JButton)super.createCustomComponent(presentation).getComponent(0);
-    panel.add(myButton, BorderLayout.CENTER);
+    myButton = (ComboBoxButton)super.createCustomComponent(presentation).getComponent(0);
+    panel.add(myButton.getComponent(), BorderLayout.CENTER);
     panel.setBorder(IdeBorderFactory.createEmptyBorder(2, 6, 2, 0));
     return panel;
   }
