@@ -24,19 +24,19 @@ import javax.annotation.Nullable;
  * @author yole
  */
 public abstract class NamedStubBase<T extends PsiNamedElement> extends StubBase<T> implements NamedStub<T> {
-  private final StringRef myName;
+  private final String myName;
 
-  protected NamedStubBase(StubElement parent, IStubElementType elementType, @javax.annotation.Nullable StringRef name) {
+  protected NamedStubBase(StubElement parent, IStubElementType elementType, @Nullable StringRef name) {
+    this(parent, elementType, StringRef.toString(name));
+  }
+
+  protected NamedStubBase(final StubElement parent, final IStubElementType elementType, @Nullable final String name) {
     super(parent, elementType);
     myName = name;
   }
 
-  protected NamedStubBase(final StubElement parent, final IStubElementType elementType, @Nullable final String name) {
-    this(parent, elementType, StringRef.fromString(name));
-  }
-
   @Override
   public String getName() {
-    return StringRef.toString(myName);
+    return myName;
   }
 }
