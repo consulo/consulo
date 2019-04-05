@@ -370,7 +370,7 @@ public interface Application extends ComponentManager {
    *
    * @return true if IDE is running in command line  mode, false otherwise
    */
- default boolean isCommandLine() {
+  default boolean isCommandLine() {
     return false;
   }
 
@@ -430,6 +430,7 @@ public interface Application extends ComponentManager {
   consulo.ui.image.Image getIcon();
 
   // region Deprecated stuff
+
   /**
    * Returns lock used for read operations, should be closed in finally block
    */
