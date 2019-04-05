@@ -16,6 +16,7 @@
 package consulo.application.impl;
 
 import com.intellij.ide.StartupProgress;
+import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.impl.ReadMostlyRWLock;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Disposer;
@@ -42,10 +43,15 @@ public abstract class BaseApplicationWithOwnWriteThread extends BaseApplication 
     Disposer.register(myLastDisposable, myWriteThread);
   }
 
+  @Nonnull
+  public AccessToken acquireWriteActionLockInternal(@Nonnull Class clazz) {
+    return new WriteAccessToken(clazz);
+  }
+
   @Override
   @Nonnull
   public <T> AsyncResult<T> pushWriteAction(@Nonnull Class<?> caller, @Nonnull ThrowableComputable<T, Throwable> computable) {
-    AsyncResult<T> asyncResult = new AsyncResult<>();
+    AsyncResult<T> asyncResult = AsyncResult.undefined();
     myWriteThread.push(computable, asyncResult, caller);
     return asyncResult;
   }

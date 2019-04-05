@@ -97,7 +97,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
   }
 
-  private class WriteAccessToken extends AccessToken {
+  public class WriteAccessToken extends AccessToken {
     @Nonnull
     private final Class clazz;
 

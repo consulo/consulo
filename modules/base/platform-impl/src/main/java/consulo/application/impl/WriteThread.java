@@ -17,6 +17,7 @@ package consulo.application.impl;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.AccessToken;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ExceptionUtil;
@@ -36,15 +37,17 @@ public class WriteThread extends Thread implements Disposable {
     private ThrowableComputable myComputable;
     private AsyncResult myResult;
     private Class myCallClass;
-    private String myCreateTrace;
+    private Exception myCreateTrace;
 
     private CallInfo(ThrowableComputable computable, AsyncResult result, Class callClass) {
       myComputable = computable;
       myResult = result;
       myCallClass = callClass;
-      myCreateTrace = ExceptionUtil.currentStackTrace();
+      myCreateTrace = new Exception();
     }
   }
+
+  private static final Logger LOG = Logger.getInstance(WriteThread.class);
 
   private final Deque<CallInfo> myQueue = new ConcurrentLinkedDeque<>();
   private final BaseApplicationWithOwnWriteThread myApplication;
@@ -61,10 +64,6 @@ public class WriteThread extends Thread implements Disposable {
   }
 
   public <T> void push(ThrowableComputable<T, Throwable> computable, AsyncResult<T> result, Class caller) {
-    if(myApplication.isWriteThread()) {
-      runImpl(caller, computable, result);
-      return;
-    }
     myQueue.addLast(new CallInfo(computable, result, caller));
   }
 
@@ -74,7 +73,7 @@ public class WriteThread extends Thread implements Disposable {
       try {
         CallInfo first = myQueue.pollFirst();
         if (first != null) {
-          runImpl(first.myCallClass, first.myComputable, first.myResult);
+          runImpl(first.myCallClass, first.myComputable, first.myResult, first.myCreateTrace);
         }
       }
       finally {
@@ -84,19 +83,30 @@ public class WriteThread extends Thread implements Disposable {
   }
 
   @SuppressWarnings("unchecked")
-  private void runImpl(@Nonnull Class caller, @Nonnull ThrowableComputable computable, @Nonnull AsyncResult asyncResult) {
+  private void runImpl(@Nonnull Class caller, @Nonnull ThrowableComputable computable, @Nonnull AsyncResult asyncResult, @Nonnull Exception e) {
+    long start = System.currentTimeMillis();
     try {
       Object compute;
-      //noinspection RequiredXAction
-      try(AccessToken ignored = myApplication.acquireWriteActionLock(caller)) {
+      try (AccessToken ignored = myApplication.acquireWriteActionLockInternal(caller)) {
         compute = computable.compute();
       }
 
       asyncResult.setDone(compute);
     }
     catch (Throwable throwable) {
-      throwable.printStackTrace();
+      String throwableText = ExceptionUtil.getThrowableText(throwable);
+
+      LOG.warn("Exception trace: " + throwableText);
+      LOG.warn("Call trace: " + ExceptionUtil.getThrowableText(e));
+
       asyncResult.rejectWithThrowable(throwable);
+    }
+    finally {
+      long l = System.currentTimeMillis() - start;
+
+      if (l > 1_000L) {
+        LOG.warn("Long write operation. Time: " + l, e);
+      }
     }
   }
 
