@@ -18,6 +18,7 @@ package com.intellij.openapi.extensions;
 import consulo.annotations.DeprecationInfo;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.util.List;
 
@@ -57,4 +58,7 @@ public interface ExtensionPoint<T> {
 
   @Nonnull
   String getClassName();
+
+  @Nullable
+  <K extends T> K findExtension(Class<K> extensionClass);
 }

@@ -18,7 +18,6 @@ package com.intellij.openapi.extensions;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.ComponentManager;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 
@@ -88,6 +87,20 @@ public class ExtensionPointName<T> {
 
   @Nullable
   public <V extends T> V findExtension(@Nonnull ComponentManager componentManager, @Nonnull Class<V> instanceOf) {
-    return ContainerUtil.findInstance(getExtensionList(componentManager), instanceOf);
+    return componentManager.findExtension(this, instanceOf);
+  }
+
+  @Nonnull
+  public <V extends T> V findExtensionOrFail(@Nonnull Class<V> instanceOf) {
+    return findExtensionOrFail(Application.get(), instanceOf);
+  }
+
+  @Nonnull
+  public <V extends T> V findExtensionOrFail(@Nonnull ComponentManager componentManager, @Nonnull Class<V> instanceOf) {
+    V extension = componentManager.findExtension(this, instanceOf);
+    if(extension == null) {
+      throw new IllegalArgumentException("Extension point: " + getName() + " not contains extension of type: " + instanceOf);
+    }
+    return extension;
   }
 }

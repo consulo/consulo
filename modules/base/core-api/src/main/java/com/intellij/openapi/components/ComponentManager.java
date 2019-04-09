@@ -27,6 +27,7 @@ import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerOwner;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -80,6 +81,11 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
   @Nonnull
   default <T> List<T> getExtensionList(@Nonnull ExtensionPointName<T> extensionPointName) {
     return getExtensionsArea().getExtensionPoint(extensionPointName).getExtensionList();
+  }
+
+  @Nullable
+  default <T, K extends T> K findExtension(@Nonnull ExtensionPointName<T> extensionPointName, @Nonnull Class<K> extensionClass) {
+    return getExtensionsArea().getExtensionPoint(extensionPointName).findExtension(extensionClass);
   }
 
   /**

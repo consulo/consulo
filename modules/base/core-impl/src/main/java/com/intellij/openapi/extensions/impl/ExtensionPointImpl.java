@@ -21,7 +21,9 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.LoadingOrder;
 import com.intellij.openapi.progress.ProcessCanceledException;
+import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import com.intellij.util.KeyedLazyInstanceEP;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.StringInterner;
@@ -33,6 +35,8 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 /**
@@ -64,6 +68,8 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
   private volatile CacheValue<T> myCacheValue;
 
   private boolean myLocked;
+
+  private final AtomicNotNullLazyValue<Map<Class, Object>> myInstanceOfCacheValue = AtomicNotNullLazyValue.createValue(ConcurrentHashMap::new);
 
   public ExtensionPointImpl(@Nonnull String name, @Nonnull String className, @Nonnull Kind kind, ComponentManager componentManager, @Nullable IdeaPluginDescriptor descriptor) {
     myName = INTERNER.intern(name);
@@ -115,6 +121,20 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
     List<T> list = build(cacheValue.myExtensionAdapters, it -> myComponentManager.getInjectingContainer().getUnbindedInstance(it), true);
     setExtensionCache(list);
     return list;
+  }
+
+  @Nullable
+  @Override
+  @SuppressWarnings("unchecked")
+  public <K extends T> K findExtension(Class<K> extensionClass) {
+    Map<Class, Object> value = myInstanceOfCacheValue.getValue();
+
+    Object result = value.computeIfAbsent(extensionClass, aClass -> {
+      K instance = ContainerUtil.findInstance(getExtensionList(), extensionClass);
+      return instance == null ? ObjectUtil.NULL : instance;
+    });
+
+    return result == ObjectUtil.NULL ? null : (K)result;
   }
 
   @Override
