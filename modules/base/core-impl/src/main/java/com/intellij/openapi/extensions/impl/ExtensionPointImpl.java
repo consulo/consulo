@@ -26,7 +26,6 @@ import com.intellij.util.KeyedLazyInstanceEP;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.StringInterner;
 import consulo.extensions.ExtensionExtender;
 
 import javax.annotation.Nonnull;
@@ -55,7 +54,6 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
   }
 
   private static final Logger LOG = Logger.getInstance(ExtensionPointImpl.class);
-  private static final StringInterner INTERNER = new StringInterner();
 
   private final ComponentManager myComponentManager;
   private final String myName;
@@ -72,7 +70,7 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
   private final AtomicNotNullLazyValue<Map<Class, Object>> myInstanceOfCacheValue = AtomicNotNullLazyValue.createValue(ConcurrentHashMap::new);
 
   public ExtensionPointImpl(@Nonnull String name, @Nonnull String className, @Nonnull Kind kind, ComponentManager componentManager, @Nullable IdeaPluginDescriptor descriptor) {
-    myName = INTERNER.intern(name);
+    myName = name;
     myClassName = className;
     myKind = kind;
     myComponentManager = componentManager;
