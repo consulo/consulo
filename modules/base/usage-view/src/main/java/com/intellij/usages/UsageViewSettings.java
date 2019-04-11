@@ -24,13 +24,7 @@ import javax.inject.Singleton;
 import java.io.File;
 
 @Singleton
-@State(
-  name = "UsageViewSettings",
-  storages = {
-    @Storage(
-      file = StoragePathMacros.APP_CONFIG + "/other.xml"
-    )}
-)
+@State(name = "UsageViewSettings", storages = @Storage("other.xml"))
 public class UsageViewSettings implements PersistentStateComponent<UsageViewSettings> {
   @NonNls public String EXPORT_FILE_NAME = "report.txt";
   public boolean IS_EXPANDED = false;

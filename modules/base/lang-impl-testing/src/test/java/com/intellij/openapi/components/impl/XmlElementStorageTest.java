@@ -58,7 +58,7 @@ public  class XmlElementStorageTest extends MockApplicationTestCase {
   public void testGetStateSucceeded() throws Exception {
     MyXmlElementStorage storage =
             new MyXmlElementStorage(tag("root", tag("component", attr("name", "test"), tag("foo"))));
-    Element state = storage.getState(this, "test", Element.class, null);
+    Element state = storage.getState(this, "test", Element.class);
     assertNotNull(state);
     assertEquals("component", state.getName());
     assertNotNull(state.getChild("foo"));
@@ -66,7 +66,7 @@ public  class XmlElementStorageTest extends MockApplicationTestCase {
 
   public void testGetStateNotSucceeded() throws Exception {
     MyXmlElementStorage storage = new MyXmlElementStorage(tag("root"));
-    Element state = storage.getState(this, "test", Element.class, null);
+    Element state = storage.getState(this, "test", Element.class);
     assertNull(state);
   }
 

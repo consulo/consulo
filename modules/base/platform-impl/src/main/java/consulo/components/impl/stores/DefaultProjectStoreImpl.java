@@ -22,9 +22,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.impl.DefaultProjectImpl;
 import com.intellij.openapi.util.Couple;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.components.impl.stores.storage.StateStorageManager;
 import consulo.components.impl.stores.storage.StorageData;
 import consulo.components.impl.stores.storage.VfsFileBasedStorage;
-import consulo.components.impl.stores.storage.StateStorageManager;
 import consulo.components.impl.stores.storage.XmlElementStorage;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -32,6 +32,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.Arrays;
@@ -45,8 +46,8 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
   private static final String ROOT_TAG_NAME = "defaultProject";
 
   @Inject
-  public DefaultProjectStoreImpl(@Nonnull Project project, @Nonnull ProjectPathMacroManager pathMacroManager) {
-    super(project, pathMacroManager);
+  public DefaultProjectStoreImpl(@Nonnull Project project, @Nonnull ProjectPathMacroManager pathMacroManager, @Nonnull Provider<ApplicationDefaultStoreCache> applicationDefaultStoreCache) {
+    super(project, pathMacroManager, applicationDefaultStoreCache);
   }
 
   @Nullable

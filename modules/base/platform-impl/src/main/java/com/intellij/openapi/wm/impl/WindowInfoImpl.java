@@ -365,7 +365,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
   }
 
   private static boolean canActivateOnStart(String id) {
-    for (ToolWindowEP ep : ToolWindowEP.EP_NAME.getExtensions()) {
+    for (ToolWindowEP ep : ToolWindowEP.EP_NAME.getExtensionList()) {
       if (id.equals(ep.id)) {
         ToolWindowFactory factory = ep.getToolWindowFactory();
         return !factory.isDoNotActivateOnStart();

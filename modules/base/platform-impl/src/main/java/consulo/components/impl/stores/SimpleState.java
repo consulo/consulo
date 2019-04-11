@@ -93,6 +93,11 @@ public class SimpleState implements State {
   }
 
   @Override
+  public String defaultStateFilePath() {
+    return "";
+  }
+
+  @Override
   public Class<? extends Annotation> annotationType() {
     return SimpleState.class;
   }

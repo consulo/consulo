@@ -1251,7 +1251,7 @@
 
     <applicationService serviceInterface="com.intellij.openapi.vfs.impl.http.RemoteFileManager"
                         serviceImplementation="com.intellij.openapi.vfs.impl.http.RemoteFileManagerImpl"/>
-
+    <applicationService serviceImplementation="consulo.components.impl.stores.ApplicationDefaultStoreCache" />
 
     <applicationService serviceInterface="com.intellij.ui.TreeUIHelper"
                         serviceImplementation="com.intellij.ui.TreeUIHelperImpl"/>

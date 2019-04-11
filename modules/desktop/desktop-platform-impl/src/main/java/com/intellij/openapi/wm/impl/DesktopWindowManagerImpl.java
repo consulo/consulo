@@ -71,7 +71,7 @@ import java.util.Set;
  * @author Vladimir Kondratyev
  */
 @Singleton
-@State(name = WindowManagerEx.ID, storages = @Storage(value = "window.manager.xml", roamingType = RoamingType.DISABLED))
+@State(name = WindowManagerEx.ID, storages = @Storage(value = "window.manager.xml", roamingType = RoamingType.DISABLED), defaultStateFilePath = "/defaultState/WindowManager.xml")
 public final class DesktopWindowManagerImpl extends WindowManagerEx implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(DesktopWindowManagerImpl.class);
 

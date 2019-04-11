@@ -26,7 +26,7 @@ public interface StateStorage {
   Topic<Listener> STORAGE_TOPIC = Topic.create("STORAGE_LISTENER", Listener.class, Topic.BroadcastDirection.NONE);
 
   @Nullable
-  <T> T getState(@Nullable Object component, @Nonnull String componentName, @Nonnull Class<T> stateClass, @Nullable T mergeInto) throws StateStorageException;
+  <T> T getState(@Nullable Object component, @Nonnull String componentName, @Nonnull Class<T> stateClass) throws StateStorageException;
 
   boolean hasState(@Nullable Object component, @Nonnull String componentName, final Class<?> aClass, final boolean reloadData);
 

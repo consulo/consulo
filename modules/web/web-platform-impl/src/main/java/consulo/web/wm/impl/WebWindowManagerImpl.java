@@ -42,7 +42,7 @@ import java.util.Map;
  * @since 24-Sep-17
  */
 @Singleton
-@State(name = WindowManagerEx.ID, storages = @Storage(value = "window.manager.xml", roamingType = RoamingType.DISABLED))
+@State(name = WindowManagerEx.ID, storages = @Storage(value = "window.manager.xml", roamingType = RoamingType.DISABLED), defaultStateFilePath = "/defaultState/WindowManager.xml")
 public class WebWindowManagerImpl extends WindowManagerEx implements PersistentStateComponent<Element> {
   private final Map<Project, WebIdeFrameImpl> myProject2Frame = new HashMap<>();
 

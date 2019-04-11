@@ -17,7 +17,6 @@ package consulo.components.impl.stores;
 
 import com.intellij.application.options.PathMacrosImpl;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
@@ -30,8 +29,8 @@ import consulo.components.impl.stores.storage.StateStorageManager;
 import consulo.components.impl.stores.storage.StateStorageManagerImpl;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.IOException;
 
@@ -47,7 +46,8 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   private String myConfigPath;
 
   @Inject
-  public ApplicationStoreImpl(ApplicationEx2 application, ApplicationPathMacroManager pathMacroManager) {
+  public ApplicationStoreImpl(ApplicationEx2 application, ApplicationPathMacroManager pathMacroManager, Provider<ApplicationDefaultStoreCache> applicationDefaultStoreCache) {
+    super(applicationDefaultStoreCache);
     myApplication = application;
     myStateStorageManager = new StateStorageManagerImpl(pathMacroManager.createTrackingSubstitutor(), ROOT_ELEMENT_NAME, application, () -> null, StateStorageFacade.JAVA_IO) {
       @Nonnull
@@ -110,11 +110,5 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   @Override
   public StateStorageManager getStateStorageManager() {
     return myStateStorageManager;
-  }
-
-  @Nullable
-  @Override
-  protected PathMacroManager getPathMacroManagerForDefaults() {
-    return null;
   }
 }

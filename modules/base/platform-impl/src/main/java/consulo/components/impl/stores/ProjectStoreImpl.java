@@ -42,6 +42,7 @@ import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
@@ -56,8 +57,8 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   private String myPresentableUrl;
 
   @Inject
-  ProjectStoreImpl(@Nonnull Project project, @Nonnull ProjectPathMacroManager pathMacroManager) {
-    super(pathMacroManager);
+  ProjectStoreImpl(@Nonnull Project project, @Nonnull ProjectPathMacroManager pathMacroManager, @Nonnull Provider<ApplicationDefaultStoreCache> applicationDefaultStoreCache) {
+    super(applicationDefaultStoreCache, pathMacroManager);
     myProject = (ProjectImpl)project;
   }
 

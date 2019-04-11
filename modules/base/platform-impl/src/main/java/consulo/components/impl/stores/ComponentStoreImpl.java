@@ -16,27 +16,24 @@
 package consulo.components.impl.stores;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.DecodeDefaultsUtil;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StateStorage.SaveSession;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.containers.SmartHashSet;
 import com.intellij.util.messages.MessageBus;
 import consulo.components.impl.stores.storage.StateStorageManager.ExternalizationSession;
 import gnu.trove.THashMap;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Provider;
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -45,6 +42,12 @@ public abstract class ComponentStoreImpl implements IComponentStore {
 
   private final Map<String, StateComponentInfo<?>> myComponents = Collections.synchronizedMap(new THashMap<>());
   private final List<SettingsSavingComponent> mySettingsSavingComponents = new CopyOnWriteArrayList<>();
+
+  private final Provider<ApplicationDefaultStoreCache> myApplicationDefaultStoreCache;
+
+  protected ComponentStoreImpl(Provider<ApplicationDefaultStoreCache> applicationDefaultStoreCache) {
+    myApplicationDefaultStoreCache = applicationDefaultStoreCache;
+  }
 
   @Override
   public <T> StateComponentInfo<T> loadStateIfStorable(@Nonnull T component) {
@@ -190,7 +193,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     }
   }
 
-  private <T> String loadState(@Nonnull StateComponentInfo<T> componentInfo, @Nullable Collection<? extends StateStorage> changedStorages, boolean reloadData) {
+  private <T> void loadState(@Nonnull StateComponentInfo<T> componentInfo, @Nullable Collection<? extends StateStorage> changedStorages, boolean reloadData) {
     PersistentStateComponent<T> component = componentInfo.getComponent();
     State stateSpec = componentInfo.getState();
     String name = stateSpec.name();
@@ -200,17 +203,17 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     }
 
     if (optimizeTestLoading()) {
-      return name;
+      return;
     }
 
     Class<T> stateClass = ComponentSerializationUtil.getStateClass(component.getClass());
-    T state = getDefaultState(component, name, stateClass);
+    T state = null;
 
     Storage[] storageSpecs = getComponentStorageSpecs(component, stateSpec, StateStorageOperation.READ);
     for (Storage storageSpec : storageSpecs) {
       StateStorage stateStorage = getStateStorageManager().getStateStorage(storageSpec);
       if (stateStorage != null && (stateStorage.hasState(component, name, stateClass, reloadData) || (changedStorages != null && changedStorages.contains(stateStorage)))) {
-        state = stateStorage.getState(component, name, stateClass, state);
+        state = stateStorage.getState(component, name, stateClass);
         break;
       }
     }
@@ -218,35 +221,49 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     if (state != null) {
       component.loadState(state);
     }
+    else {
+      T defaultState = loadDefaultState(componentInfo, component, stateClass);
+      if (defaultState != null) {
+        component.loadState(defaultState);
+      }
+    }
 
     validateUnusedMacros(name, true);
-
-    return name;
   }
 
   @Nullable
-  protected abstract PathMacroManager getPathMacroManagerForDefaults();
+  protected PathMacroManager getPathMacroManagerForDefaults() {
+    return null;
+  }
 
   @Nullable
-  protected <T> T getDefaultState(@Nonnull Object component, @Nonnull String componentName, @Nonnull final Class<T> stateClass) {
-    URL url = DecodeDefaultsUtil.getDefaults(component, componentName);
-    if (url == null) {
+  private <T> T loadDefaultState(@Nonnull StateComponentInfo<T> stateComponentInfo, @Nonnull Object component, @Nonnull final Class<T> stateClass) {
+    String defaultStateFilePath = stateComponentInfo.getState().defaultStateFilePath();
+
+    if (StringUtil.isEmpty(defaultStateFilePath)) {
       return null;
     }
 
     try {
-      Element documentElement = JDOMUtil.loadDocument(url).detachRootElement();
-
-      PathMacroManager pathMacroManager = getPathMacroManagerForDefaults();
-      if (pathMacroManager != null) {
-        pathMacroManager.expandPaths(documentElement);
+      Element element = myApplicationDefaultStoreCache.get().findDefaultStoreElement(component.getClass(), defaultStateFilePath);
+      if (element != null) {
+        return deserializeDefaultStore(element.clone(), stateClass);
       }
+    }
+    catch (Exception e) {
+      throw new StateStorageException("Error loading default state from: " + defaultStateFilePath + ", component: " + component, e);
+    }
+    return null;
+  }
 
-      return DefaultStateSerializer.deserializeState(documentElement, stateClass, null);
+  @Nullable
+  private <T> T deserializeDefaultStore(@Nonnull Element documentElement, Class<T> stateClass) {
+    PathMacroManager pathMacroManager = getPathMacroManagerForDefaults();
+    if (pathMacroManager != null) {
+      pathMacroManager.expandPaths(documentElement);
     }
-    catch (IOException | JDOMException e) {
-      throw new StateStorageException("Error loading state from " + url, e);
-    }
+
+    return DefaultStateSerializer.deserializeState(documentElement, stateClass);
   }
 
   @Nonnull

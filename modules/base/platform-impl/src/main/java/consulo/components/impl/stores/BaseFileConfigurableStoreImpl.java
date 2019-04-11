@@ -22,6 +22,7 @@ import consulo.components.impl.stores.storage.XmlElementStorage;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
+import javax.inject.Provider;
 import java.io.IOException;
 
 abstract class BaseFileConfigurableStoreImpl extends ComponentStoreImpl {
@@ -31,7 +32,8 @@ abstract class BaseFileConfigurableStoreImpl extends ComponentStoreImpl {
   private StateStorageManager myStateStorageManager;
   protected final PathMacroManager myPathMacroManager;
 
-  protected BaseFileConfigurableStoreImpl(@Nonnull PathMacroManager pathMacroManager) {
+  protected BaseFileConfigurableStoreImpl(@Nonnull Provider<ApplicationDefaultStoreCache> applicationDefaultStoreCache, @Nonnull PathMacroManager pathMacroManager) {
+    super(applicationDefaultStoreCache);
     myPathMacroManager = pathMacroManager;
   }
 

@@ -16,9 +16,12 @@
 
 package com.intellij.openapi.components;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface State {
   String name();
@@ -26,4 +29,9 @@ public @interface State {
   Storage[] storages();
 
   String additionalExportFile() default "";
+
+  /**
+   * @return default state file, search by component.getClass().getResourceAsStream(path)
+   */
+  String defaultStateFilePath() default "";
 }

@@ -17,22 +17,19 @@ package consulo.components.impl.stores;
 
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizable;
-import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @SuppressWarnings({"deprecation"})
 public class DefaultStateSerializer {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.components.impl.stores.DefaultStateSerializer");
-
   private DefaultStateSerializer() {
   }
 
@@ -53,18 +50,14 @@ public class DefaultStateSerializer {
 
   @SuppressWarnings({"unchecked"})
   @Nullable
-  public static <T> T deserializeState(@Nullable Element stateElement, Class <T> stateClass, @Nullable T mergeInto) throws StateStorageException {
-    if (stateElement == null) return mergeInto;
+  public static <T> T deserializeState(@Nullable Element stateElement, Class <T> stateClass) throws StateStorageException {
+    if (stateElement == null) return null;
 
     if (stateClass.equals(Element.class)) {
       //assert mergeInto == null;
       return (T)stateElement;
     }
     else if (JDOMExternalizable.class.isAssignableFrom(stateClass)) {
-      if (mergeInto != null) {
-        String elementText = JDOMUtil.writeElement(stateElement, "\n");
-        LOG.error("State is " + stateClass.getName() + ", merge into is " + mergeInto.toString() + ", state element text is " + elementText);
-      }
       final T t = ReflectionUtil.newInstance(stateClass);
       try {
         ((JDOMExternalizable)t).readExternal(stateElement);
@@ -74,12 +67,8 @@ public class DefaultStateSerializer {
         throw new StateStorageException(e);
       }
     }
-    else if (mergeInto == null) {
-      return XmlSerializer.deserialize(stateElement, stateClass);
-    }
     else {
-      XmlSerializer.deserializeInto(mergeInto, stateElement);
-      return mergeInto;
+      return XmlSerializer.deserialize(stateElement, stateClass);
     }
   }
 }
