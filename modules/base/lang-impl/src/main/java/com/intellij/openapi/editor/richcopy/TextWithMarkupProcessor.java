@@ -54,6 +54,7 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import java.awt.*;
 import java.util.*;
@@ -66,19 +67,25 @@ import java.util.List;
  *   MS Office 2010 (Word, PowerPoint, Outlook), OpenOffice (Writer, Impress), Gmail, Mac TextEdit, Mac Mail.
  */
 public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithMarkup> {
-  private static final Logger LOG = Logger.getInstance("#" + TextWithMarkupProcessor.class.getName());
+  private static final Logger LOG = Logger.getInstance(TextWithMarkupProcessor.class.getName());
 
   private List<RawTextWithMarkup> myResult;
+
+  private final RichCopySettings myRichCopySettings;
+
+  @Inject
+  public TextWithMarkupProcessor(RichCopySettings richCopySettings) {
+    myRichCopySettings = richCopySettings;
+  }
 
   @Nonnull
   @Override
   public List<RawTextWithMarkup> collectTransferableData(PsiFile file, Editor editor, int[] startOffsets, int[] endOffsets) {
-    if (!RichCopySettings.getInstance().isEnabled()) {
+    if (!myRichCopySettings.isEnabled()) {
       return Collections.emptyList();
     }
 
     try {
-      RichCopySettings settings = RichCopySettings.getInstance();
       List<Caret> carets = editor.getCaretModel().getAllCarets();
       Caret firstCaret = carets.get(0);
       final int indentSymbolsToStrip;
@@ -94,7 +101,7 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
       }
       logInitial(editor, startOffsets, endOffsets, indentSymbolsToStrip, firstLineStartOffset);
       CharSequence text = editor.getDocument().getCharsSequence();
-      EditorColorsScheme schemeToUse = settings.getColorsScheme(editor.getColorsScheme());
+      EditorColorsScheme schemeToUse = myRichCopySettings.getColorsScheme(editor.getColorsScheme());
       EditorHighlighter highlighter = HighlighterFactory.createHighlighter(file.getViewProvider().getVirtualFile(),
                                                                            schemeToUse, file.getProject());
       highlighter.setText(text);
