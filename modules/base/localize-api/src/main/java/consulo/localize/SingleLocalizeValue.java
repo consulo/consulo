@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,24 @@
  */
 package consulo.localize;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author VISTALL
- * @since 2019-04-11
+ * @since 09-Nov-17
  */
-public interface LocalizeKeyAsValue extends LocalizeKey, LocalizeValue {
+class SingleLocalizeValue implements LocalizeValue {
+  static final SingleLocalizeValue ourEmpty = new SingleLocalizeValue("");
+
+  private final String myValue;
+
+  SingleLocalizeValue(String value) {
+    myValue = value;
+  }
+
+  @Nonnull
+  @Override
+  public String getValue() {
+    return myValue;
+  }
 }

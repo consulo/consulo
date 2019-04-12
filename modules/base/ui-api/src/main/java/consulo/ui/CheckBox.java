@@ -15,6 +15,9 @@
  */
 package consulo.ui;
 
+import consulo.localize.LocalizeKey;
+import consulo.localize.LocalizeValue;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -31,8 +34,20 @@ public interface CheckBox extends ValueComponent<Boolean>, Mnemonicable{
   @Nonnull
   @RequiredUIAccess
   static CheckBox create(@Nonnull String text, boolean selected) {
+    return create(LocalizeKey.of(text), selected);
+  }
+
+  @Nonnull
+  @RequiredUIAccess
+  static CheckBox create(@Nonnull LocalizeValue textValue) {
+    return create(textValue, false);
+  }
+
+  @Nonnull
+  @RequiredUIAccess
+  static CheckBox create(@Nonnull LocalizeValue textValue, boolean selected) {
     CheckBox box = UIInternal.get()._Components_checkBox();
-    box.setText(text);
+    box.setText(textValue);
     box.setValue(selected);
     return box;
   }
@@ -54,5 +69,10 @@ public interface CheckBox extends ValueComponent<Boolean>, Mnemonicable{
   String getText();
 
   @RequiredUIAccess
-  void setText(@Nonnull String text);
+  default void setText(@Nonnull String text) {
+    setText(LocalizeKey.of(text));
+  }
+
+  @RequiredUIAccess
+  void setText(@Nonnull LocalizeValue localizeValue);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,32 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.localize;
+package consulo.localize.impl;
+
+import consulo.localize.LocalizeLibraryBuilder;
+import consulo.localize.LocalizeManager;
 
 import javax.annotation.Nonnull;
 
-import java.util.Locale;
-
 /**
  * @author VISTALL
- * @since 09-Nov-17
+ * @since 2019-04-11
  */
-class SingleLocalizeKeyAsValue implements LocalizeKeyAsValue {
-  private final String myValue;
-
-  SingleLocalizeKeyAsValue(String value) {
-    myValue = value;
-  }
-
+public class LocalizeManagerImpl extends LocalizeManager {
   @Nonnull
   @Override
-  public String getValue() {
-    return myValue;
-  }
-
-  @Nonnull
-  @Override
-  public String getValue(@Nonnull Locale locale) {
-    return myValue;
+  public LocalizeLibraryBuilder newBuilder(@Nonnull String pluginId, @Nonnull String id, @Nonnull Class<?> bundleClass) {
+    return new LocalizeLibraryBuilderImpl(pluginId, id, bundleClass);
   }
 }

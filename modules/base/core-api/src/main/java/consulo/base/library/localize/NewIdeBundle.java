@@ -13,11 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.localize;
+package consulo.base.library.localize;
+
+import consulo.localize.LocalizeKeyAsValue;
+import consulo.localize.LocalizeLibraryBuilder;
+import consulo.localize.LocalizeManager;
 
 /**
  * @author VISTALL
  * @since 2019-04-11
  */
-public interface LocalizeKeyAsValue extends LocalizeKey, LocalizeValue {
+public class NewIdeBundle {
+  public static final LocalizeKeyAsValue checkbox_synchronize_files_on_frame_activation;
+
+  static {
+    LocalizeLibraryBuilder library = LocalizeManager.builder("consulo.base", "NewIdeBundle", NewIdeBundle.class);
+
+    checkbox_synchronize_files_on_frame_activation = library.define("checkbox.synchronize.files.on.frame.activation");
+
+    library.finish();
+  }
 }

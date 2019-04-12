@@ -19,6 +19,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.ui.components.JBCheckBox;
 import consulo.awt.TargetAWT;
 import consulo.awt.impl.FromSwingComponentWrapper;
+import consulo.localize.LocalizeValue;
 import consulo.ui.*;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.util.MnemonicInfo;
@@ -33,6 +34,12 @@ import java.awt.event.ActionListener;
  */
 class DesktopCheckBoxImpl extends SwingComponentDelegate<JBCheckBox> implements CheckBox {
   class MyJBCheckBox extends JBCheckBox implements FromSwingComponentWrapper {
+    @Override
+    public void updateUI() {
+      super.updateUI();
+
+      updateText();
+    }
 
     @Nonnull
     @Override
@@ -40,6 +47,8 @@ class DesktopCheckBoxImpl extends SwingComponentDelegate<JBCheckBox> implements 
       return DesktopCheckBoxImpl.this;
     }
   }
+
+  private LocalizeValue myTextValue = LocalizeValue.of();
 
   public DesktopCheckBoxImpl() {
     myComponent = new MyJBCheckBox();
@@ -69,7 +78,14 @@ class DesktopCheckBoxImpl extends SwingComponentDelegate<JBCheckBox> implements 
 
   @RequiredUIAccess
   @Override
-  public void setText(@Nonnull String text) {
+  public void setText(@Nonnull LocalizeValue textValue) {
+    myTextValue = textValue;
+    updateText();
+  }
+
+  private void updateText() {
+    String text = myTextValue.getValue();
+
     MnemonicInfo mnemonicInfo = MnemonicInfo.parse(text);
     if (mnemonicInfo == null) {
       myComponent.setText(text);

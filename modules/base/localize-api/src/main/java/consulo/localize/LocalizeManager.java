@@ -15,9 +15,22 @@
  */
 package consulo.localize;
 
+import consulo.util.ServiceLoaderUtil;
+
+import javax.annotation.Nonnull;
+
 /**
  * @author VISTALL
  * @since 2019-04-11
  */
-public interface LocalizeKeyAsValue extends LocalizeKey, LocalizeValue {
+public abstract class LocalizeManager {
+  private static LocalizeManager ourInstance = ServiceLoaderUtil.loadSingleOrError(LocalizeManager.class);
+
+  @Nonnull
+  public static LocalizeLibraryBuilder builder(@Nonnull String pluginId, @Nonnull String id, @Nonnull Class<?> bundleClass) {
+    return ourInstance.newBuilder(pluginId, id, bundleClass);
+  }
+
+  @Nonnull
+  public abstract LocalizeLibraryBuilder newBuilder(@Nonnull String pluginId, @Nonnull String id, @Nonnull Class<?> bundleClass);
 }

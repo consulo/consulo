@@ -15,9 +15,15 @@
  */
 package consulo.localize;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author VISTALL
  * @since 2019-04-11
  */
-public interface LocalizeKeyAsValue extends LocalizeKey, LocalizeValue {
+public interface LocalizeLibraryBuilder {
+  @Nonnull
+  LocalizeKeyAsValue define(@Nonnull String id);
+
+  void finish();
 }

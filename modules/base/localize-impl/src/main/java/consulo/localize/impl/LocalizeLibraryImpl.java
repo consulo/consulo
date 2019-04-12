@@ -13,11 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.localize;
+package consulo.localize.impl;
+
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 2019-04-11
  */
-public interface LocalizeKeyAsValue extends LocalizeKey, LocalizeValue {
+public class LocalizeLibraryImpl {
+  private final Map<String, LocalizeKeyAsValueImpl> myKeys = new HashMap<>();
+
+  private final String myPluginId;
+  private final String myId;
+
+  public LocalizeLibraryImpl(String pluginId, String id, Map<String, LocalizeKeyAsValueImpl> keys) {
+    myPluginId = pluginId;
+    myId = id;
+  }
+
+  @Nonnull
+  @Override
+  public String toString() {
+    return myPluginId + ":" + myId;
+  }
 }

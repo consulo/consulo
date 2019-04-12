@@ -16,6 +16,7 @@
 package com.intellij.idea.starter;
 
 import com.intellij.ide.StartupProgress;
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.openapi.application.Application;
@@ -46,6 +47,12 @@ public abstract class ApplicationPostStarter {
     }
 
     PluginManager.initPlugins(splash, isHeadlessMode);
+
+    for (IdeaPluginDescriptor descriptor : PluginManager.getPlugins()) {
+      ClassLoader pluginClassLoader = descriptor.getPluginClassLoader();
+
+      
+    }
 
     createApplication(isHeadlessMode, mySplashRef, args);
   }
