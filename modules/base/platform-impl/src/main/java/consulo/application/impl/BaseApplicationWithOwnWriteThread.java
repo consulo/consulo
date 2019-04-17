@@ -22,7 +22,7 @@ import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.ThrowableComputable;
-import consulo.application.ApplicationWithOwnWriteThread;
+import consulo.application.internal.ApplicationWithOwnWriteThread;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;

@@ -20,7 +20,7 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ThrowableRunnable;
-import consulo.application.ApplicationWithOwnWriteThread;
+import consulo.application.internal.ApplicationWithOwnWriteThread;
 
 import javax.annotation.Nonnull;
 
