@@ -176,12 +176,6 @@ public class MockApplication extends MockComponentManager implements Application
     return AccessToken.EMPTY_ACCESS_TOKEN;
   }
 
-  @RequiredUIAccess
-  @Override
-  public boolean hasWriteAction(@Nullable Class<?> actionClass) {
-    return false;
-  }
-
   @Override
   public void addApplicationListener(@Nonnull ApplicationListener listener) {
   }

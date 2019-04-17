@@ -96,12 +96,6 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
 
   @RequiredReadAction
   @Override
-  public boolean hasWriteAction(@Nonnull Class<?> actionClass) {
-    throw new UnsupportedOperationException();
-  }
-
-  @RequiredReadAction
-  @Override
   public void assertReadAccessAllowed() {
 
   }
