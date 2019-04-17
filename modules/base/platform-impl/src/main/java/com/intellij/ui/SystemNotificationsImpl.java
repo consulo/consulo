@@ -16,11 +16,15 @@
 package com.intellij.ui;
 
 import com.intellij.notification.impl.NotificationsConfigurationImpl;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.AtomicNullableLazyValue;
+import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.registry.Registry;
+import com.intellij.util.SystemProperties;
+
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
@@ -32,35 +36,45 @@ public class SystemNotificationsImpl extends SystemNotifications {
     void notify(@Nonnull String name, @Nonnull String title, @Nonnull String description);
   }
 
-  private final Notifier myNotifier = getPlatformNotifier();
+  private final NullableLazyValue<Notifier> myNotifier = AtomicNullableLazyValue.createValue(SystemNotificationsImpl::getPlatformNotifier);
+
+  private final Application myApplication;
+
+  @Inject
+  public SystemNotificationsImpl(Application application) {
+    myApplication = application;
+  }
 
   @Override
   public boolean isAvailable() {
-    return myNotifier != null;
+    return myNotifier.getValue() != null;
   }
 
   @Override
   public void notify(@Nonnull String notificationName, @Nonnull String title, @Nonnull String text) {
-    if (myNotifier != null &&
-        NotificationsConfigurationImpl.getInstanceImpl().SYSTEM_NOTIFICATIONS &&
-        !ApplicationManager.getApplication().isActive()) {
-      myNotifier.notify(notificationName, title, text);
+    if (NotificationsConfigurationImpl.getInstanceImpl().SYSTEM_NOTIFICATIONS && !myApplication.isActive()) {
+      Notifier notifier = myNotifier.getValue();
+      if (notifier != null) {
+        notifier.notify(notificationName, title, text);
+      }
     }
   }
 
   private static Notifier getPlatformNotifier() {
     try {
       if (SystemInfo.isMac) {
-        if (SystemInfo.isMacOSMountainLion && Registry.is("ide.mac.mountain.lion.notifications.enabled")) {
+        if (SystemInfo.isMacOSMountainLion && SystemProperties.getBooleanProperty("ide.mac.mountain.lion.notifications.enabled", true)) {
           return MountainLionNotifications.getInstance();
         }
-        if (!Boolean.getBoolean("growl.disable")) {
+        else {
           return GrowlNotifications.getInstance();
         }
       }
-
-      if (SystemInfo.isXWindow && Registry.is("ide.libnotify.enabled") ) {
+      else if (SystemInfo.isXWindow) {
         return LibNotifyWrapper.getInstance();
+      }
+      else if (SystemInfo.isWin10OrNewer) {
+        return SystemTrayNotifications.getWin10Instance();
       }
     }
     catch (Throwable t) {

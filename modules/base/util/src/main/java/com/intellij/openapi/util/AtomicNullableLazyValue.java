@@ -16,10 +16,25 @@
 
 package com.intellij.openapi.util;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * @author peter
  */
 public abstract class AtomicNullableLazyValue<T> extends NullableLazyValue<T> {
+  @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
+  @Nonnull
+  public static <T> AtomicNullableLazyValue<T> createValue(@Nonnull final Factory<? extends T> value) {
+    return new AtomicNullableLazyValue<T>() {
+      @Nullable
+      @Override
+      protected T compute() {
+        return value.create();
+      }
+    };
+  }
+
   private volatile T myValue;
   private volatile boolean myComputed;
 
