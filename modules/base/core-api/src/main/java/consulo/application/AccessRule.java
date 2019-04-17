@@ -49,7 +49,6 @@ public final class AccessRule {
     }
   }
 
-  @SuppressWarnings("deprecation")
   @Nonnull
   public static AsyncResult<Void> writeAsync(@Nonnull ThrowableRunnable<Throwable> action) {
     return writeAsync(() -> {
@@ -69,7 +68,7 @@ public final class AccessRule {
       return ((ApplicationWithOwnWriteThread)application).pushWriteAction(aClass, action);
     }
     else {
-      AsyncResult<T> result = new AsyncResult<>();
+      AsyncResult<T> result = AsyncResult.undefined();
 
       // noinspection RequiredXAction
       try (AccessToken ignored = Application.get().acquireWriteActionLock(aClass)) {
