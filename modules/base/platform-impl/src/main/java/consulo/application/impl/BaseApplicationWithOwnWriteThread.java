@@ -43,6 +43,7 @@ public abstract class BaseApplicationWithOwnWriteThread extends BaseApplication 
     Disposer.register(myLastDisposable, myWriteThread);
   }
 
+  @Override
   @Nonnull
   public AccessToken acquireWriteActionLockInternal(@Nonnull Class clazz) {
     return new WriteAccessToken(clazz);

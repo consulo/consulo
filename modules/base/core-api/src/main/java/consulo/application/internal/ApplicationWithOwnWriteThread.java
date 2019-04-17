@@ -15,6 +15,7 @@
  */
 package consulo.application.internal;
 
+import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.ThrowableComputable;
@@ -26,6 +27,13 @@ import javax.annotation.Nonnull;
  * @since 2018-05-12
  */
 public interface ApplicationWithOwnWriteThread extends Application {
+  default boolean isWriteThreadEnabled() {
+    return true;
+  }
+
+  @Nonnull
+  AccessToken acquireWriteActionLockInternal(Class<?> callerClass);
+
   @Nonnull
   <T> AsyncResult<T> pushWriteAction(@Nonnull Class<?> caller, @Nonnull ThrowableComputable<T, Throwable> computable);
 }

@@ -52,31 +52,10 @@ public final class AccessRule {
   @SuppressWarnings("deprecation")
   @Nonnull
   public static AsyncResult<Void> writeAsync(@Nonnull ThrowableRunnable<Throwable> action) {
-    Class aClass = ObjectUtil.notNull(ReflectionUtil.getGrandCallerClass(), WriteAction.class);
-
-    Application application = Application.get();
-    if (application instanceof ApplicationWithOwnWriteThread) {
-      return ((ApplicationWithOwnWriteThread)application).pushWriteAction(aClass, () -> {
-        action.run();
-        return null;
-      });
-    }
-    else {
-      AsyncResult<Void> result = new AsyncResult<>();
-
-      // noinspection RequiredXAction
-      try (AccessToken ignored = Application.get().acquireWriteActionLock(aClass)) {
-        try {
-          action.run();
-          result.setDone();
-        }
-        catch (Throwable throwable) {
-          result.rejectWithThrowable(throwable);
-        }
-      }
-
-      return result;
-    }
+    return writeAsync(() -> {
+      action.run();
+      return null;
+    });
   }
 
   @SuppressWarnings("deprecation")
@@ -86,7 +65,7 @@ public final class AccessRule {
 
     Application application = Application.get();
 
-    if (application instanceof ApplicationWithOwnWriteThread) {
+    if (application instanceof ApplicationWithOwnWriteThread && ((ApplicationWithOwnWriteThread)application).isWriteThreadEnabled()) {
       return ((ApplicationWithOwnWriteThread)application).pushWriteAction(aClass, action);
     }
     else {
