@@ -182,7 +182,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   private volatile boolean myWriteActionPending;
 
   protected int myWriteStackBase;
-  protected volatile Thread myWriteActionThread;
 
   protected boolean myGatherStatistics;
 

@@ -334,10 +334,6 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
   @Override
   @Nonnull
   public ModalityState getCurrentModalityState() {
-    if (Thread.currentThread() == myWriteActionThread) {
-      return getDefaultModalityState();
-    }
-
     return LaterInvocator.getCurrentModalityState();
   }
 
@@ -534,32 +530,6 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     }
   }
 
-  public boolean runWriteActionWithProgressInBackgroundThread(@Nonnull String title,
-                                                              @Nullable Project project,
-                                                              @Nullable JComponent parentComponent,
-                                                              @Nullable String cancelText,
-                                                              @Nonnull Consumer<ProgressIndicator> action) {
-    Class<?> clazz = action.getClass();
-    startWrite(clazz);
-    try {
-      PotemkinProgress indicator = new PotemkinProgress(title, project, parentComponent, cancelText);
-      indicator.runInBackground(() -> {
-        assert myWriteActionThread == null;
-        myWriteActionThread = Thread.currentThread();
-        try {
-          action.accept(indicator);
-        }
-        finally {
-          myWriteActionThread = null;
-        }
-      });
-      return !indicator.isCanceled();
-    }
-    finally {
-      endWrite(clazz);
-    }
-  }
-
   @RequiredReadAction
   @Override
   public void assertReadAccessAllowed() {
@@ -584,9 +554,9 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
   @Override
   public boolean isReadAccessAllowed() {
     if (isDispatchThread()) {
-      return myWriteActionThread == null; // no reading from EDT during background write action
+      return true;
     }
-    return myLock.isReadLockedByThisThread() || myWriteActionThread == Thread.currentThread();
+    return myLock.isReadLockedByThisThread();
   }
 
   @RequiredUIAccess
@@ -665,7 +635,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
 
   @Override
   public boolean isWriteAccessAllowed() {
-    return isDispatchThread() && myLock.isWriteLocked() || myWriteActionThread == Thread.currentThread();
+    return isDispatchThread() && myLock.isWriteLocked();
   }
 
   @Override
