@@ -157,7 +157,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
       return Thread.currentThread();
     });
 
-    boolean subWriteThread = Boolean.getBoolean("consulo.sub.write.thread");
+    boolean subWriteThread = ApplicationProperties.isSubWriteThread();
     mySubWriteThread = subWriteThread ? new WriteThread(this) : null;
 
     if(subWriteThread) {
