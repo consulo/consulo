@@ -41,13 +41,7 @@ import javax.annotation.Nullable;
 public interface PsiReference {
   public static final PsiReference[] EMPTY_ARRAY = new PsiReference[0];
 
-  public static ArrayFactory<PsiReference> ARRAY_FACTORY = new ArrayFactory<PsiReference>() {
-    @Nonnull
-    @Override
-    public PsiReference[] create(int count) {
-      return count == 0 ? EMPTY_ARRAY : new PsiReference[count];
-    }
-  };
+  public static ArrayFactory<PsiReference> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new PsiReference[count];
 
   /**
    * Returns the underlying (referencing) element of the reference.
@@ -131,7 +125,7 @@ public interface PsiReference {
   @Nonnull
   @RequiredReadAction
   @Deprecated
-  @DeprecationInfo(value = "Use com.intellij.codeInsight.completion.CompletionContributor", until = "3.0")
+  @DeprecationInfo(value = "Use com.intellij.codeInsight.completion.CompletionContributor")
   default Object[] getVariants() {
     return ArrayUtil.EMPTY_OBJECT_ARRAY;
   }
@@ -145,5 +139,7 @@ public interface PsiReference {
    * @return true if the reference is soft, false otherwise.
    */
   @RequiredReadAction
-  boolean isSoft();
+  default boolean isSoft() {
+    return false;
+  }
 }
