@@ -58,11 +58,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * @author max
  */
-public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
-  private static final Logger LOGGER = Logger.getInstance(PlatformProjectOpenProcessor.class);
-  private static final PlatformProjectOpenProcessor INSTANCE = new PlatformProjectOpenProcessor();
+public class DefaultProjectOpenProcessor extends ProjectOpenProcessor {
+  private static final Logger LOGGER = Logger.getInstance(DefaultProjectOpenProcessor.class);
+  private static final DefaultProjectOpenProcessor INSTANCE = new DefaultProjectOpenProcessor();
 
-  public static PlatformProjectOpenProcessor getInstance() {
+  public static DefaultProjectOpenProcessor getInstance() {
     return INSTANCE;
   }
 

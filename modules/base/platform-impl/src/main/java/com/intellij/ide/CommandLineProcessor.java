@@ -27,7 +27,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
-import com.intellij.platform.PlatformProjectOpenProcessor;
+import com.intellij.platform.DefaultProjectOpenProcessor;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.project.ProjectOpenProcessors;
 import consulo.start.CommandLineArgs;
@@ -82,7 +82,7 @@ public class CommandLineProcessor {
   private static Project doOpenFile(VirtualFile virtualFile, int line) {
     final Project[] projects = ProjectManager.getInstance().getOpenProjects();
     if (projects.length == 0) {
-      return PlatformProjectOpenProcessor.doOpenProject(virtualFile, null, false, line, null);
+      return DefaultProjectOpenProcessor.doOpenProject(virtualFile, null, false, line, null);
     }
     else {
       Project project = findBestProject(virtualFile, projects);
