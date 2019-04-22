@@ -18,11 +18,14 @@ package com.intellij.execution.process;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
+@Singleton
 public class ProcessHandlerFactoryImpl extends ProcessHandlerFactory {
 
   @Nonnull
   @Override
+  @SuppressWarnings("deprecation")
   public OSProcessHandler createProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
     return new OSProcessHandler(commandLine);
   }

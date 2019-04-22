@@ -23,6 +23,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.util.io.BaseOutputReader;
+import consulo.annotations.DeprecationInfo;
 import gnu.trove.THashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,7 +34,7 @@ import java.util.Set;
 import java.util.concurrent.Future;
 
 public class OSProcessHandler extends BaseOSProcessHandler {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.execution.process.OSProcessHandler");
+  private static final Logger LOG = Logger.getInstance(OSProcessHandler.class);
 
   public static Key<Set<File>> DELETE_FILES_ON_TERMINATION = Key.create("OSProcessHandler.FileToDelete");
 
@@ -42,6 +43,8 @@ public class OSProcessHandler extends BaseOSProcessHandler {
   private boolean myDestroyRecursively = true;
   private Set<File> myFilesToDelete = null;
 
+  @Deprecated
+  @DeprecationInfo("Use com.intellij.execution.process.ProcessHandlerFactory")
   public OSProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
     this(startProcess(commandLine), commandLine.getCommandLineString(), commandLine.getCharset());
     myHasErrorStream = !commandLine.isRedirectErrorStream();
