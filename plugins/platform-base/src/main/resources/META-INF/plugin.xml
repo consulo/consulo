@@ -1358,6 +1358,11 @@
     <applicationService serviceImplementation="com.intellij.ide.MacOSApplicationProvider"/>
     <applicationService serviceImplementation="consulo.ide.actions.webSearch.WebSearchOptions"/>
 
+    <applicationService serviceInterface="com.intellij.execution.process.ProcessHandlerFactory"
+                        serviceImplementation="com.intellij.execution.process.ProcessHandlerFactoryImpl"/>
+
+    <applicationService serviceInterface="com.intellij.ide.UiActivityMonitor" serviceImplementation="com.intellij.ide.UiActivityMonitorImpl" />
+
     <projectService serviceInterface="com.intellij.openapi.vfs.ReadonlyStatusHandler"
                     serviceImplementation="com.intellij.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl"/>
     <projectService serviceInterface="com.intellij.openapi.startup.StartupManager"
