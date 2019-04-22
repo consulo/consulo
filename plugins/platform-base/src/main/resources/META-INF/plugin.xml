@@ -1169,7 +1169,7 @@
     <extensionPoint name="notification.parentGroup" beanClass="com.intellij.notification.impl.NotificationParentGroupBean"/>
     <extensionPoint name="notification.group" beanClass="com.intellij.notification.impl.NotificationGroupBean"/>
 
-    <extensionPoint qualifiedName="com.intellij.openapi.vcs.actions.AnnotateToggleAction.Provider"
+    <extensionPoint name="openapi.vcs.actions.AnnotateToggleAction.Provider"
                     interface="com.intellij.openapi.vcs.actions.AnnotateToggleAction$Provider"/>
 
     <extensionPoint name="remote.credentialsType" interface="com.intellij.remote.ext.CredentialsTypeEx"/>

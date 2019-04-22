@@ -22,9 +22,9 @@
     </component>
   </project-components>
   <extensionPoints>
-    <extensionPoint qualifiedName="com.intellij.coverageRunner" interface="com.intellij.coverage.CoverageRunner"/>
-    <extensionPoint qualifiedName="com.intellij.coverageEngine" interface="com.intellij.coverage.CoverageEngine"/>
-    <extensionPoint qualifiedName="com.intellij.coverageOptions" interface="com.intellij.coverage.CoverageOptions" area="PROJECT"/>
+    <extensionPoint name="coverageRunner" interface="com.intellij.coverage.CoverageRunner"/>
+    <extensionPoint name="coverageEngine" interface="com.intellij.coverage.CoverageEngine"/>
+    <extensionPoint name="coverageOptions" interface="com.intellij.coverage.CoverageOptions" area="PROJECT"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
