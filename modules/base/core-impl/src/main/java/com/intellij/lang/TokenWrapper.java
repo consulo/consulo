@@ -23,19 +23,19 @@ import com.intellij.psi.tree.IElementType;
 
 public class TokenWrapper extends IElementType {
   private final IElementType myDelegate;
-  private final String myValue;
+  private final CharSequence myValue;
 
   public TokenWrapper(IElementType delegate, CharSequence value) {
     super("Wrapper", delegate.getLanguage(), false);
     myDelegate = delegate;
-    myValue = value.toString();
+    myValue = value;
   }
 
   public IElementType getDelegate() {
     return myDelegate;
   }
 
-  public String getValue() {
+  public CharSequence getValue() {
     return myValue;
   }
 

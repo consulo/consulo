@@ -110,7 +110,7 @@ public abstract class LexerTestCase extends UsefulTestCase {
   private static String getTokenText(Lexer lexer) {
     final IElementType tokenType = lexer.getTokenType();
     if (tokenType instanceof TokenWrapper) {
-      return ((TokenWrapper)tokenType).getValue();
+      return ((TokenWrapper)tokenType).getValue().toString();
     }
 
     String text = lexer.getBufferSequence().subSequence(lexer.getTokenStart(), lexer.getTokenEnd()).toString();
