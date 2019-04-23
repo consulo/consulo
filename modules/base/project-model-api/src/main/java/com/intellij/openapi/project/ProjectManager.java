@@ -17,14 +17,17 @@ package com.intellij.openapi.project;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.Topic;
 import consulo.annotations.DeprecationInfo;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import org.jdom.JDOMException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 
 /**
@@ -54,6 +57,9 @@ public abstract class ProjectManager {
   @Deprecated
   @DeprecationInfo("Use ProjectManager#TOPIC")
   public abstract void addProjectManagerListener(@Nonnull ProjectManagerListener listener, @Nonnull Disposable parentDisposable);
+
+  @Nonnull
+  public abstract AsyncResult<Project> openProjectAsync(@Nonnull VirtualFile file, @Nonnull UIAccess uiAccess);
 
   /**
    * Removes global listener from all projects.

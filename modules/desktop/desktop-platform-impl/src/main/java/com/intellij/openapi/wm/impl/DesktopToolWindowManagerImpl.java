@@ -64,6 +64,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.PositionTracker;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.application.ApplicationProperties;
 import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 import consulo.fileEditor.impl.EditorsSplitters;
@@ -211,7 +212,12 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
       @Override
       public void projectOpened(Project project, UIAccess uiAccess) {
         if (project == myProject) {
-          DesktopToolWindowManagerImpl.this.projectOpened();
+          if(ApplicationProperties.isSubWriteThread()) {
+            uiAccess.giveAndWait(DesktopToolWindowManagerImpl.this::projectOpened);
+          }
+          else {
+            DesktopToolWindowManagerImpl.this.projectOpened();
+          }
         }
       }
 

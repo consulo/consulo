@@ -71,4 +71,7 @@ public abstract class ProjectOpenProcessor {
 
   public void refreshProjectFiles(File basedir) {
   }
+
+  @Nonnull
+  public abstract AsyncResult<Project> doOpenProjectAsync(@Nonnull VirtualFile virtualFile, @Nonnull UIAccess uiAccess);
 }

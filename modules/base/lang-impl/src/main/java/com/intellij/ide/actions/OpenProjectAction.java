@@ -29,9 +29,10 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
-import consulo.ui.RequiredUIAccess;
+import consulo.application.ApplicationProperties;
 import consulo.platform.Platform;
 import consulo.project.ProjectOpenProcessors;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.fileChooser.FileChooser;
 
@@ -54,7 +55,12 @@ public class OpenProjectAction extends AnAction implements DumbAware {
     final Project project = e.getData(CommonDataKeys.PROJECT);
     FileChooser.chooseFiles(descriptor, project, userHomeDir).doWhenDone((files) -> {
       if (files.length == 1) {
-        Platform.hacky(() -> ProjectUtil.open(files[0].getPath(), project, false), () -> ProjectUtil.openAsync(files[0].getPath(), project, false, UIAccess.current()));
+        if (ApplicationProperties.isSubWriteThread()) {
+          ProjectUtil.openAsyncNew(files[0].getPath(), project, false, UIAccess.current());
+        }
+        else {
+          Platform.hacky(() -> ProjectUtil.open(files[0].getPath(), project, false), () -> ProjectUtil.openAsync(files[0].getPath(), project, false, UIAccess.current()));
+        }
       }
     });
   }

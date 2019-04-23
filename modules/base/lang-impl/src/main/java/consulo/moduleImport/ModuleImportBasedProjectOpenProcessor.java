@@ -26,10 +26,12 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import org.jdom.JDOMException;
 
@@ -125,5 +127,19 @@ public class ModuleImportBasedProjectOpenProcessor<C extends ModuleImportContext
     ProjectManagerEx.getInstanceEx().openProject(projectToOpen);
 
     return projectToOpen;
+  }
+
+  @Nonnull
+  @Override
+  public AsyncResult<Project> doOpenProjectAsync(@Nonnull VirtualFile virtualFile, @Nonnull UIAccess uiAccess) {
+    AsyncResult<Project> asyncResult = AsyncResult.undefined();
+    Project project = doOpenProject(virtualFile, null, false);
+    if (project != null) {
+      asyncResult.setDone(project);
+    }
+    else {
+      asyncResult.reject("project not imported");
+    }
+    return asyncResult;
   }
 }

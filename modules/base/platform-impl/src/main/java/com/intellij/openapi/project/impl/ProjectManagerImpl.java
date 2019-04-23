@@ -70,6 +70,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -992,4 +993,155 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
   }
 
   //endregion
+
+
+  @Nonnull
+  @RequiredWriteAction
+  public AsyncResult<Boolean> closeAndDisposeAsync(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
+    return AsyncResult.resolved(closeProject(project, true, true, true));
+  }
+
+  @Nonnull
+  @Override
+  public AsyncResult<Project> openProjectAsync(@Nonnull VirtualFile file, @Nonnull UIAccess uiAccess) {
+    AsyncResult<Project> projectAsyncResult = new AsyncResult<>();
+
+    AsyncResult<ConversionResult> preparingResult = new AsyncResult<>();
+    String fp = toCanonicalName(file.getPath());
+
+    preparingResult.doWhenRejected(projectAsyncResult::reject);
+    preparingResult.doWhenDone(conversionResult -> tryInitProjectByPath(conversionResult, projectAsyncResult, file, uiAccess));
+
+    Task.Backgroundable.queue(null, "Preparing project...", canCancelProjectLoading(), (indicator) -> {
+      final ConversionResult conversionResult = ConversionService.getInstance().convert(fp);
+      if (conversionResult.openingIsCanceled()) {
+        preparingResult.reject("conversion canceled");
+        return;
+      }
+      preparingResult.setDone(conversionResult);
+    });
+    return projectAsyncResult;
+  }
+
+  private void tryInitProjectByPath(ConversionResult conversionResult, AsyncResult<Project> projectAsyncResult, VirtualFile path, UIAccess uiAccess) {
+    final ProjectImpl project = createProject(null, toCanonicalName(path.getPath()), false, true);
+
+    for (Project p : getOpenProjects()) {
+      if (ProjectUtil.isSameProject(path.getPath(), p)) {
+        uiAccess.give(() -> ProjectUtil.focusProjectWindow(p, false));
+        AccessRule.writeAsync(() -> {
+          closeAndDisposeAsync(project, uiAccess).doWhenProcessed(() -> projectAsyncResult.reject("Already opened project"));
+        });
+        return;
+      }
+    }
+
+    Task.Backgroundable.queue(project, ProjectBundle.message("project.load.progress"), canCancelProjectLoading(), progressIndicator -> {
+      try {
+        if (!addToOpened(project)) {
+          AccessRule.writeAsync(() -> {
+            closeAndDisposeAsync(project, uiAccess).doWhenProcessed(() -> projectAsyncResult.reject("Can't add project to opened"));
+          });
+          return;
+        }
+
+        initProjectAsync(project, null, progressIndicator);
+
+        prepareProjectWorkspace(conversionResult, project, uiAccess, projectAsyncResult);
+      }
+      catch (ProcessCanceledException e) {
+        throw e;
+      }
+      catch (Throwable e) {
+        LOG.error(e);
+
+        projectAsyncResult.rejectWithThrowable(e);
+      }
+    });
+  }
+
+  private void prepareProjectWorkspace(ConversionResult conversionResult, Project project, UIAccess uiAccess, AsyncResult<Project> projectAsyncResult) {
+    Task.Backgroundable.queue(project, "Preparing workspace...", canCancelProjectLoading(), progressIndicator -> {
+      try {
+        progressIndicator.setIndeterminate(true);
+
+        StartupManager.getInstance(project).registerPostStartupActivity(() -> conversionResult.postStartupActivity(project));
+
+        openProjectRequireBackgroundTask(project, uiAccess);
+
+        projectAsyncResult.setDone(project);
+      }
+      catch (ProcessCanceledException e) {
+        throw e;
+      }
+      catch (Throwable e) {
+        LOG.error(e);
+
+        projectAsyncResult.rejectWithThrowable(e);
+      }
+    });
+  }
+
+  private void openProjectRequireBackgroundTask(Project project, UIAccess uiAccess) {
+    // more faster welcome frame closing
+    uiAccess.give(() -> WelcomeFrameManager.getInstance().closeFrame());
+
+    myApplication.getMessageBus().syncPublisher(TOPIC).projectOpened(project, uiAccess);
+
+    final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(project);
+    startupManager.runStartupActivities(uiAccess);
+
+    // Startup activities (e.g. the one in FileBasedIndexProjectHandler) have scheduled dumb mode to begin "later"
+    // Now we schedule-and-wait to the same event queue to guarantee that the dumb mode really begins now:
+    // Post-startup activities should not ever see unindexed and at the same time non-dumb state
+    startupManager.startCacheUpdate();
+
+    startupManager.runPostStartupActivitiesFromExtensions(uiAccess);
+
+    if (!project.isDisposed()) {
+      startupManager.runPostStartupActivities(uiAccess);
+
+      Application application = ApplicationManager.getApplication();
+      if (!application.isHeadlessEnvironment() && !application.isUnitTestMode()) {
+        final TrackingPathMacroSubstitutor macroSubstitutor = ((ProjectEx)project).getStateStore().getStateStorageManager().getMacroSubstitutor();
+        if (macroSubstitutor != null) {
+          StorageUtil.notifyUnknownMacros(macroSubstitutor, project, null);
+        }
+      }
+
+      if (ApplicationManager.getApplication().isActive()) {
+        JFrame projectFrame = WindowManager.getInstance().getFrame(project);
+        if (projectFrame != null) {
+          uiAccess.giveAndWait(() -> IdeFocusManager.getInstance(project).requestFocus(projectFrame, true));
+        }
+      }
+    }
+  }
+
+  private void initProjectAsync(@Nonnull final ProjectImpl project, @Nullable ProjectImpl template, ProgressIndicator progressIndicator) throws IOException {
+    progressIndicator.setText(ProjectBundle.message("loading.components.for", project.getName()));
+    progressIndicator.setIndeterminate(true);
+
+    Application.get().getMessageBus().syncPublisher(ProjectLifecycleListener.TOPIC).beforeProjectLoaded(project);
+
+    boolean succeed = false;
+    try {
+      if (template != null) {
+        project.getStateStore().loadProjectFromTemplate(template);
+      }
+      else {
+        project.getStateStore().load();
+      }
+      project.initNotLazyServices(/*progressIndicator*/);
+      succeed = true;
+    }
+    catch (Throwable e) {
+      e.printStackTrace();
+    }
+    finally {
+      if (!succeed && !project.isDefault()) {
+        TransactionGuard.submitTransaction(project, () -> WriteAction.run(() -> Disposer.dispose(project)));
+      }
+    }
+  }
 }
