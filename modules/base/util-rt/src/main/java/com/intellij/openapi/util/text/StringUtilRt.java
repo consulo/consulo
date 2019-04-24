@@ -18,6 +18,7 @@ package com.intellij.openapi.util.text;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 
 /**
@@ -200,7 +201,7 @@ public class StringUtilRt {
   }
 
   @Contract(pure = true)
-  public static int parseInt(@javax.annotation.Nullable String string, final int defaultValue) {
+  public static int parseInt(@Nullable String string, final int defaultValue) {
     if (string == null) {
       return defaultValue;
     }
@@ -271,8 +272,21 @@ public class StringUtilRt {
   }
 
   @Contract(pure = true)
-  public static boolean endsWithChar(@javax.annotation.Nullable CharSequence s, char suffix) {
+  public static boolean endsWithChar(@Nullable CharSequence s, char suffix) {
     return s != null && s.length() != 0 && s.charAt(s.length() - 1) == suffix;
+  }
+
+  @Contract(pure = true)
+  public static boolean endsWith(@Nonnull CharSequence text, @Nonnull CharSequence suffix) {
+    int l1 = text.length();
+    int l2 = suffix.length();
+    if (l1 < l2) return false;
+
+    for (int i = l1 - 1; i >= l1 - l2; i--) {
+      if (text.charAt(i) != suffix.charAt(i + l2 - l1)) return false;
+    }
+
+    return true;
   }
 
   @Contract(pure = true)

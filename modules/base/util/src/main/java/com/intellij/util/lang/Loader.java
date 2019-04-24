@@ -1,23 +1,9 @@
-/*
- * Copyright 2000-2015 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.lang;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.URL;
 
@@ -30,6 +16,7 @@ import java.net.URL;
 abstract class Loader {
   private final URL myURL;
   private final int myIndex;
+  private ClasspathCache.NameFilter myLoadingFilter;
 
   Loader(URL url, int index) {
     myURL = url;
@@ -41,12 +28,22 @@ abstract class Loader {
   }
 
   @Nullable
-  abstract Resource getResource(String name, boolean flag);
+  abstract Resource getResource(String name);
 
   @Nonnull
   abstract ClasspathCache.LoaderData buildData() throws IOException;
 
   int getIndex() {
     return myIndex;
+  }
+
+  boolean containsName(String name, String shortName) {
+    if (name == null || name.isEmpty()) return true;
+    ClasspathCache.NameFilter filter = myLoadingFilter;
+    return filter == null || filter.maybeContains(shortName);
+  }
+
+  void applyData(ClasspathCache.LoaderData loaderData) {
+    myLoadingFilter = loaderData.getNameFilter();
   }
 }

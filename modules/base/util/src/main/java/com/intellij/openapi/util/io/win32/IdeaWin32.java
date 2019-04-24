@@ -17,7 +17,8 @@ package com.intellij.openapi.util.io.win32;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.util.lang.UrlClassLoader;
+import com.intellij.util.loader.NativeLibraryLoader;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -37,7 +38,7 @@ public class IdeaWin32 {
     IdeaWin32 instance = null;
     if (SystemInfo.isWin2kOrNewer && Boolean.parseBoolean(System.getProperty("idea.use.native.fs.for.win", "true"))) {
       try {
-        UrlClassLoader.loadPlatformLibrary("IdeaWin32");
+        NativeLibraryLoader.loadPlatformLibrary("IdeaWin32");
         instance = new IdeaWin32();
         LOG.info("Native filesystem for Windows is operational");
       }

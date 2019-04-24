@@ -17,7 +17,7 @@ package com.intellij.ui.win;
 
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
-import com.intellij.util.lang.UrlClassLoader;
+import com.intellij.util.loader.NativeLibraryLoader;
 
 import java.lang.ref.WeakReference;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -30,7 +30,7 @@ public class RecentTasks {
   private final static String openerThreadName = Thread.currentThread().getName();
 
   static {
-    UrlClassLoader.loadPlatformLibrary("jumpListBridge");
+    NativeLibraryLoader.loadPlatformLibrary("jumpListBridge");
   }
 
   private synchronized static void init() {
