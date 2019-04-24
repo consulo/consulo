@@ -4,12 +4,11 @@ package com.intellij.ide.plugins.cl;
 import com.intellij.diagnostic.PluginException;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.extensions.PluginId;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.lang.UrlClassLoader;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -146,19 +145,10 @@ public class IdeaPluginClassLoader extends UrlClassLoader {
     return null;
   }
 
-  private static final Set<String> KOTLIN_STDLIB_CLASSES_USED_IN_SIGNATURES = ContainerUtil
-          .set("kotlin.sequences.Sequence", "kotlin.Unit", "kotlin.Pair", "kotlin.Triple", "kotlin.jvm.internal.DefaultConstructorMarker", "kotlin.properties.ReadWriteProperty",
-               "kotlin.properties.ReadOnlyProperty");
-
   private static boolean mustBeLoadedByPlatform(String className) {
     if (className.startsWith("java.")) return true;
-    //some commonly used classes from kotlin-runtime must be loaded by the platform classloader. Otherwise if a plugin bundles its own version
-    // of kotlin-runtime.jar it won't be possible to call platform's methods with these types in signatures from such a plugin.
-    //We assume that these classes don't change between Kotlin versions so it's safe to always load them from platform's kotlin-runtime.
-    return className.startsWith("kotlin.") &&
-           (className.startsWith("kotlin.jvm.functions.") ||
-            (className.startsWith("kotlin.reflect.") && className.indexOf('.', 15 /* "kotlin.reflect".length */) < 0) ||
-            KOTLIN_STDLIB_CLASSES_USED_IN_SIGNATURES.contains(className));
+    // FIXME [VISTALL] we don't need skip kotlin runtime, we don't use it
+    return false;
   }
 
   @Nullable
