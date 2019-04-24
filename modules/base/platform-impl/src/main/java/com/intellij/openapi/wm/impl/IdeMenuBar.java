@@ -323,8 +323,13 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
     return false;
   }
 
+  @Nullable
   private Component findActualComponent(MouseEvent mouseEvent) {
     Component component = mouseEvent.getComponent();
+    if(component == null) {
+      return null;
+    }
+
     Component deepestComponent;
     if (myState != State.EXPANDED && !myState.isInProgress() && contains(SwingUtilities.convertPoint(component, mouseEvent.getPoint(), this))) {
       deepestComponent = this;
