@@ -18,6 +18,8 @@ package consulo.ui.desktop.internal.laf.textBoxWithExpandAction;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.ui.ComponentWithBrowseButton;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.components.fields.ExpandableTextField;
 import consulo.awt.TargetAWT;
 import consulo.ui.RequiredUIAccess;
@@ -29,6 +31,7 @@ import consulo.ui.image.Image;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
 import java.util.EventListener;
 import java.util.List;
 import java.util.function.Function;
@@ -51,6 +54,14 @@ public class DesktopTextBoxWithExpandAction {
   private static class SupportedTextBoxWithExpandAction extends SwingComponentDelegate<ExpandableTextField> implements TextBoxWithExpandAction {
     private SupportedTextBoxWithExpandAction(Function<String, List<String>> parser, Function<List<String>, String> joiner, SupportTextBoxWithExpandActionLaf lookAndFeel) {
       myComponent = new ExpandableTextField(parser::apply, joiner::apply, lookAndFeel);
+      myComponent.getDocument().addDocumentListener(new DocumentAdapter() {
+        @Override
+        @SuppressWarnings("unchecked")
+        @RequiredUIAccess
+        protected void textChanged(DocumentEvent e) {
+          getListenerDispatcher(ValueListener.class).valueChanged(new ValueEvent(SupportedTextBoxWithExpandAction.this, getValue()));
+        }
+      });
     }
 
     @Nullable
@@ -64,16 +75,25 @@ public class DesktopTextBoxWithExpandAction {
     public void setValue(String value, boolean fireEvents) {
       myComponent.setText(value);
     }
+
+    @Nonnull
+    @Override
+    public TextBoxWithExpandAction setDialogTitle(@Nonnull String text) {
+      return this;
+    }
   }
 
   private static class FallbackTextBoxWithExpandAction extends SwingComponentDelegate<ComponentWithBrowseButton<JComponent>> implements TextBoxWithExpandAction {
     private DesktopTextBoxImpl myTextBox;
 
+    private String myDialogTitle;
+
     private FallbackTextBoxWithExpandAction(Image editButtonImage, String dialogTitle, Function<String, List<String>> parser, Function<List<String>, String> joiner) {
       myTextBox = new DesktopTextBoxImpl("");
+      myDialogTitle = StringUtil.notNullize(dialogTitle);
 
       JTextField awtTextField = (JTextField)myTextBox.toAWTComponent();
-      myComponent = new ComponentWithBrowseButton<>(awtTextField, e -> Messages.showTextAreaDialog(awtTextField, dialogTitle, dialogTitle, parser::apply, joiner::apply));
+      myComponent = new ComponentWithBrowseButton<>(awtTextField, e -> Messages.showTextAreaDialog(awtTextField, myDialogTitle, myDialogTitle, parser::apply, joiner::apply));
 
       if (editButtonImage != null) {
         myComponent.setButtonIcon(TargetAWT.to(editButtonImage));
@@ -102,6 +122,13 @@ public class DesktopTextBoxWithExpandAction {
     @Override
     public void setValue(String value, boolean fireEvents) {
       myTextBox.setValue(value, fireEvents);
+    }
+
+    @Nonnull
+    @Override
+    public TextBoxWithExpandAction setDialogTitle(@Nonnull String text) {
+      myDialogTitle = text;
+      return this;
     }
   }
 }

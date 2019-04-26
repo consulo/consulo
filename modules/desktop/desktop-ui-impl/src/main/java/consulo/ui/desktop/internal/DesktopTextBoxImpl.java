@@ -17,6 +17,7 @@ package consulo.ui.desktop.internal;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.components.JBTextField;
 import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.ui.Component;
@@ -26,14 +27,13 @@ import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 
 import javax.annotation.Nonnull;
 import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 /**
  * @author VISTALL
  * @since 19-Nov-16.
  */
 public class DesktopTextBoxImpl extends SwingComponentDelegate<JBTextField> implements TextBox {
-  private static class Listener implements DocumentListener {
+  private static class Listener extends DocumentAdapter {
     private DesktopTextBoxImpl myTextField;
 
     public Listener(DesktopTextBoxImpl textField) {
@@ -41,21 +41,8 @@ public class DesktopTextBoxImpl extends SwingComponentDelegate<JBTextField> impl
     }
 
     @Override
-    @RequiredUIAccess
-    public void insertUpdate(DocumentEvent e) {
-      myTextField.fireListeners();
-    }
-
-    @Override
-    @RequiredUIAccess
-    public void removeUpdate(DocumentEvent e) {
-      myTextField.fireListeners();
-    }
-
-    @Override
-    @RequiredUIAccess
-    public void changedUpdate(DocumentEvent e) {
-      myTextField.fireListeners();
+    protected void textChanged(DocumentEvent e) {
+      myTextField.valueChanged();
     }
   }
 
@@ -76,7 +63,7 @@ public class DesktopTextBoxImpl extends SwingComponentDelegate<JBTextField> impl
 
   @SuppressWarnings("unchecked")
   @RequiredUIAccess
-  private void fireListeners() {
+  private void valueChanged() {
     dataObject().getDispatcher(ValueListener.class).valueChanged(new ValueEvent(this, getValue()));
   }
 

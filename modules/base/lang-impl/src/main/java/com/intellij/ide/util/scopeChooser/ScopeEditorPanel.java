@@ -115,20 +115,15 @@ public class ScopeEditorPanel {
     };
 
     myPatternField.setDialogCaption("Pattern");
-    myPatternField.getDocument().addDocumentListener(new DocumentAdapter() {
-      @Override
-      public void textChanged(DocumentEvent event) {
-        onTextChange();
-      }
-    });
+    myPatternField.addValueListener(event -> onTextChange());
 
-    myPatternField.getTextField().addCaretListener(new CaretListener() {
-      @Override
-      public void caretUpdate(CaretEvent e) {
-        myCaretPosition = e.getDot();
-        updateCaretPositionText();
-      }
-    });
+    //myPatternField.getTextField().addCaretListener(new CaretListener() {
+    //  @Override
+    //  public void caretUpdate(CaretEvent e) {
+    //    myCaretPosition = e.getDot();
+    //    updateCaretPositionText();
+    //  }
+    //});
 
     myPatternField.getTextField().addFocusListener(new FocusListener() {
       @Override

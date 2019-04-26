@@ -33,14 +33,11 @@ import com.intellij.ui.RawCommandLineEditor;
 import com.intellij.ui.TextAccessor;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.PathUtil;
-import com.intellij.util.execution.ParametersListUtil;
 import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
-import consulo.ui.TextBoxWithExpandAction;
-import consulo.ui.ValueComponent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -48,15 +45,13 @@ import java.awt.event.ActionListener;
 import java.util.function.Consumer;
 
 public class CommonProgramParametersPanel extends JPanel implements PanelWithAnchor {
-  private LabeledComponent<JComponent> myProgramParametersComponent;
+  private LabeledComponent<RawCommandLineEditor> myProgramParametersComponent;
   private LabeledComponent<JComponent> myWorkingDirectoryComponent;
   private MacroComboBoxWithBrowseButton myWorkingDirectoryComboBox;
   private EnvironmentVariablesComponent myEnvVariablesComponent;
   protected JComponent myAnchor;
 
   private Module myModuleContext = null;
-
-  private TextBoxWithExpandAction myProgramArgumentsBox;
 
   public CommonProgramParametersPanel() {
     this(true);
@@ -88,9 +83,7 @@ public class CommonProgramParametersPanel extends JPanel implements PanelWithAnc
   }
 
   protected void initComponents() {
-    myProgramArgumentsBox = TextBoxWithExpandAction.create(null, "Program Arguments", ParametersListUtil.DEFAULT_LINE_PARSER::fun, ParametersListUtil.DEFAULT_LINE_JOINER::fun);
-
-    myProgramParametersComponent = LabeledComponent.create((JComponent)TargetAWT.to(myProgramArgumentsBox), ExecutionBundle.message("run.configuration.program.parameters"));
+    myProgramParametersComponent = LabeledComponent.create(new RawCommandLineEditor(), ExecutionBundle.message("run.configuration.program.parameters"));
 
     FileChooserDescriptor fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
     //noinspection DialogTitleCapitalization
@@ -107,6 +100,8 @@ public class CommonProgramParametersPanel extends JPanel implements PanelWithAnc
     addComponents();
 
     setPreferredSize(new Dimension(10, 10));
+
+    copyDialogCaption(myProgramParametersComponent);
   }
 
   @Deprecated // use MacroComboBoxWithBrowseButton instead
@@ -147,11 +142,11 @@ public class CommonProgramParametersPanel extends JPanel implements PanelWithAnc
 
   public void setProgramParametersLabel(String textWithMnemonic) {
     myProgramParametersComponent.setText(textWithMnemonic);
-    //copyDialogCaption(myProgramParametersComponent);
+    copyDialogCaption(myProgramParametersComponent);
   }
 
   public void setProgramParameters(String params) {
-    myProgramArgumentsBox.setValue(params);
+    myProgramParametersComponent.getComponent().setText(params);
   }
 
   public TextAccessor getWorkingDirectoryAccessor() {
@@ -175,7 +170,7 @@ public class CommonProgramParametersPanel extends JPanel implements PanelWithAnc
     myWorkingDirectoryComboBox.showModuleMacroAlways();
   }
 
-  public LabeledComponent<JComponent> getProgramParametersComponent() {
+  public LabeledComponent<RawCommandLineEditor> getProgramParametersComponent() {
     return myProgramParametersComponent;
   }
 
@@ -193,16 +188,11 @@ public class CommonProgramParametersPanel extends JPanel implements PanelWithAnc
   }
 
   public void applyTo(CommonProgramRunConfigurationParameters configuration) {
-    configuration.setProgramParameters(fromTextField(myProgramArgumentsBox, configuration));
+    configuration.setProgramParameters(fromTextField(myProgramParametersComponent.getComponent(), configuration));
     configuration.setWorkingDirectory(fromTextField(myWorkingDirectoryComboBox, configuration));
 
     configuration.setEnvs(myEnvVariablesComponent.getEnvs());
     configuration.setPassParentEnvs(myEnvVariablesComponent.isPassParentEnvs());
-  }
-
-  @Nullable
-  protected String fromTextField(@Nonnull ValueComponent<String> textAccessor, @Nonnull CommonProgramRunConfigurationParameters configuration) {
-    return textAccessor.getValue();
   }
 
   @Nullable

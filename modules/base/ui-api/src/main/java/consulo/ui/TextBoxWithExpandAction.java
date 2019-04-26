@@ -35,4 +35,7 @@ public interface TextBoxWithExpandAction extends TextBox {
   static TextBoxWithExpandAction create(@Nullable Image editButtonImage, @Nonnull String dialogTitle, @Nonnull Function<String, List<String>> parser, @Nonnull Function<List<String>, String> joiner) {
     return UIInternal.get()._Components_textBoxWithExpandAction(editButtonImage, dialogTitle, parser, joiner);
   }
+
+  @Nonnull
+  TextBoxWithExpandAction setDialogTitle(@Nonnull String text);
 }
