@@ -15,6 +15,7 @@
  */
 package consulo.ide.ui.laf.modern;
 
+import com.intellij.ide.ui.laf.darcula.DarculaUIUtil_New;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.util.ui.JBUI;
 
@@ -41,6 +42,10 @@ public class ModernTextBorder implements Border, UIResource {
 
   @Override
   public Insets getBorderInsets(Component c) {
+    if(DarculaUIUtil_New.isTableCellEditor(c)) {
+      return JBUI.insets(2, 7, 2, 7).asUIResource();
+    }
+
     int vOffset = c instanceof JPasswordField ? 3 : c instanceof JSpinner ? 6 : 4;
     return JBUI.insets(vOffset, 7, vOffset, 7).asUIResource();
   }
@@ -52,6 +57,10 @@ public class ModernTextBorder implements Border, UIResource {
 
   @Override
   public void paintBorder(Component c, Graphics g2, int x, int y, int width, int height) {
+    if(DarculaUIUtil_New.isTableCellEditor(c)) {
+      return;
+    }
+
     if (c.getParent() instanceof JComboBox) {
       return;
     }
@@ -61,7 +70,6 @@ public class ModernTextBorder implements Border, UIResource {
     g.translate(x, y);
 
     ComponentUI componentUI = ModernUIUtil.getUI(c);
-    // TODO [VISTALL] find way for handle component of EditorTextField
     if (componentUI instanceof ModernTextUI) {
       if (((ModernTextUI)componentUI).isFocused()) {
         g.setColor(ModernUIUtil.getSelectionBackground());

@@ -21,8 +21,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.ButtonlessScrollBarUI;
 import com.intellij.util.ui.JBUI;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -80,8 +80,7 @@ public class JBScrollPane extends JScrollPane {
         }
       }
       return null;
-    }
-  }
+    }}
 
   /**
    * Indicates whether the specified event is not consumed and does not have unexpected modifiers.
@@ -175,7 +174,8 @@ public class JBScrollPane extends JScrollPane {
   private void updateViewportBorder() {
     if (getViewportBorder() instanceof ViewportBorder) {
       setViewportBorder(new ViewportBorder(myViewportBorderWidth >= 0 ? myViewportBorderWidth : 1));
-    }  }
+    }
+  }
 
   public static ViewportBorder createIndentBorder() {
     return new ViewportBorder(JBUI.scale(2));
