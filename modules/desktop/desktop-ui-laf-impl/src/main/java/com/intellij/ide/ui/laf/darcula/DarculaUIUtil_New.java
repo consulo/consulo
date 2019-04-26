@@ -323,6 +323,10 @@ public class DarculaUIUtil_New {
     return fg;
   }
 
+  public static boolean isComboBoxEditor(Component c) {
+    return UIUtil.getParentOfType(JComboBox.class, c) != null;
+  }
+
   public static boolean isMultiLineHTML(@Nullable String text) {
     if (text != null) {
       text = text.toLowerCase(Locale.getDefault());

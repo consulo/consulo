@@ -112,11 +112,7 @@ public class WinIntelliJTextFieldUI_New extends TextFieldWithPopupHandlerUI_New 
   protected int getMinimumHeight(int textHeight) {
     JComponent c = getComponent();
     Insets i = c.getInsets();
-    return isComboBoxEditor(c) || UIUtil.getParentOfType(JSpinner.class, c) != null ? textHeight : WinIntelliJTextBorder_New.MINIMUM_HEIGHT.get() + i.top + i.bottom;
-  }
-
-  public static boolean isComboBoxEditor(Component c) {
-    return UIUtil.getParentOfType(JComboBox.class, c) != null;
+    return DarculaUIUtil_New.isComboBoxEditor(c) || UIUtil.getParentOfType(JSpinner.class, c) != null ? textHeight : WinIntelliJTextBorder_New.MINIMUM_HEIGHT.get() + i.top + i.bottom;
   }
 
   @Override

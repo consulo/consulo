@@ -28,7 +28,7 @@ public class DarculaTextFieldUI_New extends TextFieldWithPopupHandlerUI_New {
     Insets i = getComponent().getInsets();
     JComponent c = getComponent();
     int minHeight = (isCompact(c) ? COMPACT_HEIGHT.get() : MINIMUM_HEIGHT.get()) + i.top + i.bottom;
-    return DarculaEditorTextFieldBorder_New.isComboBoxEditor(c) || UIUtil.getParentOfType(JSpinner.class, c) != null ? textHeight : minHeight;
+    return isComboBoxEditor(c) || UIUtil.getParentOfType(JSpinner.class, c) != null ? textHeight : minHeight;
   }
 
   @Override
