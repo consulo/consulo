@@ -347,6 +347,8 @@ public class IdeEventQueue extends EventQueue {
 
   @Override
   public void dispatchEvent(@Nonnull AWTEvent e) {
+    if (e.getSource() instanceof TrayIcon) return;
+
     checkForTimeJump();
     if (!appIsLoaded()) {
       try {
