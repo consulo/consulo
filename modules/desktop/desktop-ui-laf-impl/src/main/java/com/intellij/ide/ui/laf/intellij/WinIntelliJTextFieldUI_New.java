@@ -16,7 +16,6 @@
 package com.intellij.ide.ui.laf.intellij;
 
 import com.intellij.ide.ui.laf.darcula.DarculaUIUtil_New;
-import com.intellij.ide.ui.laf.darcula.ui.DarculaEditorTextFieldBorder_New;
 import com.intellij.ide.ui.laf.darcula.ui.TextFieldWithPopupHandlerUI_New;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.ui.JBInsets;
@@ -113,7 +112,11 @@ public class WinIntelliJTextFieldUI_New extends TextFieldWithPopupHandlerUI_New 
   protected int getMinimumHeight(int textHeight) {
     JComponent c = getComponent();
     Insets i = c.getInsets();
-    return DarculaEditorTextFieldBorder_New.isComboBoxEditor(c) || UIUtil.getParentOfType(JSpinner.class, c) != null ? textHeight : WinIntelliJTextBorder_New.MINIMUM_HEIGHT.get() + i.top + i.bottom;
+    return isComboBoxEditor(c) || UIUtil.getParentOfType(JSpinner.class, c) != null ? textHeight : WinIntelliJTextBorder_New.MINIMUM_HEIGHT.get() + i.top + i.bottom;
+  }
+
+  public static boolean isComboBoxEditor(Component c) {
+    return UIUtil.getParentOfType(JComboBox.class, c) != null;
   }
 
   @Override

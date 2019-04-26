@@ -23,7 +23,6 @@ import com.intellij.ui.mac.foundation.Foundation;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.geom.GeneralPath;
 
@@ -106,7 +105,7 @@ public class MacUIUtil {
     g.setPaint(UIUtil.getGradientPaint(0, h1, Gray._229, 0, height, Gray._234));
     g.fillRect(0, h1, width, height);
   }
-Ed
+
   public static Color getFocusRingColor() {
     final Object o = UIManager.get("Focus.color");
     if (o instanceof Color) {

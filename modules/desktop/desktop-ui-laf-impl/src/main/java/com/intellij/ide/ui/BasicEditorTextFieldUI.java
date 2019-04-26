@@ -15,7 +15,6 @@
  */
 package com.intellij.ide.ui;
 
-import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.ui.EditorTextField;
 
 import javax.swing.*;
@@ -31,22 +30,22 @@ public class BasicEditorTextFieldUI extends BasicPanelUI {
 
   @Override
   public void installUI(JComponent c) {
-    super.installUI(c);
-
     Border border = c.getBorder();
     if (border == null || border instanceof UIResource) {
       c.setBorder(UIManager.getBorder("TextField.border"));
     }
   }
 
+  @Override
+  public void uninstallUI(JComponent c) {
+    LookAndFeel.uninstallBorder(c);
+  }
 
   @Override
   public void paint(Graphics g, JComponent c) {
     EditorTextField field = (EditorTextField)c;
 
-    EditorEx editorEx = (EditorEx)field.getEditor();
-
-    g.setColor(editorEx.getBackgroundColor());
+    g.setColor(field.getBackground());
     g.fillRect(0, 0, c.getWidth(), c.getHeight());
   }
 }

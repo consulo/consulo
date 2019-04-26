@@ -29,7 +29,6 @@ import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.colors.EditorColorsUtil;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.ex.EditorEx;
@@ -502,7 +501,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     // color scheme settings:
     setupEditorFont(editor);
     updateBorder(editor);
-    editor.setBackgroundColor(getBackgroundColor(isEnabled(), colorsScheme));
+    editor.setBackgroundColor(getBackgroundColor(isEnabled()));
   }
 
   public void setOneLineMode(boolean oneLineMode) {
@@ -627,17 +626,16 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
 
   @Override
   public Color getBackground() {
-    Color color = getBackgroundColor(isEnabled(), EditorColorsUtil.getGlobalOrDefaultColorScheme());
-    return color != null ? color : super.getBackground();
+    return getBackgroundColor(isEnabled());
   }
 
   @Nonnull
-  private Color getBackgroundColor(boolean enabled, final EditorColorsScheme colorsScheme) {
+  private Color getBackgroundColor(boolean enabled) {
     if (myEnforcedBgColor != null) return myEnforcedBgColor;
-    if (UIUtil.getParentOfType(CellRendererPane.class, this) != null && (UIUtil.isUnderDarcula() || UIUtil.isUnderIntelliJLaF())) {
+    if (UIUtil.getParentOfType(CellRendererPane.class, this) != null) {
       return getParent().getBackground();
     }
-    return enabled ? colorsScheme.getDefaultBackground() : UIUtil.getInactiveTextFieldBackgroundColor();
+    return enabled ? UIUtil.getTextFieldBackground() : UIUtil.getInactiveTextFieldBackgroundColor();
   }
 
   @Override
