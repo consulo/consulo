@@ -25,6 +25,8 @@ import java.util.function.Function;
 /**
  * Text box with two states. Short - when text box looks like default {@link TextBox}, and expanded - when text are splitted and showed in large view
  *
+ * Some themes can not support inline actions, in this case it will show button with 'editButtonImage' icon, and will show text dialog on click
+ *
  * @author VISTALL
  * @since 2019-04-26
  */
