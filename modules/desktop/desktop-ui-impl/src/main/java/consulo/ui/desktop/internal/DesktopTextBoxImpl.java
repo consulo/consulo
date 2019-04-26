@@ -32,7 +32,7 @@ import javax.swing.event.DocumentListener;
  * @author VISTALL
  * @since 19-Nov-16.
  */
-class DesktopTextBoxImpl extends SwingComponentDelegate<JBTextField> implements TextBox {
+public class DesktopTextBoxImpl extends SwingComponentDelegate<JBTextField> implements TextBox {
   private static class Listener implements DocumentListener {
     private DesktopTextBoxImpl myTextField;
 

@@ -33,6 +33,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+@Deprecated
 public class RawCommandLineEditor extends JPanel implements TextAccessor {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ui.RawCommandLineEditor");
 

@@ -15,6 +15,8 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.desktop.util.awt.component.VerticalLayoutPanel;
 import gnu.trove.TDoubleObjectHashMap;
+import kava.beans.PropertyChangeListener;
+import kava.beans.PropertyChangeSupport;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -24,8 +26,6 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 import java.awt.image.ImageObserver;
-import kava.beans.PropertyChangeListener;
-import kava.beans.PropertyChangeSupport;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -1517,8 +1517,14 @@ public class JBUI {
   }
 
   @Nonnull
-  private static Icon getIcon(@Nonnull String propertyName, @Nonnull Icon defaultIcon) {
+  public static Icon getIcon(@Nonnull String propertyName, @Nonnull Icon defaultIcon) {
     Icon icon = UIManager.getIcon(propertyName);
     return icon == null ? defaultIcon : icon;
+  }
+
+  @Nonnull
+  public static Border getBorder(@Nonnull String propertyName, @Nonnull Border defaultBorder) {
+    Border border = UIManager.getBorder(propertyName);
+    return border == null ? defaultBorder : border;
   }
 }

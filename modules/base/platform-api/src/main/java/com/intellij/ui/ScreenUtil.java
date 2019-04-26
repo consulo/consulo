@@ -20,8 +20,8 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.WeakHashMap;
 import com.intellij.util.ui.JBInsets;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Area;
@@ -129,6 +129,15 @@ public class ScreenUtil {
 
   public static Rectangle getScreenRectangle(@Nonnull Point p) {
     return getScreenRectangle(p.x, p.y);
+  }
+
+  public static Rectangle getScreenRectangle(@Nonnull Component component) {
+    GraphicsConfiguration configuration = component.getGraphicsConfiguration();
+    if (configuration != null) return getScreenRectangle(configuration);
+    // try to find the nearest screen if configuration is not available
+    Point p = new Point();
+    SwingUtilities.convertPointToScreen(p, component);
+    return getScreenRectangle(p);
   }
 
   /**
