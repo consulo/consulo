@@ -320,7 +320,7 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public TextBoxWithExpandAction _Components_expandableTextBox(Image editButtonImage, Function<String, ? extends List<String>> parser, Function<? super List<String>, String> joiner) {
-    return null;
+  public TextBoxWithExpandAction _Components_textBoxWithExpandAction(Image editButtonImage, String dialogTitle, Function<String, List<String>> parser, Function<List<String>, String> joiner) {
+    throw new UnsupportedOperationException();
   }
 }
