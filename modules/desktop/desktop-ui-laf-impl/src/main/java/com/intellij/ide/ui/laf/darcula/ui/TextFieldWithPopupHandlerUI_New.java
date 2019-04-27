@@ -50,19 +50,7 @@ public abstract class TextFieldWithPopupHandlerUI_New extends BasicTextFieldUI i
   private Object variant;
   private int cursor;
 
-  @Deprecated
-  protected JTextField myTextField;
-
   public TextFieldWithPopupHandlerUI_New() {
-  }
-
-  @Deprecated
-  public TextFieldWithPopupHandlerUI_New(JTextField textField) {
-    myTextField = textField;
-  }
-
-  @Deprecated
-  public static void updateBorderInsets(Component c, Insets insets) {
   }
 
   /**

@@ -16,6 +16,7 @@
 package com.intellij.ide.ui.laf.darcula.ui;
 
 import com.intellij.ide.ui.laf.darcula.DarculaUIUtil;
+import com.intellij.ide.ui.laf.darcula.DarculaUIUtil_New;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.ui.Gray;
 import com.intellij.util.ui.JBUI;
@@ -33,10 +34,10 @@ public class DarculaTextBorder implements Border, UIResource {
   @Override
   public Insets getBorderInsets(Component c) {
     int vOffset = c instanceof JPasswordField ? 3 : 4;
-    if (DarculaTextFieldUI.isSearchFieldWithHistoryPopup(c)) {
+    if (TextFieldWithPopupHandlerUI_New.isSearchFieldWithHistoryPopup(c)) {
       return JBUI.insets(vOffset, 7 + 16 + 3, vOffset, 7 + 16).asUIResource();
     }
-    else if (DarculaTextFieldUI.isSearchField(c)) {
+    else if (TextFieldWithPopupHandlerUI_New.isSearchField(c)) {
       return JBUI.insets(vOffset, 4 + 16 + 3, vOffset, 7 + 16).asUIResource();
     }
     else {
@@ -51,9 +52,12 @@ public class DarculaTextBorder implements Border, UIResource {
 
   @Override
   public void paintBorder(Component c, Graphics g2, int x, int y, int width, int height) {
-    if (DarculaTextFieldUI.isSearchField(c)) return;
+    if (DarculaUIUtil_New.isComboBoxEditor(c)) return;
+    if (TextFieldWithPopupHandlerUI_New.isSearchField(c)) return;
+
     Graphics2D g = ((Graphics2D)g2);
     final GraphicsConfig config = new GraphicsConfig(g);
+    config.setupAAPainting();
     g.translate(x, y);
 
     if (c.hasFocus()) {
@@ -62,7 +66,7 @@ public class DarculaTextBorder implements Border, UIResource {
     else {
       boolean editable = !(c instanceof JTextComponent) || (((JTextComponent)c).isEditable());
       g.setColor(c.isEnabled() && editable ? Gray._100 : new Color(0x535353));
-      g.drawRect(JBUI.scale(1), JBUI.scale(1), width - JBUI.scale(2), height - JBUI.scale(2));
+      g.drawRoundRect(JBUI.scale(1), JBUI.scale(1), width - JBUI.scale(2), height - JBUI.scale(2), JBUI.scale(4), JBUI.scale(4));
     }
     g.translate(-x, -y);
     config.restore();

@@ -45,7 +45,11 @@ public class BasicEditorTextFieldUI extends BasicPanelUI {
   public void paint(Graphics g, JComponent c) {
     EditorTextField field = (EditorTextField)c;
 
+    paintBackground(g, field);
+  }
+
+  protected void paintBackground(Graphics g, EditorTextField field) {
     g.setColor(field.getBackground());
-    g.fillRect(0, 0, c.getWidth(), c.getHeight());
+    g.fillRect(0, 0, field.getWidth(), field.getHeight());
   }
 }

@@ -27,6 +27,7 @@ import com.intellij.util.containers.hash.HashMap;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.desktop.util.awt.laf.BuildInLookAndFeel;
+import consulo.ui.desktop.internal.laf.textBoxWithExpandAction.SupportTextBoxWithExpandActionLaf;
 import sun.awt.AppContext;
 
 import javax.annotation.Nonnull;
@@ -52,7 +53,7 @@ import java.util.Properties;
 /**
  * @author Konstantin Bulenkov
  */
-public class DarculaLaf extends BasicLookAndFeel implements BuildInLookAndFeel {
+public class DarculaLaf extends BasicLookAndFeel implements BuildInLookAndFeel, SupportTextBoxWithExpandActionLaf {
   public static final String NAME = "Darcula";
   BasicLookAndFeel base;
 
