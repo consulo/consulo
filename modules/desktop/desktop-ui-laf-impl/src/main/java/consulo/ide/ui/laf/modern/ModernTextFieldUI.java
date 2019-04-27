@@ -28,17 +28,16 @@ import java.awt.event.FocusListener;
  * @author VISTALL
  * @since 2019-04-26
  */
-public class ModernTextFieldUI_New extends TextFieldWithPopupHandlerUI_New implements ModernTextBorder.ModernTextUI {
+public class ModernTextFieldUI extends TextFieldWithPopupHandlerUI_New implements ModernTextBorder.ModernTextUI {
+  public static ComponentUI createUI(JComponent c) {
+    return new ModernTextFieldUI((JTextField)c);
+  }
+
   private final MouseEnterHandler myMouseEnterHandler;
   private boolean myFocus;
   private FocusListener myFocusListener;
 
-  @SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass", "UnusedDeclaration"})
-  public static ComponentUI createUI(JComponent c) {
-    return new ModernTextFieldUI_New((JTextField)c);
-  }
-
-  public ModernTextFieldUI_New(JTextField c) {
+  public ModernTextFieldUI(JTextField c) {
     myMouseEnterHandler = new MouseEnterHandler(c);
   }
 
