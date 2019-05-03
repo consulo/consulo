@@ -1004,9 +1004,9 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
   @Nonnull
   @Override
   public AsyncResult<Project> openProjectAsync(@Nonnull VirtualFile file, @Nonnull UIAccess uiAccess) {
-    AsyncResult<Project> projectAsyncResult = new AsyncResult<>();
+    AsyncResult<Project> projectAsyncResult = AsyncResult.undefined();
 
-    AsyncResult<ConversionResult> preparingResult = new AsyncResult<>();
+    AsyncResult<ConversionResult> preparingResult = AsyncResult.undefined();
     String fp = toCanonicalName(file.getPath());
 
     preparingResult.doWhenRejected(projectAsyncResult::reject);
