@@ -1024,7 +1024,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
   }
 
   private void tryInitProjectByPath(ConversionResult conversionResult, AsyncResult<Project> projectAsyncResult, VirtualFile path, UIAccess uiAccess) {
-    final ProjectImpl project = createProject(null, toCanonicalName(path.getPath()), false, true);
+    final ProjectImpl project = createProject(null, toCanonicalName(path.getPath()), false, false, true);
 
     for (Project p : getOpenProjects()) {
       if (ProjectUtil.isSameProject(path.getPath(), p)) {
