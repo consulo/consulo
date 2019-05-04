@@ -59,7 +59,10 @@ public abstract class ProjectManager {
   public abstract void addProjectManagerListener(@Nonnull ProjectManagerListener listener, @Nonnull Disposable parentDisposable);
 
   @Nonnull
-  public abstract AsyncResult<Project> openProjectAsync(@Nonnull VirtualFile file, @Nonnull UIAccess uiAccess);
+  public abstract AsyncResult<Project> openProjectAsyncNew(@Nonnull VirtualFile file, @Nonnull UIAccess uiAccess);
+
+  @Nonnull
+  public abstract AsyncResult<Project> openProjectAsyncNew(@Nonnull Project project, @Nonnull UIAccess uiAccess);
 
   /**
    * Removes global listener from all projects.

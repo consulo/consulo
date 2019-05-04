@@ -22,14 +22,20 @@ import com.intellij.ide.impl.NewProjectUtil;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.ide.impl.util.NewProjectUtilPlatform;
 import com.intellij.ide.util.newProjectWizard.AddModuleWizard;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.platform.DefaultProjectOpenProcessor;
 import com.intellij.projectImport.ProjectOpenProcessor;
+import com.intellij.util.ThreeState;
+import consulo.ui.Alert;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
@@ -46,9 +52,11 @@ import java.util.Collections;
  * @since 31-Jan-17
  */
 public class ModuleImportBasedProjectOpenProcessor<C extends ModuleImportContext> extends ProjectOpenProcessor {
-  private ModuleImportProvider<C> myProvider;
+  private final Application myApplication;
+  private final ModuleImportProvider<C> myProvider;
 
-  public ModuleImportBasedProjectOpenProcessor(ModuleImportProvider<C> provider) {
+  public ModuleImportBasedProjectOpenProcessor(Application application, ModuleImportProvider<C> provider) {
+    myApplication = application;
     myProvider = provider;
   }
 
@@ -82,14 +90,12 @@ public class ModuleImportBasedProjectOpenProcessor<C extends ModuleImportContext
     String pathToOpen = dotIdeaFile.getParent();
 
     boolean shouldOpenExisting = false;
-    if (!ApplicationManager.getApplication().isHeadlessEnvironment() && dotIdeaFile.exists()) {
+    if (!myApplication.isHeadlessEnvironment() && dotIdeaFile.exists()) {
       String existingName = "an existing project";
 
-      int result =
-              Messages.showYesNoCancelDialog(projectToClose, IdeBundle.message("project.import.open.existing", existingName, pathToOpen, virtualFile.getName()),
-                                             IdeBundle.message("title.open.project"), IdeBundle.message("project.import.open.existing.openExisting"),
-                                             IdeBundle.message("project.import.open.existing.reimport"), CommonBundle.message("button.cancel"),
-                                             Messages.getQuestionIcon());
+      int result = Messages.showYesNoCancelDialog(projectToClose, IdeBundle.message("project.import.open.existing", existingName, pathToOpen, virtualFile.getName()),
+                                                  IdeBundle.message("title.open.project"), IdeBundle.message("project.import.open.existing.openExisting"),
+                                                  IdeBundle.message("project.import.open.existing.reimport"), CommonBundle.message("button.cancel"), Messages.getQuestionIcon());
       if (result == Messages.CANCEL) return null;
       shouldOpenExisting = result == Messages.OK;
     }
@@ -132,14 +138,64 @@ public class ModuleImportBasedProjectOpenProcessor<C extends ModuleImportContext
   @Nonnull
   @Override
   public AsyncResult<Project> doOpenProjectAsync(@Nonnull VirtualFile virtualFile, @Nonnull UIAccess uiAccess) {
-    AsyncResult<Project> asyncResult = AsyncResult.undefined();
-    Project project = doOpenProject(virtualFile, null, false);
-    if (project != null) {
-      asyncResult.setDone(project);
+    String pathToBeImported = myProvider.getPathToBeImported(virtualFile);
+
+    AsyncResult<ThreeState> askDialogResult = AsyncResult.undefined();
+    if (!uiAccess.isHeadless() && DefaultProjectOpenProcessor.getInstance().canOpenProject(new File(pathToBeImported))) {
+      Alert<ThreeState> alert = Alert.create();
+      alert.title(IdeBundle.message("title.open.project"));
+      alert.text(IdeBundle.message("project.import.open.existing", "an existing project", FileUtil.toSystemDependentName(pathToBeImported), virtualFile.getName()));
+      alert.asQuestion();
+
+      alert.button(IdeBundle.message("project.import.open.existing.openExisting"), ThreeState.YES);
+      alert.asDefaultButton();
+
+      alert.button(IdeBundle.message("project.import.open.existing.reimport"), ThreeState.NO);
+
+      alert.button(Alert.CANCEL, ThreeState.UNSURE);
+      alert.asExitButton();
+
+      uiAccess.give(() -> alert.show().notify(askDialogResult));
     }
     else {
-      asyncResult.reject("project not imported");
+      askDialogResult.setDone(ThreeState.NO);
     }
-    return asyncResult;
+
+    AsyncResult<Project> projectResult = AsyncResult.undefined();
+
+    askDialogResult.doWhenDone(threeState -> {
+      switch (threeState) {
+        case YES:
+          VirtualFile path = LocalFileSystem.getInstance().findFileByPath(pathToBeImported);
+          assert path != null;
+          ProjectManager.getInstance().openProjectAsyncNew(virtualFile, uiAccess).notify(projectResult);
+          break;
+        case NO:
+          uiAccess.give(() -> {
+            final AddModuleWizard dialog = ImportModuleAction.createImportWizard(null, null, virtualFile, Collections.singletonList(myProvider));
+            assert dialog != null;
+            AsyncResult<Void> dialogResult = dialog.showAsync();
+            dialogResult.doWhenRejected(() -> {
+              NewProjectUtil.disposeContext(dialog);
+              projectResult.setRejected();
+            });
+            dialogResult.doWhenDone(() -> {
+              Project project = NewProjectUtil.createFromWizard(dialog, null, false);
+
+              assert project != null;
+
+              ProjectUtil.updateLastProjectLocation(pathToBeImported);
+
+              ProjectManager.getInstance().openProjectAsyncNew(project, uiAccess).notify(projectResult);
+            });
+          });
+          break;
+        case UNSURE:
+          projectResult.setRejected();
+          break;
+      }
+    });
+
+    return projectResult;
   }
 }

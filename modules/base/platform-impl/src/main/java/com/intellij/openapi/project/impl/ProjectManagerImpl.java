@@ -1003,7 +1003,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
 
   @Nonnull
   @Override
-  public AsyncResult<Project> openProjectAsync(@Nonnull VirtualFile file, @Nonnull UIAccess uiAccess) {
+  public AsyncResult<Project> openProjectAsyncNew(@Nonnull VirtualFile file, @Nonnull UIAccess uiAccess) {
     AsyncResult<Project> projectAsyncResult = AsyncResult.undefined();
 
     AsyncResult<ConversionResult> preparingResult = AsyncResult.undefined();
@@ -1023,6 +1023,14 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
     return projectAsyncResult;
   }
 
+  @Nonnull
+  @Override
+  public AsyncResult<Project> openProjectAsyncNew(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    AsyncResult<Project> projectAsyncResult = AsyncResult.undefined();
+    openProjectAsyncNew2((ProjectImpl)project, projectAsyncResult, false, ConversionResult.DUMMY, uiAccess);
+    return projectAsyncResult;
+  }
+
   private void tryInitProjectByPath(ConversionResult conversionResult, AsyncResult<Project> projectAsyncResult, VirtualFile path, UIAccess uiAccess) {
     final ProjectImpl project = createProject(null, toCanonicalName(path.getPath()), false, false, true);
 
@@ -1036,6 +1044,10 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
       }
     }
 
+    openProjectAsyncNew2(project, projectAsyncResult, true, conversionResult, uiAccess);
+  }
+
+  private void openProjectAsyncNew2(final ProjectImpl project, AsyncResult<Project> projectAsyncResult, boolean init, ConversionResult conversionResult, UIAccess uiAccess) {
     Task.Backgroundable.queue(project, ProjectBundle.message("project.load.progress"), canCancelProjectLoading(), progressIndicator -> {
       try {
         if (!addToOpened(project)) {
@@ -1045,7 +1057,9 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
           return;
         }
 
-        initProjectAsync(project, null, progressIndicator);
+        if(init) {
+          initProjectAsync(project, null, progressIndicator);
+        }
 
         prepareProjectWorkspace(conversionResult, project, uiAccess, projectAsyncResult);
       }

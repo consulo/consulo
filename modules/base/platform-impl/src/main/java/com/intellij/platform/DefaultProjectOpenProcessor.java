@@ -68,7 +68,7 @@ public class DefaultProjectOpenProcessor extends ProjectOpenProcessor {
 
   @Override
   public boolean canOpenProject(@Nonnull File file) {
-    return file.isDirectory() && new File(file, Project.DIRECTORY_STORE_FOLDER).exists();
+    return file.isDirectory() && new File(file, Project.DIRECTORY_STORE_FOLDER + "/modules.xml").exists();
   }
 
   @RequiredUIAccess
@@ -233,7 +233,7 @@ public class DefaultProjectOpenProcessor extends ProjectOpenProcessor {
   @Nonnull
   @Override
   public AsyncResult<Project> doOpenProjectAsync(@Nonnull VirtualFile baseDir, @Nonnull UIAccess uiAccess) {
-    return ProjectManager.getInstance().openProjectAsync(baseDir, uiAccess);
+    return ProjectManager.getInstance().openProjectAsyncNew(baseDir, uiAccess);
   }
 
   //region Async staff

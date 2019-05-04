@@ -69,7 +69,7 @@ public interface ModuleImportProvider<C extends ModuleImportContext> {
   @Nonnull
   List<Module> commit(@Nonnull C context,
                       @Nonnull Project project,
-                      @javax.annotation.Nullable ModifiableModuleModel model,
+                      @Nullable ModifiableModuleModel model,
                       @Nonnull ModulesProvider modulesProvider,
                       @Nullable ModifiableArtifactModel artifactModel);
 

@@ -21,6 +21,7 @@ import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.Supplier;
 
@@ -35,6 +36,11 @@ public class AWTUIAccessImpl implements UIAccess {
   @Override
   public boolean isValid() {
     return true;
+  }
+
+  @Override
+  public boolean isHeadless() {
+    return GraphicsEnvironment.isHeadless();
   }
 
   @Nonnull
