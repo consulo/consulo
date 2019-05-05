@@ -105,31 +105,6 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     doSave(externalizationSession == null ? null : externalizationSession.createSaveSessions(), readonlyFiles);
   }
 
-  @Override
-  public final void saveAsync(@Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
-    ExternalizationSession externalizationSession = myComponents.isEmpty() ? null : getStateStorageManager().startExternalization();
-    if (externalizationSession != null) {
-      String[] names = ArrayUtilRt.toStringArray(myComponents.keySet());
-      Arrays.sort(names);
-      for (String name : names) {
-        StateComponentInfo<?> componentInfo = myComponents.get(name);
-
-        commitComponentInsideSingleUIWriteThread(componentInfo, externalizationSession);
-      }
-    }
-
-    for (SettingsSavingComponent settingsSavingComponent : mySettingsSavingComponents) {
-      try {
-        settingsSavingComponent.save();
-      }
-      catch (Throwable e) {
-        LOG.error(e);
-      }
-    }
-
-    doSaveAsync(externalizationSession == null ? null : externalizationSession.createSaveSessions(), readonlyFiles);
-  }
-
   protected void doSave(@Nullable List<SaveSession> saveSessions, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
     if (saveSessions != null) {
       for (SaveSession session : saveSessions) {
@@ -141,23 +116,6 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   protected static void executeSave(@Nonnull SaveSession session, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
     try {
       session.save();
-    }
-    catch (ReadOnlyModificationException e) {
-      readonlyFiles.add(Pair.create(session, e.getFile()));
-    }
-  }
-
-  protected void doSaveAsync(@Nullable List<SaveSession> saveSessions, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
-    if (saveSessions != null) {
-      for (SaveSession session : saveSessions) {
-        executeSaveAsync(session, readonlyFiles);
-      }
-    }
-  }
-
-  protected static void executeSaveAsync(@Nonnull SaveSession session, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
-    try {
-      session.saveAsync();
     }
     catch (ReadOnlyModificationException e) {
       readonlyFiles.add(Pair.create(session, e.getFile()));

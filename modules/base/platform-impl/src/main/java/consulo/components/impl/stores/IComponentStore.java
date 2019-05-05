@@ -38,8 +38,6 @@ public interface IComponentStore {
 
   void save(@Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles);
 
-  void saveAsync(@Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles);
-
   /**
    * Return storable info about component
    */

@@ -78,44 +78,4 @@ public final class StoreUtil {
       ShutDownTracker.getInstance().unregisterStopperThread(Thread.currentThread());
     }
   }
-
-  public static void saveAsync(@Nonnull IComponentStore stateStore, @Nullable Project project) {
-    ShutDownTracker.getInstance().registerStopperThread(Thread.currentThread());
-    try {
-      stateStore.saveAsync(new SmartList<>());
-    }
-    catch (IComponentStore.SaveCancelledException e) {
-      LOG.info(e);
-    }
-    catch (Throwable e) {
-      if (ApplicationManager.getApplication().isUnitTestMode()) {
-        LOG.error("Save settings failed", e);
-      }
-      else {
-        LOG.warn("Save settings failed", e);
-      }
-
-      String messagePostfix = " Please restart " + ApplicationNamesInfo.getInstance().getFullProductName() + "</p>" +
-                              (Application.get().isInternal() ? "<p>" + StringUtil.getThrowableText(e) + "</p>" : "");
-
-      PluginId pluginId = IdeErrorsDialog.findPluginId(e);
-      if (pluginId == null) {
-        new Notification("Settings Error", "Unable to save settings",
-                         "<p>Failed to save settings." + messagePostfix,
-                         NotificationType.ERROR).notify(project);
-      }
-      else {
-        if(!ApplicationProperties.isInSandbox()) {
-          PluginManagerCore.disablePlugin(pluginId.getIdString());
-        }
-
-        new Notification("Settings Error", "Unable to save plugin settings",
-                         "<p>The plugin <i>" + pluginId + "</i> failed to save settings and has been disabled." + messagePostfix,
-                         NotificationType.ERROR).notify(project);
-      }
-    }
-    finally {
-      ShutDownTracker.getInstance().unregisterStopperThread(Thread.currentThread());
-    }
-  }
 }

@@ -296,45 +296,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
   }
 
-  @Override
-  public void saveAsync() {
-    if (ApplicationManagerEx.getApplicationEx().isDoNotSave()) {
-      // no need to save
-      return;
-    }
-
-    if (!mySavingInProgress.compareAndSet(false, true)) {
-      return;
-    }
-
-    try {
-      if (!isDefault()) {
-        String projectBasePath = getStateStore().getProjectBasePath();
-        if (projectBasePath != null) {
-          File projectDir = new File(projectBasePath);
-          File nameFile = new File(projectDir, DIRECTORY_STORE_FOLDER + "/" + NAME_FILE);
-          if (!projectDir.getName().equals(getName())) {
-            try {
-              FileUtil.writeToFile(nameFile, getName());
-            }
-            catch (IOException e) {
-              LOG.error("Unable to store project name", e);
-            }
-          }
-          else {
-            FileUtil.delete(nameFile);
-          }
-        }
-      }
-
-      StoreUtil.saveAsync(getStateStore(), this);
-    }
-    finally {
-      mySavingInProgress.set(false);
-      ApplicationManager.getApplication().getMessageBus().syncPublisher(ProjectSaved.TOPIC).saved(this);
-    }
-  }
-
   @RequiredUIAccess
   @Override
   public void dispose() {

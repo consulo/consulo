@@ -809,7 +809,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
     try {
       if (save) {
         FileDocumentManager.getInstance().saveAllDocuments();
-        project.saveAsync();
+        project.save();
       }
 
       if (checkCanClose && !ensureCouldCloseIfUnableToSave(project)) {
