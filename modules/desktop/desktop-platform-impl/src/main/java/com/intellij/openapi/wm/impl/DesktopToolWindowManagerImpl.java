@@ -64,6 +64,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.PositionTracker;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.annotations.RequiredWriteAction;
 import consulo.application.ApplicationProperties;
 import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
@@ -962,7 +963,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   @Override
-  public Element getState() {
+  public Element getStateFromUI() {
     if (myFrame == null) {
       // do nothing if the project was not opened
       return null;
@@ -1009,6 +1010,13 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
       element.addContent(layoutToRestoreElement);
     }
 
+    return element;
+  }
+
+  @RequiredWriteAction
+  @Nullable
+  @Override
+  public Element getState(Element element) {
     return element;
   }
 

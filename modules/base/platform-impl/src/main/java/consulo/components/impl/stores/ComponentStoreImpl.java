@@ -26,6 +26,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.containers.SmartHashSet;
 import com.intellij.util.messages.MessageBus;
+import consulo.component.PersistentStateComponentWithUIState;
 import consulo.components.impl.stores.storage.StateStorageManager.ExternalizationSession;
 import gnu.trove.THashMap;
 import org.jdom.Element;
@@ -39,6 +40,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class ComponentStoreImpl implements IComponentStore {
   private static final Logger LOG = Logger.getInstance(ComponentStoreImpl.class);
+  private static ThreadLocal<Boolean> ourInsideSavingSessionLocal = ThreadLocal.withInitial(() -> Boolean.FALSE);
+
+  public static void assertIfInsideSavingSession() {
+    if (ourInsideSavingSessionLocal.get() == Boolean.TRUE) {
+      throw new IllegalStateException("Can't call another thread inside saving session. Thread: " + Thread.currentThread());
+    }
+  }
 
   private final Map<String, StateComponentInfo<?>> myComponents = Collections.synchronizedMap(new THashMap<>());
   private final List<SettingsSavingComponent> mySettingsSavingComponents = new CopyOnWriteArrayList<>();
@@ -81,7 +89,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
       for (String name : names) {
         StateComponentInfo<?> componentInfo = myComponents.get(name);
 
-        commitComponent(componentInfo, externalizationSession);
+        commitComponentInsideSingleUIWriteThread(componentInfo, externalizationSession);
       }
     }
 
@@ -106,7 +114,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
       for (String name : names) {
         StateComponentInfo<?> componentInfo = myComponents.get(name);
 
-        commitComponent(componentInfo, externalizationSession);
+        commitComponentInsideSingleUIWriteThread(componentInfo, externalizationSession);
       }
     }
 
@@ -156,10 +164,18 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     }
   }
 
-  private <T> void commitComponent(@Nonnull StateComponentInfo<T> componentInfo, @Nonnull ExternalizationSession session) {
+  @SuppressWarnings({"unchecked", "RequiredXAction"})
+  private <T> void commitComponentInsideSingleUIWriteThread(@Nonnull StateComponentInfo<T> componentInfo, @Nonnull ExternalizationSession session) {
     PersistentStateComponent<T> component = componentInfo.getComponent();
-
-    T state = component.getState();
+    T state;
+    if(component instanceof PersistentStateComponentWithUIState) {
+      PersistentStateComponentWithUIState<T, Object> uiComponent = (PersistentStateComponentWithUIState<T, Object>)component;
+      Object uiState = uiComponent.getStateFromUI();
+      state = uiComponent.getState(uiState);
+    }
+    else {
+      state = component.getState();
+    }
     if (state != null) {
       Storage[] storageSpecs = getComponentStorageSpecs(component, componentInfo.getState(), StateStorageOperation.WRITE);
       session.setState(storageSpecs, component, componentInfo.getName(), state);

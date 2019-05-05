@@ -17,6 +17,7 @@ package consulo.ui.desktop.internal;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.AsyncResult;
+import consulo.components.impl.stores.ComponentStoreImpl;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
@@ -62,6 +63,7 @@ public class AWTUIAccessImpl implements UIAccess {
 
   @Override
   public void giveAndWait(@Nonnull Runnable runnable) {
+    ComponentStoreImpl.assertIfInsideSavingSession();
     try {
       SwingUtilities.invokeAndWait(runnable);
     }

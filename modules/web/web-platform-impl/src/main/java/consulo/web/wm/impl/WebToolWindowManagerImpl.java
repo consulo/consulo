@@ -34,6 +34,7 @@ import com.intellij.openapi.wm.impl.InternalDecoratorListener;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.annotations.RequiredWriteAction;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.RequiredUIAccess;
@@ -215,17 +216,24 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     return false;
   }
 
+  @RequiredUIAccess
   @Nullable
   @Override
-  public Element getState() {
+  public Element getStateFromUI() {
     return new Element("state");
+  }
+
+  @RequiredWriteAction
+  @Nullable
+  @Override
+  public Element getState(Element element) {
+    return element;
   }
 
   @Override
   public boolean canShowNotification(@Nonnull String toolWindowId) {
     return false;
   }
-
 
   @Override
   public void activateEditorComponent() {
