@@ -185,13 +185,12 @@ public class ProjectUtil {
   }
 
   @Nonnull
-  public static AsyncResult<Integer> confirmOpenNewProjectAsync(UIAccess uiAccess, boolean isNewProject) {
+  private static AsyncResult<Integer> confirmOpenNewProjectAsync(UIAccess uiAccess, boolean isNewProject) {
     final GeneralSettings settings = GeneralSettings.getInstance();
     int confirmOpenNewProject = settings.getConfirmOpenNewProject();
     if (confirmOpenNewProject == GeneralSettings.OPEN_PROJECT_ASK) {
       Alert<Integer> alert = Alert.create();
       alert.asQuestion();
-      alert.exitValue(Alert.CANCEL);
       alert.remember(ProjectNewWindowDoNotAskOption.INSTANCE);
 
       if (isNewProject) {
@@ -210,6 +209,7 @@ public class ProjectUtil {
         alert.asDefaultButton();
         alert.button(IdeBundle.message("button.newframe"), () -> GeneralSettings.OPEN_PROJECT_NEW_WINDOW);
         alert.button(Alert.CANCEL, Alert.CANCEL);
+        alert.asExitButton();
       }
 
       AsyncResult<Integer> result = AsyncResult.undefined();
@@ -252,14 +252,14 @@ public class ProjectUtil {
     return DefaultPaths.getInstance().getDocumentsDir();
   }
 
-  //region Async staff
+  //region Async old stuff
   @Nonnull
   public static AsyncResult<Project> openAsync(@Nonnull String path, @Nullable Project projectToClose, boolean forceOpenInNewFrame, @Nonnull UIAccess uiAccess) {
     final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
 
     if (virtualFile == null) return AsyncResult.rejected("file path not find");
 
-    AsyncResult<Project> result = new AsyncResult<>();
+    AsyncResult<Project> result = AsyncResult.undefined();
 
     ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(VfsUtilCore.virtualToIoFile(virtualFile));
     if (provider != null) {
@@ -304,7 +304,7 @@ public class ProjectUtil {
 
         result.doWhenRejected(WelcomeFrame::showIfNoProjectOpened);
 
-        AsyncResult<Void> reopenAsync = new AsyncResult<>();
+        AsyncResult<Void> reopenAsync = AsyncResult.undefined();
 
         Project projectToClose = projectToCloseFinal;
         Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
@@ -317,15 +317,9 @@ public class ProjectUtil {
           confirmOpenNewProjectAsync(uiAccess, false).doWhenDone(exitCode -> {
             if (exitCode == GeneralSettings.OPEN_PROJECT_SAME_WINDOW) {
               AccessRule.writeAsync(() -> {
-                // TODO 
-                //ProjectManagerEx.getInstanceEx().closeAndDisposeAsync(finalProjectToClose, uiAccess).doWhenDone((value) -> {
-                //  if (value == Boolean.FALSE) {
-                //    result.reject("not closed project");
-                //  }
-                //  else {
-                //    reopenAsync.setDone();
-                //  }
-                //});
+                AsyncResult<Void> closeResult = ProjectManagerEx.getInstanceEx().closeAndDisposeAsyncNew(finalProjectToClose, uiAccess);
+                closeResult.doWhenDone((Runnable)reopenAsync::setDone);
+                closeResult.doWhenRejected(() -> result.reject("not closed project"));
               });
             }
             else if (exitCode != GeneralSettings.OPEN_PROJECT_NEW_WINDOW) { // not in a new window

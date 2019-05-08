@@ -64,6 +64,14 @@ public abstract class ProjectManager {
   @Nonnull
   public abstract AsyncResult<Project> openProjectAsyncNew(@Nonnull Project project, @Nonnull UIAccess uiAccess);
 
+  @Nonnull
+  public AsyncResult<Void> closeAndDisposeAsyncNew(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    return closeAndDisposeAsyncNew(project, uiAccess, true, true, true);
+  }
+
+  @Nonnull
+  public abstract AsyncResult<Void> closeAndDisposeAsyncNew(@Nonnull Project project, @Nonnull UIAccess uiAccess, boolean checkCanClose, boolean save, boolean dispose);
+
   /**
    * Removes global listener from all projects.
    *

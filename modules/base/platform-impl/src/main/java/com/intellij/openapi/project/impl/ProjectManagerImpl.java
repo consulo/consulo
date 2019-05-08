@@ -1031,6 +1031,76 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
     return projectAsyncResult;
   }
 
+  @Nonnull
+  @Override
+  public AsyncResult<Void> closeAndDisposeAsyncNew(@Nonnull Project project, @Nonnull UIAccess uiAccess, boolean checkCanClose, boolean save, boolean dispose) {
+    if (isLight(project)) {
+      removeFromOpened(project);
+      return AsyncResult.resolved();
+    }
+    else {
+      if (!isProjectOpened(project)) {
+        return AsyncResult.resolved();
+      }
+    }
+
+    AsyncResult<Void> mainResult = AsyncResult.undefined();
+
+    AsyncResult<Void> closeCheckInsideUI = AsyncResult.undefined();
+
+    if (checkCanClose) {
+      uiAccess.give(() -> {
+        boolean canClose = canClose(project);
+        if (canClose) {
+          closeCheckInsideUI.setDone();
+        }
+        else {
+          closeCheckInsideUI.setRejected();
+        }
+      });
+    }
+    else {
+      closeCheckInsideUI.setDone();
+    }
+
+    closeCheckInsideUI.doWhenRejected((Runnable)mainResult::setRejected);
+
+    closeCheckInsideUI.doWhenDone(() -> {
+      final Thread executeThread = Thread.currentThread();
+      final ShutDownTracker shutDownTracker = ShutDownTracker.getInstance();
+      shutDownTracker.registerStopperThread(executeThread);
+      try {
+        if(save) {
+          uiAccess.giveAndWaitIfNeed(() -> {
+            FileDocumentManager.getInstance().saveAllDocuments();
+            project.save();
+          });
+        }
+
+        myApplication.getMessageBus().syncPublisher(TOPIC).projectClosing(project); // somebody can start progress here, do not wrap in write action
+
+        WriteAction.runAndWait(() -> {
+          removeFromOpened(project);
+
+          myApplication.getMessageBus().syncPublisher(TOPIC).projectClosed(project);
+
+          if (dispose) {
+            Disposer.dispose(project);
+          }
+        });
+
+        mainResult.setDone();
+      }
+      catch (Throwable e) {
+        mainResult.rejectWithThrowable(e);
+      }
+      finally {
+        shutDownTracker.unregisterStopperThread(Thread.currentThread());
+      }
+    });
+    return mainResult;
+  }
+
   private void tryInitProjectByPath(ConversionResult conversionResult, AsyncResult<Project> projectAsyncResult, VirtualFile path, UIAccess uiAccess) {
     final ProjectImpl project = createProject(null, toCanonicalName(path.getPath()), false, false, true);
 
@@ -1057,7 +1127,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
           return;
         }
 
-        if(init) {
+        if (init) {
           initProjectAsync(project, null, progressIndicator);
         }
 

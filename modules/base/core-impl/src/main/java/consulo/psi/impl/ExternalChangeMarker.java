@@ -15,9 +15,7 @@
  */
 package consulo.psi.impl;
 
-import com.intellij.openapi.application.Application;
 import com.intellij.util.BitUtil;
-import consulo.annotations.RequiredWriteAction;
 
 import java.util.function.Supplier;
 
@@ -32,7 +30,6 @@ public final class ExternalChangeMarker {
 
   private static ThreadLocal<Integer> ourIgnorePsiEventsMarker = ThreadLocal.withInitial(() -> 0);
 
-  @RequiredWriteAction
   public static void mark(Runnable subRunnable, int flags) {
     mark(() -> {
       subRunnable.run();
@@ -40,9 +37,7 @@ public final class ExternalChangeMarker {
     }, flags);
   }
 
-  @RequiredWriteAction
   public static <T> T mark(Supplier<T> subRunnable, int flags) {
-    Application.get().assertWriteAccessAllowed();
     try {
       Integer oldValue = ourIgnorePsiEventsMarker.get();
       ourIgnorePsiEventsMarker.set(BitUtil.set(oldValue, flags, true));
@@ -55,9 +50,7 @@ public final class ExternalChangeMarker {
     }
   }
 
-  @RequiredWriteAction
   public static boolean isMarked(int mask) {
-    Application.get().assertWriteAccessAllowed();
     return BitUtil.isSet(ourIgnorePsiEventsMarker.get(), mask);
   }
 }
