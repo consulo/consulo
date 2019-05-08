@@ -80,7 +80,7 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
 
   @Override
   public void openManageDialog(@Nonnull VirtualFile virtualFile) {
-    new BackgroundTaskByVfsChangeManageDialog(myProject, virtualFile).show();
+    new BackgroundTaskByVfsChangeManageDialog(myProject, virtualFile).showAsync();
   }
 
   @Nonnull
