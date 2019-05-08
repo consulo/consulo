@@ -26,8 +26,10 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.containers.SmartHashSet;
 import com.intellij.util.messages.MessageBus;
+import consulo.annotations.RequiredWriteAction;
 import consulo.component.PersistentStateComponentWithUIState;
 import consulo.components.impl.stores.storage.StateStorageManager.ExternalizationSession;
+import consulo.ui.UIAccess;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 
@@ -82,6 +84,32 @@ public abstract class ComponentStoreImpl implements IComponentStore {
 
   @Override
   public final void save(@Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
+    ExternalizationSession externalizationSession = myComponents.isEmpty() ? null : getStateStorageManager().startExternalization();
+    if (externalizationSession != null) {
+      String[] names = ArrayUtilRt.toStringArray(myComponents.keySet());
+      Arrays.sort(names);
+      for (String name : names) {
+        StateComponentInfo<?> componentInfo = myComponents.get(name);
+
+        commitComponentInsideSingleUIWriteThread(componentInfo, externalizationSession);
+      }
+    }
+
+    for (SettingsSavingComponent settingsSavingComponent : mySettingsSavingComponents) {
+      try {
+        settingsSavingComponent.save();
+      }
+      catch (Throwable e) {
+        LOG.error(e);
+      }
+    }
+
+    doSave(externalizationSession == null ? null : externalizationSession.createSaveSessions(), readonlyFiles);
+  }
+
+  @RequiredWriteAction
+  @Override
+  public void saveAsync(@Nonnull UIAccess uiAccess, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
     ExternalizationSession externalizationSession = myComponents.isEmpty() ? null : getStateStorageManager().startExternalization();
     if (externalizationSession != null) {
       String[] names = ArrayUtilRt.toStringArray(myComponents.keySet());

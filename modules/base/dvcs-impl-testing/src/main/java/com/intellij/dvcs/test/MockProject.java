@@ -17,10 +17,13 @@ package com.intellij.dvcs.test;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
+import consulo.annotations.RequiredWriteAction;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 
@@ -81,6 +84,13 @@ public class MockProject implements Project {
 
   @Override
   public void save() {
+    throw new UnsupportedOperationException();
+  }
+
+  @RequiredWriteAction
+  @Nonnull
+  @Override
+  public AsyncResult<Void> saveAsync(UIAccess uiAccess) {
     throw new UnsupportedOperationException();
   }
 

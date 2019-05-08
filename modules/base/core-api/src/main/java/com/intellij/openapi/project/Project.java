@@ -16,7 +16,9 @@
 package com.intellij.openapi.project;
 
 import com.intellij.openapi.components.ComponentManager;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -110,6 +112,9 @@ public interface Project extends ComponentManager {
   String getLocationHash();
 
   void save();
+
+  @Nonnull
+  AsyncResult<Void> saveAsync(@Nonnull UIAccess uiAccess);
 
   boolean isOpen();
 

@@ -22,11 +22,14 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.components.*;
-import com.intellij.openapi.extensions.impl.ExtensionAreaId;
+import com.intellij.openapi.components.ComponentConfig;
+import com.intellij.openapi.components.ProjectComponent;
+import com.intellij.openapi.components.ServiceDescriptor;
+import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbAwareRunnable;
@@ -36,6 +39,7 @@ import com.intellij.openapi.project.ProjectManagerAdapter;
 import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.startup.StartupManager;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -45,10 +49,12 @@ import com.intellij.psi.impl.DebugUtil;
 import com.intellij.util.TimedReference;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
+import consulo.application.AccessRule;
 import consulo.components.impl.PlatformComponentManagerImpl;
 import consulo.components.impl.stores.*;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -62,7 +68,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ProjectImpl extends PlatformComponentManagerImpl implements ProjectEx {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.project.impl.ProjectImpl");
+  private static final Logger LOG = Logger.getInstance(ProjectImpl.class);
   private static final ExtensionPointName<ServiceDescriptor> PROJECT_SERVICES = ExtensionPointName.create("com.intellij.projectService");
 
   public static final String NAME_FILE = ".name";
@@ -289,6 +295,52 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
       }
 
       StoreUtil.save(getStateStore(), this);
+    }
+    finally {
+      mySavingInProgress.set(false);
+      ApplicationManager.getApplication().getMessageBus().syncPublisher(ProjectSaved.TOPIC).saved(this);
+    }
+  }
+
+  @Nonnull
+  @Override
+  public AsyncResult<Void> saveAsync(@Nonnull UIAccess uiAccess) {
+    return AccessRule.writeAsync(() -> saveAsyncImpl(uiAccess));
+  }
+
+  private void saveAsyncImpl(@Nonnull UIAccess uiAccess) {
+    if (ApplicationManagerEx.getApplicationEx().isDoNotSave()) {
+      // no need to save
+      return;
+    }
+
+    if (!mySavingInProgress.compareAndSet(false, true)) {
+      return;
+    }
+
+    //HeavyProcessLatch.INSTANCE.prioritizeUiActivity();
+
+    try {
+      if (!isDefault()) {
+        String projectBasePath = getStateStore().getProjectBasePath();
+        if (projectBasePath != null) {
+          File projectDir = new File(projectBasePath);
+          File nameFile = new File(projectDir, DIRECTORY_STORE_FOLDER + "/" + NAME_FILE);
+          if (!projectDir.getName().equals(getName())) {
+            try {
+              FileUtil.writeToFile(nameFile, getName());
+            }
+            catch (IOException e) {
+              LOG.error("Unable to store project name", e);
+            }
+          }
+          else {
+            FileUtil.delete(nameFile);
+          }
+        }
+      }
+
+      StoreUtil.saveAsync(getStateStore(), uiAccess, this);
     }
     finally {
       mySavingInProgress.set(false);

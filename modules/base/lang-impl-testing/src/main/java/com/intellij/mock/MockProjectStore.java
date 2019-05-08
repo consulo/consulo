@@ -17,12 +17,14 @@ package com.intellij.mock;
 
 import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
+import consulo.annotations.RequiredWriteAction;
 import consulo.components.impl.stores.IProjectStore;
 import consulo.components.impl.stores.storage.StateStorageManager;
 import com.intellij.openapi.project.impl.ProjectImpl;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.components.impl.stores.StateComponentInfo;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -107,6 +109,12 @@ public class MockProjectStore implements IProjectStore {
 
   @Override
   public void save(@Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
+
+  }
+
+  @RequiredWriteAction
+  @Override
+  public void saveAsync(@Nonnull UIAccess uiAccess, @Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
 
   }
 

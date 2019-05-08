@@ -18,7 +18,9 @@ package consulo.components.impl.stores;
 import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.util.Pair;
+import consulo.annotations.RequiredWriteAction;
 import consulo.components.impl.stores.storage.StateStorageManager;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,6 +39,9 @@ public interface IComponentStore {
   void load() throws IOException, StateStorageException;
 
   void save(@Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles);
+
+  @RequiredWriteAction
+  void saveAsync(@Nonnull UIAccess uiAccess, @Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles);
 
   /**
    * Return storable info about component

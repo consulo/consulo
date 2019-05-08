@@ -30,11 +30,10 @@ import com.intellij.util.ScrambledInputStream;
 import com.intellij.util.ScrambledOutputStream;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.inject.Singleton;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 import java.io.*;
 import java.util.Collections;
 import java.util.HashSet;
@@ -126,7 +125,7 @@ public class StatisticsManagerImpl extends StatisticsManager {
   public void save() {
     synchronized (LOCK) {
       if (!ApplicationManager.getApplication().isUnitTestMode()){
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        ApplicationManager.getApplication().assertWriteAccessAllowed();
         for (StatisticsUnit unit : myModifiedUnits) {
           saveUnit(unit.getNumber());
         }

@@ -242,31 +242,12 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
       }
     }
 
-    @Override
-    public final void saveAsync() {
-      if (myBlockSavingTheContent) {
-        return;
-      }
-
-      try {
-        doSaveAsync(getElement(myCopiedStorageData, isCollapsePathsOnSave(), myNewLiveStates));
-        myLoadedData = myCopiedStorageData;
-      }
-      catch (IOException e) {
-        throw new StateStorageException(e);
-      }
-    }
-
     // only because default project store hack
     protected boolean isCollapsePathsOnSave() {
       return true;
     }
 
     protected abstract void doSave(@Nullable Element element) throws IOException;
-
-    protected void doSaveAsync(@Nullable Element element) throws IOException {
-      doSave(element);
-    }
 
     protected void saveForProvider(@Nullable byte[] content, @Nullable Element element) throws IOException {
       if (!myStreamProvider.isApplicable(myFileSpec, myRoamingType)) {
