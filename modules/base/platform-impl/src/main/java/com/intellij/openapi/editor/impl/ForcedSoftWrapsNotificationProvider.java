@@ -22,26 +22,18 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.EditorNotifications;
+import consulo.annotations.RequiredReadAction;
+import consulo.editor.notifications.EditorNotificationProvider;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import consulo.ui.RequiredUIAccess;
-import consulo.annotations.RequiredReadAction;
-import consulo.editor.notifications.EditorNotificationProvider;
-
 public class ForcedSoftWrapsNotificationProvider implements EditorNotificationProvider<EditorNotificationPanel>, DumbAware {
-  private static final Key<EditorNotificationPanel> KEY = Key.create("forced.soft.wraps.notification.panel");
   private static final String DISABLED_NOTIFICATION_KEY = "disable.forced.soft.wraps.notification";
-
-  @Nonnull
-  @Override
-  public Key<EditorNotificationPanel> getKey() {
-    return KEY;
-  }
 
   @RequiredReadAction
   @RequiredUIAccess
