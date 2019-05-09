@@ -70,7 +70,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -814,7 +813,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
   @Override
   public AsyncResult<Project> openProjectAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
     AsyncResult<Project> projectAsyncResult = AsyncResult.undefined();
-    openProjectAsyncNew2((ProjectImpl)project, projectAsyncResult, false, ConversionResult.DUMMY, uiAccess);
+    loadProjectAsync((ProjectImpl)project, projectAsyncResult, false, ConversionResult.DUMMY, uiAccess);
     return projectAsyncResult;
   }
 
@@ -901,16 +900,14 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
       }
     }
 
-    openProjectAsyncNew2(project, projectAsyncResult, true, conversionResult, uiAccess);
+    loadProjectAsync(project, projectAsyncResult, true, conversionResult, uiAccess);
   }
 
-  private void openProjectAsyncNew2(final ProjectImpl project, AsyncResult<Project> projectAsyncResult, boolean init, ConversionResult conversionResult, UIAccess uiAccess) {
+  private void loadProjectAsync(final ProjectImpl project, AsyncResult<Project> projectAsyncResult, boolean init, ConversionResult conversionResult, UIAccess uiAccess) {
     Task.Backgroundable.queue(project, ProjectBundle.message("project.load.progress"), canCancelProjectLoading(), progressIndicator -> {
       try {
         if (!addToOpened(project)) {
-          AccessRule.writeAsync(() -> {
-            closeAndDisposeAsync(project, uiAccess).doWhenProcessed(() -> projectAsyncResult.reject("Can't add project to opened"));
-          });
+          AccessRule.writeAsync(() -> closeAndDisposeAsync(project, uiAccess).doWhenProcessed(() -> projectAsyncResult.reject("Can't add project to opened")));
           return;
         }
 
@@ -954,9 +951,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
   }
 
   private void openProjectRequireBackgroundTask(Project project, UIAccess uiAccess) {
-    // more faster welcome frame closing
-    uiAccess.give(() -> WelcomeFrameManager.getInstance().closeFrame());
-
     myApplication.getMessageBus().syncPublisher(TOPIC).projectOpened(project, uiAccess);
 
     final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(project);
@@ -972,7 +966,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
     if (!project.isDisposed()) {
       startupManager.runPostStartupActivities(uiAccess);
 
-      Application application = ApplicationManager.getApplication();
+      Application application = Application.get();
       if (!application.isHeadlessEnvironment() && !application.isUnitTestMode()) {
         final TrackingPathMacroSubstitutor macroSubstitutor = ((ProjectEx)project).getStateStore().getStateStorageManager().getMacroSubstitutor();
         if (macroSubstitutor != null) {
@@ -980,8 +974,8 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
         }
       }
 
-      if (ApplicationManager.getApplication().isActive()) {
-        JFrame projectFrame = WindowManager.getInstance().getFrame(project);
+      if (application.isActive()) {
+        consulo.ui.Window projectFrame = WindowManager.getInstance().getWindow(project);
         if (projectFrame != null) {
           uiAccess.giveAndWait(() -> IdeFocusManager.getInstance(project).requestFocus(projectFrame, true));
         }
