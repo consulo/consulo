@@ -125,7 +125,7 @@ public class StatisticsManagerImpl extends StatisticsManager {
   public void save() {
     synchronized (LOCK) {
       if (!ApplicationManager.getApplication().isUnitTestMode()){
-        ApplicationManager.getApplication().assertWriteAccessAllowed();
+        ApplicationManager.getApplication().assertIsDispatchThread();
         for (StatisticsUnit unit : myModifiedUnits) {
           saveUnit(unit.getNumber());
         }
