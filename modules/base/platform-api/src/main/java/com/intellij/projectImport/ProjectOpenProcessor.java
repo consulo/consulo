@@ -55,20 +55,6 @@ public abstract class ProjectOpenProcessor {
   @DeprecationInfo("Use #doOpenProjectAsync()")
   public abstract Project doOpenProject(@Nonnull VirtualFile virtualFile, @Nullable Project projectToClose, boolean forceOpenInNewFrame);
 
-  public void doOpenProjectAsync(@Nonnull AsyncResult<Project> asyncResult,
-                                 @Nonnull VirtualFile virtualFile,
-                                 @Nullable Project projectToClose,
-                                 boolean forceOpenInNewFrame,
-                                 @Nonnull UIAccess uiAccess) {
-    Project project = doOpenProject(virtualFile, projectToClose, forceOpenInNewFrame);
-    if (project != null) {
-      asyncResult.setDone(project);
-    }
-    else {
-      asyncResult.reject("project not loaded");
-    }
-  }
-
   public void refreshProjectFiles(File basedir) {
   }
 

@@ -44,7 +44,6 @@ import consulo.components.impl.stores.ProjectStoreImpl;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionProviderEP;
 import consulo.module.extension.impl.ModuleExtensionProviders;
-import consulo.platform.Platform;
 import consulo.ui.UIAccess;
 import gnu.trove.THashSet;
 
@@ -464,11 +463,10 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
         if (isValidProjectPath(openPath)) {
 
           if (WriteThreadOption.isSubWriteThreadSupported()) {
-            ProjectUtil.openAsyncNew(openPath, null, forceNewFrame, UIAccess.current());
+            ProjectUtil.openAsync(openPath, null, forceNewFrame, UIAccess.current());
           }
           else {
-            final boolean finalForceNewFrame = forceNewFrame;
-            Platform.hacky(() -> ProjectUtil.open(openPath, null, finalForceNewFrame), () -> ProjectUtil.openAsync(openPath, null, finalForceNewFrame, UIAccess.get()));
+            ProjectUtil.open(openPath, null, forceNewFrame);
           }
           break;
         }

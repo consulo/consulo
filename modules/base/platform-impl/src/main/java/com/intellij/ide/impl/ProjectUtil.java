@@ -252,37 +252,8 @@ public class ProjectUtil {
     return DefaultPaths.getInstance().getDocumentsDir();
   }
 
-  //region Async old stuff
   @Nonnull
-  public static AsyncResult<Project> openAsync(@Nonnull String path, @Nullable Project projectToClose, boolean forceOpenInNewFrame, @Nonnull UIAccess uiAccess) {
-    final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
-
-    if (virtualFile == null) return AsyncResult.rejected("file path not find");
-
-    AsyncResult<Project> result = AsyncResult.undefined();
-
-    ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(VfsUtilCore.virtualToIoFile(virtualFile));
-    if (provider != null) {
-      result.doWhenDone((project) -> {
-        uiAccess.give(() -> {
-          if (!project.isDisposed()) {
-            final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.PROJECT_VIEW);
-            if (toolWindow != null) {
-              toolWindow.activate(null);
-            }
-          }
-        });
-      });
-
-      AccessRule.writeAsync(() -> provider.doOpenProjectAsync(result, virtualFile, projectToClose, forceOpenInNewFrame, uiAccess));
-      return result;
-    }
-    return AsyncResult.rejected("provider for file path is not find");
-  }
-  //endregion
-
-  @Nonnull
-  public static AsyncResult<Project> openAsyncNew(@Nonnull String path, @Nullable final Project projectToCloseFinal, boolean forceOpenInNewFrame, @Nonnull UIAccess uiAccess) {
+  public static AsyncResult<Project> openAsync(@Nonnull String path, @Nullable final Project projectToCloseFinal, boolean forceOpenInNewFrame, @Nonnull UIAccess uiAccess) {
     final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
 
     if (virtualFile == null) return AsyncResult.rejected("file path not find");
@@ -317,7 +288,7 @@ public class ProjectUtil {
           confirmOpenNewProjectAsync(uiAccess, false).doWhenDone(exitCode -> {
             if (exitCode == GeneralSettings.OPEN_PROJECT_SAME_WINDOW) {
               AccessRule.writeAsync(() -> {
-                AsyncResult<Void> closeResult = ProjectManagerEx.getInstanceEx().closeAndDisposeAsyncNew(finalProjectToClose, uiAccess);
+                AsyncResult<Void> closeResult = ProjectManagerEx.getInstanceEx().closeAndDisposeAsync(finalProjectToClose, uiAccess);
                 closeResult.doWhenDone((Runnable)reopenAsync::setDone);
                 closeResult.doWhenRejected(() -> result.reject("not closed project"));
               });

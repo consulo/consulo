@@ -61,7 +61,7 @@ public class WebIdeFrameImpl implements IdeFrameEx {
     myWindow.addListener(Window.CloseListener.class, () -> {
       myWindow.close();
 
-      ProjectManager.getInstance().closeAndDisposeAsyncNew(myProject, UIAccess.current());
+      ProjectManager.getInstance().closeAndDisposeAsync(myProject, UIAccess.current());
     });
 
     myWindow.setContent(myRootView.getComponent());

@@ -59,18 +59,18 @@ public abstract class ProjectManager {
   public abstract void addProjectManagerListener(@Nonnull ProjectManagerListener listener, @Nonnull Disposable parentDisposable);
 
   @Nonnull
-  public abstract AsyncResult<Project> openProjectAsyncNew(@Nonnull VirtualFile file, @Nonnull UIAccess uiAccess);
+  public abstract AsyncResult<Project> openProjectAsync(@Nonnull VirtualFile file, @Nonnull UIAccess uiAccess);
 
   @Nonnull
-  public abstract AsyncResult<Project> openProjectAsyncNew(@Nonnull Project project, @Nonnull UIAccess uiAccess);
+  public abstract AsyncResult<Project> openProjectAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess);
 
   @Nonnull
-  public AsyncResult<Void> closeAndDisposeAsyncNew(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-    return closeAndDisposeAsyncNew(project, uiAccess, true, true, true);
+  public AsyncResult<Void> closeAndDisposeAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    return closeAndDisposeAsync(project, uiAccess, true, true, true);
   }
 
   @Nonnull
-  public abstract AsyncResult<Void> closeAndDisposeAsyncNew(@Nonnull Project project, @Nonnull UIAccess uiAccess, boolean checkCanClose, boolean save, boolean dispose);
+  public abstract AsyncResult<Void> closeAndDisposeAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess, boolean checkCanClose, boolean save, boolean dispose);
 
   /**
    * Removes global listener from all projects.
@@ -141,9 +141,6 @@ public abstract class ProjectManager {
    */
   @RequiredUIAccess
   public abstract boolean closeProject(@Nonnull Project project);
-
-  @RequiredUIAccess
-  public abstract boolean closeProjectAsync(@Nonnull Project project);
 
   /**
    * Asynchronously reloads the specified project.

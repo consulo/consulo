@@ -30,7 +30,6 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.application.WriteThreadOption;
-import consulo.platform.Platform;
 import consulo.project.ProjectOpenProcessors;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
@@ -56,10 +55,10 @@ public class OpenProjectAction extends AnAction implements DumbAware {
     FileChooser.chooseFiles(descriptor, project, userHomeDir).doWhenDone((files) -> {
       if (files.length == 1) {
         if (WriteThreadOption.isSubWriteThreadSupported()) {
-          ProjectUtil.openAsyncNew(files[0].getPath(), project, false, UIAccess.current());
+          ProjectUtil.openAsync(files[0].getPath(), project, false, UIAccess.current());
         }
         else {
-          Platform.hacky(() -> ProjectUtil.open(files[0].getPath(), project, false), () -> ProjectUtil.openAsync(files[0].getPath(), project, false, UIAccess.current()));
+          ProjectUtil.open(files[0].getPath(), project, false);
         }
       }
     });

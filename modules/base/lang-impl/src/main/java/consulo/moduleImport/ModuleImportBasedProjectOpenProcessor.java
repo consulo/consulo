@@ -168,7 +168,7 @@ public class ModuleImportBasedProjectOpenProcessor<C extends ModuleImportContext
         case YES:
           VirtualFile path = LocalFileSystem.getInstance().findFileByPath(pathToBeImported);
           assert path != null;
-          ProjectManager.getInstance().openProjectAsyncNew(virtualFile, uiAccess).notify(projectResult);
+          ProjectManager.getInstance().openProjectAsync(virtualFile, uiAccess).notify(projectResult);
           break;
         case NO:
           uiAccess.give(() -> {
@@ -186,7 +186,7 @@ public class ModuleImportBasedProjectOpenProcessor<C extends ModuleImportContext
 
               ProjectUtil.updateLastProjectLocation(pathToBeImported);
 
-              ProjectManager.getInstance().openProjectAsyncNew(project, uiAccess).notify(projectResult);
+              ProjectManager.getInstance().openProjectAsync(project, uiAccess).notify(projectResult);
             });
           });
           break;
