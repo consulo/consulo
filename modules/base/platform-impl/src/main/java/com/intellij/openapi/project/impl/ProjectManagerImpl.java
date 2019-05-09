@@ -54,6 +54,7 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.AccessRule;
+import consulo.application.WriteThreadOption;
 import consulo.awt.TargetAWT;
 import consulo.components.impl.stores.StorageUtil;
 import consulo.components.impl.stores.storage.StateStorageBase;
@@ -518,8 +519,15 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
       }
     }
 
+    UIAccess uiAccess = myApplication.getLastUIAccess();
+
     for (Project project : projectsToReload) {
-      doReloadProject(project);
+      if(WriteThreadOption.isSubWriteThreadSupported()) {
+        doReloadProjectAsync(project, uiAccess);
+      }
+      else {
+        doReloadProject(project);
+      }
     }
   }
 
@@ -538,13 +546,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
         }
       }
     }
-
-    if (causes.isEmpty()) {
-      return false;
-    }
-
-
-    return askToRestart(causes);
+    return !causes.isEmpty() && askToRestart(causes);
   }
 
   private static boolean askToRestart(@Nullable Collection<? extends StateStorage> changedStorages) {
@@ -633,9 +635,14 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
   }
 
   @Override
-  public void reloadProject(@Nonnull Project project) {
+  public void reloadProject(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
     myChangedProjectFiles.remove(project);
-    doReloadProject(project);
+    if(WriteThreadOption.isSubWriteThreadSupported()) {
+      doReloadProjectAsync(project, uiAccess);
+    }
+    else {
+      doReloadProject(project);
+    }
   }
 
   private void doReloadProject(@Nonnull Project project) {
@@ -659,6 +666,18 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
 
       ProjectUtil.open(presentableUrl, null, true);
     }, ModalityState.NON_MODAL);
+  }
+
+  private void doReloadProjectAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    ProjectReloadState.getInstance(project).onBeforeAutomaticProjectReload();
+
+    if(project.isDisposed()) {
+      return;
+    }
+
+    String basePath = project.getBasePath();
+
+    closeAndDisposeAsync(project, uiAccess).doWhenDone(() -> ProjectUtil.openAsync(basePath, null, true, uiAccess));
   }
 
   @Override

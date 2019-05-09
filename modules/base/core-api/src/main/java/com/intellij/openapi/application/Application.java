@@ -25,6 +25,8 @@ import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -418,7 +420,13 @@ public interface Application extends ComponentManager {
    * @return Application icon. In sandbox icon maybe different
    */
   @Nonnull
-  consulo.ui.image.Image getIcon();
+  Image getIcon();
+
+  /**
+   * @return last UIAccess for application
+   */
+  @Nonnull
+  UIAccess getLastUIAccess();
 
   // region Deprecated stuff
 

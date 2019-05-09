@@ -147,7 +147,7 @@ public abstract class ProjectManager {
    *
    * @param project the project to reload.
    */
-  public abstract void reloadProject(@Nonnull Project project);
+  public abstract void reloadProject(@Nonnull Project project, @Nonnull UIAccess uiAccess);
 
   /**
    * Create new project in given location.
