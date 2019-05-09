@@ -39,7 +39,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotations.RequiredReadAction;
-import consulo.application.ApplicationProperties;
+import consulo.application.WriteThreadOption;
 import consulo.components.impl.stores.ProjectStoreImpl;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionProviderEP;
@@ -463,7 +463,7 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
       for (String openPath : openPaths) {
         if (isValidProjectPath(openPath)) {
 
-          if (ApplicationProperties.isSubWriteThread()) {
+          if (WriteThreadOption.isSubWriteThreadSupported()) {
             ProjectUtil.openAsyncNew(openPath, null, forceNewFrame, UIAccess.current());
           }
           else {

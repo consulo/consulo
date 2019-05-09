@@ -111,23 +111,4 @@ public class ApplicationProperties {
    * @type boolean
    */
   public static final String CONSULO_MAVEN_CONSOLE_LOG = "consulo.maven.console.log";
-
-  /**
-   * @type boolean
-   */
-  @Nonnull
-  @NonNls
-  public static final String CONSULO_SUB_WRITE_THREAD = "consulo.sub.write.thread";
-
-  private static final NotNullLazyValue<Boolean> ourSubWriteThread = NotNullLazyValue.createValue(new NotNullFactory<Boolean>() {
-    @Nonnull
-    @Override
-    public Boolean create() {
-      return Boolean.getBoolean(CONSULO_SUB_WRITE_THREAD);
-    }
-  });
-
-  public static boolean isSubWriteThread() {
-    return ourSubWriteThread.getValue();
-  }
 }

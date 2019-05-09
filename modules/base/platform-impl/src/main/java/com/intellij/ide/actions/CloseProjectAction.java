@@ -24,7 +24,7 @@ import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import consulo.application.ApplicationProperties;
+import consulo.application.WriteThreadOption;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
@@ -49,7 +49,7 @@ public class CloseProjectAction extends AnAction implements DumbAware {
   public void actionPerformed(@Nonnull AnActionEvent event) {
     Project project = event.getRequiredData(CommonDataKeys.PROJECT);
 
-    if (ApplicationProperties.isSubWriteThread()) {
+    if (WriteThreadOption.isSubWriteThreadSupported()) {
       myProjectManager.closeAndDisposeAsyncNew(project, UIAccess.current()).doWhenDone(() -> {
         myRecentProjectsManager.updateLastProjectPath();
         myWelcomeFrameManager.showIfNoProjectOpened();

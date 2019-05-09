@@ -22,12 +22,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.BitUtil;
-import consulo.application.ApplicationProperties;
-import consulo.ui.RequiredUIAccess;
+import consulo.application.WriteThreadOption;
 import consulo.platform.Platform;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.awt.event.InputEvent;
 import java.io.File;
 import java.util.List;
@@ -73,7 +73,7 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
       return;
     }
 
-    if(ApplicationProperties.isSubWriteThread()) {
+    if(WriteThreadOption.isSubWriteThreadSupported()) {
       ProjectUtil.openAsyncNew(myProjectPath, project, forceOpenInNewFrame, UIAccess.current());
     }
     else {

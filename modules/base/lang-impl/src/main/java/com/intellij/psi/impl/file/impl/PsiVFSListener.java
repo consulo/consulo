@@ -47,7 +47,7 @@ import com.intellij.util.FileContentUtilCore;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.AccessRule;
-import consulo.application.ApplicationProperties;
+import consulo.application.WriteThreadOption;
 import consulo.psi.impl.ExternalChangeMarker;
 
 import javax.annotation.Nonnull;
@@ -665,7 +665,7 @@ public class PsiVFSListener implements VirtualFileListener {
   private static final boolean useSubWriteThreadForPsiListener = Boolean.getBoolean("consulo.use.sub.write.thread.for.psi.listener");
 
   private void runExternalWriteAction(@RequiredWriteAction @Nonnull Runnable action) {
-    if (useSubWriteThreadForPsiListener && ApplicationProperties.isSubWriteThread()) {
+    if (useSubWriteThreadForPsiListener && WriteThreadOption.isSubWriteThreadSupported()) {
       AccessRule.writeAsync(action::run);
       return;
     }

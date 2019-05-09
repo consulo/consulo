@@ -41,10 +41,10 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.ex.ToolWindowStripeButton;
-import consulo.web.ui.ex.WebToolWindowPanelImpl;
-import consulo.web.ui.ex.WebToolWindowStripeButtonImpl;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.web.internal.WebRootPaneImpl;
+import consulo.web.ui.ex.WebToolWindowPanelImpl;
+import consulo.web.ui.ex.WebToolWindowStripeButtonImpl;
 import consulo.wm.impl.ToolWindowManagerBase;
 import consulo.wm.impl.UnifiedToolWindowImpl;
 import org.jdom.Element;
@@ -77,7 +77,7 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
       @Override
       public void projectOpened(Project project, UIAccess uiAccess) {
         if (project == myProject) {
-          WebToolWindowManagerImpl.this.projectOpened();
+          uiAccess.giveAndWait(WebToolWindowManagerImpl.this::projectOpened);
         }
       }
 
@@ -90,6 +90,7 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     });
   }
 
+  @RequiredUIAccess
   private void projectOpened() {
     myFrame = myWindowManager.allocateFrame(myProject);
 
@@ -100,6 +101,8 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     WebRootPaneImpl rootPanel = ((WebIdeFrameImpl)myFrame).getRootPanel();
 
     rootPanel.setCenterComponent(toolWindowPanel);
+
+    ((WebIdeFrameImpl)myFrame).show();
   }
 
   private void projectClosed() {

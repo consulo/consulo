@@ -29,10 +29,7 @@ import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.ModificationTracker;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.ShutDownTracker;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.AppIconScheme;
 import com.intellij.openapi.wm.IdeFrame;
@@ -47,6 +44,8 @@ import com.intellij.util.containers.Queue;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
+import consulo.application.AccessRule;
+import consulo.application.WriteThreadOption;
 import consulo.application.ex.ApplicationEx2;
 import consulo.ui.UIAccess;
 import org.jetbrains.annotations.TestOnly;
@@ -219,8 +218,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
     if (!addTaskToQueue(task)) return;
 
     if (myState.get() == State.SMART || myState.get() == State.WAITING_FOR_FINISH) {
-      enterDumbMode(contextTransaction, trace);
-      ApplicationManager.getApplication().invokeLater(this::startBackgroundProcess, myProject.getDisposed());
+      enterDumbMode(contextTransaction, trace).doWhenDone(() -> Application.get().invokeLater(this::startBackgroundProcess, myProject.getDisposed()));
     }
   }
 
@@ -239,23 +237,58 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
     return true;
   }
 
-  private void enterDumbMode(@Nullable TransactionId contextTransaction, @Nonnull Throwable trace) {
-    boolean wasSmart = !isDumb();
-    WriteAction.run(() -> {
-      synchronized (myRunWhenSmartQueue) {
-        myState.set(State.SCHEDULED_TASKS);
+  @Nonnull
+  private AsyncResult<Void> enterDumbMode(@Nullable TransactionId contextTransaction, @Nonnull Throwable trace) {
+    if (WriteThreadOption.isSeparateWriteThreadSuppored()) {
+      boolean wasSmart = !isDumb();
+
+      AsyncResult<Void> result = AsyncResult.undefined();
+
+      AccessRule.writeAsync(() -> {
+        synchronized (myRunWhenSmartQueue) {
+          myState.set(State.SCHEDULED_TASKS);
+        }
+        myDumbStart = trace;
+        myDumbStartTransaction = contextTransaction;
+        myModificationCount++;
+      }).doWhenDone(() -> {
+        if (wasSmart) {
+          try {
+            myPublisher.enteredDumbMode();
+          }
+          catch (Throwable e) {
+            LOG.error(e);
+          }
+          finally {
+            result.setDone();
+          }
+        }
+        else {
+          result.setDone();
+        }
+      });
+
+      return result;
+    }
+    else {
+      boolean wasSmart = !isDumb();
+      WriteAction.run(() -> {
+        synchronized (myRunWhenSmartQueue) {
+          myState.set(State.SCHEDULED_TASKS);
+        }
+        myDumbStart = trace;
+        myDumbStartTransaction = contextTransaction;
+        myModificationCount++;
+      });
+      if (wasSmart) {
+        try {
+          myPublisher.enteredDumbMode();
+        }
+        catch (Throwable e) {
+          LOG.error(e);
+        }
       }
-      myDumbStart = trace;
-      myDumbStartTransaction = contextTransaction;
-      myModificationCount++;
-    });
-    if (wasSmart) {
-      try {
-        myPublisher.enteredDumbMode();
-      }
-      catch (Throwable e) {
-        LOG.error(e);
-      }
+      return AsyncResult.resolved();
     }
   }
 

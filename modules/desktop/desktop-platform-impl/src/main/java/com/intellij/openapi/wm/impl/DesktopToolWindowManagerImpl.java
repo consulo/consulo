@@ -65,7 +65,7 @@ import com.intellij.util.ui.PositionTracker;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.annotations.RequiredWriteAction;
-import consulo.application.ApplicationProperties;
+import consulo.application.WriteThreadOption;
 import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 import consulo.fileEditor.impl.EditorsSplitters;
@@ -213,7 +213,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
       @Override
       public void projectOpened(Project project, UIAccess uiAccess) {
         if (project == myProject) {
-          if(ApplicationProperties.isSubWriteThread()) {
+          if(WriteThreadOption.isSubWriteThreadSupported()) {
             uiAccess.giveAndWait(DesktopToolWindowManagerImpl.this::projectOpened);
           }
           else {

@@ -46,6 +46,7 @@ import com.intellij.util.Restarter;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.ui.UIUtil;
+import consulo.application.WriteThreadOption;
 import consulo.application.impl.WriteThread;
 import consulo.application.internal.ApplicationWithOwnWriteThread;
 import consulo.ui.RequiredUIAccess;
@@ -157,7 +158,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
       return Thread.currentThread();
     });
 
-    boolean subWriteThread = ApplicationProperties.isSubWriteThread();
+    boolean subWriteThread = WriteThreadOption.isSubWriteThreadSupported();
     mySubWriteThread = subWriteThread ? new WriteThread(this) : null;
 
     if(subWriteThread) {
