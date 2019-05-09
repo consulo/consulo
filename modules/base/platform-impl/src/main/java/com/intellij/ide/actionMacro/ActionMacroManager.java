@@ -126,7 +126,7 @@ public class ActionMacroManager implements JDOMExternalizable {
 
     myKeyProcessor = new MyKeyPostpocessor();
 
-    Platform.onlyAtDesktop(() -> IdeEventQueue.getInstance().addPostprocessor(myKeyProcessor, null));
+    Platform.runIfDesktopPlatform(() -> IdeEventQueue.getInstance().addPostprocessor(myKeyProcessor, null));
   }
 
   @Override
