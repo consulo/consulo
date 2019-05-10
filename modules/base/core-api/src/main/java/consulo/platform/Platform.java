@@ -31,37 +31,12 @@ import java.io.File;
 public interface Platform {
   //region Migration staff
   @Deprecated
-  static boolean ourUnifiedVariantAnyway = Boolean.getBoolean("consulo.code.unify.enabled");
-
-  @Deprecated
-  @DeprecationInfo("This is marker for future unify. In most case unified variant works good, but need more tests")
+  @DeprecationInfo("This is marker for running tasks if desktop platform, in ideal future, must be removed")
   @SuppressWarnings("deprecation")
-  static void hacky(@Nonnull Runnable desktopVariant, @Nonnull Runnable unifiedVariant) {
-    if (ourUnifiedVariantAnyway) {
-      unifiedVariant.run();
-      return;
-    }
-
-    if (Platform.current().isDesktop()) {
-      desktopVariant.run();
-    }
-    else {
-      unifiedVariant.run();
-    }
-  }
-
-  @Deprecated
-  @DeprecationInfo("This is marker for future unify. In most case unified variant works good, but need more tests")
-  @SuppressWarnings("deprecation")
-  static void onlyAtDesktop(@Nonnull Runnable runnable) {
+  static void runIfDesktopPlatform(@Nonnull Runnable runnable) {
     if (current().isDesktop()) {
       runnable.run();
     }
-  }
-
-  @Deprecated
-  static boolean isUnifiedVariant() {
-    return ourUnifiedVariantAnyway;
   }
   //endregion
 

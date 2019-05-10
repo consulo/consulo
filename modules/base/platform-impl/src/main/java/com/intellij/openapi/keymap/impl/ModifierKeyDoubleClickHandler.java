@@ -108,7 +108,7 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
                              boolean skipIfActionHasShortcut) {
     final MyDispatcher dispatcher = new MyDispatcher(actionId, modifierKeyCode, actionKeyCode, skipIfActionHasShortcut);
     MyDispatcher oldDispatcher = myDispatchers.put(actionId, dispatcher);
-    Platform.onlyAtDesktop(() -> IdeEventQueue.getInstance().addDispatcher(dispatcher, dispatcher));
+    Platform.runIfDesktopPlatform(() -> IdeEventQueue.getInstance().addDispatcher(dispatcher, dispatcher));
     myActionManager.addAnActionListener(dispatcher, dispatcher);
     if (oldDispatcher != null) {
       Disposer.dispose(oldDispatcher);

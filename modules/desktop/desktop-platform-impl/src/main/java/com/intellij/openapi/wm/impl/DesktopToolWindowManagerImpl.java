@@ -64,6 +64,8 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.PositionTracker;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.annotations.RequiredWriteAction;
+import consulo.application.WriteThreadOption;
 import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 import consulo.fileEditor.impl.EditorsSplitters;
@@ -211,7 +213,12 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
       @Override
       public void projectOpened(Project project, UIAccess uiAccess) {
         if (project == myProject) {
-          DesktopToolWindowManagerImpl.this.projectOpened();
+          if(WriteThreadOption.isSubWriteThreadSupported()) {
+            uiAccess.giveAndWait(DesktopToolWindowManagerImpl.this::projectOpened);
+          }
+          else {
+            DesktopToolWindowManagerImpl.this.projectOpened();
+          }
         }
       }
 
@@ -956,7 +963,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   @Override
-  public Element getState() {
+  public Element getStateFromUI() {
     if (myFrame == null) {
       // do nothing if the project was not opened
       return null;
@@ -1003,6 +1010,13 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
       element.addContent(layoutToRestoreElement);
     }
 
+    return element;
+  }
+
+  @RequiredWriteAction
+  @Nullable
+  @Override
+  public Element getState(Element element) {
     return element;
   }
 

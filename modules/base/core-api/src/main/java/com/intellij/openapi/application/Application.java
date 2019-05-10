@@ -25,6 +25,8 @@ import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -113,15 +115,6 @@ public interface Application extends ComponentManager {
    */
   @RequiredUIAccess
   <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E;
-
-  /**
-   * Returns true if there is currently executing write action of the specified class.
-   *
-   * @param actionClass the class of the write action to return.
-   * @return true if the action is running, or false if no action of the specified class is currently executing.
-   */
-  @RequiredReadAction
-  boolean hasWriteAction(@Nonnull Class<?> actionClass);
 
   /**
    * Asserts whether the read access is allowed.
@@ -427,7 +420,13 @@ public interface Application extends ComponentManager {
    * @return Application icon. In sandbox icon maybe different
    */
   @Nonnull
-  consulo.ui.image.Image getIcon();
+  Image getIcon();
+
+  /**
+   * @return last UIAccess for application
+   */
+  @Nonnull
+  UIAccess getLastUIAccess();
 
   // region Deprecated stuff
 

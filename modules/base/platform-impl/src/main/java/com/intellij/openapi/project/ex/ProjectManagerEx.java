@@ -19,7 +19,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.ui.RequiredUIAccess;
@@ -49,12 +48,10 @@ public abstract class ProjectManagerEx extends ProjectManager {
 
   @RequiredUIAccess
   public boolean openProject(Project project) {
-    return openProject(project, UIAccess.get());
+    return openProject(project, UIAccess.current());
   }
 
   public abstract boolean openProject(@Nonnull Project project, @Nonnull UIAccess uiAccess);
-
-  public abstract boolean openProjectAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess);
 
   public abstract boolean isProjectOpened(Project project);
 
@@ -85,8 +82,6 @@ public abstract class ProjectManagerEx extends ProjectManager {
 
   @Nullable
   public abstract Project convertAndLoadProject(String filePath) throws IOException;
-
-  public abstract void convertAndLoadProjectAsync(@Nonnull AsyncResult<Project> result, String filePath);
 
   public abstract boolean canClose(Project project);
 

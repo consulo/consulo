@@ -135,7 +135,6 @@ public class WebWindowManagerImpl extends WindowManagerEx implements PersistentS
     WebIdeFrameImpl frame = new WebIdeFrameImpl(project);
     myProject2Frame.put(project, frame);
 
-    frame.show();
     return frame;
   }
 

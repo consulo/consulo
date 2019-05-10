@@ -53,6 +53,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
 import consulo.platform.Platform;
+import consulo.psi.impl.ExternalChangeMarker;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
@@ -833,7 +835,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     List<PsiFile> files = viewProvider.getAllFiles();
     boolean commitNecessary = files.stream().noneMatch(file -> PsiToDocumentSynchronizer.isInsideAtomicChange(file) || !(file instanceof PsiFileImpl));
 
-    boolean forceCommit = ApplicationManager.getApplication().hasWriteAction(ExternalChangeAction.class) &&
+    boolean forceCommit = ExternalChangeMarker.isMarked(ExternalChangeMarker.ExternalChangeAction) &&
                           (SystemProperties.getBooleanProperty("idea.force.commit.on.external.change", false) ||
                            ApplicationManager.getApplication().isHeadlessEnvironment() && !ApplicationManager.getApplication().isUnitTestMode());
 
@@ -859,6 +861,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     }
   }
 
+  @RequiredUIAccess
   void handleCommitWithoutPsi(@Nonnull Document document) {
     final UncommittedInfo prevInfo = clearUncommittedInfo(document);
     if (prevInfo == null) {
@@ -882,16 +885,16 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     }
 
     // we can end up outside write action here if the document has forUseInNonAWTThread=true
-    ApplicationManager.getApplication().runWriteAction(new ExternalChangeAction() {
-      @Override
-      public void run() {
+    ApplicationManager.getApplication().runWriteAction(() -> {
+      ExternalChangeMarker.mark(() -> {
         FileViewProvider viewProvider = psiFile.getViewProvider();
         if (viewProvider instanceof SingleRootFileViewProvider) {
           ((SingleRootFileViewProvider)viewProvider).onContentReload();
-        } else {
+        }
+        else {
           LOG.error("Invalid view provider: " + viewProvider + " of " + viewProvider.getClass());
         }
-      }
+      }, ExternalChangeMarker.ExternalChangeAction);
     });
   }
 

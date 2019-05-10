@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.psi;
+package consulo.web.ide.actions.impl;
 
-public interface IgnorePsiEventsMarker {
+import consulo.ide.actions.AboutManager;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.Window;
+
+import javax.annotation.Nullable;
+
+/**
+ * @author VISTALL
+ * @since 2019-05-09
+ */
+public class WebAboutManager implements AboutManager {
+  @RequiredUIAccess
+  @Override
+  public void showAbout(@Nullable Window parentWindow) {
+  }
 }

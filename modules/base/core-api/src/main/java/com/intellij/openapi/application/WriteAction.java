@@ -20,7 +20,10 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ThrowableRunnable;
+import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredWriteAction;
 import consulo.application.internal.ApplicationWithOwnWriteThread;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 
@@ -73,6 +76,15 @@ public abstract class WriteAction<T> extends BaseActionRunnable<T> {
   @Nonnull
   public static AccessToken start(@Nonnull Class clazz) {
     return ApplicationManager.getApplication().acquireWriteActionLock(clazz);
+  }
+
+  public static void runAndWait(@RequiredUIAccess @RequiredWriteAction Runnable runnable) {
+    if(Application.get().isDispatchThread()) {
+      run(runnable::run);
+    }
+    else {
+      UIUtil.invokeAndWaitIfNeeded((Runnable)() -> run(runnable::run));
+    }
   }
 
   public static <E extends Throwable> void run(@Nonnull ThrowableRunnable<E> action) throws E {

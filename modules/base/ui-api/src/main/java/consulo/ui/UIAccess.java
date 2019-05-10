@@ -100,4 +100,8 @@ public interface UIAccess {
       giveAndWait(runnable);
     }
   }
+
+  default boolean isHeadless() {
+    return false;
+  }
 }

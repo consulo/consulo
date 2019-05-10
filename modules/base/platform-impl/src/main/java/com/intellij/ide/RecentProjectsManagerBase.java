@@ -21,7 +21,6 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
-import consulo.components.impl.stores.ProjectStoreImpl;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -40,10 +39,11 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotations.RequiredReadAction;
+import consulo.application.WriteThreadOption;
+import consulo.components.impl.stores.ProjectStoreImpl;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionProviderEP;
 import consulo.module.extension.impl.ModuleExtensionProviders;
-import consulo.platform.Platform;
 import consulo.ui.UIAccess;
 import gnu.trove.THashSet;
 
@@ -462,8 +462,12 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
       for (String openPath : openPaths) {
         if (isValidProjectPath(openPath)) {
 
-          final boolean finalForceNewFrame = forceNewFrame;
-          Platform.hacky(() -> ProjectUtil.open(openPath, null, finalForceNewFrame), () -> ProjectUtil.openAsync(openPath, null, finalForceNewFrame, UIAccess.get()));
+          if (WriteThreadOption.isSubWriteThreadSupported()) {
+            ProjectUtil.openAsync(openPath, null, forceNewFrame, UIAccess.current());
+          }
+          else {
+            ProjectUtil.open(openPath, null, forceNewFrame);
+          }
           break;
         }
       }

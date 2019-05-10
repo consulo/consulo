@@ -15,6 +15,8 @@
  */
 package consulo.ui;
 
+import com.intellij.util.ThreeState;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -43,6 +45,21 @@ public final class Alerts {
     builder.asDefaultButton();
 
     builder.button(Alert.NO, Boolean.FALSE);
+    builder.asExitButton();
+
+    return builder;
+  }
+
+  @Nonnull
+  public static Alert<ThreeState> yesNoCancel() {
+    Alert<ThreeState> builder = Alert.<ThreeState>create();
+
+    builder.button(Alert.OK, ThreeState.YES);
+    builder.asDefaultButton();
+
+    builder.button(Alert.NO, ThreeState.NO);
+
+    builder.button(Alert.CANCEL, ThreeState.UNSURE);
     builder.asExitButton();
 
     return builder;

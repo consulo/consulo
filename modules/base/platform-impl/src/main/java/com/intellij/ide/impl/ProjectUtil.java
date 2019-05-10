@@ -23,6 +23,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.ui.Messages;
@@ -32,14 +33,17 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.*;
+import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.ui.AppIcon;
 import consulo.annotations.DeprecationInfo;
 import consulo.application.AccessRule;
 import consulo.application.DefaultPaths;
+import consulo.async.ex.PooledAsyncResult;
 import consulo.awt.TargetAWT;
 import consulo.components.impl.stores.IProjectStore;
 import consulo.project.ProjectOpenProcessors;
+import consulo.ui.Alert;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 
@@ -180,6 +184,42 @@ public class ProjectUtil {
     return confirmOpenNewProject;
   }
 
+  @Nonnull
+  private static AsyncResult<Integer> confirmOpenNewProjectAsync(UIAccess uiAccess, boolean isNewProject) {
+    final GeneralSettings settings = GeneralSettings.getInstance();
+    int confirmOpenNewProject = settings.getConfirmOpenNewProject();
+    if (confirmOpenNewProject == GeneralSettings.OPEN_PROJECT_ASK) {
+      Alert<Integer> alert = Alert.create();
+      alert.asQuestion();
+      alert.remember(ProjectNewWindowDoNotAskOption.INSTANCE);
+
+      if (isNewProject) {
+        alert.title(IdeBundle.message("title.new.project"));
+        alert.text(IdeBundle.message("prompt.open.project.in.new.frame"));
+
+        alert.button(IdeBundle.message("button.existingframe"), () -> GeneralSettings.OPEN_PROJECT_SAME_WINDOW);
+        alert.asDefaultButton();
+        alert.button(IdeBundle.message("button.newframe"), () -> GeneralSettings.OPEN_PROJECT_NEW_WINDOW);
+      }
+      else {
+        alert.title(IdeBundle.message("title.open.project"));
+        alert.text(IdeBundle.message("prompt.open.project.in.new.frame"));
+
+        alert.button(IdeBundle.message("button.existingframe"), () -> GeneralSettings.OPEN_PROJECT_SAME_WINDOW);
+        alert.asDefaultButton();
+        alert.button(IdeBundle.message("button.newframe"), () -> GeneralSettings.OPEN_PROJECT_NEW_WINDOW);
+        alert.button(Alert.CANCEL, Alert.CANCEL);
+        alert.asExitButton();
+      }
+
+      AsyncResult<Integer> result = AsyncResult.undefined();
+      uiAccess.give(() -> alert.show().notify(result));
+      return result;
+    }
+
+    return AsyncResult.resolved(confirmOpenNewProject);
+  }
+
   public static void focusProjectWindow(final Project p, boolean executeIfAppInactive) {
     FocusCommand cmd = new FocusCommand() {
       @Nonnull
@@ -212,32 +252,65 @@ public class ProjectUtil {
     return DefaultPaths.getInstance().getDocumentsDir();
   }
 
-  //region Async staff
   @Nonnull
-  public static AsyncResult<Project> openAsync(@Nonnull String path, @Nullable Project projectToClose, boolean forceOpenInNewFrame, @Nonnull UIAccess uiAccess) {
+  public static AsyncResult<Project> openAsync(@Nonnull String path, @Nullable final Project projectToCloseFinal, boolean forceOpenInNewFrame, @Nonnull UIAccess uiAccess) {
     final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
 
     if (virtualFile == null) return AsyncResult.rejected("file path not find");
 
-    AsyncResult<Project> result = new AsyncResult<>();
+    return PooledAsyncResult.create((result) -> {
+      ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(VfsUtilCore.virtualToIoFile(virtualFile));
+      if (provider != null) {
+        result.doWhenDone((project) -> {
+          uiAccess.give(() -> {
+            if (project.isDisposed()) return;
 
-    ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(VfsUtilCore.virtualToIoFile(virtualFile));
-    if (provider != null) {
-      result.doWhenDone((project) -> {
-        uiAccess.give(() -> {
-          if (!project.isDisposed()) {
             final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.PROJECT_VIEW);
-            if (toolWindow != null) {
+
+            if (toolWindow != null && toolWindow.getType() != ToolWindowType.SLIDING) {
               toolWindow.activate(null);
             }
-          }
+          });
         });
-      });
 
-      AccessRule.writeAsync(() -> provider.doOpenProjectAsync(result, virtualFile, projectToClose, forceOpenInNewFrame, uiAccess));
-      return result;
-    }
-    return AsyncResult.rejected("provider for file path is not find");
+        result.doWhenRejected(WelcomeFrame::showIfNoProjectOpened);
+
+        AsyncResult<Void> reopenAsync = AsyncResult.undefined();
+
+        Project projectToClose = projectToCloseFinal;
+        Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+        if (!forceOpenInNewFrame && openProjects.length > 0) {
+          if (projectToClose == null) {
+            projectToClose = openProjects[openProjects.length - 1];
+          }
+
+          final Project finalProjectToClose = projectToClose;
+          confirmOpenNewProjectAsync(uiAccess, false).doWhenDone(exitCode -> {
+            if (exitCode == GeneralSettings.OPEN_PROJECT_SAME_WINDOW) {
+              AccessRule.writeAsync(() -> {
+                AsyncResult<Void> closeResult = ProjectManagerEx.getInstanceEx().closeAndDisposeAsync(finalProjectToClose, uiAccess);
+                closeResult.doWhenDone((Runnable)reopenAsync::setDone);
+                closeResult.doWhenRejected(() -> result.reject("not closed project"));
+              });
+            }
+            else if (exitCode != GeneralSettings.OPEN_PROJECT_NEW_WINDOW) { // not in a new window
+              result.reject("not open in new window");
+            }
+            else {
+              reopenAsync.setDone();
+            }
+          });
+        }
+        else {
+          reopenAsync.setDone();
+        }
+
+        // we need reexecute it due after dialog - it will be executed in ui thread
+        reopenAsync.doWhenDone(() -> PooledAsyncResult.create(() -> provider.doOpenProjectAsync(virtualFile, uiAccess)).notify(result));
+      }
+      else {
+        result.reject("provider for file path is not find");
+      }
+    });
   }
-  //endregion
 }
