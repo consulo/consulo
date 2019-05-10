@@ -17,6 +17,8 @@ package consulo.psi.impl;
 
 import com.intellij.util.BitUtil;
 
+import java.util.Deque;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.function.Supplier;
 
 /**
@@ -28,7 +30,7 @@ public final class ExternalChangeMarker {
   public static final int ExternalChangeAction = 1 << 2 | IgnorePsiEventsMarker;
   public static final int ExternalDocumentChange = 1 << 3 | ExternalChangeAction;
 
-  private static ThreadLocal<Integer> ourIgnorePsiEventsMarker = ThreadLocal.withInitial(() -> 0);
+  private static ThreadLocal<Deque<Integer>> ourIgnorePsiEventsMarker = ThreadLocal.withInitial(ConcurrentLinkedDeque::new);
 
   public static void mark(Runnable subRunnable, int flags) {
     mark(() -> {
@@ -37,20 +39,26 @@ public final class ExternalChangeMarker {
     }, flags);
   }
 
-  public static <T> T mark(Supplier<T> subRunnable, int flags) {
+  public static <T> T mark(Supplier<T> subRunnable, int mask) {
+    Deque<Integer> queue = ourIgnorePsiEventsMarker.get();
+    int flags = BitUtil.set(0, mask, true);
     try {
-      Integer oldValue = ourIgnorePsiEventsMarker.get();
-      ourIgnorePsiEventsMarker.set(BitUtil.set(oldValue, flags, true));
-
+      queue.addLast(flags);
       return subRunnable.get();
     }
     finally {
-      Integer oldValue = ourIgnorePsiEventsMarker.get();
-      ourIgnorePsiEventsMarker.set(BitUtil.set(oldValue, flags, false));
+      Integer last = queue.removeLast();
+      assert last == flags;
     }
   }
 
   public static boolean isMarked(int mask) {
-    return BitUtil.isSet(ourIgnorePsiEventsMarker.get(), mask);
+    Deque<Integer> flags = ourIgnorePsiEventsMarker.get();
+    for (Integer flag : flags) {
+      if(BitUtil.isSet(flag, mask)) {
+        return true;
+      }
+    }
+    return false;
   }
 }
