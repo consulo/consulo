@@ -924,6 +924,8 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
 
   private void loadProjectAsync(final ProjectImpl project, AsyncResult<Project> projectAsyncResult, boolean init, ConversionResult conversionResult, UIAccess uiAccess) {
     Task.Backgroundable.queue(project, ProjectBundle.message("project.load.progress"), canCancelProjectLoading(), progressIndicator -> {
+      progressIndicator.setIndeterminate(true);
+
       try {
         if (!addToOpened(project)) {
           AccessRule.writeAsync(() -> closeAndDisposeAsync(project, uiAccess).doWhenProcessed(() -> projectAsyncResult.reject("Can't add project to opened")));
@@ -949,9 +951,9 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
 
   private void prepareProjectWorkspace(ConversionResult conversionResult, Project project, UIAccess uiAccess, AsyncResult<Project> projectAsyncResult) {
     Task.Backgroundable.queue(project, "Preparing workspace...", canCancelProjectLoading(), progressIndicator -> {
-      try {
-        progressIndicator.setIndeterminate(true);
+      progressIndicator.setIndeterminate(true);
 
+      try {
         StartupManager.getInstance(project).registerPostStartupActivity(() -> conversionResult.postStartupActivity(project));
 
         openProjectRequireBackgroundTask(project, uiAccess);
@@ -1004,7 +1006,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
 
   private void initProjectAsync(@Nonnull final ProjectImpl project, @Nullable ProjectImpl template, ProgressIndicator progressIndicator) throws IOException {
     progressIndicator.setText(ProjectBundle.message("loading.components.for", project.getName()));
-    progressIndicator.setIndeterminate(true);
 
     Application.get().getMessageBus().syncPublisher(ProjectLifecycleListener.TOPIC).beforeProjectLoaded(project);
 
