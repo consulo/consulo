@@ -26,11 +26,15 @@ import consulo.wm.impl.SystemDockImpl;
 
 import java.io.File;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author Denis Fokin
  */
 public class WinDockDelegate implements SystemDockImpl.Delegate {
+  private ExecutorService myExecutorService = Executors.newSingleThreadExecutor(r -> new Thread(r, "Windows JumpList Updater"));
+
   @Override
   public void updateRecentProjectsMenu() {
     if (ApplicationProperties.isInSandbox()) {
@@ -41,7 +45,7 @@ public class WinDockDelegate implements SystemDockImpl.Delegate {
     RecentTasks.clear();
     String name = ApplicationNamesInfo.getInstance().getProductName().toLowerCase(Locale.US);
     File exePath = new File(PathManager.getAppHomeDirectory(), name + (SystemInfo.is64Bit ? "64" : "") + ".exe");
-    if(!exePath.exists()) {
+    if (!exePath.exists()) {
       throw new IllegalArgumentException("Executable is not exists. Path: " + exePath.getPath());
     }
     String launcher = RecentTasks.getShortenPath(exePath.getPath());
@@ -50,6 +54,13 @@ public class WinDockDelegate implements SystemDockImpl.Delegate {
       ReopenProjectAction rpa = (ReopenProjectAction)recentProjectActions[i];
       tasks[i] = new Task(launcher, RecentTasks.getShortenPath(rpa.getProjectPath()), rpa.getTemplatePresentation().getText());
     }
-    RecentTasks.addTasks(tasks);
+
+    // we need invoke it in own thread, due we don't want it call inside UI thread, or Write thread (if it separate)
+    myExecutorService.execute(() -> RecentTasks.addTasks(tasks));
+  }
+
+  @Override
+  public void dispose() {
+    myExecutorService.shutdown();
   }
 }
