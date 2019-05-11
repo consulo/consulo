@@ -17,20 +17,26 @@ package com.intellij.ui.win;
 
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.loader.NativeLibraryLoader;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class RecentTasks {
+  private static final Logger LOG = Logger.getInstance(RecentTasks.class);
   private static final AtomicBoolean initialized = new AtomicBoolean(false);
-
-  static {
-    NativeLibraryLoader.loadPlatformLibrary("jumpListBridge");
-  }
+  private static boolean ourFailed;
 
   private synchronized static void init() {
     if(initialized.compareAndSet(false, true)) {
-      initialize(ApplicationInfoEx.getInstanceEx().getVersionName() + "." + PathManager.getConfigPath().hashCode());
+      try {
+        NativeLibraryLoader.loadPlatformLibrary("jumpListBridge");
+        initialize(ApplicationInfoEx.getInstanceEx().getVersionName() + "." + PathManager.getConfigPath().hashCode());
+      }
+      catch (Exception e) {
+        LOG.error(e);
+        ourFailed = true;
+      }
     }
   }
 
@@ -49,6 +55,10 @@ public class RecentTasks {
   native private static void clearNative();
 
   public synchronized static void clear() {
+    if(ourFailed) {
+      return;
+    }
+
     init();
 
     clearNative();
@@ -60,7 +70,7 @@ public class RecentTasks {
    * @param tasks
    */
   public synchronized static void addTasks(final Task[] tasks) {
-    if (tasks.length == 0) return;
+    if (tasks.length == 0 || ourFailed) return;
 
     init();
 
