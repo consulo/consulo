@@ -396,7 +396,7 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
       if (path != null) {
         markPathRecent(path, project);
       }
-      SystemDock.updateMenu();
+      SystemDock.getInstance().updateMenu();
 
       project.getMessageBus().connect().subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
         @Override
@@ -422,7 +422,7 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
           markPathRecent(path, null);
         }
       }
-      SystemDock.updateMenu();
+      SystemDock.getInstance().updateMenu();
     }
   }
 

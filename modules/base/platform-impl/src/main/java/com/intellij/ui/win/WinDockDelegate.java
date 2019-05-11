@@ -21,8 +21,8 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.wm.impl.SystemDock;
 import consulo.application.ApplicationProperties;
+import consulo.wm.impl.SystemDockImpl;
 
 import java.io.File;
 import java.util.Locale;
@@ -30,12 +30,7 @@ import java.util.Locale;
 /**
  * @author Denis Fokin
  */
-public class WinDockDelegate implements SystemDock.Delegate {
-  private static SystemDock.Delegate instance;
-
-  private WinDockDelegate() {
-  }
-
+public class WinDockDelegate implements SystemDockImpl.Delegate {
   @Override
   public void updateRecentProjectsMenu() {
     if (ApplicationProperties.isInSandbox()) {
@@ -56,12 +51,5 @@ public class WinDockDelegate implements SystemDock.Delegate {
       tasks[i] = new Task(launcher, RecentTasks.getShortenPath(rpa.getProjectPath()), rpa.getTemplatePresentation().getText());
     }
     RecentTasks.addTasks(tasks);
-  }
-
-  public static synchronized SystemDock.Delegate getInstance() {
-    if (instance == null) {
-      instance = new WinDockDelegate();
-    }
-    return instance;
   }
 }
