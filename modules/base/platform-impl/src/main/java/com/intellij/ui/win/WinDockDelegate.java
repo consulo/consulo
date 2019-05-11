@@ -41,22 +41,24 @@ public class WinDockDelegate implements SystemDockImpl.Delegate {
       return;
     }
 
-    final AnAction[] recentProjectActions = RecentProjectsManager.getInstance().getRecentProjectsActions(false);
-    RecentTasks.clear();
-    String name = ApplicationNamesInfo.getInstance().getProductName().toLowerCase(Locale.US);
-    File exePath = new File(PathManager.getAppHomeDirectory(), name + (SystemInfo.is64Bit ? "64" : "") + ".exe");
-    if (!exePath.exists()) {
-      throw new IllegalArgumentException("Executable is not exists. Path: " + exePath.getPath());
-    }
-    String launcher = RecentTasks.getShortenPath(exePath.getPath());
-    Task[] tasks = new Task[recentProjectActions.length];
-    for (int i = 0; i < recentProjectActions.length; i++) {
-      ReopenProjectAction rpa = (ReopenProjectAction)recentProjectActions[i];
-      tasks[i] = new Task(launcher, RecentTasks.getShortenPath(rpa.getProjectPath()), rpa.getTemplatePresentation().getText());
-    }
-
     // we need invoke it in own thread, due we don't want it call inside UI thread, or Write thread (if it separate)
-    myExecutorService.execute(() -> RecentTasks.addTasks(tasks));
+    myExecutorService.execute(() -> {
+      final AnAction[] recentProjectActions = RecentProjectsManager.getInstance().getRecentProjectsActions(false);
+      RecentTasks.clear();
+      String name = ApplicationNamesInfo.getInstance().getProductName().toLowerCase(Locale.US);
+      File exePath = new File(PathManager.getAppHomeDirectory(), name + (SystemInfo.is64Bit ? "64" : "") + ".exe");
+      if (!exePath.exists()) {
+        throw new IllegalArgumentException("Executable is not exists. Path: " + exePath.getPath());
+      }
+      String launcher = RecentTasks.getShortenPath(exePath.getPath());
+      Task[] tasks = new Task[recentProjectActions.length];
+      for (int i = 0; i < recentProjectActions.length; i++) {
+        ReopenProjectAction rpa = (ReopenProjectAction)recentProjectActions[i];
+        tasks[i] = new Task(launcher, RecentTasks.getShortenPath(rpa.getProjectPath()), rpa.getTemplatePresentation().getText());
+      }
+
+      RecentTasks.addTasks(tasks);
+    });
   }
 
   @Override
