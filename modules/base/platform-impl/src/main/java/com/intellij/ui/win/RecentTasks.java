@@ -19,24 +19,19 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.util.loader.NativeLibraryLoader;
 
-import java.lang.ref.WeakReference;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class RecentTasks {
-  private static AtomicBoolean initialized = new AtomicBoolean(false);
-
-  private final static WeakReference<Thread> openerThread = new WeakReference<>(Thread.currentThread());
-
-  private final static String openerThreadName = Thread.currentThread().getName();
+  private static final AtomicBoolean initialized = new AtomicBoolean(false);
 
   static {
     NativeLibraryLoader.loadPlatformLibrary("jumpListBridge");
   }
 
   private synchronized static void init() {
-    if (initialized.get()) return;
-    initialize(ApplicationInfoEx.getInstanceEx().getVersionName() + "." + PathManager.getConfigPath().hashCode());
-    initialized.set(true);
+    if(initialized.compareAndSet(false, true)) {
+      initialize(ApplicationInfoEx.getInstanceEx().getVersionName() + "." + PathManager.getConfigPath().hashCode());
+    }
   }
 
   /**
@@ -55,7 +50,7 @@ public class RecentTasks {
 
   public synchronized static void clear() {
     init();
-    checkThread();
+
     clearNative();
   }
 
@@ -66,15 +61,9 @@ public class RecentTasks {
    */
   public synchronized static void addTasks(final Task[] tasks) {
     if (tasks.length == 0) return;
-    init();
-    checkThread();
-    addTasksNativeForCategory("Recent", tasks);
-  }
 
-  private static void checkThread() {
-    Thread t = openerThread.get();
-    if (t == null || !t.equals(Thread.currentThread())) {
-      throw new RuntimeException("Current thread is " + Thread.currentThread().getName() + "This class has to be used from " + openerThreadName + " thread");
-    }
+    init();
+
+    addTasksNativeForCategory("Recent", tasks);
   }
 }
