@@ -17,8 +17,6 @@ package consulo.psi.impl;
 
 import com.intellij.util.BitUtil;
 
-import java.util.Deque;
-import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.function.Supplier;
 
 /**
@@ -26,11 +24,15 @@ import java.util.function.Supplier;
  * @since 2019-01-02
  */
 public final class ExternalChangeMarker {
-  public static final int IgnorePsiEventsMarker = 1 << 1;
-  public static final int ExternalChangeAction = 1 << 2 | IgnorePsiEventsMarker;
-  public static final int ExternalDocumentChange = 1 << 3 | ExternalChangeAction;
+  public static final int IgnorePsiEventsMarker = 1;
+  public static final int ExternalChangeAction = 2;
+  public static final int ExternalDocumentChange = 3;
 
-  private static ThreadLocal<Deque<Integer>> ourIgnorePsiEventsMarker = ThreadLocal.withInitial(ConcurrentLinkedDeque::new);
+  private static final int IgnorePsiEventsMarker_mask = 1 << 1;
+  private static final int ExternalChangeAction_mask = 1 << 2;
+  private static final int ExternalDocumentChange_mask = 1 << 3;
+
+  private static ThreadLocal<Integer> ourIgnorePsiEventsMarker = ThreadLocal.withInitial(() -> 0);
 
   public static void mark(Runnable subRunnable, int flags) {
     mark(() -> {
@@ -39,26 +41,41 @@ public final class ExternalChangeMarker {
     }, flags);
   }
 
-  public static <T> T mark(Supplier<T> subRunnable, int mask) {
-    Deque<Integer> queue = ourIgnorePsiEventsMarker.get();
-    int flags = BitUtil.set(0, mask, true);
+  public static <T> T mark(Supplier<T> subRunnable, int markerId) {
     try {
-      queue.addLast(flags);
+      ourIgnorePsiEventsMarker.set(setOrRemoveMask(markerId, ourIgnorePsiEventsMarker.get(), true));
+
       return subRunnable.get();
     }
     finally {
-      Integer last = queue.removeLast();
-      assert last == flags;
+      ourIgnorePsiEventsMarker.set(setOrRemoveMask(markerId, ourIgnorePsiEventsMarker.get(), false));
     }
   }
 
-  public static boolean isMarked(int mask) {
-    Deque<Integer> flags = ourIgnorePsiEventsMarker.get();
-    for (Integer flag : flags) {
-      if(BitUtil.isSet(flag, mask)) {
-        return true;
-      }
+  private static int setOrRemoveMask(int markerId, int oldValue, boolean value) {
+    int newValue = oldValue;
+    switch (markerId) {
+      case IgnorePsiEventsMarker:
+        newValue = BitUtil.set(newValue, IgnorePsiEventsMarker_mask, value);
+      case ExternalChangeAction:
+        newValue = BitUtil.set(newValue, ExternalChangeAction_mask, value);
+      case ExternalDocumentChange:
+        newValue = BitUtil.set(newValue, ExternalDocumentChange_mask, value);
     }
-    return false;
+    return newValue;
+  }
+
+  public static boolean isMarked(int markerId) {
+    switch (markerId) {
+      case IgnorePsiEventsMarker:
+        return BitUtil.isSet(ourIgnorePsiEventsMarker.get(), IgnorePsiEventsMarker_mask);
+      case ExternalChangeAction:
+        return BitUtil.isSet(ourIgnorePsiEventsMarker.get(), IgnorePsiEventsMarker_mask) || BitUtil.isSet(ourIgnorePsiEventsMarker.get(), ExternalChangeAction_mask);
+      case ExternalDocumentChange:
+        return BitUtil.isSet(ourIgnorePsiEventsMarker.get(), IgnorePsiEventsMarker_mask) || BitUtil.isSet(ourIgnorePsiEventsMarker.get(), ExternalChangeAction_mask) ||
+               BitUtil.isSet(ourIgnorePsiEventsMarker.get(), ExternalDocumentChange_mask);
+      default:
+        throw new IllegalArgumentException(String.valueOf(markerId));
+    }
   }
 }
