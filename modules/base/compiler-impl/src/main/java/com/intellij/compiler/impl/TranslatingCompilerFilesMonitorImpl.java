@@ -47,8 +47,8 @@ import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SLRUCache;
 import com.intellij.util.indexing.FileBasedIndex;
-import com.intellij.util.io.*;
 import com.intellij.util.io.DataOutputStream;
+import com.intellij.util.io.*;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.compiler.impl.TranslatingCompilerFilesMonitor;
@@ -60,12 +60,13 @@ import consulo.module.extension.ModuleExtensionChangeListener;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.roots.impl.TestContentFolderTypeProvider;
+import consulo.ui.UIAccess;
 import gnu.trove.*;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -1448,7 +1449,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
 
     @Override
-    public void projectClosed(final Project project) {
+    public void projectClosed(final Project project, UIAccess uiAccess) {
       final int projectId = getProjectId(project);
       terminateAsyncScan(projectId, true);
       myConnections.remove(project).disconnect();

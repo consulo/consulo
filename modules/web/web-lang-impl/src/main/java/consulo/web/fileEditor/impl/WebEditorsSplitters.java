@@ -142,6 +142,7 @@ public class WebEditorsSplitters extends EditorsSplittersBase implements Editors
     return false;
   }
 
+  @RequiredUIAccess
   @Override
   public void closeFile(VirtualFile file, boolean moveFocus) {
 

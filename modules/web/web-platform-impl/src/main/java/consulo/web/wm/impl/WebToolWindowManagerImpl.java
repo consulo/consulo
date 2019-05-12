@@ -77,12 +77,12 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
       @Override
       public void projectOpened(Project project, UIAccess uiAccess) {
         if (project == myProject) {
-          uiAccess.giveAndWait(WebToolWindowManagerImpl.this::projectOpened);
+          uiAccess.giveAndWaitIfNeed(WebToolWindowManagerImpl.this::projectOpened);
         }
       }
 
       @Override
-      public void projectClosed(Project project) {
+      public void projectClosed(Project project, UIAccess uiAccess) {
         if (project == myProject) {
           WebToolWindowManagerImpl.this.projectClosed();
         }

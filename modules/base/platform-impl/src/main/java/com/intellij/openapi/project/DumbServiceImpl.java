@@ -586,7 +586,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   private void completeWhenProjectClosed(CompletableFuture<Pair<DumbModeTask, ProgressIndicatorEx>> result) {
     ProjectManagerAdapter listener = new ProjectManagerAdapter() {
       @Override
-      public void projectClosed(Project project) {
+      public void projectClosed(Project project, UIAccess uiAccess) {
         result.completeExceptionally(new ProcessCanceledException());
       }
     };

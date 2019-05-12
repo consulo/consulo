@@ -37,6 +37,7 @@ import com.intellij.util.containers.HashSet;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.ui.RequiredUIAccess;
 import consulo.awt.TargetAWT;
+import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -90,7 +91,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable
       }
 
       @Override
-      public void projectClosed(final Project project) {
+      public void projectClosed(final Project project, UIAccess uiAccess) {
         // perform cleanup
         synchronized (myInProgress) {
           for (Iterator<Trinity<Project, String, String>> it = myInProgress.iterator(); it.hasNext(); ) {

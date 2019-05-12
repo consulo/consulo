@@ -45,6 +45,7 @@ import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -73,7 +74,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
 
     project.getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerAdapter() {
       @Override
-      public void projectClosed(Project project) {
+      public void projectClosed(Project project, UIAccess uiAccess) {
         if (project == myProject) {
           closeAllFiles();
         }

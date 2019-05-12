@@ -28,6 +28,7 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import consulo.awt.TargetAWT;
+import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import consulo.wm.util.IdeFrameUtil;
 
@@ -74,7 +75,7 @@ public abstract class ResizeToolWindowAction extends AnAction implements DumbAwa
       myListenerInstalled = true;
       ProjectManager.getInstance().addProjectManagerListener(new ProjectManagerAdapter() {
         @Override
-        public void projectClosed(Project project) {
+        public void projectClosed(Project project, UIAccess uiAccess) {
           setDisabled(null);
         }
       });

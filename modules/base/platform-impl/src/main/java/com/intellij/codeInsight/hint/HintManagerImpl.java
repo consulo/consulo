@@ -26,8 +26,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.ScrollType;
-import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.editor.event.DocumentAdapter;
+import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
@@ -44,8 +44,9 @@ import com.intellij.ui.*;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
+import consulo.ui.UIAccess;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
@@ -931,18 +932,19 @@ public class HintManagerImpl extends HintManager implements Disposable {
    */
   private final class MyProjectManagerListener extends ProjectManagerAdapter {
     @Override
-    public void projectOpened(Project project) {
+    public void projectOpened(Project project, UIAccess uiAccess) {
       project.getMessageBus().connect(project).subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, myEditorManagerListener);
     }
 
     @Override
-    public void projectClosed(Project project) {
-      ApplicationManager.getApplication().assertIsDispatchThread();
-      // avoid leak through com.intellij.codeInsight.hint.TooltipController.myCurrentTooltip
-      TooltipController.getInstance().cancelTooltips();
+    public void projectClosed(Project project, UIAccess uiAccess) {
+      uiAccess.giveAndWaitIfNeed(() -> {
+        // avoid leak through com.intellij.codeInsight.hint.TooltipController.myCurrentTooltip
+        TooltipController.getInstance().cancelTooltips();
 
-      myQuestionAction = null;
-      myQuestionHint = null;
+        myQuestionAction = null;
+        myQuestionHint = null;
+      });
     }
   }
 

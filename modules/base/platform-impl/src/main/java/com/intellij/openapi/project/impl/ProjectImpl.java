@@ -401,13 +401,13 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   private class MyProjectManagerListener extends ProjectManagerAdapter {
     @Override
-    public void projectOpened(Project project) {
+    public void projectOpened(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
       LOG.assertTrue(project == ProjectImpl.this);
       ProjectImpl.this.projectOpened();
     }
 
     @Override
-    public void projectClosed(Project project) {
+    public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
       LOG.assertTrue(project == ProjectImpl.this);
       ProjectImpl.this.projectClosed();
     }

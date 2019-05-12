@@ -133,11 +133,11 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
       }
 
       @Override
-      public void projectClosed(Project project) {
-        myDeprecatedListenerDispatcher.getMulticaster().projectClosed(project);
+      public void projectClosed(Project project, UIAccess uiAccess) {
+        myDeprecatedListenerDispatcher.getMulticaster().projectClosed(project, uiAccess);
 
         for (ProjectManagerListener listener : getListeners(project)) {
-          listener.projectClosed(project);
+          listener.projectClosed(project, uiAccess);
         }
 
         ZipHandler.clearFileAccessorCache();
@@ -711,10 +711,12 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
 
       myApplication.getMessageBus().syncPublisher(TOPIC).projectClosing(project); // somebody can start progress here, do not wrap in write action
 
+      UIAccess uiAccess = UIAccess.current();
+
       myApplication.runWriteAction(() -> {
         removeFromOpened(project);
 
-        myApplication.getMessageBus().syncPublisher(TOPIC).projectClosed(project);
+        myApplication.getMessageBus().syncPublisher(TOPIC).projectClosed(project, uiAccess);
 
         if (dispose) {
           Disposer.dispose(project);
@@ -887,7 +889,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
         WriteAction.runAndWait(() -> {
           removeFromOpened(project);
 
-          myApplication.getMessageBus().syncPublisher(TOPIC).projectClosed(project);
+          myApplication.getMessageBus().syncPublisher(TOPIC).projectClosed(project, uiAccess);
 
           if (dispose) {
             Disposer.dispose(project);

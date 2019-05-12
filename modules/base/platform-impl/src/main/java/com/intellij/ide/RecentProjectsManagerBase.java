@@ -391,7 +391,7 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
 
   private class MyProjectListener extends ProjectManagerAdapter {
     @Override
-    public void projectOpened(final Project project) {
+    public void projectOpened(final Project project, UIAccess uiAccess) {
       String path = getProjectPath(project);
       if (path != null) {
         markPathRecent(path, project);
@@ -414,7 +414,7 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
     }
 
     @Override
-    public void projectClosed(final Project project) {
+    public void projectClosed(final Project project, UIAccess uiAccess) {
       Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
       if (openProjects.length > 0) {
         String path = getProjectPath(openProjects[openProjects.length - 1]);

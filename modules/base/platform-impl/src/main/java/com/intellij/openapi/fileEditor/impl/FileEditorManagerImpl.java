@@ -156,7 +156,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         @Override
         public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
           EditorsSplitters splitters = getSplitters();
-          openAssociatedFile(UIAccess.get(), event.getNewFile(), splitters.getCurrentWindow(), splitters);
+          openAssociatedFile(UIAccess.current(), event.getNewFile(), splitters.getCurrentWindow(), splitters);
         }
       });
     }
@@ -165,10 +165,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
     final MessageBusConnection connection = project.getMessageBus().connect();
     connection.subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
-      @Override
-      public void enteredDumbMode() {
-      }
-
       @Override
       public void exitDumbMode() {
         // can happen under write action, so postpone to avoid deadlock on FileEditorProviderManager.getProviders()
@@ -179,18 +175,18 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     });
     connection.subscribe(ProjectManager.TOPIC, new ProjectManagerAdapter() {
       @Override
-      public void projectOpened(Project project) {
+      public void projectOpened(Project project, UIAccess uiAccess) {
         if (project == myProject) {
           FileEditorManagerImpl.this.projectOpened(connection);
         }
       }
 
       @Override
-      public void projectClosed(Project project) {
+      public void projectClosed(Project project, UIAccess uiAccess) {
         if (project == myProject) {
           // Dispose created editors. We do not use use closeEditor method because
           // it fires event and changes history.
-          closeAllFiles();
+          uiAccess.giveAndWaitIfNeed(() -> closeAllFiles());
         }
       }
     });
