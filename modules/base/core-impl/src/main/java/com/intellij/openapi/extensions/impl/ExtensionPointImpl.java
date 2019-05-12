@@ -145,7 +145,7 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
       return !extensionCache.isEmpty();
     }
 
-    // if we have extender swe need build before
+    // if we have extenders we need build before
     if (!getExtenders().isEmpty()) {
       return !getExtensionList().isEmpty();
     }
