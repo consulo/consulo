@@ -21,25 +21,27 @@ import com.intellij.ide.RecentProjectsManager;
 import com.intellij.ide.impl.util.NewProjectUtilPlatform;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.platform.DefaultProjectOpenProcessor;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.application.WriteThreadOption;
 import consulo.ide.newProject.NewProjectDialog;
 import consulo.ide.newProject.NewProjectPanel;
 import consulo.ide.welcomeScreen.FlatWelcomeScreen;
 import consulo.ide.welcomeScreen.WelcomeScreenSlideAction;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -110,32 +112,63 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
     return new SlideNewProjectPanel(parentDisposable, null, null);
   }
 
-  @Nullable
   @RequiredUIAccess
-  protected static Project generateProject(Project project, @Nonnull final NewProjectPanel projectPanel) {
+  protected static void generateProject(Project project, @Nonnull final NewProjectPanel projectPanel) {
+    if (WriteThreadOption.isSubWriteThreadSupported()) {
+      generateProjectAsync(project, projectPanel);
+    }
+    else {
+      generateProjectOld(project, projectPanel);
+    }
+  }
+
+  @RequiredUIAccess
+  private static void generateProjectOld(Project project, @Nonnull final NewProjectPanel projectPanel) {
     final File location = new File(projectPanel.getLocationText());
     final int childCount = location.exists() ? location.list().length : 0;
     if (!location.exists() && !location.mkdirs()) {
       Messages.showErrorDialog(project, "Cannot create directory '" + location + "'", "Create Project");
-      return null;
+      return;
     }
 
-    final VirtualFile baseDir = ApplicationManager.getApplication().runWriteAction(new Computable<VirtualFile>() {
-      @Override
-      public VirtualFile compute() {
-        return LocalFileSystem.getInstance().refreshAndFindFileByIoFile(location);
-      }
-    });
+    final VirtualFile baseDir = WriteAction.compute(() -> LocalFileSystem.getInstance().refreshAndFindFileByIoFile(location));
     baseDir.refresh(false, true);
 
     if (childCount > 0) {
       int rc = Messages.showYesNoDialog(project, "The directory '" + location + "' is not empty. Continue?", "Create New Project", Messages.getQuestionIcon());
       if (rc == Messages.NO) {
-        return null;
+        return;
       }
     }
 
     RecentProjectsManager.getInstance().setLastProjectCreationLocation(location.getParent());
-    return DefaultProjectOpenProcessor.doOpenProject(baseDir, null, false, -1, project1 -> NewProjectUtilPlatform.doCreate(projectPanel, project1, baseDir));
+    DefaultProjectOpenProcessor.doOpenProject(baseDir, null, false, -1, project1 -> NewProjectUtilPlatform.doCreate(projectPanel, project1, baseDir));
+  }
+
+  @RequiredUIAccess
+  private static void generateProjectAsync(Project project, @Nonnull final NewProjectPanel projectPanel) {
+    final File location = new File(projectPanel.getLocationText());
+    final int childCount = location.exists() ? location.list().length : 0;
+    if (!location.exists() && !location.mkdirs()) {
+      Messages.showErrorDialog(project, "Cannot create directory '" + location + "'", "Create Project");
+      return;
+    }
+
+    final VirtualFile baseDir = WriteAction.compute(() -> LocalFileSystem.getInstance().refreshAndFindFileByIoFile(location));
+    baseDir.refresh(false, true);
+
+    if (childCount > 0) {
+      int rc = Messages.showYesNoDialog(project, "The directory '" + location + "' is not empty. Continue?", "Create New Project", Messages.getQuestionIcon());
+      if (rc == Messages.NO) {
+        return;
+      }
+    }
+
+    RecentProjectsManager.getInstance().setLastProjectCreationLocation(location.getParent());
+
+    UIAccess uiAccess = UIAccess.current();
+    ProjectManager.getInstance().openProjectAsync(baseDir, uiAccess).doWhenDone((openedProject) -> {
+      uiAccess.give(() -> NewProjectUtilPlatform.doCreate(projectPanel, openedProject, baseDir));
+    });
   }
 }
