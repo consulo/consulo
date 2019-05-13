@@ -219,7 +219,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
       @Override
       public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
         if (project == myProject) {
-          DesktopToolWindowManagerImpl.this.projectClosed();
+          uiAccess.giveAndWaitIfNeed(DesktopToolWindowManagerImpl.this::projectClosed);
         }
       }
     });
