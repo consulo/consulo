@@ -2274,13 +2274,21 @@ public class UIUtil {
     drawCenteredString(g, rect, str, true, true);
   }
 
-  public static boolean isFocusAncestor(@Nonnull final JComponent component) {
+  public static boolean isFocusAncestor(@Nonnull final Component component) {
     final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     if (owner == null) return false;
     if (owner == component) return true;
     return SwingUtilities.isDescendingFrom(owner, component);
   }
 
+  /**
+   * @param component to check whether it can be focused or not
+   * @return {@code true} if component is not {@code null} and can be focused
+   * @see Component#isRequestFocusAccepted(boolean, boolean, sun.awt.CausedFocusEvent.Cause)
+   */
+  public static boolean isFocusable(@Nullable Component component) {
+    return component != null && component.isFocusable() && component.isEnabled() && component.isShowing();
+  }
 
   public static boolean isCloseClick(MouseEvent e) {
     return isCloseClick(e, MouseEvent.MOUSE_PRESSED);

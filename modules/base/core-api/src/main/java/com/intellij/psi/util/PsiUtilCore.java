@@ -745,4 +745,12 @@ public class PsiUtilCore {
     }
     return PsiUtilCore.toPsiFileArray(result);
   }
+
+  @Nullable
+  public static PsiFileSystemItem findFileSystemItem(@Nullable Project project, @Nullable VirtualFile file) {
+    if (project == null || file == null) return null;
+    if (project.isDisposed() || !file.isValid()) return null;
+    PsiManager psiManager = PsiManager.getInstance(project);
+    return file.isDirectory() ? psiManager.findDirectory(file) : psiManager.findFile(file);
+  }
 }

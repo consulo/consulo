@@ -19,15 +19,16 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.projectView.ProjectView;
 import com.intellij.ide.projectView.impl.AbstractProjectViewPane;
 import com.intellij.ide.projectView.impl.ProjectViewPane;
-import com.intellij.openapi.project.DumbAware;
-import consulo.ide.projectView.impl.ProjectViewPaneOptionProvider;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.ToggleAction;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.KeyWithDefaultValue;
-import javax.annotation.Nonnull;
+import consulo.ide.projectView.impl.ProjectViewPaneOptionProvider;
 import consulo.ui.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -69,7 +70,7 @@ public class ShowExcludedFilesProjectViewPaneOptionProvider extends ProjectViewP
     public void update(AnActionEvent e) {
       super.update(e);
       final Presentation presentation = e.getPresentation();
-      final ProjectView projectView = ProjectView.getInstance(myPane.getProject());
+      final ProjectView projectView = ProjectView.getInstance(e.getProject());
       presentation.setVisible(projectView.getCurrentProjectViewPane() == myPane);
     }
   }

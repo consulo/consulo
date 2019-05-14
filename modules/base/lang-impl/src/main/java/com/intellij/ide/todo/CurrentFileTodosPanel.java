@@ -24,31 +24,28 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.ui.content.Content;
-import javax.annotation.Nonnull;
-
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
+import org.jetbrains.annotations.NotNull;
 
 abstract class CurrentFileTodosPanel extends TodoPanel {
   CurrentFileTodosPanel(Project project, TodoPanelSettings settings, Content content) {
     super(project, settings, true, content);
 
     VirtualFile[] files = FileEditorManager.getInstance(project).getSelectedFiles();
-    setFile(files.length == 0 ? null : PsiManager.getInstance(myProject).findFile(files[0]));
+    setFile(files.length == 0 ? null : PsiManager.getInstance(myProject).findFile(files[0]), true);
     // It's important to remove this listener. It prevents invocation of setFile method after the tree builder is disposed
     project.getMessageBus().connect(this).subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
       @Override
-      public void selectionChanged(@Nonnull FileEditorManagerEvent e) {
+      public void selectionChanged(@NotNull FileEditorManagerEvent e) {
         VirtualFile file = e.getNewFile();
         final PsiFile psiFile = file != null && file.isValid() ? PsiManager.getInstance(myProject).findFile(file) : null;
         // This invokeLater is required. The problem is setFile does a commit to PSI, but setFile is
         // invoked inside PSI change event. It causes an Exception like "Changes to PSI are not allowed inside event processing"
-        DumbService.getInstance(myProject).smartInvokeLater(() -> setFile(psiFile));
+        DumbService.getInstance(myProject).smartInvokeLater(() -> setFile(psiFile, false));
       }
     });
   }
 
-  private void setFile(PsiFile file) {
+  private void setFile(PsiFile file, boolean initialUpdate) {
     // setFile method is invoked in LaterInvocator so PsiManager
     // can be already disposed, so we need to check this before using it.
     if (myProject == null || PsiManager.getInstance(myProject).isDisposed()) {
@@ -59,13 +56,10 @@ abstract class CurrentFileTodosPanel extends TodoPanel {
 
     CurrentFileTodosTreeBuilder builder = (CurrentFileTodosTreeBuilder)myTodoTreeBuilder;
     builder.setFile(file);
-    if (myTodoTreeBuilder.isUpdatable()) {
+    if (myTodoTreeBuilder.isUpdatable() || initialUpdate) {
       Object selectableElement = builder.getTodoTreeStructure().getFirstSelectableElement();
       if (selectableElement != null) {
-        builder.buildNodeForElement(selectableElement);
-        DefaultMutableTreeNode node = builder.getNodeForElement(selectableElement);
-        LOG.assertTrue(node != null);
-        myTodoTreeBuilder.getTree().getSelectionModel().setSelectionPath(new TreePath(node.getPath()));
+        builder.select(selectableElement);
       }
     }
   }

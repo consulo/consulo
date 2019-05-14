@@ -2745,6 +2745,20 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @Nonnull
   @Contract(pure = true)
+  public static <T> List<T> toMutableSmartList(List<T> oldList) {
+    if (oldList.size() == 1) {
+      return new SmartList<T>(getFirstItem(oldList));
+    }
+    else if (oldList.size() == 0) {
+      return new SmartList<T>();
+    }
+    else {
+      return new ArrayList<T>(oldList);
+    }
+  }
+
+  @Nonnull
+  @Contract(pure = true)
   public static <T> Set<T> notNullize(@Nullable Set<T> set) {
     //noinspection unchecked
     return set == null ? Collections.<T>emptySet() : set;

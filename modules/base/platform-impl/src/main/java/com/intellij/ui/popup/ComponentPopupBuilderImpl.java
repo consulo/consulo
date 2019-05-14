@@ -27,14 +27,14 @@ import com.intellij.util.BooleanFunction;
 import com.intellij.util.Processor;
 import com.intellij.util.ui.EmptyIcon;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author anna
@@ -82,6 +82,7 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
   private boolean myMayBeParent;
   private int myAdAlignment = SwingConstants.LEFT;
   private BooleanFunction<KeyEvent> myKeyEventHandler;
+  private boolean myNormalWindowLevel;
 
   public ComponentPopupBuilderImpl(@Nonnull JComponent component, JComponent preferredFocusedComponent) {
     myComponent = component;
@@ -358,6 +359,13 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
   @Override
   public ComponentPopupBuilder setShowBorder(boolean show) {
     myShowBorder = show;
+    return this;
+  }
+
+  @Nonnull
+  @Override
+  public ComponentPopupBuilder setNormalWindowLevel(boolean b) {
+    myNormalWindowLevel = b;
     return this;
   }
 }
