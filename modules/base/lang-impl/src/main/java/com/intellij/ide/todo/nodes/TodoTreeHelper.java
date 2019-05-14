@@ -46,8 +46,7 @@ import java.util.*;
  * Date: May 27, 2005
  */
 public class TodoTreeHelper {
-  public static void addPackagesToChildren(final ArrayList<AbstractTreeNode> children, final Module module, final TodoTreeBuilder builder) {
-    Project project = module.getProject();
+  public static void addPackagesToChildren(final ArrayList<AbstractTreeNode> children, Project project, @Nullable Module module, final TodoTreeBuilder builder) {
     final PsiManager psiManager = PsiManager.getInstance(project);
     final List<VirtualFile> sourceRoots = new ArrayList<VirtualFile>();
     if (module == null) {

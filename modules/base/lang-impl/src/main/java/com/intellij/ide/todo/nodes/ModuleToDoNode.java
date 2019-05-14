@@ -49,7 +49,7 @@ public class ModuleToDoNode extends BaseToDoNode<Module> {
   public Collection<AbstractTreeNode> getChildren() {
     ArrayList<AbstractTreeNode> children = new ArrayList<>();
     if (myToDoSettings.getIsPackagesShown()) {
-      TodoTreeHelper.addPackagesToChildren(children, getValue(), myBuilder);
+      TodoTreeHelper.addPackagesToChildren(children, getProject(), getValue(), myBuilder);
     }
     else {
       for (Iterator i = myBuilder.getAllFiles(); i.hasNext(); ) {
