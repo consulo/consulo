@@ -26,8 +26,8 @@ import com.intellij.util.text.CharSequenceSubSequence;
 import com.intellij.util.text.StringFactory;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.*;
@@ -2084,6 +2084,12 @@ public class StringUtil extends StringUtilRt {
   @Contract(pure = true)
   public static CharSequence last(@Nonnull CharSequence text, final int length, boolean prependEllipsis) {
     return text.length() > length ? (prependEllipsis ? "..." : "") + text.subSequence(text.length() - length, text.length()) : text;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String firstLast(@Nonnull String text, int length) {
+    return text.length() > length ? text.subSequence(0, length / 2) + "\u2026" + text.subSequence(text.length() - length / 2 - 1, text.length()) : text;
   }
 
   @Nonnull

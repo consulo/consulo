@@ -39,7 +39,6 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
 
   private final LinkedList<TreeUpdatePass> myNodeQueue = new LinkedList<>();
   private final AbstractTreeBuilder myTreeBuilder;
-  private Runnable myRunBeforeUpdate;
   private final List<Runnable> myRunAfterUpdate = new ArrayList<>();
   private final MergingUpdateQueue myUpdateQueue;
 
@@ -225,11 +224,6 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
   }
 
   public synchronized void performUpdate() {
-    if (myRunBeforeUpdate != null) {
-      myRunBeforeUpdate.run();
-      myRunBeforeUpdate = null;
-    }
-
     while (!myNodeQueue.isEmpty()) {
       if (isInPostponeMode()) break;
 
@@ -312,11 +306,6 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
         myRunAfterUpdate.add(runnable);
       }
     }
-  }
-
-  @Deprecated
-  public synchronized void runBeforeUpdate(final Runnable runnable) {
-    myRunBeforeUpdate = runnable;
   }
 
   public synchronized long getUpdateCount() {

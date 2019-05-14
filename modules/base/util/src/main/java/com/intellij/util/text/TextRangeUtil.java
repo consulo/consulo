@@ -15,17 +15,21 @@
  */
 package com.intellij.util.text;
 
+import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.TextRange;
 import javax.annotation.Nonnull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author Rustam Vishnyakov
  */
 public class TextRangeUtil {
 
-  private final static Comparator<TextRange> RANGE_COMPARATOR = new Comparator<TextRange>() {
+  public static final Comparator<TextRange> RANGE_COMPARATOR = new Comparator<TextRange>() {
     @Override
     public int compare(TextRange range1, TextRange range2) {
       int startOffsetDiff = range1.getStartOffset() - range2.getStartOffset();
@@ -41,17 +45,17 @@ public class TextRangeUtil {
    * [20..50] and [60..90], resulting ranges will be [50..60] and [90..100]. The ranges may overlap and follow in any order. In the latter
    * case the original list of excluded ranges is sorted by start/end offset.
    *
-   * @param original The original range to exclude the ranges from.
+   * @param original       The original range to exclude the ranges from.
    * @param excludedRanges The list of ranges to exclude.
    * @return A list of ranges after excluded ranges have been applied.
    */
-  public static Iterable<TextRange> excludeRanges(@Nonnull TextRange original, @Nonnull List<TextRange> excludedRanges) {
+  public static Iterable<TextRange> excludeRanges(@Nonnull TextRange original, @Nonnull List<? extends TextRange> excludedRanges) {
     if (!excludedRanges.isEmpty()) {
-      List<TextRange> enabledRanges = new ArrayList<TextRange>();
       if (excludedRanges.size() > 1) {
-        Collections.sort(excludedRanges, RANGE_COMPARATOR);
+        excludedRanges.sort(RANGE_COMPARATOR);
       }
       int enabledRangeStart = original.getStartOffset();
+      List<TextRange> enabledRanges = new ArrayList<TextRange>();
       for (TextRange excludedRange : excludedRanges) {
         if (excludedRange.getEndOffset() < enabledRangeStart) continue;
         int excludedRangeStart = excludedRange.getStartOffset();
@@ -66,6 +70,34 @@ public class TextRangeUtil {
       }
       return enabledRanges;
     }
-    return Arrays.asList(original);
+    return Collections.singletonList(original);
+  }
+
+  /**
+   * Return least text range that contains all of passed text ranges.
+   * For example for {[0, 3],[3, 7],[10, 17]} this method will return [0, 17]
+   *
+   * @param textRanges The list of ranges to process
+   * @return least text range that contains all of passed text ranges
+   */
+  @Nonnull
+  public static TextRange getEnclosingTextRange(@Nonnull List<? extends TextRange> textRanges) {
+    if (textRanges.isEmpty()) return TextRange.EMPTY_RANGE;
+    int lowerBound = textRanges.get(0).getStartOffset();
+    int upperBound = textRanges.get(0).getEndOffset();
+    for (int i = 1; i < textRanges.size(); ++i) {
+      TextRange textRange = textRanges.get(i);
+      lowerBound = Math.min(lowerBound, textRange.getStartOffset());
+      upperBound = Math.max(upperBound, textRange.getEndOffset());
+    }
+    return new TextRange(lowerBound, upperBound);
+  }
+
+  public static int getDistance(@Nonnull Segment r2, @Nonnull Segment r1) {
+    int s1 = r1.getStartOffset();
+    int e1 = r1.getEndOffset();
+    int s2 = r2.getStartOffset();
+    int e2 = r2.getEndOffset();
+    return Math.max(s1, s2) <= Math.min(e1, e2) ? 0 : Math.min(Math.abs(s1 - e2), Math.abs(s2 - e1));
   }
 }

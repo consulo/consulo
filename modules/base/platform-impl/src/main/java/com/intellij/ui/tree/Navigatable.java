@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.ui.tree;
+package com.intellij.ui.tree;
 
-import javax.swing.event.TreeModelListener;
-import javax.swing.event.TreeModelEvent;
+import javax.annotation.Nonnull;
+import org.jetbrains.concurrency.Promise;
+
+import javax.swing.tree.TreePath;
 
 /**
- * @author dyoma
+ * @author Sergey.Malenkov
  */
-public abstract class TreeModelAdapter implements TreeModelListener {
-  public void treeNodesChanged(TreeModelEvent e) {
-  }
+public interface Navigatable {
+  @Nonnull
+  Promise<TreePath> nextTreePath(@Nonnull TreePath path, Object object);
 
-  public void treeNodesInserted(TreeModelEvent e) {
-  }
-
-  public void treeNodesRemoved(TreeModelEvent e) {
-  }
-
-  public void treeStructureChanged(TreeModelEvent e) {
-  }
+  @Nonnull
+  Promise<TreePath> prevTreePath(@Nonnull TreePath path, Object object);
 }

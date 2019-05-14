@@ -840,6 +840,7 @@ public class AllIcons {
     public static final SwingImageRef WebFolder = IconLoader.getIcon("/nodes/webFolder.png"); // 16x16
     public static final SwingImageRef Weblistener = IconLoader.getIcon("/nodes/weblistener.png"); // 16x16
     public static final SwingImageRef Write_access = IconLoader.getIcon("/nodes/write-access.png"); // 13x9
+    public static final SwingImageRef CustomRegion = IconLoader.getIcon("/nodes/customRegion.svg");
 
   }
   

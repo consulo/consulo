@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 package com.intellij.ide.structureView;
 
 import com.intellij.ide.util.treeView.smartTree.TreeModel;
+import com.intellij.openapi.Disposable;
+import com.intellij.openapi.editor.Editor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -23,10 +25,10 @@ import javax.annotation.Nullable;
  * Defines the model for the data displayed in the standard structure view or file structure
  * popup component. The model of the standard structure view is represented as a tree of elements.
  *
- * @see com.intellij.ide.structureView.TreeBasedStructureViewBuilder#createStructureViewModel(com.intellij.openapi.editor.Editor)
+ * @see TreeBasedStructureViewBuilder#createStructureViewModel(Editor)
  * @see TextEditorBasedStructureViewModel
  */
-public interface StructureViewModel extends TreeModel {
+public interface StructureViewModel extends TreeModel, Disposable {
   /**
    * Returns the element currently selected in the editor linked to the structure view.
    *
@@ -42,7 +44,7 @@ public interface StructureViewModel extends TreeModel {
    *
    * @param listener the listener to add.
    */
-  void addEditorPositionListener(FileEditorPositionListener listener);
+  void addEditorPositionListener(@Nonnull FileEditorPositionListener listener);
 
   /**
    * Removes a listener which gets notified when the selection in the editor linked to the
@@ -50,7 +52,7 @@ public interface StructureViewModel extends TreeModel {
    *
    * @param listener the listener to remove.
    */
-  void removeEditorPositionListener(FileEditorPositionListener listener);
+  void removeEditorPositionListener(@Nonnull FileEditorPositionListener listener);
 
   /**
    * Adds a listener which gets notified when the data represented by the structure view
@@ -58,7 +60,7 @@ public interface StructureViewModel extends TreeModel {
    *
    * @param modelListener the listener to add.
    */
-  void addModelListener(ModelListener modelListener);
+  void addModelListener(@Nonnull ModelListener modelListener);
 
   /**
    * Removes a listener which gets notified when the data represented by the structure view
@@ -66,7 +68,7 @@ public interface StructureViewModel extends TreeModel {
    *
    * @param modelListener the listener to remove.
    */
-  void removeModelListener(ModelListener modelListener);
+  void removeModelListener(@Nonnull ModelListener modelListener);
 
   /**
    * Returns the root element of the structure view tree.
@@ -80,20 +82,29 @@ public interface StructureViewModel extends TreeModel {
   /**
    * Disposes of the model.
    */
+  @Override
   void dispose();
 
   boolean shouldEnterElement(Object element);
 
   interface ElementInfoProvider extends StructureViewModel {
-
     boolean isAlwaysShowsPlus(StructureViewTreeElement element);
 
     boolean isAlwaysLeaf(StructureViewTreeElement element);
-
   }
 
   interface ExpandInfoProvider {
-    boolean isAutoExpand(StructureViewTreeElement element);
+    boolean isAutoExpand(@Nonnull StructureViewTreeElement element);
+
     boolean isSmartExpand();
+
+    /**
+     * @return number of levels that would be always expanded in structure view.
+     * Returns 2 by default: root node and its immediate children.
+     * @apiNote Be careful with using this method because this approach is planned to be rewritten.
+     */
+    default int getMinimumAutoExpandDepth() {
+      return 2;
+    }
   }
 }

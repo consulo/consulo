@@ -20,6 +20,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.*;
 import com.intellij.util.ThrowableRunnable;
@@ -197,6 +198,17 @@ public abstract class DumbService {
     }
 
     return new ArrayList<>(collection);
+  }
+
+  @Nonnull
+  public static <T> List<T> getDumbAwareExtensions(@Nonnull Project project, @Nonnull ExtensionPointName<T> extensionPoint) {
+    List<T> list = extensionPoint.getExtensionList();
+    if (list.isEmpty()) {
+      return list;
+    }
+
+    DumbService dumbService = getInstance(project);
+    return dumbService.filterByDumbAwareness(list);
   }
 
   /**

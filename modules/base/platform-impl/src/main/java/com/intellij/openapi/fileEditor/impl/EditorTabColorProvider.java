@@ -15,9 +15,11 @@
  */
 package com.intellij.openapi.fileEditor.impl;
 
+import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.fileEditor.impl.EditorWindow;
+import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -30,4 +32,14 @@ public interface EditorTabColorProvider {
 
   @Nullable
   Color getEditorTabColor(Project project, VirtualFile file);
+
+  @Nullable
+  default Color getEditorTabColor(@Nonnull Project project, @Nonnull VirtualFile file, @Nullable EditorWindow editorWindow) {
+    return getEditorTabColor(project, file);
+  }
+
+  @Nullable
+  default Color getProjectViewColor(@Nonnull Project project, @Nonnull VirtualFile file) {
+    return null;
+  }
 }

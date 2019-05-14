@@ -16,7 +16,7 @@
 
 package com.intellij.ide.todo.nodes;
 
-import consulo.ide.projectView.impl.nodes.PackageElement;
+import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.impl.nodes.PackageNodeUtil;
 import com.intellij.ide.todo.TodoFileDirAndModuleComparator;
 import com.intellij.ide.todo.TodoTreeBuilder;
@@ -33,6 +33,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.projectView.impl.nodes.PackageElement;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
 import consulo.roots.ContentFolderScopes;
@@ -45,7 +46,7 @@ import java.util.*;
  * Date: May 27, 2005
  */
 public class TodoTreeHelper {
-  public static void addPackagesToChildren(Project project, final ArrayList<AbstractTreeNode> children, final Module module, final TodoTreeBuilder builder) {
+  public static void addPackagesToChildren(final ArrayList<AbstractTreeNode> children, Project project, @Nullable Module module, final TodoTreeBuilder builder) {
     final PsiManager psiManager = PsiManager.getInstance(project);
     final List<VirtualFile> sourceRoots = new ArrayList<VirtualFile>();
     if (module == null) {
@@ -314,5 +315,14 @@ public class TodoTreeHelper {
       return packageElement != null ? packageElement.getPackage() : null;
     }
     return null;
+  }
+
+  public static boolean contains(ProjectViewNode node, Object element) {
+    if (element instanceof PackageElement) {
+      for (VirtualFile virtualFile : ((PackageElement)element).getRoots()) {
+        if (node.contains(virtualFile)) return true;
+      }
+    }
+    return false;
   }
 }

@@ -24,8 +24,8 @@ import com.intellij.util.BooleanFunction;
 import com.intellij.util.Processor;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -158,4 +158,7 @@ public interface ComponentPopupBuilder {
 
   @Nonnull
   ComponentPopupBuilder setShowBorder(boolean show);
+
+  @Nonnull
+  ComponentPopupBuilder setNormalWindowLevel(boolean b);
 }

@@ -18,6 +18,8 @@
     <group id="Vcs.KeymapGroup" text="Version Control Systems"/>
     <!-- grouping for Settings -> Keymap -> Version Control Systems -->
     <group id="VcsGeneral.KeymapGroup"/>
+    <!-- grouping for Settings -> Keymap -> Others -->
+    <group id="Other.KeymapGroup"/>
 
     <action id="Login" class="consulo.auth.action.LoginAction" />
 
@@ -2250,6 +2252,24 @@
 
     <group id="Internal" text="Internal Actions" internal="true" popup="true">
       <add-to-group group-id="ToolsMenu" anchor="last"/>
+    </group>
+
+    <group id="TodoMainGroup" text="TODO">
+      <add-to-group group-id="Other.KeymapGroup"/>
+      <group id="TodoViewGroupByGroup" class="com.intellij.ide.todo.TodoPanel$GroupByActionGroup">
+        <separator text="Group By"/>
+        <action class="com.intellij.ide.todo.TodoPanel$MyShowModulesAction" id="TodoViewGroupByShowModules">
+          <keyboard-shortcut first-keystroke="control M" keymap="$default"/>
+        </action>
+
+        <action class="com.intellij.ide.todo.TodoPanel$MyShowPackagesAction" id="TodoViewGroupByShowPackages">
+          <keyboard-shortcut first-keystroke="control P" keymap="$default"/>
+        </action>
+
+        <action class="com.intellij.ide.todo.TodoPanel$MyFlattenPackagesAction" id="TodoViewGroupByFlattenPackage">
+          <keyboard-shortcut first-keystroke="control F" keymap="$default"/>
+        </action>
+      </group>
     </group>
   </actions>
 </idea-plugin>

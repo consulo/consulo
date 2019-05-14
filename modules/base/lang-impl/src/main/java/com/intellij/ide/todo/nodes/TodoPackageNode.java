@@ -110,7 +110,7 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
 
       int nameEndOffset = newName.length();
       int todoItemCount = getTodoItemCount(packageElement);
-      newName = IdeBundle.message("node.todo.group", newName, todoItemCount, fileCount);
+      newName = IdeBundle.message("node.todo.group", todoItemCount);
 
       myHighlightedRegions.clear();
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package com.intellij.ide.util.treeView.smartTree;
 
 import com.intellij.navigation.ItemPresentation;
+import javax.annotation.Nonnull;
 
 /**
  * An element in a generic tree control displayed in the IDEA user interface.
@@ -24,11 +25,14 @@ import com.intellij.navigation.ItemPresentation;
  */
 
 public interface TreeElement {
+  TreeElement[] EMPTY_ARRAY = new TreeElement[0];
+
   /**
    * Returns the presentation of the tree element.
    *
    * @return the element presentation.
    */
+  @Nonnull
   ItemPresentation getPresentation();
 
   /**
@@ -36,5 +40,6 @@ public interface TreeElement {
    *
    * @return the list of children.
    */
+  @Nonnull
   TreeElement[] getChildren();
 }
