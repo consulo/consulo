@@ -17,7 +17,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import consulo.ide.IconDescriptorUpdaters;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -26,13 +26,13 @@ public final class TodoDirNode extends PsiDirectoryNode {
   private final TodoTreeBuilder myBuilder;
 
 
-  public TodoDirNode(Project project, @NotNull PsiDirectory directory, TodoTreeBuilder builder) {
+  public TodoDirNode(Project project, @Nonnull PsiDirectory directory, TodoTreeBuilder builder) {
     super(project, directory, ViewSettings.DEFAULT);
     myBuilder = builder;
   }
 
   @Override
-  protected void updateImpl(@NotNull PresentationData data) {
+  protected void updateImpl(@Nonnull PresentationData data) {
     super.updateImpl(data);
     int fileCount = getFileCount(getValue());
     if (getValue() == null || !getValue().isValid() || fileCount == 0) {

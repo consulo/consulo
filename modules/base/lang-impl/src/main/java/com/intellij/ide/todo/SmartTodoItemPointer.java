@@ -7,7 +7,7 @@ import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.search.TodoItem;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public final class SmartTodoItemPointer {
   private final RangeMarker myRangeMarker;
   private final List<RangeMarker> myAdditionalRangeMarkers;
 
-  public SmartTodoItemPointer(@NotNull TodoItem todoItem, @NotNull Document document) {
+  public SmartTodoItemPointer(@Nonnull TodoItem todoItem, @Nonnull Document document) {
     myTodoItem = todoItem;
     myDocument = document;
     TextRange textRange = myTodoItem.getTextRange();
@@ -40,7 +40,7 @@ public final class SmartTodoItemPointer {
     return myRangeMarker;
   }
 
-  @NotNull
+  @Nonnull
   public List<RangeMarker> getAdditionalRangeMarkers() {
     return myAdditionalRangeMarkers;
   }

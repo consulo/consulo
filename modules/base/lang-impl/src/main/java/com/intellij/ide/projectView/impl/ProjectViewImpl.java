@@ -97,9 +97,8 @@ import gnu.trove.THashSet;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -1703,10 +1702,10 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   }
 
   private static class SelectionInfo {
-    @NotNull
+    @Nonnull
     private final Object[] myElements;
 
-    private SelectionInfo(@NotNull Object[] elements) {
+    private SelectionInfo(@Nonnull Object[] elements) {
       myElements = elements;
     }
 
@@ -1744,7 +1743,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       }
     }
 
-    @NotNull
+    @Nonnull
     public static SelectionInfo create(final AbstractProjectViewPane viewPane) {
       List<Object> selectedElements = Collections.emptyList();
       if (viewPane != null) {

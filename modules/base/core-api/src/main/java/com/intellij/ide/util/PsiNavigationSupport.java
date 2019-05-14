@@ -7,8 +7,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 
@@ -21,14 +21,14 @@ public abstract class PsiNavigationSupport {
   }
 
   @Nullable
-  public abstract Navigatable getDescriptor(@NotNull PsiElement element);
+  public abstract Navigatable getDescriptor(@Nonnull PsiElement element);
 
-  @NotNull
-  public abstract Navigatable createNavigatable(@NotNull Project project, @NotNull VirtualFile vFile, int offset);
+  @Nonnull
+  public abstract Navigatable createNavigatable(@Nonnull Project project, @Nonnull VirtualFile vFile, int offset);
 
-  public abstract boolean canNavigate(@NotNull PsiElement element);
+  public abstract boolean canNavigate(@Nonnull PsiElement element);
 
-  public abstract void navigateToDirectory(@NotNull PsiDirectory psiDirectory, boolean requestFocus);
+  public abstract void navigateToDirectory(@Nonnull PsiDirectory psiDirectory, boolean requestFocus);
 
-  public abstract void openDirectoryInSystemFileManager(@NotNull File file);
+  public abstract void openDirectoryInSystemFileManager(@Nonnull File file);
 }

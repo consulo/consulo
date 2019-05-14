@@ -3,22 +3,22 @@ package com.intellij.psi.search;
 
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
 
 public interface TodoItem {
-  @NotNull
+  @Nonnull
   PsiFile getFile();
 
-  @NotNull
+  @Nonnull
   TextRange getTextRange();
 
-  @NotNull
+  @Nonnull
   TodoPattern getPattern();
 
-  @NotNull
+  @Nonnull
   default List<TextRange> getAdditionalTextRanges() {
     return Collections.emptyList();
   }

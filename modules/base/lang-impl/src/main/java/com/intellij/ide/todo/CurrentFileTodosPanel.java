@@ -24,7 +24,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.ui.content.Content;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 abstract class CurrentFileTodosPanel extends TodoPanel {
   CurrentFileTodosPanel(Project project, TodoPanelSettings settings, Content content) {
@@ -35,7 +35,7 @@ abstract class CurrentFileTodosPanel extends TodoPanel {
     // It's important to remove this listener. It prevents invocation of setFile method after the tree builder is disposed
     project.getMessageBus().connect(this).subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
       @Override
-      public void selectionChanged(@NotNull FileEditorManagerEvent e) {
+      public void selectionChanged(@Nonnull FileEditorManagerEvent e) {
         VirtualFile file = e.getNewFile();
         final PsiFile psiFile = file != null && file.isValid() ? PsiManager.getInstance(myProject).findFile(file) : null;
         // This invokeLater is required. The problem is setFile does a commit to PSI, but setFile is

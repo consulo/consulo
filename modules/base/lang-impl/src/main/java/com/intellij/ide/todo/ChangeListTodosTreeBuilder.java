@@ -17,7 +17,7 @@
 package com.intellij.ide.todo;
 
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -27,7 +27,7 @@ public class ChangeListTodosTreeBuilder extends TodoTreeBuilder {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected TodoTreeStructure createTreeStructure() {
     return new ChangeListTodosTreeStructure(myProject);
   }

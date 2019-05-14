@@ -44,8 +44,8 @@ import com.intellij.util.OpenSourceUtil;
 import com.intellij.util.PlatformIcons;
 import com.intellij.util.ui.tree.TreeModelAdapter;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
@@ -130,7 +130,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
     }
 
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       JBPopupFactory.getInstance().createActionGroupPopup(null, this, e.getDataContext(), JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, true).showUnderneathOf(e.getInputEvent().getComponent());
     }
   }
@@ -236,7 +236,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
     setToolbar(ActionManager.getInstance().createActionToolbar(ActionPlaces.TODO_VIEW_TOOLBAR, toolbarGroup, false).getComponent());
   }
 
-  @NotNull
+  @Nonnull
   protected DefaultActionGroup createGroupByActionGroup() {
     ActionManager actionManager = ActionManager.getInstance();
     return (DefaultActionGroup)actionManager.getAction("TodoViewGroupByGroup");
@@ -295,7 +295,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
     myTodoTreeBuilder.rebuildCache();
   }
 
-  void rebuildCache(@NotNull Set<VirtualFile> files) {
+  void rebuildCache(@Nonnull Set<VirtualFile> files) {
     myTodoTreeBuilder.rebuildCache(files);
   }
 
@@ -367,7 +367,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
   }
 
   @Override
-  public Object getData(@NotNull Key dataId) {
+  public Object getData(@Nonnull Key dataId) {
     if (CommonDataKeys.NAVIGATABLE == dataId) {
       TreePath path = myTree.getSelectionPath();
       if (path == null) {
@@ -422,7 +422,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
     return myOccurenceNavigator.goPreviousOccurence();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getNextOccurenceActionName() {
     return myOccurenceNavigator.getNextOccurenceActionName();
@@ -439,7 +439,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
     return myOccurenceNavigator.hasNextOccurence();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getPreviousOccurenceActionName() {
     return myOccurenceNavigator.getPreviousOccurenceActionName();
@@ -565,13 +565,13 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
       return goToPointer(getPreviousPointer());
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getNextOccurenceActionName() {
       return IdeBundle.message("action.next.todo");
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getPreviousOccurenceActionName() {
       return IdeBundle.message("action.previous.todo");
@@ -641,19 +641,19 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
     }
 
     @Override
-    public void update(@NotNull AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       e.getPresentation().setEnabled(e.getData(TODO_PANEL_DATA_KEY) != null);
       super.update(e);
     }
 
     @Override
-    public boolean isSelected(@NotNull AnActionEvent e) {
+    public boolean isSelected(@Nonnull AnActionEvent e) {
       TodoPanel todoPanel = e.getData(TODO_PANEL_DATA_KEY);
       return todoPanel != null && todoPanel.mySettings.arePackagesShown;
     }
 
     @Override
-    public void setSelected(@NotNull AnActionEvent e, boolean state) {
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
       TodoPanel todoPanel = e.getData(TODO_PANEL_DATA_KEY);
       if (todoPanel != null) {
         todoPanel.mySettings.arePackagesShown = state;
@@ -668,19 +668,19 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
     }
 
     @Override
-    public void update(@NotNull AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       e.getPresentation().setEnabled(e.getData(TODO_PANEL_DATA_KEY) != null);
       super.update(e);
     }
 
     @Override
-    public boolean isSelected(@NotNull AnActionEvent e) {
+    public boolean isSelected(@Nonnull AnActionEvent e) {
       TodoPanel todoPanel = e.getData(TODO_PANEL_DATA_KEY);
       return todoPanel != null && todoPanel.mySettings.areModulesShown;
     }
 
     @Override
-    public void setSelected(@NotNull AnActionEvent e, boolean state) {
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
       TodoPanel todoPanel = e.getData(TODO_PANEL_DATA_KEY);
 
       if (todoPanel != null) {
@@ -696,7 +696,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
     }
 
     @Override
-    public void update(@NotNull AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       super.update(e);
       e.getPresentation().setText("   " + getTemplateText());
       TodoPanel todoPanel = e.getData(TODO_PANEL_DATA_KEY);
@@ -704,13 +704,13 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
     }
 
     @Override
-    public boolean isSelected(@NotNull AnActionEvent e) {
+    public boolean isSelected(@Nonnull AnActionEvent e) {
       TodoPanel todoPanel = e.getData(TODO_PANEL_DATA_KEY);
       return todoPanel != null && todoPanel.mySettings.areFlattenPackages;
     }
 
     @Override
-    public void setSelected(@NotNull AnActionEvent e, boolean state) {
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
       TodoPanel todoPanel = e.getData(TODO_PANEL_DATA_KEY);
       if (todoPanel != null) {
         todoPanel.mySettings.areFlattenPackages = state;
@@ -735,12 +735,12 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
     }
 
     @Override
-    public boolean isSelected(@NotNull AnActionEvent e) {
+    public boolean isSelected(@Nonnull AnActionEvent e) {
       return mySettings.showPreview;
     }
 
     @Override
-    public void setSelected(@NotNull AnActionEvent e, boolean state) {
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
       mySettings.showPreview = state;
       myUsagePreviewPanel.setVisible(state);
       if (state) {

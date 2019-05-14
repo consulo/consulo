@@ -48,8 +48,8 @@ import com.intellij.usageView.UsageTreeColorsScheme;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.concurrency.Promise;
 import org.jetbrains.concurrency.Promises;
 
@@ -167,7 +167,7 @@ public abstract class TodoTreeBuilder implements Disposable {
     }
   }
 
-  @NotNull
+  @Nonnull
   protected abstract TodoTreeStructure createTreeStructure();
 
   public final TodoTreeStructure getTodoTreeStructure() {
@@ -317,7 +317,7 @@ public abstract class TodoTreeBuilder implements Disposable {
    * "dirty" file. This method should be invoked when any modifications inside the file
    * have happened.
    */
-  private void markFileAsDirty(@NotNull PsiFile psiFile) {
+  private void markFileAsDirty(@Nonnull PsiFile psiFile) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     VirtualFile vFile = psiFile.getVirtualFile();
     if (vFile != null && !(vFile instanceof LightVirtualFile)) { // If PSI file isn't valid then its VirtualFile can be null
@@ -344,7 +344,7 @@ public abstract class TodoTreeBuilder implements Disposable {
     }
   }
 
-  void rebuildCache(@NotNull Set<? extends VirtualFile> files) {
+  void rebuildCache(@Nonnull Set<? extends VirtualFile> files) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     myFileTree.clear();
     myDirtyFileSet.clear();
@@ -641,13 +641,13 @@ public abstract class TodoTreeBuilder implements Disposable {
     return highlighter;
   }
 
-  public boolean isDirectoryEmpty(@NotNull PsiDirectory psiDirectory) {
+  public boolean isDirectoryEmpty(@Nonnull PsiDirectory psiDirectory) {
     return myFileTree.isDirectoryEmpty(psiDirectory.getVirtualFile());
   }
 
   private final class MyPsiTreeChangeListener extends PsiTreeChangeAdapter {
     @Override
-    public void childAdded(@NotNull PsiTreeChangeEvent e) {
+    public void childAdded(@Nonnull PsiTreeChangeEvent e) {
       // If local modification
       if (e.getFile() != null) {
         markFileAsDirty(e.getFile());
@@ -665,7 +665,7 @@ public abstract class TodoTreeBuilder implements Disposable {
     }
 
     @Override
-    public void beforeChildRemoval(@NotNull PsiTreeChangeEvent e) {
+    public void beforeChildRemoval(@Nonnull PsiTreeChangeEvent e) {
       // local modification
       final PsiFile file = e.getFile();
       if (file != null) {
@@ -701,7 +701,7 @@ public abstract class TodoTreeBuilder implements Disposable {
     }
 
     @Override
-    public void childMoved(@NotNull PsiTreeChangeEvent e) {
+    public void childMoved(@Nonnull PsiTreeChangeEvent e) {
       if (e.getFile() != null) { // local change
         markFileAsDirty(e.getFile());
         updateTree();
@@ -735,7 +735,7 @@ public abstract class TodoTreeBuilder implements Disposable {
     }
 
     @Override
-    public void childReplaced(@NotNull PsiTreeChangeEvent e) {
+    public void childReplaced(@Nonnull PsiTreeChangeEvent e) {
       if (e.getFile() != null) {
         markFileAsDirty(e.getFile());
         updateTree();
@@ -743,7 +743,7 @@ public abstract class TodoTreeBuilder implements Disposable {
     }
 
     @Override
-    public void childrenChanged(@NotNull PsiTreeChangeEvent e) {
+    public void childrenChanged(@Nonnull PsiTreeChangeEvent e) {
       if (e.getFile() != null) {
         markFileAsDirty(e.getFile());
         updateTree();
@@ -751,7 +751,7 @@ public abstract class TodoTreeBuilder implements Disposable {
     }
 
     @Override
-    public void propertyChanged(@NotNull PsiTreeChangeEvent e) {
+    public void propertyChanged(@Nonnull PsiTreeChangeEvent e) {
       String propertyName = e.getPropertyName();
       if (propertyName.equals(PsiTreeChangeEvent.PROP_ROOTS)) { // rebuild all tree when source roots were changed
         myModel.getInvoker().runOrInvokeLater(() -> DumbService.getInstance(myProject).runWhenSmart(() -> rebuildCache()));
@@ -781,7 +781,7 @@ public abstract class TodoTreeBuilder implements Disposable {
     }
 
     @Override
-    public void fileStatusChanged(@NotNull VirtualFile virtualFile) {
+    public void fileStatusChanged(@Nonnull VirtualFile virtualFile) {
       PsiFile psiFile = PsiManager.getInstance(myProject).findFile(virtualFile);
       if (psiFile != null && canContainTodoItems(psiFile)) {
         updateTree();

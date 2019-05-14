@@ -28,7 +28,7 @@ import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.util.ui.update.Update;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -45,7 +45,7 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
   private long myUpdateCount;
   private boolean myReleaseRequested;
 
-  public AbstractTreeUpdater(@NotNull AbstractTreeBuilder treeBuilder) {
+  public AbstractTreeUpdater(@Nonnull AbstractTreeBuilder treeBuilder) {
     myTreeBuilder = treeBuilder;
     final JTree tree = myTreeBuilder.getTree();
     final JComponent component = tree instanceof TreeTableTree ? ((TreeTableTree)tree).getTreeTable() : tree;
@@ -88,7 +88,7 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
    * @deprecated use {@link AbstractTreeBuilder#queueUpdateFrom(Object, boolean)}
    */
   @Deprecated
-  public synchronized void addSubtreeToUpdate(@NotNull DefaultMutableTreeNode rootNode) {
+  public synchronized void addSubtreeToUpdate(@Nonnull DefaultMutableTreeNode rootNode) {
     addSubtreeToUpdate(new TreeUpdatePass(rootNode).setUpdateStamp(-1));
   }
 
@@ -96,7 +96,7 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
    * @deprecated use {@link AbstractTreeBuilder#queueUpdateFrom(Object, boolean)}
    */
   @Deprecated
-  synchronized void requeue(@NotNull TreeUpdatePass toAdd) {
+  synchronized void requeue(@Nonnull TreeUpdatePass toAdd) {
     addSubtreeToUpdate(toAdd.setUpdateStamp(-1));
   }
 
@@ -104,7 +104,7 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
    * @deprecated use {@link AbstractTreeBuilder#queueUpdateFrom(Object, boolean)}
    */
   @Deprecated
-  synchronized void addSubtreeToUpdate(@NotNull TreeUpdatePass toAdd) {
+  synchronized void addSubtreeToUpdate(@Nonnull TreeUpdatePass toAdd) {
     if (myReleaseRequested) return;
 
     assert !toAdd.isExpired();
@@ -217,7 +217,7 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
     });
   }
 
-  private void queue(@NotNull Update update) {
+  private void queue(@Nonnull Update update) {
     if (isReleased()) return;
 
     myUpdateQueue.queue(update);
@@ -284,7 +284,7 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
    * @deprecated use {@link AbstractTreeBuilder#queueUpdateFrom(Object, boolean)}
    */
   @Deprecated
-  public boolean addSubtreeToUpdateByElement(@NotNull Object element) {
+  public boolean addSubtreeToUpdateByElement(@Nonnull Object element) {
     DefaultMutableTreeNode node = myTreeBuilder.getNodeForElement(element);
     if (node != null) {
       myTreeBuilder.queueUpdateFrom(element, false);

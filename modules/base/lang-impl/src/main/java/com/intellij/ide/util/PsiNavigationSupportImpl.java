@@ -10,8 +10,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.inject.Singleton;
 import java.io.File;
@@ -23,28 +23,28 @@ import java.io.File;
 public class PsiNavigationSupportImpl extends PsiNavigationSupport {
   @Nullable
   @Override
-  public Navigatable getDescriptor(@NotNull PsiElement element) {
+  public Navigatable getDescriptor(@Nonnull PsiElement element) {
     return EditSourceUtil.getDescriptor(element);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Navigatable createNavigatable(@NotNull Project project, @NotNull VirtualFile vFile, int offset) {
+  public Navigatable createNavigatable(@Nonnull Project project, @Nonnull VirtualFile vFile, int offset) {
     return new OpenFileDescriptor(project, vFile, offset);
   }
 
   @Override
-  public boolean canNavigate(@NotNull PsiElement element) {
+  public boolean canNavigate(@Nonnull PsiElement element) {
     return EditSourceUtil.canNavigate(element);
   }
 
   @Override
-  public void navigateToDirectory(@NotNull PsiDirectory psiDirectory, boolean requestFocus) {
+  public void navigateToDirectory(@Nonnull PsiDirectory psiDirectory, boolean requestFocus) {
     ProjectViewSelectInTarget.select(psiDirectory.getProject(), this, ProjectViewPane.ID, null, psiDirectory.getVirtualFile(), requestFocus);
   }
 
   @Override
-  public void openDirectoryInSystemFileManager(@NotNull File file) {
+  public void openDirectoryInSystemFileManager(@Nonnull File file) {
     ShowFilePathAction.openDirectory(file);
   }
 }

@@ -32,7 +32,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.TodoItem;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,12 +40,12 @@ import java.util.Iterator;
 
 public class ModuleToDoNode extends BaseToDoNode<Module> {
 
-  public ModuleToDoNode(Project project, @NotNull Module value, TodoTreeBuilder builder) {
+  public ModuleToDoNode(Project project, @Nonnull Module value, TodoTreeBuilder builder) {
     super(project, value, builder);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<AbstractTreeNode> getChildren() {
     ArrayList<AbstractTreeNode> children = new ArrayList<>();
     if (myToDoSettings.getIsPackagesShown()) {
@@ -89,7 +89,7 @@ public class ModuleToDoNode extends BaseToDoNode<Module> {
   }
 
   @Override
-  public void update(@NotNull PresentationData presentation) {
+  public void update(@Nonnull PresentationData presentation) {
     if (DumbService.getInstance(getProject()).isDumb()) return;
     String newName = getValue().getName();
     int todoItemCount = getTodoItemCount(getValue());

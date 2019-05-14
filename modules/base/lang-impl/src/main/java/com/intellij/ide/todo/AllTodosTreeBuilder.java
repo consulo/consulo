@@ -17,7 +17,7 @@
 package com.intellij.ide.todo;
 
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -36,7 +36,7 @@ public class AllTodosTreeBuilder extends TodoTreeBuilder {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected TodoTreeStructure createTreeStructure() {
     return new AllTodosTreeStructure(myProject);
   }

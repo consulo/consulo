@@ -9,7 +9,7 @@ import com.intellij.ide.todo.nodes.TodoTreeHelper;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.tree.AbstractTreeNodeVisitor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.function.Supplier;
 
@@ -17,13 +17,13 @@ import java.util.function.Supplier;
 class TodoNodeVisitor extends AbstractTreeNodeVisitor<Object> {
   private final VirtualFile myFile;
 
-  TodoNodeVisitor(@NotNull Supplier<Object> supplier, VirtualFile file) {
+  TodoNodeVisitor(@Nonnull Supplier<Object> supplier, VirtualFile file) {
     super(supplier, null);
     myFile = file;
   }
 
   @Override
-  protected boolean contains(@NotNull AbstractTreeNode node, @NotNull Object element) {
+  protected boolean contains(@Nonnull AbstractTreeNode node, @Nonnull Object element) {
     if (node instanceof SummaryNode || node instanceof ToDoRootNode) return true;
     if (node instanceof ProjectViewNode) {
       if (myFile == null) {

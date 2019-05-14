@@ -3,8 +3,8 @@ package com.intellij.ui.tree;
 
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.diagnostic.Logger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
@@ -23,7 +23,7 @@ public abstract class AbstractTreeNodeVisitor<T> implements TreeVisitor {
    *                  {@code true} to continue visiting with children,
    *                  {@code false} to continue visiting without children
    */
-  public AbstractTreeNodeVisitor(@NotNull Supplier<? extends T> supplier, @Nullable Predicate<? super TreePath> predicate) {
+  public AbstractTreeNodeVisitor(@Nonnull Supplier<? extends T> supplier, @Nullable Predicate<? super TreePath> predicate) {
     this.supplier = supplier;
     this.predicate = predicate;
   }
@@ -36,9 +36,9 @@ public abstract class AbstractTreeNodeVisitor<T> implements TreeVisitor {
     return supplier.get();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Action visit(@NotNull TreePath path) {
+  public Action visit(@Nonnull TreePath path) {
     if (LOG.isTraceEnabled()) LOG.debug("process ", path);
     T element = getElement();
     if (element == null) return Action.SKIP_SIBLINGS;
@@ -74,8 +74,8 @@ public abstract class AbstractTreeNodeVisitor<T> implements TreeVisitor {
    * @param element an element to find
    * @return an action that controls visiting a tree
    */
-  @NotNull
-  protected Action visit(@NotNull TreePath path, @NotNull AbstractTreeNode node, @NotNull T element) {
+  @Nonnull
+  protected Action visit(@Nonnull TreePath path, @Nonnull AbstractTreeNode node, @Nonnull T element) {
     if (matches(node, element)) {
       LOG.debug("found ", path);
       if (predicate == null) return Action.INTERRUPT;
@@ -93,7 +93,7 @@ public abstract class AbstractTreeNodeVisitor<T> implements TreeVisitor {
    * @param element an element to find
    * @return {@code true} if the specified node represents the given element
    */
-  protected boolean matches(@NotNull AbstractTreeNode node, @NotNull T element) {
+  protected boolean matches(@Nonnull AbstractTreeNode node, @Nonnull T element) {
     return node.canRepresent(element);
   }
 
@@ -102,7 +102,7 @@ public abstract class AbstractTreeNodeVisitor<T> implements TreeVisitor {
    * @param element an element to find
    * @return {@code true} if the specified node is an ancestor of the given element
    */
-  protected boolean contains(@NotNull AbstractTreeNode node, @NotNull T element) {
+  protected boolean contains(@Nonnull AbstractTreeNode node, @Nonnull T element) {
     T content = getContent(node);
     return content != null && isAncestor(content, element);
   }
@@ -111,7 +111,7 @@ public abstract class AbstractTreeNodeVisitor<T> implements TreeVisitor {
    * @param node a node of a tree structure
    * @return a content of the specified tree or {@code null}
    */
-  protected T getContent(@NotNull AbstractTreeNode node) {
+  protected T getContent(@Nonnull AbstractTreeNode node) {
     return null;
   }
 
@@ -120,7 +120,7 @@ public abstract class AbstractTreeNodeVisitor<T> implements TreeVisitor {
    * @param element an element to find
    * @return {@code true} if the specified content is an ancestor of the given element
    */
-  protected boolean isAncestor(@NotNull T content, @NotNull T element) {
+  protected boolean isAncestor(@Nonnull T content, @Nonnull T element) {
     return false;
   }
 }
