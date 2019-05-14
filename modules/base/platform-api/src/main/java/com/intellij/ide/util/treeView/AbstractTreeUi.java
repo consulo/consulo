@@ -4657,7 +4657,8 @@ public class AbstractTreeUi {
   private void removeChildren(@Nonnull DefaultMutableTreeNode node) {
     Enumeration children = node.children();
     //noinspection unchecked
-    for (DefaultMutableTreeNode child : Collections.<DefaultMutableTreeNode>list(children)) {
+    List<DefaultMutableTreeNode> nodes = Collections.<DefaultMutableTreeNode>list(children);
+    for (DefaultMutableTreeNode child : nodes) {
       disposeNode(child);
     }
     node.removeAllChildren();
