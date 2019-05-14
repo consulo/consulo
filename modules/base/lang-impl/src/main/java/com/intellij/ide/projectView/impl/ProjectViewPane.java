@@ -67,7 +67,7 @@ public class ProjectViewPane extends AbstractProjectViewPSIPane {
 
   @Nonnull
   @Override
-  protected ProjectAbstractTreeStructureBase createStructure() {
+  public ProjectAbstractTreeStructureBase createStructure() {
     return new ProjectViewPaneTreeStructure();
   }
 
