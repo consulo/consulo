@@ -53,7 +53,6 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredWriteAction;
-import consulo.application.AccessRule;
 import consulo.application.WriteThreadOption;
 import consulo.awt.TargetAWT;
 import consulo.components.impl.stores.StorageUtil;
@@ -914,9 +913,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
     for (Project p : getOpenProjects()) {
       if (ProjectUtil.isSameProject(path.getPath(), p)) {
         uiAccess.give(() -> ProjectUtil.focusProjectWindow(p, false));
-        AccessRule.writeAsync(() -> {
-          closeAndDisposeAsync(project, uiAccess).doWhenProcessed(() -> projectAsyncResult.reject("Already opened project"));
-        });
+        closeAndDisposeAsync(project, uiAccess).doWhenProcessed(() -> projectAsyncResult.reject("Already opened project"));
         return;
       }
     }
@@ -930,7 +927,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
 
       try {
         if (!addToOpened(project)) {
-          AccessRule.writeAsync(() -> closeAndDisposeAsync(project, uiAccess).doWhenProcessed(() -> projectAsyncResult.reject("Can't add project to opened")));
+          closeAndDisposeAsync(project, uiAccess).doWhenProcessed(() -> projectAsyncResult.reject("Can't add project to opened"));
           return;
         }
 

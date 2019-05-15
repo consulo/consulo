@@ -37,7 +37,6 @@ import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.ui.AppIcon;
 import consulo.annotations.DeprecationInfo;
-import consulo.application.AccessRule;
 import consulo.application.DefaultPaths;
 import consulo.async.ex.PooledAsyncResult;
 import consulo.awt.TargetAWT;
@@ -287,11 +286,9 @@ public class ProjectUtil {
           final Project finalProjectToClose = projectToClose;
           confirmOpenNewProjectAsync(uiAccess, false).doWhenDone(exitCode -> {
             if (exitCode == GeneralSettings.OPEN_PROJECT_SAME_WINDOW) {
-              AccessRule.writeAsync(() -> {
-                AsyncResult<Void> closeResult = ProjectManagerEx.getInstanceEx().closeAndDisposeAsync(finalProjectToClose, uiAccess);
-                closeResult.doWhenDone((Runnable)reopenAsync::setDone);
-                closeResult.doWhenRejected(() -> result.reject("not closed project"));
-              });
+              AsyncResult<Void> closeResult = ProjectManagerEx.getInstanceEx().closeAndDisposeAsync(finalProjectToClose, uiAccess);
+              closeResult.doWhenDone((Runnable)reopenAsync::setDone);
+              closeResult.doWhenRejected(() -> result.reject("not closed project"));
             }
             else if (exitCode != GeneralSettings.OPEN_PROJECT_NEW_WINDOW) { // not in a new window
               result.reject("not open in new window");
