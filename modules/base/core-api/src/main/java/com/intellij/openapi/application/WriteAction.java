@@ -15,58 +15,24 @@
  */
 package com.intellij.openapi.application;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredWriteAction;
+import consulo.application.WriteThreadOption;
 import consulo.application.internal.ApplicationWithOwnWriteThread;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
-public abstract class WriteAction<T> extends BaseActionRunnable<T> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.application.WriteAction");
-
+public final class WriteAction {
   @Nonnull
-  @Override
-  public RunResult<T> execute() {
-    final RunResult<T> result = new RunResult<>(this);
-
-    final Application application = ApplicationManager.getApplication();
-    boolean dispatchThread = application.isDispatchThread();
-    if (dispatchThread) {
-      AccessToken token = start(getClass());
-      try {
-        result.run();
-      }
-      finally {
-        token.finish();
-      }
-      return result;
-    }
-
-    if (application.isReadAccessAllowed()) {
-      LOG.error("Must not start write action from within read action in the other thread - deadlock is coming");
-    }
-
-    TransactionGuard.getInstance().submitTransactionAndWait(() -> {
-      AccessToken token = start(WriteAction.this.getClass());
-      try {
-        result.run();
-      }
-      finally {
-        token.finish();
-      }
-    });
-
-    result.throwException();
-    return result;
-  }
-
-  @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use AccessRule.writeAsync()")
   public static AccessToken start() {
     // get useful information about the write action
     Class aClass = ObjectUtil.notNull(ReflectionUtil.getGrandCallerClass(), WriteAction.class);
@@ -74,12 +40,14 @@ public abstract class WriteAction<T> extends BaseActionRunnable<T> {
   }
 
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use AccessRule.writeAsync()")
   public static AccessToken start(@Nonnull Class clazz) {
     return ApplicationManager.getApplication().acquireWriteActionLock(clazz);
   }
 
   public static void runAndWait(@RequiredUIAccess @RequiredWriteAction Runnable runnable) {
-    if(Application.get().isDispatchThread()) {
+    if (Application.get().isDispatchThread()) {
       run(runnable::run);
     }
     else {
@@ -87,29 +55,25 @@ public abstract class WriteAction<T> extends BaseActionRunnable<T> {
     }
   }
 
-  public static <E extends Throwable> void run(@Nonnull ThrowableRunnable<E> action) throws E {
-    Application application = Application.get();
-    if (application instanceof ApplicationWithOwnWriteThread) {
-      //noinspection RequiredXAction
-      application.<Void, E>runWriteAction(() -> {
-        action.run();
-        return null;
-      });
-      return;
+  public static <T> T computeAndWait(@RequiredUIAccess @RequiredWriteAction Supplier<T> supplier) {
+    if (Application.get().isDispatchThread()) {
+      return compute(supplier::get);
     }
+    else {
+      return UIUtil.invokeAndWaitIfNeeded(() -> compute(supplier::get));
+    }
+  }
 
-    AccessToken token = start();
-    try {
+  public static <E extends Throwable> void run(@Nonnull ThrowableRunnable<E> action) throws E {
+    compute(() -> {
       action.run();
-    }
-    finally {
-      token.finish();
-    }
+      return null;
+    });
   }
 
   public static <T, E extends Throwable> T compute(@Nonnull ThrowableComputable<T, E> action) throws E {
     Application application = Application.get();
-    if (application instanceof ApplicationWithOwnWriteThread) {
+    if (application instanceof ApplicationWithOwnWriteThread && WriteThreadOption.isSeparateWriteThreadSuppored()) {
       //noinspection RequiredXAction
       return application.runWriteAction(action);
     }

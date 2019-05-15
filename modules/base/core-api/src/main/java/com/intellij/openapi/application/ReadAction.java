@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.application;
 
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ThrowableRunnable;
 import consulo.annotations.DeprecationInfo;
@@ -23,16 +22,10 @@ import consulo.application.AccessRule;
 
 import javax.annotation.Nonnull;
 
+@Nonnull
 @Deprecated
-@DeprecationInfo("Use consulo.application.Action#read()")
-public abstract class ReadAction<T> extends BaseActionRunnable<T> {
-  @Nonnull
-  @Override
-  public RunResult<T> execute() {
-    final RunResult<T> result = new RunResult<T>(this);
-    return ApplicationManager.getApplication().runReadAction((Computable<RunResult<T>>)result::run);
-  }
-
+@DeprecationInfo("Use AccessRule.writeAsync()")
+public final class ReadAction<T>  {
   @Deprecated
   public static AccessToken start() {
     return ApplicationManager.getApplication().acquireReadActionLock();
