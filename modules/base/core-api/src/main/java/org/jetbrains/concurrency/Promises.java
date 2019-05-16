@@ -50,7 +50,7 @@ public class Promises {
 
     @Override
     public void accept(Object o) {
-      if (countDown.getAndDecrement() == 0) {
+      if (countDown.decrementAndGet() == 0) {
         myPromise.setResult(myTotalResult);
       }
     }
