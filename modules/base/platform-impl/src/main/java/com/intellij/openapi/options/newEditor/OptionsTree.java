@@ -26,6 +26,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Weighted;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SimpleTextAttributes;
+import com.intellij.ui.TreeUIHelper;
 import com.intellij.ui.treeStructure.*;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeBuilder;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeStructure;
@@ -34,6 +35,7 @@ import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
 import consulo.ui.SwingUIDecorator;
+import org.jetbrains.concurrency.Promise;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -67,14 +69,14 @@ class OptionsTree implements Disposable, OptionsEditorColleague {
     myContext = context;
 
     myRoot = new Root();
-    final SimpleTreeStructure structure = new SimpleTreeStructure() {
-      @Override
-      public Object getRootElement() {
-        return myRoot;
-      }
-    };
+    SimpleTreeStructure structure = new SimpleTreeStructure.Impl(myRoot);
 
     myTree = new SimpleTree() {
+      @Override
+      protected void configureUiHelper(TreeUIHelper helper) {
+        // disable speed search
+      }
+
       @Override
       public void updateUI() {
         super.updateUI();
@@ -512,7 +514,7 @@ class OptionsTree implements Disposable, OptionsEditorColleague {
     }
 
     @Override
-    protected ActionCallback refilterNow(Object preferredSelection, boolean adjustSelection) {
+    protected Promise<?> refilterNow(Object preferredSelection, boolean adjustSelection) {
       final List<Object> toRestore = new ArrayList<>();
       if (myContext.isHoldingFilter() && !myWasHoldingFilter && myToExpandOnResetFilter == null) {
         myToExpandOnResetFilter = myBuilder.getUi().getExpandedElements();
@@ -524,9 +526,9 @@ class OptionsTree implements Disposable, OptionsEditorColleague {
 
       myWasHoldingFilter = myContext.isHoldingFilter();
 
-      ActionCallback result = super.refilterNow(preferredSelection, adjustSelection);
+      Promise<?> result = super.refilterNow(preferredSelection, adjustSelection);
       myRefilteringNow = true;
-      return result.doWhenDone(() -> {
+      return result.onSuccess((c) -> {
         myRefilteringNow = false;
         if (!myContext.isHoldingFilter() && getSelectedElements().isEmpty()) {
           restoreExpandedState(toRestore);

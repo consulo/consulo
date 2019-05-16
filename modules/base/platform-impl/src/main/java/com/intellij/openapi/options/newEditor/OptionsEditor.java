@@ -63,6 +63,8 @@ import consulo.ui.SwingUIDecorator;
 import consulo.util.ProtectedRunnable;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.concurrency.Promise;
+import org.jetbrains.concurrency.Promises;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -416,7 +418,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       return false;
     }
 
-    public ActionCallback refilterFor(String text, boolean adjustSelection, final boolean now) {
+    public Promise<?> refilterFor(String text, boolean adjustSelection, final boolean now) {
       try {
         myUpdateEnabled = false;
         mySearch.setText(text);
@@ -438,8 +440,8 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       updateSpotlight(false);
     }
 
-    public ActionCallback update(DocumentEvent.EventType type, boolean adjustSelection, boolean now) {
-      if (!myUpdateEnabled) return new ActionCallback.Rejected();
+    public Promise<?> update(DocumentEvent.EventType type, boolean adjustSelection, boolean now) {
+      if (!myUpdateEnabled) return Promises.rejectedPromise();
 
       final String text = mySearch.getText();
       if (getFilterText().length() == 0) {
@@ -493,7 +495,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
         myLastSelected = current;
       }
 
-      final ActionCallback callback = fireUpdate(adjustSelection ? myTree.findNodeFor(toSelect) : null, adjustSelection, now);
+      final Promise<?> callback = fireUpdate(adjustSelection ? myTree.findNodeFor(toSelect) : null, adjustSelection, now);
 
       myFilterDocumentWasChanged = true;
 
@@ -707,13 +709,13 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       return select(configurable, "");
     }
     else {
-      return myFilter.refilterFor(mySearch.getText(), true, true);
+      return Promises.toActionCallback(myFilter.refilterFor(mySearch.getText(), true, true));
     }
   }
 
   public ActionCallback select(Configurable configurable, final String text) {
     ActionCallback callback = new ActionCallback();
-    myFilter.refilterFor(text, false, true).doWhenDone(() -> myTree.select(configurable).notify(callback));
+    Promises.toActionCallback(myFilter.refilterFor(text, false, true)).doWhenDone(() -> myTree.select(configurable).notify(callback));
     return callback;
   }
 
@@ -1028,7 +1030,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
 
     final AsyncResult<Void> result = AsyncResult.undefined();
 
-    myFilter.refilterFor(filter, false, true).doWhenDone(() -> myTree.select(config).notifyWhenDone(result));
+    myFilter.refilterFor(filter, false, true).onSuccess((c) -> myTree.select(config).notifyWhenDone(result));
 
     return result;
   }

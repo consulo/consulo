@@ -36,11 +36,15 @@ public class AbstractTreeBuilder implements Disposable {
   private static final String TREE_BUILDER = "TreeBuilder";
   protected static final boolean DEFAULT_UPDATE_INACTIVE = true;
 
-  public AbstractTreeBuilder(@Nonnull JTree tree, @Nonnull DefaultTreeModel treeModel, AbstractTreeStructure treeStructure, @Nullable Comparator<NodeDescriptor> comparator) {
+  public AbstractTreeBuilder(@Nonnull JTree tree, @Nonnull DefaultTreeModel treeModel, AbstractTreeStructure treeStructure, @Nullable Comparator<? super NodeDescriptor> comparator) {
     this(tree, treeModel, treeStructure, comparator, DEFAULT_UPDATE_INACTIVE);
   }
 
-  public AbstractTreeBuilder(@Nonnull JTree tree, @Nonnull DefaultTreeModel treeModel, AbstractTreeStructure treeStructure, @Nullable Comparator<NodeDescriptor> comparator, boolean updateIfInactive) {
+  public AbstractTreeBuilder(@Nonnull JTree tree,
+                             @Nonnull DefaultTreeModel treeModel,
+                             AbstractTreeStructure treeStructure,
+                             @Nullable Comparator<? super NodeDescriptor> comparator,
+                             boolean updateIfInactive) {
     init(tree, treeModel, treeStructure, comparator, updateIfInactive);
   }
 
@@ -51,7 +55,7 @@ public class AbstractTreeBuilder implements Disposable {
   protected void init(@Nonnull JTree tree,
                       @Nonnull DefaultTreeModel treeModel,
                       AbstractTreeStructure treeStructure,
-                      @Nullable final Comparator<NodeDescriptor> comparator,
+                      @Nullable final Comparator<? super NodeDescriptor> comparator,
                       final boolean updateIfInactive) {
 
     tree.putClientProperty(TREE_BUILDER, new WeakReference<>(this));
@@ -115,6 +119,7 @@ public class AbstractTreeBuilder implements Disposable {
     AbstractTreeUi ui = getUi();
     if (ui != null) ui.collapseChildren(element, new UserRunnable(onDone));
   }
+
 
   @Nonnull
   static AbstractTreeNode<Object> createSearchingTreeNodeWrapper() {
