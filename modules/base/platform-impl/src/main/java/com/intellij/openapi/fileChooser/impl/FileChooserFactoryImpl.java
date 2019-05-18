@@ -36,6 +36,7 @@ import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -94,7 +95,7 @@ public class FileChooserFactoryImpl extends FileChooserFactory {
   private static <T extends FileOperateDialogProvider> T findProvider(@Nonnull FileChooserDescriptor fileChooserDescriptor,
                                                                       @Nonnull Function<FileOperateDialogSettings, String> idFunc,
                                                                       @Nonnull ExtensionPointName<T> ep) {
-    T[] extensions = ep.getExtensions();
+    List<T> extensions = ep.getExtensionList();
 
     String forceOperateDialogProviderId = fileChooserDescriptor.getForceOperateDialogProviderId();
     if (forceOperateDialogProviderId != null) {
