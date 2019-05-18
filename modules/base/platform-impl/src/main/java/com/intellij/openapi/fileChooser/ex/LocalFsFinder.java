@@ -25,10 +25,10 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.SystemProperties;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
@@ -185,8 +185,8 @@ public class LocalFsFinder implements FileLookup.Finder, FileLookup {
 
     @Override
     @Nullable
-    public Icon getIcon() {
-      return myFile != null ? (myFile.isDirectory() ? AllIcons.Nodes.TreeClosed : VirtualFilePresentation.getAWTIcon(myFile)) : null;
+    public Image getIcon() {
+      return myFile != null ? (myFile.isDirectory() ? AllIcons.Nodes.TreeClosed : VirtualFilePresentation.getIcon(myFile)) : null;
     }
 
     @Override

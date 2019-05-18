@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.fileChooser.ex;
 
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.List;
 
 public interface FileLookup {
@@ -49,7 +49,7 @@ public interface FileLookup {
     boolean exists();
 
     @Nullable
-    Icon getIcon();
+    Image getIcon();
   }
 
   interface LookupFilter {
