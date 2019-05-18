@@ -27,10 +27,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.pom.Navigatable;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.concurrent.Callable;
@@ -87,7 +87,7 @@ public abstract class DiffElement<T> {
   }
 
   @Nullable
-  public Icon getIcon() {
+  public Image getIcon() {
     return null;
   }
 

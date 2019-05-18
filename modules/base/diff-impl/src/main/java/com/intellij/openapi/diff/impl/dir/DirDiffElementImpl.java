@@ -17,10 +17,10 @@ package com.intellij.openapi.diff.impl.dir;
 
 import com.intellij.ide.diff.*;
 import com.intellij.util.text.DateFormatUtil;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 import static com.intellij.ide.diff.DirDiffOperation.*;
 
@@ -227,15 +227,18 @@ public class DirDiffElementImpl implements DirDiffElement {
     myOperation = operation;
   }
 
-  public Icon getSourceIcon() {
+  @Nullable
+  public Image getSourceIcon() {
     return getIcon(mySource);
   }
 
-  public Icon getTargetIcon() {
+  @Nullable
+  public Image getTargetIcon() {
     return getIcon(myTarget);
   }
 
-  private static Icon getIcon(DiffElement element) {
+  @Nullable
+  private static Image getIcon(DiffElement element) {
     return element != null ? element.getIcon() : null;
   }
 
