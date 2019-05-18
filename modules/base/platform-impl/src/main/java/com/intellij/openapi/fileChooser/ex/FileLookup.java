@@ -55,5 +55,4 @@ public interface FileLookup {
   interface LookupFilter {
     boolean isAccepted(LookupFile file);
   }
-
 }

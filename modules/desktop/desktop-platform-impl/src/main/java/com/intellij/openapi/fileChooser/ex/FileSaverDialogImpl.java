@@ -69,7 +69,7 @@ public class FileSaverDialogImpl extends FileChooserDialogImpl implements FileSa
     init();
     restoreSelection(baseDir);
     myFileSystemTree.addListener(new FileSystemTree.Listener() {
-      public void selectionChanged(final List<VirtualFile> selection) {
+      public void selectionChanged(final List<? extends VirtualFile> selection) {
         updateFileName(selection);
         updateOkButton();
       }
@@ -115,7 +115,7 @@ public class FileSaverDialogImpl extends FileChooserDialogImpl implements FileSa
     return new File(path);
   }
 
-  private void updateFileName(List<VirtualFile> selection) {
+  private void updateFileName(List<? extends VirtualFile> selection) {
     for (VirtualFile file : selection) {
       if (file.isDirectory()) {
         myPathTextField.getField().setText(file.getPath());
