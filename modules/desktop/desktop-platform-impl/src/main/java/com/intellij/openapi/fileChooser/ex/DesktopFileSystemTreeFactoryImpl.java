@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 
 @Singleton
-public class FileSystemTreeFactoryImpl extends FileSystemTreeFactory {
+public class DesktopFileSystemTreeFactoryImpl extends FileSystemTreeFactory {
   @Override
   @Nonnull
   public FileSystemTree createFileSystemTree(Project project, FileChooserDescriptor fileChooserDescriptor) {
