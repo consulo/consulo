@@ -997,7 +997,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
       if (application.isActive()) {
         consulo.ui.Window projectFrame = WindowManager.getInstance().getWindow(project);
         if (projectFrame != null) {
-          uiAccess.giveAndWait(() -> IdeFocusManager.getInstance(project).requestFocus(projectFrame, true));
+          uiAccess.giveAndWaitIfNeed(() -> IdeFocusManager.getInstance(project).requestFocus(projectFrame, true));
         }
       }
     }

@@ -33,15 +33,16 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.*;
-import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.ui.AppIcon;
 import consulo.annotations.DeprecationInfo;
 import consulo.application.DefaultPaths;
+import consulo.application.WriteThreadOption;
 import consulo.async.ex.PooledAsyncResult;
 import consulo.awt.TargetAWT;
 import consulo.components.impl.stores.IProjectStore;
 import consulo.project.ProjectOpenProcessors;
+import consulo.start.WelcomeFrameManager;
 import consulo.ui.Alert;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
@@ -56,7 +57,7 @@ import java.io.IOException;
  * @author Eugene Belyaev
  */
 public class ProjectUtil {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.impl.ProjectUtil");
+  private static final Logger LOG = Logger.getInstance(ProjectUtil.class);
 
   private ProjectUtil() {
   }
@@ -233,6 +234,20 @@ public class ProjectUtil {
     }
   }
 
+  /**
+   * Proxy method
+   */
+  @Nonnull
+  public static AsyncResult<Project> openOrOpenAsync(@Nonnull final String path, final Project projectToClose, boolean forceOpenInNewFrame, UIAccess uiAccess) {
+    if(WriteThreadOption.isSubWriteThreadSupported()) {
+      return openAsync(path, projectToClose, forceOpenInNewFrame, uiAccess);
+    }
+    else {
+      Project project = uiAccess.giveAndWaitIfNeed(() -> open(path, projectToClose, forceOpenInNewFrame));
+      return project == null ? AsyncResult.rejected() : AsyncResult.resolved(project);
+    }
+  }
+
   @Nonnull
   public static String getBaseDir() {
     final String lastProjectLocation = RecentProjectsManager.getInstance().getLastProjectCreationLocation();
@@ -244,6 +259,10 @@ public class ProjectUtil {
 
   @Nonnull
   public static AsyncResult<Project> openAsync(@Nonnull String path, @Nullable final Project projectToCloseFinal, boolean forceOpenInNewFrame, @Nonnull UIAccess uiAccess) {
+    if(!WriteThreadOption.isSubWriteThreadSupported()) {
+      throw new UnsupportedOperationException("WriteThread must supported");
+    }
+
     final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
 
     if (virtualFile == null) return AsyncResult.rejected("file path not find");
@@ -263,7 +282,7 @@ public class ProjectUtil {
           });
         });
 
-        result.doWhenRejected(WelcomeFrame::showIfNoProjectOpened);
+        result.doWhenRejected(() -> WelcomeFrameManager.getInstance().showIfNoProjectOpened());
 
         AsyncResult<Void> reopenAsync = AsyncResult.undefined();
 

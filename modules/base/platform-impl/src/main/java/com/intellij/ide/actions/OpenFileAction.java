@@ -38,7 +38,6 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.application.WriteThreadOption;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
@@ -108,25 +107,14 @@ public class OpenFileAction extends AnAction implements DumbAware {
   private static void doOpenFile(@Nullable final Project project, @Nonnull final VirtualFile[] result) {
     for (final VirtualFile file : result) {
       if (file.isDirectory()) {
-        if (WriteThreadOption.isSubWriteThreadSupported()) {
-          ProjectUtil.openAsync(file.getPath(), project, false, UIAccess.current()).doWhenDone(openedProject -> FileChooserUtil.setLastOpenedFile(openedProject, file));
-        }
-        else {
-          Project openedProject = ProjectUtil.open(file.getPath(), project, false);
-          FileChooserUtil.setLastOpenedFile(openedProject, file);
-        }
+        ProjectUtil.openOrOpenAsync(file.getPath(), project, false, UIAccess.current()).doWhenDone(openedProject -> FileChooserUtil.setLastOpenedFile(openedProject, file));
         return;
       }
 
       if (OpenProjectFileChooserDescriptor.canOpen(file)) {
         int answer = Messages.showYesNoDialog(project, IdeBundle.message("message.open.file.is.project", file.getName()), IdeBundle.message("title.open.project"), Messages.getQuestionIcon());
         if (answer == 0) {
-          if (WriteThreadOption.isSubWriteThreadSupported()) {
-            ProjectUtil.openAsync(file.getPath(), project, false, UIAccess.current()).doWhenDone(openedProject -> FileChooserUtil.setLastOpenedFile(openedProject, file));
-          }
-          else {
-            FileChooserUtil.setLastOpenedFile(ProjectUtil.open(file.getPath(), project, false), file);
-          }
+          ProjectUtil.openOrOpenAsync(file.getPath(), project, false, UIAccess.current()).doWhenDone(openedProject -> FileChooserUtil.setLastOpenedFile(openedProject, file));
           return;
         }
       }
