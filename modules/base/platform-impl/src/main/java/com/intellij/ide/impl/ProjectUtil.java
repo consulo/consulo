@@ -191,25 +191,16 @@ public class ProjectUtil {
       Alert<Integer> alert = Alert.create();
       alert.asQuestion();
       alert.remember(ProjectNewWindowDoNotAskOption.INSTANCE);
+      alert.title(isNewProject ? IdeBundle.message("title.new.project") : IdeBundle.message("title.open.project"));
+      alert.text(IdeBundle.message("prompt.open.project.in.new.frame"));
 
-      if (isNewProject) {
-        alert.title(IdeBundle.message("title.new.project"));
-        alert.text(IdeBundle.message("prompt.open.project.in.new.frame"));
+      alert.button(IdeBundle.message("button.existingframe"), () -> GeneralSettings.OPEN_PROJECT_SAME_WINDOW);
+      alert.asDefaultButton();
 
-        alert.button(IdeBundle.message("button.existingframe"), () -> GeneralSettings.OPEN_PROJECT_SAME_WINDOW);
-        alert.asDefaultButton();
-        alert.button(IdeBundle.message("button.newframe"), () -> GeneralSettings.OPEN_PROJECT_NEW_WINDOW);
-      }
-      else {
-        alert.title(IdeBundle.message("title.open.project"));
-        alert.text(IdeBundle.message("prompt.open.project.in.new.frame"));
+      alert.button(IdeBundle.message("button.newframe"), () -> GeneralSettings.OPEN_PROJECT_NEW_WINDOW);
 
-        alert.button(IdeBundle.message("button.existingframe"), () -> GeneralSettings.OPEN_PROJECT_SAME_WINDOW);
-        alert.asDefaultButton();
-        alert.button(IdeBundle.message("button.newframe"), () -> GeneralSettings.OPEN_PROJECT_NEW_WINDOW);
-        alert.button(Alert.CANCEL, Alert.CANCEL);
-        alert.asExitButton();
-      }
+      alert.button(Alert.CANCEL, Alert.CANCEL);
+      alert.asExitButton();
 
       AsyncResult<Integer> result = AsyncResult.undefined();
       uiAccess.give(() -> alert.show().notify(result));
