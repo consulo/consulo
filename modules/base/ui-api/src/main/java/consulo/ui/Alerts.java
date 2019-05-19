@@ -24,6 +24,19 @@ import javax.annotation.Nonnull;
  * @since 6/9/18
  */
 public final class Alerts {
+  private static final Object ourStableNull = new Object();
+
+  @Nonnull
+  public static Alert<Object> okError(@Nonnull String text) {
+    Alert<Object> builder = Alert.create();
+    builder.asError();
+    builder.text(text);
+
+    builder.button(Alert.OK, ourStableNull);
+    builder.asDefaultButton();
+    return builder;
+  }
+
   @Nonnull
   public static Alert<Boolean> okCancel() {
     Alert<Boolean> builder = Alert.<Boolean>create();

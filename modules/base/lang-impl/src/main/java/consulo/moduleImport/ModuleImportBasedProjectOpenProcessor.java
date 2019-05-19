@@ -179,15 +179,11 @@ public class ModuleImportBasedProjectOpenProcessor<C extends ModuleImportContext
               NewProjectUtil.disposeContext(dialog);
               projectResult.setRejected();
             });
-            dialogResult.doWhenDone(() -> {
-              Project project = NewProjectUtil.createFromWizard(dialog, null, false);
-
-              assert project != null;
-
+            dialogResult.doWhenDone(() -> NewProjectUtil.createFromWizardAsync(dialog).doWhenDone((newProject) -> {
               ProjectUtil.updateLastProjectLocation(pathToBeImported);
 
-              ProjectManager.getInstance().openProjectAsync(project, uiAccess).notify(projectResult);
-            });
+              ProjectManager.getInstance().openProjectAsync(newProject, uiAccess).notify(projectResult);
+            }).doWhenRejectedWithThrowable(projectResult::rejectWithThrowable));
           });
           break;
         case UNSURE:

@@ -97,9 +97,4 @@ public class LegacyModuleImportProvider implements ModuleImportProvider<ModuleIm
   public Image getIconForFile(VirtualFile file) {
     return myProvider.getIconForFile(file);
   }
-
-  @Override
-  public boolean validate(Project current, Project dest) {
-    return myProvider.getBuilder().validate(current, dest);
-  }
 }
