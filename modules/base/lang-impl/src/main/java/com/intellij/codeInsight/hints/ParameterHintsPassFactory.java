@@ -136,8 +136,8 @@ public class ParameterHintsPassFactory implements TextEditorHighlightingPassFact
         if (!presentationManager.isParameterHint(inlay)) continue;
         int offset = inlay.getOffset();
         Pair<String, InlayParameterHintsProvider> pair = myAnnotations.remove(offset);
-        String newText = pair.getFirst();
-        InlayParameterHintsProvider parameterHintsProvider = pair.getSecond();
+        String newText = pair == null ? null :pair.getFirst();
+        InlayParameterHintsProvider parameterHintsProvider = pair == null ? null : pair.getSecond();
         if (delayRemoval(inlay, caretMap)) continue;
         String oldText = presentationManager.getHintText(inlay);
         if (!Objects.equals(newText, oldText)) {

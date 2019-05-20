@@ -78,7 +78,7 @@ public class ParameterHintsPresentationManager implements Disposable {
     updateRenderer(editor, hint, null, null);
   }
 
-  public void replaceHint(@Nonnull Editor editor, @Nonnull Inlay hint, @Nonnull InlayParameterHintsProvider parameterHintsProvider, @Nonnull String newText) {
+  public void replaceHint(@Nonnull Editor editor, @Nonnull Inlay hint, @Nullable InlayParameterHintsProvider parameterHintsProvider, @Nonnull String newText) {
     updateRenderer(editor, hint, parameterHintsProvider, newText);
   }
 
