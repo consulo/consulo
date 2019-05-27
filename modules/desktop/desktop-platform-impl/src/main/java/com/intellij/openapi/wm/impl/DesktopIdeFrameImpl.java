@@ -598,7 +598,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
       try {
         Field modalBlockerField = Window.class.getDeclaredField("modalBlocker");
         modalBlockerField.setAccessible(true);
-        final Window modalBlocker = (Window)modalBlockerField.get(this);
+        final Window modalBlocker = (Window)modalBlockerField.get(myJFrame);
         if (modalBlocker != null) {
           ApplicationManager.getApplication().invokeLater(() -> toggleFullScreen(state), ModalityState.NON_MODAL);
           return true;
