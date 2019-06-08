@@ -243,8 +243,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
       myDialog = new MyDialog(owner, myWrapper, myProject, focused);
 
-      UIUtil.suppressFocusStealing(getWindow());
-
       myDialog.setModalityType(ideModalityType.toAwtModality());
 
       myCanBeParent = canBeParent;
