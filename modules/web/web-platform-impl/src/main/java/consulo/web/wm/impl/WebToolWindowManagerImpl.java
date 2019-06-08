@@ -210,11 +210,6 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   @Override
-  protected void activateEditorComponentImpl(List<FinalizableCommand> commandList, boolean forced) {
-
-  }
-
-  @Override
   protected boolean hasModalChild(WindowInfoImpl info) {
     return false;
   }

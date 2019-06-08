@@ -39,7 +39,6 @@ import consulo.annotations.DeprecationInfo;
 import consulo.application.DefaultPaths;
 import consulo.application.WriteThreadOption;
 import consulo.async.ex.PooledAsyncResult;
-import consulo.awt.TargetAWT;
 import consulo.components.impl.stores.IProjectStore;
 import consulo.project.ProjectOpenProcessors;
 import consulo.start.WelcomeFrameManager;
@@ -49,7 +48,7 @@ import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.*;
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -212,25 +211,15 @@ public class ProjectUtil {
   }
 
   public static void focusProjectWindow(final Project p, boolean executeIfAppInactive) {
-    FocusCommand cmd = new FocusCommand() {
-      @Nonnull
-      @Override
-      public AsyncResult<Void> run() {
-        Window f = TargetAWT.to(WindowManager.getInstance().getWindow(p));
-        if (f != null) {
-          f.toFront();
-          //f.requestFocus();
-        }
-        return AsyncResult.resolved();
+    JFrame f = WindowManager.getInstance().getFrame(p);
+    if (f != null) {
+      if (executeIfAppInactive) {
+        AppIcon.getInstance().requestFocus(WindowManager.getInstance().getIdeFrame(p));
+        f.toFront();
       }
-    };
-
-    if (executeIfAppInactive) {
-      AppIcon.getInstance().requestFocus(WindowManager.getInstance().getIdeFrame(p));
-      cmd.run();
-    }
-    else {
-      IdeFocusManager.getInstance(p).requestFocus(cmd, false);
+      else {
+        IdeFocusManager.getInstance(p).requestFocus(f, true);
+      }
     }
   }
 

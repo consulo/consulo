@@ -22,7 +22,6 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.util.ExpirableRunnable;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
@@ -33,7 +32,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 
 /**
  * This class receives focus requests, manages the, and delegates to the awt focus subsystem. All focus requests
@@ -94,13 +92,6 @@ public interface IdeFocusManager extends FocusRequestor {
   @Nullable
   public abstract Component getFocusedDescendantFor(final Component comp);
 
-  /**
-   * Dispatches given key event. This methods should not be called by the user code
-   *
-   * @return true is the event was dispatched, false - otherwise.
-   */
-  public abstract boolean dispatch(@Nonnull KeyEvent e);
-
   @Deprecated
   // use #typeAheadUntil(ActionCallback, String) instead
   default void typeAheadUntil(AsyncResult<Void> done) {
@@ -116,11 +107,6 @@ public interface IdeFocusManager extends FocusRequestor {
   }
 
   /**
-   * Reports if any focus activity is being done
-   */
-  public abstract boolean isFocusBeingTransferred();
-
-  /**
    * Requests default focus. The method should not be called by the user code.
    */
   @Nonnull
@@ -129,31 +115,8 @@ public interface IdeFocusManager extends FocusRequestor {
   /**
    * Reports of focus transfer is enabled right now. It can be disabled if app is inactive. In this case
    * all focus requests will be either postponed or executed only if <code>FocusCommand</code> can be executed on an inaactive app.
-   *
-   * @see com.intellij.openapi.wm.FocusCommand#canExecuteOnInactiveApp()
    */
   public abstract boolean isFocusTransferEnabled();
-
-  /**
-   * Returns <code>Expirable</code> instance for the given counter of focus commands. As any new <code>FocusCommand</code>
-   * is emitted to execute, the counter increments thus making the returned <code>Expirable</code> objects expired.
-   */
-  @Nonnull
-  public abstract Expirable getTimestamp(boolean trackOnlyForcedCommands);
-
-  /**
-   * Returns <code>FocusRequestor</code> object which will emit focus requests unless expired.
-   *
-   * @see #getTimestamp(boolean)
-   */
-  @Nonnull
-  public abstract FocusRequestor getFurtherRequestor();
-
-  /**
-   * Injects some procedure that will maybe do something with focus after all focus requests are fulfilled and
-   * before focus transfer is reported ready.
-   */
-  public abstract void revalidateFocus(@Nonnull ExpirableRunnable runnable);
 
   /**
    * Enables or disables typeahead
@@ -190,10 +153,6 @@ public interface IdeFocusManager extends FocusRequestor {
    * is the preferred way to finding the container window and unconditionally calling <code>window.toFront()</code>
    */
   public abstract void toFront(JComponent c);
-
-  default boolean isUnforcedRequestAllowed() {
-    return false;
-  }
 
   public static IdeFocusManager getInstance(@Nullable Project project) {
     if (project == null || project.isDisposed() || !project.isInitialized()) return getGlobalInstance();
@@ -233,7 +192,7 @@ public interface IdeFocusManager extends FocusRequestor {
       consulo.ui.Window uiWindow = TargetAWT.from((Window)parent);
 
       IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
-      if(ideFrame == null) {
+      if (ideFrame == null) {
         return null;
       }
       return getInstanceSafe(ideFrame.getProject());

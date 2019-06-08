@@ -57,7 +57,7 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
   private final Set<Content> myContentWithChangedComponent = new HashSet<>();
 
   private boolean myDisposed;
-  private final Project myProject;
+  protected final Project myProject;
 
   protected final List<DataProvider> myDataProviders = new SmartList<>();
   private List<Content> mySelectionHistory = new ArrayList<>();

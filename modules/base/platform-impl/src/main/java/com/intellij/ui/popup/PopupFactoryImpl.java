@@ -41,7 +41,6 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.ColorUtil;
-import com.intellij.ui.FocusTrackback;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.panels.NonOpaquePanel;
@@ -1012,7 +1011,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
   @Override
   @Nonnull
   public List<JBPopup> getChildPopups(@Nonnull final Component component) {
-    return FocusTrackback.getChildPopups(component);
+    return AbstractPopup.getChildPopups(component);
   }
 
   @Override

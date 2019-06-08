@@ -20,8 +20,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.*;
 import gnu.trove.*;
 import org.jetbrains.annotations.Contract;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.util.HashMap;
@@ -2951,6 +2951,18 @@ public class ContainerUtil extends ContainerUtilRt {
         return weighterFunc.fun(o2) - weighterFunc.fun(o1);
       }
     });
+  }
+
+  /**
+   * Hard keys weak values hash map.
+   * Null keys are NOT allowed
+   * Null values are allowed
+   */
+  @Contract(value = " -> new", pure = true)
+  @Nonnull
+  public static <K, V> Map<K, V> createWeakValueMap() {
+    //noinspection deprecation
+    return new WeakValueHashMap<K, V>(ContainerUtil.<K>canonicalStrategy());
   }
 }
 

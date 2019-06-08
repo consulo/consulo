@@ -186,8 +186,6 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         myWindowsBorderUpdater = null;
       }
 
-      FocusTrackback.release(this);
-
       super.dispose();
     }
 
@@ -474,10 +472,6 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
       if (myRootPane != null) { //already disposed
         myRootPane.deinstallNorthComponents();
       }
-    }
-
-    if (project == null) {
-      FocusTrackback.release(myJFrame);
     }
 
     if (myJFrame.isVisible() && myRestoreFullScreen) {

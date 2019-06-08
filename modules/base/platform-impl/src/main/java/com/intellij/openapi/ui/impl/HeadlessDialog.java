@@ -17,9 +17,8 @@ package com.intellij.openapi.ui.impl;
 
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.ui.FocusTrackback;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyListener;
@@ -187,11 +186,6 @@ class HeadlessDialog implements AbstractDialog {
 
   @Override
   public IdeFocusManager getFocusManager() {
-    return null;
-  }
-
-  @Override
-  public FocusTrackback getFocusTrackback() {
     return null;
   }
 

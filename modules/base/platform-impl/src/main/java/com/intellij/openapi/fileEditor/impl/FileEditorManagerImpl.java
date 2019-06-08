@@ -34,7 +34,6 @@ import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
-import com.intellij.openapi.editor.impl.EditorComponentImpl;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
@@ -57,12 +56,10 @@ import com.intellij.openapi.vcs.FileStatusListener;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.reference.SoftReference;
-import com.intellij.ui.FocusTrackback;
 import com.intellij.ui.docking.DockContainer;
 import com.intellij.ui.docking.DockManager;
 import com.intellij.ui.docking.impl.DockManagerImpl;
@@ -77,7 +74,6 @@ import com.intellij.util.ui.update.Update;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.AccessRule;
-import consulo.awt.TargetAWT;
 import consulo.component.PersistentStateComponentWithUIState;
 import consulo.fileEditor.impl.EditorComposite;
 import consulo.fileEditor.impl.EditorWindow;
@@ -87,7 +83,6 @@ import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.platform.Platform;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
-import consulo.wm.util.IdeFrameUtil;
 import gnu.trove.THashSet;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
@@ -1589,13 +1584,11 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     public void beforeFileDeletion(@Nonnull VirtualFileEvent e) {
       assertDispatchThread();
 
-      boolean moveFocus = moveFocusOnDelete();
-
       final VirtualFile file = e.getFile();
       final VirtualFile[] openFiles = getOpenFiles();
       for (int i = openFiles.length - 1; i >= 0; i--) {
         if (VfsUtilCore.isAncestor(file, openFiles[i], false)) {
-          closeFile(openFiles[i], moveFocus, true);
+          closeFile(openFiles[i], true, true);
         }
       }
     }
@@ -1641,24 +1634,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         }
       }
     }
-  }
-
-  private static boolean moveFocusOnDelete() {
-    final Window awtWindow = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
-    if (awtWindow != null) {
-      final Component component = FocusTrackback.getFocusFor(awtWindow);
-      if (component != null) {
-        return component instanceof EditorComponentImpl;
-      }
-
-      consulo.ui.Window uiWindow = TargetAWT.from(awtWindow);
-
-      IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
-      if (ideFrame != null) {
-        return IdeFrameUtil.isRootFrame(ideFrame);
-      }
-    }
-    return true;
   }
 
   @Override
