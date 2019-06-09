@@ -37,10 +37,6 @@ public class ModuleListNode extends ProjectViewNode<Module> {
     super(project, value, viewSettings);
   }
 
-  public ModuleListNode(final Project project, final Object value, final ViewSettings viewSettings) {
-    this(project, (Module)value, viewSettings);
-  }
-
   @Override
   @Nonnull
   public Collection<AbstractTreeNode> getChildren() {
