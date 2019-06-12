@@ -16,8 +16,8 @@
 package com.intellij.util.concurrency;
 
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -38,6 +38,7 @@ class BoundedScheduledExecutorService extends SchedulingWrapper {
   @Override
   public void shutdown() {
     super.shutdown();
+    cancelAndRemoveTasksFromQueue();
     backendExecutorService.shutdown();
   }
 
