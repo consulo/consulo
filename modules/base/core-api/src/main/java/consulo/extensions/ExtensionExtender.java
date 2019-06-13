@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
- * Extension extender. It will add additional memebers for select extension. It will be called once when extension cache builded.
+ * Extension extender. It will add additional memebers for select extension. It will be called once when extension cache built.
  * <p>
  * You can't removed those items from extensions later
  *
