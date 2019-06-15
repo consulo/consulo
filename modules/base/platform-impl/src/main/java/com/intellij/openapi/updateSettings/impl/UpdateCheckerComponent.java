@@ -21,6 +21,8 @@ import com.intellij.util.text.DateFormatUtil;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -33,15 +35,21 @@ import java.util.concurrent.TimeUnit;
 public class UpdateCheckerComponent implements Disposable {
   private static final long ourCheckInterval = DateFormatUtil.DAY;
 
+  private final UpdateSettings myUpdateSettings;
+  private final Runnable myCheckRunnable;
+
   private Future<?> myCheckFuture = CompletableFuture.completedFuture(null);
 
-  private final Runnable myCheckRunnable = () -> PlatformOrPluginUpdateChecker.updateAndShowResult().doWhenDone(() -> {
-    UpdateSettings.getInstance().setLastTimeCheck(System.currentTimeMillis());
-    queueNextUpdateCheck(ourCheckInterval);
-  });
+  @Inject
+  public UpdateCheckerComponent(@Nonnull UpdateSettings updateSettings) {
+    myUpdateSettings = updateSettings;
 
-  public UpdateCheckerComponent() {
-    final long interval = UpdateSettings.getInstance().getLastTimeCheck() + ourCheckInterval - System.currentTimeMillis();
+    myCheckRunnable = () -> PlatformOrPluginUpdateChecker.updateAndShowResult().doWhenDone(() -> {
+      myUpdateSettings.setLastTimeCheck(System.currentTimeMillis());
+      queueNextUpdateCheck(ourCheckInterval);
+    });
+
+    final long interval = myUpdateSettings.getLastTimeCheck() + ourCheckInterval - System.currentTimeMillis();
     queueNextUpdateCheck(PlatformOrPluginUpdateChecker.checkNeeded() ? ourCheckInterval : Math.max(interval, DateFormatUtil.MINUTE));
   }
 

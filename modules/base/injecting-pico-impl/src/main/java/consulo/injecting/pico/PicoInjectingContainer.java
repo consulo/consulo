@@ -15,6 +15,7 @@
  */
 package consulo.injecting.pico;
 
+import com.intellij.openapi.diagnostic.Logger;
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.injecting.key.InjectingKey;
@@ -30,6 +31,8 @@ import java.util.List;
  * @since 2018-08-23
  */
 class PicoInjectingContainer implements InjectingContainer {
+  private static final Logger LOG = Logger.getInstance(PicoInjectingContainer.class);
+
   private final DefaultPicoContainer myContainer;
   private final List<InjectingKey<?>> myKeys;
 
@@ -53,6 +56,11 @@ class PicoInjectingContainer implements InjectingContainer {
   @Override
   @SuppressWarnings("unchecked")
   public <T> T getInstance(@Nonnull Class<T> clazz) {
+    Class<?> insideObjectCreation = GetInstanceValidator.insideObjectCreation();
+    if (insideObjectCreation != null) {
+      LOG.warn("Calling #getInstance(" + clazz + ".class) inside object initialization. Use contructor injection instead. MainInjecting: " + insideObjectCreation);
+    }
+
     T instance = (T)myContainer.getComponentInstance(clazz);
     if (instance != null) {
       return instance;

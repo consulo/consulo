@@ -110,13 +110,13 @@ public class PsiVFSListener implements VirtualFileListener {
   }
 
   @Inject
-  public PsiVFSListener(Project project) {
+  public PsiVFSListener(Project project, PsiManager psiManager, ProjectRootManager projectRootManager) {
     installGlobalListener();
 
     myProject = project;
     myFileTypeManager = FileTypeManager.getInstance();
-    myProjectRootManager = ProjectRootManager.getInstance(project);
-    myManager = (PsiManagerImpl)PsiManager.getInstance(project);
+    myProjectRootManager = projectRootManager;
+    myManager = (PsiManagerImpl)psiManager;
     myFileManager = myManager.getFileManager();
 
     myConnection = project.getMessageBus().connect(project);
