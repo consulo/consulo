@@ -19,9 +19,8 @@ import com.intellij.ide.FrameStateManager;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.ui.LafManager;
 import com.intellij.ide.ui.LafManagerListener;
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.KeyboardShortcut;
-import com.intellij.openapi.actionSystem.Shortcut;
+import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
@@ -199,9 +198,12 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
       return;
     }
 
-    actionManager.addAnActionListener((action, dataContext, event) -> {
-      if (myCurrentState != KeyState.hold) {
-        resetHoldState();
+    actionManager.addAnActionListener(new AnActionListener() {
+      @Override
+      public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
+        if (myCurrentState != KeyState.hold) {
+          resetHoldState();
+        }
       }
     }, project);
 
