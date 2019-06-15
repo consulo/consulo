@@ -29,10 +29,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationActivationListener;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.TransactionGuard;
+import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
@@ -67,15 +64,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.swing.*;
 import javax.swing.Timer;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.WindowEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 @Singleton
 public final class ActionManagerImpl extends ActionManagerEx implements Disposable {
@@ -93,7 +90,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   private MyTimer myTimer;
 
   private int myRegisteredActionsCount;
-  private final List<AnActionListener> myActionListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   private String myLastPreformedActionId;
   private final Application myApplication;
   private final KeymapManager myKeymapManager;
@@ -176,11 +172,15 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
   private boolean myTransparentOnlyUpdate;
 
+  private final List<AnActionListener> myActionListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final AnActionListener myMessageBusPublisher;
+
   @Inject
   ActionManagerImpl(Application application, KeymapManager keymapManager, DataManager dataManager) {
     myApplication = application;
     myKeymapManager = keymapManager;
     myDataManager = dataManager;
+    myMessageBusPublisher = application.getMessageBus().syncPublisher(AnActionListener.TOPIC);
 
     registerPluginActions();
   }
@@ -1099,17 +1099,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   }
 
   @Override
-  public void addAnActionListener(final AnActionListener listener, final Disposable parentDisposable) {
-    addAnActionListener(listener);
-    Disposer.register(parentDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        removeAnActionListener(listener);
-      }
-    });
-  }
-
-  @Override
   public void removeAnActionListener(AnActionListener listener) {
     myActionListeners.remove(listener);
   }
@@ -1122,9 +1111,12 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
       //noinspection AssignmentToStaticFieldFromInstanceMethod
       LastActionTracker.ourLastActionId = myLastPreformedActionId;
     }
+
     for (AnActionListener listener : myActionListeners) {
       listener.beforeActionPerformed(action, dataContext, event);
     }
+
+    myMessageBusPublisher.beforeActionPerformed(action, dataContext, event);
   }
 
   @Override
@@ -1135,6 +1127,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
       //noinspection AssignmentToStaticFieldFromInstanceMethod
       LastActionTracker.ourLastActionId = myLastPreformedActionId;
     }
+
     for (AnActionListener listener : myActionListeners) {
       try {
         listener.afterActionPerformed(action, dataContext, event);
@@ -1142,6 +1135,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
       catch (AbstractMethodError ignored) {
       }
     }
+
+    myMessageBusPublisher.afterActionPerformed(action, dataContext, event);
   }
 
   @Override
@@ -1169,6 +1164,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     for (AnActionListener listener : myActionListeners) {
       listener.beforeEditorTyping(c, dataContext);
     }
+    myMessageBusPublisher.beforeEditorTyping(c, dataContext);
   }
 
   @Override

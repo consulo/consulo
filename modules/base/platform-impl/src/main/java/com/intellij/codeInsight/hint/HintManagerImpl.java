@@ -16,10 +16,10 @@
 package com.intellij.codeInsight.hint;
 
 import com.intellij.ide.IdeTooltip;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -43,6 +43,7 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.*;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Alarm;
+import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.UIAccess;
 
@@ -57,10 +58,9 @@ import java.util.EventObject;
 import java.util.List;
 
 @Singleton
-public class HintManagerImpl extends HintManager implements Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.hint.HintManager");
+public class HintManagerImpl extends HintManager {
+  private static final Logger LOG = Logger.getInstance(HintManagerImpl.class);
 
-  private final AnActionListener myAnActionListener;
   private final MyEditorManagerListener myEditorManagerListener;
   private final EditorMouseAdapter myEditorMouseListener;
   private final FocusListener myEditorFocusListener;
@@ -104,11 +104,8 @@ public class HintManagerImpl extends HintManager implements Disposable {
   }
 
   @Inject
-  public HintManagerImpl(ActionManager actionManager, ProjectManager projectManager) {
+  public HintManagerImpl(Application application, ProjectManager projectManager) {
     myEditorManagerListener = new MyEditorManagerListener();
-
-    myAnActionListener = new MyAnActionListener();
-    actionManager.addAnActionListener(myAnActionListener);
 
     myCaretMoveListener = new CaretAdapter() {
       @Override
@@ -121,7 +118,10 @@ public class HintManagerImpl extends HintManager implements Disposable {
     for (Project project : projectManager.getOpenProjects()) {
       projectManagerListener.projectOpened(project);
     }
-    projectManager.addProjectManagerListener(projectManagerListener);
+
+    MessageBusConnection busConnection = application.getMessageBus().connect();
+    busConnection.subscribe(ProjectManager.TOPIC, projectManagerListener);
+    busConnection.subscribe(AnActionListener.TOPIC, new MyAnActionListener());
 
     myEditorMouseListener = new EditorMouseAdapter() {
       @Override
@@ -247,11 +247,6 @@ public class HintManagerImpl extends HintManager implements Disposable {
       }
     }
     return false;
-  }
-
-  @Override
-  public void dispose() {
-    ActionManagerEx.getInstanceEx().removeAnActionListener(myAnActionListener);
   }
 
   private static void updateScrollableHintPosition(VisibleAreaEvent e, LightweightHint hint, boolean hideIfOutOfEditor) {

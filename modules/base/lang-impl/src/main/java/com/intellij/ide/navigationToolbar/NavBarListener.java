@@ -38,7 +38,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.problems.ProblemListener;
-import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiTreeChangeEvent;
 import com.intellij.psi.PsiTreeChangeListener;
@@ -75,9 +74,9 @@ public class NavBarListener
     KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(listener);
     FileStatusManager.getInstance(project).addFileStatusListener(listener);
     PsiManager.getInstance(project).addPsiTreeChangeListener(listener);
-    ActionManager.getInstance().addAnActionListener(listener);
 
     final MessageBusConnection connection = project.getMessageBus().connect();
+    connection.subscribe(AnActionListener.TOPIC, listener);
     connection.subscribe(ProblemListener.TOPIC, listener);
     connection.subscribe(ProjectTopics.PROJECT_ROOTS, listener);
     connection.subscribe(NavBarModelListener.NAV_BAR, listener);
@@ -101,7 +100,6 @@ public class NavBarListener
       KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener(listener);
       FileStatusManager.getInstance(project).removeFileStatusListener(listener);
       PsiManager.getInstance(project).removePsiTreeChangeListener(listener);
-      ActionManager.getInstance().removeAnActionListener(listener);
       final MessageBusConnection connection = (MessageBusConnection)panel.getClientProperty(BUS);
       panel.putClientProperty(BUS, null);
       if (connection != null) {

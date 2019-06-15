@@ -17,6 +17,7 @@ package com.intellij.openapi.actionSystem;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.util.ActionCallback;
@@ -166,10 +167,22 @@ public abstract class ActionManager {
   public abstract ActionCallback tryToExecute(@Nonnull AnAction action, @Nonnull InputEvent inputEvent, @Nullable Component contextComponent,
                                               @Nullable String place, boolean now);
 
+  /**
+   * @deprecated Use {@link AnActionListener#TOPIC}
+   */
   public abstract void addAnActionListener(AnActionListener listener);
-  public abstract void addAnActionListener(AnActionListener listener, Disposable parentDisposable);
 
+  /**
+   * @deprecated Use {@link AnActionListener#TOPIC}
+   */
   public abstract void removeAnActionListener(AnActionListener listener);
+
+  /**
+   * @deprecated Use {@link AnActionListener#TOPIC}
+   */
+  public void addAnActionListener(AnActionListener listener, Disposable parentDisposable) {
+    Application.get().getMessageBus().connect(parentDisposable).subscribe(AnActionListener.TOPIC, listener);
+  }
 
   @Nullable
   public abstract KeyboardShortcut getKeyboardShortcut(@Nonnull String actionId);

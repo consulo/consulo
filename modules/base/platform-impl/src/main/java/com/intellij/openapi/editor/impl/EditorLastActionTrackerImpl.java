@@ -18,6 +18,7 @@ package com.intellij.openapi.editor.impl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.EditorLastActionTracker;
@@ -45,17 +46,16 @@ public class EditorLastActionTrackerImpl extends EditorLastActionTracker impleme
   private Editor myLastEditor;
 
   @Inject
-  EditorLastActionTrackerImpl(ActionManager actionManager, EditorFactory editorFactory) {
+  EditorLastActionTrackerImpl(Application application, ActionManager actionManager, EditorFactory editorFactory) {
     myActionManager = actionManager;
+    application.getMessageBus().connect(this).subscribe(AnActionListener.TOPIC, this);
     myEditorEventMulticaster = editorFactory.getEventMulticaster();
-    myActionManager.addAnActionListener(this);
     myEditorEventMulticaster.addEditorMouseListener(this);
   }
 
   @Override
   public void dispose() {
     myEditorEventMulticaster.removeEditorMouseListener(this);
-    myActionManager.removeAnActionListener(this);
   }
 
   @Override
