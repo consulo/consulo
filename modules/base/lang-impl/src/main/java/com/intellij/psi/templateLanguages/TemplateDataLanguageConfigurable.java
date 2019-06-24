@@ -69,6 +69,4 @@ public class TemplateDataLanguageConfigurable extends LanguagePerFileConfigurabl
   protected String visualize(@Nonnull final Language language) {
     return language.getDisplayName();
   }
-
-
 }
