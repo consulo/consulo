@@ -231,14 +231,6 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
     myList.setEnabled(gutterIconsShown);
   }
 
-  @RequiredUIAccess
-  @Override
-  public void disposeUIResources() {
-    for (ChangeListener listener : myShowGutterIconsJBCheckBox.getChangeListeners()) {
-      myShowGutterIconsJBCheckBox.removeChangeListener(listener);
-    }
-  }
-
   @Nonnull
   @Override
   public String getId() {
