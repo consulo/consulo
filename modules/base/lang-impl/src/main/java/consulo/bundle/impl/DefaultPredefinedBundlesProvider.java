@@ -62,7 +62,7 @@ public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider 
           }
         }
       }
-      catch (Exception e) {
+      catch (Error e) {
         LOG.error(e);
       }
     }
