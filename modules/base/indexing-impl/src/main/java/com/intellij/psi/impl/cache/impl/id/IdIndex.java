@@ -27,8 +27,9 @@ import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.InlineKeyDescriptor;
 import com.intellij.util.io.KeyDescriptor;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -37,12 +38,13 @@ import java.util.Map;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Jan 16, 2008
+ * Date: Jan 16, 2008
  */
 public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> {
-  @NonNls public static final ID<IdIndexEntry, Integer> NAME = ID.create("IdIndex");
+  @NonNls
+  public static final ID<IdIndexEntry, Integer> NAME = ID.create("IdIndex");
 
-  private final FileBasedIndex.InputFilter myInputFilter = (project, file) -> isIndexable(file.getFileType());
+  private final FileBasedIndex.InputFilter myInputFilter;
 
   public static final boolean ourSnapshotMappingsEnabled = SystemProperties.getBooleanProperty("idea.index.snapshot.mappings.enabled", true);
 
@@ -74,7 +76,7 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> {
     @Override
     @Nonnull
     public Map<IdIndexEntry, Integer> map(@Nonnull final FileContent inputData) {
-      final IdIndexer indexer = IdTableBuilding.getFileTypeIndexer(inputData.getFileType());
+      final IdIndexer indexer = IdTableBuilding.getFileTypeIndexer(myRegistry, inputData.getFileType());
       if (indexer != null) {
         return indexer.map(inputData);
       }
@@ -83,9 +85,17 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> {
     }
   };
 
+  protected final CacheBuilderRegistry myRegistry;
+
+  @Inject
+  IdIndex(CacheBuilderRegistry registry) {
+    myRegistry = registry;
+    myInputFilter = (project, file) -> isIndexable(file.getFileType(), registry);
+  }
+
   @Override
   public int getVersion() {
-    return 16 + (ourSnapshotMappingsEnabled ? 0xFF:0); // TODO: version should enumerate all word scanner versions and build version upon that set
+    return 16 + (ourSnapshotMappingsEnabled ? 0xFF : 0); // TODO: version should enumerate all word scanner versions and build version upon that set
   }
 
   @Override
@@ -95,7 +105,7 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> {
 
   @Nonnull
   @Override
-  public ID<IdIndexEntry,Integer> getName() {
+  public ID<IdIndexEntry, Integer> getName() {
     return NAME;
   }
 
@@ -123,11 +133,8 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> {
     return myInputFilter;
   }
 
-  public static boolean isIndexable(FileType fileType) {
-    return fileType instanceof LanguageFileType ||
-           fileType instanceof CustomSyntaxTableFileType ||
-           IdTableBuilding.isIdIndexerRegistered(fileType) ||
-           CacheBuilderRegistry.getInstance().getCacheBuilder(fileType) != null;
+  public static boolean isIndexable(FileType fileType, CacheBuilderRegistry registry) {
+    return fileType instanceof LanguageFileType || fileType instanceof CustomSyntaxTableFileType || IdTableBuilding.isIdIndexerRegistered(fileType) || registry.getCacheBuilder(fileType) != null;
   }
 
   @Override

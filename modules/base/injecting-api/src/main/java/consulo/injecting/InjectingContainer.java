@@ -35,7 +35,7 @@ public interface InjectingContainer {
     throw new UnsupportedOperationException("RootInjectingContainerFactory not found");
   }
 
-  @Nullable
+  @Nonnull
   <T> T getInstance(@Nonnull Class<T> clazz);
 
   @Nonnull
