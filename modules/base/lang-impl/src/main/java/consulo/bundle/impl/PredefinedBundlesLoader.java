@@ -69,7 +69,7 @@ public class PredefinedBundlesLoader {
     }
 
     ContextImpl context = new ContextImpl(sdkTable);
-    for (PredefinedBundlesProvider provider : PredefinedBundlesProvider.EP_NAME.getExtensions()) {
+    for (PredefinedBundlesProvider provider : PredefinedBundlesProvider.EP_NAME.getExtensionList()) {
       provider.createBundles(context);
     }
 
