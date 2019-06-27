@@ -19,6 +19,7 @@ import com.intellij.dvcs.DvcsUtil;
 import com.intellij.dvcs.repo.AbstractRepositoryManager;
 import com.intellij.dvcs.repo.Repository;
 import com.intellij.dvcs.ui.BranchActionGroupPopup;
+import com.intellij.dvcs.ui.LightActionGroup;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
 import com.intellij.openapi.actionSystem.ActionGroup;
@@ -125,7 +126,7 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
 
   @Nonnull
   private ActionGroup createActions() {
-    DefaultActionGroup popupGroup = new DefaultActionGroup(null, false);
+    LightActionGroup popupGroup = new LightActionGroup();
     AbstractRepositoryManager<Repo> repositoryManager = myRepositoryManager;
     if (repositoryManager.moreThanOneRoot()) {
       if (userWantsSyncControl()) {
@@ -146,7 +147,7 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
     return (myVcsSettings.getSyncSetting() != DvcsSyncSettings.Value.DONT_SYNC);
   }
 
-  protected abstract void fillWithCommonRepositoryActions(@Nonnull DefaultActionGroup popupGroup, @Nonnull AbstractRepositoryManager<Repo> repositoryManager);
+  protected abstract void fillWithCommonRepositoryActions(@Nonnull LightActionGroup popupGroup, @Nonnull AbstractRepositoryManager<Repo> repositoryManager);
 
   @Nonnull
   protected List<Repo> filterRepositoriesNotOnThisBranch(@Nonnull final String branch, @Nonnull List<Repo> allRepositories) {
@@ -166,7 +167,7 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
     return !userWantsSyncControl() || myMultiRootBranchConfig.diverged();
   }
 
-  protected abstract void fillPopupWithCurrentRepositoryActions(@Nonnull DefaultActionGroup popupGroup, @javax.annotation.Nullable DefaultActionGroup actions);
+  protected abstract void fillPopupWithCurrentRepositoryActions(@Nonnull LightActionGroup popupGroup, @Nullable DefaultActionGroup actions);
 
   public static class MyMoreIndex {
     public static final int MAX_REPO_NUM = 8;
