@@ -52,9 +52,8 @@ import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.util.*;
 
@@ -857,7 +856,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     execute(commandList);
   }
 
-  private void deactivateWindows(@NotNull String idToIgnore, @NotNull List<FinalizableCommand> commandList) {
+  private void deactivateWindows(@Nonnull String idToIgnore, @Nonnull List<FinalizableCommand> commandList) {
     for (WindowInfoImpl info : myLayout.getInfos()) {
       if (!idToIgnore.equals(info.getId())) {
         deactivateToolWindowImpl(info.getId(), isToHideOnDeactivation(info), commandList);
@@ -865,7 +864,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
   }
 
-  private static boolean isToHideOnDeactivation(@NotNull final WindowInfoImpl info) {
+  private static boolean isToHideOnDeactivation(@Nonnull final WindowInfoImpl info) {
     if (info.isFloating() || info.isWindowed()) return false;
     return info.isAutoHide() || info.isSliding();
   }
@@ -967,8 +966,8 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     execute(commandList);
   }
 
-  @NotNull
-  private WindowInfoImpl getRegisteredInfoOrLogError(@NotNull String id) {
+  @Nonnull
+  private WindowInfoImpl getRegisteredInfoOrLogError(@Nonnull String id) {
     WindowInfoImpl info = myLayout.getInfo(id, true);
     if (info == null) {
       throw new IllegalThreadStateException("window with id=\"" + id + "\" is unknown");

@@ -48,11 +48,10 @@ import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
 import consulo.awt.TargetAWT;
 import consulo.platform.Platform;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import sun.awt.AppContext;
 import sun.awt.SunToolkit;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.basic.ComboPopup;
@@ -140,7 +139,7 @@ public class IdeEventQueue extends EventQueue {
 
   private final Queue<AWTEvent> focusEventsList = new ConcurrentLinkedQueue<>();
 
-  public void executeWhenAllFocusEventsLeftTheQueue(@NotNull Runnable runnable) {
+  public void executeWhenAllFocusEventsLeftTheQueue(@Nonnull Runnable runnable) {
     ifFocusEventsInTheQueue(e -> {
       List<Runnable> runnables = myRunnablesWaitingFocusChange.get(e);
       if (runnables != null) {
@@ -157,12 +156,12 @@ public class IdeEventQueue extends EventQueue {
     }, runnable);
   }
 
-  @NotNull
+  @Nonnull
   public String runnablesWaitingForFocusChangeState() {
     return StringUtil.join(focusEventsList, event -> "[" + event.getID() + "; " + event.getSource().getClass().getName() + "]", ", ");
   }
 
-  private void ifFocusEventsInTheQueue(@NotNull Consumer<? super AWTEvent> yes, @NotNull Runnable no) {
+  private void ifFocusEventsInTheQueue(@Nonnull Consumer<? super AWTEvent> yes, @Nonnull Runnable no) {
     if (!focusEventsList.isEmpty()) {
       if (FOCUS_AWARE_RUNNABLES_LOG.isDebugEnabled()) {
         FOCUS_AWARE_RUNNABLES_LOG.debug("Focus event list (trying to execute runnable): " + runnablesWaitingForFocusChangeState());
@@ -1166,7 +1165,7 @@ public class IdeEventQueue extends EventQueue {
     return true;
   }
 
-  private static boolean isFocusEvent(@NotNull AWTEvent e) {
+  private static boolean isFocusEvent(@Nonnull AWTEvent e) {
     return e.getID() == FocusEvent.FOCUS_GAINED ||
            e.getID() == FocusEvent.FOCUS_LOST ||
            e.getID() == WindowEvent.WINDOW_ACTIVATED ||

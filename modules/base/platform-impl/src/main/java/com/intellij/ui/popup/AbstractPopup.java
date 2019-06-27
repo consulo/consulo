@@ -1694,7 +1694,7 @@ public class AbstractPopup implements JBPopup {
   }
 
   @Nonnull
-  CaptionPanel getTitle() {
+  public CaptionPanel getTitle() {
     return myCaption;
   }
 

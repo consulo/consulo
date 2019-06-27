@@ -364,6 +364,8 @@ public class AllIcons {
     public static final SwingImageRef BalloonInformation = IconLoader.getIcon("/general/balloonInformation.png"); // 16x16
     public static final SwingImageRef BalloonWarning = IconLoader.getIcon("/general/balloonWarning.png"); // 16x16
     public static final SwingImageRef Bullet = IconLoader.getIcon("/general/bullet.png"); // 16x16
+    public static final SwingImageRef CollapseComponent = IconLoader.getIcon("/general/collapseComponent.svg");
+    public static final SwingImageRef CollapseComponentHover = IconLoader.getIcon("/general/collapseComponentHover.svg");
     public static final SwingImageRef CollapseAll = IconLoader.getIcon("/general/collapseAll.png"); // 11x16
     public static final SwingImageRef CollapseAllHover = IconLoader.getIcon("/general/collapseAllHover.png"); // 11x16
     public static final SwingImageRef Combo = IconLoader.getIcon("/general/combo.png"); // 16x16

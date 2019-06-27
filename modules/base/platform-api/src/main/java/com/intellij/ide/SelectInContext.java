@@ -19,9 +19,8 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
@@ -50,7 +49,7 @@ public interface SelectInContext {
    * @param requestFocus specifies whether a focus request is needed or not
    * @return {@code true} if a selection request is approved and executed by the given target
    */
-  default boolean selectIn(@NotNull SelectInTarget target, boolean requestFocus) {
+  default boolean selectIn(@Nonnull SelectInTarget target, boolean requestFocus) {
     if (!target.canSelect(this)) return false;
     target.selectIn(this, requestFocus);
     return true;
