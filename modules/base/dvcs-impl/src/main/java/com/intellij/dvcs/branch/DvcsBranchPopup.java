@@ -161,13 +161,13 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
   }
 
   @Nonnull
-  protected abstract DefaultActionGroup createRepositoriesActions();
+  protected abstract LightActionGroup createRepositoriesActions();
 
   protected boolean highlightCurrentRepo() {
     return !userWantsSyncControl() || myMultiRootBranchConfig.diverged();
   }
 
-  protected abstract void fillPopupWithCurrentRepositoryActions(@Nonnull LightActionGroup popupGroup, @Nullable DefaultActionGroup actions);
+  protected abstract void fillPopupWithCurrentRepositoryActions(@Nonnull LightActionGroup popupGroup, @Nullable LightActionGroup actions);
 
   public static class MyMoreIndex {
     public static final int MAX_REPO_NUM = 8;
