@@ -91,7 +91,11 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
       Presentation presentation = event.getPresentation();
 
       presentation.setText(UIBundle.message("tool.window.hide.action.name"));
-      presentation.setIcon(getHideIcon(myToolWindow));
+      boolean visible = myToolWindow.isVisible();
+      presentation.setEnabled(visible);
+      if(visible) {
+        presentation.setIcon(getHideIcon(myToolWindow));
+      }
     }
 
     private Image getHideIcon(ToolWindow toolWindow) {
