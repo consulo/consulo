@@ -40,8 +40,8 @@ public class UnknownFeaturesCollector implements PersistentStateComponent<Elemen
   @NonNls private static final String FEATURE_ID = "featureType";
   @NonNls private static final String IMPLEMENTATION_NAME = "implementationName";
 
-  private final Set<UnknownExtension> myUnknownExtensions = new HashSet<UnknownExtension>();
-  private final Set<UnknownExtension> myIgnoredUnknownExtensions = new HashSet<UnknownExtension>();
+  private final Set<UnknownExtension> myUnknownExtensions = new HashSet<>();
+  private final Set<UnknownExtension> myIgnoredUnknownExtensions = new HashSet<>();
 
   public static UnknownFeaturesCollector getInstance(Project project) {
     return ServiceManager.getService(project, UnknownFeaturesCollector.class);

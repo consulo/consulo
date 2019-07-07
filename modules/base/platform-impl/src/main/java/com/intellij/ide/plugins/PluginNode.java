@@ -95,15 +95,16 @@ public class PluginNode implements IdeaPluginDescriptor {
       addOptionalDependency(Arrays.stream(jsonPlugin.optionalDependencies).map(PluginId::getId).toArray(PluginId[]::new));
     }
 
-    PluginJsonNode.Extension[] extensions = jsonPlugin.extensions;
+    PluginJsonNode.Extension[] extensions = jsonPlugin.extensionsV2;
     if(extensions != null) {
-      mySimpleExtensions = new ArrayList<>();
+      mySimpleExtensions = new ArrayList<>(extensions.length);
       for (PluginJsonNode.Extension extension : extensions) {
         mySimpleExtensions.add(new SimpleExtension(extension.key, extension.values));
       }
     }
   }
 
+  @Override
   @Nonnull
   public List<SimpleExtension> getSimpleExtensions() {
     return mySimpleExtensions;

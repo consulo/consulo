@@ -304,7 +304,7 @@ public class StringUtil extends StringUtilRt {
   @Contract(value = "null -> null; !null -> !null", pure = true)
   public static String toLowerCase(@Nullable final String str) {
     //noinspection ConstantConditions
-    return str == null ? null : str.toLowerCase();
+    return str == null ? null : str.toLowerCase(Locale.US);
   }
 
   @Nonnull

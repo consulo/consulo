@@ -16,6 +16,8 @@
 package com.intellij.openapi.fileTypes;
 
 import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.util.text.StringUtil;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -28,5 +30,29 @@ public abstract class FileNameMatcherFactory {
   }
 
   @Nonnull
-  public abstract FileNameMatcher createMatcher(@Nonnull String pattern);
+  public final FileNameMatcher createMatcher(@Nonnull String pattern) {
+    if (pattern.startsWith("*.") && pattern.indexOf('*', 2) < 0 && pattern.indexOf('.', 2) < 0 && pattern.indexOf('?', 2) < 0) {
+      return createExtensionFileNameMatcher(StringUtil.toLowerCase(pattern.substring(2)));
+    }
+
+    if (pattern.contains("*") || pattern.contains("?")) {
+      return createWildcardFileNameMatcher(pattern);
+    }
+
+    return createExactFileNameMatcher(pattern);
+  }
+
+  @Nonnull
+  public FileNameMatcher createExactFileNameMatcher(@Nonnull String fileName) {
+    return createExactFileNameMatcher(fileName, false);
+  }
+
+  @Nonnull
+  public abstract FileNameMatcher createExtensionFileNameMatcher(@Nonnull String extension);
+
+  @Nonnull
+  public abstract FileNameMatcher createExactFileNameMatcher(@Nonnull String fileName, boolean ignoreCase);
+
+  @Nonnull
+  public abstract FileNameMatcher createWildcardFileNameMatcher(@Nonnull String pattern);
 }
