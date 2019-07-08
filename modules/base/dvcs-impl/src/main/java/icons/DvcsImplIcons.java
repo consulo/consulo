@@ -16,4 +16,7 @@ public class DvcsImplIcons {
   public static final Image Favorite = load("/icons/favorite.png"); // 16x16
   public static final Image FavoriteOnHover = load("/icons/favoriteOnHover.png"); // 16x16
   public static final Image NotFavoriteOnHover = load("/icons/notFavoriteOnHover.png"); // 16x16
+  public static final Image Incoming = load("/icons/incoming.svg");
+  public static final Image IncomingOutgoing = load("/icons/incomingOutgoing.svg");
+  public static final Image Outgoing = load("/icons/outgoing.svg");
 }

@@ -103,7 +103,7 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
       window = new EditorWindowImpl(documentRange, editor, injectedFile, documentRange.isOneLine());
       allEditors.add(window);
     }
-    assert window.isValid();
+    window.checkValid();
     return window;
   }
 

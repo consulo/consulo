@@ -134,9 +134,6 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
       myBalloonLayout = null;
     }
 
-    // open project from welcome screen show progress dialog and call FocusTrackback.register()
-    FocusTrackback.release(this);
-
     myClearInstance.run();
   }
 

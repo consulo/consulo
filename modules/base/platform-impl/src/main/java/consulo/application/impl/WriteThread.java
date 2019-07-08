@@ -22,6 +22,7 @@ import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.TimeoutUtil;
+import consulo.application.internal.ApplicationWithOwnWriteThread;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -50,11 +51,11 @@ public class WriteThread extends Thread implements Disposable {
   private static final Logger LOG = Logger.getInstance(WriteThread.class);
 
   private final Deque<CallInfo> myQueue = new ConcurrentLinkedDeque<>();
-  private final BaseApplicationWithOwnWriteThread myApplication;
+  private final ApplicationWithOwnWriteThread myApplication;
 
   private boolean myStop;
 
-  public WriteThread(@Nullable BaseApplicationWithOwnWriteThread application) {
+  public WriteThread(@Nullable ApplicationWithOwnWriteThread application) {
     super("Consulo Write Thread");
     myApplication = application;
 

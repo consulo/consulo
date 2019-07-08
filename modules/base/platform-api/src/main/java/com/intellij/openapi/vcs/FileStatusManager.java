@@ -18,8 +18,8 @@ package com.intellij.openapi.vcs;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-
 import javax.annotation.Nonnull;
+
 import java.awt.*;
 
 /**
@@ -58,4 +58,15 @@ public abstract class FileStatusManager {
   }
 
   public abstract Color getNotChangedDirectoryColor(VirtualFile vf);
+
+  /**
+   * @See VcsConfiguration#SHOW_DIRTY_RECURSIVELY
+   * @See com.intellij.openapi.vcs.FileStatus#NOT_CHANGED_IMMEDIATE
+   * @See com.intellij.openapi.vcs.FileStatus#NOT_CHANGED_RECURSIVE
+   */
+  @Nonnull
+  public FileStatus getRecursiveStatus(@Nonnull VirtualFile file) {
+    FileStatus status = getStatus(file);
+    return status != null ? status : FileStatus.NOT_CHANGED;
+  }
 }

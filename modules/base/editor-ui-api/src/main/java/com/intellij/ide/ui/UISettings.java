@@ -109,7 +109,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
    *
    * @return the system font scale
    */
-  public static double getDefFontScale() {
+  public static float getDefFontScale() {
     return UIUtil.isJreHiDPIEnabled() ? 1f : JBUI.sysScale();
   }
 

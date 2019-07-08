@@ -22,7 +22,7 @@ import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.ThrowableComputable;
-import consulo.application.ApplicationWithOwnWriteThread;
+import consulo.application.internal.ApplicationWithOwnWriteThread;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
@@ -43,6 +43,7 @@ public abstract class BaseApplicationWithOwnWriteThread extends BaseApplication 
     Disposer.register(myLastDisposable, myWriteThread);
   }
 
+  @Override
   @Nonnull
   public AccessToken acquireWriteActionLockInternal(@Nonnull Class clazz) {
     return new WriteAccessToken(clazz);
@@ -59,7 +60,7 @@ public abstract class BaseApplicationWithOwnWriteThread extends BaseApplication 
   @Override
   public boolean isReadAccessAllowed() {
     if (isDispatchThread()) {
-      return myWriteActionThread == null; // no reading from EDT during background write action
+      return true;
     }
     return isWriteThread() || myLock.isReadLockedByThisThread();
   }

@@ -33,7 +33,6 @@ import com.intellij.openapi.util.WindowStateService;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.AppUIUtil;
-import com.intellij.ui.FocusTrackback;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ImageUtil;
 import consulo.awt.TargetAWT;
@@ -62,7 +61,6 @@ public class FrameWrapper implements Disposable, DataProvider {
   private final Map<Key<?>, Object> myDataMap = ContainerUtil.newHashMap();
   private Project myProject;
   private final ProjectManagerListener myProjectListener = new MyProjectManagerListener();
-  private FocusTrackback myFocusTrackback;
   private FocusWatcher myFocusWatcher;
 
   private AsyncResult<Void> myFocusedCallback;
@@ -122,8 +120,6 @@ public class FrameWrapper implements Disposable, DataProvider {
       myStatusBar.install(ideFrame);
     }
 
-    myFocusTrackback = new FocusTrackback(this, IdeFocusManager.findInstance().getFocusOwner(), true);
-
     if (frame instanceof JFrame) {
       ((JFrame)frame).setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
@@ -175,12 +171,7 @@ public class FrameWrapper implements Disposable, DataProvider {
       loadFrameState();
     }
 
-    myFocusWatcher = new FocusWatcher() {
-      @Override
-      protected void focusLostImpl(final FocusEvent e) {
-        myFocusTrackback.consume();
-      }
-    };
+    myFocusWatcher = new FocusWatcher();
     myFocusWatcher.install(myComponent);
     myShown = true;
     frame.setVisible(true);
@@ -209,15 +200,11 @@ public class FrameWrapper implements Disposable, DataProvider {
     myPreferredFocus = null;
     myProject = null;
     myDataMap.clear();
-    if (myFocusTrackback != null) {
-      myFocusTrackback.restoreFocus();
-    }
     if (myComponent != null && myFocusWatcher != null) {
       myFocusWatcher.deinstall(myComponent);
     }
     myFocusWatcher = null;
     myFocusedCallback = null;
-    myFocusTrackback = null;
     myComponent = null;
     myImages = null;
     myDisposed = true;
@@ -232,10 +219,6 @@ public class FrameWrapper implements Disposable, DataProvider {
       JRootPane rootPane = ((RootPaneContainer)frame).getRootPane();
       frame.removeAll();
       DialogWrapper.cleanupRootPane(rootPane);
-
-      if (frame instanceof JFrame) {
-        FocusTrackback.release((JFrame)frame);
-      }
 
       consulo.ui.Window uiWindow = TargetAWT.from(frame);
       IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);

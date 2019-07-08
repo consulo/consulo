@@ -16,8 +16,6 @@
 
 package com.intellij.openapi.components;
 
-import com.intellij.util.xmlb.XmlSerializer;
-
 import javax.annotation.Nullable;
 
 /**

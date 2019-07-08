@@ -20,26 +20,21 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.util.ExpirableRunnable;
-import com.intellij.openapi.wm.*;
+import com.intellij.openapi.wm.IdeFocusManager;
+import com.intellij.openapi.wm.IdeFrame;
+import com.intellij.openapi.wm.WeakFocusStackManager;
 import consulo.wm.ProjectIdeFocusManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 
 @Singleton
 public class DesktopIdeFocusManagerImpl implements ProjectIdeFocusManager {
-  private final DesktopToolWindowManagerImpl myToolWindowManager;
-
-  @Inject
-  public DesktopIdeFocusManagerImpl(ToolWindowManager twManager) {
-    myToolWindowManager = (DesktopToolWindowManagerImpl)twManager;
+  public DesktopIdeFocusManagerImpl() {
     WeakFocusStackManager.getInstance();
   }
 
@@ -49,12 +44,6 @@ public class DesktopIdeFocusManagerImpl implements ProjectIdeFocusManager {
     return IdeFocusManager.getGlobalInstance().requestFocus(c, forced);
   }
 
-  @Override
-  @Nonnull
-  public AsyncResult<Void> requestFocus(@Nonnull final FocusCommand command, final boolean forced) {
-    return IdeFocusManager.getGlobalInstance().requestFocus(command, forced);
-  }
-
   @Nonnull
   @Override
   public AsyncResult<Void> requestFocus(@Nonnull consulo.ui.Component c, boolean forced) {
@@ -62,7 +51,7 @@ public class DesktopIdeFocusManagerImpl implements ProjectIdeFocusManager {
   }
 
   @Override
-  public AsyncResult<Void> requestFocusInProject(@Nonnull Component c, @javax.annotation.Nullable Project project) {
+  public AsyncResult<Void> requestFocusInProject(@Nonnull Component c, @Nullable Project project) {
     return IdeFocusManager.getGlobalInstance().requestFocusInProject(c, project);
   }
 
@@ -93,11 +82,6 @@ public class DesktopIdeFocusManagerImpl implements ProjectIdeFocusManager {
   }
 
   @Override
-  public boolean dispatch(@Nonnull KeyEvent e) {
-    return IdeFocusManager.getGlobalInstance().dispatch(e);
-  }
-
-  @Override
   public void typeAheadUntil(@Nonnull ActionCallback callback, @Nonnull String cause) {
     IdeFocusManager.getGlobalInstance().typeAheadUntil(callback, cause);
   }
@@ -105,29 +89,13 @@ public class DesktopIdeFocusManagerImpl implements ProjectIdeFocusManager {
   @Nonnull
   @Override
   public AsyncResult<Void> requestDefaultFocus(boolean forced) {
-    return myToolWindowManager.requestDefaultFocus(forced);
+    //todo need to implement
+    return AsyncResult.resolved();
   }
 
   @Override
   public boolean isFocusTransferEnabled() {
     return IdeFocusManager.getGlobalInstance().isFocusTransferEnabled();
-  }
-
-  @Nonnull
-  @Override
-  public Expirable getTimestamp(boolean trackOnlyForcedCommands) {
-    return IdeFocusManager.getGlobalInstance().getTimestamp(trackOnlyForcedCommands);
-  }
-
-  @Nonnull
-  @Override
-  public FocusRequestor getFurtherRequestor() {
-    return IdeFocusManager.getGlobalInstance().getFurtherRequestor();
-  }
-
-  @Override
-  public void revalidateFocus(@Nonnull ExpirableRunnable runnable) {
-    IdeFocusManager.getGlobalInstance().revalidateFocus(runnable);
   }
 
   @Override
@@ -158,11 +126,6 @@ public class DesktopIdeFocusManagerImpl implements ProjectIdeFocusManager {
   @Override
   public void toFront(JComponent c) {
     IdeFocusManager.getGlobalInstance().toFront(c);
-  }
-
-  @Override
-  public boolean isFocusBeingTransferred() {
-    return IdeFocusManager.getGlobalInstance().isFocusBeingTransferred();
   }
 
   @Override

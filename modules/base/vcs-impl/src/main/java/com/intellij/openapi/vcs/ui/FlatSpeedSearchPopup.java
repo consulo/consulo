@@ -15,27 +15,28 @@
  */
 package com.intellij.openapi.vcs.ui;
 
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionGroup;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.EmptyAction;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.ui.popup.ListPopupStep;
 import com.intellij.openapi.util.Condition;
 import com.intellij.ui.popup.PopupFactoryImpl;
 import com.intellij.ui.popup.WizardPopup;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class FlatSpeedSearchPopup extends PopupFactoryImpl.ActionGroupPopup {
 
   public FlatSpeedSearchPopup(String title,
-                              @Nonnull DefaultActionGroup actionGroup,
+                              @Nonnull ActionGroup actionGroup,
                               @Nonnull DataContext dataContext,
-                              @javax.annotation.Nullable Condition<AnAction> preselectActionCondition, boolean showDisableActions) {
-    super(title, actionGroup, dataContext, false, false, showDisableActions, false,
-          null, -1, preselectActionCondition, null);
+                              @Nullable Condition<AnAction> preselectActionCondition, boolean showDisableActions) {
+    super(title, actionGroup, dataContext, false, false, showDisableActions, false, null, -1, preselectActionCondition, null);
   }
 
-  protected FlatSpeedSearchPopup(@javax.annotation.Nullable WizardPopup parent,
-                                 @Nonnull ListPopupStep step,
-                                 @Nonnull DataContext dataContext,
-                                 @javax.annotation.Nullable Object value) {
+  protected FlatSpeedSearchPopup(@Nullable WizardPopup parent, @Nonnull ListPopupStep step, @Nonnull DataContext dataContext, @Nullable Object value) {
     super(parent, step, null, dataContext, null, -1);
     setParentValue(value);
   }
@@ -65,18 +66,32 @@ public class FlatSpeedSearchPopup extends PopupFactoryImpl.ActionGroupPopup {
     return action instanceof SpeedsearchAction;
   }
 
+  protected static <T> T getSpecificAction(Object value, @Nonnull Class<T> clazz) {
+    if (value instanceof PopupFactoryImpl.ActionItem) {
+      AnAction action = ((PopupFactoryImpl.ActionItem)value).getAction();
+      if (clazz.isInstance(action)) {
+        return clazz.cast(action);
+      }
+      else if (action instanceof EmptyAction.MyDelegatingActionGroup) {
+        ActionGroup group = ((EmptyAction.MyDelegatingActionGroup)action).getDelegate();
+        return clazz.isInstance(group) ? clazz.cast(group) : null;
+      }
+    }
+    return null;
+  }
+
   public interface SpeedsearchAction {
   }
 
-  private static class MySpeedSearchAction extends EmptyAction.MyDelegatingAction implements SpeedsearchAction {
+  private static class MySpeedSearchAction extends EmptyAction.MyDelegatingAction implements SpeedsearchAction, DumbAware {
 
-    public MySpeedSearchAction(@Nonnull AnAction action) {
+    MySpeedSearchAction(@Nonnull AnAction action) {
       super(action);
     }
   }
 
-  private static class MySpeedSearchActionGroup extends EmptyAction.MyDelegatingActionGroup implements SpeedsearchAction {
-    public MySpeedSearchActionGroup(@Nonnull ActionGroup actionGroup) {
+  private static class MySpeedSearchActionGroup extends EmptyAction.MyDelegatingActionGroup implements SpeedsearchAction, DumbAware {
+    MySpeedSearchActionGroup(@Nonnull ActionGroup actionGroup) {
       super(actionGroup);
     }
   }

@@ -437,23 +437,21 @@ public class Utils {
     menuBuilt.doWhenDone(() -> {
       if (!mayDataContextBeInvalid) return;
 
-      if (IdeFocusManager.getInstance(null).isFocusBeingTransferred()) {
-        IdeFocusManager.getInstance(null).doWhenFocusSettlesDown(() -> {
-          if (!component.isShowing()) return;
+      IdeFocusManager.getInstance(null).doWhenFocusSettlesDown(() -> {
+        if (!component.isShowing()) return;
 
-          DataContext context1 = DataManager.getInstance().getDataContext();
-          expandActionGroup(LaterInvocator.isInModalContext(), group, new ArrayList<>(), presentationFactory, context1, place, ActionManager.getInstance());
+        DataContext context1 = DataManager.getInstance().getDataContext();
+        expandActionGroup(LaterInvocator.isInModalContext(), group, new ArrayList<>(), presentationFactory, context1, place, ActionManager.getInstance());
 
-          for (Component each : children) {
-            if (each instanceof ActionMenuItem) {
-              ((ActionMenuItem)each).updateContext(context1);
-            }
-            else if (each instanceof ActionMenu) {
-              ((ActionMenu)each).updateContext(context1);
-            }
+        for (Component each : children) {
+          if (each instanceof ActionMenuItem) {
+            ((ActionMenuItem)each).updateContext(context1);
           }
-        });
-      }
+          else if (each instanceof ActionMenu) {
+            ((ActionMenu)each).updateContext(context1);
+          }
+        }
+      });
     });
 
   }

@@ -18,8 +18,9 @@ package com.intellij.openapi.vcs;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Comparator;
 
@@ -30,17 +31,21 @@ import static com.intellij.ui.GuiUtils.getTextWithoutMnemonicEscaping;
  */
 
 public interface CheckoutProvider {
-  @NonNls ExtensionPointName<CheckoutProvider> EXTENSION_POINT_NAME = new ExtensionPointName<CheckoutProvider>("com.intellij.checkoutProvider");
+  ExtensionPointName<CheckoutProvider> EXTENSION_POINT_NAME = ExtensionPointName.create("com.intellij.checkoutProvider");
 
-  void doCheckout(@Nonnull final Project project, @javax.annotation.Nullable Listener listener);
-  @NonNls String getVcsName();
+  void doCheckout(@Nonnull final Project project, @Nullable Listener listener);
+
+  @NonNls
+  String getVcsName();
 
   interface Listener {
     void directoryCheckedOut(File directory, VcsKey vcs);
+
     void checkoutCompleted();
   }
 
   class CheckoutProviderComparator implements Comparator<CheckoutProvider> {
+    @Override
     public int compare(final CheckoutProvider o1, final CheckoutProvider o2) {
       return getTextWithoutMnemonicEscaping(o1.getVcsName()).compareTo(getTextWithoutMnemonicEscaping(o2.getVcsName()));
     }

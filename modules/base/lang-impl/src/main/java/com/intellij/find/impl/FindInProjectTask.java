@@ -21,6 +21,7 @@ import com.intellij.find.FindBundle;
 import com.intellij.find.FindModel;
 import com.intellij.find.findInProject.FindInProjectManager;
 import com.intellij.find.ngrams.TrigramIndex;
+import com.intellij.lang.cacheBuilder.CacheBuilderRegistry;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.diagnostic.Logger;
@@ -308,7 +309,8 @@ class FindInProjectTask {
             if (hasTrigrams) {
               return TrigramIndex.isIndexable(fileType) && fileBasedIndex.isIndexingCandidate(file, TrigramIndex.INDEX_ID);
             }
-            return IdIndex.isIndexable(fileType) && fileBasedIndex.isIndexingCandidate(file, IdIndex.NAME);
+            CacheBuilderRegistry registry = CacheBuilderRegistry.getInstance();
+            return IdIndex.isIndexable(fileType, registry) && fileBasedIndex.isIndexingCandidate(file, IdIndex.NAME);
           }
         });
         return true;

@@ -16,47 +16,30 @@
 package com.intellij.openapi.roots;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.util.NotNullLazyValue;
+import consulo.annotations.DeprecationInfo;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.DocumentationOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
-import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import consulo.annotations.DeprecationInfo;
 
-import java.util.Arrays;
-import java.util.Comparator;
+import javax.annotation.Nonnull;
+import java.util.*;
 
 /**
  * Root types that can be queried from OrderEntry.
- * @see OrderEntry
+ *
  * @author dsl
+ * @see OrderEntry
  */
 public class OrderRootType {
   private static final ExtensionPointName<OrderRootType> EP_NAME = ExtensionPointName.create("com.intellij.orderRootType");
 
-  private static AtomicNotNullLazyValue<OrderRootType[]> ourExtensions = new AtomicNotNullLazyValue<OrderRootType[]>() {
-    @Nonnull
-    @Override
-    protected OrderRootType[] compute() {
-      return EP_NAME.getExtensions();
-    }
-  };
-
-  private static AtomicNotNullLazyValue<OrderRootType[]> ourSortExtensions = new AtomicNotNullLazyValue<OrderRootType[]>() {
-    @Nonnull
-    @Override
-    protected OrderRootType[] compute() {
-      OrderRootType[] extensions = ourExtensions.getValue();
-      Arrays.sort(extensions, new Comparator<OrderRootType>() {
-        @Override
-        public int compare(final OrderRootType o1, final OrderRootType o2) {
-          return o1.getName().compareTo(o2.getName());
-        }
-      });
-      return extensions;
-    }
-  };
+  private static NotNullLazyValue<List<OrderRootType>> ourSortExtensions = NotNullLazyValue.createValue(() -> {
+    List<OrderRootType> extensions = new ArrayList<>(EP_NAME.getExtensionList());
+    Collections.sort(extensions, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+    return extensions;
+  });
 
   /**
    * Binaries without output directories for modules.
@@ -117,23 +100,19 @@ public class OrderRootType {
     return type.equals(getName());
   }
 
-  public static OrderRootType[] getAllTypes() {
-    return ourExtensions.getValue();
+  @Nonnull
+  public static List<OrderRootType> getAllTypes() {
+    return EP_NAME.getExtensionList();
   }
 
-  public static OrderRootType[] getSortedRootTypes() {
+  @Nonnull
+  public static List<OrderRootType> getSortedRootTypes() {
     return ourSortExtensions.getValue();
   }
 
-  public static <T> T getOrderRootType(final Class<? extends T> orderRootTypeClass) {
-    for(OrderRootType rootType: getAllTypes()) {
-      if (orderRootTypeClass.isInstance(rootType)) {
-        //noinspection unchecked
-        return (T)rootType;
-      }
-    }
-    assert false : "Root type "+orderRootTypeClass+" not found. All roots: "+ Arrays.asList(getAllTypes());
-    return null;
+  @Nonnull
+  public static <T extends OrderRootType> T getOrderRootType(final Class<? extends T> orderRootTypeClass) {
+    return EP_NAME.findExtensionOrFail(orderRootTypeClass);
   }
 
   @Override

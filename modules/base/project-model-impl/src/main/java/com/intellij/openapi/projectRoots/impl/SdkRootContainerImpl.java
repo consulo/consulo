@@ -200,7 +200,7 @@ public class SdkRootContainerImpl implements PersistentStateComponent<Element>, 
   @Override
   public Element getState() {
     Element element = new Element("state");
-    OrderRootType[] allTypes = OrderRootType.getSortedRootTypes();
+    List<OrderRootType> allTypes = OrderRootType.getSortedRootTypes();
     for (OrderRootType type : allTypes) {
       write(element, type);
     }

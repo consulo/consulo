@@ -16,6 +16,7 @@
 package com.intellij.ide.diff;
 
 import com.intellij.diff.DiffContentFactory;
+import com.intellij.diff.chains.DiffRequestProducer;
 import com.intellij.diff.chains.DiffRequestProducerException;
 import com.intellij.diff.contents.DiffContent;
 import com.intellij.openapi.fileTypes.FileType;
@@ -26,10 +27,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.pom.Navigatable;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.concurrent.Callable;
@@ -61,7 +62,7 @@ public abstract class DiffElement<T> {
 
   public abstract DiffElement[] getChildren() throws IOException;
 
-  @javax.annotation.Nullable
+  @Nullable
   public Navigatable getNavigatable(@Nullable Project project) {
     return null;
   }
@@ -69,9 +70,9 @@ public abstract class DiffElement<T> {
   /**
    * Returns content data as byte array. Can be null, if element for example is a container
    * @return content byte array
-   * @throws java.io.IOException when reading
+   * @throws IOException when reading
    */
-  @javax.annotation.Nullable
+  @Nullable
   public abstract byte[] getContent() throws IOException;
 
   @Nonnull
@@ -85,18 +86,18 @@ public abstract class DiffElement<T> {
     return "/";
   }
 
-  @javax.annotation.Nullable
-  public Icon getIcon() {
+  @Nullable
+  public Image getIcon() {
     return null;
   }
 
   /**
    * Called in background thread without ReadLock OR in EDT
    *
-   * @see com.intellij.diff.chains.DiffRequestProducer#process
+   * @see DiffRequestProducer#process
    */
   @Nonnull
-  public DiffContent createDiffContent(@javax.annotation.Nullable Project project, @Nonnull ProgressIndicator indicator)
+  public DiffContent createDiffContent(@Nullable Project project, @Nonnull ProgressIndicator indicator)
           throws DiffRequestProducerException, ProcessCanceledException {
     try {
       final T src = getValue();
@@ -114,7 +115,7 @@ public abstract class DiffElement<T> {
     }
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public Callable<DiffElement<T>> getElementChooser(Project project) {
     return null;
   }
@@ -137,7 +138,7 @@ public abstract class DiffElement<T> {
    * @return <code>true</code> if coping was completed successfully,
    *        <code>false</code> otherwise
    */
-  @javax.annotation.Nullable
+  @Nullable
   public DiffElement<?> copyTo(DiffElement<T> container, String relativePath) {
     return null;
   }

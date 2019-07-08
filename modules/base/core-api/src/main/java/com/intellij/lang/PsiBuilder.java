@@ -120,6 +120,17 @@ public interface PsiBuilder extends UserDataHolder, UserDataHolderUnprotected {
   String getTokenText();
 
   /**
+   * Returns the char sequencr of the current token from the lexer.
+   *
+   * @return the token char sequencr, or null when the token stream is over.
+   */
+  @NonNls
+  @Nullable
+  default CharSequence getTokenSequence() {
+    return getTokenText();
+  }
+
+  /**
    * Returns the start offset of the current token, or the file length when the token stream is over.
    *
    * @return the token offset.

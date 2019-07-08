@@ -15,6 +15,7 @@
  */
 package com.intellij.codeInsight.daemon.impl;
 
+import com.intellij.codeInsight.hints.InlayParameterHintsProvider;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.ServiceManager;
@@ -65,8 +66,8 @@ public class ParameterHintsPresentationManager implements Disposable {
     return renderer instanceof MyRenderer ? ((MyRenderer)renderer).getText() : null;
   }
 
-  public void addHint(@Nonnull Editor editor, int offset, @Nonnull String hintText, boolean useAnimation) {
-    MyRenderer renderer = new MyRenderer(editor, hintText, useAnimation);
+  public void addHint(@Nonnull Editor editor, int offset, @Nullable InlayParameterHintsProvider parameterHintsProvider, @Nonnull String hintText, boolean useAnimation) {
+    MyRenderer renderer = new MyRenderer(editor, parameterHintsProvider, hintText, useAnimation);
     Inlay inlay = editor.getInlayModel().addInlineElement(offset, renderer);
     if (useAnimation && inlay != null) {
       scheduleRendererUpdate(editor, inlay);
@@ -74,16 +75,16 @@ public class ParameterHintsPresentationManager implements Disposable {
   }
 
   public void deleteHint(@Nonnull Editor editor, @Nonnull Inlay hint) {
-    updateRenderer(editor, hint, null);
+    updateRenderer(editor, hint, null, null);
   }
 
-  public void replaceHint(@Nonnull Editor editor, @Nonnull Inlay hint, @Nonnull String newText) {
-    updateRenderer(editor, hint, newText);
+  public void replaceHint(@Nonnull Editor editor, @Nonnull Inlay hint, @Nullable InlayParameterHintsProvider parameterHintsProvider, @Nonnull String newText) {
+    updateRenderer(editor, hint, parameterHintsProvider, newText);
   }
 
-  private void updateRenderer(@Nonnull Editor editor, @Nonnull Inlay hint, @Nullable String newText) {
+  private void updateRenderer(@Nonnull Editor editor, @Nonnull Inlay hint, @Nullable InlayParameterHintsProvider parameterHintsProvider, @Nullable String newText) {
     MyRenderer renderer = (MyRenderer)hint.getRenderer();
-    renderer.update(editor, newText);
+    renderer.update(editor, parameterHintsProvider, newText);
     hint.updateSize();
     scheduleRendererUpdate(editor, hint);
   }
@@ -145,13 +146,13 @@ public class ParameterHintsPresentationManager implements Disposable {
   }
 
   private static class MyRenderer implements EditorCustomElementRenderer {
-    private String myText; // text with colon as a suffix
+    private String myText;
     private int startWidth;
     private int steps;
     private int step;
 
-    private MyRenderer(Editor editor, String text, boolean animated) {
-      updateState(editor, text);
+    private MyRenderer(Editor editor, @Nullable InlayParameterHintsProvider parameterHintsProvider, String text, boolean animated) {
+      updateState(editor, parameterHintsProvider, text);
       if (!animated) step = steps + 1;
     }
 
@@ -159,8 +160,8 @@ public class ParameterHintsPresentationManager implements Disposable {
       return myText == null ? null : myText.substring(0, myText.length() - 1);
     }
 
-    public void update(Editor editor, String newText) {
-      updateState(editor, newText);
+    public void update(Editor editor, @Nullable InlayParameterHintsProvider parameterHintsProvider, String newText) {
+      updateState(editor, parameterHintsProvider, newText);
     }
 
     @Nullable
@@ -169,10 +170,19 @@ public class ParameterHintsPresentationManager implements Disposable {
       return "ParameterNameHints";
     }
 
-    private void updateState(Editor editor, String text) {
+    private void updateState(Editor editor, @Nullable InlayParameterHintsProvider parameterHintsProvider, String text) {
       FontMetrics metrics = getFontMetrics(editor).metrics;
       startWidth = doCalcWidth(myText, metrics);
-      myText = text == null ? null : (text + ":");
+      if(text == null) {
+        myText = null;
+      }
+      else if(parameterHintsProvider != null) {
+        myText = parameterHintsProvider.getInlayPresentation(text);
+      }
+      else {
+        myText = text + ":";
+      }
+
       int endWidth = doCalcWidth(myText, metrics);
       step = 1;
       steps = Math.max(1, Math.abs(endWidth - startWidth) / metrics.charWidth('a') / ANIMATION_CHARS_PER_STEP);

@@ -20,8 +20,8 @@ import com.intellij.util.text.CharArrayCharSequence;
 import gnu.trove.Equality;
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -165,7 +165,7 @@ public class ArrayUtil extends ArrayUtilRt {
   @Nonnull
   @Contract(pure=true)
   public static <T> T[] insert(@Nonnull T[] array, int index, T value) {
-    T[] result = createArray(array.getClass().getComponentType(), array.length + 1);
+    T[] result = newArray(getComponentType(array), array.length + 1);
     System.arraycopy(array, 0, result, 0, index);
     result[index] = value;
     System.arraycopy(array, index, result, index + 1, array.length - index);
@@ -217,14 +217,14 @@ public class ArrayUtil extends ArrayUtilRt {
   @Nonnull
   @Contract(pure=true)
   public static <T> T[] toObjectArray(@Nonnull Collection<? extends T> collection, @Nonnull Class<T> aClass) {
-    T[] array = createArray(aClass, collection.size());
+    T[] array = newArray(aClass, collection.size());
     return collection.toArray(array);
   }
 
   @Nonnull
   @Contract(pure=true)
   public static <T> T[] toObjectArray(@Nonnull Class<T> aClass, @Nonnull Object... source) {
-    T[] array = createArray(aClass, source.length);
+    T[] array = newArray(aClass, source.length);
     //noinspection SuspiciousSystemArraycopy
     System.arraycopy(source, 0, array, 0, array.length);
     return array;
@@ -259,11 +259,11 @@ public class ArrayUtil extends ArrayUtilRt {
       return a1;
     }
 
-    final Class<?> class1 = a1.getClass().getComponentType();
-    final Class<?> class2 = a2.getClass().getComponentType();
-    final Class<?> aClass = class1.isAssignableFrom(class2) ? class1 : class2;
+    final Class<T> class1 = getComponentType(a1);
+    final Class<T> class2 = getComponentType(a2);
+    final Class<T> aClass = class1.isAssignableFrom(class2) ? class1 : class2;
 
-    T[] result = createArray(aClass, a1.length + a2.length);
+    T[] result = newArray(aClass, a1.length + a2.length);
     System.arraycopy(a1, 0, result, 0, a1.length);
     System.arraycopy(a2, 0, result, a1.length, a2.length);
     return result;
@@ -400,7 +400,7 @@ public class ArrayUtil extends ArrayUtilRt {
   @Contract(pure=true)
   public static <T> T[] prepend(T element, @Nonnull T[] array, @Nonnull Class<T> type) {
     int length = array.length;
-    T[] result = createArray(type, length + 1);
+    T[] result = newArray(type, length + 1);
     System.arraycopy(array, 0, result, 1, length);
     result[0] = element;
     return result;
@@ -440,7 +440,7 @@ public class ArrayUtil extends ArrayUtilRt {
   @Contract(pure=true)
   public static <T> T[] append(@Nonnull T[] src, @Nullable final T element, @Nonnull Class<T> componentType) {
     int length = src.length;
-    T[] result = createArray(componentType, length + 1);
+    T[] result = newArray(componentType, length + 1);
     System.arraycopy(src, 0, result, 0, length);
     result[length] = element;
     return result;
@@ -460,13 +460,14 @@ public class ArrayUtil extends ArrayUtilRt {
     if (idx < 0 || idx >= length) {
       throw new IllegalArgumentException("invalid index: " + idx);
     }
-    T[] result = createArray(src.getClass().getComponentType(), length - 1);
+    T[] result = newArray(getComponentType(src), length - 1);
     System.arraycopy(src, 0, result, 0, idx);
     System.arraycopy(src, idx + 1, result, idx, length - idx - 1);
     return result;
   }
 
-  private static <T> T[] createArray(@Nonnull Class<?> type, int length) {
+  @Nonnull
+  public static <T> T[] newArray(@Nonnull Class<T> type, int length) {
     //noinspection unchecked
     return (T[])Array.newInstance(type, length);
   }
@@ -885,8 +886,7 @@ public class ArrayUtil extends ArrayUtilRt {
   @Contract(pure=true)
   public static <E> E[] ensureExactSize(int count, @Nonnull E[] sample) {
     if (count == sample.length) return sample;
-    @SuppressWarnings("unchecked") final E[] array = createArray(sample.getClass().getComponentType(), count);
-    return array;
+    return newArray(getComponentType(sample), count);
   }
 
   @Nullable
@@ -985,5 +985,11 @@ public class ArrayUtil extends ArrayUtilRt {
       if (value < min) min = value;
     }
     return min;
+  }
+
+  @Nonnull
+  public static <T> Class<T> getComponentType(@Nonnull T[] collection) {
+    //noinspection unchecked
+    return (Class<T>)collection.getClass().getComponentType();
   }
 }

@@ -42,6 +42,8 @@ import com.intellij.util.ui.update.LazyUiDisposable;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.util.ui.update.Update;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -303,7 +305,7 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
 
         public Icon getIconFor(final Object value) {
           final LookupFile file = (LookupFile)value;
-          return file.getIcon();
+          return TargetAWT.to(file.getIcon());
         }
 
         @Nullable

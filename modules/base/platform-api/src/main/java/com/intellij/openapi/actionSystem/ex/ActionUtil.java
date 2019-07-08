@@ -15,9 +15,11 @@
  */
 package com.intellij.openapi.actionSystem.ex;
 
+import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.TransactionGuard;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -37,12 +39,15 @@ import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class ActionUtil {
+  private static final Logger LOG = Logger.getInstance(ActionUtil.class);
   @NonNls private static final String WAS_ENABLED_BEFORE_DUMB = "WAS_ENABLED_BEFORE_DUMB";
   @NonNls public static final String WOULD_BE_ENABLED_IF_NOT_DUMB_MODE = "WOULD_BE_ENABLED_IF_NOT_DUMB_MODE";
   @NonNls private static final String WOULD_BE_VISIBLE_IF_NOT_DUMB_MODE = "WOULD_BE_VISIBLE_IF_NOT_DUMB_MODE";
@@ -359,5 +364,41 @@ public class ActionUtil {
       a1.copyShortcutFrom(a2);
     }
     return a1;
+  }
+
+  public static void invokeAction(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull String place, @Nullable InputEvent inputEvent, @Nullable Runnable onDone) {
+    Presentation presentation = action.getTemplatePresentation().clone();
+    AnActionEvent event = new AnActionEvent(inputEvent, dataContext, place, presentation, ActionManager.getInstance(), 0);
+    performDumbAwareUpdate(false, action, event, true);
+    final ActionManagerEx manager = ActionManagerEx.getInstanceEx();
+    if (event.getPresentation().isEnabled() && event.getPresentation().isVisible()) {
+      manager.fireBeforeActionPerformed(action, dataContext, event);
+      performActionDumbAware(action, event);
+      if (onDone != null) {
+        onDone.run();
+      }
+      manager.fireAfterActionPerformed(action, dataContext, event);
+    }
+  }
+
+  public static void invokeAction(@Nonnull AnAction action, @Nonnull Component component, @Nonnull String place, @Nullable InputEvent inputEvent, @Nullable Runnable onDone) {
+    invokeAction(action, DataManager.getInstance().getDataContext(component), place, inputEvent, onDone);
+  }
+
+  @Nonnull
+  public static ActionListener createActionListener(@Nonnull String actionId, @Nonnull Component component, @Nonnull String place) {
+    return e -> {
+      AnAction action = ActionManager.getInstance().getAction(actionId);
+      if (action == null) {
+        LOG.warn("Can not find action by id " + actionId);
+        return;
+      }
+      invokeAction(action, component, place, null, null);
+    };
+  }
+
+  @Nonnull
+  public static ActionListener createActionListener(@Nonnull AnAction action, @Nonnull Component component, @Nonnull String place) {
+    return e -> invokeAction(action, component, place, null, null);
   }
 }

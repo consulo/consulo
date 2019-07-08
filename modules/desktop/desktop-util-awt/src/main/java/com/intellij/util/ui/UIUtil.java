@@ -2274,13 +2274,21 @@ public class UIUtil {
     drawCenteredString(g, rect, str, true, true);
   }
 
-  public static boolean isFocusAncestor(@Nonnull final JComponent component) {
+  public static boolean isFocusAncestor(@Nonnull final Component component) {
     final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     if (owner == null) return false;
     if (owner == component) return true;
     return SwingUtilities.isDescendingFrom(owner, component);
   }
 
+  /**
+   * @param component to check whether it can be focused or not
+   * @return {@code true} if component is not {@code null} and can be focused
+   * @see Component#isRequestFocusAccepted(boolean, boolean, sun.awt.CausedFocusEvent.Cause)
+   */
+  public static boolean isFocusable(@Nullable Component component) {
+    return component != null && component.isFocusable() && component.isEnabled() && component.isShowing();
+  }
 
   public static boolean isCloseClick(MouseEvent e) {
     return isCloseClick(e, MouseEvent.MOUSE_PRESSED);
@@ -3538,13 +3546,7 @@ public class UIUtil {
       try {
         onWindow.getClass().getMethod("setAutoRequestFocus", boolean.class).invoke(onWindow, set);
       }
-      catch (NoSuchMethodException e) {
-        LOG.debug(e);
-      }
-      catch (InvocationTargetException e) {
-        LOG.debug(e);
-      }
-      catch (IllegalAccessException e) {
+      catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
         LOG.debug(e);
       }
     }
@@ -3609,8 +3611,9 @@ public class UIUtil {
    * @return the first window ancestor of the component; or {@code null}
    * if the component is not a window and is not contained inside a window
    */
-  public static Window getWindow(Component component) {
-    return component instanceof Window ? (Window)component : SwingUtilities.getWindowAncestor(component);
+  @Nullable
+  public static Window getWindow(@Nullable Component component) {
+    return component == null ? null : component instanceof Window ? (Window)component : SwingUtilities.getWindowAncestor(component);
   }
 
   public static boolean isAncestor(@Nonnull Component ancestor, @Nullable Component descendant) {

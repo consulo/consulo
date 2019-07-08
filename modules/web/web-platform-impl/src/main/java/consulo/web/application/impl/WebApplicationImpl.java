@@ -112,7 +112,8 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
 
   @Override
   public void invokeLater(@Nonnull Runnable runnable) {
-
+    WebSession currentSession = getCurrentSession();
+    if (currentSession != null) currentSession.getAccess().give(runnable);
   }
 
   @Override

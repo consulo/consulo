@@ -180,7 +180,7 @@ public abstract class ProjectViewNode <Value> extends AbstractTreeNode<Value> im
       return Collections.singleton(((PsiFileSystemItem)value).getVirtualFile());
     }
 
-    return EMPTY_ROOTS;
+    return Collections.emptyList();
   }
 
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,29 +18,43 @@ package com.intellij.ide.structureView.impl;
 
 import com.intellij.ide.structureView.StructureView;
 import com.intellij.ide.structureView.StructureViewModel;
+import com.intellij.ide.structureView.StructureViewTreeElement;
+import com.intellij.ide.structureView.TextEditorBasedStructureViewModel;
+import com.intellij.ide.util.treeView.smartTree.TreeElement;
+import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.util.ArrayUtil;
 import consulo.ui.image.Image;
-
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
  * @author cdr
  */
 public class StructureViewComposite implements StructureView {
-  @Nonnull
+
   private final StructureViewDescriptor[] myStructureViews;
-  @Nonnull
-  private StructureViewDescriptor mySelectedViewDescriptor;
+
   public static class StructureViewDescriptor {
     public final String title;
+    public final StructureViewModel structureModel;
     public final StructureView structureView;
     public final Image icon;
 
-    public StructureViewDescriptor(final String title, @Nonnull StructureView structureView, Image icon) {
+    public StructureViewDescriptor(String title, @Nonnull StructureView structureView, Image icon) {
       this.title = title;
+      this.structureModel = structureView.getTreeModel();
       this.structureView = structureView;
+      this.icon = icon;
+    }
+
+    public StructureViewDescriptor(String title, @Nonnull StructureViewModel structureModel, Image icon) {
+      this.title = title;
+      this.structureModel = structureModel;
+      this.structureView = null;
       this.icon = icon;
     }
   }
@@ -50,31 +64,34 @@ public class StructureViewComposite implements StructureView {
     for (StructureViewDescriptor descriptor : views) {
       Disposer.register(this, descriptor.structureView);
     }
-    mySelectedViewDescriptor = views[0];
   }
 
+  public boolean isOutdated() {
+    return false;
+  }
+
+  @Nullable
   public StructureView getSelectedStructureView() {
-    return mySelectedViewDescriptor.structureView;
-  }
-
-  public void setStructureView(int index, StructureViewDescriptor view) {
-    myStructureViews[index] = view;
-    Disposer.register(this, view.structureView);
+    StructureViewDescriptor descriptor = ArrayUtil.getFirstElement(myStructureViews);
+    return descriptor == null ? null : descriptor.structureView;
   }
 
   @Override
   public FileEditor getFileEditor() {
-    return getSelectedStructureView().getFileEditor();
+    StructureView view = getSelectedStructureView();
+    return view == null ? null : view.getFileEditor();
   }
 
   @Override
   public boolean navigateToSelectedElement(final boolean requestFocus) {
-    return getSelectedStructureView().navigateToSelectedElement(requestFocus);
+    StructureView view = getSelectedStructureView();
+    return view != null && view.navigateToSelectedElement(requestFocus);
   }
 
   @Override
   public JComponent getComponent() {
-    return mySelectedViewDescriptor.structureView.getComponent();
+    StructureView view = getSelectedStructureView();
+    return view == null ? null : view.getComponent();
   }
 
   @Override
@@ -83,7 +100,8 @@ public class StructureViewComposite implements StructureView {
 
   @Override
   public void centerSelectedRow() {
-    getSelectedStructureView().centerSelectedRow();
+    StructureView view = getSelectedStructureView();
+    if (view != null) view.centerSelectedRow();
   }
 
   @Override
@@ -108,7 +126,68 @@ public class StructureViewComposite implements StructureView {
   @Override
   @Nonnull
   public StructureViewModel getTreeModel() {
-    return getSelectedStructureView().getTreeModel();
-  }
+    StructureView view = getSelectedStructureView();
+    if (view != null) return view.getTreeModel();
+    class M extends TextEditorBasedStructureViewModel implements StructureViewTreeElement, ItemPresentation {
+      M() {
+        super(null, null);
+      }
 
+      @Nonnull
+      @Override
+      public StructureViewTreeElement getRoot() {
+        return this;
+      }
+
+      @Override
+      public Object getValue() {
+        return null;
+      }
+
+      @Nonnull
+      @Override
+      public ItemPresentation getPresentation() {
+        return this;
+      }
+
+      @Nonnull
+      @Override
+      public TreeElement[] getChildren() {
+        return EMPTY_ARRAY;
+      }
+
+      @Nullable
+      @Override
+      public String getPresentableText() {
+        return null;
+      }
+
+      @Nullable
+      @Override
+      public String getLocationString() {
+        return null;
+      }
+
+      @Nullable
+      @Override
+      public Image getIcon() {
+        return null;
+      }
+
+      @Override
+      public void navigate(boolean requestFocus) {
+      }
+
+      @Override
+      public boolean canNavigate() {
+        return false;
+      }
+
+      @Override
+      public boolean canNavigateToSource() {
+        return false;
+      }
+    }
+    return new M();
+  }
 }

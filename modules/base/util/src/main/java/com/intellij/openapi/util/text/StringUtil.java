@@ -26,8 +26,8 @@ import com.intellij.util.text.CharSequenceSubSequence;
 import com.intellij.util.text.StringFactory;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.*;
@@ -304,7 +304,7 @@ public class StringUtil extends StringUtilRt {
   @Contract(value = "null -> null; !null -> !null", pure = true)
   public static String toLowerCase(@Nullable final String str) {
     //noinspection ConstantConditions
-    return str == null ? null : str.toLowerCase();
+    return str == null ? null : str.toLowerCase(Locale.US);
   }
 
   @Nonnull
@@ -1879,15 +1879,7 @@ public class StringUtil extends StringUtilRt {
 
   @Contract(pure = true)
   public static boolean endsWith(@Nonnull CharSequence text, @Nonnull CharSequence suffix) {
-    int l1 = text.length();
-    int l2 = suffix.length();
-    if (l1 < l2) return false;
-
-    for (int i = l1 - 1; i >= l1 - l2; i--) {
-      if (text.charAt(i) != suffix.charAt(i + l2 - l1)) return false;
-    }
-
-    return true;
+    return StringUtilRt.endsWith(text, suffix);
   }
 
   @Nonnull
@@ -2092,6 +2084,12 @@ public class StringUtil extends StringUtilRt {
   @Contract(pure = true)
   public static CharSequence last(@Nonnull CharSequence text, final int length, boolean prependEllipsis) {
     return text.length() > length ? (prependEllipsis ? "..." : "") + text.subSequence(text.length() - length, text.length()) : text;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String firstLast(@Nonnull String text, int length) {
+    return text.length() > length ? text.subSequence(0, length / 2) + "\u2026" + text.subSequence(text.length() - length / 2 - 1, text.length()) : text;
   }
 
   @Nonnull

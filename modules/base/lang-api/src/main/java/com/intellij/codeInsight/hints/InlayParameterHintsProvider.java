@@ -19,9 +19,9 @@ package com.intellij.codeInsight.hints;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageExtension;
 import com.intellij.psi.PsiElement;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 import java.util.Set;
 
@@ -57,5 +57,13 @@ public interface InlayParameterHintsProvider {
   @Nullable
   default Language getBlackListDependencyLanguage() {
     return null;
+  }
+
+  /**
+   * Customise hints presentation
+   */
+  @Nonnull
+  default String getInlayPresentation(@Nonnull String inlayText) {
+    return inlayText + ":";
   }
 }

@@ -454,9 +454,6 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
           moduleBuilder.setModuleDirPath(wizard.getModuleDirPath());
         }
       }
-      if (!builder.validate(myProject, myProject)) {
-        return null;
-      }
       return Pair.create(wizard.getImportProvider(), wizard.getWizardContext().getModuleImportContext(builder));
     }
 

@@ -21,7 +21,6 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -115,12 +114,6 @@ public class MockApplicationEx extends MockApplication implements ApplicationEx 
   public boolean tryRunReadAction(@Nonnull Runnable runnable) {
     runReadAction(runnable);
     return true;
-  }
-
-  @Nonnull
-  @Override
-  public UIAccess getLastUIAccess() {
-    return UIAccess.get();
   }
 
   @Override

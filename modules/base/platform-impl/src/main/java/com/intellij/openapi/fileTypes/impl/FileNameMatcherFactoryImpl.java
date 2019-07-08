@@ -26,18 +26,19 @@ import javax.inject.Singleton;
 public class FileNameMatcherFactoryImpl extends FileNameMatcherFactory {
   @Nonnull
   @Override
-  public FileNameMatcher createMatcher(@Nonnull String pattern) {
-    if (pattern.startsWith("*.") &&
-        pattern.indexOf('*', 2) < 0 &&
-        pattern.indexOf('.', 2) < 0 &&
-        pattern.indexOf('?', 2) < 0) {
-      return new ExtensionFileNameMatcher(pattern.substring(2).toLowerCase());
-    }
+  public FileNameMatcher createExtensionFileNameMatcher(@Nonnull String extension) {
+    return new ExtensionFileNameMatcher(extension);
+  }
 
-    if (pattern.contains("*") || pattern.contains("?")) {
-      return new WildcardFileNameMatcher(pattern);
-    }
+  @Nonnull
+  @Override
+  public FileNameMatcher createExactFileNameMatcher(@Nonnull String fileName, boolean ignoreCase) {
+    return new ExactFileNameMatcher(fileName, ignoreCase);
+  }
 
-    return new ExactFileNameMatcher(pattern);
+  @Nonnull
+  @Override
+  public FileNameMatcher createWildcardFileNameMatcher(@Nonnull String pattern) {
+    return new WildcardFileNameMatcher(pattern);
   }
 }

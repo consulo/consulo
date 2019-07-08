@@ -303,7 +303,7 @@ public class InspectionTree extends Tree {
   }
 
   private void sortChildren(InspectionTreeNode node) {
-    final List<TreeNode> children = TreeUtil.childrenToArray(node);
+    final List<TreeNode> children = TreeUtil.listChildren(node);
     Collections.sort(children, InspectionResultsViewComparator.getInstance());
     node.removeAllChildren();
     TreeUtil.addChildrenTo(node, children);

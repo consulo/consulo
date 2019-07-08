@@ -16,6 +16,8 @@
 package com.intellij.openapi.actionSystem;
 
 import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.util.text.StringUtil;
+import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
 
@@ -24,6 +26,17 @@ import javax.annotation.Nullable;
  */
 public final class AnSeparator extends AnAction implements DumbAware {
   private static final AnSeparator ourInstance = new AnSeparator();
+
+
+  @Nonnull
+  public static AnSeparator create() {
+    return create(null);
+  }
+
+  @Nonnull
+  public static AnSeparator create(@Nullable String text) {
+    return StringUtil.isEmptyOrSpaces(text) ? ourInstance : new AnSeparator(text);
+  }
 
   private String myText;
 

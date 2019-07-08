@@ -1,58 +1,41 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui;
 
 import com.intellij.ide.util.treeView.NodeDescriptor;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.IdeActions;
+import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ArrayUtilRt;
+import com.intellij.util.ObjectUtils;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
+import com.intellij.util.containers.JBIterable;
 import com.intellij.util.ui.tree.TreeUtil;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
+
+import static javax.swing.tree.TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION;
 
 public class TreeSpeedSearch extends SpeedSearchBase<JTree> {
-  private boolean myCanExpand;
+  protected boolean myCanExpand;
 
-  private static final Convertor<TreePath, String> TO_STRING = new Convertor<TreePath, String>() {
-    @Override
-    public String convert(TreePath object) {
-      DefaultMutableTreeNode node = (DefaultMutableTreeNode)object.getLastPathComponent();
-      return node.toString();
-    }
-  };
-  private final Convertor<TreePath, String> myToStringConvertor;
-  public static final Convertor<TreePath, String> NODE_DESCRIPTOR_TOSTRING = new Convertor<TreePath, String>() {
-    @Override
-    public String convert(TreePath path) {
-      final DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
-      final Object userObject = node.getUserObject();
-      if (userObject instanceof NodeDescriptor) {
-        NodeDescriptor descr = (NodeDescriptor)userObject;
-        return descr.toString();
-      }
-      return TO_STRING.convert(path);
-    }
+  private static final Convertor<TreePath, String> TO_STRING = path -> path.getLastPathComponent().toString();
+  private final Convertor<? super TreePath, String> myToStringConvertor;
+  public static final Convertor<TreePath, String> NODE_DESCRIPTOR_TOSTRING = path -> {
+    NodeDescriptor descriptor = TreeUtil.getLastUserObject(NodeDescriptor.class, path);
+    if (descriptor != null) return descriptor.toString();
+    return TO_STRING.convert(path);
   };
 
-  public TreeSpeedSearch(JTree tree, Convertor<TreePath, String> toStringConvertor) {
+  public TreeSpeedSearch(JTree tree, Convertor<? super TreePath, String> toStringConvertor) {
     this(tree, toStringConvertor, false);
   }
 
@@ -60,19 +43,21 @@ public class TreeSpeedSearch extends SpeedSearchBase<JTree> {
     this(tree, TO_STRING);
   }
 
-  public TreeSpeedSearch(Tree tree, Convertor<TreePath, String> toString) {
+  public TreeSpeedSearch(Tree tree, Convertor<? super TreePath, String> toString) {
     this(tree, toString, false);
   }
 
-  public TreeSpeedSearch(Tree tree, Convertor<TreePath, String> toString, boolean canExpand) {
+  public TreeSpeedSearch(Tree tree, Convertor<? super TreePath, String> toString, boolean canExpand) {
     this((JTree)tree, toString, canExpand);
   }
 
-  public TreeSpeedSearch(JTree tree, Convertor<TreePath, String> toString, boolean canExpand) {
+  public TreeSpeedSearch(JTree tree, Convertor<? super TreePath, String> toString, boolean canExpand) {
     super(tree);
     setComparator(new SpeedSearchComparator(false, true));
     myToStringConvertor = toString;
     myCanExpand = canExpand;
+
+    new MySelectAllAction(tree, this).registerCustomShortcutSet(tree, null);
   }
 
   @Override
@@ -89,33 +74,22 @@ public class TreeSpeedSearch extends SpeedSearchBase<JTree> {
     return selectionRows == null || selectionRows.length == 0 ? -1 : selectionRows[0];
   }
 
+  @Nonnull
   @Override
   protected Object[] getAllElements() {
+    JBIterable<TreePath> paths;
     if (myCanExpand) {
-      final Object root = myComponent.getModel().getRoot();
-      if (root instanceof DefaultMutableTreeNode || root instanceof PathAwareTreeNode) {
-        final List<TreePath> paths = new ArrayList<TreePath>();
-        TreeUtil.traverseDepth((TreeNode)root, new TreeUtil.Traverse() {
-          @Override
-          public boolean accept(Object node) {
-            if (node instanceof DefaultMutableTreeNode) {
-              paths.add(new TreePath(((DefaultMutableTreeNode)node).getPath()));
-            }
-            else if (node instanceof PathAwareTreeNode) {
-              paths.add(((PathAwareTreeNode)node).getPath());
-            }
-            return true;
-          }
-        });
-        return paths.toArray(new TreePath[paths.size()]);
+      paths = TreeUtil.treePathTraverser(myComponent).traverse();
+    }
+    else {
+      TreePath[] arr = new TreePath[myComponent.getRowCount()];
+      for (int i = 0; i < arr.length; i++) {
+        arr[i] = myComponent.getPathForRow(i);
       }
+      paths = JBIterable.of(arr);
     }
-    TreePath[] paths = new TreePath[myComponent.getRowCount()];
-    for (int i = 0; i < paths.length; i++) {
-      paths[i] = myComponent.getPathForRow(i);
-    }
-    return paths;
-
+    List<TreePath> result = paths.filter(o -> !(o.getLastPathComponent() instanceof LoadingNode)).toList();
+    return result.toArray(new TreePath[0]);
   }
 
   @Override
@@ -126,7 +100,64 @@ public class TreeSpeedSearch extends SpeedSearchBase<JTree> {
     return string;
   }
 
-  public interface PathAwareTreeNode extends TreeNode {
-    TreePath getPath();
+  @Nonnull
+  private List<TreePath> findAllFilteredElements(String s) {
+    List<TreePath> paths = new ArrayList<>();
+    String _s = s.trim();
+
+    ListIterator<Object> it = getElementIterator(0);
+    while (it.hasNext()) {
+      Object element = it.next();
+      if (isMatchingElement(element, _s)) paths.add((TreePath)element);
+    }
+    return paths;
+  }
+
+  private static class MySelectAllAction extends DumbAwareAction {
+    @Nonnull
+    private final JTree myTree;
+    @Nonnull
+    private final TreeSpeedSearch mySearch;
+
+    MySelectAllAction(@Nonnull JTree tree, @Nonnull TreeSpeedSearch search) {
+      myTree = tree;
+      mySearch = search;
+      copyShortcutFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_SELECT_ALL));
+      setEnabledInModalContext(true);
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+      e.getPresentation().setEnabled(mySearch.isPopupActive() && myTree.getSelectionModel().getSelectionMode() == DISCONTIGUOUS_TREE_SELECTION);
+    }
+
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+      TreeSelectionModel sm = myTree.getSelectionModel();
+
+      String query = mySearch.getEnteredPrefix();
+      if (query == null) return;
+
+      List<TreePath> filtered = mySearch.findAllFilteredElements(query);
+      if (filtered.isEmpty()) return;
+
+      boolean alreadySelected = sm.getSelectionCount() == filtered.size() && ContainerUtil.and(filtered, (path) -> sm.isPathSelected(path));
+
+      if (alreadySelected) {
+        TreePath anchor = myTree.getAnchorSelectionPath();
+
+        sm.setSelectionPath(anchor);
+        myTree.setAnchorSelectionPath(anchor);
+
+        mySearch.findAndSelectElement(query);
+      }
+      else {
+        TreePath currentElement = (TreePath)mySearch.findElement(query);
+        TreePath anchor = ObjectUtils.chooseNotNull(currentElement, filtered.get(0));
+
+        sm.setSelectionPaths(filtered.toArray(new TreePath[0]));
+        myTree.setAnchorSelectionPath(anchor);
+      }
+    }
   }
 }

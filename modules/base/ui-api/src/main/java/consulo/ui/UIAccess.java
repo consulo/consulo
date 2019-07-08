@@ -77,9 +77,9 @@ public interface UIAccess {
   }
 
   @SuppressWarnings("unchecked")
-  default <T> T giveAndWait(@RequiredUIAccess @Nonnull Supplier<T> supplier) {
+  default <T> T giveAndWaitIfNeed(@RequiredUIAccess @Nonnull Supplier<T> supplier) {
     Object[] value = new Object[1];
-    giveAndWaitIfNeed(() -> value[0] = supplier.get());
+    giveAndWaitIfNeed((Runnable)() -> value[0] = supplier.get());
     return (T)value[0];
   }
 
@@ -99,5 +99,9 @@ public interface UIAccess {
     else {
       giveAndWait(runnable);
     }
+  }
+
+  default boolean isHeadless() {
+    return false;
   }
 }

@@ -15,6 +15,7 @@
  */
 package com.intellij.psi.impl.cache.impl.id;
 
+import com.intellij.lang.cacheBuilder.CacheBuilderRegistry;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.util.Comparing;
@@ -37,19 +38,20 @@ public class IdIndexImpl extends IdIndex implements CustomInputsIndexFileBasedIn
   private final FileTypeManager myFileTypeManager;
 
   @Inject
-  public IdIndexImpl(FileTypeManager manager) {
+  public IdIndexImpl(FileTypeManager manager, CacheBuilderRegistry registry) {
+    super(registry);
     myFileTypeManager = manager;
   }
 
   @Override
   public int getVersion() {
     FileType[] types = myFileTypeManager.getRegisteredFileTypes();
-    Arrays.sort(types, (o1, o2) -> Comparing.compare(o1.getName(), o2.getName()));
+    Arrays.sort(types, (o1, o2) -> Comparing.compare(o1.getId(), o2.getId()));
 
     int version = super.getVersion();
     for(FileType fileType:types) {
-      if (!isIndexable(fileType)) continue;
-      IdIndexer indexer = IdTableBuilding.getFileTypeIndexer(fileType);
+      if (!isIndexable(fileType, myRegistry)) continue;
+      IdIndexer indexer = IdTableBuilding.getFileTypeIndexer(myRegistry, fileType);
       if (indexer == null) continue;
       version = version * 31 + (indexer.getVersion() ^ indexer.getClass().getName().hashCode());
     }

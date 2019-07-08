@@ -23,7 +23,10 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ThrowableRunnable;
+import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
+import consulo.application.internal.ApplicationWithOwnWriteThread;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,48 +51,49 @@ public final class AccessRule {
     }
   }
 
-  @SuppressWarnings("deprecation")
   @Nonnull
-  public static AsyncResult<Void> writeAsync(@Nonnull ThrowableRunnable<Throwable> action) {
-    Class aClass = ObjectUtil.notNull(ReflectionUtil.getGrandCallerClass(), WriteAction.class);
+  public static AsyncResult<Void> readAsync(@RequiredReadAction @Nonnull ThrowableRunnable<Throwable> action) {
+    return readAsync(() -> {
+      action.run();
+      return null;
+    });
+  }
 
+  @Nonnull
+  public static <T> AsyncResult<T> readAsync(@RequiredReadAction @Nonnull ThrowableComputable<T, Throwable> action) {
+    AsyncResult<T> result = AsyncResult.undefined();
     Application application = Application.get();
-    if (application instanceof ApplicationWithOwnWriteThread) {
-      return ((ApplicationWithOwnWriteThread)application).pushWriteAction(aClass, () -> {
-        action.run();
-        return null;
-      });
-    }
-    else {
-      AsyncResult<Void> result = new AsyncResult<>();
-
-      // noinspection RequiredXAction
-      try (AccessToken ignored = Application.get().acquireWriteActionLock(aClass)) {
-        try {
-          action.run();
-          result.setDone();
-        }
-        catch (Throwable throwable) {
-          result.rejectWithThrowable(throwable);
-        }
+    AppExecutorUtil.getAppExecutorService().execute(() -> {
+      try {
+        result.setDone(application.runReadAction(action));
       }
+      catch (Throwable throwable) {
+        result.rejectWithThrowable(throwable);
+      }
+    });
+    return result;
+  }
 
-      return result;
-    }
+  @Nonnull
+  public static AsyncResult<Void> writeAsync(@RequiredWriteAction @Nonnull ThrowableRunnable<Throwable> action) {
+    return writeAsync(() -> {
+      action.run();
+      return null;
+    });
   }
 
   @SuppressWarnings("deprecation")
   @Nonnull
-  public static <T> AsyncResult<T> writeAsync(@Nonnull ThrowableComputable<T, Throwable> action) {
+  public static <T> AsyncResult<T> writeAsync(@RequiredWriteAction @Nonnull ThrowableComputable<T, Throwable> action) {
     Class aClass = ObjectUtil.notNull(ReflectionUtil.getGrandCallerClass(), WriteAction.class);
 
     Application application = Application.get();
 
-    if (application instanceof ApplicationWithOwnWriteThread) {
+    if (application instanceof ApplicationWithOwnWriteThread && ((ApplicationWithOwnWriteThread)application).isWriteThreadEnabled()) {
       return ((ApplicationWithOwnWriteThread)application).pushWriteAction(aClass, action);
     }
     else {
-      AsyncResult<T> result = new AsyncResult<>();
+      AsyncResult<T> result = AsyncResult.undefined();
 
       // noinspection RequiredXAction
       try (AccessToken ignored = Application.get().acquireWriteActionLock(aClass)) {

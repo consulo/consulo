@@ -15,8 +15,10 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.desktop.util.awt.component.VerticalLayoutPanel;
 import gnu.trove.TDoubleObjectHashMap;
-import javax.annotation.Nonnull;
+import kava.beans.PropertyChangeListener;
+import kava.beans.PropertyChangeSupport;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -24,8 +26,6 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 import java.awt.image.ImageObserver;
-import kava.beans.PropertyChangeListener;
-import kava.beans.PropertyChangeSupport;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -40,6 +40,22 @@ import static com.intellij.util.ui.JBUI.ScaleType.*;
  */
 @SuppressWarnings("UseJBColor")
 public class JBUI {
+  public static class CurrentTheme {
+    public static class Popup {
+      public static int toolbarHeight() {
+        return scale(28);
+      }
+
+      public static Color toolbarBorderColor() {
+        return UIUtil.getBorderColor();
+      }
+
+      public static Color toolbarPanelColor() {
+        return UIUtil.getPanelBackground();
+      }
+    }
+  }
+
   private static final Logger LOG = Logger.getInstance("#com.intellij.util.ui.JBUI");
 
   public static final String USER_SCALE_FACTOR_PROPERTY = "JBUI.userScaleFactor";
@@ -150,8 +166,7 @@ public class JBUI {
     @Nonnull
     public Scale of(double value) {
       return Scale.create(value, this);
-    }
-  }
+    }}
 
   /**
    * A scale factor of a particular type.

@@ -30,6 +30,7 @@ import consulo.roots.orderEntry.OrderEntryType;
 import javax.annotation.Nonnull;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author dsl
@@ -100,7 +101,7 @@ public abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl imple
         return false;
       }
     }
-    final OrderRootType[] allTypes = OrderRootType.getAllTypes();
+    final List<OrderRootType> allTypes = OrderRootType.getAllTypes();
     for (OrderRootType type : allTypes) {
       final String[] orderedRootUrls1 = getUrls(type);
       final String[] orderedRootUrls2 = other.getUrls(type);

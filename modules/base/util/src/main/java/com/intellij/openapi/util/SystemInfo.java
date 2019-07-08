@@ -79,7 +79,7 @@ public class SystemInfo extends SystemInfoRt {
   public static final boolean isWinVistaOrNewer = isWindows && isOsVersionAtLeast("6.0");
   public static final boolean isWin7OrNewer = isWindows && isOsVersionAtLeast("6.1");
   public static final boolean isWin8OrNewer = isWindows && isOsVersionAtLeast("6.2");
-  public static final boolean isWindowsXP = isWindows && (OS_VERSION.equals("5.1") || OS_VERSION.equals("5.2"));
+  public static final boolean isWin10OrNewer = isWindows && isOsVersionAtLeast("10.0");
 
   public static final boolean isXWindow = isUnix && !isMac;
 

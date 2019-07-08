@@ -34,16 +34,17 @@ import com.intellij.openapi.wm.impl.InternalDecoratorListener;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.annotations.RequiredWriteAction;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.ex.ToolWindowStripeButton;
-import consulo.web.ui.ex.WebToolWindowPanelImpl;
-import consulo.web.ui.ex.WebToolWindowStripeButtonImpl;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.web.internal.WebRootPaneImpl;
+import consulo.web.ui.ex.WebToolWindowPanelImpl;
+import consulo.web.ui.ex.WebToolWindowStripeButtonImpl;
 import consulo.wm.impl.ToolWindowManagerBase;
 import consulo.wm.impl.UnifiedToolWindowImpl;
 import org.jdom.Element;
@@ -76,12 +77,12 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
       @Override
       public void projectOpened(Project project, UIAccess uiAccess) {
         if (project == myProject) {
-          WebToolWindowManagerImpl.this.projectOpened();
+          uiAccess.giveAndWaitIfNeed(WebToolWindowManagerImpl.this::projectOpened);
         }
       }
 
       @Override
-      public void projectClosed(Project project) {
+      public void projectClosed(Project project, UIAccess uiAccess) {
         if (project == myProject) {
           WebToolWindowManagerImpl.this.projectClosed();
         }
@@ -89,6 +90,7 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     });
   }
 
+  @RequiredUIAccess
   private void projectOpened() {
     myFrame = myWindowManager.allocateFrame(myProject);
 
@@ -99,6 +101,8 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     WebRootPaneImpl rootPanel = ((WebIdeFrameImpl)myFrame).getRootPanel();
 
     rootPanel.setCenterComponent(toolWindowPanel);
+
+    ((WebIdeFrameImpl)myFrame).show();
   }
 
   private void projectClosed() {
@@ -206,26 +210,28 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   @Override
-  protected void activateEditorComponentImpl(List<FinalizableCommand> commandList, boolean forced) {
-
-  }
-
-  @Override
   protected boolean hasModalChild(WindowInfoImpl info) {
     return false;
   }
 
+  @RequiredUIAccess
   @Nullable
   @Override
-  public Element getState() {
+  public Element getStateFromUI() {
     return new Element("state");
+  }
+
+  @RequiredWriteAction
+  @Nullable
+  @Override
+  public Element getState(Element element) {
+    return element;
   }
 
   @Override
   public boolean canShowNotification(@Nonnull String toolWindowId) {
     return false;
   }
-
 
   @Override
   public void activateEditorComponent() {

@@ -26,6 +26,7 @@ import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
+import consulo.annotations.DeprecationInfo;
 import consulo.ui.image.Image;
 import org.intellij.lang.annotations.Language;
 
@@ -69,7 +70,7 @@ public interface ModuleImportProvider<C extends ModuleImportContext> {
   @Nonnull
   List<Module> commit(@Nonnull C context,
                       @Nonnull Project project,
-                      @javax.annotation.Nullable ModifiableModuleModel model,
+                      @Nullable ModifiableModuleModel model,
                       @Nonnull ModulesProvider modulesProvider,
                       @Nullable ModifiableArtifactModel artifactModel);
 
@@ -104,6 +105,8 @@ public interface ModuleImportProvider<C extends ModuleImportContext> {
     return null;
   }
 
+  @Deprecated
+  @DeprecationInfo("Unused")
   default boolean validate(Project current, Project dest) {
     return true;
   }

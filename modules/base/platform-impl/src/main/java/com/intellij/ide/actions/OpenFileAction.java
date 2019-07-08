@@ -35,13 +35,12 @@ import com.intellij.openapi.fileTypes.ex.FileTypeChooser;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.platform.PlatformProjectOpenProcessor;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import consulo.ui.fileChooser.FileChooser;
 
 import javax.annotation.Nonnull;
@@ -83,14 +82,9 @@ public class OpenFileAction extends AnAction implements DumbAware {
     };
     descriptor.setTitle(showFiles ? "Open File or Project" : "Open Project");
 
-    VirtualFile userHomeDir = null;
-    if (SystemInfo.isUnix) {
-      userHomeDir = VfsUtil.getUserHomeDir();
-    }
-
     descriptor.putUserData(PathChooserDialog.PREFER_LAST_OVER_EXPLICIT, Boolean.TRUE);
 
-    FileChooser.chooseFiles(descriptor, project, userHomeDir).doWhenDone(files -> {
+    FileChooser.chooseFiles(descriptor, project, VfsUtil.getUserHomeDir()).doWhenDone(files -> {
       for (VirtualFile file : files) {
         if (!descriptor.isFileSelectable(file)) { // on Mac, it could be selected anyway
           Messages.showInfoMessage(project, file.getPresentableUrl() + " contains no " + ApplicationNamesInfo.getInstance().getFullProductName() + " project", "Cannot Open Project");
@@ -109,22 +103,18 @@ public class OpenFileAction extends AnAction implements DumbAware {
     }
   }
 
-  private static void doOpenFile(@Nullable final Project project,
-                                 @Nonnull final VirtualFile[] result) {
+  @RequiredUIAccess
+  private static void doOpenFile(@Nullable final Project project, @Nonnull final VirtualFile[] result) {
     for (final VirtualFile file : result) {
       if (file.isDirectory()) {
-        Project openedProject = ProjectUtil.open(file.getPath(), project, false);
-        FileChooserUtil.setLastOpenedFile(openedProject, file);
+        ProjectUtil.openOrOpenAsync(file.getPath(), project, false, UIAccess.current()).doWhenDone(openedProject -> FileChooserUtil.setLastOpenedFile(openedProject, file));
         return;
       }
 
       if (OpenProjectFileChooserDescriptor.canOpen(file)) {
-        int answer = Messages.showYesNoDialog(project,
-                                              IdeBundle.message("message.open.file.is.project", file.getName()),
-                                              IdeBundle.message("title.open.project"),
-                                              Messages.getQuestionIcon());
+        int answer = Messages.showYesNoDialog(project, IdeBundle.message("message.open.file.is.project", file.getName()), IdeBundle.message("title.open.project"), Messages.getQuestionIcon());
         if (answer == 0) {
-          FileChooserUtil.setLastOpenedFile(ProjectUtil.open(file.getPath(), project, false), file);
+          ProjectUtil.openOrOpenAsync(file.getPath(), project, false, UIAccess.current()).doWhenDone(openedProject -> FileChooserUtil.setLastOpenedFile(openedProject, file));
           return;
         }
       }
@@ -134,10 +124,6 @@ public class OpenFileAction extends AnAction implements DumbAware {
 
       if (project != null) {
         openFile(file, project);
-      }
-      else {
-        PlatformProjectOpenProcessor processor = PlatformProjectOpenProcessor.getInstance();
-        processor.doOpenProject(file, null, false);
       }
     }
   }
@@ -152,11 +138,8 @@ public class OpenFileAction extends AnAction implements DumbAware {
   public static void openFile(final VirtualFile virtualFile, final Project project) {
     FileEditorProviderManager editorProviderManager = FileEditorProviderManager.getInstance();
     if (editorProviderManager.getProviders(project, virtualFile).length == 0) {
-      Messages.showMessageDialog(project,
-                                 IdeBundle.message("error.files.of.this.type.cannot.be.opened",
-                                                   ApplicationNamesInfo.getInstance().getProductName()),
-                                 IdeBundle.message("title.cannot.open.file"),
-                                 Messages.getErrorIcon());
+      Messages.showMessageDialog(project, IdeBundle.message("error.files.of.this.type.cannot.be.opened", ApplicationNamesInfo.getInstance().getProductName()),
+                                 IdeBundle.message("title.cannot.open.file"), Messages.getErrorIcon());
       return;
     }
 
@@ -164,5 +147,4 @@ public class OpenFileAction extends AnAction implements DumbAware {
     OpenFileDescriptor descriptor = new OpenFileDescriptor(project, virtualFile);
     FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
   }
-
 }

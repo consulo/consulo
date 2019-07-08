@@ -49,8 +49,9 @@ import com.intellij.util.Function;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;
-import javax.annotation.Nonnull;
+import consulo.ui.UIAccess;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -98,7 +99,7 @@ class EventLogConsole {
     installNotificationsFont(editor);
     myProjectModel.getProject().getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerAdapter() {
       @Override
-      public void projectClosed(Project project) {
+      public void projectClosed(Project project, UIAccess uiAccess) {
         if (project == myProjectModel.getProject()) {
           EditorFactory.getInstance().releaseEditor(editor);
         }

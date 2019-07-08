@@ -61,6 +61,7 @@ import consulo.application.AccessRule;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 import gnu.trove.THashSet;
@@ -587,6 +588,7 @@ public class DesktopEditorsSplitters implements Disposable, EditorsSplitters {
     return null;
   }
 
+  @RequiredUIAccess
   @Override
   public void closeFile(VirtualFile file, boolean moveFocus) {
     final List<DesktopEditorWindow> windows = findWindows(file);

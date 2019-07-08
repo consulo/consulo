@@ -31,18 +31,21 @@ import com.intellij.psi.impl.source.PsiFileWithStubSupport;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.internal.PerApplicationInstance;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 /**
  * @author yole
  */
 public abstract class StubTreeLoader {
+  private static final PerApplicationInstance<StubTreeLoader> ourInstance = PerApplicationInstance.of(StubTreeLoader.class);
 
+  @Nonnull
   public static StubTreeLoader getInstance() {
-    return ServiceManager.getService(StubTreeLoader.class);
+    return ourInstance.get();
   }
 
   @Nullable
@@ -93,7 +96,8 @@ public abstract class StubTreeLoader {
         boolean consistent = DebugUtil.psiToString(psiFile, true).equals(DebugUtil.psiToString(fromText, true));
         if (consistent) {
           msg += "\n tree consistent";
-        } else {
+        }
+        else {
           msg += "\n AST INCONSISTENT, perhaps after incremental reparse; " + fromText;
         }
       }
@@ -136,10 +140,7 @@ public abstract class StubTreeLoader {
   }
 
   @Nonnull
-  private static Attachment[] createAttachments(@Nonnull ObjectStubTree stubTree,
-                                                @Nonnull PsiFileWithStubSupport psiFile,
-                                                VirtualFile file,
-                                                @Nullable StubTree stubTreeFromIndex) {
+  private static Attachment[] createAttachments(@Nonnull ObjectStubTree stubTree, @Nonnull PsiFileWithStubSupport psiFile, VirtualFile file, @Nullable StubTree stubTreeFromIndex) {
     List<Attachment> attachments = ContainerUtil.newArrayList();
     attachments.add(new Attachment(file.getPath() + "_file.txt", psiFile instanceof PsiCompiledElement ? "compiled" : psiFile.getText()));
     attachments.add(new Attachment("stubTree.txt", ((PsiFileStubImpl)stubTree.getRoot()).printTree()));
@@ -151,15 +152,21 @@ public abstract class StubTreeLoader {
 
   public static String getFileViewProviderMismatchDiagnostics(@Nonnull FileViewProvider provider) {
     Function<PsiFile, String> fileClassName = file -> file.getClass().getSimpleName();
-    Function<Pair<IStubFileElementType, PsiFile>, String> stubRootToString =
-            pair -> "(" + pair.first.toString() + ", " + pair.first.getLanguage() + " -> " + fileClassName.fun(pair.second) + ")";
+    Function<Pair<IStubFileElementType, PsiFile>, String> stubRootToString = pair -> "(" + pair.first.toString() + ", " + pair.first.getLanguage() + " -> " + fileClassName.fun(pair.second) + ")";
     List<Pair<IStubFileElementType, PsiFile>> roots = StubTreeBuilder.getStubbedRoots(provider);
-    return "path = " + provider.getVirtualFile().getPath() +
-           ", stubBindingRoot = " + fileClassName.fun(provider.getStubBindingRoot()) +
-           ", languages = [" + StringUtil.join(provider.getLanguages(), Language::getID, ", ") +
-           "], fileTypes = [" + StringUtil.join(provider.getAllFiles(), file -> file.getFileType().getName(), ", ") +
-           "], files = [" + StringUtil.join(provider.getAllFiles(), fileClassName, ", ") +
-           "], roots = [" + StringUtil.join(roots, stubRootToString, ", ") + "]";
+    return "path = " +
+           provider.getVirtualFile().getPath() +
+           ", stubBindingRoot = " +
+           fileClassName.fun(provider.getStubBindingRoot()) +
+           ", languages = [" +
+           StringUtil.join(provider.getLanguages(), Language::getID, ", ") +
+           "], fileTypes = [" +
+           StringUtil.join(provider.getAllFiles(), file -> file.getFileType().getName(), ", ") +
+           "], files = [" +
+           StringUtil.join(provider.getAllFiles(), fileClassName, ", ") +
+           "], roots = [" +
+           StringUtil.join(roots, stubRootToString, ", ") +
+           "]";
   }
 }
 

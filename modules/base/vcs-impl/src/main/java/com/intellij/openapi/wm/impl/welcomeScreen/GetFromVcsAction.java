@@ -26,13 +26,14 @@ import consulo.start.WelcomeFrameManager;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GetFromVcsAction extends WelcomePopupAction{
 
   @Override
   protected void fillActions(DefaultActionGroup group) {
-    final List<CheckoutProvider> providers = CheckoutProvider.EXTENSION_POINT_NAME.getExtensionList();
+    final List<CheckoutProvider> providers = new ArrayList<>(CheckoutProvider.EXTENSION_POINT_NAME.getExtensionList());
     ContainerUtil.sort(providers, new CheckoutProvider.CheckoutProviderComparator());
     for (CheckoutProvider provider : providers) {
       group.add(new CheckoutAction(provider));

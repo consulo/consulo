@@ -36,10 +36,7 @@ import com.intellij.openapi.project.impl.ProjectManagerImpl;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MessageDialogBuilder;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.ShutDownTracker;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
@@ -49,6 +46,9 @@ import com.intellij.util.Restarter;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.ui.UIUtil;
+import consulo.application.WriteThreadOption;
+import consulo.application.impl.WriteThread;
+import consulo.application.internal.ApplicationWithOwnWriteThread;
 import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.application.ApplicationProperties;
@@ -72,7 +72,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
-public class DesktopApplicationImpl extends BaseApplication implements ApplicationEx2 {
+public class DesktopApplicationImpl extends BaseApplication implements ApplicationEx2, ApplicationWithOwnWriteThread {
   private static final Logger LOG = Logger.getInstance(DesktopApplicationImpl.class);
 
   private final ModalityInvokator myInvokator = new ModalityInvokatorImpl();
@@ -105,6 +105,8 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
   static {
     IdeaForkJoinWorkerThreadFactory.setupForkJoinCommonPool();
   }
+
+  private final WriteThread mySubWriteThread;
 
   public DesktopApplicationImpl(boolean isHeadless, @Nonnull Ref<? extends StartupProgress> splashRef) {
     super(splashRef);
@@ -155,9 +157,42 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
       });
       return Thread.currentThread();
     });
-    myLock = new ReadMostlyRWLock(edt);
+
+    boolean subWriteThread = WriteThreadOption.isSubWriteThreadSupported();
+    mySubWriteThread = subWriteThread ? new WriteThread(this) : null;
+
+    if(subWriteThread) {
+      myLock = new ReadMostlyRWLock(edt, mySubWriteThread);
+    }
+    else {
+      myLock = new ReadMostlyRWLock(edt);
+    }
 
     NoSwingUnderWriteAction.watchForEvents(this);
+  }
+
+  @Nonnull
+  @Override
+  public AccessToken acquireWriteActionLockInternal(Class<?> callerClass) {
+    return new WriteAccessToken(callerClass);
+  }
+
+  @Override
+  public boolean isWriteThread() {
+    return super.isWriteThread() || Thread.currentThread() == mySubWriteThread;
+  }
+
+  @Nonnull
+  @Override
+  public <T> AsyncResult<T> pushWriteAction(@Nonnull Class<?> caller, @Nonnull ThrowableComputable<T, Throwable> computable) {
+    AsyncResult<T> asyncResult = AsyncResult.undefined();
+    mySubWriteThread.push(computable, asyncResult, caller);
+    return asyncResult;
+  }
+
+  @Override
+  public boolean isWriteThreadEnabled() {
+    return mySubWriteThread != null;
   }
 
   private DesktopTransactionGuardImpl transactionGuard() {
@@ -334,10 +369,6 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
   @Override
   @Nonnull
   public ModalityState getCurrentModalityState() {
-    if (Thread.currentThread() == myWriteActionThread) {
-      return getDefaultModalityState();
-    }
-
     return LaterInvocator.getCurrentModalityState();
   }
 
@@ -534,32 +565,6 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     }
   }
 
-  public boolean runWriteActionWithProgressInBackgroundThread(@Nonnull String title,
-                                                              @Nullable Project project,
-                                                              @Nullable JComponent parentComponent,
-                                                              @Nullable String cancelText,
-                                                              @Nonnull Consumer<ProgressIndicator> action) {
-    Class<?> clazz = action.getClass();
-    startWrite(clazz);
-    try {
-      PotemkinProgress indicator = new PotemkinProgress(title, project, parentComponent, cancelText);
-      indicator.runInBackground(() -> {
-        assert myWriteActionThread == null;
-        myWriteActionThread = Thread.currentThread();
-        try {
-          action.accept(indicator);
-        }
-        finally {
-          myWriteActionThread = null;
-        }
-      });
-      return !indicator.isCanceled();
-    }
-    finally {
-      endWrite(clazz);
-    }
-  }
-
   @RequiredReadAction
   @Override
   public void assertReadAccessAllowed() {
@@ -584,9 +589,9 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
   @Override
   public boolean isReadAccessAllowed() {
     if (isDispatchThread()) {
-      return myWriteActionThread == null; // no reading from EDT during background write action
+      return true;
     }
-    return myLock.isReadLockedByThisThread() || myWriteActionThread == Thread.currentThread();
+    return myLock.isReadLockedByThisThread();
   }
 
   @RequiredUIAccess
@@ -595,13 +600,6 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     if (isDispatchThread()) return;
     if (ShutDownTracker.isShutdownHookRunning()) return;
     assertIsDispatchThread("Access is allowed from event dispatch thread only.");
-  }
-
-  @Override
-  protected void assertWriteActionStart() {
-    if (!isWriteAccessAllowed()) {
-      assertIsDispatchThread("Write access is allowed from event dispatch thread only");
-    }
   }
 
   private void assertIsDispatchThread(@Nonnull String message) {
@@ -617,6 +615,29 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
                                          describe(Thread.currentThread()) +
                                          " SystemEventQueueThread: " +
                                          describe(getEventQueueThread()), dump);
+  }
+
+  @Override
+  protected void assertWriteActionStart() {
+    if (!isWriteAccessAllowed()) {
+      assertIsWriteOrDispatchThread("Write access is allowed from event write/dispatch thread only");
+    }
+  }
+
+  private void assertIsWriteOrDispatchThread(@Nonnull String message) {
+    if (isWriteThread()) return;
+    final Attachment dump = new Attachment("threadDump.txt", ThreadDumper.dumpThreadsToString());
+    throw new LogEventException(message, " EventQueue.isDispatchThread()=" +
+                                         EventQueue.isDispatchThread() +
+                                         " isDispatchThread()=" +
+                                         isDispatchThread() +
+                                         " Toolkit.getEventQueue()=" +
+                                         Toolkit.getDefaultToolkit().getSystemEventQueue() +
+                                         " Current thread: " +
+                                         describe(Thread.currentThread()) +
+                                         " SystemEventQueueThread: " +
+                                         describe(getEventQueueThread()) + "" +
+                                         " WriteThread: " + mySubWriteThread, dump);
   }
 
   @RequiredUIAccess
@@ -665,7 +686,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
 
   @Override
   public boolean isWriteAccessAllowed() {
-    return isDispatchThread() && myLock.isWriteLocked() || myWriteActionThread == Thread.currentThread();
+    return isWriteThread() && myLock.isWriteLocked();
   }
 
   @Override

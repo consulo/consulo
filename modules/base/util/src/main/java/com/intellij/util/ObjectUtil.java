@@ -19,6 +19,7 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.util.containers.Convertor;
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 
 /**
@@ -102,5 +103,27 @@ public class ObjectUtil {
       return null;
     }
     return obj;
+  }
+
+  /**
+   * Performs binary search on the range [fromIndex, toIndex)
+   *
+   * @param indexComparator a comparator which receives a middle index and returns the result of comparision of the value at this index and the goal value
+   *                        (e.g 0 if found, -1 if the value[middleIndex] < goal, or 1 if value[middleIndex] > goal)
+   * @return index for which {@code indexComparator} returned 0 or {@code -insertionIndex-1} if wasn't found
+   * @see java.util.Arrays#binarySearch(Object[], Object, Comparator)
+   * @see java.util.Collections#binarySearch(List, Object, Comparator)
+   */
+  public static int binarySearch(int fromIndex, int toIndex, @Nonnull IntIntFunction indexComparator) {
+    int low = fromIndex;
+    int high = toIndex - 1;
+    while (low <= high) {
+      int mid = (low + high) >>> 1;
+      int cmp = indexComparator.fun(mid);
+      if (cmp < 0) low = mid + 1;
+      else if (cmp > 0) high = mid - 1;
+      else return mid;
+    }
+    return -(low + 1);
   }
 }

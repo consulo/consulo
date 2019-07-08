@@ -15,8 +15,10 @@
  */
 package com.intellij.openapi.project;
 
+import consulo.annotations.DeprecationInfo;
 import consulo.ui.UIAccess;
 
+import javax.annotation.Nonnull;
 import java.util.EventListener;
 
 /**
@@ -30,7 +32,7 @@ public interface ProjectManagerListener extends EventListener {
    *
    * @param project opening project
    */
-  default void projectOpened(Project project, UIAccess uiAccess) {
+  default void projectOpened(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
     projectOpened(project);
   }
 
@@ -40,7 +42,8 @@ public interface ProjectManagerListener extends EventListener {
    * @param project opening project
    */
   @Deprecated
-  default void projectOpened(Project project) {
+  @DeprecationInfo("Use projectOpened(Project, UIAccess)")
+  default void projectOpened(@Nonnull Project project) {
   }
 
   /**
@@ -48,12 +51,23 @@ public interface ProjectManagerListener extends EventListener {
    *
    * @param project closing project
    */
-  default void projectClosed(Project project) {
+  default void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    projectClosed(project);
+  }
+
+  /**
+   * Invoked on project close.
+   *
+   * @param project closing project
+   */
+  @Deprecated
+  @DeprecationInfo("Use projectClosed(Project, UIAccess)")
+  default void projectClosed(@Nonnull Project project) {
   }
 
   /**
    * Invoked on project close before any closing activities
    */
-  default void projectClosing(Project project) {
+  default void projectClosing(@Nonnull Project project) {
   }
 }

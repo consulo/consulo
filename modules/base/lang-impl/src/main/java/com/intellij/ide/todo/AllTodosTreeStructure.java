@@ -31,12 +31,7 @@ public class AllTodosTreeStructure extends TodoTreeStructure {
 
   @Override
   public boolean accept(final PsiFile psiFile) {
-    final boolean
-            accept = psiFile.isValid() &&
-                     (
-                             myTodoFilter != null && myTodoFilter.accept(mySearchHelper, psiFile) ||
-                             (myTodoFilter == null && mySearchHelper.getTodoItemsCount(psiFile) > 0)
-                     );
+    final boolean accept = psiFile.isValid() && (myTodoFilter != null && myTodoFilter.accept(mySearchHelper, psiFile) || (myTodoFilter == null && mySearchHelper.getTodoItemsCount(psiFile) > 0));
     return accept;
   }
 
@@ -52,7 +47,6 @@ public class AllTodosTreeStructure extends TodoTreeStructure {
 
   @Override
   protected AbstractTreeNode createRootElement() {
-    return new ToDoRootNode(myProject, new Object(),
-                            myBuilder, mySummaryElement);
+    return new ToDoRootNode(myProject, new Object(), myBuilder, mySummaryElement);
   }
 }

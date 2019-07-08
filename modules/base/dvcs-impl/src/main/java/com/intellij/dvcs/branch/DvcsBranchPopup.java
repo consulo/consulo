@@ -19,6 +19,7 @@ import com.intellij.dvcs.DvcsUtil;
 import com.intellij.dvcs.repo.AbstractRepositoryManager;
 import com.intellij.dvcs.repo.Repository;
 import com.intellij.dvcs.ui.BranchActionGroupPopup;
+import com.intellij.dvcs.ui.LightActionGroup;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
 import com.intellij.openapi.actionSystem.ActionGroup;
@@ -32,8 +33,10 @@ import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.VcsNotifier;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import consulo.annotations.DeprecationInfo;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.util.List;
@@ -61,7 +64,8 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
                             @Nonnull AbstractRepositoryManager<Repo> repositoryManager,
                             @Nonnull DvcsMultiRootBranchConfig<Repo> multiRootBranchConfig,
                             @Nonnull DvcsSyncSettings vcsSettings,
-                            @Nonnull Condition<AnAction> preselectActionCondition) {
+                            @Nonnull Condition<AnAction> preselectActionCondition,
+                            @Nullable String dimensionKey) {
     myProject = currentRepository.getProject();
     myCurrentRepository = currentRepository;
     myRepositoryManager = repositoryManager;
@@ -69,9 +73,8 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
     myVcsSettings = vcsSettings;
     myMultiRootBranchConfig = multiRootBranchConfig;
     String title = myVcs.getDisplayName() + " Branches";
-    myRepoTitleInfo = (myRepositoryManager.moreThanOneRoot() && myVcsSettings.getSyncSetting() == DvcsSyncSettings.Value.DONT_SYNC)
-                      ? " in " + DvcsUtil.getShortRepositoryName(currentRepository) : "";
-    myPopup = new BranchActionGroupPopup(title + myRepoTitleInfo, myProject, preselectActionCondition, createActions());
+    myRepoTitleInfo = (myRepositoryManager.moreThanOneRoot() && myVcsSettings.getSyncSetting() == DvcsSyncSettings.Value.DONT_SYNC) ? " in " + DvcsUtil.getShortRepositoryName(currentRepository) : "";
+    myPopup = new BranchActionGroupPopup(title + myRepoTitleInfo, myProject, preselectActionCondition, createActions(), dimensionKey);
 
     initBranchSyncPolicyIfNotInitialized();
     setCurrentBranchInfo();
@@ -101,11 +104,12 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
   }
 
   private void notifyAboutSyncedBranches() {
-    String description =
-            "You have several " + myVcs.getDisplayName() + " roots in the project and they all are checked out at the same branch. " +
-            "We've enabled synchronous branch control for the project. <br/>" +
-            "If you wish to control branches in different roots separately, " +
-            "you may <a href='settings'>disable</a> the setting.";
+    String description = "You have several " +
+                         myVcs.getDisplayName() +
+                         " roots in the project and they all are checked out at the same branch. " +
+                         "We've enabled synchronous branch control for the project. <br/>" +
+                         "If you wish to control branches in different roots separately, " +
+                         "you may <a href='settings'>disable</a> the setting.";
     NotificationListener listener = new NotificationListener() {
       @Override
       public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
@@ -122,7 +126,7 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
 
   @Nonnull
   private ActionGroup createActions() {
-    DefaultActionGroup popupGroup = new DefaultActionGroup(null, false);
+    LightActionGroup popupGroup = new LightActionGroup();
     AbstractRepositoryManager<Repo> repositoryManager = myRepositoryManager;
     if (repositoryManager.moreThanOneRoot()) {
       if (userWantsSyncControl()) {
@@ -143,12 +147,10 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
     return (myVcsSettings.getSyncSetting() != DvcsSyncSettings.Value.DONT_SYNC);
   }
 
-  protected abstract void fillWithCommonRepositoryActions(@Nonnull DefaultActionGroup popupGroup,
-                                                          @Nonnull AbstractRepositoryManager<Repo> repositoryManager);
+  protected abstract void fillWithCommonRepositoryActions(@Nonnull LightActionGroup popupGroup, @Nonnull AbstractRepositoryManager<Repo> repositoryManager);
 
   @Nonnull
-  protected List<Repo> filterRepositoriesNotOnThisBranch(@Nonnull final String branch,
-                                                         @Nonnull List<Repo> allRepositories) {
+  protected List<Repo> filterRepositoriesNotOnThisBranch(@Nonnull final String branch, @Nonnull List<Repo> allRepositories) {
     return ContainerUtil.filter(allRepositories, repository -> !branch.equals(repository.getCurrentBranchName()));
   }
 
@@ -159,14 +161,13 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
   }
 
   @Nonnull
-  protected abstract DefaultActionGroup createRepositoriesActions();
+  protected abstract LightActionGroup createRepositoriesActions();
 
   protected boolean highlightCurrentRepo() {
     return !userWantsSyncControl() || myMultiRootBranchConfig.diverged();
   }
 
-  protected abstract void fillPopupWithCurrentRepositoryActions(@Nonnull DefaultActionGroup popupGroup,
-                                                                @javax.annotation.Nullable DefaultActionGroup actions);
+  protected abstract void fillPopupWithCurrentRepositoryActions(@Nonnull LightActionGroup popupGroup, @Nullable LightActionGroup actions);
 
   public static class MyMoreIndex {
     public static final int MAX_REPO_NUM = 8;

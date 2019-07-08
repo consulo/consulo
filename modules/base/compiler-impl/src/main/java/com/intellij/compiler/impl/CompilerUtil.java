@@ -38,10 +38,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashMap;
-import javax.annotation.Nonnull;
 import consulo.roots.ContentFolderScopes;
+import gnu.trove.THashMap;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.*;
@@ -156,12 +156,6 @@ public class CompilerUtil {
       //noinspection HardCodedStringLiteral
       commandLine.add((launcherUsed? "-J" : "") + "-Duser.region=" + region);
     }
-  }
-
-
-
-  public static boolean isOfVersion(String versionString, String checkedVersion) {
-    return versionString.contains(checkedVersion);
   }
 
   public static <T extends Throwable> void runInContext(CompileContext context, String title, ThrowableRunnable<T> action) throws T {

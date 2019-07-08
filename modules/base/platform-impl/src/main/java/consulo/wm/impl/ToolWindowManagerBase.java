@@ -19,7 +19,6 @@ import com.intellij.ide.actions.ActivateToolWindowAction;
 import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.DumbAware;
@@ -41,6 +40,7 @@ import com.intellij.openapi.wm.impl.commands.InvokeLaterCmd;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.SmartList;
+import consulo.component.PersistentStateComponentWithUIState;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.condition.ModuleExtensionCondition;
 import consulo.ui.RequiredUIAccess;
@@ -52,8 +52,8 @@ import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.util.*;
 
@@ -61,7 +61,7 @@ import java.util.*;
  * @author VISTALL
  * @since 25-Sep-17
  */
-public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implements PersistentStateComponent<Element>, Disposable {
+public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implements PersistentStateComponentWithUIState<Element, Element>, Disposable {
   public static final String ID = "ToolWindowManager";
 
   public static class InitToolWindowsActivity implements StartupActivity, DumbAware {
@@ -225,7 +225,6 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   protected final EventDispatcher<ToolWindowManagerListener> myDispatcher = EventDispatcher.create(ToolWindowManagerListener.class);
   protected final ToolWindowLayout myLayout = new ToolWindowLayout();
   protected ToolWindowLayout myLayoutToRestoreLater = null;
-  protected boolean myEditorWasActive;
   protected ToolWindowPanel myToolWindowPanel;
 
   protected final MyToolWindowPropertyChangeListener myToolWindowPropertyChangeListener = new MyToolWindowPropertyChangeListener();
@@ -288,8 +287,6 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     final FinalizableCommand command = myToolWindowPanel.createSetEditorComponentCmd(component, commandProcessor);
     commandsList.add(command);
   }
-
-  protected abstract void activateEditorComponentImpl(List<FinalizableCommand> commandList, final boolean forced);
 
   protected abstract boolean hasModalChild(final WindowInfoImpl info);
 
@@ -547,8 +544,6 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   }
 
   protected void activateToolWindowImpl(final String id, List<FinalizableCommand> commandList, boolean forced, boolean autoFocusContents) {
-    if (!IdeFocusManager.getGlobalInstance().isUnforcedRequestAllowed() && !forced) return;
-
     if (LOG.isDebugEnabled()) {
       LOG.debug("enter: activateToolWindowImpl(" + id + ")");
     }
@@ -562,7 +557,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
       }
       return;
     }
-    prepareForActivation(id, commandList);
+    deactivateWindows(id, commandList);
     showAndActivate(id, false, commandList, autoFocusContents, forced);
   }
 
@@ -805,7 +800,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     info.setAutoHide(autoHide);
     appendApplyWindowInfoCmd(info, commandsList);
     if (info.isVisible()) {
-      prepareForActivation(id, commandsList);
+      deactivateWindows(id, commandsList);
       showAndActivate(id, false, commandsList, true, true);
     }
   }
@@ -838,7 +833,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
       }
       info.setType(type);
       appendApplyWindowInfoCmd(info, commandsList);
-      prepareForActivation(id, commandsList);
+      deactivateWindows(id, commandsList);
       showAndActivate(id, dirtyMode, commandsList, true, true);
       appendUpdateToolWindowsPaneCmd(commandsList);
     }
@@ -861,24 +856,17 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     execute(commandList);
   }
 
-  /**
-   * Helper method. It deactivates all tool windows excepting the tool window
-   * which should be activated.
-   */
-  protected void prepareForActivation(final String id, final List<FinalizableCommand> commandList) {
-    final WindowInfoImpl toBeActivatedInfo = getInfo(id);
-    final WindowInfoImpl[] infos = myLayout.getInfos();
-    for (final WindowInfoImpl info : infos) {
-      if (id.equals(info.getId())) {
-        continue;
-      }
-      if (toBeActivatedInfo.isDocked() || toBeActivatedInfo.isSliding()) {
-        deactivateToolWindowImpl(info.getId(), info.isAutoHide() || info.isSliding(), commandList);
-      }
-      else { // floating window is being activated
-        deactivateToolWindowImpl(info.getId(), info.isAutoHide() && info.isFloating() && !hasModalChild(info), commandList);
+  private void deactivateWindows(@Nonnull String idToIgnore, @Nonnull List<FinalizableCommand> commandList) {
+    for (WindowInfoImpl info : myLayout.getInfos()) {
+      if (!idToIgnore.equals(info.getId())) {
+        deactivateToolWindowImpl(info.getId(), isToHideOnDeactivation(info), commandList);
       }
     }
+  }
+
+  private static boolean isToHideOnDeactivation(@Nonnull final WindowInfoImpl info) {
+    if (info.isFloating() || info.isWindowed()) return false;
+    return info.isAutoHide() || info.isSliding();
   }
 
   @RequiredUIAccess
@@ -930,8 +918,6 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
           deactivateToolWindowImpl(eachId, true, commandList);
         }
       }
-
-      activateEditorComponentImpl(commandList, true);
     }
     else if (isStackEnabled()) {
 
@@ -965,41 +951,32 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
       myActiveStack.remove(id, false); // hidden window should be at the top of stack
 
-      if (wasActive && moveFocus) {
-        if (myActiveStack.isEmpty()) {
-          if (hasOpenEditorFiles()) {
-            activateEditorComponentImpl(commandList, false);
-          }
-          else {
-            focusToolWinowByDefault(id);
-          }
+
+      if (wasActive && moveFocus && !myActiveStack.isEmpty()) {
+        final String toBeActivatedId = myActiveStack.pop();
+        if (getRegisteredInfoOrLogError(toBeActivatedId).isVisible() || isStackEnabled()) {
+          activateToolWindowImpl(toBeActivatedId, commandList, false, true);
         }
         else {
-          final String toBeActivatedId = myActiveStack.pop();
-          if (toBeActivatedId != null && (getInfo(toBeActivatedId).isVisible() || isStackEnabled())) {
-            activateToolWindowImpl(toBeActivatedId, commandList, false, true);
-          }
-          else {
-            focusToolWinowByDefault(id);
-          }
+          focusToolWindowByDefault(id);
         }
-      }
-    }
-    //todo[kb] it's just a temporary solution due a number of focus issues in JDK 7
-    if (SystemInfo.isJavaVersionAtLeast(7, 0, 0)) {
-      if (hasOpenEditorFiles()) {
-        activateEditorComponentImpl(commandList, false);
-      }
-      else {
-        focusToolWinowByDefault(id);
       }
     }
 
     execute(commandList);
   }
 
+  @Nonnull
+  private WindowInfoImpl getRegisteredInfoOrLogError(@Nonnull String id) {
+    WindowInfoImpl info = myLayout.getInfo(id, true);
+    if (info == null) {
+      throw new IllegalThreadStateException("window with id=\"" + id + "\" is unknown");
+    }
+    return info;
+  }
+
   @RequiredUIAccess
-  protected void focusToolWinowByDefault(@Nullable String idToIngore) {
+  protected void focusToolWindowByDefault(@Nullable String idToIngore) {
     String toFocus = null;
 
     for (String each : myActiveStack.getStack()) {
@@ -1143,9 +1120,6 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
         showToolWindowImpl(info.getId(), false, commandsList);
       }
     }
-    else if (wasActive) { // tool window was active but it cannot be activate again
-      activateEditorComponentImpl(commandsList, true);
-    }
 
     execute(commandsList);
     fireToolWindowRegistered(id);
@@ -1262,10 +1236,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   @Override
   public void loadState(Element state) {
     for (Element e : state.getChildren()) {
-      if (EDITOR_ELEMENT.equals(e.getName())) {
-        myEditorWasActive = Boolean.valueOf(e.getAttributeValue(ACTIVE_ATTR_VALUE)).booleanValue();
-      }
-      else if (ToolWindowLayout.TAG.equals(e.getName())) {
+      if (ToolWindowLayout.TAG.equals(e.getName())) {
         myLayout.readExternal(e);
       }
       else if (LAYOUT_TO_RESTORE.equals(e.getName())) {
@@ -1391,11 +1362,6 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
       if (info.isVisible()) {
         showToolWindowImpl(currentInfo.getId(), false, commandList);
       }
-    }
-    // if there is no any active tool window and editor is also inactive
-    // then activate editor
-    if (!myEditorWasActive && getActiveToolWindowId() == null) {
-      activateEditorComponentImpl(commandList, true);
     }
     execute(commandList);
   }

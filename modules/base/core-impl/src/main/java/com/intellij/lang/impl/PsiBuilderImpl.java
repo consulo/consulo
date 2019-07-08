@@ -555,7 +555,7 @@ public class PsiBuilderImpl extends UserDataHolderBase implements PsiBuilder {
       if (myHC == -1) {
         int hc = 0;
         if (myTokenType instanceof TokenWrapper) {
-          final String value = ((TokenWrapper)myTokenType).getValue();
+          final CharSequence value = ((TokenWrapper)myTokenType).getValue();
           for (int i = 0; i < value.length(); i++) {
             hc += value.charAt(i);
           }
@@ -893,12 +893,19 @@ public class PsiBuilderImpl extends UserDataHolderBase implements PsiBuilder {
   @Override
   @Nullable
   public String getTokenText() {
+    CharSequence tokenSequence = getTokenSequence();
+    return tokenSequence == null ? null : tokenSequence.toString();
+  }
+
+  @Nullable
+  @Override
+  public CharSequence getTokenSequence() {
     if (eof()) return null;
     final IElementType type = getTokenType();
     if (type instanceof TokenWrapper) {
       return ((TokenWrapper)type).getValue();
     }
-    return myText.subSequence(myLexStarts[myCurrentLexeme], myLexStarts[myCurrentLexeme + 1]).toString();
+    return myText.subSequence(myLexStarts[myCurrentLexeme], myLexStarts[myCurrentLexeme + 1]);
   }
 
   private void resizeLexemes(final int newSize) {
@@ -1514,7 +1521,7 @@ public class PsiBuilderImpl extends UserDataHolderBase implements PsiBuilder {
         final Token token = (Token)newNode;
 
         if (oldNode instanceof ForeignLeafPsiElement) {
-          return type instanceof ForeignLeafType && ((ForeignLeafType)type).getValue().equals(oldNode.getText()) ? ThreeState.YES : ThreeState.NO;
+          return type instanceof ForeignLeafType && StringUtil.equals(((ForeignLeafType)type).getValue(), oldNode.getText()) ? ThreeState.YES : ThreeState.NO;
         }
 
         if (oldNode instanceof LeafElement) {
@@ -1575,7 +1582,7 @@ public class PsiBuilderImpl extends UserDataHolderBase implements PsiBuilder {
         if (isForeign1 != isForeign2) return false;
 
         if (isForeign1) {
-          return n1.getText().equals(((ForeignLeafType)n2.getTokenType()).getValue());
+          return StringUtil.equals(n1.getText(), ((ForeignLeafType)n2.getTokenType()).getValue());
         }
 
         return ((LeafElement)n1).textMatches(((Token)n2).getText());

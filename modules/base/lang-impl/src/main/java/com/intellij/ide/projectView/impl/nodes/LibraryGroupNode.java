@@ -145,7 +145,7 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
   static VirtualFile[] getLibraryRoots(@Nonnull LibraryOrderEntry orderEntry) {
     Library library = orderEntry.getLibrary();
     if (library == null) return VirtualFile.EMPTY_ARRAY;
-    OrderRootType[] rootTypes = LibraryType.DEFAULT_EXTERNAL_ROOT_TYPES;
+    OrderRootType[] rootTypes = LibraryType.getDefaultExternalRootTypes();
     if (library instanceof LibraryEx) {
       if (((LibraryEx)library).isDisposed()) return VirtualFile.EMPTY_ARRAY;
       PersistentLibraryKind<?> libKind = ((LibraryEx)library).getKind();

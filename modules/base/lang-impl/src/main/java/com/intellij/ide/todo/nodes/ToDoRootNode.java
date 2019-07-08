@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,29 +21,32 @@ import com.intellij.ide.todo.ToDoSummary;
 import com.intellij.ide.todo.TodoTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.Project;
-
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-public final class ToDoRootNode extends BaseToDoNode{
+public class ToDoRootNode extends BaseToDoNode {
   private final SummaryNode mySummaryNode;
 
-  public ToDoRootNode(Project project, Object value, TodoTreeBuilder builder, ToDoSummary summary) {
+  public ToDoRootNode(Project project, Object value, TodoTreeBuilder builder, @Nonnull ToDoSummary summary) {
     super(project, value, builder);
-    mySummaryNode = new SummaryNode(getProject(), summary, myBuilder);
+    mySummaryNode = createSummaryNode(summary);
+  }
+
+  protected SummaryNode createSummaryNode(@Nonnull ToDoSummary summary) {
+    return new SummaryNode(getProject(), summary, myBuilder);
   }
 
   @Override
   @Nonnull
   public Collection<AbstractTreeNode> getChildren() {
-    return new ArrayList<AbstractTreeNode>(Collections.singleton(mySummaryNode));
+    return new ArrayList<>(Collections.singleton(mySummaryNode));
   }
 
   @Override
-  public void update(PresentationData presentation) {
+  public void update(@Nonnull PresentationData presentation) {
   }
 
   public Object getSummaryNode() {

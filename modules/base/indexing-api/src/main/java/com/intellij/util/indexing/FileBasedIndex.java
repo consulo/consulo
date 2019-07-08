@@ -28,6 +28,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Consumer;
 import com.intellij.util.Processor;
 import com.intellij.util.SystemProperties;
+import consulo.application.internal.PerApplicationInstance;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -40,19 +41,22 @@ import java.util.Set;
  * Author: dmitrylomov
  */
 public abstract class FileBasedIndex {
+  private static final PerApplicationInstance<FileBasedIndex> ourInstance = PerApplicationInstance.of(FileBasedIndex.class);
+
+  @Nonnull
+  public static FileBasedIndex getInstance() {
+    return ourInstance.get();
+  }
+
   public abstract void iterateIndexableFiles(@Nonnull ContentIterator processor, @Nonnull Project project, ProgressIndicator indicator);
 
   public void iterateIndexableFilesConcurrently(@Nonnull ContentIterator processor, @Nonnull Project project, ProgressIndicator indicator) {
     iterateIndexableFiles(processor, project, indicator);
   }
 
-  public abstract void registerIndexableSet(@Nonnull IndexableFileSet set, @javax.annotation.Nullable Project project);
+  public abstract void registerIndexableSet(@Nonnull IndexableFileSet set, @Nullable Project project);
 
   public abstract void removeIndexableSet(@Nonnull IndexableFileSet set);
-
-  public static FileBasedIndex getInstance() {
-    return ApplicationManager.getApplication().getComponent(FileBasedIndex.class);
-  }
 
   public static int getFileId(@Nonnull final VirtualFile file) {
     if (file instanceof VirtualFileWithId) {
@@ -67,13 +71,6 @@ public abstract class FileBasedIndex {
 
   public void requestRebuild(ID<?, ?> indexId) {
     requestRebuild(indexId, new Throwable());
-  }
-
-
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "FileBasedIndex";
   }
 
   @Nonnull
@@ -99,7 +96,7 @@ public abstract class FileBasedIndex {
                                       @Nullable VirtualFile inFile,
                                       @Nonnull FileBasedIndex.ValueProcessor<V> processor,
                                       @Nonnull GlobalSearchScope filter,
-                                      @javax.annotation.Nullable IdFilter idFilter) {
+                                      @Nullable IdFilter idFilter) {
     return processValues(indexId, dataKey, inFile, processor, filter);
   }
 
@@ -120,7 +117,7 @@ public abstract class FileBasedIndex {
    * DO NOT CALL DIRECTLY IN CLIENT CODE
    * The method is internal to indexing engine end is called internally. The method is public due to implementation details
    */
-  public abstract <K> void ensureUpToDate(@Nonnull ID<K, ?> indexId, @Nullable Project project, @javax.annotation.Nullable GlobalSearchScope filter);
+  public abstract <K> void ensureUpToDate(@Nonnull ID<K, ?> indexId, @Nullable Project project, @Nullable GlobalSearchScope filter);
 
   public abstract void requestRebuild(ID<?, ?> indexId, Throwable throwable);
 
@@ -146,7 +143,7 @@ public abstract class FileBasedIndex {
   public static void iterateRecursively(@Nullable final VirtualFile root,
                                         @Nonnull final ContentIterator processor,
                                         @Nullable final ProgressIndicator indicator,
-                                        @javax.annotation.Nullable final Set<VirtualFile> visitedRoots,
+                                        @Nullable final Set<VirtualFile> visitedRoots,
                                         @Nullable final ProjectFileIndex projectFileIndex) {
     if (root == null) {
       return;
@@ -195,7 +192,7 @@ public abstract class FileBasedIndex {
    * Author: dmitrylomov
    */
   public interface InputFilter {
-    boolean acceptInput(@javax.annotation.Nullable Project project, @Nonnull VirtualFile file);
+    boolean acceptInput(@Nullable Project project, @Nonnull VirtualFile file);
   }
 
   public interface FileTypeSpecificInputFilter extends InputFilter {

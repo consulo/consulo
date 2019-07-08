@@ -35,6 +35,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class BoundedTaskExecutor extends AbstractExecutorService {
   private volatile boolean myShutdown;
+  private volatile Exception myShutdownTrace;
   @Nonnull
   private final String myName;
   private final Executor myBackendExecutor;
@@ -93,6 +94,7 @@ public class BoundedTaskExecutor extends AbstractExecutorService {
   @Override
   public void shutdown() {
     if (myShutdown) throw new IllegalStateException("Already shutdown: "+this);
+    myShutdownTrace = new Exception("shutdown trace");
     myShutdown = true;
   }
 
@@ -138,7 +140,7 @@ public class BoundedTaskExecutor extends AbstractExecutorService {
   @Override
   public void execute(@Nonnull Runnable task) {
     if (isShutdown() && !(task instanceof LastTask)) {
-      throw new RejectedExecutionException("Already shutdown");
+      throw new RejectedExecutionException("Already shutdown", myShutdownTrace);
     }
     long status = incrementCounterAndTimestamp(); // increment inProgress and queue stamp atomically
 

@@ -27,7 +27,7 @@ import java.util.ServiceLoader;
  * @since 2018-08-23
  */
 public interface InjectingContainer {
-  static <S> InjectingContainer root() {
+  static InjectingContainer root() {
     for (RootInjectingContainerFactory factory : ServiceLoader.load(RootInjectingContainerFactory.class, RootInjectingContainerFactory.class.getClassLoader())) {
       return factory.getRoot();
     }
@@ -35,7 +35,7 @@ public interface InjectingContainer {
     throw new UnsupportedOperationException("RootInjectingContainerFactory not found");
   }
 
-  @Nullable
+  @Nonnull
   <T> T getInstance(@Nonnull Class<T> clazz);
 
   @Nonnull

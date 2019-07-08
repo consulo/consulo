@@ -18,7 +18,6 @@ package com.intellij.ide.projectView.impl.nodes;
 
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleFileIndex;
@@ -27,59 +26,49 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import javax.annotation.Nonnull;
+import consulo.annotations.RequiredReadAction;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 public class ProjectViewModuleNode extends AbstractModuleNode {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode");
-
   public ProjectViewModuleNode(Project project, Module value, ViewSettings viewSettings) {
     super(project, value, viewSettings);
   }
 
-  public ProjectViewModuleNode(Project project, Object value, ViewSettings viewSettings) {
-    this(project, (Module)value, viewSettings);
-  }
-
   @Override
   @Nonnull
+  @RequiredReadAction
   public Collection<AbstractTreeNode> getChildren() {
     Module module = getValue();
-    if (module == null) {  // module has been disposed
+    if (module == null || module.isDisposed()) {
       return Collections.emptyList();
     }
     ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
     ModuleFileIndex moduleFileIndex = rootManager.getFileIndex();
 
     final VirtualFile[] contentRoots = rootManager.getContentRoots();
-    final List<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>(contentRoots.length + 1);
-    final PsiManager psiManager = PsiManager.getInstance(getProject());
+    final List<AbstractTreeNode> children = new ArrayList<>(contentRoots.length + 1);
+    final PsiManager psiManager = PsiManager.getInstance(module.getProject());
     for (final VirtualFile contentRoot : contentRoots) {
       if (!moduleFileIndex.isInContent(contentRoot)) continue;
 
-      AbstractTreeNode child;
       if (contentRoot.isDirectory()) {
         PsiDirectory directory = psiManager.findDirectory(contentRoot);
-        LOG.assertTrue(directory != null);
-        child = new PsiDirectoryNode(getProject(), directory, getSettings());
+        if(directory != null) {
+          children.add(new PsiDirectoryNode(getProject(), directory, getSettings()));
+        }
       }
       else {
         PsiFile file = psiManager.findFile(contentRoot);
-        LOG.assertTrue(file != null);
-        child = new PsiFileNode(getProject(), file, getSettings());
+        if(file != null) {
+          children.add(new PsiFileNode(getProject(), file, getSettings()));
+        }
       }
-      children.add(child);
     }
-
-    /*
-    if (getSettings().isShowLibraryContents()) {
-      children.add(new LibraryGroupNode(getProject(), new LibraryGroupElement(getValue()), getSettings()));
-    }
-    */
     return children;
   }
 

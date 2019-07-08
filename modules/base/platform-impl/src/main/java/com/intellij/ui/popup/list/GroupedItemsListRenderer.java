@@ -28,11 +28,11 @@ public class GroupedItemsListRenderer<E> extends GroupedElementsRenderer.List im
   protected ListItemDescriptor<E> myDescriptor;
 
   protected JLabel myNextStepLabel;
+  protected int myCurrentIndex;
 
   public JLabel getNextStepLabel() {
     return myNextStepLabel;
   }
-
 
   public GroupedItemsListRenderer(ListItemDescriptor<E> descriptor) {
     myDescriptor = descriptor;
@@ -44,10 +44,10 @@ public class GroupedItemsListRenderer<E> extends GroupedElementsRenderer.List im
     boolean hasSeparator = myDescriptor.hasSeparatorAboveOf(value);
     if (index == 0 && StringUtil.isEmptyOrSpaces(caption)) hasSeparator = false;
 
-    Icon icon = myDescriptor.getIconFor(value);
-    final JComponent result = configureComponent(myDescriptor.getTextFor(value), myDescriptor.getTooltipFor(value),
-                                                 icon, icon, isSelected, hasSeparator,
-                                                 caption, -1);
+    Icon icon = isSelected ? myDescriptor.getSelectedIconFor(value) : myDescriptor.getIconFor(value);
+    final JComponent result = configureComponent(myDescriptor.getTextFor(value), myDescriptor.getTooltipFor(value), icon, icon, isSelected, hasSeparator, caption, -1);
+    myCurrentIndex = index;
+    myRendererComponent.setBackground(list.getBackground());
     customizeComponent(list, value, isSelected);
     return result;
   }
@@ -67,10 +67,8 @@ public class GroupedItemsListRenderer<E> extends GroupedElementsRenderer.List im
 
   protected final JComponent layoutComponent(JComponent middleItemComponent) {
     myNextStepLabel = new JLabel();
-    myNextStepLabel.setOpaque(true);
-    return JBUI.Panels.simplePanel(middleItemComponent)
-            .addToRight(myNextStepLabel)
-            .withBorder(getDefaultItemComponentBorder());
+    myNextStepLabel.setOpaque(false);
+    return JBUI.Panels.simplePanel(middleItemComponent).addToRight(myNextStepLabel).withBorder(getDefaultItemComponentBorder());
   }
 
   protected void customizeComponent(JList<? extends E> list, E value, boolean isSelected) {

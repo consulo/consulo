@@ -933,39 +933,25 @@ public abstract class JBTabsImpl extends JComponent
 
   @Nonnull
   private AsyncResult<Void> requestFocus(final JComponent toFocus) {
-    if (toFocus == null) return AsyncResult.done(null);
+    if (toFocus == null) return AsyncResult.resolved();
 
     if (myTestMode) {
-      getGlobalInstance().doWhenFocusSettlesDown(() -> {
-        getGlobalInstance().requestFocus(toFocus, true);
-      });
-      return AsyncResult.done(null);
+      getGlobalInstance().doWhenFocusSettlesDown(() -> getGlobalInstance().requestFocus(toFocus, true));
+      return AsyncResult.resolved();
     }
 
 
     if (isShowing()) {
-      return myFocusManager.requestFocus(new FocusCommand.ByComponent(toFocus, new Exception()), true);
+      return myFocusManager.requestFocus(toFocus, true);
     }
     else {
-      final AsyncResult<Void> result = new AsyncResult<>();
-      final FocusRequestor requestor = myFocusManager.getFurtherRequestor();
-      final Ref<Boolean> queued = new Ref<>(false);
-      Disposer.register(requestor, () -> {
-        if (!queued.get()) {
-          result.setRejected();
-        }
-      });
-      myDeferredFocusRequest = () -> {
-        queued.set(true);
-        requestor.requestFocus(new FocusCommand.ByComponent(toFocus, new Exception()), true).notify(result);
-      };
-      return result;
+      return AsyncResult.rejected();
     }
   }
 
   @Nonnull
   private AsyncResult<Void> removeDeferred() {
-    final AsyncResult<Void> callback = new AsyncResult<>();
+    final AsyncResult<Void> callback = AsyncResult.undefined();
 
     final long executionRequest = ++myRemoveDeferredRequest;
 

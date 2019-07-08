@@ -33,12 +33,12 @@ import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.application.impl.ReadMostlyRWLock;
 import com.intellij.openapi.components.ComponentConfig;
-import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
@@ -53,7 +53,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.PausesStat;
-import com.intellij.util.ReflectionUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.containers.Stack;
@@ -171,6 +170,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   private final ExecutorService myThreadExecutorsService = PooledThreadExecutor.INSTANCE;
 
+  // FIXME [VISTALL] we need this?
   protected final Stack<Class> myWriteActionsStack = new Stack<>();
 
   private final long myStartTime;
@@ -182,7 +182,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   private volatile boolean myWriteActionPending;
 
   protected int myWriteStackBase;
-  protected volatile Thread myWriteActionThread;
 
   protected boolean myGatherStatistics;
 
@@ -695,18 +694,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     finally {
       endWrite(clazz);
     }
-  }
-
-  @RequiredUIAccess
-  @Override
-  public boolean hasWriteAction(@Nonnull Class<?> actionClass) {
-    assertReadAccessAllowed();
-
-    for (int i = myWriteActionsStack.size() - 1; i >= 0; i--) {
-      Class action = myWriteActionsStack.get(i);
-      if (actionClass == action || ReflectionUtil.isAssignable(actionClass, action)) return true;
-    }
-    return false;
   }
 
   @Override

@@ -15,31 +15,24 @@
  */
 package com.intellij.util.lang;
 
-import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.ShutDownTracker;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.SmartList;
-import com.intellij.util.containers.HashMap;
+import com.intellij.openapi.diagnostic.LoggerRt;
 import com.intellij.util.containers.Stack;
-import com.intellij.util.io.URLUtil;
-
 import javax.annotation.Nullable;
-import java.io.*;
+
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.jar.Attributes;
-import java.util.jar.JarInputStream;
-import java.util.jar.Manifest;
 
 public class ClassPath {
-  private static final ResourceStringLoaderIterator ourCheckedIterator = new ResourceStringLoaderIterator(true);
-  private static final ResourceStringLoaderIterator ourUncheckedIterator = new ResourceStringLoaderIterator(false);
+  private static final ResourceStringLoaderIterator ourResourceIterator = new ResourceStringLoaderIterator();
   private static final LoaderCollector ourLoaderCollector = new LoaderCollector();
+  public static final String CLASSPATH_JAR_FILE_NAME_PREFIX = "classpath";
 
   private final Stack<URL> myUrls = new Stack<URL>();
   private final List<Loader> myLoaders = new ArrayList<Loader>();
@@ -49,16 +42,19 @@ public class ClassPath {
   private final AtomicInteger myLastLoaderProcessed = new AtomicInteger();
   private final Map<URL, Loader> myLoadersMap = new HashMap<URL, Loader>();
   private final ClasspathCache myCache = new ClasspathCache();
+  private final Set<URL> myURLsWithProtectionDomain;
 
-  private final boolean myCanLockJars;
+  final boolean myCanLockJars; // true implies that the .jar file will not be modified in the lifetime of the JarLoader
   private final boolean myCanUseCache;
   private final boolean myAcceptUnescapedUrls;
-  private final boolean myPreloadJarContents;
-  private final boolean myCanHavePersistentIndex;
+  final boolean myPreloadJarContents;
+  final boolean myCanHavePersistentIndex;
+  final boolean myLazyClassloadingCaches;
   @Nullable
   private final CachePoolImpl myCachePool;
   @Nullable
   private final UrlClassLoader.CachingCondition myCachingCondition;
+  final boolean myLogErrorOnMissingJar;
 
   public ClassPath(List<URL> urls,
                    boolean canLockJars,
@@ -67,18 +63,27 @@ public class ClassPath {
                    boolean preloadJarContents,
                    boolean canHavePersistentIndex,
                    @Nullable CachePoolImpl cachePool,
-                   @Nullable UrlClassLoader.CachingCondition cachingCondition) {
+                   @Nullable UrlClassLoader.CachingCondition cachingCondition,
+                   boolean logErrorOnMissingJar,
+                   boolean lazyClassloadingCaches,
+                   Set<URL> urlsWithProtectionDomain) {
+    myLazyClassloadingCaches = lazyClassloadingCaches;
     myCanLockJars = canLockJars;
-    myCanUseCache = canUseCache;
+    myCanUseCache = canUseCache && !myLazyClassloadingCaches;
     myAcceptUnescapedUrls = acceptUnescapedUrls;
     myPreloadJarContents = preloadJarContents;
     myCachePool = cachePool;
     myCachingCondition = cachingCondition;
     myCanHavePersistentIndex = canHavePersistentIndex;
+    myLogErrorOnMissingJar = logErrorOnMissingJar;
+    myURLsWithProtectionDomain = urlsWithProtectionDomain;
     push(urls);
   }
 
-  /** @deprecated to be removed in IDEA 15 */
+  /**
+   * @deprecated Adding additional urls to classpath at runtime could lead to hard-to-debug errors
+   */
+  @Deprecated
   void addURL(URL url) {
     push(Collections.singletonList(url));
   }
@@ -95,31 +100,29 @@ public class ClassPath {
   }
 
   @Nullable
-  public Resource getResource(String s, boolean flag) {
+  public Resource getResource(String s) {
     final long started = startTiming();
     try {
+      String shortName = ClasspathCache.transformName(s);
+
       int i;
       if (myCanUseCache) {
-        boolean allUrlsWereProcessed;
-
-        allUrlsWereProcessed = myAllUrlsWereProcessed;
+        boolean allUrlsWereProcessed = myAllUrlsWereProcessed;
         i = allUrlsWereProcessed ? 0 : myLastLoaderProcessed.get();
 
-        Resource prevResource = myCache.iterateLoaders(s, flag ? ourCheckedIterator : ourUncheckedIterator, s, this);
+        Resource prevResource = myCache.iterateLoaders(s, ourResourceIterator, s, this, shortName);
         if (prevResource != null || allUrlsWereProcessed) return prevResource;
       }
       else {
         i = 0;
       }
 
-      String shortName = ClasspathCache.transformName(s);
-
       Loader loader;
       while ((loader = getLoader(i++)) != null) {
         if (myCanUseCache) {
-          if (!myCache.loaderHasName(s, shortName, loader)) continue;
+          if (!loader.containsName(s, shortName)) continue;
         }
-        Resource resource = loader.getResource(s, flag);
+        Resource resource = loader.getResource(s);
         if (resource != null) {
           return resource;
         }
@@ -132,34 +135,40 @@ public class ClassPath {
     return null;
   }
 
-  public Enumeration<URL> getResources(final String name, final boolean check) {
-    return new MyEnumeration(name, check);
+  public Enumeration<URL> getResources(final String name) {
+    return new MyEnumeration(name);
   }
 
   @Nullable
-  private synchronized Loader getLoader(int i) {
+  private Loader getLoader(int i) {
+    if (i < myLastLoaderProcessed.get()) { // volatile read
+      return myLoaders.get(i);
+    }
+
+    return getLoaderSlowPath(i);
+  }
+
+  @Nullable
+  private synchronized Loader getLoaderSlowPath(int i) {
     while (myLoaders.size() < i + 1) {
-      boolean lastOne;
       URL url;
       synchronized (myUrls) {
         if (myUrls.empty()) {
           if (myCanUseCache) {
-            myCache.nameSymbolsLoaded();
             myAllUrlsWereProcessed = true;
           }
           return null;
         }
         url = myUrls.pop();
-        lastOne = myUrls.isEmpty();
       }
 
       if (myLoadersMap.containsKey(url)) continue;
 
       try {
-        initLoaders(url, lastOne, myLoaders.size());
+        initLoaders(url, myLoaders.size());
       }
       catch (IOException e) {
-        Logger.getInstance(ClassPath.class).info("url: " + url, e);
+        LoggerRt.getInstance(ClassPath.class).info("url: " + url, e);
       }
     }
 
@@ -174,11 +183,7 @@ public class ClassPath {
     return result;
   }
 
-  /**
-   * Used in com.intellij.openapi.projectRoots.JdkUtil#isClassPathJarEnabled(List, String)
-   * as a condition that UrlClassLoader supports classpath jars. Please modify it accordingly.
-   */
-  private void initLoaders(final URL url, boolean lastOne, int index) throws IOException {
+  private void initLoaders(final URL url, int index) throws IOException {
     String path;
 
     if (myAcceptUnescapedUrls) {
@@ -189,41 +194,48 @@ public class ClassPath {
         path = url.toURI().getSchemeSpecificPart();
       }
       catch (URISyntaxException e) {
-        Logger.getInstance(ClassPath.class).error("url: " + url, e);
+        LoggerRt.getInstance(ClassPath.class).error("url: " + url, e);
         path = url.getFile();
       }
     }
 
-    if (path != null && URLUtil.FILE_PROTOCOL.equals(url.getProtocol())) {
-      Loader loader = createLoader(url, index, new File(path), true);
+    if (path != null && "file".equals(url.getProtocol())) {
+      File file = new File(path);
+      Loader loader = createLoader(url, index, file, file.getName().startsWith(CLASSPATH_JAR_FILE_NAME_PREFIX));
       if (loader != null) {
-        initLoader(url, lastOne, loader);
+        initLoader(url, loader);
       }
     }
   }
 
   private Loader createLoader(URL url, int index, File file, boolean processRecursively) throws IOException {
     if (file.isDirectory()) {
-      return new FileLoader(url, index, myCanHavePersistentIndex);
+      return new FileLoader(url, index, this);
     }
-    else if (file.isFile()) {
-      Loader loader = new JarLoader(url, myCanLockJars, index, myPreloadJarContents);
+    if (file.isFile()) {
+      JarLoader loader;
+      if (myURLsWithProtectionDomain.contains(url)) {
+        loader = new SecureJarLoader(url, index, this);
+      }
+      else {
+        loader = new JarLoader(url, index, this);
+      }
       if (processRecursively) {
-        String[] referencedJars = loadManifestClasspath(file);
+        String[] referencedJars = loadManifestClasspath(loader);
         if (referencedJars != null) {
+          long s2 = ourLogTiming ? System.nanoTime() : 0;
+          List<URL> urls = new ArrayList<URL>(referencedJars.length);
           for (String referencedJar : referencedJars) {
             try {
-              URI uri = new URI(referencedJar);
-              File referencedFile = new File(uri);
-              URL referencedUrl = uri.toURL();
-              Loader referencedLoader = createLoader(referencedUrl, index++, referencedFile, false);
-              if (referencedLoader != null) {
-                initLoader(referencedUrl, false, referencedLoader);
-              }
+              urls.add(UrlClassLoader.internProtocol(new URI(referencedJar).toURL()));
             }
             catch (Exception e) {
-              Logger.getInstance(ClassPath.class).warn("url: " + url + " / " + referencedJar, e);
+              LoggerRt.getInstance(ClassPath.class).warn("url: " + url + " / " + referencedJar, e);
             }
+          }
+          push(urls);
+          if (ourLogTiming) {
+            System.out.println("Loaded all " + referencedJars.length + " urls " + (System.nanoTime() - s2) / 1000000 + "ms");
           }
         }
       }
@@ -232,7 +244,7 @@ public class ClassPath {
     return null;
   }
 
-  private void initLoader(URL url, boolean lastOne, Loader loader) throws IOException {
+  private void initLoader(URL url, Loader loader) throws IOException {
     if (myCanUseCache) {
       ClasspathCache.LoaderData data = myCachePool == null ? null : myCachePool.getCachedData(url);
       if (data == null) {
@@ -243,37 +255,54 @@ public class ClassPath {
       }
       myCache.applyLoaderData(data, loader);
 
+      boolean lastOne;
+      synchronized (myUrls) {
+        lastOne = myUrls.isEmpty();
+      }
+
       if (lastOne) {
-        myCache.nameSymbolsLoaded();
         myAllUrlsWereProcessed = true;
       }
-      myLastLoaderProcessed.incrementAndGet();
-      //assert myLastLoaderProcessed.get() == myLoaders.size();
     }
     myLoaders.add(loader);
     myLoadersMap.put(url, loader);
+    myLastLoaderProcessed.incrementAndGet(); // volatile write
+  }
+
+  Attributes getManifestData(URL url) {
+    return myCanUseCache && myCachePool != null ? myCachePool.getManifestData(url) : null;
+  }
+
+  void cacheManifestData(URL url, Attributes manifestAttributes) {
+    if (myCanUseCache && myCachePool != null && myCachingCondition != null && myCachingCondition.shouldCacheData(url)) {
+      myCachePool.cacheManifestData(url, manifestAttributes);
+    }
   }
 
   private class MyEnumeration implements Enumeration<URL> {
-    private int myIndex = 0;
-    private Resource myRes = null;
+    private int myIndex;
+    private Resource myRes;
     private final String myName;
     private final String myShortName;
-    private final boolean myCheck;
     private final List<Loader> myLoaders;
 
-    public MyEnumeration(String name, boolean check) {
+    MyEnumeration(String name) {
       myName = name;
       myShortName = ClasspathCache.transformName(name);
-      myCheck = check;
       List<Loader> loaders = null;
 
       if (myCanUseCache && myAllUrlsWereProcessed) {
-        loaders = new SmartList<Loader>();
-        myCache.iterateLoaders(name, ourLoaderCollector, loaders, this);
-        if (!name.endsWith("/")) {
-          myCache.iterateLoaders(name.concat("/"), ourLoaderCollector, loaders, this);
+        Collection<Loader> loadersSet = new LinkedHashSet<Loader>();
+        myCache.iterateLoaders(name, ourLoaderCollector, loadersSet, this, myShortName);
+
+        if (name.endsWith("/")) {
+          myCache.iterateLoaders(name.substring(0, name.length() - 1), ourLoaderCollector, loadersSet, this, myShortName);
         }
+        else {
+          myCache.iterateLoaders(name + "/", ourLoaderCollector, loadersSet, this, myShortName);
+        }
+
+        loaders = new ArrayList<Loader>(loadersSet);
       }
 
       myLoaders = loaders;
@@ -288,18 +317,18 @@ public class ClassPath {
         if (myLoaders != null) {
           while (myIndex < myLoaders.size()) {
             loader = myLoaders.get(myIndex++);
-            if (!myCache.loaderHasName(myName, myShortName, loader)) {
+            if (!loader.containsName(myName, myShortName)) {
               myRes = null;
               continue;
             }
-            myRes = loader.getResource(myName, myCheck);
+            myRes = loader.getResource(myName);
             if (myRes != null) return true;
           }
         }
         else {
           while ((loader = getLoader(myIndex++)) != null) {
-            if (myCanUseCache && !myCache.loaderHasName(myName, myShortName, loader)) continue;
-            myRes = loader.getResource(myName, myCheck);
+            if (myCanUseCache && !loader.containsName(myName, myShortName)) continue;
+            myRes = loader.getResource(myName);
             if (myRes != null) return true;
           }
         }
@@ -311,10 +340,12 @@ public class ClassPath {
       return false;
     }
 
+    @Override
     public boolean hasMoreElements() {
       return next();
     }
 
+    @Override
     public URL nextElement() {
       if (!next()) {
         throw new NoSuchElementException();
@@ -328,126 +359,109 @@ public class ClassPath {
   }
 
   private static class ResourceStringLoaderIterator extends ClasspathCache.LoaderIterator<Resource, String, ClassPath> {
-    private final boolean myFlag;
-
-    private ResourceStringLoaderIterator(boolean flag) {
-      myFlag = flag;
-    }
-
     @Override
-    Resource process(Loader loader, String s, ClassPath classPath) {
-      if (!classPath.myCache.loaderHasName(s, ClasspathCache.transformName(s), loader)) return null;
-      Resource resource = loader.getResource(s, myFlag);
-      if (resource != null) printOrder(loader, s, resource);
+    Resource process(Loader loader, String s, ClassPath classPath, String shortName) {
+      if (!loader.containsName(s, shortName)) return null;
+      Resource resource = loader.getResource(s);
+      if (resource != null && ourResourceLoadingLogger != null) {
+        long resourceSize;
+        try {
+          resourceSize = resource instanceof MemoryResource ? resource.getBytes().length : -1;
+        }
+        catch (IOException e) {
+          resourceSize = -1;
+        }
+        ourResourceLoadingLogger.logResource(s, loader.getBaseURL(), resourceSize);
+      }
       return resource;
     }
   }
 
-  private static class LoaderCollector extends ClasspathCache.LoaderIterator<Object, List<Loader>, Object> {
+  private static class LoaderCollector extends ClasspathCache.LoaderIterator<Object, Collection<Loader>, Object> {
     @Override
-    Object process(Loader loader, List<Loader> parameter, Object parameter2) {
+    Object process(Loader loader, Collection<Loader> parameter, Object parameter2, String shortName) {
       parameter.add(loader);
       return null;
     }
   }
 
-  private static final boolean ourDumpOrder = "true".equals(System.getProperty("idea.dump.order"));
-  private static PrintStream ourOrder;
-  private static long ourOrderSize;
-  private static final Set<String> ourOrderedUrls = new HashSet<String>();
+  public interface ResourceLoadingLogger {
+    void logResource(String url, URL baseLoaderURL, long resourceSize);
+  }
 
-  @SuppressWarnings("UseOfSystemOutOrSystemErr")
-  private static synchronized void printOrder(Loader loader, String url, Resource resource) {
-    if (!ourDumpOrder) return;
-    if (!ourOrderedUrls.add(url)) return;
+  private static final ResourceLoadingLogger ourResourceLoadingLogger;
 
-    String home = FileUtil.toSystemIndependentName(PathManager.getHomePath());
-    try {
-      if (resource instanceof MemoryResource) {
-        ourOrderSize += resource.getBytes().length;
-      }
-    }
-    catch (IOException e) {
-      e.printStackTrace(System.out);
-    }
-
-    if (ourOrder == null) {
-      final File orderFile = new File(PathManager.getBinPath(), "order.txt");
+  static {
+    String className = System.getProperty("intellij.class.resources.loading.logger");
+    ResourceLoadingLogger resourceLoadingLogger = null;
+    if (className != null) {
       try {
-        if (!FileUtil.ensureCanCreateFile(orderFile)) return;
-        ourOrder = new PrintStream(new FileOutputStream(orderFile, true));
-        ShutDownTracker.getInstance().registerShutdownTask(new Runnable() {
-          @Override
-          public void run() {
-            closeOrderStream();
-          }
-        });
+        resourceLoadingLogger = (ResourceLoadingLogger)Class.forName(className).newInstance();
       }
-      catch (IOException e) {
-        return;
+      catch (Throwable e) {
+        LoggerRt.getInstance(ClassPath.class).error("Failed to instantiate resource loading logger " + className, e);
       }
     }
-
-    if (ourOrder != null) {
-      String jarURL = FileUtil.toSystemIndependentName(loader.getBaseURL().getFile());
-      jarURL = StringUtil.trimStart(jarURL, "file:/");
-      if (jarURL.startsWith(home)) {
-        jarURL = jarURL.replaceFirst(home, "");
-        jarURL = StringUtil.trimEnd(jarURL, "!/");
-        ourOrder.println(url + ":" + jarURL);
-      }
-    }
+    ourResourceLoadingLogger = resourceLoadingLogger;
   }
 
-  @SuppressWarnings("UseOfSystemOutOrSystemErr")
-  private static synchronized void closeOrderStream() {
-    ourOrder.close();
-    System.out.println(ourOrderSize);
-  }
-
-  private static final boolean ourLogTiming = Boolean.getBoolean("idea.print.classpath.timing");
-  private static long ourTotalTime = 0;
-  private static int ourTotalRequests = 0;
+  static final boolean ourLogTiming = Boolean.getBoolean("idea.print.classpath.timing");
+  private static final AtomicLong ourTotalTime = new AtomicLong();
+  private static final AtomicInteger ourTotalRequests = new AtomicInteger();
+  private static final ThreadLocal<Boolean> ourDoingTiming = new ThreadLocal<Boolean>();
 
   private static long startTiming() {
-    return ourLogTiming ? System.nanoTime() : 0;
+    if (!ourLogTiming) return 0;
+    if (ourDoingTiming.get() != null) {
+      return 0;
+    }
+    ourDoingTiming.set(Boolean.TRUE);
+    return System.nanoTime();
   }
 
   @SuppressWarnings("UseOfSystemOutOrSystemErr")
   private static void logTiming(ClassPath path, long started, String msg) {
     if (!ourLogTiming) return;
+    if (started == 0) {
+      return;
+    }
+    ourDoingTiming.set(null);
 
     long time = System.nanoTime() - started;
-    ourTotalTime += time;
-    ++ourTotalRequests;
+    long totalTime = ourTotalTime.addAndGet(time);
+    int totalRequests = ourTotalRequests.incrementAndGet();
     if (time > 10000000L) {
-      System.out.println((time / 1000000) + " ms for " + msg);
+      System.out.println(time / 1000000 + " ms for " + msg);
     }
-    if (ourTotalRequests % 1000 == 0) {
-      System.out.println(path.toString() + ", requests:" + ourTotalRequests + ", time:" + (ourTotalTime / 1000000) + "ms");
+    if (totalRequests % 10000 == 0) {
+      System.out.println(path.getClass().getClassLoader() + ", requests:" + ourTotalRequests + ", time:" + (totalTime / 1000000) + "ms");
     }
   }
 
-  private static String[] loadManifestClasspath(File file) {
+  static {
+    if (ourLogTiming) {
+      Runtime.getRuntime().addShutdownHook(new Thread("Shutdown hook for tracing classloading information") {
+        @Override
+        public void run() {
+          System.out.println("Classloading requests:" + ClassPath.class.getClassLoader() + "," + ourTotalRequests + ", time:" + (ourTotalTime.get() / 1000000) + "ms");
+        }
+      });
+    }
+  }
+
+  private static String[] loadManifestClasspath(JarLoader loader) {
     try {
-      JarInputStream inputStream = new JarInputStream(new FileInputStream(file));
-      try {
-        Manifest manifest = inputStream.getManifest();
-        if (manifest != null) {
-          final String classPath = manifest.getMainAttributes().getValue(Attributes.Name.CLASS_PATH);
-          if (classPath != null) {
-            String[] urls = classPath.split(" ");
-            if (urls.length > 0 && urls[0].startsWith("file:")) {
-              return urls;
-            }
-          }
+      String classPath = loader.getClassPathManifestAttribute();
+
+      if (classPath != null) {
+        String[] urls = classPath.split(" ");
+        if (urls.length > 0 && urls[0].startsWith("file:")) {
+          return urls;
         }
       }
-      finally {
-        inputStream.close();
-      }
     }
-    catch (Exception ignore) { }
+    catch (Exception ignore) {
+    }
     return null;
   }
 }

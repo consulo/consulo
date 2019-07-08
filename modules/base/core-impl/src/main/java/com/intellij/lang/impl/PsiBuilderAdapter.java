@@ -22,6 +22,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.diff.FlyweightCapableTreeStructure;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -51,7 +52,8 @@ public class PsiBuilderAdapter implements PsiBuilder {
     myDelegate.advanceLexer();
   }
 
-  @Override @Nullable
+  @Override
+  @Nullable
   public IElementType getTokenType() {
     return myDelegate.getTokenType();
   }
@@ -91,10 +93,17 @@ public class PsiBuilderAdapter implements PsiBuilder {
     return myDelegate.rawTokenIndex();
   }
 
-  @Override @Nullable
+  @Override
+  @Nullable
   @NonNls
   public String getTokenText() {
     return myDelegate.getTokenText();
+  }
+
+  @Nullable
+  @Override
+  public CharSequence getTokenSequence() {
+    return myDelegate.getTokenSequence();
   }
 
   @Override
@@ -137,12 +146,14 @@ public class PsiBuilderAdapter implements PsiBuilder {
     myDelegate.enforceCommentTokens(tokens);
   }
 
-  @Override @Nullable
+  @Override
+  @Nullable
   public LighterASTNode getLatestDoneMarker() {
     return myDelegate.getLatestDoneMarker();
   }
 
-  @Override @Nullable
+  @Override
+  @Nullable
   public <T> T getUserData(@Nonnull final Key<T> key) {
     return myDelegate.getUserData(key);
   }

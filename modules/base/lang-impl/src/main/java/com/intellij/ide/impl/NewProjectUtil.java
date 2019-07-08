@@ -21,19 +21,18 @@ package com.intellij.ide.impl;
 
 import com.intellij.ide.impl.util.NewProjectUtilPlatform;
 import com.intellij.ide.util.newProjectWizard.AddModuleWizard;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
@@ -43,34 +42,17 @@ import com.intellij.util.ui.UIUtil;
 import consulo.compiler.CompilerConfiguration;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 
 public class NewProjectUtil extends NewProjectUtilPlatform {
-  public static final Logger LOGGER = Logger.getInstance(NewProjectUtil.class);
+  private static final Logger LOG = Logger.getInstance(NewProjectUtil.class);
 
   private NewProjectUtil() {
-  }
-
-  public static void createNewProject(Project projectToClose, @Nullable final String defaultPath) {
-    final boolean proceed = ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
-      @Override
-      public void run() {
-        ProjectManager.getInstance().getDefaultProject(); //warm up components
-      }
-    }, ProjectBundle.message("project.new.wizard.progress.title"), true, null);
-    if (!proceed) return;
-    final AddModuleWizard dialog = new AddModuleWizard(null, ModulesProvider.EMPTY_MODULES_PROVIDER, defaultPath);
-    dialog.show();
-    if (!dialog.isOK()) {
-      return;
-    }
-
-    createFromWizard(dialog, projectToClose);
   }
 
   @Nullable
@@ -100,7 +82,7 @@ public class NewProjectUtil extends NewProjectUtilPlatform {
 
     try {
       File projectDir = new File(projectFilePath).getParentFile();
-      LOGGER.assertTrue(projectDir != null, "Cannot create project in '" + projectFilePath + "': no parent file exists");
+      LOG.assertTrue(projectDir != null, "Cannot create project in '" + projectFilePath + "': no parent file exists");
       FileUtil.ensureExists(projectDir);
       final File ideaDir = new File(projectFilePath, Project.DIRECTORY_STORE_FOLDER);
       FileUtil.ensureExists(ideaDir);
@@ -108,8 +90,7 @@ public class NewProjectUtil extends NewProjectUtilPlatform {
       final Project newProject;
       if (importContext == null || !importContext.isUpdate()) {
         String name = wizard.getProjectName();
-        newProject =
-                importProvider == null ? projectManager.newProject(name, projectFilePath, true, false) : projectManager.createProject(name, projectFilePath);
+        newProject = importProvider == null ? projectManager.newProject(name, projectFilePath, true, false) : projectManager.createProject(name, projectFilePath);
       }
       else {
         newProject = projectToClose;
@@ -141,10 +122,6 @@ public class NewProjectUtil extends NewProjectUtilPlatform {
 
       if (!ApplicationManager.getApplication().isUnitTestMode()) {
         newProject.save();
-      }
-
-      if (importProvider != null && !importProvider.validate(projectToClose, newProject)) {
-        return projectToClose;
       }
 
       if (newProject != projectToClose && !ApplicationManager.getApplication().isUnitTestMode()) {
@@ -183,7 +160,7 @@ public class NewProjectUtil extends NewProjectUtilPlatform {
         }
       });
 
-      if(openAfter) {
+      if (openAfter) {
         if (newProject != projectToClose) {
           ProjectUtil.updateLastProjectLocation(projectFilePath);
 
@@ -214,5 +191,76 @@ public class NewProjectUtil extends NewProjectUtilPlatform {
 
   public static void disposeContext(@Nonnull AddModuleWizard wizard) {
     Disposer.dispose(wizard.getWizardContext());
+  }
+
+  @Nonnull
+  @SuppressWarnings("unchecked")
+  public static AsyncResult<Project> createFromWizardAsync(@Nonnull AddModuleWizard wizard) {
+    final ProjectManagerEx projectManager = ProjectManagerEx.getInstanceEx();
+    final String projectFilePath = wizard.getNewProjectFilePath();
+    final ModuleImportProvider importProvider = wizard.getImportProvider();
+
+    ModuleImportContext importContext = importProvider == null ? null : wizard.getWizardContext().getModuleImportContext(importProvider);
+    final String compileOutput = wizard.getNewCompileOutput();
+
+    disposeContext(wizard);
+
+    boolean isUnitTestMode = Application.get().isUnitTestMode();
+    try {
+      File projectDir = new File(projectFilePath).getParentFile();
+      LOG.assertTrue(projectDir != null, "Cannot create project in '" + projectFilePath + "': no parent file exists");
+      FileUtil.ensureExists(projectDir);
+      final File projectConfigDir = new File(projectFilePath, Project.DIRECTORY_STORE_FOLDER);
+      FileUtil.ensureExists(projectConfigDir);
+
+      final Project newProject;
+      if (importContext == null || !importContext.isUpdate()) {
+        String name = wizard.getProjectName();
+        newProject = importProvider == null ? projectManager.newProject(name, projectFilePath, true, false) : projectManager.createProject(name, projectFilePath);
+      }
+      else {
+        newProject = null;
+      }
+
+      if (newProject == null) return AsyncResult.rejected();
+
+      String canonicalPath = compileOutput;
+      try {
+        canonicalPath = FileUtil.resolveShortWindowsName(compileOutput);
+      }
+      catch (IOException e) {
+        //file doesn't exist
+      }
+      canonicalPath = FileUtil.toSystemIndependentName(canonicalPath);
+      CompilerConfiguration.getInstance(newProject).setCompilerOutputUrl(VfsUtilCore.pathToUrl(canonicalPath));
+
+      if (!isUnitTestMode) {
+        newProject.save();
+      }
+
+      if (importProvider != null) {
+        importProvider.commit(importContext, newProject, null, ModulesProvider.EMPTY_MODULES_PROVIDER, null);
+      }
+
+      final boolean need2OpenProjectStructure = importContext == null || importContext.isOpenProjectSettingsAfter();
+      StartupManager.getInstance(newProject).registerPostStartupActivity((ui) -> {
+        // ensure the dialog is shown after all startup activities are done
+        ui.give(() -> {
+          if (newProject.isDisposed() || isUnitTestMode) return;
+
+          if (need2OpenProjectStructure) {
+            ModulesConfigurator.showDialog(newProject, null, null);
+          }
+        });
+      });
+
+      if (!isUnitTestMode) {
+        newProject.save();
+      }
+      return AsyncResult.resolved(newProject);
+    }
+    catch (Exception e) {
+      return AsyncResult.<Project>undefined().rejectWithThrowable(e);
+    }
   }
 }

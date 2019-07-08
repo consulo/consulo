@@ -23,12 +23,12 @@ import com.intellij.ide.todo.ToDoSummary;
 import com.intellij.ide.todo.TodoFileDirAndModuleComparator;
 import com.intellij.ide.todo.TodoTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
@@ -39,45 +39,40 @@ import java.util.Collections;
 import java.util.Iterator;
 
 public class SummaryNode extends BaseToDoNode<ToDoSummary> {
-  public SummaryNode(Project project, ToDoSummary value, TodoTreeBuilder builder) {
+  public SummaryNode(Project project, @Nonnull ToDoSummary value, TodoTreeBuilder builder) {
     super(project, value, builder);
   }
 
   @Override
   @Nonnull
   public Collection<AbstractTreeNode> getChildren() {
-    ArrayList<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
+    ArrayList<AbstractTreeNode> children = new ArrayList<>();
 
     final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(getProject()).getFileIndex();
     if (myToDoSettings.isModulesShown()) {
-      for (Iterator i = myBuilder.getAllFiles(); i.hasNext();) {
+      for (Iterator i = myBuilder.getAllFiles(); i.hasNext(); ) {
         final PsiFile psiFile = (PsiFile)i.next();
         if (psiFile == null) { // skip invalid PSI files
           continue;
         }
         final VirtualFile virtualFile = psiFile.getVirtualFile();
-        Module module = projectFileIndex.getModuleForFile(virtualFile);
-        if (module != null) {
-          ModuleToDoNode moduleToDoNode = new ModuleToDoNode(getProject(), module, myBuilder);
-          if (!children.contains(moduleToDoNode)) {
-            children.add(moduleToDoNode);
-          }
-        }
+        createModuleTodoNodeForFile(children, projectFileIndex, virtualFile);
       }
     }
     else {
       if (myToDoSettings.getIsPackagesShown()) {
-        if (myBuilder instanceof CurrentFileTodosTreeBuilder){
+        if (myBuilder instanceof CurrentFileTodosTreeBuilder) {
           final Iterator allFiles = myBuilder.getAllFiles();
-          if(allFiles.hasNext()){
+          if (allFiles.hasNext()) {
             children.add(new TodoFileNode(myProject, (PsiFile)allFiles.next(), myBuilder, false));
           }
-        } else {
-          TodoTreeHelper.addPackagesToChildren(getProject(), children, null, myBuilder);
+        }
+        else {
+          TodoTreeHelper.addPackagesToChildren(children, getProject(), null, myBuilder);
         }
       }
       else {
-        for (Iterator i = myBuilder.getAllFiles(); i.hasNext();) {
+        for (Iterator i = myBuilder.getAllFiles(); i.hasNext(); ) {
           final PsiFile psiFile = (PsiFile)i.next();
           if (psiFile == null) { // skip invalid PSI files
             continue;
@@ -94,8 +89,19 @@ public class SummaryNode extends BaseToDoNode<ToDoSummary> {
 
   }
 
+  protected void createModuleTodoNodeForFile(ArrayList<? super AbstractTreeNode> children, ProjectFileIndex projectFileIndex, VirtualFile virtualFile) {
+    Module module = projectFileIndex.getModuleForFile(virtualFile);
+    if (module != null) {
+      ModuleToDoNode moduleToDoNode = new ModuleToDoNode(getProject(), module, myBuilder);
+      if (!children.contains(moduleToDoNode)) {
+        children.add(moduleToDoNode);
+      }
+    }
+  }
+
   @Override
-  public void update(PresentationData presentation) {
+  public void update(@Nonnull PresentationData presentation) {
+    if (DumbService.getInstance(getProject()).isDumb()) return;
     int todoItemCount = getTodoItemCount(getValue());
     int fileCount = getFileCount(getValue());
     presentation.setPresentableText(IdeBundle.message("node.todo.summary", todoItemCount, fileCount));
@@ -109,7 +115,7 @@ public class SummaryNode extends BaseToDoNode<ToDoSummary> {
   @Override
   public int getFileCount(ToDoSummary summary) {
     int count = 0;
-    for (Iterator i = myBuilder.getAllFiles(); i.hasNext();) {
+    for (Iterator i = myBuilder.getAllFiles(); i.hasNext(); ) {
       PsiFile psiFile = (PsiFile)i.next();
       if (psiFile == null) { // skip invalid PSI files
         continue;
@@ -124,16 +130,9 @@ public class SummaryNode extends BaseToDoNode<ToDoSummary> {
   @Override
   public int getTodoItemCount(final ToDoSummary val) {
     int count = 0;
-    for(final Iterator<PsiFile> i=myBuilder.getAllFiles();i.hasNext();){
-        count+= ApplicationManager.getApplication().runReadAction(
-            new Computable<Integer>() {
-              @Override
-              public Integer compute() {
-                return getTreeStructure().getTodoItemCount(i.next());
-              }
-            }
-        );
-      }
+    for (final Iterator<PsiFile> i = myBuilder.getAllFiles(); i.hasNext(); ) {
+      count += ReadAction.compute(() -> getTreeStructure().getTodoItemCount(i.next()));
+    }
     return count;
   }
 

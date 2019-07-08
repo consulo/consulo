@@ -28,6 +28,7 @@ import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -91,12 +92,6 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
   @RequiredUIAccess
   @Override
   public <T> T runWriteAction(@Nonnull Computable<T> computation) {
-    throw new UnsupportedOperationException();
-  }
-
-  @RequiredReadAction
-  @Override
-  public boolean hasWriteAction(@Nonnull Class<?> actionClass) {
     throw new UnsupportedOperationException();
   }
 
@@ -283,6 +278,12 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
   @Nonnull
   @Override
   public Image getIcon() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Nonnull
+  @Override
+  public UIAccess getLastUIAccess() {
     throw new UnsupportedOperationException();
   }
 

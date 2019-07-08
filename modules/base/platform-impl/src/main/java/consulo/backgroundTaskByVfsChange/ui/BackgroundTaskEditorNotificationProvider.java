@@ -18,7 +18,6 @@ package consulo.backgroundTaskByVfsChange.ui;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
@@ -29,10 +28,10 @@ import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeProvider;
 import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeProviders;
 import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeTask;
 import consulo.editor.notifications.EditorNotificationProvider;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-
 import java.util.List;
 
 /**
@@ -40,18 +39,11 @@ import java.util.List;
  * @since 26.10.2015
  */
 public class BackgroundTaskEditorNotificationProvider implements EditorNotificationProvider<EditorNotificationPanel>, DumbAware {
-  private static final Key<EditorNotificationPanel> KEY = Key.create("BackgroundTaskEditorProvider");
   private final Project myProject;
 
   @Inject
   public BackgroundTaskEditorNotificationProvider(Project project) {
     myProject = project;
-  }
-
-  @Nonnull
-  @Override
-  public Key<EditorNotificationPanel> getKey() {
-    return KEY;
   }
 
   @RequiredReadAction
