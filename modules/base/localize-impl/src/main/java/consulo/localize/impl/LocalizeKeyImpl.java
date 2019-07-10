@@ -15,7 +15,8 @@
  */
 package consulo.localize.impl;
 
-import consulo.localize.LocalizeKeyAsValue;
+import com.intellij.CommonBundle;
+import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;
@@ -24,46 +25,52 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2019-04-11
  */
-public class LocalizeKeyAsValueImpl implements LocalizeKeyAsValue {
+class LocalizeKeyImpl implements LocalizeKey {
   private final String myId;
 
-  public LocalizeKeyAsValueImpl(String id) {
+  private LocalizeLibraryImpl myLibrary;
+
+  LocalizeKeyImpl(String id) {
     myId = id;
+  }
+
+  void setLibrary(LocalizeLibraryImpl library) {
+    myLibrary = library;
+  }
+
+  @Nonnull
+  @Override
+  public LocalizeValue getValue() {
+    return () -> myLibrary.getText(myId);
   }
 
   @Nonnull
   @Override
   public LocalizeValue getValue(Object arg) {
-    return null;
+    return () -> CommonBundle.format(myLibrary.getText(myId), arg);
   }
 
   @Nonnull
   @Override
   public LocalizeValue getValue(Object arg0, Object arg1) {
-    return null;
+    return () -> CommonBundle.format(myLibrary.getText(myId), arg0, arg1);
   }
 
   @Nonnull
   @Override
   public LocalizeValue getValue(Object arg0, Object arg1, Object arg2) {
-    return null;
+    return () -> CommonBundle.format(myLibrary.getText(myId), arg0, arg1, arg2);
   }
 
   @Nonnull
   @Override
   public LocalizeValue getValue(Object arg0, Object arg1, Object arg2, Object arg3) {
-    return null;
+    return () -> CommonBundle.format(myLibrary.getText(myId), arg0, arg1, arg2, arg3);
   }
 
   @Nonnull
   @Override
   public LocalizeValue getValue(Object arg0, Object arg1, Object arg2, Object arg3, Object arg4) {
-    return null;
-  }
-
-  @Nonnull
-  @Override
-  public String getValue() {
-    return null;
+    return () -> CommonBundle.format(myLibrary.getText(myId), arg0, arg1, arg2, arg3, arg4);
   }
 }

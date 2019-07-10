@@ -23,10 +23,13 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.util.Ref;
 import consulo.annotations.Internal;
+import consulo.localize.LocalizeManager;
 import consulo.start.CommandLineArgs;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Internal
 public abstract class ApplicationPostStarter {
@@ -48,11 +51,13 @@ public abstract class ApplicationPostStarter {
 
     PluginManager.initPlugins(splash, isHeadlessMode);
 
+    Set<ClassLoader> classLoaders = new HashSet<>();
+    classLoaders.add(Application.class.getClassLoader()); // add root app class loader
     for (IdeaPluginDescriptor descriptor : PluginManager.getPlugins()) {
-      ClassLoader pluginClassLoader = descriptor.getPluginClassLoader();
-
-      
+      classLoaders.add(descriptor.getPluginClassLoader());
     }
+
+    LocalizeManager.getInstance().initiaze(classLoaders);
 
     createApplication(isHeadlessMode, mySplashRef, args);
   }

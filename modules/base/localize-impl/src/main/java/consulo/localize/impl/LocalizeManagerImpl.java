@@ -15,10 +15,13 @@
  */
 package consulo.localize.impl;
 
+import consulo.localize.Localize;
 import consulo.localize.LocalizeLibraryBuilder;
 import consulo.localize.LocalizeManager;
 
 import javax.annotation.Nonnull;
+import java.util.ServiceLoader;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -27,7 +30,18 @@ import javax.annotation.Nonnull;
 public class LocalizeManagerImpl extends LocalizeManager {
   @Nonnull
   @Override
-  public LocalizeLibraryBuilder newBuilder(@Nonnull String pluginId, @Nonnull String id, @Nonnull Class<?> bundleClass) {
-    return new LocalizeLibraryBuilderImpl(pluginId, id, bundleClass);
+  public LocalizeLibraryBuilder newBuilder(@Nonnull String pluginId, @Nonnull Localize localize) {
+    return new LocalizeLibraryBuilderImpl(pluginId, localize);
+  }
+
+  @Override
+  public void initiaze(@Nonnull Set<ClassLoader> classLoaders) {
+    for (ClassLoader classLoader : classLoaders) {
+      ServiceLoader<Localize> loader = ServiceLoader.load(Localize.class, classLoader);
+
+      for (Localize localize : loader) {
+        System.out.println(loader);
+      }
+    }
   }
 }

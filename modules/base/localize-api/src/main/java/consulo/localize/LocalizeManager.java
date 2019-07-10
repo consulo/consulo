@@ -18,6 +18,7 @@ package consulo.localize;
 import consulo.util.ServiceLoaderUtil;
 
 import javax.annotation.Nonnull;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -27,10 +28,15 @@ public abstract class LocalizeManager {
   private static LocalizeManager ourInstance = ServiceLoaderUtil.loadSingleOrError(LocalizeManager.class);
 
   @Nonnull
-  public static LocalizeLibraryBuilder builder(@Nonnull String pluginId, @Nonnull String id, @Nonnull Class<?> bundleClass) {
-    return ourInstance.newBuilder(pluginId, id, bundleClass);
+  public static LocalizeManager getInstance() {
+    return ourInstance;
   }
 
+  /**
+   * Will throw exception on second call
+   */
+  public abstract void initiaze(@Nonnull Set<ClassLoader> classLoaders);
+
   @Nonnull
-  public abstract LocalizeLibraryBuilder newBuilder(@Nonnull String pluginId, @Nonnull String id, @Nonnull Class<?> bundleClass);
+  public abstract LocalizeLibraryBuilder newBuilder(@Nonnull String pluginId, @Nonnull Localize localize);
 }

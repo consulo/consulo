@@ -34,7 +34,7 @@ public interface CheckBox extends ValueComponent<Boolean>, Mnemonicable{
   @Nonnull
   @RequiredUIAccess
   static CheckBox create(@Nonnull String text, boolean selected) {
-    return create(LocalizeKey.of(text), selected);
+    return create(LocalizeValue.of(text), selected);
   }
 
   @Nonnull
@@ -70,7 +70,7 @@ public interface CheckBox extends ValueComponent<Boolean>, Mnemonicable{
 
   @RequiredUIAccess
   default void setText(@Nonnull String text) {
-    setText(LocalizeKey.of(text));
+    setText(LocalizeValue.of(text));
   }
 
   @RequiredUIAccess

@@ -23,6 +23,9 @@ import javax.annotation.Nonnull;
  */
 public interface LocalizeKey {
   @Nonnull
+  LocalizeValue getValue();
+
+  @Nonnull
   LocalizeValue getValue(Object arg);
 
   @Nonnull

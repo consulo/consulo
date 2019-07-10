@@ -17,7 +17,7 @@ package consulo.localize;
 
 /**
  * @author VISTALL
- * @since 2019-04-11
+ * @since 2019-07-08
  */
-public interface LocalizeKeyAsValue extends LocalizeKey, LocalizeValue {
+public interface Localize {
 }

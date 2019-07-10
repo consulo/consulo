@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
  */
 public interface LocalizeLibraryBuilder {
   @Nonnull
-  LocalizeKeyAsValue define(@Nonnull String id);
+  LocalizeKey define(@Nonnull String id);
 
   void finish();
 }

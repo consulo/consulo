@@ -16,22 +16,48 @@
 package consulo.localize.impl;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 2019-04-11
  */
-public class LocalizeLibraryImpl {
-  private final Map<String, LocalizeKeyAsValueImpl> myKeys = new HashMap<>();
+class LocalizeLibraryImpl {
+  public static final String DEFAULT_LOCALE = "en";
 
   private final String myPluginId;
   private final String myId;
+  private final Class<?> myLocalizeClass;
 
-  public LocalizeLibraryImpl(String pluginId, String id, Map<String, LocalizeKeyAsValueImpl> keys) {
+  private LocalizeFileLoader myLoader;
+
+  public LocalizeLibraryImpl(String pluginId, String id, Class<?> localizeClass, Map<String, LocalizeKeyImpl> keys) {
     myPluginId = pluginId;
     myId = id;
+    myLocalizeClass = localizeClass;
+
+    for (LocalizeKeyImpl key : keys.values()) {
+      key.setLibrary(this);
+    }
+  }
+
+  public void loadLocale(String locale) {
+    LocalizeFileLoader loader = new LocalizeFileLoader("/localize/" + myPluginId + "/" + myId + ".yaml", myLocalizeClass.getClassLoader());
+
+    loader.parse();
+
+    myLoader = loader;
+  }
+
+  @Nonnull
+  public String getText(String id) {
+    if (myLoader == null) {
+      return id;
+    }
+
+    LocalizeFileLoader.LocalizeValueInstance valueInstance = myLoader.get(id);
+
+    return valueInstance.getText();
   }
 
   @Nonnull

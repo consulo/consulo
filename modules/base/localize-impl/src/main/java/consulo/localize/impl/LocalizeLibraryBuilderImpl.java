@@ -15,7 +15,8 @@
  */
 package consulo.localize.impl;
 
-import consulo.localize.LocalizeKeyAsValue;
+import consulo.localize.Localize;
+import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeLibraryBuilder;
 
 import javax.annotation.Nonnull;
@@ -26,33 +27,39 @@ import java.util.Map;
  * @author VISTALL
  * @since 2019-04-11
  */
-public class LocalizeLibraryBuilderImpl implements LocalizeLibraryBuilder {
+class LocalizeLibraryBuilderImpl implements LocalizeLibraryBuilder {
   private final String myPluginId;
   private final String myId;
   private final Class<?> myBundleClass;
 
-  private Map<String, LocalizeKeyAsValueImpl> myKeys = new HashMap<>();
+  private Map<String, LocalizeKeyImpl> myKeys = new HashMap<>();
 
-  public LocalizeLibraryBuilderImpl(String pluginId, String id, Class<?> bundleClass) {
+  public LocalizeLibraryBuilderImpl(String pluginId, @Nonnull Localize localize) {
     myPluginId = pluginId;
-    myId = id;
-    myBundleClass = bundleClass;
+    myId = localize.getClass().getSimpleName();
+    myBundleClass = localize.getClass();
   }
 
   @Nonnull
   @Override
-  public LocalizeKeyAsValue define(@Nonnull String id) {
-    return new LocalizeKeyAsValueImpl(id);
+  public LocalizeKey define(@Nonnull String id) {
+    if (myKeys.containsKey(id)) {
+      throw new IllegalArgumentException("duplicate id " + id);
+    }
+    LocalizeKeyImpl key = new LocalizeKeyImpl(id);
+    myKeys.put(id, key);
+    return key;
   }
 
   @Override
   public void finish() {
-    Map<String, LocalizeKeyAsValueImpl> keys = myKeys;
+    Map<String, LocalizeKeyImpl> keys = myKeys;
     myKeys = null;
 
-    LocalizeFileLoader loader = new LocalizeFileLoader("en", "/localize/" + myPluginId + "/" + myId + ".yaml", myBundleClass.getClassLoader());
+    LocalizeLibraryImpl library = new LocalizeLibraryImpl(myPluginId, myId, myBundleClass, keys);
 
-    LocalizeLibraryImpl library = new LocalizeLibraryImpl(myPluginId, myId, keys);
+    library.loadLocale(LocalizeLibraryImpl.DEFAULT_LOCALE);
+
     // TODO [VISTALL] register
   }
 }

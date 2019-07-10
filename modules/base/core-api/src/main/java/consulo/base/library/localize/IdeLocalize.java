@@ -15,22 +15,38 @@
  */
 package consulo.base.library.localize;
 
-import consulo.localize.LocalizeKeyAsValue;
-import consulo.localize.LocalizeLibraryBuilder;
-import consulo.localize.LocalizeManager;
+import consulo.localize.*;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2019-04-11
  */
-public class NewIdeBundle {
-  public static final LocalizeKeyAsValue checkbox_synchronize_files_on_frame_activation;
+public class IdeLocalize implements Localize {
+  private final LocalizeKey checkbox_synchronize_files_on_frame_activation;
 
-  static {
-    LocalizeLibraryBuilder library = LocalizeManager.builder("consulo.base", "NewIdeBundle", NewIdeBundle.class);
+  private static IdeLocalize ourInstance;
+
+  public IdeLocalize() {
+    LocalizeLibraryBuilder library = LocalizeManager.getInstance().newBuilder("consulo.base", this);
 
     checkbox_synchronize_files_on_frame_activation = library.define("checkbox.synchronize.files.on.frame.activation");
 
     library.finish();
+
+    ourInstance = this;
+  }
+
+  @Nonnull
+  public static LocalizeValue checkboxSynchronizeFilesOnFrameActivation() {
+    checkInitialized();
+    return ourInstance.checkbox_synchronize_files_on_frame_activation.getValue();
+  }
+
+  private static void checkInitialized() {
+    if(ourInstance == null) {
+      throw new IllegalArgumentException("not initialized");
+    }
   }
 }

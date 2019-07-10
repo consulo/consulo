@@ -84,6 +84,11 @@ class DesktopCheckBoxImpl extends SwingComponentDelegate<JBCheckBox> implements 
   }
 
   private void updateText() {
+    // first initialize
+    if(myComponent == null) {
+      return;
+    }
+
     String text = myTextValue.getValue();
 
     MnemonicInfo mnemonicInfo = MnemonicInfo.parse(text);
