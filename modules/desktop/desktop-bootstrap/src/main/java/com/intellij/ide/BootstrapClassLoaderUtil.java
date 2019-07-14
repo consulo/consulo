@@ -43,8 +43,6 @@ import java.util.List;
  * @author max
  */
 public class BootstrapClassLoaderUtil {
-  private static final String PROPERTY_ALLOW_BOOTSTRAP_RESOURCES = "idea.allow.bootstrap.resources";
-
   private BootstrapClassLoaderUtil() {
   }
 
@@ -61,12 +59,12 @@ public class BootstrapClassLoaderUtil {
     addIDEALibraries(classpath);
     addParentClasspath(classpath, true);
 
-    UrlClassLoader.Builder builder =
-            UrlClassLoader.build().urls(new ArrayList<URL>(classpath)).allowLock().usePersistentClasspathIndexForLocalClassDirectories()
-                    .useCache();
-    if (Boolean.valueOf(System.getProperty(PROPERTY_ALLOW_BOOTSTRAP_RESOURCES, "true"))) {
-      builder.allowBootstrapResources();
-    }
+    UrlClassLoader.Builder builder = UrlClassLoader.build().urls(new ArrayList<URL>(classpath));
+
+    builder.allowLock();
+    builder.usePersistentClasspathIndexForLocalClassDirectories();
+    builder.useCache();
+    builder.allowBootstrapResources();
 
     // in ideal world we don't need this (after migration to java9 also)
     // tools jar we don't use in java plugin
