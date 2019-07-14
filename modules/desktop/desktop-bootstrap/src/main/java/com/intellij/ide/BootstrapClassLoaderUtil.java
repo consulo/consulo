@@ -44,7 +44,6 @@ import java.util.List;
  */
 public class BootstrapClassLoaderUtil {
   private static final String PROPERTY_ALLOW_BOOTSTRAP_RESOURCES = "idea.allow.bootstrap.resources";
-  private static final String PROPERTY_ADDITIONAL_CLASSPATH = "idea.additional.classpath";
 
   private BootstrapClassLoaderUtil() {
   }
@@ -60,7 +59,6 @@ public class BootstrapClassLoaderUtil {
     Collection<URL> classpath = new LinkedHashSet<URL>();
     addParentClasspath(classpath, false);
     addIDEALibraries(classpath);
-    addAdditionalClassPath(classpath);
     addParentClasspath(classpath, true);
 
     UrlClassLoader.Builder builder =
@@ -172,10 +170,6 @@ public class BootstrapClassLoaderUtil {
         }
       }
     }
-  }
-
-  private static void addAdditionalClassPath(Collection<URL> classpath) {
-    parseClassPathString(System.getProperty(PROPERTY_ADDITIONAL_CLASSPATH), classpath);
   }
 
   private static void parseClassPathString(String pathString, Collection<URL> classpath) {
