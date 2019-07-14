@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
 /**
  * @author max
  */
-public class BootstrapClassLoaderUtil extends ClassUtilCore {
+public class BootstrapClassLoaderUtil {
   private static final String PROPERTY_IGNORE_CLASSPATH = "ignore.classpath";
   private static final String PROPERTY_ALLOW_BOOTSTRAP_RESOURCES = "idea.allow.bootstrap.resources";
   private static final String PROPERTY_ADDITIONAL_CLASSPATH = "idea.additional.classpath";
@@ -53,7 +53,7 @@ public class BootstrapClassLoaderUtil extends ClassUtilCore {
   }
 
   @Nonnull
-  public static ClassLoader initClassLoader(boolean updatePlugins) throws MalformedURLException {
+  public static ClassLoader initClassLoader() throws MalformedURLException {
     PathManager.loadProperties();
 
     Collection<URL> classpath = new LinkedHashSet<URL>();
@@ -77,17 +77,13 @@ public class BootstrapClassLoaderUtil extends ClassUtilCore {
     try {
       logger = new StartupActionLogger();
 
-      logger.info("start: update=" + updatePlugins);
-      // prepare plugins
-      if (updatePlugins) {
-        try {
-          StartupActionScriptManager.executeActionScript(logger);
-        }
-        catch (IOException e) {
-          logger.error(e);
+      try {
+        StartupActionScriptManager.executeActionScript(logger);
+      }
+      catch (IOException e) {
+        logger.error(e);
 
-          Main.showMessage("Plugin Installation Error", e);
-        }
+        Main.showMessage("Plugin Installation Error", e);
       }
     }
     finally {
