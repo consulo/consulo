@@ -25,8 +25,8 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.lang.UrlClassLoader;
 import com.intellij.util.text.StringTokenizer;
 import consulo.startup.StartupActionLogger;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -34,14 +34,15 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.*;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 /**
  * @author max
  */
 public class BootstrapClassLoaderUtil {
-  private static final String PROPERTY_IGNORE_CLASSPATH = "ignore.classpath";
   private static final String PROPERTY_ALLOW_BOOTSTRAP_RESOURCES = "idea.allow.bootstrap.resources";
   private static final String PROPERTY_ADDITIONAL_CLASSPATH = "idea.additional.classpath";
 
@@ -63,7 +64,7 @@ public class BootstrapClassLoaderUtil {
     addParentClasspath(classpath, true);
 
     UrlClassLoader.Builder builder =
-            UrlClassLoader.build().urls(filterClassPath(new ArrayList<URL>(classpath))).allowLock().usePersistentClasspathIndexForLocalClassDirectories()
+            UrlClassLoader.build().urls(new ArrayList<URL>(classpath)).allowLock().usePersistentClasspathIndexForLocalClassDirectories()
                     .useCache();
     if (Boolean.valueOf(System.getProperty(PROPERTY_ALLOW_BOOTSTRAP_RESOURCES, "true"))) {
       builder.allowBootstrapResources();
@@ -192,20 +193,5 @@ public class BootstrapClassLoaderUtil {
         getLogger().error(e);
       }
     }
-  }
-
-  @SuppressWarnings("Duplicates")
-  private static List<URL> filterClassPath(List<URL> classpath) {
-    String ignoreProperty = System.getProperty(PROPERTY_IGNORE_CLASSPATH);
-    if (ignoreProperty != null) {
-      Pattern pattern = Pattern.compile(ignoreProperty);
-      for (Iterator<URL> i = classpath.iterator(); i.hasNext(); ) {
-        String url = i.next().toExternalForm();
-        if (pattern.matcher(url).matches()) {
-          i.remove();
-        }
-      }
-    }
-    return classpath;
   }
 }
