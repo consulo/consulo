@@ -158,8 +158,6 @@ public class BootstrapClassLoaderUtil {
 
     File libFolder = new File(PathManager.getLibPath());
     addLibraries(classpath, libFolder, selfRootUrl);
-    addLibraries(classpath, new File(libFolder, "ext"), selfRootUrl);
-    addLibraries(classpath, new File(libFolder, "ant/lib"), selfRootUrl);
   }
 
   private static void addLibraries(Collection<URL> classPath, File fromDir, URL selfRootUrl) throws MalformedURLException {
