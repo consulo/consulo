@@ -68,6 +68,10 @@ public class BootstrapClassLoaderUtil {
       builder.allowBootstrapResources();
     }
 
+    // in ideal world we don't need this (after migration to java9 also)
+    // tools jar we don't use in java plugin
+    // without this code, it will throw access error to java.sql module
+    // in java 9 we need add requires to java.sql and we can remove this hack
     ClassLoaderUtil.addPlatformLoaderParentIfOnJdk9(builder);
 
     UrlClassLoader newClassLoader = builder.get();
