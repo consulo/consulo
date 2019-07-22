@@ -33,6 +33,7 @@ public interface IdeFrame {
 
   Key<IdeFrame> KEY = Key.create("IdeFrame");
 
+  @Nullable
   StatusBar getStatusBar();
 
   @Nullable
