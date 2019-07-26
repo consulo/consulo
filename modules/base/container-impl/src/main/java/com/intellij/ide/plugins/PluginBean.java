@@ -58,6 +58,8 @@ public class PluginBean extends ComponentManagerConfig {
   //@AbstractCollection(surroundWithTag = false)
   public List<PluginHelpSet> helpSets = Collections.emptyList();
 
+  public List<String> imports = Collections.emptyList();
+
   //@Tag("category")
   public String category;
 

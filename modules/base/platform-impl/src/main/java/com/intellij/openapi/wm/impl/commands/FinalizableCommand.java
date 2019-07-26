@@ -32,6 +32,10 @@ public abstract class FinalizableCommand implements Runnable {
     myFinishCallBack = finishCallBack;
   }
 
+  public ToolWindowManager getManager() {
+    return myManager;
+  }
+
   public final void finish() {
     myFinishCallBack.run();
   }

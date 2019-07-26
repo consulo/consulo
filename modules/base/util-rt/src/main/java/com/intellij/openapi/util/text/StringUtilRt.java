@@ -50,6 +50,26 @@ public class StringUtilRt {
     return cs == null || cs.length() == 0;
   }
 
+
+  @Contract(value = "null -> true", pure = true)
+  // we need to keep this method to preserve backward compatibility
+  public static boolean isEmptyOrSpaces(@Nullable String s) {
+    return isEmptyOrSpaces(((CharSequence)s));
+  }
+
+  @Contract(value = "null -> true", pure = true)
+  public static boolean isEmptyOrSpaces(@Nullable CharSequence s) {
+    if (isEmpty(s)) {
+      return true;
+    }
+    for (int i = 0; i < s.length(); i++) {
+      if (s.charAt(i) > ' ') {
+        return false;
+      }
+    }
+    return true;
+  }
+
   @Contract(pure = true)
   public static String replace(@NonNls @Nonnull final String text, @NonNls @Nonnull final String oldS, @NonNls @Nonnull final String newS, final boolean ignoreCase) {
     if (text.length() < oldS.length()) return text;

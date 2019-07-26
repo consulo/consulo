@@ -32,9 +32,11 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * @author mike
@@ -59,16 +61,17 @@ public class IdeaPluginDescriptorImpl extends PluginDescriptorStub {
   private PluginId[] myOptionalDependencies = PluginId.EMPTY_ARRAY;
   private Map<PluginId, String> myOptionalConfigs;
   private Map<PluginId, IdeaPluginDescriptorImpl> myOptionalDescriptors;
+  @Nonnull
   private List<SimpleXmlElement> myActionsElements = Collections.emptyList();
   private List<ComponentConfig> myAppComponents = Collections.emptyList();
   private List<ComponentConfig> myProjectComponents = Collections.emptyList();
   private boolean myDeleted = false;
   private ClassLoader myLoader;
   private Collection<HelpSetPath> myHelpSets = Collections.emptyList();
-  @Nullable
-  private SimpleMultiMap<String, ExtensionInfo> myExtensions;
-  @Nullable
-  private SimpleMultiMap<String, SimpleXmlElement> myExtensionsPoints;
+  @Nonnull
+  private SimpleMultiMap<String, ExtensionInfo> myExtensions = SimpleMultiMap.emptyMap();
+  @Nonnull
+  private SimpleMultiMap<String, SimpleXmlElement> myExtensionsPoints = SimpleMultiMap.emptyMap();
   private String myDescriptionChildText;
   private boolean myEnabled = true;
   private Boolean mySkipped;
@@ -78,36 +81,22 @@ public class IdeaPluginDescriptorImpl extends PluginDescriptorStub {
     myIsPreInstalled = isPreInstalled;
   }
 
-  @Nonnull
-  private static List<ComponentConfig> mergeComponents(@Nonnull List<ComponentConfig> first, @Nonnull List<ComponentConfig> second) {
-    if (first.isEmpty()) {
-      return second;
-    }
-    if (second.isEmpty()) {
-      return first;
-    }
-    List<ComponentConfig> result = new ArrayList<ComponentConfig>(first.size() + second.size());
-    result.addAll(first);
-    result.addAll(second);
-    return result;
-  }
-
   @Override
   public File getPath() {
     return myPath;
   }
 
-  public void readExternal(@Nonnull InputStream stream) throws SimpleXmlParsingException {
+  public void readExternal(@Nonnull InputStream stream, @Nullable ZipFile zipFile) throws SimpleXmlParsingException {
     SimpleXmlElement element = SimpleXmlReader.parse(stream);
-    readExternal(element);
+    readExternal(element, zipFile);
   }
 
-  public void readExternal(@Nonnull URL url) throws SimpleXmlParsingException {
-    SimpleXmlElement element = SimpleXmlReader.parse(url);
-    readExternal(element);
-  }
+  //public void readExternal(@Nonnull URL url) throws SimpleXmlParsingException {
+  //  SimpleXmlElement element = SimpleXmlReader.parse(url);
+  //  readExternal(element);
+  //}
 
-  private void readExternal(@Nonnull SimpleXmlElement element) {
+  private void readExternal(@Nonnull SimpleXmlElement element, @Nullable ZipFile zipFile) throws SimpleXmlParsingException {
     final PluginBean pluginBean = PluginBeanParser.parseBean(element, null);
     assert pluginBean != null;
     url = pluginBean.url;
@@ -117,14 +106,13 @@ public class IdeaPluginDescriptorImpl extends PluginDescriptorStub {
       idString = myName;
     }
     myId = idString == null ? null : PluginId.getId(idString);
-    myResourceBundleBaseName = pluginBean.resourceBundle;
+    myResourceBundleBaseName = StringUtilRt.isEmpty(pluginBean.resourceBundle) ? null : pluginBean.resourceBundle;
 
     myDescriptionChildText = pluginBean.description;
     myChangeNotes = pluginBean.changeNotes;
     myVersion = pluginBean.pluginVersion;
     myPlatformVersion = pluginBean.platformVersion;
     myCategory = pluginBean.category;
-
 
     if (pluginBean.vendor != null) {
       myVendor = pluginBean.vendor.name;
@@ -167,12 +155,45 @@ public class IdeaPluginDescriptorImpl extends PluginDescriptorStub {
       }
     }
 
-    myAppComponents = pluginBean.applicationComponents;
-    myProjectComponents = pluginBean.projectComponents;
+    extendPlugin(pluginBean);
+
+    if (zipFile != null) {
+      for (String importPath : pluginBean.imports) {
+        if (importPath.charAt(0) == '/') {
+          importPath = importPath.substring(1, importPath.length());
+        }
+
+        ZipEntry entry = zipFile.getEntry(importPath);
+        if (entry != null) {
+          try {
+            InputStream childImportSteam = zipFile.getInputStream(entry);
+            SimpleXmlElement childImportElement = SimpleXmlReader.parse(childImportSteam);
+
+            PluginBean importBean = PluginBeanParser.parseBean(childImportElement, pluginBean.id);
+
+            if (importBean == null) {
+              continue;
+            }
+
+            extendPlugin(importBean);
+          }
+          catch (IOException e) {
+            throw new SimpleXmlParsingException(e);
+          }
+        }
+      }
+    }
+  }
+
+  private void extendPlugin(PluginBean pluginBean) {
+    myAppComponents = mergeElements(myAppComponents, pluginBean.applicationComponents);
+    myProjectComponents = mergeElements(myProjectComponents, pluginBean.projectComponents);
+    myActionsElements = mergeElements(myActionsElements, pluginBean.actions);
 
     List<ExtensionInfo> extensions = pluginBean.extensions;
-    if (extensions != null) {
-      myExtensions = SimpleMultiMap.newHashMap();
+    if (extensions != null && !extensions.isEmpty()) {
+      initializeExtensions();
+
       for (ExtensionInfo extension : extensions) {
         String extId = extension.getPluginId() + "." + extension.getElement().getName();
         myExtensions.putValue(extId, extension);
@@ -180,16 +201,62 @@ public class IdeaPluginDescriptorImpl extends PluginDescriptorStub {
     }
 
     List<SimpleXmlElement> extensionPoints = pluginBean.extensionPoints;
-    if (extensionPoints != null) {
-      myExtensionsPoints = SimpleMultiMap.newHashMap();
+    if (extensionPoints != null && !extensionPoints.isEmpty()) {
+      initializeExtensionPoints();
+
       for (SimpleXmlElement extensionPoint : extensionPoints) {
         String areaId = extensionPoint.getAttributeValue("area", "");
+
+        if (areaId.isEmpty()) {
+          areaId = "APPLICATION";
+        }
 
         myExtensionsPoints.putValue(areaId, extensionPoint);
       }
     }
+  }
 
-    myActionsElements = pluginBean.actions;
+  @Nonnull
+  private static <T> List<T> mergeElements(@Nonnull List<T> original, @Nonnull List<T> additional) {
+    if (additional.isEmpty()) {
+      return original;
+    }
+
+    List<T> result = original;
+    if (original.isEmpty()) {
+      result = new ArrayList<T>(additional);
+    }
+    else {
+      result.addAll(additional);
+    }
+
+    return result;
+  }
+
+  public void mergeOptionalConfig(final IdeaPluginDescriptorImpl descriptor) {
+    initializeExtensions();
+
+    myExtensions.putAll(descriptor.myExtensions);
+
+    initializeExtensionPoints();
+
+    myExtensionsPoints.putAll(descriptor.myExtensionsPoints);
+
+    myActionsElements = mergeElements(myActionsElements, descriptor.myActionsElements);
+    myAppComponents = mergeElements(myAppComponents, descriptor.myAppComponents);
+    myProjectComponents = mergeElements(myProjectComponents, descriptor.myProjectComponents);
+  }
+
+  private void initializeExtensions() {
+    if (myExtensions.isEmpty()) {
+      myExtensions = SimpleMultiMap.newHashMap();
+    }
+  }
+
+  private void initializeExtensionPoints() {
+    if (myExtensionsPoints.isEmpty()) {
+      myExtensionsPoints = SimpleMultiMap.newHashMap();
+    }
   }
 
   @Override
@@ -255,12 +322,12 @@ public class IdeaPluginDescriptorImpl extends PluginDescriptorStub {
     myCategory = category;
   }
 
-  @Nullable
+  @Nonnull
   public SimpleMultiMap<String, SimpleXmlElement> getExtensionsPoints() {
     return myExtensionsPoints;
   }
 
-  @Nullable
+  @Nonnull
   public SimpleMultiMap<String, ExtensionInfo> getExtensions() {
     return myExtensions;
   }
@@ -391,38 +458,12 @@ public class IdeaPluginDescriptorImpl extends PluginDescriptorStub {
   }
 
   @Nullable
-  Map<PluginId, IdeaPluginDescriptorImpl> getOptionalDescriptors() {
+  public Map<PluginId, IdeaPluginDescriptorImpl> getOptionalDescriptors() {
     return myOptionalDescriptors;
   }
 
   public void setOptionalDescriptors(final Map<PluginId, IdeaPluginDescriptorImpl> optionalDescriptors) {
     myOptionalDescriptors = optionalDescriptors;
-  }
-
-  void mergeOptionalConfig(final IdeaPluginDescriptorImpl descriptor) {
-    if (myExtensions == null) {
-      myExtensions = descriptor.myExtensions;
-    }
-    else if (descriptor.myExtensions != null) {
-      myExtensions.putAllValues(descriptor.myExtensions);
-    }
-
-    if (myExtensionsPoints == null) {
-      myExtensionsPoints = descriptor.myExtensionsPoints;
-    }
-    else if (descriptor.myExtensionsPoints != null) {
-      myExtensionsPoints.putAllValues(descriptor.myExtensionsPoints);
-    }
-
-    if (myActionsElements == null) {
-      myActionsElements = descriptor.myActionsElements;
-    }
-    else if (descriptor.myActionsElements != null) {
-      myActionsElements.addAll(descriptor.myActionsElements);
-    }
-
-    myAppComponents = mergeComponents(myAppComponents, descriptor.myAppComponents);
-    myProjectComponents = mergeComponents(myProjectComponents, descriptor.myProjectComponents);
   }
 
   public Boolean getSkipped() {

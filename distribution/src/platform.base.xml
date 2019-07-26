@@ -18,7 +18,6 @@
     <dependencySet>
       <outputDirectory>Consulo/platform/buildSNAPSHOT/modules/consulo.platform.base/lib</outputDirectory>
       <unpack>false</unpack>
-      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
       <includes>
         <include>consulo:consulo-platform-base-plugin</include>
 
@@ -72,6 +71,7 @@
         <include>consulo:consulo-ui-impl</include>
         <include>consulo:consulo-usage-view</include>
         <include>consulo:consulo-util</include>
+        <include>consulo:consulo-util-rmi</include>
         <!--<include>consulo:consulo-util-rt</include>-->
         <include>consulo:consulo-vcs-api</include>
         <include>consulo:consulo-vcs-api-core</include>
@@ -89,13 +89,17 @@
 
         <!--TODO [VISTALL] this dependency must be removed from base plugin-->
         <include>consulo:consulo-desktop-util-awt</include>
+        <include>org.imgscalr:imgscalr-lib</include>
 
         <!--Internal libraries-->
         <include>consulo.internal:trove4j</include>
         <include>consulo.internal:jdom</include>
+        <include>consulo.internal:forms_rt</include>
+        <include>consulo.internal:svg-salamander</include>
         <include>consulo:kava.beans</include>
         <!--External libraries-->
         <include>net.java.dev.jna:jna</include>
+        <include>net.java.dev.jna:jna-platform</include>
         <include>io.netty:netty-common</include>
         <include>io.netty:netty-buffer</include>
         <include>io.netty:netty-transport</include>
@@ -105,8 +109,21 @@
         <include>args4j:args4j</include>
         <include>org.apache.logging.log4j:log4j-api</include>
         <include>org.apache.logging.log4j:log4j-core</include>
+        <include>org.slf4j:jcl-over-slf4j</include>
+        <include>org.slf4j:slf4j-api</include>
         <include>picocontainer:picocontainer</include>
         <include>javax.inject:javax.inject</include>
+        <include>com.google.guava:guava</include>
+        <include>org.apache.httpcomponents:httpcore</include>
+        <include>org.apache.httpcomponents:httpclient</include>
+        <include>org.apache.httpcomponents:httpmime</include>
+        <include>org.iq80.snappy:snappy</include>
+        <include>com.github.markusbernhardt:proxy-vole</include>
+        <include>org.apache.commons:commons-imaging</include>
+        <include>com.google.code.gson:gson</include>
+        <include>dk.brics.automaton:automaton</include>
+        <include>cglib:cglib-nodep</include>
+        <include>oro:oro</include>
       </includes>
     </dependencySet>
   </dependencySets>

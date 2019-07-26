@@ -76,9 +76,9 @@ public class FileUtilRt {
 
   private static String ourCanonicalTempPathCache = null;
 
-  protected static final class NIOReflect {
+  public static final class NIOReflect {
     // NIO-reflection initialization placed in a separate class for lazy loading
-    static final boolean IS_AVAILABLE;
+    public static final boolean IS_AVAILABLE;
 
     // todo: replace reflection with normal code after migration to JDK 1.8
     private static Method ourFilesDeleteIfExistsMethod;

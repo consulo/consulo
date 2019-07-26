@@ -45,7 +45,7 @@ public class PluginHolderModificator {
     return ourPlugins.get() != null;
   }
 
-  public static void initalize(@Nonnull List<? extends PluginDescriptor> pluginDescriptors) {
+  public static void initialize(@Nonnull List<? extends PluginDescriptor> pluginDescriptors) {
     // create new array for dropping leak to list from another classloader etc
     ourPlugins.set(Collections.unmodifiableList(new ArrayList<PluginDescriptor>(pluginDescriptors)));
   }

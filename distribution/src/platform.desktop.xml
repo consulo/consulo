@@ -18,7 +18,6 @@
     <dependencySet>
       <outputDirectory>Consulo/platform/buildSNAPSHOT/modules/consulo.platform.desktop/lib</outputDirectory>
       <unpack>false</unpack>
-      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
       <includes>
         <include>consulo:consulo-platform-desktop-plugin</include>
 

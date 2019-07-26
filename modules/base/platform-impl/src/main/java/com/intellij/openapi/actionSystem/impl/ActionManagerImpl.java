@@ -54,6 +54,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.extensions.ListOfElementsEP;
 import consulo.platform.impl.action.LastActionTracker;
 import consulo.ui.image.Image;
@@ -253,9 +254,11 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   }
 
   private void registerPluginActions() {
-    final IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
-    for (IdeaPluginDescriptor plugin : plugins) {
-      if (PluginManagerCore.shouldSkipPlugin(plugin)) continue;
+    for (PluginDescriptor plugin : consulo.container.plugin.PluginManager.getPlugins()) {
+      if (PluginManagerCore.shouldSkipPlugin(plugin)) {
+        continue;
+      }
+
       final List<SimpleXmlElement> elementList = plugin.getActionsDescriptionElements();
       for (SimpleXmlElement e : elementList) {
         processActionsChildElement(plugin.getPluginClassLoader(), plugin.getPluginId(), e);
@@ -485,8 +488,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   }
 
   @Nullable
-  private static ResourceBundle getActionsResourceBundle(ClassLoader loader, IdeaPluginDescriptor plugin) {
-    @NonNls final String resBundleName = plugin != null && !plugin.getPluginId().equals(PluginManagerCore.CORE_PLUGIN) ? plugin.getResourceBundleBaseName() : ACTIONS_BUNDLE;
+  private static ResourceBundle getActionsResourceBundle(ClassLoader loader, PluginDescriptor plugin) {
+    @NonNls final String resBundleName = plugin.getResourceBundleBaseName();
     ResourceBundle bundle = null;
     if (resBundleName != null) {
       bundle = AbstractBundle.getResourceBundle(resBundleName, loader);
@@ -992,7 +995,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   @NonNls
   private static String getPluginInfo(@Nullable PluginId id) {
     if (id != null) {
-      final IdeaPluginDescriptor plugin = PluginManager.getPlugin(id);
+      final PluginDescriptor plugin = consulo.container.plugin.PluginManager.findPlugin(id);
       if (plugin != null) {
         String name = plugin.getName();
         if (name == null) {

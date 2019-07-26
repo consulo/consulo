@@ -69,7 +69,7 @@ public class BootstrapClassLoaderUtil {
       descriptor.setLoader(loader);
     }
 
-    PluginHolderModificator.initalize(descriptors);
+    PluginHolderModificator.initialize(descriptors);
 
     PluginLoadStatistics.initialize(false);
 

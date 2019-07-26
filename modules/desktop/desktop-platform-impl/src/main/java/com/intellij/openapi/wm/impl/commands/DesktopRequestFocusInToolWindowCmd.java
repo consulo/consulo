@@ -103,10 +103,10 @@ public final class DesktopRequestFocusInToolWindowCmd extends FinalizableCommand
         if (c != null) {
           final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getPermanentFocusOwner();
           if (owner != c) {
-            myManager.getFocusManager().requestFocusInProject(c, myProject);
+            getManager().getFocusManager().requestFocusInProject(c, myProject);
             bringOwnerToFront();
           }
-          myManager.getFocusManager().doWhenFocusSettlesDown(() -> updateToolWindow(c));
+          getManager().getFocusManager().doWhenFocusSettlesDown(() -> updateToolWindow(c));
         }
         else {
           checkerAlarm.addRequest(this, 100);

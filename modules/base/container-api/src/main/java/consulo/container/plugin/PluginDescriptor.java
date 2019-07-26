@@ -64,6 +64,7 @@ public interface PluginDescriptor {
   @Nullable
   String getPlatformVersion();
 
+  @Nullable
   String getResourceBundleBaseName();
 
   String getCategory();

@@ -153,7 +153,7 @@ public class PluginLoader {
           InputStream inputStream = zipFile.getInputStream(entry);
 
           IdeaPluginDescriptorImpl descriptor = new IdeaPluginDescriptorImpl(pluginPath, isPreInstalledPath);
-          descriptor.readExternal(inputStream);
+          descriptor.readExternal(inputStream, zipFile);
           return descriptor;
         }
       }

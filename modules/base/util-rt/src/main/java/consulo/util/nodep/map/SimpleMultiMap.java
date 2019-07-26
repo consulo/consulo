@@ -24,6 +24,11 @@ import java.util.*;
  */
 public class SimpleMultiMap<K, V> implements Map<K, Collection<V>> {
   @Nonnull
+  public static <K1, V1> SimpleMultiMap<K1, V1> emptyMap() {
+    return new SimpleMultiMap<K1, V1>(Collections.<K1, Collection<V1>>emptyMap());
+  }
+
+  @Nonnull
   public static <K1, V1> SimpleMultiMap<K1, V1> newHashMap() {
     return new SimpleMultiMap<K1, V1>(new HashMap<K1, Collection<V1>>());
   }

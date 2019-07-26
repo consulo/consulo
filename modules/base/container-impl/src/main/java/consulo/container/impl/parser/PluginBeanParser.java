@@ -56,13 +56,16 @@ public class PluginBeanParser {
     pluginBean.changeNotes = rootTag.getChildText("change-notes");
     pluginBean.url = rootTag.getAttributeValue("url");
 
-    // expand all extensionPoints
-    List<SimpleXmlElement> extensionPointsTag = rootTag.getChildren("extensionPoints");
-    List<SimpleXmlElement> extensionPoints = new ArrayList<SimpleXmlElement>();
-    for (SimpleXmlElement extensionPointTag : extensionPointsTag) {
-      extensionPoints.addAll(extensionPointTag.getChildren());
+    List<SimpleXmlElement> anImport = rootTag.getChildren("import");
+    if (!anImport.isEmpty()) {
+      List<String> imports = new ArrayList<String>();
+      for (SimpleXmlElement element : anImport) {
+        imports.add(element.getAttributeValue("path"));
+      }
+      pluginBean.imports = imports;
     }
-    pluginBean.extensionPoints = extensionPoints;
+
+    pluginBean.extensionPoints = expandChildren(rootTag, "extensionPoints");
 
     List<SimpleXmlElement> extensionsTag = rootTag.getChildren("extensions");
 
@@ -75,12 +78,14 @@ public class PluginBeanParser {
         defaultExtensionNs = pluginBean.id;
       }
 
-      extensionInfos.add(new ExtensionInfo(defaultExtensionNs, extensionElement));
+      for (SimpleXmlElement childExtension : extensionElement.getChildren()) {
+        extensionInfos.add(new ExtensionInfo(defaultExtensionNs, childExtension));
+      }
     }
 
     pluginBean.extensions = extensionInfos;
 
-    pluginBean.actions = rootTag.getChildren("actions");
+    pluginBean.actions = expandChildren(rootTag, "actions");
 
     SimpleXmlElement vendorElement = rootTag.getChild("vendor");
     if (vendorElement != null) {
@@ -139,6 +144,24 @@ public class PluginBeanParser {
     // endregion
 
     return pluginBean;
+  }
+
+  @Nonnull
+  private static List<SimpleXmlElement> expandChildren(SimpleXmlElement element, String childTag) {
+    List<SimpleXmlElement> list = Collections.emptyList();
+
+    for (SimpleXmlElement child : element.getChildren(childTag)) {
+      List<SimpleXmlElement> children = child.getChildren();
+      if (!children.isEmpty()) {
+        if (list.isEmpty()) {
+          list = new ArrayList<SimpleXmlElement>();
+        }
+
+        list.addAll(children);
+      }
+    }
+
+    return list;
   }
 
   private static void parseComponent(SimpleXmlElement componentsParent, List<ComponentConfig> configConsumer) {

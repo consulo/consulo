@@ -106,8 +106,23 @@ public final class SimpleXmlElement {
     return attrValue == null ? defaultvalue : attrValue;
   }
 
+  public Map<String, String> getAttributes() {
+    return Collections.unmodifiableMap(myAttributes);
+  }
+
   @Nonnull
   public String getName() {
     return myName;
+  }
+
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder("SimpleXmlElement{");
+    sb.append("myName='").append(myName).append('\'');
+    sb.append(", myText='").append(myText).append('\'');
+    sb.append(", myAttributes=").append(myAttributes);
+    sb.append(", myChildren=").append(myChildren);
+    sb.append('}');
+    return sb.toString();
   }
 }

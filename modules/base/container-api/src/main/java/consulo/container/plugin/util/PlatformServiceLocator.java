@@ -32,7 +32,7 @@ public class PlatformServiceLocator {
   @Nonnull
   public static <T> T findImplementation(@Nonnull Class<T> interfaceClass) {
     for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
-      if (PluginIds.isPlatformImplementation(descriptor.getPluginId())) {
+      if (PluginIds.isPlatformImplementationPlugin(descriptor.getPluginId())) {
         ServiceLoader<T> loader = ServiceLoader.load(interfaceClass, descriptor.getPluginClassLoader());
 
         Iterator<T> iterator = loader.iterator();

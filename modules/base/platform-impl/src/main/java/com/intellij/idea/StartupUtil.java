@@ -31,6 +31,7 @@ import com.intellij.ui.AppUIUtil;
 import com.intellij.util.EnvironmentUtil;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.container.StartupError;
 import consulo.container.impl.ExitCodes;
 import consulo.start.CommandLineArgs;
 import consulo.start.ImportantFolderLocker;
@@ -56,8 +57,6 @@ import java.util.function.Consumer;
  */
 public class StartupUtil {
   private static ImportantFolderLocker ourFolderLocker;
-
-  private static boolean showError;
 
   private StartupUtil() {
   }
@@ -256,6 +255,10 @@ public class StartupUtil {
 
   // Copy&Paste from desktop Main
   public static void showMessage(String title, String message, boolean error, boolean graphError) {
+    if (StartupError.hasStartupError) {
+      return;
+    }
+
     PrintStream stream = error ? System.err : System.out;
     stream.println("\n" + title + ": " + message);
 
@@ -266,6 +269,8 @@ public class StartupUtil {
       }
       catch (Throwable ignore) {
       }
+
+      StartupError.hasStartupError = true;
 
       try {
         JTextPane textPane = new JTextPane();

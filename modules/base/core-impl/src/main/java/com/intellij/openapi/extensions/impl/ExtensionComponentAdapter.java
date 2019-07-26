@@ -42,7 +42,7 @@ public class ExtensionComponentAdapter<T> implements LoadingOrder.Orderable {
   private final PluginDescriptor myPluginDescriptor;
   private final boolean myDeserializeInstance;
 
-  public ExtensionComponentAdapter(@Nonnull String implementationClass, Element extensionElement, IdeaPluginDescriptor pluginDescriptor, boolean deserializeInstance) {
+  public ExtensionComponentAdapter(@Nonnull String implementationClass, Element extensionElement, PluginDescriptor pluginDescriptor, boolean deserializeInstance) {
     myImplementationClassName = implementationClass;
     myExtensionElement = extensionElement;
     myPluginDescriptor = pluginDescriptor;

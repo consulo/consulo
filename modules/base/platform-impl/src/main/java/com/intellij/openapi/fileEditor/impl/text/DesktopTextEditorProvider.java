@@ -121,10 +121,10 @@ public class DesktopTextEditorProvider extends TextEditorProvider {
     else UiNotifyConnector.doWhenFirstShown(editor.getContentComponent(), scrollingRunnable);
   }
 
-  protected class EditorWrapper extends UserDataHolderBase implements TextEditor {
+  public class EditorWrapper extends UserDataHolderBase implements TextEditor {
     private final Editor myEditor;
 
-    EditorWrapper(@Nonnull Editor editor) {
+    public EditorWrapper(@Nonnull Editor editor) {
       myEditor = editor;
     }
 
