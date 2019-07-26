@@ -59,6 +59,8 @@
     <module>modules/base/core-impl</module>
     <module>modules/base/compiler-api</module>
     <module>modules/base/compiler-impl</module>
+    <module>modules/base/container-api</module>
+    <module>modules/base/container-impl</module>
     <module>modules/base/diff-api</module>
     <module>modules/base/diff-impl</module>
     <module>modules/base/disposer-api</module>

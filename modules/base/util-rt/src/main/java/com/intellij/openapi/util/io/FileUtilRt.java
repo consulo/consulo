@@ -21,9 +21,9 @@ import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.util.ArrayUtilRt;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.lang.reflect.InvocationHandler;
@@ -1046,6 +1046,14 @@ public class FileUtilRt {
     catch (NumberFormatException e) {
       return 2500 * KILOBYTE;
     }
+  }
+
+  public static boolean isJarOrZip(@Nonnull File file) {
+    if (file.isDirectory()) {
+      return false;
+    }
+    final String name = file.getName();
+    return StringUtilRt.endsWithIgnoreCase(name, ".jar") || StringUtilRt.endsWithIgnoreCase(name, ".zip");
   }
 
   private static int getLargeFilePreviewSize() {

@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.project.impl;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.notification.*;
 import com.intellij.openapi.application.Application;
@@ -52,6 +51,7 @@ import com.intellij.util.io.storage.HeavyProcessLatch;
 import consulo.application.AccessRule;
 import consulo.components.impl.PlatformComponentManagerImpl;
 import consulo.components.impl.stores.*;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
@@ -123,7 +123,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   @Nonnull
   @Override
-  protected ComponentConfig[] getComponentConfigs(IdeaPluginDescriptor ideaPluginDescriptor) {
+  protected List<ComponentConfig> getComponentConfigs(PluginDescriptor ideaPluginDescriptor) {
     return ideaPluginDescriptor.getProjectComponents();
   }
 

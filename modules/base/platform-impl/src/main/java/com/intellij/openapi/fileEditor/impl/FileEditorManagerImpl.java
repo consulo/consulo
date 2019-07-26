@@ -19,6 +19,7 @@ import com.intellij.ProjectTopics;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.plugins.PluginManagerCore;
+import com.intellij.ide.plugins.cl.PluginLoadStatistics;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.injected.editor.VirtualFileWindow;
@@ -1388,7 +1389,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
               Long startTime = myProject.getUserData(ProjectImpl.CREATION_TIME);
               if (startTime != null) {
                 LOG.info("Project opening took " + (currentTime - startTime.longValue()) / 1000000 + " ms");
-                PluginManagerCore.dumpPluginClassStatistics();
+                PluginLoadStatistics.get().dumpPluginClassStatistics(LOG::info);
               }
             }, myProject.getDisposed());
             // group 1

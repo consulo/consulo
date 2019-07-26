@@ -58,9 +58,12 @@
       <plugin>
         <groupId>consulo.maven</groupId>
         <artifactId>consulo-maven-plugin</artifactId>
-        <version>2.0</version>
+        <version>2-SNAPSHOT</version>
         <configuration>
-          <buildDirectory>${project.build.directory}/consulo-sandbox-desktop-${project.version}-main</buildDirectory>
+          <execution>
+            <buildDirectory>${project.build.directory}/consulo-sandbox-desktop-${project.version}-main</buildDirectory>
+            <newBootLoader>true</newBootLoader>
+          </execution>
         </configuration>
       </plugin>
     </plugins>

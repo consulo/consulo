@@ -76,7 +76,7 @@ public class PluginManagerColumnInfo extends ColumnInfo<IdeaPluginDescriptor, St
     }
     if (columnIdx == COLUMN_DATE) {
       //  Base class IdeaPluginDescriptor does not declare this field.
-      long date = (base instanceof PluginNode) ? ((PluginNode)base).getDate() : ((IdeaPluginDescriptorImpl)base).getDate();
+      long date = (base instanceof PluginNode) ? ((PluginNode)base).getDate() : 0;
       if (date != 0) {
         return DateFormatUtil.formatDate(date);
       }
@@ -194,8 +194,8 @@ public class PluginManagerColumnInfo extends ColumnInfo<IdeaPluginDescriptor, St
     }
     if (isSortByDate()) {
       return (o1, o2) -> {
-        long date1 = (o1 instanceof PluginNode) ? ((PluginNode)o1).getDate() : ((IdeaPluginDescriptorImpl)o1).getDate();
-        long date2 = (o2 instanceof PluginNode) ? ((PluginNode)o2).getDate() : ((IdeaPluginDescriptorImpl)o2).getDate();
+        long date1 = (o1 instanceof PluginNode) ? ((PluginNode)o1).getDate() : 0;
+        long date2 = (o2 instanceof PluginNode) ? ((PluginNode)o2).getDate() : 0;
         if (date1 < date2) {
           return -1;
         }

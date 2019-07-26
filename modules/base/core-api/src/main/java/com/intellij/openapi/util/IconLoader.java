@@ -22,12 +22,12 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.JBImageIcon;
 import com.intellij.util.ui.JBUI;
 import consulo.annotations.DeprecationInfo;
+import consulo.container.plugin.util.PlatformServiceLocator;
 import consulo.ui.migration.IconLoaderFacade;
 import consulo.ui.migration.SwingImageRef;
-import consulo.util.ServiceLoaderUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +39,7 @@ import java.util.List;
 public final class IconLoader {
   private static final Logger LOG = Logger.getInstance(IconLoader.class);
 
-  private static IconLoaderFacade ourIconLoaderFacade = ServiceLoaderUtil.loadSingleOrError(IconLoaderFacade.class);
+  private static IconLoaderFacade ourIconLoaderFacade = PlatformServiceLocator.findImplementation(IconLoaderFacade.class);
 
   public static boolean STRICT = false;
 

@@ -43,6 +43,12 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-container-api</artifactId>
+      <version>${project.version}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-async-api</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -63,7 +69,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-util-rt</artifactId>
+      <artifactId>consulo-util</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>

@@ -55,13 +55,11 @@ public class ApplicationStarter {
 
     myArgs = args;
 
-    boolean headless = Main.isHeadless();
-
-    patchSystem(headless);
+    patchSystem(false);
 
     myPostStarter = createPostStarter();
 
-    myPostStarter.initApplication(headless, args);
+    myPostStarter.initApplication(false, args);
   }
 
   protected void patchSystem(boolean headless) {

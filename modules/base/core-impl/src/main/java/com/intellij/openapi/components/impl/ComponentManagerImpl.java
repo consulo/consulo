@@ -35,6 +35,8 @@ import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.impl.MessageBusFactory;
 import consulo.application.ApplicationProperties;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginManager;
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.injecting.InjectingPoint;
@@ -46,6 +48,7 @@ import org.jetbrains.annotations.TestOnly;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -191,10 +194,9 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   protected void registerServices(InjectingContainerBuilder builder) {
-    IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
-    for (IdeaPluginDescriptor plugin : plugins) {
+    for (PluginDescriptor plugin : PluginManager.getPlugins()) {
       if (!PluginManagerCore.shouldSkipPlugin(plugin)) {
-        ComponentConfig[] componentConfigs = getComponentConfigs(plugin);
+        List<ComponentConfig> componentConfigs = getComponentConfigs(plugin);
 
         for (ComponentConfig componentConfig : componentConfigs) {
           registerComponent(componentConfig, plugin);
@@ -209,8 +211,8 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   @Nonnull
-  protected ComponentConfig[] getComponentConfigs(IdeaPluginDescriptor ideaPluginDescriptor) {
-    return ComponentConfig.EMPTY_ARRAY;
+  protected List<ComponentConfig> getComponentConfigs(PluginDescriptor ideaPluginDescriptor) {
+    return Collections.emptyList();
   }
 
   private void loadServices(List<Class> notLazyServices, InjectingContainerBuilder builder) {
@@ -256,7 +258,8 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     }
   }
 
-  private static ClassLoader getTargetClassLoader(IdeaPluginDescriptor pluginDescriptor) {
+  @Nonnull
+  private static ClassLoader getTargetClassLoader(PluginDescriptor pluginDescriptor) {
     return pluginDescriptor != null ? pluginDescriptor.getPluginClassLoader() : ComponentManagerImpl.class.getClassLoader();
   }
 
@@ -277,10 +280,11 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     LOG.error(ex);
   }
 
-  private void registerComponent(ComponentConfig config, IdeaPluginDescriptor pluginDescriptor) {
+  @SuppressWarnings("deprecation")
+  private void registerComponent(ComponentConfig config, PluginDescriptor pluginDescriptor) {
     config.prepareClasses();
 
-    config.pluginDescriptor = pluginDescriptor;
+    config.pluginDescriptor = (IdeaPluginDescriptor)pluginDescriptor;
     myComponentsRegistry.addConfig(config);
   }
 

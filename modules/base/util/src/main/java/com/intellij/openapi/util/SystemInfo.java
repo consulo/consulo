@@ -36,7 +36,6 @@ public class SystemInfo extends SystemInfoRt {
   public static final String OS_VERSION = SystemInfoRt.OS_VERSION;
   public static final String OS_ARCH = System.getProperty("os.arch");
   public static final String JAVA_VERSION = System.getProperty("java.version");
-  public static final String JAVA_RUNTIME_VERSION = System.getProperty("java.runtime.version");
   public static final String ARCH_DATA_MODEL = System.getProperty("sun.arch.data.model");
   public static final String SUN_DESKTOP = System.getProperty("sun.desktop", "");
 
@@ -56,18 +55,6 @@ public class SystemInfo extends SystemInfoRt {
   public static final boolean isJetbrainsJvm = isJetbrainsJvm();
   public static final boolean isSunJvm = isSunJvm();
   public static final boolean isIbmJvm = isIbmJvm();
-  public static final boolean IS_AT_LEAST_JAVA9 = isModularJava();
-
-  @SuppressWarnings("JavaReflectionMemberAccess")
-  private static boolean isModularJava() {
-    try {
-      Class.class.getMethod("getModule");
-      return true;
-    }
-    catch (Throwable t) {
-      return false;
-    }
-  }
 
   public static boolean isOsVersionAtLeast(@Nonnull String version) {
     return StringUtil.compareVersionNumbers(OS_VERSION, version) >= 0;

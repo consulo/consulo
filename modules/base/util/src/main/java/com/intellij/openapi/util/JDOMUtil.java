@@ -35,11 +35,11 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.*;
 import java.lang.ref.SoftReference;
 import java.net.URL;
@@ -368,6 +368,11 @@ public class JDOMUtil {
   @Contract("null -> null; !null -> !null")
   public static Element load(Reader reader) throws JDOMException, IOException {
     return reader == null ? null : loadDocument(reader).detachRootElement();
+  }
+
+  @Contract("null -> null; !null -> !null")
+  public static Element load(URL url) throws JDOMException, IOException {
+    return url == null ? null : loadDocument(url).detachRootElement();
   }
 
   @Contract("null -> null; !null -> !null")

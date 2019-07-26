@@ -143,11 +143,6 @@ public class PathManager {
     return getHomePath() + File.separator + LIB_FOLDER;
   }
 
-  @Nonnull
-  public static String getPreInstalledPluginsPath() {
-    return getHomePath() + File.separatorChar + PLUGINS_FOLDER;
-  }
-
   // config paths
   @Nonnull
   public static String getConfigPath() {

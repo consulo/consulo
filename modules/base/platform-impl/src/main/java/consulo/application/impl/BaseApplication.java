@@ -21,7 +21,6 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.ActivityTracker;
 import com.intellij.ide.ApplicationLoadListener;
 import com.intellij.ide.StartupProgress;
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.AccessToken;
@@ -64,6 +63,7 @@ import consulo.components.impl.PlatformComponentManagerImpl;
 import consulo.components.impl.stores.ApplicationStoreImpl;
 import consulo.components.impl.stores.IApplicationStore;
 import consulo.components.impl.stores.StoreUtil;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -74,6 +74,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -217,7 +218,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   @Nonnull
   @Override
-  protected ComponentConfig[] getComponentConfigs(IdeaPluginDescriptor ideaPluginDescriptor) {
+  protected List<ComponentConfig> getComponentConfigs(PluginDescriptor ideaPluginDescriptor) {
     return ideaPluginDescriptor.getAppComponents();
   }
 

@@ -35,6 +35,7 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.io.ZipUtil;
 import com.intellij.util.ui.StatusText;
+import consulo.container.impl.PluginLoader;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.ide.plugins.AvailablePluginsDialog;
 import consulo.ui.RequiredUIAccess;
@@ -131,7 +132,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
         ZipUtil.extract(file, outputDir, null);
         final File[] files = outputDir.listFiles();
         if (files != null && files.length == 1) {
-          descriptor = PluginManagerCore.loadDescriptor(files[0], PluginManagerCore.PLUGIN_XML, false, false);
+          descriptor = PluginLoader.loadDescriptor(files[0], false, false, PluginManagerCore.C_LOG);
         }
       }
       finally {

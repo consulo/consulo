@@ -1127,16 +1127,6 @@ public class StringUtil extends StringUtilRt {
     return s != null && !s.isEmpty();
   }
 
-  @Contract(value = "null -> true", pure=true)
-  public static boolean isEmpty(@Nullable String s) {
-    return s == null || s.isEmpty();
-  }
-
-  @Contract(value = "null -> true",pure = true)
-  public static boolean isEmpty(@Nullable CharSequence cs) {
-    return cs == null || cs.length() == 0;
-  }
-
   @Contract(pure = true)
   public static int length(@Nullable CharSequence cs) {
     return cs == null ? 0 : cs.length();

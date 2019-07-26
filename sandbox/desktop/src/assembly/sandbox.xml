@@ -22,6 +22,11 @@
   </formats>
   <includeBaseDirectory>false</includeBaseDirectory>
 
+  <componentDescriptors>
+    <componentDescriptor>${project.basedir}/../../distribution/src/platform.base.xml</componentDescriptor>
+    <componentDescriptor>${project.basedir}/../../distribution/src/platform.desktop.xml</componentDescriptor>
+  </componentDescriptors>
+
   <fileSets>
     <fileSet>
       <directory>${project.basedir}/boot/win/</directory>
@@ -65,6 +70,19 @@
 
   <dependencySets>
     <dependencySet>
+      <outputDirectory>Consulo/platform/buildSNAPSHOT/boot</outputDirectory>
+      <unpack>false</unpack>
+      <scope>runtime</scope>
+      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+      <includes>
+        <include>consulo:consulo-container-api</include>
+        <include>consulo:consulo-container-impl</include>
+        <include>consulo:consulo-desktop-bootstrap</include>
+        <include>consulo:consulo-util-rt</include>
+      </includes>
+    </dependencySet>
+
+    <!--<dependencySet>
       <outputDirectory>Consulo/platform/buildSNAPSHOT/lib</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>
@@ -76,15 +94,16 @@
       </excludes>
     </dependencySet>
     <dependencySet>
-      <outputDirectory>Consulo/platform/buildSNAPSHOT/plugins/platform-independent/lib</outputDirectory>
+      <outputDirectory>Consulo/platform/buildSNAPSHOT/plugins/consulo.platform.base/lib</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>
+      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
       <includes>
         <include>consulo:consulo-platform-base-plugin</include>
       </includes>
     </dependencySet>
     <dependencySet>
-      <outputDirectory>Consulo/platform/buildSNAPSHOT/plugins/sand-language/lib</outputDirectory>
+      <outputDirectory>Consulo/platform/buildSNAPSHOT/plugins/consulo.sandbox/lib</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>
       <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
@@ -93,13 +112,13 @@
       </includes>
     </dependencySet>
     <dependencySet>
-      <outputDirectory>Consulo/platform/buildSNAPSHOT/plugins/platform-desktop/lib</outputDirectory>
+      <outputDirectory>Consulo/platform/buildSNAPSHOT/plugins/consulo.platform.desktop/lib</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>
       <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
       <includes>
         <include>consulo:consulo-platform-desktop-plugin</include>
       </includes>
-    </dependencySet>
+    </dependencySet>  -->
   </dependencySets>
 </assembly>

@@ -31,13 +31,18 @@ import com.intellij.ui.AppUIUtil;
 import com.intellij.util.EnvironmentUtil;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.container.impl.ExitCodes;
 import consulo.start.CommandLineArgs;
 import consulo.start.ImportantFolderLocker;
 import consulo.util.logging.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.management.ManagementFactory;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -52,6 +57,8 @@ import java.util.function.Consumer;
 public class StartupUtil {
   private static ImportantFolderLocker ourFolderLocker;
 
+  private static boolean showError;
+
   private StartupUtil() {
   }
 
@@ -61,7 +68,7 @@ public class StartupUtil {
 
   @Nonnull
   public static synchronized ImportantFolderLocker getLocker() {
-    if(ourFolderLocker == null) {
+    if (ourFolderLocker == null) {
       throw new IllegalArgumentException("Called #getLocker() before app start");
     }
     return ourFolderLocker;
@@ -73,19 +80,17 @@ public class StartupUtil {
 
     if (commandLineArgs.isShowHelp()) {
       CommandLineArgs.printUsage();
-      System.exit(Main.USAGE_INFO);
+      System.exit(ExitCodes.USAGE_INFO);
     }
 
     if (commandLineArgs.isShowVersion()) {
       ApplicationInfoEx infoEx = ApplicationInfoImpl.getShadowInstance();
       System.out.println(infoEx.getFullApplicationName());
-      System.exit(Main.VERSION_INFO);
+      System.exit(ExitCodes.VERSION_INFO);
     }
 
-    if (!Main.isHeadless()) {
-      AppUIUtil.updateFrameClass();
-      newConfigFolder = !new File(PathManager.getConfigPath()).exists();
-    }
+    AppUIUtil.updateFrameClass();
+    newConfigFolder = !new File(PathManager.getConfigPath()).exists();
 
     List<LoggerFactory> factories = ContainerUtil.newArrayList(ServiceLoader.load(LoggerFactory.class, StartupUtil.class.getClassLoader()));
     ContainerUtil.weightSort(factories, LoggerFactory::getPriority);
@@ -97,18 +102,16 @@ public class StartupUtil {
       System.exit(0);
     }
     else if (result != ActivationResult.STARTED) {
-      System.exit(Main.INSTANCE_CHECK_FAILED);
+      System.exit(ExitCodes.INSTANCE_CHECK_FAILED);
     }
 
-    Logger log = Logger.getInstance(Main.class);
+    Logger log = Logger.getInstance(StartupUtil.class);
     startLogging(log, factory);
     loadSystemLibraries(log);
     fixProcessEnvironment(log);
 
-    if (!Main.isHeadless()) {
-      AppUIUtil.updateWindowIcon(JOptionPane.getRootFrame());
-      AppUIUtil.registerBundledFonts();
-    }
+    AppUIUtil.updateWindowIcon(JOptionPane.getRootFrame());
+    AppUIUtil.registerBundledFonts();
 
     appStarter.consume(newConfigFolder, commandLineArgs);
   }
@@ -132,7 +135,7 @@ public class StartupUtil {
       status = ourFolderLocker.lock(args);
     }
     catch (Exception e) {
-      Main.showMessage("Cannot Lock System Folders", e);
+      showMessage("Cannot Lock System Folders", e);
       return ActivationResult.FAILED;
     }
 
@@ -151,18 +154,17 @@ public class StartupUtil {
       System.out.println("Already running");
       return ActivationResult.ACTIVATED;
     }
-    else if (Main.isHeadless() || status == ImportantFolderLocker.ActivateStatus.CANNOT_ACTIVATE) {
+    else if (status == ImportantFolderLocker.ActivateStatus.CANNOT_ACTIVATE) {
       String message = "Only one instance of " + ApplicationNamesInfo.getInstance().getFullProductName() + " can be run at a time.";
-      Main.showMessage("Too Many Instances", message, true);
+      showMessage("Too Many Instances", message, true, false);
     }
 
     return ActivationResult.FAILED;
   }
 
   private static void fixProcessEnvironment(Logger log) {
-    if (!Main.isCommandLine()) {
-      System.setProperty("__idea.mac.env.lock", "unlocked");
-    }
+    System.setProperty("__idea.mac.env.lock", "unlocked");
+
     boolean envReady = EnvironmentUtil.isEnvironmentReady();  // trigger environment loading
     if (!envReady) {
       log.info("initializing environment");
@@ -220,6 +222,74 @@ public class StartupUtil {
     List<String> arguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
     if (arguments != null) {
       log.info("JVM Args: " + StringUtil.join(arguments, " "));
+    }
+  }
+
+  public static void showMessage(String title, Throwable t) {
+    StringWriter message = new StringWriter();
+    boolean graphError = false;
+    AWTError awtError = findGraphicsError(t);
+    if (awtError != null) {
+      message.append("Failed to initialize graphics environment\n\n");
+      graphError = true;
+      t = awtError;
+    }
+    else {
+      message.append("Internal error. Please post to ");
+      message.append("https://discuss.consulo.io");
+      message.append("\n\n");
+    }
+
+    t.printStackTrace(new PrintWriter(message));
+    showMessage(title, message.toString(), true, graphError);
+  }
+
+  private static AWTError findGraphicsError(Throwable t) {
+    while (t != null) {
+      if (t instanceof AWTError) {
+        return (AWTError)t;
+      }
+      t = t.getCause();
+    }
+    return null;
+  }
+
+  // Copy&Paste from desktop Main
+  public static void showMessage(String title, String message, boolean error, boolean graphError) {
+    PrintStream stream = error ? System.err : System.out;
+    stream.println("\n" + title + ": " + message);
+
+    boolean headless = GraphicsEnvironment.isHeadless() || graphError;
+    if (!headless) {
+      try {
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+      }
+      catch (Throwable ignore) {
+      }
+
+      try {
+        JTextPane textPane = new JTextPane();
+        textPane.setEditable(false);
+        textPane.setText(message.replaceAll("\t", "    "));
+        textPane.setBackground(UIManager.getColor("Panel.background"));
+        textPane.setCaretPosition(0);
+        JScrollPane scrollPane = new JScrollPane(textPane, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setBorder(null);
+
+        int maxHeight = Toolkit.getDefaultToolkit().getScreenSize().height / 2;
+        int maxWidth = Toolkit.getDefaultToolkit().getScreenSize().width / 2;
+        Dimension component = scrollPane.getPreferredSize();
+        if (component.height > maxHeight || component.width > maxWidth) {
+          scrollPane.setPreferredSize(new Dimension(Math.min(maxWidth, component.width), Math.min(maxHeight, component.height)));
+        }
+
+        int type = error ? JOptionPane.ERROR_MESSAGE : JOptionPane.WARNING_MESSAGE;
+        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), scrollPane, title, type);
+      }
+      catch (Throwable t) {
+        stream.println("\nAlso, an UI exception occurred on attempt to show above message:");
+        t.printStackTrace(stream);
+      }
     }
   }
 }

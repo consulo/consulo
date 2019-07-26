@@ -15,6 +15,7 @@
  */
 package consulo.awt;
 
+import consulo.container.plugin.util.PlatformServiceLocator;
 import consulo.ui.Component;
 import consulo.ui.KeyCode;
 import consulo.ui.Window;
@@ -23,7 +24,6 @@ import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.RGBColor;
 import consulo.ui.shared.Rectangle2D;
 import consulo.ui.shared.Size;
-import consulo.util.ServiceLoaderUtil;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -38,7 +38,7 @@ import javax.swing.*;
  */
 @SuppressWarnings("deprecation")
 public class TargetAWT {
-  private static final TargetAWTFacade ourFacade = ServiceLoaderUtil.loadSingleOrError(TargetAWTFacade.class);
+  private static final TargetAWTFacade ourFacade = PlatformServiceLocator.findImplementation(TargetAWTFacade.class);
 
   @Nonnull
   public static java.awt.Dimension to(@Nonnull Size size) {
