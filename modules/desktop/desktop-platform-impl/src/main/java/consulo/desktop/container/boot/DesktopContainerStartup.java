@@ -15,6 +15,7 @@
  */
 package consulo.desktop.container.boot;
 
+import com.intellij.concurrency.IdeaForkJoinWorkerThreadFactory;
 import com.intellij.ide.ClassUtilCore;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.startup.StartupActionScriptManager;
@@ -34,9 +35,8 @@ import java.io.IOException;
 
 /**
  * @author VISTALL
- * @since 2019-07-15
- *
  * @see consulo.desktop.boot.main.Main
+ * @since 2019-07-15
  */
 @SuppressWarnings("unused")
 public class DesktopContainerStartup implements ContainerStartup {
@@ -45,6 +45,8 @@ public class DesktopContainerStartup implements ContainerStartup {
   @Override
   public void run(@Nonnull String[] args) {
     startupStart = System.nanoTime();
+
+    IdeaForkJoinWorkerThreadFactory.setupForkJoinCommonPool();
 
     UIUtil.initDefaultLAF();
 

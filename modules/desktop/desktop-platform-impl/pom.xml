@@ -78,6 +78,12 @@
       <version>${project.version}</version>
       <optional>true</optional>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-bootstrap</artifactId>
+      <version>${project.version}</version>
+      <optional>true</optional>
+    </dependency>
     <!-- external dependencies -->
     <dependency>
       <groupId>consulo.internal</groupId>

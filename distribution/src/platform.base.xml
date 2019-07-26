@@ -105,6 +105,8 @@
         <include>args4j:args4j</include>
         <include>org.apache.logging.log4j:log4j-api</include>
         <include>org.apache.logging.log4j:log4j-core</include>
+        <include>picocontainer:picocontainer</include>
+        <include>javax.inject:javax.inject</include>
       </includes>
     </dependencySet>
   </dependencySets>

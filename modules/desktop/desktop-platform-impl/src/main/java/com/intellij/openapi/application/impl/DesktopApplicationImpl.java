@@ -16,7 +16,6 @@
 package com.intellij.openapi.application.impl;
 
 import com.intellij.CommonBundle;
-import com.intellij.concurrency.IdeaForkJoinWorkerThreadFactory;
 import com.intellij.diagnostic.LogEventException;
 import com.intellij.diagnostic.ThreadDumper;
 import com.intellij.ide.*;
@@ -101,10 +100,6 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
       return "ANY";
     }
   };
-
-  static {
-    IdeaForkJoinWorkerThreadFactory.setupForkJoinCommonPool();
-  }
 
   private final WriteThread mySubWriteThread;
 
