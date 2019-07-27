@@ -15,42 +15,21 @@
  */
 package com.intellij.ide;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 /**
- * This class is initialized in two classloaders: the bootstrap classloader and the main IDEA classloader. The bootstrap instance
- * has ourMirrorClass initialized by the Bootstrap class; it calls the main instance of itself via reflection.
+ * This class is initialized in boot classloader
  *
  * @author yole
  */
-@SuppressWarnings("UnusedDeclaration")
 public class WindowsCommandLineProcessor {
-  // The WindowsCommandLineProcessor class which is loaded in the main IDEA (non-bootstrap) classloader.
-  public static Class ourMirrorClass = null;
-
   public static WindowsCommandLineListener LISTENER = null;
 
   /**
    * NOTE: This method is called through JNI by the Windows launcher. Please do not delete or rename it.
    */
+  @SuppressWarnings("unused")
   public static void processWindowsLauncherCommandLine(final String currentDirectory, final String commandLine) {
-    if (ourMirrorClass != null) {
-      try {
-        Method method = ourMirrorClass.getMethod("processWindowsLauncherCommandLine", String.class, String.class);
-        method.invoke(null, currentDirectory, commandLine);
-      }
-      catch (NoSuchMethodException e) {
-      }
-      catch (InvocationTargetException e) {
-      }
-      catch (IllegalAccessException e) {
-      }
-    }
-    else {
-      if (LISTENER != null) {
-        LISTENER.processWindowsLauncherCommandLine(currentDirectory, commandLine);
-      }
+    if (LISTENER != null) {
+      LISTENER.processWindowsLauncherCommandLine(currentDirectory, commandLine);
     }
   }
 }
