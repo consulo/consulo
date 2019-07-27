@@ -53,8 +53,13 @@
     </dependency>
     <!--external dependencies-->
     <dependency>
-      <groupId>org.apache.ws.xmlrpc</groupId>
-      <artifactId>xmlrpc</artifactId>
+      <groupId>org.apache.xmlrpc</groupId>
+      <artifactId>xmlrpc-common</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlrpc</groupId>
+      <artifactId>xmlrpc-server</artifactId>
       <optional>true</optional>
     </dependency>
     <dependency>

@@ -99,6 +99,8 @@
         <include>consulo.internal:svg-salamander</include>
         <include>consulo.internal:javasysmon</include>
         <include>consulo.internal:pty4j</include>
+        <include>consulo.internal:build.serviceMessages</include>
+        <include>consulo.internal:purejavacomm</include>
         <include>consulo:kava.beans</include>
         <!--External libraries-->
         <include>net.java.dev.jna:jna</include>
@@ -132,6 +134,13 @@
         <include>be.cyberelf.nanoxml:nanoxml</include>
         <include>org.apache.velocity:velocity-engine-core</include>
         <include>org.jvnet.winp:winp</include>
+        <include>org.apache.common:commons-lang3</include>
+        <include>jaxen:jaxen</include>
+        <include>com.google.code.findbugs:jsr305</include>
+        <include>org.apache.thrift:libthrift</include>
+        <include>org.apache.xmlrpc:xmlrpc-common</include>
+        <include>org.apache.xmlrpc:xmlrpc-server</include>
+        <include>org.apache.xmlrpc:xmlrpc-client</include>
       </includes>
     </dependencySet>
   </dependencySets>

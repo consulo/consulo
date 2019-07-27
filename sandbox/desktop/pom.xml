@@ -161,8 +161,16 @@
 
     <!--optional dependency-->
     <dependency>
-      <groupId>org.apache.ws.xmlrpc</groupId>
-      <artifactId>xmlrpc</artifactId>
+      <groupId>org.apache.xmlrpc</groupId>
+      <artifactId>xmlrpc-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlrpc</groupId>
+      <artifactId>xmlrpc-server</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlrpc</groupId>
+      <artifactId>xmlrpc-client</artifactId>
     </dependency>
     <dependency>
       <groupId>io.netty</groupId>
@@ -175,6 +183,10 @@
     <dependency>
       <groupId>io.netty</groupId>
       <artifactId>netty-transport</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jaxen</groupId>
+      <artifactId>jaxen</artifactId>
     </dependency>
     <dependency>
       <groupId>io.netty</groupId>
