@@ -97,6 +97,8 @@
         <include>consulo.internal:jdom</include>
         <include>consulo.internal:forms_rt</include>
         <include>consulo.internal:svg-salamander</include>
+        <include>consulo.internal:javasysmon</include>
+        <include>consulo.internal:pty4j</include>
         <include>consulo:kava.beans</include>
         <!--External libraries-->
         <include>net.java.dev.jna:jna</include>

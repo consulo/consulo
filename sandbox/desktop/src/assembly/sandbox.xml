@@ -29,30 +29,30 @@
 
   <fileSets>
     <fileSet>
-      <directory>${project.basedir}/boot/win/</directory>
+      <directory>${project.basedir}/../../distribution/boot/win/</directory>
       <includes>
-        <include>*</include>
+        <include>**</include>
       </includes>
       <outputDirectory>Consulo/</outputDirectory>
     </fileSet>
     <fileSet>
       <directory>${project.basedir}/../../distribution/platform/shared/</directory>
       <includes>
-        <include>*/*</include>
+        <include>**</include>
       </includes>
       <outputDirectory>Consulo/platform/buildSNAPSHOT/</outputDirectory>
     </fileSet>
     <fileSet>
       <directory>${project.basedir}/../../distribution/platform/win</directory>
       <includes>
-        <include>*/*</include>
+        <include>**</include>
       </includes>
       <outputDirectory>Consulo/platform/buildSNAPSHOT/</outputDirectory>
     </fileSet>
     <fileSet>
       <directory>${project.basedir}/../../distribution/platform/linux</directory>
       <includes>
-        <include>*/*</include>
+        <include>**</include>
       </includes>
       <excludes>
         <exclude>/bin/.gitignore</exclude>
@@ -62,64 +62,9 @@
     <fileSet>
       <directory>${project.basedir}/../../distribution/platform/mac</directory>
       <includes>
-        <include>*/*</include>
+        <include>**</include>
       </includes>
       <outputDirectory>Consulo/platform/buildSNAPSHOT/</outputDirectory>
     </fileSet>
   </fileSets>
-
-  <dependencySets>
-    <dependencySet>
-      <outputDirectory>Consulo/platform/buildSNAPSHOT/boot</outputDirectory>
-      <unpack>false</unpack>
-      <scope>runtime</scope>
-      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-      <includes>
-        <include>consulo:consulo-container-api</include>
-        <include>consulo:consulo-container-impl</include>
-        <include>consulo:consulo-desktop-bootstrap</include>
-        <include>consulo:consulo-bootstrap</include>
-        <include>consulo:consulo-util-rt</include>
-      </includes>
-    </dependencySet>
-
-    <!--<dependencySet>
-      <outputDirectory>Consulo/platform/buildSNAPSHOT/lib</outputDirectory>
-      <unpack>false</unpack>
-      <scope>runtime</scope>
-      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-      <excludes>
-        <exclude>consulo:consulo-sand-language-plugin</exclude>
-        <exclude>consulo:consulo-platform-base-plugin</exclude>
-        <exclude>consulo:consulo-platform-desktop-plugin</exclude>
-      </excludes>
-    </dependencySet>
-    <dependencySet>
-      <outputDirectory>Consulo/platform/buildSNAPSHOT/plugins/consulo.platform.base/lib</outputDirectory>
-      <unpack>false</unpack>
-      <scope>runtime</scope>
-      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-      <includes>
-        <include>consulo:consulo-platform-base-plugin</include>
-      </includes>
-    </dependencySet>
-    <dependencySet>
-      <outputDirectory>Consulo/platform/buildSNAPSHOT/plugins/consulo.sandbox/lib</outputDirectory>
-      <unpack>false</unpack>
-      <scope>runtime</scope>
-      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-      <includes>
-        <include>consulo:consulo-sand-language-plugin</include>
-      </includes>
-    </dependencySet>
-    <dependencySet>
-      <outputDirectory>Consulo/platform/buildSNAPSHOT/plugins/consulo.platform.desktop/lib</outputDirectory>
-      <unpack>false</unpack>
-      <scope>runtime</scope>
-      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-      <includes>
-        <include>consulo:consulo-platform-desktop-plugin</include>
-      </includes>
-    </dependencySet>  -->
-  </dependencySets>
 </assembly>
