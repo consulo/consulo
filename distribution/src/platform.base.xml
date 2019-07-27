@@ -87,7 +87,7 @@
         <include>consulo:consulo-xtest-impl</include>
         <include>consulo:consulo-xtest-sm-impl</include>
 
-        <!--TODO [VISTALL] those dependency must be removed from base plugin-->
+        <!--TODO [VISTALL] those dependencies must be removed from base plugin-->
         <include>consulo:consulo-desktop-util-awt</include>
         <include>org.imgscalr:imgscalr-lib</include>
         <include>com.miglayout:miglayout</include>
