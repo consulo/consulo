@@ -90,6 +90,7 @@
         <!--TODO [VISTALL] those dependency must be removed from base plugin-->
         <include>consulo:consulo-desktop-util-awt</include>
         <include>org.imgscalr:imgscalr-lib</include>
+        <include>com.miglayout:miglayout</include>
 
         <!--Internal libraries-->
         <include>consulo.internal:trove4j</include>
@@ -128,6 +129,7 @@
         <include>commons-codec:commons-codec</include>
         <include>be.cyberelf.nanoxml:nanoxml</include>
         <include>org.apache.velocity:velocity-engine-core</include>
+        <include>org.jvnet.winp:winp</include>
       </includes>
     </dependencySet>
   </dependencySets>
