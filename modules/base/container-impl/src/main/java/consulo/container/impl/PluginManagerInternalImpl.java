@@ -15,10 +15,15 @@
  */
 package consulo.container.impl;
 
+import com.intellij.ide.plugins.cl.IdeaPluginClassLoader;
+import com.intellij.openapi.extensions.PluginId;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginManager;
 import consulo.container.plugin.internal.PluginManagerInternal;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.File;
 
 /**
  * @author VISTALL
@@ -39,5 +44,17 @@ public class PluginManagerInternalImpl implements PluginManagerInternal {
   @Override
   public boolean isInitialized() {
     return PluginHolderModificator.isInitialized();
+  }
+
+  @Nullable
+  @Override
+  public File getPluginPath(@Nonnull Class<?> pluginClass) {
+    ClassLoader temp = pluginClass.getClassLoader();
+    assert temp instanceof IdeaPluginClassLoader : "classloader is not plugin";
+    IdeaPluginClassLoader classLoader = (IdeaPluginClassLoader)temp;
+    PluginId pluginId = classLoader.getPluginId();
+    PluginDescriptor plugin = PluginManager.findPlugin(pluginId);
+    assert plugin != null : "plugin is not found";
+    return plugin.getPath();
   }
 }

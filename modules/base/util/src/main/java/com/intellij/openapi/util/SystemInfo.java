@@ -36,7 +36,7 @@ public class SystemInfo extends SystemInfoRt {
   public static final String OS_VERSION = SystemInfoRt.OS_VERSION;
   public static final String OS_ARCH = System.getProperty("os.arch");
   public static final String JAVA_VERSION = System.getProperty("java.version");
-  public static final String ARCH_DATA_MODEL = System.getProperty("sun.arch.data.model");
+  public static final String ARCH_DATA_MODEL = SystemInfoRt.ARCH_DATA_MODEL;
   public static final String SUN_DESKTOP = System.getProperty("sun.desktop", "");
 
   public static final boolean isWindows = SystemInfoRt.isWindows;
@@ -114,8 +114,8 @@ public class SystemInfo extends SystemInfoRt {
   public static final boolean isFileSystemCaseSensitive = SystemInfoRt.isFileSystemCaseSensitive;
   public static final boolean areSymLinksSupported = isUnix || isWinVistaOrNewer;
 
-  public static final boolean is32Bit = ARCH_DATA_MODEL == null || ARCH_DATA_MODEL.equals("32");
-  public static final boolean is64Bit = !is32Bit;
+  public static final boolean is32Bit = SystemInfoRt.is32Bit;
+  public static final boolean is64Bit = SystemInfoRt.is64Bit;
   public static final boolean isAMD64 = "amd64".equals(OS_ARCH);
   public static final boolean isMacIntel64 = isMac && "x86_64".equals(OS_ARCH);
 

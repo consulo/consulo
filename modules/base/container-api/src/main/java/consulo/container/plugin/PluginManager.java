@@ -21,6 +21,7 @@ import consulo.util.ServiceLoaderUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.File;
 
 /**
  * @author VISTALL
@@ -43,6 +44,11 @@ public final class PluginManager {
     }
 
     return null;
+  }
+
+  @Nullable
+  public static File getPluginPath(@Nonnull Class<?> pluginClass) {
+    return ourInternal.getPluginPath(pluginClass);
   }
 
   public static int getPluginsCount() {

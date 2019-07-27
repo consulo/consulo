@@ -18,6 +18,8 @@ package consulo.container.plugin.internal;
 import consulo.container.plugin.PluginDescriptor;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.File;
 
 /**
  * @author VISTALL
@@ -30,4 +32,7 @@ public interface PluginManagerInternal {
   int getPluginsCount();
 
   boolean isInitialized();
+
+  @Nullable
+  File getPluginPath(@Nonnull Class<?> pluginClass);
 }
