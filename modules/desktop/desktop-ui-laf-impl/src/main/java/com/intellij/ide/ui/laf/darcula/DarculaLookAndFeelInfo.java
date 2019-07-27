@@ -16,15 +16,15 @@
 package com.intellij.ide.ui.laf.darcula;
 
 import com.intellij.ide.IdeBundle;
+import consulo.desktop.ui.laf.LookAndFeelInfoWithClassLoader;
 import consulo.ide.ui.laf.LafWithColorScheme;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
-public class DarculaLookAndFeelInfo extends UIManager.LookAndFeelInfo implements LafWithColorScheme {
+public class DarculaLookAndFeelInfo extends LookAndFeelInfoWithClassLoader implements LafWithColorScheme {
   public DarculaLookAndFeelInfo() {
     super(IdeBundle.message("idea.dark.look.and.feel"), DarculaLaf.class.getName());
   }

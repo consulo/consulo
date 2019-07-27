@@ -57,8 +57,7 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginManager;
+import consulo.desktop.ui.laf.LookAndFeelInfoWithClassLoader;
 import consulo.desktop.util.awt.UIModificationTracker;
 import consulo.desktop.util.awt.laf.GTKPlusUIUtil;
 import consulo.ide.eap.EarlyAccessProgramManager;
@@ -72,7 +71,6 @@ import consulo.ide.ui.laf.mac.MacEditorTabsUI;
 import consulo.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.ModernWhiteLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.NativeModernWhiteLookAndFeelInfo;
-import consulo.platform.Platform;
 import consulo.ui.style.StyleManager;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -318,20 +316,21 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
 
       UIModificationTracker.getInstance().incModificationCount();
 
-      PluginDescriptor plugin = PluginManager.findPlugin(Platform.current().getPluginId());
+      ClassLoader targetClassLoader = null;
+      if (lookAndFeelInfo instanceof LookAndFeelInfoWithClassLoader) {
+        targetClassLoader = ((LookAndFeelInfoWithClassLoader)lookAndFeelInfo).getClassLoader();
+        UIManager.setLookAndFeel(newInstance((LookAndFeelInfoWithClassLoader)lookAndFeelInfo));
+      }
+      else {
+        UIManager.setLookAndFeel(lookAndFeelInfo.getClassName());
+      }
 
-      ClassLoader pluginClassLoader = plugin.getPluginClassLoader();
+      if(targetClassLoader != null) {
+        final UIDefaults uiDefaults = UIManager.getLookAndFeelDefaults();
 
+        uiDefaults.put("ClassLoader", targetClassLoader);
+      }
 
-      Class<?> clazz = Class.forName(lookAndFeelInfo.getClassName(), true, pluginClassLoader);
-
-      LookAndFeel o = (LookAndFeel)ReflectionUtil.newInstance(clazz);
-
-      UIManager.setLookAndFeel(o);
-
-      final UIDefaults uiDefaults = UIManager.getLookAndFeelDefaults();
-
-      uiDefaults.put("ClassLoader", pluginClassLoader);
       fireUpdate();
     }
     catch (Exception e) {
@@ -340,8 +339,15 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
       return;
     }
     myCurrentLaf = lookAndFeelInfo;
+  }
 
-    checkLookAndFeel(lookAndFeelInfo, false);
+  @Nonnull
+  private LookAndFeel newInstance(LookAndFeelInfoWithClassLoader lookAndFeel) throws Exception {
+    ClassLoader classLoader = lookAndFeel.getClassLoader();
+
+    Class<?> clazz = Class.forName(lookAndFeel.getClassName(), true, classLoader);
+
+    return (LookAndFeel)ReflectionUtil.newInstance(clazz);
   }
 
   private static void fireUpdate() {
@@ -360,15 +366,6 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
       }
     }
     ActionToolbarImpl.updateAllToolbarsImmediately();
-  }
-
-  @Override
-  public boolean checkLookAndFeel(UIManager.LookAndFeelInfo lookAndFeelInfo) {
-    return checkLookAndFeel(lookAndFeelInfo, true);
-  }
-
-  private boolean checkLookAndFeel(final UIManager.LookAndFeelInfo lafInfo, final boolean confirm) {
-    return true;
   }
 
   /**

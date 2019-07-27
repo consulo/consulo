@@ -16,15 +16,15 @@
 package com.intellij.ide.ui.laf.intellij;
 
 import com.intellij.ide.IdeBundle;
+import consulo.desktop.ui.laf.LookAndFeelInfoWithClassLoader;
 import consulo.ide.ui.laf.LafWithColorScheme;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
-public class IntelliJLookAndFeelInfo extends UIManager.LookAndFeelInfo implements LafWithColorScheme {
+public class IntelliJLookAndFeelInfo extends LookAndFeelInfoWithClassLoader implements LafWithColorScheme {
   public IntelliJLookAndFeelInfo(){
     super(IdeBundle.message("idea.intellij.look.and.feel"), IntelliJLaf.class.getName());
   }

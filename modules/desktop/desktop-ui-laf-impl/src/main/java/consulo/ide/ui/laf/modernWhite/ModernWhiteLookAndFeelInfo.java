@@ -16,16 +16,16 @@
 package consulo.ide.ui.laf.modernWhite;
 
 import com.intellij.ide.IdeBundle;
+import consulo.desktop.ui.laf.LookAndFeelInfoWithClassLoader;
 import consulo.ide.ui.laf.LafWithColorScheme;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 02.03.14
  */
-public class ModernWhiteLookAndFeelInfo extends UIManager.LookAndFeelInfo implements LafWithColorScheme {
+public class ModernWhiteLookAndFeelInfo extends LookAndFeelInfoWithClassLoader implements LafWithColorScheme {
   public ModernWhiteLookAndFeelInfo() {
     super(IdeBundle.message("modern.white.intellij.look.and.feel"), ModernWhiteLaf.class.getName());
   }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.ui.laf;
-
-import consulo.desktop.ui.laf.LookAndFeelInfoWithClassLoader;
+package consulo.desktop.ui.laf;
 
 import javax.annotation.Nonnull;
+import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 14.12.14
+ * @since 2019-07-27
  */
-public class MacDefaultLookAndFeelInfo extends LookAndFeelInfoWithClassLoader implements LafWithColorScheme {
-  public MacDefaultLookAndFeelInfo(String name, String className) {
+public abstract class LookAndFeelInfoWithClassLoader extends UIManager.LookAndFeelInfo {
+  public LookAndFeelInfoWithClassLoader(String name, String className) {
     super(name, className);
   }
 
   @Nonnull
-  @Override
-  public String getColorSchemeName() {
-    return getName();
+  public ClassLoader getClassLoader() {
+    return getClass().getClassLoader();
   }
 }
