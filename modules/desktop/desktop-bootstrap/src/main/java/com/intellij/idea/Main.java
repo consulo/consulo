@@ -15,6 +15,7 @@
  */
 package com.intellij.idea;
 
+@Deprecated
 public class Main {
   public static void main(String[] args) {
     consulo.desktop.boot.main.Main.main(args);

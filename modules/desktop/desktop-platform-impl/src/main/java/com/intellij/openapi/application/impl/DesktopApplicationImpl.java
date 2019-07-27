@@ -48,6 +48,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.application.WriteThreadOption;
 import consulo.application.impl.WriteThread;
 import consulo.application.internal.ApplicationWithOwnWriteThread;
+import consulo.desktop.boot.main.windows.WindowsCommandLineProcessor;
 import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.application.ApplicationProperties;

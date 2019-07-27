@@ -13,23 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide;
+package consulo.desktop.boot.main.windows;
 
 /**
- * This class is initialized in boot classloader
- *
  * @author yole
  */
-public class WindowsCommandLineProcessor {
-  public static WindowsCommandLineListener LISTENER = null;
-
-  /**
-   * NOTE: This method is called through JNI by the Windows launcher. Please do not delete or rename it.
-   */
-  @SuppressWarnings("unused")
-  public static void processWindowsLauncherCommandLine(final String currentDirectory, final String commandLine) {
-    if (LISTENER != null) {
-      LISTENER.processWindowsLauncherCommandLine(currentDirectory, commandLine);
-    }
-  }
+public interface WindowsCommandLineListener {
+  void processWindowsLauncherCommandLine(final String currentDirectory, final String commandLine);
 }

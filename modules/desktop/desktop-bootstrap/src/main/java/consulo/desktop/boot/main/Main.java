@@ -87,8 +87,6 @@ public class Main {
   private static void initAndCallStartup(String[] args) throws Exception {
     ContainerStartup containerStartup = BootstrapClassLoaderUtil.buildContainerStartup(new ContainerLoggerImpl());
 
-    //WindowsCommandLineProcessor.ourMirrorClass = Class.forName(WindowsCommandLineProcessor.class.getName(), true, newClassLoader);
-
     containerStartup.run(args);
   }
 
