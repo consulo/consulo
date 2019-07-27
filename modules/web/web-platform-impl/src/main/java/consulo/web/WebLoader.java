@@ -17,14 +17,12 @@ package consulo.web;
 
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.idea.ApplicationStarter;
-import com.intellij.idea.Main;
 import com.intellij.idea.StartupUtil;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.concurrency.AppExecutorUtil;
-import consulo.application.ApplicationProperties;
 import consulo.ui.web.servlet.UIIconServlet;
 import consulo.ui.web.servlet.UIServlet;
 import consulo.web.main.WebPostStarter;
@@ -55,7 +53,7 @@ public class WebLoader {
     System.setProperty(PathManager.PROPERTY_CONFIG_PATH, home.getPath() + "/.config/sandbox/config");
     System.setProperty(PathManager.PROPERTY_SYSTEM_PATH, home.getPath() + "/.config/sandbox/system");
 
-    Main.setFlags(new String[0]);
+    //Main.setFlags(new String[0]);
 
     StartupUtil.prepareAndStart(args, WebImportantFolderLocker::new, (newConfigFolder, commandLineArgs) -> {
       ApplicationStarter app = new ApplicationStarter(WebPostStarter.class,commandLineArgs);
