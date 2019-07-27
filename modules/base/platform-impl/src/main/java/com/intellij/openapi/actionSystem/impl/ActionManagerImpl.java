@@ -295,7 +295,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
    * Converts action's stub to normal action.
    */
   @SuppressWarnings("unchecked")
-  AnAction convertStub(ActionStub stub) {
+  public AnAction convertStub(ActionStub stub) {
     Object obj;
     String className = stub.getClassName();
     Class actionClass = stub.resolveClass();
@@ -1013,15 +1013,15 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   }
 
   @Override
-  public void unregisterAction(@Nonnull String actionId) {
+  public AnAction unregisterActionEx(@Nonnull String actionId) {
     synchronized (myLock) {
       if (!myId2Action.containsKey(actionId)) {
         if (LOG.isDebugEnabled()) {
           LOG.debug("action with ID " + actionId + " wasn't registered");
-          return;
+          return null;
         }
       }
-      AnAction oldValue = (AnAction)myId2Action.remove(actionId);
+      AnAction oldValue = myId2Action.remove(actionId);
       myAction2Id.remove(oldValue);
       myId2Index.remove(actionId);
       for (PluginId pluginName : myPlugin2Id.keySet()) {
@@ -1030,6 +1030,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
           pluginActions.remove(actionId);
         }
       }
+      return oldValue;
     }
   }
 

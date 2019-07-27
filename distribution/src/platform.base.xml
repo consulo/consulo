@@ -87,7 +87,7 @@
         <include>consulo:consulo-xtest-impl</include>
         <include>consulo:consulo-xtest-sm-impl</include>
 
-        <!--TODO [VISTALL] this dependency must be removed from base plugin-->
+        <!--TODO [VISTALL] those dependency must be removed from base plugin-->
         <include>consulo:consulo-desktop-util-awt</include>
         <include>org.imgscalr:imgscalr-lib</include>
 
@@ -124,6 +124,10 @@
         <include>dk.brics.automaton:automaton</include>
         <include>cglib:cglib-nodep</include>
         <include>oro:oro</include>
+        <include>org.apache.commons:commons-compress</include>
+        <include>commons-codec:commons-codec</include>
+        <include>be.cyberelf.nanoxml:nanoxml</include>
+        <include>org.apache.velocity:velocity-engine-core</include>
       </includes>
     </dependencySet>
   </dependencySets>

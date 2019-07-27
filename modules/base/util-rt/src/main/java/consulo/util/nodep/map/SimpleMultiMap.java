@@ -80,12 +80,6 @@ public class SimpleMultiMap<K, V> implements Map<K, Collection<V>> {
     vs.add(value);
   }
 
-  public void putAllValues(@Nonnull SimpleMultiMap<K, V> map) {
-    for (Entry<K, Collection<V>> e : map.entrySet()) {
-      put(e.getKey(), e.getValue());
-    }
-  }
-
   @Override
   public Collection<V> put(K key, Collection<V> value) {
     for (V v : value) {
@@ -96,8 +90,10 @@ public class SimpleMultiMap<K, V> implements Map<K, Collection<V>> {
   }
 
   @Override
-  public void putAll(@Nonnull Map<? extends K, ? extends Collection<V>> m) {
-    throw new UnsupportedOperationException();
+  public void putAll(@Nonnull Map<? extends K, ? extends Collection<V>> map) {
+    for (Entry<? extends K, ? extends Collection<V>> e : map.entrySet()) {
+      put(e.getKey(), e.getValue());
+    }
   }
 
   @Override

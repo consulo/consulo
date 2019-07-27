@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.newProject.actions;
+package consulo.desktop.ui.popup.impl;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.Window;
+import consulo.ui.desktop.internal.window.JWindowAsUIWindow;
+import consulo.ui.popup.JWindowPopupFactory;
 
-import javax.annotation.Nonnull;
+import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 14-Oct-17
+ * @since 2019-07-27
  */
-public class NewProjectAction extends AnAction {
-  @RequiredUIAccess
+public class JWindowPopupFactoryImpl implements JWindowPopupFactory {
   @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    //TODO [VISTALL] stub until we not merge with desktop implementation
+  public JWindow create(Window window) {
+    return new JWindowAsUIWindow(window);
   }
 }

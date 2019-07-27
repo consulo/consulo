@@ -122,8 +122,13 @@ public class SimpleXmlReader {
 
   @Nullable
   private static String mapText(Element element) {
-    String textContent = element.getTextContent();
-    return StringUtilRt.isEmptyOrSpaces(textContent) ? null : textContent;
+    Node firstChild = element.getFirstChild();
+    Node lastChild = element.getLastChild();
+    if (lastChild == firstChild && firstChild instanceof Text) {
+      String wholeText = ((Text)firstChild).getWholeText();
+      return StringUtilRt.isEmptyOrSpaces(wholeText) ? null : wholeText.trim();
+    }
+    return null;
   }
 
   @Nonnull
@@ -131,7 +136,7 @@ public class SimpleXmlReader {
     NamedNodeMap attributes = element.getAttributes();
 
     int length = attributes.getLength();
-    if(length == 0) {
+    if (length == 0) {
       return Collections.emptyMap();
     }
 
@@ -140,7 +145,7 @@ public class SimpleXmlReader {
     for (int i = 0; i < length; i++) {
       Node namedItem = attributes.item(i);
 
-      if(namedItem instanceof Attr) {
+      if (namedItem instanceof Attr) {
         map.put(((Attr)namedItem).getName(), ((Attr)namedItem).getValue());
       }
     }

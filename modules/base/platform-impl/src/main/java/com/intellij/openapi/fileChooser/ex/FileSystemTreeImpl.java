@@ -441,7 +441,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
     return myAsyncTreeModel != null && myAsyncTreeModel.isLeaf(component);
   }
 
-  static VirtualFile getVirtualFile(TreePath path) {
+  public static VirtualFile getVirtualFile(TreePath path) {
     Object component = path.getLastPathComponent();
     if (component instanceof DefaultMutableTreeNode) {
       DefaultMutableTreeNode node = (DefaultMutableTreeNode)component;

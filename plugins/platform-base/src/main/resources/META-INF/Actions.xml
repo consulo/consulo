@@ -994,7 +994,7 @@
     </group>
 
     <group id="WelcomeScreen.QuickStart.IDEA">
-      <action id="WelcomeScreen.CreateNewProject" class="consulo.ide.newProject.actions.NewProjectAction" icon="AllIcons.Welcome.CreateNewProject"/>
+      <action id="WelcomeScreen.CreateNewProject" class="com.intellij.openapi.actionSystem.EmptyAction" icon="AllIcons.Welcome.CreateNewProject"/>
       <action id="WelcomeScreen.OpenProject" class="com.intellij.ide.actions.OpenProjectAction" icon="AllIcons.Welcome.OpenProject"/>
       <add-to-group group-id="WelcomeScreen.QuickStart" anchor="first"/>
     </group>
@@ -1913,7 +1913,7 @@
 
     <!-- File -->
     <group id="OpenProjectGroup">
-      <action id="NewProject" class="consulo.ide.newProject.actions.NewProjectAction"/>
+      <action id="NewProject" class="com.intellij.openapi.actionSystem.EmptyAction"/>
       <action id="NewModule" class="com.intellij.openapi.roots.ui.configuration.actions.NewModuleAction"/>
       <action id="ImportModule" class="com.intellij.ide.actions.ImportModuleAction" text="Import Module..."/>
 

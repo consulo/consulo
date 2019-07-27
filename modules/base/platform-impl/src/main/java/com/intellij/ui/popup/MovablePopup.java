@@ -17,7 +17,7 @@ package com.intellij.ui.popup;
 
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
-import consulo.util.JWindowAsUIWindowHack;
+import consulo.ui.popup.JWindowPopupFactory;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -142,7 +142,7 @@ public class MovablePopup {
       Window owner = UIUtil.getWindow(myOwner);
       if (owner != null) {
         if (myHeavyWeight) {
-          JWindow view = JWindowAsUIWindowHack.create(TargetAWT.from(owner));
+          JWindow view = JWindowPopupFactory.getInstance().create(TargetAWT.from(owner));
           view.setType(Window.Type.POPUP);
           if (myAlwaysOnTop) {
             try {
