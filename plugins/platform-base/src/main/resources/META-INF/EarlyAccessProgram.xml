@@ -13,7 +13,7 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin>
+<consulo-plugin>
   <extensionPoints>
     <extensionPoint name="eapDescriptor" interface="consulo.ide.eap.EarlyAccessProgramDescriptor" />
   </extensionPoints>
@@ -29,4 +29,4 @@
                              instance="consulo.ide.eap.EarlyAccessProgramConfigurable" />
     <applicationService serviceImplementation="consulo.ide.eap.EarlyAccessProgramManager" />
   </extensions>
-</idea-plugin>
+</consulo-plugin>

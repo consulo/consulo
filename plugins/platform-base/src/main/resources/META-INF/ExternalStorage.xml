@@ -13,8 +13,8 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin>
+<consulo-plugin>
   <extensions defaultExtensionNs="com.intellij">
     <applicationLoadListener implementation="consulo.externalStorage.ExternalStorageAppListener" />
   </extensions>
-</idea-plugin>
+</consulo-plugin>

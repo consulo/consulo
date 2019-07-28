@@ -1,4 +1,4 @@
-<idea-plugin>
+<consulo-plugin>
   <name>Sand Language</name>
   <platformVersion>SNAPSHOT</platformVersion>
 
@@ -52,4 +52,4 @@
 
     <remoteServer.type implementation="consulo.sandboxPlugin.ide.remoteServer.SandServerType" />
   </extensions>
-</idea-plugin>
+</consulo-plugin>

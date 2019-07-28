@@ -13,7 +13,7 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin>
+<consulo-plugin>
   <id>consulo.platform.web</id>
   <name>Platform: web</name>
 
@@ -60,4 +60,4 @@
     <projectService serviceInterface="com.intellij.openapi.wm.ToolWindowManager" serviceImplementation="consulo.web.wm.impl.WebToolWindowManagerImpl" lazy="false"/>
     <projectService serviceInterface="consulo.wm.ProjectIdeFocusManager" serviceImplementation="consulo.web.wm.impl.WebProjectIdeFocusManagerImpl" lazy="false"/>
   </extensions>
-</idea-plugin>
+</consulo-plugin>

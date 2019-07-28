@@ -13,7 +13,7 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin version="2">
+<consulo-plugin>
   <extensions defaultExtensionNs="com.intellij">
     <projectConfigurable displayName="Copyright"
                          parentId="editor"
@@ -55,4 +55,4 @@
       <add-to-group group-id="GenerateGroup" anchor="last"/>
     </action>
   </actions>
-</idea-plugin>
+</consulo-plugin>

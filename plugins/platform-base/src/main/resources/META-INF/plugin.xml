@@ -13,7 +13,7 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin>
+<consulo-plugin>
   <id>com.intellij</id>
   <name>Platform: base</name>
   <resource-bundle>messages.ActionsBundle</resource-bundle>
@@ -2581,4 +2581,4 @@
 
     <codeStyleIndentHelperExtension implementation="consulo.consulo.psi.impl.source.codeStyle.DefaultIndentHelperExtension" order="last"/>
   </extensions>
-</idea-plugin>
+</consulo-plugin>

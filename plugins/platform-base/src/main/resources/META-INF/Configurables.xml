@@ -13,7 +13,7 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin>
+<consulo-plugin>
   <extensions defaultExtensionNs="com.intellij">
     <applicationConfigurable id="execution"
                              displayName="Execution"
@@ -209,4 +209,4 @@
                     instance="com.intellij.diff.settings.ExternalDiffSettingsConfigurable"/>
     </projectConfigurable>
   </extensions>
-</idea-plugin>
+</consulo-plugin>

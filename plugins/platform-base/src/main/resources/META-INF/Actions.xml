@@ -13,7 +13,7 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin>
+<consulo-plugin>
   <actions>
     <group id="Vcs.KeymapGroup" text="Version Control Systems"/>
     <!-- grouping for Settings -> Keymap -> Version Control Systems -->
@@ -2286,4 +2286,4 @@
     </group>
 
   </actions>
-</idea-plugin>
+</consulo-plugin>

@@ -13,7 +13,7 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin>
+<consulo-plugin>
   <application-components>
     <component>
       <interface-class>com.intellij.openapi.project.ProjectManager</interface-class>
@@ -217,4 +217,4 @@
       <implementation-class>com.intellij.util.gist.GistManagerImpl</implementation-class>
     </component>
   </application-components>
-</idea-plugin>
+</consulo-plugin>

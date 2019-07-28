@@ -13,7 +13,7 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin>
+<consulo-plugin>
   <extensionPoints>
     <extensionPoint name="customPortServerManager" interface="consulo.builtInServer.custom.CustomPortServerManager"/>
     <extensionPoint name="binaryRequestHandler" interface="consulo.builtInServer.binary.BinaryRequestHandler"/>
@@ -32,4 +32,4 @@
 
     <customPortServerManager implementation="consulo.builtInServer.impl.ide.BuiltInServerOptions$MyCustomPortServerManager"/>
   </extensions>
-</idea-plugin>
+</consulo-plugin>

@@ -13,7 +13,7 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin>
+<consulo-plugin>
   <extensionPoints>
     <extensionPoint name="logProvider" interface="com.intellij.vcs.log.VcsLogProvider" area="PROJECT"/>
     <extensionPoint name="logHighlighterFactory" interface="com.intellij.vcs.log.ui.VcsLogHighlighterFactory" area="PROJECT"/>
@@ -22,6 +22,9 @@
   <extensions defaultExtensionNs="com.intellij">
     <changesViewContent tabName="Log" className="com.intellij.vcs.log.impl.VcsLogContentProvider"
                         predicateClassName="com.intellij.vcs.log.impl.VcsLogContentProvider$VcsLogVisibilityPredicate"/>
+
+    <applicationService serviceInterface="com.intellij.vcs.log.graph.PermanentGraphBuilder"
+                        serviceImplementation="com.intellij.vcs.log.graph.PermanentGraphBuilderImpl"/>
 
     <projectService serviceImplementation="com.intellij.vcs.log.impl.VcsProjectLog"/>
     <projectService serviceInterface="com.intellij.vcs.log.VcsLogObjectsFactory"
@@ -139,5 +142,5 @@
     </group>
   </actions>
 
-</idea-plugin>
+</consulo-plugin>
 

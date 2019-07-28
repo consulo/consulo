@@ -13,7 +13,7 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin>
+<consulo-plugin>
   <project-components>
     <component>
       <interface-class>com.intellij.xdebugger.XDebuggerManager</interface-class>
@@ -68,4 +68,4 @@
 
     <copyPastePreProcessor implementation="com.intellij.xdebugger.impl.ui.DebuggerCopyPastePreprocessor"/>
   </extensions>
-</idea-plugin>
+</consulo-plugin>
