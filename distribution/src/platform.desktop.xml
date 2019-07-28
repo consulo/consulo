@@ -16,7 +16,7 @@
 <component>
   <dependencySets>
     <dependencySet>
-      <outputDirectory>Consulo/platform/buildSNAPSHOT/modules/consulo.platform.desktop/lib</outputDirectory>
+      <outputDirectory>${build.dist.platform.home}/modules/consulo.platform.desktop/lib</outputDirectory>
       <unpack>false</unpack>
       <includes>
         <include>consulo:consulo-platform-desktop-plugin</include>
@@ -35,7 +35,7 @@
     </dependencySet>
 
     <dependencySet>
-      <outputDirectory>Consulo/platform/buildSNAPSHOT/boot</outputDirectory>
+      <outputDirectory>${build.dist.platform.home}/boot</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>
       <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>

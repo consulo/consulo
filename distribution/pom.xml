@@ -25,14 +25,29 @@
         <version>${maven.assembly.plugin}</version>
         <executions>
           <execution>
-            <id>create-archive-win</id>
+            <id>create-archive-win-linux</id>
             <configuration>
               <descriptors>
                 <descriptor>${project.basedir}/src/assembly/win.xml</descriptor>
                 <descriptor>${project.basedir}/src/assembly/linux.xml</descriptor>
+              </descriptors>
+              <attach>false</attach>
+            </configuration>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>create-archive-mac</id>
+            <configuration>
+              <descriptors>
                 <descriptor>${project.basedir}/src/assembly/mac.xml</descriptor>
               </descriptors>
               <attach>false</attach>
+              <filters>
+                <filter>${project.basedir}/src/assembly/mac.properties</filter>
+              </filters>
             </configuration>
             <phase>package</phase>
             <goals>

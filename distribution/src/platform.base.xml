@@ -16,7 +16,7 @@
 <component>
   <dependencySets>
     <dependencySet>
-      <outputDirectory>Consulo/platform/buildSNAPSHOT/modules/consulo.platform.base/lib</outputDirectory>
+      <outputDirectory>${build.dist.platform.home}/modules/consulo.platform.base/lib</outputDirectory>
       <unpack>false</unpack>
       <includes>
         <include>consulo:consulo-platform-base-plugin</include>
