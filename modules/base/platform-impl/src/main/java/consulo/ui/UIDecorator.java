@@ -37,12 +37,14 @@ public interface UIDecorator {
   NotNullLazyValue<List<UIDecorator>> ourDecorators = NotNullLazyValue.createValue(() -> {
     List<UIDecorator> list = new ArrayList<>();
 
-    Iterable<PluginDescriptor> plugins = PluginManager.getPlugins();
-    for (PluginDescriptor plugin : plugins) {
-      ServiceLoader<UIDecorator> loader = ServiceLoader.load(UIDecorator.class, plugin.getPluginClassLoader());
+    if(PluginManager.isInitialized()) {
+      Iterable<PluginDescriptor> plugins = PluginManager.getPlugins();
+      for (PluginDescriptor plugin : plugins) {
+        ServiceLoader<UIDecorator> loader = ServiceLoader.load(UIDecorator.class, plugin.getPluginClassLoader());
 
-      for (UIDecorator uiDecorator : loader) {
-        list.add(uiDecorator);
+        for (UIDecorator uiDecorator : loader) {
+          list.add(uiDecorator);
+        }
       }
     }
 
