@@ -32,6 +32,9 @@
                 <descriptor>${project.basedir}/src/assembly/linux.xml</descriptor>
               </descriptors>
               <attach>false</attach>
+              <filters>
+                <filter>${project.basedir}/src/assembly/default.properties</filter>
+              </filters>
             </configuration>
             <phase>package</phase>
             <goals>
