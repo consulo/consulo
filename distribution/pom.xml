@@ -25,14 +25,13 @@
         <version>${maven.assembly.plugin}</version>
         <executions>
           <execution>
-            <id>create-archive-win</id>
+            <id>create-archive</id>
             <configuration>
               <descriptors>
                 <descriptor>${project.basedir}/src/assembly/win.xml</descriptor>
                 <descriptor>${project.basedir}/src/assembly/linux.xml</descriptor>
                 <descriptor>${project.basedir}/src/assembly/mac.xml</descriptor>
               </descriptors>
-              <attach>false</attach>
             </configuration>
             <phase>package</phase>
             <goals>
