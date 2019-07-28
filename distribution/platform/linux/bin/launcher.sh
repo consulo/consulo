@@ -119,15 +119,15 @@ if [ -r "$VM_OPTIONS_FILE" ]; then
   VM_OPTIONS="$VM_OPTIONS -Djb.vmOptionsFile=\"$VM_OPTIONS_FILE\" -Dconsulo.vm.options.file=\"$VM_OPTIONS_FILE\""
 fi
 
-COMMON_JVM_ARGS="-Dconsulo.home.path=\"$IDE_HOME\ -Didea.home.path=\"$IDE_HOME\" -Didea.properties.file=\"$ROOT_DIR/consulo.properties\" -consulo.properties.file=\"$ROOT_DIR/consulo.properties\""
+COMMON_JVM_ARGS="-Dconsulo.home.path=\"$IDE_HOME\" -Didea.home.path=\"$IDE_HOME\" -Didea.properties.file=\"$ROOT_DIR/consulo.properties\" -Dconsulo.properties.file=\"$ROOT_DIR/consulo.properties\""
 IDE_JVM_ARGS=""
 ALL_JVM_ARGS="$VM_OPTIONS $COMMON_JVM_ARGS $IDE_JVM_ARGS $AGENT $REQUIRED_JVM_ARGS"
 
 CLASSPATH="$IDE_HOME/boot/consulo-bootstrap.jar"
 CLASSPATH="$CLASSPATH:$IDE_HOME/boot/consulo-container-api.jar"
-CLASSPATH="$CLASSPATH:$IDE_HOME/lib/consulo-container-impl.jar"
-CLASSPATH="$CLASSPATH:$IDE_HOME/lib/consulo-desktop-bootstrap.jar"
-CLASSPATH="$CLASSPATH:$IDE_HOME/lib/consulo-util-rt.jar"
+CLASSPATH="$CLASSPATH:$IDE_HOME/boot/consulo-container-impl.jar"
+CLASSPATH="$CLASSPATH:$IDE_HOME/boot/consulo-desktop-bootstrap.jar"
+CLASSPATH="$CLASSPATH:$IDE_HOME/boot/consulo-util-rt.jar"
 
 if [ -n "$IDEA_CLASSPATH" ]; then
   CLASSPATH="$CLASSPATH:$IDEA_CLASSPATH"
