@@ -190,9 +190,9 @@ public class UIUtil {
   @NonNls
   public static final String BORDER_LINE = "<hr size=1 noshade>";
 
-  private static final StyleSheet DEFAULT_HTML_KIT_CSS;
+  private static StyleSheet DEFAULT_HTML_KIT_CSS;
 
-  static {
+  public static void hackAWT() {
     blockATKWrapper();
     // save the default JRE CSS and ..
     HTMLEditorKit kit = new HTMLEditorKit();

@@ -48,6 +48,7 @@ public class DesktopContainerStartup implements ContainerStartup {
 
     IdeaForkJoinWorkerThreadFactory.setupForkJoinCommonPool();
 
+    UIUtil.hackAWT();
     UIUtil.initDefaultLAF();
 
     ThreadGroup threadGroup = new ThreadGroup("Consulo Thread Group") {
