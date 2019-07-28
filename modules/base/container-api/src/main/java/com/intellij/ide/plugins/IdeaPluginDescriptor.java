@@ -22,7 +22,7 @@ import consulo.container.plugin.PluginDescriptor;
  * @author max
  */
 @Deprecated
-@DeprecationInfo("See ConsuloPluginDescriptor")
+@DeprecationInfo("See PluginDescriptor")
 public interface IdeaPluginDescriptor extends PluginDescriptor {
   IdeaPluginDescriptor[] EMPTY_ARRAY = new IdeaPluginDescriptor[0];
 }

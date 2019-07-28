@@ -29,7 +29,6 @@ import gnu.trove.THashMap;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Map;
 
 public class ExtensionsAreaImpl implements ExtensionsArea {
@@ -152,7 +151,7 @@ public class ExtensionsAreaImpl implements ExtensionsArea {
     return myCreationTrace;
   }
 
-  public void registerExtensionPoint(@Nonnull String extensionPointName, @Nonnull String extensionPointBeanClass, @Nullable PluginDescriptor descriptor, @Nonnull ExtensionPoint.Kind kind) {
+  public void registerExtensionPoint(@Nonnull String extensionPointName, @Nonnull String extensionPointBeanClass, @Nonnull PluginDescriptor descriptor, @Nonnull ExtensionPoint.Kind kind) {
     if (hasExtensionPoint(extensionPointName)) {
       if (DEBUG_REGISTRATION) {
         final ExtensionPointImpl oldEP = getExtensionPoint(extensionPointName);
