@@ -14,10 +14,10 @@
   - limitations under the License.
   -->
 <component>
-  <!--FIXME [VISTALL] if you update this file - update _mac file too-->
+  <!--FIXME [VISTALL] this file is copy file without _mac prefix. It's need due mac distribution have own path-->
   <dependencySets>
     <dependencySet>
-      <outputDirectory>Consulo/platform/buildSNAPSHOT/modules/consulo.platform.base/lib</outputDirectory>
+      <outputDirectory>Consulo.app/Contents/platform/buildSNAPSHOT/modules/consulo.platform.base/lib</outputDirectory>
       <unpack>false</unpack>
       <includes>
         <include>consulo:consulo-platform-base-plugin</include>
