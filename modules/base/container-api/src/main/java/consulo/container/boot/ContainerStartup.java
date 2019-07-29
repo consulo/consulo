@@ -15,6 +15,8 @@
  */
 package consulo.container.boot;
 
+import consulo.container.util.StatCollector;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -22,5 +24,5 @@ import javax.annotation.Nonnull;
  * @since 2019-07-25
  */
 public interface ContainerStartup {
-  void run(@Nonnull String[] args);
+  void run(@Nonnull StatCollector stat, @Nonnull String[] args);
 }

@@ -23,6 +23,7 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ReflectionUtil;
 import consulo.application.TransactionGuardEx;
+import consulo.container.util.StatCollector;
 import consulo.start.CommandLineArgs;
 
 import javax.annotation.Nonnull;
@@ -77,16 +78,16 @@ public class ApplicationStarter {
     }
   }
 
-  public void run(boolean newConfigFolder) {
+  public void run(StatCollector stat, Runnable appInitalizeMark, boolean newConfigFolder) {
     try {
       ApplicationEx app = (ApplicationEx)Application.get();
       app.load(PathManager.getOptionsPath());
 
       if (myPostStarter.needStartInTransaction()) {
-        ((TransactionGuardEx)TransactionGuard.getInstance()).performUserActivity(() -> myPostStarter.main(app, newConfigFolder, myArgs));
+        ((TransactionGuardEx)TransactionGuard.getInstance()).performUserActivity(() -> myPostStarter.main(stat, appInitalizeMark, app, newConfigFolder, myArgs));
       }
       else {
-        myPostStarter.main(app, newConfigFolder, myArgs);
+        myPostStarter.main(stat, appInitalizeMark, app, newConfigFolder, myArgs);
       }
 
       myPostStarter = null;

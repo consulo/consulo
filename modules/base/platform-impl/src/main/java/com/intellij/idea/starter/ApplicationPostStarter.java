@@ -22,6 +22,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.util.Ref;
 import consulo.annotations.Internal;
+import consulo.container.util.StatCollector;
 import consulo.start.CommandLineArgs;
 
 import javax.annotation.Nonnull;
@@ -53,7 +54,7 @@ public abstract class ApplicationPostStarter {
   @Nonnull
   protected abstract Application createApplication(boolean isHeadlessMode, Ref<StartupProgress> splashRef, CommandLineArgs args);
 
-  public void main(ApplicationEx app, boolean newConfigFolder, @Nonnull CommandLineArgs args) {
+  public void main(StatCollector stat, Runnable appInitalizeMark, ApplicationEx app, boolean newConfigFolder, @Nonnull CommandLineArgs args) {
   }
 
   public boolean needStartInTransaction() {

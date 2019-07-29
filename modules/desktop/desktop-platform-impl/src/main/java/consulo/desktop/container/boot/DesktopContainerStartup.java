@@ -27,6 +27,7 @@ import com.intellij.idea.starter.DesktopApplicationStarter;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.util.ui.UIUtil;
 import consulo.container.boot.ContainerStartup;
+import consulo.container.util.StatCollector;
 import consulo.startup.StartupActionLogger;
 
 import javax.annotation.Nonnull;
@@ -40,18 +41,18 @@ import java.io.IOException;
  */
 @SuppressWarnings("unused")
 public class DesktopContainerStartup implements ContainerStartup {
-  public static long startupStart;
-
   @Override
-  public void run(@Nonnull String[] args) {
-    startupStart = System.nanoTime();
+  public void run(@Nonnull StatCollector stat, @Nonnull String[] args) {
+    Runnable appInitializeMark = stat.mark(StatCollector.APP_INITIALIZE);
 
     IdeaForkJoinWorkerThreadFactory.setupForkJoinCommonPool();
 
     PathManager.loadProperties();
 
+    Runnable hackAwt = stat.mark("boot.hack.awt");
     UIUtil.hackAWT();
     UIUtil.initDefaultLAF();
+    hackAwt.run();
 
     ThreadGroup threadGroup = new ThreadGroup("Consulo Thread Group") {
       @Override
@@ -64,7 +65,7 @@ public class DesktopContainerStartup implements ContainerStartup {
       try {
         ClassUtilCore.clearJarURLCache();
 
-        start(args);
+        start(stat, appInitializeMark, args);
       }
       catch (Throwable t) {
         throw new PluginManager.StartupAbortedException(t);
@@ -74,7 +75,7 @@ public class DesktopContainerStartup implements ContainerStartup {
     new Thread(threadGroup, runnable, "Consulo Main Thread").start();
   }
 
-  private static void start(String[] args) {
+  private static void start(StatCollector stat, Runnable appInitalizeMark, String[] args) {
     StartupActionLogger logger = null;
     try {
       logger = new StartupActionLogger();
@@ -104,7 +105,7 @@ public class DesktopContainerStartup implements ContainerStartup {
 
       SwingUtilities.invokeLater(() -> {
         PluginManager.installExceptionHandler();
-        app.run(newConfigFolder);
+        app.run(stat, appInitalizeMark, newConfigFolder);
       });
     });
   }

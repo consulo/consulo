@@ -21,6 +21,7 @@ import consulo.container.StartupError;
 import consulo.container.boot.ContainerStartup;
 import consulo.container.impl.ContainerLogger;
 import consulo.container.impl.ExitCodes;
+import consulo.container.util.StatCollector;
 
 import javax.swing.*;
 import java.awt.*;
@@ -85,9 +86,11 @@ public class Main {
   }
 
   private static void initAndCallStartup(String[] args) throws Exception {
-    ContainerStartup containerStartup = BootstrapClassLoaderUtil.buildContainerStartup(new ContainerLoggerImpl());
+    StatCollector stat = new StatCollector();
 
-    containerStartup.run(args);
+    ContainerStartup containerStartup = BootstrapClassLoaderUtil.buildContainerStartup(stat, new ContainerLoggerImpl());
+
+    containerStartup.run(stat, args);
   }
 
   public static boolean isHeadless() {

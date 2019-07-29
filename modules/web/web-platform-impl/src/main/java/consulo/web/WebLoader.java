@@ -23,6 +23,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.container.util.StatCollector;
 import consulo.ui.web.servlet.UIIconServlet;
 import consulo.ui.web.servlet.UIServlet;
 import consulo.web.main.WebPostStarter;
@@ -53,14 +54,16 @@ public class WebLoader {
     System.setProperty(PathManager.PROPERTY_CONFIG_PATH, home.getPath() + "/.config/sandbox/config");
     System.setProperty(PathManager.PROPERTY_SYSTEM_PATH, home.getPath() + "/.config/sandbox/system");
 
-    //Main.setFlags(new String[0]);
+    StatCollector stat = new StatCollector();
+
+    Runnable appInitializeMark = stat.mark(StatCollector.APP_INITIALIZE);
 
     StartupUtil.prepareAndStart(args, WebImportantFolderLocker::new, (newConfigFolder, commandLineArgs) -> {
-      ApplicationStarter app = new ApplicationStarter(WebPostStarter.class,commandLineArgs);
+      ApplicationStarter app = new ApplicationStarter(WebPostStarter.class, commandLineArgs);
 
       AppExecutorUtil.getAppExecutorService().execute(() -> {
         PluginManager.installExceptionHandler();
-        app.run(newConfigFolder);
+        app.run(stat, appInitializeMark, newConfigFolder);
       });
     });
   }

@@ -34,7 +34,7 @@ import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.ui.DesktopSplash;
 import consulo.annotations.Internal;
 import consulo.application.ApplicationProperties;
-import consulo.desktop.container.boot.DesktopContainerStartup;
+import consulo.container.util.StatCollector;
 import consulo.ide.customize.FirstStartCustomizeUtil;
 import consulo.start.CommandLineArgs;
 
@@ -42,6 +42,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
+import java.util.Map;
 
 @Internal
 public class DesktopApplicationPostStarter extends ApplicationPostStarter {
@@ -83,7 +84,7 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
   }
 
   @Override
-  public void main(ApplicationEx app, boolean newConfigFolder, @Nonnull CommandLineArgs args) {
+  public void main(StatCollector stat, Runnable appInitializeMark, ApplicationEx app, boolean newConfigFolder, @Nonnull CommandLineArgs args) {
     SystemDock.getInstance().updateMenu();
 
     // if OS has dock, RecentProjectsManager will be already created, but not all OS have dock, so, we trigger creation here to ensure that RecentProjectsManager app listener will be added
@@ -97,7 +98,12 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
 
     RecentProjectsManagerBase recentProjectsManager = RecentProjectsManagerBase.getInstanceEx();
 
-    LOG.info("App initialization took " + (System.nanoTime() - DesktopContainerStartup.startupStart) / 1000000 + " ms");
+    appInitializeMark.run();
+
+    LOG.info("Startup statistics:");
+    for (Map.Entry<String, Long> entry : stat.data()) {
+      LOG.info(" - " + entry.getKey() + " - " + entry.getValue() + " ms");
+    }
     PluginLoadStatistics.get().dumpPluginClassStatistics(LOG::info);
 
     app.invokeAndWait(() -> {

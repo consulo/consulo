@@ -25,6 +25,7 @@ import consulo.container.impl.ContainerLogger;
 import consulo.container.impl.PluginHolderModificator;
 import consulo.container.impl.PluginLoader;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.util.StatCollector;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -41,7 +42,9 @@ public class BootstrapClassLoaderUtil {
   private static final String CONSULO_PLATFORM_BASE = "consulo.platform.base";
 
   @Nonnull
-  public static ContainerStartup buildContainerStartup(ContainerLogger containerLogger) throws Exception {
+  public static ContainerStartup buildContainerStartup(StatCollector stat, ContainerLogger containerLogger) throws Exception {
+    Runnable bootInitialize = stat.mark("boot.classloader.initialize");
+
     File modulesDirectory = getModulesDirectory();
 
     IdeaPluginDescriptorImpl base = initalizePlatformBase(modulesDirectory, containerLogger);
@@ -49,7 +52,9 @@ public class BootstrapClassLoaderUtil {
     List<IdeaPluginDescriptorImpl> descriptors = new ArrayList<IdeaPluginDescriptorImpl>();
     descriptors.add(base);
 
-    for (File moduleDirectory : modulesDirectory.listFiles()) {
+    File[] files = modulesDirectory.listFiles();
+    assert files != null;
+    for (File moduleDirectory : files) {
       if (CONSULO_PLATFORM_BASE.equals(moduleDirectory.getName())) {
         continue;
       }
@@ -79,6 +84,8 @@ public class BootstrapClassLoaderUtil {
       Iterator<ContainerStartup> iterator = loader.iterator();
 
       if (iterator.hasNext()) {
+        bootInitialize.run();
+
         return iterator.next();
       }
     }
