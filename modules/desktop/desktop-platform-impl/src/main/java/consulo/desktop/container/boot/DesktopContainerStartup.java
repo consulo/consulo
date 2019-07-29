@@ -48,6 +48,8 @@ public class DesktopContainerStartup implements ContainerStartup {
 
     IdeaForkJoinWorkerThreadFactory.setupForkJoinCommonPool();
 
+    PathManager.loadProperties();
+
     UIUtil.hackAWT();
     UIUtil.initDefaultLAF();
 
@@ -73,8 +75,6 @@ public class DesktopContainerStartup implements ContainerStartup {
   }
 
   private static void start(String[] args) {
-    PathManager.loadProperties();
-
     StartupActionLogger logger = null;
     try {
       logger = new StartupActionLogger();

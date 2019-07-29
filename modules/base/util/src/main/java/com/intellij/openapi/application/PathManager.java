@@ -19,8 +19,8 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.io.URLUtil;
 import com.sun.jna.TypeMapper;
 import com.sun.jna.platform.FileUtils;
@@ -42,7 +42,9 @@ import java.util.*;
 import static com.intellij.util.SystemProperties.getUserHome;
 
 public class PathManager {
-  public static final String PROPERTIES_FILE = "idea.properties.file";
+  @Deprecated
+  public static final String OLD_PROPERTIES_FILE = "idea.properties.file";
+  public static final String PROPERTIES_FILE = "consulo.properties.file";
   public static final String PROPERTY_SYSTEM_PATH = "idea.system.path";
   public static final String PROPERTY_SCRATCH_PATH = "idea.scratch.path";
   public static final String PROPERTY_CONFIG_PATH = "idea.config.path";
@@ -382,38 +384,37 @@ public class PathManager {
   }
 
   public static void loadProperties() {
-    File propFile =
-            FileUtil.findFirstThatExist(System.getProperty(PROPERTIES_FILE), getUserHome() + "/idea.properties", getHomePath() + "/bin/idea.properties");
+    List<String> paths = new ArrayList<>();
+    paths.add(System.getProperty(PROPERTIES_FILE));
+    paths.add(System.getProperty(OLD_PROPERTIES_FILE));
+    paths.add(new File(getAppHomeDirectory(), "consulo.properties").getPath());
+    paths.add(getUserHome() + "/consulo.properties");
 
-    if (propFile != null) {
-      try {
-        InputStream fis = null;
-        try {
-          fis = new BufferedInputStream(new FileInputStream(propFile));
+    File propFile = FileUtil.findFirstThatExist(ArrayUtil.toStringArray(paths));
 
-          final PropertyResourceBundle bundle = new PropertyResourceBundle(fis);
-          final Enumeration keys = bundle.getKeys();
-          String home = (String)bundle.handleGetObject("idea.home");
-          if (home != null && ourHomePath == null) {
-            ourHomePath = getAbsolutePath(substituteVars(home));
-          }
-          final Properties sysProperties = System.getProperties();
-          while (keys.hasMoreElements()) {
-            String key = (String)keys.nextElement();
-            if (sysProperties.getProperty(key, null) == null) { // load the property from the property file only if it is not defined yet
-              final String value = substituteVars(bundle.getString(key));
-              sysProperties.setProperty(key, value);
-            }
-          }
-        }
-        finally {
-          StreamUtil.closeStream(fis);
+    if (propFile == null) {
+      return;
+    }
+
+    try (InputStream fis = new BufferedInputStream(new FileInputStream(propFile))) {
+      final PropertyResourceBundle bundle = new PropertyResourceBundle(fis);
+      final Enumeration keys = bundle.getKeys();
+      String home = (String)bundle.handleGetObject("idea.home");
+      if (home != null && ourHomePath == null) {
+        ourHomePath = getAbsolutePath(substituteVars(home));
+      }
+      final Properties sysProperties = System.getProperties();
+      while (keys.hasMoreElements()) {
+        String key = (String)keys.nextElement();
+        if (sysProperties.getProperty(key, null) == null) { // load the property from the property file only if it is not defined yet
+          final String value = substituteVars(bundle.getString(key));
+          sysProperties.setProperty(key, value);
         }
       }
-      catch (IOException e) {
-        //noinspection HardCodedStringLiteral,UseOfSystemOutOrSystemErr
-        System.err.println("Problem reading from property file: " + propFile.getPath());
-      }
+    }
+    catch (IOException e) {
+      //noinspection HardCodedStringLiteral,UseOfSystemOutOrSystemErr
+      System.err.println("Problem reading from property file: " + propFile.getPath());
     }
   }
 
