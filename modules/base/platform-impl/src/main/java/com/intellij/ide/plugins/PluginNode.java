@@ -18,7 +18,7 @@ package com.intellij.ide.plugins;
 import com.intellij.openapi.extensions.PluginId;
 import consulo.container.plugin.PluginDescriptorStub;
 import consulo.ide.plugins.PluginJsonNode;
-import consulo.ide.plugins.SimpleExtension;
+import consulo.container.plugin.SimpleExtension;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

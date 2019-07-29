@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.plugins;
+package consulo.container.plugin;
 
 import javax.annotation.Nonnull;
 
@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 21-Sep-16
  */
-public class SimpleExtension {
+public final class SimpleExtension {
   private final String myKey;
   private final String[] myValues;
 

@@ -19,7 +19,6 @@ import com.intellij.ide.plugins.HelpSetPath;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.extensions.PluginId;
-import consulo.ide.plugins.SimpleExtension;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 
 import javax.annotation.Nonnull;

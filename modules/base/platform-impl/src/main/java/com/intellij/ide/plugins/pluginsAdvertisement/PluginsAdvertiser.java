@@ -31,7 +31,7 @@ import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeat
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.EditorNotifications;
 import com.intellij.util.ui.UIUtil;
-import consulo.ide.plugins.SimpleExtension;
+import consulo.container.plugin.SimpleExtension;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import consulo.ide.updateSettings.UpdateSettings;
