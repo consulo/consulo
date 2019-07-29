@@ -17,7 +17,7 @@ package com.intellij.idea.starter;
 
 import com.intellij.ide.*;
 import com.intellij.ide.plugins.PluginManager;
-import com.intellij.ide.plugins.PluginManagerCore;
+import com.intellij.ide.plugins.cl.PluginLoadStatistics;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.openapi.application.Application;
@@ -34,6 +34,7 @@ import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.ui.DesktopSplash;
 import consulo.annotations.Internal;
 import consulo.application.ApplicationProperties;
+import consulo.desktop.container.boot.DesktopContainerStartup;
 import consulo.ide.customize.FirstStartCustomizeUtil;
 import consulo.start.CommandLineArgs;
 
@@ -96,8 +97,8 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
 
     RecentProjectsManagerBase recentProjectsManager = RecentProjectsManagerBase.getInstanceEx();
 
-    LOG.info("App initialization took " + (System.nanoTime() - PluginManager.startupStart) / 1000000 + " ms");
-    PluginManagerCore.dumpPluginClassStatistics();
+    LOG.info("App initialization took " + (System.nanoTime() - DesktopContainerStartup.startupStart) / 1000000 + " ms");
+    PluginLoadStatistics.get().dumpPluginClassStatistics(LOG::info);
 
     app.invokeAndWait(() -> {
       StartupProgress desktopSplash = mySplashRef.get();

@@ -15,15 +15,15 @@
  */
 package consulo.ide.ui.laf;
 
-import javax.annotation.Nonnull;
+import consulo.desktop.ui.laf.LookAndFeelInfoWithClassLoader;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 14.12.14
  */
-public class MacDefaultLookAndFeelInfo extends UIManager.LookAndFeelInfo implements LafWithColorScheme {
+public class MacDefaultLookAndFeelInfo extends LookAndFeelInfoWithClassLoader implements LafWithColorScheme {
   public MacDefaultLookAndFeelInfo(String name, String className) {
     super(name, className);
   }

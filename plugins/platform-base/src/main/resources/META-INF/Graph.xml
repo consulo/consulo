@@ -13,7 +13,7 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin>
+<consulo-plugin>
   <actions>
     <action id="ShowDiagram" class="consulo.diagram.actions.ShowDiagramAction" icon="AllIcons.FileTypes.Diagram">
       <keyboard-shortcut first-keystroke="control shift alt U" keymap="$default"/>
@@ -27,4 +27,4 @@
   <extensionPoints>
     <extensionPoint name="graphProvider" interface="consulo.diagram.provider.GraphProvider" />
   </extensionPoints>
-</idea-plugin>
+</consulo-plugin>

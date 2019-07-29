@@ -15,12 +15,12 @@
  */
 package consulo.awt.impl;
 
-import com.intellij.idea.Main;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.BitUtil;
 import com.intellij.util.ui.JBUI;
 import consulo.awt.TargetAWT;
 import consulo.awt.TargetAWTFacade;
+import consulo.container.StartupError;
 import consulo.ui.Component;
 import consulo.ui.Window;
 import consulo.ui.*;
@@ -143,7 +143,7 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
   @Override
   @Contract("null -> null")
   public Window from(@Nullable java.awt.Window window) {
-    if (Main.hasStartUpError()) {
+    if (StartupError.hasStartupError) {
       return null;
     }
 

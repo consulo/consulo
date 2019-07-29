@@ -15,18 +15,18 @@
  */
 package consulo.platform;
 
-import consulo.annotations.Internal;
+import consulo.platform.internal.PlatformInternal;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 15-Sep-17
  */
-@Internal
 public class WebPlatformInternalImpl extends PlatformInternal {
   @Nonnull
   @Override
-  Platform build() {
+  public Platform build() {
     return new WebPlatformImpl();
   }
 }

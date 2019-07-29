@@ -123,7 +123,17 @@ public abstract class ActionManager {
    *
    * @param actionId Id of the action to be unregistered
    */
-  public abstract void unregisterAction(@Nonnull String actionId);
+  public void unregisterAction(@Nonnull String actionId) {
+    unregisterActionEx(actionId);
+  }
+
+  /**
+   * Unregisters the action with the specified actionId.
+   *
+   * @param actionId Id of the action to be unregistered
+   */
+  @Nullable
+  public abstract AnAction unregisterActionEx(@Nonnull String actionId);
 
   /**
    * Returns the list of all registered action IDs with the specified prefix.

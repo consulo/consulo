@@ -39,7 +39,7 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-util</artifactId>
+      <artifactId>consulo-container-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>

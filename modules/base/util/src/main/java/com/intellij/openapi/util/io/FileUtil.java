@@ -31,9 +31,9 @@ import com.intellij.util.text.StringFactory;
 import gnu.trove.TObjectHashingStrategy;
 import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.Contract;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.lang.reflect.Method;
@@ -1453,14 +1453,6 @@ public class FileUtil extends FileUtilRt {
     }
     list.add(path.substring(index, path.length()));
     return list;
-  }
-
-  public static boolean isJarOrZip(@Nonnull File file) {
-    if (file.isDirectory()) {
-      return false;
-    }
-    final String name = file.getName();
-    return StringUtil.endsWithIgnoreCase(name, ".jar") || StringUtil.endsWithIgnoreCase(name, ".zip");
   }
 
   public static boolean visitFiles(@Nonnull File root, @Nonnull Processor<File> processor) {

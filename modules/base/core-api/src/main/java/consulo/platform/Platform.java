@@ -18,6 +18,7 @@ package consulo.platform;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.util.ObjectUtil;
 import consulo.annotations.DeprecationInfo;
+import consulo.platform.internal.PlatformInternal;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

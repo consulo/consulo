@@ -13,7 +13,7 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin version="2">
+<consulo-plugin>
   <project-components>
     <component>
       <interface-class>com.intellij.coverage.CoverageDataManager</interface-class>
@@ -47,4 +47,4 @@
     </group>
   </actions>
 
-</idea-plugin>
+</consulo-plugin>

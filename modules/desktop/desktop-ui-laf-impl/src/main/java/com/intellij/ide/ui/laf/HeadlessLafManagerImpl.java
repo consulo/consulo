@@ -37,11 +37,6 @@ public class HeadlessLafManagerImpl extends LafManager {
   }
 
   @Override
-  public boolean checkLookAndFeel(UIManager.LookAndFeelInfo lookAndFeelInfo) {
-    return true;
-  }
-
-  @Override
   public void setCurrentLookAndFeel(UIManager.LookAndFeelInfo lookAndFeelInfo) {
   }
 

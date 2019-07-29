@@ -13,7 +13,7 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin>
+<consulo-plugin>
   <extensionPoints>
     <extensionPoint name="compiler.dependencyCache" beanClass="consulo.compiler.make.DependencyCacheEP">
       <with attribute="implementationClass" implements="consulo.compiler.make.DependencyCache"/>
@@ -66,4 +66,4 @@
     <projectService serviceInterface="com.intellij.compiler.CompilerWorkspaceConfiguration"
                     serviceImplementation="com.intellij.compiler.CompilerWorkspaceConfiguration"/>
   </extensions>
-</idea-plugin>
+</consulo-plugin>

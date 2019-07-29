@@ -58,9 +58,12 @@
       <plugin>
         <groupId>consulo.maven</groupId>
         <artifactId>consulo-maven-plugin</artifactId>
-        <version>2.0</version>
+        <version>2-SNAPSHOT</version>
         <configuration>
-          <buildDirectory>${project.build.directory}/consulo-sandbox-desktop-${project.version}-main</buildDirectory>
+          <execution>
+            <buildDirectory>${project.build.directory}/consulo-sandbox-desktop-${project.version}-main</buildDirectory>
+            <newBootLoader>true</newBootLoader>
+          </execution>
         </configuration>
       </plugin>
     </plugins>
@@ -148,13 +151,26 @@
       <artifactId>consulo-disposer-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-bootstrap</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <!--copied from consulo-bundle module-->
 
     <!--optional dependency-->
     <dependency>
-      <groupId>org.apache.ws.xmlrpc</groupId>
-      <artifactId>xmlrpc</artifactId>
+      <groupId>org.apache.xmlrpc</groupId>
+      <artifactId>xmlrpc-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlrpc</groupId>
+      <artifactId>xmlrpc-server</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlrpc</groupId>
+      <artifactId>xmlrpc-client</artifactId>
     </dependency>
     <dependency>
       <groupId>io.netty</groupId>
@@ -167,6 +183,10 @@
     <dependency>
       <groupId>io.netty</groupId>
       <artifactId>netty-transport</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jaxen</groupId>
+      <artifactId>jaxen</artifactId>
     </dependency>
     <dependency>
       <groupId>io.netty</groupId>

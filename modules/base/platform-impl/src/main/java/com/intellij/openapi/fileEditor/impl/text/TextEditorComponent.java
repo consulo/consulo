@@ -62,7 +62,7 @@ import java.awt.*;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-class TextEditorComponent extends JBLoadingPanel implements DataProvider, Disposable {
+public class TextEditorComponent extends JBLoadingPanel implements DataProvider, Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.text.TextEditorComponent");
 
   private final Project myProject;
@@ -86,7 +86,7 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider, Dispos
    */
   private boolean myValid;
 
-  TextEditorComponent(@Nonnull final Project project, @Nonnull final VirtualFile file, @Nonnull final DesktopTextEditorImpl textEditor) {
+  public TextEditorComponent(@Nonnull final Project project, @Nonnull final VirtualFile file, @Nonnull final DesktopTextEditorImpl textEditor) {
     super(new BorderLayout(), textEditor);
 
     myProject = project;
@@ -162,7 +162,7 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider, Dispos
    * @return most recently used editor. This method never returns {@code null}.
    */
   @Nonnull
-  Editor getEditor() {
+  public Editor getEditor() {
     return myEditor;
   }
 

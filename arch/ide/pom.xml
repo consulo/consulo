@@ -41,12 +41,7 @@
       <artifactId>consulo-core-api</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <!--TODO [VISTALL] remove from global pom-->
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-desktop-boot</artifactId>
-      <version>${project.version}</version>
-    </dependency>
+
     <!--TODO [VISTALL] remove from global pom-->
     <dependency>
       <groupId>${project.groupId}</groupId>

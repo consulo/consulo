@@ -26,7 +26,6 @@
     <module>plugins/sandLanguage</module>
 
     <module>modules/desktop/desktop-main</module>
-    <module>modules/desktop/desktop-boot</module>
     <module>modules/desktop/desktop-bootstrap</module>
     <module>modules/desktop/desktop-ui-impl</module>
     <module>modules/desktop/desktop-platform-impl</module>
@@ -53,12 +52,15 @@
     <module>modules/base/annotations</module>
     <module>modules/base/analysis-api</module>
     <module>modules/base/analysis-impl</module>
+    <module>modules/base/bootstrap</module>
     <module>modules/base/built-in-server-api</module>
     <module>modules/base/built-in-server-impl</module>
     <module>modules/base/core-api</module>
     <module>modules/base/core-impl</module>
     <module>modules/base/compiler-api</module>
     <module>modules/base/compiler-impl</module>
+    <module>modules/base/container-api</module>
+    <module>modules/base/container-impl</module>
     <module>modules/base/diff-api</module>
     <module>modules/base/diff-impl</module>
     <module>modules/base/disposer-api</module>

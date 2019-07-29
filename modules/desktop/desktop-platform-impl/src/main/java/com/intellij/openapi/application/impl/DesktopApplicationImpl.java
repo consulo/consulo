@@ -16,7 +16,6 @@
 package com.intellij.openapi.application.impl;
 
 import com.intellij.CommonBundle;
-import com.intellij.concurrency.IdeaForkJoinWorkerThreadFactory;
 import com.intellij.diagnostic.LogEventException;
 import com.intellij.diagnostic.ThreadDumper;
 import com.intellij.ide.*;
@@ -49,6 +48,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.application.WriteThreadOption;
 import consulo.application.impl.WriteThread;
 import consulo.application.internal.ApplicationWithOwnWriteThread;
+import consulo.desktop.boot.main.windows.WindowsCommandLineProcessor;
 import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.application.ApplicationProperties;
@@ -101,10 +101,6 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
       return "ANY";
     }
   };
-
-  static {
-    IdeaForkJoinWorkerThreadFactory.setupForkJoinCommonPool();
-  }
 
   private final WriteThread mySubWriteThread;
 

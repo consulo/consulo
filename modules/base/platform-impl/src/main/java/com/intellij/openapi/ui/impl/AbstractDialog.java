@@ -27,7 +27,7 @@ import java.awt.event.MouseMotionListener;
 /**
  * @author Konstantin Bulenkov
  */
-interface AbstractDialog extends Disposable {
+public interface AbstractDialog extends Disposable {
   void setUndecorated(boolean undecorated);
 
   void addMouseListener(MouseListener listener);

@@ -13,7 +13,7 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin>
+<consulo-plugin>
   <project-components>
     <component>
       <implementation-class>com.intellij.dvcs.repo.VcsRepositoryManager</implementation-class>
@@ -47,5 +47,5 @@
     <projectService serviceImplementation="com.intellij.dvcs.push.PushSettings"/>
     <projectService serviceImplementation="com.intellij.dvcs.cherrypick.VcsCherryPickManager"/>
   </extensions>
-</idea-plugin>
+</consulo-plugin>
 

@@ -13,80 +13,33 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
+<consulo-plugin>
   <id>com.intellij</id>
   <name>Platform: base</name>
+  <resource-bundle>messages.ActionsBundle</resource-bundle>
 
-  <xi:include href="/META-INF/Actions.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/Diff.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/ProjectComponents.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/ApplicationComponents.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/ExternalSystems.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/RemoteServers.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/Bundled.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/BackgroundTaskByVfsChange.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/Compiler.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/EarlyAccessProgram.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/Graph.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/Copyright.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/VcsLog.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/DVcs.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/PostfixTemplates.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/Coverage.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/XDebugger.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/Configurables.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-
-  <xi:include href="/META-INF/Scratch.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-
-  <xi:include href="/META-INF/ExternalStorage.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-
-  <xi:include href="/META-INF/BuildInServer.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-
-  <xi:include href="/META-INF/TipsOfTheDay.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
+  <import path="/META-INF/Actions.xml"/>
+  <import path="/META-INF/Diff.xml"/>
+  <import path="/META-INF/ProjectComponents.xml"/>
+  <import path="/META-INF/ApplicationComponents.xml"/>
+  <import path="/META-INF/ExternalSystems.xml"/>
+  <import path="/META-INF/RemoteServers.xml"/>
+  <import path="/META-INF/Bundled.xml"/>
+  <import path="/META-INF/BackgroundTaskByVfsChange.xml"/>
+  <import path="/META-INF/Compiler.xml"/>
+  <import path="/META-INF/EarlyAccessProgram.xml"/>
+  <import path="/META-INF/Graph.xml"/>
+  <import path="/META-INF/Copyright.xml"/>
+  <import path="/META-INF/VcsLog.xml"/>
+  <import path="/META-INF/DVcs.xml"/>
+  <import path="/META-INF/PostfixTemplates.xml"/>
+  <import path="/META-INF/Coverage.xml"/>
+  <import path="/META-INF/XDebugger.xml"/>
+  <import path="/META-INF/Configurables.xml"/>
+  <import path="/META-INF/Scratch.xml"/>
+  <import path="/META-INF/ExternalStorage.xml"/>
+  <import path="/META-INF/BuildInServer.xml"/>
+  <import path="/META-INF/TipsOfTheDay.xml"/>
 
   <extensionPoints>
     <extensionPoint name="listOfElements" beanClass="consulo.extensions.ListOfElementsEP"/>
@@ -1208,7 +1161,7 @@
     <projectService serviceInterface="consulo.util.ProjectPropertiesComponent"
                     serviceImplementation="com.intellij.ide.util.ProjectPropertiesComponentImpl"/>
 
-    <applicationService serviceImplementation="com.intellij.openapi.wm.impl.WindowDressing" lazy="false" />
+    <applicationService serviceImplementation="com.intellij.openapi.wm.impl.WindowDressing" lazy="false"/>
 
     <applicationService serviceInterface="com.intellij.openapi.vfs.tracker.VirtualFileTracker"
                         serviceImplementation="com.intellij.openapi.vfs.tracker.VirtualFileTrackerImpl"/>
@@ -1251,7 +1204,7 @@
 
     <applicationService serviceInterface="com.intellij.openapi.vfs.impl.http.RemoteFileManager"
                         serviceImplementation="com.intellij.openapi.vfs.impl.http.RemoteFileManagerImpl"/>
-    <applicationService serviceImplementation="consulo.components.impl.stores.ApplicationDefaultStoreCache" />
+    <applicationService serviceImplementation="consulo.components.impl.stores.ApplicationDefaultStoreCache"/>
 
     <applicationService serviceInterface="com.intellij.ui.TreeUIHelper"
                         serviceImplementation="com.intellij.ui.TreeUIHelperImpl"/>
@@ -1361,7 +1314,7 @@
     <applicationService serviceInterface="com.intellij.execution.process.ProcessHandlerFactory"
                         serviceImplementation="com.intellij.execution.process.ProcessHandlerFactoryImpl"/>
 
-    <applicationService serviceInterface="com.intellij.ide.UiActivityMonitor" serviceImplementation="com.intellij.ide.UiActivityMonitorImpl" />
+    <applicationService serviceInterface="com.intellij.ide.UiActivityMonitor" serviceImplementation="com.intellij.ide.UiActivityMonitorImpl"/>
 
     <projectService serviceInterface="com.intellij.openapi.vfs.ReadonlyStatusHandler"
                     serviceImplementation="com.intellij.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl"/>
@@ -2436,7 +2389,7 @@
     <projectService serviceInterface="com.intellij.psi.impl.file.PsiPackageHelper"
                     serviceImplementation="com.intellij.psi.impl.file.PsiPackageHelperImpl"/>
 
-    <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.ProjectSettingsService" />
+    <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.ProjectSettingsService"/>
 
     <projectService serviceInterface="com.intellij.refactoring.RefactoringFactory"
                     serviceImplementation="com.intellij.refactoring.openapi.impl.RefactoringFactoryImpl"/>
@@ -2620,7 +2573,7 @@
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.WholeFileLocalInspectionsPassFactory"/>
 
     <applicationService serviceImplementation="com.intellij.ide.ScreenReaderSupportHandler" lazy="false"/>
-    <applicationService serviceInterface="com.intellij.openapi.wm.impl.SystemDock" serviceImplementation="consulo.wm.impl.SystemDockImpl" />
+    <applicationService serviceInterface="com.intellij.openapi.wm.impl.SystemDock" serviceImplementation="consulo.wm.impl.SystemDockImpl"/>
 
     <projectService serviceInterface="com.intellij.problems.WolfTheProblemSolver" serviceImplementation="com.intellij.codeInsight.problems.WolfTheProblemSolverImpl" lazy="false"/>
 
@@ -2628,4 +2581,4 @@
 
     <codeStyleIndentHelperExtension implementation="consulo.consulo.psi.impl.source.codeStyle.DefaultIndentHelperExtension" order="last"/>
   </extensions>
-</idea-plugin>
+</consulo-plugin>

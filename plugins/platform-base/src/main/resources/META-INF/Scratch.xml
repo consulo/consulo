@@ -13,7 +13,7 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin>
+<consulo-plugin>
   <extensionPoints>
     <extensionPoint name="scratch.rootType" interface="com.intellij.ide.scratch.RootType"/>
   </extensionPoints>
@@ -34,4 +34,4 @@
     <scratch.rootType implementation="com.intellij.execution.console.HistoryRootType"/>
     <scratch.rootType implementation="com.intellij.execution.console.IdeConsoleRootType"/>
   </extensions>
-</idea-plugin>
+</consulo-plugin>

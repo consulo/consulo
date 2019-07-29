@@ -59,7 +59,7 @@ public class DesktopTextEditorImpl extends UserDataHolderBase implements TextEdi
   private final DesktopAsyncEditorLoader myAsyncLoader;
   private final Future<?> myLoadingFinished;
 
-  DesktopTextEditorImpl(@Nonnull final Project project, @Nonnull final VirtualFile file, final DesktopTextEditorProvider provider) {
+  public DesktopTextEditorImpl(@Nonnull final Project project, @Nonnull final VirtualFile file, final DesktopTextEditorProvider provider) {
     myProject = project;
     myFile = file;
     myChangeSupport = new PropertyChangeSupport(this);
