@@ -142,6 +142,7 @@
         <include>org.apache.xmlrpc:xmlrpc-common</include>
         <include>org.apache.xmlrpc:xmlrpc-server</include>
         <include>org.apache.xmlrpc:xmlrpc-client</include>
+        <include>org.apache.ws.commons:ws-commons-util</include>
       </includes>
     </dependencySet>
   </dependencySets>
