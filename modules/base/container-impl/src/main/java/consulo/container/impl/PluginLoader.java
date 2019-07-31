@@ -143,9 +143,6 @@ public class PluginLoader {
                                                         boolean isPreInstalledPath,
                                                         @Nonnull ContainerLogger logger) {
     try {
-      String fileURL = StringUtilRt.replace(jarFile.toURI().toASCIIString(), "!", "%21");
-      URL jarURL = new URL("jar:" + fileURL + "!/META-INF/" + fileName);
-
       ZipFile zipFile = new ZipFile(jarFile.getPath());
       try {
         ZipEntry entry = zipFile.getEntry("META-INF/" + fileName);
