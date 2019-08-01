@@ -25,14 +25,14 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.ui.UIUtil;
+import consulo.actionSystem.ex.TopApplicationMenuUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -355,7 +355,7 @@ public class Utils {
     expandActionGroup(isInModalContext, group, list, presentationFactory, context, place, ActionManager.getInstance(), false,
                       group instanceof CompactActionGroup, true, false);
 
-    final boolean fixMacScreenMenu = SystemInfo.isMacSystemMenu && isWindowMenu && Registry.is("actionSystem.mac.screenMenuNotUpdatedFix");
+    final boolean fixMacScreenMenu = TopApplicationMenuUtil.isMacSystemMenu && isWindowMenu && Registry.is("actionSystem.mac.screenMenuNotUpdatedFix");
     final ArrayList<Component> children = new ArrayList<>();
 
     for (int i = 0, size = list.size(); i < size; i++) {

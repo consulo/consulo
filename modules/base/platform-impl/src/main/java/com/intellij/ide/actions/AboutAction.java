@@ -20,8 +20,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.WindowManager;
+import consulo.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ide.actions.AboutManager;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Window;
@@ -42,7 +42,7 @@ public class AboutAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setVisible(!SystemInfo.isMacSystemMenu);
+    e.getPresentation().setVisible(!TopApplicationMenuUtil.isMacSystemMenu);
     e.getPresentation().setDescription("Show information about " + ApplicationNamesInfo.getInstance().getFullProductName());
   }
 

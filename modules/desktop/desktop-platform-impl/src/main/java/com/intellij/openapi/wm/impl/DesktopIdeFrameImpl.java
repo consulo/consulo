@@ -48,6 +48,7 @@ import com.intellij.ui.mac.MacMainFrameDecorator;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
+import consulo.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.application.impl.FrameTitleUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.desktop.internal.window.JFrameAsUIWindow;
@@ -358,7 +359,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         if (isTemporaryDisposed()) return;
 
         final Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-        if (openProjects.length > 1 || openProjects.length == 1 && SystemInfo.isMacSystemMenu) {
+        if (openProjects.length > 1 || openProjects.length == 1 && TopApplicationMenuUtil.isMacSystemMenu) {
           if (myProject != null && myProject.isOpen()) {
             ProjectUtil.closeAndDispose(myProject);
           }
