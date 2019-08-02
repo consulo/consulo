@@ -31,12 +31,11 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.platform.DefaultProjectOpenProcessor;
 import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
 import consulo.application.WriteThreadOption;
 import consulo.ide.newProject.NewProjectDialog;
 import consulo.ide.newProject.NewProjectPanel;
-import consulo.ide.welcomeScreen.FlatWelcomeScreen;
 import consulo.ide.welcomeScreen.WelcomeScreenSlideAction;
+import consulo.ide.welcomeScreen.WelcomeScreenSlider;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 
@@ -45,17 +44,18 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.util.function.Consumer;
 
 /**
  * @author VISTALL
  */
 public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAware {
   static class SlideNewProjectPanel extends NewProjectPanel {
+    private final WelcomeScreenSlider owner;
     private JButton myOkButton;
 
-    public SlideNewProjectPanel(@Nonnull Disposable parentDisposable, @Nullable Project project, @Nullable VirtualFile virtualFile) {
+    public SlideNewProjectPanel(@Nonnull Disposable parentDisposable, WelcomeScreenSlider owner, @Nullable Project project, @Nullable VirtualFile virtualFile) {
       super(parentDisposable, project, virtualFile);
+      this.owner = owner;
     }
 
     @Override
@@ -80,13 +80,7 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
 
       JButton cancelButton = new JButton(CommonBundle.getCancelButtonText());
       cancelButton.setMargin(JBUI.insets(2, 16));
-      cancelButton.addActionListener(e -> {
-        FlatWelcomeScreen flatWelcomeScreen = (FlatWelcomeScreen)UIUtil.findParentByCondition(buttonsPanel, x -> x instanceof FlatWelcomeScreen);
-
-        if (flatWelcomeScreen != null) {
-          flatWelcomeScreen.replacePanel(this);
-        }
-      });
+      cancelButton.addActionListener(e -> owner.removeSlide(this));
       buttonsPanel.add(cancelButton);
 
       return JBUI.Panels.simplePanel().addToRight(buttonsPanel);
@@ -106,10 +100,10 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
 
   @Nonnull
   @Override
-  public JComponent createSlide(@Nonnull Disposable parentDisposable, Consumer<String> titleChanger) {
-    titleChanger.accept(IdeBundle.message("title.new.project"));
+  public JComponent createSlide(@Nonnull Disposable parentDisposable, @Nonnull WelcomeScreenSlider owner) {
+    owner.setTitle(IdeBundle.message("title.new.project"));
 
-    return new SlideNewProjectPanel(parentDisposable, null, null);
+    return new SlideNewProjectPanel(parentDisposable, owner, null, null);
   }
 
   @RequiredUIAccess

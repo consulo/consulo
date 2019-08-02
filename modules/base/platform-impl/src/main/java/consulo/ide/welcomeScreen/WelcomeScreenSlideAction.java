@@ -17,10 +17,9 @@ package consulo.ide.welcomeScreen;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
-import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -28,5 +27,5 @@ import java.util.function.Consumer;
  */
 public abstract class WelcomeScreenSlideAction extends AnAction {
   @Nonnull
-  public abstract JComponent createSlide(@Nonnull Disposable parentDisposable, @Nonnull Consumer<String> titleChanger);
+  public abstract JComponent createSlide(@Nonnull Disposable parentDisposable, @Nonnull WelcomeScreenSlider owner);
 }
