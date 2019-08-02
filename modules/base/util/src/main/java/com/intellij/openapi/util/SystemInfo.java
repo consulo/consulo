@@ -109,7 +109,7 @@ public class SystemInfo extends SystemInfoRt {
     return ourOsReleaseInfo.getValue().get("VERSION");
   }
 
-  public static final boolean isMacSystemMenu = isMac && "true".equals(System.getProperty("apple.laf.useScreenMenuBar"));
+  // public static final boolean isMacSystemMenu = isMac && "true".equals(System.getProperty("apple.laf.useScreenMenuBar"));
 
   public static final boolean isFileSystemCaseSensitive = SystemInfoRt.isFileSystemCaseSensitive;
   public static final boolean areSymLinksSupported = isUnix || isWinVistaOrNewer;

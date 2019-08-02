@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -29,7 +29,7 @@ public class ExitAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setVisible(!SystemInfo.isMacSystemMenu);
+    e.getPresentation().setVisible(!TopApplicationMenuUtil.isMacSystemMenu);
   }
 
   @RequiredUIAccess

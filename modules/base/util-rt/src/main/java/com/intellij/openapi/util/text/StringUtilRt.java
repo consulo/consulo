@@ -50,6 +50,41 @@ public class StringUtilRt {
     return cs == null || cs.length() == 0;
   }
 
+  @Nonnull
+  @Contract(pure = true)
+  public static String notNullize(@Nullable final String s) {
+    return notNullize(s, "");
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String notNullize(@Nullable final String s, @Nonnull String defaultValue) {
+    return s == null ? defaultValue : s;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String notNullizeIfEmpty(@Nullable final String s, @Nonnull String defaultValue) {
+    return isEmpty(s) ? defaultValue : s;
+  }
+
+  @Nullable
+  @Contract(pure = true)
+  public static String nullize(@Nullable final String s) {
+    return nullize(s, false);
+  }
+
+  @Nullable
+  @Contract(pure = true)
+  public static String nullize(@Nullable final String s, boolean nullizeSpaces) {
+    if (nullizeSpaces) {
+      if (isEmptyOrSpaces(s)) return null;
+    }
+    else {
+      if (isEmpty(s)) return null;
+    }
+    return s;
+  }
 
   @Contract(value = "null -> true", pure = true)
   // we need to keep this method to preserve backward compatibility

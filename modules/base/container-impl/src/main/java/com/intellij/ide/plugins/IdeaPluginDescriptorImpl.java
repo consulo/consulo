@@ -110,7 +110,7 @@ public class IdeaPluginDescriptorImpl extends PluginDescriptorStub {
 
     myDescriptionChildText = pluginBean.description;
     myChangeNotes = pluginBean.changeNotes;
-    myVersion = pluginBean.pluginVersion;
+    myVersion = StringUtilRt.nullize(pluginBean.pluginVersion);
     myPlatformVersion = pluginBean.platformVersion;
     myCategory = pluginBean.category;
 
