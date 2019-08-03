@@ -570,7 +570,7 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
+      <!--<plugin>
         <groupId>consulo.maven</groupId>
         <artifactId>notnull-maven-plugin</artifactId>
         <version>2.1-SNAPSHOT</version>
@@ -582,15 +582,15 @@
               <goal>instrument</goal>
             </goals>
           </execution>
-          <!--<execution>
+          <execution>
             <id>test</id>
             <phase>process-test-classes</phase>
             <goals>
               <goal>test-instrument</goal>
             </goals>
-          </execution> -->
+          </execution>
         </executions>
-      </plugin>
+      </plugin> -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
