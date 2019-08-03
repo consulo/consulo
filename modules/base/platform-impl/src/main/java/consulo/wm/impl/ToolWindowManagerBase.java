@@ -672,7 +672,9 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
   protected void appendRemoveButtonCmd(final String id, final List<FinalizableCommand> commandsList) {
     final FinalizableCommand command = myToolWindowPanel.createRemoveButtonCmd(id, myCommandProcessor);
-    commandsList.add(command);
+    if(command != null) {
+      commandsList.add(command);
+    }
   }
 
   protected void appendRemoveFloatingDecoratorCmd(final WindowInfoImpl info, final List<FinalizableCommand> commandsList) {

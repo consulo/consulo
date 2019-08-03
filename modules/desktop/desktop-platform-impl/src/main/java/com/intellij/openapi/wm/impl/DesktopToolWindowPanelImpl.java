@@ -278,9 +278,12 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
    * @param id <code>ID</code> of the button to be removed.
    */
   @Override
-  @Nonnull
+  @Nullable
   public FinalizableCommand createRemoveButtonCmd(@Nonnull String id, @Nonnull Runnable finishCallBack) {
     final DesktopStripeButton button = getButtonById(id);
+    if(button == null) {
+      return null;
+    }
     final WindowInfoImpl info = getButtonInfoById(id);
 
     myButton2Info.remove(button);

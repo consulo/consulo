@@ -284,7 +284,7 @@ public class WebToolWindowPanelImpl extends UIComponentWithVaadinComponent<WebTo
     return new AddToolStripeButtonCmd((WebToolWindowStripeButtonImpl)button, copiedInfo, comparator, finishCallBack);
   }
 
-  @Nonnull
+  @Nullable
   @Override
   public FinalizableCommand createRemoveButtonCmd(@Nonnull String id, @Nonnull Runnable finishCallBack) {
     return new FinalizableCommand(finishCallBack) {
