@@ -37,6 +37,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginIds;
 import consulo.ide.plugins.InstalledPluginsState;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import consulo.ide.updateSettings.UpdateChannel;
@@ -52,7 +53,7 @@ import java.util.*;
  * @since 10-Oct-16
  */
 public class PlatformOrPluginUpdateChecker {
-  public static final Logger LOGGER = Logger.getInstance(PlatformOrPluginUpdateChecker.class);
+  private static final Logger LOG = Logger.getInstance(PlatformOrPluginUpdateChecker.class);
 
   private static final NotificationGroup ourGroup = new NotificationGroup("Platform Or Plugins Update", NotificationDisplayType.STICKY_BALLOON, false);
 
@@ -118,7 +119,7 @@ public class PlatformOrPluginUpdateChecker {
       UIUtil.invokeLaterIfNeeded(() -> Messages.showErrorDialog(failedMessage, IdeBundle.message("title.connection.error")));
     }
     else {
-      LOGGER.info(failedMessage);
+      LOG.info(failedMessage);
     }
   }
 
@@ -185,7 +186,7 @@ public class PlatformOrPluginUpdateChecker {
       return PlatformOrPluginUpdateResult.CANCELED;
     }
     catch (Exception e) {
-      LOGGER.info(e);
+      LOG.info(e);
     }
 
     boolean alreadyVisited = false;
@@ -226,7 +227,7 @@ public class PlatformOrPluginUpdateChecker {
         return PlatformOrPluginUpdateResult.CANCELED;
       }
       catch (Exception e) {
-        LOGGER.info(e);
+        LOG.info(e);
       }
     }
 
@@ -234,7 +235,11 @@ public class PlatformOrPluginUpdateChecker {
     final List<PluginDescriptor> installedPlugins = consulo.container.plugin.PluginManager.getPlugins();
     final List<String> disabledPlugins = PluginManagerCore.getDisabledPlugins();
     for (PluginDescriptor installedPlugin : installedPlugins) {
-      if (!installedPlugin.isBundled() && !disabledPlugins.contains(installedPlugin.getPluginId().getIdString())) {
+      if (PluginIds.isPlatformPlugin(installedPlugin.getPluginId())) {
+        continue;
+      }
+
+      if (!disabledPlugins.contains(installedPlugin.getPluginId().getIdString())) {
         ourPlugins.put(installedPlugin.getPluginId(), installedPlugin);
       }
     }
@@ -249,7 +254,7 @@ public class PlatformOrPluginUpdateChecker {
 
           if (filtered == null) {
             // if platform updated - but we not found new plugin in new remote list, notify user about it
-            if(newPlatformPlugin != null) {
+            if (newPlatformPlugin != null) {
               targets.add(new PlatformOrPluginNode(pluginId, entry.getValue(), null));
             }
             continue;

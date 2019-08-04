@@ -24,6 +24,7 @@ import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.ui.Messages;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginIds;
 import consulo.ide.plugins.InstalledPluginsState;
 import consulo.ui.RequiredUIAccess;
 
@@ -61,7 +62,7 @@ public class UninstallPluginAction extends AnAction implements DumbAware {
       for (PluginDescriptor descriptor : selection) {
         if (descriptor instanceof IdeaPluginDescriptorImpl) {
           final IdeaPluginDescriptorImpl ideaPluginDescriptor = (IdeaPluginDescriptorImpl)descriptor;
-          if (ideaPluginDescriptor.isDeleted() || ideaPluginDescriptor.isBundled()) {
+          if (ideaPluginDescriptor.isDeleted() || PluginIds.isPlatformPlugin(ideaPluginDescriptor.getPluginId())) {
             enabled = false;
             break;
           }

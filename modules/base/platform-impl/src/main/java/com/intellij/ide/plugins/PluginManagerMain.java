@@ -46,6 +46,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginIds;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
@@ -354,7 +355,7 @@ public abstract class PluginManagerMain implements Disposable {
       sb.append(changeNotes);
     }
 
-    if (!plugin.isBundled()) {
+    if (!PluginIds.isPlatformPlugin(plugin.getPluginId())) {
       String vendor = plugin.getVendor();
       String vendorEmail = plugin.getVendorEmail();
       String vendorUrl = plugin.getVendorUrl();

@@ -32,6 +32,7 @@ import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginIds;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -122,7 +123,7 @@ public class PluginHeaderPanel {
       final String version = plugin.getVersion();
       myVersion.setText("Version: " + (version == null ? "N/A" : version));
       myUpdated.setVisible(false);
-      if (!plugin.isBundled()) {
+      if (!PluginIds.isPlatformPlugin(plugin.getPluginId())) {
         if (((IdeaPluginDescriptorImpl)plugin).isDeleted()) {
           myActionId = ACTION_ID.RESTART;
         }

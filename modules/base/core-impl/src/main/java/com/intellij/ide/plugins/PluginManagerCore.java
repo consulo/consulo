@@ -284,7 +284,7 @@ public class PluginManagerCore {
   }
 
   static void logPlugins() {
-    List<String> loadedBundled = new ArrayList<>();
+    List<String> platform = new ArrayList<>();
     List<String> disabled = new ArrayList<>();
     List<String> loadedCustom = new ArrayList<>();
 
@@ -292,8 +292,8 @@ public class PluginManagerCore {
       final String version = descriptor.getVersion();
       String s = descriptor.getName() + (version != null ? " (" + version + ")" : "");
       if (descriptor.isEnabled()) {
-        if (descriptor.isBundled() || CORE_PLUGIN.equals(descriptor.getPluginId())) {
-          loadedBundled.add(s);
+        if (PluginIds.isPlatformPlugin(descriptor.getPluginId())) {
+          platform.add(s);
         }
         else {
           loadedCustom.add(s);
@@ -304,11 +304,11 @@ public class PluginManagerCore {
       }
     }
 
-    Collections.sort(loadedBundled);
+    Collections.sort(platform);
     Collections.sort(loadedCustom);
     Collections.sort(disabled);
 
-    getLogger().info("Loaded bundled plugins: " + StringUtil.join(loadedBundled, ", "));
+    getLogger().info("Loaded platform plugins: " + StringUtil.join(platform, ", "));
     if (!loadedCustom.isEmpty()) {
       getLogger().info("Loaded custom plugins: " + StringUtil.join(loadedCustom, ", "));
     }
