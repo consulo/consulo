@@ -23,13 +23,14 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.net.HttpConfigurable;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.ide.plugins.PluginJsonNode;
 import consulo.ide.updateSettings.UpdateChannel;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
 import consulo.ide.webService.WebServiceApi;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -86,14 +87,14 @@ public class RepositoryHelper {
    * Load & return only plugins from repository
    */
   @Nonnull
-  public static List<IdeaPluginDescriptor> loadOnlyPluginsFromRepository(@Nullable ProgressIndicator indicator, @Nonnull UpdateChannel channel)
+  public static List<PluginDescriptor> loadOnlyPluginsFromRepository(@Nullable ProgressIndicator indicator, @Nonnull UpdateChannel channel)
           throws Exception {
-    List<IdeaPluginDescriptor> ideaPluginDescriptors = loadPluginsFromRepository(indicator, channel);
+    List<PluginDescriptor> ideaPluginDescriptors = loadPluginsFromRepository(indicator, channel);
     return ContainerUtil.filter(ideaPluginDescriptors, it -> !PlatformOrPluginUpdateChecker.isPlatform(it.getPluginId()));
   }
 
   @Nonnull
-  public static List<IdeaPluginDescriptor> loadPluginsFromRepository(@Nullable ProgressIndicator indicator, @Nonnull UpdateChannel channel) throws Exception {
+  public static List<PluginDescriptor> loadPluginsFromRepository(@Nullable ProgressIndicator indicator, @Nonnull UpdateChannel channel) throws Exception {
     return loadPluginsFromRepository(indicator, channel, null);
   }
 
@@ -105,7 +106,7 @@ public class RepositoryHelper {
    * @throws Exception
    */
   @Nonnull
-  public static List<IdeaPluginDescriptor> loadPluginsFromRepository(@Nullable ProgressIndicator indicator,
+  public static List<PluginDescriptor> loadPluginsFromRepository(@Nullable ProgressIndicator indicator,
                                                                      @Nonnull UpdateChannel channel,
                                                                      @Nullable String buildNumber) throws Exception {
     if (buildNumber == null) {
@@ -154,7 +155,7 @@ public class RepositoryHelper {
     }
   }
 
-  private static List<IdeaPluginDescriptor> readPluginsStream(InputStream is, ProgressIndicator indicator) throws Exception {
+  private static List<PluginDescriptor> readPluginsStream(InputStream is, ProgressIndicator indicator) throws Exception {
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     try {
       byte[] buffer = new byte[1024];
@@ -173,7 +174,7 @@ public class RepositoryHelper {
     PluginJsonNode[] nodes =
             new Gson().fromJson(new InputStreamReader(new ByteArrayInputStream(os.toByteArray()), StandardCharsets.UTF_8), PluginJsonNode[].class);
 
-    List<IdeaPluginDescriptor> pluginDescriptors = new ArrayList<>(nodes.length);
+    List<PluginDescriptor> pluginDescriptors = new ArrayList<>(nodes.length);
     for (PluginJsonNode jsonPlugin : nodes) {
       pluginDescriptors.add(new PluginNode(jsonPlugin));
     }

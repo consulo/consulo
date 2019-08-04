@@ -15,7 +15,6 @@
  */
 package consulo.ide.plugins.pluginsAdvertisement;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerColumnInfo;
 import com.intellij.ide.plugins.PluginTableModel;
 import com.intellij.ide.plugins.PluginsTableRenderer;
@@ -23,8 +22,9 @@ import com.intellij.openapi.extensions.PluginId;
 import com.intellij.ui.BooleanTableCellEditor;
 import com.intellij.ui.BooleanTableCellRenderer;
 import com.intellij.util.ui.ColumnInfo;
-import javax.annotation.Nonnull;
+import consulo.container.plugin.PluginDescriptor;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -44,7 +44,7 @@ public class PluginAdvertiserPluginModel extends PluginTableModel {
     }
 
     @Override
-    public TableCellRenderer getRenderer(final IdeaPluginDescriptor pluginDescriptor) {
+    public TableCellRenderer getRenderer(final PluginDescriptor pluginDescriptor) {
       return new PluginsTableRenderer(pluginDescriptor, false);
     }
 
@@ -54,7 +54,7 @@ public class PluginAdvertiserPluginModel extends PluginTableModel {
     }
   }
 
-  private static class DownloadCheckboxColumnInfo extends ColumnInfo<IdeaPluginDescriptor, Boolean> {
+  private static class DownloadCheckboxColumnInfo extends ColumnInfo<PluginDescriptor, Boolean> {
     private final Map<PluginId, Boolean> myDownloadMap;
 
     public DownloadCheckboxColumnInfo(Map<PluginId, Boolean> downloadMap) {
@@ -63,12 +63,12 @@ public class PluginAdvertiserPluginModel extends PluginTableModel {
     }
 
     @Override
-    public Boolean valueOf(IdeaPluginDescriptor ideaPluginDescriptor) {
+    public Boolean valueOf(PluginDescriptor ideaPluginDescriptor) {
       return myDownloadMap.get(ideaPluginDescriptor.getPluginId());
     }
 
     @Override
-    public boolean isCellEditable(final IdeaPluginDescriptor ideaPluginDescriptor) {
+    public boolean isCellEditable(final PluginDescriptor ideaPluginDescriptor) {
       return true;
     }
 
@@ -78,12 +78,12 @@ public class PluginAdvertiserPluginModel extends PluginTableModel {
     }
 
     @Override
-    public TableCellEditor getEditor(final IdeaPluginDescriptor o) {
+    public TableCellEditor getEditor(final PluginDescriptor o) {
       return new BooleanTableCellEditor();
     }
 
     @Override
-    public TableCellRenderer getRenderer(final IdeaPluginDescriptor ideaPluginDescriptor) {
+    public TableCellRenderer getRenderer(final PluginDescriptor ideaPluginDescriptor) {
       return new BooleanTableCellRenderer() {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -93,7 +93,7 @@ public class PluginAdvertiserPluginModel extends PluginTableModel {
     }
 
     @Override
-    public void setValue(final IdeaPluginDescriptor ideaPluginDescriptor, Boolean value) {
+    public void setValue(final PluginDescriptor ideaPluginDescriptor, Boolean value) {
       myDownloadMap.put(ideaPluginDescriptor.getPluginId(), value);
     }
 
@@ -103,15 +103,14 @@ public class PluginAdvertiserPluginModel extends PluginTableModel {
     }
   }
 
-
-  public PluginAdvertiserPluginModel(Map<PluginId, Boolean> downloadState, @Nonnull List<IdeaPluginDescriptor> pluginDescriptors) {
+  public PluginAdvertiserPluginModel(Map<PluginId, Boolean> downloadState, @Nonnull List<PluginDescriptor> pluginDescriptors) {
     columns = new ColumnInfo[]{new MyPluginManagerColumnInfo(this), new DownloadCheckboxColumnInfo(downloadState)};
     view = new ArrayList<>();
     updatePluginsList(pluginDescriptors);
   }
 
   @Override
-  public void updatePluginsList(List<IdeaPluginDescriptor> list) {
+  public void updatePluginsList(List<PluginDescriptor> list) {
     view.clear();
     filtered.clear();
     view.addAll(list);
@@ -124,7 +123,7 @@ public class PluginAdvertiserPluginModel extends PluginTableModel {
   }
 
   @Override
-  public boolean isPluginDescriptorAccepted(IdeaPluginDescriptor descriptor) {
+  public boolean isPluginDescriptorAccepted(PluginDescriptor descriptor) {
     return false;
   }
 }

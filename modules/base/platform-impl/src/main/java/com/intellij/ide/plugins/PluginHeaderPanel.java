@@ -31,6 +31,7 @@ import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.container.plugin.PluginDescriptor;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -40,7 +41,8 @@ import java.awt.*;
  * @author Konstantin Bulenkov
  */
 public class PluginHeaderPanel {
-  private IdeaPluginDescriptor myPlugin;
+  private PluginDescriptor myPlugin;
+
   @Nullable
   private final PluginManagerMain myManager;
   private final JTable myPluginTable;
@@ -82,7 +84,7 @@ public class PluginHeaderPanel {
     myRoot.setVisible(false);
   }
 
-  public void setPlugin(IdeaPluginDescriptor plugin) {
+  public void setPlugin(PluginDescriptor plugin) {
     myPlugin = plugin;
     myRoot.setVisible(true);
     myCategory.setVisible(true);

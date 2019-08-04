@@ -15,7 +15,6 @@
  */
 package com.intellij.ide.plugins.pluginsAdvertisement;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationGroup;
@@ -31,6 +30,7 @@ import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeat
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.EditorNotifications;
 import com.intellij.util.ui.UIUtil;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.SimpleExtension;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
@@ -69,12 +69,12 @@ public class PluginsAdvertiser implements StartupActivity, DumbAware {
         return;
       }
 
-      final Set<IdeaPluginDescriptor> ids = new HashSet<>();
+      final Set<PluginDescriptor> ids = new HashSet<>();
       for (UnknownExtension feature : unknownExtensions) {
-        final Set<IdeaPluginDescriptor> descriptors = findByFeature(pluginDescriptors, feature);
+        final Set<PluginDescriptor> descriptors = findByFeature(pluginDescriptors, feature);
         //do not suggest to download disabled plugins
         final List<String> disabledPlugins = PluginManagerCore.getDisabledPlugins();
-        for (IdeaPluginDescriptor id : descriptors) {
+        for (PluginDescriptor id : descriptors) {
           if (!disabledPlugins.contains(id.getPluginId().getIdString())) {
             ids.add(id);
           }
@@ -107,9 +107,9 @@ public class PluginsAdvertiser implements StartupActivity, DumbAware {
   }
 
   @Nonnull
-  public static Set<IdeaPluginDescriptor> findByFeature(List<IdeaPluginDescriptor> descriptors, UnknownExtension feature) {
-    Set<IdeaPluginDescriptor> filter = new LinkedHashSet<>();
-    for (IdeaPluginDescriptor descriptor : descriptors) {
+  public static Set<PluginDescriptor> findByFeature(List<PluginDescriptor> descriptors, UnknownExtension feature) {
+    Set<PluginDescriptor> filter = new LinkedHashSet<>();
+    for (PluginDescriptor descriptor : descriptors) {
       for (SimpleExtension simpleExtension : descriptor.getSimpleExtensions()) {
         // check is is my extension
         if (feature.getExtensionKey().equals(simpleExtension.getKey())) {

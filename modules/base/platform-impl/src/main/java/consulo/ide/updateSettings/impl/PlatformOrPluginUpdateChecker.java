@@ -36,6 +36,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.ide.plugins.InstalledPluginsState;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import consulo.ide.updateSettings.UpdateChannel;
@@ -101,7 +102,7 @@ public class PlatformOrPluginUpdateChecker {
 
   @Nonnull
   public static AsyncResult<Void> updateAndShowResult() {
-    final AsyncResult<Void> result = new AsyncResult<>();
+    final AsyncResult<Void> result = AsyncResult.undefined();
     final Application app = Application.get();
     final UpdateSettings updateSettings = UpdateSettings.getInstance();
     if (!updateSettings.isEnable()) {
@@ -152,7 +153,7 @@ public class PlatformOrPluginUpdateChecker {
   }
 
   public static AsyncResult<Void> checkAndNotifyForUpdates(@Nullable Project project, boolean showResults, @Nullable ProgressIndicator indicator) {
-    AsyncResult<Void> actionCallback = new AsyncResult<>();
+    AsyncResult<Void> actionCallback = AsyncResult.undefined();
     PlatformOrPluginUpdateResult updateResult = checkForUpdates(showResults, indicator);
     if (updateResult == PlatformOrPluginUpdateResult.CANCELED) {
       actionCallback.setDone();
@@ -174,7 +175,7 @@ public class PlatformOrPluginUpdateChecker {
     ApplicationInfoEx appInfo = ApplicationInfoImpl.getShadowInstance();
     String currentBuildNumber = appInfo.getBuild().asString();
 
-    List<IdeaPluginDescriptor> remotePlugins = Collections.emptyList();
+    List<PluginDescriptor> remotePlugins = Collections.emptyList();
     UpdateChannel channel = UpdateSettings.getInstance().getChannel();
     try {
       remotePlugins = RepositoryHelper.loadPluginsFromRepository(indicator, channel);
@@ -190,9 +191,9 @@ public class PlatformOrPluginUpdateChecker {
     boolean alreadyVisited = false;
     final InstalledPluginsState state = InstalledPluginsState.getInstance();
 
-    IdeaPluginDescriptor newPlatformPlugin = null;
+    PluginDescriptor newPlatformPlugin = null;
     // try to search platform number
-    for (IdeaPluginDescriptor pluginDescriptor : remotePlugins) {
+    for (PluginDescriptor pluginDescriptor : remotePlugins) {
       PluginId pluginId = pluginDescriptor.getPluginId();
       // platform already downloaded for update
       if (state.wasUpdated(pluginId)) {
@@ -229,10 +230,10 @@ public class PlatformOrPluginUpdateChecker {
       }
     }
 
-    final Map<PluginId, IdeaPluginDescriptor> ourPlugins = new HashMap<>();
-    final IdeaPluginDescriptor[] installedPlugins = PluginManagerCore.getPlugins();
+    final Map<PluginId, PluginDescriptor> ourPlugins = new HashMap<>();
+    final List<PluginDescriptor> installedPlugins = consulo.container.plugin.PluginManager.getPlugins();
     final List<String> disabledPlugins = PluginManagerCore.getDisabledPlugins();
-    for (IdeaPluginDescriptor installedPlugin : installedPlugins) {
+    for (PluginDescriptor installedPlugin : installedPlugins) {
       if (!installedPlugin.isBundled() && !disabledPlugins.contains(installedPlugin.getPluginId().getIdString())) {
         ourPlugins.put(installedPlugin.getPluginId(), installedPlugin);
       }
@@ -241,10 +242,10 @@ public class PlatformOrPluginUpdateChecker {
     state.getOutdatedPlugins().clear();
     if (!ourPlugins.isEmpty()) {
       try {
-        for (final Map.Entry<PluginId, IdeaPluginDescriptor> entry : ourPlugins.entrySet()) {
+        for (final Map.Entry<PluginId, PluginDescriptor> entry : ourPlugins.entrySet()) {
           final PluginId pluginId = entry.getKey();
 
-          IdeaPluginDescriptor filtered = ContainerUtil.find(remotePlugins, it -> pluginId.equals(it.getPluginId()));
+          PluginDescriptor filtered = ContainerUtil.find(remotePlugins, it -> pluginId.equals(it.getPluginId()));
 
           if (filtered == null) {
             // if platform updated - but we not found new plugin in new remote list, notify user about it
@@ -286,13 +287,13 @@ public class PlatformOrPluginUpdateChecker {
     return targets.isEmpty() ? PlatformOrPluginUpdateResult.NO_UPDATE : new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_UPDATE, targets);
   }
 
-  private static void processDependencies(@Nonnull IdeaPluginDescriptor target, List<PlatformOrPluginNode> targets, List<IdeaPluginDescriptor> remotePlugins) {
+  private static void processDependencies(@Nonnull PluginDescriptor target, List<PlatformOrPluginNode> targets, List<PluginDescriptor> remotePlugins) {
     PluginId[] dependentPluginIds = target.getDependentPluginIds();
     for (PluginId pluginId : dependentPluginIds) {
-      IdeaPluginDescriptor depPlugin = PluginManager.getPlugin(pluginId);
+      PluginDescriptor depPlugin = PluginManager.getPlugin(pluginId);
       // if plugin is not installed
       if (depPlugin == null) {
-        IdeaPluginDescriptor filtered = ContainerUtil.find(remotePlugins, it -> pluginId.equals(it.getPluginId()));
+        PluginDescriptor filtered = ContainerUtil.find(remotePlugins, it -> pluginId.equals(it.getPluginId()));
 
         if (filtered != null) {
           targets.add(new PlatformOrPluginNode(filtered.getPluginId(), null, filtered));

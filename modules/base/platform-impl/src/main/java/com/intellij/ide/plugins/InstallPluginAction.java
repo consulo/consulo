@@ -28,11 +28,12 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.ide.plugins.InstalledPluginsState;
 import consulo.ide.updateSettings.impl.PlatformOrPluginDialog;
 import consulo.ide.updateSettings.impl.PlatformOrPluginNode;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateResult;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,7 +46,7 @@ import java.util.stream.Collectors;
  * @author lloix
  */
 public class InstallPluginAction extends AnAction implements DumbAware {
-  private static final Set<IdeaPluginDescriptor> ourInstallingNodes = new HashSet<>();
+  private static final Set<PluginDescriptor> ourInstallingNodes = new HashSet<>();
 
   private final PluginManagerMain myInstalledPluginPanel;
   private final PluginManagerMain myAvailablePluginPanel;
@@ -60,16 +61,16 @@ public class InstallPluginAction extends AnAction implements DumbAware {
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
-    IdeaPluginDescriptor[] selection = getPluginTable().getSelectedObjects();
+    PluginDescriptor[] selection = getPluginTable().getSelectedObjects();
     boolean enabled = (selection != null);
 
     if (enabled) {
-      for (IdeaPluginDescriptor descr : selection) {
+      for (PluginDescriptor descr : selection) {
         presentation.setText(IdeBundle.message("action.download.and.install.plugin"));
         presentation.setDescription(IdeBundle.message("action.download.and.install.plugin"));
         enabled &= !ourInstallingNodes.contains(descr);
         if (descr instanceof PluginNode) {
-          enabled &= !PluginManagerColumnInfo.isDownloaded((PluginNode)descr);
+          enabled &= !PluginManagerColumnInfo.isDownloaded(descr);
           if (((PluginNode)descr).getStatus() == PluginNode.STATUS_INSTALLED) {
             presentation.setText(IdeBundle.message("action.update.plugin"));
             presentation.setDescription(IdeBundle.message("action.update.plugin"));
@@ -96,10 +97,10 @@ public class InstallPluginAction extends AnAction implements DumbAware {
 
   @RequiredUIAccess
   public void install(@Nullable Project project, @Nullable final Runnable onSuccess) {
-    IdeaPluginDescriptor[] selection = getPluginTable().getSelectedObjects();
+    PluginDescriptor[] selection = getPluginTable().getSelectedObjects();
 
-    final List<IdeaPluginDescriptor> list = new ArrayList<>();
-    for (IdeaPluginDescriptor descr : selection) {
+    final List<PluginDescriptor> list = new ArrayList<>();
+    for (PluginDescriptor descr : selection) {
       PluginNode pluginNode = null;
       if (descr instanceof PluginNode) {
         pluginNode = (PluginNode)descr;
@@ -118,15 +119,15 @@ public class InstallPluginAction extends AnAction implements DumbAware {
         ourInstallingNodes.add(pluginNode);
       }
       final InstalledPluginsTableModel pluginsModel = (InstalledPluginsTableModel)myInstalledPluginPanel.getPluginsModel();
-      final Set<IdeaPluginDescriptor> disabled = new HashSet<>();
-      final Set<IdeaPluginDescriptor> disabledDependants = new HashSet<>();
-      for (IdeaPluginDescriptor node : list) {
+      final Set<PluginDescriptor> disabled = new HashSet<>();
+      final Set<PluginDescriptor> disabledDependants = new HashSet<>();
+      for (PluginDescriptor node : list) {
         final PluginId pluginId = node.getPluginId();
         if (pluginsModel.isDisabled(pluginId)) {
           disabled.add(node);
         }
         for (PluginId dependantId : node.getDependentPluginIds()) {
-          final IdeaPluginDescriptor pluginDescriptor = PluginManager.getPlugin(dependantId);
+          final PluginDescriptor pluginDescriptor = PluginManager.getPlugin(dependantId);
           if (pluginDescriptor != null && pluginsModel.isDisabled(dependantId)) {
             disabledDependants.add(pluginDescriptor);
           }
@@ -136,7 +137,7 @@ public class InstallPluginAction extends AnAction implements DumbAware {
         myInstalledPluginPanel.setRequireShutdown(true);
       }
     }
-    final Consumer<Collection<IdeaPluginDescriptor>> afterCallback = pluginNodes -> {
+    final Consumer<Collection<PluginDescriptor>> afterCallback = pluginNodes -> {
       if (pluginNodes.isEmpty()) {
         return;
       }
@@ -150,8 +151,8 @@ public class InstallPluginAction extends AnAction implements DumbAware {
       }
       else {
         boolean needToRestart = false;
-        for (IdeaPluginDescriptor node : pluginNodes) {
-          final IdeaPluginDescriptor pluginDescriptor = PluginManager.getPlugin(node.getPluginId());
+        for (PluginDescriptor node : pluginNodes) {
+          final PluginDescriptor pluginDescriptor = PluginManager.getPlugin(node.getPluginId());
           if (pluginDescriptor == null || pluginDescriptor.isEnabled()) {
             needToRestart = true;
             break;
@@ -173,16 +174,16 @@ public class InstallPluginAction extends AnAction implements DumbAware {
   }
 
   public static boolean downloadAndInstallPlugins(@Nullable Project project,
-                                                  @Nonnull final List<IdeaPluginDescriptor> toInstall,
-                                                  @Nonnull final List<IdeaPluginDescriptor> allPlugins,
-                                                  @Nullable final Consumer<Collection<IdeaPluginDescriptor>> afterCallback) {
-    Set<IdeaPluginDescriptor> pluginsForInstallWithDependencies = PluginInstallUtil.getPluginsForInstall(toInstall, allPlugins);
+                                                  @Nonnull final List<PluginDescriptor> toInstall,
+                                                  @Nonnull final List<PluginDescriptor> allPlugins,
+                                                  @Nullable final Consumer<Collection<PluginDescriptor>> afterCallback) {
+    Set<PluginDescriptor> pluginsForInstallWithDependencies = PluginInstallUtil.getPluginsForInstall(toInstall, allPlugins);
 
     List<PlatformOrPluginNode> remap = pluginsForInstallWithDependencies.stream().map(x -> new PlatformOrPluginNode(x.getPluginId(), null, x)).collect(Collectors.toList());
     PlatformOrPluginUpdateResult result = new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL, remap);
     Predicate<PluginId> greenNodeStrategy = pluginId -> {
       // do not mark target node as green, only depend
-      for (IdeaPluginDescriptor node : toInstall) {
+      for (PluginDescriptor node : toInstall) {
         if (node.getPluginId().equals(pluginId)) {
           return false;
         }
@@ -200,16 +201,16 @@ public class InstallPluginAction extends AnAction implements DumbAware {
   }
 
   private static boolean suggestToEnableInstalledPlugins(final InstalledPluginsTableModel pluginsModel,
-                                                         final Set<IdeaPluginDescriptor> disabled,
-                                                         final Set<IdeaPluginDescriptor> disabledDependants,
-                                                         final List<IdeaPluginDescriptor> list) {
+                                                         final Set<PluginDescriptor> disabled,
+                                                         final Set<PluginDescriptor> disabledDependants,
+                                                         final List<PluginDescriptor> list) {
     if (!disabled.isEmpty() || !disabledDependants.isEmpty()) {
       String message = "";
       if (disabled.size() == 1) {
         message += "Updated plugin '" + disabled.iterator().next().getName() + "' is disabled.";
       }
       else if (!disabled.isEmpty()) {
-        message += "Updated plugins " + StringUtil.join(disabled, IdeaPluginDescriptor::getName, ", ") + " are disabled.";
+        message += "Updated plugins " + StringUtil.join(disabled, PluginDescriptor::getName, ", ") + " are disabled.";
       }
 
       if (!disabledDependants.isEmpty()) {
@@ -219,7 +220,7 @@ public class InstallPluginAction extends AnAction implements DumbAware {
           message += " plugin '" + disabledDependants.iterator().next().getName() + "'.";
         }
         else {
-          message += " plugins " + StringUtil.join(disabledDependants, IdeaPluginDescriptor::getName, ", ") + ".";
+          message += " plugins " + StringUtil.join(disabledDependants, PluginDescriptor::getName, ", ") + ".";
         }
       }
       message += " Disabled plugins and plugins which depends on disabled plugins won't be activated after restart.";
@@ -246,18 +247,18 @@ public class InstallPluginAction extends AnAction implements DumbAware {
 
       if (result == Messages.YES) {
         disabled.addAll(disabledDependants);
-        pluginsModel.enableRows(disabled.toArray(new IdeaPluginDescriptor[disabled.size()]), true);
+        pluginsModel.enableRows(disabled.toArray(new PluginDescriptor[disabled.size()]), true);
       }
       else if (result == Messages.NO && !disabled.isEmpty()) {
-        pluginsModel.enableRows(disabled.toArray(new IdeaPluginDescriptor[disabled.size()]), true);
+        pluginsModel.enableRows(disabled.toArray(new PluginDescriptor[disabled.size()]), true);
       }
       return true;
     }
     return false;
   }
 
-  private void installedPluginsToModel(Collection<IdeaPluginDescriptor> list) {
-    for (IdeaPluginDescriptor pluginNode : list) {
+  private void installedPluginsToModel(Collection<PluginDescriptor> list) {
+    for (PluginDescriptor pluginNode : list) {
       final PluginId id = pluginNode.getPluginId();
       final InstalledPluginsState pluginsState = InstalledPluginsState.getInstance();
 
@@ -266,7 +267,7 @@ public class InstallPluginAction extends AnAction implements DumbAware {
     }
 
     final InstalledPluginsTableModel installedPluginsModel = (InstalledPluginsTableModel)myInstalledPluginPanel.getPluginsModel();
-    for (IdeaPluginDescriptor node : list) {
+    for (PluginDescriptor node : list) {
       installedPluginsModel.appendOrUpdateDescriptor(node);
     }
   }

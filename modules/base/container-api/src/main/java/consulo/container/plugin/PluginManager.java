@@ -22,6 +22,7 @@ import consulo.util.ServiceLoaderUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -31,8 +32,12 @@ public final class PluginManager {
   private static final PluginManagerInternal ourInternal = ServiceLoaderUtil.loadSingleOrError(PluginManagerInternal.class);
 
   @Nonnull
-  public static Iterable<PluginDescriptor> getPlugins() {
+  public static List<PluginDescriptor> getPlugins() {
     return ourInternal.getPlugins();
+  }
+
+  public static int getPluginsCount() {
+    return getPlugins().size();
   }
 
   @Nullable
@@ -49,10 +54,6 @@ public final class PluginManager {
   @Nullable
   public static File getPluginPath(@Nonnull Class<?> pluginClass) {
     return ourInternal.getPluginPath(pluginClass);
-  }
-
-  public static int getPluginsCount() {
-    return ourInternal.getPluginsCount();
   }
 
   public static boolean isInitialized() {

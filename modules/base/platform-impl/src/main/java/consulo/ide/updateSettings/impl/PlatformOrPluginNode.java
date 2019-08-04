@@ -1,7 +1,7 @@
 package consulo.ide.updateSettings.impl;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.openapi.extensions.PluginId;
+import consulo.container.plugin.PluginDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -14,11 +14,11 @@ public class PlatformOrPluginNode {
   @Nonnull
   private final PluginId myPluginId;
   @Nullable
-  private final IdeaPluginDescriptor myCurrentDescriptor;
+  private final PluginDescriptor myCurrentDescriptor;
   @Nullable
-  private final IdeaPluginDescriptor myFutureDescriptor;
+  private final PluginDescriptor myFutureDescriptor;
 
-  public PlatformOrPluginNode(@Nonnull PluginId pluginId, @Nullable IdeaPluginDescriptor currentDescriptor, @Nullable IdeaPluginDescriptor futureDescriptor) {
+  public PlatformOrPluginNode(@Nonnull PluginId pluginId, @Nullable PluginDescriptor currentDescriptor, @Nullable PluginDescriptor futureDescriptor) {
     myPluginId = pluginId;
     myCurrentDescriptor = currentDescriptor;
     myFutureDescriptor = futureDescriptor;
@@ -34,12 +34,12 @@ public class PlatformOrPluginNode {
   }
 
   @Nullable
-  public IdeaPluginDescriptor getCurrentDescriptor() {
+  public PluginDescriptor getCurrentDescriptor() {
     return myCurrentDescriptor;
   }
 
   @Nullable
-  public IdeaPluginDescriptor getFutureDescriptor() {
+  public PluginDescriptor getFutureDescriptor() {
     return myFutureDescriptor;
   }
 }

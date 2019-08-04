@@ -36,6 +36,7 @@ import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.io.ZipUtil;
 import com.intellij.util.ui.StatusText;
 import consulo.container.impl.PluginLoader;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.ide.plugins.AvailablePluginsDialog;
 import consulo.ui.RequiredUIAccess;
@@ -91,7 +92,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
             Messages.showErrorDialog("Plugin " + pluginDescriptor.getName() + " is incompatible with current installation", CommonBundle.getErrorTitle());
             return;
           }
-          final IdeaPluginDescriptor alreadyInstalledPlugin = PluginManager.getPlugin(pluginDescriptor.getPluginId());
+          final PluginDescriptor alreadyInstalledPlugin = PluginManager.getPlugin(pluginDescriptor.getPluginId());
           if (alreadyInstalledPlugin != null) {
             final File oldFile = alreadyInstalledPlugin.getPath();
             if (oldFile != null) {
@@ -165,8 +166,8 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
               CommonBundle.getWarningTitle());
     }
     if (!disabledIds.isEmpty()) {
-      final Set<IdeaPluginDescriptor> dependencies = new HashSet<>();
-      for (IdeaPluginDescriptor ideaPluginDescriptor : myPluginsModel.getAllPlugins()) {
+      final Set<PluginDescriptor> dependencies = new HashSet<>();
+      for (PluginDescriptor ideaPluginDescriptor : myPluginsModel.getAllPlugins()) {
         if (disabledIds.contains(ideaPluginDescriptor.getPluginId())) {
           dependencies.add(ideaPluginDescriptor);
         }
@@ -176,18 +177,18 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
                        pluginDescriptor.getName() +
                        " depends on " +
                        disabledPluginsMessage +
-                       StringUtil.join(dependencies, IdeaPluginDescriptor::getName, ", ") +
+                       StringUtil.join(dependencies, PluginDescriptor::getName, ", ") +
                        ". Enable " +
                        disabledPluginsMessage.trim() +
                        "?";
       if (Messages.showOkCancelDialog(myActionsPanel, message, CommonBundle.getWarningTitle(), Messages.getWarningIcon()) == Messages.OK) {
-        ((InstalledPluginsTableModel)myPluginsModel).enableRows(dependencies.toArray(new IdeaPluginDescriptor[dependencies.size()]), Boolean.TRUE);
+        ((InstalledPluginsTableModel)myPluginsModel).enableRows(dependencies.toArray(new PluginDescriptor[dependencies.size()]), Boolean.TRUE);
       }
     }
   }
 
   @Override
-  protected void propagateUpdates(List<IdeaPluginDescriptor> list) {
+  protected void propagateUpdates(List<PluginDescriptor> list) {
   }
 
 
@@ -209,7 +210,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
         final Boolean enabled = (Boolean)myPluginTable.getValueAt(selectedRow, column);
         currentlyMarked &= enabled == null || enabled;
       }
-      final IdeaPluginDescriptor[] selected = new IdeaPluginDescriptor[selectedRows.length];
+      final PluginDescriptor[] selected = new PluginDescriptor[selectedRows.length];
       for (int i = 0, selectedLength = selected.length; i < selectedLength; i++) {
         selected[i] = myPluginsModel.getObjectAt(myPluginTable.convertRowIndexToModel(selectedRows[i]));
       }
@@ -253,12 +254,12 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
     final boolean modified = super.isModified();
     if (modified) return true;
     for (int i = 0; i < myPluginsModel.getRowCount(); i++) {
-      final IdeaPluginDescriptor pluginDescriptor = myPluginsModel.getObjectAt(i);
+      final PluginDescriptor pluginDescriptor = myPluginsModel.getObjectAt(i);
       if (pluginDescriptor.isEnabled() != ((InstalledPluginsTableModel)myPluginsModel).isEnabled(pluginDescriptor.getPluginId())) {
         return true;
       }
     }
-    for (IdeaPluginDescriptor descriptor : myPluginsModel.filtered) {
+    for (PluginDescriptor descriptor : myPluginsModel.filtered) {
       if (descriptor.isEnabled() != ((InstalledPluginsTableModel)myPluginsModel).isEnabled(descriptor.getPluginId())) {
         return true;
       }
@@ -279,11 +280,11 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
     final String apply = super.apply();
     if (apply != null) return apply;
     for (int i = 0; i < myPluginTable.getRowCount(); i++) {
-      final IdeaPluginDescriptor pluginDescriptor = myPluginsModel.getObjectAt(i);
+      final PluginDescriptor pluginDescriptor = myPluginsModel.getObjectAt(i);
       final Boolean enabled = (Boolean)myPluginsModel.getValueAt(i, InstalledPluginsTableModel.getCheckboxColumn());
       pluginDescriptor.setEnabled(enabled != null && enabled);
     }
-    for (IdeaPluginDescriptor descriptor : myPluginsModel.filtered) {
+    for (PluginDescriptor descriptor : myPluginsModel.filtered) {
       descriptor.setEnabled(((InstalledPluginsTableModel)myPluginsModel).isEnabled(descriptor.getPluginId()));
     }
     try {
@@ -315,7 +316,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
       return "<html><body style=\"padding: 5px;\">Unable to apply changes: plugin" +
              (dependentToRequiredListMap.size() == 1 ? " " : "s ") +
              StringUtil.join(dependentToRequiredListMap.keySet(), pluginId -> {
-               final IdeaPluginDescriptor ideaPluginDescriptor = PluginManager.getPlugin(pluginId);
+               final PluginDescriptor ideaPluginDescriptor = PluginManager.getPlugin(pluginId);
                return "\"" + (ideaPluginDescriptor != null ? ideaPluginDescriptor.getName() : pluginId.getIdString()) + "\"";
              }, ", ") +
              " won't be able to load.</body></html>";
@@ -341,7 +342,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
           @RequiredUIAccess
           @Override
           public void actionPerformed(@Nonnull AnActionEvent e) {
-            final IdeaPluginDescriptor[] selection = myPluginTable.getSelectedObjects();
+            final PluginDescriptor[] selection = myPluginTable.getSelectedObjects();
             final String filter = myFilter.getFilter().toLowerCase();
             ((InstalledPluginsTableModel)myPluginsModel).setEnabledFilter(enabledValue, filter);
             if (selection != null) {

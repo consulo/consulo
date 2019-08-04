@@ -15,7 +15,6 @@
  */
 package consulo.ide.plugins;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.IdeaPluginDescriptorImpl;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.application.Application;
@@ -23,9 +22,10 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.container.plugin.PluginDescriptor;
+
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
@@ -55,14 +55,14 @@ public class InstalledPluginsState {
 
   private Set<PluginId> myNewVersions = new HashSet<>();
 
-  private final Set<IdeaPluginDescriptor> myAllPlugins = new HashSet<>();
+  private final Set<PluginDescriptor> myAllPlugins = new HashSet<>();
 
-  public void updateExistingPlugin(@Nonnull IdeaPluginDescriptor descriptor, @Nonnull IdeaPluginDescriptor installed) {
+  public void updateExistingPlugin(@Nonnull PluginDescriptor descriptor, @Nonnull PluginDescriptor installed) {
     updateExistingPluginInfo(descriptor, installed);
     myUpdatedPlugins.add(installed.getPluginId());
   }
 
-  public void updateExistingPluginInfo(IdeaPluginDescriptor descr, IdeaPluginDescriptor existing) {
+  public void updateExistingPluginInfo(PluginDescriptor descr, PluginDescriptor existing) {
     int state = StringUtil.compareVersionNumbers(descr.getVersion(), existing.getVersion());
     final PluginId pluginId = existing.getPluginId();
     final Set<PluginId> installedPlugins = InstalledPluginsState.getInstance().getInstalledPlugins();
@@ -103,7 +103,7 @@ public class InstalledPluginsState {
     return myOutdatedPlugins;
   }
 
-  public Set<IdeaPluginDescriptor> getAllPlugins() {
+  public Set<PluginDescriptor> getAllPlugins() {
     return myAllPlugins;
   }
 }

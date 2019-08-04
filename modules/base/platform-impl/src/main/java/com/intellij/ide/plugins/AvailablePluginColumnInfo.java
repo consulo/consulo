@@ -15,6 +15,8 @@
  */
 package com.intellij.ide.plugins;
 
+import consulo.container.plugin.PluginDescriptor;
+
 import javax.swing.table.TableCellRenderer;
 
 /**
@@ -27,7 +29,7 @@ class AvailablePluginColumnInfo extends PluginManagerColumnInfo {
   }
 
   @Override
-  public TableCellRenderer getRenderer(final IdeaPluginDescriptor pluginDescriptor) {
+  public TableCellRenderer getRenderer(final PluginDescriptor pluginDescriptor) {
     return new PluginsTableRenderer(pluginDescriptor, true);
   }
 }

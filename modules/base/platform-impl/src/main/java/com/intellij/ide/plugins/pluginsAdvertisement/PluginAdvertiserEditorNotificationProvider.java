@@ -16,7 +16,6 @@
 package com.intellij.ide.plugins.pluginsAdvertisement;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.plugins.PluginManagerMain;
@@ -32,6 +31,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.EditorNotifications;
 import consulo.annotations.RequiredReadAction;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.editor.notifications.EditorNotificationProvider;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
@@ -39,7 +39,10 @@ import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -72,9 +75,9 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
 
     UnknownExtension fileFeatureForChecking = new UnknownExtension(FileTypeFactory.FILE_TYPE_FACTORY_EP.getName(), file.getName());
 
-    List<IdeaPluginDescriptor> allPlugins = PluginsAdvertiserHolder.getLoadedPluginDescriptors();
+    List<PluginDescriptor> allPlugins = PluginsAdvertiserHolder.getLoadedPluginDescriptors();
 
-    Set<IdeaPluginDescriptor> byFeature = PluginsAdvertiser.findByFeature(allPlugins, fileFeatureForChecking);
+    Set<PluginDescriptor> byFeature = PluginsAdvertiser.findByFeature(allPlugins, fileFeatureForChecking);
     if (!byFeature.isEmpty()) {
       return createPanel(file, byFeature);
 
@@ -83,12 +86,12 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
   }
 
   @Nonnull
-  private EditorNotificationPanel createPanel(VirtualFile virtualFile, Set<IdeaPluginDescriptor> plugins) {
+  private EditorNotificationPanel createPanel(VirtualFile virtualFile, Set<PluginDescriptor> plugins) {
     String extension = virtualFile.getExtension();
 
     final EditorNotificationPanel panel = new EditorNotificationPanel();
     panel.setText(IdeBundle.message("plugin.advestiser.notification.text", plugins.size()));
-    final IdeaPluginDescriptor disabledPlugin = getDisabledPlugin(plugins.stream().map(x -> x.getPluginId().getIdString()).collect(Collectors.toSet()));
+    final PluginDescriptor disabledPlugin = getDisabledPlugin(plugins.stream().map(x -> x.getPluginId().getIdString()).collect(Collectors.toSet()));
     if (disabledPlugin != null) {
       panel.createActionLabel("Enable " + disabledPlugin.getName() + " plugin", () -> {
         myEnabledExtensions.add(extension);
@@ -137,7 +140,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
   }
 
   @Nullable
-  private static IdeaPluginDescriptor getDisabledPlugin(Set<String> plugins) {
+  private static PluginDescriptor getDisabledPlugin(Set<String> plugins) {
     final List<String> disabledPlugins = new ArrayList<>(PluginManagerCore.getDisabledPlugins());
     disabledPlugins.retainAll(plugins);
     if (disabledPlugins.size() == 1) {
