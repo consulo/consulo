@@ -20,6 +20,7 @@ import consulo.container.plugin.PluginDescriptor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -27,9 +28,7 @@ import java.io.File;
  */
 public interface PluginManagerInternal {
   @Nonnull
-  Iterable<PluginDescriptor> getPlugins();
-
-  int getPluginsCount();
+  List<PluginDescriptor> getPlugins();
 
   boolean isInitialized();
 

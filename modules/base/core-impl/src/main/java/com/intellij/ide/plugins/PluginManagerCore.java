@@ -105,17 +105,15 @@ public class PluginManagerCore {
   @Nonnull
   @Deprecated
   @DeprecationInfo("Use consulo.container.plugin.PluginManager#getPlugins()")
+  @SuppressWarnings("deprecation")
   public static IdeaPluginDescriptor[] getPlugins() {
-    Iterable<PluginDescriptor> plugins = PluginManager.getPlugins();
-    int pluginsCount = PluginManager.getPluginsCount();
-
-    IdeaPluginDescriptor[] descriptors = new IdeaPluginDescriptor[pluginsCount];
-
-    int i = 0;
-    for (PluginDescriptor plugin : plugins) {
-      descriptors[i++] = (IdeaPluginDescriptor)plugin;
+    List<PluginDescriptor> plugins = PluginManager.getPlugins();
+    IdeaPluginDescriptor[] array = new IdeaPluginDescriptor[plugins.size()];
+    for (int i = 0; i < plugins.size(); i++) {
+      PluginDescriptor pluginDescriptor = plugins.get(i);
+      array[i] = (IdeaPluginDescriptor)pluginDescriptor;
     }
-    return descriptors;
+    return array;
   }
 
   static boolean isUnitTestMode() {
@@ -575,9 +573,10 @@ public class PluginManagerCore {
     DEPENDENCY_IS_NOT_RESOLVED
   }
 
+  @Nonnull
   static PluginSkipReason calcPluginSkipReason(final PluginDescriptor descriptor) {
     final String idString = descriptor.getPluginId().getIdString();
-    if (descriptor.getPluginId().equals(CORE_PLUGIN)) {
+    if (PluginIds.isPlatformPlugin(descriptor.getPluginId())) {
       return PluginSkipReason.NO;
     }
 

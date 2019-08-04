@@ -24,6 +24,7 @@ import consulo.container.plugin.internal.PluginManagerInternal;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -32,13 +33,8 @@ import java.io.File;
 public class PluginManagerInternalImpl implements PluginManagerInternal {
   @Nonnull
   @Override
-  public Iterable<PluginDescriptor> getPlugins() {
+  public List<PluginDescriptor> getPlugins() {
     return PluginHolderModificator.getPlugins();
-  }
-
-  @Override
-  public int getPluginsCount() {
-    return PluginHolderModificator.getPlugins().size();
   }
 
   @Override
