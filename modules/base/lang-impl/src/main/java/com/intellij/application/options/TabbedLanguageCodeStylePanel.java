@@ -193,7 +193,7 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
   }
 
   @Override
-  public final void setModel(CodeStyleSchemesModel model) {
+  public final void setModel(@Nonnull CodeStyleSchemesModel model) {
     super.setModel(model);
     ensureTabs();
     for (CodeStyleAbstractPanel tab : myTabs) {

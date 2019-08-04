@@ -354,7 +354,7 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
   }
 
   @Override
-  public void setModel(@Nullable CodeStyleSchemesModel model) {
+  public void setModel(@Nonnull CodeStyleSchemesModel model) {
     super.setModel(model);
     myExcludedFilesList.setSchemesModel(model);
   }

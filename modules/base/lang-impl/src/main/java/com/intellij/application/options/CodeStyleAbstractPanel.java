@@ -130,7 +130,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
     return mySomethingChanged;
   }
 
-  public void setModel(final CodeStyleSchemesModel model) {
+  public void setModel(@Nonnull CodeStyleSchemesModel model) {
     myModel = model;
   }
 
