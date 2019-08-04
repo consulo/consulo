@@ -1158,6 +1158,12 @@
     <applicationService serviceInterface="com.intellij.openapi.projectRoots.impl.JdkVersionDetector"
                         serviceImplementation="com.intellij.openapi.projectRoots.impl.JdkVersionDetectorImpl"/>
 
+    <applicationService serviceImplementation="com.intellij.ide.browsers.WebBrowserManager" />
+
+    <applicationService serviceInterface="com.intellij.ide.browsers.BrowserLauncher" serviceImplementation="com.intellij.ide.browsers.BrowserLauncherImpl" />
+
+    <urlOpener implementation="com.intellij.ide.browsers.impl.DefaultUrlOpener" order="last" />
+
     <projectService serviceInterface="consulo.util.ProjectPropertiesComponent"
                     serviceImplementation="com.intellij.ide.util.ProjectPropertiesComponentImpl"/>
 

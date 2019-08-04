@@ -24,6 +24,7 @@ import java.io.File;
 import java.net.URI;
 
 public abstract class BrowserLauncher {
+  @Nonnull
   public static BrowserLauncher getInstance() {
     return ServiceManager.getService(BrowserLauncher.class);
   }

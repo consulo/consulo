@@ -16,6 +16,7 @@
 package com.intellij.icons;
 
 import com.intellij.openapi.util.IconLoader;
+import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
 
 import javax.swing.*;
@@ -1132,11 +1133,46 @@ public class AllIcons {
   public static class Xml {
     
     public static class Browsers {
-      public static final SwingImageRef Chrome16 = IconLoader.getIcon("/xml/browsers/chrome16.png"); // 16x16
-      public static final SwingImageRef Explorer16 = IconLoader.getIcon("/xml/browsers/explorer16.png"); // 16x16
-      public static final SwingImageRef Firefox16 = IconLoader.getIcon("/xml/browsers/firefox16.png"); // 16x16
-      public static final SwingImageRef Opera16 = IconLoader.getIcon("/xml/browsers/opera16.png"); // 16x16
-      public static final SwingImageRef Safari16 = IconLoader.getIcon("/xml/browsers/safari16.png"); // 16x16
+      /**
+       * 16x16
+       */
+      public static final Image Canary16 = IconLoader.getIcon("/xml/browsers/canary16.svg");
+      /**
+       * 16x16
+       */
+      public static final Image Chrome16 = IconLoader.getIcon("/xml/browsers/chrome16.svg");
+      /**
+       * 16x16
+       */
+      public static final Image Chromium16 = IconLoader.getIcon("/xml/browsers/chromium16.svg");
+      /**
+       * 16x16
+       */
+      public static final Image Edge16 = IconLoader.getIcon("/xml/browsers/edge16.svg");
+      /**
+       * 16x16
+       */
+      public static final Image Explorer16 = IconLoader.getIcon("/xml/browsers/explorer16.svg");
+      /**
+       * 16x16
+       */
+      public static final Image Firefox16 = IconLoader.getIcon("/xml/browsers/firefox16.svg");
+      /**
+       * 16x16
+       */
+      public static final Image Nwjs16 = IconLoader.getIcon("/xml/browsers/nwjs16.svg");
+      /**
+       * 16x16
+       */
+      public static final Image Opera16 = IconLoader.getIcon("/xml/browsers/opera16.svg");
+      /**
+       * 16x16
+       */
+      public static final Image Safari16 = IconLoader.getIcon("/xml/browsers/safari16.svg");
+      /**
+       * 16x16
+       */
+      public static final Image Yandex16 = IconLoader.getIcon("/xml/browsers/yandex16.svg");
 
     }
     public static final SwingImageRef Html5 = IconLoader.getIcon("/xml/html5.png"); // 16x16

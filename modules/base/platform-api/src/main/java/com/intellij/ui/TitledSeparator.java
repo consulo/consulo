@@ -17,9 +17,11 @@
 package com.intellij.ui;
 
 import com.intellij.ui.components.JBLabel;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -43,6 +45,11 @@ public class TitledSeparator extends JPanel {
   };
   protected final JSeparator mySeparator = new JSeparator(SwingConstants.HORIZONTAL);
   private String myOriginalText;
+
+  @Nonnull
+  public static Border createEmptyBorder() {
+    return JBUI.Borders.empty(TOP_INSET, 0, BOTTOM_INSET, 0);
+  }
 
   public TitledSeparator() {
     this("");
