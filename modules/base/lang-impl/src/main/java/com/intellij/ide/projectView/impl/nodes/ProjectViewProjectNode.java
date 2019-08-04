@@ -28,8 +28,11 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.SystemProperties;
+import consulo.annotations.RequiredReadAction;
+
 import javax.annotation.Nonnull;
 
 import java.io.File;
@@ -43,6 +46,7 @@ public class ProjectViewProjectNode extends AbstractProjectNode {
     super(project, project, viewSettings);
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public Collection<AbstractTreeNode> getChildren() {
@@ -50,15 +54,17 @@ public class ProjectViewProjectNode extends AbstractProjectNode {
 
     Set<Module> modules = new LinkedHashSet<Module>(topLevelContentRoots.size());
 
+    Project project = getProject();
+
     for (VirtualFile root : topLevelContentRoots) {
-      final Module module = ModuleUtil.findModuleForFile(root, myProject);
+      final Module module = ModuleUtil.findModuleForFile(root, project);
       if (module != null) { // Some people exclude module's content roots...
         modules.add(module);
       }
     }
 
-    ArrayList<AbstractTreeNode> nodes = new ArrayList<AbstractTreeNode>();
-    final PsiManager psiManager = PsiManager.getInstance(getProject());
+    ArrayList<AbstractTreeNode> nodes = new ArrayList<>();
+    final PsiManager psiManager = PsiManager.getInstance(project);
 
     /*
     for (VirtualFile root : reduceRoots(topLevelContentRoots)) {
@@ -68,20 +74,23 @@ public class ProjectViewProjectNode extends AbstractProjectNode {
 
     nodes.addAll(modulesAndGroups(modules.toArray(new Module[modules.size()])));
 
-    final VirtualFile baseDir = getProject().getBaseDir();
+    final VirtualFile baseDir = project.getBaseDir();
     if (baseDir == null) return nodes;
 
     final VirtualFile[] files = baseDir.getChildren();
     for (VirtualFile file : files) {
-      if (ModuleUtil.findModuleForFile(file, getProject()) == null) {
+      if (ModuleUtil.findModuleForFile(file, project) == null) {
         if (!file.isDirectory()) {
-          nodes.add(new PsiFileNode(getProject(), psiManager.findFile(file), getSettings()));
+          PsiFile psiFile = psiManager.findFile(file);
+          if(psiFile != null) {
+            nodes.add(new PsiFileNode(project, psiFile, getSettings()));
+          }
         }
       }
     }
 
     if (getSettings().isShowLibraryContents()) {
-      nodes.add(new ExternalLibrariesNode(getProject(), getSettings()));
+      nodes.add(new ExternalLibrariesNode(project, getSettings()));
     }
 
     return nodes;

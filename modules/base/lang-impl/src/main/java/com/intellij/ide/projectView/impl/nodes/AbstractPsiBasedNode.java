@@ -64,7 +64,7 @@ import java.util.Collections;
 public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value> implements ValidateableNode, StatePreservingNavigatable {
   private static final Logger LOG = Logger.getInstance(AbstractPsiBasedNode.class.getName());
 
-  protected AbstractPsiBasedNode(final Project project, final Value value, final ViewSettings viewSettings) {
+  protected AbstractPsiBasedNode(final Project project, @Nonnull Value value, final ViewSettings viewSettings) {
     super(project, value, viewSettings);
   }
 

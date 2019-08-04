@@ -20,11 +20,11 @@ import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-@SuppressWarnings({"unchecked", "CastToIncompatibleInterface", "InstanceofIncompatibleInterface"})
 public abstract class BasePsiNode <T extends PsiElement> extends AbstractPsiBasedNode<T> {
-  protected BasePsiNode(Project project, T value, ViewSettings viewSettings) {
+  protected BasePsiNode(Project project, @Nonnull T value, ViewSettings viewSettings) {
     super(project, value, viewSettings);
   }
 

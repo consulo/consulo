@@ -13,11 +13,12 @@ import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.tree.LeafState;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.Collection;
 import java.util.Map;
@@ -38,6 +39,7 @@ public abstract class AbstractTreeNode<T> extends PresentableNodeDescriptor<Abst
   }
 
   @Nonnull
+  @RequiredReadAction
   public abstract Collection<? extends AbstractTreeNode> getChildren();
 
 

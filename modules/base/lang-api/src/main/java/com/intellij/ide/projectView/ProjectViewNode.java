@@ -55,7 +55,7 @@ public abstract class ProjectViewNode <Value> extends AbstractTreeNode<Value> im
    * @param value        the object (for example, a PSI element) represented by the project view node
    * @param viewSettings the settings of the project view.
    */
-  protected ProjectViewNode(Project project, Value value, ViewSettings viewSettings) {
+  protected ProjectViewNode(Project project, @Nonnull Value value, ViewSettings viewSettings) {
     super(project, value);
     mySettings = viewSettings;
   }
