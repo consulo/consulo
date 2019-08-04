@@ -76,15 +76,29 @@ public class FileUtilRt {
 
   private static String ourCanonicalTempPathCache = null;
 
-  public static final class NIOReflect {
-    // NIO-reflection initialization placed in a separate class for lazy loading
-    public static final boolean IS_AVAILABLE;
+  private static final class NIOReflect {
+    static final boolean IS_AVAILABLE;
 
-    // todo: replace reflection with normal code after migration to JDK 1.8
+    static Object toPath(File file) throws InvocationTargetException, IllegalAccessException {
+      return ourFileToPathMethod.invoke(file);
+    }
+
+    static void deleteRecursively(Object path) throws InvocationTargetException, IllegalAccessException {
+      try {
+        ourFilesWalkMethod.invoke(null, path, ourDeletionVisitor);
+      }
+      catch (InvocationTargetException e) {
+        if (!ourNoSuchFileExceptionClass.isInstance(e.getCause())) {
+          throw e;
+        }
+      }
+    }
+
     private static Method ourFilesDeleteIfExistsMethod;
     private static Method ourFilesWalkMethod;
     private static Method ourFileToPathMethod;
     private static Method ourPathToFileMethod;
+    private static Method ourAttributesIsOtherMethod;
     private static Object ourDeletionVisitor;
     private static Class ourNoSuchFileExceptionClass;
     private static Class ourAccessDeniedExceptionClass;
@@ -101,10 +115,13 @@ public class FileUtilRt {
         ourFileToPathMethod = Class.forName("java.io.File").getMethod("toPath");
         ourPathToFileMethod = pathClass.getMethod("toFile");
         ourFilesWalkMethod = filesClass.getMethod("walkFileTree", pathClass, visitorClass);
+        ourAttributesIsOtherMethod = Class.forName("java.nio.file.attribute.BasicFileAttributes").getDeclaredMethod("isOther");
         ourFilesDeleteIfExistsMethod = filesClass.getMethod("deleteIfExists", pathClass);
+
         final Object Result_Continue = Class.forName("java.nio.file.FileVisitResult").getDeclaredField("CONTINUE").get(null);
+        final Object Result_Skip = Class.forName("java.nio.file.FileVisitResult").getDeclaredField("SKIP_SUBTREE").get(null);
+
         ourDeletionVisitor = Proxy.newProxyInstance(FileUtilRt.class.getClassLoader(), new Class[]{visitorClass}, new InvocationHandler() {
-          @Override
           public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             if (args.length == 2) {
               final Object second = args[1];
@@ -113,23 +130,26 @@ public class FileUtilRt {
               }
               final String methodName = method.getName();
               if ("visitFile".equals(methodName) || "postVisitDirectory".equals(methodName)) {
-                if (!performDelete(args[0])) {
-                  throw new IOException("Failed to delete " + args[0]) {
-                    // optimization: the stacktrace is not needed: the exception is used to terminate tree walkup and to pass the result
-                    @Override
-                    public synchronized Throwable fillInStackTrace() {
-                      return this;
-                    }
-                  };
+                performDelete(args[0]);
+              }
+              else if (SystemInfoRt.isWindows && "preVisitDirectory".equals(methodName)) {
+                boolean notDirectory = false;
+                try {
+                  notDirectory = Boolean.TRUE.equals(ourAttributesIsOtherMethod.invoke(second));
+                }
+                catch (Throwable ignored) {
+                }
+                if (notDirectory) {
+                  performDelete(args[0]);
+                  return Result_Skip;
                 }
               }
             }
             return Result_Continue;
           }
 
-          private boolean performDelete(@Nonnull final Object fileObject) {
+          private void performDelete(final Object fileObject) throws IOException {
             Boolean result = doIOOperation(new RepeatableIOOperation<Boolean, RuntimeException>() {
-              @Override
               public Boolean execute(boolean lastAttempt) {
                 try {
                   //Files.deleteIfExists(file);
@@ -163,7 +183,14 @@ public class FileUtilRt {
                 return lastAttempt ? Boolean.FALSE : null;
               }
             });
-            return Boolean.TRUE.equals(result);
+            if (!Boolean.TRUE.equals(result)) {
+              throw new IOException("Failed to delete " + fileObject) {
+                @Override
+                public synchronized Throwable fillInStackTrace() {
+                  return this; // optimization: the stacktrace is not needed: the exception is used to terminate tree walking and to pass the result
+                }
+              };
+            }
           }
         });
         initSuccess = true;
@@ -201,9 +228,7 @@ public class FileUtilRt {
       return filePath.indexOf('.', lastSlash + 1) == -1;
     }
     int extStart = filePath.length() - extLen;
-    return extStart >= 1 &&
-           filePath.charAt(extStart - 1) == '.' &&
-           filePath.regionMatches(!SystemInfoRt.isFileSystemCaseSensitive, extStart, extension, 0, extLen);
+    return extStart >= 1 && filePath.charAt(extStart - 1) == '.' && filePath.regionMatches(!SystemInfoRt.isFileSystemCaseSensitive, extStart, extension, 0, extLen);
   }
 
   @Nonnull
@@ -305,8 +330,7 @@ public class FileUtilRt {
   }
 
   @Nonnull
-  public static File createTempDirectory(@Nonnull File dir, @Nonnull @NonNls String prefix, @Nullable @NonNls String suffix, boolean deleteOnExit)
-          throws IOException {
+  public static File createTempDirectory(@Nonnull File dir, @Nonnull @NonNls String prefix, @Nullable @NonNls String suffix, boolean deleteOnExit) throws IOException {
     File file = doCreateTempFile(dir, prefix, suffix, true);
     if (deleteOnExit) {
       //file.deleteOnExit();
@@ -360,8 +384,7 @@ public class FileUtilRt {
   }
 
   @Nonnull
-  public static File createTempFile(@NonNls File dir, @Nonnull @NonNls String prefix, @Nullable @NonNls String suffix, boolean create, boolean deleteOnExit)
-          throws IOException {
+  public static File createTempFile(@NonNls File dir, @Nonnull @NonNls String prefix, @Nullable @NonNls String suffix, boolean create, boolean deleteOnExit) throws IOException {
     File file = doCreateTempFile(dir, prefix, suffix, false);
     if (deleteOnExit) {
       //noinspection SSBasedInspection
@@ -378,8 +401,7 @@ public class FileUtilRt {
   private static final Random RANDOM = new Random();
 
   @Nonnull
-  private static File doCreateTempFile(@Nonnull File dir, @Nonnull @NonNls String prefix, @Nullable @NonNls String suffix, boolean isDirectory)
-          throws IOException {
+  private static File doCreateTempFile(@Nonnull File dir, @Nonnull @NonNls String prefix, @Nullable @NonNls String suffix, boolean isDirectory) throws IOException {
     //noinspection ResultOfMethodCallIgnored
     dir.mkdirs();
 
@@ -403,8 +425,7 @@ public class FileUtilRt {
         if (!success) {
           List<String> list = Arrays.asList(f.getParentFile().list());
           maxFileNumber = Math.max(10, list.size() * 10); // if too many files are in tmp dir, we need a bigger random range than meager 10
-          throw new IOException(
-                  "Unable to create temporary file " + f + "\nDirectory '" + f.getParentFile() + "' list (" + list.size() + " children): " + list);
+          throw new IOException("Unable to create temporary file " + f + "\nDirectory '" + f.getParentFile() + "' list (" + list.size() + " children): " + list);
         }
 
         return normalizeFile(f);
@@ -530,8 +551,7 @@ public class FileUtilRt {
   @Nonnull
   public static char[] loadFileText(@Nonnull File file, @Nullable @NonNls String encoding) throws IOException {
     InputStream stream = new FileInputStream(file);
-    @SuppressWarnings("IOResourceOpenedButNotSafelyClosed") Reader reader =
-            encoding == null ? new InputStreamReader(stream) : new InputStreamReader(stream, encoding);
+    @SuppressWarnings("IOResourceOpenedButNotSafelyClosed") Reader reader = encoding == null ? new InputStreamReader(stream) : new InputStreamReader(stream, encoding);
     try {
       return loadText(reader, (int)file.length());
     }
@@ -589,8 +609,7 @@ public class FileUtilRt {
   public static List<String> loadLines(@Nonnull String path, @Nullable @NonNls String encoding) throws IOException {
     InputStream stream = new FileInputStream(path);
     try {
-      @SuppressWarnings("IOResourceOpenedButNotSafelyClosed") InputStreamReader in =
-              encoding == null ? new InputStreamReader(stream) : new InputStreamReader(stream, encoding);
+      @SuppressWarnings("IOResourceOpenedButNotSafelyClosed") InputStreamReader in = encoding == null ? new InputStreamReader(stream) : new InputStreamReader(stream, encoding);
       BufferedReader reader = new BufferedReader(in);
       try {
         return loadLines(reader);
@@ -680,43 +699,36 @@ public class FileUtilRt {
    */
   public static boolean delete(@Nonnull File file) {
     if (NIOReflect.IS_AVAILABLE) {
-      return deleteRecursivelyNIO(file);
-    }
-    return deleteRecursively(file);
-  }
-
-  protected static boolean deleteRecursivelyNIO(File file) {
-    try {
-      /*
-      Files.walkFileTree(file.toPath(), new SimpleFileVisitor<Path>() {
-        @Override
-        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-          Files.deleteIfExists(file);
-          return FileVisitResult.CONTINUE;
-        }
-
-        @Override
-        public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-          Files.deleteIfExists(dir);
-          return FileVisitResult.CONTINUE;
-        }
-      });
-      */
-      final Object pathObject = NIOReflect.ourFileToPathMethod.invoke(file);
-      NIOReflect.ourFilesWalkMethod.invoke(null, pathObject, NIOReflect.ourDeletionVisitor);
-    }
-    catch (InvocationTargetException e) {
-      final Throwable cause = e.getCause();
-      if (cause == null || !NIOReflect.ourNoSuchFileExceptionClass.isInstance(cause)) {
+      try {
+        deleteRecursivelyNIO(NIOReflect.toPath(file));
+        return true;
+      }
+      catch (IOException e) {
+        return false;
+      }
+      catch (Exception e) {
         logger().info(e);
         return false;
       }
     }
+    else {
+      return deleteRecursively(file);
+    }
+  }
+
+  static void deleteRecursivelyNIO(@Nonnull Object path) throws IOException {
+    try {
+      NIOReflect.deleteRecursively(path);
+    }
+    catch (InvocationTargetException e) {
+      Throwable cause = e.getCause();
+      if (cause instanceof IOException) {
+        throw (IOException)cause;
+      }
+    }
     catch (Exception e) {
       logger().info(e);
-      return false;
     }
-    return true;
   }
 
   private static boolean deleteRecursively(@Nonnull File file) {

@@ -433,29 +433,6 @@ public class FileUtil extends FileUtilRt {
     }
   }
 
-  public static boolean delete(@Nonnull File file) {
-    if (NIOReflect.IS_AVAILABLE) {
-      return deleteRecursivelyNIO(file);
-    }
-    return deleteRecursively(file);
-  }
-
-  private static boolean deleteRecursively(@Nonnull File file) {
-    FileAttributes attributes = FileSystemUtil.getAttributes(file);
-    if (attributes == null) return true;
-
-    if (attributes.isDirectory() && !attributes.isSymLink()) {
-      File[] files = file.listFiles();
-      if (files != null) {
-        for (File child : files) {
-          if (!deleteRecursively(child)) return false;
-        }
-      }
-    }
-
-    return deleteFile(file);
-  }
-
   public static boolean createParentDirs(@Nonnull File file) {
     return FileUtilRt.createParentDirs(file);
   }
