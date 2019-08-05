@@ -145,5 +145,15 @@
         <include>org.apache.ws.commons:ws-commons-util</include>
       </includes>
     </dependencySet>
+    <dependencySet>
+      <outputDirectory>Consulo.app/Contents/platform/buildSNAPSHOT/modules/consulo.platform.base/lib_11</outputDirectory>
+      <unpack>false</unpack>
+      <includes>
+        <include>jakarta.xml.bind:jakarta.xml.bind-api</include>
+        <include>org.glassfish.jaxb:jaxb-runtime</include>
+        <include>com.sun.istack:istack-commons-runtime</include>
+        <include>jakarta.activation:jakarta.activation-api</include>
+      </includes>
+    </dependencySet>
   </dependencySets>
 </component>

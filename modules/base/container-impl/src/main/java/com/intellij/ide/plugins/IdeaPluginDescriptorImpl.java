@@ -17,6 +17,7 @@ package com.intellij.ide.plugins;
 
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.extensions.PluginId;
+import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtilRt;
 import consulo.container.impl.parser.ExtensionInfo;
@@ -337,24 +338,33 @@ public class IdeaPluginDescriptorImpl extends PluginDescriptorStub {
     if (myPath.isDirectory()) {
       final List<File> result = new ArrayList<File>();
 
-      final File[] files = new File(myPath, "lib").listFiles();
-      if (files != null && files.length > 0) {
-        for (final File f : files) {
-          if (f.isFile()) {
-            if (FileUtilRt.isJarOrZip(f)) {
-              result.add(f);
-            }
-          }
-          else {
-            result.add(f);
-          }
-        }
+      fillLibs(new File(myPath, "lib"), result);
+
+      // special case until we move to JRE11
+      if(SystemInfoRt.isJavaVersionAtLeast(11, 0, 0)) {
+        fillLibs(new File(myPath, "lib_11"), result);
       }
 
       return result;
     }
     else {
       return Collections.singletonList(myPath);
+    }
+  }
+
+  private static void fillLibs(File libDirectory, List<File> result) {
+    final File[] files = libDirectory.listFiles();
+    if (files != null && files.length > 0) {
+      for (final File f : files) {
+        if (f.isFile()) {
+          if (FileUtilRt.isJarOrZip(f)) {
+            result.add(f);
+          }
+        }
+        else {
+          result.add(f);
+        }
+      }
     }
   }
 
