@@ -19,10 +19,11 @@ package com.intellij.ui.tabs;
 import com.intellij.openapi.fileEditor.impl.EditorTabColorProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.FileColorManager;
-import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
+import com.intellij.ui.FileColorManager;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 
@@ -37,5 +38,12 @@ public class EditorTabColorProviderImpl implements EditorTabColorProvider {
     final FileColorManager colorManager = FileColorManagerImpl.getInstance(project);
     final PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
     return psiFile != null && colorManager.isEnabledForTabs() ? colorManager.getFileColor(psiFile) : null;
+  }
+
+  @Nullable
+  @Override
+  public Color getProjectViewColor(@Nonnull Project project, @Nonnull VirtualFile file) {
+    FileColorManager colorManager = FileColorManager.getInstance(project);
+    return colorManager.isEnabledForProjectView() ? colorManager.getFileColor(file) : null;
   }
 }
