@@ -73,15 +73,13 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   public static final String NAME_FILE = ".name";
 
-  private ProjectManager myManager;
+  private final ProjectManager myManager;
 
   private MyProjectManagerListener myProjectManagerListener;
 
   private final AtomicBoolean mySavingInProgress = new AtomicBoolean(false);
 
   public boolean myOptimiseTestLoadSpeed;
-  @NonNls
-  public static final String TEMPLATE_PROJECT_NAME = "Default (Template) Project";
 
   private String myName;
 
@@ -112,7 +110,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
     myManager = manager;
 
-    myName = isDefault() ? TEMPLATE_PROJECT_NAME : projectName == null ? getStateStore().getProjectName() : projectName;
+    myName = projectName;
   }
 
   @Nullable
@@ -129,7 +127,9 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   @Override
   public void setProjectName(@Nonnull String projectName) {
-    if (!projectName.equals(myName)) {
+    String name = getName();
+
+    if (!projectName.equals(name)) {
       myName = projectName;
       StartupManager.getInstance(this).runWhenProjectIsInitialized(new DumbAwareRunnable() {
         @Override
@@ -210,13 +210,15 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   @Nonnull
   @Override
   public String getName() {
+    if(myName == null) {
+      myName = getStateStore().getProjectName();
+    }
     return myName;
   }
 
   @NonNls
   @Override
   public String getPresentableUrl() {
-    if (myName == null) return null;  // not yet initialized
     return getStateStore().getPresentableUrl();
   }
 
@@ -362,8 +364,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
       myManager.removeProjectManagerListener(this, myProjectManagerListener);
     }
 
-    myManager = null;
-    myName = null;
     myProjectManagerListener = null;
 
     if (!application.isDisposed()) {
