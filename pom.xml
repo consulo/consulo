@@ -35,7 +35,7 @@
     <module>modules/desktop/desktop-util-awt</module>
     <module>plugins/platform-desktop</module>
 
-    <module>modules/web/web-boot</module>
+    <module>modules/web/web-bootstrap</module>
     <module>modules/web/web-ui-impl-client</module>
     <module>modules/web/web-ui-impl-shared</module>
     <module>modules/web/web-ui-impl-server</module>

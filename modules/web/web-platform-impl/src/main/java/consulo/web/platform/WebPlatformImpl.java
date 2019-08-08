@@ -13,20 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.platform;
+package consulo.web.platform;
 
-import consulo.platform.internal.PlatformInternal;
-
-import javax.annotation.Nonnull;
+import consulo.platform.PlatformBase;
 
 /**
  * @author VISTALL
  * @since 15-Sep-17
  */
-public class WebPlatformInternalImpl extends PlatformInternal {
-  @Nonnull
+public class WebPlatformImpl extends PlatformBase {
+  public WebPlatformImpl() {
+    super("consulo.platform.web");
+  }
+
   @Override
-  public Platform build() {
-    return new WebPlatformImpl();
+  public boolean isWebService() {
+    return true;
   }
 }

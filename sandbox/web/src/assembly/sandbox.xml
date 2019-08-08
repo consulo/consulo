@@ -22,20 +22,25 @@
   </formats>
   <includeBaseDirectory>false</includeBaseDirectory>
 
+  <componentDescriptors>
+    <componentDescriptor>${project.basedir}/../../distribution/src/platform.base.xml</componentDescriptor>
+    <componentDescriptor>${project.basedir}/../../distribution/src/platform.web.xml</componentDescriptor>
+  </componentDescriptors>
+
   <fileSets>
     <fileSet>
       <directory>${project.basedir}/../../distribution/platform/shared/</directory>
       <includes>
         <include>*/*</include>
       </includes>
-      <outputDirectory>workdir/platform/buildSNAPSHOT/</outputDirectory>
+      <outputDirectory>Consulo/platform/buildSNAPSHOT/</outputDirectory>
     </fileSet>
     <fileSet>
       <directory>${project.basedir}/../../distribution/platform/win</directory>
       <includes>
         <include>*/*</include>
       </includes>
-      <outputDirectory>/workdir/platform/buildSNAPSHOT/</outputDirectory>
+      <outputDirectory>/Consulo/platform/buildSNAPSHOT/</outputDirectory>
     </fileSet>
     <fileSet>
       <directory>${project.basedir}/../../distribution/platform/linux</directory>
@@ -45,48 +50,14 @@
       <excludes>
         <exclude>/bin/.gitignore</exclude>
       </excludes>
-      <outputDirectory>workdir/platform/buildSNAPSHOT/</outputDirectory>
+      <outputDirectory>Consulo/platform/buildSNAPSHOT/</outputDirectory>
     </fileSet>
     <fileSet>
       <directory>${project.basedir}/../../distribution/platform/mac</directory>
       <includes>
         <include>*/*</include>
       </includes>
-      <outputDirectory>workdir/platform/buildSNAPSHOT/</outputDirectory>
+      <outputDirectory>Consulo/platform/buildSNAPSHOT/</outputDirectory>
     </fileSet>
   </fileSets>
-
-  <dependencySets>
-    <dependencySet>
-      <outputDirectory>/workdir/platform/buildSNAPSHOT/lib</outputDirectory>
-      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-      <excludes>
-        <exclude>consulo:consulo-platform-base-plugin</exclude>
-        <exclude>consulo:consulo-platform-web-plugin</exclude>
-        <exclude>consulo:consulo-sand-language-plugin</exclude>
-      </excludes>
-    </dependencySet>
-    <dependencySet>
-      <outputDirectory>workdir/platform/buildSNAPSHOT/plugins/platform-independent/lib</outputDirectory>
-      <includes>
-        <include>consulo:consulo-platform-base-plugin</include>
-      </includes>
-    </dependencySet>
-    <dependencySet>
-      <outputDirectory>workdir/platform/buildSNAPSHOT/plugins/sand-language/lib</outputDirectory>
-      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-      <includes>
-        <include>consulo:consulo-sand-language-plugin</include>
-      </includes>
-    </dependencySet>
-    <dependencySet>
-      <outputDirectory>workdir/platform/buildSNAPSHOT/plugins/platform-web/lib</outputDirectory>
-      <unpack>false</unpack>
-      <scope>runtime</scope>
-      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-      <includes>
-        <include>consulo:consulo-platform-web-plugin</include>
-      </includes>
-    </dependencySet>
-  </dependencySets>
 </assembly>

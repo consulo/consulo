@@ -25,6 +25,7 @@ import com.intellij.idea.StartupUtil;
 import com.intellij.idea.starter.DesktopApplicationPostStarter;
 import com.intellij.idea.starter.DesktopApplicationStarter;
 import com.intellij.openapi.application.PathManager;
+import com.intellij.ui.AppUIUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.container.boot.ContainerStartup;
 import consulo.container.util.StatCollector;
@@ -33,6 +34,7 @@ import consulo.startup.StartupActionLogger;
 import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -42,7 +44,7 @@ import java.io.IOException;
 @SuppressWarnings("unused")
 public class DesktopContainerStartup implements ContainerStartup {
   @Override
-  public void run(@Nonnull StatCollector stat, @Nonnull String[] args) {
+  public void run(@Nonnull Map<String, Object> map, @Nonnull StatCollector stat, @Nonnull String[] args) {
     Runnable appInitializeMark = stat.mark(StatCollector.APP_INITIALIZE);
 
     IdeaForkJoinWorkerThreadFactory.setupForkJoinCommonPool();
@@ -75,6 +77,11 @@ public class DesktopContainerStartup implements ContainerStartup {
     new Thread(threadGroup, runnable, "Consulo Main Thread").start();
   }
 
+  @Override
+  public void destroy() {
+    // unused
+  }
+
   private static void start(StatCollector stat, Runnable appInitalizeMark, String[] args) {
     StartupActionLogger logger = null;
     try {
@@ -101,6 +108,9 @@ public class DesktopContainerStartup implements ContainerStartup {
     }
 
     StartupUtil.prepareAndStart(args, DesktopImportantFolderLocker::new, (newConfigFolder, commandLineArgs) -> {
+      AppUIUtil.updateWindowIcon(JOptionPane.getRootFrame());
+      AppUIUtil.registerBundledFonts();
+
       ApplicationStarter app = new DesktopApplicationStarter(DesktopApplicationPostStarter.class, commandLineArgs);
 
       SwingUtilities.invokeLater(() -> {

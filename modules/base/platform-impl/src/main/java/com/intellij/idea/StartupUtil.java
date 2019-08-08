@@ -109,9 +109,6 @@ public class StartupUtil {
     loadSystemLibraries(log);
     fixProcessEnvironment(log);
 
-    AppUIUtil.updateWindowIcon(JOptionPane.getRootFrame());
-    AppUIUtil.registerBundledFonts();
-
     appStarter.consume(newConfigFolder, commandLineArgs);
   }
 

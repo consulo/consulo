@@ -23,11 +23,16 @@ import consulo.container.impl.ContainerLogger;
 import consulo.container.impl.ExitCodes;
 import consulo.container.util.StatCollector;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
   private static class ContainerLoggerImpl implements ContainerLogger {
@@ -49,7 +54,6 @@ public class Main {
       t.printStackTrace(System.err);
     }
   }
-
 
   private static final String AWT_HEADLESS = "java.awt.headless";
 
@@ -88,9 +92,37 @@ public class Main {
   private static void initAndCallStartup(String[] args) throws Exception {
     StatCollector stat = new StatCollector();
 
-    ContainerStartup containerStartup = BootstrapClassLoaderUtil.buildContainerStartup(stat, new ContainerLoggerImpl());
+    File modulesDirectory = getModulesDirectory();
 
-    containerStartup.run(stat, args);
+    ContainerStartup containerStartup = BootstrapClassLoaderUtil.buildContainerStartup(stat, modulesDirectory, new ContainerLoggerImpl());
+
+    Map<String, Object> map = new HashMap<String, Object>();
+    map.put(ContainerStartup.ARGS, args);
+    map.put(ContainerStartup.STAT_COLLECTOR, stat);
+
+    containerStartup.run(map, stat, args);
+  }
+
+  @Nonnull
+  private static File getModulesDirectory() throws Exception {
+    Class<BootstrapClassLoaderUtil> aClass = BootstrapClassLoaderUtil.class;
+
+    URL url = aClass.getResource("/" + aClass.getName().replace('.', '/') + ".class");
+
+    String file = url.getFile();
+
+    int i = file.indexOf("!/");
+    if (i == -1) {
+      throw new IllegalArgumentException("Wrong path: " + file);
+    }
+
+    String jarUrlPath = file.substring(0, i);
+
+    File jarFile = new File(new URL(jarUrlPath).toURI().getSchemeSpecificPart());
+
+    File bootDirectory = jarFile.getParentFile();
+
+    return new File(bootDirectory.getParentFile(), "modules");
   }
 
   public static boolean isHeadless() {

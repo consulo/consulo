@@ -57,7 +57,7 @@ If you want run Consulo from repository
    and start web server
 
    ```sh
-   cd modules/web/web-boot
+   cd modules/web/web-bootstrap
 
    mvn -am jetty:run
    ```

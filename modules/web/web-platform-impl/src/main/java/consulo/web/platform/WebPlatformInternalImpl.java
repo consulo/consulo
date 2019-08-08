@@ -13,31 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.boot.util.logger;
+package consulo.web.platform;
 
-import com.intellij.openapi.diagnostic.Logger;
-import consulo.util.logging.LoggerFactory;
+import consulo.platform.Platform;
+import consulo.platform.internal.PlatformInternal;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 16-May-17
+ * @since 15-Sep-17
  */
-public class WebLoggerFactory implements LoggerFactory {
+public class WebPlatformInternalImpl extends PlatformInternal {
   @Nonnull
   @Override
-  public Logger getLoggerInstance(String category) {
-    return new WebLogger();
-  }
-
-  @Override
-  public int getPriority() {
-    return DEFAULT_PRIORITY;
-  }
-
-  @Override
-  public void shutdown() {
-
+  public Platform build() {
+    return new WebPlatformImpl();
   }
 }
