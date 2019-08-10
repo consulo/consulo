@@ -16,8 +16,9 @@
 package com.intellij.util.io.socketConnection.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.io.socketConnection.*;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.io.IOException;

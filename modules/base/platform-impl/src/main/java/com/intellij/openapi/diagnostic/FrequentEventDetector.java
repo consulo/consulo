@@ -18,6 +18,8 @@ package com.intellij.openapi.diagnostic;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.ExceptionUtil;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.util.LinkedHashMap;

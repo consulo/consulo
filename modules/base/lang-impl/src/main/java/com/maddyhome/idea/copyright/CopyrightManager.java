@@ -19,7 +19,6 @@ package com.maddyhome.idea.copyright;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.event.DocumentAdapter;
@@ -43,6 +42,7 @@ import com.maddyhome.idea.copyright.actions.UpdateCopyrightProcessor;
 import com.maddyhome.idea.copyright.util.NewFileTracker;
 import consulo.copyright.config.CopyrightFileConfig;
 import consulo.copyright.config.CopyrightFileConfigManager;
+import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 

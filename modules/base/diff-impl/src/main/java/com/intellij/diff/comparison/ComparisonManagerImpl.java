@@ -21,7 +21,7 @@ import com.intellij.diff.fragments.*;
 import com.intellij.diff.util.IntPair;
 import com.intellij.diff.util.MergeRange;
 import com.intellij.diff.util.Range;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;

@@ -16,7 +16,7 @@
 package com.intellij.openapi.vfs.impl.local;
 
 import com.intellij.concurrency.JobLauncher;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileSystemUtil;
 import com.intellij.openapi.util.io.FileUtil;

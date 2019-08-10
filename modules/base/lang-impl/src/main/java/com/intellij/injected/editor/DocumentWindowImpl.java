@@ -17,7 +17,6 @@
 package com.intellij.injected.editor;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.LogicalPosition;
@@ -34,6 +33,7 @@ import com.intellij.psi.impl.source.tree.injected.Place;
 import com.intellij.util.Processor;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.ImmutableCharSequence;
+import consulo.logging.Logger;
 import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;

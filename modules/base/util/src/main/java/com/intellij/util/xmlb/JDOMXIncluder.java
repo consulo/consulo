@@ -16,7 +16,7 @@
 
 package com.intellij.util.xmlb;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.util.io.URLUtil;

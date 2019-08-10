@@ -16,8 +16,9 @@
 
 package com.intellij.openapi.actionSystem;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

@@ -18,7 +18,6 @@ package com.intellij.openapi.vcs.changes.actions;
 import com.intellij.CommonBundle;
 import com.intellij.diff.FileAwareSimpleContent;
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.DiffContent;
 import com.intellij.openapi.diff.FileContent;
 import com.intellij.openapi.diff.SimpleContent;
@@ -39,6 +38,8 @@ import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.changes.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -17,7 +17,7 @@ package com.intellij.ui.win;
 
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.loader.NativeLibraryLoader;
 
 import java.util.concurrent.atomic.AtomicBoolean;

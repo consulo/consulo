@@ -16,7 +16,7 @@
 
 package com.intellij.ide.highlighter.custom.tokens;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.psi.tree.IElementType;
 
 /**

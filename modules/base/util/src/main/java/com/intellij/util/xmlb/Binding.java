@@ -15,7 +15,7 @@
  */
 package com.intellij.util.xmlb;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

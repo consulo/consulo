@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.codeStyle.arrangement.match;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.arrangement.DefaultArrangementSettingsSerializer;
 import com.intellij.psi.codeStyle.arrangement.model.ArrangementAtomMatchCondition;

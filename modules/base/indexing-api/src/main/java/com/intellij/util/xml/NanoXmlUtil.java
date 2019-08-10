@@ -16,13 +16,13 @@
 
 package com.intellij.util.xml;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.text.StringFactory;
+import consulo.logging.Logger;
 import net.n3.nanoxml.*;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.diff.impl.processing;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.ex.DiffFragment;
 import com.intellij.openapi.diff.impl.ComparisonPolicy;
 import com.intellij.openapi.diff.impl.highlighting.FragmentSide;
@@ -25,6 +24,8 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.util.diff.Diff;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import javax.annotation.Nonnull;
+
+import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.ArrayList;

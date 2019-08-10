@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor;
 
 import com.intellij.codeInsight.editorActions.TextBlockTransferableData;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

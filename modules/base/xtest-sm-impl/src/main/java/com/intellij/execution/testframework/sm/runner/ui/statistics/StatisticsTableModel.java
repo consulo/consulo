@@ -17,8 +17,9 @@ package com.intellij.execution.testframework.sm.runner.ui.statistics;
 
 import com.intellij.execution.testframework.sm.SMRunnerUtil;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ui.ListTableModel;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

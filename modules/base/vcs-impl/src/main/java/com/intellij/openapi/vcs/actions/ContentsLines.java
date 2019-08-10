@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.vcs.actions;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.logging.Logger;
 
 import java.util.ArrayList;
 import java.util.List;

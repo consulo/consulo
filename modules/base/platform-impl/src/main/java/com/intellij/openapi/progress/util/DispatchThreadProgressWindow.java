@@ -17,9 +17,9 @@ package com.intellij.openapi.progress.util;
 
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
+import consulo.logging.Logger;
 
 public class DispatchThreadProgressWindow extends ProgressWindow{
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.progress.util.DispatchThreadProgressWindow");

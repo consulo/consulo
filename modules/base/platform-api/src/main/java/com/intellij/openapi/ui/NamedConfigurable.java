@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.ui;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.util.ui.JBUI;

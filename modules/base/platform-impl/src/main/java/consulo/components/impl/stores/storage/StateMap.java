@@ -16,7 +16,7 @@
 package consulo.components.impl.stores.storage;
 
 import com.intellij.openapi.components.StateStorageException;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.text.StringUtil;

@@ -17,7 +17,6 @@ package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Couple;
@@ -33,6 +32,7 @@ import com.intellij.util.Consumer;
 import com.intellij.openapi.vcs.changes.ui.PlusMinus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.messages.Topic;
+import consulo.logging.Logger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

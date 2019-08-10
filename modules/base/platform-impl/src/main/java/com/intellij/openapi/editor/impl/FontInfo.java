@@ -2,10 +2,10 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.Patches;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.impl.view.FontLayoutService;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
 import gnu.trove.TIntHashSet;
 import org.intellij.lang.annotations.JdkConstants;
 import sun.font.CompositeGlyphMapper;

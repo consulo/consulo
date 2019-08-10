@@ -17,7 +17,7 @@ package com.intellij.openapi.diff.impl.util;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 
 public class ContextLogger {

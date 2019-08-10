@@ -20,7 +20,7 @@ import com.intellij.ide.todo.nodes.SingleFileToDoNode;
 import com.intellij.ide.todo.nodes.ToDoRootNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.NodeDescriptor;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;

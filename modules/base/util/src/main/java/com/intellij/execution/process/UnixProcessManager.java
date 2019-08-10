@@ -14,7 +14,7 @@
 package com.intellij.execution.process;
 
 import com.intellij.jna.JnaLoader;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.Processor;

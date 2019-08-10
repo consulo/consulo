@@ -2,7 +2,7 @@
 package com.intellij.ide.util.treeView;
 
 import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Progressive;

@@ -17,11 +17,11 @@
 package com.intellij.ui;
 
 import com.intellij.ide.BrowserUtil;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.logging.Logger;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

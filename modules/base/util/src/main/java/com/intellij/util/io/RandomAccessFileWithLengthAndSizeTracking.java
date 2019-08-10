@@ -15,7 +15,7 @@
  */
 package com.intellij.util.io;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.SystemProperties;
 
 import java.io.IOException;

@@ -17,7 +17,7 @@
 package com.intellij.pom.tree.events.impl;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.pom.PomModelAspect;
 import com.intellij.pom.event.PomChangeSet;
 import com.intellij.pom.tree.events.ChangeInfo;

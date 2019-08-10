@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.vcs.changes;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.Consumer;
+import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.*;

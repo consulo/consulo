@@ -2,7 +2,7 @@
 package com.intellij.psi.impl.search;
 
 import com.intellij.ide.todo.TodoConfiguration;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.search.IndexPattern;
 import com.intellij.psi.search.IndexPatternOccurrence;

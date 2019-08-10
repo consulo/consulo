@@ -18,7 +18,7 @@ package com.intellij.codeInsight.template.postfix.settings;
 import com.intellij.codeInsight.intention.impl.config.ActionUsagePanel;
 import com.intellij.codeInsight.intention.impl.config.TextDescriptor;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;

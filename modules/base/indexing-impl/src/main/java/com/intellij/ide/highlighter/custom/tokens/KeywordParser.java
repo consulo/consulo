@@ -16,11 +16,11 @@
 
 package com.intellij.ide.highlighter.custom.tokens;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.CustomHighlighterTokenType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.CharTrie;
+import consulo.logging.Logger;
 import gnu.trove.THashSet;
 import gnu.trove.TIntHashSet;
 

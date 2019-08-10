@@ -15,7 +15,7 @@
  */
 package consulo.builtInServer.impl.net.http;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;

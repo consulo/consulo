@@ -21,7 +21,6 @@ import com.intellij.ide.PowerSaveMode;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.diagnostic.Attachment;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.progress.impl.ProgressSuspender;
@@ -47,6 +46,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.application.AccessRule;
 import consulo.application.WriteThreadOption;
 import consulo.application.ex.ApplicationEx2;
+import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import org.jetbrains.annotations.TestOnly;
 

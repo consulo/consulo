@@ -15,7 +15,7 @@
  */
 package consulo.ui.web.internal;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.AsyncResult;
 import com.vaadin.ui.UI;
 import consulo.components.impl.stores.ComponentStoreImpl;

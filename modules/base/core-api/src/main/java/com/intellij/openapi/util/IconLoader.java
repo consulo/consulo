@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ImageLoader;
 import com.intellij.util.ReflectionUtil;
@@ -23,6 +22,7 @@ import com.intellij.util.ui.JBImageIcon;
 import com.intellij.util.ui.JBUI;
 import consulo.annotations.DeprecationInfo;
 import consulo.container.plugin.util.PlatformServiceLocator;
+import consulo.logging.Logger;
 import consulo.ui.migration.IconLoaderFacade;
 import consulo.ui.migration.SwingImageRef;
 import org.jetbrains.annotations.NonNls;

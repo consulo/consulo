@@ -15,8 +15,7 @@
  */
 package com.intellij.util.io;
 
-import com.intellij.openapi.diagnostic.Logger;
-import consulo.util.io.PreJava9IOUtil;
+import consulo.logging.Logger;
 
 import java.io.File;
 import java.io.IOException;

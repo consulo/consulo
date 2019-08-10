@@ -15,7 +15,7 @@
  */
 package com.intellij.util.ui;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.ui.ColoredTextContainer;
 import com.intellij.ui.SimpleTextAttributes;
 import javax.annotation.Nonnull;

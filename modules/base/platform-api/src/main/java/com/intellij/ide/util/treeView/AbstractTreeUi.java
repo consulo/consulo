@@ -7,7 +7,7 @@ import com.intellij.ide.UiActivityMonitor;
 import com.intellij.ide.util.treeView.TreeRunnable.TreeConsumer;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.util.*;

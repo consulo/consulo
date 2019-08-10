@@ -18,7 +18,7 @@ package consulo.externalStorage.storage;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.RoamingType;
 import consulo.components.impl.stores.storage.StateStorageManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.SystemInfo;

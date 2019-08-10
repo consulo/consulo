@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.markup;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.InvalidDataException;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;

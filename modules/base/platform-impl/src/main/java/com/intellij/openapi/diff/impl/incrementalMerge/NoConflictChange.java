@@ -1,8 +1,9 @@
 package com.intellij.openapi.diff.impl.incrementalMerge;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.impl.highlighting.FragmentSide;
 import com.intellij.openapi.util.TextRange;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 public class NoConflictChange extends TwoSideChange.SideChange<MergeNoConflict> {

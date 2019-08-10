@@ -17,7 +17,7 @@ package com.intellij.openapi.roots.libraries.ui.impl;
 
 import com.intellij.ide.util.ChooseElementsDialog;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;

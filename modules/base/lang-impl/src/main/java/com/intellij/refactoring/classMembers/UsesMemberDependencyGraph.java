@@ -25,7 +25,7 @@
 package com.intellij.refactoring.classMembers;
 
 import com.intellij.lang.LanguageDependentMembersRefactoringSupport;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.NavigatablePsiElement;
 import com.intellij.psi.PsiElement;

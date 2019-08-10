@@ -17,9 +17,9 @@
 package com.intellij.util.io;
 
 import com.intellij.CommonBundle;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileSystemUtil;
 import com.intellij.openapi.util.io.FileUtil;
+import consulo.logging.Logger;
 
 import java.io.*;
 

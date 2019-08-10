@@ -19,7 +19,6 @@ import com.intellij.CommonBundle;
 import com.intellij.analysis.AnalysisScope;
 import com.intellij.find.FindBundle;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.impl.scopes.LibraryScope;
 import com.intellij.openapi.project.Project;
@@ -56,6 +55,7 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.JBUI;
+import consulo.logging.Logger;
 import consulo.roots.ui.configuration.classpath.AddModuleDependencyDialog;
 import javax.annotation.Nonnull;
 

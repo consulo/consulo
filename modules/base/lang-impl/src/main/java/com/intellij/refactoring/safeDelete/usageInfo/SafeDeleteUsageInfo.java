@@ -16,7 +16,7 @@
 
 package com.intellij.refactoring.safeDelete.usageInfo;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.usageView.UsageInfo;
 import javax.annotation.Nonnull;

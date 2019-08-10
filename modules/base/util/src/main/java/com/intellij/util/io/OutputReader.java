@@ -15,8 +15,9 @@
  */
 package com.intellij.util.io;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.concurrency.Semaphore;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.io.IOException;

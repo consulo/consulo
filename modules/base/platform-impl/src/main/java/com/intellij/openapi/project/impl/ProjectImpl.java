@@ -26,7 +26,7 @@ import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.progress.ProgressIndicator;

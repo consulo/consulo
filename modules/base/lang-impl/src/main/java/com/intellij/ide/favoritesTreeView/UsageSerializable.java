@@ -16,7 +16,7 @@
 package com.intellij.ide.favoritesTreeView;
 
 import com.intellij.codeInsight.folding.impl.GenericElementSignatureProvider;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.util.text.StringUtil;

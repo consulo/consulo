@@ -16,8 +16,8 @@
 package consulo.components.impl.stores.storage;
 
 import com.intellij.openapi.components.StateSplitterEx;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.JDOMUtil;
+import consulo.logging.Logger;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectObjectProcedure;
 import org.jdom.Element;

@@ -17,7 +17,6 @@ package consulo.compiler.impl;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ui.LightFilePointer;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -25,6 +24,7 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.ModuleCompilerPathsManager;
+import consulo.logging.Logger;
 import consulo.roots.ContentFolderTypeProvider;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

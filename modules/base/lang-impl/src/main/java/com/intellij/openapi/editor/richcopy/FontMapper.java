@@ -15,8 +15,9 @@
  */
 package com.intellij.openapi.editor.richcopy;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ReflectionUtil;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.awt.*;

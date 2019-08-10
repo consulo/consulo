@@ -21,7 +21,7 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.messages.MessageBus;
 import consulo.components.impl.stores.storage.DirectoryStorageData;
 import consulo.components.impl.stores.storage.StateStorageFacade;

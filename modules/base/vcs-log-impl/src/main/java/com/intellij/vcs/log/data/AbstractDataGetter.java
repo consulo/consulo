@@ -1,7 +1,6 @@
 package com.intellij.vcs.log.data;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.PerformInBackgroundOption;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
@@ -20,6 +19,7 @@ import com.intellij.vcs.log.VcsShortCommitDetails;
 import com.intellij.vcs.log.data.index.IndexedDetails;
 import com.intellij.vcs.log.data.index.VcsLogIndex;
 import com.intellij.vcs.log.util.SequentialLimitedLifoExecutor;
+import consulo.logging.Logger;
 import gnu.trove.TIntHashSet;
 import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntObjectHashMap;

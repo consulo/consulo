@@ -16,7 +16,7 @@
 package com.intellij.psi.stubs;
 
 import com.intellij.openapi.diagnostic.LogUtil;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.RecentStringInterner;
@@ -135,7 +135,7 @@ public class StubSerializationHelper {
 
     final int stubFilesCount = DataInputOutputUtil.readINT(inputStream);
     if (stubFilesCount <= 0) {
-      Logger.getInstance(getClass()).error("Incorrect stub files count during deserialization:"+stubFilesCount);
+      Logger.getInstance(getClass()).error("Incorrect stub files count during deserialization:" + stubFilesCount);
     }
     final Stub baseStub = deserialize(inputStream, null);
     final List<PsiFileStub> stubs = ContainerUtil.newArrayListWithCapacity(stubFilesCount);

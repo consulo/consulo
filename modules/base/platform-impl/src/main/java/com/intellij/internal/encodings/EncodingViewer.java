@@ -15,7 +15,7 @@
  */
 package com.intellij.internal.encodings;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.CharsetToolkit;

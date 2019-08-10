@@ -16,7 +16,7 @@
 package com.intellij.openapi.extensions;
 
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import consulo.injecting.InjectingContainer;
 
 import javax.annotation.Nonnull;

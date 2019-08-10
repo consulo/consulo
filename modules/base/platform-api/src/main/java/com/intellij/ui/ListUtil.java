@@ -15,10 +15,10 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Condition;
 import com.intellij.ui.speedSearch.FilteringListModel;
 import com.intellij.util.ui.UIUtil;
+import consulo.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

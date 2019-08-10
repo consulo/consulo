@@ -17,7 +17,6 @@ package com.intellij.packaging.impl.compiler;
 
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
@@ -35,6 +34,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import consulo.application.AccessRule;
+import consulo.logging.Logger;
 import gnu.trove.THashMap;
 
 import javax.annotation.Nonnull;

@@ -15,7 +15,6 @@
  */
 package com.intellij.ui.dualView;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Condition;
 import com.intellij.ui.HighlightableCellRenderer;
 import com.intellij.ui.table.ItemsProvider;
@@ -24,6 +23,7 @@ import com.intellij.ui.treeStructure.treetable.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.SortableColumnModel;
+import consulo.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;

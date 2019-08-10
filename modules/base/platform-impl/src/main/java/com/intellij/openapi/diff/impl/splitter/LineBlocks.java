@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.diff.impl.splitter;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.diff.impl.DiffUtil;
 import com.intellij.openapi.diff.impl.fragments.LineBlock;
 import com.intellij.openapi.diff.impl.fragments.LineFragment;

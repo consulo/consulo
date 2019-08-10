@@ -20,10 +20,10 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ReflectionUtil;
 import consulo.application.TransactionGuardEx;
 import consulo.container.util.StatCollector;
+import consulo.logging.Logger;
 import consulo.start.CommandLineArgs;
 
 import javax.annotation.Nonnull;

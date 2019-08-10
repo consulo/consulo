@@ -7,7 +7,7 @@ import com.intellij.ide.todo.HighlightedRegionProvider;
 import com.intellij.ide.todo.SmartTodoItemPointer;
 import com.intellij.ide.todo.TodoTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;

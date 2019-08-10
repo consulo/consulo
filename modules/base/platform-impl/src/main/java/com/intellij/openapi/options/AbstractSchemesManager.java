@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.options;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.text.UniqueNameGenerator;
+import consulo.logging.Logger;
 import gnu.trove.THashSet;
 import consulo.util.pointers.Named;
 import javax.annotation.Nonnull;

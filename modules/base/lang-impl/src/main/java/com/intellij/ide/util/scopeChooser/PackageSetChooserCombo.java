@@ -16,7 +16,6 @@
 package com.intellij.ide.util.scopeChooser;
 
 import com.intellij.ui.ListCellRendererWrapper;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComponentWithBrowseButton;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -26,6 +25,7 @@ import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
 import com.intellij.ui.components.editors.JBComboBoxTableCellEditorComponent;
 import com.intellij.util.Function;
+import consulo.logging.Logger;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

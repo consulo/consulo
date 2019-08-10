@@ -1,12 +1,13 @@
 
 package com.intellij.openapi.paths;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.ElementManipulators;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.util.List;

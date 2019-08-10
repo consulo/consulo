@@ -16,10 +16,10 @@
 package com.intellij.ui;
 
 import com.intellij.Patches;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.containers.HashMap;
+import consulo.logging.Logger;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;

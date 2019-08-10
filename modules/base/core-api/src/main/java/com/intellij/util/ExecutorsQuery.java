@@ -15,9 +15,10 @@
  */
 package com.intellij.util;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.IndexNotReadyException;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.util.List;
@@ -26,7 +27,7 @@ import java.util.List;
  * @author max
  */
 public final class ExecutorsQuery<Result, Parameter> extends AbstractQuery<Result> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.ExecutorsQuery"); 
+  private static final Logger LOG = Logger.getInstance("#com.intellij.util.ExecutorsQuery");
 
   private final List<QueryExecutor<Result, Parameter>> myExecutors;
   private final Parameter myParameters;

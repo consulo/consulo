@@ -16,7 +16,6 @@
 package com.intellij.psi.stubs;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -27,6 +26,8 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.Processor;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.util.List;

@@ -17,7 +17,7 @@ package com.intellij.application.options.codeStyle.arrangement.match;
 
 import com.intellij.application.options.codeStyle.arrangement.ArrangementConstants;
 import com.intellij.application.options.codeStyle.arrangement.ui.ArrangementEditorAware;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import javax.annotation.Nonnull;
 
 import javax.swing.table.DefaultTableModel;

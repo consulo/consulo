@@ -18,7 +18,7 @@ package com.intellij.openapi.application.impl;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationListener;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicBoolean;

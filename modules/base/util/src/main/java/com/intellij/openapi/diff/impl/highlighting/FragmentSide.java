@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.diff.impl.highlighting;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.diff.impl.string.DiffString;
 import com.intellij.openapi.diff.ex.DiffFragment;
 import javax.annotation.Nonnull;

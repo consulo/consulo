@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.editor.colors;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.ui.Gray;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 
 import java.awt.*;

@@ -2,7 +2,7 @@
 package com.intellij.ui.tree;
 
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

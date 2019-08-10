@@ -16,7 +16,6 @@
 package com.intellij.psi.impl.source.tree;
 
 import com.intellij.extapi.psi.StubBasedPsiElementBase;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFileWithId;
 import com.intellij.psi.PsiElement;
@@ -27,6 +26,8 @@ import com.intellij.psi.stubs.Stub;
 import com.intellij.psi.stubs.StubTree;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

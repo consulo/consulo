@@ -22,7 +22,7 @@ import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.codeInsight.editorActions.emacs.EmacsProcessingHandler;
 import com.intellij.codeInsight.editorActions.emacs.LanguageEmacsExtension;
 import com.intellij.lang.LanguageFormatting;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;

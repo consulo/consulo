@@ -17,7 +17,7 @@ package com.intellij.diagnostic;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.diagnostic.Attachment;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.project.DumbAwareAction;
 
 import java.awt.event.InputEvent;

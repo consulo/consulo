@@ -15,9 +15,10 @@
  */
 package com.intellij.dvcs.push.ui;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.vcs.changes.issueLinks.LinkMouseListenerBase;
 import com.intellij.ui.CheckboxTree;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.tree.DefaultMutableTreeNode;

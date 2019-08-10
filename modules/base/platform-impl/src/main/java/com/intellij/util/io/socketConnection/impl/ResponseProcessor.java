@@ -1,7 +1,7 @@
 package com.intellij.util.io.socketConnection.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.MultiValuesMap;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.Alarm;

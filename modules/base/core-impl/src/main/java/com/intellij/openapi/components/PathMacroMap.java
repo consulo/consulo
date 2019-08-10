@@ -16,7 +16,7 @@
 package com.intellij.openapi.components;
 
 import com.intellij.openapi.application.PathMacroFilter;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import org.jdom.*;
 import javax.annotation.Nonnull;

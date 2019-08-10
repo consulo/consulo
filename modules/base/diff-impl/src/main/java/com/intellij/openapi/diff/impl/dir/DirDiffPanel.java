@@ -30,7 +30,7 @@ import com.intellij.ide.diff.DiffElement;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.diff.impl.dir.actions.DirDiffToolbarActions;
 import com.intellij.openapi.diff.impl.dir.actions.RefreshDirDiffAction;
 import com.intellij.openapi.keymap.KeymapUtil;

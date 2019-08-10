@@ -25,7 +25,7 @@ import consulo.components.impl.stores.storage.VfsDirectoryBasedStorage;
 import consulo.components.impl.stores.storage.DirectoryStorageData;
 import consulo.components.impl.stores.StorageUtil;
 import consulo.components.impl.stores.StreamProvider;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;

@@ -15,7 +15,7 @@
  */
 package consulo.builtInServer.impl.net.http;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;

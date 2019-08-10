@@ -19,7 +19,7 @@ import com.intellij.ide.customize.CustomizeIDEWizardDialog;
 import com.intellij.ide.plugins.RepositoryHelper;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.SystemInfo;

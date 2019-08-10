@@ -25,7 +25,6 @@ import com.intellij.openapi.command.undo.BasicUndoableAction;
 import com.intellij.openapi.command.undo.UndoManager;
 import com.intellij.openapi.command.undo.UndoableAction;
 import com.intellij.openapi.command.undo.UnexpectedUndoException;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
@@ -49,6 +48,7 @@ import com.intellij.util.containers.MultiMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
+import consulo.logging.Logger;
 
 import java.util.*;
 

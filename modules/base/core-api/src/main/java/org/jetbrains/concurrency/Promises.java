@@ -17,7 +17,7 @@ package org.jetbrains.concurrency;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.ControlFlowException;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.ThreeState;

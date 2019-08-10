@@ -22,7 +22,6 @@ import com.intellij.mock.MockProgressIndicator;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.VerticalFlowLayout;
@@ -31,6 +30,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.util.Restarter;
 import com.intellij.util.ui.UIUtil;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

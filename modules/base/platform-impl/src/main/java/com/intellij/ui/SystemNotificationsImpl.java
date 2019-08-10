@@ -17,11 +17,11 @@ package com.intellij.ui;
 
 import com.intellij.notification.impl.NotificationsConfigurationImpl;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.AtomicNullableLazyValue;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.SystemProperties;
+import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

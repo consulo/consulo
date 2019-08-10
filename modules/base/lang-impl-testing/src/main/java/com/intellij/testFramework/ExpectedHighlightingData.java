@@ -23,7 +23,7 @@ import com.intellij.codeInsight.daemon.impl.SeveritiesProvider;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.RangeMarker;

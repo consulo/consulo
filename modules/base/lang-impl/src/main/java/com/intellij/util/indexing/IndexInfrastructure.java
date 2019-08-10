@@ -22,7 +22,6 @@ package com.intellij.util.indexing;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.CacheUpdateRunner;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.ex.dummy.DummyFileSystem;
@@ -35,6 +34,8 @@ import com.intellij.util.concurrency.BoundedTaskExecutor;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import consulo.logging.Logger;
 import org.jetbrains.ide.PooledThreadExecutor;
 
 import java.io.File;

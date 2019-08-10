@@ -15,11 +15,12 @@
  */
 package com.intellij.util.concurrency;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.Consumer;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
+
+import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.List;

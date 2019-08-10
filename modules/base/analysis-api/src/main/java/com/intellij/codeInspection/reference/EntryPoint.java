@@ -16,9 +16,9 @@
 
 package com.intellij.codeInspection.reference;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.psi.PsiElement;
+import consulo.logging.Logger;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

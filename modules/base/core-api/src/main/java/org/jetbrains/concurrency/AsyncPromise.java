@@ -16,7 +16,7 @@
 package org.jetbrains.concurrency;
 
 import com.intellij.openapi.diagnostic.ControlFlowException;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.ExceptionUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

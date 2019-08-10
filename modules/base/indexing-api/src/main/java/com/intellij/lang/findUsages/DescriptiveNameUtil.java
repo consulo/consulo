@@ -16,7 +16,7 @@
 package com.intellij.lang.findUsages;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.meta.PsiMetaData;

@@ -16,13 +16,14 @@
 package com.intellij.openapi.vcs.persistent;
 
 import com.intellij.openapi.Forceable;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.io.KeyDescriptor;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.io.*;

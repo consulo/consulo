@@ -19,7 +19,7 @@ package com.intellij.codeInsight.template.macro;
 import com.intellij.codeInsight.template.Expression;
 import com.intellij.codeInsight.template.ExpressionContext;
 import com.intellij.codeInsight.template.Result;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Clock;
 import com.intellij.util.text.DateFormatUtil;
 

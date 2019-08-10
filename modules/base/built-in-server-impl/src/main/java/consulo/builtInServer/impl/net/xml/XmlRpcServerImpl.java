@@ -15,7 +15,7 @@
  */
 package consulo.builtInServer.impl.net.xml;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.builtInServer.http.HttpRequestHandler;
 import consulo.builtInServer.http.Responses;

@@ -15,7 +15,6 @@
  */
 package com.intellij.util.indexing;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentIterator;
@@ -27,6 +26,8 @@ import com.intellij.openapi.vfs.VirtualFileWithId;
 import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.util.BitSet;

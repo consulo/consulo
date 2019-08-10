@@ -15,7 +15,7 @@
  */
 package com.intellij.compiler.impl.generic;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.io.IOUtil;
 import gnu.trove.TIntHashSet;

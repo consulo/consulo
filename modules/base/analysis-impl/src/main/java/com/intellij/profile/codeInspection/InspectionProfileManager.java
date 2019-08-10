@@ -18,7 +18,6 @@ package com.intellij.profile.codeInspection;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.StoragePathMacros;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.DisposerUtil;
 import com.intellij.profile.ApplicationProfileManager;
 import com.intellij.profile.Profile;
@@ -26,6 +25,7 @@ import com.intellij.profile.ProfileChangeAdapter;
 import com.intellij.profile.ProfileEx;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
 

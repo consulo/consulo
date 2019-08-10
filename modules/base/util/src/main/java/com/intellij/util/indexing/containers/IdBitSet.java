@@ -15,7 +15,7 @@
  */
 package com.intellij.util.indexing.containers;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.indexing.ValueContainer;
 
 /**

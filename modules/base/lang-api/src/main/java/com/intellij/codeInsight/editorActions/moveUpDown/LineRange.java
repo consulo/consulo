@@ -16,9 +16,9 @@
 
 package com.intellij.codeInsight.editorActions.moveUpDown;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.psi.PsiElement;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

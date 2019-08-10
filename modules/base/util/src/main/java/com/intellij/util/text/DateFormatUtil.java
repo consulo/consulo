@@ -16,7 +16,7 @@
 package com.intellij.util.text;
 
 import com.intellij.CommonBundle;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Clock;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;

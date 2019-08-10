@@ -15,9 +15,7 @@
  */
 package com.intellij.featureStatistics;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.Extensions;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
 import org.jdom.Document;

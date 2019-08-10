@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.folding.impl;
 
 import com.intellij.codeInsight.CodeInsightActionHandler;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.FoldRegion;

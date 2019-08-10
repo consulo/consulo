@@ -16,7 +16,6 @@
 package com.intellij.openapi.roots.ui.configuration.projectRoot;
 
 import com.intellij.ide.util.projectWizard.WizardContext;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
@@ -27,6 +26,7 @@ import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.roots.libraries.LibraryType;
 import com.intellij.openapi.roots.libraries.ui.OrderRoot;
+import consulo.logging.Logger;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
 import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelProvider;

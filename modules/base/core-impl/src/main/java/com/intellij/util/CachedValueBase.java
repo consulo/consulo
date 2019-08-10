@@ -16,12 +16,12 @@
 package com.intellij.util;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.reference.SoftReference;
+import consulo.logging.Logger;
 import gnu.trove.TLongArrayList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

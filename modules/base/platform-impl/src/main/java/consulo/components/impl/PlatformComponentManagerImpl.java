@@ -24,7 +24,7 @@ import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import consulo.components.impl.stores.IComponentStore;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import consulo.ui.RequiredUIAccess;
 import consulo.components.impl.stores.StateComponentInfo;

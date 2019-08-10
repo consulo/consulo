@@ -15,13 +15,13 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
 import consulo.awt.TargetAWT;
+import consulo.logging.Logger;
 import sun.awt.AWTAccessor;
 import sun.misc.Unsafe;
 

@@ -17,7 +17,7 @@ package com.intellij.util.net;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.proxy.CommonProxy;
 import com.intellij.util.proxy.NonStaticAuthenticator;
 

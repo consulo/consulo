@@ -15,8 +15,8 @@
  */
 package com.intellij.psi;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.KeyedExtensionCollector;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

@@ -1,10 +1,11 @@
 package com.intellij.remoteServer.impl.runtime;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.remoteServer.runtime.RemoteOperationCallback;
 import com.intellij.remoteServer.runtime.ServerTaskExecutor;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.util.concurrent.ExecutorService;

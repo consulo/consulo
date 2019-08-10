@@ -17,7 +17,7 @@ package com.intellij.util.concurrency;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 
 /**
  * This is the 3rd version of SwingWorker (also known as

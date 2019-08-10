@@ -18,7 +18,7 @@ package com.intellij.ide;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationActivationListener;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.ex.ApplicationEx2;
@@ -37,7 +37,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class ApplicationActivationStateManager {
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.ApplicationActivationStateManager");
+  private static final Logger LOG = Logger.getInstance(ApplicationActivationStateManager.class);
 
   private static AtomicLong requestToDeactivateTime = new AtomicLong(System.currentTimeMillis());
 

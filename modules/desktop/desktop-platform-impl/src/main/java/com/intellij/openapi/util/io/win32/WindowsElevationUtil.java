@@ -1,11 +1,12 @@
 package com.intellij.openapi.util.io.win32;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import com.intellij.openapi.util.SystemInfo;
 import com.sun.jna.Structure;
 import com.sun.jna.platform.win32.*;
 import com.sun.jna.ptr.IntByReference;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.util.List;

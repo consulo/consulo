@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.annotate;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.localVcs.UpToDateLineNumberProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.VcsKey;

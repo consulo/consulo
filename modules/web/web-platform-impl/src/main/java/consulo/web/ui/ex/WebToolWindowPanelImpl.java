@@ -15,7 +15,7 @@
  */
 package consulo.web.ui.ex;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.WindowInfo;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;

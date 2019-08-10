@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.tree;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

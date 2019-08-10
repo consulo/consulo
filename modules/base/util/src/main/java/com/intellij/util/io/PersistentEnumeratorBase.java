@@ -16,7 +16,6 @@
 package com.intellij.util.io;
 
 import com.intellij.openapi.Forceable;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.IncorrectOperationException;
@@ -26,6 +25,7 @@ import com.intellij.util.containers.ShareableKey;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.Closeable;

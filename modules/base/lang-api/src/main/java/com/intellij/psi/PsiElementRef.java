@@ -15,7 +15,8 @@
  */
 package com.intellij.psi;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

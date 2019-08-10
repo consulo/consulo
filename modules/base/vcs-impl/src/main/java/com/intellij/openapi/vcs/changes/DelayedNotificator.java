@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.vcs.changes.local.ChangeListCommand;
 import com.intellij.util.EventDispatcher;
 import javax.annotation.Nonnull;

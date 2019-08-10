@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.ide.CommandLineProcessor;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.io.URLUtil;
 import consulo.start.CommandLineArgs;

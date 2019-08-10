@@ -18,7 +18,6 @@ package com.intellij.compiler;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -31,6 +30,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.graph.*;
 import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
+import consulo.logging.Logger;
 
 import java.util.*;
 

@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.ui.mac.growl.Growl;
 import com.intellij.util.ArrayUtil;
 import javax.annotation.Nonnull;

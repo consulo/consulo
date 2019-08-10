@@ -15,7 +15,6 @@
  */
 package com.intellij.util.indexing.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.SLRUCache;
 import com.intellij.util.indexing.StorageException;
@@ -23,6 +22,8 @@ import com.intellij.util.indexing.ValueContainer;
 import com.intellij.util.io.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;

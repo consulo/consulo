@@ -18,7 +18,7 @@ package com.intellij.openapi.application;
 import com.google.common.base.MoreObjects;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Disposer;

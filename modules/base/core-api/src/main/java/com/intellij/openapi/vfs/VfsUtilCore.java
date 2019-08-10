@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vfs;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;

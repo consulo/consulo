@@ -16,7 +16,7 @@
 package org.slf4j.impl;
 
 import com.intellij.BundleBase;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import org.slf4j.helpers.MarkerIgnoringBase;
 
 import java.io.Serializable;

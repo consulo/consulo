@@ -17,7 +17,7 @@ package com.intellij.openapi.util;
 
 import com.intellij.Patches;
 import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.FrameState;

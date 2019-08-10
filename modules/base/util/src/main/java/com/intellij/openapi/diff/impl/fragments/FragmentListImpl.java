@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.diff.impl.fragments;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.impl.highlighting.FragmentSide;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.TextRange;
+import consulo.logging.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;

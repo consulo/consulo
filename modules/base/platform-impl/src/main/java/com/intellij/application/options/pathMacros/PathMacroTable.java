@@ -17,12 +17,12 @@ package com.intellij.application.options.pathMacros;
 
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.application.PathMacros;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.Table;
 import consulo.application.options.PathMacrosService;
+import consulo.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;

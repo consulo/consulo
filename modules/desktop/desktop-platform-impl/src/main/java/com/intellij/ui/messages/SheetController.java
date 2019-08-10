@@ -15,7 +15,6 @@
  */
 package com.intellij.ui.messages;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.SystemInfo;
@@ -26,6 +25,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.desktop.util.awt.graphics.GraphicsUtilities;
 import consulo.desktop.util.awt.graphics.ShadowRenderer;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

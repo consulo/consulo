@@ -16,7 +16,7 @@
 package com.intellij.ide;
 
 import com.intellij.openapi.application.AccessToken;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import consulo.platform.Platform;
 
 import javax.annotation.Nonnull;
