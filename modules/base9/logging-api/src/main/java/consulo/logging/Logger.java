@@ -34,7 +34,7 @@ public interface Logger {
   }
 
   @Nonnull
-  public static Logger getInstance(Class cl) {
+  public static Logger getInstance(@Nonnull Class cl) {
     return getInstance(cl.getName());
   }
 
