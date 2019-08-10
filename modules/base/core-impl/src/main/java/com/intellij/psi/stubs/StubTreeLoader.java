@@ -16,9 +16,6 @@
 package com.intellij.psi.stubs;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.diagnostic.Attachment;
-import com.intellij.openapi.diagnostic.RuntimeExceptionWithAttachments;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
@@ -32,6 +29,9 @@ import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.internal.PerApplicationInstance;
+import consulo.logging.attachment.Attachment;
+import consulo.logging.attachment.AttachmentFactory;
+import consulo.logging.attachment.RuntimeExceptionWithAttachments;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -142,10 +142,10 @@ public abstract class StubTreeLoader {
   @Nonnull
   private static Attachment[] createAttachments(@Nonnull ObjectStubTree stubTree, @Nonnull PsiFileWithStubSupport psiFile, VirtualFile file, @Nullable StubTree stubTreeFromIndex) {
     List<Attachment> attachments = ContainerUtil.newArrayList();
-    attachments.add(new Attachment(file.getPath() + "_file.txt", psiFile instanceof PsiCompiledElement ? "compiled" : psiFile.getText()));
-    attachments.add(new Attachment("stubTree.txt", ((PsiFileStubImpl)stubTree.getRoot()).printTree()));
+    attachments.add(AttachmentFactory.get().create(file.getPath() + "_file.txt", psiFile instanceof PsiCompiledElement ? "compiled" : psiFile.getText()));
+    attachments.add(AttachmentFactory.get().create("stubTree.txt", ((PsiFileStubImpl)stubTree.getRoot()).printTree()));
     if (stubTreeFromIndex != null) {
-      attachments.add(new Attachment("stubTreeFromIndex.txt", ((PsiFileStubImpl)stubTreeFromIndex.getRoot()).printTree()));
+      attachments.add(AttachmentFactory.get().create("stubTreeFromIndex.txt", ((PsiFileStubImpl)stubTreeFromIndex.getRoot()).printTree()));
     }
     return attachments.toArray(Attachment.EMPTY_ARRAY);
   }

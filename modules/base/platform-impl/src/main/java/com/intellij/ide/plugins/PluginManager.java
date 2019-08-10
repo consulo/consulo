@@ -25,12 +25,10 @@ import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.components.ComponentConfig;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.extensions.impl.PluginExtensionInitializationException;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import consulo.annotations.Exported;
@@ -38,6 +36,7 @@ import consulo.application.ApplicationProperties;
 import consulo.awt.TargetAWT;
 import consulo.container.impl.ExitCodes;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.logging.internal.LoggerFactoryInitializer;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -103,7 +102,7 @@ public class PluginManager extends PluginManagerCore {
     if (se != null) {
       if (se.logError()) {
         try {
-          if (Logger.isInitialized() && !(t instanceof ProcessCanceledException)) {
+          if (LoggerFactoryInitializer.isInitialized() && !(t instanceof ProcessCanceledException)) {
             getLogger().error(t);
           }
         }

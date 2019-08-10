@@ -16,12 +16,12 @@
 package consulo.startup;
 
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ExceptionUtil;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileWriter;
@@ -31,7 +31,7 @@ import java.io.IOException;
  * @author VISTALL
  * @since 27-May-17
  */
-public class StartupActionLogger extends Logger implements Closeable {
+public class StartupActionLogger implements Logger, Closeable {
   public static boolean ourPrintToConsole = false;
 
   private final StringBuilder myBuilder = new StringBuilder();

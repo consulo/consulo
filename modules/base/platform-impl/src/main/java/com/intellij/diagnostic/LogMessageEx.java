@@ -15,15 +15,16 @@
  */
 package com.intellij.diagnostic;
 
-import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.SmartList;
+import consulo.logging.Logger;
+import consulo.logging.attachment.Attachment;
+import consulo.logging.attachment.AttachmentFactory;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.Arrays;
@@ -67,7 +68,7 @@ public class LogMessageEx extends LogMessage {
   }
 
   public void addAttachment(String path, String content) {
-    addAttachment(new Attachment(path, content));
+    addAttachment(AttachmentFactory.get().create(path, content));
   }
 
   public void addAttachment(Attachment attachment) {
@@ -148,7 +149,7 @@ public class LogMessageEx extends LogMessage {
     if (attachmentText.length > 0 && detailsBuffer.length() > 0) {
       detailsBuffer.setLength(detailsBuffer.length() - 1);
     }
-    Attachment attachment = detailsBuffer.length() > 0 ? new Attachment("current-context.txt", detailsBuffer.toString()) : null;
+    Attachment attachment = detailsBuffer.length() > 0 ? AttachmentFactory.get().create("current-context.txt", detailsBuffer.toString()) : null;
     logger.error(createEvent(message, ExceptionUtil.getThrowableText(cause), null, null, attachment));
   }
 

@@ -18,8 +18,6 @@ package com.intellij.psi;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.FileASTNode;
 import com.intellij.lang.Language;
-import com.intellij.openapi.diagnostic.Attachment;
-import com.intellij.openapi.diagnostic.ExceptionWithAttachments;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.util.registry.Registry;
@@ -27,10 +25,13 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.stubs.PsiFileStub;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.util.PsiUtilCore;
+import consulo.logging.attachment.Attachment;
+import consulo.logging.attachment.AttachmentFactory;
+import consulo.logging.attachment.ExceptionWithAttachments;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.lang.ref.SoftReference;
 
 /**
@@ -97,8 +98,8 @@ public class PsiInvalidElementAccessException extends RuntimeException implement
   private static Attachment[] createAttachments(@Nullable Object trace) {
     return trace == null
            ? Attachment.EMPTY_ARRAY
-           : new Attachment[]{trace instanceof Throwable ? new Attachment("invalidation", (Throwable)trace)
-                                                         : new Attachment("diagnostic.txt", trace.toString())};
+           : new Attachment[]{trace instanceof Throwable ? AttachmentFactory.get().create("invalidation", (Throwable)trace)
+                                                         : AttachmentFactory.get().create("diagnostic.txt", trace.toString())};
   }
 
   @Nullable

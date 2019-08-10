@@ -17,8 +17,6 @@ package com.intellij.openapi.editor.impl.softwrap.mapping;
 
 import com.intellij.diagnostic.Dumpable;
 import com.intellij.diagnostic.LogMessageEx;
-import com.intellij.openapi.diagnostic.Attachment;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.DocumentEx;
@@ -34,11 +32,13 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.DocumentUtil;
+import consulo.logging.Logger;
+import consulo.logging.attachment.AttachmentFactory;
 import org.intellij.lang.annotations.JdkConstants;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ import java.util.List;
  */
 public class SoftWrapApplianceManager implements Dumpable {
 
-  private static final Logger LOG = Logger.getInstance("#" + SoftWrapApplianceManager.class.getName());
+  private static final Logger LOG = Logger.getInstance(SoftWrapApplianceManager.class.getName());
 
   /** Enumerates possible type of soft wrap indents to use. */
   enum IndentType {
@@ -318,7 +318,7 @@ public class SoftWrapApplianceManager implements Dumpable {
       LOG.debug("Soft wrap recalculation done: " + event.toString() + ". " + (event.getActualEndOffset() - event.getStartOffset()) + " characters processed");
     }
     if (event.getActualEndOffset() > endOffsetUpperEstimate) {
-      LOG.error("Unexpected error at soft wrap recalculation", new Attachment("softWrapModel.txt", myEditor.getSoftWrapModel().toString()));
+      LOG.error("Unexpected error at soft wrap recalculation", AttachmentFactory.get().create("softWrapModel.txt", myEditor.getSoftWrapModel().toString()));
     }
     notifyListenersOnCacheUpdateEnd(event);
     myEventBeingProcessed = null;

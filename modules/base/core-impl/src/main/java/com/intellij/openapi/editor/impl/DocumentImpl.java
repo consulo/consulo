@@ -20,8 +20,6 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.diagnostic.Attachment;
-import com.intellij.openapi.diagnostic.ExceptionWithAttachments;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.DocCommandGroupId;
@@ -43,6 +41,9 @@ import com.intellij.util.containers.IntArrayList;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.ImmutableCharSequence;
 import consulo.application.TransactionGuardEx;
+import consulo.logging.attachment.Attachment;
+import consulo.logging.attachment.AttachmentFactory;
+import consulo.logging.attachment.ExceptionWithAttachments;
 import gnu.trove.TIntObjectHashMap;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
@@ -1092,7 +1093,9 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     private final Attachment[] myAttachments;
 
     private UnexpectedBulkUpdateStateException(Throwable enteringTrace) {
-      myAttachments = enteringTrace == null ? Attachment.EMPTY_ARRAY : new Attachment[]{new Attachment("enteringTrace.txt", enteringTrace)};
+      myAttachments = enteringTrace == null
+                      ? Attachment.EMPTY_ARRAY
+                      : new Attachment[]{AttachmentFactory.get().create("enteringTrace.txt", enteringTrace)};
     }
 
     @Nonnull

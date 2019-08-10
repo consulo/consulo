@@ -48,6 +48,10 @@
         <option name="WHILE_BRACE_FORCE" value="1" />
         <option name="FOR_BRACE_FORCE" value="1" />
         <option name="FIELD_ANNOTATION_WRAP" value="0" />
+        <JavaCodeStyleSettings>
+          <option name="FIELD_NAME_PREFIX" value="my" />
+          <option name="STATIC_FIELD_NAME_PREFIX" value="our" />
+        </JavaCodeStyleSettings>
         <ADDITIONAL_INDENT_OPTIONS fileType="gsp">
           <option name="INDENT_SIZE" value="2" />
         </ADDITIONAL_INDENT_OPTIONS>

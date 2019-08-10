@@ -15,8 +15,8 @@
  */
 package com.intellij.jna;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.sun.jna.Native;
+import consulo.logging.Logger;
 
 public class JnaLoader {
   private static volatile boolean ourJnaLoaded = false;

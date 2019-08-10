@@ -21,7 +21,6 @@ import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
@@ -33,9 +32,11 @@ import com.intellij.util.PairConsumer;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.container.StartupError;
 import consulo.container.impl.ExitCodes;
+import consulo.logging.Logger;
+import consulo.logging.internal.LoggerFactory;
+import consulo.logging.internal.LoggerFactoryInitializer;
 import consulo.start.CommandLineArgs;
 import consulo.start.ImportantFolderLocker;
-import consulo.util.logging.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -94,7 +95,7 @@ public class StartupUtil {
     List<LoggerFactory> factories = ContainerUtil.newArrayList(ServiceLoader.load(LoggerFactory.class, StartupUtil.class.getClassLoader()));
     ContainerUtil.weightSort(factories, LoggerFactory::getPriority);
     LoggerFactory factory = factories.get(0);
-    Logger.setFactory(factory);
+    LoggerFactoryInitializer.setFactory(factory);
 
     ActivationResult result = lockSystemFolders(lockFactory, args);
     if (result == ActivationResult.ACTIVATED) {
