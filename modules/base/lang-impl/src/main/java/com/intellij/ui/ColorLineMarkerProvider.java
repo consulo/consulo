@@ -20,12 +20,12 @@ import com.intellij.codeInsight.daemon.*;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.ElementColorProvider;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.Function;
 import com.intellij.util.FunctionUtil;
+import consulo.language.editor.ElementColorProvider;
 import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.awt.TargetAWT;
@@ -86,7 +86,7 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider {
     }
   }
 
-  private final ElementColorProvider[] myExtensions = ElementColorProvider.EP_NAME.getExtensions();
+  private final List<ElementColorProvider> myExtensions = ElementColorProvider.EP_NAME.getExtensionList();
 
   @RequiredReadAction
   @Override

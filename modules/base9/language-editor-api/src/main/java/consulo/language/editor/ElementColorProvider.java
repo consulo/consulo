@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.editor;
+package consulo.language.editor;
 
+import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
-import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.ui.shared.ColorValue;
@@ -27,9 +27,9 @@ import javax.annotation.Nullable;
 /**
  * @author Konstantin Bulenkov
  */
-@Deprecated
-@DeprecationInfo("Use consulo.language.editor.ElementColorProvider, will be removed after migration to java9 modules")
-public interface ElementColorProvider extends consulo.language.editor.ElementColorProvider {
+public interface ElementColorProvider {
+  ExtensionPointName<ElementColorProvider> EP_NAME = ExtensionPointName.create("com.intellij.colorProvider");
+
   @Nullable
   @RequiredReadAction
   ColorValue getColorFrom(@Nonnull PsiElement element);
