@@ -20,6 +20,10 @@ import com.intellij.openapi.util.text.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author VISTALL
@@ -69,18 +73,59 @@ public abstract class PlatformBase implements Platform {
     public boolean isMac() {
       return isMac;
     }
+
+    @Nonnull
+    @Override
+    public String name() {
+      return OS_NAME;
+    }
+
+    @Nonnull
+    @Override
+    public String version() {
+      return OS_VERSION;
+    }
+
+    @Nonnull
+    @Override
+    public String arch() {
+      return StringUtil.notNullize(System.getProperty("os.arch"));
+    }
+  }
+
+  protected static class JvmImpl implements Jvm {
+
+    @Nonnull
+    @Override
+    public String version() {
+      return System.getProperty("java.version");
+    }
+
+    @Nonnull
+    @Override
+    public String runtimeVersion() {
+      return StringUtil.notNullize(System.getProperty("java.runtime.version"), "n/a");
+    }
+
+    @Nonnull
+    @Override
+    public String vendor() {
+      return StringUtil.notNullize(System.getProperty("java.vendor"), "n/a");
+    }
   }
 
   private final PluginId myPluginId;
 
   private final FileSystem myFileSystem;
   private final OperatingSystem myOperatingSystem;
+  private final Jvm myJvm;
 
   protected PlatformBase(@Nonnull String pluginId) {
     myPluginId = PluginId.getId(pluginId);
 
     myFileSystem = createFS();
     myOperatingSystem = createOS();
+    myJvm = createJVM();
   }
 
   @Nonnull
@@ -88,8 +133,20 @@ public abstract class PlatformBase implements Platform {
     return new FileSystemImpl();
   }
 
+  @Nonnull
   protected OperatingSystem createOS() {
     return new OperatingSystemImpl();
+  }
+
+  @Nonnull
+  protected Jvm createJVM() {
+    return new JvmImpl();
+  }
+
+  @Nonnull
+  @Override
+  public Jvm jvm() {
+    return myJvm;
   }
 
   @Nonnull
@@ -114,6 +171,23 @@ public abstract class PlatformBase implements Platform {
   @Override
   public String getEnvironmentVariable(@Nonnull String key) {
     return System.getenv(key);
+  }
+
+  @Nonnull
+  @Override
+  public Map<String, String> getEnvironmentVariables() {
+    return Collections.unmodifiableMap(System.getenv());
+  }
+
+  @Nonnull
+  @Override
+  public Map<String, String> getRuntimeProperties() {
+    Properties properties = System.getProperties();
+    Map<String, String> map = new LinkedHashMap<>();
+    for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+      map.put(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
+    }
+    return map;
   }
 
   @Nonnull

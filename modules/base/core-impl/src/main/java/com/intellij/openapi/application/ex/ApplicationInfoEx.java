@@ -36,8 +36,6 @@ public abstract class ApplicationInfoEx extends ApplicationInfo {
     return (ApplicationInfoEx)ApplicationInfo.getInstance();
   }
 
-  public abstract String getAboutImageUrl();
-
   @Deprecated
   @DeprecationInfo("Do not use this method. Use SandboxUtil.getAppIcon()")
   public String getIconUrl() {
@@ -71,6 +69,4 @@ public abstract class ApplicationInfoEx extends ApplicationInfo {
   public abstract String getWinKeymapUrl();
 
   public abstract String getMacKeymapUrl();
-
-  public abstract Color getAboutForeground();
 }

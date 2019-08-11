@@ -24,6 +24,7 @@ import consulo.ui.image.Image;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -59,6 +60,26 @@ public interface Platform {
     boolean isWindows();
 
     boolean isMac();
+
+    @Nonnull
+    String name();
+
+    @Nonnull
+    String version();
+
+    @Nonnull
+    String arch();
+  }
+
+  interface Jvm {
+    @Nonnull
+    String version();
+
+    @Nonnull
+    String runtimeVersion();
+
+    @Nonnull
+    String vendor();
   }
 
   @Nonnull
@@ -71,6 +92,9 @@ public interface Platform {
 
   @Nonnull
   OperatingSystem os();
+
+  @Nonnull
+  Jvm jvm();
 
   @Nonnull
   PluginId getPluginId();
@@ -91,6 +115,12 @@ public interface Platform {
   default String getRuntimeProperty(@Nonnull String key, @Nonnull String defaultValue) {
     return ObjectUtil.notNull(getRuntimeProperty(key), defaultValue);
   }
+
+  @Nonnull
+  Map<String, String> getRuntimeProperties();
+
+  @Nonnull
+  Map<String, String> getEnvironmentVariables();
 
   @Nullable
   String getEnvironmentVariable(@Nonnull String key);

@@ -2,7 +2,6 @@
   <version major="2" minor="0"/>
   <company name="consulo.io" url="http://consulo.io"/>
   <build number="@build.number@" date="@build.date@"/>
-  <about url="/logo_about.png" foreground="000000" logoX="300" logoY="265" logoW="75" logoH="30"/>
 
   <names product="Consulo" fullname="Consulo" script="consulo"/>
 

@@ -19,35 +19,39 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.BuildNumber;
 import org.jetbrains.annotations.NonNls;
 
-import java.awt.*;
 import java.util.Calendar;
 
 public abstract class ApplicationInfo {
   @NonNls
-  public static final String APPLICATION_INFO_XML =  "idea/ConsuloApplicationInfo.xml";
+  public static final String APPLICATION_INFO_XML = "idea/ConsuloApplicationInfo.xml";
   @NonNls
-  public static final String ABSOLUTE_APPLICATION_INFO_XML =  "/" + APPLICATION_INFO_XML;
+  public static final String ABSOLUTE_APPLICATION_INFO_XML = "/" + APPLICATION_INFO_XML;
 
   public abstract Calendar getBuildDate();
 
   @Deprecated()
   /**
    * Use {@link #getBuild()} instead
-   */
-  public String getBuildNumber() {
+   */ public String getBuildNumber() {
     return getBuild().asString();
   }
 
   public abstract BuildNumber getBuild();
 
   public abstract String getMajorVersion();
+
   public abstract String getMinorVersion();
+
   public abstract String getVersionName();
+
   public abstract String getHelpURL();
+
   public abstract String getCompanyName();
+
   public abstract String getCompanyURL();
-  public abstract Rectangle getAboutLogoRect();
+
   public abstract boolean hasHelp();
+
   public abstract boolean hasContextHelp();
 
   public String getFullVersion() {
