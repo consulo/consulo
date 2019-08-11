@@ -48,7 +48,7 @@ public class Log4J2LoggerFactory implements LoggerFactory {
   public Log4J2LoggerFactory() {
     // map message factory to simple, since default message factory is reusable - and will remap our object to string message, without access to object variant
     System.setProperty("log4j2.messageFactory", "org.apache.logging.log4j.message.SimpleMessageFactory");
-    System.setProperty(ShutdownCallbackRegistry.SHUTDOWN_HOOK_ENABLED, "false")
+    System.setProperty(ShutdownCallbackRegistry.SHUTDOWN_HOOK_ENABLED, "false");
     myLoggerContext = init();
   }
 
