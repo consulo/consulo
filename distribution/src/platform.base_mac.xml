@@ -52,7 +52,9 @@
         <include>consulo:consulo-injecting-pico-impl</include>
         <include>consulo:consulo-lang-api</include>
         <include>consulo:consulo-lang-impl</include>
+        <include>consulo:consulo-language-editor-api</include>
         <include>consulo:consulo-localize-api</include>
+        <include>consulo:consulo-logging-api</include>
         <include>consulo:consulo-logging-log4j2-impl</include>
         <include>consulo:consulo-logging-slf4j-binding-impl</include>
         <include>consulo:consulo-lvcs-api</include>
