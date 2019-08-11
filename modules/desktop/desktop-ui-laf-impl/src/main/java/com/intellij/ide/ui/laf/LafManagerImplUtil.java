@@ -16,6 +16,11 @@
 package com.intellij.ide.ui.laf;
 
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.wm.impl.status.BasicStatusBarUI;
+import consulo.ide.ui.laf.darcula.DarculaEditorTabsUI;
+import consulo.ide.ui.laf.intellij.ActionButtonUI;
+import consulo.ide.ui.laf.intellij.IntelliJEditorTabsUI;
+import consulo.ui.style.StyleManager;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
@@ -60,6 +65,24 @@ public class LafManagerImplUtil {
     InputMap tableInputMap = (InputMap)defaults.get("Table.ancestorInputMap");
     if (tableInputMap != null) { // It really can be null, for example when LAF isn't properly initialized (Alloy license problem)
       installCutCopyPasteShortcuts(tableInputMap, true);
+    }
+  }
+
+  public static void insertCustomComponentUI(UIDefaults uiDefaults) {
+    if (uiDefaults.get("ActionButtonUI") == null) {
+      uiDefaults.put("ActionButtonUI", ActionButtonUI.class.getName());
+    }
+
+    if (uiDefaults.get("JBEditorTabsUI") == null) {
+      uiDefaults.put("JBEditorTabsUI", StyleManager.get().getCurrentStyle().isDark() ? DarculaEditorTabsUI.class.getName() : IntelliJEditorTabsUI.class.getName());
+    }
+
+    if (uiDefaults.get("IdeStatusBarUI") == null) {
+      uiDefaults.put("IdeStatusBarUI", BasicStatusBarUI.class.getName());
+    }
+
+    if (uiDefaults.get("ActionButtonUI") == null) {
+      uiDefaults.put("ActionButtonUI", ActionButtonUI.class.getName());
     }
   }
 

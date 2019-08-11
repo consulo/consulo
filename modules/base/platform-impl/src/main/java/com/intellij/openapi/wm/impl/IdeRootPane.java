@@ -198,14 +198,14 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
     }
   }
 
-  void updateNorthComponents() {
+  public void updateNorthComponents() {
     for (IdeRootPaneNorthExtension northComponent : myNorthComponents) {
       northComponent.revalidate();
     }
     myContentPane.revalidate();
   }
 
-  void updateMainMenuActions(){
+  public void updateMainMenuActions(){
     ((IdeMenuBar)menuBar).updateMenuActions();
     menuBar.repaint();
   }

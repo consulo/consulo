@@ -30,7 +30,6 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -46,7 +45,6 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.openapi.wm.impl.status.BasicStatusBarUI;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.content.Content;
@@ -63,15 +61,12 @@ import consulo.desktop.util.awt.laf.GTKPlusUIUtil;
 import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.ide.ui.laf.GTKPlusEAPDescriptor;
 import consulo.ide.ui.laf.MacDefaultLookAndFeelInfo;
-import consulo.ide.ui.laf.darcula.DarculaEditorTabsUI;
-import consulo.ide.ui.laf.intellij.ActionButtonUI;
-import consulo.ide.ui.laf.intellij.IntelliJEditorTabsUI;
 import consulo.ide.ui.laf.mac.MacButtonlessScrollbarUI;
 import consulo.ide.ui.laf.mac.MacEditorTabsUI;
 import consulo.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.ModernWhiteLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.NativeModernWhiteLookAndFeelInfo;
-import consulo.ui.style.StyleManager;
+import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
@@ -408,21 +403,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
 
     fixSeparatorColor(uiDefaults);
 
-    if (uiDefaults.get("ActionButtonUI") == null) {
-      uiDefaults.put("ActionButtonUI", ActionButtonUI.class.getName());
-    }
-
-    if (uiDefaults.get("JBEditorTabsUI") == null) {
-      uiDefaults.put("JBEditorTabsUI", StyleManager.get().getCurrentStyle().isDark() ? DarculaEditorTabsUI.class.getName() : IntelliJEditorTabsUI.class.getName());
-    }
-
-    if (uiDefaults.get("IdeStatusBarUI") == null) {
-      uiDefaults.put("IdeStatusBarUI", BasicStatusBarUI.class.getName());
-    }
-
-    if (uiDefaults.get("ActionButtonUI") == null) {
-      uiDefaults.put("ActionButtonUI", ActionButtonUI.class.getName());
-    }
+    LafManagerImplUtil.insertCustomComponentUI(uiDefaults);
 
     updateToolWindows();
     for (Frame frame : Frame.getFrames()) {

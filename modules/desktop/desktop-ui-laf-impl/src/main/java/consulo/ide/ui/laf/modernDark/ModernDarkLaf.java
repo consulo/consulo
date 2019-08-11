@@ -26,6 +26,7 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.desktop.util.awt.laf.BuildInLookAndFeel;
+import consulo.ide.ui.laf.BaseLookAndFeel;
 import sun.awt.AppContext;
 
 import javax.annotation.Nonnull;
@@ -53,7 +54,7 @@ import java.util.Properties;
  * @author VISTALL
  * @since 02.03.14
  */
-public class ModernDarkLaf extends BasicLookAndFeel implements BuildInLookAndFeel {
+public class ModernDarkLaf extends BaseLookAndFeel implements BuildInLookAndFeel {
   BasicLookAndFeel base;
 
   public ModernDarkLaf() {
@@ -88,8 +89,9 @@ public class ModernDarkLaf extends BasicLookAndFeel implements BuildInLookAndFee
     e.printStackTrace();
   }
 
+  @Nonnull
   @Override
-  public UIDefaults getDefaults() {
+  public UIDefaults getDefaultsImpl(UIDefaults superDefaults) {
     try {
       final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod("getDefaults");
       superMethod.setAccessible(true);
@@ -107,6 +109,9 @@ public class ModernDarkLaf extends BasicLookAndFeel implements BuildInLookAndFee
       }
 
       LafManagerImplUtil.initInputMapDefaults(defaults);
+      LafManagerImplUtil.insertCustomComponentUI(defaults);
+      defaults.put("ClassLoader", getClass().getClassLoader());
+
       initIdeaDefaults(defaults);
       patchStyledEditorKit(defaults);
       patchComboBox(metalDefaults, defaults);
@@ -122,7 +127,7 @@ public class ModernDarkLaf extends BasicLookAndFeel implements BuildInLookAndFee
     catch (Exception e) {
       log(e);
     }
-    return super.getDefaults();
+    return super.getDefaultsImpl(superDefaults);
   }
 
   protected DefaultMetalTheme createMetalTheme() {
