@@ -45,13 +45,16 @@ public class PathManager {
   @Deprecated
   public static final String OLD_PROPERTIES_FILE = "idea.properties.file";
   public static final String PROPERTIES_FILE = "consulo.properties.file";
+
   public static final String PROPERTY_SYSTEM_PATH = "idea.system.path";
   public static final String PROPERTY_SCRATCH_PATH = "idea.scratch.path";
   public static final String PROPERTY_CONFIG_PATH = "idea.config.path";
   @Deprecated
   @DeprecationInfo("See ApplicationProperties#CONSULO_PLUGINS_PATHS")
   public static final String PROPERTY_PLUGINS_PATH = ApplicationProperties.IDEA_PLUGINS_PATH;
-  public static final String PROPERTY_HOME_PATH = "idea.home.path";
+  public static final String PROPERTY_HOME_PATH = "consulo.home.path";
+  @Deprecated
+  public static final String OLD_PROPERTY_HOME_PATH = "idea.home.path";
   public static final String PROPERTY_LOG_PATH = "idea.log.path";
 
   private static final String PLATFORM_FOLDER = "platform";
@@ -76,9 +79,14 @@ public class PathManager {
   public static String getHomePath() {
     if (ourHomePath != null) return ourHomePath;
 
-    String fromProperty = System.getProperty(PROPERTY_HOME_PATH);
-    if (fromProperty != null) {
-      ourHomePath = getAbsolutePath(fromProperty);
+    if (System.getProperty(PROPERTY_HOME_PATH) != null) {
+      ourHomePath = getAbsolutePath(System.getProperty(PROPERTY_HOME_PATH));
+      if (!new File(ourHomePath).isDirectory()) {
+        throw new RuntimeException("Invalid home path '" + ourHomePath + "'");
+      }
+    }
+    else if (System.getProperty(OLD_PROPERTY_HOME_PATH) != null) {
+      ourHomePath = getAbsolutePath(System.getProperty(OLD_PROPERTY_HOME_PATH));
       if (!new File(ourHomePath).isDirectory()) {
         throw new RuntimeException("Invalid home path '" + ourHomePath + "'");
       }

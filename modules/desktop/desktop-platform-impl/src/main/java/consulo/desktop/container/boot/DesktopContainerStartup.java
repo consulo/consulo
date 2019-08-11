@@ -29,7 +29,7 @@ import com.intellij.ui.AppUIUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.container.boot.ContainerStartup;
 import consulo.container.util.StatCollector;
-import consulo.startup.StartupActionLogger;
+import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -50,6 +50,8 @@ public class DesktopContainerStartup implements ContainerStartup {
     IdeaForkJoinWorkerThreadFactory.setupForkJoinCommonPool();
 
     PathManager.loadProperties();
+
+    StartupUtil.initializeLogger();
 
     Runnable hackAwt = stat.mark("boot.hack.awt");
     UIUtil.hackAWT();
@@ -83,28 +85,14 @@ public class DesktopContainerStartup implements ContainerStartup {
   }
 
   private static void start(StatCollector stat, Runnable appInitalizeMark, String[] args) {
-    StartupActionLogger logger = null;
     try {
-      logger = new StartupActionLogger();
-
-      try {
-        StartupActionScriptManager.executeActionScript(logger);
-      }
-      catch (IOException e) {
-        logger.error(e);
-
-        StartupUtil.showMessage("Plugin Installation Error", e);
-        return;
-      }
+      StartupActionScriptManager.executeActionScript();
     }
-    finally {
-      if (logger != null) {
-        try {
-          logger.close();
-        }
-        catch (IOException ignored) {
-        }
-      }
+    catch (IOException e) {
+      Logger.getInstance(DesktopContainerStartup.class).error(e);
+
+      StartupUtil.showMessage("Plugin Installation Error", e);
+      return;
     }
 
     StartupUtil.prepareAndStart(args, DesktopImportantFolderLocker::new, (newConfigFolder, commandLineArgs) -> {

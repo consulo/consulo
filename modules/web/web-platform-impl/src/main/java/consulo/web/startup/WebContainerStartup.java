@@ -62,7 +62,7 @@ public class WebContainerStartup implements ContainerStartup {
     File homePath = (File)map.get("platformPath");
 
     System.setProperty("java.awt.headless", "true");
-    System.setProperty(PathManager.PROPERTY_HOME_PATH, homePath.getPath());
+    System.setProperty(PathManager.OLD_PROPERTY_HOME_PATH, homePath.getPath());
     System.setProperty(PathManager.PROPERTY_CONFIG_PATH, homePath.getPath() + "/.config/sandbox/config");
     System.setProperty(PathManager.PROPERTY_SYSTEM_PATH, homePath.getPath() + "/.config/sandbox/system");
 

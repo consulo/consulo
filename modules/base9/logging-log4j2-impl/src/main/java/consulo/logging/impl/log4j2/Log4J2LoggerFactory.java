@@ -15,6 +15,7 @@
  */
 package consulo.logging.impl.log4j2;
 
+import com.intellij.idea.StartupUtil;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -22,10 +23,13 @@ import consulo.application.ApplicationProperties;
 import consulo.logging.Logger;
 import consulo.logging.internal.LoggerFactory;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LifeCycle;
 import org.apache.logging.log4j.core.config.ConfigurationSource;
 import org.apache.logging.log4j.core.config.Configurator;
+import org.apache.logging.log4j.core.util.ShutdownCallbackRegistry;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -39,10 +43,13 @@ public class Log4J2LoggerFactory implements LoggerFactory {
   private static final String APPLICATION_MACRO = "$APPLICATION_DIR$";
   private static final String LOG_DIR_MACRO = "$LOG_DIR$";
 
+  private final LifeCycle myLoggerContext;
+
   public Log4J2LoggerFactory() {
     // map message factory to simple, since default message factory is reusable - and will remap our object to string message, without access to object variant
     System.setProperty("log4j2.messageFactory", "org.apache.logging.log4j.message.SimpleMessageFactory");
-    init();
+    System.setProperty(ShutdownCallbackRegistry.SHUTDOWN_HOOK_ENABLED, "false")
+    myLoggerContext = init();
   }
 
   @Nonnull
@@ -58,10 +65,13 @@ public class Log4J2LoggerFactory implements LoggerFactory {
 
   @Override
   public void shutdown() {
-    LogManager.shutdown();
+    if(myLoggerContext != null) {
+      myLoggerContext.stop();
+    }
   }
 
-  private void init() {
+  @Nullable
+  private static LifeCycle init() {
     try {
       String fileRef = Boolean.getBoolean(ApplicationProperties.CONSULO_MAVEN_CONSOLE_LOG) ? "/log4j2-console.xml" : "/log4j2.xml";
 
@@ -77,10 +87,12 @@ public class Log4J2LoggerFactory implements LoggerFactory {
 
       ConfigurationSource source = new ConfigurationSource(new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8)));
 
-      Configurator.initialize(Log4J2LoggerFactory.class.getClassLoader(), source);
+      return Configurator.initialize(Log4J2LoggerFactory.class.getClassLoader(), source);
     }
     catch (Exception e) {
       e.printStackTrace();
+      StartupUtil.showMessage("Consulo", e);
+      return null;
     }
   }
 }

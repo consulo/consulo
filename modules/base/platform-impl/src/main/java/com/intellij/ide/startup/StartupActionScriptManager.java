@@ -151,28 +151,28 @@ public class StartupActionScriptManager {
   private StartupActionScriptManager() {
   }
 
-  public static synchronized void executeActionScript(Logger logger) throws IOException {
-    List<ActionCommand> commands = loadStartActions(logger);
+  public static synchronized void executeActionScript() throws IOException {
+    List<ActionCommand> commands = loadStartActions(LOG);
 
     for (ActionCommand command : commands) {
-      logger.info("start: load command " + command);
+      LOG.info("start: load command " + command);
     }
 
     for (ActionCommand command : commands) {
       try {
-        logger.info("start: executing command " + command);
-        command.execute(logger);
+        LOG.info("start: executing command " + command);
+        command.execute(LOG);
       }
       catch (IOException e) {
-        logger.error(e);
+        LOG.error(e);
 
         throw e;
       }
     }
 
-    logger.info("start: saved empty list");
+    LOG.info("start: saved empty list");
 
-    saveStartActions(new ArrayList<ActionCommand>());
+    saveStartActions(new ArrayList<>());
   }
 
   public static synchronized void addActionCommand(ActionCommand command) throws IOException {

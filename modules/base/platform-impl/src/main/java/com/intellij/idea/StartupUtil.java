@@ -92,11 +92,6 @@ public class StartupUtil {
     AppUIUtil.updateFrameClass();
     newConfigFolder = !new File(PathManager.getConfigPath()).exists();
 
-    List<LoggerFactory> factories = ContainerUtil.newArrayList(ServiceLoader.load(LoggerFactory.class, StartupUtil.class.getClassLoader()));
-    ContainerUtil.weightSort(factories, LoggerFactory::getPriority);
-    LoggerFactory factory = factories.get(0);
-    LoggerFactoryInitializer.setFactory(factory);
-
     ActivationResult result = lockSystemFolders(lockFactory, args);
     if (result == ActivationResult.ACTIVATED) {
       System.exit(0);
@@ -106,11 +101,18 @@ public class StartupUtil {
     }
 
     Logger log = Logger.getInstance(StartupUtil.class);
-    startLogging(log, factory);
+    logStartupInfo(log);
     loadSystemLibraries(log);
     fixProcessEnvironment(log);
 
     appStarter.consume(newConfigFolder, commandLineArgs);
+  }
+
+  public static void initializeLogger() {
+    List<LoggerFactory> factories = ContainerUtil.newArrayList(ServiceLoader.load(LoggerFactory.class, StartupUtil.class.getClassLoader()));
+    ContainerUtil.weightSort(factories, LoggerFactory::getPriority);
+    LoggerFactory factory = factories.get(0);
+    LoggerFactoryInitializer.setFactory(factory);
   }
 
   private enum ActivationResult {
@@ -197,7 +199,9 @@ public class StartupUtil {
     }
   }
 
-  private static void startLogging(final Logger log, LoggerFactory factory) {
+  private static void logStartupInfo(final Logger log) {
+    LoggerFactory factory = LoggerFactoryInitializer.getFactory();
+
     Runtime.getRuntime().addShutdownHook(new Thread("Shutdown hook - logging") {
       @Override
       public void run() {
