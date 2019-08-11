@@ -214,7 +214,7 @@ public class UIUtil {
     if (ScreenReader.isEnabled(ScreenReader.ATK_WRAPPER)) {
       // Replace AtkWrapper with a dummy Object. It'll be instantiated & GC'ed right away, a NOP.
       System.setProperty("javax.accessibility.assistive_technologies", "java.lang.Object");
-      LOG.info(ScreenReader.ATK_WRAPPER + " is blocked, see IDEA-149219");
+      getLogger().info(ScreenReader.ATK_WRAPPER + " is blocked, see IDEA-149219");
     }
   }
 
@@ -331,8 +331,6 @@ public class UIUtil {
 
   public static Key<Integer> KEEP_BORDER_SIDES = Key.create("keepBorderSides");
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.ui.UIUtil");
-
   private static final Color UNFOCUSED_SELECTION_COLOR = Gray._212;
   private static final Color ACTIVE_HEADER_COLOR = new Color(160, 186, 213);
   private static final Color INACTIVE_HEADER_COLOR = Gray._128;
@@ -418,25 +416,25 @@ public class UIUtil {
       }
       catch (ClassNotFoundException e) {
         // not an Oracle Mac JDK or API has been changed
-        LOG.debug("CGraphicsDevice.getScaleFactor(): not an Oracle Mac JDK or API has been changed");
+        getLogger().debug("CGraphicsDevice.getScaleFactor(): not an Oracle Mac JDK or API has been changed");
       }
       catch (NoSuchMethodException e) {
-        LOG.debug("CGraphicsDevice.getScaleFactor(): not an Oracle Mac JDK or API has been changed");
+        getLogger().debug("CGraphicsDevice.getScaleFactor(): not an Oracle Mac JDK or API has been changed");
       }
 
       try {
         isRetina = getScaleFactorMethod == null || (Integer)getScaleFactorMethod.invoke(device) != 1;
       }
       catch (IllegalAccessException e) {
-        LOG.debug("CGraphicsDevice.getScaleFactor(): Access issue");
+        getLogger().debug("CGraphicsDevice.getScaleFactor(): Access issue");
         isRetina = false;
       }
       catch (InvocationTargetException e) {
-        LOG.debug("CGraphicsDevice.getScaleFactor(): Invocation issue");
+        getLogger().debug("CGraphicsDevice.getScaleFactor(): Invocation issue");
         isRetina = false;
       }
       catch (IllegalArgumentException e) {
-        LOG.debug("object is not an instance of declaring class: " + device.getClass().getName());
+        getLogger().debug("object is not an instance of declaring class: " + device.getClass().getName());
         isRetina = false;
       }
 
@@ -2154,7 +2152,7 @@ public class UIUtil {
         }
       }
       catch (Exception e) {
-        LOG.error(e); //?
+        getLogger().error(e);
       }
     }
   }
@@ -2173,7 +2171,7 @@ public class UIUtil {
       queue.take();
     }
     catch (InterruptedException e) {
-      LOG.error(e);
+      getLogger().error(e);
     }
   }
 
@@ -2512,7 +2510,7 @@ public class UIUtil {
       return styleSheet;
     }
     catch (IOException e) {
-      LOG.warn(url + " loading failed", e);
+      getLogger().warn(url + " loading failed", e);
       return null;
     }
   }
@@ -2700,7 +2698,7 @@ public class UIUtil {
         SwingUtilities.invokeAndWait(runnable);
       }
       catch (Exception e) {
-        LOG.error(e);
+        getLogger().error(e);
       }
     }
   }
@@ -3547,7 +3545,7 @@ public class UIUtil {
         onWindow.getClass().getMethod("setAutoRequestFocus", boolean.class).invoke(onWindow, set);
       }
       catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-        LOG.debug(e);
+        getLogger().debug(e);
       }
     }
   }
@@ -3700,5 +3698,10 @@ public class UIUtil {
         source.removeKeyListener(keyAdapter);
       }
     });
+  }
+
+  @Nonnull
+  public static Logger getLogger() {
+    return Logger.getInstance(UIUtil.class);
   }
 }

@@ -22,8 +22,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ApplicationProperties;
 import consulo.logging.Logger;
 import consulo.logging.internal.LoggerFactory;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.LifeCycle;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.ConfigurationSource;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.core.util.ShutdownCallbackRegistry;
@@ -43,7 +42,7 @@ public class Log4J2LoggerFactory implements LoggerFactory {
   private static final String APPLICATION_MACRO = "$APPLICATION_DIR$";
   private static final String LOG_DIR_MACRO = "$LOG_DIR$";
 
-  private final LifeCycle myLoggerContext;
+  private final LoggerContext myLoggerContext;
 
   public Log4J2LoggerFactory() {
     // map message factory to simple, since default message factory is reusable - and will remap our object to string message, without access to object variant
@@ -55,7 +54,7 @@ public class Log4J2LoggerFactory implements LoggerFactory {
   @Nonnull
   @Override
   public Logger getLoggerInstance(String name) {
-    return new Log4J2Logger(LogManager.getLogger(name));
+    return new Log4J2Logger(myLoggerContext.getLogger(name));
   }
 
   @Override
@@ -65,13 +64,13 @@ public class Log4J2LoggerFactory implements LoggerFactory {
 
   @Override
   public void shutdown() {
-    if(myLoggerContext != null) {
+    if (myLoggerContext != null) {
       myLoggerContext.stop();
     }
   }
 
   @Nullable
-  private static LifeCycle init() {
+  private static LoggerContext init() {
     try {
       String fileRef = Boolean.getBoolean(ApplicationProperties.CONSULO_MAVEN_CONSOLE_LOG) ? "/log4j2-console.xml" : "/log4j2.xml";
 

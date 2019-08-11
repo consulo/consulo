@@ -141,7 +141,6 @@ public class StartupActionScriptManager {
     }
   }
 
-  private static final Logger LOG = Logger.getInstance(StartupActionScriptManager.class);
   @NonNls
   public static final String STARTUP_WIZARD_MODE = "StartupWizardMode";
 
@@ -152,31 +151,33 @@ public class StartupActionScriptManager {
   }
 
   public static synchronized void executeActionScript() throws IOException {
-    List<ActionCommand> commands = loadStartActions(LOG);
+    Logger logger = Logger.getInstance(StartupActionScriptManager.class);
+
+    List<ActionCommand> commands = loadStartActions(logger);
 
     for (ActionCommand command : commands) {
-      LOG.info("start: load command " + command);
+      logger.info("start: load command " + command);
     }
 
     for (ActionCommand command : commands) {
       try {
-        LOG.info("start: executing command " + command);
-        command.execute(LOG);
+        logger.info("start: executing command " + command);
+        command.execute(logger);
       }
       catch (IOException e) {
-        LOG.error(e);
+        logger.error(e);
 
         throw e;
       }
     }
 
-    LOG.info("start: saved empty list");
+    logger.info("start: saved empty list");
 
     saveStartActions(new ArrayList<>());
   }
 
   public static synchronized void addActionCommand(ActionCommand command) throws IOException {
-    addActionCommand(LOG, command);
+    addActionCommand(Logger.getInstance(StartupActionScriptManager.class), command);
   }
 
   public static synchronized void addActionCommand(Logger logger, ActionCommand command) throws IOException {
@@ -238,7 +239,7 @@ public class StartupActionScriptManager {
         return list;
       }
       catch (Exception e) {
-        LOG.error(e);
+        logger.error(e);
         return Collections.emptyList();
       }
     }

@@ -75,7 +75,7 @@ public class StartupUtil {
   }
 
   public static void prepareAndStart(String[] args, BiFunction<String, String, ImportantFolderLocker> lockFactory, PairConsumer<Boolean, CommandLineArgs> appStarter) {
-    boolean newConfigFolder = false;
+    boolean newConfigFolder;
     CommandLineArgs commandLineArgs = CommandLineArgs.parse(args);
 
     if (commandLineArgs.isShowHelp()) {
