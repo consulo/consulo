@@ -27,6 +27,7 @@ import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.impl.source.CharTableImpl;
+import com.intellij.psi.impl.source.resolve.FileContextUtil;
 import com.intellij.psi.impl.source.text.BlockSupportImpl;
 import com.intellij.psi.impl.source.text.DiffLog;
 import com.intellij.psi.impl.source.tree.Factory;
@@ -1869,6 +1870,22 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
     }
 
     return ASTFactory.leaf(type, myLanguageVersion, text);
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public <T> T getUserData(@Nonnull Key<T> key) {
+    return key == FileContextUtil.CONTAINING_FILE_KEY ? (T)myFile : super.getUserData(key);
+  }
+
+  @Override
+  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+    if (key == FileContextUtil.CONTAINING_FILE_KEY) {
+      myFile = (PsiFile)value;
+    }
+    else {
+      super.putUserData(key, value);
+    }
   }
 
   private static class MyList extends ArrayList<ProductionMarker> {
