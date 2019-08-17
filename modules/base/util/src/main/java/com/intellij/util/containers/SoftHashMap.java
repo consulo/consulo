@@ -16,59 +16,60 @@
 package com.intellij.util.containers;
 
 import com.intellij.reference.SoftReference;
+import com.intellij.util.DeprecatedMethodException;
 import gnu.trove.TObjectHashingStrategy;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
 import java.lang.ref.ReferenceQueue;
-import java.util.Map;
 
 /**
  * Soft keys hash map.
  * Null keys are NOT allowed
  * Null values are allowed
+ *
+ * @deprecated use {@link ContainerUtil#createSoftMap()} instead
  */
-public final class SoftHashMap<K,V> extends RefHashMap<K,V> {
-  public SoftHashMap(int initialCapacity, float loadFactor) {
-    super(initialCapacity, loadFactor);
+@Deprecated
+public final class SoftHashMap<K, V> extends RefHashMap<K, V> {
+  /**
+   * Soft keys hash map.
+   * Null keys are NOT allowed
+   * Null values are allowed
+   *
+   * @deprecated use {@link ContainerUtil#createSoftMap()} instead
+   */
+  @Deprecated
+  public SoftHashMap() {
+    DeprecatedMethodException.report("Use ContainerUtil.createSoftMap() instead");
   }
 
-  public SoftHashMap(int initialCapacity) {
+  SoftHashMap(int initialCapacity) {
     super(initialCapacity);
   }
 
-  public SoftHashMap() {
-  }
-
-  public SoftHashMap(@Nonnull Map<K, V> t) {
-    super(t);
-  }
-
-  public SoftHashMap(@Nonnull TObjectHashingStrategy<K> hashingStrategy) {
+  SoftHashMap(@Nonnull TObjectHashingStrategy<? super K> hashingStrategy) {
     super(hashingStrategy);
-  }
-
-  public SoftHashMap(int initialCapacity, float loadFactor, @Nonnull TObjectHashingStrategy<K> strategy) {
-    super(initialCapacity, loadFactor, strategy);
   }
 
   @Nonnull
   @Override
-  protected <T> Key<T> createKey(@Nonnull T k, @Nonnull TObjectHashingStrategy<T> strategy, @Nonnull ReferenceQueue<? super T> q) {
-    return new SoftKey<T>(k, strategy, q);
+  protected <T> Key<T> createKey(@Nonnull T k, @Nonnull TObjectHashingStrategy<? super T> strategy, @Nonnull ReferenceQueue<? super T> q) {
+    return new SoftKey<>(k, strategy, q);
   }
 
   private static class SoftKey<T> extends SoftReference<T> implements Key<T> {
     private final int myHash;  /* Hash code of key, stored here since the key may be tossed by the GC */
     @Nonnull
-    private final TObjectHashingStrategy<T> myStrategy;
+    private final TObjectHashingStrategy<? super T> myStrategy;
 
-    private SoftKey(@Nonnull T k, @Nonnull TObjectHashingStrategy<T> strategy, @Nonnull ReferenceQueue<? super T> q) {
+    private SoftKey(@Nonnull T k, @Nonnull TObjectHashingStrategy<? super T> strategy, @Nonnull ReferenceQueue<? super T> q) {
       super(k, q);
       myStrategy = strategy;
       myHash = strategy.computeHashCode(k);
     }
 
+    @Override
     public boolean equals(Object o) {
       if (this == o) return true;
       if (!(o instanceof Key)) return false;
@@ -79,6 +80,7 @@ public final class SoftHashMap<K,V> extends RefHashMap<K,V> {
       return keyEqual(t, u, myStrategy);
     }
 
+    @Override
     public int hashCode() {
       return myHash;
     }

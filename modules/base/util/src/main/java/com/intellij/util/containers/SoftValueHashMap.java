@@ -16,20 +16,26 @@
 package com.intellij.util.containers;
 
 import com.intellij.reference.SoftReference;
+import com.intellij.util.DeprecatedMethodException;
 import gnu.trove.TObjectHashingStrategy;
 import javax.annotation.Nonnull;
 
 import java.lang.ref.ReferenceQueue;
 
-public final class SoftValueHashMap<K,V> extends RefValueHashMap<K,V>{
+/**
+ * @deprecated use {@link ContainerUtil#createSoftValueMap()} instead
+ */
+@Deprecated
+public final class SoftValueHashMap<K, V> extends RefValueHashMap<K, V> {
   private static class MySoftReference<K, T> extends SoftReference<T> implements MyReference<K, T> {
     private final K key;
 
-    public MySoftReference(@Nonnull K key, T referent, @Nonnull ReferenceQueue<? super T> q) {
+    MySoftReference(@Nonnull K key, T referent, @Nonnull ReferenceQueue<? super T> q) {
       super(referent, q);
       this.key = key;
     }
 
+    @Nonnull
     @Override
     public K getKey() {
       return key;
@@ -37,14 +43,15 @@ public final class SoftValueHashMap<K,V> extends RefValueHashMap<K,V>{
   }
 
   public SoftValueHashMap() {
+    DeprecatedMethodException.report("Use ContainerUtil.createSoftValueMap() instead");
   }
 
-  public SoftValueHashMap(@Nonnull TObjectHashingStrategy<K> strategy) {
+  SoftValueHashMap(@Nonnull TObjectHashingStrategy<K> strategy) {
     super(strategy);
   }
 
   @Override
-  protected MyReference<K, V> createReference(@Nonnull K key, V value, @Nonnull ReferenceQueue<V> queue) {
-    return new MySoftReference<K, V>(key, value, queue);
+  protected MyReference<K, V> createReference(@Nonnull K key, V value, @Nonnull ReferenceQueue<? super V> queue) {
+    return new MySoftReference<>(key, value, queue);
   }
 }

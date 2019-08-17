@@ -72,7 +72,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
   /**
    * This cache contains mapping between icons and disabled icons.
    */
-  private final Map<Icon, Icon> myIcon2DisabledIcon = new WeakHashMap<>(200);
+  private final Map<Icon, Icon> myIcon2DisabledIcon = ContainerUtil.createWeakMap(200);
 
   private static final ImageIcon EMPTY_ICON = new ImageIcon(UIUtil.createImage(1, 1, BufferedImage.TYPE_3BYTE_BGR)) {
     @NonNls

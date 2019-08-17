@@ -21,15 +21,19 @@ import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.Proxy;
 
 /**
  * @author peter
  */
 public class ObjectUtil {
+  /**
+   * @see NotNullizer
+   */
+  public static final Object NULL = sentinel("ObjectUtils.NULL");
+
   private ObjectUtil() {
   }
-
-  public static final Object NULL = new Object();
 
   @Nonnull
   public static <T> T assertNotNull(@Nullable T t) {
@@ -125,5 +129,54 @@ public class ObjectUtil {
       else return mid;
     }
     return -(low + 1);
+  }
+
+  /**
+   * Creates a new object which could be used as sentinel value (special value to distinguish from any other object). It does not equal
+   * to any other object. Usually should be assigned to the static final field.
+   *
+   * @param name an object name, returned from {@link #toString()} to simplify the debugging or heap dump analysis
+   *             (guaranteed to be stored as sentinel object field). If sentinel is assigned to the static final field,
+   *             it's recommended to supply that field name (possibly qualified with the class name).
+   * @return a new sentinel object
+   */
+  @Nonnull
+  public static Object sentinel(@Nonnull String name) {
+    return new Sentinel(name);
+  }
+
+  private static class Sentinel {
+    private final String myName;
+
+    Sentinel(@Nonnull String name) {
+      myName = name;
+    }
+
+    @Override
+    public String toString() {
+      return myName;
+    }
+  }
+
+  /**
+   * Creates an instance of class {@code ofInterface} with its {@link Object#toString()} method returning {@code name}.
+   * No other guarantees about return value behaviour.
+   * {@code ofInterface} must represent an interface class.
+   * Useful for stubs in generic code, e.g. for storing in {@code List<T>} to represent empty special value.
+   */
+  @Nonnull
+  public static <T> T sentinel(@Nonnull final String name, @Nonnull Class<T> ofInterface) {
+    if (!ofInterface.isInterface()) {
+      throw new IllegalArgumentException("Expected interface but got: " + ofInterface);
+    }
+    // java.lang.reflect.Proxy.ProxyClassFactory fails if the class is not available via the classloader.
+    // We must use interface own classloader because classes from plugins are not available via ObjectUtils' classloader.
+    //noinspection unchecked
+    return (T)Proxy.newProxyInstance(ofInterface.getClassLoader(), new Class[]{ofInterface}, (__, method, args) -> {
+      if ("toString".equals(method.getName()) && args.length == 0) {
+        return name;
+      }
+      throw new AbstractMethodError();
+    });
   }
 }

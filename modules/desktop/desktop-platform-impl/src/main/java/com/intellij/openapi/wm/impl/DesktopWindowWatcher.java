@@ -23,7 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.FocusWatcher;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.util.containers.WeakHashMap;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
 import consulo.wm.util.IdeFrameUtil;
@@ -55,7 +55,7 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
 
   private final Object myLock = new Object();
 
-  private final Map<consulo.ui.Window, WindowInfo> myWindow2Info = new WeakHashMap<>();
+  private final Map<consulo.ui.Window, WindowInfo> myWindow2Info = ContainerUtil.createWeakMap();
   private final Application myApplication;
   /**
    * Currenly focused window (window which has focused component). Can be <code>null</code> if there is no focused

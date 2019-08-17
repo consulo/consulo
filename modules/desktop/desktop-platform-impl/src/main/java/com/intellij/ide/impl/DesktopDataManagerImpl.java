@@ -32,7 +32,7 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.ObjectUtil;
-import com.intellij.util.containers.WeakValueHashMap;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.awt.TargetAWT;
 import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.awt.impl.FromSwingWindowWrapper;
@@ -64,7 +64,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
     // that have DataContext as a field.
     private final Reference<Component> myRef;
     private Map<Key, Object> myUserData;
-    private final Map<Key, Object> myCachedData = new WeakValueHashMap<>();
+    private final Map<Key, Object> myCachedData = ContainerUtil.createWeakValueMap();
 
     public MyDataContext(final Component component) {
       myEventCount = -1;
@@ -143,7 +143,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
     private Map<Key, Object> getOrCreateMap() {
       Map<Key, Object> userData = myUserData;
       if (userData == null) {
-        myUserData = userData = new WeakValueHashMap<>();
+        myUserData = userData = ContainerUtil.createWeakValueMap();
       }
       return userData;
     }

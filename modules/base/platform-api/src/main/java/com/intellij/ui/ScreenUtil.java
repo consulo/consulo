@@ -17,11 +17,11 @@ package com.intellij.ui;
 
 import com.intellij.Patches;
 import com.intellij.openapi.util.Pair;
-import com.intellij.util.containers.WeakHashMap;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBInsets;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Area;
@@ -35,7 +35,7 @@ public class ScreenUtil {
   public static final String DISPOSE_TEMPORARY = "dispose.temporary";
 
   @Nullable private static final Map<GraphicsConfiguration, Pair<Insets, Long>> ourInsetsCache =
-          Patches.JDK_BUG_ID_8004103 ? new WeakHashMap<GraphicsConfiguration, Pair<Insets, Long>>() : null;
+          Patches.JDK_BUG_ID_8004103 ? ContainerUtil.createWeakMap() : null;
   private static final int ourInsetsTimeout = 5000;  // shouldn't be too long
 
   private ScreenUtil() { }

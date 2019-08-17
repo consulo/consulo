@@ -17,10 +17,8 @@ package com.intellij.codeInsight.editorActions;
 
 import com.intellij.codeInsight.template.TemplateManager;
 import com.intellij.formatting.FormatConstants;
-import com.intellij.lang.Language;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.formatter.WhiteSpaceFormattingStrategy;
 import com.intellij.ide.DataManager;
+import com.intellij.lang.Language;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.editor.*;
@@ -30,11 +28,13 @@ import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.impl.TextChangeImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
+import com.intellij.psi.formatter.WhiteSpaceFormattingStrategy;
 import com.intellij.psi.formatter.WhiteSpaceFormattingStrategyFactory;
-import com.intellij.util.containers.WeakHashMap;
-import javax.annotation.Nonnull;
+import com.intellij.util.containers.ContainerUtil;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 
 /**
@@ -64,7 +64,7 @@ public class AutoHardWrapHandler {
    * Hence, we remember last auto-wrap change per-document and merge it with the new auto-wrap if necessary. Current collection
    * holds that <code>'document -> last auto-wrap change'</code> mappings.
    */
-  private final Map<Document, AutoWrapChange> myAutoWrapChanges = new WeakHashMap<Document, AutoWrapChange>();
+  private final Map<Document, AutoWrapChange> myAutoWrapChanges = ContainerUtil.createWeakMap();
 
   public static AutoHardWrapHandler getInstance() {
     return INSTANCE;

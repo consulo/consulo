@@ -162,14 +162,4 @@ public class PsiBuilderAdapter implements PsiBuilder {
   public <T> void putUserData(@Nonnull final Key<T> key, @Nullable final T value) {
     myDelegate.putUserData(key, value);
   }
-
-  @Override
-  public <T> T getUserDataUnprotected(@Nonnull final Key<T> key) {
-    return myDelegate.getUserDataUnprotected(key);
-  }
-
-  @Override
-  public <T> void putUserDataUnprotected(@Nonnull final Key<T> key, @Nullable final T value) {
-    myDelegate.putUserDataUnprotected(key, value);
-  }
 }

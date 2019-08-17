@@ -1,16 +1,14 @@
 package com.intellij.openapi.externalSystem.service.remote;
 
-import consulo.util.rmi.RemoteObject;
+import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationEvent;
-import com.intellij.openapi.externalSystem.service.notification.ExternalSystemProgressNotificationManager;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener;
-import com.intellij.util.containers.ConcurrentHashMap;
-import com.intellij.util.containers.ConcurrentHashSet;
+import com.intellij.openapi.externalSystem.service.notification.ExternalSystemProgressNotificationManager;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.util.rmi.RemoteObject;
+
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
-
-import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId;
-
 import java.rmi.RemoteException;
 import java.util.Collections;
 import java.util.Map;
@@ -27,8 +25,7 @@ public class ExternalSystemProgressNotificationManagerImpl extends RemoteObject
 {
 
   private final ConcurrentMap<ExternalSystemTaskNotificationListener, Set<ExternalSystemTaskId>/* EMPTY_SET as a sign of 'all ids' */>
-    myListeners
-    = new ConcurrentHashMap<ExternalSystemTaskNotificationListener, Set<ExternalSystemTaskId>>();
+    myListeners = ContainerUtil.newConcurrentMap();
 
   @Override
   public boolean addNotificationListener(@Nonnull ExternalSystemTaskNotificationListener listener) {
@@ -44,7 +41,7 @@ public class ExternalSystemProgressNotificationManagerImpl extends RemoteObject
         ids = myListeners.get(listener);
       }
       else {
-        ids = myListeners.putIfAbsent(listener, new ConcurrentHashSet<ExternalSystemTaskId>());
+        ids = myListeners.putIfAbsent(listener, ContainerUtil.newConcurrentSet());
       }
     }
     return ids.add(taskId);

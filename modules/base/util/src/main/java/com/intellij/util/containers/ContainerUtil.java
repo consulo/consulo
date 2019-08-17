@@ -389,15 +389,13 @@ public class ContainerUtil extends ContainerUtilRt {
   @Nonnull
   @Contract(pure = true)
   public static <T> Set<T> newConcurrentSet() {
-    //noinspection deprecation
-    return new ConcurrentHashSet<T>();
+    return Collections.newSetFromMap(newConcurrentMap());
   }
 
   @Nonnull
   @Contract(pure = true)
   public static <T> Set<T> newConcurrentSet(@Nonnull TObjectHashingStrategy<T> hashStrategy) {
-    //noinspection deprecation
-    return new ConcurrentHashSet<T>(hashStrategy);
+    return Collections.newSetFromMap(newConcurrentMap(hashStrategy));
   }
 
   @Nonnull
@@ -2963,6 +2961,68 @@ public class ContainerUtil extends ContainerUtilRt {
   public static <K, V> Map<K, V> createWeakValueMap() {
     //noinspection deprecation
     return new WeakValueHashMap<K, V>(ContainerUtil.<K>canonicalStrategy());
+  }
+
+  /**
+   * Soft keys hard values hash map.
+   * Null keys are NOT allowed
+   * Null values are allowed
+   */
+  @Contract(value = " -> new", pure = true)
+  @Nonnull
+  public static <K, V> Map<K, V> createSoftMap() {
+    //noinspection deprecation
+    return new SoftHashMap<>(4);
+  }
+
+  @Contract(value = "_ -> new", pure = true)
+  @Nonnull
+  public static <K, V> Map<K, V> createSoftMap(@Nonnull TObjectHashingStrategy<? super K> strategy) {
+    //noinspection deprecation
+    return new SoftHashMap<K, V>(strategy);
+  }
+
+  /**
+   * Hard keys soft values hash map.
+   * Null keys are NOT allowed
+   * Null values are allowed
+   */
+  @Contract(value = " -> new", pure = true)
+  @Nonnull
+  public static <K, V> Map<K, V> createSoftValueMap() {
+    //noinspection deprecation
+    return new SoftValueHashMap<>(canonicalStrategy());
+  }
+
+  /**
+   * Weak keys hard values hash map.
+   * Null keys are NOT allowed
+   * Null values are allowed
+   */
+  @Contract(value = " -> new", pure = true)
+  @Nonnull
+  public static <K, V> Map<K, V> createWeakMap() {
+    return createWeakMap(4);
+  }
+
+  @Contract(value = "_ -> new", pure = true)
+  @Nonnull
+  public static <K, V> Map<K, V> createWeakMap(int initialCapacity) {
+    return createWeakMap(initialCapacity, 0.8f, canonicalStrategy());
+  }
+
+  @Contract(value = "_, _, _ -> new", pure = true)
+  @Nonnull
+  public static <K, V> Map<K, V> createWeakMap(int initialCapacity, float loadFactor, @Nonnull TObjectHashingStrategy<? super K> strategy) {
+    //noinspection deprecation
+    return new WeakHashMap<K, V>(initialCapacity, loadFactor, strategy);
+  }
+
+  @Contract(value = " -> new", pure = true)
+  @Nonnull
+  public static <K, V> Map<K, V> createWeakKeyWeakValueMap() {
+    //noinspection deprecation
+    return new WeakKeyWeakValueHashMap<>(true);
   }
 }
 

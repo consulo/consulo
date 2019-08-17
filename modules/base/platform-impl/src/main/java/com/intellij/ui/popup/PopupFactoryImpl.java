@@ -27,7 +27,6 @@ import com.intellij.openapi.actionSystem.impl.ActionMenu;
 import com.intellij.openapi.actionSystem.impl.Utils;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.impl.LaterInvocator;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.CaretModel;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.VisualPosition;
@@ -53,10 +52,10 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
-import com.intellij.util.containers.WeakHashMap;
 import com.intellij.util.ui.StatusText;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.logging.Logger;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;
@@ -91,7 +90,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.ui.popup.PopupFactoryImpl");
 
-  private final Map<Disposable, List<Balloon>> myStorage = new WeakHashMap<>();
+  private final Map<Disposable, List<Balloon>> myStorage = ContainerUtil.createWeakMap();
 
   @Nonnull
   @Override

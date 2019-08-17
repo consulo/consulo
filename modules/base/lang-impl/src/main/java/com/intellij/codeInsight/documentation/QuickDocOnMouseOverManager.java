@@ -37,12 +37,12 @@ import com.intellij.psi.*;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.popup.PopupFactoryImpl;
 import com.intellij.util.Alarm;
-import com.intellij.util.containers.WeakHashMap;
+import com.intellij.util.containers.ContainerUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.awt.*;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
@@ -72,10 +72,10 @@ public class QuickDocOnMouseOverManager {
   @Nonnull
   private final Runnable                  myHintCloseCallback   = new MyCloseDocCallback();
   @Nonnull
-  private final Map<Document, Boolean>    myMonitoredDocuments  = new WeakHashMap<>();
+  private final Map<Document, Boolean> myMonitoredDocuments = ContainerUtil.createWeakMap();
 
   private final Map<Editor, Reference<PsiElement> /* PSI element which is located under the current mouse position */> myActiveElements
-          = new WeakHashMap<>();
+          = ContainerUtil.createWeakMap();
 
   /** Holds a reference (if any) to the documentation manager used last time to show an 'auto quick doc' popup. */
   @Nullable
