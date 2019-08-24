@@ -51,6 +51,7 @@ import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.graph.GraphGenerator;
 import consulo.ide.newProject.NewProjectDialog;
+import consulo.ide.newProject.NewProjectPanel;
 import consulo.logging.Logger;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
@@ -368,7 +369,8 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
       Module newModule;
 
       if (dialog.showAndGet()) {
-        newModule = NewProjectUtilPlatform.doCreate(dialog.getProjectPanel(), myModuleModel, moduleDir, false);
+        NewProjectPanel panel = dialog.getProjectPanel();
+        newModule = NewProjectUtilPlatform.doCreate(panel.getWizardContext(), panel.getProcessor(), myModuleModel, moduleDir, false);
       }
       else {
         newModule = null;

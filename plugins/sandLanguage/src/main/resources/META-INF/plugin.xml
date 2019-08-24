@@ -1,4 +1,5 @@
 <consulo-plugin>
+  <id>consulo.sandbox.plugin</id>
   <name>Sand Language</name>
   <platformVersion>SNAPSHOT</platformVersion>
 

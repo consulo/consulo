@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,22 +17,25 @@ package consulo.ide.newProject;
 
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
-import consulo.annotations.DeprecationInfo;
+import consulo.ide.wizard.newModule.NewModuleWizardContext;
+import consulo.ide.wizard.newModule.ProjectOrModuleNameStep;
+import consulo.ui.wizard.WizardStep;
 
 import javax.annotation.Nonnull;
-
-import javax.swing.*;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 05.06.14
+ * @since 2019-08-20
  */
-@Deprecated
-@DeprecationInfo("Use NewModuleBuilderProcessor2")
-public interface NewModuleBuilderProcessor<T extends JComponent> {
+public interface NewModuleBuilderProcessor2<C extends NewModuleWizardContext> {
   @Nonnull
-  T createConfigurationPanel();
+  C createContext(boolean isNewProject);
 
-  default void setupModule(@Nonnull T panel, @Nonnull ContentEntry contentEntry, @Nonnull ModifiableRootModel modifiableRootModel) {
+  default void buildSteps(@Nonnull Consumer<WizardStep<C>> consumer, @Nonnull C context) {
+    consumer.accept(new ProjectOrModuleNameStep<>(context));
+  }
+
+  default void process(@Nonnull C context, @Nonnull ContentEntry contentEntry, @Nonnull ModifiableRootModel modifiableRootModel) {
   }
 }

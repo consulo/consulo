@@ -26,10 +26,11 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.FieldPanel;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.DeprecationInfo;
+import consulo.ide.wizard.newModule.NewModuleWizardContext;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.AttributeSet;
@@ -41,9 +42,9 @@ import java.io.File;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Dec 30, 2003
+ * Date: Dec 30, 2003
  */
-public class NamePathComponent extends JPanel{
+public class NamePathComponent extends JPanel {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.util.projectWizard.NamePathComponent");
 
   private JTextField myTfName;
@@ -63,20 +64,11 @@ public class NamePathComponent extends JPanel{
     this(nameLabelText, pathLabelText, pathChooserTitle, pathChooserDescription, true);
   }
 
-  public NamePathComponent(String nameLabelText,
-                           String pathLabelText,
-                           final String pathChooserTitle,
-                           final String pathChooserDescription,
-                           boolean hideIgnored) {
+  public NamePathComponent(String nameLabelText, String pathLabelText, final String pathChooserTitle, final String pathChooserDescription, boolean hideIgnored) {
     this(nameLabelText, pathLabelText, pathChooserTitle, pathChooserDescription, hideIgnored, true);
   }
 
-  public NamePathComponent(String nameLabelText,
-                           String pathLabelText,
-                           final String pathChooserTitle,
-                           final String pathChooserDescription,
-                           boolean hideIgnored,
-                           boolean bold) {
+  public NamePathComponent(String nameLabelText, String pathLabelText, final String pathChooserTitle, final String pathChooserDescription, boolean hideIgnored, boolean bold) {
     super(new GridBagLayout());
 
     myTfName = new JTextField();
@@ -91,12 +83,10 @@ public class NamePathComponent extends JPanel{
     if (bold) myNameLabel.setFont(UIUtil.getLabelFont().deriveFont(Font.BOLD));
     myNameLabel.setLabelFor(myTfName);
     Insets insets = new Insets(0, 0, 5, 4);
-    this.add(myNameLabel, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-                                                 insets, 0, 0));
+    this.add(myNameLabel, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, insets, 0, 0));
 
     insets = new Insets(0, 0, 5, 0);
-    this.add(myTfName, new GridBagConstraints(1, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
-                                              insets, 0, 0));
+    this.add(myTfName, new GridBagConstraints(1, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, insets, 0, 0));
     // todo: review texts
     final FileChooserDescriptor chooserDescriptor = (FileChooserDescriptor)BrowseFilesListener.SINGLE_DIRECTORY_DESCRIPTOR.clone();
     chooserDescriptor.setHideIgnored(hideIgnored);
@@ -112,30 +102,25 @@ public class NamePathComponent extends JPanel{
     myPathLabel.setLabelFor(myTfPath);
     if (bold) myPathLabel.setFont(UIUtil.getLabelFont().deriveFont(Font.BOLD));
     insets = new Insets(0, 0, 5, 4);
-    this.add(myPathLabel, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-                                                   insets, 0, 0));
+    this.add(myPathLabel, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, insets, 0, 0));
     insets = new Insets(0, 0, 5, 0);
-    this.add(myPathPanel, new GridBagConstraints(1, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
-                                                 insets, 0, 0));
+    this.add(myPathPanel, new GridBagConstraints(1, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, insets, 0, 0));
   }
 
-  public boolean validateNameAndPath(WizardContext context) throws ConfigurationException {
+  public boolean validateNameAndPath(@Nonnull NewModuleWizardContext context) throws ConfigurationException {
     final String name = getNameValue();
     if (name.length() == 0) {
-      final ApplicationInfo info = ApplicationManager.getApplication().getComponent(ApplicationInfo.class);
-      throw new ConfigurationException(
-        IdeBundle.message("prompt.new.project.file.name", info.getVersionName(), context.getPresentationName()));
+      final ApplicationInfo info = ApplicationInfo.getInstance();
+      throw new ConfigurationException(IdeBundle.message("prompt.new.project.file.name", info.getVersionName(), context.getTargetId()));
     }
 
     final String projectFileDirectory = getPath();
     if (projectFileDirectory.length() == 0) {
-      throw new ConfigurationException(IdeBundle.message("prompt.enter.project.file.location", context.getPresentationName()));
+      throw new ConfigurationException(IdeBundle.message("prompt.enter.project.file.location", context.getTargetId()));
     }
 
     final boolean shouldPromptCreation = isPathChangedByUser();
-    if (!ProjectWizardUtil
-      .createDirectoryIfNotExists(IdeBundle.message("directory.project.file.directory", context.getPresentationName()),
-                                  projectFileDirectory, shouldPromptCreation)) {
+    if (!ProjectWizardUtil.createDirectoryIfNotExists(IdeBundle.message("directory.project.file.directory", context.getTargetId()), projectFileDirectory, shouldPromptCreation)) {
       return false;
     }
 
@@ -147,9 +132,43 @@ public class NamePathComponent extends JPanel{
     boolean shouldContinue = true;
     final File projectDir = new File(getPath(), Project.DIRECTORY_STORE_FOLDER);
     if (projectDir.exists()) {
-      int answer = Messages.showYesNoDialog(
-        IdeBundle.message("prompt.overwrite.project.folder", projectDir.getAbsolutePath(), context.getPresentationName()),
-        IdeBundle.message("title.file.already.exists"), Messages.getQuestionIcon());
+      int answer = Messages.showYesNoDialog(IdeBundle.message("prompt.overwrite.project.folder", projectDir.getAbsolutePath(), context.getTargetId()), IdeBundle.message("title.file.already.exists"),
+                                            Messages.getQuestionIcon());
+      shouldContinue = (answer == Messages.YES);
+    }
+
+    return shouldContinue;
+  }
+
+  @Deprecated
+  @DeprecationInfo("Use new step implementation")
+  public boolean validateNameAndPath(WizardContext context) throws ConfigurationException {
+    final String name = getNameValue();
+    if (name.length() == 0) {
+      final ApplicationInfo info = ApplicationManager.getApplication().getComponent(ApplicationInfo.class);
+      throw new ConfigurationException(IdeBundle.message("prompt.new.project.file.name", info.getVersionName(), context.getPresentationName()));
+    }
+
+    final String projectFileDirectory = getPath();
+    if (projectFileDirectory.length() == 0) {
+      throw new ConfigurationException(IdeBundle.message("prompt.enter.project.file.location", context.getPresentationName()));
+    }
+
+    final boolean shouldPromptCreation = isPathChangedByUser();
+    if (!ProjectWizardUtil.createDirectoryIfNotExists(IdeBundle.message("directory.project.file.directory", context.getPresentationName()), projectFileDirectory, shouldPromptCreation)) {
+      return false;
+    }
+
+    final File file = new File(projectFileDirectory);
+    if (file.exists() && !file.canWrite()) {
+      throw new ConfigurationException(String.format("Directory '%s' is not writable!\nPlease choose another project location.", projectFileDirectory));
+    }
+
+    boolean shouldContinue = true;
+    final File projectDir = new File(getPath(), Project.DIRECTORY_STORE_FOLDER);
+    if (projectDir.exists()) {
+      int answer = Messages.showYesNoDialog(IdeBundle.message("prompt.overwrite.project.folder", projectDir.getAbsolutePath(), context.getPresentationName()),
+                                            IdeBundle.message("title.file.already.exists"), Messages.getQuestionIcon());
       shouldContinue = (answer == Messages.YES);
     }
 
@@ -191,7 +210,7 @@ public class NamePathComponent extends JPanel{
   public JTextField getNameComponent() {
     return myTfName;
   }
-  
+
   @Nonnull
   public JLabel getPathLabel() {
     return myPathLabel;
@@ -200,7 +219,7 @@ public class NamePathComponent extends JPanel{
   public JTextField getPathComponent() {
     return myTfPath;
   }
-  
+
   @Nonnull
   public FieldPanel getPathPanel() {
     return myPathPanel;

@@ -15,17 +15,21 @@
  */
 package consulo.ide.newProject;
 
+import com.intellij.CommonBundle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.ArrayUtil;
 import consulo.awt.TargetAWT;
 import consulo.start.WelcomeFrameManager;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 /**
  * @author VISTALL
@@ -36,11 +40,28 @@ public class NewProjectDialog extends DialogWrapper {
 
   private NewProjectPanel myProjectPanel;
 
+  private Runnable myOkAction;
+  private Runnable myBackAction;
+
+  private DialogWrapperAction myBackJAction;
+
+  @RequiredUIAccess
   public NewProjectDialog(@Nullable Project project, @Nullable VirtualFile virtualFile) {
     super(project, true);
     setResizable(false);
 
+    myBackJAction = new DialogWrapperAction(CommonBundle.message("button.back")) {
+      @Override
+      protected void doAction(ActionEvent e) {
+        if(myBackAction != null) {
+          myBackAction.run();
+        }
+      }
+    };
+    myBackJAction.setVisible(false);
+
     myProjectPanel = new NewProjectPanel(getDisposable(), project, virtualFile) {
+      @Nonnull
       @Override
       protected JComponent createSouthPanel() {
         return NewProjectDialog.this.createSouthPanel();
@@ -49,6 +70,22 @@ public class NewProjectDialog extends DialogWrapper {
       @Override
       public void setOKActionEnabled(boolean enabled) {
         NewProjectDialog.this.setOKActionEnabled(enabled);
+      }
+
+      @Override
+      public void setOKActionText(@Nonnull String text) {
+        NewProjectDialog.this.setOKButtonText(text);
+      }
+
+      @Override
+      public void setOKAction(@Nullable Runnable action) {
+        myOkAction = action;
+      }
+
+      @Override
+      public void setBackAction(@Nullable Runnable action) {
+        myBackAction = action;
+        myBackJAction.setVisible(action != null);
       }
     };
 
@@ -64,6 +101,29 @@ public class NewProjectDialog extends DialogWrapper {
     return myProjectPanel;
   }
 
+  @Nonnull
+  @Override
+  protected Action[] createActions() {
+    return ArrayUtil.prepend(myBackJAction, super.createActions());
+  }
+
+  @Override
+  protected void doOKAction() {
+    if (myOkAction != null) {
+      myOkAction.run();
+    }
+    else {
+      super.doOKAction();
+    }
+  }
+
+  @Override
+  protected void dispose() {
+    myProjectPanel.dispose();
+
+    super.dispose();
+  }
+
   @Override
   protected void initRootPanel(@Nonnull JPanel root) {
     root.add(myProjectPanel, BorderLayout.CENTER);
@@ -77,6 +137,7 @@ public class NewProjectDialog extends DialogWrapper {
     return "NewProjectDialog";
   }
 
+  @RequiredUIAccess
   @Nullable
   @Override
   public JComponent getPreferredFocusedComponent() {

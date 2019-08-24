@@ -31,6 +31,7 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ide.newProject.NewProjectPanel;
 import consulo.ui.RequiredUIAccess;
 import consulo.ide.newProject.NewProjectDialog;
 import consulo.moduleImport.ModuleImportContext;
@@ -66,7 +67,8 @@ public class NewModuleAction extends AnAction implements DumbAware {
 
     NewProjectDialog dialog = new NewProjectDialog(project, moduleDir);
     if (dialog.showAndGet()) {
-      NewProjectUtilPlatform.doCreate(dialog.getProjectPanel(), project, moduleDir);
+      NewProjectPanel panel = dialog.getProjectPanel();
+      NewProjectUtilPlatform.doCreate(panel.getWizardContext(), panel.getProcessor(), project, moduleDir);
     }
   }
 

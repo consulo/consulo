@@ -32,10 +32,13 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.platform.DefaultProjectOpenProcessor;
 import com.intellij.util.ui.JBUI;
 import consulo.application.WriteThreadOption;
+import consulo.ide.newProject.NewModuleBuilderProcessor2;
 import consulo.ide.newProject.NewProjectDialog;
 import consulo.ide.newProject.NewProjectPanel;
 import consulo.ide.welcomeScreen.WelcomeScreenSlideAction;
 import consulo.ide.welcomeScreen.WelcomeScreenSlider;
+import consulo.ide.wizard.newModule.NewModuleWizardContext;
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 
@@ -44,15 +47,23 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.util.Objects;
 
 /**
  * @author VISTALL
  */
 public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAware {
+  private static final Logger LOG = Logger.getInstance(NewProjectAction.class);
+
   static class SlideNewProjectPanel extends NewProjectPanel {
     private final WelcomeScreenSlider owner;
+    private JButton myBackButton;
     private JButton myOkButton;
 
+    private Runnable myOkAction;
+    private Runnable myBackAction;
+
+    @RequiredUIAccess
     public SlideNewProjectPanel(@Nonnull Disposable parentDisposable, WelcomeScreenSlider owner, @Nullable Project project, @Nullable VirtualFile virtualFile) {
       super(parentDisposable, project, virtualFile);
       this.owner = owner;
@@ -64,8 +75,31 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
     }
 
     @Override
+    public void setOKActionText(@Nonnull String text) {
+      myOkButton.setText(text);
+    }
+
+    @Override
+    public void setBackAction(Runnable backAction) {
+      myBackAction = backAction;
+      myBackButton.setVisible(myBackAction != null);
+    }
+
+    @Override
+    public void setOKAction(@Nullable Runnable action) {
+      myOkAction = action;
+    }
+
+    @Nonnull
+    @Override
     protected JPanel createSouthPanel() {
-      JPanel buttonsPanel = new JPanel(new GridLayout(1, 2, SystemInfo.isMacOSLeopard ? 0 : 5, 0));
+      JPanel buttonsPanel = new JPanel(new GridLayout(1, 3, SystemInfo.isMacOSLeopard ? 0 : 5, 0));
+
+      myBackButton = new JButton(CommonBundle.message("button.back"));
+      myBackButton.addActionListener(e -> Objects.requireNonNull(myBackAction).run());
+      myBackButton.setVisible(false);
+      buttonsPanel.add(myBackButton);
+
       myOkButton = new JButton(CommonBundle.getOkButtonText()) {
         @Override
         public boolean isDefaultButton() {
@@ -75,7 +109,7 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
       myOkButton.setMargin(JBUI.insets(2, 16));
       myOkButton.setEnabled(false);
 
-      myOkButton.addActionListener(e -> generateProject(null, this));
+      myOkButton.addActionListener(e -> doOkAction());
       buttonsPanel.add(myOkButton);
 
       JButton cancelButton = new JButton(CommonBundle.getCancelButtonText());
@@ -84,6 +118,16 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
       buttonsPanel.add(cancelButton);
 
       return JBUI.Panels.simplePanel().addToRight(buttonsPanel);
+    }
+
+    @RequiredUIAccess
+    protected void doOkAction() {
+      if (myOkAction != null) {
+        myOkAction.run();
+      }
+      else {
+        generateProject(null, this);
+      }
     }
   }
 
@@ -108,17 +152,24 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
 
   @RequiredUIAccess
   protected static void generateProject(Project project, @Nonnull final NewProjectPanel projectPanel) {
+    NewModuleWizardContext context = projectPanel.getWizardContext();
+    NewModuleBuilderProcessor2<NewModuleWizardContext> processor = projectPanel.getProcessor();
+    if (processor == null || context == null) {
+      LOG.error("Impossible situation. Calling generate project with null data: " + processor + "/" + context);
+      return;
+    }
+
     if (WriteThreadOption.isSubWriteThreadSupported()) {
-      generateProjectAsync(project, projectPanel);
+      generateProjectAsync(project, context, processor);
     }
     else {
-      generateProjectOld(project, projectPanel);
+      generateProjectOld(project, context, processor);
     }
   }
 
   @RequiredUIAccess
-  private static void generateProjectOld(Project project, @Nonnull final NewProjectPanel projectPanel) {
-    final File location = new File(projectPanel.getLocationText());
+  private static void generateProjectOld(Project project, @Nonnull NewModuleWizardContext context, @Nonnull NewModuleBuilderProcessor2 processor) {
+    final File location = new File(context.getPath());
     final int childCount = location.exists() ? location.list().length : 0;
     if (!location.exists() && !location.mkdirs()) {
       Messages.showErrorDialog(project, "Cannot create directory '" + location + "'", "Create Project");
@@ -136,12 +187,12 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
     }
 
     RecentProjectsManager.getInstance().setLastProjectCreationLocation(location.getParent());
-    DefaultProjectOpenProcessor.doOpenProject(baseDir, null, false, -1, project1 -> NewProjectUtilPlatform.doCreate(projectPanel, project1, baseDir));
+    DefaultProjectOpenProcessor.doOpenProject(baseDir, null, false, -1, project1 -> NewProjectUtilPlatform.doCreate(context, processor, project1, baseDir));
   }
 
   @RequiredUIAccess
-  private static void generateProjectAsync(Project project, @Nonnull final NewProjectPanel projectPanel) {
-    final File location = new File(projectPanel.getLocationText());
+  private static void generateProjectAsync(Project project, @Nonnull NewModuleWizardContext context, @Nonnull NewModuleBuilderProcessor2 processor) {
+    final File location = new File(context.getPath());
     final int childCount = location.exists() ? location.list().length : 0;
     if (!location.exists() && !location.mkdirs()) {
       Messages.showErrorDialog(project, "Cannot create directory '" + location + "'", "Create Project");
@@ -162,7 +213,7 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
 
     UIAccess uiAccess = UIAccess.current();
     ProjectManager.getInstance().openProjectAsync(baseDir, uiAccess).doWhenDone((openedProject) -> {
-      uiAccess.give(() -> NewProjectUtilPlatform.doCreate(projectPanel, openedProject, baseDir));
+      uiAccess.give(() -> NewProjectUtilPlatform.doCreate(context, processor, openedProject, baseDir));
     });
   }
 }

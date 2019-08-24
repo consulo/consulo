@@ -95,6 +95,14 @@ public class ProjectNameStep extends ModuleWizardStep {
     }
   }
 
+  public String getProjectFileDirectory() {
+    return myNamePathComponent.getPath();
+  }
+
+  public String getProjectName() {
+    return myNamePathComponent.getNameValue();
+  }
+
   @Override
   public Icon getIcon() {
     return myWizardContext.getStepIcon();
@@ -110,13 +118,7 @@ public class ProjectNameStep extends ModuleWizardStep {
     return "reference.dialogs.new.project.fromCode.name";
   }
 
-  public String getProjectFileDirectory() {
-    return myNamePathComponent.getPath();
-  }
 
-  public String getProjectName() {
-    return myNamePathComponent.getNameValue();
-  }
 
   @Override
   public boolean validate(@Nonnull WizardContext wizardContext) throws ConfigurationException {

@@ -30,8 +30,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
-import consulo.ide.newProject.NewModuleBuilderProcessor;
-import consulo.ide.newProject.NewProjectPanel;
+import consulo.ide.newProject.NewModuleBuilderProcessor2;
+import consulo.ide.wizard.newModule.NewModuleWizardContext;
 import consulo.roots.impl.ExcludedContentFolderTypeProvider;
 
 import javax.annotation.Nonnull;
@@ -49,20 +49,28 @@ public class NewProjectUtilPlatform {
 
   @Nonnull
   @RequiredReadAction
-  public static Module doCreate(@Nonnull NewProjectPanel projectPanel, @Nonnull final Project project, @Nonnull final VirtualFile baseDir) {
-    return doCreate(projectPanel, ModuleManager.getInstance(project).getModifiableModel(), baseDir, true);
+  public static Module doCreate(@Nonnull NewModuleWizardContext context, @Nonnull NewModuleBuilderProcessor2 processor, @Nonnull final Project project, @Nonnull final VirtualFile baseDir) {
+    return doCreate(context, processor, ModuleManager.getInstance(project).getModifiableModel(), baseDir, true);
   }
 
   @Nonnull
-  public static Module doCreate(@Nonnull NewProjectPanel projectPanel, @Nonnull final ModifiableModuleModel modifiableModel, @Nonnull final VirtualFile baseDir, final boolean requireModelCommit) {
-    return WriteAction.compute(() -> doCreateImpl(projectPanel, modifiableModel, baseDir, requireModelCommit));
+  public static Module doCreate(@Nonnull NewModuleWizardContext context,
+                                @Nonnull NewModuleBuilderProcessor2 processor,
+                                @Nonnull final ModifiableModuleModel modifiableModel,
+                                @Nonnull final VirtualFile baseDir,
+                                final boolean requireModelCommit) {
+    return WriteAction.compute(() -> doCreateImpl(context, processor, modifiableModel, baseDir, requireModelCommit));
   }
 
   @SuppressWarnings("unchecked")
   @Nonnull
   @RequiredWriteAction
-  private static Module doCreateImpl(@Nonnull NewProjectPanel projectPanel, @Nonnull final ModifiableModuleModel modifiableModel, @Nonnull final VirtualFile baseDir, boolean requireModelCommit) {
-    String name = StringUtil.notNullize(projectPanel.getNameText(), baseDir.getName());
+  private static Module doCreateImpl(@Nonnull NewModuleWizardContext context,
+                                     @Nonnull NewModuleBuilderProcessor2 processor,
+                                     @Nonnull ModifiableModuleModel modifiableModel,
+                                     @Nonnull VirtualFile baseDir,
+                                     boolean requireModelCommit) {
+    String name = StringUtil.notNullize(context.getName(), baseDir.getName());
 
     Module newModule = modifiableModel.newModule(name, baseDir.getPath());
 
@@ -70,14 +78,11 @@ public class NewProjectUtilPlatform {
     ModifiableRootModel modifiableModelForModule = moduleRootManager.getModifiableModel();
     ContentEntry contentEntry = modifiableModelForModule.addContentEntry(baseDir);
 
-    if (!projectPanel.isModuleCreation()) {
+    if (context.isNewProject()) {
       contentEntry.addFolder(contentEntry.getUrl() + "/" + Project.DIRECTORY_STORE_FOLDER, ExcludedContentFolderTypeProvider.getInstance());
     }
 
-    NewModuleBuilderProcessor processor = projectPanel.getProcessor();
-    if (processor != null) {
-      processor.setupModule(projectPanel.getConfigurationPanel(), contentEntry, modifiableModelForModule);
-    }
+    processor.process(context, contentEntry, modifiableModelForModule);
 
     modifiableModelForModule.commit();
 

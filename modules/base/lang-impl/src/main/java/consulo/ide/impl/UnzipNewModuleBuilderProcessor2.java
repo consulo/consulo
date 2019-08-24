@@ -15,17 +15,16 @@
  */
 package consulo.ide.impl;
 
-import consulo.annotations.DeprecationInfo;
-import consulo.logging.Logger;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.io.ZipUtil;
-import consulo.ide.newProject.NewModuleBuilderProcessor;
-import javax.annotation.Nonnull;
+import consulo.ide.newProject.NewModuleBuilderProcessor2;
+import consulo.ide.wizard.newModule.NewModuleWizardContext;
+import consulo.logging.Logger;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,14 +33,12 @@ import java.io.InputStream;
  * @author VISTALL
  * @since 05.06.14
  */
-@Deprecated
-@DeprecationInfo("Use UnzipNewModuleBuilderProcessor2")
-public abstract class UnzipNewModuleBuilderProcessor<T extends JComponent> implements NewModuleBuilderProcessor<T> {
-  private static final Logger LOG = Logger.getInstance(UnzipNewModuleBuilderProcessor.class);
+public abstract class UnzipNewModuleBuilderProcessor2<C extends NewModuleWizardContext> implements NewModuleBuilderProcessor2<C> {
+  private static final Logger LOG = Logger.getInstance(UnzipNewModuleBuilderProcessor2.class);
 
   private final String myPath;
 
-  public UnzipNewModuleBuilderProcessor(String path) {
+  public UnzipNewModuleBuilderProcessor2(String path) {
     myPath = path;
   }
 

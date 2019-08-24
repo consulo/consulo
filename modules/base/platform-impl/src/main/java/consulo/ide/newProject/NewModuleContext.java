@@ -15,14 +15,24 @@
  */
 package consulo.ide.newProject;
 
+import com.intellij.openapi.roots.ContentEntry;
+import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.DeprecationInfo;
+import consulo.ide.wizard.newModule.NewModuleWizardContextBase;
+import consulo.ide.wizard.newModule.ProjectOrModuleNameStep;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.ui.wizard.WizardStep;
 
 import javax.annotation.Nonnull;
+import javax.swing.*;
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -32,6 +42,58 @@ public class NewModuleContext {
   public static final String UGROUPED = "ungrouped";
 
   public static class Group implements Comparable<Group> {
+    @SuppressWarnings("deprecation")
+    private static class BridgeStep extends ProjectOrModuleNameStep<BridgeWizardContext> implements WizardStep<BridgeWizardContext> {
+      private NewModuleBuilderProcessor myProcessor;
+
+      private JComponent myComponent;
+
+      private BridgeStep(NewModuleBuilderProcessor processor, BridgeWizardContext context) {
+        super(context);
+        myProcessor = processor;
+      }
+
+      @RequiredUIAccess
+      @Nonnull
+      @Override
+      public consulo.ui.Component getComponent() {
+        throw new UnsupportedOperationException();
+      }
+
+      @RequiredUIAccess
+      @Nonnull
+      @Override
+      public Component getSwingComponent() {
+        Component component = super.getSwingComponent();
+        myAdditionalContentPanel.add(myComponent = myProcessor.createConfigurationPanel(), BorderLayout.NORTH);
+        return component;
+      }
+
+      @Override
+      public void onStepLeave(@Nonnull BridgeWizardContext context) {
+        if (myComponent == null) {
+          throw new IllegalArgumentException("no call #getSwingComponent()");
+        }
+        context.setPanel(myComponent);
+      }
+    }
+
+    private static class BridgeWizardContext extends NewModuleWizardContextBase {
+      private JComponent myPanel;
+
+      public BridgeWizardContext(boolean isNewProject) {
+        super(isNewProject);
+      }
+
+      public void setPanel(JComponent panel) {
+        myPanel = panel;
+      }
+
+      public Component getPanel() {
+        return myPanel;
+      }
+    }
+
     private final Set<Item> myItems = new TreeSet<>();
     private final String myId;
     private final String myName;
@@ -41,8 +103,33 @@ public class NewModuleContext {
       myName = name;
     }
 
-    public void add(String name, Image icon, NewModuleBuilderProcessor<?> processor) {
+    public void add(String name, Image icon, NewModuleBuilderProcessor2<?> processor) {
       myItems.add(new Item(name, icon, processor));
+    }
+
+    @SuppressWarnings({"unchecked", "deprecation"})
+    @Deprecated
+    @DeprecationInfo("Use NewModuleBuilderProcessor2")
+    public void add(String name, Image icon, NewModuleBuilderProcessor<? extends JComponent> processor) {
+      add(name, icon, new NewModuleBuilderProcessor2<BridgeWizardContext>() {
+        @Nonnull
+        @Override
+        public BridgeWizardContext createContext(boolean isNewProject) {
+          return new BridgeWizardContext(isNewProject);
+        }
+
+        @Override
+        public void buildSteps(@Nonnull Consumer<WizardStep<BridgeWizardContext>> consumer, @Nonnull BridgeWizardContext context) {
+          consumer.accept(new BridgeStep(processor, context));
+        }
+
+        @Override
+        public void process(@Nonnull BridgeWizardContext context, @Nonnull ContentEntry contentEntry, @Nonnull ModifiableRootModel modifiableRootModel) {
+          Component panel = context.getPanel();
+          NewModuleBuilderProcessor unchecked = processor;
+          unchecked.setupModule((JComponent)panel, contentEntry, modifiableRootModel);
+        }
+      });
     }
 
     public String getName() {
@@ -62,7 +149,7 @@ public class NewModuleContext {
     public int compareTo(@Nonnull Group o) {
       int weight = getWeight();
       int oWeight = o.getWeight();
-      if(weight != oWeight) {
+      if (weight != oWeight) {
         return oWeight - weight;
       }
 
@@ -77,9 +164,9 @@ public class NewModuleContext {
   public static class Item implements Comparable<Item> {
     private String myName;
     private Image myIcon;
-    private NewModuleBuilderProcessor<?> myProcessor;
+    private NewModuleBuilderProcessor2<?> myProcessor;
 
-    public Item(String name, Image icon, NewModuleBuilderProcessor<?> processor) {
+    public Item(String name, Image icon, NewModuleBuilderProcessor2<?> processor) {
       myName = name;
       myIcon = icon;
       myProcessor = processor;
@@ -93,13 +180,18 @@ public class NewModuleContext {
       return myIcon;
     }
 
-    public NewModuleBuilderProcessor<?> getProcessor() {
+    public NewModuleBuilderProcessor2<?> getProcessor() {
       return myProcessor;
     }
 
     @Override
     public int compareTo(@Nonnull Item o) {
       return myName.compareTo(o.myName);
+    }
+
+    @Override
+    public String toString() {
+      return getName();
     }
   }
 

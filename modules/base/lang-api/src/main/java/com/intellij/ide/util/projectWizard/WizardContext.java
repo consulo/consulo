@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+@Deprecated
 public class WizardContext extends UserDataHolderBase implements Disposable {
   /**
    * a project where the module should be added, can be null => the wizard creates a new project
