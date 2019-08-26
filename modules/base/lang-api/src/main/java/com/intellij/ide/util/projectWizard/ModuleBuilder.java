@@ -15,7 +15,6 @@
  */
 package com.intellij.ide.util.projectWizard;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.ModifiableModuleModel;
@@ -25,7 +24,6 @@ import com.intellij.openapi.module.ModuleWithNameAlreadyExistsException;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
@@ -34,29 +32,24 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.util.EventDispatcher;
-import consulo.ide.util.DefaultModuleBuilder;
 import consulo.logging.Logger;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 @Deprecated
 public abstract class ModuleBuilder extends AbstractModuleBuilder {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.util.projectWizard.ModuleBuilder");
-  protected Sdk myJdk;
   private String myName;
-  @NonNls private String moduleDirPath;
+  @NonNls
+  private String moduleDirPath;
   private String myContentEntryPath;
-  private final Set<ModuleConfigurationUpdater> myUpdaters = new HashSet<ModuleConfigurationUpdater>();
-  private final EventDispatcher<ModuleBuilderListener> myDispatcher = EventDispatcher.create(ModuleBuilderListener.class);
-  private Map<String, Boolean> myAvailableFrameworks;
 
   @javax.annotation.Nullable
   protected final String acceptParameter(String param) {
@@ -68,62 +61,10 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
   }
 
   @Override
-  public ModuleWizardStep[] createWizardSteps(WizardContext wizardContext, ModulesProvider modulesProvider) {
-    DefaultModuleBuilder builder = new DefaultModuleBuilder();
-    return builder.createWizardSteps(wizardContext, modulesProvider);
-  }
-
-  /**
-   * Typically delegates to ModuleType (e.g. JavaModuleType) that is more generic than ModuleBuilder
-   *
-   * @param settingsStep step to be modified
-   * @return callback ({@link com.intellij.ide.util.projectWizard.ModuleWizardStep#validate()}
-   *         and {@link com.intellij.ide.util.projectWizard.ModuleWizardStep#updateDataModel()}
-   *         will be invoked)
-   */
-  @Override
-  @Nullable
-  public ModuleWizardStep modifySettingsStep(SettingsStep settingsStep) {
-/*
-      final ModuleWizardStep step = type.modifySettingsStep(settingsStep, this);
-      final List<WizardInputField> fields = getAdditionalFields();
-      for (WizardInputField field : fields) {
-        field.addToSettings(settingsStep);
-      }
-      return new ModuleWizardStep() {
-        @Override
-        public JComponent getComponent() {
-          return null;
-        }
-
-        @Override
-        public void updateDataModel() {
-          if (step != null) {
-            step.updateDataModel();
-          }
-        }
-
-        @Override
-        public boolean validate() throws ConfigurationException {
-          for (WizardInputField field : fields) {
-            if (!field.validate()) {
-              return false;
-            }
-          }
-          return step == null || step.validate();
-        }
-      };*/
-    return null;
-  }
-
-  @Override
   public void setName(String name) {
     myName = acceptParameter(name);
   }
 
-  public void addModuleConfigurationUpdater(ModuleConfigurationUpdater updater) {
-    myUpdaters.add(updater);
-  }
 
   @Override
   public void setModuleDirPath(@NonNls String path) {
@@ -172,8 +113,7 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
   }
 
   @Nonnull
-  public Module createModule(@Nonnull ModifiableModuleModel moduleModel)
-    throws InvalidDataException, IOException, ModuleWithNameAlreadyExistsException, JDOMException, ConfigurationException {
+  public Module createModule(@Nonnull ModifiableModuleModel moduleModel) throws InvalidDataException, IOException, ModuleWithNameAlreadyExistsException, JDOMException, ConfigurationException {
     LOG.assertTrue(myName != null);
     LOG.assertTrue(moduleDirPath != null);
 
@@ -188,21 +128,18 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
   protected void setupModule(Module module) throws ConfigurationException {
     final ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
     setupRootModel(modifiableModel);
-    for (ModuleConfigurationUpdater updater : myUpdaters) {
-      updater.update(module, modifiableModel);
-    }
+
     modifiableModel.commit();
   }
 
   private void onModuleInitialized(final Module module) {
-    myDispatcher.getMulticaster().moduleCreated(module);
   }
 
   public abstract void setupRootModel(ModifiableRootModel modifiableRootModel) throws ConfigurationException;
 
   @Nonnull
   public Module createAndCommitIfNeeded(@Nonnull Project project, @Nullable ModifiableModuleModel model, boolean runFromProjectWizard)
-    throws InvalidDataException, ConfigurationException, IOException, JDOMException, ModuleWithNameAlreadyExistsException {
+          throws InvalidDataException, ConfigurationException, IOException, JDOMException, ModuleWithNameAlreadyExistsException {
     final ModifiableModuleModel moduleModel = model != null ? model : ModuleManager.getInstance(project).getModifiableModel();
     final Module module = createModule(moduleModel);
     if (model == null) moduleModel.commit();
@@ -226,14 +163,6 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
     return module;
   }
 
-
-  public void addListener(ModuleBuilderListener listener) {
-    myDispatcher.addListener(listener);
-  }
-
-  public void removeListener(ModuleBuilderListener listener) {
-    myDispatcher.removeListener(listener);
-  }
 
   public boolean canCreateModule() {
     return true;
@@ -271,9 +200,6 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
     return null;
   }
 
-  public Icon getNodeIcon() {
-    return  AllIcons.Nodes.Module;
-  }
 
   public String getDescription() {
     return "Module";
@@ -291,27 +217,5 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
     myName = from.getName();
     myContentEntryPath = from.getContentEntryPath();
     moduleDirPath = from.getModuleDirPath();
-  }
-
-  public void setModuleJdk(Sdk jdk) {
-    myJdk = jdk;
-  }
-
-  public Sdk getModuleJdk() {
-    return myJdk;
-  }
-
-  public Map<String, Boolean> getAvailableFrameworks() {
-    return myAvailableFrameworks;
-  }
-
-  public void setAvailableFrameworks(Map<String, Boolean> availableFrameworks) {
-    myAvailableFrameworks = availableFrameworks;
-  }
-
-  public static abstract class ModuleConfigurationUpdater {
-
-    public abstract void update(@Nonnull Module module, @Nonnull ModifiableRootModel rootModel);
-
   }
 }

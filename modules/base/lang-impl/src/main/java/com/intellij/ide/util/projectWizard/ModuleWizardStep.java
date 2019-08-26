@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
+@Deprecated
 public abstract class ModuleWizardStep extends StepAdapter {
   public static final ModuleWizardStep[] EMPTY_ARRAY = new ModuleWizardStep[0];
 

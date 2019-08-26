@@ -22,16 +22,14 @@ import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.UserDataHolderBase;
-import com.intellij.projectImport.ProjectImportBuilder;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.moduleImport.LegacyModuleImportProvider;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
 import gnu.trove.THashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.io.File;
 import java.util.List;
@@ -159,9 +157,7 @@ public class WizardContext extends UserDataHolderBase implements Disposable {
     if (myImportProvider == null) {
       return null;
     }
-    if (myImportProvider instanceof LegacyModuleImportProvider) {
-      return ((LegacyModuleImportProvider)myImportProvider).getProvider().getBuilder();
-    }
+
     throw new IllegalArgumentException();
   }
 
@@ -174,10 +170,6 @@ public class WizardContext extends UserDataHolderBase implements Disposable {
     myImportProvider = projectBuilder;
   }
 
-  @Deprecated
-  public void setProjectBuilder(@Nullable final ProjectImportBuilder projectBuilder) {
-    myImportProvider = new LegacyModuleImportProvider(projectBuilder.getProvider());
-  }
 
   public String getPresentationName() {
     return myProject == null ? IdeBundle.message("project.new.wizard.project.identification") : IdeBundle.message("project.new.wizard.module.identification");

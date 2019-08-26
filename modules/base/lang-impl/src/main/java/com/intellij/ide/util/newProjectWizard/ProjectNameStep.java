@@ -16,15 +16,13 @@
 package com.intellij.ide.util.newProjectWizard;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.util.newProjectWizard.modes.WizardMode;
 import com.intellij.ide.util.projectWizard.*;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.JBUI;
 import consulo.moduleImport.ModuleImportProvider;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -33,6 +31,7 @@ import java.io.File;
  * @author Eugene Zhuravlev
  *         Date: Jul 17, 2007
  */
+@Deprecated
 public class ProjectNameStep extends ModuleWizardStep {
   private final JPanel myPanel;
   protected final JPanel myAdditionalContentPanel;
@@ -64,11 +63,6 @@ public class ProjectNameStep extends ModuleWizardStep {
     myPanel.add(myAdditionalContentPanel,
                 new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 1.0, GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
                                        JBUI.emptyInsets(), 0, 0));
-  }
-
-  @Deprecated
-  public ProjectNameStep(WizardContext wizardContext, @Nullable final WizardMode mode) {
-    this(wizardContext);
   }
 
   @Override

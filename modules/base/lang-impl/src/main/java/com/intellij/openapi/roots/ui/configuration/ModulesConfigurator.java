@@ -22,7 +22,6 @@ import com.intellij.ide.util.newProjectWizard.AddModuleWizard;
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
@@ -40,8 +39,8 @@ import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ModuleProjectStructureElement;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VfsUtilCore;
@@ -57,6 +56,10 @@ import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
 import consulo.roots.ContentFolderScopes;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.fileChooser.FileChooser;
+import org.jetbrains.concurrency.AsyncPromise;
+import org.jetbrains.concurrency.Promise;
+import org.jetbrains.concurrency.Promises;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -315,11 +318,10 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     return doRemoveModule(moduleEditor);
   }
 
-  @Nullable
+  @Nonnull
   @RequiredUIAccess
-  @SuppressWarnings("unchecked")
-  public List<Module> addModule(Component parent, boolean anImport) {
-    if (myProject.isDefault()) return null;
+  public Promise<List<Module>> addModule(Component parent, boolean anImport) {
+    if (myProject.isDefault()) return Promises.rejectedPromise();
 
     if (anImport) {
       Pair<ModuleImportProvider, ModuleImportContext> pair = runModuleWizard(parent, true);
@@ -337,7 +339,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
             getOrCreateModuleEditor(module);
           }
         });
-        return commitedModules;
+        return Promises.resolvedPromise(commitedModules);
       }
     }
     else {
@@ -359,76 +361,37 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
       };
       fileChooserDescriptor.setTitle(ProjectBundle.message("choose.module.home"));
 
-      final VirtualFile moduleDir = FileChooser.chooseFile(fileChooserDescriptor, myProject, null);
+      AsyncPromise<List<Module>> promise = new AsyncPromise<>();
 
-      if (moduleDir == null) {
-        return null;
-      }
+      AsyncResult<VirtualFile> fileChooserAsync = FileChooser.chooseFile(fileChooserDescriptor, myProject, null);
+      fileChooserAsync.doWhenDone(moduleDir -> {
+        final NewProjectDialog dialog = new NewProjectDialog(myProject, moduleDir);
 
-      final NewProjectDialog dialog = new NewProjectDialog(myProject, moduleDir);
-      Module newModule;
+        AsyncResult<Void> dialogAsync = dialog.showAsync();
+        dialogAsync.doWhenDone(() -> {
+          NewProjectPanel panel = dialog.getProjectPanel();
+          Module newModule = NewProjectUtilPlatform.doCreate(panel.getWizardContext(), panel.getProcessor(), myModuleModel, moduleDir, false);
 
-      if (dialog.showAndGet()) {
-        NewProjectPanel panel = dialog.getProjectPanel();
-        newModule = NewProjectUtilPlatform.doCreate(panel.getWizardContext(), panel.getProcessor(), myModuleModel, moduleDir, false);
-      }
-      else {
-        newModule = null;
-      }
+          ApplicationManager.getApplication().runWriteAction(() -> {
+            getOrCreateModuleEditor(newModule);
 
-      if (newModule == null) {
-        return null;
-      }
+            Collections.sort(myModuleEditors, myModuleEditorComparator);
+          });
+          processModuleCountChanged();
 
-      ApplicationManager.getApplication().runWriteAction(() -> {
-        getOrCreateModuleEditor(newModule);
-
-        Collections.sort(myModuleEditors, myModuleEditorComparator);
+          promise.setResult(Collections.singletonList(newModule));
+        });
+        dialogAsync.doWhenRejected(() -> {
+          promise.setError("dialog canceled");
+        });
       });
-      processModuleCountChanged();
-
-      return Collections.singletonList(newModule);
-    }
-    return null;
-  }
-
-  @RequiredUIAccess
-  private Module createModule(final ModuleBuilder builder) {
-    final Exception[] ex = new Exception[]{null};
-    final Module module = ApplicationManager.getApplication().runWriteAction(new Computable<Module>() {
-      @Override
-      @SuppressWarnings({"ConstantConditions"})
-      public Module compute() {
-        try {
-          return builder.createModule(myModuleModel);
-        }
-        catch (Exception e) {
-          ex[0] = e;
-          return null;
-        }
-      }
-    });
-    if (ex[0] != null) {
-      Messages.showErrorDialog(ProjectBundle.message("module.add.error.message", ex[0].getMessage()), ProjectBundle.message("module.add.error.title"));
-    }
-    return module;
-  }
-
-  @Nullable
-  @RequiredUIAccess
-  public Module addModule(final ModuleBuilder moduleBuilder) {
-    final Module module = createModule(moduleBuilder);
-    if (module != null) {
-      ApplicationManager.getApplication().runWriteAction(new Runnable() {
-        @Override
-        public void run() {
-          getOrCreateModuleEditor(module);
-          Collections.sort(myModuleEditors, myModuleEditorComparator);
-        }
+      fileChooserAsync.doWhenRejected(() -> {
+        promise.setError("rejected from chooser");
       });
-      processModuleCountChanged();
+
+      return promise;
     }
-    return module;
+    return Promises.rejectedPromise();
   }
 
   @Nullable

@@ -292,9 +292,6 @@
     <extensionPoint name="packaging.sourceItemProvider" interface="com.intellij.packaging.ui.PackagingSourceItemsProvider"/>
     <extensionPoint name="packaging.artifactType" interface="com.intellij.packaging.artifacts.ArtifactType"/>
 
-    <!--new project wizard-->
-    <extensionPoint name="projectImportProvider" interface="com.intellij.projectImport.ProjectImportProvider"/>
-    <extensionPoint name="projectImportBuilder" interface="com.intellij.projectImport.ProjectImportBuilder"/>
     <extensionPoint name="moduleImportProvider" interface="consulo.moduleImport.ModuleImportProvider"/>
 
     <extensionPoint name="codeInsight.wordCompletionFilter" beanClass="com.intellij.lang.LanguageExtensionPoint">

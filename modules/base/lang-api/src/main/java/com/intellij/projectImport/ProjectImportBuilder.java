@@ -41,7 +41,6 @@ public abstract class ProjectImportBuilder<T> extends ProjectBuilder {
 
   private boolean myUpdate;
   private String myFileToImport;
-  private ProjectImportProvider myProvider;
 
   @Nonnull
   public abstract String getName();
@@ -87,13 +86,5 @@ public abstract class ProjectImportBuilder<T> extends ProjectBuilder {
 
   public void setUpdate(final boolean update) {
     myUpdate = update;
-  }
-
-  public void setProvider(ProjectImportProvider provider) {
-    myProvider = provider;
-  }
-
-  public ProjectImportProvider getProvider() {
-    return myProvider;
   }
 }

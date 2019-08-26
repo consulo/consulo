@@ -30,6 +30,7 @@ import javax.annotation.Nullable;
 
 import java.util.*;
 
+@Deprecated
 public class StepSequence {
   private final List<ModuleWizardStep> myCommonSteps = new ArrayList<ModuleWizardStep>();
   private final List<Pair<ModuleWizardStep, Set<String>>> myCommonFinishingSteps = new ArrayList<Pair<ModuleWizardStep, Set<String>>>();

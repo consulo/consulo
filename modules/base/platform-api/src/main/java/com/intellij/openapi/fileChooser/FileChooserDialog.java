@@ -19,6 +19,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotations.DeprecationInfo;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -46,6 +47,7 @@ public interface FileChooserDialog {
    */
   @Nonnull
   @Deprecated
+  @DeprecationInfo("Use #chooseAsync")
   default VirtualFile[] choose(@Nullable Project project, @Nonnull VirtualFile... toSelect) {
     throw new UnsupportedOperationException("desktop only");
   }

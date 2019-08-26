@@ -34,21 +34,18 @@ import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.projectImport.ProjectImportProvider;
 import com.intellij.util.Function;
 import com.intellij.util.ui.JBUI;
-import consulo.moduleImport.LegacyModuleImportProvider;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.util.Arrays;
 
 /**
  * TODO [VISTALL] we need review this class
@@ -97,37 +94,6 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep> {
     initModuleWizard(project, filePath);
   }
 
-  /**
-   * Import mode
-   */
-  @Deprecated
-  public AddModuleWizard(Project project, String filePath, ProjectImportProvider... importProviders) {
-    super(getImportWizardTitle(project, importProviders), project);
-    myCurrentProject = project;
-    myImportProviders = Arrays.stream(importProviders).map(LegacyModuleImportProvider::new).toArray(ModuleImportProvider[]::new);
-    initModuleWizard(project, filePath);
-  }
-
-  /**
-   * Import mode
-   */
-  @Deprecated
-  public AddModuleWizard(Project project, Component dialogParent, String filePath, ProjectImportProvider... importProviders) {
-    super(getImportWizardTitle(project, importProviders), dialogParent);
-    myCurrentProject = project;
-    myImportProviders = Arrays.stream(importProviders).map(LegacyModuleImportProvider::new).toArray(ModuleImportProvider[]::new);
-    initModuleWizard(project, filePath);
-  }
-
-  @Deprecated
-  private static String getImportWizardTitle(Project project, ProjectImportProvider... providers) {
-    StringBuilder builder = new StringBuilder("Import ");
-    builder.append(project == null ? "Project" : "Module");
-    if (providers.length == 1) {
-      builder.append(" from ").append(providers[0].getName());
-    }
-    return builder.toString();
-  }
 
   private static String getImportWizardTitle(Project project, ModuleImportProvider... providers) {
     StringBuilder builder = new StringBuilder("Import ");

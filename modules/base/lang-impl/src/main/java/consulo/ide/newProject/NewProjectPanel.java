@@ -82,16 +82,6 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel<VirtualFile
     return myWizardContext;
   }
 
-  @Nonnull
-  public String getLocationText() {
-    return "";
-  }
-
-  @Nullable
-  public String getNameText() {
-    return "";
-  }
-
   public boolean isModuleCreation() {
     return myParam != null;
   }
@@ -199,14 +189,14 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel<VirtualFile
 
           if (myParam != null) {
             myWizardContext.setName(myParam.getName());
-            myWizardContext.setName(myParam.getPath());
+            myWizardContext.setPath(myParam.getPath());
           }
           else {
             String baseDir = ProjectUtil.getBaseDir();
             File suggestedProjectDirectory = FileUtil.findSequentNonexistentFile(new File(baseDir), "untitled", "");
 
-            myWizardContext.setPath(suggestedProjectDirectory.getPath());
             myWizardContext.setName(suggestedProjectDirectory.getName());
+            myWizardContext.setPath(suggestedProjectDirectory.getPath());
           }
 
           List<WizardStep<NewModuleWizardContext>> steps = new ArrayList<>();

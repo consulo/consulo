@@ -50,6 +50,7 @@
                 canCloseContents="true"
                 factoryClass="consulo.sandboxPlugin.ide.toolwindow.SandToolWindowFactory"/>
     <newModuleBuilder implementation="consulo.sandboxPlugin.ide.module.SandNewModuleBuilder"/>
+    <moduleImportProvider implementation="consulo.sandboxPlugin.lang.moduleImport.SandModuleImportProvider" />
 
     <remoteServer.type implementation="consulo.sandboxPlugin.ide.remoteServer.SandServerType" />
   </extensions>

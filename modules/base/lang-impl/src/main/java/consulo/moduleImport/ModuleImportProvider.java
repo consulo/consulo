@@ -27,13 +27,16 @@ import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import consulo.annotations.DeprecationInfo;
+import consulo.ide.wizard.newModule.ProjectOrModuleNameStep;
 import consulo.ui.image.Image;
+import consulo.ui.wizard.WizardStep;
 import org.intellij.lang.annotations.Language;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -63,6 +66,7 @@ public interface ModuleImportProvider<C extends ModuleImportContext> {
 
   boolean canImport(@Nonnull File fileOrDirectory);
 
+  @Nonnull
   default List<Module> commit(@Nonnull C context, @Nonnull Project project) {
     return commit(context, project, null, DefaultModulesProvider.createForProject(project), null);
   }
@@ -82,15 +86,8 @@ public interface ModuleImportProvider<C extends ModuleImportContext> {
     return file.isDirectory() ? file.getPath() : file.getParent().getPath();
   }
 
-  default void addSteps(StepSequence sequence, WizardContext context, @Nonnull C moduleImportContext, String id) {
-    ModuleWizardStep[] steps = createSteps(context, moduleImportContext);
-    for (ModuleWizardStep step : steps) {
-      sequence.addSpecificStep(id, step);
-    }
-  }
-
-  default ModuleWizardStep[] createSteps(@Nonnull WizardContext context, @Nonnull C moduleImportContext) {
-    return ModuleWizardStep.EMPTY_ARRAY;
+  default void buildSteps(@Nonnull Consumer<WizardStep<C>> consumer, @Nonnull C context) {
+    consumer.accept(new ProjectOrModuleNameStep<>(context));
   }
 
   @Nonnull
@@ -109,5 +106,16 @@ public interface ModuleImportProvider<C extends ModuleImportContext> {
   @DeprecationInfo("Unused")
   default boolean validate(Project current, Project dest) {
     return true;
+  }
+
+  default void addSteps(StepSequence sequence, WizardContext context, @Nonnull C moduleImportContext, String id) {
+    ModuleWizardStep[] steps = createSteps(context, moduleImportContext);
+    for (ModuleWizardStep step : steps) {
+      sequence.addSpecificStep(id, step);
+    }
+  }
+
+  default ModuleWizardStep[] createSteps(@Nonnull WizardContext context, @Nonnull C moduleImportContext) {
+    return ModuleWizardStep.EMPTY_ARRAY;
   }
 }

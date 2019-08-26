@@ -15,25 +15,14 @@
  */
 package com.intellij.ide.util.projectWizard;
 
-import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author yole
  */
 @Deprecated
 public abstract class AbstractModuleBuilder extends ProjectBuilder {
-  public abstract Icon getNodeIcon();
 
-  public abstract ModuleWizardStep[] createWizardSteps(WizardContext wizardContext, ModulesProvider modulesProvider);
-
-  @Nullable
-  public ModuleWizardStep modifySettingsStep(SettingsStep settingsStep) {
-    return null;
-  }
 
   public abstract void setName(String name);
 
