@@ -58,14 +58,14 @@ import java.util.function.Consumer;
 /**
  * @author Konstantin Bulenkov
  */
-public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
+public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
   private FlatWelcomeFrame myFlatWelcomeFrame;
   public Consumer<List<NotificationType>> myEventListener;
   public Computable<Point> myEventLocation;
 
   @RequiredUIAccess
   public FlatWelcomePanel(FlatWelcomeFrame flatWelcomeFrame) {
-    super(flatWelcomeFrame, null);
+    super(flatWelcomeFrame);
     myFlatWelcomeFrame = flatWelcomeFrame;
 
     final JList projectsList = UIUtil.findComponentOfType(myLeftComponent, JList.class);
@@ -89,14 +89,14 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
 
   @Nonnull
   @Override
-  protected JComponent createLeftComponent(@Nonnull Disposable parentDisposable, Void param) {
+  protected JComponent createLeftComponent(@Nonnull Disposable parentDisposable) {
     return new NewRecentProjectPanel(parentDisposable);
   }
 
   @RequiredUIAccess
   @Override
   @Nonnull
-  protected JComponent createRightComponent(Void param) {
+  protected JComponent createRightComponent() {
     JPanel panel = new JPanel(new BorderLayout());
     JPanel logoPanel = new JPanel(new BorderLayout());
     logoPanel.setBorder(JBUI.Borders.empty(53, 66, 45, 0));

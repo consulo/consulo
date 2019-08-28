@@ -53,7 +53,7 @@ import java.util.List;
  * @author VISTALL
  * @since 14-Sep-16
  */
-public abstract class NewProjectPanel extends BaseWelcomeScreenPanel<VirtualFile> implements Disposable {
+public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements Disposable {
   private static final Logger LOG = Logger.getInstance(NewProjectPanel.class);
 
   private static final String EMPTY_PANEL = "empty-panel";
@@ -62,13 +62,15 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel<VirtualFile
   private WizardSession<NewModuleWizardContext> myWizardSession;
   private NewModuleWizardContext myWizardContext;
   private NewModuleBuilderProcessor2<NewModuleWizardContext> myProcessor;
-
+  @Nullable
+  private final VirtualFile myModuleHome;
 
   private JBList<Object> myList;
 
   @RequiredUIAccess
-  public NewProjectPanel(@Nonnull Disposable parentDisposable, @Nullable Project project, @Nullable VirtualFile virtualFile) {
-    super(parentDisposable, virtualFile);
+  public NewProjectPanel(@Nonnull Disposable parentDisposable, @Nullable Project project, @Nullable VirtualFile moduleHome) {
+    super(parentDisposable);
+    myModuleHome = moduleHome;
     setOKActionText(IdeBundle.message("button.create"));
     setCancelText(CommonBundle.message("button.cancel"));
   }
@@ -84,7 +86,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel<VirtualFile
   }
 
   public boolean isModuleCreation() {
-    return myParam != null;
+    return myModuleHome != null;
   }
 
   @Nonnull
@@ -103,7 +105,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel<VirtualFile
 
   @Nonnull
   @Override
-  protected JComponent createLeftComponent(@Nonnull Disposable parentDisposable, VirtualFile param) {
+  protected JComponent createLeftComponent(@Nonnull Disposable parentDisposable) {
     NewModuleContext context = new NewModuleContext();
 
     NewModuleBuilder.EP_NAME.composite().setupContext(context);
@@ -153,7 +155,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel<VirtualFile
   @Nonnull
   @Override
   @SuppressWarnings({"deprecation", "unchecked", "RequiredXAction"})
-  protected JComponent createRightComponent(VirtualFile param) {
+  protected JComponent createRightComponent() {
     final JPanel panel = new JPanel(new VerticalFlowLayout());
 
     JPanel rightPanel = new JPanel(new BorderLayout());
@@ -165,7 +167,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel<VirtualFile
     rightPanel.add(rightContentPanel, BorderLayout.CENTER);
 
     final JPanel nullPanel = new JPanel(new BorderLayout());
-    JBLabel nodeLabel = new JBLabel("Please select project type", UIUtil.ComponentStyle.SMALL, UIUtil.FontColor.BRIGHTER);
+    JBLabel nodeLabel = new JBLabel(myModuleHome == null ? "Please select project type" : "Please select module type", UIUtil.ComponentStyle.SMALL, UIUtil.FontColor.BRIGHTER);
     nodeLabel.setHorizontalAlignment(SwingConstants.CENTER);
     nullPanel.add(nodeLabel, BorderLayout.CENTER);
 
@@ -191,9 +193,9 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel<VirtualFile
         if (myProcessor != null) {
           myWizardContext = myProcessor.createContext(!isModuleCreation());
 
-          if (myParam != null) {
-            myWizardContext.setName(myParam.getName());
-            myWizardContext.setPath(myParam.getPath());
+          if (myModuleHome != null) {
+            myWizardContext.setName(myModuleHome.getName());
+            myWizardContext.setPath(myModuleHome.getPath());
           }
           else {
             String baseDir = ProjectUtil.getBaseDir();
