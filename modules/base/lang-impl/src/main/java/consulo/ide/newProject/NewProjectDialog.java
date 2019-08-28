@@ -15,12 +15,10 @@
  */
 package consulo.ide.newProject;
 
-import com.intellij.CommonBundle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.ArrayUtil;
 import consulo.awt.TargetAWT;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.RequiredUIAccess;
@@ -29,38 +27,24 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 
 /**
  * @author VISTALL
  * @since 04.06.14
  */
 public class NewProjectDialog extends DialogWrapper {
-  private final boolean myModuleCreation;
-
   private NewProjectPanel myProjectPanel;
 
   private Runnable myOkAction;
-  private Runnable myBackAction;
-
-  private DialogWrapperAction myBackJAction;
+  private Runnable myCancelAction;
 
   @RequiredUIAccess
-  public NewProjectDialog(@Nullable Project project, @Nullable VirtualFile virtualFile) {
+  public NewProjectDialog(@Nullable Project project, @Nullable VirtualFile moduleHome) {
     super(project, true);
     setResizable(false);
 
-    myBackJAction = new DialogWrapperAction(CommonBundle.message("button.back")) {
-      @Override
-      protected void doAction(ActionEvent e) {
-        if(myBackAction != null) {
-          myBackAction.run();
-        }
-      }
-    };
-    myBackJAction.setVisible(false);
-
-    myProjectPanel = new NewProjectPanel(getDisposable(), project, virtualFile) {
+    myProjectPanel = new NewProjectPanel(getDisposable(), project, moduleHome) {
+      @RequiredUIAccess
       @Nonnull
       @Override
       protected JComponent createSouthPanel() {
@@ -78,20 +62,22 @@ public class NewProjectDialog extends DialogWrapper {
       }
 
       @Override
+      public void setCancelText(@Nonnull String text) {
+        NewProjectDialog.this.setCancelButtonText(text);
+      }
+
+      @Override
       public void setOKAction(@Nullable Runnable action) {
         myOkAction = action;
       }
 
       @Override
-      public void setBackAction(@Nullable Runnable action) {
-        myBackAction = action;
-        myBackJAction.setVisible(action != null);
+      public void setCancelAction(@Nullable Runnable action) {
+        myCancelAction = action;
       }
     };
 
-    myModuleCreation = virtualFile != null;
-
-    setTitle(myModuleCreation ? IdeBundle.message("title.add.module") : IdeBundle.message("title.new.project"));
+    setTitle(moduleHome != null ? IdeBundle.message("title.add.module") : IdeBundle.message("title.new.project"));
 
     setOKActionEnabled(false);
     init();
@@ -104,7 +90,17 @@ public class NewProjectDialog extends DialogWrapper {
   @Nonnull
   @Override
   protected Action[] createActions() {
-    return ArrayUtil.prepend(myBackJAction, super.createActions());
+    return new Action[]{getCancelAction(), getOKAction()};
+  }
+
+  @Override
+  public void doCancelAction() {
+    if(myCancelAction != null) {
+      myCancelAction.run();
+    }
+    else {
+      super.doCancelAction();
+    }
   }
 
   @Override
@@ -148,9 +144,5 @@ public class NewProjectDialog extends DialogWrapper {
   @Override
   protected JComponent createCenterPanel() {
     throw new IllegalArgumentException();
-  }
-
-  public boolean isModuleCreation() {
-    return myModuleCreation;
   }
 }

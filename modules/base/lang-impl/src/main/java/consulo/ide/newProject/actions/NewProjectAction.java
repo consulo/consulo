@@ -47,7 +47,6 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -57,11 +56,11 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
 
   static class SlideNewProjectPanel extends NewProjectPanel {
     private final WelcomeScreenSlider owner;
-    private JButton myBackButton;
     private JButton myOkButton;
+    private JButton myCancelButton;
 
     private Runnable myOkAction;
-    private Runnable myBackAction;
+    private Runnable myCancelAction;
 
     @RequiredUIAccess
     public SlideNewProjectPanel(@Nonnull Disposable parentDisposable, WelcomeScreenSlider owner, @Nullable Project project, @Nullable VirtualFile virtualFile) {
@@ -80,9 +79,13 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
     }
 
     @Override
-    public void setBackAction(Runnable backAction) {
-      myBackAction = backAction;
-      myBackButton.setVisible(myBackAction != null);
+    public void setCancelText(@Nonnull String text) {
+      myCancelButton.setText(text);
+    }
+
+    @Override
+    public void setCancelAction(Runnable backAction) {
+      myCancelAction = backAction;
     }
 
     @Override
@@ -90,15 +93,17 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
       myOkAction = action;
     }
 
+    @RequiredUIAccess
     @Nonnull
     @Override
     protected JPanel createSouthPanel() {
-      JPanel buttonsPanel = new JPanel(new GridLayout(1, 3, SystemInfo.isMacOSLeopard ? 0 : 5, 0));
+      JPanel buttonsPanel = new JPanel(new GridLayout(1, 2, SystemInfo.isMacOSLeopard ? 0 : 5, 0));
 
-      myBackButton = new JButton(CommonBundle.message("button.back"));
-      myBackButton.addActionListener(e -> Objects.requireNonNull(myBackAction).run());
-      myBackButton.setVisible(false);
-      buttonsPanel.add(myBackButton);
+      myCancelButton = new JButton(CommonBundle.getCancelButtonText());
+      myCancelButton.setMargin(JBUI.insets(2, 16));
+      myCancelButton.addActionListener(e -> doCancelAction());
+
+      buttonsPanel.add(myCancelButton);
 
       myOkButton = new JButton(CommonBundle.getOkButtonText()) {
         @Override
@@ -112,16 +117,20 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
       myOkButton.addActionListener(e -> doOkAction());
       buttonsPanel.add(myOkButton);
 
-      JButton cancelButton = new JButton(CommonBundle.getCancelButtonText());
-      cancelButton.setMargin(JBUI.insets(2, 16));
-      cancelButton.addActionListener(e -> owner.removeSlide(this));
-      buttonsPanel.add(cancelButton);
-
       return JBUI.Panels.simplePanel().addToRight(buttonsPanel);
     }
 
+    private void doCancelAction() {
+      if (myCancelAction != null) {
+        myCancelAction.run();
+      }
+      else {
+        owner.removeSlide(this);
+      }
+    }
+
     @RequiredUIAccess
-    protected void doOkAction() {
+    private void doOkAction() {
       if (myOkAction != null) {
         myOkAction.run();
       }

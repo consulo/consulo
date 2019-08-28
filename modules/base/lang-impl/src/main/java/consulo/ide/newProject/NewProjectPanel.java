@@ -70,6 +70,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel<VirtualFile
   public NewProjectPanel(@Nonnull Disposable parentDisposable, @Nullable Project project, @Nullable VirtualFile virtualFile) {
     super(parentDisposable, virtualFile);
     setOKActionText(IdeBundle.message("button.create"));
+    setCancelText(CommonBundle.message("button.cancel"));
   }
 
   @Nullable
@@ -87,6 +88,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel<VirtualFile
   }
 
   @Nonnull
+  @RequiredUIAccess
   protected abstract JComponent createSouthPanel();
 
   public abstract void setOKActionEnabled(boolean enabled);
@@ -95,7 +97,9 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel<VirtualFile
 
   public abstract void setOKAction(@Nullable Runnable action);
 
-  public abstract void setBackAction(@Nullable Runnable action);
+  public abstract void setCancelText(@Nonnull String text);
+
+  public abstract void setCancelAction(@Nullable Runnable action);
 
   @Nonnull
   @Override
@@ -262,10 +266,12 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel<VirtualFile
 
       int currentStepIndex = myWizardSession.getCurrentStepIndex();
       if (currentStepIndex != 0) {
-        setBackAction(() -> gotoStep(rightContentPanel, myWizardSession.prev()));
+        setCancelAction(() -> gotoStep(rightContentPanel, myWizardSession.prev()));
+        setCancelText(CommonBundle.message("button.back"));
       }
       else {
-        setBackAction(null);
+        setCancelAction(null);
+        setCancelText(CommonBundle.message("button.cancel"));
       }
 
       setOKActionEnabled(true);
@@ -275,7 +281,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel<VirtualFile
 
       setOKActionText(IdeBundle.message("button.create"));
       setOKAction(null);
-      setBackAction(null);
+      setCancelAction(null);
     }
   }
 
