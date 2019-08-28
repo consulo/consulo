@@ -46,7 +46,6 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.graph.GraphGenerator;
 import consulo.ide.newProject.NewProjectDialog;
@@ -54,6 +53,7 @@ import consulo.ide.newProject.NewProjectPanel;
 import consulo.logging.Logger;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
+import consulo.moduleImport.ui.ModuleImportProcessor;
 import consulo.roots.ContentFolderScopes;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.fileChooser.FileChooser;
@@ -324,7 +324,10 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     if (myProject.isDefault()) return Promises.rejectedPromise();
 
     if (anImport) {
-      Pair<ModuleImportProvider, ModuleImportContext> pair = runModuleWizard(parent, true);
+      AsyncResult<List<Module>> listAsyncResult = ModuleImportProcessor.create(myProject, true);
+
+
+      /*Pair<ModuleImportProvider, ModuleImportContext> pair = runImportWizard(parent);
       if (pair != null) {
         ModuleImportProvider importProvider = pair.getFirst();
         ModuleImportContext importContext = pair.getSecond();
@@ -340,7 +343,9 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
           }
         });
         return Promises.resolvedPromise(commitedModules);
-      }
+      } */
+      
+      // TODO
     }
     else {
       FileChooserDescriptor fileChooserDescriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
@@ -395,18 +400,14 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
   }
 
   @Nullable
-  Pair<ModuleImportProvider, ModuleImportContext> runModuleWizard(Component dialogParent, boolean anImport) {
+  Pair<ModuleImportProvider, ModuleImportContext> runImportWizard(Component dialogParent) {
     AddModuleWizard wizard;
-    if (anImport) {
-      wizard = ImportModuleAction.selectFileAndCreateWizard(myProject, dialogParent);
-      if (wizard == null) return null;
-      if (wizard.getStepCount() == 0) {
-        return Pair.create(wizard.getImportProvider(), wizard.getWizardContext().getModuleImportContext(wizard.getImportProvider()));
-      }
+    wizard = ImportModuleAction.selectFileAndCreateWizard(myProject, dialogParent);
+    if (wizard == null) return null;
+    if (wizard.getStepCount() == 0) {
+      return Pair.create(wizard.getImportProvider(), wizard.getWizardContext().getModuleImportContext(wizard.getImportProvider()));
     }
-    else {
-      wizard = new AddModuleWizard(dialogParent, myProject, this);
-    }
+
     wizard.show();
     if (wizard.isOK()) {
       final ModuleImportProvider<?> builder = wizard.getImportProvider();

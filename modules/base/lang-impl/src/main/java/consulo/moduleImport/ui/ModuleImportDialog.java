@@ -17,33 +17,81 @@ package consulo.moduleImport.ui;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBCardLayout;
+import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.wizard.WizardSession;
+import consulo.ui.wizard.WizardStep;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author VISTALL
  * @since 2019-08-26
  */
-public class ModuleImportDialog extends DialogWrapper {
+public class ModuleImportDialog<C extends ModuleImportContext> extends DialogWrapper {
   @Nonnull
-  private final List<ModuleImportProvider> myModuleImportProviders;
-
+  private final ModuleImportProvider myModuleImportProvider;
+  @Nonnull
   private JPanel myContentPanel;
 
-  protected ModuleImportDialog(@Nullable Project project, @Nonnull List<ModuleImportProvider> moduleImportProviders) {
+  private final WizardSession<C> myWizardSession;
+
+  protected ModuleImportDialog(@Nullable Project project, @Nonnull VirtualFile targetFile, @Nonnull ModuleImportProvider<C> moduleImportProvider) {
     super(project);
-    myModuleImportProviders = moduleImportProviders;
+    myModuleImportProvider = moduleImportProvider;
+
+    C context = moduleImportProvider.createContext();
+
+    String defaultPath = ModuleImportProvider.getDefaultPath(targetFile);
+    context.setPath(defaultPath);
+    context.setName(new File(defaultPath).getName());
+    context.setFileToImport(targetFile.getPath());
+
+    List<WizardStep<C>> steps = new ArrayList<>();
+    moduleImportProvider.buildSteps(steps::add, context);
+
+    myWizardSession = new WizardSession<>(context, steps);
+
+    if (!myWizardSession.hasNext()) {
+      throw new IllegalArgumentException("no steps for show");
+    }
+
+    setTitle("Import from " + moduleImportProvider.getName());
+
+    init();
+    pack();
   }
 
   @Nullable
   @Override
+  @RequiredUIAccess
   protected JComponent createCenterPanel() {
-    myContentPanel = new JPanel(new JBCardLayout());
+    JBCardLayout layout = new JBCardLayout();
+    myContentPanel = new JPanel(layout);
+
+    WizardStep<C> first = myWizardSession.next();
+
+    int currentStepIndex = myWizardSession.getCurrentStepIndex();
+
+    String id = "step-" + currentStepIndex;
+    myContentPanel.add(first.getSwingComponent(), id);
+
+    layout.show(myContentPanel, id);
     return myContentPanel;
+  }
+
+  @Override
+  protected void dispose() {
+    myWizardSession.dispose();
+
+    super.dispose();
   }
 }

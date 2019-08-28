@@ -26,7 +26,6 @@ import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
-import consulo.annotations.DeprecationInfo;
 import consulo.ide.wizard.newModule.ProjectOrModuleNameStep;
 import consulo.ui.image.Image;
 import consulo.ui.wizard.WizardStep;
@@ -94,18 +93,6 @@ public interface ModuleImportProvider<C extends ModuleImportContext> {
   @Language("HTML")
   default String getFileSample() {
     return getName();
-  }
-
-  @Nullable
-  @Deprecated
-  default Image getIconForFile(VirtualFile file) {
-    return null;
-  }
-
-  @Deprecated
-  @DeprecationInfo("Unused")
-  default boolean validate(Project current, Project dest) {
-    return true;
   }
 
   default void addSteps(StepSequence sequence, WizardContext context, @Nonnull C moduleImportContext, String id) {

@@ -35,22 +35,22 @@ import java.util.List;
  * @author VISTALL
  * @since 2019-08-26
  */
-public class SandModuleImportProvider implements ModuleImportProvider<ModuleImportContext> {
+public class Sand2ModuleImportProvider implements ModuleImportProvider<ModuleImportContext> {
   @Nonnull
   @Override
   public String getName() {
-    return "sand";
+    return "sand2";
   }
 
   @Nonnull
   @Override
   public Image getIcon() {
-    return AllIcons.Nodes.Static;
+    return AllIcons.Nodes.ClassInitializer;
   }
 
   @Override
   public boolean canImport(@Nonnull File fileOrDirectory) {
-    return new File(fileOrDirectory, "sand.txt").exists();
+    return new File(fileOrDirectory, "sand2.txt").exists();
   }
 
   @Override
