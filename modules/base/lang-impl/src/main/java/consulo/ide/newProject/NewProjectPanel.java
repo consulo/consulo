@@ -177,7 +177,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
     myList.addListSelectionListener(e -> {
       rightContentPanel.removeAll();
 
-      if(myWizardSession != null) {
+      if (myWizardSession != null) {
         myWizardSession.dispose();
         myWizardSession = null;
       }
@@ -239,7 +239,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
         rightContentLayout.show(rightContentPanel, id);
       }
 
-      updateButtonPresentation( rightContentPanel);
+      updateButtonPresentation(rightContentPanel);
     });
 
     JPanel root = new JPanel(new BorderLayout());
@@ -251,7 +251,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
   }
 
   @RequiredUIAccess
-  private void updateButtonPresentation( JPanel rightContentPanel) {
+  private void updateButtonPresentation(JPanel rightContentPanel) {
     if (myProcessor != null) {
       assert myWizardSession != null;
 
