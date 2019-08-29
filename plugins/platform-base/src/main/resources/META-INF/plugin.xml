@@ -1228,8 +1228,6 @@
                         serviceImplementation="com.intellij.ide.dnd.DnDManagerImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.vfs.encoding.EncodingManager"
                         serviceImplementation="com.intellij.openapi.vfs.encoding.EncodingManagerImpl"/>
-    <applicationService serviceInterface="com.intellij.openapi.fileChooser.FileSystemTreeFactory"
-                        serviceImplementation="com.intellij.openapi.fileChooser.ex.DesktopFileSystemTreeFactoryImpl"/>
     <applicationService serviceInterface="com.intellij.ide.plugins.PluginManagerUISettings"
                         serviceImplementation="com.intellij.ide.plugins.PluginManagerUISettings"/>
     <applicationService serviceImplementation="com.intellij.ide.ui.UISettings"/>
