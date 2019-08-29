@@ -40,8 +40,7 @@ public class NewProjectCheckoutListener implements VcsAwareCheckoutListener {
   @Override
   public boolean processCheckedOutDirectory(Project project, File directory, VcsKey vcsKey) {
     int rc = Messages.showYesNoDialog(project, VcsBundle
-      .message("checkout.create.project.prompt", ProjectDirCheckoutListener.getProductNameWithArticle(), directory.getAbsolutePath()),
-                                      VcsBundle.message("checkout.title"), Messages.getQuestionIcon());
+      .message("checkout.create.project.prompt", directory.getAbsolutePath()), VcsBundle.message("checkout.title"), Messages.getQuestionIcon());
     if (rc == Messages.YES) {
       final ProjectManager pm = ProjectManager.getInstance();
       final Project[] projects = pm.getOpenProjects();

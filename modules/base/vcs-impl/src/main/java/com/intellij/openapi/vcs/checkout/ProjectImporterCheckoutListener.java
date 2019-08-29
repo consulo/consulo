@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.vcs.checkout;
 
+import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vcs.VcsBundle;
@@ -22,6 +23,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.project.ProjectOpenProcessors;
+import consulo.ui.UIAccess;
 
 import java.io.File;
 
@@ -37,11 +39,10 @@ public class ProjectImporterCheckoutListener implements CheckoutListener {
         if (virtualFile != null) {
           final ProjectOpenProcessor openProcessor = ProjectOpenProcessors.getInstance().findProcessor(file);
           if (openProcessor != null) {
-            int rc = Messages.showYesNoDialog(project, VcsBundle
-              .message("checkout.open.project.prompt", ProjectDirCheckoutListener.getProductNameWithArticle(), files[0].getPath()),
+            int rc = Messages.showYesNoDialog(project, VcsBundle .message("checkout.open.project.prompt", files[0].getPath()),
                                               VcsBundle.message("checkout.title"), Messages.getQuestionIcon());
             if (rc == Messages.YES) {
-              openProcessor.doOpenProject(virtualFile, project, false);
+              ProjectUtil.openAsync(virtualFile.getPath(), project, false, UIAccess.current());
             }
             return true;
           }

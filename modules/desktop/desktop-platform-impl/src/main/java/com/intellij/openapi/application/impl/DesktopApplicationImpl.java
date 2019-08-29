@@ -23,7 +23,6 @@ import com.intellij.idea.StartupUtil;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.Attachment;
-import consulo.logging.Logger;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.progress.util.PotemkinProgress;
@@ -45,17 +44,17 @@ import com.intellij.util.Restarter;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.ui.UIUtil;
-import consulo.application.WriteThreadOption;
-import consulo.application.impl.WriteThread;
-import consulo.application.internal.ApplicationWithOwnWriteThread;
-import consulo.desktop.boot.main.windows.WindowsCommandLineProcessor;
-import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.application.ApplicationProperties;
 import consulo.application.ex.ApplicationEx2;
 import consulo.application.impl.BaseApplication;
+import consulo.application.impl.WriteThread;
+import consulo.application.internal.ApplicationWithOwnWriteThread;
+import consulo.desktop.boot.main.windows.WindowsCommandLineProcessor;
 import consulo.injecting.InjectingContainerBuilder;
+import consulo.logging.Logger;
 import consulo.start.CommandLineArgs;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.desktop.internal.AWTUIAccessImpl;
 import org.jetbrains.annotations.NonNls;
@@ -154,15 +153,9 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
       return Thread.currentThread();
     });
 
-    boolean subWriteThread = WriteThreadOption.isSubWriteThreadSupported();
-    mySubWriteThread = subWriteThread ? new WriteThread(this) : null;
+    mySubWriteThread = new WriteThread(this);
 
-    if(subWriteThread) {
-      myLock = new ReadMostlyRWLock(edt, mySubWriteThread);
-    }
-    else {
-      myLock = new ReadMostlyRWLock(edt);
-    }
+    myLock = new ReadMostlyRWLock(edt, mySubWriteThread);
 
     NoSwingUnderWriteAction.watchForEvents(this);
   }

@@ -21,15 +21,22 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
+import consulo.ide.wizard.newModule.ProjectOrModuleNameStep;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
+import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.TextBox;
 import consulo.ui.image.Image;
+import consulo.ui.layout.LabeledLayout;
+import consulo.ui.wizard.WizardStep;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -56,6 +63,20 @@ public class Sand2ModuleImportProvider implements ModuleImportProvider<ModuleImp
   @Override
   public boolean isOnlyForNewImport() {
     return false;
+  }
+
+  @Override
+  public void buildSteps(@Nonnull Consumer<WizardStep<ModuleImportContext>> consumer, @Nonnull ModuleImportContext context) {
+    consumer.accept(new ProjectOrModuleNameStep<>(context));
+
+    consumer.accept(new WizardStep<ModuleImportContext>() {
+      @RequiredUIAccess
+      @Nonnull
+      @Override
+      public Component getComponent() {
+        return LabeledLayout.create("Some Text", TextBox.create("Test Value"));
+      }
+    });
   }
 
   @Nonnull

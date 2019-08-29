@@ -15,19 +15,24 @@
  */
 package consulo.moduleImport.ui;
 
+import com.intellij.CommonBundle;
+import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBCardLayout;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
+import consulo.start.WelcomeFrameManager;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.shared.Size;
 import consulo.ui.wizard.WizardSession;
 import consulo.ui.wizard.WizardStep;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,55 +42,137 @@ import java.util.List;
  * @since 2019-08-26
  */
 public class ModuleImportDialog<C extends ModuleImportContext> extends DialogWrapper {
-  @Nonnull
-  private final ModuleImportProvider myModuleImportProvider;
-  @Nonnull
-  private JPanel myContentPanel;
 
   private final WizardSession<C> myWizardSession;
 
+  private Runnable myNextRunnable;
+  private Runnable myBackRunnable;
+  private final C myContext;
+
   protected ModuleImportDialog(@Nullable Project project, @Nonnull VirtualFile targetFile, @Nonnull ModuleImportProvider<C> moduleImportProvider) {
     super(project);
-    myModuleImportProvider = moduleImportProvider;
 
-    C context = moduleImportProvider.createContext();
+    myContext = moduleImportProvider.createContext();
 
     String defaultPath = ModuleImportProvider.getDefaultPath(targetFile);
-    context.setPath(defaultPath);
-    context.setName(new File(defaultPath).getName());
-    context.setFileToImport(targetFile.getPath());
+    myContext.setPath(defaultPath);
+    myContext.setName(new File(defaultPath).getName());
+    myContext.setFileToImport(targetFile.getPath());
 
     List<WizardStep<C>> steps = new ArrayList<>();
-    moduleImportProvider.buildSteps(steps::add, context);
+    moduleImportProvider.buildSteps(steps::add, myContext);
 
-    myWizardSession = new WizardSession<>(context, steps);
+    myWizardSession = new WizardSession<>(myContext, steps);
 
     if (!myWizardSession.hasNext()) {
       throw new IllegalArgumentException("no steps for show");
     }
 
     setTitle("Import from " + moduleImportProvider.getName());
+    setOKButtonText(IdeBundle.message("button.create"));
+
+    Size size = WelcomeFrameManager.getDefaultWindowSize();
+    setScalableSize(size.getWidth(), size.getHeight());
 
     init();
-    pack();
+  }
+
+  @Nonnull
+  public C getContext() {
+    return myContext;
+  }
+
+  @Nonnull
+  @Override
+  protected Action[] createActions() {
+    return new Action[]{getCancelAction(), getOKAction()};
+  }
+
+  @Override
+  protected void doOKAction() {
+    if (myNextRunnable != null) {
+      myNextRunnable.run();
+    }
+    else {
+      super.doOKAction();
+    }
+  }
+
+  @Override
+  public void doCancelAction() {
+    if (myBackRunnable != null) {
+      myBackRunnable.run();
+    }
+    else {
+      super.doCancelAction();
+    }
+  }
+
+  @Nullable
+  @Override
+  protected String getDimensionServiceKey() {
+    return getClass().getName();
   }
 
   @Nullable
   @Override
   @RequiredUIAccess
+  @SuppressWarnings("deprecation")
   protected JComponent createCenterPanel() {
     JBCardLayout layout = new JBCardLayout();
-    myContentPanel = new JPanel(layout);
+    JPanel contentPanel = new JPanel(layout);
 
     WizardStep<C> first = myWizardSession.next();
 
     int currentStepIndex = myWizardSession.getCurrentStepIndex();
 
     String id = "step-" + currentStepIndex;
-    myContentPanel.add(first.getSwingComponent(), id);
+    contentPanel.add(first.getSwingComponent(), id);
 
-    layout.show(myContentPanel, id);
-    return myContentPanel;
+    layout.show(contentPanel, id);
+
+    updateButtonPresentation(contentPanel);
+    return contentPanel;
+  }
+
+  @RequiredUIAccess
+  @SuppressWarnings("deprecation")
+  private void gotoStep(JPanel rightContentPanel, WizardStep<C> step) {
+    Component swingComponent = step.getSwingComponent();
+
+    String id = "step-" + myWizardSession.getCurrentStepIndex();
+
+    JBCardLayout layout = (JBCardLayout)rightContentPanel.getLayout();
+
+    rightContentPanel.add(swingComponent, id);
+
+    layout.swipe(rightContentPanel, id, JBCardLayout.SwipeDirection.FORWARD);
+
+    updateButtonPresentation(rightContentPanel);
+  }
+
+  private void updateButtonPresentation(JPanel contentPanel) {
+    boolean hasNext = myWizardSession.hasNext();
+
+    if (hasNext) {
+      setOKButtonText(CommonBundle.getNextButtonText());
+      myNextRunnable = () -> gotoStep(contentPanel, myWizardSession.next());
+    }
+    else {
+      setOKButtonText(IdeBundle.message("button.create"));
+      myNextRunnable = null;
+    }
+
+    int currentStepIndex = myWizardSession.getCurrentStepIndex();
+    if (currentStepIndex != 0) {
+      myBackRunnable = () -> gotoStep(contentPanel, myWizardSession.prev());
+
+      setCancelButtonText(CommonBundle.message("button.back"));
+    }
+    else {
+      myBackRunnable = null;
+      setCancelButtonText(CommonBundle.message("button.cancel"));
+    }
   }
 
   @Override

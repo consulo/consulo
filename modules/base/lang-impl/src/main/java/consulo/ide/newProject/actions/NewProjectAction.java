@@ -168,35 +168,7 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
       return;
     }
 
-    if (WriteThreadOption.isSubWriteThreadSupported()) {
-      generateProjectAsync(project, context, processor);
-    }
-    else {
-      generateProjectOld(project, context, processor);
-    }
-  }
-
-  @RequiredUIAccess
-  private static void generateProjectOld(Project project, @Nonnull NewModuleWizardContext context, @Nonnull NewModuleBuilderProcessor2 processor) {
-    final File location = new File(context.getPath());
-    final int childCount = location.exists() ? location.list().length : 0;
-    if (!location.exists() && !location.mkdirs()) {
-      Messages.showErrorDialog(project, "Cannot create directory '" + location + "'", "Create Project");
-      return;
-    }
-
-    final VirtualFile baseDir = WriteAction.compute(() -> LocalFileSystem.getInstance().refreshAndFindFileByIoFile(location));
-    baseDir.refresh(false, true);
-
-    if (childCount > 0) {
-      int rc = Messages.showYesNoDialog(project, "The directory '" + location + "' is not empty. Continue?", "Create New Project", Messages.getQuestionIcon());
-      if (rc == Messages.NO) {
-        return;
-      }
-    }
-
-    RecentProjectsManager.getInstance().setLastProjectCreationLocation(location.getParent());
-    DefaultProjectOpenProcessor.doOpenProject(baseDir, null, false, -1, project1 -> NewProjectUtilPlatform.doCreate(context, processor, project1, baseDir));
+    generateProjectAsync(project, context, processor);
   }
 
   @RequiredUIAccess

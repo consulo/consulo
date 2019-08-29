@@ -15,7 +15,7 @@
  */
 package consulo.application;
 
-import com.intellij.openapi.util.NotNullLazyValue;
+import consulo.annotations.DeprecationInfo;
 import consulo.platform.Platform;
 
 /**
@@ -23,10 +23,10 @@ import consulo.platform.Platform;
  * @since 2019-05-09
  */
 public class WriteThreadOption {
-  private static final NotNullLazyValue<Boolean> ourSubWriteThread = NotNullLazyValue.createValue(() -> Boolean.getBoolean("consulo.sub.write.thread"));
-
+  @Deprecated
+  @DeprecationInfo("Always enabled")
   public static boolean isSubWriteThreadSupported() {
-    return isSeparateWriteThreadSuppored() || ourSubWriteThread.getValue();
+    return true;
   }
 
   public static boolean isSeparateWriteThreadSuppored() {

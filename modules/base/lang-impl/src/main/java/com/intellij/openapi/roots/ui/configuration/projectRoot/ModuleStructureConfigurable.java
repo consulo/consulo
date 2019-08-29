@@ -455,7 +455,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
 
   @RequiredUIAccess
   private void addModule(boolean anImport) {
-    myContext.myModulesConfigurator.addModule(myTree, anImport).onSuccess(modules -> {
+    myContext.myModulesConfigurator.addModule(anImport).onSuccess(modules -> {
       for (Module module : modules) {
         addModuleNode(module);
       }

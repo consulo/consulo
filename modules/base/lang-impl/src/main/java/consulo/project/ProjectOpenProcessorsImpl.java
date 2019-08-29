@@ -19,9 +19,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.platform.DefaultProjectOpenProcessor;
 import com.intellij.projectImport.ProjectOpenProcessor;
-import consulo.moduleImport.ModuleImportBasedProjectOpenProcessor;
-import consulo.moduleImport.ModuleImportProvider;
-import consulo.moduleImport.ModuleImportProviders;
+import consulo.moduleImport.ImportProjectOpenProcessor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -43,10 +41,7 @@ public class ProjectOpenProcessorsImpl implements ProjectOpenProcessors {
     myCacheValue = NotNullLazyValue.createValue(() -> {
       List<ProjectOpenProcessor> processors = new ArrayList<>();
       processors.add(DefaultProjectOpenProcessor.getInstance());
-
-      for (ModuleImportProvider<?> provider : ModuleImportProviders.getExtensions(false)) {
-        processors.add(new ModuleImportBasedProjectOpenProcessor(application, provider));
-      }
+      processors.add(new ImportProjectOpenProcessor(application));
       return processors.toArray(new ProjectOpenProcessor[processors.size()]);
     });
   }

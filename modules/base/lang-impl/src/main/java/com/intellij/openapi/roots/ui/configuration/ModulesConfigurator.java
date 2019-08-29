@@ -46,6 +46,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
+import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.graph.GraphGenerator;
 import consulo.ide.newProject.NewProjectDialog;
@@ -320,17 +321,18 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
 
   @Nonnull
   @RequiredUIAccess
-  public Promise<List<Module>> addModule(Component parent, boolean anImport) {
+  @SuppressWarnings("unchecked")
+  public Promise<List<Module>> addModule(boolean anImport) {
     if (myProject.isDefault()) return Promises.rejectedPromise();
 
     if (anImport) {
-      AsyncResult<List<Module>> listAsyncResult = ModuleImportProcessor.create(myProject, true);
+      AsyncPromise<List<Module>> asyncPromise = new AsyncPromise<>();
+      AsyncResult listAsyncResult = ModuleImportProcessor.showFileChooser(myProject);
 
-
-      /*Pair<ModuleImportProvider, ModuleImportContext> pair = runImportWizard(parent);
-      if (pair != null) {
-        ModuleImportProvider importProvider = pair.getFirst();
-        ModuleImportContext importContext = pair.getSecond();
+      listAsyncResult.doWhenDone(o -> {
+        Pair<ModuleImportContext, ModuleImportProvider> pair = (Pair<ModuleImportContext, ModuleImportProvider>)o;
+        ModuleImportProvider importProvider = pair.getSecond();
+        ModuleImportContext importContext = pair.getFirst();
         assert importProvider != null;
         assert importContext != null;
 
@@ -342,10 +344,11 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
             getOrCreateModuleEditor(module);
           }
         });
-        return Promises.resolvedPromise(commitedModules);
-      } */
-      
-      // TODO
+
+        asyncPromise.setResult(commitedModules);
+      });
+
+      listAsyncResult.doWhenRejected(() -> asyncPromise.setError("rejected"));
     }
     else {
       FileChooserDescriptor fileChooserDescriptor = new FileChooserDescriptor(false, true, false, false, false, false) {

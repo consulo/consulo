@@ -216,7 +216,7 @@ public class NewProjectUtil extends NewProjectUtilPlatform {
       final Project newProject;
       if (importContext == null || !importContext.isUpdate()) {
         String name = wizard.getProjectName();
-        newProject = importProvider == null ? projectManager.newProject(name, projectFilePath, true, false) : projectManager.createProject(name, projectFilePath);
+        newProject = projectManager.createProject(name, projectFilePath);
       }
       else {
         newProject = null;
@@ -241,18 +241,6 @@ public class NewProjectUtil extends NewProjectUtilPlatform {
       if (importProvider != null) {
         importProvider.commit(importContext, newProject, null, ModulesProvider.EMPTY_MODULES_PROVIDER, null);
       }
-
-      final boolean need2OpenProjectStructure = importContext == null || importContext.isOpenProjectSettingsAfter();
-      StartupManager.getInstance(newProject).registerPostStartupActivity((ui) -> {
-        // ensure the dialog is shown after all startup activities are done
-        ui.give(() -> {
-          if (newProject.isDisposed() || isUnitTestMode) return;
-
-          if (need2OpenProjectStructure) {
-            ModulesConfigurator.showDialog(newProject, null, null);
-          }
-        });
-      });
 
       if (!isUnitTestMode) {
         newProject.save();

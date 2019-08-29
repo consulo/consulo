@@ -19,9 +19,6 @@ import com.intellij.CommonBundle;
 import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.RecentProjectsManager;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ex.ProjectEx;
@@ -37,9 +34,9 @@ import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.ui.AppIcon;
 import consulo.annotations.DeprecationInfo;
 import consulo.application.DefaultPaths;
-import consulo.application.WriteThreadOption;
 import consulo.async.ex.PooledAsyncResult;
 import consulo.components.impl.stores.IProjectStore;
+import consulo.logging.Logger;
 import consulo.project.ProjectOpenProcessors;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.Alert;
@@ -136,28 +133,7 @@ public class ProjectUtil {
   @Deprecated
   @DeprecationInfo("Sync variant of #openAsync()")
   public static Project open(@Nonnull final String path, final Project projectToClose, boolean forceOpenInNewFrame) {
-    final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
-
-    if (virtualFile == null) return null;
-
-    ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(VfsUtilCore.virtualToIoFile(virtualFile));
-    if (provider != null) {
-      final Project project = provider.doOpenProject(virtualFile, projectToClose, forceOpenInNewFrame);
-
-      if (project != null) {
-        ApplicationManager.getApplication().invokeLater(() -> {
-          if (!project.isDisposed()) {
-            final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.PROJECT_VIEW);
-            if (toolWindow != null) {
-              toolWindow.activate(null);
-            }
-          }
-        }, ModalityState.NON_MODAL);
-      }
-
-      return project;
-    }
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -165,6 +141,7 @@ public class ProjectUtil {
    * {@link com.intellij.ide.GeneralSettings#OPEN_PROJECT_NEW_WINDOW}
    * {@link com.intellij.openapi.ui.Messages#CANCEL} - if user canceled the dialog
    */
+  @Deprecated
   public static int confirmOpenNewProject(boolean isNewProject) {
     final GeneralSettings settings = GeneralSettings.getInstance();
     int confirmOpenNewProject = settings.getConfirmOpenNewProject();
@@ -223,18 +200,11 @@ public class ProjectUtil {
     }
   }
 
-  /**
-   * Proxy method
-   */
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("use #openAsync() - just rename method reference")
   public static AsyncResult<Project> openOrOpenAsync(@Nonnull final String path, final Project projectToClose, boolean forceOpenInNewFrame, UIAccess uiAccess) {
-    if(WriteThreadOption.isSubWriteThreadSupported()) {
-      return openAsync(path, projectToClose, forceOpenInNewFrame, uiAccess);
-    }
-    else {
-      Project project = uiAccess.giveAndWaitIfNeed(() -> open(path, projectToClose, forceOpenInNewFrame));
-      return project == null ? AsyncResult.rejected() : AsyncResult.resolved(project);
-    }
+    return openAsync(path, projectToClose, forceOpenInNewFrame, uiAccess);
   }
 
   @Nonnull
@@ -248,10 +218,6 @@ public class ProjectUtil {
 
   @Nonnull
   public static AsyncResult<Project> openAsync(@Nonnull String path, @Nullable final Project projectToCloseFinal, boolean forceOpenInNewFrame, @Nonnull UIAccess uiAccess) {
-    if(!WriteThreadOption.isSubWriteThreadSupported()) {
-      throw new UnsupportedOperationException("WriteThread must supported");
-    }
-
     final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
 
     if (virtualFile == null) return AsyncResult.rejected("file path not find");
