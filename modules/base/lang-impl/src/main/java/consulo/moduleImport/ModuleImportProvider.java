@@ -15,17 +15,12 @@
  */
 package consulo.moduleImport;
 
-import com.intellij.ide.util.newProjectWizard.StepSequence;
-import com.intellij.ide.util.projectWizard.ModuleWizardStep;
-import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
-import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.packaging.artifacts.ModifiableArtifactModel;
+import consulo.annotations.RequiredReadAction;
 import consulo.ide.wizard.newModule.ProjectOrModuleNameStep;
 import consulo.ui.image.Image;
 import consulo.ui.wizard.WizardStep;
@@ -34,7 +29,6 @@ import org.intellij.lang.annotations.Language;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
-import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -46,8 +40,8 @@ public interface ModuleImportProvider<C extends ModuleImportContext> {
 
   @SuppressWarnings("unchecked")
   @Nonnull
-  default C createContext() {
-    return (C)new ModuleImportContext();
+  default C createContext(@Nullable Project project) {
+    return (C)new ModuleImportContext(project);
   }
 
   /**
@@ -65,17 +59,8 @@ public interface ModuleImportProvider<C extends ModuleImportContext> {
 
   boolean canImport(@Nonnull File fileOrDirectory);
 
-  @Nonnull
-  default List<Module> commit(@Nonnull C context, @Nonnull Project project) {
-    return commit(context, project, null, DefaultModulesProvider.createForProject(project), null);
-  }
-
-  @Nonnull
-  List<Module> commit(@Nonnull C context,
-                      @Nonnull Project project,
-                      @Nullable ModifiableModuleModel model,
-                      @Nonnull ModulesProvider modulesProvider,
-                      @Nullable ModifiableArtifactModel artifactModel);
+  @RequiredReadAction
+  void process(@Nonnull C context, @Nonnull Project project, @Nonnull ModifiableModuleModel model, @Nonnull Consumer<Module> newModuleConsumer);
 
   default String getPathToBeImported(@Nonnull VirtualFile file) {
     return getDefaultPath(file);
@@ -93,16 +78,5 @@ public interface ModuleImportProvider<C extends ModuleImportContext> {
   @Language("HTML")
   default String getFileSample() {
     return getName();
-  }
-
-  default void addSteps(StepSequence sequence, WizardContext context, @Nonnull C moduleImportContext, String id) {
-    ModuleWizardStep[] steps = createSteps(context, moduleImportContext);
-    for (ModuleWizardStep step : steps) {
-      sequence.addSpecificStep(id, step);
-    }
-  }
-
-  default ModuleWizardStep[] createSteps(@Nonnull WizardContext context, @Nonnull C moduleImportContext) {
-    return ModuleWizardStep.EMPTY_ARRAY;
   }
 }

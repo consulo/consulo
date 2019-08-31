@@ -15,12 +15,14 @@
  */
 package consulo.externalSystem.service.module.wizard;
 
-import com.intellij.ide.util.projectWizard.WizardContext;
-import com.intellij.openapi.externalSystem.service.project.wizard.AbstractImportFromExternalSystemWizardStep;
 import com.intellij.openapi.externalSystem.service.settings.AbstractImportFromExternalSystemControl;
 import com.intellij.openapi.options.ConfigurationException;
-import javax.annotation.Nonnull;
+import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.wizard.WizardStep;
+import consulo.ui.wizard.WizardStepValidationException;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -37,7 +39,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 8/1/11 4:15 PM
  */
-public class SelectExternalProjectStep extends AbstractImportFromExternalSystemWizardStep {
+public class SelectExternalProjectStep<C extends AbstractImportFromExternalSystemControl> implements WizardStep<ExternalModuleImportContext<C>> {
 
   private final JPanel myComponent = new JPanel(new BorderLayout());
 
@@ -46,51 +48,46 @@ public class SelectExternalProjectStep extends AbstractImportFromExternalSystemW
 
   private boolean myGradleSettingsInitialised;
 
-  public SelectExternalProjectStep(@Nonnull WizardContext context) {
-    super(context);
+  @RequiredUIAccess
+  @Nonnull
+  @Override
+  public Component getComponent() {
+    throw new UnsupportedOperationException("desktop only");
   }
 
+  @RequiredUIAccess
+  @Nonnull
   @Override
-  public JComponent getComponent() {
+  public JComponent getSwingComponent() {
     return myComponent;
   }
 
   @Override
-  public void updateStep(@Nonnull WizardContext wizardContext) {
+  public void onStepEnter(@Nonnull ExternalModuleImportContext<C> context) {
     if (!myGradleSettingsInitialised) {
-      initExternalProjectSettingsControl();
+      initExternalProjectSettingsControl(context);
     }
   }
 
   @Override
-  public void updateDataModel() {
-  }
-
-  // TODO den uncomment
-  //@Override
-  //public String getHelpId() {
-  //  return GradleConstants.HELP_TOPIC_IMPORT_SELECT_PROJECT_STEP;
-  //}
-
-  @Override
-  public boolean validate(@Nonnull WizardContext wizardContext) throws ConfigurationException {
-    myControl.apply();
-    AbstractExternalModuleImportProvider<?> provider = (AbstractExternalModuleImportProvider<?>)getImportProvider();
-    if (provider == null) {
-      return false;
+  public void validateStep(@Nonnull ExternalModuleImportContext<C> context) throws WizardStepValidationException {
+    try {
+      myControl.apply();
+    }
+    catch (ConfigurationException e) {
+      throw new WizardStepValidationException(e.getMessage());
     }
 
-    provider.ensureProjectIsDefined(getWizardContext());
-    return true;
+    AbstractExternalModuleImportProvider<C> provider = context.getImportProvider();
+
+    provider.ensureProjectIsDefined(context);
   }
 
-  private void initExternalProjectSettingsControl() {
-    AbstractExternalModuleImportProvider<?> provider = (AbstractExternalModuleImportProvider<?>)getImportProvider();
-    if (provider == null) {
-      return;
-    }
-    provider.prepare(getWizardContext());
-    myControl = provider.getControl(getWizardContext().getProject());
+  private void initExternalProjectSettingsControl(ExternalModuleImportContext<C> context) {
+    AbstractExternalModuleImportProvider<C> provider = context.getImportProvider();
+
+    provider.prepare(context);
+    myControl = provider.getControl(context.getProject());
     myComponent.add(myControl.getComponent());
     myGradleSettingsInitialised = true;
   }

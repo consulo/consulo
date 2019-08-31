@@ -52,7 +52,7 @@ public class ModuleImportDialog<C extends ModuleImportContext> extends DialogWra
   protected ModuleImportDialog(@Nullable Project project, @Nonnull VirtualFile targetFile, @Nonnull ModuleImportProvider<C> moduleImportProvider) {
     super(project);
 
-    myContext = moduleImportProvider.createContext();
+    myContext = moduleImportProvider.createContext(project);
 
     String defaultPath = ModuleImportProvider.getDefaultPath(targetFile);
     myContext.setPath(defaultPath);

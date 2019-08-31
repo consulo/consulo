@@ -17,7 +17,6 @@ package com.intellij.openapi.externalSystem.action;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.actions.ImportModuleAction;
-import com.intellij.ide.util.newProjectWizard.AddModuleWizard;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -28,15 +27,10 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.externalSystem.util.ExternalSystemBundle;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.SystemInfoRt;
-import consulo.externalSystem.service.module.wizard.AbstractExternalModuleImportProvider;
-import consulo.moduleImport.ModuleImportProvider;
-import consulo.moduleImport.ModuleImportProviders;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 
 /**
  * @author Denis Zhdanov
@@ -80,20 +74,6 @@ public class AttachExternalProjectAction extends AnAction implements DumbAware {
       return;
     }
 
-    Ref<ModuleImportProvider<?>> providerRef = Ref.create();
-    for (ModuleImportProvider<?> provider : ModuleImportProviders.getExtensions(true)) {
-      if (provider instanceof AbstractExternalModuleImportProvider && externalSystemId.equals(((AbstractExternalModuleImportProvider)provider).getExternalSystemId())) {
-        providerRef.set(provider);
-        break;
-      }
-    }
-    if (providerRef.get() == null) {
-      return;
-    }
-
-    AddModuleWizard wizard = ImportModuleAction.selectFileAndCreateWizard(project, null, manager.getExternalProjectDescriptor(), Arrays.asList(providerRef.get()));
-    if (wizard != null && (wizard.getStepCount() <= 0 || wizard.showAndGet())) {
-      ImportModuleAction.createFromWizard(project, wizard);
-    }
+    ImportModuleAction.executeImportAction(project, manager.getExternalProjectDescriptor());
   }
 }

@@ -16,12 +16,10 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.compiler.ModuleCompilerUtil;
-import com.intellij.ide.actions.ImportModuleAction;
-import com.intellij.ide.impl.util.NewProjectUtilPlatform;
-import com.intellij.ide.util.newProjectWizard.AddModuleWizard;
-import com.intellij.ide.util.projectWizard.ModuleBuilder;
+import com.intellij.ide.impl.util.NewOrImportModuleUtil;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
@@ -46,7 +44,6 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.graph.GraphGenerator;
 import consulo.ide.newProject.NewProjectDialog;
@@ -64,8 +61,6 @@ import org.jetbrains.concurrency.Promises;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.*;
-import java.util.List;
 import java.util.*;
 
 /**
@@ -327,25 +322,26 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
 
     if (anImport) {
       AsyncPromise<List<Module>> asyncPromise = new AsyncPromise<>();
-      AsyncResult listAsyncResult = ModuleImportProcessor.showFileChooser(myProject);
+      AsyncResult listAsyncResult = ModuleImportProcessor.showFileChooser(myProject, null);
 
       listAsyncResult.doWhenDone(o -> {
         Pair<ModuleImportContext, ModuleImportProvider> pair = (Pair<ModuleImportContext, ModuleImportProvider>)o;
-        ModuleImportProvider importProvider = pair.getSecond();
+        ModuleImportProvider<ModuleImportContext> importProvider = pair.getSecond();
         ModuleImportContext importContext = pair.getFirst();
         assert importProvider != null;
         assert importContext != null;
 
-        final ModifiableArtifactModel artifactModel = ProjectStructureConfigurable.getInstance(myProject).getArtifactsStructureConfigurable().getModifiableArtifactModel();
-        List<Module> commitedModules = importProvider.commit(importContext, myProject, myModuleModel, this, artifactModel);
+        List<Module> modules = new ArrayList<>();
 
-        ApplicationManager.getApplication().runWriteAction(() -> {
-          for (Module module : commitedModules) {
+        importProvider.process(importContext, myProject, myModuleModel, modules::add);
+
+        WriteAction.runAndWait(() -> {
+          for (Module module : modules) {
             getOrCreateModuleEditor(module);
           }
         });
 
-        asyncPromise.setResult(commitedModules);
+        asyncPromise.setResult(modules);
       });
 
       listAsyncResult.doWhenRejected(() -> asyncPromise.setError("rejected"));
@@ -378,7 +374,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
         AsyncResult<Void> dialogAsync = dialog.showAsync();
         dialogAsync.doWhenDone(() -> {
           NewProjectPanel panel = dialog.getProjectPanel();
-          Module newModule = NewProjectUtilPlatform.doCreate(panel.getWizardContext(), panel.getProcessor(), myModuleModel, moduleDir, false);
+          Module newModule = NewOrImportModuleUtil.doCreate(panel.getWizardContext(), panel.getProcessor(), myModuleModel, moduleDir, false);
 
           ApplicationManager.getApplication().runWriteAction(() -> {
             getOrCreateModuleEditor(newModule);
@@ -401,34 +397,6 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     }
     return Promises.rejectedPromise();
   }
-
-  @Nullable
-  Pair<ModuleImportProvider, ModuleImportContext> runImportWizard(Component dialogParent) {
-    AddModuleWizard wizard;
-    wizard = ImportModuleAction.selectFileAndCreateWizard(myProject, dialogParent);
-    if (wizard == null) return null;
-    if (wizard.getStepCount() == 0) {
-      return Pair.create(wizard.getImportProvider(), wizard.getWizardContext().getModuleImportContext(wizard.getImportProvider()));
-    }
-
-    wizard.show();
-    if (wizard.isOK()) {
-      final ModuleImportProvider<?> builder = wizard.getImportProvider();
-      if (builder instanceof ModuleBuilder) {
-        final ModuleBuilder moduleBuilder = (ModuleBuilder)builder;
-        if (moduleBuilder.getName() == null) {
-          moduleBuilder.setName(wizard.getProjectName());
-        }
-        if (moduleBuilder.getModuleDirPath() == null) {
-          moduleBuilder.setModuleDirPath(wizard.getModuleDirPath());
-        }
-      }
-      return Pair.create(wizard.getImportProvider(), wizard.getWizardContext().getModuleImportContext(builder));
-    }
-
-    return null;
-  }
-
 
   private boolean doRemoveModule(@Nonnull ModuleEditor selectedEditor) {
 

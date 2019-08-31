@@ -1576,7 +1576,7 @@
                          instance="consulo.compiler.options.CompilerExcludedConfigurable"/>
 
     <checkoutListener implementation="com.intellij.openapi.vcs.checkout.ProjectImporterCheckoutListener"/>
-    <vcsAwareCheckoutListener implementation="com.intellij.openapi.vcs.checkout.NewProjectCheckoutListener"/>
+    <vcsAwareCheckoutListener implementation="com.intellij.openapi.vcs.checkout.RegisterMappingCheckoutListener"/>
 
     <gotoFileContributor implementation="com.intellij.ide.util.gotoByName.ProjectBaseDirNavigationContributor"/>
 

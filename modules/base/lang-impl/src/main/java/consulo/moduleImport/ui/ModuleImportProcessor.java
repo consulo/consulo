@@ -16,7 +16,6 @@
 package consulo.moduleImport.ui;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.actions.OpenProjectFileChooserDescriptor;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.Project;
@@ -28,6 +27,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.awt.TargetAWT;
 import consulo.moduleImport.ModuleImportContext;
@@ -60,27 +60,10 @@ public class ModuleImportProcessor {
    * @return
    */
   @RequiredUIAccess
-  public static <C extends ModuleImportContext> AsyncResult<Pair<C, ModuleImportProvider<C>>> showFileChooser(@Nullable Project project) {
+  public static <C extends ModuleImportContext> AsyncResult<Pair<C, ModuleImportProvider<C>>> showFileChooser(@Nullable Project project, @Nullable FileChooserDescriptor chooserDescriptor) {
     boolean isModuleImport = project != null;
 
-    FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, true, true, false, false) {
-      FileChooserDescriptor myDelegate = new OpenProjectFileChooserDescriptor(true);
-
-      @Override
-      public Image getIcon(VirtualFile file) {
-        for (ModuleImportProvider importProvider : ModuleImportProviders.getExtensions(true)) {
-          if (importProvider.canImport(VfsUtilCore.virtualToIoFile(file))) {
-            return importProvider.getIcon();
-          }
-        }
-        Image icon = myDelegate.getIcon(file);
-        return icon == null ? super.getIcon(file) : icon;
-      }
-    };
-    descriptor.setHideIgnored(false);
-    descriptor.setTitle("Select File or Directory to Import");
-    String description = getFileChooserDescription(isModuleImport);
-    descriptor.setDescription(description);
+    FileChooserDescriptor descriptor = ObjectUtil.notNull(chooserDescriptor, createAllImportDescriptor(isModuleImport));
 
     VirtualFile toSelect = null;
     String lastLocation = PropertiesComponent.getInstance().getValue(LAST_IMPORTED_LOCATION);
@@ -100,6 +83,26 @@ public class ModuleImportProcessor {
     fileChooseAsync.doWhenRejected((Runnable)result::setRejected);
 
     return result;
+  }
+
+  @Nonnull
+  private static FileChooserDescriptor createAllImportDescriptor(boolean isModuleImport) {
+    FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, true, true, false, false) {
+      @Override
+      public Image getIcon(VirtualFile file) {
+        for (ModuleImportProvider importProvider : ModuleImportProviders.getExtensions(isModuleImport)) {
+          if (importProvider.canImport(VfsUtilCore.virtualToIoFile(file))) {
+            return importProvider.getIcon();
+          }
+        }
+        return super.getIcon(file);
+      }
+    };
+    descriptor.setHideIgnored(false);
+    descriptor.setTitle("Select File or Directory to Import");
+    String description = getFileChooserDescription(isModuleImport);
+    descriptor.setDescription(description);
+    return descriptor;
   }
 
   @RequiredUIAccess
@@ -125,8 +128,6 @@ public class ModuleImportProcessor {
                                                                        @Nonnull VirtualFile file,
                                                                        @Nonnull List<ModuleImportProvider> providers,
                                                                        @Nonnull AsyncResult<Pair<C, ModuleImportProvider<C>>> result) {
-    boolean isModuleImport = project != null;
-
     if (providers.size() == 1) {
       showImportWizard(project, file, providers.get(0), result);
     }
@@ -170,7 +171,7 @@ public class ModuleImportProcessor {
     AsyncResult<Void> showAsync = dialog.showAsync();
 
     showAsync.doWhenDone(() -> result.setDone(Pair.create(dialog.getContext(), moduleImportProvider)));
-    showAsync.doWhenRejected((Runnable)result::setRejected);
+    showAsync.doWhenRejected(() -> result.setRejected(Pair.create(dialog.getContext(), moduleImportProvider)));
   }
 
   private static String getFileChooserDescription(boolean isImport) {

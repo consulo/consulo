@@ -18,7 +18,7 @@ package consulo.ide.newProject.actions;
 import com.intellij.CommonBundle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.RecentProjectsManager;
-import com.intellij.ide.impl.util.NewProjectUtilPlatform;
+import com.intellij.ide.impl.util.NewOrImportModuleUtil;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.WriteAction;
@@ -29,9 +29,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.platform.DefaultProjectOpenProcessor;
 import com.intellij.util.ui.JBUI;
-import consulo.application.WriteThreadOption;
 import consulo.ide.newProject.NewModuleBuilderProcessor2;
 import consulo.ide.newProject.NewProjectDialog;
 import consulo.ide.newProject.NewProjectPanel;
@@ -194,7 +192,7 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
 
     UIAccess uiAccess = UIAccess.current();
     ProjectManager.getInstance().openProjectAsync(baseDir, uiAccess).doWhenDone((openedProject) -> {
-      uiAccess.give(() -> NewProjectUtilPlatform.doCreate(context, processor, openedProject, baseDir));
+      uiAccess.give(() -> NewOrImportModuleUtil.doCreate(context, processor, openedProject, baseDir));
     });
   }
 }

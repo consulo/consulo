@@ -34,6 +34,7 @@ public final class Alerts {
 
     builder.button(Alert.OK, ourStableNull);
     builder.asDefaultButton();
+    builder.asExitButton();
     return builder;
   }
 

@@ -16,20 +16,21 @@
 package consulo.sandboxPlugin.lang.moduleImport;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
-import com.intellij.packaging.artifacts.ModifiableArtifactModel;
+import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.vfs.VfsUtil;
+import consulo.annotations.RequiredReadAction;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.File;
-import java.util.Collections;
-import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -58,13 +59,17 @@ public class SandModuleImportProvider implements ModuleImportProvider<ModuleImpo
     return false;
   }
 
-  @Nonnull
+  @RequiredReadAction
   @Override
-  public List<Module> commit(@Nonnull ModuleImportContext context,
-                             @Nonnull Project project,
-                             @Nullable ModifiableModuleModel model,
-                             @Nonnull ModulesProvider modulesProvider,
-                             @Nullable ModifiableArtifactModel artifactModel) {
-    return Collections.emptyList();
+  public void process(@Nonnull ModuleImportContext context, @Nonnull Project project, @Nonnull ModifiableModuleModel model, @Nonnull Consumer<Module> newModuleConsumer) {
+    String path = context.getPath();
+
+    Module module = model.newModule(context.getName(), path);
+
+    ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
+    modifiableModel.addContentEntry(VfsUtil.pathToUrl(path));
+    WriteAction.runAndWait(modifiableModel::commit);
+
+    newModuleConsumer.accept(module);
   }
 }

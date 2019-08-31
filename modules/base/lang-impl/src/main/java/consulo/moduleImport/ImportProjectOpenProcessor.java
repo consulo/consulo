@@ -16,10 +16,13 @@
 package consulo.moduleImport;
 
 import com.intellij.ide.IdeBundle;
+import com.intellij.ide.impl.ProjectUtil;
+import com.intellij.ide.impl.util.NewOrImportModuleUtil;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.AsyncResult;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -130,22 +133,28 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
           break;
         case NO:
           uiAccess.give(() -> {
-            ModuleImportProcessor.showImportChooser(null, virtualFile, targetProviders, AsyncResult.undefined());
+            AsyncResult<Pair<ModuleImportContext, ModuleImportProvider<ModuleImportContext>>> result = AsyncResult.undefined();
+            ModuleImportProcessor.showImportChooser(null, virtualFile, targetProviders, result);
 
-            // FIXME rejected
-            projectResult.setRejected();
-           /* final AddModuleWizard dialog = ImportModuleAction.createImportWizard(null, null, virtualFile, Collections.singletonList(myProvider));
-            assert dialog != null;
-            AsyncResult<Void> dialogResult = dialog.showAsync();
-            dialogResult.doWhenRejected(() -> {
-              NewProjectUtil.disposeContext(dialog);
+            result.doWhenDone(pair -> {
+              ModuleImportContext context = pair.getFirst();
+
+              ModuleImportProvider<ModuleImportContext> provider = pair.getSecond();
+              AsyncResult<Project> importProjectAsync = NewOrImportModuleUtil.importProject(context, provider);
+              importProjectAsync.doWhenDone((newProject) -> {
+                ProjectUtil.updateLastProjectLocation(expectedProjectPath);
+
+                ProjectManager.getInstance().openProjectAsync(newProject, uiAccess).notify(projectResult);
+              });
+
+              importProjectAsync.doWhenRejected((Runnable)projectResult::setRejected);
+            });
+
+            result.doWhenRejected((pair, error) -> {
+              pair.getFirst().dispose();
+
               projectResult.setRejected();
             });
-            dialogResult.doWhenDone(() -> NewProjectUtil.createFromWizardAsync(dialog).doWhenDone((newProject) -> {
-              ProjectUtil.updateLastProjectLocation(pathToBeImported);
-
-              ProjectManager.getInstance().openProjectAsync(newProject, uiAccess).notify(projectResult);
-            }).doWhenRejectedWithThrowable(projectResult::rejectWithThrowable));   */
           });
           break;
         case UNSURE:

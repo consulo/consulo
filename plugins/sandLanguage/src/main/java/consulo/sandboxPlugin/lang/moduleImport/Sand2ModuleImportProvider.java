@@ -19,8 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
-import com.intellij.packaging.artifacts.ModifiableArtifactModel;
+import consulo.annotations.RequiredReadAction;
 import consulo.ide.wizard.newModule.ProjectOrModuleNameStep;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
@@ -32,10 +31,7 @@ import consulo.ui.layout.LabeledLayout;
 import consulo.ui.wizard.WizardStep;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.File;
-import java.util.Collections;
-import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -79,13 +75,9 @@ public class Sand2ModuleImportProvider implements ModuleImportProvider<ModuleImp
     });
   }
 
-  @Nonnull
+  @RequiredReadAction
   @Override
-  public List<Module> commit(@Nonnull ModuleImportContext context,
-                             @Nonnull Project project,
-                             @Nullable ModifiableModuleModel model,
-                             @Nonnull ModulesProvider modulesProvider,
-                             @Nullable ModifiableArtifactModel artifactModel) {
-    return Collections.emptyList();
+  public void process(@Nonnull ModuleImportContext context, @Nonnull Project project, @Nonnull ModifiableModuleModel model, @Nonnull Consumer<Module> newModuleConsumer) {
+
   }
 }

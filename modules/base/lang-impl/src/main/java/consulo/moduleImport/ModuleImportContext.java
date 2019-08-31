@@ -16,20 +16,27 @@
 package consulo.moduleImport;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.project.Project;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 30-Jan-17
  */
 public class ModuleImportContext implements NewModuleWizardContext, Disposable {
+  @Nullable
+  private final Project myProject;
   private String myFileToImport;
-  private boolean myUpdate;
 
   private String myName;
   private String myPath;
+
+  public ModuleImportContext(@Nullable Project project) {
+    myProject = project;
+  }
 
   public void setFileToImport(String fileToImport) {
     myFileToImport = fileToImport;
@@ -39,16 +46,9 @@ public class ModuleImportContext implements NewModuleWizardContext, Disposable {
     return myFileToImport;
   }
 
-  public boolean isUpdate() {
-    return myUpdate;
-  }
-
-  public void setUpdate(final boolean update) {
-    myUpdate = update;
-  }
-
-  public boolean isOpenProjectSettingsAfter() {
-    return false;
+  @Nullable
+  public Project getProject() {
+    return myProject;
   }
 
   @Override
@@ -79,6 +79,6 @@ public class ModuleImportContext implements NewModuleWizardContext, Disposable {
 
   @Override
   public boolean isNewProject() {
-    return false;
+    return myProject == null;
   }
 }
