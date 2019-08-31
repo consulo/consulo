@@ -15,7 +15,6 @@
  */
 package consulo.project;
 
-import com.intellij.openapi.application.Application;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.platform.DefaultProjectOpenProcessor;
 import com.intellij.projectImport.ProjectOpenProcessor;
@@ -37,11 +36,11 @@ public class ProjectOpenProcessorsImpl implements ProjectOpenProcessors {
 
   @Inject
   @SuppressWarnings("unchecked")
-  public ProjectOpenProcessorsImpl(Application application) {
+  public ProjectOpenProcessorsImpl() {
     myCacheValue = NotNullLazyValue.createValue(() -> {
       List<ProjectOpenProcessor> processors = new ArrayList<>();
       processors.add(DefaultProjectOpenProcessor.getInstance());
-      processors.add(new ImportProjectOpenProcessor(application));
+      processors.add(new ImportProjectOpenProcessor());
       return processors.toArray(new ProjectOpenProcessor[processors.size()]);
     });
   }

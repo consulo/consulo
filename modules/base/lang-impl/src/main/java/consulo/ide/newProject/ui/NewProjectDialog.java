@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.newProject;
+package consulo.ide.newProject.ui;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.project.Project;

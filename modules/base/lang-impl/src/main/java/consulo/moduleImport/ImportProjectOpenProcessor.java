@@ -46,11 +46,9 @@ import java.util.function.Consumer;
  * @since 31-Jan-17
  */
 public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
-  private final Application myApplication;
   private final List<ModuleImportProvider> myProviders;
 
-  public ImportProjectOpenProcessor(Application application) {
-    myApplication = application;
+  public ImportProjectOpenProcessor() {
     myProviders = ModuleImportProviders.getExtensions(false);
   }
 

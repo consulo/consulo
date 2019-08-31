@@ -30,7 +30,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
-import consulo.ide.newProject.NewModuleBuilderProcessor2;
+import consulo.ide.newProject.NewModuleBuilderProcessor;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;
 import consulo.logging.Logger;
 import consulo.moduleImport.ModuleImportContext;
@@ -46,13 +46,13 @@ public class NewOrImportModuleUtil {
 
   @Nonnull
   @RequiredReadAction
-  public static Module doCreate(@Nonnull NewModuleWizardContext context, @Nonnull NewModuleBuilderProcessor2 processor, @Nonnull final Project project, @Nonnull final VirtualFile baseDir) {
+  public static Module doCreate(@Nonnull NewModuleWizardContext context, @Nonnull NewModuleBuilderProcessor processor, @Nonnull final Project project, @Nonnull final VirtualFile baseDir) {
     return doCreate(context, processor, ModuleManager.getInstance(project).getModifiableModel(), baseDir, true);
   }
 
   @Nonnull
   public static Module doCreate(@Nonnull NewModuleWizardContext context,
-                                @Nonnull NewModuleBuilderProcessor2 processor,
+                                @Nonnull NewModuleBuilderProcessor processor,
                                 @Nonnull final ModifiableModuleModel modifiableModel,
                                 @Nonnull final VirtualFile baseDir,
                                 final boolean requireModelCommit) {
@@ -63,7 +63,7 @@ public class NewOrImportModuleUtil {
   @Nonnull
   @RequiredWriteAction
   private static Module doCreateImpl(@Nonnull NewModuleWizardContext context,
-                                     @Nonnull NewModuleBuilderProcessor2 processor,
+                                     @Nonnull NewModuleBuilderProcessor processor,
                                      @Nonnull ModifiableModuleModel modifiableModel,
                                      @Nonnull VirtualFile baseDir,
                                      boolean requireModelCommit) {

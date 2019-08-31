@@ -21,7 +21,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.RequiredReadAction;
-import consulo.ide.wizard.newModule.ProjectOrModuleNameStep;
+import consulo.ide.newProject.ui.ProjectOrModuleNameStep;
 import consulo.ui.image.Image;
 import consulo.ui.wizard.WizardStep;
 import org.intellij.lang.annotations.Language;

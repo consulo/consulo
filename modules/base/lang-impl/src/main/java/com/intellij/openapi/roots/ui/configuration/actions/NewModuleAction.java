@@ -27,8 +27,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.ide.newProject.NewProjectDialog;
-import consulo.ide.newProject.NewProjectPanel;
+import consulo.ide.newProject.ui.NewProjectDialog;
+import consulo.ide.newProject.ui.NewProjectPanel;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.fileChooser.FileChooser;
 

@@ -20,7 +20,7 @@ import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import consulo.annotations.RequiredReadAction;
-import consulo.ide.wizard.newModule.ProjectOrModuleNameStep;
+import consulo.ide.newProject.ui.ProjectOrModuleNameStep;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
 import consulo.ui.Component;

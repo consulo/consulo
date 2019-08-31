@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.newProject;
+package consulo.ide.newProject.ui;
 
 import com.intellij.CommonBundle;
 import com.intellij.ide.IdeBundle;
@@ -33,6 +33,9 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.ide.newProject.NewModuleBuilder;
+import consulo.ide.newProject.NewModuleBuilderProcessor;
+import consulo.ide.newProject.NewModuleContext;
 import consulo.ide.welcomeScreen.BaseWelcomeScreenPanel;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;
 import consulo.logging.Logger;
@@ -61,7 +64,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
   // per module builder fields
   private WizardSession<NewModuleWizardContext> myWizardSession;
   private NewModuleWizardContext myWizardContext;
-  private NewModuleBuilderProcessor2<NewModuleWizardContext> myProcessor;
+  private NewModuleBuilderProcessor<NewModuleWizardContext> myProcessor;
   @Nullable
   private final VirtualFile myModuleHome;
 
@@ -76,7 +79,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
   }
 
   @Nullable
-  public NewModuleBuilderProcessor2<NewModuleWizardContext> getProcessor() {
+  public NewModuleBuilderProcessor<NewModuleWizardContext> getProcessor() {
     return myProcessor;
   }
 
@@ -184,7 +187,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
 
       Object selectedValue = myList.getSelectedValue();
 
-      myProcessor = selectedValue instanceof NewModuleContext.Item ? (NewModuleBuilderProcessor2<NewModuleWizardContext>)((NewModuleContext.Item)selectedValue).getProcessor() : null;
+      myProcessor = selectedValue instanceof NewModuleContext.Item ? (NewModuleBuilderProcessor<NewModuleWizardContext>)((NewModuleContext.Item)selectedValue).getProcessor() : null;
 
       String id = null;
       Component toShow = null;

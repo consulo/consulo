@@ -30,9 +30,9 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ui.JBUI;
-import consulo.ide.newProject.NewModuleBuilderProcessor2;
-import consulo.ide.newProject.NewProjectDialog;
-import consulo.ide.newProject.NewProjectPanel;
+import consulo.ide.newProject.NewModuleBuilderProcessor;
+import consulo.ide.newProject.ui.NewProjectDialog;
+import consulo.ide.newProject.ui.NewProjectPanel;
 import consulo.ide.welcomeScreen.WelcomeScreenSlideAction;
 import consulo.ide.welcomeScreen.WelcomeScreenSlider;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;
@@ -160,7 +160,7 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
   @RequiredUIAccess
   protected static void generateProject(Project project, @Nonnull final NewProjectPanel projectPanel) {
     NewModuleWizardContext context = projectPanel.getWizardContext();
-    NewModuleBuilderProcessor2<NewModuleWizardContext> processor = projectPanel.getProcessor();
+    NewModuleBuilderProcessor<NewModuleWizardContext> processor = projectPanel.getProcessor();
     if (processor == null || context == null) {
       LOG.error("Impossible situation. Calling generate project with null data: " + processor + "/" + context);
       return;
@@ -170,7 +170,7 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
   }
 
   @RequiredUIAccess
-  private static void generateProjectAsync(Project project, @Nonnull NewModuleWizardContext context, @Nonnull NewModuleBuilderProcessor2 processor) {
+  private static void generateProjectAsync(Project project, @Nonnull NewModuleWizardContext context, @Nonnull NewModuleBuilderProcessor processor) {
     final File location = new File(context.getPath());
     final int childCount = location.exists() ? location.list().length : 0;
     if (!location.exists() && !location.mkdirs()) {

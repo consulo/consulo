@@ -17,7 +17,7 @@ package consulo.ide.impl;
 
 import com.intellij.icons.AllIcons;
 import consulo.ide.newProject.NewModuleBuilder;
-import consulo.ide.newProject.NewModuleBuilderProcessor2;
+import consulo.ide.newProject.NewModuleBuilderProcessor;
 import consulo.ide.newProject.NewModuleContext;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;
 import consulo.ide.wizard.newModule.NewModuleWizardContextBase;
@@ -33,7 +33,7 @@ public class EmptyNewModuleBuilder implements NewModuleBuilder {
   public void setupContext(@Nonnull NewModuleContext context) {
     NewModuleContext.Group group = context.createGroup(NewModuleContext.UGROUPED, "");
 
-    group.add("Empty", AllIcons.FileTypes.Any_type, new NewModuleBuilderProcessor2<NewModuleWizardContext>() {
+    group.add("Empty", AllIcons.FileTypes.Any_type, new NewModuleBuilderProcessor<NewModuleWizardContext>() {
       @Nonnull
       @Override
       public NewModuleWizardContext createContext(boolean isNewProject) {

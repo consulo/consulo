@@ -18,9 +18,9 @@ package consulo.sandboxPlugin.ide.module;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
-import consulo.ide.impl.UnzipNewModuleBuilderProcessor2;
+import consulo.ide.impl.UnzipNewModuleBuilderProcessor;
 import consulo.ide.newProject.NewModuleBuilder;
-import consulo.ide.newProject.NewModuleBuilderProcessor2;
+import consulo.ide.newProject.NewModuleBuilderProcessor;
 import consulo.ide.newProject.NewModuleContext;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;
 import consulo.ide.wizard.newModule.NewModuleWizardContextBase;
@@ -44,7 +44,7 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
   public void setupContext(@Nonnull NewModuleContext context) {
     NewModuleContext.Group group = context.createGroup("sand", "Sand");
 
-    group.add("Sand Example", AllIcons.Nodes.Static, new UnzipNewModuleBuilderProcessor2<NewModuleWizardContext>("/moduleTemplates/Hello.zip") {
+    group.add("Sand Example", AllIcons.Nodes.Static, new UnzipNewModuleBuilderProcessor<NewModuleWizardContext>("/moduleTemplates/Hello.zip") {
       @Nonnull
       @Override
       public NewModuleWizardContext createContext(boolean isNewProject) {
@@ -63,7 +63,7 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
       }
     });
 
-    group.add("Sand Hello", AllIcons.Nodes.ProjectTab, new NewModuleBuilderProcessor2<NewModuleWizardContext>() {
+    group.add("Sand Hello", AllIcons.Nodes.ProjectTab, new NewModuleBuilderProcessor<NewModuleWizardContext>() {
       @Nonnull
       @Override
       public NewModuleWizardContext createContext(boolean isNewProject) {
@@ -72,7 +72,7 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
 
       @Override
       public void buildSteps(@Nonnull Consumer<WizardStep<NewModuleWizardContext>> consumer, @Nonnull NewModuleWizardContext context) {
-        NewModuleBuilderProcessor2.super.buildSteps(consumer, context);
+        NewModuleBuilderProcessor.super.buildSteps(consumer, context);
 
         consumer.accept(new WizardStep<NewModuleWizardContext>() {
           @RequiredUIAccess
