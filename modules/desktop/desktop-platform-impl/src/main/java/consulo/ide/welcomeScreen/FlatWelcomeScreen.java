@@ -17,6 +17,7 @@ package consulo.ide.welcomeScreen;
 
 import com.intellij.ide.DataManager;
 import com.intellij.internal.statistic.UsageTrigger;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
@@ -159,6 +160,10 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreenSlider {
     JBCardLayout layout = (JBCardLayout)getLayout();
 
     layout.swipe(this, MAIN, JBCardLayout.SwipeDirection.BACKWARD, () -> remove(target));
+
+    if(target instanceof Disposable) {
+      ((Disposable)target).dispose();
+    }
 
     myWelcomeFrame.setDefaultTitle();
   }

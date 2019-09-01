@@ -20,12 +20,16 @@ import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.EmptyRunnable;
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
@@ -52,8 +56,8 @@ import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
@@ -73,6 +77,8 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
         List<FinalizableCommand> list = new ArrayList<>();
         manager.registerToolWindowsFromBeans(list);
         manager.initAll(list);
+
+        list.add(((ToolWindowManagerBase)ex).connectModuleExtensionListener());
 
         uiAccess.give(() -> {
           manager.execute(list);
@@ -334,28 +340,64 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
         list.add(new FinalizableCommand(EmptyRunnable.INSTANCE) {
           @Override
           public void run() {
-            initToolWindow(bean);
+            try {
+              initToolWindow(bean);
+            }
+            catch (ProcessCanceledException e) {
+              throw e;
+            }
+            catch (Throwable t) {
+              LOG.error("failed to init toolwindow " + bean.factoryClass, t);
+            }
           }
         });
       }
     }
+  }
 
-    myProject.getMessageBus().connect().subscribe(ModuleExtension.CHANGE_TOPIC, (oldExtension, newExtension) -> {
-      boolean extensionVal = newExtension.isEnabled();
-      for (final ToolWindowEP bean : beans) {
-        boolean value = checkCondition(newExtension, bean);
+  @Nonnull
+  protected FinalizableCommand connectModuleExtensionListener() {
+    return new FinalizableCommand(EmptyRunnable.getInstance()) {
+      @Override
+      public void run() {
+        myProject.getMessageBus().connect().subscribe(ModuleExtension.CHANGE_TOPIC, (oldExtension, newExtension) -> {
+          boolean extensionVal = newExtension.isEnabled();
+          for (final ToolWindowEP bean : ToolWindowEP.EP_NAME.getExtensionList()) {
+            boolean value = checkCondition(newExtension, bean);
 
-        if (extensionVal && value) {
-          if (isToolWindowRegistered(bean.id)) {
-            continue;
+            if (extensionVal && value) {
+              if (isToolWindowRegistered(bean.id)) {
+                continue;
+              }
+              initToolWindow(bean);
+            }
+            else if (!extensionVal && !value) {
+              unregisterToolWindow(bean.id);
+            }
           }
-          initToolWindow(bean);
-        }
-        else if (!extensionVal && !value) {
-          unregisterToolWindow(bean.id);
+        });
+
+        revalidateToolWindows();
+      }
+
+      private void revalidateToolWindows() {
+        final List<ToolWindowEP> beans = ToolWindowEP.EP_NAME.getExtensionList();
+
+        for (ToolWindowEP bean : beans) {
+          boolean value = checkCondition(myProject, bean);
+
+          if (value) {
+            if (isToolWindowRegistered(bean.id)) {
+              continue;
+            }
+            initToolWindow(bean);
+          }
+          else {
+            unregisterToolWindow(bean.id);
+          }
         }
       }
-    });
+    };
   }
 
   public boolean isToolWindowRegistered(String id) {
@@ -672,7 +714,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
   protected void appendRemoveButtonCmd(final String id, final List<FinalizableCommand> commandsList) {
     final FinalizableCommand command = myToolWindowPanel.createRemoveButtonCmd(id, myCommandProcessor);
-    if(command != null) {
+    if (command != null) {
       commandsList.add(command);
     }
   }

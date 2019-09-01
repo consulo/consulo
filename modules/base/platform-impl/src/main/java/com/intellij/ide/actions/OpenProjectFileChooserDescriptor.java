@@ -53,7 +53,7 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
   }
 
   @Nullable
-  private static Image getProcessorIcon(final VirtualFile virtualFile) {
+  private Image getProcessorIcon(final VirtualFile virtualFile) {
     final ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(VfsUtilCore.virtualToIoFile(virtualFile));
     if (provider != null) {
       return provider.getIcon(virtualFile);

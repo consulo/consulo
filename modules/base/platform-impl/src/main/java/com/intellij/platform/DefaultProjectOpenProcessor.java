@@ -41,7 +41,6 @@ import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.util.Consumer;
 import consulo.logging.Logger;
 import consulo.project.ProjectOpenProcessors;
-import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 
@@ -54,7 +53,8 @@ import java.io.File;
  * @author max
  */
 public class DefaultProjectOpenProcessor extends ProjectOpenProcessor {
-  private static final Logger LOGGER = Logger.getInstance(DefaultProjectOpenProcessor.class);
+  private static final Logger LOG = Logger.getInstance(DefaultProjectOpenProcessor.class);
+
   private static final DefaultProjectOpenProcessor INSTANCE = new DefaultProjectOpenProcessor();
 
   public static DefaultProjectOpenProcessor getInstance() {
@@ -64,13 +64,6 @@ public class DefaultProjectOpenProcessor extends ProjectOpenProcessor {
   @Override
   public boolean canOpenProject(@Nonnull File file) {
     return file.isDirectory() && new File(file, Project.DIRECTORY_STORE_FOLDER + "/modules.xml").exists();
-  }
-
-  @RequiredUIAccess
-  @Override
-  @Nullable
-  public Project doOpenProject(@Nonnull final VirtualFile virtualFile, @Nullable final Project projectToClose, final boolean forceOpenInNewFrame) {
-    return doOpenProject(virtualFile, projectToClose, forceOpenInNewFrame, -1, null);
   }
 
   @Nullable
@@ -126,7 +119,7 @@ public class DefaultProjectOpenProcessor extends ProjectOpenProcessor {
         }
       }
       catch (Exception e) {
-        LOGGER.error(e);
+        LOG.error(e);
       }
     }
     else {
@@ -188,28 +181,10 @@ public class DefaultProjectOpenProcessor extends ProjectOpenProcessor {
     });
   }
 
-  private static void openFileFromCommandLineAsync(@Nonnull Project project, final VirtualFile virtualFile, final int line, UIAccess uiAccess) {
-    //noinspection RedundantCast
-    StartupManager.getInstance(project).registerPostStartupActivity((DumbAwareRunnable)() -> {
-      if (project.isDisposed()) {
-        return;
-      }
-      uiAccess.give(() -> {
-        if (!virtualFile.isDirectory()) {
-          if (line > 0) {
-            new OpenFileDescriptor(project, virtualFile, line - 1, 0).navigate(true);
-          }
-          else {
-            new OpenFileDescriptor(project, virtualFile).navigate(true);
-          }
-        }
-      });
-    });
-  }
 
   @Override
   @Nonnull
-  public Image getIcon() {
+  public Image getIcon(@Nonnull VirtualFile file) {
     return Application.get().getIcon();
   }
 

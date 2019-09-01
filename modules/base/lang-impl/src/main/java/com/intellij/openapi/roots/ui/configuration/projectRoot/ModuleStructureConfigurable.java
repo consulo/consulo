@@ -453,13 +453,13 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     return findNodeByObject(myRoot, module);
   }
 
+  @RequiredUIAccess
   private void addModule(boolean anImport) {
-    final List<Module> modules = myContext.myModulesConfigurator.addModule(myTree, anImport);
-    if (modules != null) {
+    myContext.myModulesConfigurator.addModule(anImport).onSuccess(modules -> {
       for (Module module : modules) {
         addModuleNode(module);
       }
-    }
+    });
   }
 
   private void addModuleNode(final Module module) {

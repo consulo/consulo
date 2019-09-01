@@ -35,9 +35,12 @@ import com.intellij.openapi.fileTypes.ex.FileTypeChooser;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.projectImport.ProjectOpenProcessor;
+import consulo.project.ProjectOpenProcessors;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
@@ -45,6 +48,8 @@ import consulo.ui.fileChooser.FileChooser;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OpenFileAction extends AnAction implements DumbAware {
   @RequiredUIAccess
@@ -81,6 +86,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
       }
     };
     descriptor.setTitle(showFiles ? "Open File or Project" : "Open Project");
+    // FIXME [VISTALL] we need this? descriptor.setDescription(getFileChooserDescription());
 
     descriptor.putUserData(PathChooserDialog.PREFER_LAST_OVER_EXPLICIT, Boolean.TRUE);
 
@@ -103,18 +109,28 @@ public class OpenFileAction extends AnAction implements DumbAware {
     }
   }
 
+  @Nonnull
+  private static String getFileChooserDescription() {
+    ProjectOpenProcessor[] providers = ProjectOpenProcessors.getInstance().getProcessors();
+    List<String> fileSamples = new ArrayList<>();
+    for (ProjectOpenProcessor processor : providers) {
+      processor.collectFileSamples(fileSamples::add);
+    }
+    return IdeBundle.message("import.project.chooser.header", StringUtil.join(fileSamples, ", <br>"));
+  }
+
   @RequiredUIAccess
   private static void doOpenFile(@Nullable final Project project, @Nonnull final VirtualFile[] result) {
     for (final VirtualFile file : result) {
       if (file.isDirectory()) {
-        ProjectUtil.openOrOpenAsync(file.getPath(), project, false, UIAccess.current()).doWhenDone(openedProject -> FileChooserUtil.setLastOpenedFile(openedProject, file));
+        ProjectUtil.openAsync(file.getPath(), project, false, UIAccess.current()).doWhenDone(openedProject -> FileChooserUtil.setLastOpenedFile(openedProject, file));
         return;
       }
 
       if (OpenProjectFileChooserDescriptor.canOpen(file)) {
         int answer = Messages.showYesNoDialog(project, IdeBundle.message("message.open.file.is.project", file.getName()), IdeBundle.message("title.open.project"), Messages.getQuestionIcon());
         if (answer == 0) {
-          ProjectUtil.openOrOpenAsync(file.getPath(), project, false, UIAccess.current()).doWhenDone(openedProject -> FileChooserUtil.setLastOpenedFile(openedProject, file));
+          ProjectUtil.openAsync(file.getPath(), project, false, UIAccess.current()).doWhenDone(openedProject -> FileChooserUtil.setLastOpenedFile(openedProject, file));
           return;
         }
       }

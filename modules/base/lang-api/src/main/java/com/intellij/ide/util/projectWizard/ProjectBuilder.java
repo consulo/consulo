@@ -23,13 +23,10 @@ package com.intellij.ide.util.projectWizard;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 @Deprecated
@@ -50,33 +47,4 @@ public abstract class ProjectBuilder {
   }
   public void cleanup() {}
 
-  public boolean isOpenProjectSettingsAfter() {
-    return false;
-  }
-
-  /**
-   * Deprecated. Use {@link #isSuitableSdkType(com.intellij.openapi.projectRoots.SdkTypeId)} instead.
-   *
-   * Used for automatically assigning an SDK to the project when it gets created.
-   * If no SDK is specified in the template project and there is no specific SDK chooser step,
-   * the SDK which is set for the project is the highest version SDK for which
-   * <code>isSuitableSdk</code> returns true.
-   *
-   * @param sdk the candidate SDK
-   * @return true if the SDK can be used for this project type, false otherwise
-   */
-  @Deprecated
-  public boolean isSuitableSdk(Sdk sdk) {
-    return isSuitableSdkType(sdk.getSdkType());
-  }
-
-  public boolean isSuitableSdkType(SdkTypeId sdkType) {
-    return true;
-  }
-
-
-  @Nullable
-  public Project createProject(String name, String path) {
-    return ProjectManager.getInstance().createProject(name, path);
-  }
 }

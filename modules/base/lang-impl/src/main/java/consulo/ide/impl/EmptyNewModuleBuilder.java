@@ -17,11 +17,12 @@ package consulo.ide.impl;
 
 import com.intellij.icons.AllIcons;
 import consulo.ide.newProject.NewModuleBuilder;
+import consulo.ide.newProject.NewModuleBuilderProcessor;
 import consulo.ide.newProject.NewModuleContext;
-import javax.annotation.Nonnull;
+import consulo.ide.wizard.newModule.NewModuleWizardContext;
+import consulo.ide.wizard.newModule.NewModuleWizardContextBase;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,6 +33,12 @@ public class EmptyNewModuleBuilder implements NewModuleBuilder {
   public void setupContext(@Nonnull NewModuleContext context) {
     NewModuleContext.Group group = context.createGroup(NewModuleContext.UGROUPED, "");
 
-    group.add("Empty", AllIcons.FileTypes.Any_type, () -> new JPanel(new BorderLayout()));
+    group.add("Empty", AllIcons.FileTypes.Any_type, new NewModuleBuilderProcessor<NewModuleWizardContext>() {
+      @Nonnull
+      @Override
+      public NewModuleWizardContext createContext(boolean isNewProject) {
+        return new NewModuleWizardContextBase(isNewProject);
+      }
+    });
   }
 }

@@ -70,7 +70,7 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
 
   private final AtomicNotNullLazyValue<Map<Class, Object>> myInstanceOfCacheValue = AtomicNotNullLazyValue.createValue(ConcurrentHashMap::new);
 
-  public ExtensionPointImpl(@Nonnull String name, @Nonnull String className, @Nonnull Kind kind, @Nonnull ComponentManager componentManager, @Nullable PluginDescriptor descriptor) {
+  public ExtensionPointImpl(@Nonnull String name, @Nonnull String className, @Nonnull Kind kind, @Nonnull ComponentManager componentManager, @Nonnull PluginDescriptor descriptor) {
     myName = name;
     myClassName = className;
     myKind = kind;
