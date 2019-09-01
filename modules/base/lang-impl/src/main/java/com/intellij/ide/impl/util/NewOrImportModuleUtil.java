@@ -29,8 +29,8 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.RequiredReadAction;
-import consulo.annotations.RequiredWriteAction;
 import consulo.ide.newProject.NewModuleBuilderProcessor;
+import consulo.ide.newProject.ui.NewProjectPanel;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;
 import consulo.logging.Logger;
 import consulo.moduleImport.ModuleImportContext;
@@ -46,27 +46,20 @@ public class NewOrImportModuleUtil {
 
   @Nonnull
   @RequiredReadAction
-  public static Module doCreate(@Nonnull NewModuleWizardContext context, @Nonnull NewModuleBuilderProcessor processor, @Nonnull final Project project, @Nonnull final VirtualFile baseDir) {
-    return doCreate(context, processor, ModuleManager.getInstance(project).getModifiableModel(), baseDir, true);
+  public static Module doCreate(@Nonnull NewProjectPanel panel, @Nonnull final Project project, @Nonnull final VirtualFile baseDir) {
+    return doCreate(panel, ModuleManager.getInstance(project).getModifiableModel(), baseDir, true);
   }
 
   @Nonnull
-  public static Module doCreate(@Nonnull NewModuleWizardContext context,
-                                @Nonnull NewModuleBuilderProcessor processor,
-                                @Nonnull final ModifiableModuleModel modifiableModel,
-                                @Nonnull final VirtualFile baseDir,
-                                final boolean requireModelCommit) {
-    return WriteAction.compute(() -> doCreateImpl(context, processor, modifiableModel, baseDir, requireModelCommit));
-  }
-
+  @RequiredReadAction
   @SuppressWarnings("unchecked")
-  @Nonnull
-  @RequiredWriteAction
-  private static Module doCreateImpl(@Nonnull NewModuleWizardContext context,
-                                     @Nonnull NewModuleBuilderProcessor processor,
-                                     @Nonnull ModifiableModuleModel modifiableModel,
-                                     @Nonnull VirtualFile baseDir,
-                                     boolean requireModelCommit) {
+  public static Module doCreate(@Nonnull NewProjectPanel panel, @Nonnull final ModifiableModuleModel modifiableModel, @Nonnull final VirtualFile baseDir, final boolean requireModelCommit) {
+    NewModuleBuilderProcessor<NewModuleWizardContext> processor = panel.getProcessor();
+    NewModuleWizardContext context = panel.getWizardContext();
+    assert context != null;
+
+    panel.onOKAction();
+
     String name = StringUtil.notNullize(context.getName(), baseDir.getName());
 
     Module newModule = modifiableModel.newModule(name, baseDir.getPath());
@@ -81,10 +74,10 @@ public class NewOrImportModuleUtil {
 
     processor.process(context, contentEntry, modifiableModelForModule);
 
-    modifiableModelForModule.commit();
+    WriteAction.runAndWait(modifiableModelForModule::commit);
 
     if (requireModelCommit) {
-      modifiableModel.commit();
+      WriteAction.runAndWait(modifiableModel::commit);
     }
 
     baseDir.refresh(true, true);

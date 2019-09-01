@@ -290,6 +290,10 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
     }
   }
 
+  public void onOKAction() {
+    myWizardSession.current().onStepLeave(myWizardContext);
+  }
+
   @RequiredUIAccess
   private void gotoStep(JPanel rightContentPanel, WizardStep<NewModuleWizardContext> step) {
     Component swingComponent = step.getSwingComponent();

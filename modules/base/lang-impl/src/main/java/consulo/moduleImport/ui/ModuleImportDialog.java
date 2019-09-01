@@ -54,9 +54,9 @@ public class ModuleImportDialog<C extends ModuleImportContext> extends DialogWra
 
     myContext = moduleImportProvider.createContext(project);
 
-    String defaultPath = ModuleImportProvider.getDefaultPath(targetFile);
-    myContext.setPath(defaultPath);
-    myContext.setName(new File(defaultPath).getName());
+    String pathToImport = moduleImportProvider.getPathToBeImported(targetFile);
+    myContext.setPath(pathToImport);
+    myContext.setName(new File(pathToImport).getName());
     myContext.setFileToImport(targetFile.getPath());
 
     List<WizardStep<C>> steps = new ArrayList<>();
@@ -94,6 +94,8 @@ public class ModuleImportDialog<C extends ModuleImportContext> extends DialogWra
       myNextRunnable.run();
     }
     else {
+      myWizardSession.current().onStepLeave(myContext);
+
       super.doOKAction();
     }
   }

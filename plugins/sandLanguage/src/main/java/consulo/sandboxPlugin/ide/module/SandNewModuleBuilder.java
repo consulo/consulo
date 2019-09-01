@@ -18,6 +18,7 @@ package consulo.sandboxPlugin.ide.module;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
+import consulo.annotations.RequiredReadAction;
 import consulo.ide.impl.UnzipNewModuleBuilderProcessor;
 import consulo.ide.newProject.NewModuleBuilder;
 import consulo.ide.newProject.NewModuleBuilderProcessor;
@@ -51,6 +52,7 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
         return new NewModuleWizardContextBase(isNewProject);
       }
 
+      @RequiredReadAction
       @Override
       public void process(@Nonnull NewModuleWizardContext context, @Nonnull ContentEntry contentEntry, @Nonnull ModifiableRootModel modifiableRootModel) {
         SandMutableModuleExtension extension = modifiableRootModel.getExtensionWithoutCheck(SandMutableModuleExtension.class);
@@ -84,6 +86,7 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
         });
       }
 
+      @RequiredReadAction
       @Override
       public void process(@Nonnull NewModuleWizardContext context, @Nonnull ContentEntry contentEntry, @Nonnull ModifiableRootModel modifiableRootModel) {
         SandMutableModuleExtension extension = modifiableRootModel.getExtensionWithoutCheck(SandMutableModuleExtension.class);

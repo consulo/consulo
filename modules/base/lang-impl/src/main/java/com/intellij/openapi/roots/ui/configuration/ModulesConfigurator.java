@@ -374,7 +374,8 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
         AsyncResult<Void> dialogAsync = dialog.showAsync();
         dialogAsync.doWhenDone(() -> {
           NewProjectPanel panel = dialog.getProjectPanel();
-          Module newModule = NewOrImportModuleUtil.doCreate(panel.getWizardContext(), panel.getProcessor(), myModuleModel, moduleDir, false);
+
+          Module newModule = NewOrImportModuleUtil.doCreate(panel, myModuleModel, moduleDir, false);
 
           ApplicationManager.getApplication().runWriteAction(() -> {
             getOrCreateModuleEditor(newModule);

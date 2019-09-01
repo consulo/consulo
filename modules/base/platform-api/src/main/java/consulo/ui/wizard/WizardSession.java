@@ -91,6 +91,14 @@ public final class WizardSession<CONTEXT> {
     return step;
   }
 
+  @Nonnull
+  public WizardStep<CONTEXT> current() {
+    if (myCurrentStepIndex == -1) {
+      throw new IllegalArgumentException();
+    }
+    return mySteps.get(myCurrentStepIndex);
+  }
+
   public void dispose() {
     for (WizardStep<CONTEXT> step : mySteps) {
       step.disposeUIResources();

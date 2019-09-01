@@ -78,7 +78,7 @@ public class NewModuleAction extends AnAction implements DumbAware {
 
       dialog.showAsync().doWhenDone(() -> {
         NewProjectPanel panel = dialog.getProjectPanel();
-        NewOrImportModuleUtil.doCreate(panel.getWizardContext(), panel.getProcessor(), project, moduleDir);
+        NewOrImportModuleUtil.doCreate(panel, project, moduleDir);
       });
     });
   }

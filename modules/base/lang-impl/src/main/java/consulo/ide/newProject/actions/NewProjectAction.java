@@ -166,11 +166,13 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
       return;
     }
 
-    generateProjectAsync(project, context, processor);
+    generateProjectAsync(project, projectPanel);
   }
 
   @RequiredUIAccess
-  private static void generateProjectAsync(Project project, @Nonnull NewModuleWizardContext context, @Nonnull NewModuleBuilderProcessor processor) {
+  private static void generateProjectAsync(Project project, @Nonnull NewProjectPanel panel) {
+    NewModuleWizardContext context = panel.getWizardContext();
+
     final File location = new File(context.getPath());
     final int childCount = location.exists() ? location.list().length : 0;
     if (!location.exists() && !location.mkdirs()) {
@@ -192,7 +194,7 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
 
     UIAccess uiAccess = UIAccess.current();
     ProjectManager.getInstance().openProjectAsync(baseDir, uiAccess).doWhenDone((openedProject) -> {
-      uiAccess.give(() -> NewOrImportModuleUtil.doCreate(context, processor, openedProject, baseDir));
+      uiAccess.give(() -> NewOrImportModuleUtil.doCreate(panel, openedProject, baseDir));
     });
   }
 }
