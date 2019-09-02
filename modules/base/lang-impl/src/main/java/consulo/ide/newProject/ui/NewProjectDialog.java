@@ -27,6 +27,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowEvent;
 
 /**
  * @author VISTALL
@@ -91,6 +92,16 @@ public class NewProjectDialog extends DialogWrapper {
   @Override
   protected Action[] createActions() {
     return new Action[]{getCancelAction(), getOKAction()};
+  }
+
+  @Override
+  public void doCancelAction(AWTEvent source) {
+    if (source instanceof WindowEvent) {
+      // if it's window event - close it via X
+      super.doCancelAction();
+      return;
+    }
+    super.doCancelAction(source);
   }
 
   @Override

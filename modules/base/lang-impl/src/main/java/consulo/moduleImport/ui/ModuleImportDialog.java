@@ -33,6 +33,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,6 +99,16 @@ public class ModuleImportDialog<C extends ModuleImportContext> extends DialogWra
 
       super.doOKAction();
     }
+  }
+
+  @Override
+  public void doCancelAction(AWTEvent source) {
+    if (source instanceof WindowEvent) {
+      // if it's window event - close it via X
+      super.doCancelAction();
+      return;
+    }
+    super.doCancelAction(source);
   }
 
   @Override
