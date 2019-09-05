@@ -29,36 +29,28 @@ public final class WizardSession<CONTEXT> {
 
   private int myCurrentStepIndex = -1;
 
+  private int myPreviusStepIndex = -1;
+
   public WizardSession(@Nonnull CONTEXT context, @Nonnull List<WizardStep<CONTEXT>> steps) {
     myContext = context;
     mySteps = new ArrayList<>(steps);
   }
 
   public boolean hasNext() {
-    int nextStep = myCurrentStepIndex + 1;
-
-    for (int i = nextStep; i < mySteps.size(); i++) {
-      WizardStep<CONTEXT> step = mySteps.get(i);
-
-      if (step.isVisible()) {
-        return true;
-      }
-    }
-
-    return false;
+    return findNextStepIndex() != -1;
   }
 
   @Nonnull
   public WizardStep<CONTEXT> next() {
-    if (!hasNext()) {
+    int nextStepIndex = findNextStepIndex();
+    if (nextStepIndex == -1) {
       throw new IllegalArgumentException("There no visible next step");
     }
 
-    int nextStepIndex = myCurrentStepIndex + 1;
-    int prevStepIndex = myCurrentStepIndex - 1;
+    int oldIndex = myCurrentStepIndex;
 
-    if (prevStepIndex >= 0) {
-      WizardStep<CONTEXT> prevStep = mySteps.get(prevStepIndex);
+    if (oldIndex != -1) {
+      WizardStep<CONTEXT> prevStep = mySteps.get(oldIndex);
 
       prevStep.onStepLeave(myContext);
     }
@@ -66,23 +58,25 @@ public final class WizardSession<CONTEXT> {
     WizardStep<CONTEXT> step = mySteps.get(nextStepIndex);
 
     myCurrentStepIndex = nextStepIndex;
+    myPreviusStepIndex = oldIndex;
+
     step.onStepEnter(myContext);
     return step;
   }
 
   @Nonnull
   public WizardStep<CONTEXT> prev() {
-    if (myCurrentStepIndex == 0) {
+    if (myPreviusStepIndex == -1) {
       throw new IllegalArgumentException("There no visible prev step");
     }
 
-    int stepToMove = myCurrentStepIndex - 1;
+    int prev = findPrevStepIndex();
 
     WizardStep<CONTEXT> currentStep = mySteps.get(myCurrentStepIndex);
 
     currentStep.onStepLeave(myContext);
 
-    myCurrentStepIndex = stepToMove;
+    myCurrentStepIndex = prev;
 
     WizardStep<CONTEXT> step = mySteps.get(myCurrentStepIndex);
 
@@ -97,6 +91,29 @@ public final class WizardSession<CONTEXT> {
       throw new IllegalArgumentException();
     }
     return mySteps.get(myCurrentStepIndex);
+  }
+
+  private int findNextStepIndex() {
+    int from = myCurrentStepIndex + 1;
+
+    for (int i = from; i < mySteps.size(); i++) {
+      WizardStep<CONTEXT> step = mySteps.get(i);
+      if (step.isVisible()) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  private int findPrevStepIndex() {
+    for (int i = myPreviusStepIndex; i != 0; i--) {
+      WizardStep<CONTEXT> step = mySteps.get(i);
+      if (step.isVisible()) {
+        return i;
+      }
+    }
+
+    return -1;
   }
 
   public void dispose() {
