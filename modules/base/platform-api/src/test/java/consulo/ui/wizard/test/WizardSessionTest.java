@@ -127,4 +127,32 @@ public class WizardSessionTest extends Assert {
 
     assertFalse(third.myStepLeave);
   }
+
+  @Test
+  public void testPrevPrev() {
+    List<WizardStep<Object>> steps = new ArrayList<>();
+    steps.add(new StepStub("first", true));
+    steps.add(new StepStub("second", true));
+    steps.add(new StepStub("third", false));
+    steps.add(new StepStub("fourth", true));
+
+    WizardSession<Object> session = new WizardSession<>(ObjectUtil.NULL, steps);
+
+    assertTrue(session.hasNext());
+
+    session.next();
+    session.next();
+
+    WizardStep<Object> _3step = session.next();
+
+    assertEquals(_3step.toString(), "fourth");
+
+    WizardStep<Object> prev = session.prev();
+
+    assertEquals(prev.toString(), "second");
+
+    WizardStep<Object> prev2 = session.prev();
+
+    assertEquals(prev2.toString(), "first");
+  }
 }
