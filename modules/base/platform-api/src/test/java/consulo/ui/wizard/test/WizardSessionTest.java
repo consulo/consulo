@@ -32,7 +32,7 @@ import java.util.List;
  * @since 2019-09-05
  */
 public class WizardSessionTest extends Assert {
-  private static class StepStub implements WizardStep<Object> {
+  private static class StepStub<T> implements WizardStep<T> {
     private String myId;
     private boolean myVisible;
 
@@ -44,17 +44,17 @@ public class WizardSessionTest extends Assert {
     }
 
     @Override
-    public void onStepEnter(@Nonnull Object o) {
+    public void onStepEnter(@Nonnull T o) {
       myStepEnter = true;
     }
 
     @Override
-    public void onStepLeave(@Nonnull Object o) {
+    public void onStepLeave(@Nonnull T o) {
       myStepLeave = true;
     }
 
     @Override
-    public boolean isVisible() {
+    public boolean isVisible(@Nonnull T o) {
       return myVisible;
     }
 
@@ -74,10 +74,10 @@ public class WizardSessionTest extends Assert {
   @Test
   public void testVisibleStep() {
     List<WizardStep<Object>> steps = new ArrayList<>();
-    steps.add(new StepStub("first", true));
-    steps.add(new StepStub("second", true));
-    steps.add(new StepStub("third", false));
-    steps.add(new StepStub("fourth", true));
+    steps.add(new StepStub<>("first", true));
+    steps.add(new StepStub<>("second", true));
+    steps.add(new StepStub<>("third", false));
+    steps.add(new StepStub<>("fourth", true));
 
     WizardSession<Object> session = new WizardSession<>(ObjectUtil.NULL, steps);
 
@@ -95,13 +95,13 @@ public class WizardSessionTest extends Assert {
 
   @Test
   public void testStepEnterAndLeave() {
-    StepStub first, second, third, fourth;
+    StepStub<Object> first, second, third, fourth;
 
     List<WizardStep<Object>> steps = new ArrayList<>();
-    steps.add(first = new StepStub("first", true));
-    steps.add(second = new StepStub("second", true));
-    steps.add(third = new StepStub("third", false));
-    steps.add(fourth = new StepStub("fourth", true));
+    steps.add(first = new StepStub<>("first", true));
+    steps.add(second = new StepStub<>("second", true));
+    steps.add(third = new StepStub<>("third", false));
+    steps.add(fourth = new StepStub<>("fourth", true));
 
     WizardSession<Object> session = new WizardSession<>(ObjectUtil.NULL, steps);
 
@@ -131,10 +131,10 @@ public class WizardSessionTest extends Assert {
   @Test
   public void testPrevPrev() {
     List<WizardStep<Object>> steps = new ArrayList<>();
-    steps.add(new StepStub("first", true));
-    steps.add(new StepStub("second", true));
-    steps.add(new StepStub("third", false));
-    steps.add(new StepStub("fourth", true));
+    steps.add(new StepStub<>("first", true));
+    steps.add(new StepStub<>("second", true));
+    steps.add(new StepStub<>("third", false));
+    steps.add(new StepStub<>("fourth", true));
 
     WizardSession<Object> session = new WizardSession<>(ObjectUtil.NULL, steps);
 
@@ -154,5 +154,67 @@ public class WizardSessionTest extends Assert {
     WizardStep<Object> prev2 = session.prev();
 
     assertEquals(prev2.toString(), "first");
+  }
+
+  private static class InvisibleContext {
+    private boolean mySecondStepVisible = true;
+  }
+  
+  private static class Step implements WizardStep<InvisibleContext> {
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public Component getComponent() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean isVisible(@Nonnull InvisibleContext invisibleContext) {
+      return invisibleContext.mySecondStepVisible;
+    }
+  }
+
+  @Test
+  public void testVisibleAfterStepLeave() {
+    List<WizardStep<InvisibleContext>> steps = new ArrayList<>();
+    steps.add(new WizardStep<InvisibleContext>() {
+      @RequiredUIAccess
+      @Nonnull
+      @Override
+      public Component getComponent() {
+        throw new UnsupportedOperationException();
+      }
+
+      @Override
+      public void onStepLeave(@Nonnull InvisibleContext invisibleContext) {
+        invisibleContext.mySecondStepVisible = false;
+      }
+    });
+
+    steps.add(new WizardStep<InvisibleContext>() {
+      @RequiredUIAccess
+      @Nonnull
+      @Override
+      public Component getComponent() {
+        throw new UnsupportedOperationException();
+      }
+
+      @Override
+      public boolean isVisible(@Nonnull InvisibleContext invisibleContext) {
+        return invisibleContext.mySecondStepVisible;
+      }
+    });
+
+    steps.add(new StepStub<>("end", true));
+
+    WizardSession<InvisibleContext> session = new WizardSession<>(new InvisibleContext(), steps);
+
+    assertTrue(session.hasNext());
+
+    session.next();
+
+    WizardStep<InvisibleContext> endStep = session.next();
+
+    assertEquals(endStep.toString(), "end");
   }
 }

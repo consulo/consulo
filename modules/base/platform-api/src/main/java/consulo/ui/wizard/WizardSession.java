@@ -42,8 +42,7 @@ public final class WizardSession<CONTEXT> {
 
   @Nonnull
   public WizardStep<CONTEXT> next() {
-    int nextStepIndex = findNextStepIndex();
-    if (nextStepIndex == -1) {
+    if (!hasNext()) {
       throw new IllegalArgumentException("There no visible next step");
     }
 
@@ -54,6 +53,8 @@ public final class WizardSession<CONTEXT> {
 
       prevStep.onStepLeave(myContext);
     }
+
+    int nextStepIndex = findNextStepIndex();
 
     WizardStep<CONTEXT> step = mySteps.get(nextStepIndex);
 
@@ -98,7 +99,7 @@ public final class WizardSession<CONTEXT> {
 
     for (int i = from; i < mySteps.size(); i++) {
       WizardStep<CONTEXT> step = mySteps.get(i);
-      if (step.isVisible()) {
+      if (step.isVisible(myContext)) {
         return i;
       }
     }
@@ -109,7 +110,7 @@ public final class WizardSession<CONTEXT> {
     int from = myPreviusStepIndex - 1;
     for (int i = from; i != -1; i--) {
       WizardStep<CONTEXT> step = mySteps.get(i);
-      if (step.isVisible()) {
+      if (step.isVisible(myContext)) {
         return i;
       }
     }

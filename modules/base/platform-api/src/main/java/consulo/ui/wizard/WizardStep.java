@@ -64,6 +64,13 @@ public interface WizardStep<CONTEXT> {
   default void disposeUIResources() {
   }
 
+  @SuppressWarnings("deprecation")
+  default boolean isVisible(@Nonnull CONTEXT context) {
+    return isVisible();
+  }
+
+  @Deprecated
+  @DeprecationInfo("Use isVisible(CONTEXT)")
   default boolean isVisible() {
     return true;
   }
