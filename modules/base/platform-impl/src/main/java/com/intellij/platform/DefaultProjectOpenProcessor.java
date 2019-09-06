@@ -15,46 +15,25 @@
  */
 package com.intellij.platform;
 
-import com.intellij.ide.GeneralSettings;
-import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.project.ex.ProjectManagerEx;
-import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowId;
-import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.openapi.wm.ToolWindowType;
-import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.util.Consumer;
-import consulo.logging.Logger;
-import consulo.project.ProjectOpenProcessors;
+import consulo.annotations.DeprecationInfo;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.io.File;
 
 /**
  * @author max
  */
 public class DefaultProjectOpenProcessor extends ProjectOpenProcessor {
-  private static final Logger LOG = Logger.getInstance(DefaultProjectOpenProcessor.class);
-
   private static final DefaultProjectOpenProcessor INSTANCE = new DefaultProjectOpenProcessor();
 
   public static DefaultProjectOpenProcessor getInstance() {
@@ -67,120 +46,11 @@ public class DefaultProjectOpenProcessor extends ProjectOpenProcessor {
   }
 
   @Nullable
+  @Deprecated
+  @DeprecationInfo("Use ProjectUtil#openAsync(). Always return null")
   public static Project doOpenProject(@Nonnull final VirtualFile virtualFile, Project projectToClose, final boolean forceOpenInNewFrame, final int line, @Nullable Consumer<Project> callback) {
-    VirtualFile baseDir = virtualFile;
-    if (!baseDir.isDirectory()) {
-      baseDir = virtualFile.getParent();
-      while (baseDir != null) {
-        if (new File(FileUtil.toSystemDependentName(baseDir.getPath()), Project.DIRECTORY_STORE_FOLDER).exists()) {
-          break;
-        }
-        baseDir = baseDir.getParent();
-      }
-      if (baseDir == null) {
-        baseDir = virtualFile.getParent();
-      }
-    }
-
-    final File projectDir = new File(FileUtil.toSystemDependentName(baseDir.getPath()), Project.DIRECTORY_STORE_FOLDER);
-
-    Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-    if (!forceOpenInNewFrame && openProjects.length > 0) {
-      if (projectToClose == null) {
-        projectToClose = openProjects[openProjects.length - 1];
-      }
-
-      int exitCode = ProjectUtil.confirmOpenNewProject(false);
-      if (exitCode == GeneralSettings.OPEN_PROJECT_SAME_WINDOW) {
-        if (!ProjectUtil.closeAndDispose(projectToClose)) return null;
-      }
-      else if (exitCode != GeneralSettings.OPEN_PROJECT_NEW_WINDOW) { // not in a new window
-        return null;
-      }
-    }
-
-    boolean runConfigurators = true;
-    final ProjectManagerEx projectManager = ProjectManagerEx.getInstanceEx();
-    Project project = null;
-    if (projectDir.exists()) {
-      try {
-        for (ProjectOpenProcessor processor : ProjectOpenProcessors.getInstance().getProcessors()) {
-          processor.refreshProjectFiles(projectDir);
-        }
-
-        project = projectManager.convertAndLoadProject(baseDir.getPath());
-        if (project == null) {
-          WelcomeFrame.showIfNoProjectOpened();
-          return null;
-        }
-        final Module[] modules = ModuleManager.getInstance(project).getModules();
-        if (modules.length > 0) {
-          runConfigurators = false;
-        }
-      }
-      catch (Exception e) {
-        LOG.error(e);
-      }
-    }
-    else {
-      projectDir.mkdirs();
-    }
-
-    if (project == null) {
-      project = projectManager.newProject(projectDir.getParentFile().getName(), projectDir.getParent(), true, false);
-    }
-
-    if (project == null) return null;
-    desktopOpenProjectToolWindow(project);
-    openFileFromCommandLine(project, virtualFile, line);
-    if (!projectManager.openProject(project)) {
-      WelcomeFrame.showIfNoProjectOpened();
-      final Project finalProject = project;
-      ApplicationManager.getApplication().runWriteAction(() -> Disposer.dispose(finalProject));
-      return project;
-    }
-
-    if (callback != null && runConfigurators) {
-      callback.consume(project);
-    }
-
-    return project;
+    return null;
   }
-
-  private static void desktopOpenProjectToolWindow(final Project project) {
-    //noinspection RedundantCast
-    StartupManager.getInstance(project).registerPostStartupActivity((DumbAwareRunnable)() -> {
-      // ensure the dialog is shown after all startup activities are done
-      SwingUtilities.invokeLater(() -> ApplicationManager.getApplication().invokeLater(() -> {
-        if (project.isDisposed()) return;
-        final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.PROJECT_VIEW);
-        if (toolWindow != null && toolWindow.getType() != ToolWindowType.SLIDING) {
-          toolWindow.activate(null);
-        }
-      }, ModalityState.NON_MODAL));
-    });
-  }
-
-  private static void openFileFromCommandLine(@Nonnull Project project, final VirtualFile virtualFile, final int line) {
-    //noinspection RedundantCast
-    StartupManager.getInstance(project).registerPostStartupActivity((DumbAwareRunnable)() -> {
-      if (project.isDisposed()) {
-        return;
-      }
-
-      Application.get().invokeLater(() -> {
-        if (!virtualFile.isDirectory()) {
-          if (line > 0) {
-            new OpenFileDescriptor(project, virtualFile, line - 1, 0).navigate(true);
-          }
-          else {
-            new OpenFileDescriptor(project, virtualFile).navigate(true);
-          }
-        }
-      }, ModalityState.NON_MODAL);
-    });
-  }
-
 
   @Override
   @Nonnull

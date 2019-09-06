@@ -133,7 +133,7 @@ public class ProjectUtil {
   @Deprecated
   @DeprecationInfo("Sync variant of #openAsync()")
   public static Project open(@Nonnull final String path, final Project projectToClose, boolean forceOpenInNewFrame) {
-    throw new UnsupportedOperationException();
+    return null;
   }
 
   /**
