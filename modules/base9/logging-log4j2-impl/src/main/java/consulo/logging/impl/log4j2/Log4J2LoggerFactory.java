@@ -72,7 +72,7 @@ public class Log4J2LoggerFactory implements LoggerFactory {
   @Nullable
   private static LoggerContext init() {
     try {
-      String fileRef = Boolean.getBoolean(ApplicationProperties.CONSULO_MAVEN_CONSOLE_LOG) ? "/log4j2-console.xml" : "/log4j2-ide.xml";
+      String fileRef = Boolean.getBoolean(ApplicationProperties.CONSULO_MAVEN_CONSOLE_LOG) ? "/log4j2-console.xml" : "/log4j2-default.xml";
 
       String text = FileUtil.loadTextAndClose(Log4J2LoggerFactory.class.getResourceAsStream(fileRef));
       text = StringUtil.replace(text, SYSTEM_MACRO, StringUtil.replace(PathManager.getSystemPath(), "\\", "\\\\"));
