@@ -32,6 +32,7 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.project.ProjectOpenProcessors;
 import consulo.start.CommandLineArgs;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -64,17 +65,13 @@ public class CommandLineProcessor {
 
     File targetFile = new File(file);
 
+    UIAccess uiAccess = Application.get().getLastUIAccess();
     if (projectFile != null) {
-      return ProjectUtil.openAsync(projectFile.getPath(), null, true, Application.get().getLastUIAccess()).doWhenDone(project -> {
+      return ProjectUtil.openAsync(projectFile.getPath(), null, true, uiAccess).doWhenDone(project -> {
         if (!FileUtil.filesEqual(projectFile, targetFile) && !targetFile.isDirectory()) {
           final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(targetFile);
           if (virtualFile != null) {
-            if (line == -1) {
-              new OpenFileDescriptor(project, virtualFile).navigate(true);
-            }
-            else {
-              new OpenFileDescriptor(project, virtualFile, line - 1, 0).navigate(true);
-            }
+            openFile(uiAccess, project, virtualFile, line);
           }
         }
       });
@@ -88,15 +85,21 @@ public class CommandLineProcessor {
 
       Project bestProject = findBestProject(targetVFile);
 
-      if (line == -1) {
-        new OpenFileDescriptor(bestProject, targetVFile).navigate(true);
-      }
-      else {
-        new OpenFileDescriptor(bestProject, targetVFile, line - 1, 0).navigate(true);
-      }
+      openFile(uiAccess, bestProject, targetVFile, line);
 
       return AsyncResult.resolved(bestProject);
     }
+  }
+
+  private static void openFile(@Nonnull UIAccess uiAccess, @Nonnull Project project, @Nonnull VirtualFile virtualFile, int line) {
+    uiAccess.give(() -> {
+      if (line == -1) {
+        new OpenFileDescriptor(project, virtualFile).navigate(true);
+      }
+      else {
+        new OpenFileDescriptor(project, virtualFile, line - 1, 0).navigate(true);
+      }
+    });
   }
 
   @Nonnull
