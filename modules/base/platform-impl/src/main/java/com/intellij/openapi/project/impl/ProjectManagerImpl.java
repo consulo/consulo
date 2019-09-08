@@ -52,7 +52,6 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredWriteAction;
-import consulo.application.WriteThreadOption;
 import consulo.awt.TargetAWT;
 import consulo.components.impl.stores.StorageUtil;
 import consulo.components.impl.stores.storage.StateStorageBase;
@@ -521,12 +520,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
     UIAccess uiAccess = myApplication.getLastUIAccess();
 
     for (Project project : projectsToReload) {
-      if(WriteThreadOption.isSubWriteThreadSupported()) {
-        doReloadProjectAsync(project, uiAccess);
-      }
-      else {
-        doReloadProject(project);
-      }
+      doReloadProjectAsync(project, uiAccess);
     }
   }
 
@@ -636,35 +630,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
   @Override
   public void reloadProject(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
     myChangedProjectFiles.remove(project);
-    if(WriteThreadOption.isSubWriteThreadSupported()) {
-      doReloadProjectAsync(project, uiAccess);
-    }
-    else {
-      doReloadProject(project);
-    }
-  }
-
-  private void doReloadProject(@Nonnull Project project) {
-    final Ref<Project> projectRef = Ref.create(project);
-    ProjectReloadState.getInstance(project).onBeforeAutomaticProjectReload();
-    myApplication.invokeLater(() -> {
-      LOG.debug("Reloading project.");
-      Project project1 = projectRef.get();
-      // Let it go
-      projectRef.set(null);
-
-      if (project1.isDisposed()) {
-        return;
-      }
-
-      // must compute here, before project dispose
-      String presentableUrl = project1.getPresentableUrl();
-      if (!ProjectUtil.closeAndDispose(project1)) {
-        return;
-      }
-
-      ProjectUtil.open(presentableUrl, null, true);
-    }, ModalityState.NON_MODAL);
+    doReloadProjectAsync(project, uiAccess);
   }
 
   private void doReloadProjectAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess) {

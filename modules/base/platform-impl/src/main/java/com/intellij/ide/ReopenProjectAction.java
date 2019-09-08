@@ -71,7 +71,7 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
       return;
     }
 
-    ProjectUtil.openOrOpenAsync(myProjectPath, project, forceOpenInNewFrame, UIAccess.current());
+    ProjectUtil.openAsync(myProjectPath, project, forceOpenInNewFrame, UIAccess.current());
   }
 
   @Nonnull

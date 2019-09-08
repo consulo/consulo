@@ -15,7 +15,6 @@
  */
 package com.intellij.ide.impl;
 
-import com.intellij.CommonBundle;
 import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.RecentProjectsManager;
@@ -23,7 +22,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -111,53 +109,6 @@ public class ProjectUtil {
   @RequiredUIAccess
   public static boolean closeAndDispose(@Nonnull final Project project) {
     return ProjectManagerEx.getInstanceEx().closeAndDispose(project);
-  }
-
-  @Deprecated
-  @DeprecationInfo("ProjectUtil#open()")
-  @RequiredUIAccess
-  @SuppressWarnings({"unused", "deprecation"})
-  public static Project openOrImport(@Nonnull final String path, final Project projectToClose, boolean forceOpenInNewFrame) {
-    return open(path, projectToClose, forceOpenInNewFrame);
-  }
-
-  /**
-   * @param path                project file path
-   * @param projectToClose      currently active project
-   * @param forceOpenInNewFrame forces opening in new frame
-   * @return project by path if the path was recognized as Consulo project file or one of the project formats supported by
-   * installed importers (regardless of opening/import result)
-   * null otherwise
-   */
-  @Nullable
-  @Deprecated
-  @DeprecationInfo("Sync variant of #openAsync()")
-  public static Project open(@Nonnull final String path, final Project projectToClose, boolean forceOpenInNewFrame) {
-    return null;
-  }
-
-  /**
-   * @return {@link com.intellij.ide.GeneralSettings#OPEN_PROJECT_SAME_WINDOW}
-   * {@link com.intellij.ide.GeneralSettings#OPEN_PROJECT_NEW_WINDOW}
-   * {@link com.intellij.openapi.ui.Messages#CANCEL} - if user canceled the dialog
-   */
-  @Deprecated
-  public static int confirmOpenNewProject(boolean isNewProject) {
-    final GeneralSettings settings = GeneralSettings.getInstance();
-    int confirmOpenNewProject = settings.getConfirmOpenNewProject();
-    if (confirmOpenNewProject == GeneralSettings.OPEN_PROJECT_ASK) {
-      if (isNewProject) {
-        int exitCode = Messages.showYesNoDialog(IdeBundle.message("prompt.open.project.in.new.frame"), IdeBundle.message("title.new.project"), IdeBundle.message("button.existingframe"),
-                                                IdeBundle.message("button.newframe"), Messages.getQuestionIcon(), new ProjectNewWindowDoNotAskOption());
-        return exitCode == 0 ? GeneralSettings.OPEN_PROJECT_SAME_WINDOW : GeneralSettings.OPEN_PROJECT_NEW_WINDOW;
-      }
-      else {
-        int exitCode = Messages.showYesNoCancelDialog(IdeBundle.message("prompt.open.project.in.new.frame"), IdeBundle.message("title.open.project"), IdeBundle.message("button.existingframe"),
-                                                      IdeBundle.message("button.newframe"), CommonBundle.getCancelButtonText(), Messages.getQuestionIcon(), new ProjectNewWindowDoNotAskOption());
-        return exitCode == 0 ? GeneralSettings.OPEN_PROJECT_SAME_WINDOW : exitCode == 1 ? GeneralSettings.OPEN_PROJECT_NEW_WINDOW : Messages.CANCEL;
-      }
-    }
-    return confirmOpenNewProject;
   }
 
   @Nonnull

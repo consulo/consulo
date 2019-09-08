@@ -21,14 +21,12 @@ import com.intellij.idea.ApplicationStarter;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.util.Ref;
-import consulo.annotations.Internal;
 import consulo.container.util.StatCollector;
 import consulo.start.CommandLineArgs;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-@Internal
 public abstract class ApplicationPostStarter {
   protected final Ref<StartupProgress> mySplashRef = Ref.create();
   protected ApplicationStarter myApplicationStarter;

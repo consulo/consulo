@@ -63,6 +63,14 @@ public class CommandLineArgs {
     return myShowHelp;
   }
 
+  public void setFile(String file) {
+    this.file = file;
+  }
+
+  public void setNoRecentProjects(boolean noRecentProjects) {
+    myNoRecentProjects = noRecentProjects;
+  }
+
   public String getFile() {
     return file;
   }

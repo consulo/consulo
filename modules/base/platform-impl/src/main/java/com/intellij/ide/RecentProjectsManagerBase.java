@@ -460,8 +460,7 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
       }
       for (String openPath : openPaths) {
         if (isValidProjectPath(openPath)) {
-
-          ProjectUtil.openOrOpenAsync(openPath, null, forceNewFrame, UIAccess.current());
+          ProjectUtil.openAsync(openPath, null, forceNewFrame, UIAccess.current());
           break;
         }
       }

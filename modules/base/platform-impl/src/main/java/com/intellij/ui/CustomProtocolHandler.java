@@ -32,12 +32,12 @@ import java.util.List;
 public class CustomProtocolHandler {
   public static final String LINE_NUMBER_ARG_NAME = "--line";
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ui.CustomProtocolHandler");
+  private static final Logger LOG = Logger.getInstance(CustomProtocolHandler.class);
 
-  public boolean openLink(@Nonnull URI uri) {
+  public void openLink(@Nonnull URI uri) {
     LOG.info("CustomProtocolHandler.openLink");
     final List<String> args = getOpenArgs(uri);
-    return !args.isEmpty() && CommandLineProcessor.processExternalCommandLine(CommandLineArgs.parse(ArrayUtil.toStringArray(args)), null) != null;
+    CommandLineProcessor.processExternalCommandLine(CommandLineArgs.parse(ArrayUtil.toStringArray(args)), null);
   }
 
   @Nonnull

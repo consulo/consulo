@@ -125,10 +125,12 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
 
       StartupUtil.addExternalInstanceListener(commandLineArgs -> {
         LOG.info("ApplicationImpl.externalInstanceListener invocation");
-        final Project project = CommandLineProcessor.processExternalCommandLine(commandLineArgs, null);
-        final IdeFrame frame = WindowManager.getInstance().getIdeFrame(project);
 
-        if (frame != null) AppIcon.getInstance().requestFocus(frame);
+        CommandLineProcessor.processExternalCommandLine(commandLineArgs, null).doWhenDone(project -> {
+          final IdeFrame frame = WindowManager.getInstance().getIdeFrame(project);
+
+          if (frame != null) AppIcon.getInstance().requestFocus(frame);
+        });
       });
 
       WindowsCommandLineProcessor.LISTENER = (currentDirectory, commandLine) -> {

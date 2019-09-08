@@ -45,13 +45,6 @@ public class DefaultProjectOpenProcessor extends ProjectOpenProcessor {
     return file.isDirectory() && new File(file, Project.DIRECTORY_STORE_FOLDER + "/modules.xml").exists();
   }
 
-  @Nullable
-  @Deprecated
-  @DeprecationInfo("Use ProjectUtil#openAsync(). Always return null")
-  public static Project doOpenProject(@Nonnull final VirtualFile virtualFile, Project projectToClose, final boolean forceOpenInNewFrame, final int line, @Nullable Consumer<Project> callback) {
-    return null;
-  }
-
   @Override
   @Nonnull
   public Image getIcon(@Nonnull VirtualFile file) {
