@@ -49,7 +49,4 @@ public abstract class ProjectOpenProcessor {
 
   @Nonnull
   public abstract AsyncResult<Project> doOpenProjectAsync(@Nonnull VirtualFile virtualFile, @Nonnull UIAccess uiAccess);
-
-  public void refreshProjectFiles(File basedir) {
-  }
 }
