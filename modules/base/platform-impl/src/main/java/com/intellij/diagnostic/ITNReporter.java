@@ -113,7 +113,7 @@ public class ITNReporter extends ErrorReportSubmitter {
             LOG.error("There not version for plugin: " + pluginId + ", name: " + pluginDescriptor.getName());
             continue;
           }
-          errorBean.addAffectedPlugin(pluginId, StringUtil.notNullize(pluginDescriptor.getVersion(), "?"));
+          errorBean.addAffectedPlugin(pluginId, version);
         }
       }
     }
