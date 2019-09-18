@@ -382,7 +382,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
       modulesElement.addContent(moduleElement);
     }
 
-    for (ModuleLoadItem failedModulePath : myFailedModulePaths) {
+    for (ModuleLoadItem failedModulePath : new ArrayList<>(myFailedModulePaths)) {
       final Element clone = failedModulePath.getElement().clone();
       modulesElement.addContent(clone);
     }
