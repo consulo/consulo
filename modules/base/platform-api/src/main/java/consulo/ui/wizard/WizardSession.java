@@ -31,6 +31,8 @@ public final class WizardSession<CONTEXT> {
 
   private int myPreviusStepIndex = -1;
 
+  private boolean myFinished;
+
   public WizardSession(@Nonnull CONTEXT context, @Nonnull List<WizardStep<CONTEXT>> steps) {
     myContext = context;
     mySteps = new ArrayList<>(steps);
@@ -42,6 +44,10 @@ public final class WizardSession<CONTEXT> {
 
   @Nonnull
   public WizardStep<CONTEXT> next() {
+    if (myFinished) {
+      throw new IllegalArgumentException("Finished");
+    }
+
     if (!hasNext()) {
       throw new IllegalArgumentException("There no visible next step");
     }
@@ -67,6 +73,10 @@ public final class WizardSession<CONTEXT> {
 
   @Nonnull
   public WizardStep<CONTEXT> prev() {
+    if (myFinished) {
+      throw new IllegalArgumentException("Finished");
+    }
+
     if (myPreviusStepIndex == -1) {
       throw new IllegalArgumentException("There no visible prev step");
     }
@@ -86,12 +96,16 @@ public final class WizardSession<CONTEXT> {
     return step;
   }
 
-  @Nonnull
-  public WizardStep<CONTEXT> current() {
+  public void finish() {
     if (myCurrentStepIndex == -1) {
       throw new IllegalArgumentException();
     }
-    return mySteps.get(myCurrentStepIndex);
+
+    myFinished = true;
+
+    WizardStep<CONTEXT> step = mySteps.get(myCurrentStepIndex);
+
+    step.onStepLeave(myContext);
   }
 
   private int findNextStepIndex() {
@@ -119,6 +133,10 @@ public final class WizardSession<CONTEXT> {
   }
 
   public void dispose() {
+    if (!myFinished) {
+      throw new IllegalArgumentException("not finished");
+    }
+
     for (WizardStep<CONTEXT> step : mySteps) {
       step.disposeUIResources();
     }

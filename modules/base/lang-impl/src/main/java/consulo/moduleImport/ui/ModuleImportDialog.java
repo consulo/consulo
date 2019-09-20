@@ -95,7 +95,7 @@ public class ModuleImportDialog<C extends ModuleImportContext> extends DialogWra
       myNextRunnable.run();
     }
     else {
-      myWizardSession.current().onStepLeave(myContext);
+      myWizardSession.finish();
 
       super.doOKAction();
     }

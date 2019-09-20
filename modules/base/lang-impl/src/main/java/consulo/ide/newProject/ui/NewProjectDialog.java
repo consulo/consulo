@@ -126,6 +126,7 @@ public class NewProjectDialog extends DialogWrapper {
 
   @Override
   protected void dispose() {
+    myProjectPanel.finish();
     myProjectPanel.dispose();
 
     super.dispose();

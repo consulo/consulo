@@ -171,6 +171,9 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
 
   @RequiredUIAccess
   private static void generateProjectAsync(Project project, @Nonnull NewProjectPanel panel) {
+    // leave current step
+    panel.finish();
+
     NewModuleWizardContext context = panel.getWizardContext();
 
     final File location = new File(context.getPath());

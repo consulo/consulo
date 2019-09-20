@@ -181,6 +181,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
       rightContentPanel.removeAll();
 
       if (myWizardSession != null) {
+        myWizardSession.finish();
         myWizardSession.dispose();
         myWizardSession = null;
       }
@@ -290,8 +291,8 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
     }
   }
 
-  public void onOKAction() {
-    myWizardSession.current().onStepLeave(myWizardContext);
+  public void finish() {
+    myWizardSession.finish();
   }
 
   @RequiredUIAccess

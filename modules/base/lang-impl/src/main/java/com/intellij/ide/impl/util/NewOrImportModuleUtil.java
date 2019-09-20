@@ -58,8 +58,6 @@ public class NewOrImportModuleUtil {
     NewModuleWizardContext context = panel.getWizardContext();
     assert context != null;
 
-    panel.onOKAction();
-
     String name = StringUtil.notNullize(context.getName(), baseDir.getName());
 
     Module newModule = modifiableModel.newModule(name, baseDir.getPath());
