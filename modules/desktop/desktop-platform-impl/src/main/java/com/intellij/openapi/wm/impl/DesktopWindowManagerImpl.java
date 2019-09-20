@@ -488,6 +488,9 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     final Frame[] all = Frame.getFrames();
     for (Frame each : all) {
       consulo.ui.Window uiWindow = TargetAWT.from(each);
+      if(uiWindow == null) {
+        continue;
+      }
 
       IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
       if (ideFrame != null) {
