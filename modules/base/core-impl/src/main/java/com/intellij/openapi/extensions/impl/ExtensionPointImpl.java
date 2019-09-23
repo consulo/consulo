@@ -16,6 +16,7 @@
 package com.intellij.openapi.extensions.impl;
 
 import com.intellij.openapi.components.ComponentManager;
+import com.intellij.openapi.progress.ProgressManager;
 import consulo.logging.Logger;
 import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.LoadingOrder;
@@ -203,6 +204,8 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
       return Collections.emptyList();
     }
 
+    ProgressManager.checkCanceled();
+
     List<T> extensions = new ArrayList<>(extensionAdapters.size());
     List<ExtensionComponentAdapter<T>> adapters = new ArrayList<>(extensionAdapters);
     LoadingOrder.sort(adapters);
@@ -210,6 +213,7 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
     Class<T> extensionClass = getExtensionClass();
     for (ExtensionComponentAdapter<T> adapter : adapters) {
       try {
+        ProgressManager.checkCanceled();
         T extension = adapter.getExtension(unbindedInstanceFunc);
         if (!extensionClass.isInstance(extension)) {
           LOG.error("Extension " + extension.getClass() + " does not implement " + extensionClass);

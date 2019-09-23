@@ -117,6 +117,11 @@ public class MockApplicationEx extends MockApplication implements ApplicationEx 
   }
 
   @Override
+  public boolean isInImpatientReader() {
+    return false;
+  }
+
+  @Override
   public boolean isWriteActionInProgress() {
     return false;
   }

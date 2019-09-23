@@ -1,37 +1,21 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
  */
 package com.intellij.openapi.progress.impl;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.progress.*;
+import com.intellij.openapi.progress.EmptyProgressIndicator;
+import com.intellij.openapi.progress.ProcessCanceledException;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.progress.util.PingProgress;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import com.intellij.openapi.progress.util.ProgressWindow;
-import com.intellij.openapi.progress.util.SmoothProgressAdapter;
-import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.SystemNotifications;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.io.storage.HeavyProcessLatch;
-import consulo.awt.TargetAWT;
-import consulo.platform.Platform;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -41,74 +25,52 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Set;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.LockSupport;
 
 @Singleton
 public class ProgressManagerImpl extends CoreProgressManager implements Disposable {
+  private static final Key<Boolean> SAFE_PROGRESS_INDICATOR = Key.create("SAFE_PROGRESS_INDICATOR");
   private final Set<CheckCanceledHook> myHooks = ContainerUtil.newConcurrentSet();
+  private final CheckCanceledHook mySleepHook = __ -> sleepIfNeededToGivePriorityToAnotherThread();
 
   public ProgressManagerImpl() {
-    HeavyProcessLatch.INSTANCE.addUIActivityListener(new HeavyProcessLatch.HeavyProcessListener() {
-      CheckCanceledHook sleepHook = indicator -> sleepIfNeededToGivePriorityToAnotherThread();
-      AtomicBoolean scheduled = new AtomicBoolean();
-      Runnable addHookLater = () -> {
-        scheduled.set(false);
-        if (HeavyProcessLatch.INSTANCE.hasPrioritizedThread()) {
-          addCheckCanceledHook(sleepHook);
-        }
-      };
-
-      @Override
-      public void processStarted() {
-        if (scheduled.compareAndSet(false, true)) {
-          AppExecutorUtil.getAppScheduledExecutorService().schedule(addHookLater, 5, TimeUnit.MILLISECONDS);
-        }
-      }
-
-      @Override
-      public void processFinished() {
-        removeCheckCanceledHook(sleepHook);
-      }
-
-    }, this);
+    // ExtensionPointImpl.setCheckCanceledAction(ProgressManager::checkCanceled);
   }
 
   @Override
-  public void setCancelButtonText(String cancelButtonText) {
-    ProgressIndicator progressIndicator = getProgressIndicator();
-    if (progressIndicator != null) {
-      if (progressIndicator instanceof SmoothProgressAdapter && cancelButtonText != null) {
-        ProgressIndicator original = ((SmoothProgressAdapter)progressIndicator).getOriginalProgressIndicator();
-        if (original instanceof ProgressWindow) {
-          ((ProgressWindow)original).setCancelButtonText(cancelButtonText);
-        }
-      }
-    }
+  public boolean hasUnsafeProgressIndicator() {
+    return super.hasUnsafeProgressIndicator() || ContainerUtil.exists(getCurrentIndicators(), ProgressManagerImpl::isUnsafeIndicator);
+  }
+
+  private static boolean isUnsafeIndicator(ProgressIndicator indicator) {
+    return indicator instanceof ProgressWindow && ((ProgressWindow)indicator).getUserData(SAFE_PROGRESS_INDICATOR) == null;
+  }
+
+  /**
+   * The passes progress won't count in {@link #hasUnsafeProgressIndicator()} and won't stop from application exiting.
+   */
+  public void markProgressSafe(@Nonnull ProgressWindow progress) {
+    progress.putUserData(SAFE_PROGRESS_INDICATOR, true);
   }
 
   @Override
   public void executeProcessUnderProgress(@Nonnull Runnable process, ProgressIndicator progress) throws ProcessCanceledException {
-    if (progress instanceof ProgressWindow) myCurrentUnsafeProgressCount.incrementAndGet();
-
-    CheckCanceledHook hook = progress instanceof PingProgress && ApplicationManager.getApplication().isDispatchThread()
-                             ? p -> { ((PingProgress)progress).interact(); return true; }
-                             : null;
+    CheckCanceledHook hook = progress instanceof PingProgress && ApplicationManager.getApplication().isDispatchThread() ? p -> {
+      ((PingProgress)progress).interact();
+      return true;
+    } : null;
     if (hook != null) addCheckCanceledHook(hook);
 
     try {
       super.executeProcessUnderProgress(process, progress);
     }
     finally {
-      if (progress instanceof ProgressWindow) myCurrentUnsafeProgressCount.decrementAndGet();
       if (hook != null) removeCheckCanceledHook(hook);
     }
   }
 
   @TestOnly
-  public static void runWithAlwaysCheckingCanceled(@Nonnull Runnable runnable) {
-    Thread fake = new Thread("fake");
+  public static void __testWhileAlwaysCheckingCanceled(@Nonnull Runnable runnable) {
+    @SuppressWarnings("InstantiatingAThreadWithDefaultRunMethod") Thread fake = new Thread("fake");
     try {
       threadsUnderCanceledIndicator.add(fake);
       runnable.run();
@@ -127,7 +89,7 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
       final Task.NotificationInfo notificationInfo = task.notifyFinished();
       long time = end - start;
       if (notificationInfo != null && time > 5000) { // show notification only if process took more than 5 secs
-        final Window frame = TargetAWT.to(WindowManager.getInstance().getWindow(task.getProject()));
+        final JFrame frame = WindowManager.getInstance().getFrame(task.getProject());
         if (frame != null && !frame.hasFocus()) {
           systemNotify(notificationInfo);
         }
@@ -143,62 +105,19 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
   @Override
   @Nonnull
   public Future<?> runProcessWithProgressAsynchronously(@Nonnull Task.Backgroundable task) {
-    //TODO [VISTALL] web service hack
-    ProgressIndicator progressIndicator = ApplicationManager.getApplication().isHeadlessEnvironment() || Platform.current().isWebService() ?
-                                          new EmptyProgressIndicator() :
-                                          new BackgroundableProcessIndicator(task);
+    ProgressIndicator progressIndicator = ApplicationManager.getApplication().isHeadlessEnvironment() ? new EmptyProgressIndicator() : new BackgroundableProcessIndicator(task);
     return runProcessWithProgressAsynchronously(task, progressIndicator, null);
   }
 
   @Override
-  @Nonnull
-  public Future<?> runProcessWithProgressAsynchronously(@Nonnull final Task.Backgroundable task,
-                                                        @Nonnull final ProgressIndicator progressIndicator,
-                                                        @Nullable final Runnable continuation,
-                                                        @Nonnull final ModalityState modalityState) {
-    if (progressIndicator instanceof Disposable) {
-      Disposer.register(ApplicationManager.getApplication(), (Disposable)progressIndicator);
-    }
-
-    final Runnable process = new TaskRunnable(task, progressIndicator, continuation);
-
-    TaskContainer action = new TaskContainer(task) {
-      @Override
-      public void run() {
-        boolean processCanceled = false;
-        Throwable exception = null;
-
-        final long start = System.currentTimeMillis();
-        try {
-          ProgressManager.getInstance().runProcess(process, progressIndicator);
-        }
-        catch (ProcessCanceledException e) {
-          processCanceled = true;
-        }
-        catch (Throwable e) {
-          exception = e;
-        }
-        final long end = System.currentTimeMillis();
-
-        final boolean finalCanceled = processCanceled || progressIndicator.isCanceled();
-        final Throwable finalException = exception;
-
-        if (!finalCanceled) {
-          final Task.NotificationInfo notificationInfo = task.notifyFinished();
-          final long time = end - start;
-          if (notificationInfo != null && time > 5000) { // snow notification if process took more than 5 secs
-            final Component window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
-            if (window == null || notificationInfo.isShowWhenFocused()) {
-              systemNotify(notificationInfo);
-            }
-          }
-        }
-
-        ApplicationManager.getApplication().invokeLater(() -> finishTask(task, finalCanceled, finalException), modalityState);
+  void notifyTaskFinished(@Nonnull Task.Backgroundable task, long elapsed) {
+    final Task.NotificationInfo notificationInfo = task.notifyFinished();
+    if (notificationInfo != null && elapsed > 5000) { // snow notification if process took more than 5 secs
+      final Component window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+      if (window == null || notificationInfo.isShowWhenFocused()) {
+        systemNotify(notificationInfo);
       }
-    };
-
-    return ApplicationManager.getApplication().executeOnPooledThread(action);
+    }
   }
 
   @Override
@@ -227,7 +146,7 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
   protected CheckCanceledHook createCheckCanceledHook() {
     if (myHooks.isEmpty()) return null;
 
-    CheckCanceledHook[] activeHooks = ArrayUtil.stripTrailingNulls(myHooks.toArray(new CheckCanceledHook[0]));
+    CheckCanceledHook[] activeHooks = myHooks.toArray(new CheckCanceledHook[0]);
     return activeHooks.length == 1 ? activeHooks[0] : indicator -> {
       boolean result = false;
       for (CheckCanceledHook hook : activeHooks) {
@@ -239,11 +158,13 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
     };
   }
 
-  private static boolean sleepIfNeededToGivePriorityToAnotherThread() {
-    if (HeavyProcessLatch.INSTANCE.isInsideLowPriorityThread()) {
-      LockSupport.parkNanos(1_000_000);
-      return true;
-    }
-    return false;
+  @Override
+  protected void prioritizingStarted() {
+    addCheckCanceledHook(mySleepHook);
+  }
+
+  @Override
+  protected void prioritizingFinished() {
+    removeCheckCanceledHook(mySleepHook);
   }
 }

@@ -281,7 +281,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   }
 
   private void fireBeforeApplicationLoaded() {
-    for (ApplicationLoadListener listener : ApplicationLoadListener.EP_NAME.getExtensions()) {
+    for (ApplicationLoadListener listener : ApplicationLoadListener.EP_NAME.getExtensionList()) {
       try {
         listener.beforeApplicationLoaded();
       }
@@ -300,8 +300,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   // public for testing purposes
   public void _saveSettings() {
     if (mySaveSettingsIsInProgress.compareAndSet(false, true)) {
-      HeavyProcessLatch.INSTANCE.prioritizeUiActivity();
-
       try {
         StoreUtil.save(getStateStore(), null);
       }
@@ -546,6 +544,11 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     return true;
   }
 
+  @Override
+  public boolean isInImpatientReader() {
+    return myLock.isInImpatientReader();
+  }
+
   private void startRead() {
     myLock.readLock();
   }
@@ -600,7 +603,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   protected void startWrite(@Nonnull Class clazz) {
     assertWriteActionStart();
 
-    HeavyProcessLatch.INSTANCE.stopThreadPrioritizing(); // let non-cancellable read actions complete faster, if present
     boolean writeActionPending = myWriteActionPending;
     if (myGatherStatistics && myWriteActionsStack.isEmpty() && !writeActionPending) {
       ActionPauses.WRITE.started();

@@ -23,12 +23,13 @@ import com.intellij.idea.ApplicationStarter;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.impl.LaterInvocator;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.FrequentEventDetector;
-import consulo.logging.Logger;
 import com.intellij.openapi.keymap.KeyboardSettingsExternalizable;
 import com.intellij.openapi.keymap.impl.IdeKeyEventDispatcher;
 import com.intellij.openapi.keymap.impl.IdeMouseEventDispatcher;
 import com.intellij.openapi.keymap.impl.KeyState;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.registry.Registry;
@@ -43,15 +44,15 @@ import com.intellij.util.Alarm;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
-import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
 import consulo.awt.TargetAWT;
+import consulo.logging.Logger;
 import consulo.platform.Platform;
-import javax.annotation.Nonnull;
 import sun.awt.AppContext;
 import sun.awt.SunToolkit;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.basic.ComboPopup;
@@ -81,6 +82,7 @@ public class IdeEventQueue extends EventQueue {
   private static final Logger FOCUS_AWARE_RUNNABLES_LOG = Logger.getInstance("#com.intellij.ide.IdeEventQueue.runnables");
 
   private static TransactionGuardEx ourTransactionGuard;
+  private static ProgressManager ourProgressManager;
 
   /**
    * Adding/Removing of "idle" listeners should be thread safe.
@@ -435,15 +437,22 @@ public class IdeEventQueue extends EventQueue {
     AWTEvent oldEvent = myCurrentEvent;
     myCurrentEvent = e;
 
-    HeavyProcessLatch.INSTANCE.prioritizeUiActivity();
     try (AccessToken ignored = startActivity(e)) {
-      _dispatchEvent(e);
+      ProgressManager progressManager = obtainProgressManager();
+      if (progressManager != null) {
+        progressManager.computePrioritized(() -> {
+          _dispatchEvent(myCurrentEvent);
+          return null;
+        });
+      }
+      else {
+        _dispatchEvent(myCurrentEvent);
+      }
     }
     catch (Throwable t) {
       processException(t);
     }
     finally {
-      HeavyProcessLatch.INSTANCE.stopThreadPrioritizing();
       myIsInInputEvent = wasInputEvent;
       myCurrentEvent = oldEvent;
 
@@ -491,6 +500,19 @@ public class IdeEventQueue extends EventQueue {
 
   private static boolean isInputEvent(@Nonnull AWTEvent e) {
     return e instanceof InputEvent || e instanceof InputMethodEvent || e instanceof WindowEvent || e instanceof ActionEvent;
+  }
+
+
+  @Nullable
+  private static ProgressManager obtainProgressManager() {
+    ProgressManager manager = ourProgressManager;
+    if (manager == null) {
+      Application app = ApplicationManager.getApplication();
+      if (app != null && !app.isDisposed()) {
+        ourProgressManager = manager = ServiceManager.getService(ProgressManager.class);
+      }
+    }
+    return manager;
   }
 
   @Override

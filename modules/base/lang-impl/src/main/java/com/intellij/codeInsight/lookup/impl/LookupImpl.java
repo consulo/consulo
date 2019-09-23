@@ -1169,9 +1169,6 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
   }
 
   private <T> T withLock(Computable<T> computable) {
-    if (ApplicationManager.getApplication().isDispatchThread()) {
-      HeavyProcessLatch.INSTANCE.stopThreadPrioritizing();
-    }
     synchronized (myLock) {
       return computable.compute();
     }

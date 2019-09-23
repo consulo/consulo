@@ -274,8 +274,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
       return;
     }
 
-    HeavyProcessLatch.INSTANCE.prioritizeUiActivity();
-
     try {
       if (!isDefault()) {
         String projectBasePath = getStateStore().getProjectBasePath();

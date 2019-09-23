@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,37 +19,30 @@
  */
 package com.intellij.concurrency;
 
-import com.intellij.util.IncorrectOperationException;
 import javax.annotation.Nonnull;
 
-import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 public interface Job<T> {
-  // the lower the priority the more important the task is
-  int DEFAULT_PRIORITY = 100;
-
-  String getTitle();
-
-  void addTask(@Nonnull Callable<T> task);
-
-  void addTask(@Nonnull Runnable task, T result);
-
-  void addTask(@Nonnull Runnable task);
-
-  List<T> scheduleAndWaitForResults() throws Throwable;
-
   void cancel();
 
   boolean isCanceled();
 
-  void schedule();
-
   boolean isDone();
 
+  /**
+   * Waits until all work is executed.
+   * Note that calling {@link #cancel()} might not lead to this method termination because the job can be in the middle of execution.
+   *
+   * @throws TimeoutException when timeout expires
+   */
   void waitForCompletion(int millis) throws InterruptedException, ExecutionException, TimeoutException;
+
+  @SuppressWarnings("unchecked")
+  static <T> Job<T> nullJob() {
+    return NULL_JOB;
+  }
 
   @Nonnull
   Job NULL_JOB = new Job() {
@@ -68,39 +61,8 @@ public interface Job<T> {
     }
 
     @Override
-    public String getTitle() {
-      return null;
-    }
-
-    @Override
-    public void addTask(@Nonnull Callable task) {
-      throw new IncorrectOperationException();
-    }
-
-    @Override
-    public void addTask(@Nonnull Runnable task, Object result) {
-      throw new IncorrectOperationException();
-    }
-
-    @Override
-    public void addTask(@Nonnull Runnable task) {
-      throw new IncorrectOperationException();
-    }
-
-    @Override
-    public List scheduleAndWaitForResults() throws Throwable {
-      throw new IncorrectOperationException();
-    }
-
-    @Override
     public boolean isCanceled() {
       return true;
     }
-
-    @Override
-    public void schedule() {
-      throw new IncorrectOperationException();
-    }
   };
-
 }

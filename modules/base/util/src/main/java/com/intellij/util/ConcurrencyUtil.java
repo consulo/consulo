@@ -16,12 +16,17 @@
 package com.intellij.util;
 
 import com.intellij.diagnostic.ThreadDumper;
+import com.intellij.openapi.util.ThrowableComputable;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -32,7 +37,7 @@ public class ConcurrencyUtil {
    * Invokes and waits all tasks using threadPool, avoiding thread starvation on the way
    * (see <a href="http://gafter.blogspot.com/2006/11/thread-pool-puzzler.html">"A Thread Pool Puzzler"</a>).
    */
-  public static <T> List<Future<T>> invokeAll(@Nonnull Collection<Callable<T>> tasks, ExecutorService executorService) throws Throwable {
+  public static <T> List<Future<T>> invokeAll(@Nonnull Collection<? extends Callable<T>> tasks, ExecutorService executorService) throws Throwable {
     if (executorService == null) {
       for (Callable<T> task : tasks) {
         task.call();
@@ -40,7 +45,7 @@ public class ConcurrencyUtil {
       return null;
     }
 
-    List<Future<T>> futures = new ArrayList<Future<T>>(tasks.size());
+    List<Future<T>> futures = new ArrayList<>(tasks.size());
     boolean done = false;
     try {
       for (Callable<T> t : tasks) {
@@ -78,7 +83,7 @@ public class ConcurrencyUtil {
 
   /**
    * @return defaultValue if there is no entry in the map (in that case defaultValue is placed into the map),
-   *         or corresponding value if entry already exists.
+   * or corresponding value if entry already exists.
    */
   @Nonnull
   public static <K, V> V cacheOrGet(@Nonnull ConcurrentMap<K, V> map, @Nonnull final K key, @Nonnull final V defaultValue) {
@@ -88,6 +93,14 @@ public class ConcurrencyUtil {
     return prev == null ? defaultValue : prev;
   }
 
+  /**
+   * @return defaultValue if the reference contains null (in that case defaultValue is placed there), or reference value otherwise.
+   */
+  @Nonnull
+  public static <T> T cacheOrGet(@Nonnull AtomicReference<T> ref, @Nonnull T defaultValue) {
+    return ref.updateAndGet(prev -> prev == null ? defaultValue : prev);
+  }
+
   @Nonnull
   public static ThreadPoolExecutor newSingleThreadExecutor(@Nonnull @NonNls String name) {
     return newSingleThreadExecutor(name, Thread.NORM_PRIORITY);
@@ -95,8 +108,7 @@ public class ConcurrencyUtil {
 
   @Nonnull
   public static ThreadPoolExecutor newSingleThreadExecutor(@NonNls @Nonnull String name, int priority) {
-    return new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS,
-                                  new LinkedBlockingQueue<Runnable>(), newNamedThreadFactory(name, true, priority));
+    return new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), newNamedThreadFactory(name, true, priority));
   }
 
   @Nonnull
@@ -112,29 +124,27 @@ public class ConcurrencyUtil {
     return executor;
   }
 
+  /**
+   * Service which executes tasks synchronously immediately after they submitted
+   */
+  @Nonnull
+  public static ExecutorService newSameThreadExecutorService() {
+    return new SameThreadExecutorService();
+  }
+
   @Nonnull
   public static ThreadFactory newNamedThreadFactory(@NonNls @Nonnull final String name, final boolean isDaemon, final int priority) {
-    return new ThreadFactory() {
-      @Nonnull
-      @Override
-      public Thread newThread(@Nonnull Runnable r) {
-        Thread thread = new Thread(r, name);
-        thread.setDaemon(isDaemon);
-        thread.setPriority(priority);
-        return thread;
-      }
+    return r -> {
+      Thread thread = new Thread(r, name);
+      thread.setDaemon(isDaemon);
+      thread.setPriority(priority);
+      return thread;
     };
   }
 
   @Nonnull
   public static ThreadFactory newNamedThreadFactory(@NonNls @Nonnull final String name) {
-    return new ThreadFactory() {
-      @Nonnull
-      @Override
-      public Thread newThread(@Nonnull final Runnable r) {
-        return new Thread(r, name);
-      }
-    };
+    return r -> new Thread(r, name);
   }
 
   /**
@@ -160,16 +170,91 @@ public class ConcurrencyUtil {
         thread.join(unit.toMillis(timeout));
       }
       catch (InterruptedException e) {
-        String trace = "Thread leaked: " + thread+"; " + thread.getState()+" ("+ thread.isAlive()+")\n--- its stacktrace:\n";
+        String trace = "Thread leaked: " + thread + "; " + thread.getState() + " (" + thread.isAlive() + ")\n--- its stacktrace:\n";
         for (final StackTraceElement stackTraceElement : thread.getStackTrace()) {
-          trace += " at "+stackTraceElement +"\n";
+          trace += " at " + stackTraceElement + "\n";
         }
         trace += "---\n";
         System.err.println("Executor " + executor + " is still active after " + unit.toSeconds(timeout) + " seconds://///\n" +
-                           "Thread "+thread+" dump:\n" + trace+
-                           "all thread dump:\n"+ThreadDumper.dumpThreadsToString() + "\n/////");
+                           "Thread " + thread + " dump:\n" + trace +
+                           "all thread dump:\n" + ThreadDumper.dumpThreadsToString() + "\n/////");
         break;
       }
     }
   }
+
+  public static void joinAll(@Nonnull Collection<? extends Thread> threads) throws RuntimeException {
+    for (Thread thread : threads) {
+      try {
+        thread.join();
+      }
+      catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+    }
+  }
+
+  public static void joinAll(@Nonnull Thread... threads) throws RuntimeException {
+    joinAll(Arrays.asList(threads));
+  }
+
+  public static void getAll(@Nonnull Collection<? extends Future<?>> futures) throws ExecutionException, InterruptedException {
+    for (Future<?> future : futures) {
+      future.get();
+    }
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static Runnable underThreadNameRunnable(@Nonnull final String name, @Nonnull final Runnable runnable) {
+    return () -> runUnderThreadName(name, runnable);
+  }
+
+  public static void runUnderThreadName(@Nonnull final String name, @Nonnull final Runnable runnable) {
+    Thread currentThread = Thread.currentThread();
+    String oldThreadName = currentThread.getName();
+    if (name.equals(oldThreadName)) {
+      runnable.run();
+    }
+    else {
+      currentThread.setName(name);
+      try {
+        runnable.run();
+      }
+      finally {
+        currentThread.setName(oldThreadName);
+      }
+    }
+  }
+
+  @Nonnull
+  public static Runnable once(@Nonnull final Runnable delegate) {
+    final AtomicBoolean done = new AtomicBoolean(false);
+    return () -> {
+      if (done.compareAndSet(false, true)) {
+        delegate.run();
+      }
+    };
+  }
+
+  public static <T, E extends Throwable> T withLock(@Nonnull Lock lock, @Nonnull ThrowableComputable<T, E> runnable) throws E {
+    lock.lock();
+    try {
+      return runnable.compute();
+    }
+    finally {
+      lock.unlock();
+    }
+  }
+
+  public static <E extends Throwable> void withLock(@Nonnull Lock lock, @Nonnull ThrowableRunnable<E> runnable) throws E {
+    lock.lock();
+    try {
+      runnable.run();
+    }
+    finally {
+      lock.unlock();
+    }
+  }
+
 }

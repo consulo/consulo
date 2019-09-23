@@ -234,6 +234,10 @@ public class ReadMostlyRWLock {
     }
   }
 
+  public boolean isInImpatientReader() {
+    return R.get().impatientReads;
+  }
+
   @Nullable
   public SuspensionId currentReadPrivilege() {
     return privilegedReaders.get(Thread.currentThread());

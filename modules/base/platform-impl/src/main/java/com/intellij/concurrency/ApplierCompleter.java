@@ -23,9 +23,9 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.util.Processor;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
 import consulo.application.ex.ApplicationEx2;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CountedCompleter;
@@ -48,7 +48,7 @@ class ApplierCompleter<T> extends CountedCompleter<Void> {
   private final boolean failFastOnAcquireReadAction;
   private final ProgressIndicator progressIndicator;
   @Nonnull
-  private final List<T> array;
+  private final List<? extends T> array;
   @Nonnull
   private final Processor<? super T> processor;
   private final int lo;
@@ -72,7 +72,7 @@ class ApplierCompleter<T> extends CountedCompleter<Void> {
                    boolean runInReadAction,
                    boolean failFastOnAcquireReadAction,
                    @Nonnull ProgressIndicator progressIndicator,
-                   @Nonnull List<T> array,
+                   @Nonnull List<? extends T> array,
                    @Nonnull Processor<? super T> processor,
                    int lo,
                    int hi,
@@ -137,14 +137,21 @@ class ApplierCompleter<T> extends CountedCompleter<Void> {
         }
         long finish = System.currentTimeMillis();
         long elapsed = finish - start;
-        if (elapsed > 5 && hi - i >= 2 && getSurplusQueuedTaskCount() <= JobSchedulerImpl.getJobPoolParallelism()) {
-          int mid = i + hi >>> 1;
-          right = new ApplierCompleter<>(this, runInReadAction, failFastOnAcquireReadAction, progressIndicator, array, processor, mid, hi, failedSubTasks, right);
-          //children.add(right);
-          addToPendingCount(1);
-          right.fork();
-          hi = mid;
-          start = finish;
+        if (elapsed > 1 && hi - i >= 2) {
+          int availableParallelism = JobSchedulerImpl.getJobPoolParallelism() - getSurplusQueuedTaskCount();
+          if (availableParallelism > 1) {
+            // fork off several sub-tasks at once to reduce rampup
+            for (int n = 0; n < availableParallelism; n++) {
+              int mid = i + hi >>> 1;
+              if (mid == i || mid == hi) break;
+              right = new ApplierCompleter<>(this, runInReadAction, failFastOnAcquireReadAction, progressIndicator, array, processor, mid, hi, failedSubTasks, right);
+              //children.add(right);
+              addToPendingCount(1);
+              right.fork();
+              hi = mid;
+            }
+            start = finish;
+          }
         }
       }
 

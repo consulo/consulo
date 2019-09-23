@@ -779,8 +779,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return;
       }
 
-      HeavyProcessLatch.INSTANCE.prioritizeUiActivity();
-
       compositeRef.set(window.findFileComposite(file));
       boolean newEditor = compositeRef.isNull();
       if (newEditor) {

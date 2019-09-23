@@ -37,6 +37,7 @@ import com.intellij.openapi.extensions.ExtensionsArea;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeExtension;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.impl.CoreProgressManager;
@@ -66,11 +67,12 @@ import consulo.psi.tree.ASTLeafFactory;
 import consulo.psi.tree.impl.DefaultASTCompositeFactory;
 import consulo.psi.tree.impl.DefaultASTLazyFactory;
 import consulo.psi.tree.impl.DefaultASTLeafFactory;
-
 import javax.annotation.Nonnull;
+
+import javax.annotation.Nullable;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author yole
@@ -142,50 +144,26 @@ public class CoreApplicationEnvironment {
   @Nonnull
   protected JobLauncher createJobLauncher() {
     return new JobLauncher() {
+
       @Override
-      public <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<T> things,
+      public <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<? extends T> things,
                                                          ProgressIndicator progress,
                                                          boolean runInReadAction,
                                                          boolean failFastOnAcquireReadAction,
-                                                         @Nonnull Processor<? super T> thingProcessor) {
+                                                         @Nonnull Processor<? super T> thingProcessor) throws ProcessCanceledException {
         for (T thing : things) {
-          if (!thingProcessor.process(thing))
-            return false;
+          if (!thingProcessor.process(thing)) return false;
         }
         return true;
       }
 
       @Nonnull
       @Override
-      public Job<Void> submitToJobThread(@Nonnull Runnable action, Consumer<Future> onDoneCallback) {
+      public Job<Void> submitToJobThread(@Nonnull Runnable action, @Nullable Consumer<? super Future<?>> onDoneCallback) {
         action.run();
-        if (onDoneCallback != null)
-          onDoneCallback.consume(new Future() {
-            @Override
-            public boolean cancel(boolean mayInterruptIfRunning) {
-              return false;
-            }
-
-            @Override
-            public boolean isCancelled() {
-              return false;
-            }
-
-            @Override
-            public boolean isDone() {
-              return true;
-            }
-
-            @Override
-            public Object get() {
-              return null;
-            }
-
-            @Override
-            public Object get(long timeout, @Nonnull TimeUnit unit) {
-              return null;
-            }
-          });
+        if (onDoneCallback != null) {
+          onDoneCallback.consume(CompletableFuture.completedFuture(null));
+        }
         return Job.NULL_JOB;
       }
     };
