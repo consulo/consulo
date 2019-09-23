@@ -24,6 +24,7 @@ import com.intellij.openapi.projectRoots.impl.SdkTableImpl;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.SystemProperties;
 import consulo.bundle.PredefinedBundlesProvider;
+import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -37,6 +38,8 @@ import java.util.List;
  */
 @Singleton
 public class PredefinedBundlesLoader {
+  private static final Logger LOG = Logger.getInstance(PredefinedBundlesLoader.class);
+
   private static class ContextImpl implements PredefinedBundlesProvider.Context {
     private final List<Sdk> myBundles = new ArrayList<>();
     private final SdkTable mySdkTable;
@@ -70,7 +73,12 @@ public class PredefinedBundlesLoader {
 
     ContextImpl context = new ContextImpl(sdkTable);
     for (PredefinedBundlesProvider provider : PredefinedBundlesProvider.EP_NAME.getExtensionList()) {
-      provider.createBundles(context);
+      try {
+        provider.createBundles(context);
+      }
+      catch (Error e) {
+        LOG.error(e);
+      }
     }
 
     List<Sdk> bundles = context.myBundles;

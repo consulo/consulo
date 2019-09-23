@@ -69,6 +69,17 @@ public interface Platform {
 
     @Nonnull
     String arch();
+
+    @Nonnull
+    Map<String, String> getEnvironmentVariables();
+
+    @Nullable
+    String getEnvironmentVariable(@Nonnull String key);
+
+    @Nullable
+    default String getEnvironmentVariable(@Nonnull String key, @Nonnull String defaultValue) {
+      return ObjectUtil.notNull(getEnvironmentVariable(key), defaultValue);
+    }
   }
 
   interface Jvm {
@@ -80,6 +91,17 @@ public interface Platform {
 
     @Nonnull
     String vendor();
+
+    @Nullable
+    String getRuntimeProperty(@Nonnull String key);
+
+    @Nullable
+    default String getRuntimeProperty(@Nonnull String key, @Nonnull String defaultValue) {
+      return ObjectUtil.notNull(getRuntimeProperty(key), defaultValue);
+    }
+
+    @Nonnull
+    Map<String, String> getRuntimeProperties();
   }
 
   @Nonnull
@@ -109,23 +131,45 @@ public interface Platform {
   boolean isUnderRoot();
 
   @Nullable
-  String getRuntimeProperty(@Nonnull String key);
+  @Deprecated
+  @DeprecationInfo("Use jvm().getRuntimeProperty()")
+  default String getRuntimeProperty(@Nonnull String key) {
+    return jvm().getRuntimeProperty(key);
+  }
 
   @Nullable
+  @Deprecated
+  @DeprecationInfo("Use jvm().getRuntimeProperty()")
+  @SuppressWarnings("deprecation")
   default String getRuntimeProperty(@Nonnull String key, @Nonnull String defaultValue) {
     return ObjectUtil.notNull(getRuntimeProperty(key), defaultValue);
   }
 
   @Nonnull
-  Map<String, String> getRuntimeProperties();
+  @Deprecated
+  @DeprecationInfo("Use jvm().getRuntimeProperty()")
+  default Map<String, String> getRuntimeProperties() {
+    return jvm().getRuntimeProperties();
+  }
 
   @Nonnull
-  Map<String, String> getEnvironmentVariables();
+  @Deprecated
+  @DeprecationInfo("Use os().getEnvironmentVariables()")
+  default Map<String, String> getEnvironmentVariables() {
+    return os().getEnvironmentVariables();
+  }
 
   @Nullable
-  String getEnvironmentVariable(@Nonnull String key);
+  @Deprecated
+  @DeprecationInfo("Use os().getEnvironmentVariables()")
+  default String getEnvironmentVariable(@Nonnull String key) {
+    return os().getEnvironmentVariable(key);
+  }
 
   @Nullable
+  @Deprecated
+  @DeprecationInfo("Use os().getEnvironmentVariables()")
+  @SuppressWarnings("deprecation")
   default String getEnvironmentVariable(@Nonnull String key, @Nonnull String defaultValue) {
     return ObjectUtil.notNull(getEnvironmentVariable(key), defaultValue);
   }

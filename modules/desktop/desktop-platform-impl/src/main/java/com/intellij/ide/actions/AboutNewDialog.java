@@ -141,6 +141,10 @@ public class AboutNewDialog extends WholeWestDialogWrapper {
     builder.item("version", platform.jvm().version());
     builder.item("runtimeVersion", platform.jvm().runtimeVersion());
     builder.item("locale", Locale.getDefault().toString());
+    builder.group("JVM Env");
+    for (Map.Entry<String, String> entry : platform.jvm().getRuntimeProperties().entrySet()) {
+      builder.item(entry.getKey(), StringUtil.escapeCharCharacters(entry.getValue()));
+    }
 
     builder.group("OS");
     builder.item("name", platform.os().name());
@@ -148,12 +152,7 @@ public class AboutNewDialog extends WholeWestDialogWrapper {
     builder.item("arch", platform.os().arch());
 
     builder.group("Env");
-    for (Map.Entry<String, String> entry : platform.getEnvironmentVariables().entrySet()) {
-      builder.item(entry.getKey(), StringUtil.escapeCharCharacters(entry.getValue()));
-    }
-
-    builder.group("JVM Env");
-    for (Map.Entry<String, String> entry : platform.getRuntimeProperties().entrySet()) {
+    for (Map.Entry<String, String> entry : platform.os().getEnvironmentVariables().entrySet()) {
       builder.item(entry.getKey(), StringUtil.escapeCharCharacters(entry.getValue()));
     }
 

@@ -86,6 +86,18 @@ public abstract class PlatformBase implements Platform {
       return OS_VERSION;
     }
 
+    @Nullable
+    @Override
+    public String getEnvironmentVariable(@Nonnull String key) {
+      return System.getenv(key);
+    }
+
+    @Nonnull
+    @Override
+    public Map<String, String> getEnvironmentVariables() {
+      return Collections.unmodifiableMap(System.getenv());
+    }
+
     @Nonnull
     @Override
     public String arch() {
@@ -111,6 +123,23 @@ public abstract class PlatformBase implements Platform {
     @Override
     public String vendor() {
       return StringUtil.notNullize(System.getProperty("java.vendor"), "n/a");
+    }
+
+    @Nullable
+    @Override
+    public String getRuntimeProperty(@Nonnull String key) {
+      return System.getProperty(key);
+    }
+
+    @Nonnull
+    @Override
+    public Map<String, String> getRuntimeProperties() {
+      Properties properties = System.getProperties();
+      Map<String, String> map = new LinkedHashMap<>();
+      for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+        map.put(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
+      }
+      return map;
     }
   }
 
@@ -159,35 +188,6 @@ public abstract class PlatformBase implements Platform {
   @Override
   public OperatingSystem os() {
     return myOperatingSystem;
-  }
-
-  @Nullable
-  @Override
-  public String getRuntimeProperty(@Nonnull String key) {
-    return System.getProperty(key);
-  }
-
-  @Nullable
-  @Override
-  public String getEnvironmentVariable(@Nonnull String key) {
-    return System.getenv(key);
-  }
-
-  @Nonnull
-  @Override
-  public Map<String, String> getEnvironmentVariables() {
-    return Collections.unmodifiableMap(System.getenv());
-  }
-
-  @Nonnull
-  @Override
-  public Map<String, String> getRuntimeProperties() {
-    Properties properties = System.getProperties();
-    Map<String, String> map = new LinkedHashMap<>();
-    for (Map.Entry<Object, Object> entry : properties.entrySet()) {
-      map.put(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
-    }
-    return map;
   }
 
   @Nonnull
