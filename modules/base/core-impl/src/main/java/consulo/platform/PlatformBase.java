@@ -42,8 +42,15 @@ public abstract class PlatformBase implements Platform {
   private static final boolean isLinux = _OS_NAME.startsWith("linux");
   private static final boolean isUnix = !isWindows && !isOS2;
 
-  private static final boolean isFileSystemCaseSensitive = isUnix && !isMac || "true".equalsIgnoreCase(System.getProperty("idea.case.sensitive.fs"));
+  // version numbers from http://msdn.microsoft.com/en-us/library/windows/desktop/ms724832.aspx
+  private static final boolean isWin2kOrNewer = isWindows && isOsVersionAtLeast("5.0");
+  private static final boolean isWinXpOrNewer = isWindows && isOsVersionAtLeast("5.1");
   private static final boolean isWinVistaOrNewer = isWindows && isOsVersionAtLeast("6.0");
+  private static final boolean isWin7OrNewer = isWindows && isOsVersionAtLeast("6.1");
+  private static final boolean isWin8OrNewer = isWindows && isOsVersionAtLeast("6.2");
+  private static final boolean isWin10OrNewer = isWindows && isOsVersionAtLeast("10.0");
+
+  private static final boolean isFileSystemCaseSensitive = isUnix && !isMac || "true".equalsIgnoreCase(System.getProperty("idea.case.sensitive.fs"));
   private static final boolean areSymLinksSupported = isUnix || isWinVistaOrNewer;
 
   public static boolean isOsVersionAtLeast(@Nonnull String version) {
@@ -70,8 +77,33 @@ public abstract class PlatformBase implements Platform {
     }
 
     @Override
+    public boolean isWindowsVistaOrNewer() {
+      return isWinVistaOrNewer;
+    }
+
+    @Override
+    public boolean isWindows7OrNewer() {
+      return isWin7OrNewer;
+    }
+
+    @Override
+    public boolean isWindows8OrNewer() {
+      return isWin8OrNewer;
+    }
+
+    @Override
+    public boolean isWindows10OrNewer() {
+      return isWin10OrNewer;
+    }
+
+    @Override
     public boolean isMac() {
       return isMac;
+    }
+
+    @Override
+    public boolean isLinux() {
+      return isLinux;
     }
 
     @Nonnull

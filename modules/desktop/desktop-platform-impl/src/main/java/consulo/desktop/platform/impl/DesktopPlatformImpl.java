@@ -34,7 +34,7 @@ class DesktopPlatformImpl extends PlatformBase {
   static class DesktopFileSystemImpl extends FileSystemImpl {
     @Nullable
     @Override
-    public Image getImage(File file) {
+    public Image getImage(@Nonnull File file) {
       Icon systemIcon = FileSystemView.getFileSystemView().getSystemIcon(file);
       return systemIcon == null ? null : new DesktopImageOverIconImpl(systemIcon);
     }

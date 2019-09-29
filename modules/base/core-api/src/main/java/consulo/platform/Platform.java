@@ -51,7 +51,7 @@ public interface Platform {
      * @return image filemanager image for file. If return null it will use default icon from IDE
      */
     @Nullable
-    default Image getImage(File file) {
+    default Image getImage(@Nonnull File file) {
       return null;
     }
   }
@@ -59,7 +59,25 @@ public interface Platform {
   interface OperatingSystem {
     boolean isWindows();
 
+    boolean isWindowsVistaOrNewer();
+
+    boolean isWindows7OrNewer();
+
+    boolean isWindows8OrNewer();
+
+    boolean isWindows10OrNewer();
+
     boolean isMac();
+
+    boolean isLinux();
+
+    default boolean isUnix() {
+      return !isWindows();
+    }
+
+    default boolean isXWindow() {
+      return isUnix() && !isMac();
+    }
 
     @Nonnull
     String name();
