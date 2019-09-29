@@ -16,6 +16,7 @@
 package consulo.platform;
 
 import com.intellij.openapi.extensions.PluginId;
+import com.intellij.util.LineSeparator;
 import com.intellij.util.ObjectUtil;
 import consulo.annotations.DeprecationInfo;
 import consulo.platform.internal.PlatformInternal;
@@ -77,6 +78,14 @@ public interface Platform {
 
     default boolean isXWindow() {
       return isUnix() && !isMac();
+    }
+
+    @Nonnull
+    default LineSeparator getLineSeparator() {
+      if(isWindows()) {
+        return LineSeparator.CRLF;
+      }
+      return LineSeparator.LF;
     }
 
     @Nonnull
