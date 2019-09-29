@@ -18,19 +18,19 @@ package com.intellij.execution;
 import com.intellij.openapi.util.SystemInfo;
 import javax.annotation.Nonnull;
 
-public enum Platform {
+public enum FilePathSeparator {
   WINDOWS('\\', ';'), UNIX('/', ':');
 
   public final char fileSeparator;
   public final char pathSeparator;
 
-  Platform(char fileSeparator, char pathSeparator) {
+  FilePathSeparator(char fileSeparator, char pathSeparator) {
     this.fileSeparator = fileSeparator;
     this.pathSeparator = pathSeparator;
   }
 
   @Nonnull
-  public static Platform current() {
+  public static FilePathSeparator current() {
     return SystemInfo.isWindows ? WINDOWS : UNIX;
   }
 }
