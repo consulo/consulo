@@ -182,12 +182,8 @@ public class StartupUtil {
     if (System.getProperty("jna.nosys") == null) {
       System.setProperty("jna.nosys", "true");  // prefer bundled JNA dispatcher lib
     }
-    try {
-      JnaLoader.load(log);
-    }
-    catch (Throwable t) {
-      log.error("Unable to load JNA library (OS: " + SystemInfo.OS_NAME + " " + SystemInfo.OS_VERSION + ")", t);
-    }
+
+    JnaLoader.load(log);
 
     if (SystemInfo.isWin2kOrNewer) {
       IdeaWin32.isAvailable();  // logging is done there
