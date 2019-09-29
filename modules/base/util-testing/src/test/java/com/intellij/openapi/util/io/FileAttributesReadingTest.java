@@ -15,11 +15,13 @@
  */
 package com.intellij.openapi.util.io;
 
+import com.intellij.jna.JnaLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.win32.FileInfo;
 import com.intellij.openapi.util.io.win32.IdeaWin32;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.TimeoutUtil;
+import consulo.logging.Logger;
 import org.junit.*;
 
 import javax.annotation.Nonnull;
@@ -36,6 +38,8 @@ public class FileAttributesReadingTest {
 
   @BeforeClass
   public static void checkMediator() throws Exception {
+    JnaLoader.load(Logger.getInstance(FileAttributesReadingTest.class));
+
     final String expectedName = SystemInfo.isWindows ? "IdeaWin32" : "JnaUnix";
     assertEquals(expectedName, FileSystemUtil.getMediatorName());
   }
