@@ -18,6 +18,7 @@ package com.intellij.openapi.command.impl;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.platform.Platform;
 
 import java.awt.*;
 
@@ -26,6 +27,9 @@ import java.awt.*;
  */
 class FocusBasedCurrentEditorProvider implements CurrentEditorProvider {
   public FileEditor getCurrentEditor() {
+    if(Platform.current().isWebService()) {
+      return null;
+    }
     // [kirillk] this is a hack, since much of editor-related code was written long before
     // own focus managenent in the platform, so this method should be strictly synchronous
     final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();

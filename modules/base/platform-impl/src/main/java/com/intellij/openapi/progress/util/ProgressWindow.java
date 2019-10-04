@@ -34,6 +34,7 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.messages.Topic;
 import com.intellij.util.ui.UIUtil;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -97,7 +98,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
     setModalityProgress(shouldShowBackground ? null : this);
 
     Component parent = parentComponent;
-    if (parent == null && project == null && !ApplicationManager.getApplication().isHeadlessEnvironment()) {
+    if (parent == null && project == null && !ApplicationManager.getApplication().isHeadlessEnvironment() && !Platform.current().isWebService()) {
       parent = JOptionPane.getRootFrame();
     }
 
