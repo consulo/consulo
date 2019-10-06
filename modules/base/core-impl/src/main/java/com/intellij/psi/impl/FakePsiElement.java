@@ -24,6 +24,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.util.IncorrectOperationException;
+import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
@@ -41,58 +42,68 @@ public abstract class FakePsiElement extends PsiElementBase implements PsiNamedE
     return this;
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public Language getLanguage() {
     return Language.ANY;
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public PsiElement[] getChildren() {
     return PsiElement.EMPTY_ARRAY;
   }
 
+  @RequiredReadAction
   @Override
   @Nullable
   public PsiElement getFirstChild() {
     return null;
   }
 
+  @RequiredReadAction
   @Override
   @Nullable
   public PsiElement getLastChild() {
     return null;
   }
 
+  @RequiredReadAction
   @Override
   @Nullable
   public PsiElement getNextSibling() {
     return null;
   }
 
+  @RequiredReadAction
   @Override
   @Nullable
   public PsiElement getPrevSibling() {
     return null;
   }
 
+  @RequiredReadAction
   @Override
   @Nullable
   public TextRange getTextRange() {
     return null;
   }
 
+  @RequiredReadAction
   @Override
   public int getStartOffsetInParent() {
     return 0;
   }
 
+  @RequiredReadAction
   @Override
   public int getTextLength() {
     return 0;
   }
 
+  @RequiredReadAction
   @Override
   @Nullable
   public PsiElement findElementAt(int offset) {
@@ -104,6 +115,7 @@ public abstract class FakePsiElement extends PsiElementBase implements PsiNamedE
     return 0;
   }
 
+  @RequiredReadAction
   @Override
   @Nullable
   @NonNls
@@ -111,12 +123,14 @@ public abstract class FakePsiElement extends PsiElementBase implements PsiNamedE
     return null;
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public char[] textToCharArray() {
     return new char[0];
   }
 
+  @RequiredReadAction
   @Override
   public boolean textContains(char c) {
     return false;
@@ -155,6 +169,9 @@ public abstract class FakePsiElement extends PsiElementBase implements PsiNamedE
   @Override
   public PsiManager getManager() {
     final PsiElement parent = getParent();
-    return parent != null ? parent.getManager() : null;
+    if(parent != null) {
+      return parent.getManager();
+    }
+    throw new IllegalArgumentException("Parent must be not null for return PsiManager, or override this method. Class: " + getClass());
   }
 }
