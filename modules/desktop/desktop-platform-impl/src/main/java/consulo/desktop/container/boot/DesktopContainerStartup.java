@@ -29,9 +29,7 @@ import com.intellij.ui.AppUIUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.container.boot.ContainerStartup;
 import consulo.container.util.StatCollector;
-import consulo.desktop.start.netty.ApplicationInternalLoggerFactory;
 import consulo.logging.Logger;
-import io.netty.util.internal.logging.InternalLoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -100,7 +98,8 @@ public class DesktopContainerStartup implements ContainerStartup {
     // desktop locker use netty. it will throw error due log4j2 initialize
     // see io.netty.channel.MultithreadEventLoopGroup.logger
     // it will override logger, which is active only if app exists
-    InternalLoggerFactory.setDefaultFactory(ApplicationInternalLoggerFactory.INSTANCE);
+    // FIXME [VISTALL] see feac1737-76bf-4952-b770-d3f8d1978e59
+    // InternalLoggerFactory.setDefaultFactory(ApplicationInternalLoggerFactory.INSTANCE);
 
     StartupUtil.prepareAndStart(args, DesktopImportantFolderLocker::new, (newConfigFolder, commandLineArgs) -> {
       AppUIUtil.updateWindowIcon(JOptionPane.getRootFrame());
