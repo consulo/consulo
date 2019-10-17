@@ -60,6 +60,11 @@
       <with attribute="implementationClass" implements="consulo.extensions.ExtensionExtender"/>
     </extensionPoint>
 
+    <extensionPoint name="editorFactoryDocumentListener" interface="com.intellij.openapi.editor.event.DocumentListener"/>
+    <extensionPoint name="editorFactoryMouseListener" interface="com.intellij.openapi.editor.event.EditorMouseListener"/>
+    <extensionPoint name="editorFactoryMouseMotionListener" interface="com.intellij.openapi.editor.event.EditorMouseMotionListener"/>
+    <extensionPoint name="editorFactoryListener" interface="com.intellij.openapi.editor.event.EditorFactoryListener"/>
+
     <extensionPoint name="generatedSourcesFilter" interface="com.intellij.openapi.roots.GeneratedSourcesFilter"/>
     <extensionPoint name="defaultLibraryRootDetector" interface="com.intellij.openapi.roots.libraries.ui.RootDetector"/>
 
@@ -2275,7 +2280,6 @@
                            implementationClass="com.intellij.psi.impl.source.resolve.reference.ArbitraryPlaceUrlReferenceProvider"/>
 
     <uiDebuggerExtension implementation="com.intellij.ui.debugger.extensions.ActionTracer"/>
-    <uiDebuggerExtension implementation="com.intellij.openapi.util.objectTree.DisposerDebugger"/>
 
     <globalInspection shortName="Annotator" displayName="Annotator" groupKey="inspection.general.tools.group.name" groupBundle="messages.InspectionsBundle"
                       enabledByDefault="true" level="ERROR"
@@ -2591,5 +2595,11 @@
     <intentionMenuContributor implementation="com.intellij.codeInsight.daemon.impl.CleanupIntentionMenuContributor"/>
 
     <applicationService serviceImplementation="com.intellij.openapi.editor.impl.EditorMouseHoverPopupControl" />
+    <applicationService serviceImplementation="com.intellij.openapi.editor.EditorMouseHoverPopupManager" />
+
+    <editorFactoryMouseListener implementation="com.intellij.openapi.editor.EditorMouseHoverPopupManager$MyEditorMouseEventListener"/>
+    <editorFactoryMouseMotionListener implementation="com.intellij.openapi.editor.EditorMouseHoverPopupManager$MyEditorMouseMotionEventListener"/>
+
+    <applicationService serviceInterface="com.intellij.openapi.application.AsyncExecutionService" serviceImplementation="com.intellij.openapi.application.impl.AsyncExecutionServiceImpl" />
   </extensions>
 </consulo-plugin>

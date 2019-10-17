@@ -16,6 +16,7 @@
 
 package com.intellij.openapi.ui.popup;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.awt.*;
@@ -26,7 +27,7 @@ public interface IdePopupEventDispatcher {
   @Nullable
   Component getComponent();
 
-  @Nullable
+  @Nonnull
   Stream<JBPopup> getPopupStream();
 
   boolean dispatch(AWTEvent event);
@@ -35,5 +36,15 @@ public interface IdePopupEventDispatcher {
 
   boolean close();
 
-  void setRestoreFocusSilentely();
+  default void setRestoreFocusSilently() {
+    //noinspection deprecation
+    setRestoreFocusSilentely();
+  }
+
+  /**
+   * @deprecated use {@link IdePopupEventDispatcher#setRestoreFocusSilently()}
+   */
+  @Deprecated
+  default void setRestoreFocusSilentely() {
+  }
 }

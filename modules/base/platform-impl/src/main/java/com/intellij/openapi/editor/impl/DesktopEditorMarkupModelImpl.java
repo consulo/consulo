@@ -42,6 +42,7 @@ import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.DisposerUtil;
 import com.intellij.openapi.util.ProperTextRange;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.ui.*;
@@ -57,8 +58,8 @@ import consulo.editor.impl.DesktopEditorErrorPanel;
 import consulo.ui.RequiredUIAccess;
 import gnu.trove.THashSet;
 import gnu.trove.TIntIntHashMap;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -135,6 +136,8 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
   }
 
   public boolean showToolTipByMouseMove(final MouseEvent e) {
+    boolean newLook = Registry.is("editor.new.mouse.hover.popups");
+
     if (myEditor.getVisibleLineCount() == 0) return false;
     MouseEvent me = new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), 0, e.getY() + 1, e.getClickCount(), e.isPopupTrigger());
 
@@ -161,7 +164,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
       me = new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), me.getX(), y + 1, e.getClickCount(), e.isPopupTrigger());
       bigRenderer = myTooltipRendererProvider.calcTooltipRenderer(highlighters);
       if (bigRenderer != null) {
-        myErrorPanel.showTooltip(me, bigRenderer, createHint(me));
+        myErrorPanel.showTooltip(me, bigRenderer, createHint(me).setForcePopup(newLook));
         return true;
       }
       return false;
@@ -552,7 +555,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
           public Dimension getPreferredSize() {
             int width = myEditor.getGutterComponentEx().getWidth() + myEditor.getScrollingModel().getVisibleArea().width;
             if (!ToolWindowManagerEx.getInstanceEx(myEditor.getProject()).getIdsOn(ToolWindowAnchor.LEFT).isEmpty()) width--;
-            return new Dimension(width - BalloonImpl.POINTER_WIDTH, myEditor.getLineHeight() * (myEndVisualLine - myStartVisualLine));
+            return new Dimension(width - BalloonImpl.POINTER_LENGTH.get(), myEditor.getLineHeight() * (myEndVisualLine - myStartVisualLine));
           }
 
           @Override

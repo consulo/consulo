@@ -214,7 +214,7 @@ public final class DocumentationManager extends DockablePopupManager<Documentati
   }
 
   public static DocumentationManager getInstance(@Nonnull Project project) {
-    return ServiceManager.getService(DocumentationManager.class);
+    return ServiceManager.getService(project, DocumentationManager.class);
   }
 
   @Inject

@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author mike
@@ -98,9 +99,15 @@ public class ExtensionPointName<T> {
   @Nonnull
   public <V extends T> V findExtensionOrFail(@Nonnull ComponentManager componentManager, @Nonnull Class<V> instanceOf) {
     V extension = componentManager.findExtension(this, instanceOf);
-    if(extension == null) {
+    if (extension == null) {
       throw new IllegalArgumentException("Extension point: " + getName() + " not contains extension of type: " + instanceOf);
     }
     return extension;
+  }
+
+  public void forEachExtensionSafe(@Nonnull Consumer<T> consumer) {
+    for (T value : getExtensionList()) {
+      consumer.accept(value);
+    }
   }
 }

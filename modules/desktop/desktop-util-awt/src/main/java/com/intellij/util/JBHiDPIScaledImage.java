@@ -1,21 +1,8 @@
-/*
- * Copyright 2000-2013 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util;
 
 import com.intellij.ui.paint.PaintUtil.RoundingMode;
+import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.JBUI;
 import org.imgscalr.Scalr;
@@ -32,7 +19,7 @@ import static java.lang.Math.round;
  * @author Konstantin Bulenkov
  * @author tav
  */
-public class JBHiDPIScaledImage extends BufferedImage {
+public final class JBHiDPIScaledImage extends BufferedImage {
   @Nullable
   private final Image myImage;
   private final double myUserWidth;
@@ -49,9 +36,9 @@ public class JBHiDPIScaledImage extends BufferedImage {
   /**
    * Creates a scaled HiDPI-aware BufferedImage, targeting the system default scale.
    *
-   * @param width the width in user coordinate space
+   * @param width  the width in user coordinate space
    * @param height the height in user coordinate space
-   * @param type the type
+   * @param type   the type
    */
   public JBHiDPIScaledImage(double width, double height, int type) {
     this((GraphicsConfiguration)null, width, height, type);
@@ -67,14 +54,14 @@ public class JBHiDPIScaledImage extends BufferedImage {
   /**
    * Creates a scaled HiDPI-aware BufferedImage, targeting the graphics scale.
    *
-   * @param g the graphics which provides the target scale
-   * @param width the width in user coordinate space
+   * @param g      the graphics which provides the target scale
+   * @param width  the width in user coordinate space
    * @param height the height in user coordinate space
-   * @param type the type
-   * @param rm the rounding mode
+   * @param type   the type
+   * @param rm     the rounding mode
    */
   public JBHiDPIScaledImage(@Nullable Graphics2D g, double width, double height, int type, @Nonnull RoundingMode rm) {
-    this(JBUI.sysScale(g), width, height, type, rm);
+    this(JBUIScale.sysScale(g), width, height, type, rm);
   }
 
   /**
@@ -94,10 +81,10 @@ public class JBHiDPIScaledImage extends BufferedImage {
   /**
    * Creates a scaled HiDPI-aware BufferedImage, targeting the graphics config.
    *
-   * @param gc the graphics config which provides the target scale
-   * @param width the width in user coordinate space
+   * @param gc     the graphics config which provides the target scale
+   * @param width  the width in user coordinate space
    * @param height the height in user coordinate space
-   * @param type the type
+   * @param type   the type
    */
   public JBHiDPIScaledImage(@Nullable GraphicsConfiguration gc, double width, double height, int type) {
     this(gc, width, height, type, RoundingMode.FLOOR);
@@ -106,12 +93,11 @@ public class JBHiDPIScaledImage extends BufferedImage {
   /**
    * Creates a scaled HiDPI-aware BufferedImage, targeting the graphics config.
    *
-   * @param gc the graphics config which provides the target scale
-   * @param width the width in user coordinate space
+   * @param gc     the graphics config which provides the target scale
+   * @param width  the width in user coordinate space
    * @param height the height in user coordinate space
-   * @param rm the rounding mode to apply when converting width/height to the device space
-   * @param type the type
-   * @param rm the rounding mode
+   * @param rm     the rounding mode to apply when converting width/height to the device space
+   * @param type   the type
    */
   public JBHiDPIScaledImage(@Nullable GraphicsConfiguration gc, double width, double height, int type, @Nonnull RoundingMode rm) {
     this(JBUI.sysScale(gc), width, height, type, rm);
@@ -136,10 +122,10 @@ public class JBHiDPIScaledImage extends BufferedImage {
    * Creates a HiDPI-aware BufferedImage wrapper for the provided scaled raw image.
    * The wrapper image will represent the scaled raw image in user coordinate space.
    *
-   * @param image the scaled raw image
-   * @param width the width in user coordinate space
+   * @param image  the scaled raw image
+   * @param width  the width in user coordinate space
    * @param height the height in user coordinate space
-   * @param type the type
+   * @param type   the type
    */
   public JBHiDPIScaledImage(@Nonnull Image image, double width, double height, int type) {
     super(1, 1, type); // a dummy wrapper
@@ -159,8 +145,9 @@ public class JBHiDPIScaledImage extends BufferedImage {
    * @param scaleFactor the scale factor
    * @return scaled instance
    */
+  @Nonnull
   public JBHiDPIScaledImage scale(double scaleFactor) {
-    Image img = myImage == null ? this: myImage;
+    Image img = myImage == null ? this : myImage;
 
     int w = (int)(scaleFactor * getRealWidth(null));
     int h = (int)(scaleFactor * getRealHeight(null));
@@ -174,10 +161,38 @@ public class JBHiDPIScaledImage extends BufferedImage {
     if (myImage != null) {
       return new JBHiDPIScaledImage(scaled, newUserWidth, newUserHeight, getType());
     }
-    JBHiDPIScaledImage newImg = new JBHiDPIScaledImage(newUserWidth, newUserHeight, getType());
+    JBHiDPIScaledImage newImg = new JBHiDPIScaledImage(myScale, newUserWidth, newUserHeight, getType(), RoundingMode.ROUND);
     Graphics2D g = newImg.createGraphics();
-    g.drawImage(scaled, 0, 0, (int)round(newUserWidth), (int)round(newUserHeight),
-                0, 0, scaled.getWidth(null), scaled.getHeight(null), null);
+    g.drawImage(scaled, 0, 0, (int)round(newUserWidth), (int)round(newUserHeight), 0, 0, scaled.getWidth(null), scaled.getHeight(null), null);
+    g.dispose();
+    return newImg;
+  }
+
+  /**
+   * Returns JBHiDPIScaledImage of the same structure scaled to the provided dimensions.
+   * Dimensions are in user-space coordinates (unscaled)
+   *
+   * @return scaled instance
+   */
+  @Nonnull
+  public JBHiDPIScaledImage scale(int targetUserWidth, int targetUserHeight) {
+    Image img = myImage == null ? this : myImage;
+
+    int w = getUserWidth(null);
+    int h = getUserHeight(null);
+    if (w <= 0 || h <= 0 || w == targetUserWidth && h == targetUserHeight) return this;
+
+    int targetWidth = (int)round(targetUserWidth * myScale);
+    int targetHeight = (int)round(targetUserHeight * myScale);
+
+    Image scaled = Scalr.resize(ImageUtil.toBufferedImage(img), Scalr.Method.QUALITY, Scalr.Mode.FIT_EXACT, targetWidth, targetHeight);
+
+    if (myImage != null) {
+      return new JBHiDPIScaledImage(scaled, targetUserWidth, targetUserHeight, getType());
+    }
+    JBHiDPIScaledImage newImg = new JBHiDPIScaledImage(myScale, targetUserWidth, targetUserHeight, getType(), RoundingMode.ROUND);
+    Graphics2D g = newImg.createGraphics();
+    g.drawImage(scaled, 0, 0, targetUserWidth, targetUserHeight, 0, 0, scaled.getWidth(null), scaled.getHeight(null), null);
     g.dispose();
     return newImg;
   }

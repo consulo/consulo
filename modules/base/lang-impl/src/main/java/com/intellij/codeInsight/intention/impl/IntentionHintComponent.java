@@ -41,10 +41,9 @@ import com.intellij.util.Alarm;
 import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.EmptyIcon;
-import javax.annotation.Nonnull;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -332,7 +331,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
       public void mousePressed(@Nonnull MouseEvent e) {
         if (!e.isPopupTrigger() && e.getButton() == MouseEvent.BUTTON1) {
           AnAction action = ActionManager.getInstance().getAction(IdeActions.ACTION_SHOW_INTENTION_ACTIONS);
-          AnActionEvent event = AnActionEvent.createFromInputEvent(e, ActionPlaces.MOUSE_SHORTCUT, null, SimpleDataContext.getProjectContext(project));
+          AnActionEvent event = AnActionEvent.createFromInputEvent(e, ActionPlaces.MOUSE_SHORTCUT, new Presentation(), SimpleDataContext.getProjectContext(project));
           //ActionsCollector.getInstance().record(project, action, event, file.getLanguage());
 
           showPopup(true);

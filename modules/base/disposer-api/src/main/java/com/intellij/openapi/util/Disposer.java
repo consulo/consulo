@@ -65,16 +65,16 @@ public class Disposer {
     return ourInternal.isDisposed(disposable);
   }
 
+  public static boolean isDisposing(@Nonnull Disposable disposable) {
+    return ourInternal.isDisposing(disposable);
+  }
+
   public static void dispose(@Nonnull Disposable disposable) {
     dispose(disposable, true);
   }
 
   public static void dispose(@Nonnull Disposable disposable, boolean processUnregistered) {
     ourInternal.dispose(disposable, processUnregistered);
-  }
-
-  public static void disposeChildAndReplace(@Nonnull Disposable toDispose, @Nonnull Disposable toReplace) {
-    ourInternal.disposeChildAndReplace(toDispose, toReplace);
   }
 
   public static boolean isDebugMode() {

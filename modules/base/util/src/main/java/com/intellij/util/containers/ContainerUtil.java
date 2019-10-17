@@ -1308,11 +1308,11 @@ public class ContainerUtil extends ContainerUtilRt {
   }
 
   @Contract(pure = true)
-  public static <T, U extends T> U findInstance(@Nonnull Iterable<T> iterable, @Nonnull Class<U> aClass) {
+  public static <T, U extends T> U findInstance(@Nonnull Iterable<? extends T> iterable, @Nonnull Class<? extends U> aClass) {
     return findInstance(iterable.iterator(), aClass);
   }
 
-  public static <T, U extends T> U findInstance(@Nonnull Iterator<T> iterator, @Nonnull Class<U> aClass) {
+  public static <T, U extends T> U findInstance(@Nonnull Iterator<? extends T> iterator, @Nonnull Class<? extends U> aClass) {
     //noinspection unchecked
     return (U)find(iterator, FilteringIterator.instanceOf(aClass));
   }
@@ -3029,6 +3029,15 @@ public class ContainerUtil extends ContainerUtilRt {
   public static <K, V> Map<K, V> createWeakKeyWeakValueMap() {
     //noinspection deprecation
     return new WeakKeyWeakValueHashMap<>(true);
+  }
+
+  public static <T> boolean all(@Nonnull T[] collection, @Nonnull Condition<? super T> condition) {
+    for (T t : collection) {
+      if (!condition.value(t)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   public static <T> boolean all(@Nonnull Collection<? extends T> collection, @Nonnull Condition<? super T> condition) {

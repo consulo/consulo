@@ -16,13 +16,13 @@
 
 package com.intellij.util;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.DifferenceFilter;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.containers.JBTreeTraverser;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -100,6 +100,20 @@ public class ReflectionUtil {
   @Nonnull
   public static String declarationToString(@Nonnull GenericDeclaration anInterface) {
     return anInterface.toString() + Arrays.asList(anInterface.getTypeParameters()) + " loaded by " + ((Class)anInterface).getClassLoader();
+  }
+
+  @Nonnull
+  public static Class<?> boxType(@Nonnull Class<?> type) {
+    if (!type.isPrimitive()) return type;
+    if (type == boolean.class) return Boolean.class;
+    if (type == byte.class) return Byte.class;
+    if (type == short.class) return Short.class;
+    if (type == int.class) return Integer.class;
+    if (type == long.class) return Long.class;
+    if (type == float.class) return Float.class;
+    if (type == double.class) return Double.class;
+    if (type == char.class) return Character.class;
+    return type;
   }
 
   @Nonnull

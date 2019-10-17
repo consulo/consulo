@@ -61,4 +61,8 @@ public interface IdeFrame {
   default boolean isActive() {
     return Window.getActiveWindow() == getWindow();
   }
+
+  default boolean isInFullScreen() {
+    return false;
+  }
 }

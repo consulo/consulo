@@ -200,29 +200,32 @@ public final class CtrlMouseHandler {
     myProject = project;
 
     if(project.isDefault()) {
-      return;
+      // fixme [vistall] hack for javac bug with return inside constructor and lambda parameter
+      // [203,6] error: variable __ might not have been initialized
+      //return;
     }
-
-    StartupManager.getInstance(project).registerPostStartupActivity((DumbAwareRunnable)() -> {
-      EditorEventMulticaster eventMulticaster = EditorFactory.getInstance().getEventMulticaster();
-      eventMulticaster.addEditorMouseListener(myEditorMouseAdapter, project);
-      eventMulticaster.addEditorMouseMotionListener(myEditorMouseMotionListener, project);
-      eventMulticaster.addCaretListener(new CaretListener() {
-        @Override
-        public void caretPositionChanged(@Nonnull CaretEvent e) {
-          if (myHint != null) {
-            DocumentationManager.getInstance(myProject).updateToolwindowContext();
+    else {
+      StartupManager.getInstance(project).registerPostStartupActivity((DumbAwareRunnable)() -> {
+        EditorEventMulticaster eventMulticaster = EditorFactory.getInstance().getEventMulticaster();
+        eventMulticaster.addEditorMouseListener(myEditorMouseAdapter, project);
+        eventMulticaster.addEditorMouseMotionListener(myEditorMouseMotionListener, project);
+        eventMulticaster.addCaretListener(new CaretListener() {
+          @Override
+          public void caretPositionChanged(@Nonnull CaretEvent e) {
+            if (myHint != null) {
+              DocumentationManager.getInstance(myProject).updateToolwindowContext();
+            }
           }
+        }, project);
+      });
+      project.getMessageBus().connect().subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
+        @Override
+        public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
+          disposeHighlighter();
+          cancelPreviousTooltip();
         }
-      }, project);
-    });
-    project.getMessageBus().connect().subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
-      @Override
-      public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
-        disposeHighlighter();
-        cancelPreviousTooltip();
-      }
-    });
+      });
+    }
   }
 
   private void cancelPreviousTooltip() {

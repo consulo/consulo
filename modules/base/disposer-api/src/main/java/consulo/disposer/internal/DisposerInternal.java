@@ -35,9 +35,9 @@ public abstract class DisposerInternal {
 
   public abstract boolean isDisposed(@Nonnull Disposable disposable);
 
-  public abstract void dispose(@Nonnull Disposable disposable, boolean processUnregistered);
+  public abstract boolean isDisposing(@Nonnull Disposable disposable);
 
-  public abstract void disposeChildAndReplace(@Nonnull Disposable toDispose, @Nonnull Disposable toReplace);
+  public abstract void dispose(@Nonnull Disposable disposable, boolean processUnregistered);
 
   public abstract TraceableDisposable newTraceDisposable(boolean debug);
 

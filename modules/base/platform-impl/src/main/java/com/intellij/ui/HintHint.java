@@ -20,8 +20,8 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -32,6 +32,7 @@ public class HintHint {
   private Component myOriginalComponent;
   private Point myOriginalPoint;
 
+  private boolean myForcePopup;
   private boolean myAwtTooltip = false;
   private Balloon.Position myPreferredPosition = Balloon.Position.below;
 
@@ -93,6 +94,15 @@ public class HintHint {
 
   public boolean isAwtTooltip() {
     return myAwtTooltip;
+  }
+
+  public boolean isPopupForced() {
+    return myForcePopup;
+  }
+
+  public HintHint setForcePopup(boolean forcePopup) {
+    myForcePopup = forcePopup;
+    return this;
   }
 
   public Component getOriginalComponent() {
@@ -284,11 +294,10 @@ public class HintHint {
   }
 
   /**
-   *
    * @param enabled is {@code true} by default and balloon appears with transparency animation. {@code false} means instant opaque showing.
    * @return current instance of HintHint
    */
-  public HintHint setAnimationEnabled(boolean enabled){
+  public HintHint setAnimationEnabled(boolean enabled) {
     myAnimationEnabled = enabled;
     return this;
   }
