@@ -9,10 +9,10 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +37,11 @@ public final class ObjectTree {
     return myObject2NodeMap.get(object);
   }
 
-  void putNode(@Nonnull Disposable object, @Nullable("null means remove") ObjectNode node) {
+  /**
+   * @param object
+   * @param node null means remove
+   */
+  void putNode(@Nonnull Disposable object, @Nullable ObjectNode node) {
     if (node == null) {
       myObject2NodeMap.remove(object);
     }
