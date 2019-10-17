@@ -63,6 +63,9 @@ public abstract class FileTypeRegistry {
   @Nonnull
   public abstract FileType getFileTypeByFileName(@Nonnull @NonNls String fileName);
 
+  @Nonnull
+  public abstract FileType getFileTypeByFileName(@Nonnull @NonNls CharSequence fileName);
+
   /**
    * Returns the file type for the specified extension.
    * Note that a more general way of obtaining file type is with {@link #getFileTypeByFile(VirtualFile)}

@@ -21,6 +21,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.concurrency.Promise;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,6 +38,12 @@ public abstract class DataManager {
    */
   @Nonnull
   public abstract DataContext getDataContext();
+
+  /**
+   * @return {@link DataContext} constructed by the currently focused component.
+   */
+  @Nonnull
+  public abstract Promise<DataContext> getDataContextFromFocusAsync();
 
   @Nonnull
   public abstract AsyncResult<DataContext> getDataContextFromFocus();

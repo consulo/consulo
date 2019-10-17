@@ -43,6 +43,12 @@ class MockFileTypeManager extends FileTypeManager {
 
   @Nonnull
   @Override
+  public FileType getFileTypeByFileName(@Nonnull @NonNls CharSequence fileName) {
+    return MockLanguageFileType.INSTANCE;
+  }
+
+  @Nonnull
+  @Override
   public FileType getFileTypeByFile(@Nonnull VirtualFile file) {
     return MockLanguageFileType.INSTANCE;
   }

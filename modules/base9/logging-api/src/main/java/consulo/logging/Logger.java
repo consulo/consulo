@@ -99,6 +99,10 @@ public interface Logger {
     error(message);
   }
 
+  default void error(@NonNls String message, @Nullable Throwable throwable,  Attachment... attachments) {
+    error(message);
+  }
+
   default void error(@NonNls String message, @NonNls String... details) {
     error(message, new Throwable(), details);
   }

@@ -34,12 +34,11 @@ import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.FontPreferences;
 import com.intellij.openapi.editor.colors.impl.FontPreferencesImpl;
-import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.editor.event.DocumentAdapter;
+import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
@@ -57,18 +56,19 @@ import com.intellij.ui.components.JBList;
 import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.util.CollectConsumer;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
@@ -133,7 +133,6 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
     setForceShowAsPopup(true);
     setCancelOnClickOutside(false);
     setResizable(true);
-    AbstractPopup.suppressMacCornerFor(getComponent());
 
     myProject = project;
     myEditor = InjectedLanguageUtil.getTopLevelEditor(editor);
@@ -1146,21 +1145,20 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
   }
 
   @Override
-  public boolean showElementActions() {
-    if (!isVisible()) return false;
+  public void showElementActions(InputEvent e) {
+    if (!isVisible()) return;
 
     final LookupElement element = getCurrentItem();
     if (element == null) {
-      return false;
+      return;
     }
 
     final Collection<LookupElementAction> actions = getActionsFor(element);
     if (actions.isEmpty()) {
-      return false;
+      return;
     }
 
     showItemPopup(JBPopupFactory.getInstance().createListPopup(new LookupActionsStep(actions, this, element)));
-    return true;
   }
 
   @Nonnull

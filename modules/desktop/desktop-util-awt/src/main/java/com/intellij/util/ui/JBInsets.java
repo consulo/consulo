@@ -47,6 +47,11 @@ public class JBInsets extends Insets {
     return top + bottom;
   }
 
+  @Nonnull
+  public static JBInsets create(int topBottom, int leftRight) {
+    return new JBInsets(topBottom, leftRight, topBottom, leftRight);
+  }
+
   public static JBInsets create(@Nonnull Insets insets) {
     if (insets instanceof JBInsets) {
       JBInsets copy = new JBInsets(0, 0, 0, 0);

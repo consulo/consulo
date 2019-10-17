@@ -87,7 +87,7 @@ public abstract class EditorFactory {
    * @see Editor#getProject()
    * @see #releaseEditor(Editor)
    */
-  public abstract Editor createEditor(@Nonnull Document document, @javax.annotation.Nullable Project project);
+  public abstract Editor createEditor(@Nonnull Document document, @Nullable Project project);
 
   /**
    * Creates an editor for the specified document associated with the specified project.
@@ -124,7 +124,18 @@ public abstract class EditorFactory {
    * @see Editor#getProject()
    * @see #releaseEditor(Editor)
    */
-  public abstract Editor createViewer(@Nonnull Document document, @javax.annotation.Nullable Project project);
+  public abstract Editor createViewer(@Nonnull Document document, @Nullable Project project);
+
+  /**
+   * Creates a read-only editor for the specified document associated with the specified project.
+   *
+   * @param document the document to create the editor for.
+   * @param project  the project with which the editor is associated.
+   * @return the editor instance.
+   * @see Editor#getProject()
+   * @see #releaseEditor(Editor)
+   */
+  public abstract Editor createViewer(@Nonnull Document document, @Nullable Project project, @Nonnull EditorKind editorKind);
 
   /**
    * Disposes of the specified editor instance.

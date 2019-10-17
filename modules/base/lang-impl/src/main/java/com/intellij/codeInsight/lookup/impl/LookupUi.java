@@ -440,7 +440,7 @@ class LookupUi {
         @Override
         public void mousePressed(MouseEvent e) {
           if (!e.isPopupTrigger() && e.getButton() == MouseEvent.BUTTON1) {
-            myLookup.showElementActions();
+            myLookup.showElementActions(null);
           }
         }
       });

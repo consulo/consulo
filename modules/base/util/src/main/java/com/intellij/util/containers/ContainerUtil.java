@@ -20,9 +20,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.*;
 import gnu.trove.*;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.util.HashMap;
@@ -3030,6 +3029,15 @@ public class ContainerUtil extends ContainerUtilRt {
   public static <K, V> Map<K, V> createWeakKeyWeakValueMap() {
     //noinspection deprecation
     return new WeakKeyWeakValueHashMap<>(true);
+  }
+
+  public static <T> boolean all(@Nonnull Collection<? extends T> collection, @Nonnull Condition<? super T> condition) {
+    for (T t : collection) {
+      if (!condition.value(t)) {
+        return false;
+      }
+    }
+    return true;
   }
 }
 

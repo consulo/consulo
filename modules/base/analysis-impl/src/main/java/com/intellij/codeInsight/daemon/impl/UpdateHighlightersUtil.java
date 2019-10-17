@@ -137,7 +137,7 @@ public class UpdateHighlightersUtil {
   static void setHighlightersOutsideRange(@Nonnull final Project project,
                                           @Nonnull final Document document,
                                           @Nonnull final PsiFile psiFile,
-                                          @Nonnull final List<HighlightInfo> infos,
+                                          @Nonnull final List<? extends HighlightInfo> infos,
                                           @Nullable final EditorColorsScheme colorsScheme,
                                           // if null global scheme will be used
                                           final int startOffset,
@@ -216,7 +216,7 @@ public class UpdateHighlightersUtil {
                                      @Nonnull final Document document,
                                      @Nonnull final TextRange range,
                                      @Nullable final EditorColorsScheme colorsScheme, // if null global scheme will be used
-                                     @Nonnull final List<HighlightInfo> infos,
+                                     @Nonnull final List<? extends HighlightInfo> infos,
                                      @Nonnull final MarkupModelEx markup,
                                      final int group) {
     ApplicationManager.getApplication().assertIsDispatchThread();

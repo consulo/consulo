@@ -139,4 +139,17 @@ public abstract class IntentionManager  {
    */
   @Nonnull
   public abstract LocalQuickFix convertToFix(@Nonnull IntentionAction action);
+
+  /**
+   * @return intention to start code cleanup on file
+   */
+  @Nonnull
+  public abstract IntentionAction createCleanupAllIntention();
+
+  /**
+   * @return options for cleanup intention {@link #createCleanupAllIntention()}
+   * e.g. edit enabled cleanup inspections or starting cleanup on predefined scope
+   */
+  @Nonnull
+  public abstract List<IntentionAction> getCleanupIntentionOptions();
 }

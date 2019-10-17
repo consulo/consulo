@@ -8,6 +8,7 @@ import com.intellij.openapi.editor.ex.util.EditorUtil;
 import javax.annotation.Nonnull;
 
 import java.awt.*;
+import java.util.function.Consumer;
 
 /**
  * A single Tab character
@@ -39,7 +40,9 @@ class TabFragment implements LineFragment {
   }
 
   @Override
-  public void draw(Graphics2D g, float x, float y, int startColumn, int endColumn) {
+  public Consumer<Graphics2D> draw(float x, float y, int startColumn, int endColumn) {
+    return g -> {
+    };
   }
 
   @Nonnull
@@ -75,21 +78,21 @@ class TabFragment implements LineFragment {
 
   @Override
   public int[] xToVisualColumn(float startX, float x) {
-    if (x <= startX) return new int[] {0, 0};
+    if (x <= startX) return new int[]{0, 0};
     float nextTabStop = getNextTabStop(startX);
-    if (x > nextTabStop) return new int[] {getVisualColumnCount(startX), 1};
+    if (x > nextTabStop) return new int[]{getVisualColumnCount(startX), 1};
     int column;
     boolean closerToLargerColumns;
     if (myEditor.getSettings().isCaretInsideTabs()) {
       float plainSpaceWidth = myView.getPlainSpaceWidth();
-      column = Math.round((x - startX)/plainSpaceWidth);
+      column = Math.round((x - startX) / plainSpaceWidth);
       closerToLargerColumns = (x - startX) > (column * plainSpaceWidth);
     }
     else {
       column = x > (startX + nextTabStop) / 2 ? getVisualColumnCount(startX) : 0;
       closerToLargerColumns = column == 0;
     }
-    return new int[] {column, closerToLargerColumns ? 1 : 0};
+    return new int[]{column, closerToLargerColumns ? 1 : 0};
   }
 
   @Override

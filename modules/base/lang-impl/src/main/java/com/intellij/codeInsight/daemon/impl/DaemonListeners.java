@@ -20,6 +20,8 @@ import com.intellij.ProjectTopics;
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
+import com.intellij.codeInsight.documentation.DocumentationManager;
+import com.intellij.codeInsight.folding.impl.FoldingUtil;
 import com.intellij.codeInsight.hint.TooltipController;
 import com.intellij.ide.AppLifecycleListener;
 import com.intellij.ide.IdeTooltipManager;
@@ -34,15 +36,18 @@ import com.intellij.openapi.command.CommandEvent;
 import com.intellij.openapi.command.CommandListener;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.undo.UndoManager;
-import consulo.logging.Logger;
-import com.intellij.openapi.editor.*;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.EditorFactory;
+import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.actionSystem.DocCommandGroupId;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.editor.ex.EditorEventMulticasterEx;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
-import com.intellij.openapi.editor.impl.DesktopEditorImpl;
+import com.intellij.openapi.editor.ex.util.EditorUtil;
+import com.intellij.openapi.editor.impl.EditorMouseHoverPopupControl;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -55,6 +60,7 @@ import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderEx;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.VcsDirtyScopeManager;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -78,10 +84,11 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.vcsUtil.VcsUtil;
 import consulo.command.undo.ProjectUndoManager;
+import consulo.logging.Logger;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -197,12 +204,13 @@ public class DaemonListeners implements Disposable {
             !worthBothering(editor.getDocument(), editor.getProject())) {
           return; //no need to stop daemon if something happened in the console
         }
-        if (!application.isUnitTestMode()) {
+        Application app = ApplicationManager.getApplication();
+
+        if (!app.isUnitTestMode()) {
           ApplicationManager.getApplication().invokeLater(() -> {
-            if (!editor.getComponent().isShowing() || myProject.isDisposed()) {
-              return;
+            if ((editor.getComponent().isShowing() || app.isHeadlessEnvironment()) && !myProject.isDisposed()) {
+              IntentionsUI.getInstance(myProject).invalidate();
             }
-            myDaemonCodeAnalyzer.hideLastIntentionHint();
           }, ModalityState.current());
         }
       }
@@ -253,7 +261,10 @@ public class DaemonListeners implements Disposable {
       @Override
       public void editorReleased(@Nonnull EditorFactoryEvent event) {
         // mem leak after closing last editor otherwise
-        UIUtil.invokeLaterIfNeeded(myDaemonCodeAnalyzer::hideLastIntentionHint);
+        UIUtil.invokeLaterIfNeeded(() -> {
+          IntentionsUI intentionUI = IntentionsUI.getInstance(project);
+          intentionUI.invalidate();
+        });
       }
     };
     editorFactory.addEditorFactoryListener(editorFactoryListener, this);
@@ -556,25 +567,24 @@ public class DaemonListeners implements Disposable {
 
   private class MyEditorMouseMotionListener implements EditorMouseMotionListener {
     @Override
-    public void mouseMoved(EditorMouseEvent e) {
+    public void mouseMoved(@Nonnull EditorMouseEvent e) {
+      if (Registry.is("ide.disable.editor.tooltips") || Registry.is("editor.new.mouse.hover.popups")) {
+        return;
+      }
       Editor editor = e.getEditor();
       if (myProject != editor.getProject()) return;
-      if (editor.getComponent().getClientProperty(DesktopEditorImpl.IGNORE_MOUSE_TRACKING) != null) return;
+      if (EditorMouseHoverPopupControl.arePopupsDisabled(editor)) return;
 
       boolean shown = false;
       try {
-        // There is a possible case that cursor is located at soft wrap-introduced virtual space (that is mapped to offset
-        // of the document symbol just after soft wrap). We don't want to show any tooltips for it then.
-        VisualPosition visual = editor.xyToVisualPosition(e.getMouseEvent().getPoint());
-        if (editor.getSoftWrapModel().isInsideOrBeforeSoftWrap(visual)) {
-          return;
-        }
-        LogicalPosition logical = editor.visualToLogicalPosition(visual);
-        if (e.getArea() == EditorMouseEventArea.EDITING_AREA && !UIUtil.isControlKeyDown(e.getMouseEvent())) {
+        if (e.getArea() == EditorMouseEventArea.EDITING_AREA &&
+            !UIUtil.isControlKeyDown(e.getMouseEvent()) &&
+            DocumentationManager.getInstance(myProject).getDocInfoHint() == null &&
+            EditorUtil.isPointOverText(editor, e.getMouseEvent().getPoint())) {
+          LogicalPosition logical = editor.xyToLogicalPosition(e.getMouseEvent().getPoint());
           int offset = editor.logicalPositionToOffset(logical);
-          if (editor.offsetToLogicalPosition(offset).column != logical.column) return; // we are in virtual space
           HighlightInfo info = myDaemonCodeAnalyzer.findHighlightByOffset(editor.getDocument(), offset, false);
-          if (info == null || info.getDescription() == null) {
+          if (info == null || info.getDescription() == null || info.getHighlighter() != null && FoldingUtil.isHighlighterFolded(editor, info.getHighlighter())) {
             IdeTooltipManager.getInstance().hideCurrent(e.getMouseEvent());
             return;
           }
@@ -583,15 +593,18 @@ public class DaemonListeners implements Disposable {
         }
       }
       finally {
-        if (!shown && !myTooltipController.shouldSurvive(e.getMouseEvent())) {
+        if (!shown && !TooltipController.getInstance().shouldSurvive(e.getMouseEvent())) {
           DaemonTooltipUtil.cancelTooltips();
         }
       }
     }
 
     @Override
-    public void mouseDragged(EditorMouseEvent e) {
-      myTooltipController.cancelTooltips();
+    public void mouseDragged(@Nonnull EditorMouseEvent e) {
+      if (Registry.is("editor.new.mouse.hover.popups")) {
+        return;
+      }
+      TooltipController.getInstance().cancelTooltips();
     }
   }
 
@@ -614,7 +627,7 @@ public class DaemonListeners implements Disposable {
     final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
     final EditorMarkupModel markup = (EditorMarkupModel)editor.getMarkupModel();
     markup.setErrorPanelPopupHandler(new DaemonEditorPopup(psiFile));
-    markup.setErrorStripTooltipRendererProvider(new DaemonTooltipRendererProvider(project));
+    markup.setErrorStripTooltipRendererProvider(new DaemonTooltipRendererProvider(project, editor));
     markup.setMinMarkHeight(DaemonCodeAnalyzerSettings.getInstance().ERROR_STRIPE_MARK_MIN_HEIGHT);
     TrafficLightRenderer.setOrRefreshErrorStripeRenderer(markup, project, document, psiFile);
   }

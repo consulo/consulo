@@ -29,9 +29,11 @@ import com.intellij.openapi.util.Key;
 import com.intellij.util.Consumer;
 import com.intellij.util.Processor;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * This is mock implementation to be used in null-object pattern where necessary.
+ *
  * @author max
  */
 public class EmptyMarkupModel implements MarkupModelEx {
@@ -49,11 +51,7 @@ public class EmptyMarkupModel implements MarkupModelEx {
 
   @Override
   @Nonnull
-  public RangeHighlighter addRangeHighlighter(int startOffset,
-                                              int endOffset,
-                                              int layer,
-                                              @javax.annotation.Nullable TextAttributes textAttributes,
-                                              @Nonnull HighlighterTargetArea targetArea) {
+  public RangeHighlighter addRangeHighlighter(int startOffset, int endOffset, int layer, @Nullable TextAttributes textAttributes, @Nonnull HighlighterTargetArea targetArea) {
     throw new ProcessCanceledException();
   }
 
@@ -65,18 +63,17 @@ public class EmptyMarkupModel implements MarkupModelEx {
                                                                    TextAttributes textAttributes,
                                                                    @Nonnull HighlighterTargetArea targetArea,
                                                                    boolean isPersistent,
-                                                                   Consumer<RangeHighlighterEx> changeAttributesAction) {
+                                                                   Consumer<? super RangeHighlighterEx> changeAttributesAction) {
     throw new ProcessCanceledException();
   }
 
   @Override
-  public void changeAttributesInBatch(@Nonnull RangeHighlighterEx highlighter,
-                                      @Nonnull Consumer<RangeHighlighterEx> changeAttributesAction) {
+  public void changeAttributesInBatch(@Nonnull RangeHighlighterEx highlighter, @Nonnull Consumer<? super RangeHighlighterEx> changeAttributesAction) {
   }
 
   @Override
   @Nonnull
-  public RangeHighlighter addLineHighlighter(int line, int layer, @javax.annotation.Nullable TextAttributes textAttributes) {
+  public RangeHighlighter addLineHighlighter(int line, int layer, @Nullable TextAttributes textAttributes) {
     throw new ProcessCanceledException();
   }
 
@@ -139,6 +136,12 @@ public class EmptyMarkupModel implements MarkupModelEx {
   @Nonnull
   @Override
   public MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset) {
+    return MarkupIterator.EMPTY;
+  }
+
+  @Nonnull
+  @Override
+  public MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset, boolean onlyRenderedInGutter, boolean onlyRenderedInScrollBar) {
     return MarkupIterator.EMPTY;
   }
 

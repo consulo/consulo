@@ -37,12 +37,7 @@ public class MockFontLayoutService extends FontLayoutService {
 
   @Nonnull
   @Override
-  public GlyphVector layoutGlyphVector(@Nonnull Font font,
-                                       @Nonnull FontRenderContext fontRenderContext,
-                                       @Nonnull char[] chars,
-                                       int start,
-                                       int end,
-                                       boolean isRtl) {
+  public GlyphVector layoutGlyphVector(@Nonnull Font font, @Nonnull FontRenderContext fontRenderContext, @Nonnull char[] chars, int start, int end, boolean isRtl) {
     return new MockGlyphVector(Arrays.copyOfRange(chars, start, end), isRtl);
   }
 
@@ -59,6 +54,11 @@ public class MockFontLayoutService extends FontLayoutService {
   @Override
   public float charWidth2D(@Nonnull FontMetrics fontMetrics, int codePoint) {
     return myCharWidth;
+  }
+
+  @Override
+  public int stringWidth(@Nonnull FontMetrics fontMetrics, @Nonnull String str) {
+    return myCharWidth * str.codePointCount(0, str.length());
   }
 
   @Override

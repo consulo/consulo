@@ -330,7 +330,7 @@ public class EditorOptionsPanel {
 
   private int getQuickDocDelayFromGui() {
     try {
-      return EditorSettingsExternalizable.QUICK_DOC_DELAY_RANGE.fit(Integer.parseInt(myQuickDocDelayTextField.getText().trim()));
+      return EditorSettingsExternalizable.TOOLTIPS_DELAY_RANGE.fit(Integer.parseInt(myQuickDocDelayTextField.getText().trim()));
     }
     catch (NumberFormatException e) {
       return -1;
@@ -414,7 +414,7 @@ public class EditorOptionsPanel {
     isModified |= isModified(myCbEnsureBlankLineBeforeCheckBox, editorSettings.isEnsureNewLineAtEOF());
 
     isModified |= isModified(myCbShowQuickDocOnMouseMove, editorSettings.isShowQuickDocOnMouseOverElement());
-    isModified |= isModified(myQuickDocDelayTextField, editorSettings.getQuickDocOnMouseOverElementDelayMillis(), EditorSettingsExternalizable.QUICK_DOC_DELAY_RANGE);
+    isModified |= isModified(myQuickDocDelayTextField, editorSettings.getQuickDocOnMouseOverElementDelayMillis(), EditorSettingsExternalizable.TOOLTIPS_DELAY_RANGE);
 
     // advanced mouse
     isModified |= isModified(myCbEnableDnD, editorSettings.isDndEnabled());

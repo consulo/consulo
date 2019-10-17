@@ -21,13 +21,9 @@ import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTFactory;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.pom.tree.events.ChangeInfo;
-import com.intellij.pom.tree.events.TreeChangeEvent;
-import com.intellij.pom.tree.events.impl.ChangeInfoImpl;
-import com.intellij.pom.tree.events.impl.ReplaceChangeInfoImpl;
+import com.intellij.pom.tree.events.impl.TreeChangeEventImpl;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.DebugUtil;
@@ -42,9 +38,11 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
 import com.intellij.util.text.StringFactory;
 import consulo.annotations.RequiredReadAction;
+import consulo.logging.Logger;
 import consulo.psi.PsiElementWithSubtreeChangeNotifier;
 import consulo.psi.tree.PsiElementFactory;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -640,15 +638,12 @@ public class CompositeElement extends TreeElement {
 
     removeChildrenInner(first, last);
 
-    ChangeUtil.prepareAndRunChangeAction(new ChangeUtil.ChangeAction(){
-      @Override
-      public void makeChange(TreeChangeEvent destinationTreeChange) {
-        if (anchorBefore != null) {
-          insertBefore(destinationTreeChange, (TreeElement)anchorBefore, first);
-        }
-        else {
-          add(destinationTreeChange, CompositeElement.this, first);
-        }
+    ChangeUtil.prepareAndRunChangeAction(destinationTreeChange -> {
+      if (anchorBefore != null) {
+        insertBefore((TreeChangeEventImpl)destinationTreeChange, (TreeElement)anchorBefore, first);
+      }
+      else {
+        add((TreeChangeEventImpl)destinationTreeChange, this, first);
       }
     }, this);
   }
@@ -685,16 +680,13 @@ public class CompositeElement extends TreeElement {
     final TreeElement newChildNext = ((TreeElement)newChild).getTreeNext();
     final TreeElement newChild1 = (TreeElement)newChild;
 
-    if(oldChild1 == newChild1) return;
+    if (oldChild1 == newChild1) return;
 
     removeChildrenInner(newChild1, newChildNext);
 
-    ChangeUtil.prepareAndRunChangeAction(new ChangeUtil.ChangeAction(){
-      @Override
-      public void makeChange(TreeChangeEvent destinationTreeChange) {
-        replace(destinationTreeChange, oldChild1, newChild1);
-        repairRemovedElement(CompositeElement.this, oldChild1);
-      }
+    ChangeUtil.prepareAndRunChangeAction(destinationTreeChange -> {
+      replace((TreeChangeEventImpl)destinationTreeChange, oldChild1, newChild1);
+      repairRemovedElement(this, oldChild1);
     }, this);
   }
 
@@ -703,31 +695,21 @@ public class CompositeElement extends TreeElement {
     TreeUtil.ensureParsed(getFirstChildNode());
     TreeUtil.ensureParsed(anotherParent.getFirstChildNode());
     final ASTNode firstChild = anotherParent.getFirstChildNode();
-    ChangeUtil.prepareAndRunChangeAction(new ChangeUtil.ChangeAction(){
-      @Override
-      public void makeChange(TreeChangeEvent destinationTreeChange) {
-        destinationTreeChange.addElementaryChange(anotherParent, ChangeInfoImpl.create(ChangeInfo.CONTENTS_CHANGED, anotherParent));
-        ((CompositeElement)anotherParent).rawRemoveAllChildren();
-      }
-    }, (TreeElement)anotherParent);
+    ChangeUtil.prepareAndRunChangeAction(event -> remove((TreeChangeEventImpl)event, (TreeElement)anotherParent.getFirstChildNode(), null), (TreeElement)anotherParent);
 
     if (firstChild != null) {
-      ChangeUtil.prepareAndRunChangeAction(new ChangeUtil.ChangeAction(){
-        @Override
-        public void makeChange(TreeChangeEvent destinationTreeChange) {
-          if(getTreeParent() != null){
-            final ChangeInfoImpl changeInfo = ChangeInfoImpl.create(ChangeInfo.CONTENTS_CHANGED, CompositeElement.this);
-            changeInfo.setOldLength(getTextLength());
-            destinationTreeChange.addElementaryChange(CompositeElement.this, changeInfo);
-            rawRemoveAllChildren();
-            rawAddChildren((TreeElement)firstChild);
-          }
-          else{
-            final TreeElement first = getFirstChildNode();
-            remove(destinationTreeChange, first, null);
-            add(destinationTreeChange, CompositeElement.this, (TreeElement)firstChild);
-            repairRemovedElement(CompositeElement.this, first);
-          }
+      ChangeUtil.prepareAndRunChangeAction(destinationTreeChange -> {
+        TreeElement first = getFirstChildNode();
+        TreeChangeEventImpl event = (TreeChangeEventImpl)destinationTreeChange;
+        CompositeElement parent = getTreeParent();
+        if (parent != null) {
+          // treat all replacements as one big childrenChanged to simplify resulting PSI/document events
+          event.addElementaryChange(parent);
+        }
+        remove(event, first, null);
+        add(event, this, (TreeElement)firstChild);
+        if (parent != null) {
+          repairRemovedElement(this, first);
         }
       }, this);
     }
@@ -847,49 +829,34 @@ public class CompositeElement extends TreeElement {
     treeElement.rawAddChildren(oldChild);
   }
 
-  private static void add(final TreeChangeEvent destinationTreeChange,
+  private static void add(final TreeChangeEventImpl destinationTreeChange,
                           final CompositeElement parent,
                           final TreeElement first) {
+    destinationTreeChange.addElementaryChange(parent);
     parent.rawAddChildren(first);
-    TreeElement child = first;
-    while(child != null){
-      destinationTreeChange.addElementaryChange(child, ChangeInfoImpl.create(ChangeInfo.ADD, child));
-      child = child.getTreeNext();
-    }
   }
 
-  private static void remove(final TreeChangeEvent destinationTreeChange,
+  private static void remove(final TreeChangeEventImpl destinationTreeChange,
                              final TreeElement first,
                              final TreeElement last) {
     if (first != null) {
-      TreeElement child = first;
-      while(child != last && child != null){
-        destinationTreeChange.addElementaryChange(child, ChangeInfoImpl.create(ChangeInfo.REMOVED, child));
-        child = child.getTreeNext();
-      }
-
+      destinationTreeChange.addElementaryChange(first.getTreeParent());
       first.rawRemoveUpTo(last);
     }
   }
 
-  private static void insertBefore(final TreeChangeEvent destinationTreeChange,
+  private static void insertBefore(final TreeChangeEventImpl destinationTreeChange,
                                    final TreeElement anchorBefore,
                                    final TreeElement first) {
+    destinationTreeChange.addElementaryChange(anchorBefore.getTreeParent());
     anchorBefore.rawInsertBeforeMe(first);
-    TreeElement child = first;
-    while(child != anchorBefore){
-      destinationTreeChange.addElementaryChange(child, ChangeInfoImpl.create(ChangeInfo.ADD, child));
-      child = child.getTreeNext();
-    }
   }
 
-  private static void replace(final TreeChangeEvent sourceTreeChange,
+  private static void replace(final TreeChangeEventImpl sourceTreeChange,
                               final TreeElement oldChild,
                               final TreeElement newChild) {
+    sourceTreeChange.addElementaryChange(oldChild.getTreeParent());
     oldChild.rawReplaceWithList(newChild);
-    final ReplaceChangeInfoImpl change = new ReplaceChangeInfoImpl(newChild);
-    sourceTreeChange.addElementaryChange(newChild, change);
-    change.setReplaced(oldChild);
   }
 
   private static void removeChildInner(final TreeElement child) {
@@ -899,12 +866,9 @@ public class CompositeElement extends TreeElement {
   private static void removeChildrenInner(final TreeElement first, final TreeElement last) {
     final FileElement fileElement = TreeUtil.getFileElement(first);
     if (fileElement != null) {
-      ChangeUtil.prepareAndRunChangeAction(new ChangeUtil.ChangeAction() {
-        @Override
-        public void makeChange(TreeChangeEvent destinationTreeChange) {
-          remove(destinationTreeChange, first, last);
-          repairRemovedElement(fileElement, first);
-        }
+      ChangeUtil.prepareAndRunChangeAction(destinationTreeChange -> {
+        remove((TreeChangeEventImpl)destinationTreeChange, first, last);
+        repairRemovedElement(fileElement, first);
       }, first.getTreeParent());
     }
     else {

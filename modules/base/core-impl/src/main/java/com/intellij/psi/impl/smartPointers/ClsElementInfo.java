@@ -15,66 +15,56 @@
  */
 package com.intellij.psi.impl.smartPointers;
 
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiAnchor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import consulo.annotations.RequiredReadAction;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-/**
- * User: cdr
- */
-public class ClsElementInfo extends SmartPointerElementInfo {
+class ClsElementInfo extends SmartPointerElementInfo {
+  @Nonnull
   private final PsiAnchor.StubIndexReference myStubIndexReference;
 
-  public ClsElementInfo(@Nonnull PsiAnchor.StubIndexReference stubReference) {
+  ClsElementInfo(@Nonnull PsiAnchor.StubIndexReference stubReference) {
     myStubIndexReference = stubReference;
   }
 
-  @RequiredReadAction
   @Override
-  public PsiElement restoreElement() {
+  PsiElement restoreElement(@Nonnull SmartPointerManagerImpl manager) {
     return myStubIndexReference.retrieve();
   }
 
   @Override
-  public int elementHashCode() {
+  int elementHashCode() {
     return myStubIndexReference.hashCode();
   }
 
   @Override
-  public boolean pointsToTheSameElementAs(@Nonnull SmartPointerElementInfo other) {
+  boolean pointsToTheSameElementAs(@Nonnull SmartPointerElementInfo other, @Nonnull SmartPointerManagerImpl manager) {
     return other instanceof ClsElementInfo && myStubIndexReference.equals(((ClsElementInfo)other).myStubIndexReference);
   }
 
   @Override
-  public VirtualFile getVirtualFile() {
+  @Nonnull
+  VirtualFile getVirtualFile() {
     return myStubIndexReference.getVirtualFile();
   }
 
   @Override
-  public Segment getRange() {
+  Segment getRange(@Nonnull SmartPointerManagerImpl manager) {
     return null;
-  }
-
-  @Nonnull
-  @Override
-  public Project getProject() {
-    return myStubIndexReference.getProject();
   }
 
   @Nullable
   @Override
-  public Segment getPsiRange() {
+  Segment getPsiRange(@Nonnull SmartPointerManagerImpl manager) {
     return null;
   }
 
   @Override
-  public PsiFile restoreFile() {
+  PsiFile restoreFile(@Nonnull SmartPointerManagerImpl manager) {
     return myStubIndexReference.getFile();
   }
 

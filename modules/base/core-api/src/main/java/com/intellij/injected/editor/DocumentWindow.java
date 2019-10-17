@@ -28,18 +28,27 @@ import javax.annotation.Nullable;
 public interface DocumentWindow extends Document {
   @Nonnull
   Document getDelegate();
-  int injectedToHost(int injectedOffset);
-  @Nonnull
-  TextRange injectedToHost(@Nonnull TextRange injectedOffset);
-  int hostToInjected(int hostOffset);
 
   /**
-   * Use com.intellij.lang.injection.InjectedLanguageManager#intersectWithAllEditableFragments(com.intellij.psi.PsiFile, com.intellij.openapi.util.TextRange)
-   * since editable fragments may well spread over several injection hosts
+   * @deprecated use {@link #injectedToHost(int)} instead
    */
   @Deprecated
-  @Nullable
-  TextRange intersectWithEditable(@Nonnull TextRange range);
+  default int hostToInjectedUnescaped(int hostOffset) {
+    return injectedToHost(hostOffset);
+  }
+
+  int injectedToHost(int injectedOffset);
+
+  /**
+   * @param minHostOffset if {@code true} minimum host offset corresponding to given injected offset is returned, otherwise maximum related
+   *                      host offset is returned
+   */
+  int injectedToHost(int injectedOffset, boolean minHostOffset);
+
+  @Nonnull
+  TextRange injectedToHost(@Nonnull TextRange injectedOffset);
+
+  int hostToInjected(int hostOffset);
 
   @Nullable
   TextRange getHostRange(int hostOffset);
@@ -53,5 +62,7 @@ public interface DocumentWindow extends Document {
 
   boolean isValid();
 
-  boolean containsRange(int start, int end);
+  boolean containsRange(int hostStart, int hostEnd);
+
+  boolean isOneLine();
 }

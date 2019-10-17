@@ -344,10 +344,6 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     }
 
     if (ok[0]) {
-      // otherwise changes maybe not synced to the document yet, and injectors will crash
-      if (!mySynchronizer.isDocumentAffectedByTransactions(document)) {
-        InjectedLanguageManager.getInstance(myProject).startRunInjectors(document, synchronously);
-      }
       // run after commit actions outside write action
       runAfterCommitActions(document);
       if (DebugUtil.DO_EXPENSIVE_CHECKS && !ApplicationInfoImpl.isInPerformanceTest()) {
@@ -806,8 +802,6 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     if (psiCause == null) {
       beforeDocumentChangeOnUnlockedDocument(viewProvider);
     }
-
-    ((SingleRootFileViewProvider)viewProvider).beforeDocumentChanged(psiCause);
   }
 
   protected void beforeDocumentChangeOnUnlockedDocument(@Nonnull final FileViewProvider viewProvider) {
@@ -1035,7 +1029,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     }
 
     @Override
-    public void moveTextHappened(int start, int end, int base) {
+    public void moveTextHappened(Document document, int start, int end, int base) {
       myEvents.add(new RetargetRangeMarkers(myOriginal, start, end, base));
     }
 

@@ -22,63 +22,55 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import consulo.annotations.RequiredReadAction;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-/**
- * User: cdr
- */
 class DirElementInfo extends SmartPointerElementInfo {
+  @Nonnull
   private final VirtualFile myVirtualFile;
+  @Nonnull
   private final Project myProject;
 
 
-  public DirElementInfo(@Nonnull PsiDirectory directory) {
+  DirElementInfo(@Nonnull PsiDirectory directory) {
     myProject = directory.getProject();
     myVirtualFile = directory.getVirtualFile();
   }
 
-  @RequiredReadAction
   @Override
-  public PsiElement restoreElement() {
+  PsiElement restoreElement(@Nonnull SmartPointerManagerImpl manager) {
     return SelfElementInfo.restoreDirectoryFromVirtual(myVirtualFile, myProject);
   }
 
   @Override
-  public PsiFile restoreFile() {
+  PsiFile restoreFile(@Nonnull SmartPointerManagerImpl manager) {
     return null;
   }
 
   @Override
-  public int elementHashCode() {
+  int elementHashCode() {
     return myVirtualFile.hashCode();
   }
 
   @Override
-  public boolean pointsToTheSameElementAs(@Nonnull SmartPointerElementInfo other) {
+  boolean pointsToTheSameElementAs(@Nonnull SmartPointerElementInfo other, @Nonnull SmartPointerManagerImpl manager) {
     return other instanceof DirElementInfo && Comparing.equal(myVirtualFile, ((DirElementInfo)other).myVirtualFile);
-  }
-
-  @Override
-  public VirtualFile getVirtualFile() {
-    return myVirtualFile;
-  }
-
-  @Override
-  public Segment getRange() {
-    return null;
   }
 
   @Nonnull
   @Override
-  public Project getProject() {
-    return myProject;
+  VirtualFile getVirtualFile() {
+    return myVirtualFile;
+  }
+
+  @Override
+  Segment getRange(@Nonnull SmartPointerManagerImpl manager) {
+    return null;
   }
 
   @Nullable
   @Override
-  public Segment getPsiRange() {
+  Segment getPsiRange(@Nonnull SmartPointerManagerImpl manager) {
     return null;
   }
 

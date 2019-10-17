@@ -244,10 +244,7 @@ public class CodeCompletionHandlerBase {
     int offset = editor.getCaretModel().getOffset();
     int psiOffset = Math.max(0, offset - 1);
 
-    PsiElement elementAt = InjectedLanguageUtil.findInjectedElementNoCommit(psiFile, psiOffset);
-    if (elementAt == null) {
-      elementAt = psiFile.findElementAt(psiOffset);
-    }
+    PsiElement elementAt = psiFile.findElementAt(psiOffset);
     if (elementAt == null) return true;
 
     Language language = PsiUtilCore.findLanguageFromElement(elementAt);

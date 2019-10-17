@@ -15,7 +15,9 @@
  */
 package com.intellij.openapi.editor.event;
 
+import com.intellij.openapi.editor.Document;
 import com.intellij.util.ArrayFactory;
+import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -27,7 +29,7 @@ import java.util.EventListener;
  * @see EditorEventMulticaster#addDocumentListener(DocumentListener)
  */
 @SuppressWarnings("JavadocReference")
-public interface DocumentListener extends EventListener{
+public interface DocumentListener extends EventListener {
   DocumentListener[] EMPTY_ARRAY = new DocumentListener[0];
   ArrayFactory<DocumentListener> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new DocumentListener[count];
 
@@ -45,5 +47,17 @@ public interface DocumentListener extends EventListener{
    * @param event the event containing the information about the change.
    */
   default void documentChanged(DocumentEvent event) {
+  }
+
+  /**
+   * Notifies about {@link Document#setInBulkUpdate(boolean) bulk mode} being enabled.
+   */
+  default void bulkUpdateStarting(@Nonnull Document document) {
+  }
+
+  /**
+   * Notifies about {@link Document#setInBulkUpdate(boolean) bulk mode} being disabled.
+   */
+  default void bulkUpdateFinished(@Nonnull Document document) {
   }
 }

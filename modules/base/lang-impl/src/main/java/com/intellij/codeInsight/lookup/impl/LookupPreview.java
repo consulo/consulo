@@ -103,15 +103,17 @@ class LookupPreview {
   private static EditorCustomElementRenderer createGrayRenderer(final String suffix) {
     return new EditorCustomElementRenderer() {
       @Override
-      public int calcWidthInPixels(@Nonnull Editor editor) {
+      public int calcWidthInPixels(@Nonnull Inlay inlay) {
+        Editor editor = inlay.getEditor();
         return editor.getContentComponent().getFontMetrics(getFont(editor)).stringWidth(suffix);
       }
 
       @Override
-      public void paint(@Nonnull Editor editor, @Nonnull Graphics g, @Nonnull Rectangle r, @Nonnull TextAttributes textAttributes) {
+      public void paint(@Nonnull Inlay inlay, @Nonnull Graphics g, @Nonnull Rectangle r, @Nonnull TextAttributes textAttributes) {
+        Editor editor = inlay.getEditor();
         g.setColor(JBColor.GRAY);
         g.setFont(getFont(editor));
-        g.drawString(suffix, r.x, r.y + ((DesktopEditorImpl)editor).getAscent());
+        g.drawString(suffix, r.x, r.y + editor.getAscent());
       }
 
       private Font getFont(@Nonnull Editor editor) {

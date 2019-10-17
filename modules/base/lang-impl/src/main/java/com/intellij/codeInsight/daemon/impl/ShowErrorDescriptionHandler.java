@@ -21,14 +21,17 @@ import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import javax.annotation.Nonnull;
 import consulo.ui.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
 
 public class ShowErrorDescriptionHandler implements CodeInsightActionHandler {
   private final int myWidth;
+  private final boolean myRequestFocus;
 
-  public ShowErrorDescriptionHandler(final int width) {
+  public ShowErrorDescriptionHandler(final int width, boolean requestFocus) {
     myWidth = width;
+    myRequestFocus = requestFocus;
   }
 
   @RequiredUIAccess
@@ -38,7 +41,7 @@ public class ShowErrorDescriptionHandler implements CodeInsightActionHandler {
     DaemonCodeAnalyzer codeAnalyzer = DaemonCodeAnalyzer.getInstance(project);
     HighlightInfo info = ((DaemonCodeAnalyzerImpl)codeAnalyzer).findHighlightByOffset(editor.getDocument(), offset, false);
     if (info != null) {
-      DaemonTooltipUtil.showInfoTooltip(info, editor, editor.getCaretModel().getOffset(), myWidth);
+      DaemonTooltipUtil.showInfoTooltip(info, editor, editor.getCaretModel().getOffset(), myWidth, myRequestFocus, true);
     }
   }
 

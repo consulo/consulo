@@ -15,7 +15,6 @@
  */
 package com.intellij.psi.impl.smartPointers;
 
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -23,59 +22,47 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import javax.annotation.Nonnull;
 
-/**
- * User: cdr
- */
 class HardElementInfo extends SmartPointerElementInfo {
   @Nonnull
   private final PsiElement myElement;
-  @Nonnull
-  private final Project myProject;
 
-  public HardElementInfo(@Nonnull Project project, @Nonnull PsiElement element) {
+  HardElementInfo(@Nonnull PsiElement element) {
     myElement = element;
-    myProject = project;
   }
 
   @Override
-  public PsiElement restoreElement() {
+  PsiElement restoreElement(@Nonnull SmartPointerManagerImpl manager) {
     return myElement;
   }
 
   @Override
-  public PsiFile restoreFile() {
+  PsiFile restoreFile(@Nonnull SmartPointerManagerImpl manager) {
     return myElement.isValid() ? myElement.getContainingFile() : null;
   }
 
   @Override
-  public int elementHashCode() {
+  int elementHashCode() {
     return myElement.hashCode();
   }
 
   @Override
-  public boolean pointsToTheSameElementAs(@Nonnull final SmartPointerElementInfo other) {
+  boolean pointsToTheSameElementAs(@Nonnull final SmartPointerElementInfo other, @Nonnull SmartPointerManagerImpl manager) {
     return other instanceof HardElementInfo && myElement.equals(((HardElementInfo)other).myElement);
   }
 
   @Override
-  public VirtualFile getVirtualFile() {
+  VirtualFile getVirtualFile() {
     return PsiUtilCore.getVirtualFile(myElement);
   }
 
   @Override
-  public Segment getRange() {
+  Segment getRange(@Nonnull SmartPointerManagerImpl manager) {
     return myElement.getTextRange();
   }
 
   @Override
-  public Segment getPsiRange() {
-    return getRange();
-  }
-
-  @Nonnull
-  @Override
-  public Project getProject() {
-    return myProject;
+  Segment getPsiRange(@Nonnull SmartPointerManagerImpl manager) {
+    return getRange(manager);
   }
 
   @Override

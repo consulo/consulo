@@ -38,19 +38,21 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.undo.UndoUtil;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.*;
 import com.intellij.openapi.editor.actions.ScrollToTheEndToolbarAction;
 import com.intellij.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.event.*;
+import com.intellij.openapi.editor.event.DocumentAdapter;
+import com.intellij.openapi.editor.event.DocumentEvent;
+import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.HighlighterClient;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
+import com.intellij.openapi.editor.impl.ContextMenuPopupHandler;
 import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
 import com.intellij.openapi.editor.markup.TextAttributes;
@@ -68,10 +70,14 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.ui.awt.RelativePoint;
-import com.intellij.util.*;
+import com.intellij.util.Alarm;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.Consumer;
+import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 import gnu.trove.TIntObjectHashMap;
 import org.jetbrains.annotations.NonNls;
@@ -85,8 +91,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.io.IOException;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableConsoleView, DataProvider, OccurenceNavigator {
@@ -859,11 +865,10 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     return ApplicationManager.getApplication().runReadAction((Computable<EditorEx>)() -> {
       EditorEx editor = doCreateConsoleEditor();
       LOG.assertTrue(UndoUtil.isUndoDisabledFor(editor.getDocument()));
-      editor.setContextMenuGroupId(null); // disabling default context menu
-      editor.addEditorMouseListener(new EditorPopupHandler() {
+      editor.installPopupHandler(new ContextMenuPopupHandler() {
         @Override
-        public void invokePopup(final EditorMouseEvent event) {
-          popupInvoked(event.getMouseEvent());
+        public ActionGroup getActionGroup(@Nonnull EditorMouseEvent event) {
+          return getPopupGroup(event.getMouseEvent());
         }
       });
       editor.getDocument().addDocumentListener(new DocumentAdapter() {
@@ -957,7 +962,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     action.registerCustomShortcutSet(new CustomShortcutSet(shortcuts), editor.getContentComponent());
   }
 
-  private void popupInvoked(@Nonnull MouseEvent mouseEvent) {
+  private ActionGroup getPopupGroup(@Nonnull MouseEvent mouseEvent) {
     final ActionManager actionManager = ActionManager.getInstance();
     final HyperlinkInfo info = myHyperlinks != null ? myHyperlinks.getHyperlinkInfoByPoint(mouseEvent.getPoint()) : null;
     ActionGroup group = null;
@@ -973,9 +978,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     for (ConsoleActionsPostProcessor postProcessor : postProcessors) {
       result = postProcessor.postProcessPopupActions(this, result);
     }
-    final DefaultActionGroup processedGroup = new DefaultActionGroup(result);
-    final ActionPopupMenu menu = actionManager.createActionPopupMenu(ActionPlaces.EDITOR_POPUP, processedGroup);
-    menu.getComponent().show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
+    return new DefaultActionGroup(result);
   }
 
   private void highlightHyperlinksAndFoldings(@Nonnull RangeMarker lastProcessedOutput) {

@@ -30,7 +30,6 @@ import com.intellij.util.Consumer;
 import com.intellij.util.FilteringProcessor;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.FilteringIterator;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -42,14 +41,9 @@ public class EditorFilteringMarkupModelEx implements MarkupModelEx {
   @Nonnull
   private final MarkupModelEx myDelegate;
 
-  private final Condition<RangeHighlighter> IS_AVAILABLE = new Condition<RangeHighlighter>() {
-    @Override
-    public boolean value(RangeHighlighter highlighter) {
-      return isAvailable(highlighter);
-    }
-  };
+  private final Condition<RangeHighlighter> IS_AVAILABLE = this::isAvailable;
 
-  public EditorFilteringMarkupModelEx(@Nonnull DesktopEditorImpl editor, @Nonnull MarkupModelEx delegate) {
+  EditorFilteringMarkupModelEx(@Nonnull DesktopEditorImpl editor, @Nonnull MarkupModelEx delegate) {
     myEditor = editor;
     myDelegate = delegate;
   }
@@ -85,33 +79,24 @@ public class EditorFilteringMarkupModelEx implements MarkupModelEx {
   @Override
   @Nonnull
   public MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset) {
-    return new MyFilteringIterator(myDelegate.overlappingIterator(startOffset, endOffset));
+    return new FilteringMarkupIterator<>(myDelegate.overlappingIterator(startOffset, endOffset), this::isAvailable);
+  }
+
+  @Nonnull
+  @Override
+  public MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset, boolean onlyRenderedInGutter, boolean onlyRenderedInScrollBar) {
+    return new FilteringMarkupIterator<>(myDelegate.overlappingIterator(startOffset, endOffset, onlyRenderedInGutter, onlyRenderedInScrollBar), this::isAvailable);
   }
 
   @Override
   @Nonnull
   public RangeHighlighter[] getAllHighlighters() {
     List<RangeHighlighter> list = ContainerUtil.filter(myDelegate.getAllHighlighters(), IS_AVAILABLE);
-    return list.toArray(new RangeHighlighter[list.size()]);
+    return list.toArray(RangeHighlighter.EMPTY_ARRAY);
   }
 
   @Override
   public void dispose() {
-  }
-
-  private class MyFilteringIterator extends FilteringIterator<RangeHighlighterEx, RangeHighlighterEx>
-          implements MarkupIterator<RangeHighlighterEx> {
-    private MarkupIterator<RangeHighlighterEx> myDelegate;
-
-    public MyFilteringIterator(@Nonnull MarkupIterator<RangeHighlighterEx> delegate) {
-      super(delegate, IS_AVAILABLE);
-      myDelegate = delegate;
-    }
-
-    @Override
-    public void dispose() {
-      myDelegate.dispose();
-    }
   }
 
   //
@@ -130,8 +115,8 @@ public class EditorFilteringMarkupModelEx implements MarkupModelEx {
   }
 
   @Override
-  public void fireAttributesChanged(@Nonnull RangeHighlighterEx segmentHighlighter, boolean renderersChanged, boolean fontStyleChanged) {
-    myDelegate.fireAttributesChanged(segmentHighlighter, renderersChanged, fontStyleChanged);
+  public void fireAttributesChanged(@Nonnull RangeHighlighterEx segmentHighlighter, boolean renderersChanged, boolean fontStyleOrColorChanged) {
+    myDelegate.fireAttributesChanged(segmentHighlighter, renderersChanged, fontStyleOrColorChanged);
   }
 
   @Override
@@ -151,22 +136,13 @@ public class EditorFilteringMarkupModelEx implements MarkupModelEx {
   }
 
   @Override
-  public void addRangeHighlighter(@Nonnull RangeHighlighterEx marker,
-                                  int start,
-                                  int end,
-                                  boolean greedyToLeft,
-                                  boolean greedyToRight,
-                                  int layer) {
+  public void addRangeHighlighter(@Nonnull RangeHighlighterEx marker, int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer) {
     myDelegate.addRangeHighlighter(marker, start, end, greedyToLeft, greedyToRight, layer);
   }
 
   @Override
   @Nonnull
-  public RangeHighlighter addRangeHighlighter(int startOffset,
-                                              int endOffset,
-                                              int layer,
-                                              @Nullable TextAttributes textAttributes,
-                                              @Nonnull HighlighterTargetArea targetArea) {
+  public RangeHighlighter addRangeHighlighter(int startOffset, int endOffset, int layer, @Nullable TextAttributes textAttributes, @Nonnull HighlighterTargetArea targetArea) {
     return myDelegate.addRangeHighlighter(startOffset, endOffset, layer, textAttributes, targetArea);
   }
 
@@ -184,9 +160,8 @@ public class EditorFilteringMarkupModelEx implements MarkupModelEx {
                                                                    TextAttributes textAttributes,
                                                                    @Nonnull HighlighterTargetArea targetArea,
                                                                    boolean isPersistent,
-                                                                   Consumer<RangeHighlighterEx> changeAttributesAction) {
-    return myDelegate.addRangeHighlighterAndChangeAttributes(startOffset, endOffset, layer, textAttributes, targetArea, isPersistent,
-                                                             changeAttributesAction);
+                                                                   Consumer<? super RangeHighlighterEx> changeAttributesAction) {
+    return myDelegate.addRangeHighlighterAndChangeAttributes(startOffset, endOffset, layer, textAttributes, targetArea, isPersistent, changeAttributesAction);
   }
 
   @Override
@@ -195,8 +170,7 @@ public class EditorFilteringMarkupModelEx implements MarkupModelEx {
   }
 
   @Override
-  public void changeAttributesInBatch(@Nonnull RangeHighlighterEx highlighter,
-                                      @Nonnull Consumer<RangeHighlighterEx> changeAttributesAction) {
+  public void changeAttributesInBatch(@Nonnull RangeHighlighterEx highlighter, @Nonnull Consumer<? super RangeHighlighterEx> changeAttributesAction) {
     myDelegate.changeAttributesInBatch(highlighter, changeAttributesAction);
   }
 

@@ -21,9 +21,9 @@ import com.intellij.lang.LighterASTTokenNode;
 import com.intellij.lang.impl.PsiBuilderImpl;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
@@ -38,9 +38,10 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.diff.FlyweightCapableTreeStructure;
+import consulo.logging.Logger;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
@@ -557,6 +558,26 @@ public class DebugUtil {
     }
     if (depth == 0) {
       ourPsiModificationTrace.set(null);
+    }
+  }
+
+  public static <T extends Throwable> void performPsiModification(String trace, @Nonnull ThrowableRunnable<T> runnable) throws T {
+    startPsiModification(trace);
+    try {
+      runnable.run();
+    }
+    finally {
+      finishPsiModification();
+    }
+  }
+
+  public static <T, E extends Throwable> T performPsiModification(String trace, @Nonnull ThrowableComputable<T, E> runnable) throws E {
+    startPsiModification(trace);
+    try {
+      return runnable.compute();
+    }
+    finally {
+      finishPsiModification();
     }
   }
 

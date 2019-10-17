@@ -30,11 +30,18 @@ import java.util.Collection;
 
 public interface ErrorStripTooltipRendererProvider {
   @Nullable
-  TooltipRenderer calcTooltipRenderer(@Nonnull Collection<RangeHighlighter> highlighters);
+  TooltipRenderer calcTooltipRenderer(@Nonnull Collection<? extends RangeHighlighter> highlighters);
+
   @Nonnull
   TooltipRenderer calcTooltipRenderer(@Nonnull String text);
+
   @Nonnull
   TooltipRenderer calcTooltipRenderer(@Nonnull String text, int width);
+
+  @Nonnull
+  default TooltipRenderer calcTooltipRenderer(@Nonnull String text, @Nullable TooltipAction action, int width) {
+    return calcTooltipRenderer(text, width);
+  }
 
   @Nonnull
   TrafficTooltipRenderer createTrafficTooltipRenderer(@Nonnull Runnable onHide, @Nonnull Editor editor);

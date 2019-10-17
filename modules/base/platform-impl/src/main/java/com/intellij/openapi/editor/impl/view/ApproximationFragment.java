@@ -4,6 +4,7 @@ package com.intellij.openapi.editor.impl.view;
 import javax.annotation.Nonnull;
 
 import java.awt.*;
+import java.util.function.Consumer;
 
 /**
  * Used for quick estimation of editor's viewable area size (without full text layout)
@@ -58,7 +59,7 @@ class ApproximationFragment implements LineFragment {
   public int[] xToVisualColumn(float startX, float x) {
     float relX = x - startX;
     int column = relX < myWidth / 2 ? 0 : myColumnCount;
-    return new int[] {column, relX <= visualColumnToX(startX, column) ? 0 : 1};
+    return new int[]{column, relX <= visualColumnToX(startX, column) ? 0 : 1};
   }
 
   @Override
@@ -67,7 +68,7 @@ class ApproximationFragment implements LineFragment {
   }
 
   @Override
-  public void draw(Graphics2D g, float x, float y, int startColumn, int endColumn) {
+  public Consumer<Graphics2D> draw(float x, float y, int startColumn, int endColumn) {
     throw new UnsupportedOperationException();
   }
 

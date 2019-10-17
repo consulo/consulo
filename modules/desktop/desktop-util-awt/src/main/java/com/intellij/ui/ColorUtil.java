@@ -121,6 +121,11 @@ public class ColorUtil {
     return shift(withAlpha(c, d), d);
   }
 
+  @Nonnull
+  public static String toHtmlColor(@Nonnull final Color c) {
+    return "#" + toHex(c);
+  }
+
   public static String toHex(@Nonnull final Color c) {
     final String R = Integer.toHexString(c.getRed());
     final String G = Integer.toHexString(c.getGreen());

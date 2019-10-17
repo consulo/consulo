@@ -210,11 +210,16 @@ public class StringUtil extends StringUtilRt {
     return newText != null ? newText.toString() : "";
   }
 
+  @Contract(pure = true)
+  public static int indexOfIgnoreCase(@Nonnull String where, @Nonnull String what, int fromIndex) {
+    return indexOfIgnoreCase((CharSequence)where, what, fromIndex);
+  }
+
   /**
    * Implementation copied from {@link String#indexOf(String, int)} except character comparisons made case insensitive
    */
   @Contract(pure = true)
-  public static int indexOfIgnoreCase(@Nonnull String where, @Nonnull String what, int fromIndex) {
+  public static int indexOfIgnoreCase(@Nonnull CharSequence where, @Nonnull CharSequence what, int fromIndex) {
     int targetCount = what.length();
     int sourceCount = where.length();
 
@@ -236,6 +241,7 @@ public class StringUtil extends StringUtilRt {
     for (int i = fromIndex; i <= max; i++) {
       /* Look for first character. */
       if (!charsEqualIgnoreCase(where.charAt(i), first)) {
+        //noinspection StatementWithEmptyBody,AssignmentToForLoopParameter
         while (++i <= max && !charsEqualIgnoreCase(where.charAt(i), first)) ;
       }
 
@@ -243,6 +249,7 @@ public class StringUtil extends StringUtilRt {
       if (i <= max) {
         int j = i + 1;
         int end = j + targetCount - 1;
+        //noinspection StatementWithEmptyBody
         for (int k = 1; j < end && charsEqualIgnoreCase(where.charAt(j), what.charAt(k)); j++, k++) ;
 
         if (j == end) {
@@ -3245,6 +3252,15 @@ public class StringUtil extends StringUtilRt {
       check();
       return delegate.subSequence(i, i1);
     }
+  }
+
+  /**
+   * @return {@code text} with some characters replaced with standard XML entities, e.g. '<' replaced with '{@code &lt;}'
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static String escapeXmlEntities(@Nonnull String text) {
+    return replace(text, REPLACES_DISP, REPLACES_REFS);
   }
 
   /** @deprecated use {@link #startsWithConcatenation(String, String...)} (to remove in IDEA 15) */

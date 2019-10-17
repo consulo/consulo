@@ -23,7 +23,6 @@ import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.util.Consumer;
 import com.intellij.util.Processor;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -44,22 +43,21 @@ public interface MarkupModelEx extends MarkupModel {
 
   boolean containsHighlighter(@Nonnull RangeHighlighter highlighter);
 
-  void addRangeHighlighter(@Nonnull RangeHighlighterEx marker,
-                           int start,
-                           int end,
-                           boolean greedyToLeft,
-                           boolean greedyToRight,
-                           int layer);
+  void addRangeHighlighter(@Nonnull RangeHighlighterEx marker, int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer);
 
   void addMarkupModelListener(@Nonnull Disposable parentDisposable, @Nonnull MarkupModelListener listener);
 
   void setRangeHighlighterAttributes(@Nonnull RangeHighlighter highlighter, @Nonnull TextAttributes textAttributes);
 
   boolean processRangeHighlightersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor);
+
   boolean processRangeHighlightersOutside(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor);
 
   @Nonnull
   MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset);
+
+  @Nonnull
+  MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset, boolean onlyRenderedInGutter, boolean onlyRenderedInScrollBar);
 
   // optimization: creates highlighter and fires only one event: highlighterCreated
   @Nonnull
@@ -69,8 +67,8 @@ public interface MarkupModelEx extends MarkupModel {
                                                             TextAttributes textAttributes,
                                                             @Nonnull HighlighterTargetArea targetArea,
                                                             boolean isPersistent,
-                                                            Consumer<RangeHighlighterEx> changeAttributesAction);
+                                                            Consumer<? super RangeHighlighterEx> changeAttributesAction);
 
   // runs change attributes action and fires highlighterChanged event if there were changes
-  void changeAttributesInBatch(@Nonnull RangeHighlighterEx highlighter, @Nonnull Consumer<RangeHighlighterEx> changeAttributesAction);
+  void changeAttributesInBatch(@Nonnull RangeHighlighterEx highlighter, @Nonnull Consumer<? super RangeHighlighterEx> changeAttributesAction);
 }

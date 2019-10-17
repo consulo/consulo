@@ -1,59 +1,42 @@
-/*
- * Copyright 2000-2015 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.intellij.psi.impl.smartPointers;
 
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredReadAction;
 
 abstract class SmartPointerElementInfo {
   @Nullable
-  public Document getDocumentToSynchronize() {
+  Document getDocumentToSynchronize() {
     return null;
   }
 
-  public void fastenBelt() {
+  void fastenBelt(@Nonnull SmartPointerManagerImpl manager) {
   }
 
   @Nullable
-  @RequiredReadAction
-  public abstract PsiElement restoreElement();
-
-  public abstract PsiFile restoreFile();
-
-  public abstract int elementHashCode(); // must be immutable
-  public abstract boolean pointsToTheSameElementAs(@Nonnull SmartPointerElementInfo other);
-
-  public abstract VirtualFile getVirtualFile();
+  abstract PsiElement restoreElement(@Nonnull SmartPointerManagerImpl manager);
 
   @Nullable
-  public abstract Segment getRange();
-  @Nonnull
-  public abstract Project getProject();
+  abstract PsiFile restoreFile(@Nonnull SmartPointerManagerImpl manager);
 
-  public void cleanup() {
+  abstract int elementHashCode(); // must be immutable
+
+  abstract boolean pointsToTheSameElementAs(@Nonnull SmartPointerElementInfo other, @Nonnull SmartPointerManagerImpl manager);
+
+  abstract VirtualFile getVirtualFile();
+
+  @Nullable
+  abstract Segment getRange(@Nonnull SmartPointerManagerImpl manager);
+
+  void cleanup() {
   }
 
   @Nullable
-  public abstract Segment getPsiRange();
+  abstract Segment getPsiRange(@Nonnull SmartPointerManagerImpl manager);
 }

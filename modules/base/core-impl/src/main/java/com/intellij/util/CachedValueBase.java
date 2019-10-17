@@ -99,6 +99,10 @@ public abstract class CachedValueBase<T> {
     return getUpToDateOrNull(false) != null;
   }
 
+  public Data<T> getUpToDateOrNull() {
+    return getUpToDateOrNull(false);
+  }
+
   @Nullable
   private Data<T> getUpToDateOrNull(boolean dispose) {
     final Data<T> data = getRawData();
@@ -190,7 +194,7 @@ public abstract class CachedValueBase<T> {
 
   public abstract boolean isFromMyProject(Project project);
 
-  protected static class Data<T> implements Disposable {
+  protected static class Data<T> implements Disposable, Getter<T> {
     private final T myValue;
     private final Object[] myDependencies;
     private final long[] myTimeStamps;
@@ -199,6 +203,12 @@ public abstract class CachedValueBase<T> {
       myValue = value;
       myDependencies = dependencies;
       myTimeStamps = timeStamps;
+    }
+
+    @Nullable
+    @Override
+    public T get() {
+      return myValue;
     }
 
     @Override

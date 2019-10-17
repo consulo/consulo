@@ -36,16 +36,15 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.MouseEventAdapter;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextDelegate;
-import consulo.ui.RequiredUIAccess;
 import consulo.application.ApplicationProperties;
 import consulo.awt.TargetAWT;
+import consulo.desktop.util.awt.MorphColor;
 import consulo.ide.welcomeScreen.BaseWelcomeScreenPanel;
 import consulo.ide.welcomeScreen.WelcomeScreenConstants;
 import consulo.spash.AnimatedLogoLabel;
-import consulo.desktop.util.awt.MorphColor;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.style.StyleManager;
 
-import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;
 import javax.annotation.Nonnull;
@@ -232,11 +231,8 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
       }
 
       @Override
-      public Accessible getAccessibleParent() {
-        if (getParent() instanceof Accessible) {
-          return (Accessible)getParent();
-        }
-        return super.getAccessibleParent();
+      public Container getDelegateParent() {
+        return getParent();
       }
 
       @Override

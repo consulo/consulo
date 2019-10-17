@@ -119,7 +119,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
     return file.getUserData(PSI_DOCUMENT_ATOMIC_ACTION) == Boolean.TRUE;
   }
 
-  static void performAtomically(@Nonnull PsiFile file, @Nonnull Runnable runnable) {
+  public static void performAtomically(@Nonnull PsiFile file, @Nonnull Runnable runnable) {
     assert !isInsideAtomicChange(file);
     file.putUserData(PSI_DOCUMENT_ATOMIC_ACTION, Boolean.TRUE);
 

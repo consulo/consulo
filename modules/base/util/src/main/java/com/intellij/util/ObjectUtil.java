@@ -22,6 +22,7 @@ import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Proxy;
+import java.util.function.Supplier;
 
 /**
  * @author peter
@@ -82,6 +83,11 @@ public class ObjectUtil {
   @Nonnull
   public static <T> T notNull(@Nullable T value, @Nonnull T defaultValue) {
     return value == null ? defaultValue : value;
+  }
+
+  @Nonnull
+  public static <T> T notNull(@Nullable T value, @Nonnull Supplier<? extends T> defaultValue) {
+    return value == null ? defaultValue.get() : value;
   }
 
   @Nullable

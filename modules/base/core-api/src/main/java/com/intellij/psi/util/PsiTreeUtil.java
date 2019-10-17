@@ -16,7 +16,6 @@
 package com.intellij.psi.util;
 
 import com.intellij.lang.Language;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
@@ -34,11 +33,13 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.lang.LanguageVersion;
 import consulo.lang.LanguageVersionResolver;
 import consulo.lang.LanguageVersionResolvers;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.Contract;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Predicate;
 
 public class PsiTreeUtil {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.util.PsiTreeUtil");
@@ -591,6 +592,25 @@ public class PsiTreeUtil {
 
     //noinspection unchecked
     return (T)element;
+  }
+
+
+  @Nonnull
+  public static <T extends PsiElement> List<T> collectParents(@Nonnull PsiElement element,
+                                                              @Nonnull Class<? extends T> parent,
+                                                              boolean includeMyself, @Nonnull Predicate<? super PsiElement> stopCondition) {
+    if (!includeMyself) {
+      element = element.getParent();
+    }
+    List<T> parents = new SmartList<>();
+    while (element != null) {
+      if (stopCondition.test(element)) break;
+      if (parent.isInstance(element)) {
+        parents.add(parent.cast(element));
+      }
+      element = element.getParent();
+    }
+    return parents;
   }
 
   @Nullable

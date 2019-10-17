@@ -16,8 +16,14 @@
 
 package com.intellij.ui;
 
-import javax.swing.Icon;
+import com.intellij.util.ui.JBInsets;
+import com.intellij.util.ui.UIUtil;
+
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static java.awt.Cursor.*;
 import static javax.swing.SwingUtilities.convertPointFromScreen;
@@ -39,54 +45,94 @@ public class WindowResizeListener extends WindowMouseListener {
     myCorner = corner;
   }
 
+  /**
+   * @param content the window content to find a window, or {@code null} to use a component from a mouse event
+   * @param corner  the corner icon that specifies a Mac-specific area to resize
+   */
+  public WindowResizeListener(Component content, Icon corner) {
+    super(content);
+    myBorder = null;
+    myCorner = corner;
+  }
+
+  /**
+   * @param view the component to resize
+   * @return an insets indicating inactive outer area
+   */
+  protected Insets getResizeOffset(Component view) {
+    return null;
+  }
+
+  /**
+   * @param view the component to resize
+   * @return an insets indicating active inner area
+   */
+  protected Insets getResizeBorder(Component view) {
+    return myBorder;
+  }
+
+  @Override
+  protected boolean isDisabled(Component view) {
+    if (view instanceof Dialog && !((Dialog)view).isResizable()) return true;
+    if (view instanceof Frame && !((Frame)view).isResizable()) return true;
+    return super.isDisabled(view);
+  }
+
   @Override
   int getCursorType(Component view, Point location) {
     Component parent = view instanceof Window ? null : view.getParent();
     if (parent != null) {
       convertPointFromScreen(location, parent);
     }
-    int top = location.y - view.getY();
-    if (top < 0) {
-      return CUSTOM_CURSOR;
-    }
-    int left = location.x - view.getX();
-    if (left < 0) {
-      return CUSTOM_CURSOR;
-    }
-    int right = view.getWidth() - left;
-    if (right < 0) {
-      return CUSTOM_CURSOR;
-    }
-    int bottom = view.getHeight() - top;
-    if (bottom < 0) {
-      return CUSTOM_CURSOR;
-    }
+    Rectangle bounds = view.getBounds();
+    JBInsets.removeFrom(bounds, getResizeOffset(view));
+
+    int top = location.y - bounds.y;
+    if (top < 0) return CUSTOM_CURSOR;
+
+    int left = location.x - bounds.x;
+    if (left < 0) return CUSTOM_CURSOR;
+
+    int right = bounds.width - left;
+    if (right < 0) return CUSTOM_CURSOR;
+
+    int bottom = bounds.height - top;
+    if (bottom < 0) return CUSTOM_CURSOR;
+
     if (myCorner != null && right < myCorner.getIconWidth() && bottom < myCorner.getIconHeight()) {
       return DEFAULT_CURSOR;
     }
-    if (myBorder != null) {
-      if (top < myBorder.top) {
-        if (left < myBorder.left) {
-          return NW_RESIZE_CURSOR;
+    Insets expected = getResizeBorder(view);
+    if (expected != null) {
+      if (view instanceof Frame) {
+        int state = ((Frame)view).getExtendedState();
+        if (isStateSet(Frame.MAXIMIZED_HORIZ, state)) {
+          left = Integer.MAX_VALUE;
+          right = Integer.MAX_VALUE;
         }
-        if (right < myBorder.right) {
-          return NE_RESIZE_CURSOR;
+        if (isStateSet(Frame.MAXIMIZED_VERT, state)) {
+          top = Integer.MAX_VALUE;
+          bottom = Integer.MAX_VALUE;
         }
+      }
+      if (top < expected.top) {
+        if (left < expected.left * 2) return NW_RESIZE_CURSOR;
+        if (right < expected.right * 2) return NE_RESIZE_CURSOR;
         return N_RESIZE_CURSOR;
       }
-      if (bottom < myBorder.bottom) {
-        if (left < myBorder.left) {
-          return SW_RESIZE_CURSOR;
-        }
-        if (right < myBorder.right) {
-          return SE_RESIZE_CURSOR;
-        }
+      if (bottom < expected.bottom) {
+        if (left < expected.left * 2) return SW_RESIZE_CURSOR;
+        if (right < expected.right * 2) return SE_RESIZE_CURSOR;
         return S_RESIZE_CURSOR;
       }
-      if (left < myBorder.left) {
+      if (left < expected.left) {
+        if (top < expected.top * 2) return NW_RESIZE_CURSOR;
+        if (bottom < expected.bottom * 2) return SW_RESIZE_CURSOR;
         return W_RESIZE_CURSOR;
       }
-      if (right < myBorder.right) {
+      if (right < expected.right) {
+        if (top < expected.top * 2) return NE_RESIZE_CURSOR;
+        if (bottom < expected.bottom * 2) return SE_RESIZE_CURSOR;
         return E_RESIZE_CURSOR;
       }
     }
@@ -95,26 +141,90 @@ public class WindowResizeListener extends WindowMouseListener {
 
   @Override
   void updateBounds(Rectangle bounds, Component view, int dx, int dy) {
-    Dimension minimum = view.getMinimumSize();
-    if (myType == NE_RESIZE_CURSOR || myType == E_RESIZE_CURSOR || myType == SE_RESIZE_CURSOR || myType == DEFAULT_CURSOR) {
+    Dimension minimum = getMinimumSize(view);
+    if (myCursorType == NE_RESIZE_CURSOR || myCursorType == E_RESIZE_CURSOR || myCursorType == SE_RESIZE_CURSOR || myCursorType == DEFAULT_CURSOR) {
       bounds.width += fixMinSize(dx, bounds.width, minimum.width);
     }
-    else if (myType == NW_RESIZE_CURSOR || myType == W_RESIZE_CURSOR || myType == SW_RESIZE_CURSOR) {
+    else if (myCursorType == NW_RESIZE_CURSOR || myCursorType == W_RESIZE_CURSOR || myCursorType == SW_RESIZE_CURSOR) {
       dx = fixMinSize(-dx, bounds.width, minimum.width);
       bounds.x -= dx;
       bounds.width += dx;
     }
-    if (myType == SW_RESIZE_CURSOR || myType == S_RESIZE_CURSOR || myType == SE_RESIZE_CURSOR || myType == DEFAULT_CURSOR) {
+    if (myCursorType == SW_RESIZE_CURSOR || myCursorType == S_RESIZE_CURSOR || myCursorType == SE_RESIZE_CURSOR || myCursorType == DEFAULT_CURSOR) {
       bounds.height += fixMinSize(dy, bounds.height, minimum.height);
     }
-    else if (myType == NW_RESIZE_CURSOR || myType == N_RESIZE_CURSOR || myType == NE_RESIZE_CURSOR) {
+    else if (myCursorType == NW_RESIZE_CURSOR || myCursorType == N_RESIZE_CURSOR || myCursorType == NE_RESIZE_CURSOR) {
       dy = fixMinSize(-dy, bounds.height, minimum.height);
       bounds.y -= dy;
       bounds.height += dy;
     }
   }
 
+  @Override
+  protected void setCursorType(int cursorType) {
+    super.setCursorType(cursorType);
+    //noinspection AssignmentToStaticFieldFromInstanceMethod
+    ourIsResizing = myCursorType >= SW_RESIZE_CURSOR && myCursorType <= E_RESIZE_CURSOR;
+  }
+
+  /**
+   * Note: default implementation takes Component.getTreeLock()
+   */
+  protected Dimension getMinimumSize(Component comp) {
+    return comp.getMinimumSize();
+  }
+
   private static int fixMinSize(int delta, int value, int min) {
     return delta + value < min ? min - value : delta;
+  }
+
+  /**
+   * @author tav
+   */
+  //@ApiStatus.Experimental
+  public static class ToolkitListener extends WindowResizeListener {
+    private final ToolkitListenerHelper myHelper;
+    private final AtomicReference<Dimension> myMinSize = new AtomicReference<>();
+
+    public ToolkitListener(Component content, Insets border, Icon corner) {
+      super(content, border, corner);
+      myHelper = new ToolkitListenerHelper(this);
+      myMinSize.set(content.getMinimumSize());
+      Window window = UIUtil.getWindow(content);
+      if (window != null) window.addHierarchyListener(new HierarchyListener() {
+        @Override
+        public void hierarchyChanged(HierarchyEvent e) {
+          if (e.getID() == HierarchyEvent.HIERARCHY_CHANGED) {
+            myMinSize.set(content.getMinimumSize());
+          }
+          else if (e.getID() == HierarchyEvent.SHOWING_CHANGED && !window.isShowing()) {
+            window.removeHierarchyListener(this);
+          }
+        }
+      });
+    }
+
+    @Override
+    protected void setBounds(Component comp, Rectangle bounds) {
+      myHelper.setBounds(comp, bounds, () -> super.setBounds(comp, bounds));
+    }
+
+    @Override
+    protected void setCursor(Component content, Cursor cursor) {
+      myHelper.setCursor(content, cursor, () -> super.setCursor(content, cursor));
+    }
+
+    @Override
+    protected Dimension getMinimumSize(Component comp) {
+      return myMinSize.get();
+    }
+
+    public void addTo(Component comp) {
+      myHelper.addTo(comp);
+    }
+
+    public void removeFrom(Component comp) {
+      myHelper.removeFrom(comp);
+    }
   }
 }

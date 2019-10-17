@@ -31,9 +31,10 @@ import java.util.List;
  */
 public interface FoldingModelEx extends FoldingModel {
   void setFoldingEnabled(boolean isEnabled);
+
   boolean isFoldingEnabled();
 
-  FoldRegion getFoldingPlaceholderAt(Point p);
+  FoldRegion getFoldingPlaceholderAt(@Nonnull Point p);
 
   boolean intersectsRegion(int startOffset, int endOffset);
 
@@ -48,8 +49,7 @@ public interface FoldingModelEx extends FoldingModel {
   FoldRegion[] fetchTopLevel();
 
   @Nullable
-  FoldRegion createFoldRegion(int startOffset, int endOffset, @Nonnull String placeholder, @Nullable FoldingGroup group,
-                              boolean neverExpands);
+  FoldRegion createFoldRegion(int startOffset, int endOffset, @Nonnull String placeholder, @Nullable FoldingGroup group, boolean neverExpands);
 
   void addListener(@Nonnull FoldingListener listener, @Nonnull Disposable parentDisposable);
 

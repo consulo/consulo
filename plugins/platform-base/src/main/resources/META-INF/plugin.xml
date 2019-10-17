@@ -206,6 +206,8 @@
       <with attribute="implementationClass" implements="com.intellij.navigation.ItemPresentationProvider"/>
     </extensionPoint>
 
+    <extensionPoint name="intentionMenuContributor"  interface="com.intellij.codeInsight.daemon.impl.IntentionMenuContributor"/>
+
     <extensionPoint name="fileTypeDetector" interface="com.intellij.openapi.fileTypes.FileTypeRegistry$FileTypeDetector"/>
 
     <extensionPoint name="pathMacroFilter" interface="com.intellij.openapi.application.PathMacroFilter"/>
@@ -1377,6 +1379,9 @@
     <projectService serviceInterface="com.intellij.util.indexing.FileBasedIndexScanRunnableCollector"
                     serviceImplementation="com.intellij.util.indexing.FileBasedIndexScanRunnableCollectorImpl"/>
 
+    <projectService serviceInterface="com.intellij.codeInsight.daemon.impl.IntentionsUI"
+                    serviceImplementation="com.intellij.codeInsight.daemon.impl.IntentionsUIImpl"/>
+
     <fileTypeFactory implementation="com.intellij.openapi.fileTypes.impl.PlatformFileTypeFactory"/>
     <postStartupActivity implementation="com.intellij.openapi.fileTypes.impl.ApproveRemovedMappingsActivity"/>
     <applicationService serviceInterface="com.intellij.openapi.options.colors.ColorSettingsPages"
@@ -1819,7 +1824,7 @@
     <projectService serviceInterface="com.intellij.psi.PsiFileFactory"
                     serviceImplementation="com.intellij.psi.impl.PsiFileFactoryImpl"/>
     <projectService serviceInterface="com.intellij.psi.text.BlockSupport"
-                    serviceImplementation="com.intellij.psi.impl.source.text.BlockSupportImpl"/>
+                    serviceImplementation="com.intellij.psi.impl.BlockSupportImpl"/>
     <projectService serviceInterface="com.intellij.psi.SmartPointerManager"
                     serviceImplementation="com.intellij.psi.impl.smartPointers.SmartPointerManagerImpl"/>
     <projectService serviceInterface="com.intellij.psi.codeStyle.CodeStyleManager"
@@ -2580,5 +2585,11 @@
     <lang.formatter.restriction implementation="com.intellij.formatting.ExcludedFileFormattingRestriction"/>
 
     <codeStyleIndentHelperExtension implementation="consulo.consulo.psi.impl.source.codeStyle.DefaultIndentHelperExtension" order="last"/>
+
+    <intentionMenuContributor implementation="com.intellij.codeInsight.daemon.impl.DoNotShowInspectionIntentionMenuContributor"/>
+    <intentionMenuContributor implementation="com.intellij.codeInsight.daemon.impl.GutterIntentionMenuContributor"/>
+    <intentionMenuContributor implementation="com.intellij.codeInsight.daemon.impl.CleanupIntentionMenuContributor"/>
+
+    <applicationService serviceImplementation="com.intellij.openapi.editor.impl.EditorMouseHoverPopupControl" />
   </extensions>
 </consulo-plugin>

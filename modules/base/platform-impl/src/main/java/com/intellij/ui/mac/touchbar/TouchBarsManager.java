@@ -15,6 +15,13 @@
  */
 package com.intellij.ui.mac.touchbar;
 
+import com.intellij.openapi.Disposable;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.ui.popup.AbstractPopup;
+
+import javax.annotation.Nonnull;
+
+import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -23,5 +30,14 @@ import java.awt.*;
 public class TouchBarsManager {
   public static void onFocusEvent(AWTEvent e) {
     // nothing
+  }
+
+  public static void onUpdateEditorHeader(@Nonnull Editor editor, JComponent header) {
+    // nothing
+  }
+
+  public static Disposable showPopupBar(AbstractPopup abstractPopup, JComponent content) {
+    // nothing
+    return null;
   }
 }

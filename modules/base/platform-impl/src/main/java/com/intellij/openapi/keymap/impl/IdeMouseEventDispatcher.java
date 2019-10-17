@@ -351,7 +351,7 @@ public final class IdeMouseEventDispatcher {
     return findHorizontalScrollBar(c.getParent());
   }
 
-  private static boolean isDiagramViewComponent(Component c) {
+  public static boolean isDiagramViewComponent(Component c) {
     return c != null && "y.view.Graph2DView".equals(c.getClass().getName());
   }
 

@@ -20,11 +20,13 @@ import com.intellij.ui.HintHint;
 import com.intellij.ui.LightweightHint;
 import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 
 /**
  * @author cdr
  */
 public interface TooltipRenderer {
+  @Nullable
   LightweightHint show(@Nonnull Editor editor, @Nonnull Point p, boolean alignToRight, @Nonnull TooltipGroup group, @Nonnull HintHint intInfo);
 }

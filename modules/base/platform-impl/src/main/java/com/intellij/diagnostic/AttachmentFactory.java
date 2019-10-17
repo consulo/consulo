@@ -5,8 +5,8 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.logging.attachment.Attachment;
-
 import javax.annotation.Nonnull;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
@@ -16,6 +16,12 @@ import java.text.MessageFormat;
  */
 public class AttachmentFactory {
   private static final String ERROR_MESSAGE_PATTERN = "[[[Can't get file contents: {0}]]]";
+
+  public static Attachment createContext(@Nonnull Object start, Object... more) {
+    StringBuilder builder = new StringBuilder(String.valueOf(start));
+    for (Object o : more) builder.append(",").append(o);
+    return consulo.logging.attachment.AttachmentFactory.get().create("current-context.txt", builder.length() > 0 ? builder.toString() : "(unknown)");
+  }
 
   public static Attachment createAttachment(Document document) {
     VirtualFile file = FileDocumentManager.getInstance().getFile(document);

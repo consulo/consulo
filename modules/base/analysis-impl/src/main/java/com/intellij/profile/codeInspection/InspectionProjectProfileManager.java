@@ -50,6 +50,10 @@ public abstract class InspectionProjectProfileManager extends DefaultProjectProf
     return getInspectionProfile().getName();
   }
 
+  public InspectionProfile getCurrentProfile() {
+    return getInspectionProfile();
+  }
+
   @Nonnull
   public InspectionProfile getInspectionProfile() {
     return (InspectionProfile)getProjectProfileImpl();

@@ -41,7 +41,6 @@ import com.intellij.pom.tree.TreeAspectEvent;
 import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.impl.source.PsiFileImpl;
-import com.intellij.psi.impl.source.text.DiffLog;
 import com.intellij.psi.impl.source.tree.FileElement;
 import com.intellij.psi.impl.source.tree.ForeignLeafPsiElement;
 import com.intellij.psi.impl.source.tree.TreeUtil;

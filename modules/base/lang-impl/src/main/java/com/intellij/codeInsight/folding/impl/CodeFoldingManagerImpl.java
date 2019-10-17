@@ -1,69 +1,43 @@
-/*
- * Copyright 2000-2015 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.folding.impl;
 
+import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.folding.CodeFoldingManager;
-import com.intellij.codeInsight.hint.EditorFragmentComponent;
-import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ProjectComponent;
-import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.event.EditorMouseEvent;
-import com.intellij.openapi.editor.event.EditorMouseEventArea;
-import com.intellij.openapi.editor.event.EditorMouseMotionAdapter;
-import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.EditorFactory;
+import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.ex.FoldingModelEx;
 import com.intellij.openapi.fileEditor.impl.text.CodeFoldingState;
-import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.startup.StartupManager;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.UserDataHolderEx;
 import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.ui.LightweightHint;
 import com.intellij.util.containers.WeakList;
-import consulo.ui.RequiredUIAccess;
-import consulo.annotations.RequiredReadAction;
 import org.jdom.Element;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseEvent;
+import java.util.Collection;
 import java.util.List;
 
 @Singleton
-public class CodeFoldingManagerImpl extends CodeFoldingManager implements ProjectComponent, Disposable {
+public class CodeFoldingManagerImpl extends CodeFoldingManager implements Disposable {
   private final Project myProject;
 
-  private final List<Document> myDocumentsWithFoldingInfo = new WeakList<>();
+  private final Collection<Document> myDocumentsWithFoldingInfo = new WeakList<>();
 
   private final Key<DocumentFoldingInfo> myFoldingInfoInDocumentKey = Key.create("FOLDING_INFO_IN_DOCUMENT_KEY");
   private static final Key<Boolean> FOLDING_STATE_KEY = Key.create("FOLDING_STATE_KEY");
 
   @Inject
-  CodeFoldingManagerImpl(Project project) {
+  public CodeFoldingManagerImpl(Project project) {
     myProject = project;
   }
 
@@ -77,102 +51,8 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
   }
 
   @Override
-  public void projectOpened() {
-    final EditorMouseMotionAdapter myMouseMotionListener = new EditorMouseMotionAdapter() {
-      LightweightHint myCurrentHint;
-      FoldRegion myCurrentFold;
-
-      @Override
-      public void mouseMoved(EditorMouseEvent e) {
-        if (myProject.isDisposed()) return;
-        HintManager hintManager = HintManager.getInstance();
-        if (hintManager != null && hintManager.hasShownHintsThatWillHideByOtherHint(false)) {
-          return;
-        }
-
-        if (e.getArea() != EditorMouseEventArea.FOLDING_OUTLINE_AREA) return;
-        LightweightHint hint = null;
-        try {
-          Editor editor = e.getEditor();
-          if (PsiDocumentManager.getInstance(myProject).isUncommited(editor.getDocument())) return;
-
-          MouseEvent mouseEvent = e.getMouseEvent();
-          FoldRegion fold = ((EditorEx)editor).getGutterComponentEx().findFoldingAnchorAt(mouseEvent.getX(), mouseEvent.getY());
-
-          if (fold == null || !fold.isValid()) return;
-          if (fold == myCurrentFold && myCurrentHint != null) {
-            hint = myCurrentHint;
-            return;
-          }
-
-          TextRange psiElementRange = EditorFoldingInfo.get(editor).getPsiElementRange(fold);
-          if (psiElementRange == null) return;
-
-          int textOffset = psiElementRange.getStartOffset();
-          // There is a possible case that target PSI element's offset is less than fold region offset (e.g. complete method is
-          // returned as PSI element for fold region that corresponds to java method code block). We don't want to show any hint
-          // if start of the current fold region is displayed.
-          Point foldStartXY = editor.visualPositionToXY(editor.offsetToVisualPosition(Math.max(textOffset, fold.getStartOffset())));
-          Rectangle visibleArea = editor.getScrollingModel().getVisibleArea();
-          if (visibleArea.y > foldStartXY.y) {
-            if (myCurrentHint != null) {
-              myCurrentHint.hide();
-              myCurrentHint = null;
-            }
-
-
-            // We want to show a hint with the top fold region content that is above the current viewport position.
-            // However, there is a possible case that complete region has a big height and only a little bottom part
-            // is shown at the moment. We can't just show hint with the whole top content because it would hide actual
-            // editor content, hence, we show max(2; available visual lines number) instead.
-            // P.S. '2' is used here in assumption that many java methods have javadocs which first line is just '/**'.
-            // So, it's not too useful to show only it even when available vertical space is not big enough.
-            int availableVisualLines = 2;
-            JComponent editorComponent = editor.getComponent();
-            Container editorComponentParent = editorComponent.getParent();
-            if (editorComponentParent != null) {
-              Container contentPane = editorComponent.getRootPane().getContentPane();
-              if (contentPane != null) {
-                int y = SwingUtilities.convertPoint(editorComponentParent, editorComponent.getLocation(), contentPane).y;
-                int visualLines = y / editor.getLineHeight();
-                availableVisualLines = Math.max(availableVisualLines, visualLines);
-              }
-            }
-            int startVisualLine = editor.offsetToVisualPosition(textOffset).line;
-            int desiredEndVisualLine = Math.max(0, editor.xyToVisualPosition(new Point(0, visibleArea.y)).line - 1);
-            int endVisualLine = startVisualLine + availableVisualLines;
-            if (endVisualLine > desiredEndVisualLine) {
-              endVisualLine = desiredEndVisualLine;
-            }
-
-            // Show only the non-displayed top part of the target fold region
-            int endOffset = editor.logicalPositionToOffset(editor.visualToLogicalPosition(new VisualPosition(endVisualLine, 0)));
-            TextRange textRange = new UnfairTextRange(textOffset, endOffset);
-            hint = EditorFragmentComponent.showEditorFragmentHint(editor, textRange, true, true);
-            myCurrentFold = fold;
-            myCurrentHint = hint;
-          }
-        }
-        finally {
-          if (hint == null) {
-            if (myCurrentHint != null) {
-              myCurrentHint.hide();
-              myCurrentHint = null;
-            }
-            myCurrentFold = null;
-          }
-        }
-      }
-    };
-
-    StartupManager.getInstance(myProject).registerPostStartupActivity(
-            (DumbAwareRunnable)() -> EditorFactory.getInstance().getEventMulticaster().addEditorMouseMotionListener(myMouseMotionListener, myProject));
-  }
-
-  @RequiredUIAccess
-  @Override
   public void releaseFoldings(@Nonnull Editor editor) {
-    Application.get().assertIsDispatchThread();
+    ApplicationManager.getApplication().assertIsDispatchThread();
     final Project project = editor.getProject();
     if (project != null && (!project.equals(myProject) || !project.isOpen())) return;
 
@@ -180,14 +60,9 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
     PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
     if (file == null || !file.getViewProvider().isPhysical() || !file.isValid()) return;
 
-    Editor[] otherEditors = EditorFactory.getInstance().getEditors(document, myProject);
-    if (otherEditors.length == 0 && !editor.isDisposed()) {
-      getDocumentFoldingInfo(document).loadFromEditor(editor);
-    }
     EditorFoldingInfo.get(editor).dispose();
   }
 
-  @RequiredUIAccess
   @Override
   public void buildInitialFoldings(@Nonnull final Editor editor) {
     final Project project = editor.getProject();
@@ -205,7 +80,6 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
 
   @Nullable
   @Override
-  @RequiredReadAction
   public CodeFoldingState buildInitialFoldings(@Nonnull final Document document) {
     if (myProject.isDisposed()) {
       return null;
@@ -223,21 +97,31 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
     }
 
 
-    final FoldingUpdate.FoldingMap foldingMap = FoldingUpdate.getFoldingsFor(file, document, true);
+    final List<FoldingUpdate.RegionInfo> regionInfos = FoldingUpdate.getFoldingsFor(file, document, true);
 
     return editor -> {
-      Application.get().assertIsDispatchThread();
+      ApplicationManager.getApplication().assertIsDispatchThread();
       if (myProject.isDisposed() || editor.isDisposed()) return;
       final FoldingModelEx foldingModel = (FoldingModelEx)editor.getFoldingModel();
       if (!foldingModel.isFoldingEnabled()) return;
       if (isFoldingsInitializedInEditor(editor)) return;
       if (DumbService.isDumb(myProject) && !FoldingUpdate.supportsDumbModeFolding(editor)) return;
 
-      foldingModel.runBatchFoldingOperationDoNotCollapseCaret(new UpdateFoldRegionsOperation(myProject, editor, file, foldingMap,
-                                                                                             UpdateFoldRegionsOperation.ApplyDefaultStateMode.YES,
-                                                                                             false, false));
+      foldingModel.runBatchFoldingOperationDoNotCollapseCaret(new UpdateFoldRegionsOperation(myProject, editor, file, regionInfos, UpdateFoldRegionsOperation.ApplyDefaultStateMode.YES, false, false));
       initFolding(editor);
     };
+  }
+
+  @Nullable
+  @Override
+  public Boolean isCollapsedByDefault(@Nonnull FoldRegion region) {
+    return region.getUserData(UpdateFoldRegionsOperation.COLLAPSED_BY_DEFAULT);
+  }
+
+  @Override
+  public void scheduleAsyncFoldingUpdate(@Nonnull Editor editor) {
+    FoldingUpdate.clearFoldingCache(editor);
+    DaemonCodeAnalyzer.getInstance(myProject).restart();
   }
 
   private void initFolding(@Nonnull final Editor editor) {
@@ -255,10 +139,6 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
 
       editor.putUserData(FOLDING_STATE_KEY, Boolean.TRUE);
     });
-  }
-
-  @Override
-  public void projectClosed() {
   }
 
   @Override
@@ -287,26 +167,6 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
   }
 
   @Override
-  public void forceDefaultState(@Nonnull final Editor editor) {
-    PsiDocumentManager.getInstance(myProject).commitDocument(editor.getDocument());
-    Runnable runnable = updateFoldRegions(editor, true, false);
-    if (runnable != null) {
-      runnable.run();
-    }
-
-    final FoldRegion[] regions = editor.getFoldingModel().getAllFoldRegions();
-    editor.getFoldingModel().runBatchFoldingOperation(() -> {
-      EditorFoldingInfo foldingInfo = EditorFoldingInfo.get(editor);
-      for (FoldRegion region : regions) {
-        PsiElement element = foldingInfo.getPsiElement(region);
-        if (element != null) {
-          region.setExpanded(!FoldingPolicy.isCollapseByDefault(element));
-        }
-      }
-    });
-  }
-
-  @Override
   @Nullable
   public Runnable updateFoldRegionsAsync(@Nonnull final Editor editor, final boolean firstTime) {
     if (!editor.getSettings().isAutoCodeFoldingEnabled()) return null;
@@ -322,13 +182,11 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
   }
 
   @Nullable
-  @RequiredReadAction
   private Runnable updateFoldRegions(@Nonnull Editor editor, boolean applyDefaultState, boolean quick) {
     PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
     return file == null ? null : FoldingUpdate.updateFoldRegions(editor, file, applyDefaultState, quick);
   }
 
-  @RequiredUIAccess
   @Override
   public CodeFoldingState saveFoldingState(@Nonnull Editor editor) {
     ApplicationManager.getApplication().assertIsDispatchThread();
@@ -339,7 +197,6 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
     return info;
   }
 
-  @RequiredUIAccess
   @Override
   public void restoreFoldingState(@Nonnull Editor editor, @Nonnull CodeFoldingState state) {
     ApplicationManager.getApplication().assertIsDispatchThread();
@@ -349,12 +206,9 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
   }
 
   @Override
-  public void writeFoldingState(@Nonnull CodeFoldingState state, @Nonnull Element element) throws WriteExternalException {
+  public void writeFoldingState(@Nonnull CodeFoldingState state, @Nonnull Element element) {
     if (state instanceof DocumentFoldingInfo) {
       ((DocumentFoldingInfo)state).writeExternal(element);
-    }
-    else {
-      throw new WriteExternalException();
     }
   }
 

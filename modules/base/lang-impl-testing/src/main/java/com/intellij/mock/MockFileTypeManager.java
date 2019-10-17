@@ -81,6 +81,12 @@ public class MockFileTypeManager extends FileTypeManagerEx {
     return fileType;
   }
 
+  @Nonnull
+  @Override
+  public FileType getFileTypeByFileName(@Nonnull @NonNls CharSequence fileName) {
+    return null;
+  }
+
   @Override
   @Nonnull
   public FileType getFileTypeByFile(@Nonnull VirtualFile file) {

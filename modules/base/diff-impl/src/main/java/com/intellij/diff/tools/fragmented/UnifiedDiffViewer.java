@@ -249,7 +249,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
 
   @RequiredUIAccess
   protected void installEditorListeners() {
-    new TextDiffViewerUtil.EditorActionsPopup(createEditorPopupActions()).install(getEditors());
+    new TextDiffViewerUtil.EditorActionsPopup(createEditorPopupActions()).install(getEditors(), myPanel);
   }
 
   //

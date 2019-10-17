@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
-public class IntentionSettingsConfigurable implements SearchableConfigurable, Configurable.HoldPreferredFocusedComponent {
+public class IntentionSettingsConfigurable implements SearchableConfigurable, Configurable.HoldPreferredFocusedComponent, IntentionsConfigurable {
   @NonNls
   public static final String HELP_ID = "preferences.intentionPowerPack";
   private IntentionSettingsPanel myPanel;

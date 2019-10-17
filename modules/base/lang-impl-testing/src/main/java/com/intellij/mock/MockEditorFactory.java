@@ -19,6 +19,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
+import com.intellij.openapi.editor.EditorKind;
 import com.intellij.openapi.editor.event.EditorEventMulticaster;
 import com.intellij.openapi.editor.event.EditorFactoryListener;
 import com.intellij.openapi.editor.impl.DocumentImpl;
@@ -27,6 +28,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.text.CharArrayCharSequence;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class MockEditorFactory extends EditorFactory {
   public Document createDocument(String text) {
@@ -60,6 +62,11 @@ public class MockEditorFactory extends EditorFactory {
 
   @Override
   public Editor createViewer(@Nonnull Document document, Project project) {
+    return null;
+  }
+
+  @Override
+  public Editor createViewer(@Nonnull Document document, @Nullable Project project, @Nonnull EditorKind editorKind) {
     return null;
   }
 

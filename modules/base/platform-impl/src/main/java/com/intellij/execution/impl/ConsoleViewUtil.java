@@ -71,8 +71,6 @@ public class ConsoleViewUtil {
 
   public static void setupConsoleEditor(@Nonnull final EditorEx editor, final boolean foldingOutlineShown, final boolean lineMarkerAreaShown) {
     ApplicationManager.getApplication().runReadAction(() -> {
-      editor.setSoftWrapAppliancePlace(SoftWrapAppliancePlaces.CONSOLE);
-
       final EditorSettings editorSettings = editor.getSettings();
       editorSettings.setLineMarkerAreaShown(lineMarkerAreaShown);
       editorSettings.setIndentGuidesShown(false);

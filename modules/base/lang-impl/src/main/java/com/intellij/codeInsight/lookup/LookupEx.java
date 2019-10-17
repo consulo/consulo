@@ -17,7 +17,9 @@ package com.intellij.codeInsight.lookup;
 
 import com.intellij.openapi.ui.popup.JBPopup;
 
+import javax.annotation.Nullable;
 import java.awt.*;
+import java.awt.event.InputEvent;
 
 /**
  * @author peter
@@ -32,7 +34,5 @@ public interface LookupEx extends Lookup {
   
   Component getComponent();
 
-  boolean showElementActions();
-
-
+  void showElementActions(@Nullable InputEvent event);
 }

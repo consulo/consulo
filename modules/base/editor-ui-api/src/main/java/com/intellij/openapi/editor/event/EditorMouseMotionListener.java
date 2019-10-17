@@ -33,7 +33,7 @@ public interface EditorMouseMotionListener extends EventListener {
    * @param e the event containing information about the mouse movement.
    */
   @RequiredUIAccess
-  void mouseMoved(EditorMouseEvent e);
+  default void mouseMoved(EditorMouseEvent e) {}
 
   /**
    * Called when the mouse is moved over the editor and a mouse button is pressed.
@@ -41,5 +41,6 @@ public interface EditorMouseMotionListener extends EventListener {
    * @param e the event containing information about the mouse movement.
    */
   @RequiredUIAccess
-  void mouseDragged(EditorMouseEvent e);
+  default void mouseDragged(EditorMouseEvent e) {
+  }
 }

@@ -16,10 +16,10 @@
 package com.intellij.openapi.actionSystem.ex;
 
 import com.intellij.ide.DataManager;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.TransactionGuard;
-import consulo.logging.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -34,6 +34,7 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.PausesStat;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredReadAction;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -53,6 +54,15 @@ public class ActionUtil {
   @NonNls private static final String WOULD_BE_VISIBLE_IF_NOT_DUMB_MODE = "WOULD_BE_VISIBLE_IF_NOT_DUMB_MODE";
 
   private ActionUtil() {
+  }
+
+  public static void recursiveRegisterShortcutSet(@Nonnull ActionGroup group, @Nonnull JComponent component, @Nullable Disposable parentDisposable) {
+    for (AnAction action : group.getChildren(null)) {
+      if (action instanceof ActionGroup) {
+        recursiveRegisterShortcutSet((ActionGroup)action, component, parentDisposable);
+      }
+      action.registerCustomShortcutSet(component, parentDisposable);
+    }
   }
 
   public static void showDumbModeWarning(@Nonnull AnActionEvent... events) {
@@ -273,6 +283,13 @@ public class ActionUtil {
     }
 
     return true;
+  }
+
+  public static void performActionDumbAwareWithCallbacks(@Nonnull AnAction action, @Nonnull AnActionEvent e, @Nonnull DataContext context) {
+    final ActionManagerEx manager = ActionManagerEx.getInstanceEx();
+    manager.fireBeforeActionPerformed(action, context, e);
+    performActionDumbAware(action, e);
+    manager.fireAfterActionPerformed(action, context, e);
   }
 
   public static void performActionDumbAware(AnAction action, AnActionEvent e) {

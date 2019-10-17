@@ -15,99 +15,89 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.FoldRegion;
-import com.intellij.openapi.editor.FoldingGroup;
-import com.intellij.util.containers.hash.HashMap;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 class FoldingAnchorsOverlayStrategy {
   private final DesktopEditorImpl myEditor;
 
-  public FoldingAnchorsOverlayStrategy(DesktopEditorImpl editor) {
+  FoldingAnchorsOverlayStrategy(DesktopEditorImpl editor) {
     myEditor = editor;
   }
 
-  public Collection<DisplayedFoldingAnchor> getAnchorsToDisplay(int firstVisibleOffset, int lastVisibleOffset, FoldRegion activeFoldRegion) {
-    Map<Integer, DisplayedFoldingAnchor> result = new HashMap<Integer, DisplayedFoldingAnchor>();
+  @Nonnull
+  Collection<DisplayedFoldingAnchor> getAnchorsToDisplay(int firstVisibleOffset, int lastVisibleOffset, @Nonnull List<FoldRegion> activeFoldRegions) {
+    Map<Integer, DisplayedFoldingAnchor> result = new HashMap<>();
     FoldRegion[] visibleFoldRegions = myEditor.getFoldingModel().fetchVisible();
-    for (FoldRegion region : visibleFoldRegions) {
-      if (!region.isValid()) continue;
-      final int startOffset = region.getStartOffset();
-      if (startOffset > lastVisibleOffset) continue;
-      final int endOffset = getEndOffset(region);
-      if (endOffset < firstVisibleOffset) continue;
-      if (!isFoldingPossible(startOffset, endOffset)) continue;
+    if (visibleFoldRegions != null) {
+      for (FoldRegion region : visibleFoldRegions) {
+        if (!region.isValid()) continue;
+        final int startOffset = region.getStartOffset();
+        if (startOffset > lastVisibleOffset) continue;
+        final int endOffset = region.getEndOffset();
+        if (endOffset < firstVisibleOffset) continue;
 
-      final FoldingGroup group = region.getGroup();
-      if (group != null && myEditor.getFoldingModel().getFirstRegion(group, region) != region) continue;
+        boolean singleLine = false;
+        int startLogicalLine = myEditor.getDocument().getLineNumber(startOffset);
+        int endLogicalLine = myEditor.getDocument().getLineNumber(endOffset);
+        if (startLogicalLine == endLogicalLine) {
+          singleLine = true;
+          if (!region.isGutterMarkEnabledForSingleLine() &&
+              (!myEditor.getSettings().isAllowSingleLogicalLineFolding() || (endOffset - startOffset) <= 1 ||
+               myEditor.getSoftWrapModel().getSoftWrapsForRange(startOffset + 1, endOffset - 1).isEmpty())) {
+            // unless requested, we don't display markers for single-line fold regions
+            continue;
+          }
+        }
 
-      //offset = Math.min(myEditor.getDocument().getTextLength() - 1, offset);
-      int foldStart = myEditor.offsetToVisualLine(startOffset);
-
-      if (!region.isExpanded()) {
-        tryAdding(result, region, foldStart, 0, DisplayedFoldingAnchor.Type.COLLAPSED, activeFoldRegion);
-      }
-      else {
-        //offset = Math.min(myEditor.getDocument().getTextLength() - 1, offset);
-        int foldEnd = myEditor.offsetToVisualLine(endOffset);
-        tryAdding(result, region, foldStart, foldEnd - foldStart, DisplayedFoldingAnchor.Type.EXPANDED_TOP, activeFoldRegion);
-        tryAdding(result, region, foldEnd, foldEnd - foldStart, DisplayedFoldingAnchor.Type.EXPANDED_BOTTOM, activeFoldRegion);
+        int foldStart = myEditor.offsetToVisualLine(startOffset);
+        if (!region.isExpanded()) {
+          tryAdding(result, region, foldStart, 0, singleLine ? DisplayedFoldingAnchor.Type.COLLAPSED_SINGLE_LINE : DisplayedFoldingAnchor.Type.COLLAPSED, activeFoldRegions);
+        }
+        else {
+          int foldEnd = myEditor.offsetToVisualLine(endOffset);
+          if (foldStart == foldEnd) {
+            tryAdding(result, region, foldStart, 0, DisplayedFoldingAnchor.Type.EXPANDED_SINGLE_LINE, activeFoldRegions);
+          }
+          else {
+            tryAdding(result, region, foldStart, foldEnd - foldStart, DisplayedFoldingAnchor.Type.EXPANDED_TOP, activeFoldRegions);
+            tryAdding(result, region, foldEnd, foldEnd - foldStart, DisplayedFoldingAnchor.Type.EXPANDED_BOTTOM, activeFoldRegions);
+          }
+        }
       }
     }
     return result.values();
   }
 
-  private static void tryAdding(Map<Integer, DisplayedFoldingAnchor> resultsMap,
-                                FoldRegion region,
+  private static void tryAdding(@Nonnull Map<Integer, DisplayedFoldingAnchor> resultsMap,
+                                @Nonnull FoldRegion region,
                                 int visualLine,
                                 int visualHeight,
-                                DisplayedFoldingAnchor.Type type,
-                                FoldRegion activeRegion) {
+                                @Nonnull DisplayedFoldingAnchor.Type type,
+                                @Nonnull List<FoldRegion> activeRegions) {
     DisplayedFoldingAnchor prev = resultsMap.get(visualLine);
-    if (prev != null) {
-      if (prev.foldRegion == activeRegion) {
+    if (prev != null && !prev.type.singleLine) {
+      if (type.singleLine) {
+        // show single-line marks only if there are no other marks on the same line
         return;
       }
-      if (region != activeRegion && prev.foldRegionVisualLines < visualHeight) {
+      if (region.getGroup() != null && region.getGroup() == prev.foldRegion.getGroup() && type != DisplayedFoldingAnchor.Type.COLLAPSED && type != prev.type) {
+        // when top/bottom marks for regions from the same group overlap, don't show them at all
+        resultsMap.remove(visualLine);
+        return;
+      }
+      if (activeRegions.contains(prev.foldRegion)) {
+        return;
+      }
+      if (!activeRegions.contains(region) && prev.foldRegionVisualLines < visualHeight) {
         return;
       }
     }
     resultsMap.put(visualLine, new DisplayedFoldingAnchor(region, visualLine, visualHeight, type));
   }
-
-  private int getEndOffset(FoldRegion foldRange) {
-    FoldingGroup group = foldRange.getGroup();
-    return group == null ? foldRange.getEndOffset() : myEditor.getFoldingModel().getEndOffset(group);
-  }
-
-  /**
-   * Allows to answer if there may be folding for the given offsets.
-   * <p/>
-   * The rule is that we can fold range that occupies multiple logical or visual lines.
-   *
-   * @param startOffset   start offset of the target region to check
-   * @param endOffset     end offset of the target region to check
-   * @return
-   */
-  private boolean isFoldingPossible(int startOffset, int endOffset) {
-    Document document = myEditor.getDocument();
-    if (startOffset >= document.getTextLength()) {
-      return false;
-    }
-
-    int endOffsetToUse = Math.min(endOffset, document.getTextLength());
-    if (endOffsetToUse <= startOffset) {
-      return false;
-    }
-
-    if (document.getLineNumber(startOffset) != document.getLineNumber(endOffsetToUse)) {
-      return true;
-    }
-    return myEditor.getSettings().isAllowSingleLogicalLineFolding()
-           && !myEditor.getSoftWrapModel().getSoftWrapsForRange(startOffset, endOffsetToUse).isEmpty();
-  }
-
 }

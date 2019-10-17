@@ -54,7 +54,7 @@ public class DesktopContainerStartup implements ContainerStartup {
     StartupUtil.initializeLogger();
 
     Runnable hackAwt = stat.mark("boot.hack.awt");
-    UIUtil.hackAWT();
+    DesktopStartUIUtil.hackAWT();
     UIUtil.initDefaultLAF();
     hackAwt.run();
 

@@ -18,6 +18,9 @@ package com.intellij.openapi.editor;
 import com.intellij.openapi.util.Key;
 import javax.annotation.Nonnull;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * Provides services for drawing custom text annotations in the editor gutter.
  * Such annotations are used, for example, by the "Annotate" feature of version
@@ -41,15 +44,19 @@ public interface EditorGutter {
    * possibility to execute an action when the annotation is clicked.
    *
    * @param provider the provider instance.
-   * @param action the action to execute when the annotation is clicked.
-   * @since 5.1
+   * @param action   the action to execute when the annotation is clicked.
    */
   void registerTextAnnotation(@Nonnull TextAnnotationGutterProvider provider, @Nonnull EditorGutterAction action);
 
   boolean isAnnotationsShown();
 
+  @Nonnull
+  List<TextAnnotationGutterProvider> getTextAnnotations();
+
   /**
    * Removes all text annotations from the gutter.
    */
   void closeAllAnnotations();
+
+  void closeTextAnnotations(@Nonnull Collection<? extends TextAnnotationGutterProvider> annotations);
 }

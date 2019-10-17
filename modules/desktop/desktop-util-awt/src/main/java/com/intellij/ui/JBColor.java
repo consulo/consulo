@@ -17,20 +17,76 @@ package com.intellij.ui;
 
 import com.intellij.openapi.util.ClearableLazyValue;
 import com.intellij.util.NotNullProducer;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ColorModel;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Konstantin Bulenkov
  */
 @SuppressWarnings("UseJBColor")
 public class JBColor extends Color {
+  @Nonnull
+  public static JBColor namedColor(@Nonnull String propertyName, int defaultValueRGB) {
+    return namedColor(propertyName, new Color(defaultValueRGB));
+  }
+
+  @Nonnull
+  public static JBColor namedColor(@Nonnull String propertyName, int defaultValueRGB, int darkValueRGB) {
+    return namedColor(propertyName, new JBColor(defaultValueRGB, darkValueRGB));
+  }
+
+  @Nonnull
+  public static JBColor namedColor(@Nonnull final String propertyName, @Nonnull final Color defaultColor) {
+    return new JBColor(() -> {
+      Color color = ObjectUtil.notNull(UIManager.getColor(propertyName), () -> ObjectUtil.notNull(findPatternMatch(propertyName), defaultColor));
+      if (UIManager.get(propertyName) == null) {
+        UIManager.put(propertyName, color);
+      }
+      return color;
+    });
+  }
+
+  // Let's find if namedColor can be overridden by *.propertyName rule in ui theme and apply it
+  // We need to cache calculated results. Cache and rules will be reset after LaF change
+  private static Color findPatternMatch(@Nonnull String name) {
+    Object value = UIManager.get("*");
+
+    if (value instanceof Map) {
+      Map<?, ?> map = (Map<?, ?>)value;
+      Object o = UIManager.get("*cache");
+      if (!(o instanceof Map)) {
+        o = new HashMap<String, Color>();
+        UIManager.put("*cache", o);
+      }
+      @SuppressWarnings("unchecked") Map<String, Color> cache = (Map)o;
+      if (cache.containsKey(name)) {
+        return cache.get(name);
+      }
+      Color color = null;
+      for (Map.Entry<?, ?> entry : map.entrySet()) {
+        if (entry.getKey() instanceof String && name.endsWith((String)entry.getKey())) {
+          Object result = map.get(entry.getKey());
+          if (result instanceof Color) {
+            color = (Color)result;
+            break;
+          }
+        }
+      }
+      cache.put(name, color);
+      return color;
+    }
+    return null;
+  }
 
   private static ClearableLazyValue<Boolean> ourDarkValue = new ClearableLazyValue<Boolean>() {
     @Nonnull

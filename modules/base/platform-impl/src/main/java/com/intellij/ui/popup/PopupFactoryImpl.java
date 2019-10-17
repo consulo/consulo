@@ -255,7 +255,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
                                @Nonnull DataContext dataContext,
                                @Nullable String actionPlace,
                                int maxRowCount) {
-      super(aParent, step, maxRowCount);
+      super(dataContext.getData(CommonDataKeys.PROJECT), aParent, step, null);
       myDisposeCallback = disposeCallback;
       myComponent = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
       myActionPlace = actionPlace == null ? ActionPlaces.UNKNOWN : actionPlace;
@@ -566,13 +566,13 @@ public class PopupFactoryImpl extends JBPopupFactory {
   @Nonnull
   @Override
   public TreePopup createTree(JBPopup parent, @Nonnull TreePopupStep aStep, Object parentValue) {
-    return new TreePopupImpl(parent, aStep, parentValue);
+    return new TreePopupImpl(aStep.getProject(), parent, aStep, parentValue);
   }
 
   @Nonnull
   @Override
   public TreePopup createTree(@Nonnull TreePopupStep aStep) {
-    return new TreePopupImpl(aStep);
+    return new TreePopupImpl(aStep.getProject(), null, aStep, null);
   }
 
   @Nonnull

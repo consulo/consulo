@@ -43,6 +43,7 @@ import com.intellij.openapi.wm.impl.commands.InvokeLaterCmd;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.SmartList;
+import com.intellij.util.messages.MessageBusConnection;
 import consulo.component.PersistentStateComponentWithUIState;
 import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
@@ -244,6 +245,9 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
     myCommandProcessor = createCommandProcessor();
     myInternalDecoratorListener = createInternalDecoratorListener();
+
+    MessageBusConnection busConnection = project.getMessageBus().connect(this);
+    busConnection.subscribe(ToolWindowManagerListener.TOPIC, myDispatcher.getMulticaster());
   }
 
   // region Factory Abstract Group
@@ -474,11 +478,11 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   }
 
   protected void fireToolWindowRegistered(final String id) {
-    myDispatcher.getMulticaster().toolWindowRegistered(id);
+    myProject.getMessageBus().syncPublisher(ToolWindowManagerListener.TOPIC).toolWindowRegistered(id);
   }
 
   protected void fireStateChanged() {
-    myDispatcher.getMulticaster().stateChanged();
+    myProject.getMessageBus().syncPublisher(ToolWindowManagerListener.TOPIC).stateChanged();
   }
 
   public ToolWindowAnchor getToolWindowAnchor(final String id) {
@@ -1269,7 +1273,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
   @Override
   public void addToolWindowManagerListener(@Nonnull ToolWindowManagerListener l, @Nonnull Disposable parentDisposable) {
-    myDispatcher.addListener(l, parentDisposable);
+    myProject.getMessageBus().connect(parentDisposable).subscribe(ToolWindowManagerListener.TOPIC, l);
   }
 
   @Override

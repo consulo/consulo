@@ -33,17 +33,19 @@ import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubTree;
+import com.intellij.psi.templateLanguages.OuterLanguageElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IStrongWhitespaceHolderElementType;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TreeUtil {
   private static final Key<String> UNCLOSED_ELEMENT_PROPERTY = Key.create("UNCLOSED_ELEMENT_PROPERTY");
@@ -484,6 +486,22 @@ public class TreeUtil {
         super.visitNode(node);
       }
     });
+  }
+
+  public static boolean containsOuterLanguageElements(@Nonnull ASTNode node) {
+    AtomicBoolean result = new AtomicBoolean(false);
+    ((TreeElement)node).acceptTree(new RecursiveTreeElementWalkingVisitor() {
+      @Override
+      protected void visitNode(TreeElement element) {
+        if (element instanceof OuterLanguageElement) {
+          result.set(true);
+          stopWalking();
+          return;
+        }
+        super.visitNode(element);
+      }
+    });
+    return result.get();
   }
 
   @Nullable

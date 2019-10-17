@@ -164,7 +164,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
 
 
     new MyFocusOppositePaneAction().install(myPanel);
-    new TextDiffViewerUtil.EditorActionsPopup(createEditorPopupActions()).install(editors);
+    new TextDiffViewerUtil.EditorActionsPopup(createEditorPopupActions()).install(editors, myPanel);
 
     new TextDiffViewerUtil.EditorFontSizeSynchronizer(editors).install(this);
 

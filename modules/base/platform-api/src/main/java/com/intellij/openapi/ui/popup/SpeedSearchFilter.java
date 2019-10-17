@@ -16,9 +16,9 @@
 package com.intellij.openapi.ui.popup;
 
 public interface SpeedSearchFilter<T> {
-
-  boolean canBeHidden(T value);
+  default boolean canBeHidden(T value) {
+    return true;
+  }
 
   String getIndexedString(T value);
-
 }

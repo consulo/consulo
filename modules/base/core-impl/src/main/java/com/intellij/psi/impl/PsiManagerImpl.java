@@ -44,6 +44,7 @@ import org.jetbrains.annotations.TestOnly;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -53,7 +54,7 @@ public class PsiManagerImpl extends PsiManagerEx {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.PsiManagerImpl");
 
   private final Project myProject;
-  private final FileIndexFacade myFileIndex;
+  private final Provider<FileIndexFacade> myFileIndex;
   private final MessageBus myMessageBus;
   private final PsiModificationTracker myModificationTracker;
 
@@ -76,7 +77,7 @@ public class PsiManagerImpl extends PsiManagerEx {
   public PsiManagerImpl(Project project,
                         FileDocumentManager fileDocumentManager,
                         PsiBuilderFactory psiBuilderFactory,
-                        FileIndexFacade fileIndex,
+                        Provider<FileIndexFacade> fileIndex,
                         PsiModificationTracker modificationTracker) {
     myProject = project;
     myFileIndex = fileIndex;
@@ -88,7 +89,7 @@ public class PsiManagerImpl extends PsiManagerEx {
 
     boolean isProjectDefault = project.isDefault();
 
-    myFileManager = isProjectDefault ? new EmptyFileManager(this) : new FileManagerImpl(this, fileDocumentManager, fileIndex);
+    myFileManager = isProjectDefault ? new EmptyFileManager(this) : new FileManagerImpl(this, fileIndex);
 
     myTreeChangePreprocessors.add((PsiTreeChangePreprocessor)modificationTracker);
 
@@ -137,7 +138,7 @@ public class PsiManagerImpl extends PsiManagerEx {
     }
     if (file != null && file.isPhysical() && virtualFile.getFileSystem() instanceof NonPhysicalFileSystem) return true;
 
-    return virtualFile != null && myFileIndex.isInContent(virtualFile);
+    return virtualFile != null && myFileIndex.get().isInContent(virtualFile);
   }
 
   @Override

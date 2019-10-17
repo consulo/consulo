@@ -15,38 +15,43 @@
  */
 package com.intellij.codeInsight.daemon.impl;
 
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.util.TextRange;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.util.List;
 
+// IMPL class hardcoding logic to react to errors/warnings found during highlighting
+// DO NOT USE directly
 public abstract class HighlightInfoProcessor {
+  // HInfos for visible part of file/block are produced.
+  // Will remove all range-highlighters from there and replace them with passed infos
   public void highlightsInsideVisiblePartAreProduced(@Nonnull HighlightingSession session,
-                                                     @Nonnull List<HighlightInfo> infos,
+                                                     @Nullable Editor editor,
+                                                     @Nonnull List<? extends HighlightInfo> infos,
                                                      @Nonnull TextRange priorityRange,
-                                                     @Nonnull TextRange restrictRange,
-                                                     int groupId) {
+                                                     @Nonnull TextRange restrictRange, int groupId) {
   }
 
   public void highlightsOutsideVisiblePartAreProduced(@Nonnull HighlightingSession session,
-                                                      @Nonnull List<HighlightInfo> infos,
+                                                      @Nullable Editor editor,
+                                                      @Nonnull List<? extends HighlightInfo> infos,
                                                       @Nonnull TextRange priorityRange,
-                                                      @Nonnull TextRange restrictedRange,
-                                                      int groupId) {
+                                                      @Nonnull TextRange restrictedRange, int groupId) {
   }
 
-  public void infoIsAvailable(@Nonnull HighlightingSession session,
-                              @Nonnull HighlightInfo info,
-                              @Nonnull TextRange priorityRange,
-                              @Nonnull TextRange restrictedRange,
-                              int groupId) {
+  // new HInfo became available during highlighting.
+  // Incrementally add this HInfo in EDT iff there were nothing there before.
+  public void infoIsAvailable(@Nonnull HighlightingSession session, @Nonnull HighlightInfo info, @Nonnull TextRange priorityRange, @Nonnull TextRange restrictedRange, int groupId) {
   }
 
-  public void allHighlightsForRangeAreProduced(@Nonnull HighlightingSession session, @Nonnull TextRange elementRange, @Nullable List<HighlightInfo> infos) {
+  // this range is over.
+  // Can queue to EDT to remove abandoned bijective highlighters from this range. All the rest abandoned highlighters have to wait until *AreProduced().
+  public void allHighlightsForRangeAreProduced(@Nonnull HighlightingSession session, @Nonnull TextRange elementRange, @Nullable List<? extends HighlightInfo> infos) {
   }
 
-  public void progressIsAdvanced(@Nonnull HighlightingSession highlightingSession, double progress) {
+  public void progressIsAdvanced(@Nonnull HighlightingSession highlightingSession, @Nullable Editor editor, double progress) {
   }
 
 

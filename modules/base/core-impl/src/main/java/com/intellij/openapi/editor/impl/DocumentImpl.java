@@ -61,7 +61,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.impl.DocumentImpl");
 
   private final LockFreeCOWSortedArray<DocumentListener> myDocumentListeners = new LockFreeCOWSortedArray<>(PrioritizedDocumentListener.COMPARATOR, DocumentListener.ARRAY_FACTORY);
-  private final List<DocumentBulkUpdateListener> myBulkDocumentInternalListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+
   private final RangeMarkerTree<RangeMarkerEx> myRangeMarkers = new RangeMarkerTree<>(this);
   private final RangeMarkerTree<RangeMarkerEx> myPersistentRangeMarkers = new RangeMarkerTree<>(this);
   private final List<RangeMarker> myGuardedBlocks = new ArrayList<>();
@@ -426,7 +426,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     if (!(0 <= startOffset && startOffset <= endOffset && endOffset <= getTextLength())) {
       LOG.error("Incorrect offsets: startOffset=" + startOffset + ", endOffset=" + endOffset + ", text length=" + getTextLength());
     }
-    return surviveOnExternalChange ? new PersistentRangeMarker(this, startOffset, endOffset, true) : new RangeMarkerImpl(this, startOffset, endOffset, true);
+    return surviveOnExternalChange ? new PersistentRangeMarker(this, startOffset, endOffset, true) : new RangeMarkerImpl(this, startOffset, endOffset, true, false);
   }
 
   @Override
@@ -514,7 +514,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   private void fireMoveText(int start, int end, int newBase) {
     for (DocumentListener listener : getListeners()) {
       if (listener instanceof PrioritizedInternalDocumentListener) {
-        ((PrioritizedInternalDocumentListener)listener).moveTextHappened(start, end, newBase);
+        ((PrioritizedInternalDocumentListener)listener).moveTextHappened(this, start, end, newBase);
       }
     }
   }
@@ -708,6 +708,33 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
   }
 
+  private class DelayedExceptions {
+    Throwable myException;
+
+    void register(Throwable e) {
+      if (myException == null) {
+        myException = e;
+      }
+      else {
+        myException.addSuppressed(e);
+      }
+
+      if (!(e instanceof ProcessCanceledException)) {
+        LOG.error(e);
+      }
+      else if (myAssertThreading) {
+        LOG.error("ProcessCanceledException must not be thrown from document listeners for real document", new Throwable(e));
+      }
+    }
+
+    void rethrowPCE() {
+      if (myException instanceof ProcessCanceledException) {
+        // the case of some wise inspection modifying non-physical document during highlighting to be interrupted
+        throw (ProcessCanceledException)myException;
+      }
+    }
+  }
+
   @Override
   public int getModificationSequence() {
     return sequence.get();
@@ -874,14 +901,6 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
   }
 
-  void addInternalBulkModeListener(@Nonnull DocumentBulkUpdateListener listener) {
-    myBulkDocumentInternalListeners.add(listener);
-  }
-
-  void removeInternalBulkModeListener(@Nonnull DocumentBulkUpdateListener listener) {
-    myBulkDocumentInternalListeners.remove(listener);
-  }
-
   @Override
   public int getLineNumber(final int offset) {
     return getLineSet().findLineIndex(offset);
@@ -999,14 +1018,14 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     try {
       if (value) {
         getPublisher().updateStarted(this);
-        notifyInternalListenersOnBulkModeStarted();
+        notifyListenersOnBulkModeStarting();
         myBulkUpdateEnteringTrace = new Throwable();
         myDoingBulkUpdate = true;
       }
       else {
         myDoingBulkUpdate = false;
         myBulkUpdateEnteringTrace = null;
-        notifyInternalListenersOnBulkModeFinished();
+        notifyListenersOnBulkModeFinished();
         getPublisher().updateFinished(this);
       }
     }
@@ -1015,16 +1034,32 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
   }
 
-  private void notifyInternalListenersOnBulkModeStarted() {
-    for (DocumentBulkUpdateListener listener : myBulkDocumentInternalListeners) {
-      listener.updateStarted(this);
+  private void notifyListenersOnBulkModeStarting() {
+    DelayedExceptions exceptions = new DelayedExceptions();
+    DocumentListener[] listeners = getListeners();
+    for (int i = listeners.length - 1; i >= 0; i--) {
+      try {
+        listeners[i].bulkUpdateStarting(this);
+      }
+      catch (Throwable e) {
+        exceptions.register(e);
+      }
     }
+    exceptions.rethrowPCE();
   }
 
-  private void notifyInternalListenersOnBulkModeFinished() {
-    for (DocumentBulkUpdateListener listener : myBulkDocumentInternalListeners) {
-      listener.updateFinished(this);
+  private void notifyListenersOnBulkModeFinished() {
+    DelayedExceptions exceptions = new DelayedExceptions();
+    DocumentListener[] listeners = getListeners();
+    for (DocumentListener listener : listeners) {
+      try {
+        listener.bulkUpdateFinished(this);
+      }
+      catch (Throwable e) {
+        exceptions.register(e);
+      }
     }
+    exceptions.rethrowPCE();
   }
 
   private static class DocumentBulkUpdateListenerHolder {
@@ -1093,9 +1128,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     private final Attachment[] myAttachments;
 
     private UnexpectedBulkUpdateStateException(Throwable enteringTrace) {
-      myAttachments = enteringTrace == null
-                      ? Attachment.EMPTY_ARRAY
-                      : new Attachment[]{AttachmentFactory.get().create("enteringTrace.txt", enteringTrace)};
+      myAttachments = enteringTrace == null ? Attachment.EMPTY_ARRAY : new Attachment[]{AttachmentFactory.get().create("enteringTrace.txt", enteringTrace)};
     }
 
     @Nonnull

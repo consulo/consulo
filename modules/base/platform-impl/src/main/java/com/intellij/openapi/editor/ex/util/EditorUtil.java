@@ -48,8 +48,8 @@ import com.intellij.util.messages.MessageBusConnection;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.logging.Logger;
 import org.intellij.lang.annotations.JdkConstants;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -646,7 +646,7 @@ public final class EditorUtil {
   }
 
   public static int yPositionToLogicalLine(@Nonnull Editor editor, int y) {
-    int line = editor instanceof DesktopEditorImpl ? ((DesktopEditorImpl)editor).yToVisibleLine(y) : y / editor.getLineHeight();
+    int line = editor instanceof DesktopEditorImpl ? editor.yToVisualLine(y) : y / editor.getLineHeight();
     return line > 0 ? editor.visualToLogicalPosition(new VisualPosition(line, 0)).line : 0;
   }
 
@@ -770,5 +770,69 @@ public final class EditorUtil {
         if (animationWasEnabled) scrollingModel.enableAnimation();
       }
     }
+  }
+
+  public static boolean isPrimaryCaretVisible(@Nonnull Editor editor) {
+    Rectangle visibleArea = editor.getScrollingModel().getVisibleArea();
+    Caret caret = editor.getCaretModel().getPrimaryCaret();
+    Point caretPoint = editor.visualPositionToXY(caret.getVisualPosition());
+    return visibleArea.contains(caretPoint);
+  }
+
+  /**
+   * Performs inlay-aware conversion of offset to visual position in editor. If there are inlays at given position, their
+   * 'related to preceding text' property will be taken account to determine resulting position. Specifically, resulting position will
+   * match caret's visual position if it's moved to the given offset using {@link Caret#moveToOffset(int)} call.
+   * <p>
+   * NOTE: if editor is an {@link EditorWindow}, corresponding offset is treated as an offset in injected editor, but returned position
+   * is always related to host editor.
+   *
+   * @see Inlay#isRelatedToPrecedingText()
+   */
+  @Nonnull
+  public static VisualPosition inlayAwareOffsetToVisualPosition(@Nonnull Editor editor, int offset) {
+    LogicalPosition logicalPosition = editor.offsetToLogicalPosition(offset);
+    if (editor instanceof EditorWindow) {
+      logicalPosition = ((EditorWindow)editor).injectedToHost(logicalPosition);
+      editor = ((EditorWindow)editor).getDelegate();
+    }
+    VisualPosition pos = editor.logicalToVisualPosition(logicalPosition);
+    Inlay inlay;
+    while ((inlay = editor.getInlayModel().getInlineElementAt(pos)) != null) {
+      if (inlay.isRelatedToPrecedingText()) break;
+      pos = new VisualPosition(pos.line, pos.column + 1);
+    }
+    return pos;
+  }
+
+  public static int getTotalInlaysHeight(@Nonnull List<? extends Inlay> inlays) {
+    int sum = 0;
+    for (Inlay inlay : inlays) {
+      sum += inlay.getHeightInPixels();
+    }
+    return sum;
+  }
+
+  /**
+   * Virtual space (after line end, and after end of text), inlays and space between visual lines (where block inlays are located) is
+   * excluded
+   */
+  public static boolean isPointOverText(@Nonnull Editor editor, @Nonnull Point point) {
+    VisualPosition visualPosition = editor.xyToVisualPosition(point);
+    int visualLineStartY = editor.visualLineToY(visualPosition.line);
+    if (point.y < visualLineStartY || point.y >= visualLineStartY + editor.getLineHeight()) return false; // block inlay space
+    if (editor.getSoftWrapModel().isInsideOrBeforeSoftWrap(visualPosition)) return false; // soft wrap
+    LogicalPosition logicalPosition = editor.visualToLogicalPosition(visualPosition);
+    int offset = editor.logicalPositionToOffset(logicalPosition);
+    if (!logicalPosition.equals(editor.offsetToLogicalPosition(offset))) return false; // virtual space
+    List<Inlay> inlays = editor.getInlayModel().getInlineElementsInRange(offset, offset);
+    if (!inlays.isEmpty()) {
+      VisualPosition inlaysStart = editor.offsetToVisualPosition(offset);
+      if (inlaysStart.line == visualPosition.line) {
+        int relX = point.x - editor.visualPositionToXY(inlaysStart).x;
+        if (relX >= 0 && relX < inlays.stream().mapToInt(i -> i.getWidthInPixels()).sum()) return false; // inline inlay
+      }
+    }
+    return true;
   }
 }

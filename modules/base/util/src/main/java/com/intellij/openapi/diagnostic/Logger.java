@@ -115,6 +115,10 @@ public final class Logger {
   public void error(@NonNls String message, Attachment... attachments) {
     error(message);
   }
+  
+  public void error(@NonNls String message, Throwable throwable, Attachment... attachments) {
+    error(message);
+  }
 
   public void error(@NonNls String message, @NonNls String... details) {
     error(message, new Throwable(), details);

@@ -20,9 +20,14 @@
 package com.intellij.injected.editor;
 
 import com.intellij.openapi.vfs.VirtualFile;
+import javax.annotation.Nonnull;
 
 public interface VirtualFileWindow {
+  @Nonnull
   VirtualFile getDelegate();
+
+  @Nonnull
   DocumentWindow getDocumentWindow();
+
   boolean isValid();
 }

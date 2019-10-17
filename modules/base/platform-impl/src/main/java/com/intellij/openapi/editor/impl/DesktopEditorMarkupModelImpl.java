@@ -24,6 +24,7 @@
  */
 package com.intellij.openapi.editor.impl;
 
+import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.hint.*;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.Disposable;
@@ -56,8 +57,8 @@ import consulo.editor.impl.DesktopEditorErrorPanel;
 import consulo.ui.RequiredUIAccess;
 import gnu.trove.THashSet;
 import gnu.trove.TIntIntHashMap;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -422,7 +423,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
 
   private static class BasicTooltipRendererProvider implements ErrorStripTooltipRendererProvider {
     @Override
-    public TooltipRenderer calcTooltipRenderer(@Nonnull final Collection<RangeHighlighter> highlighters) {
+    public TooltipRenderer calcTooltipRenderer(@Nonnull final Collection<? extends RangeHighlighter> highlighters) {
       LineTooltipRenderer bigRenderer = null;
       //do not show same tooltip twice
       Set<String> tooltips = null;
@@ -431,7 +432,9 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
         final Object tooltipObject = highlighter.getErrorStripeTooltip();
         if (tooltipObject == null) continue;
 
-        final String text = tooltipObject.toString();
+        final String text = tooltipObject instanceof HighlightInfo ? ((HighlightInfo)tooltipObject).getToolTip() : tooltipObject.toString();
+        if (text == null) continue;
+
         if (tooltips == null) {
           tooltips = new THashSet<>();
         }

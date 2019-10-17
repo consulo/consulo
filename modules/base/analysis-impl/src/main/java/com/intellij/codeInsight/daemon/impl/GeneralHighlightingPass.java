@@ -28,7 +28,6 @@ import com.intellij.codeInsight.problems.ProblemImpl;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
@@ -37,6 +36,7 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.IndexNotReadyException;
@@ -56,9 +56,10 @@ import com.intellij.util.SmartList;
 import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Stack;
+import consulo.logging.Logger;
 import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -229,14 +230,13 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
       final boolean forceHighlightParents = forceHighlightParents();
 
       if (!isDumbMode()) {
-        highlightTodos(getFile(), getDocument().getCharsSequence(), myRestrictRange.getStartOffset(), myRestrictRange.getEndOffset(), progress, myPriorityRange, insideResult,
-                       outsideResult);
+        highlightTodos(getFile(), getDocument().getCharsSequence(), myRestrictRange.getStartOffset(), myRestrictRange.getEndOffset(), myPriorityRange, insideResult, outsideResult);
       }
 
       boolean success = collectHighlights(allInsideElements, allInsideRanges, allOutsideElements, allOutsideRanges, progress, filteredVisitors, insideResult, outsideResult, forceHighlightParents);
 
       if (success) {
-        myHighlightInfoProcessor.highlightsOutsideVisiblePartAreProduced(myHighlightingSession, outsideResult, myPriorityRange,
+        myHighlightInfoProcessor.highlightsOutsideVisiblePartAreProduced(myHighlightingSession, getEditor(), outsideResult, myPriorityRange,
                                                                          myRestrictRange, getId());
 
         if (myUpdateAll) {
@@ -300,7 +300,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
                   nestedRange, nestedInfos);
       final TextRange priorityIntersection = myPriorityRange.intersection(myRestrictRange);
       if ((!elements1.isEmpty() || !insideResult.isEmpty()) && priorityIntersection != null) { // do not apply when there were no elements to highlight
-        myHighlightInfoProcessor.highlightsInsideVisiblePartAreProduced(myHighlightingSession, insideResult, myPriorityRange, myRestrictRange, getId());
+        myHighlightInfoProcessor.highlightsInsideVisiblePartAreProduced(myHighlightingSession, getEditor(), insideResult, myPriorityRange, myRestrictRange, getId());
       }
       runVisitors(elements2, ranges2, chunkSize, progress, skipParentsSet, holder, insideResult, outsideResult, forceHighlightParents, visitors,
                   nestedRange, nestedInfos);
@@ -312,7 +312,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
       assert info != null;
       postInfos.add(info);
     }
-    myHighlightInfoProcessor.highlightsInsideVisiblePartAreProduced(myHighlightingSession, postInfos, getFile().getTextRange(), getFile().getTextRange(), POST_UPDATE_ALL);
+    myHighlightInfoProcessor.highlightsInsideVisiblePartAreProduced(myHighlightingSession, getEditor(), postInfos, getFile().getTextRange(), getFile().getTextRange(), POST_UPDATE_ALL);
     return success;
   }
 
@@ -470,7 +470,6 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
                              @Nonnull CharSequence text,
                              int startOffset,
                              int endOffset,
-                             @Nonnull ProgressIndicator progress,
                              @Nonnull ProperTextRange priorityRange,
                              @Nonnull Collection<HighlightInfo> insideResult,
                              @Nonnull Collection<HighlightInfo> outsideResult) {
@@ -479,7 +478,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     if (todoItems.length == 0) return;
 
     for (TodoItem todoItem : todoItems) {
-      progress.checkCanceled();
+      ProgressManager.checkCanceled();
       TextRange range = todoItem.getTextRange();
       TextAttributes attributes = todoItem.getPattern().getAttributes().getTextAttributes();
       HighlightInfo.Builder builder = HighlightInfo.newHighlightInfo(HighlightInfoType.TODO).range(range);

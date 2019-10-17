@@ -28,10 +28,18 @@ public class CaretEvent extends EventObject {
   private final LogicalPosition myOldPosition;
   private final LogicalPosition myNewPosition;
 
+  /**
+   * @deprecated Use {@link #CaretEvent(Caret, LogicalPosition, LogicalPosition)} instead.
+   */
+  @Deprecated
   public CaretEvent(@Nonnull Editor editor, @Nonnull LogicalPosition oldPosition, @Nonnull LogicalPosition newPosition) {
     this(editor, null, oldPosition, newPosition);
   }
 
+  /**
+   * @deprecated Use {@link #CaretEvent(Caret, LogicalPosition, LogicalPosition)} instead.
+   */
+  @Deprecated
   public CaretEvent(@Nonnull Editor editor, @Nullable Caret caret, @Nonnull LogicalPosition oldPosition, @Nonnull LogicalPosition newPosition) {
     super(editor);
     myCaret = caret;
@@ -39,9 +47,16 @@ public class CaretEvent extends EventObject {
     myNewPosition = newPosition;
   }
 
+  public CaretEvent(@Nonnull Caret caret, @Nonnull LogicalPosition oldPosition, @Nonnull LogicalPosition newPosition) {
+    super(caret.getEditor());
+    myCaret = caret;
+    myOldPosition = oldPosition;
+    myNewPosition = newPosition;
+  }
+
   @Nonnull
   public Editor getEditor() {
-    return (Editor) getSource();
+    return (Editor)getSource();
   }
 
   @Nullable

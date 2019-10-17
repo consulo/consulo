@@ -67,6 +67,13 @@ public class CoreFileTypeRegistry extends FileTypeRegistry {
 
   @Nonnull
   @Override
+  public FileType getFileTypeByFileName(@Nonnull @NonNls CharSequence fileName) {
+    final String extension = FileUtilRt.getExtension(fileName.toString());
+    return getFileTypeByExtension(extension);
+  }
+
+  @Nonnull
+  @Override
   public FileType getFileTypeByExtension(@NonNls @Nonnull String extension) {
     final FileType result = myExtensionsMap.get(extension);
     return result == null ? UnknownFileType.INSTANCE : result;

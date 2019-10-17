@@ -20,7 +20,6 @@ import com.intellij.ide.IdeTooltipManager;
 import com.intellij.ide.dnd.DnDAware;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.ui.Divider;
 import com.intellij.openapi.ui.Painter;
 import com.intellij.openapi.ui.impl.GlassPaneDialogWrapperPeer;
@@ -36,9 +35,10 @@ import com.intellij.util.containers.FactoryMap;
 import com.intellij.util.ui.EmptyClipboardOwner;
 import com.intellij.util.ui.MouseEventAdapter;
 import com.intellij.util.ui.UIUtil;
+import consulo.logging.Logger;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
@@ -47,8 +47,8 @@ import java.awt.event.AWTEventListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, IdeEventQueue.EventDispatcher {
 
@@ -400,6 +400,15 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, IdeEvent
 
   public static boolean hasPreProcessedCursor(@Nonnull JComponent component) {
     return component.getClientProperty(PREPROCESSED_CURSOR_KEY) != null;
+  }
+
+  public static boolean savePreProcessedCursor(@Nonnull JComponent component, @Nonnull Cursor cursor) {
+    if (hasPreProcessedCursor(component)) {
+      return false;
+    }
+
+    component.putClientProperty(PREPROCESSED_CURSOR_KEY, cursor);
+    return true;
   }
 
   public void setCursor(Cursor cursor, @Nonnull Object requestor) {

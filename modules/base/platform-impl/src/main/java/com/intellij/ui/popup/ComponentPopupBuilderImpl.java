@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,8 @@ import com.intellij.util.BooleanFunction;
 import com.intellij.util.Processor;
 import com.intellij.util.ui.EmptyIcon;
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -38,7 +38,6 @@ import java.util.*;
 
 /**
  * @author anna
- * @since 15-Mar-2006
  */
 public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
   private String myTitle = "";
@@ -47,12 +46,12 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
   private final JComponent myComponent;
   private final JComponent myPreferredFocusedComponent;
   private boolean myRequestFocus;
-  private String myDimensionServiceKey = null;
-  private Computable<Boolean> myCallback = null;
+  private String myDimensionServiceKey;
+  private Computable<Boolean> myCallback;
   private Project myProject;
   private boolean myCancelOnClickOutside = true;
   private boolean myCancelOnWindowDeactivation = true;
-  private final Set<JBPopupListener> myListeners = new LinkedHashSet<JBPopupListener>();
+  private final Set<JBPopupListener> myListeners = new LinkedHashSet<>();
   private boolean myUseDimServiceForXYLocation;
 
   private IconButton myCancelButton;
@@ -60,9 +59,9 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
   private boolean myCancelOnWindow;
   private ActiveIcon myTitleIcon = new ActiveIcon(EmptyIcon.ICON_0);
   private boolean myCancelKeyEnabled = true;
-  private boolean myLocateByContent = false;
+  private boolean myLocateByContent;
   private boolean myPlaceWithinScreen = true;
-  private Processor<JBPopup> myPinCallback = null;
+  private Processor<? super JBPopup> myPinCallback;
   private Dimension myMinSize;
   private MaskProvider myMaskProvider;
   private float myAlpha;
@@ -77,12 +76,16 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
   private boolean myShowBorder = true;
   private boolean myFocusable = true;
   private ActiveComponent myCommandButton;
-  private List<Pair<ActionListener, KeyStroke>> myKeyboardActions = Collections.emptyList();
+  private List<? extends Pair<ActionListener, KeyStroke>> myKeyboardActions = Collections.emptyList();
   private Component mySettingsButtons;
   private boolean myMayBeParent;
   private int myAdAlignment = SwingConstants.LEFT;
-  private BooleanFunction<KeyEvent> myKeyEventHandler;
+  private BooleanFunction<? super KeyEvent> myKeyEventHandler;
+  private Color myBorderColor;
   private boolean myNormalWindowLevel;
+  private
+  @Nullable
+  Runnable myOkHandler;
 
   public ComponentPopupBuilderImpl(@Nonnull JComponent component, JComponent preferredFocusedComponent) {
     myComponent = component;
@@ -126,14 +129,14 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
 
   @Override
   @Nonnull
-  public ComponentPopupBuilder setCancelOnMouseOutCallback(final MouseChecker shouldCancel) {
+  public ComponentPopupBuilder setCancelOnMouseOutCallback(@Nonnull final MouseChecker shouldCancel) {
     myCancelOnMouseOutCallback = shouldCancel;
     return this;
   }
 
   @Override
   @Nonnull
-  public ComponentPopupBuilder addListener(final JBPopupListener listener) {
+  public ComponentPopupBuilder addListener(@Nonnull final JBPopupListener listener) {
     myListeners.add(listener);
     return this;
   }
@@ -163,7 +166,7 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
 
   @Override
   @Nonnull
-  public ComponentPopupBuilder setCancelCallback(final Computable<Boolean> shouldProceed) {
+  public ComponentPopupBuilder setCancelCallback(@Nonnull final Computable<Boolean> shouldProceed) {
     myCallback = shouldProceed;
     return this;
   }
@@ -174,6 +177,7 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
     myCancelButton = cancelButton;
     return this;
   }
+
   @Override
   @Nonnull
   public ComponentPopupBuilder setCommandButton(@Nonnull ActiveComponent button) {
@@ -183,14 +187,14 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
 
   @Override
   @Nonnull
-  public ComponentPopupBuilder setCouldPin(@Nullable final Processor<JBPopup> callback) {
+  public ComponentPopupBuilder setCouldPin(@Nullable final Processor<? super JBPopup> callback) {
     myPinCallback = callback;
     return this;
   }
 
   @Override
   @Nonnull
-  public ComponentPopupBuilder setKeyboardActions(@Nonnull List<Pair<ActionListener, KeyStroke>> keyboardActions) {
+  public ComponentPopupBuilder setKeyboardActions(@Nonnull List<? extends Pair<ActionListener, KeyStroke>> keyboardActions) {
     myKeyboardActions = keyboardActions;
     return this;
   }
@@ -217,7 +221,7 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
 
   @Nonnull
   @Override
-  public ComponentPopupBuilder setKeyEventHandler(@Nonnull BooleanFunction<KeyEvent> handler) {
+  public ComponentPopupBuilder setKeyEventHandler(@Nonnull BooleanFunction<? super KeyEvent> handler) {
     myKeyEventHandler = handler;
     return this;
   }
@@ -232,14 +236,15 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
   @Override
   @Nonnull
   public JBPopup createPopup() {
-    AbstractPopup popup = new AbstractPopup().init(
-            myProject, myComponent, myPreferredFocusedComponent, myRequestFocus, myFocusable, myMovable, myDimensionServiceKey,
-            myResizable, myTitle, myCallback, myCancelOnClickOutside, myListeners, myUseDimServiceForXYLocation, myCommandButton,
-            myCancelButton, myCancelOnMouseOutCallback, myCancelOnWindow, myTitleIcon, myCancelKeyEnabled, myLocateByContent,
-            myPlaceWithinScreen, myMinSize, myAlpha, myMaskProvider, myInStack, myModalContext, myFocusOwners, myAd, myAdAlignment,
-            false, myKeyboardActions, mySettingsButtons, myPinCallback, myMayBeParent,
-            myShowShadow, myShowBorder, myCancelOnWindowDeactivation, myKeyEventHandler
-    );
+    AbstractPopup popup = new AbstractPopup()
+            .init(myProject, myComponent, myPreferredFocusedComponent, myRequestFocus, myFocusable, myMovable, myDimensionServiceKey, myResizable, myTitle, myCallback, myCancelOnClickOutside,
+                  myListeners, myUseDimServiceForXYLocation, myCommandButton, myCancelButton, myCancelOnMouseOutCallback, myCancelOnWindow, myTitleIcon, myCancelKeyEnabled, myLocateByContent,
+                  myPlaceWithinScreen, myMinSize, myAlpha, myMaskProvider, myInStack, myModalContext, myFocusOwners, myAd, myAdAlignment, false, myKeyboardActions, mySettingsButtons, myPinCallback,
+                  myMayBeParent, myShowShadow, myShowBorder, myBorderColor, myCancelOnWindowDeactivation, myKeyEventHandler);
+
+    popup.setNormalWindowLevel(myNormalWindowLevel);
+    popup.setOkHandler(myOkHandler);
+
     if (myUserData != null) {
       popup.setUserData(myUserData);
     }
@@ -249,7 +254,7 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
 
   @Override
   @Nonnull
-  public ComponentPopupBuilder setRequestFocusCondition(Project project, Condition<Project> condition) {
+  public ComponentPopupBuilder setRequestFocusCondition(@Nonnull Project project, @Nonnull Condition<? super Project> condition) {
     myRequestFocus = condition.value(project);
     return this;
   }
@@ -314,7 +319,7 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
   @Nonnull
   public ComponentPopupBuilder addUserData(final Object object) {
     if (myUserData == null) {
-      myUserData = new ArrayList<Object>();
+      myUserData = new ArrayList<>();
     }
     myUserData.add(object);
     return this;
@@ -366,6 +371,20 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
   @Override
   public ComponentPopupBuilder setNormalWindowLevel(boolean b) {
     myNormalWindowLevel = b;
+    return this;
+  }
+
+  @Nonnull
+  @Override
+  public ComponentPopupBuilder setBorderColor(Color color) {
+    myBorderColor = color;
+    return this;
+  }
+
+  @Nonnull
+  @Override
+  public ComponentPopupBuilder setOkHandler(@Nullable Runnable okHandler) {
+    myOkHandler = okHandler;
     return this;
   }
 }

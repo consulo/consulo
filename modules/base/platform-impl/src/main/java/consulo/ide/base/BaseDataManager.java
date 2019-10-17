@@ -33,8 +33,10 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.ide.impl.DataValidators;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+import org.jetbrains.concurrency.AsyncPromise;
+import org.jetbrains.concurrency.Promise;
+
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -190,6 +192,14 @@ public abstract class BaseDataManager extends DataManager {
     AsyncResult<DataContext> context = AsyncResult.undefined();
     IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> context.setDone(getDataContext()), ModalityState.current());
     return context;
+  }
+
+  @Nonnull
+  @Override
+  public Promise<DataContext> getDataContextFromFocusAsync() {
+    AsyncPromise<DataContext> result = new AsyncPromise<>();
+    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> result.setResult(getDataContext()), ModalityState.any());
+    return result;
   }
 
   @Nullable

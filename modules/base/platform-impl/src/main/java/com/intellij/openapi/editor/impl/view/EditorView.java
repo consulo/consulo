@@ -15,15 +15,13 @@ import com.intellij.openapi.editor.event.VisibleAreaListener;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.editor.impl.DesktopEditorImpl;
-import com.intellij.openapi.editor.impl.DocumentImpl;
-import com.intellij.openapi.editor.impl.FontInfo;
-import com.intellij.openapi.editor.impl.TextDrawingCallback;
+import com.intellij.openapi.editor.impl.*;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
+import org.intellij.lang.annotations.JdkConstants;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
@@ -38,7 +36,7 @@ import java.text.Bidi;
 /**
  * A facade for components responsible for drawing editor contents, managing editor size
  * and coordinate conversions (offset <-> logical position <-> visual position <-> x,y).
- *
+ * <p>
  * Also contains a cache of several font-related quantities (line height, space width, etc).
  */
 public class EditorView implements TextDrawingCallback, Disposable, Dumpable, HierarchyListener, VisibleAreaListener {
@@ -51,9 +49,10 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
   private final EditorSizeManager mySizeManager;
   private final TextLayoutCache myTextLayoutCache;
   private final LogicalPositionCache myLogicalPositionCache;
+  private final CharWidthCache myCharWidthCache;
   private final TabFragment myTabFragment;
 
-  private FontRenderContext myFontRenderContext;
+  private FontRenderContext myFontRenderContext; // guarded by myLock
   private String myPrefixText; // accessed only in EDT
   private LineLayout myPrefixLayout; // guarded by myLock
   private TextAttributes myPrefixAttributes; // accessed only in EDT
@@ -63,7 +62,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
   private int myLineHeight; // guarded by myLock
   private int myDescent; // guarded by myLock
   private int myCharHeight; // guarded by myLock
-  private int myMaxCharWidth; // guarded by myLock
+  private float myMaxCharWidth; // guarded by myLock
   private int myTabSize; // guarded by myLock
   private int myTopOverhang; //guarded by myLock
   private int myBottomOverhang; //guarded by myLock
@@ -79,6 +78,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
     mySizeManager = new EditorSizeManager(this);
     myTextLayoutCache = new TextLayoutCache(this);
     myLogicalPositionCache = new LogicalPositionCache(this);
+    myCharWidthCache = new CharWidthCache(this);
     myTabFragment = new TabFragment(this);
 
     myEditor.getContentComponent().addHierarchyListener(this);
@@ -94,7 +94,9 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
   }
 
   FontRenderContext getFontRenderContext() {
-    return myFontRenderContext;
+    synchronized (myLock) {
+      return myFontRenderContext;
+    }
   }
 
   EditorSizeManager getSizeManager() {
@@ -139,9 +141,10 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
   }
 
   @Override
-  public void visibleAreaChanged(VisibleAreaEvent e) {
+  public void visibleAreaChanged(@Nonnull VisibleAreaEvent e) {
     checkFontRenderContext(null);
   }
+
   public int yToVisualLine(int y) {
     return myMapper.yToVisualLine(y);
   }
@@ -234,8 +237,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
     assertIsDispatchThread();
     myPrefixText = prefixText;
     synchronized (myLock) {
-      myPrefixLayout = prefixText == null || prefixText.isEmpty() ? null :
-                       LineLayout.create(this, prefixText, attributes.getFontType());
+      myPrefixLayout = prefixText == null || prefixText.isEmpty() ? null : LineLayout.create(this, prefixText, attributes.getFontType());
     }
     myPrefixAttributes = attributes;
     mySizeManager.invalidateRange(0, 0);
@@ -327,6 +329,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
     synchronized (myLock) {
       myPlainSpaceWidth = -1;
       myTabSize = -1;
+      setFontRenderContext(null);
     }
     switch (EditorSettingsExternalizable.getInstance().getBidiTextDirection()) {
       case LTR:
@@ -338,10 +341,10 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
       default:
         myBidiFlags = Bidi.DIRECTION_DEFAULT_LEFT_TO_RIGHT;
     }
-    setFontRenderContext(null);
     myLogicalPositionCache.reset(false);
     myTextLayoutCache.resetToDocumentSize(false);
     invalidateFoldRegionLayouts();
+    myCharWidthCache.clear();
     setPrefix(myPrefixText, myPrefixAttributes); // recreate prefix layout
     mySizeManager.reset();
   }
@@ -373,17 +376,14 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
     if (myDocument.getTextLength() == 0) return false;
     LogicalPosition logicalPosition = visualToLogicalPosition(visualPosition);
     int offset = logicalPositionToOffset(logicalPosition);
+    if (!logicalPosition.equals(offsetToLogicalPosition(offset))) return false; // virtual space
     if (myEditor.getSoftWrapModel().getSoftWrap(offset) != null) {
       VisualPosition beforeWrapPosition = offsetToVisualPosition(offset, true, true);
-      if (visualPosition.line == beforeWrapPosition.line &&
-          (visualPosition.column > beforeWrapPosition.column ||
-           visualPosition.column == beforeWrapPosition.column && visualPosition.leansRight)) {
+      if (visualPosition.line == beforeWrapPosition.line && (visualPosition.column > beforeWrapPosition.column || visualPosition.column == beforeWrapPosition.column && visualPosition.leansRight)) {
         return false;
       }
       VisualPosition afterWrapPosition = offsetToVisualPosition(offset, false, false);
-      if (visualPosition.line == afterWrapPosition.line &&
-          (visualPosition.column < afterWrapPosition.column ||
-           visualPosition.column == afterWrapPosition.column && !visualPosition.leansRight)) {
+      if (visualPosition.line == afterWrapPosition.line && (visualPosition.column < afterWrapPosition.column || visualPosition.column == afterWrapPosition.column && !visualPosition.leansRight)) {
         return false;
       }
     }
@@ -454,7 +454,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
     }
   }
 
-  int getMaxCharWidth() {
+  float getMaxCharWidth() {
     synchronized (myLock) {
       initMetricsIfNeeded();
       return myMaxCharWidth;
@@ -497,6 +497,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
     float verticalScalingFactor = getVerticalScalingFactor();
 
     int fontMetricsHeight = FontLayoutService.getInstance().getHeight(fm);
+    int lineHeight;
     if (Registry.is("editor.text.xcode.vertical.spacing")) {
       //Here we approximate line calculation to the variant used in Xcode 9 editor
       LineMetrics metrics = font.getLineMetrics("", myFontRenderContext);
@@ -510,11 +511,22 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
       else {
         spacing = ((int)Math.ceil((height * delta) / 2)) * 2;
       }
-      myLineHeight = (int)Math.ceil(height) + spacing;
+      lineHeight = (int)Math.ceil(height) + spacing;
+    }
+    else if (Registry.is("editor.text.vertical.spacing.correct.rounding")) {
+      if (verticalScalingFactor == 1f) {
+        lineHeight = fontMetricsHeight;
+      }
+      else {
+        Font scaledFont = font.deriveFont(font.getSize() * verticalScalingFactor);
+        FontMetrics scaledMetrics = FontInfo.getFontMetrics(scaledFont, myFontRenderContext);
+        lineHeight = FontLayoutService.getInstance().getHeight(scaledMetrics);
+      }
     }
     else {
-      myLineHeight = (int)Math.ceil(fontMetricsHeight * verticalScalingFactor);
+      lineHeight = (int)Math.ceil(fontMetricsHeight * verticalScalingFactor);
     }
+    myLineHeight = Math.max(1, lineHeight);
     int descent = FontLayoutService.getInstance().getDescent(fm);
     myDescent = descent + (myLineHeight - fontMetricsHeight) / 2;
     myTopOverhang = fontMetricsHeight - myLineHeight + myDescent - descent;
@@ -522,7 +534,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
 
     // assuming that bold italic 'W' gives a good approximation of font's widest character
     FontMetrics fmBI = FontInfo.getFontMetrics(myEditor.getColorsScheme().getFont(EditorFontType.BOLD_ITALIC), myFontRenderContext);
-    myMaxCharWidth = FontLayoutService.getInstance().charWidth(fmBI, 'W');
+    myMaxCharWidth = FontLayoutService.getInstance().charWidth2D(fmBI, 'W');
   }
 
   public int getTabSize() {
@@ -534,24 +546,28 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
     }
   }
 
+  // guarded by myLock
   private boolean setFontRenderContext(FontRenderContext context) {
     FontRenderContext contextToSet = context == null ? FontInfo.getFontRenderContext(myEditor.getContentComponent()) : context;
     if (areEqualContexts(myFontRenderContext, contextToSet)) return false;
     myFontRenderContext = contextToSet.getFractionalMetricsHint() == myEditor.myFractionalMetricsHintValue
                           ? contextToSet
-                          : new FontRenderContext(contextToSet.getTransform(),
-                                                  contextToSet.getAntiAliasingHint(),
-                                                  myEditor.myFractionalMetricsHintValue);
+                          : new FontRenderContext(contextToSet.getTransform(), contextToSet.getAntiAliasingHint(), myEditor.myFractionalMetricsHintValue);
     return true;
   }
 
   private void checkFontRenderContext(FontRenderContext context) {
-    if (setFontRenderContext(context)) {
-      synchronized (myLock) {
+    boolean contextUpdated = false;
+    synchronized (myLock) {
+      if (setFontRenderContext(context)) {
         myPlainSpaceWidth = -1;
+        contextUpdated = true;
       }
+    }
+    if (contextUpdated) {
       myTextLayoutCache.resetToDocumentSize(false);
       invalidateFoldRegionLayouts();
+      myCharWidthCache.clear();
     }
   }
 
@@ -564,21 +580,62 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
     return c1.getTransform().equals(c2.getTransform()) && c1.getAntiAliasingHint().equals(c2.getAntiAliasingHint());
   }
 
+  public int offsetToVisualColumnInFoldRegion(@Nonnull FoldRegion region, int offset, boolean leanTowardsLargerOffsets) {
+    if (offset < 0 || offset == 0 && !leanTowardsLargerOffsets) return 0;
+    String text = region.getPlaceholderText();
+    if (offset > text.length()) {
+      offset = text.length();
+      leanTowardsLargerOffsets = true;
+    }
+    int logicalColumn = LogicalPositionCache.calcColumn(text, 0, 0, offset, getTabSize());
+    int maxColumn = 0;
+    for (LineLayout.VisualFragment fragment : getFoldRegionLayout(region).getFragmentsInVisualOrder(0)) {
+      int startLC = fragment.getStartLogicalColumn();
+      int endLC = fragment.getEndLogicalColumn();
+      if (logicalColumn > startLC && logicalColumn < endLC || logicalColumn == startLC && leanTowardsLargerOffsets || logicalColumn == endLC && !leanTowardsLargerOffsets) {
+        return fragment.logicalToVisualColumn(logicalColumn);
+      }
+      maxColumn = fragment.getEndVisualColumn();
+    }
+    return maxColumn;
+  }
+
+  public int visualColumnToOffsetInFoldRegion(@Nonnull FoldRegion region, int visualColumn, boolean leansRight) {
+    if (visualColumn < 0 || visualColumn == 0 && !leansRight) return 0;
+    String text = region.getPlaceholderText();
+    for (LineLayout.VisualFragment fragment : getFoldRegionLayout(region).getFragmentsInVisualOrder(0)) {
+      int startVC = fragment.getStartVisualColumn();
+      int endVC = fragment.getEndVisualColumn();
+      if (visualColumn > startVC && visualColumn < endVC || visualColumn == startVC && leansRight || visualColumn == endVC && !leansRight) {
+        int logicalColumn = fragment.visualToLogicalColumn(visualColumn);
+        return LogicalPositionCache.calcOffset(text, logicalColumn, 0, 0, text.length(), getTabSize());
+      }
+    }
+    return text.length();
+  }
+
   LineLayout getFoldRegionLayout(FoldRegion foldRegion) {
     LineLayout layout = foldRegion.getUserData(FOLD_REGION_TEXT_LAYOUT);
     if (layout == null) {
       TextAttributes placeholderAttributes = myEditor.getFoldingModel().getPlaceholderAttributes();
-      layout = LineLayout.create(this, StringUtil.replace(foldRegion.getPlaceholderText(), "\n", " "),
-                                 placeholderAttributes == null ? Font.PLAIN : placeholderAttributes.getFontType());
+      layout = LineLayout.create(this, StringUtil.replace(foldRegion.getPlaceholderText(), "\n", " "), placeholderAttributes == null ? Font.PLAIN : placeholderAttributes.getFontType());
       foldRegion.putUserData(FOLD_REGION_TEXT_LAYOUT, layout);
     }
     return layout;
   }
 
-  void invalidateFoldRegionLayouts() {
+  private void invalidateFoldRegionLayouts() {
     for (FoldRegion region : myEditor.getFoldingModel().getAllFoldRegions()) {
-      region.putUserData(FOLD_REGION_TEXT_LAYOUT, null);
+      invalidateFoldRegionLayout(region);
     }
+  }
+
+  public void invalidateFoldRegionLayout(FoldRegion region) {
+    region.putUserData(FOLD_REGION_TEXT_LAYOUT, null);
+  }
+
+  float getCodePointWidth(int codePoint, @JdkConstants.FontStyle int fontStyle) {
+    return myCharWidthCache.getCodePointWidth(codePoint, fontStyle);
   }
 
   Insets getInsets() {

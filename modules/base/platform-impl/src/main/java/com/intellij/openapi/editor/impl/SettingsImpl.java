@@ -28,6 +28,7 @@ import com.intellij.application.options.CodeStyle;
 import com.intellij.codeStyle.CodeStyleFacade;
 import com.intellij.lang.Language;
 import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.EditorKind;
 import com.intellij.openapi.editor.EditorSettings;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.EditorEx;
@@ -102,12 +103,21 @@ public class SettingsImpl implements EditorSettings {
   private List<Integer> mySoftMargins = null;
 
   public SettingsImpl() {
-    this(null, null);
+    this(null, null, EditorKind.MAIN_EDITOR);
   }
 
-  public SettingsImpl(@Nullable EditorEx editor, @Nullable Project project) {
+  public SettingsImpl(@Nullable EditorEx editor, @Nullable Project project, @Nonnull EditorKind kind) {
     myEditor = editor;
     myLanguage = editor != null && project != null ? getDocumentLanguage(project, editor.getDocument()) : null;
+    if (EditorKind.CONSOLE.equals(kind)) {
+      mySoftWrapAppliancePlace = SoftWrapAppliancePlaces.CONSOLE;
+    }
+    else if (EditorKind.PREVIEW.equals(kind)) {
+      mySoftWrapAppliancePlace = SoftWrapAppliancePlaces.PREVIEW;
+    }
+    else {
+      mySoftWrapAppliancePlace = SoftWrapAppliancePlaces.MAIN_EDITOR;
+    }
   }
 
   @Override

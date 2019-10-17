@@ -40,11 +40,6 @@ public class WebFoldingModelImpl implements FoldingModelEx {
   }
 
   @Override
-  public boolean addFoldRegion(@Nonnull FoldRegion region) {
-    return false;
-  }
-
-  @Override
   public void removeFoldRegion(@Nonnull FoldRegion region) {
 
   }

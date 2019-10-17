@@ -20,4 +20,9 @@ import javax.annotation.Nonnull;
 public interface IntentionActionDelegate {
   @Nonnull
   IntentionAction getDelegate();
+
+  @Nonnull
+  static IntentionAction unwrap(@Nonnull IntentionAction action) {
+    return action instanceof IntentionActionDelegate ? unwrap(((IntentionActionDelegate)action).getDelegate()) : action;
+  }
 }

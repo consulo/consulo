@@ -491,6 +491,10 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     return CLOSE_TAB_BUTTON_ON_THE_RIGHT;
   }
 
+  public boolean getCycleScrolling() {
+    return CYCLE_SCROLLING;
+  }
+
   /**
    * @see #setupComponentAntialiasing(JComponent)
    */

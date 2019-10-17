@@ -52,11 +52,7 @@ public class MarkupModelWindow extends UserDataHolderBase implements MarkupModel
 
   @Override
   @Nonnull
-  public RangeHighlighter addRangeHighlighter(final int startOffset,
-                                              final int endOffset,
-                                              final int layer,
-                                              final TextAttributes textAttributes,
-                                              @Nonnull final HighlighterTargetArea targetArea) {
+  public RangeHighlighter addRangeHighlighter(final int startOffset, final int endOffset, final int layer, final TextAttributes textAttributes, @Nonnull final HighlighterTargetArea targetArea) {
     TextRange hostRange = myDocument.injectedToHost(new ProperTextRange(startOffset, endOffset));
     return myHostModel.addRangeHighlighter(hostRange.getStartOffset(), hostRange.getEndOffset(), layer, textAttributes, targetArea);
   }
@@ -69,15 +65,13 @@ public class MarkupModelWindow extends UserDataHolderBase implements MarkupModel
                                                                    TextAttributes textAttributes,
                                                                    @Nonnull HighlighterTargetArea targetArea,
                                                                    boolean isPersistent,
-                                                                   Consumer<RangeHighlighterEx> changeAttributesAction) {
+                                                                   Consumer<? super RangeHighlighterEx> changeAttributesAction) {
     TextRange hostRange = myDocument.injectedToHost(new ProperTextRange(startOffset, endOffset));
-    return myHostModel.addRangeHighlighterAndChangeAttributes(hostRange.getStartOffset(), hostRange.getEndOffset(), layer, textAttributes,
-                                                              targetArea, isPersistent, changeAttributesAction);
+    return myHostModel.addRangeHighlighterAndChangeAttributes(hostRange.getStartOffset(), hostRange.getEndOffset(), layer, textAttributes, targetArea, isPersistent, changeAttributesAction);
   }
 
   @Override
-  public void changeAttributesInBatch(@Nonnull RangeHighlighterEx highlighter,
-                                      @Nonnull Consumer<RangeHighlighterEx> changeAttributesAction) {
+  public void changeAttributesInBatch(@Nonnull RangeHighlighterEx highlighter, @Nonnull Consumer<? super RangeHighlighterEx> changeAttributesAction) {
     myHostModel.changeAttributesInBatch(highlighter, changeAttributesAction);
   }
 
@@ -148,6 +142,12 @@ public class MarkupModelWindow extends UserDataHolderBase implements MarkupModel
   public MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset) {
     // todo convert
     return myHostModel.overlappingIterator(startOffset, endOffset);
+  }
+
+  @Nonnull
+  @Override
+  public MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset, boolean onlyRenderedInGutter, boolean onlyRenderedInScrollBar) {
+    throw new UnsupportedOperationException();
   }
 
   @Override

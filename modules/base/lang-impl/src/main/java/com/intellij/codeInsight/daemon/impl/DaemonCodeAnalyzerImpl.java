@@ -114,7 +114,6 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
   private final FileStatusMap myFileStatusMap;
   private DaemonCodeAnalyzerSettings myLastSettings;
 
-  private volatile IntentionHintComponent myLastIntentionHint;
   private volatile boolean myDisposed;     // the only possible transition: false -> true
   private volatile boolean myInitialized;  // the only possible transition: false -> true
 
@@ -676,7 +675,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
 
     if (foundInfoList.isEmpty()) return null;
     if (foundInfoList.size() == 1) return foundInfoList.get(0);
-    return new HighlightInfoComposite(foundInfoList);
+    return HighlightInfoComposite.create(foundInfoList);
   }
 
   private static boolean isOffsetInsideHighlightInfo(int offset, @Nonnull HighlightInfo info, boolean includeFixRange) {
@@ -706,34 +705,9 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
     return result;
   }
 
-  void setLastIntentionHint(@Nonnull Project project, @Nonnull PsiFile file, @Nonnull Editor editor, @Nonnull ShowIntentionsPass.IntentionsInfo intentions, boolean hasToRecreate) {
-    if (!editor.getSettings().isShowIntentionBulb()) {
-      return;
-    }
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    hideLastIntentionHint();
-
-    if (editor.getCaretModel().getCaretCount() > 1) return;
-
-    IntentionHintComponent hintComponent = IntentionHintComponent.showIntentionHint(project, file, editor, intentions, false);
-    if (hasToRecreate) {
-      hintComponent.recreate();
-    }
-    myLastIntentionHint = hintComponent;
-  }
-
-  void hideLastIntentionHint() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    IntentionHintComponent hint = myLastIntentionHint;
-    if (hint != null && hint.isVisible()) {
-      hint.hide();
-      myLastIntentionHint = null;
-    }
-  }
-
   @Nullable
   public IntentionHintComponent getLastIntentionHint() {
-    return myLastIntentionHint;
+    return ((IntentionsUIImpl)IntentionsUI.getInstance(myProject)).getLastIntentionHint();
   }
 
   @Nullable

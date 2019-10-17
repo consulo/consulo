@@ -70,6 +70,10 @@ public interface HighlightInfoType {
           HighlightDisplayKey.findOrRegister(DeprecationUtil.DEPRECATION_SHORT_NAME, DeprecationUtil.DEPRECATION_DISPLAY_NAME, DeprecationUtil.DEPRECATION_ID),
           CodeInsightColors.DEPRECATED_ATTRIBUTES);
 
+  HighlightInfoType MARKED_FOR_REMOVAL =
+          new HighlightInfoTypeSeverityByKey(HighlightDisplayKey.findOrRegister(DeprecationUtil.FOR_REMOVAL_SHORT_NAME, DeprecationUtil.FOR_REMOVAL_DISPLAY_NAME, DeprecationUtil.FOR_REMOVAL_ID),
+                                             CodeInsightColors.MARKED_FOR_REMOVAL_ATTRIBUTES);
+
   HighlightSeverity SYMBOL_TYPE_SEVERITY = new HighlightSeverity("SYMBOL_TYPE_SEVERITY", HighlightSeverity.INFORMATION.myVal - 2);
 
   HighlightInfoType TODO = new HighlightInfoTypeImpl(HighlightSeverity.INFORMATION, CodeInsightColors.TODO_DEFAULT_ATTRIBUTES, false);

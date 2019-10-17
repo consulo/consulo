@@ -22,22 +22,9 @@ import javax.annotation.Nonnull;
  * @author ik
  */
 public interface TreeChange {
-  void addChange(ASTNode child, @Nonnull ChangeInfo changeInfo);
 
   @Nonnull
   ASTNode[] getAffectedChildren();
 
   ChangeInfo getChangeByChild(ASTNode child);
-
-  int getChildOffsetInNewTree(@Nonnull ASTNode child);
-
-  void composite(@Nonnull TreeChange treeChange);
-
-  boolean isEmpty();
-
-  void removeChange(ASTNode beforeEqualDepth);
-
-  void add(@Nonnull TreeChange value);
-
-  int getOldLength();
 }
