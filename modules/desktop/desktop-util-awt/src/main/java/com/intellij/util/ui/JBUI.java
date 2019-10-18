@@ -71,6 +71,40 @@ public class JBUI {
       }
     }
 
+    public static class ActionButton {
+      @Nonnull
+      public static Color pressedBackground() {
+        return JBColor.namedColor("ActionButton.pressedBackground", Gray.xCF);
+      }
+
+      @Nonnull
+      public static Color pressedBorder() {
+        return JBColor.namedColor("ActionButton.pressedBorderColor", Gray.xCF);
+      }
+
+      @Nonnull
+      public static Color hoverBackground() {
+        return JBColor.namedColor("ActionButton.hoverBackground", Gray.xDF);
+      }
+
+      @Nonnull
+      public static Color hoverBorder() {
+        return JBColor.namedColor("ActionButton.hoverBorderColor", Gray.xDF);
+      }
+
+      @Nonnull
+      public static Color hoverSeparatorColor() {
+        return JBColor.namedColor("ActionButton.hoverSeparatorColor", new JBColor(Gray.xB3, Gray.x6B));
+      }
+    }
+
+    public static class StatusBar {
+      @Nonnull
+      public static Color hoverBackground() {
+        return JBColor.namedColor("StatusBar.hoverBackground", ActionButton.hoverBackground());
+      }
+    }
+
     public static class CustomFrameDecorations {
       @Nonnull
       public static Color separatorForeground() {

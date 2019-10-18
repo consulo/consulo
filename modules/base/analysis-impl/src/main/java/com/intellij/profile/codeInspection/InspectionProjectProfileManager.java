@@ -18,6 +18,7 @@ package com.intellij.profile.codeInspection;
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.codeInspection.InspectionProfile;
+import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.Project;
@@ -26,7 +27,7 @@ import com.intellij.profile.DefaultProjectProfileManager;
 import com.intellij.profile.Profile;
 import com.intellij.psi.PsiElement;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -50,8 +51,8 @@ public abstract class InspectionProjectProfileManager extends DefaultProjectProf
     return getInspectionProfile().getName();
   }
 
-  public InspectionProfile getCurrentProfile() {
-    return getInspectionProfile();
+  public InspectionProfileImpl getCurrentProfile() {
+    return (InspectionProfileImpl)getInspectionProfile();
   }
 
   @Nonnull

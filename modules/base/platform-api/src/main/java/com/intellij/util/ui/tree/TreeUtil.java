@@ -51,6 +51,7 @@ import static com.intellij.util.ReflectionUtil.getDeclaredMethod;
 import static java.util.stream.Collectors.toList;
 
 public final class TreeUtil {
+  public static final TreePath[] EMPTY_TREE_PATH = new TreePath[0];
   private static final Logger LOG = Logger.getInstance("#com.intellij.util.ui.tree.TreeUtil");
   private static final String TREE_UTIL_SCROLL_TIME_STAMP = "TreeUtil.scrollTimeStamp";
   private static final JBIterable<Integer> NUMBERS = JBIterable.generate(0, i -> i + 1);

@@ -15,67 +15,18 @@
  */
 package com.intellij.openapi.progress.util;
 
-import consulo.logging.Logger;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.TaskInfo;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
-import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.WeakList;
-
 import javax.annotation.Nonnull;
-import java.util.List;
+
+import java.util.Collection;
 
 public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBase implements ProgressIndicatorEx {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.progress.util.ProgressIndicatorBase");
-  private static final IndicatorAction CHECK_CANCELED_ACTION = new IndicatorAction() {
-    @Override
-    public void execute(@Nonnull ProgressIndicatorEx each) {
-      each.checkCanceled();
-    }
-  };
-  private static final IndicatorAction STOP_ACTION = new IndicatorAction() {
-    @Override
-    public void execute(@Nonnull final ProgressIndicatorEx each) {
-      each.stop();
-    }
-  };
-  private static final IndicatorAction START_ACTION = new IndicatorAction() {
-    @Override
-    public void execute(@Nonnull final ProgressIndicatorEx each) {
-      each.start();
-    }
-  };
-  private static final IndicatorAction CANCEL_ACTION = new IndicatorAction() {
-    @Override
-    public void execute(@Nonnull final ProgressIndicatorEx each) {
-      each.cancel();
-    }
-  };
-  private static final IndicatorAction PUSH_ACTION = new IndicatorAction() {
-    @Override
-    public void execute(@Nonnull final ProgressIndicatorEx each) {
-      each.pushState();
-    }
-  };
-  private static final IndicatorAction POP_ACTION = new IndicatorAction() {
-    @Override
-    public void execute(@Nonnull final ProgressIndicatorEx each) {
-      each.popState();
-    }
-  };
-  private static final IndicatorAction STARTNC_ACTION = new IndicatorAction() {
-    @Override
-    public void execute(@Nonnull final ProgressIndicatorEx each) {
-      each.startNonCancelableSection();
-    }
-  };
-  private static final IndicatorAction FINISHNC_ACTION = new IndicatorAction() {
-    @Override
-    public void execute(@Nonnull final ProgressIndicatorEx each) {
-      each.finishNonCancelableSection();
-    }
-  };
-  protected final boolean myReusable;
-  private volatile List<ProgressIndicatorEx> myStateDelegates;
+  private final boolean myReusable;
+  private volatile ProgressIndicatorEx[] myStateDelegates;
   private volatile WeakList<TaskInfo> myFinished;
   private volatile boolean myWasStarted;
   private TaskInfo myOwnerTask;
@@ -90,35 +41,31 @@ public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBa
 
   @Override
   public void start() {
-    synchronized (this) {
+    synchronized (getLock()) {
       super.start();
-      delegateRunningChange(START_ACTION);
+      delegateRunningChange(ProgressIndicator::start);
+      myWasStarted = true;
     }
-    myWasStarted = true;
   }
+
 
   @Override
   public void stop() {
     super.stop();
-    delegateRunningChange(STOP_ACTION);
+    delegateRunningChange(ProgressIndicator::stop);
   }
 
   @Override
   public void cancel() {
     super.cancel();
-    delegateRunningChange(CANCEL_ACTION);
-  }
-
-  @Override
-  public boolean isCanceled() {
-    return super.isCanceled();
+    delegateRunningChange(ProgressIndicator::cancel);
   }
 
   @Override
   public void finish(@Nonnull final TaskInfo task) {
     WeakList<TaskInfo> finished = myFinished;
     if (finished == null) {
-      synchronized (this) {
+      synchronized (getLock()) {
         finished = myFinished;
         if (finished == null) {
           myFinished = finished = new WeakList<>();
@@ -127,17 +74,12 @@ public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBa
     }
     if (!finished.addIfAbsent(task)) return;
 
-    delegateRunningChange(new IndicatorAction() {
-      @Override
-      public void execute(@Nonnull final ProgressIndicatorEx each) {
-        each.finish(task);
-      }
-    });
+    delegateRunningChange(each -> each.finish(task));
   }
 
   @Override
   public boolean isFinished(@Nonnull final TaskInfo task) {
-    List<TaskInfo> list = myFinished;
+    Collection<TaskInfo> list = myFinished;
     return list != null && list.contains(task);
   }
 
@@ -157,71 +99,46 @@ public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBa
   public final void checkCanceled() {
     super.checkCanceled();
 
-    delegate(CHECK_CANCELED_ACTION);
+    delegate(ProgressIndicator::checkCanceled);
   }
 
   @Override
   public void setText(final String text) {
     super.setText(text);
 
-    delegateProgressChange(new IndicatorAction() {
-      @Override
-      public void execute(@Nonnull final ProgressIndicatorEx each) {
-        each.setText(text);
-      }
-    });
+    delegateProgressChange(each -> each.setText(text));
   }
 
   @Override
   public void setText2(final String text) {
     super.setText2(text);
 
-    delegateProgressChange(new IndicatorAction() {
-      @Override
-      public void execute(@Nonnull final ProgressIndicatorEx each) {
-        each.setText2(text);
-      }
-    });
+    delegateProgressChange(each -> each.setText2(text));
   }
 
   @Override
   public void setFraction(final double fraction) {
     super.setFraction(fraction);
 
-    delegateProgressChange(new IndicatorAction() {
-      @Override
-      public void execute(@Nonnull final ProgressIndicatorEx each) {
-        each.setFraction(fraction);
-      }
-    });
+    delegateProgressChange(each -> each.setFraction(fraction));
   }
 
   @Override
-  public synchronized void pushState() {
-    super.pushState();
+  public void pushState() {
+    synchronized (getLock()) {
+      super.pushState();
 
-    delegateProgressChange(PUSH_ACTION);
+      delegateProgressChange(ProgressIndicator::pushState);
+    }
   }
 
   @Override
-  public synchronized void popState() {
-    super.popState();
+  public void popState() {
+    synchronized (getLock()) {
+      super.popState();
 
-    delegateProgressChange(POP_ACTION);
-  }
-
-  @Override
-  public void startNonCancelableSection() {
-    super.startNonCancelableSection();
-
-    delegateProgressChange(STARTNC_ACTION);
-  }
-
-  @Override
-  public void finishNonCancelableSection() {
-    super.finishNonCancelableSection();
-
-    delegateProgressChange(FINISHNC_ACTION);
+      delegateProgressChange(ProgressIndicator::popState);
+    }
   }
 
   @Override
@@ -233,26 +150,25 @@ public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBa
   public void setIndeterminate(final boolean indeterminate) {
     super.setIndeterminate(indeterminate);
 
-    delegateProgressChange(new IndicatorAction() {
-      @Override
-      public void execute(@Nonnull final ProgressIndicatorEx each) {
-        each.setIndeterminate(indeterminate);
-      }
-    });
+    delegateProgressChange(each -> each.setIndeterminate(indeterminate));
   }
 
   @Override
   public final void addStateDelegate(@Nonnull ProgressIndicatorEx delegate) {
-    delegate.initStateFrom(this);
-    synchronized (this) {
-      List<ProgressIndicatorEx> stateDelegates = myStateDelegates;
+    synchronized (getLock()) {
+      delegate.initStateFrom(this);
+      ProgressIndicatorEx[] stateDelegates = myStateDelegates;
       if (stateDelegates == null) {
-        myStateDelegates = stateDelegates = ContainerUtil.createLockFreeCopyOnWriteList();
+        myStateDelegates = stateDelegates = new ProgressIndicatorEx[1];
+        stateDelegates[0] = delegate;
       }
       else {
-        LOG.assertTrue(!stateDelegates.contains(delegate), "Already registered: " + delegate);
+        // hard throw is essential for avoiding deadlocks
+        if (ArrayUtil.contains(delegate, stateDelegates)) {
+          throw new IllegalArgumentException("Already registered: " + delegate);
+        }
+        myStateDelegates = ArrayUtil.append(stateDelegates, delegate, ProgressIndicatorEx.class);
       }
-      stateDelegates.add(delegate);
     }
   }
 
@@ -267,8 +183,8 @@ public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBa
   }
 
   private void delegate(@Nonnull IndicatorAction action) {
-    List<ProgressIndicatorEx> list = myStateDelegates;
-    if (list != null && !list.isEmpty()) {
+    ProgressIndicatorEx[] list = myStateDelegates;
+    if (list != null) {
       for (ProgressIndicatorEx each : list) {
         action.execute(each);
       }
@@ -288,6 +204,7 @@ public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBa
     return myWasStarted;
   }
 
+  @FunctionalInterface
   protected interface IndicatorAction {
     void execute(@Nonnull ProgressIndicatorEx each);
   }

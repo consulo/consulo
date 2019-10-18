@@ -18,8 +18,8 @@ package com.intellij.openapi.util;
 import com.intellij.openapi.Disposable;
 import consulo.disposer.internal.DisposerInternal;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 
 public class Disposer {
@@ -63,6 +63,10 @@ public class Disposer {
 
   public static boolean isDisposed(@Nonnull Disposable disposable) {
     return ourInternal.isDisposed(disposable);
+  }
+
+  public static Throwable getDisposalTrace(@Nonnull Disposable disposable) {
+    return ourInternal.getDisposalTrace(disposable);
   }
 
   public static boolean isDisposing(@Nonnull Disposable disposable) {

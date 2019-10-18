@@ -1,4 +1,4 @@
-// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.tree;
 
 import com.intellij.ide.util.treeView.AbstractTreeNode;
@@ -6,16 +6,18 @@ import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.ide.util.treeView.ValidateableNode;
 import com.intellij.openapi.Disposable;
-import consulo.logging.Logger;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.util.concurrency.Invoker;
 import com.intellij.util.concurrency.InvokerSupplier;
 import com.intellij.util.ui.tree.AbstractTreeModel;
 import com.intellij.util.ui.tree.TreeUtil;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.concurrency.AsyncPromise;
 import org.jetbrains.concurrency.Promise;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
@@ -41,18 +43,37 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
   private final Structure structure;
   private volatile Comparator<? super Node> comparator;
 
-  private StructureTreeModel(@Nonnull Structure structure, boolean background) {
+  private StructureTreeModel(@Nonnull Structure structure, boolean background, @Nonnull Disposable parentDisposable) {
     this.structure = structure;
     description = format(structure.toString());
-    invoker = background ? new Invoker.BackgroundThread(this) : new Invoker.EDT(this);
+    invoker = background ? new Invoker.Background(this) : new Invoker.EDT(this);
+    Disposer.register(parentDisposable, this);
   }
 
+  /**
+   * @deprecated Please use {@link #StructureTreeModel(AbstractTreeStructure, Disposable)}
+   */
+  @Deprecated
+  //@ApiStatus.ScheduledForRemoval(inVersion = "2019.3")
   public StructureTreeModel(@Nonnull Structure structure) {
-    this(structure, true);
+    this(structure, Disposer.newDisposable());
   }
 
+  /**
+   * @deprecated Please use {@link #StructureTreeModel(AbstractTreeStructure, Comparator, Disposable)}
+   */
+  @Deprecated
+  //@ApiStatus.ScheduledForRemoval(inVersion = "2019.3")
   public StructureTreeModel(@Nonnull Structure structure, @Nonnull Comparator<? super NodeDescriptor> comparator) {
-    this(structure);
+    this(structure, comparator, Disposer.newDisposable());
+  }
+
+  public StructureTreeModel(@Nonnull Structure structure, @Nonnull Disposable parentDisposable) {
+    this(structure, true, parentDisposable);
+  }
+
+  public StructureTreeModel(@Nonnull Structure structure, @Nonnull Comparator<? super NodeDescriptor> comparator, @Nonnull Disposable parentDisposable) {
+    this(structure, parentDisposable);
     this.comparator = wrapToNodeComparator(comparator);
   }
 
@@ -250,7 +271,7 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
    * @param consumer a path consumer called on EDT if path is found and selected
    */
   public final void select(@Nonnull Object element, @Nonnull JTree tree, @Nonnull Consumer<? super TreePath> consumer) {
-    promiseVisitor(element).onSuccess(visitor -> TreeUtil.select(tree, visitor, consumer));
+    promiseVisitor(element).onSuccess(visitor -> TreeUtil.promiseSelect(tree, visitor).onSuccess(consumer));
   }
 
   /**
@@ -263,7 +284,8 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
    */
   @Nonnull
   public final Promise<TreeVisitor> promiseVisitor(@Nonnull Object element) {
-    return onValidThread(structure -> new TreeVisitor.ByTreePath<>(TreePathUtil.pathToCustomNode(element, structure::getParentElement), node -> node instanceof Node ? ((Node)node).getElement() : null));
+    return onValidThread(
+            structure -> new TreeVisitor.ByTreePath<>(TreePathUtil.pathToCustomNode(element, structure::getParentElement), node -> node instanceof Node ? ((Node)node).getElement() : null));
   }
 
   @Override
@@ -331,10 +353,6 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
     return object instanceof Node && child instanceof Node ? ((Node)object).getIndex((TreeNode)child) : -1;
   }
 
-  @Override
-  public void valueForPathChanged(TreePath path, Object value) {
-  }
-
   private boolean isValid(@Nonnull Node node) {
     return isValid(structure, node.getElement());
   }
@@ -378,6 +396,7 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
 
     List<Node> list = new ArrayList<>(elements.length);
     for (Object element : elements) {
+      ProgressManager.checkCanceled();
       if (isValid(structure, element)) {
         list.add(new Node(structure, element, descriptor)); // an exception may be thrown while getting children
       }
@@ -409,7 +428,7 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
     return list;
   }
 
-  private static final class Node extends DefaultMutableTreeNode {
+  private static final class Node extends DefaultMutableTreeNode implements LeafState.Supplier {
     private final Reference<List<Node>> children = new Reference<>();
     private final LeafState leafState;
     private final int hashCode;
@@ -551,6 +570,12 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
     @Override
     public int getIndex(@Nonnull TreeNode child) {
       return child instanceof Node && isNodeChild(child) ? getChildren().indexOf(child) : -1;
+    }
+
+    @Nonnull
+    @Override
+    public LeafState getLeafState() {
+      return leafState;
     }
   }
 

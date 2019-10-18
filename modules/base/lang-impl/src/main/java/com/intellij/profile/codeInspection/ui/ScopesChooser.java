@@ -32,6 +32,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -62,7 +63,7 @@ public abstract class ScopesChooser extends ComboBoxAction implements DumbAware 
 
   @Nonnull
   @Override
-  public DefaultActionGroup createPopupActionGroup(DataContext context) {
+  public DefaultActionGroup createPopupActionGroup(JComponent component) {
     final DefaultActionGroup group = new DefaultActionGroup();
 
     final List<NamedScope> predefinedScopes = new ArrayList<NamedScope>();

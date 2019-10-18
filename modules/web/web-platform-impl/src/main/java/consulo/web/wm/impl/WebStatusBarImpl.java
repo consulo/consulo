@@ -18,6 +18,7 @@ package consulo.web.wm.impl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.TaskInfo;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.BalloonHandler;
 import com.intellij.openapi.util.Pair;
@@ -134,6 +135,12 @@ public class WebStatusBarImpl implements StatusBarEx {
   @Override
   public void install(IdeFrame frame) {
 
+  }
+
+  @Nullable
+  @Override
+  public Project getProject() {
+    return myFrame.getProject();
   }
 
   @Override

@@ -117,7 +117,7 @@ class EncodingFileTreeTable extends AbstractFileTreeTable<Charset> {
         ComboBoxAction changeAction = new ComboBoxAction() {
           @Nonnull
           @Override
-          public DefaultActionGroup createPopupActionGroup(DataContext context) {
+          public DefaultActionGroup createPopupActionGroup(JComponent component) {
             return cfa.createActionGroup(myVirtualFile, null, document, bytes, "<Clear>");
           }
         };

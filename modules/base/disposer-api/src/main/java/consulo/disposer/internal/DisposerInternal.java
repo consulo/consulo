@@ -18,8 +18,8 @@ package consulo.disposer.internal;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.TraceableDisposable;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.ServiceLoader;
@@ -42,6 +42,8 @@ public abstract class DisposerInternal {
   public abstract TraceableDisposable newTraceDisposable(boolean debug);
 
   public abstract Disposable get(@Nonnull String key);
+
+  public abstract Throwable getDisposalTrace(@Nonnull Disposable disposable);
 
   public abstract boolean isDebugMode();
 

@@ -100,6 +100,9 @@ public interface StatusBar extends StatusBarInfo, Disposable {
 
   void install(IdeFrame frame);
 
+  @Nullable
+  Project getProject();
+
   final class StandardWidgets {
     public static final String ENCODING_PANEL = "Encoding";
     public static final String COLUMN_SELECTION_MODE_PANEL = "InsertOverwrite"; // Keep the old ID for backwards compatibility

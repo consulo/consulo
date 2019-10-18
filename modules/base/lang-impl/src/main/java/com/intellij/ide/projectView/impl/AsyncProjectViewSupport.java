@@ -11,7 +11,7 @@ import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.AbstractTreeUpdater;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.Disposable;
-import consulo.logging.Logger;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.registry.Registry;
@@ -47,7 +47,7 @@ class AsyncProjectViewSupport {
   private final AsyncTreeModel myAsyncTreeModel;
 
   AsyncProjectViewSupport(@Nonnull Disposable parent, @Nonnull Project project, @Nonnull JTree tree, @Nonnull AbstractTreeStructure structure, @Nonnull Comparator<NodeDescriptor> comparator) {
-    myStructureTreeModel = new StructureTreeModel<>(structure, comparator);
+    myStructureTreeModel = new StructureTreeModel<>(structure, comparator, parent);
     myAsyncTreeModel = new AsyncTreeModel(myStructureTreeModel, parent);
     myAsyncTreeModel.setRootImmediately(myStructureTreeModel.getRootImmediately());
     myNodeUpdater = new ProjectFileNodeUpdater(project, myStructureTreeModel.getInvoker()) {
@@ -59,7 +59,7 @@ class AsyncProjectViewSupport {
         else {
           long time = System.currentTimeMillis();
           LOG.debug("found ", updatedFiles.size(), " changed files");
-          TreeCollector<VirtualFile> collector = TreeCollector.createFileRootsCollector();
+          TreeCollector<VirtualFile> collector = TreeCollector.VirtualFileRoots.create();
           for (VirtualFile file : updatedFiles) {
             if (!file.isDirectory()) file = file.getParent();
             if (file != null && findArea(file, project) != null) collector.add(file);

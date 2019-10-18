@@ -1,40 +1,47 @@
-/*
- * Copyright 2000-2015 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.wm.impl.status;
 
+import com.intellij.ide.util.EditorGotoLineNumberDialog;
 import com.intellij.ide.util.GotoLineNumberDialog;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
+import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.ui.UIBundle;
+import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
 import javax.annotation.Nonnull;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-public class PositionPanel extends EditorBasedWidget implements StatusBarWidget.Multiframe, StatusBarWidget.TextPresentation, CaretListener, SelectionListener {
+public final class PositionPanel extends EditorBasedWidget
+        implements StatusBarWidget.Multiframe, StatusBarWidget.TextPresentation, CaretListener, SelectionListener, BulkAwareDocumentListener.Simple, PropertyChangeListener {
+
+  public static final Key<Object> DISABLE_FOR_EDITOR = new Key<>("positionPanel.disableForEditor");
+
+  public static final String SPACE = "     ";
+  public static final String SEPARATOR = ":";
+
+  private static final int CHAR_COUNT_SYNC_LIMIT = 500_000;
+  private static final String CHAR_COUNT_UNKNOWN = "...";
+
+  private Alarm myAlarm;
+  private CodePointCountTask myCountTask;
+
   private String myText;
 
-  public PositionPanel(@Nonnull final Project project) {
+  public PositionPanel(@Nonnull Project project) {
     super(project);
   }
 
@@ -46,7 +53,7 @@ public class PositionPanel extends EditorBasedWidget implements StatusBarWidget.
   @Override
   @Nonnull
   public String ID() {
-    return "Position";
+    return StatusBar.StandardWidgets.POSITION_PANEL;
   }
 
   @Override
@@ -66,71 +73,87 @@ public class PositionPanel extends EditorBasedWidget implements StatusBarWidget.
   }
 
   @Override
-  @Nonnull
-  public String getMaxPossibleText() {
-    return "0000000000000";
-  }
-
-  @Override
   public float getAlignment() {
     return Component.CENTER_ALIGNMENT;
   }
 
   @Override
   public String getTooltipText() {
-    return UIBundle.message("go.to.line.command.double.click");
+    final String shortcut = KeymapUtil.getFirstKeyboardShortcutText("GotoLine");
+    if (!shortcut.isEmpty()) {
+      return UIBundle.message("go.to.line.command.name") + " (" + shortcut + ")";
+    }
+    return UIBundle.message("go.to.line.command.name");
   }
 
   @Override
   public Consumer<MouseEvent> getClickConsumer() {
     return mouseEvent -> {
-      final Project project = getProject();
-      if (project == null) return;
-      final Editor editor = getEditor();
+      Project project = getProject();
+      Editor editor = getFocusedEditor();
       if (editor == null) return;
-      final CommandProcessor processor = CommandProcessor.getInstance();
-      processor.executeCommand(
-              project, () -> {
-        final GotoLineNumberDialog dialog = new GotoLineNumberDialog(project, editor);
+
+      CommandProcessor.getInstance().executeCommand(project, () -> {
+        GotoLineNumberDialog dialog = new EditorGotoLineNumberDialog(project, editor);
         dialog.show();
         IdeDocumentHistory.getInstance(project).includeCurrentCommandAsNavigation();
-      },
-              UIBundle.message("go.to.line.command.name"),
-              null
-      );
+      }, UIBundle.message("go.to.line.command.name"), null);
     };
   }
 
   @Override
   public void install(@Nonnull StatusBar statusBar) {
     super.install(statusBar);
-    final EditorEventMulticaster multicaster = EditorFactory.getInstance().getEventMulticaster();
+    myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, this);
+    EditorEventMulticaster multicaster = EditorFactory.getInstance().getEventMulticaster();
     multicaster.addCaretListener(this, this);
     multicaster.addSelectionListener(this, this);
+    multicaster.addDocumentListener(this, this);
+    KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(SWING_FOCUS_OWNER_PROPERTY, this);
+    Disposer.register(this, () -> KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener(SWING_FOCUS_OWNER_PROPERTY, this));
   }
 
   @Override
-  public void selectionChanged(final SelectionEvent e) {
+  public void selectionChanged(@Nonnull final SelectionEvent e) {
+    Editor editor = e.getEditor();
+    if (isFocusedEditor(editor)) updatePosition(editor);
+  }
+
+  @Override
+  public void caretPositionChanged(@Nonnull final CaretEvent e) {
+    Editor editor = e.getEditor();
+    // When multiple carets exist in editor, we don't show information about caret positions
+    if (editor.getCaretModel().getCaretCount() == 1 && isFocusedEditor(editor)) updatePosition(editor);
+  }
+
+  @Override
+  public void caretAdded(@Nonnull CaretEvent e) {
     updatePosition(e.getEditor());
   }
 
   @Override
-  public void caretPositionChanged(final CaretEvent e) {
+  public void caretRemoved(@Nonnull CaretEvent e) {
     updatePosition(e.getEditor());
   }
 
   @Override
-  public void caretAdded(CaretEvent e) {
-    updatePosition(e.getEditor());
+  public void afterDocumentChange(@Nonnull Document document) {
+    Editor[] editors = EditorFactory.getInstance().getEditors(document);
+    for (Editor editor : editors) {
+      if (isFocusedEditor(editor)) {
+        updatePosition(editor);
+        break;
+      }
+    }
   }
 
-  @Override
-  public void caretRemoved(CaretEvent e) {
-    updatePosition(e.getEditor());
+  private boolean isFocusedEditor(Editor editor) {
+    Component focusOwner = getFocusedComponent();
+    return focusOwner == editor.getContentComponent();
   }
 
   private void updatePosition(final Editor editor) {
-    if (editor == null) {
+    if (editor == null || DISABLE_FOR_EDITOR.isIn(editor)) {
       myText = "";
     }
     else {
@@ -142,8 +165,18 @@ public class PositionPanel extends EditorBasedWidget implements StatusBarWidget.
     }
   }
 
+  private void updateTextWithCodePointCount(int codePointCount) {
+    if (myText != null) {
+      myText = myText.replace(CHAR_COUNT_UNKNOWN, Integer.toString(codePointCount));
+      if (myStatusBar != null) {
+        myStatusBar.updateWidget(ID());
+      }
+    }
+  }
+
   private String getPositionText(@Nonnull Editor editor) {
-    if (!editor.isDisposed() && myStatusBar != null) {
+    myCountTask = null;
+    if (!editor.isDisposed() && !myAlarm.isDisposed()) {
       StringBuilder message = new StringBuilder();
 
       SelectionModel selectionModel = editor.getSelectionModel();
@@ -156,24 +189,71 @@ public class PositionPanel extends EditorBasedWidget implements StatusBarWidget.
           int selectionStart = selectionModel.getSelectionStart();
           int selectionEnd = selectionModel.getSelectionEnd();
           if (selectionEnd > selectionStart) {
-            message.append(UIBundle.message("position.panel.selected.chars.count", selectionEnd - selectionStart));
+            CodePointCountTask countTask = new CodePointCountTask(editor.getDocument().getImmutableCharSequence(), selectionStart, selectionEnd);
+            if (countTask.isQuick()) {
+              int charCount = countTask.calculate();
+              message.append(charCount).append(' ').append(UIBundle.message("position.panel.selected.chars.count", charCount));
+            }
+            else {
+              message.append(CHAR_COUNT_UNKNOWN).append(' ').append(UIBundle.message("position.panel.selected.chars.count", 2));
+              myCountTask = countTask;
+              myAlarm.cancelAllRequests();
+              myAlarm.addRequest(countTask, 0);
+            }
             int selectionStartLine = editor.getDocument().getLineNumber(selectionStart);
             int selectionEndLine = editor.getDocument().getLineNumber(selectionEnd);
             if (selectionEndLine > selectionStartLine) {
               message.append(", ");
-              message.append(UIBundle.message("position.panel.selected.lines.count", selectionEndLine - selectionStartLine + 1));
+              message.append(UIBundle.message("position.panel.selected.line.breaks.count", selectionEndLine - selectionStartLine));
             }
-            message.append("     ");
+            message.append(SPACE);
           }
         }
         LogicalPosition caret = editor.getCaretModel().getLogicalPosition();
-        message.append(caret.line + 1).append(":").append(caret.column + 1);
+        message.append(caret.line + 1).append(SEPARATOR).append(caret.column + 1);
       }
 
       return message.toString();
     }
     else {
       return "";
+    }
+  }
+
+  @Override
+  public void propertyChange(PropertyChangeEvent e) {
+    updatePosition(getFocusedEditor());
+  }
+
+  private class CodePointCountTask implements Runnable {
+    private final CharSequence text;
+    private final int startOffset;
+    private final int endOffset;
+
+    private CodePointCountTask(CharSequence text, int startOffset, int endOffset) {
+      this.text = text;
+      this.startOffset = startOffset;
+      this.endOffset = endOffset;
+    }
+
+    private boolean isQuick() {
+      return endOffset - startOffset < CHAR_COUNT_SYNC_LIMIT;
+    }
+
+    private int calculate() {
+      return Character.codePointCount(text, startOffset, endOffset);
+    }
+
+    @Override
+    public void run() {
+      int count = calculate();
+      //noinspection SSBasedInspection
+      SwingUtilities.invokeLater(() -> {
+        if (this == myCountTask) {
+          updateTextWithCodePointCount(count);
+          myCountTask = null;
+        }
+      });
     }
   }
 }

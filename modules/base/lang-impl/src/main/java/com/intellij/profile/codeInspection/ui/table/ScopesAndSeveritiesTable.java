@@ -432,7 +432,7 @@ public class ScopesAndSeveritiesTable extends JBTable {
       };
       DataContext dataContext = DataManager.getInstance().getDataContext(myTable);
       final ListPopup popup = JBPopupFactory.getInstance()
-              .createActionGroupPopup(ScopesChooser.TITLE, scopesChooser.createPopupActionGroup(dataContext), dataContext,
+              .createActionGroupPopup(ScopesChooser.TITLE, scopesChooser.createPopupActionGroup(myTable), dataContext,
                                       JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
       final RelativePoint point = new RelativePoint(myTable, new Point(myTable.getWidth() - popup.getContent().getPreferredSize().width, 0));
       popup.show(point);

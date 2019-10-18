@@ -19,11 +19,12 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.TraceableDisposable;
 import com.intellij.openapi.util.TraceableDisposableImpl;
 import com.intellij.openapi.util.objectTree.ObjectTree;
+import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.internal.DisposerInternal;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.util.Map;
 
@@ -93,6 +94,10 @@ public class DisposerInternalImpl extends DisposerInternal {
   @Override
   public Disposable get(@Nonnull String key) {
     return myKeyDisposables.get(key);
+  }
+
+  public Throwable getDisposalTrace(@Nonnull Disposable disposable) {
+    return ObjectUtils.tryCast(getTree().getDisposalInfo(disposable), Throwable.class);
   }
 
   public void dispose(@Nonnull Disposable disposable) {

@@ -17,11 +17,11 @@ package com.intellij.refactoring.ui;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 
 import javax.annotation.Nonnull;
+import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,7 +56,7 @@ class ComboBoxVisibilityGroup extends ComboBoxAction {
 
   @Nonnull
   @Override
-  public DefaultActionGroup createPopupActionGroup(DataContext context) {
+  public DefaultActionGroup createPopupActionGroup(JComponent component) {
     return myGroup;
   }
 
