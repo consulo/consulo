@@ -19,6 +19,8 @@ package com.intellij.openapi.actionSystem.ex;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.extensions.PluginId;
+
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import javax.swing.*;
@@ -33,9 +35,9 @@ public abstract class ActionManagerEx extends ActionManager {
 
   public abstract ActionToolbar createActionToolbar(String place, ActionGroup group, boolean horizontal, boolean decorateButtons);
 
-  public abstract void fireBeforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event);
+  public abstract void fireBeforeActionPerformed(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull AnActionEvent event);
 
-  public abstract void fireAfterActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event);
+  public abstract void fireAfterActionPerformed(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull AnActionEvent event);
 
   public abstract void fireBeforeEditorTyping(char c, DataContext dataContext);
 

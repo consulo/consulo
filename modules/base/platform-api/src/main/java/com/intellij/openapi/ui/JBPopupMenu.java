@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2016 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.ui;
 
 import com.intellij.icons.AllIcons;
@@ -20,6 +6,7 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.util.ui.GraphicsUtil;
+import com.intellij.util.ui.TimerUtil;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
 
@@ -37,7 +24,7 @@ import java.awt.event.MouseWheelEvent;
  * @author ignatov
  */
 public class JBPopupMenu extends JPopupMenu {
-  private MyLayout myLayout;
+  private final MyLayout myLayout;
 
   public JBPopupMenu() {
     this(null);
@@ -55,6 +42,8 @@ public class JBPopupMenu extends JPopupMenu {
   public void processMouseWheelEvent(MouseWheelEvent e) {
     if (!isShowing()) return;
 
+    int rotation = e.getWheelRotation();
+    if (rotation == 0) return;
     if (e.getComponent() != this) {
       e = (MouseWheelEvent)SwingUtilities.convertMouseEvent(e.getComponent(), e, this);
     }
@@ -62,7 +51,7 @@ public class JBPopupMenu extends JPopupMenu {
     SwingUtilities.convertPointToScreen(p, this);
     Point tPoint = getLocationOnScreen();
     if (p.x >= tPoint.x && p.x <= tPoint.x + getWidth() && p.y >= tPoint.y && p.y <= tPoint.y + getHeight()) {
-      myLayout.updateShift(e.getWheelRotation() * 10);
+      myLayout.updateShift(rotation * 10);
     }
   }
 
@@ -79,20 +68,20 @@ public class JBPopupMenu extends JPopupMenu {
     super.paint(g);
     LayoutManager layout = getLayout();
     if (layout instanceof MyLayout) {
-      ((MyLayout)layout).paintIfNeed(g);
+      ((MyLayout)layout).paintIfNeeded(g);
     }
   }
 
   private static class MyLayout extends DefaultMenuLayout implements ActionListener {
-    private JPopupMenu myTarget;
+    private final JPopupMenu myTarget;
     int myShift = 0;
     int myScrollDirection = 0;
     Timer myTimer;
 
-    public MyLayout(final JPopupMenu target) {
+    MyLayout(final JPopupMenu target) {
       super(target, BoxLayout.PAGE_AXIS);
       myTarget = target;
-      myTimer = UIUtil.createNamedTimer("PopupTimer", 40, this);
+      myTimer = TimerUtil.createNamedTimer("PopupTimer", 40, this);
       myTarget.addPopupMenuListener(new PopupMenuListener() {
         @Override
         public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
@@ -153,8 +142,7 @@ public class JBPopupMenu extends JPopupMenu {
       }
 
       SwingUtilities.convertPointFromScreen(mouseLocation, myTarget);
-      myTarget.dispatchEvent(
-              new MouseEvent(myTarget, MouseEvent.MOUSE_ENTERED, System.currentTimeMillis(), 0, mouseLocation.x, mouseLocation.y, 0, false));
+      myTarget.dispatchEvent(new MouseEvent(myTarget, MouseEvent.MOUSE_ENTERED, System.currentTimeMillis(), 0, mouseLocation.x, mouseLocation.y, 0, false));
 
       updateShift(5 * myScrollDirection);
     }
@@ -166,23 +154,21 @@ public class JBPopupMenu extends JPopupMenu {
         myShift = newShift;
         myTarget.revalidate();
         myTarget.repaint();
+        Window w = UIUtil.getWindow(myTarget.getComponent());
+        if (w != null) {
+          for (Window window : w.getOwnedWindows()) {
+            window.dispose();
+          }
+        }
       }
     }
 
-    private Color[] dim = new Color[]{
-            JBColor.background(),
-            ColorUtil.withAlpha(JBColor.background(), .9),
-            ColorUtil.withAlpha(JBColor.background(), .8),
-            ColorUtil.withAlpha(JBColor.background(), .7),
-            ColorUtil.withAlpha(JBColor.background(), .6),
-            ColorUtil.withAlpha(JBColor.background(), .5),
-            ColorUtil.withAlpha(JBColor.background(), .4),
-            ColorUtil.withAlpha(JBColor.background(), .3),
-            ColorUtil.withAlpha(JBColor.background(), .2),
-            ColorUtil.withAlpha(JBColor.background(), .1),
-    };
+    private final Color[] dim =
+            new Color[]{JBColor.background(), ColorUtil.withAlpha(JBColor.background(), .9), ColorUtil.withAlpha(JBColor.background(), .8), ColorUtil.withAlpha(JBColor.background(), .7),
+                    ColorUtil.withAlpha(JBColor.background(), .6), ColorUtil.withAlpha(JBColor.background(), .5), ColorUtil.withAlpha(JBColor.background(), .4),
+                    ColorUtil.withAlpha(JBColor.background(), .3), ColorUtil.withAlpha(JBColor.background(), .2), ColorUtil.withAlpha(JBColor.background(), .1),};
 
-    public void paintIfNeed(Graphics g) {
+    public void paintIfNeeded(Graphics g) {
       if (myShift > 0) {
         for (int i = 0; i < dim.length; i++) {
           g.setColor(dim[i]);
@@ -193,11 +179,9 @@ public class JBPopupMenu extends JPopupMenu {
       if (super.preferredLayoutSize(myTarget).height - getMaxHeight() - myShift > 0) {
         for (int i = 0; i < dim.length; i++) {
           g.setColor(dim[i]);
-          g.drawLine(0, myTarget.getHeight() - i, myTarget.getWidth(),
-                     myTarget.getHeight() - i);
+          g.drawLine(0, myTarget.getHeight() - i, myTarget.getWidth(), myTarget.getHeight() - i);
         }
-        AllIcons.General.SplitDown.paintIcon(myTarget, g, myTarget.getWidth() / 2 - AllIcons.General.SplitDown.getIconWidth() / 2,
-                                             myTarget.getHeight() - AllIcons.General.SplitDown.getIconHeight());
+        AllIcons.General.ArrowDown.paintIcon(myTarget, g, myTarget.getWidth() / 2 - AllIcons.General.ArrowDown.getIconWidth() / 2, myTarget.getHeight() - AllIcons.General.ArrowDown.getIconHeight());
       }
     }
 

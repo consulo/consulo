@@ -5,6 +5,7 @@
  */
 package com.intellij.codeInsight.daemon.impl;
 
+import com.intellij.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
 import com.intellij.codeInsight.hint.LineTooltipRenderer;
 import com.intellij.codeInsight.hint.TooltipRenderer;
 import com.intellij.openapi.editor.Editor;
@@ -13,12 +14,13 @@ import com.intellij.openapi.editor.ex.TooltipAction;
 import com.intellij.openapi.editor.impl.TrafficTooltipRenderer;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.List;
 
@@ -67,11 +69,11 @@ public class DaemonTooltipRendererProvider implements ErrorStripTooltipRendererP
       final HighlightInfoComposite composite = HighlightInfoComposite.create(infos);
       String toolTip = composite.getToolTip();
       DaemonTooltipRenderer myRenderer;
-      /*if (Registry.is("ide.tooltip.show.with.actions")) {
+      if (Registry.is("ide.tooltip.show.with.actions")) {
         TooltipAction action = TooltipActionProvider.calcTooltipAction(composite, myEditor);
         myRenderer = new DaemonTooltipWithActionRenderer(toolTip, action, 0, action == null ? new Object[]{toolTip} : new Object[]{toolTip, action});
       }
-      else */{
+      else{
         myRenderer = new DaemonTooltipRenderer(toolTip, new Object[]{highlighters});
       }
       if (bigRenderer != null) {
@@ -97,9 +99,9 @@ public class DaemonTooltipRendererProvider implements ErrorStripTooltipRendererP
   @Nonnull
   @Override
   public TooltipRenderer calcTooltipRenderer(@Nonnull String text, @Nullable TooltipAction action, int width) {
-    //if (action != null || Registry.is("ide.tooltip.show.with.actions")) {
-    //  return new DaemonTooltipWithActionRenderer(text, action, width, action == null ? new Object[]{text} : new Object[]{text, action});
-    //}
+    if (action != null || Registry.is("ide.tooltip.show.with.actions")) {
+      return new DaemonTooltipWithActionRenderer(text, action, width, action == null ? new Object[]{text} : new Object[]{text, action});
+    }
 
     return ErrorStripTooltipRendererProvider.super.calcTooltipRenderer(text, action, width);
   }

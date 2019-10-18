@@ -105,6 +105,13 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
     updateUI();
   }
 
+  public boolean shallPaintDownArrow() {
+    if (!(myAction instanceof ActionGroup && ((ActionGroup)myAction).isPopup())) return false;
+    if (Boolean.TRUE == myAction.getTemplatePresentation().getClientProperty(HIDE_DROPDOWN_ICON)) return false;
+    if (Boolean.TRUE == myPresentation.getClientProperty(HIDE_DROPDOWN_ICON)) return false;
+    return true;
+  }
+
   public void setMinimalMode(boolean minimalMode) {
     myMinimalMode = minimalMode;
   }

@@ -39,7 +39,7 @@ public interface TooltipActionProvider {
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     if (file == null) return null;
 
-    for (TooltipActionProvider extension : EXTENSION_POINT_NAME.getExtensions()) {
+    for (TooltipActionProvider extension : EXTENSION_POINT_NAME.getExtensionList()) {
       TooltipAction action = extension.getTooltipAction(info, editor, file);
       if (action != null) return action;
     }
