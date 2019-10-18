@@ -13,7 +13,6 @@ import com.intellij.openapi.actionSystem.impl.PresentationFactory;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.impl.LaterInvocator;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.CaretModel;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.VisualPosition;
@@ -38,9 +37,10 @@ import com.intellij.ui.popup.tree.TreePopupImpl;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
@@ -63,7 +63,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
    */
   public static final Key<VisualPosition> ANCHOR_POPUP_POSITION = Key.create("popup.anchor.position");
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ui.popup.PopupFactoryImpl");
+  private static final Logger LOG = Logger.getInstance(PopupFactoryImpl.class);
 
   private final Map<Disposable, List<Balloon>> myStorage = ContainerUtil.createWeakMap();
 
