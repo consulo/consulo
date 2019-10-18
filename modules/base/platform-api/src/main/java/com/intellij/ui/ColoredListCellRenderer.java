@@ -15,11 +15,12 @@
  */
 package com.intellij.ui;
 
+import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -45,8 +46,7 @@ public abstract class ColoredListCellRenderer<T> extends SimpleColoredComponent 
   public ColoredListCellRenderer(@Nullable JComboBox comboBox) {
     myComboBox = comboBox;
     setFocusBorderAroundIcon(true);
-    getIpad().left = UIUtil.getListCellHPadding();
-    getIpad().right = UIUtil.getListCellHPadding();
+    getIpad().left = getIpad().right = JBUIScale.scale(UIUtil.getListCellHPadding());
   }
 
   public void setSeparator(@Nullable String text) {
@@ -137,7 +137,7 @@ public abstract class ColoredListCellRenderer<T> extends SimpleColoredComponent 
       setFont(null);
     }
 
-    return result;
+    return UIUtil.updateListRowHeight(result);
   }
 
   protected abstract void customizeCellRenderer(@Nonnull JList<? extends T> list, T value, int index, boolean selected, boolean hasFocus);

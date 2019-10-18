@@ -2,7 +2,6 @@
 package com.intellij.openapi.editor.impl.view;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.ex.*;
@@ -15,6 +14,7 @@ import com.intellij.util.CommonProcessors;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
 import org.intellij.lang.annotations.JdkConstants;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

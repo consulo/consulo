@@ -309,7 +309,6 @@ public class JBScrollPane extends JScrollPane {
     }
   }
 
-
   public static boolean canBePreprocessed(MouseEvent e, JScrollBar bar) {
     if (e.getID() == MouseEvent.MOUSE_MOVED || e.getID() == MouseEvent.MOUSE_PRESSED) {
       ScrollBarUI ui = bar.getUI();

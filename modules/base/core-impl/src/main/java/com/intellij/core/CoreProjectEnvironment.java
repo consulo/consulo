@@ -61,7 +61,7 @@ public class CoreProjectEnvironment {
     myProject.registerService(ResolveCache.class, new ResolveCache(myProject));
 
     registerProjectExtensionPoint(PsiTreeChangePreprocessor.EP_NAME, PsiTreeChangePreprocessor.class);
-    myPsiManager = new PsiManagerImpl(myProject, null, null, () -> myFileIndexFacade, modificationTracker);
+    myPsiManager = new PsiManagerImpl(myProject, () -> myFileIndexFacade, modificationTracker);
     ((FileManagerImpl)myPsiManager.getFileManager()).markInitialized();
     registerProjectComponent(PsiManager.class, myPsiManager);
 

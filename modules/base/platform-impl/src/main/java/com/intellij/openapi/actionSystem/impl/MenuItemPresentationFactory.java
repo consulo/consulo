@@ -42,4 +42,8 @@ public class MenuItemPresentationFactory extends PresentationFactory {
       presentation.putClientProperty(HIDE_ICON, Boolean.TRUE);
     }
   }
+
+  public boolean shallHideIcons() {
+    return myForceHide || !UISettings.getInstance().SHOW_ICONS_IN_MENUS;
+  }
 }

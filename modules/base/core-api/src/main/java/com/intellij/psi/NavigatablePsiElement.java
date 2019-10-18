@@ -22,4 +22,5 @@ import com.intellij.navigation.NavigationItem;
  * @author yole
  */
 public interface NavigatablePsiElement extends PsiElement, NavigationItem {
+  NavigatablePsiElement[] EMPTY_ARRAY = new NavigatablePsiElement[0];
 }

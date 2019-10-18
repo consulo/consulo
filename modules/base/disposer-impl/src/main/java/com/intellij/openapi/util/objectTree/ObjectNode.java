@@ -2,7 +2,7 @@
 package com.intellij.openapi.util.objectTree;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NonNls;

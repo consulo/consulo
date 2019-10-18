@@ -31,8 +31,8 @@ import com.intellij.util.ui.UIUtil;
 import consulo.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -74,6 +74,15 @@ public class Utils {
     else {
       LOG.error("update failed for ActionGroup: " + action + "[" + presentation.getText() + "]", exc);
     }
+  }
+
+  /**
+   * @return actions from the given and nested non-popup groups that are visible after updating
+   */
+  public static List<AnAction> expandActionGroup(boolean isInModalContext, @Nonnull ActionGroup group, PresentationFactory presentationFactory, @Nonnull DataContext context, String place) {
+    ArrayList<AnAction> list = new ArrayList<>();
+    expandActionGroup(isInModalContext, group, list, presentationFactory, context, place, ActionManager.getInstance());
+    return list;
   }
 
   @Deprecated

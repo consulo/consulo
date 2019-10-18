@@ -244,7 +244,7 @@ public class BaseProjectViewDirectoryHelper {
                                                  ViewSettings viewSettings,
                                                  boolean withSubDirectories) {
     for (PsiElement child : children) {
-      LOGGER.assertTrue(child.isValid());
+      LOGGER.assertTrue(child.isValid(), "Element " + child.getClass() + " not valid");
 
       final VirtualFile vFile;
       if (child instanceof PsiFile) {

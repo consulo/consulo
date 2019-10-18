@@ -16,11 +16,16 @@
 package com.intellij.psi.impl;
 
 public interface AnyPsiChangeListener {
-  void beforePsiChanged(boolean isPhysical);
-  void afterPsiChanged(boolean isPhysical);
+  default void beforePsiChanged(boolean isPhysical) {
+  }
 
+  default void afterPsiChanged(boolean isPhysical) {
+  }
+
+  /**
+   * @deprecated Use {@link AnyPsiChangeListener} directly.
+   */
+  @Deprecated
   abstract class Adapter implements AnyPsiChangeListener {
-    @Override public void beforePsiChanged(boolean isPhysical) { }
-    @Override public void afterPsiChanged(boolean isPhysical) { }
   }
 }

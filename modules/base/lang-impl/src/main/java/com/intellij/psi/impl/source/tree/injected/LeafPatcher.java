@@ -18,7 +18,6 @@ package com.intellij.psi.impl.source.tree.injected;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.diagnostic.Attachment;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
@@ -27,6 +26,7 @@ import com.intellij.psi.LiteralTextEscaper;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.source.tree.*;
+import consulo.logging.Logger;
 import gnu.trove.THashMap;
 import javax.annotation.Nonnull;
 

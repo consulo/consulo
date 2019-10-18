@@ -5,6 +5,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
+import com.intellij.ui.ColorUtil;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.border.CustomLineBorder;
@@ -70,6 +71,52 @@ public class JBUI {
       }
     }
 
+    public static class CustomFrameDecorations {
+      @Nonnull
+      public static Color separatorForeground() {
+        return JBColor.namedColor("Separator.separatorColor", new JBColor(0xcdcdcd, 0x515151));
+      }
+
+      @Nonnull
+      public static Color titlePaneButtonHoverBackground() {
+        return JBColor.namedColor("TitlePane.Button.hoverBackground", new JBColor(ColorUtil.withAlpha(Color.BLACK, .1), ColorUtil.withAlpha(Color.WHITE, .1)));
+      }
+
+      @Nonnull
+      public static Color titlePaneButtonPressBackground() {
+        return titlePaneButtonHoverBackground();
+      }
+
+      @Nonnull
+      public static Color titlePaneInactiveBackground() {
+        return JBColor.namedColor("TitlePane.inactiveBackground", titlePaneBackground());
+      }
+
+      @Nonnull
+      public static Color titlePaneBackground(boolean active) {
+        return active ? titlePaneBackground() : titlePaneInactiveBackground();
+      }
+
+      @Nonnull
+      public static Color titlePaneBackground() {
+        return JBColor.namedColor("TitlePane.background", paneBackground());
+      }
+
+      @Nonnull
+      public static Color titlePaneInfoForeground() {
+        return JBColor.namedColor("TitlePane.infoForeground", new JBColor(0x616161, 0x919191));
+      }
+
+      @Nonnull
+      public static Color titlePaneInactiveInfoForeground() {
+        return JBColor.namedColor("TitlePane.inactiveInfoForeground", new JBColor(0xA6A6A6, 0x737373));
+      }
+
+      @Nonnull
+      public static Color paneBackground() {
+        return JBColor.namedColor("Panel.background", Gray.xCD);
+      }
+    }
 
     public static class Link {
       @Nonnull
@@ -165,6 +212,14 @@ public class JBUI {
     }
 
     public static class Popup {
+      public static Color separatorColor() {
+        return JBColor.namedColor("Popup.separatorColor", new JBColor(Color.gray.brighter(), Gray.x51));
+      }
+
+      public static Color separatorTextColor() {
+        return JBColor.namedColor("Popup.separatorForeground", Color.gray);
+      }
+
       public static int toolbarHeight() {
         return scale(28);
       }

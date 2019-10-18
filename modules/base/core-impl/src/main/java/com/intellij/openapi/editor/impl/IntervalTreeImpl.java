@@ -3,7 +3,6 @@ package com.intellij.openapi.editor.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.ex.MarkupIterator;
 import com.intellij.openapi.editor.ex.RangeMarkerEx;
 import com.intellij.openapi.util.Getter;
@@ -12,6 +11,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.WalkingState;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
+import consulo.logging.Logger;
 import gnu.trove.TLongHashSet;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

@@ -7,7 +7,6 @@ import com.intellij.ide.TooltipEvent;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.IdeActions;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.util.registry.Registry;
@@ -21,6 +20,7 @@ import com.intellij.util.ui.accessibility.AccessibleContextDelegate;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import com.intellij.util.ui.update.ComparableObject;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 
 import javax.accessibility.AccessibleContext;

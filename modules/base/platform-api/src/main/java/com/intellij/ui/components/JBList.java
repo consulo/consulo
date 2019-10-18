@@ -18,14 +18,17 @@ package com.intellij.ui.components;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.*;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.ui.*;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import javax.swing.plaf.ListUI;
+import javax.swing.plaf.basic.BasicListUI;
 import java.awt.*;
 import java.util.Collection;
 
@@ -166,6 +169,17 @@ public class JBList<E> extends JList<E> implements ComponentWithEmptyText, Compo
     else {
       return super.getPreferredSize();
     }
+  }
+
+  @Override
+  public void setUI(ListUI ui) {
+    if (ui != null && Registry.is("ide.wide.selection.list.ui")) {
+      Class<? extends ListUI> type = ui.getClass();
+      if (type == BasicListUI.class) {
+        ui = new WideSelectionListUI();
+      }
+    }
+    super.setUI(ui);
   }
 
   private void init() {

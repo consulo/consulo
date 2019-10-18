@@ -7,7 +7,6 @@ import com.intellij.diagnostic.ThreadDumper;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.constraints.ExpirableConstrainedExecution;
 import com.intellij.openapi.application.constraints.Expiration;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -19,6 +18,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.concurrency.AsyncPromise;
 import org.jetbrains.concurrency.CancellablePromise;

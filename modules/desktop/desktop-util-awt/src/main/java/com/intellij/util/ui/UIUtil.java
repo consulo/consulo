@@ -40,10 +40,10 @@ import consulo.ui.style.StyleManager;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 import sun.java2d.SunGraphicsEnvironment;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.Timer;
 import javax.swing.*;
@@ -1567,15 +1567,11 @@ public class UIUtil {
   }
 
   public static Insets getListCellPadding() {
-    return new Insets(getListCellVPadding(), getListCellHPadding(), getListCellVPadding(), getListCellHPadding());
+    return JBInsets.create(getListCellVPadding(), getListCellHPadding());
   }
 
   public static Insets getListViewportPadding() {
-    if (isUnderNativeMacLookAndFeel()) {
-      return new Insets(1, 0, 1, 0);
-    }
-    Insets listPopupInsets = UIManager.getInsets("listPopupInsets");
-    return listPopupInsets == null ? JBUI.emptyInsets() : listPopupInsets;
+    return isUnderNativeMacLookAndFeel() ? JBInsets.create(1, 0) : JBUI.emptyInsets();
   }
 
   public static boolean isToUseDottedCellBorder() {
@@ -3759,6 +3755,21 @@ public class UIUtil {
       protected void adjustVisibility(Rectangle nloc) {
       }
     });
+  }
+
+  @Nonnull
+  public static Dimension updateListRowHeight(@Nonnull Dimension size) {
+    size.height = Math.max(size.height, UIManager.getInt("List.rowHeight"));
+    return size;
+  }
+
+  //Escape error-prone HTML data (if any) when we use it in renderers, see IDEA-170768
+  public static <T> T htmlInjectionGuard(T toRender) {
+    if (toRender instanceof String && StringUtil.toLowerCase(((String)toRender)).startsWith("<html>")) {
+      //noinspection unchecked
+      return (T)("<html>" + StringUtil.escapeXmlEntities((String)toRender));
+    }
+    return toRender;
   }
 
   @Nonnull

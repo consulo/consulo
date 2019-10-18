@@ -3,7 +3,6 @@ package com.intellij.psi.impl.smartPointers;
 
 import com.google.common.base.MoreObjects;
 import com.intellij.lang.Language;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.AbstractFileViewProvider;
@@ -16,6 +15,8 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.containers.Interner;
 import com.intellij.util.containers.WeakInterner;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
