@@ -18,10 +18,13 @@ package com.intellij.codeInsight.daemon;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.messages.Topic;
 import javax.annotation.Nonnull;
+
+import java.util.Collection;
 
 /**
  * Manages the background highlighting and auto-import for files displayed in editors.
@@ -33,9 +36,6 @@ public abstract class DaemonCodeAnalyzer {
   }
 
   public abstract void settingsChanged();
-
-  @Deprecated
-  public abstract void updateVisibleHighlighters(@Nonnull Editor editor);
 
   public abstract void setUpdateByTimerEnabled(boolean value);
   public abstract void disableUpdateByTimer(@Nonnull Disposable parentDisposable);
@@ -64,8 +64,31 @@ public abstract class DaemonCodeAnalyzer {
   public static final Topic<DaemonListener> DAEMON_EVENT_TOPIC = Topic.create("DAEMON_EVENT_TOPIC", DaemonListener.class);
 
   public interface DaemonListener {
-    void daemonFinished();
-    void daemonCancelEventOccurred(@Nonnull String reason);
+    /**
+     * Fired when the background code analysis is being scheduled for the specified set of files.
+     *
+     * @param fileEditors The list of files that will be analyzed during the current execution of the daemon.
+     */
+    default void daemonStarting(@Nonnull Collection<FileEditor> fileEditors) {
+    }
+
+    /**
+     * Fired when the background code analysis is done.
+     */
+    default void daemonFinished() {
+    }
+
+    /**
+     * Fired when the background code analysis is done.
+     *
+     * @param fileEditors The list of files analyzed during the current execution of the daemon.
+     */
+    default void daemonFinished(@Nonnull Collection<FileEditor> fileEditors) {
+      daemonFinished();
+    }
+
+    default void daemonCancelEventOccurred(@Nonnull String reason) {
+    }
   }
 
   public abstract static class DaemonListenerAdapter implements DaemonListener {

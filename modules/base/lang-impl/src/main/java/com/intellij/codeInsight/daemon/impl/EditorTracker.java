@@ -19,6 +19,7 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ProjectComponent;
+import com.intellij.openapi.components.ServiceManager;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -49,6 +50,9 @@ import java.util.*;
 
 @Singleton
 public class EditorTracker implements ProjectComponent {
+  public static EditorTracker getInstance(Project project) {
+    return ServiceManager.getService(project, EditorTracker.class);
+  }
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.daemon.impl.EditorTracker");
 
   private final WindowManager myWindowManager;

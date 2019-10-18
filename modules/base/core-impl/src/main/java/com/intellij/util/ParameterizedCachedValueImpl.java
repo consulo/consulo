@@ -14,25 +14,22 @@
  * limitations under the License.
  */
 
-/*
- * Created by IntelliJ IDEA.
- * User: mike
- * Date: Jun 6, 2002
- * Time: 5:41:42 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package com.intellij.util;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.ParameterizedCachedValue;
 import com.intellij.psi.util.ParameterizedCachedValueProvider;
 import javax.annotation.Nonnull;
 
-public abstract class ParameterizedCachedValueImpl<T,P> extends CachedValueBase<T> implements ParameterizedCachedValue<T,P> {
-  private final ParameterizedCachedValueProvider<T,P> myProvider;
+public class ParameterizedCachedValueImpl<T, P> extends CachedValueBase<T> implements ParameterizedCachedValue<T, P> {
+  @Nonnull
+  private final Project myProject;
+  private final ParameterizedCachedValueProvider<T, P> myProvider;
 
-  public ParameterizedCachedValueImpl(@Nonnull ParameterizedCachedValueProvider<T,P> provider) {
+  ParameterizedCachedValueImpl(@Nonnull Project project, @Nonnull ParameterizedCachedValueProvider<T, P> provider, boolean trackValue) {
+    super(trackValue);
+    myProject = project;
     myProvider = provider;
   }
 
@@ -42,7 +39,13 @@ public abstract class ParameterizedCachedValueImpl<T,P> extends CachedValueBase<
   }
 
   @Override
-  public ParameterizedCachedValueProvider<T,P> getValueProvider() {
+  public boolean isFromMyProject(@Nonnull Project project) {
+    return myProject == project;
+  }
+
+  @Override
+  @Nonnull
+  public ParameterizedCachedValueProvider<T, P> getValueProvider() {
     return myProvider;
   }
 

@@ -19,6 +19,7 @@ import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.ParameterizedCachedValue;
 import com.intellij.psi.util.ParameterizedCachedValueProvider;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -27,6 +28,6 @@ import javax.annotation.Nonnull;
 public interface CachedValuesFactory {
 
   <T> CachedValue<T> createCachedValue(@Nonnull CachedValueProvider<T> provider, boolean trackValue);
-  <T,P> ParameterizedCachedValue<T,P> createParameterizedCachedValue(@Nonnull ParameterizedCachedValueProvider<T,P> provider, boolean trackValue);
 
+  <T, P> ParameterizedCachedValue<T, P> createParameterizedCachedValue(@Nonnull ParameterizedCachedValueProvider<T, P> provider, boolean trackValue);
 }

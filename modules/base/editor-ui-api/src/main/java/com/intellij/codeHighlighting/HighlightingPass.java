@@ -16,8 +16,9 @@
 package com.intellij.codeHighlighting;
 
 import com.intellij.openapi.progress.ProgressIndicator;
-import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
+
+import javax.annotation.Nonnull;
 
 public interface HighlightingPass {
   HighlightingPass[] EMPTY_ARRAY = new HighlightingPass[0];

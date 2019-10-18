@@ -72,6 +72,10 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
 
   boolean isDisposed();
 
+  default boolean isDisposedOrDisposeInProgress() {
+    return isDisposed();
+  }
+
   @Nonnull
   @Deprecated
   default <T> T[] getExtensions(@Nonnull ExtensionPointName<T> extensionPointName) {

@@ -20,7 +20,6 @@
 package com.intellij.codeInsight.daemon.impl.quickfix;
 
 import com.intellij.codeInsight.CodeInsightBundle;
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
@@ -35,8 +34,8 @@ import com.intellij.openapi.ui.ex.MessagesEx;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 
 public class RenameFileFix implements IntentionAction, LocalQuickFix {
@@ -102,9 +101,6 @@ public class RenameFileFix implements IntentionAction, LocalQuickFix {
     }
     catch(IOException e){
       MessagesEx.error(project, e.getMessage()).showLater();
-    }
-    if (editor != null) {
-      DaemonCodeAnalyzer.getInstance(project).updateVisibleHighlighters(editor);
     }
   }
 

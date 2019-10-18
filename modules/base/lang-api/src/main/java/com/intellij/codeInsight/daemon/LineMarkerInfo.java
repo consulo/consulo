@@ -18,6 +18,7 @@ package com.intellij.codeInsight.daemon;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
+import com.intellij.openapi.editor.markup.MarkupEditorFilter;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.SeparatorPlacement;
 import com.intellij.openapi.project.IndexNotReadyException;
@@ -28,8 +29,8 @@ import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.util.Function;
 import consulo.ui.image.Image;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.awt.*;
 
@@ -123,6 +124,11 @@ public class LineMarkerInfo<T extends PsiElement> {
   @Nullable
   public GutterIconNavigationHandler<T> getNavigationHandler() {
     return myNavigationHandler;
+  }
+
+  @Nonnull
+  public MarkupEditorFilter getEditorFilter() {
+    return MarkupEditorFilter.EMPTY;
   }
 
   public static class LineMarkerGutterIconRenderer<T extends PsiElement> extends GutterIconRenderer {
