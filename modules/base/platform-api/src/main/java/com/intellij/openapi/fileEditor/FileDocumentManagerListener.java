@@ -1,20 +1,7 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.fileEditor;
 
+import com.intellij.AppTopics;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -22,6 +9,9 @@ import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 
+/**
+ * @see AppTopics#FILE_DOCUMENT_SYNC
+ */
 public interface FileDocumentManagerListener extends EventListener {
 
   /**
@@ -38,24 +28,31 @@ public interface FileDocumentManagerListener extends EventListener {
    * Fired before processing FileDocumentManager.saveAllDocuments(). Can be used by plugins
    * which need to perform additional save operations when documents, rather than settings,
    * are saved.
-   *
-   * @since 8.0
    */
-  void beforeAllDocumentsSaving();
+  default void beforeAllDocumentsSaving() {
+  }
 
   /**
    * NOTE: Vetoing facility is deprecated in this listener implement {@link FileDocumentSynchronizationVetoer} instead.
    */
-  void beforeDocumentSaving(@Nonnull Document document);
+  default void beforeDocumentSaving(@Nonnull Document document) {
+  }
 
   /**
    * NOTE: Vetoing facility is deprecated in this listener implement {@link FileDocumentSynchronizationVetoer} instead.
    */
-  void beforeFileContentReload(VirtualFile file, @Nonnull Document document);
+  default void beforeFileContentReload(@Nonnull VirtualFile file, @Nonnull Document document) {
+  }
 
-  void fileWithNoDocumentChanged(@Nonnull VirtualFile file);
-  void fileContentReloaded(VirtualFile file, @Nonnull Document document);
-  void fileContentLoaded(@Nonnull VirtualFile file, @Nonnull Document document);
+  default void fileWithNoDocumentChanged(@Nonnull VirtualFile file) {
+  }
 
-  void unsavedDocumentsDropped();
+  default void fileContentReloaded(@Nonnull VirtualFile file, @Nonnull Document document) {
+  }
+
+  default void fileContentLoaded(@Nonnull VirtualFile file, @Nonnull Document document) {
+  }
+
+  default void unsavedDocumentsDropped() {
+  }
 }

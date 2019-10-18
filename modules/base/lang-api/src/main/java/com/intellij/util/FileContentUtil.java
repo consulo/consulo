@@ -57,7 +57,7 @@ public class FileContentUtil extends FileContentUtilCore {
     virtualFile.refresh(false, false);
   }
 
-  public static void reparseFiles(@Nonnull final Project project, @Nonnull final Collection<VirtualFile> files, final boolean includeOpenFiles) {
+  public static void reparseFiles(@Nonnull final Project project, @Nonnull final Collection<? extends VirtualFile> files, final boolean includeOpenFiles) {
     LinkedHashSet<VirtualFile> fileSet = new LinkedHashSet<VirtualFile>(files);
     if (includeOpenFiles) {
       for (VirtualFile open : FileEditorManager.getInstance(project).getOpenFiles()) {

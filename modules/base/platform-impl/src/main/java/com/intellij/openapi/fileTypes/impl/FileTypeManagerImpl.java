@@ -48,6 +48,7 @@ import com.intellij.psi.SingleRootFileViewProvider;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.ui.GuiUtils;
 import com.intellij.util.*;
+import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.BoundedTaskExecutor;
 import com.intellij.util.containers.ConcurrentPackedBitsArray;
 import com.intellij.util.containers.ContainerUtil;
@@ -73,6 +74,7 @@ import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -362,11 +364,11 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     System.out.println(message + " - " + Thread.currentThread());
   }
 
-  private final BoundedTaskExecutor reDetectExecutor = new BoundedTaskExecutor("FileTypeManager redetect pool", PooledThreadExecutor.INSTANCE, 1, this);
+  private final Executor reDetectExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor("FileTypeManager Redetect Pool", PooledThreadExecutor.INSTANCE, 1, this);
   private final BlockingQueue<VirtualFile> filesToRedetect = new LinkedBlockingDeque<>();
 
   private void awakeReDetectExecutor() {
-    reDetectExecutor.submit(new Runnable() {
+    reDetectExecutor.execute(new Runnable() {
       private static final int CHUNK = 10;
 
       @Override
@@ -384,7 +386,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   @TestOnly
   public void drainReDetectQueue() {
     try {
-      reDetectExecutor.waitAllTasksExecuted(1, TimeUnit.MINUTES);
+      ((BoundedTaskExecutor)reDetectExecutor).waitAllTasksExecuted(1, TimeUnit.MINUTES);
     }
     catch (Exception e) {
       throw new RuntimeException(e);

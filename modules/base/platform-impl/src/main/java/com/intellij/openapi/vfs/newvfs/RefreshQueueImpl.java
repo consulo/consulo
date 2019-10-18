@@ -19,13 +19,13 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.diagnostic.FrequentEventDetector;
-import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.vfs.VfsBundle;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
-import com.intellij.util.concurrency.BoundedTaskExecutor;
+import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import consulo.application.TransactionGuardEx;
+import consulo.logging.Logger;
 import gnu.trove.TLongObjectHashMap;
 import org.jetbrains.ide.PooledThreadExecutor;
 
@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import java.util.Collections;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executor;
 
 /**
  * @author max
@@ -42,7 +42,7 @@ import java.util.concurrent.ExecutorService;
 public class RefreshQueueImpl extends RefreshQueue implements Disposable {
   private static final Logger LOG = Logger.getInstance(RefreshQueueImpl.class);
 
-  private final ExecutorService myQueue = new BoundedTaskExecutor("RefreshQueue pool", PooledThreadExecutor.INSTANCE, 1, this);
+  private final Executor myQueue = AppExecutorUtil.createBoundedApplicationPoolExecutor("RefreshQueue Pool", PooledThreadExecutor.INSTANCE, 1, this);
   private final ProgressIndicator myRefreshIndicator = RefreshProgress.create(VfsBundle.message("file.synchronize.progress"));
   private final TLongObjectHashMap<RefreshSession> mySessions = new TLongObjectHashMap<>();
   private final FrequentEventDetector myEventCounter = new FrequentEventDetector(100, 100, FrequentEventDetector.Level.WARN);
@@ -76,7 +76,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
   }
 
   protected void queueSession(@Nonnull RefreshSessionImpl session, @Nullable TransactionId transaction) {
-    myQueue.submit(() -> {
+    myQueue.execute(() -> {
       myRefreshIndicator.start();
       try (AccessToken ignored = createHeavyLatch("Doing file refresh. " + session)) {
         doScan(session);

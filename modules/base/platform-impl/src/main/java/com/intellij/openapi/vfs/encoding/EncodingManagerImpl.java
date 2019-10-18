@@ -41,17 +41,19 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ObjectUtils;
+import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.BoundedTaskExecutor;
 import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.logging.Logger;
 import gnu.trove.Equality;
 import gnu.trove.THashSet;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 import org.jetbrains.annotations.NonNls;
+import javax.annotation.Nonnull;
 import org.jetbrains.ide.PooledThreadExecutor;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -59,11 +61,15 @@ import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.nio.charset.Charset;
 import java.util.Collection;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 @Singleton
 @State(name = "Encoding", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/encoding.xml")})
 public class EncodingManagerImpl extends EncodingManager implements PersistentStateComponent<EncodingManagerImpl.State>, Disposable {
+  private static final Logger LOG = Logger.getInstance(EncodingManagerImpl.class);
+
   private static final Equality<Reference<Document>> REFERENCE_EQUALITY = new Equality<Reference<Document>>() {
     @Override
     public boolean equals(Reference<Document> o1, Reference<Document> o2) {
@@ -93,8 +99,8 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
 
   private static final Key<Charset> CACHED_CHARSET_FROM_CONTENT = Key.create("CACHED_CHARSET_FROM_CONTENT");
 
-  private final BoundedTaskExecutor changedDocumentExecutor =
-          new BoundedTaskExecutor("EncodingManagerImpl document pool", PooledThreadExecutor.INSTANCE, JobSchedulerImpl.getJobPoolParallelism(), this);
+  private final ExecutorService changedDocumentExecutor =
+          AppExecutorUtil.createBoundedApplicationPoolExecutor("EncodingManagerImpl Document Pool", PooledThreadExecutor.INSTANCE, JobSchedulerImpl.getJobPoolParallelism(), this);
 
   @Inject
   public EncodingManagerImpl(@Nonnull EditorFactory editorFactory) {
@@ -239,7 +245,21 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
   }
 
   public void clearDocumentQueue() {
-    changedDocumentExecutor.clearAndCancelAll();
+    if (ApplicationManager.getApplication().isWriteAccessAllowed()) {
+      throw new IllegalStateException("Must not call clearDocumentQueue() from under write action because some queued detectors require read action");
+    }
+    ((BoundedTaskExecutor)changedDocumentExecutor).clearAndCancelAll();
+    // after clear and canceling all queued tasks, make sure they all are finished
+    waitAllTasksExecuted(1, TimeUnit.MINUTES);
+  }
+
+  void waitAllTasksExecuted(long timeout, @Nonnull TimeUnit unit) {
+    try {
+      ((BoundedTaskExecutor)changedDocumentExecutor).waitAllTasksExecuted(timeout, unit);
+    }
+    catch (Exception e) {
+      LOG.error(e);
+    }
   }
 
   @Nullable

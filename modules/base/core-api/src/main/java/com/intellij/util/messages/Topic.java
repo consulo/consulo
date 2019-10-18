@@ -35,6 +35,10 @@ public class Topic<L> {
   private final Class<L> myListenerClass;
   private final BroadcastDirection myBroadcastDirection;
 
+  public Topic(@Nonnull Class<L> listenerClass) {
+    this(listenerClass.getSimpleName(), listenerClass, BroadcastDirection.TO_CHILDREN);
+  }
+
   public Topic(@NonNls @Nonnull String displayName, @Nonnull Class<L> listenerClass) {
     this(displayName, listenerClass, BroadcastDirection.TO_CHILDREN);
   }

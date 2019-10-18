@@ -65,7 +65,7 @@ public class CoreProjectEnvironment {
     ((FileManagerImpl)myPsiManager.getFileManager()).markInitialized();
     registerProjectComponent(PsiManager.class, myPsiManager);
 
-    registerProjectComponent(PsiDocumentManager.class, new CorePsiDocumentManager(myProject, myPsiManager, new MockDocumentCommitProcessor()));
+    registerProjectComponent(PsiDocumentManager.class, new CorePsiDocumentManager(myProject, new MockDocumentCommitProcessor()));
 
     myProject.registerService(ResolveScopeManager.class, createResolveScopeManager(myPsiManager));
 

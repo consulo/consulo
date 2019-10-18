@@ -44,7 +44,7 @@ public class FileContentUtilCore {
   }
 
   @RequiredUIAccess
-  public static void reparseFiles(@Nonnull final Collection<VirtualFile> files) {
+  public static void reparseFiles(@Nonnull final Collection<? extends VirtualFile> files) {
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {

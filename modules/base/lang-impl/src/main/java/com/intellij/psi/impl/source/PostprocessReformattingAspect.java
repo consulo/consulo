@@ -52,13 +52,13 @@ import com.intellij.util.LocalTimeCounter;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.TextRangeUtil;
+import consulo.annotations.RequiredReadAction;
 import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
-import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NonNls;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
@@ -112,6 +112,45 @@ public class PostprocessReformattingAspect implements PomModelAspect {
       }
     };
     ApplicationManager.getApplication().addApplicationListener(applicationListener, project);
+  }
+
+  public static void assertDocumentChangeIsAllowed(@Nonnull PsiFile file) {
+    PostprocessReformattingAspect reformattingAspect = getInstance(file.getProject());
+    reformattingAspect.assertDocumentChangeIsAllowed(file.getViewProvider());
+  }
+
+  /**
+   * Checks that view provider doesn't contain any PSI modifications which will be used in postponed formatting and may conflict with
+   * changes made to the document.
+   *
+   * @param viewProvider The view provider to validate.
+   * @throws RuntimeException If the assertion fails.
+   */
+  public void assertDocumentChangeIsAllowed(@Nonnull FileViewProvider viewProvider) {
+    if (isViewProviderLocked(viewProvider)) {
+      Throwable cause = viewProvider.getUserData(REFORMAT_ORIGINATOR);
+      @NonNls String message = "Document is locked by write PSI operations. " +
+                               "Use PsiDocumentManager.doPostponedOperationsAndUnblockDocument() to commit PSI changes to the document." +
+                               "\nUnprocessed elements: " + dumpUnprocessedElements(viewProvider) +
+                               (cause == null ? "" : " \nSee cause stacktrace for the reason to lock.");
+      throw cause == null ? new RuntimeException(message) : new RuntimeException(message, cause);
+    }
+  }
+
+  private String dumpUnprocessedElements(@Nonnull FileViewProvider provider) {
+    StringBuilder sb = new StringBuilder();
+    int count = 0;
+    List<ASTNode> nodes = myContext.get().myReformatElements.get(provider);
+    for (ASTNode node : nodes) {
+      if (count >= 5) {
+        sb.append(" and ").append(nodes.size() - count).append(" more.");
+        break;
+      }
+      if (sb.length() > 0) sb.append(", ");
+      sb.append(node.getElementType()).append(node.getTextRange());
+      count++;
+    }
+    return sb.toString();
   }
 
   public void disablePostprocessFormattingInside(@Nonnull final Runnable runnable) {

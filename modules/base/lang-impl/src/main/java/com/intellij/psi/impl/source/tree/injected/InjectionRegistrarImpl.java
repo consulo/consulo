@@ -219,7 +219,7 @@ class InjectionRegistrarImpl extends MultiHostRegistrarImpl implements MultiHost
       Language forcedLanguage = myContextElement.getUserData(SingleRootInjectedFileViewProvider.LANGUAGE_FOR_INJECTED_COPY_KEY);
       checkForCorrectContextElement(placeInfos, myContextElement, myLanguageVersion, myHostPsiFile, myHostVirtualFile, myHostDocument, myDocumentManagerBase);
 
-      createAndRegisterInjected(LanguageVersionUtil.findDefaultVersion(forcedLanguage));
+      createAndRegisterInjected(forcedLanguage == null ? myLanguageVersion : LanguageVersionUtil.findDefaultVersion(forcedLanguage));
     }
     finally {
       clear();

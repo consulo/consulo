@@ -26,7 +26,6 @@ import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -47,12 +46,12 @@ import com.intellij.openapi.wm.impl.FrameTitleBuilder;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.util.TimedReference;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.io.storage.HeavyProcessLatch;
 import consulo.application.AccessRule;
 import consulo.components.impl.PlatformComponentManagerImpl;
 import consulo.components.impl.stores.*;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.injecting.InjectingContainerBuilder;
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NonNls;
@@ -111,6 +110,11 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     myManager = manager;
 
     myName = projectName;
+  }
+
+  @Nullable
+  public String getCreationTrace() {
+    return getUserData(CREATION_TRACE);
   }
 
   @Nullable

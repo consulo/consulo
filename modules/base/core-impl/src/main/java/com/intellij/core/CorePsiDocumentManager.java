@@ -16,7 +16,6 @@
 package com.intellij.core;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.DocumentCommitProcessor;
 import com.intellij.psi.impl.PsiDocumentManagerBase;
 import org.jetbrains.annotations.NonNls;
@@ -28,9 +27,7 @@ import javax.annotation.Nonnull;
  */
 @Deprecated
 class CorePsiDocumentManager extends PsiDocumentManagerBase {
-  CorePsiDocumentManager(@Nonnull Project project,
-                         @Nonnull PsiManager psiManager,
-                         @NonNls @Nonnull DocumentCommitProcessor documentCommitProcessor) {
-    super(project, psiManager, documentCommitProcessor);
+  CorePsiDocumentManager(@Nonnull Project project, @NonNls @Nonnull DocumentCommitProcessor documentCommitProcessor) {
+    super(project, documentCommitProcessor);
   }
 }
