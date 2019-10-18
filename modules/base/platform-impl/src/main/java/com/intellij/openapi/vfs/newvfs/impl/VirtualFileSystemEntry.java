@@ -17,27 +17,22 @@ package com.intellij.openapi.vfs.newvfs.impl;
 
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.io.FileTooBigException;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VFileProperty;
-import com.intellij.openapi.vfs.VfsBundle;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.openapi.vfs.encoding.EncodingRegistry;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFSImpl;
-import com.intellij.psi.SingleRootFileViewProvider;
 import com.intellij.util.LocalTimeCounter;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.StringFactory;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
@@ -355,26 +350,18 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
       charset = configured == null ? Charset.defaultCharset() : configured;
       setCharset(charset);
     }
-    else if (SingleRootFileViewProvider.isTooLargeForContentLoading(this)) {
-      charset = super.getCharset();
-    }
     else {
-      try {
-        final byte[] content;
-        try {
-          content = contentsToByteArray();
-        }
-        catch (FileNotFoundException e) {
-          // file has already been deleted on disk
-          return super.getCharset();
-        }
-        charset = LoadTextUtil.detectCharsetAndSetBOM(this, content);
-      }
-      catch (FileTooBigException e) {
+      FileType fileType = getFileType();
+      if (isCharsetSet()) {
+        // file type detection may have cached the charset, no need to re-detect
         return super.getCharset();
       }
+      try {
+        final byte[] content = VfsUtilCore.loadBytes(this);
+        charset = LoadTextUtil.detectCharsetAndSetBOM(this, content, fileType);
+      }
       catch (IOException e) {
-        throw new RuntimeException(e);
+        return super.getCharset();
       }
     }
     return charset;

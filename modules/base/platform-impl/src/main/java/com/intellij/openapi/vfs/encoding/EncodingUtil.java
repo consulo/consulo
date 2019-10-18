@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2015 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.vfs.encoding;
 
 import com.intellij.AppTopics;
@@ -21,7 +7,8 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
+import com.intellij.openapi.fileEditor.FileDocumentManagerListener;
+import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
@@ -29,31 +16,51 @@ import com.intellij.openapi.project.ProjectLocator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.util.text.StringUtilRt;
+import com.intellij.openapi.vfs.CharsetToolkit;
+import com.intellij.openapi.vfs.ReadonlyStatusHandler;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileEvent;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.messages.MessageBusConnection;
-import consulo.ui.RequiredUIAccess;
 import consulo.fileTypes.FileTypeWithPredefinedCharset;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.function.Consumer;
 
 public class EncodingUtil {
-  enum Magic8 {
+
+  enum FailReason {
+    IS_DIRECTORY,
+    IS_BINARY,
+    BY_FILE,
+    BY_BOM,
+    BY_BYTES,
+    BY_FILETYPE
+  }
+
+  // the result of wild guess
+  public enum Magic8 {
     ABSOLUTELY,
     WELL_IF_YOU_INSIST,
     NO_WAY
   }
 
   // check if file can be loaded in the encoding correctly:
-  // returns true if bytes on disk, converted to text with the charset, converted back to bytes matched
-  static Magic8 isSafeToReloadIn(@Nonnull VirtualFile virtualFile, @Nonnull String text, @Nonnull byte[] bytes, @Nonnull Charset charset) {
+  // returns ABSOLUTELY if bytes on disk, converted to text with the charset, converted back to bytes matched
+  // returns NO_WAY if the new encoding is incompatible (bytes on disk will differ)
+  // returns WELL_IF_YOU_INSIST if the bytes on disk remain the same but the text will change
+  @Nonnull
+  static Magic8 isSafeToReloadIn(@Nonnull VirtualFile virtualFile, @Nonnull CharSequence text, @Nonnull byte[] bytes, @Nonnull Charset charset) {
     // file has BOM but the charset hasn't
     byte[] bom = virtualFile.getBOM();
     if (bom != null && !CharsetToolkit.canHaveBom(charset, bom)) return Magic8.NO_WAY;
@@ -67,8 +74,8 @@ public class EncodingUtil {
     String separator = FileDocumentManager.getInstance().getLineSeparator(virtualFile, null);
     String toSave = StringUtil.convertLineSeparators(loaded, separator);
 
-    String failReason = LoadTextUtil.wasCharsetDetectedFromBytes(virtualFile);
-    if (failReason != null && CharsetToolkit.UTF8_CHARSET.equals(virtualFile.getCharset()) && !CharsetToolkit.UTF8_CHARSET.equals(charset)) {
+    LoadTextUtil.AutoDetectionReason failReason = LoadTextUtil.getCharsetAutoDetectionReason(virtualFile);
+    if (failReason != null && StandardCharsets.UTF_8.equals(virtualFile.getCharset()) && !StandardCharsets.UTF_8.equals(charset)) {
       return Magic8.NO_WAY; // can't reload utf8-autodetected file in another charset
     }
 
@@ -76,36 +83,37 @@ public class EncodingUtil {
     try {
       bytesToSave = toSave.getBytes(charset);
     }
-    catch (UnsupportedOperationException e) {
+    // turned out some crazy charsets have incorrectly implemented .newEncoder() returning null
+    catch (UnsupportedOperationException | NullPointerException e) {
       return Magic8.NO_WAY;
     }
     if (bom != null && !ArrayUtil.startsWith(bytesToSave, bom)) {
       bytesToSave = ArrayUtil.mergeArrays(bom, bytesToSave); // for 2-byte encodings String.getBytes(Charset) adds BOM automatically
     }
 
-    return !Arrays.equals(bytesToSave, bytes) ? Magic8.NO_WAY : loaded.equals(text) ? Magic8.ABSOLUTELY : Magic8.WELL_IF_YOU_INSIST;
+    return !Arrays.equals(bytesToSave, bytes) ? Magic8.NO_WAY : StringUtil.equals(loaded, text) ? Magic8.ABSOLUTELY : Magic8.WELL_IF_YOU_INSIST;
   }
 
-  static Magic8 isSafeToConvertTo(@Nonnull VirtualFile virtualFile, @Nonnull String text, @Nonnull byte[] bytesOnDisk, @Nonnull Charset charset) {
+  @Nonnull
+  static Magic8 isSafeToConvertTo(@Nonnull VirtualFile virtualFile, @Nonnull CharSequence text, @Nonnull byte[] bytesOnDisk, @Nonnull Charset charset) {
     try {
       String lineSeparator = FileDocumentManager.getInstance().getLineSeparator(virtualFile, null);
-      String textToSave = lineSeparator.equals("\n") ? text : StringUtil.convertLineSeparators(text, lineSeparator);
+      CharSequence textToSave = lineSeparator.equals("\n") ? text : StringUtilRt.convertLineSeparators(text, lineSeparator);
 
-      Pair<Charset, byte[]> chosen = LoadTextUtil.chooseMostlyHarmlessCharset(virtualFile.getCharset(), charset, textToSave);
+      Pair<Charset, byte[]> chosen = LoadTextUtil.chooseMostlyHarmlessCharset(virtualFile.getCharset(), charset, textToSave.toString());
 
       byte[] saved = chosen.second;
 
       CharSequence textLoadedBack = LoadTextUtil.getTextByBinaryPresentation(saved, charset);
 
-      return !text.equals(textLoadedBack.toString()) ? Magic8.NO_WAY : Arrays.equals(saved, bytesOnDisk) ? Magic8.ABSOLUTELY : Magic8.WELL_IF_YOU_INSIST;
+      return !StringUtil.equals(text, textLoadedBack) ? Magic8.NO_WAY : Arrays.equals(saved, bytesOnDisk) ? Magic8.ABSOLUTELY : Magic8.WELL_IF_YOU_INSIST;
     }
     catch (UnsupportedOperationException e) { // unsupported encoding
       return Magic8.NO_WAY;
     }
   }
 
-  @RequiredUIAccess
-  public static void saveIn(@Nonnull final Document document, final Editor editor, @Nonnull final VirtualFile virtualFile, @Nonnull final Charset charset) {
+  static void saveIn(@Nonnull final Document document, final Editor editor, @Nonnull final VirtualFile virtualFile, @Nonnull final Charset charset) {
     FileDocumentManager documentManager = FileDocumentManager.getInstance();
     documentManager.saveDocument(document);
     final Project project = ProjectLocator.getInstance().guessProjectForFile(virtualFile);
@@ -115,150 +123,156 @@ public class EncodingUtil {
       return;
     }
 
-    // first, save the file in the new charset and then mark the file as having the correct encoding
-    try {
-      ApplicationManager.getApplication().runWriteAction(new ThrowableComputable<Object, IOException>() {
-        @Override
-        public Object compute() throws IOException {
+    EncodingProjectManagerImpl.suppressReloadDuring(() -> {
+      EncodingManager.getInstance().setEncoding(virtualFile, charset);
+      try {
+        ApplicationManager.getApplication().runWriteAction((ThrowableComputable<Object, IOException>)() -> {
           virtualFile.setCharset(charset);
           LoadTextUtil.write(project, virtualFile, virtualFile, document.getText(), document.getModificationStamp());
           return null;
-        }
-      });
-    }
-    catch (IOException io) {
-      Messages.showErrorDialog(project, io.getMessage(), "Error Writing File");
-    }
-
-    EncodingProjectManagerImpl.suppressReloadDuring(new Runnable() {
-      @Override
-      public void run() {
-        EncodingManager.getInstance().setEncoding(virtualFile, charset);
+        });
+      }
+      catch (IOException io) {
+        Messages.showErrorDialog(project, io.getMessage(), "Error Writing File");
       }
     });
   }
 
-  static void reloadIn(@Nonnull final VirtualFile virtualFile, @Nonnull final Charset charset) {
+  static void reloadIn(@Nonnull final VirtualFile virtualFile, @Nonnull final Charset charset, final Project project) {
     final FileDocumentManager documentManager = FileDocumentManager.getInstance();
-    //Project project = ProjectLocator.getInstance().guessProjectForFile(myFile);
-    //if (documentManager.isFileModified(myFile)) {
-    //  int result = Messages.showDialog(project, "File is modified. Reload file anyway?", "File is Modified", new String[]{"Reload", "Cancel"}, 0, AllIcons.General.WarningDialog);
-    //  if (result != 0) return;
-    //}
 
+    Consumer<VirtualFile> setEncoding = file -> {
+      if (project == null) {
+        EncodingManager.getInstance().setEncoding(file, charset);
+      }
+      else {
+        EncodingProjectManager.getInstance(project).setEncoding(file, charset);
+      }
+    };
     if (documentManager.getCachedDocument(virtualFile) == null) {
       // no need to reload document
-      EncodingManager.getInstance().setEncoding(virtualFile, charset);
+      setEncoding.accept(virtualFile);
       return;
     }
 
     final Disposable disposable = Disposer.newDisposable();
     MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect(disposable);
-    connection.subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerAdapter() {
+    connection.subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerListener() {
       @Override
-      public void beforeFileContentReload(VirtualFile file, @Nonnull Document document) {
+      public void beforeFileContentReload(@Nonnull VirtualFile file, @Nonnull Document document) {
         if (!file.equals(virtualFile)) return;
         Disposer.dispose(disposable); // disconnect
 
-        EncodingManager.getInstance().setEncoding(file, charset);
+        setEncoding.accept(file);
 
-        LoadTextUtil.setCharsetWasDetectedFromBytes(file, null);
+        LoadTextUtil.clearCharsetAutoDetectionReason(file);
       }
     });
 
     // if file was modified, the user will be asked here
     try {
-      EncodingProjectManagerImpl.suppressReloadDuring(new Runnable() {
-        @Override
-        public void run() {
-          ((VirtualFileListener)documentManager).contentsChanged(
-                  new VirtualFileEvent(null, virtualFile, virtualFile.getName(), virtualFile.getParent()));
-        }
-      });
+      EncodingProjectManagerImpl.suppressReloadDuring(() -> ((FileDocumentManagerImpl)documentManager).contentsChanged(new VirtualFileEvent(null, virtualFile, virtualFile.getName(), virtualFile.getParent())));
     }
     finally {
       Disposer.dispose(disposable);
     }
   }
 
-  // returns (hardcoded charset from the file type, explanation) or (null, null) if file type does not restrict encoding
-  @Nonnull
-  static Pair<Charset, String> checkHardcodedCharsetFileType(@Nonnull VirtualFile virtualFile) {
+  // returns file type description if the charset is hard-coded or null if file type does not restrict encoding
+  private static String checkHardcodedCharsetFileType(@Nonnull VirtualFile virtualFile) {
     FileType fileType = virtualFile.getFileType();
-    if (fileType.isBinary()) return Pair.create(null, "binary file");
     if(fileType instanceof FileTypeWithPredefinedCharset) {
-      return ((FileTypeWithPredefinedCharset)fileType).getPredefinedCharset(virtualFile);
-    }
-    return Pair.create(null, null);
-  }
-
-  @Nonnull
-  // returns pair (existing charset (null means N/A); failReason: null means enabled, notnull means disabled and contains error message)
-  public static Pair<Charset, String> checkCanReload(@Nonnull VirtualFile virtualFile) {
-    if (virtualFile.isDirectory()) {
-      return Pair.create(null, "file is a directory");
-    }
-    FileDocumentManager documentManager = FileDocumentManager.getInstance();
-    Document document = documentManager.getDocument(virtualFile);
-    if (document == null) return Pair.create(null, "binary file");
-    Charset charsetFromContent = ((EncodingManagerImpl)EncodingManager.getInstance()).computeCharsetFromContent(virtualFile);
-    Charset existing = charsetFromContent;
-    String failReason = LoadTextUtil.wasCharsetDetectedFromBytes(virtualFile);
-    if (failReason != null) {
-      // no point changing encoding if it was auto-detected
-      existing = virtualFile.getCharset();
-    }
-    else if (charsetFromContent != null) {
-      failReason = "hard coded in text";
-    }
-    else {
-      Pair<Charset, String> fileTypeCheck = checkHardcodedCharsetFileType(virtualFile);
-      if (fileTypeCheck.second != null) {
-        failReason = fileTypeCheck.second;
-        existing = fileTypeCheck.first;
-      }
-    }
-    if (failReason != null) {
-      return Pair.create(existing, failReason);
-    }
-    return Pair.create(virtualFile.getCharset(), null);
-  }
-
-  /**
-   * @return null means enabled, notnull means disabled and contains error message
-   */
-  @Nullable
-  public static String checkCanConvert(@Nonnull VirtualFile virtualFile) {
-    if (virtualFile.isDirectory()) {
-      return "file is a directory";
-    }
-    String failReason = null;
-
-    Charset charsetFromContent = ((EncodingManagerImpl)EncodingManager.getInstance()).computeCharsetFromContent(virtualFile);
-    if (charsetFromContent != null) {
-      failReason = "Encoding is hard-coded in the text";
-    }
-    else {
-      Pair<Charset, String> check = checkHardcodedCharsetFileType(virtualFile);
-      if (check.second != null) {
-        failReason = check.second;
-      }
-    }
-
-    if (failReason != null) {
-      return failReason;
+      return ((FileTypeWithPredefinedCharset)fileType).getPredefinedCharset(virtualFile).getSecond();
     }
     return null;
   }
 
-  // null means enabled, (current charset, error description) otherwise
-  @Nullable
-  public static Pair<Charset, String> checkSomeActionEnabled(@Nonnull VirtualFile selectedFile) {
-    String saveError = checkCanConvert(selectedFile);
-    if (saveError == null) return null;
-    Pair<Charset, String> reloadError = checkCanReload(selectedFile);
-    if (reloadError.second == null) return null;
-    return Pair.create(reloadError.first, saveError);
+  public static boolean canReload(@Nonnull VirtualFile virtualFile) {
+    return checkCanReload(virtualFile, null) == null;
   }
 
+  @Nullable
+  static FailReason checkCanReload(@Nonnull VirtualFile virtualFile, @Nullable Ref<? super Charset> current) {
+    if (virtualFile.isDirectory()) {
+      return FailReason.IS_DIRECTORY;
+    }
+    FileDocumentManager documentManager = FileDocumentManager.getInstance();
+    Document document = documentManager.getDocument(virtualFile);
+    if (document == null) return FailReason.IS_BINARY;
+    Charset charsetFromContent = ((EncodingManagerImpl)EncodingManager.getInstance()).computeCharsetFromContent(virtualFile);
+    Charset existing = virtualFile.getCharset();
+    LoadTextUtil.AutoDetectionReason autoDetectedFrom = LoadTextUtil.getCharsetAutoDetectionReason(virtualFile);
+    FailReason result;
+    if (autoDetectedFrom != null) {
+      // no point changing encoding if it was auto-detected
+      result = autoDetectedFrom == LoadTextUtil.AutoDetectionReason.FROM_BOM ? FailReason.BY_BOM : FailReason.BY_BYTES;
+    }
+    else if (charsetFromContent != null) {
+      result = FailReason.BY_FILE;
+      existing = charsetFromContent;
+    }
+    else {
+      result = fileTypeDescriptionError(virtualFile);
+    }
+    if (current != null) current.set(existing);
+    return result;
+  }
+
+  @Nullable
+  private static FailReason fileTypeDescriptionError(@Nonnull VirtualFile virtualFile) {
+    if (virtualFile.getFileType().isBinary()) return FailReason.IS_BINARY;
+
+    String fileTypeDescription = checkHardcodedCharsetFileType(virtualFile);
+    return fileTypeDescription == null ? null : FailReason.BY_FILETYPE;
+  }
+
+  /**
+   * @param virtualFile
+   * @return null means enabled, notnull means disabled and contains error message
+   */
+  @Nullable
+  static FailReason checkCanConvert(@Nonnull VirtualFile virtualFile) {
+    if (virtualFile.isDirectory()) {
+      return FailReason.IS_DIRECTORY;
+    }
+
+    Charset charsetFromContent = ((EncodingManagerImpl)EncodingManager.getInstance()).computeCharsetFromContent(virtualFile);
+    return charsetFromContent != null ? FailReason.BY_FILE : fileTypeDescriptionError(virtualFile);
+  }
+
+  @Nullable
+  static FailReason checkCanConvertAndReload(@Nonnull VirtualFile selectedFile) {
+    FailReason result = checkCanConvert(selectedFile);
+    if (result == null) return null;
+    return checkCanReload(selectedFile, null);
+  }
+
+  @Nullable
+  public static Pair<Charset, String> getCharsetAndTheReasonTooltip(@Nonnull VirtualFile file) {
+    FailReason r1 = checkCanConvert(file);
+    if (r1 == null) return null;
+    Ref<Charset> current = Ref.create();
+    FailReason r2 = checkCanReload(file, current);
+    if (r2 == null) return null;
+    String errorDescription = r1 == r2 ? reasonToString(r1, file) : reasonToString(r1, file) + ", " + reasonToString(r2, file);
+    return Pair.create(current.get(), errorDescription);
+  }
+
+  static String reasonToString(@Nonnull FailReason reason, VirtualFile file) {
+    switch (reason) {
+      case IS_DIRECTORY:
+        return "disabled for a directory";
+      case IS_BINARY:
+        return "disabled for a binary file";
+      case BY_FILE:
+        return "charset is hard-coded in the file";
+      case BY_BOM:
+        return "charset is auto-detected by BOM";
+      case BY_BYTES:
+        return "charset is auto-detected from content";
+      case BY_FILETYPE:
+        return "disabled for " + file.getFileType().getDescription();
+    }
+    throw new AssertionError(reason);
+  }
 }

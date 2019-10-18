@@ -19,12 +19,9 @@ import com.intellij.openapi.Forceable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.util.io.*;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
-import com.intellij.openapi.util.io.ByteSequence;
-import com.intellij.openapi.util.io.FileAttributes;
-import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
 import com.intellij.openapi.vfs.newvfs.impl.FileNameCache;
 import com.intellij.util.ArrayUtil;
@@ -1574,7 +1571,7 @@ public class FSRecords implements Forceable {
 
   private static final MessageDigest myDigest = ContentHashesUtil.createHashDigest();
 
-  public static void writeContent(int fileId, ByteSequence bytes, boolean readOnly) throws IOException {
+  public static void writeContent(int fileId, ByteArraySequence bytes, boolean readOnly) throws IOException {
     try {
       new ContentOutputStream(fileId, readOnly).writeBytes(bytes);
     } catch (Throwable e) {
@@ -1636,14 +1633,14 @@ public class FSRecords implements Forceable {
 
       try {
         final BufferExposingByteArrayOutputStream _out = (BufferExposingByteArrayOutputStream)out;
-        writeBytes(new ByteSequence(_out.getInternalBuffer(), 0, _out.size()));
+        writeBytes(new ByteArraySequence(_out.getInternalBuffer(), 0, _out.size()));
       }
       catch (Throwable e) {
         throw DbConnection.handleError(e);
       }
     }
 
-    public void writeBytes(ByteSequence bytes) throws IOException {
+    public void writeBytes(ByteArraySequence bytes) throws IOException {
       int page;
       RefCountingStorage contentStorage = getContentStorage();
       final boolean fixedSize;
@@ -1683,7 +1680,7 @@ public class FSRecords implements Forceable {
           }
           CompressionUtil.writeCompressed(outputStream, rawBytes, bytes.getLength());
           outputStream.close();
-          bytes = new ByteSequence(out.getInternalBuffer(), 0, out.size());
+          bytes = new ByteArraySequence(out.getInternalBuffer(), 0, out.size());
         }
         contentStorage.writeBytes(page, bytes, fixedSize);
       }
@@ -1808,10 +1805,10 @@ public class FSRecords implements Forceable {
               writeRecordHeader(DbConnection.getAttributeId(myAttribute.getId()), myFileId, this);
               write(oldOut.getInternalBuffer(), 0, oldOut.size());
               getAttributesStorage()
-                      .writeBytes(page, new ByteSequence(stream.getInternalBuffer(), 0, stream.size()), myAttribute.isFixedSize());
+                      .writeBytes(page, new ByteArraySequence(stream.getInternalBuffer(), 0, stream.size()), myAttribute.isFixedSize());
             } else {
               getAttributesStorage()
-                      .writeBytes(page, new ByteSequence(_out.getInternalBuffer(), 0, _out.size()), myAttribute.isFixedSize());
+                      .writeBytes(page, new ByteArraySequence(_out.getInternalBuffer(), 0, _out.size()), myAttribute.isFixedSize());
             }
           }
           finally {
@@ -1878,7 +1875,7 @@ public class FSRecords implements Forceable {
                 if (_out.size() == attrAddressOrSize) {
                   // update inplace when new attr has the same size
                   int remaining = attrRefs.available();
-                  storage.replaceBytes(recordId, remainingAtStart - remaining, new ByteSequence(_out.getInternalBuffer(), 0, _out.size()));
+                  storage.replaceBytes(recordId, remainingAtStart - remaining, new ByteArraySequence(_out.getInternalBuffer(), 0, _out.size()));
                   return;
                 }
                 attrRefs.skipBytes(attrAddressOrSize);

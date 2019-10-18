@@ -19,8 +19,6 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.FileTypeRegistry;
-import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
@@ -31,9 +29,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.nio.charset.Charset;
@@ -73,21 +71,10 @@ public class FilePathImpl implements FilePath {
     return new File(child.getPath());
   }
 
-  private void detectFileType() {
-    VirtualFile file = myVirtualFile;
-    if (file == null || !file.isValid() || file.isDirectory()) return;
-    FileType fileType = file.getFileType();
-    if (fileType == UnknownFileType.INSTANCE) {
-      FileTypeRegistry.getInstance().detectFileTypeFromContent(file);
-    }
-  }
-
-  @Heavy
   public FilePathImpl(@Nonnull VirtualFile virtualParent, String name, final boolean isDirectory) {
     this(virtualParent, name, isDirectory, null, false);
   }
 
-  @Heavy
   private FilePathImpl(@Nonnull VirtualFile virtualParent, String name, final boolean isDirectory, final boolean forDeleted) {
     this(virtualParent, name, isDirectory, null, forDeleted);
   }
@@ -215,7 +202,6 @@ public class FilePathImpl implements FilePath {
     if (myVirtualFile != null && !myVirtualFile.isValid()) {
       myVirtualFile = null;
     }
-    detectFileType();
     return myVirtualFile;
   }
 

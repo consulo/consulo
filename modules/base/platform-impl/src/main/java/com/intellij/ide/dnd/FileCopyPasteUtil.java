@@ -15,8 +15,6 @@
  */
 package com.intellij.ide.dnd;
 
-import com.intellij.openapi.fileTypes.FileTypeRegistry;
-import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.text.StringUtil;
@@ -27,7 +25,6 @@ import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.FlavorMap;
 import java.awt.datatransfer.SystemFlavorMap;
@@ -143,15 +140,13 @@ public class FileCopyPasteUtil {
       result = Collections.emptyList();
     }
     else {
-      result = new ArrayList<VirtualFile>(fileList.size());
+      result = new ArrayList<>(fileList.size());
       for (File file : fileList) {
         VirtualFile virtualFile = VfsUtil.findFileByIoFile(file, true);
         if (virtualFile == null) continue;
         result.add(virtualFile);
         // detect and store file type for Finder-2-IDEA drag-n-drop
-        if (!virtualFile.isDirectory() && virtualFile.getFileType() == UnknownFileType.INSTANCE) {
-          FileTypeRegistry.getInstance().detectFileTypeFromContent(virtualFile);
-        }
+        virtualFile.getFileType();
       }
     }
     return result;

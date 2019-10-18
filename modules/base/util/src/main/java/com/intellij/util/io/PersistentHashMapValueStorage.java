@@ -20,13 +20,12 @@
 package com.intellij.util.io;
 
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
-import com.intellij.openapi.util.io.ByteSequence;
+import com.intellij.openapi.util.io.ByteArraySequence;
 import com.intellij.util.SystemProperties;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.*;
 import java.util.Comparator;
 import java.util.List;
@@ -117,7 +116,7 @@ public class PersistentHashMapValueStorage {
     }
 
     if (mySize == 0 && !myReadOnly) {
-      appendBytes(new ByteSequence("Header Record For PersistentHashMapValueStorage".getBytes()), 0);
+      appendBytes(new ByteArraySequence("Header Record For PersistentHashMapValueStorage".getBytes()), 0);
 
       // avoid corruption issue when disk fails to write first record synchronously or unexpected first write file increase (IDEA-106306),
       // code depends on correct value of mySize
@@ -142,7 +141,7 @@ public class PersistentHashMapValueStorage {
     }
   }
 
-  public long appendBytes(ByteSequence data, long prevChunkAddress) throws IOException {
+  public long appendBytes(ByteArraySequence data, long prevChunkAddress) throws IOException {
     return appendBytes(data.getBytes(), data.getOffset(), data.getLength(), prevChunkAddress);
   }
 
@@ -467,7 +466,7 @@ public class PersistentHashMapValueStorage {
       newValueOffset = appendBytes(stream.getInternalBuffer(), 0, stream.size(), 0);
       myChunksBytesAfterRemoval += stream.size();
     } else {
-      newValueOffset = appendBytes(new ByteSequence(result.buffer), 0);
+      newValueOffset = appendBytes(new ByteArraySequence(result.buffer), 0);
       myChunksBytesAfterRemoval += result.buffer.length;
     }
 

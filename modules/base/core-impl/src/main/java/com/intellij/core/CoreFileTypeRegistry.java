@@ -24,8 +24,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +45,11 @@ public class CoreFileTypeRegistry extends FileTypeRegistry {
   @Override
   public boolean isFileIgnored(@NonNls @Nonnull VirtualFile file) {
     return false;
+  }
+
+  @Override
+  public boolean isFileOfType(@Nonnull VirtualFile file, @Nonnull FileType type) {
+    return file.getFileType() == type;
   }
 
   @Override
@@ -86,11 +91,6 @@ public class CoreFileTypeRegistry extends FileTypeRegistry {
     }
   }
 
-  @Nonnull
-  @Override
-  public FileType detectFileTypeFromContent(@Nonnull VirtualFile file) {
-    return UnknownFileType.INSTANCE;
-  }
 
   @Nullable
   @Override

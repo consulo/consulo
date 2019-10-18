@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,35 +15,49 @@
  */
 package com.intellij.util.text;
 
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.CharSequenceWithStringHash;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.CharsetToolkit;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
+import java.util.Arrays;
+
+//@ReviseWhenPortedToJDK("9")
 public class ByteArrayCharSequence implements CharSequenceWithStringHash {
-  private int hash;
+  private final int myStart;
+  private final int myEnd;
+  private transient int hash;
   private final byte[] myChars;
 
-  private ByteArrayCharSequence(@Nonnull byte[] chars) {
+  public ByteArrayCharSequence(@Nonnull byte[] chars) {
+    this(chars, 0, chars.length);
+  }
+
+  public ByteArrayCharSequence(@Nonnull byte[] chars, int start, int end) {
     myChars = chars;
+    myStart = start;
+    myEnd = end;
   }
 
   @Override
   public int hashCode() {
     int h = hash;
     if (h == 0) {
-      hash = h = StringUtil.stringHashCode(this, 0, length());
+      hash = h = StringUtil.stringHashCode(this, myStart, myEnd);
     }
     return h;
   }
 
   @Override
   public final int length() {
-    return myChars.length;
+    return myEnd - myStart;
   }
 
   @Override
   public final char charAt(int index) {
-    return (char)myChars[index];
+    return (char)(myChars[index + myStart] & 0xff);
   }
 
   @Nonnull
@@ -55,29 +69,61 @@ public class ByteArrayCharSequence implements CharSequenceWithStringHash {
   @Override
   @Nonnull
   public String toString() {
-    return StringFactory.createShared(CharArrayUtil.fromSequence(this, 0, length()));
+    return new String(myChars, myStart, length(), CharsetToolkit.ISO_8859_1_CHARSET);
   }
 
+  /**
+   * @deprecated use {@link #convertToBytesIfPossible(CharSequence)} instead
+   */
+  @Deprecated
   @Nonnull
   public static CharSequence convertToBytesIfAsciiString(@Nonnull String name) {
-    return convertToBytesIfAsciiString((CharSequence)name);
+    return convertToBytesIfPossible(name);
+  }
+
+  /**
+   * @return instance of {@link ByteArrayCharSequence} if the supplied string can be stored internally
+   * as a byte array of 8-bit code points (for more compact representation); its {@code string} argument otherwise
+   */
+  @Nonnull
+  public static CharSequence convertToBytesIfPossible(@Nonnull CharSequence string) {
+    if (SystemInfo.IS_AT_LEAST_JAVA9) return string; // see JEP 254: Compact Strings
+    if (string.length() == 0) return "";
+    if (string instanceof ByteArrayCharSequence) return string;
+    byte[] bytes = toBytesIfPossible(string);
+    return bytes == null ? string : new ByteArrayCharSequence(bytes);
   }
 
   @Nonnull
-  public static CharSequence convertToBytesIfAsciiString(@Nonnull CharSequence name) {
-    int length = name.length();
-    if (length == 0) return "";
+  byte[] getBytes() {
+    return myStart == 0 && myEnd == myChars.length ? myChars : Arrays.copyOfRange(myChars, myStart, myEnd);
+  }
 
-    byte[] bytes = new byte[length];
-    for (int i = 0; i < length; i++) {
-      char c = name.charAt(i);
-      if (c >= 128) {
-        //noinspection RedundantStringConstructorCall
-        return new String(name.toString()); // So we don't hold whole char[] buffer of a lengthy path on JDK 6
-      }
-
-      bytes[i] = (byte)c;
+  @Nullable
+  static byte[] toBytesIfPossible(@Nonnull CharSequence seq) {
+    if (seq instanceof ByteArrayCharSequence) {
+      return ((ByteArrayCharSequence)seq).getBytes();
     }
-    return new ByteArrayCharSequence(bytes);
+    byte[] bytes = new byte[seq.length()];
+    char[] chars = CharArrayUtil.fromSequenceWithoutCopying(seq);
+    if (chars == null) {
+      for (int i = 0; i < bytes.length; i++) {
+        char c = seq.charAt(i);
+        if ((c & 0xff00) != 0) {
+          return null;
+        }
+        bytes[i] = (byte)c;
+      }
+    }
+    else {
+      for (int i = 0; i < bytes.length; i++) {
+        char c = chars[i];
+        if ((c & 0xff00) != 0) {
+          return null;
+        }
+        bytes[i] = (byte)c;
+      }
+    }
+    return bytes;
   }
 }

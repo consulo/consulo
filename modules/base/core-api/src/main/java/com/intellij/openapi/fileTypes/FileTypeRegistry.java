@@ -1,31 +1,41 @@
-/*
- * Copyright 2000-2011 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.fileTypes;
 
+import com.intellij.lang.Language;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.io.ByteSequence;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.application.internal.PerApplicationInstance;
 import org.jetbrains.annotations.NonNls;
-
-import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import java.util.Collection;
+
 /**
+ * A service for retrieving file types for files.
+ *
+ * <p><b>Performance notice.</b> There are different rules of file type matching for a file: matching by file name, by extension,
+ * by file content, by custom logic providers and so on. They are all executed by the general methods {@code getFileTypeByFile},
+ * thus implying that execution of
+ * such methods is as long as the sum of all possible matching checks in the worst case. That includes reading file contents to
+ * feed to all {@link FileTypeDetector} instances, checking {@link FileTypeIdentifiableByVirtualFile} and so on. Such actions
+ * may lead to considerable slowdowns if used on large {@code VirtualFile} collections, e.g. in
+ * {@link com.intellij.openapi.vfs.newvfs.BulkFileListener} implementations.
+ *
+ * <p> If it is possible and correct to restrict file type matching by particular means (e.g. match only by file name),
+ * it is advised to do so, in order to improve the performance of the check, e.g. use
+ * <pre><code>
+ * FileTypeRegistry.getInstance().getFileTypeByFileName(file.getNameSequence())
+ * </code></pre>
+ * instead of
+ * <pre><code>
+ * file.getFileType()
+ * </code></pre>
+ * <p>
+ * Also, if you are interested not in getting file type, but rather comparing file type with a known one, prefer using
+ * {@link #isFileOfType(VirtualFile, FileType)}, as it is faster than {@link #getFileTypeByFile(VirtualFile)} as well.
+ *
  * @author yole
  */
 public abstract class FileTypeRegistry {
@@ -36,13 +46,28 @@ public abstract class FileTypeRegistry {
     return ourInstance.get();
   }
 
-  public abstract boolean isFileIgnored(@NonNls @Nonnull VirtualFile file);
+  public abstract boolean isFileIgnored(@Nonnull VirtualFile file);
+
+  /**
+   * Checks if the given file has the given file type. This is faster than getting the file type
+   * and comparing it, because for file types that are identified by virtual file, it will only
+   * check if the given file type matches, and will not run other detectors. However, this can
+   * lead to inconsistent results if two file types report the same file as matching (which should
+   * generally be avoided).
+   */
+  public abstract boolean isFileOfType(@Nonnull VirtualFile file, @Nonnull FileType type);
+
+  @Nullable
+  public LanguageFileType findFileTypeByLanguage(@Nonnull Language language) {
+    return language.findMyFileType(getRegisteredFileTypes());
+  }
 
   /**
    * Returns the list of all registered file types.
    *
    * @return The list of file types.
    */
+  @Nonnull
   public abstract FileType[] getRegisteredFileTypes();
 
   /**
@@ -55,16 +80,35 @@ public abstract class FileTypeRegistry {
   public abstract FileType getFileTypeByFile(@Nonnull VirtualFile file);
 
   /**
+   * Returns the file type for the specified file.
+   *
+   * @param file    The file for which the type is requested.
+   * @param content Content of the file (if already available, to avoid reading from disk again)
+   * @return The file type instance.
+   */
+  @Nonnull
+  public FileType getFileTypeByFile(@Nonnull VirtualFile file, @Nullable byte[] content) {
+    return getFileTypeByFile(file);
+  }
+
+  /**
    * Returns the file type for the specified file name.
    *
-   * @param fileName The file name for which the type is requested.
-   * @return The file type instance, or {@link UnknownFileType#INSTANCE} if not found.
+   * @param fileNameSeq The file name for which the type is requested.
+   * @return The file type instance, or {@link FileTypes#UNKNOWN} if not found.
+   */
+  @Nonnull
+  public FileType getFileTypeByFileName(@Nonnull @NonNls CharSequence fileNameSeq) {
+    return getFileTypeByFileName(fileNameSeq.toString());
+  }
+
+  /**
+   * Same as {@linkplain FileTypeRegistry#getFileTypeByFileName(CharSequence)} but receives String parameter.
+   * <p>
+   * Consider to use the method above in case when you want to get VirtualFile's file type by file name.
    */
   @Nonnull
   public abstract FileType getFileTypeByFileName(@Nonnull @NonNls String fileName);
-
-  @Nonnull
-  public abstract FileType getFileTypeByFileName(@Nonnull @NonNls CharSequence fileName);
 
   /**
    * Returns the file type for the specified extension.
@@ -77,21 +121,10 @@ public abstract class FileTypeRegistry {
   public abstract FileType getFileTypeByExtension(@NonNls @Nonnull String extension);
 
   /**
-   * Tries to detect whether the file is text or not by analyzing its content.
-   *
-   * @param file to analyze
-   * @return {@link com.intellij.openapi.fileTypes.PlainTextFileType} if file looks like text,
-   * or another file type if some file type detector identified the file
-   * or the {@link UnknownFileType} if file is binary or we are unable to detect.
-   */
-  @Nonnull
-  public abstract FileType detectFileTypeFromContent(@Nonnull VirtualFile file);
-
-  /**
    * Finds a file type with the specified name.
    */
   @Nullable
-  public abstract FileType findFileTypeByName(String fileTypeName);
+  public abstract FileType findFileTypeByName(@Nonnull String fileTypeName);
 
   /**
    * Pluggable file type detector by content
@@ -110,9 +143,25 @@ public abstract class FileTypeRegistry {
     @Nullable
     FileType detect(@Nonnull VirtualFile file, @Nonnull ByteSequence firstBytes, @Nullable CharSequence firstCharsIfText);
 
-    @Nonnegative
-    default int getVersion() {
-      return 0;
+    /**
+     * Returns the file type that this detector is capable of detecting, or null if it can detect
+     * multiple file types.
+     */
+    @Nullable
+    default Collection<? extends FileType> getDetectedFileTypes() {
+      return null;
     }
+
+    /**
+     * Defines how much content is required for this detector to detect file type reliably. At least such amount of bytes
+     * will be passed to {@link #detect(VirtualFile, ByteSequence, CharSequence)} if present.
+     *
+     * @return number of first bytes to be given
+     */
+    default int getDesiredContentPrefixLength() {
+      return 1024;
+    }
+
+    int getVersion();
   }
 }

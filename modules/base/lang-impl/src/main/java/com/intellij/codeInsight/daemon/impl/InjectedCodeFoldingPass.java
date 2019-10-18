@@ -24,7 +24,7 @@ import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class InjectedCodeFoldingPass extends TextEditorHighlightingPass {
   private static final Key<Boolean> THE_FIRST_TIME_KEY = Key.create("FirstInjectedFoldingPass");
@@ -32,14 +32,14 @@ class InjectedCodeFoldingPass extends TextEditorHighlightingPass {
   private final Editor myEditor;
   private final PsiFile myFile;
 
-  InjectedCodeFoldingPass(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
+  InjectedCodeFoldingPass(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     super(project, editor.getDocument(), false);
     myEditor = editor;
     myFile = file;
   }
 
   @Override
-  public void doCollectInformation(@NotNull ProgressIndicator progress) {
+  public void doCollectInformation(@Nonnull ProgressIndicator progress) {
     boolean firstTime = CodeFoldingPass.isFirstTime(myFile, myEditor, THE_FIRST_TIME_KEY);
     Runnable runnable = FoldingUpdate.updateInjectedFoldRegions(myEditor, myFile, firstTime);
     synchronized (this) {

@@ -23,8 +23,8 @@ import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.vfs.VirtualFile;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +45,11 @@ public class LightFileTypeRegistry extends FileTypeRegistry {
   @Override
   public boolean isFileIgnored(@NonNls @Nonnull VirtualFile file) {
     return false;
+  }
+
+  @Override
+  public boolean isFileOfType(@Nonnull VirtualFile file, @Nonnull FileType type) {
+    return file.getFileType() == type;
   }
 
   @Override
@@ -69,7 +74,8 @@ public class LightFileTypeRegistry extends FileTypeRegistry {
   @Override
   public FileType getFileTypeByFileName(@Nonnull @NonNls CharSequence fileName) {
     final String extension = FileUtilRt.getExtension(fileName.toString());
-    return getFileTypeByExtension(extension);  }
+    return getFileTypeByExtension(extension);
+  }
 
   @Nonnull
   @Override
@@ -83,12 +89,6 @@ public class LightFileTypeRegistry extends FileTypeRegistry {
     for (final String ext : extension.split(";")) {
       myExtensionsMap.put(ext, fileType);
     }
-  }
-
-  @Nonnull
-  @Override
-  public FileType detectFileTypeFromContent(@Nonnull VirtualFile file) {
-    return UnknownFileType.INSTANCE;
   }
 
   @Nullable

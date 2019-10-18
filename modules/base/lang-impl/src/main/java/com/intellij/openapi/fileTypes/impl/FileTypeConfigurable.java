@@ -30,7 +30,6 @@ import com.intellij.openapi.ui.DialogBuilder;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.psi.templateLanguages.TemplateDataLanguagePatterns;
@@ -49,8 +48,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author Eugene Belyaev
@@ -133,9 +132,6 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
           myManager.setIgnoredFilesList(myFileTypePanel.myIgnoreFilesField.getText());
         }
         myManager.setPatternsTable(myTempFileTypes, myTempPatternsTable);
-        for (FileNameMatcher matcher : myReassigned.keySet()) {
-          myManager.getRemovedMappings().put(matcher, Pair.create(myReassigned.get(matcher), true));
-        }
 
         TemplateDataLanguagePatterns.getInstance().setAssocTable(myTempTemplateDataLanguages);
       }

@@ -98,6 +98,9 @@
     <extensionPoint name="fileTypeFactory"
                     interface="com.intellij.openapi.fileTypes.FileTypeFactory"/>
 
+    <extensionPoint name="fileType"
+                    beanClass="com.intellij.openapi.fileTypes.impl.FileTypeBean" />
+
     <extensionPoint name="virtualFileSystem" interface="com.intellij.openapi.vfs.VirtualFileSystem"/>
 
     <extensionPoint name="keymapExtension"

@@ -31,11 +31,10 @@ import com.intellij.util.containers.HashSetQueue;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.ide.PooledThreadExecutor;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -60,7 +59,7 @@ public final class DocumentCommitThread implements Runnable, Disposable, Documen
   private CommitTask currentTask; // guarded by lock
   private boolean myEnabled; // true if we can do commits. set to false temporarily during the write action.  guarded by lock
 
-  static DocumentCommitThread getInstance() {
+  public static DocumentCommitThread getInstance() {
     return (DocumentCommitThread)ServiceManager.getService(DocumentCommitProcessor.class);
   }
 
@@ -194,7 +193,7 @@ public final class DocumentCommitThread implements Runnable, Disposable, Documen
   }
 
   @TestOnly
-  void clearQueue() {
+  public void clearQueue() {
     synchronized (lock) {
       cancelAll();
       wakeUpQueue();

@@ -56,7 +56,7 @@ class EncodingFileTreeTable extends AbstractFileTreeTable<Charset> {
         final Charset t = (Charset)value;
         final Object userObject = table.getModel().getValueAt(row, 0);
         final VirtualFile file = userObject instanceof VirtualFile ? (VirtualFile)userObject : null;
-        Pair<Charset, String> check = file == null || file.isDirectory() ? null : EncodingUtil.checkSomeActionEnabled(file);
+        Pair<Charset, String> check = file == null || file.isDirectory() ? null : EncodingUtil.getCharsetAndTheReasonTooltip(file);
         String failReason = check == null ? null : check.second;
         boolean enabled = failReason == null;
 
@@ -157,6 +157,6 @@ class EncodingFileTreeTable extends AbstractFileTreeTable<Charset> {
   @Override
   protected boolean isValueEditableForFile(final VirtualFile virtualFile) {
     return virtualFile == null || virtualFile.isDirectory() ||
-           EncodingUtil.checkSomeActionEnabled(virtualFile) == null;
+           EncodingUtil.getCharsetAndTheReasonTooltip(virtualFile) == null;
   }
 }

@@ -23,8 +23,24 @@ import javax.annotation.Nonnull;
  * @author max
  */
 public interface FileNameMatcher {
-  boolean accept(@NonNls @Nonnull CharSequence fileName);
+  /**
+   * @deprecated use {@link #acceptsCharSequence(CharSequence)}
+   */
+  @Deprecated
+  default boolean accept(@NonNls @Nonnull String fileName) {
+    return acceptsCharSequence(fileName);
+  }
 
-  @NonNls @Nonnull
+  /**
+   * This method must be overridden in specific matchers, it's default only for compatibility reasons.
+   *
+   * @return whether the given file name is accepted by this matcher.
+   */
+  default boolean acceptsCharSequence(@NonNls @Nonnull CharSequence fileName) {
+    return accept(fileName.toString());
+  }
+
+  @NonNls
+  @Nonnull
   String getPresentableString();
 }

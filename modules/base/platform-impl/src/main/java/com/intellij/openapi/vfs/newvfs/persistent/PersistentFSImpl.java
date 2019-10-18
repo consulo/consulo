@@ -221,7 +221,7 @@ public class PersistentFSImpl extends PersistentFS implements Disposable {
     return FSRecords.writeContent(getFileId(file), readOnly);
   }
 
-  private static void writeContent(@Nonnull VirtualFile file, ByteSequence content, boolean readOnly) throws IOException {
+  private static void writeContent(@Nonnull VirtualFile file, ByteArraySequence content, boolean readOnly) throws IOException {
     FSRecords.writeContent(getFileId(file), content, readOnly);
   }
 
@@ -496,7 +496,7 @@ public class PersistentFSImpl extends PersistentFS implements Disposable {
            cacheContent && !application.isInternal() && !application.isUnitTestMode()) &&
           content.length <= PersistentFSConstants.FILE_LENGTH_TO_CACHE_THRESHOLD) {
         synchronized (myInputLock) {
-          writeContent(file, new ByteSequence(content), delegate.isReadOnly());
+          writeContent(file, new ByteArraySequence(content), delegate.isReadOnly());
           setFlag(file, MUST_RELOAD_CONTENT, false);
         }
       }
@@ -570,7 +570,7 @@ public class PersistentFSImpl extends PersistentFS implements Disposable {
   private void storeContentToStorage(long fileLength, @Nonnull VirtualFile file, boolean readOnly, @Nonnull byte[] bytes, int bytesLength) throws IOException {
     synchronized (myInputLock) {
       if (bytesLength == fileLength) {
-        writeContent(file, new ByteSequence(bytes, 0, bytesLength), readOnly);
+        writeContent(file, new ByteArraySequence(bytes, 0, bytesLength), readOnly);
         setFlag(file, MUST_RELOAD_CONTENT, false);
       }
       else {

@@ -18,34 +18,16 @@ package com.intellij.openapi.util.io;
 import javax.annotation.Nonnull;
 
 /**
- * @author Eugene Zhuravlev
- *         Date: 11/23/10
+ * A sequence of bytes.
  */
-public class ByteSequence {
-  private final byte[] myBytes;
-  private final int myOffset;
-  private final int myLen;
+public interface ByteSequence {
+  int length();
 
-  public ByteSequence(@Nonnull byte[] bytes) {
-    this(bytes, 0, bytes.length);
-  }
-  
-  public ByteSequence(@Nonnull byte[] bytes, int offset, int len) {
-    myBytes = bytes;
-    myOffset = offset;
-    myLen = len;
-  }
+  byte byteAt(int index);
 
   @Nonnull
-  public byte[] getBytes() {
-    return myBytes;
-  }
+  ByteSequence subSequence(int start, int end);
 
-  public int getOffset() {
-    return myOffset;
-  }
-
-  public int getLength() {
-    return myLen;
-  }
+  @Nonnull
+  byte[] toBytes();
 }

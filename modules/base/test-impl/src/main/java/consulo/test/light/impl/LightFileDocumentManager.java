@@ -129,7 +129,7 @@ public class LightFileDocumentManager extends FileDocumentManager {
   @Override
   @Nonnull
   public String getLineSeparator(VirtualFile file, Project project) {
-    return LoadTextUtil.getDetectedLineSeparator(file);
+    return "";
   }
 
   @Override

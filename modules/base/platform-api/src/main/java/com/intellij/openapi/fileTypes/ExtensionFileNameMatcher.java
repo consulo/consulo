@@ -34,7 +34,7 @@ public class ExtensionFileNameMatcher implements FileNameMatcher {
   }
 
   @Override
-  public boolean accept(@Nonnull @NonNls CharSequence fileName) {
+  public boolean acceptsCharSequence(@Nonnull @NonNls CharSequence fileName) {
     return StringUtilRt.endsWithIgnoreCase(fileName, myDotExtension);
   }
 

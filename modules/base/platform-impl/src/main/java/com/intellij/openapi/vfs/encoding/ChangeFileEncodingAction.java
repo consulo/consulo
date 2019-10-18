@@ -62,7 +62,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
     Document document = documentManager.getDocument(virtualFile);
     if (document == null) return false;
 
-    return EncodingUtil.checkCanConvert(virtualFile) == null || EncodingUtil.checkCanReload(virtualFile).second == null;
+    return EncodingUtil.checkCanConvert(virtualFile) == null || EncodingUtil.checkCanReload(virtualFile, null) == null;
   }
 
   @RequiredUIAccess
@@ -186,13 +186,13 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
         undo = new Runnable() {
           @Override
           public void run() {
-            EncodingUtil.reloadIn(virtualFile, oldCharset);
+            EncodingUtil.reloadIn(virtualFile, oldCharset, project);
           }
         };
         redo = new Runnable() {
           @Override
           public void run() {
-            EncodingUtil.reloadIn(virtualFile, charset);
+            EncodingUtil.reloadIn(virtualFile, charset, project);
           }
         };
       }

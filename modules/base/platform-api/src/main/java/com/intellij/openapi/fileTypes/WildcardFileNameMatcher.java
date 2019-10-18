@@ -114,7 +114,7 @@ public class WildcardFileNameMatcher implements FileNameMatcher {
   }
 
   @Override
-  public boolean accept(@Nonnull CharSequence fileName) {
+  public boolean acceptsCharSequence(@Nonnull CharSequence fileName) {
     return myMatcher.matches(fileName);
   }
 

@@ -15,10 +15,10 @@
  */
 package com.intellij.util.indexing;
 
-import com.intellij.openapi.util.io.ByteSequence;
+import com.intellij.openapi.util.io.ByteArraySequence;
 import com.intellij.util.io.DataExternalizer;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -27,17 +27,17 @@ import java.io.InputStream;
 /**
  * Created by Maxim.Mossienko on 5/7/2014.
  */
-class ByteSequenceDataExternalizer implements DataExternalizer<ByteSequence> {
+class ByteSequenceDataExternalizer implements DataExternalizer<ByteArraySequence> {
   static final ByteSequenceDataExternalizer INSTANCE = new ByteSequenceDataExternalizer();
   @Override
-  public void save(@Nonnull DataOutput out, ByteSequence value) throws IOException {
+  public void save(@Nonnull DataOutput out, ByteArraySequence value) throws IOException {
     out.write(value.getBytes(), value.getOffset(), value.getLength()); // todo fix double copying
   }
 
   @Override
-  public ByteSequence read(@Nonnull DataInput in) throws IOException {
+  public ByteArraySequence read(@Nonnull DataInput in) throws IOException {
     byte[] buf = new byte[((InputStream)in).available()]; // todo fix double copying
     in.readFully(buf);
-    return new ByteSequence(buf);
+    return new ByteArraySequence(buf);
   }
 }

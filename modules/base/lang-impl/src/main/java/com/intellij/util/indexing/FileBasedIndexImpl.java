@@ -1279,7 +1279,7 @@ public class FileBasedIndexImpl extends FileBasedIndex implements Disposable {
           newFc = previousContent;
         }
         else {
-          newFc = new FileContentImpl(vFile, contentText, vFile.getCharset(), currentDocStamp);
+          newFc = new FileContentImpl(vFile, contentText, currentDocStamp);
           document.putUserData(ourFileContentKey, new WeakReference<>(newFc));
         }
 

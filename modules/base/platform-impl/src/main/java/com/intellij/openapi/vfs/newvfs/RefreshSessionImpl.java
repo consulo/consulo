@@ -20,7 +20,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.TransactionId;
 import com.intellij.openapi.application.WriteAction;
-import consulo.logging.Logger;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
@@ -30,9 +29,10 @@ import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.openapi.vfs.newvfs.persistent.RefreshWorker;
 import com.intellij.util.concurrency.Semaphore;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -68,8 +68,7 @@ public class RefreshSessionImpl extends RefreshSession {
   }
 
   private Throwable rememberStartTrace() {
-    if (ApplicationManager.getApplication().isUnitTestMode() &&
-        (myIsAsync || !ApplicationManager.getApplication().isDispatchThread())) {
+    if (ApplicationManager.getApplication().isUnitTestMode() && (myIsAsync || !ApplicationManager.getApplication().isDispatchThread())) {
       return new Throwable();
     }
     return null;
@@ -91,15 +90,24 @@ public class RefreshSessionImpl extends RefreshSession {
       if (file == null) {
         LOG.error("null passed among " + files);
       }
-      else {
+
+      if (file instanceof NewVirtualFile) {
         myWorkQueue.add(file);
+      }
+      else {
+        LOG.debug("skipped: " + file + " / " + file.getClass());
       }
     }
   }
 
   @Override
   public void addFile(@Nonnull VirtualFile file) {
-    myWorkQueue.add(file);
+    if (file instanceof NewVirtualFile) {
+      myWorkQueue.add(file);
+    }
+    else {
+      LOG.debug("skipped: " + file + " / " + file.getClass());
+    }
   }
 
   @Override
@@ -131,7 +139,8 @@ public class RefreshSessionImpl extends RefreshSession {
       }
 
       int count = 0;
-      refresh: do {
+      refresh:
+      do {
         if (LOG.isTraceEnabled()) LOG.trace("try=" + count);
 
         for (VirtualFile file : workQueue) {

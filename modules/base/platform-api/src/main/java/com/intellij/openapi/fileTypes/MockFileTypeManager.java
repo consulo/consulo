@@ -24,16 +24,13 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
 
 class MockFileTypeManager extends FileTypeManager {
-  @Override
-  public void registerFileType(@Nonnull FileType type, @Nonnull List<FileNameMatcher> defaultAssociations) {
-    throw new UnsupportedOperationException();
-  }
 
   @Nonnull
   @Override
@@ -66,12 +63,17 @@ class MockFileTypeManager extends FileTypeManager {
   }
 
   @Override
-  public boolean isFileIgnored(@NonNls @Nonnull CharSequence name) {
+  public boolean isFileIgnored(@NonNls @Nonnull VirtualFile file) {
     return false;
   }
 
   @Override
-  public boolean isFileIgnored(@NonNls @Nonnull VirtualFile file) {
+  public void registerFileType(@Nonnull FileType type, @Nonnull List<? extends FileNameMatcher> defaultAssociations) {
+
+  }
+
+  @Override
+  public boolean isFileIgnored(@NonNls @Nonnull String name) {
     return false;
   }
 
@@ -131,12 +133,6 @@ class MockFileTypeManager extends FileTypeManager {
 
   public boolean isFileOfType(VirtualFile file, FileType type) {
     return false;
-  }
-
-  @Nonnull
-  @Override
-  public FileType detectFileTypeFromContent(@Nonnull VirtualFile file) {
-    return UnknownFileType.INSTANCE;
   }
 
   @Nullable
