@@ -73,9 +73,11 @@ public class Patches {
 
   /**
    * XToolkit.getScreenInsets() may be very slow.
-   * See https://bugs.openjdk.java.net/browse/JDK-8004103.
+   * See https://bugs.openjdk.java.net/browse/JDK-8170937.
    */
-  public static final boolean JDK_BUG_ID_8004103 = SystemInfo.isXWindow && !GraphicsEnvironment.isHeadless() && SystemInfo.isJavaVersionAtLeast(7, 0, 0);
+  public static boolean isJdkBugId8004103() {
+    return SystemInfo.isXWindow && !GraphicsEnvironment.isHeadless();
+  }
 
   /**
    * No BindException when another program is using the port.

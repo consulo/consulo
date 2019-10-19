@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2014 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui;
 
 import com.intellij.Patches;
@@ -27,18 +13,15 @@ import java.awt.*;
 import java.awt.geom.Area;
 import java.util.Map;
 
-/**
- * @author kir
- * @author Konstantin Bulenkov
- */
-public class ScreenUtil {
+public final class ScreenUtil {
   public static final String DISPOSE_TEMPORARY = "dispose.temporary";
 
-  @Nullable private static final Map<GraphicsConfiguration, Pair<Insets, Long>> ourInsetsCache =
-          Patches.JDK_BUG_ID_8004103 ? ContainerUtil.createWeakMap() : null;
+  @Nullable
+  private static final Map<GraphicsConfiguration, Pair<Insets, Long>> ourInsetsCache = Patches.isJdkBugId8004103() ? ContainerUtil.createWeakMap() : null;
   private static final int ourInsetsTimeout = 5000;  // shouldn't be too long
 
-  private ScreenUtil() { }
+  private ScreenUtil() {
+  }
 
   public static boolean isVisible(@Nonnull Point location) {
     return getScreenRectangle(location).contains(location);
@@ -127,6 +110,10 @@ public class ScreenUtil {
     return new Rectangle(minX, minY, maxX - minX, maxY - minY);
   }
 
+  public static Rectangle getScreenRectangle(@Nonnull Point p) {
+    return getScreenRectangle(p.x, p.y);
+  }
+
   public static Rectangle getScreenRectangle(@Nonnull Component component) {
     GraphicsConfiguration configuration = component.getGraphicsConfiguration();
     if (configuration != null) return getScreenRectangle(configuration);
@@ -134,10 +121,6 @@ public class ScreenUtil {
     Point p = new Point();
     SwingUtilities.convertPointToScreen(p, component);
     return getScreenRectangle(p);
-  }
-
-  public static Rectangle getScreenRectangle(@Nonnull Point p) {
-    return getScreenRectangle(p.x, p.y);
   }
 
   /**
@@ -295,7 +278,7 @@ public class ScreenUtil {
    * @return a normalized value
    */
   private static int normalize(int value, int min, int max) {
-    return value < min ? min : value > max ? max : value;
+    return value < min ? min : Math.min(value, max);
   }
 
   /**
@@ -311,13 +294,6 @@ public class ScreenUtil {
     x -= normalize(x, bounds.x, bounds.x + bounds.width);
     y -= normalize(y, bounds.y, bounds.y + bounds.height);
     return x * x + y * y;
-  }
-
-  public static boolean isOutsideOnTheRightOFScreen(Rectangle rect) {
-    final int screenX = rect.x;
-    final int screenY = rect.y;
-    Rectangle screen = getScreenRectangle(screenX, screenY);
-    return rect.getMaxX() > screen.getMaxX();
   }
 
   public static void moveRectangleToFitTheScreen(Rectangle aRectangle) {
@@ -435,7 +411,6 @@ public class ScreenUtil {
         distance = d;
       }
     }
-    assert best != null;
     return best;
   }
 
@@ -462,10 +437,9 @@ public class ScreenUtil {
   }
 
   /**
-   *
    * @param prevLocation - previous location on screen
-   * @param location - current location on screen
-   * @param bounds - area to check if location shifted towards or not. Also in screen coordinates
+   * @param location     - current location on screen
+   * @param bounds       - area to check if location shifted towards or not. Also in screen coordinates
    * @return true if movement from prevLocation to location is towards specified rectangular area
    */
   public static boolean isMovementTowards(final Point prevLocation, final Point location, final Rectangle bounds) {
@@ -486,15 +460,13 @@ public class ScreenUtil {
     // Check if the mouse goes out of the control.
     if (dx > 0 && bounds.x >= prevLocation.x) return false;
     if (dx < 0 && bounds.x + bounds.width <= prevLocation.x) return false;
-    if (dy > 0 && bounds.y + bounds.height >= prevLocation.y) return false;
-    if (dy < 0 && bounds.y <= prevLocation.y) return false;
+    if (dy < 0 && bounds.y + bounds.height <= prevLocation.y) return false;
+    if (dy > 0 && bounds.y >= prevLocation.y) return false;
     if (dx == 0) {
-      return (location.x >= bounds.x && location.x < bounds.x + bounds.width)
-             && (dy > 0 ^ bounds.y > location.y);
+      return (location.x >= bounds.x && location.x < bounds.x + bounds.width) && (dy > 0 ^ bounds.y > location.y);
     }
     if (dy == 0) {
-      return (location.y >= bounds.y && location.y < bounds.y + bounds.height)
-             && (dx > 0 ^ bounds.x > location.x);
+      return (location.y >= bounds.y && location.y < bounds.y + bounds.height) && (dx > 0 ^ bounds.x > location.x);
     }
 
 
@@ -521,5 +493,9 @@ public class ScreenUtil {
     if (crossX >= bounds.x && crossX < bounds.x + bounds.width) return true;
 
     return false;
+  }
+
+  public static boolean intersectsVisibleScreen(Window window) {
+    return window.getGraphicsConfiguration().getBounds().intersects(window.getBounds());
   }
 }
