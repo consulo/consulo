@@ -16,15 +16,11 @@
 package consulo.wm.impl.status;
 
 import com.intellij.ProjectTopics;
-import com.intellij.icons.AllIcons;
-import com.intellij.ide.DataManager;
-import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.actionSystem.ActionGroup;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
@@ -33,60 +29,54 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.CustomStatusBarWidget;
 import com.intellij.openapi.wm.StatusBar;
-import com.intellij.openapi.wm.impl.status.EditorBasedWidget;
-import com.intellij.openapi.wm.impl.status.TextPanel;
-import com.intellij.ui.ClickListener;
-import com.intellij.ui.awt.RelativePoint;
+import com.intellij.openapi.wm.StatusBarWidget;
+import com.intellij.openapi.wm.impl.status.EditorBasedStatusBarPopup;
 import com.intellij.util.ListWithSelection;
-import com.intellij.util.ui.UIUtil;
 import consulo.roots.ModuleRootLayer;
 import consulo.roots.ModuleRootLayerListener;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 30.07.14
  */
-public class ModuleLayerWidget extends EditorBasedWidget implements CustomStatusBarWidget {
-  @Nonnull
-  private final TextPanel myComponent;
-
-  private boolean myActionEnabled;
-
+public class ModuleLayerWidget extends EditorBasedStatusBarPopup implements CustomStatusBarWidget {
   public ModuleLayerWidget(@Nonnull Project project) {
-    super(project);
+    super(project, false);
+  }
 
-    myComponent = new TextPanel() {
-      @Override
-      protected void paintComponent(@Nonnull final Graphics g) {
-        super.paintComponent(g);
-        if (myActionEnabled && getText() != null) {
-          final Rectangle r = getBounds();
-          final Insets insets = getInsets();
-          AllIcons.Ide.Statusbar_arrows.paintIcon(this, g, r.width - insets.right - AllIcons.Ide.Statusbar_arrows.getIconWidth() - 2, r.height / 2 - AllIcons.Ide.Statusbar_arrows.getIconHeight() / 2);
-        }
-      }
-    };
+  @Nonnull
+  @Override
+  protected WidgetState getWidgetState(@Nullable VirtualFile file) {
+    if (file == null) {
+      return WidgetState.HIDDEN;
+    }
 
-    new ClickListener() {
-      @Override
-      public boolean onClick(MouseEvent e, int clickCount) {
-        update();
-        showPopup(e);
-        return true;
-      }
-    }.installOn(myComponent);
-    myComponent.setBorder(WidgetBorder.INSTANCE);
+    Module module = ModuleUtilCore.findModuleForFile(file, getProject());
+    if (module == null) {
+      return WidgetState.HIDDEN;
+    }
+    ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+    Map<String, ModuleRootLayer> layers = moduleRootManager.getLayers();
+    if (layers.size() == 1) {
+      return WidgetState.HIDDEN;
+    }
+
+    String currentLayerName = moduleRootManager.getCurrentLayerName();
+    return new WidgetState("Module Layer: " + currentLayerName, currentLayerName, true);
+  }
+
+  @Nonnull
+  @Override
+  protected StatusBarWidget createInstance(@Nonnull Project project) {
+    return new ModuleLayerWidget(project);
   }
 
   @Override
@@ -111,12 +101,10 @@ public class ModuleLayerWidget extends EditorBasedWidget implements CustomStatus
     });
   }
 
-  private void showPopup(MouseEvent e) {
-    if (!myActionEnabled) {
-      return;
-    }
-    DataContext dataContext = getContext();
-    DefaultActionGroup actionGroup = new DefaultActionGroup();
+  @Nullable
+  @Override
+  protected ListPopup createPopup(DataContext context) {
+    ActionGroup.Builder builder = ActionGroup.newImmutableBuilder();
 
     ListWithSelection<String> profiles = getLayers();
     assert profiles != null;
@@ -125,10 +113,11 @@ public class ModuleLayerWidget extends EditorBasedWidget implements CustomStatus
         continue;
       }
 
-      actionGroup.add(new AnAction(profile) {
+      builder.add(new AnAction(profile) {
+        @RequiredUIAccess
         @Override
-        public void actionPerformed(AnActionEvent anActionEvent) {
-          Project project = getProject();
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+          Project project = e.getProject();
           VirtualFile selectedFile = getSelectedFile();
           if (selectedFile == null || project == null) {
             return;
@@ -140,24 +129,12 @@ public class ModuleLayerWidget extends EditorBasedWidget implements CustomStatus
 
           ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(moduleForFile).getModifiableModel();
           modifiableModel.setCurrentLayer(profile);
-          WriteAction.run(() -> modifiableModel.commit());
+          WriteAction.run(modifiableModel::commit);
         }
       });
     }
 
-    ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup("Module layer", actionGroup, dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
-    Dimension dimension = popup.getContent().getPreferredSize();
-    Point at = new Point(0, -dimension.height);
-    popup.show(new RelativePoint(e.getComponent(), at));
-    Disposer.register(this, popup); // destroy popup on unexpected project close
-  }
-
-  @Nonnull
-  private DataContext getContext() {
-    Editor editor = getEditor();
-    DataContext parent = DataManager.getInstance().getDataContext((Component)myStatusBar);
-    return SimpleDataContext.getSimpleContext(PlatformDataKeys.VIRTUAL_FILE_ARRAY, new VirtualFile[]{getSelectedFile()}, SimpleDataContext
-            .getSimpleContext(CommonDataKeys.PROJECT, getProject(), SimpleDataContext.getSimpleContext(PlatformDataKeys.CONTEXT_COMPONENT, editor == null ? null : editor.getComponent(), parent)));
+    return JBPopupFactory.getInstance().createActionGroupPopup("Module Layer", builder.build(), context, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
   }
 
   @Nullable
@@ -165,7 +142,7 @@ public class ModuleLayerWidget extends EditorBasedWidget implements CustomStatus
     VirtualFile file = getSelectedFile();
     Project project = getProject();
 
-    Module moduleForFile = file == null || project == null ? null : ModuleUtilCore.findModuleForFile(file, project);
+    Module moduleForFile = file == null ? null : ModuleUtilCore.findModuleForFile(file, project);
     if (moduleForFile == null) {
       return null;
     }
@@ -177,84 +154,12 @@ public class ModuleLayerWidget extends EditorBasedWidget implements CustomStatus
     }
     String currentLayerName = moduleRootManager.getCurrentLayerName();
 
-    return new ListWithSelection<String>(layers.keySet(), currentLayerName);
-  }
-
-  private void update() {
-    UIUtil.invokeLaterIfNeeded(new Runnable() {
-      @Override
-      public void run() {
-        myActionEnabled = false;
-
-        String toolTipText = null;
-        String panelText = null;
-
-        ListWithSelection<String> profiles = getLayers();
-        if (profiles != null) {
-          myActionEnabled = true;
-
-          toolTipText = "Module Layer: " + profiles.getSelection();
-          panelText = profiles.getSelection();
-          myComponent.setVisible(true);
-        }
-
-        myActionEnabled = profiles != null;
-        myComponent.setVisible(profiles != null);
-
-        myComponent.resetColor();
-
-        String toDoComment;
-
-        if (myActionEnabled) {
-          toDoComment = "Click to change";
-          myComponent.setForeground(UIUtil.getActiveTextColor());
-          myComponent.setTextAlignment(Component.LEFT_ALIGNMENT);
-        }
-        else {
-          toDoComment = "";
-          myComponent.setForeground(UIUtil.getInactiveTextColor());
-          myComponent.setTextAlignment(Component.CENTER_ALIGNMENT);
-        }
-
-        myComponent.setToolTipText(String.format("%s%n%s", toolTipText, toDoComment));
-        myComponent.setText(panelText);
-
-
-        if (myStatusBar != null) {
-          myStatusBar.updateWidget(ID());
-        }
-      }
-    });
-  }
-
-
-  @Override
-  public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
-      return;
-    }
-    update();
-  }
-
-  @Override
-  public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
-    update();
+    return new ListWithSelection<>(layers.keySet(), currentLayerName);
   }
 
   @Nonnull
   @Override
   public String ID() {
     return "ModuleLayerWidget";
-  }
-
-  @Nullable
-  @Override
-  public WidgetPresentation getPresentation() {
-    return null;
-  }
-
-  @Override
-  public JComponent getComponent() {
-    return myComponent;
   }
 }
