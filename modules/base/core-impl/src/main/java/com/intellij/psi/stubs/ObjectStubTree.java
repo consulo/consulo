@@ -16,7 +16,10 @@
 package com.intellij.psi.stubs;
 
 import com.intellij.openapi.util.Key;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.Function;
 import gnu.trove.THashMap;
+import gnu.trove.TObjectHashingStrategy;
 import gnu.trove.TObjectObjectProcedure;
 import gnu.trove.TObjectProcedure;
 import javax.annotation.Nonnull;
@@ -28,18 +31,16 @@ import java.util.Map;
 
 /**
  * @author Dmitry Avdeev
- *         Date: 8/3/12
  */
 public class ObjectStubTree<T extends Stub> {
-  protected static final Key<ObjectStubTree> STUB_TO_TREE_REFERENCE = Key.create("stub to tree reference");
-  public static final Key<Integer> LAST_STUB_TREE_HASH = Key.create("LAST_STUB_TREE_HASH");
+  private static final Key<ObjectStubTree> STUB_TO_TREE_REFERENCE = Key.create("stub to tree reference");
   protected final ObjectStubBase myRoot;
   private String myDebugInfo;
-  protected final List<T> myPlainList = new ArrayList<>();
+  private final List<T> myPlainList;
 
   public ObjectStubTree(@Nonnull final ObjectStubBase root, final boolean withBackReference) {
     myRoot = root;
-    enumerateStubs(root, (List<Stub>)myPlainList);
+    myPlainList = enumerateStubs(root);
     if (withBackReference) {
       myRoot.putUserData(STUB_TO_TREE_REFERENCE, this); // This will prevent soft references to stub tree to be collected before all of the stubs are collected.
     }
@@ -56,13 +57,19 @@ public class ObjectStubTree<T extends Stub> {
   }
 
   @Nonnull
-  public List<T> getPlainListFromAllRoots() {
+  List<T> getPlainListFromAllRoots() {
     return getPlainList();
   }
 
+  @Deprecated
   @Nonnull
   public Map<StubIndexKey, Map<Object, int[]>> indexStubTree() {
-    StubIndexSink sink = new StubIndexSink();
+    return indexStubTree(key -> TObjectHashingStrategy.CANONICAL);
+  }
+
+  @Nonnull
+  public Map<StubIndexKey, Map<Object, int[]>> indexStubTree(@Nonnull Function<StubIndexKey<?, ?>, TObjectHashingStrategy<?>> keyHashingStrategyFunction) {
+    StubIndexSink sink = new StubIndexSink(keyHashingStrategyFunction);
     final List<T> plainList = getPlainListFromAllRoots();
     for (int i = 0, plainListSize = plainList.size(); i < plainListSize; i++) {
       final Stub stub = plainList.get(i);
@@ -73,18 +80,26 @@ public class ObjectStubTree<T extends Stub> {
     return sink.getResult();
   }
 
-  private static void enumerateStubs(@Nonnull Stub root, @Nonnull List<Stub> result) {
+  @Nonnull
+  protected List<T> enumerateStubs(@Nonnull Stub root) {
+    List<T> result = new ArrayList<>();
+    //noinspection unchecked
+    enumerateStubsInto(root, (List)result);
+    return result;
+  }
+
+  private static void enumerateStubsInto(@Nonnull Stub root, @Nonnull List<? super Stub> result) {
     ((ObjectStubBase)root).id = result.size();
     result.add(root);
     List<? extends Stub> childrenStubs = root.getChildrenStubs();
     //noinspection ForLoopReplaceableByForEach
     for (int i = 0; i < childrenStubs.size(); i++) {
       Stub child = childrenStubs.get(i);
-      enumerateStubs(child, result);
+      enumerateStubsInto(child, result);
     }
   }
 
-  public void setDebugInfo(String info) {
+  public void setDebugInfo(@Nonnull String info) {
     ObjectStubTree ref = getStubTree(myRoot);
     if (ref != null) {
       assert ref == this;
@@ -107,41 +122,45 @@ public class ObjectStubTree<T extends Stub> {
     return getClass().getSimpleName() + "{myDebugInfo='" + myDebugInfo + '\'' + ", myRoot=" + myRoot + '}' + hashCode();
   }
 
-  private static class StubIndexSink implements IndexSink, TObjectProcedure<Map<Object, int[]>>, TObjectObjectProcedure<Object,int[]> {
+  private static class StubIndexSink implements IndexSink, TObjectProcedure<Map<Object, int[]>>, TObjectObjectProcedure<Object, int[]> {
     private final THashMap<StubIndexKey, Map<Object, int[]>> myResult = new THashMap<>();
+    private final Function<StubIndexKey<?, ?>, TObjectHashingStrategy<?>> myHashingStrategyFunction;
     private int myStubIdx;
     private Map<Object, int[]> myProcessingMap;
+
+    private StubIndexSink(@Nonnull Function<StubIndexKey<?, ?>, TObjectHashingStrategy<?>> hashingStrategyFunction) {
+      myHashingStrategyFunction = hashingStrategyFunction;
+    }
 
     @Override
     public void occurrence(@Nonnull final StubIndexKey indexKey, @Nonnull final Object value) {
       Map<Object, int[]> map = myResult.get(indexKey);
       if (map == null) {
-        map = new THashMap<>();
+        map = new THashMap<>((TObjectHashingStrategy<Object>)myHashingStrategyFunction.fun(indexKey));
         myResult.put(indexKey, map);
       }
 
       int[] list = map.get(value);
       if (list == null) {
-        map.put(value, new int[] {myStubIdx});
-      } else {
-        int lastZero;
-        for(lastZero = list.length - 1; lastZero >=0 && list[lastZero] == 0; --lastZero);
-        if (lastZero >= 0 && list[lastZero] == myStubIdx) {
+        map.put(value, new int[]{myStubIdx});
+      }
+      else {
+        int lastNonZero = ArrayUtil.lastIndexOfNot(list, 0);
+        if (lastNonZero >= 0 && list[lastNonZero] == myStubIdx) {
           // second and subsequent occurrence calls for the same value are no op
           return;
         }
-        ++lastZero;
+        int lastZero = lastNonZero + 1;
 
         if (lastZero == list.length) {
-          int[] newlist = new int[Math.max(4, list.length << 1)];
-          System.arraycopy(list, 0, newlist, 0, list.length);
-          lastZero = list.length;
-          map.put(value, list = newlist);
+          list = ArrayUtil.realloc(list, Math.max(4, list.length << 1));
+          map.put(value, list);
         }
         list[lastZero] = myStubIdx;
       }
     }
 
+    @Nonnull
     public Map<StubIndexKey, Map<Object, int[]>> getResult() {
       myResult.forEachValue(this);
       return myResult;
@@ -157,11 +176,9 @@ public class ObjectStubTree<T extends Stub> {
     @Override
     public boolean execute(Object a, int[] b) {
       if (b.length == 1) return true;
-      int firstZero;
-      for(firstZero = 0; firstZero < b.length && b[firstZero] != 0; ++firstZero);
-      if (firstZero != b.length) {
-        int[] shorterList = new int[firstZero];
-        System.arraycopy(b, 0, shorterList, 0, shorterList.length);
+      int firstZero = ArrayUtil.indexOf(b, 0);
+      if (firstZero != -1) {
+        int[] shorterList = ArrayUtil.realloc(b, firstZero);
         myProcessingMap.put(a, shorterList);
       }
       return true;

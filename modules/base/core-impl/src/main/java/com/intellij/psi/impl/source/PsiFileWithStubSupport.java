@@ -19,17 +19,16 @@
  */
 package com.intellij.psi.impl.source;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubTree;
-import consulo.annotations.RequiredReadAction;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * A base interface for PSI files that may contain not only text-based syntactic trees as their content,
  * but also a more lightweight representation called stubs.
+ *
  * @see com.intellij.extapi.psi.StubBasedPsiElementBase
  */
 public interface PsiFileWithStubSupport extends PsiFile {
@@ -38,13 +37,17 @@ public interface PsiFileWithStubSupport extends PsiFile {
    * (e.g. by calling {@link PsiElement#getNode()} or {@link PsiElement#getText()}.
    */
   @Nullable
-  @RequiredReadAction
   StubTree getStubTree();
 
   /**
-   * Loads the AST for this file and returns the node which corresponds to the given stub
+   * @return StubbedSpine for accessing stubbed PSI, which can be backed up by stubs or AST
    */
-  @Nullable
-  @RequiredReadAction
-  ASTNode findTreeForStub(StubTree tree, StubElement<?> stub);
+  @Nonnull
+  default StubbedSpine getStubbedSpine() {
+    StubTree tree = getStubTree();
+    if (tree == null) {
+      throw new UnsupportedOperationException("Please implement getStubbedSpine method");
+    }
+    return tree.getSpine();
+  }
 }

@@ -60,9 +60,8 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
     try {
       byte[] content = vFile.contentsToByteArray();
       vFile.setPreloadedContentHint(content);
-      final FileContent fc;
       try {
-        fc = new FileContentImpl(vFile, content);
+        final FileContent fc = new FileContentImpl(vFile, content);
         fc.putUserData(IndexingDataKeys.PROJECT, project);
         if (psiFile != null && !vFile.getFileType().isBinary()) {
           fc.putUserData(IndexingDataKeys.FILE_TEXT_CONTENT_KEY, psiFile.getViewProvider().getContents());
@@ -70,8 +69,8 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
         }
 
         Stub element = RecursionManager.doPreventingRecursion(vFile, false, () -> StubTreeBuilder.buildStubTree(fc));
-        if (element instanceof PsiFileStub) {
-          StubTree tree = new StubTree((PsiFileStub)element);
+        ObjectStubTree tree = element instanceof PsiFileStub ? new StubTree((PsiFileStub)element) : element instanceof ObjectStubBase ? new ObjectStubTree((ObjectStubBase)element, true) : null;
+        if (tree != null) {
           tree.setDebugInfo("created from file content");
           return tree;
         }
@@ -81,7 +80,13 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
       }
     }
     catch (IOException e) {
-      LOG.info(e); // content can be not cached yet, and the file can be deleted on disk already, without refresh
+      if (LOG.isDebugEnabled()) {
+        LOG.debug(e);
+      }
+      else {
+        // content can be not cached yet, and the file can be deleted on disk already, without refresh
+        LOG.info("Can't load file content for stub building: " + e.getMessage());
+      }
     }
 
     return null;

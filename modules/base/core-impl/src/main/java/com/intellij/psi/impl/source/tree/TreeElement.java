@@ -22,14 +22,18 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectCoreUtil;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.UserDataHolderBase;
+import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.testFramework.ReadOnlyLightVirtualFile;
 import com.intellij.util.CharTable;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -409,6 +413,18 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
   @Nonnull
   public IElementType getElementType() {
     return myType;
+  }
+
+  void assertReadAccessAllowed() {
+    if (ApplicationManager.getApplication().isReadAccessAllowed()) return;
+    FileElement fileElement = TreeUtil.getFileElement(this);
+    PsiElement psi = fileElement == null ? null : fileElement.getCachedPsi();
+    if (psi == null) return;
+    FileViewProvider provider = psi instanceof PsiFile ? ((PsiFile)psi).getViewProvider() : null;
+    boolean ok = provider != null && provider.getVirtualFile() instanceof ReadOnlyLightVirtualFile;
+    if (!ok) {
+      ApplicationManager.getApplication().assertReadAccessAllowed();
+    }
   }
 }
 

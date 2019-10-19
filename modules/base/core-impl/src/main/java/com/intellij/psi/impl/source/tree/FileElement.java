@@ -18,20 +18,29 @@ package com.intellij.psi.impl.source.tree;
 
 import com.intellij.lang.*;
 import com.intellij.openapi.util.Getter;
+import com.intellij.openapi.util.RecursionManager;
+import com.intellij.openapi.util.StackOverflowPreventedException;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.StubBuilder;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.source.CharTableImpl;
 import com.intellij.psi.impl.source.PsiFileImpl;
+import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.ILightStubFileElementType;
+import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.util.CharTable;
 import consulo.annotations.RequiredReadAction;
 import javax.annotation.Nonnull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileElement extends LazyParseableElement implements FileASTNode, Getter<FileElement> {
   public static final FileElement[] EMPTY_ARRAY = new FileElement[0];
   private volatile CharTable myCharTable = new CharTableImpl();
   private volatile boolean myDetached;
+  private volatile AstSpine myStubbedSpine;
 
   @RequiredReadAction
   @Override
@@ -83,6 +92,12 @@ public class FileElement extends LazyParseableElement implements FileASTNode, Ge
     return psiElementCopy.getTreeElement();
   }
 
+  @Override
+  protected void clearPsi() {
+    super.clearPsi();
+    myStubbedSpine = null;
+  }
+
   public void setCharTable(@Nonnull CharTable table) {
     myCharTable = table;
   }
@@ -90,5 +105,45 @@ public class FileElement extends LazyParseableElement implements FileASTNode, Ge
   @Override
   public FileElement get() {
     return this;
+  }
+
+  @Nonnull
+  public final AstSpine getStubbedSpine() {
+    AstSpine result = myStubbedSpine;
+    if (result == null) {
+      PsiFileImpl file = (PsiFileImpl)getPsi();
+      IStubFileElementType type = file.getElementTypeForStubBuilder();
+      if (type == null) return AstSpine.EMPTY_SPINE;
+
+      result = RecursionManager.doPreventingRecursion(file, false, () -> new AstSpine(calcStubbedDescendants(type.getBuilder())));
+      if (result == null) {
+        throw new StackOverflowPreventedException("Endless recursion prevented");
+      }
+      myStubbedSpine = result;
+    }
+    return result;
+  }
+
+  private List<CompositeElement> calcStubbedDescendants(StubBuilder builder) {
+    List<CompositeElement> result = new ArrayList<>();
+    result.add(this);
+
+    acceptTree(new RecursiveTreeElementWalkingVisitor() {
+      @Override
+      public void visitComposite(CompositeElement node) {
+        CompositeElement parent = node.getTreeParent();
+        if (parent != null && builder.skipChildProcessingWhenBuildingStubs(parent, node)) {
+          return;
+        }
+
+        IElementType type = node.getElementType();
+        if (type instanceof IStubElementType && ((IStubElementType)type).shouldCreateStub(node)) {
+          result.add(node);
+        }
+
+        super.visitNode(node);
+      }
+    });
+    return result;
   }
 }

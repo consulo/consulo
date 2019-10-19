@@ -333,7 +333,7 @@ public class StubIndexImpl extends StubIndex implements PersistentStateComponent
         if (file == null || scope != null && !scope.contains(file)) {
           return true;
         }
-        return myStubProcessingHelper.processStubsInFile(project, file, value, processor, requiredClass);
+        return myStubProcessingHelper.processStubsInFile(project, file, value, processor, scope, requiredClass);
       }
     });
   }

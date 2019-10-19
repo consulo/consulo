@@ -19,10 +19,8 @@
  */
 package com.intellij.psi.impl.source.tree;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.LogUtil;
-import consulo.logging.Logger;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.StaticGetter;
 import com.intellij.psi.impl.DebugUtil;
@@ -31,10 +29,12 @@ import com.intellij.psi.tree.ILazyParseableElementTypeBase;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.ImmutableCharSequence;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.TestOnly;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.TestOnly;
 
 public class LazyParseableElement extends CompositeElement {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.tree.LazyParseableElement");
@@ -174,58 +174,64 @@ public class LazyParseableElement extends CompositeElement {
     if (!ourParsingAllowed) {
       LOG.error("Parsing not allowed!!!");
     }
+    if (myParsed) return;
+
     CharSequence text;
     synchronized (lock) {
       if (myParsed) return;
+
       text = myText.get();
       assert text != null;
-    }
 
-    if (TreeUtil.getFileElement(this) == null) {
-      LOG.error("Chameleons must not be parsed till they're in file tree: " + this);
-    }
-
-    ApplicationManager.getApplication().assertReadAccessAllowed();
-
-    DebugUtil.startPsiModification("lazy-parsing");
-    try {
-      ILazyParseableElementTypeBase type = (ILazyParseableElementTypeBase)getElementType();
-      ASTNode parsedNode = type.parseContents(this);
-
-      if (parsedNode == null && text.length() > 0) {
-        CharSequence diagText = ApplicationManager.getApplication().isInternal() ? text : "";
-        LOG.error("No parse for a non-empty string: " + diagText + "; type=" + LogUtil.objectAndClass(type));
+      FileElement fileElement = TreeUtil.getFileElement(this);
+      if (fileElement == null) {
+        LOG.error("Chameleons must not be parsed till they're in file tree: " + this);
+      }
+      else {
+        fileElement.assertReadAccessAllowed();
       }
 
-      synchronized (lock) {
-        if (myParsed) return;
-        if (rawFirstChild() != null) {
-          LOG.error("Reentrant parsing?");
+      if (rawFirstChild() != null) {
+        LOG.error("Reentrant parsing?");
+      }
+
+      DebugUtil.performPsiModification("lazy-parsing", () -> {
+        TreeElement parsedNode = (TreeElement)((ILazyParseableElementTypeBase)getElementType()).parseContents(this);
+        assertTextLengthIntact(text, parsedNode);
+
+        if (parsedNode != null) {
+          setChildren(parsedNode);
         }
 
         myParsed = true;
-
-        if (parsedNode != null) {
-          super.rawAddChildrenWithoutNotifications((TreeElement)parsedNode);
-        }
-
-        AstPath.cacheNodePaths(this);
-
-        assertTextLengthIntact(text.length());
         myText = new SoftReference<>(text);
-      }
-    }
-    finally {
-      DebugUtil.finishPsiModification();
+      });
     }
   }
 
-  private void assertTextLengthIntact(int expected) {
+  private void setChildren(@Nonnull TreeElement parsedNode) {
+    ProgressManager.getInstance().executeNonCancelableSection(() -> {
+      try {
+        TreeElement last = rawSetParents(parsedNode, this);
+        super.setFirstChildNode(parsedNode);
+        super.setLastChildNode(last);
+      }
+      catch (Throwable e) {
+        LOG.error("Chameleon expansion may not be interrupted by exceptions", e);
+      }
+    });
+  }
+
+  private void assertTextLengthIntact(CharSequence text, TreeElement child) {
     int length = 0;
-    for (ASTNode node : getChildren(null)) {
-      length += node.getTextLength();
+    while (child != null) {
+      length += child.getTextLength();
+      child = child.getTreeNext();
     }
-    assert length == expected : "Text mismatch in " + getElementType();
+    if (length != text.length()) {
+      LOG.error("Text mismatch in " + LogUtil.objectAndClass(getElementType())/*, PluginException.createByClass("Text mismatch", null, getElementType().getClass()),
+                new Attachment("code.txt", text.toString())*/);
+    }
   }
 
   @Override

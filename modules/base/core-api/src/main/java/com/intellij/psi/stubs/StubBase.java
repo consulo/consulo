@@ -26,17 +26,14 @@ import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.ArrayFactory;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtil;
-import com.intellij.util.SmartList;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.util.Collections;
 import java.util.List;
 
 public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<StubElement> implements StubElement<T> {
-  private List<StubElement> myChildren;
-  private final IStubElementType myElementType;
+  StubList myStubList;
   private volatile T myPsi;
 
   private static final AtomicFieldUpdater<StubBase, PsiElement> ourPsiUpdater = AtomicFieldUpdater.forFieldOfType(StubBase.class, PsiElement.class);
@@ -44,11 +41,8 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
   @SuppressWarnings("unchecked")
   protected StubBase(final StubElement parent, final IStubElementType elementType) {
     super(parent);
-    myElementType = elementType;
-    if (parent != null) {
-      if (((StubBase)parent).myChildren == null) ((StubBase)parent).myChildren = new SmartList<StubElement>();
-      ((StubBase)parent).myChildren.add(this);
-    }
+    myStubList = parent == null ? new MaterialStubList(10) : ((StubBase<?>)parent).myStubList;
+    myStubList.addStub(this, (StubBase<?>)parent, elementType);
   }
 
   @Override
@@ -60,7 +54,7 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
   @Override
   @SuppressWarnings("unchecked")
   public List<StubElement> getChildrenStubs() {
-    return ObjectUtil.chooseNotNull(myChildren, Collections.<StubElement>emptyList());
+    return (List)myStubList.getChildrenStubs(id);
   }
 
   @Override
@@ -210,7 +204,7 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
 
   @Override
   public IStubElementType getStubType() {
-    return myElementType;
+    return myStubList.getStubType(id);
   }
 
   public Project getProject() {

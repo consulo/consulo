@@ -30,5 +30,4 @@ public interface IndexingDataKeys {
   Key<PsiFile> PSI_FILE = Key.create("PSI for stubs");
   Key<CharSequence> FILE_TEXT_CONTENT_KEY = Key.create("file text content cached by stub indexer");
   Key<LighterAST> LIGHTER_AST_NODE_KEY = Key.create("lighter.ast.node");
-  Key<Integer> VIRTUAL_FILE_ID = Key.create("Context virtual file id");
 }

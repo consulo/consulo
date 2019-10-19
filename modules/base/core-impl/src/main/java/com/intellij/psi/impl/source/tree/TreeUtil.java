@@ -455,39 +455,6 @@ public class TreeUtil {
     }
   }
 
-  public static void bindStubsToTree(@Nonnull PsiFileImpl file, @Nonnull StubTree stubTree, @Nonnull FileElement tree) throws StubBindingException {
-    final ListIterator<StubElement<?>> stubs = stubTree.getPlainList().listIterator();
-    stubs.next();  // skip file root stub
-
-    final IStubFileElementType type = file.getElementTypeForStubBuilder();
-    assert type != null;
-    final StubBuilder builder = type.getBuilder();
-    tree.acceptTree(new RecursiveTreeElementWalkingVisitor() {
-      @Override
-      protected void visitNode(TreeElement node) {
-        CompositeElement parent = node.getTreeParent();
-        if (parent != null && builder.skipChildProcessingWhenBuildingStubs(parent, node)) {
-          return;
-        }
-
-        IElementType type = node.getElementType();
-        if (type instanceof IStubElementType && ((IStubElementType)type).shouldCreateStub(node)) {
-          final StubElement stub = stubs.hasNext() ? stubs.next() : null;
-          if (stub == null || stub.getStubType() != type) {
-            throw new StubBindingException("stub:" + stub + ", AST:" + type);
-          }
-
-          StubBasedPsiElementBase psi = (StubBasedPsiElementBase)node.getPsi();
-          //noinspection unchecked
-          ((StubBase)stub).setPsi(psi);
-          psi.setStubIndex(stubs.previousIndex());
-        }
-
-        super.visitNode(node);
-      }
-    });
-  }
-
   public static boolean containsOuterLanguageElements(@Nonnull ASTNode node) {
     AtomicBoolean result = new AtomicBoolean(false);
     ((TreeElement)node).acceptTree(new RecursiveTreeElementWalkingVisitor() {
