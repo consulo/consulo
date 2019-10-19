@@ -22,6 +22,7 @@ import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.CharSequenceSubSequence;
+import com.intellij.util.text.MergingCharSequence;
 import com.intellij.util.text.StringFactory;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.Contract;
@@ -60,6 +61,15 @@ public class StringUtil extends StringUtilRt {
       return "'" + s + "'";
     }
   };
+
+  /**
+   * @return a lightweight CharSequence which results from replacing {@code [start, end)} range in the {@code charSeq} with {@code replacement}.
+   * Works in O(1), but retains references to the passed char sequences, so please use something else if you want them to be garbage-collected.
+   */
+  @Nonnull
+  public static MergingCharSequence replaceSubSequence(@Nonnull CharSequence charSeq, int start, int end, @Nonnull CharSequence replacement) {
+    return new MergingCharSequence(new MergingCharSequence(new CharSequenceSubSequence(charSeq, 0, start), replacement), new CharSequenceSubSequence(charSeq, end, charSeq.length()));
+  }
 
   @Nonnull
   @Contract(pure = true)

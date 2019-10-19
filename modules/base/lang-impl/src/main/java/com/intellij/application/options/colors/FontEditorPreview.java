@@ -65,7 +65,7 @@ public class FontEditorPreview implements PreviewPanel{
   }
 
   static void installTrafficLights(@Nonnull EditorEx editor) {
-    TrafficLightRenderer renderer = new TrafficLightRenderer(null, null,null) {
+    TrafficLightRenderer renderer = new TrafficLightRenderer(null, null) {
       @Nonnull
       @Override
       protected DaemonCodeAnalyzerStatus getDaemonCodeAnalyzerStatus(@Nonnull SeverityRegistrar severityRegistrar) {

@@ -50,6 +50,10 @@ public interface Logger {
     debug(message);
   }
 
+  default void trace(Throwable message) {
+    debug(message);
+  }
+
   public abstract boolean isDebugEnabled();
 
   public abstract void debug(@NonNls String message);

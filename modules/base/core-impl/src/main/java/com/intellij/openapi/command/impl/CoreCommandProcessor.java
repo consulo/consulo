@@ -29,11 +29,12 @@ import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.messages.MessageBus;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import org.jetbrains.annotations.Nls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Stack;
@@ -75,8 +76,90 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
   protected CommandDescriptor myCurrentCommand;
   private final Stack<CommandDescriptor> myInterruptedCommands = new Stack<>();
-  private final List<CommandListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<CommandListener> myNewListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   private int myUndoTransparentCount;
+
+  private final CommandListener eventPublisher;
+
+  public CoreCommandProcessor() {
+    MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
+    messageBus.connect().subscribe(CommandListener.TOPIC, new CommandListener() {
+      @Override
+      public void commandStarted(@Nonnull CommandEvent event) {
+        for (CommandListener listener : myNewListeners) {
+          try {
+            listener.commandStarted(event);
+          }
+          catch (Throwable e) {
+            CommandLog.LOG.error(e);
+          }
+        }
+      }
+
+      @Override
+      public void beforeCommandFinished(@Nonnull CommandEvent event) {
+        for (CommandListener listener : myNewListeners) {
+          try {
+            listener.beforeCommandFinished(event);
+          }
+          catch (Throwable e) {
+            CommandLog.LOG.error(e);
+          }
+        }
+      }
+
+      @Override
+      public void commandFinished(@Nonnull CommandEvent event) {
+        for (CommandListener listener : myNewListeners) {
+          try {
+            listener.commandFinished(event);
+          }
+          catch (Throwable e) {
+            CommandLog.LOG.error(e);
+          }
+        }
+      }
+
+      @Override
+      public void undoTransparentActionStarted() {
+        for (CommandListener listener : myNewListeners) {
+          try {
+            listener.undoTransparentActionStarted();
+          }
+          catch (Throwable e) {
+            CommandLog.LOG.error(e);
+          }
+        }
+      }
+
+      @Override
+      public void beforeUndoTransparentActionFinished() {
+        for (CommandListener listener : myNewListeners) {
+          try {
+            listener.beforeUndoTransparentActionFinished();
+          }
+          catch (Throwable e) {
+            CommandLog.LOG.error(e);
+          }
+        }
+      }
+
+      @Override
+      public void undoTransparentActionFinished() {
+        for (CommandListener listener : myNewListeners) {
+          try {
+            listener.undoTransparentActionFinished();
+          }
+          catch (Throwable e) {
+            CommandLog.LOG.error(e);
+          }
+        }
+      }
+    });
+
+    // will, command events occurred quite often, let's cache publisher
+    eventPublisher = messageBus.syncPublisher(CommandListener.TOPIC);
+  }
 
   @Override
   public void executeCommand(@Nonnull Runnable runnable, String name, Object groupId) {
@@ -251,25 +334,11 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     CommandEvent event = new CommandEvent(this, currentCommand.myCommand, currentCommand.myName, currentCommand.myGroupId, currentCommand.myProject, currentCommand.myUndoConfirmationPolicy,
                                           currentCommand.myShouldRecordActionForActiveDocument, currentCommand.myDocument);
     try {
-      for (CommandListener listener : myListeners) {
-        try {
-          listener.beforeCommandFinished(event);
-        }
-        catch (Throwable e) {
-          CommandLog.LOG.error(e);
-        }
-      }
+      eventPublisher.beforeCommandFinished(event);
     }
     finally {
       myCurrentCommand = null;
-      for (CommandListener listener : myListeners) {
-        try {
-          listener.commandFinished(event);
-        }
-        catch (Throwable e) {
-          CommandLog.LOG.error(e);
-        }
-      }
+      eventPublisher.commandFinished(event);
     }
   }
 
@@ -353,7 +422,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
   @Override
   public void addCommandListener(@Nonnull CommandListener listener) {
-    myListeners.add(listener);
+    myNewListeners.add(listener);
   }
 
   @Override
@@ -364,7 +433,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
   @Override
   public void removeCommandListener(@Nonnull CommandListener listener) {
-    myListeners.remove(listener);
+    myNewListeners.remove(listener);
   }
 
   @Override
@@ -402,35 +471,14 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     CommandDescriptor currentCommand = myCurrentCommand;
     CommandEvent event = new CommandEvent(this, currentCommand.myCommand, currentCommand.myName, currentCommand.myGroupId, currentCommand.myProject, currentCommand.myUndoConfirmationPolicy,
                                           currentCommand.myShouldRecordActionForActiveDocument, currentCommand.myDocument);
-    for (CommandListener listener : myListeners) {
-      try {
-        listener.commandStarted(event);
-      }
-      catch (Throwable e) {
-        CommandLog.LOG.error(e);
-      }
-    }
+    eventPublisher.commandStarted(event);
   }
 
   private void fireUndoTransparentStarted() {
-    for (CommandListener listener : myListeners) {
-      try {
-        listener.undoTransparentActionStarted();
-      }
-      catch (Throwable e) {
-        CommandLog.LOG.error(e);
-      }
-    }
+    eventPublisher.undoTransparentActionStarted();
   }
 
   private void fireUndoTransparentFinished() {
-    for (CommandListener listener : myListeners) {
-      try {
-        listener.undoTransparentActionFinished();
-      }
-      catch (Throwable e) {
-        CommandLog.LOG.error(e);
-      }
-    }
+    eventPublisher.undoTransparentActionFinished();
   }
 }

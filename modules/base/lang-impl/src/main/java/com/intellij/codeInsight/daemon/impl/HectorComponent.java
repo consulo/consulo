@@ -258,7 +258,6 @@ public class HectorComponent extends JPanel {
         }
       }
       forceDaemonRestart();
-      DaemonListeners.getInstance(myFile.getProject()).updateStatusBar();
     }
   }
 

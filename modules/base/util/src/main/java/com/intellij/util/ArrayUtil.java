@@ -19,8 +19,8 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.util.text.CharArrayCharSequence;
 import gnu.trove.Equality;
 import org.jetbrains.annotations.Contract;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.lang.reflect.Array;
@@ -831,6 +831,17 @@ public class ArrayUtil extends ArrayUtilRt {
     for (int i = src.size() - 1; i >= 0; i--) {
       final T o = src.get(i);
       if (comparator.equals(obj, o)) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  @Contract(pure = true)
+  public static int lastIndexOfNot(@Nonnull final int[] src, final int obj) {
+    for (int i = src.length - 1; i >= 0; i--) {
+      final int o = src[i];
+      if (o != obj) {
         return i;
       }
     }

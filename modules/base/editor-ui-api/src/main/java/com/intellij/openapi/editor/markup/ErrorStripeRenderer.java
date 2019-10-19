@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.markup;
 import java.awt.*;
 
 public interface ErrorStripeRenderer {
-  void paint(Component c, Graphics g, Point point);
+  void paint(Component c, Graphics g, Rectangle r);
 
   int getSquareSize();
 }

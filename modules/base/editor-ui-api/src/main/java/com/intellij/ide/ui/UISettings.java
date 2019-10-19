@@ -511,6 +511,14 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     return CYCLE_SCROLLING;
   }
 
+  public boolean getShowEditorToolTip() {
+    return SHOW_EDITOR_TOOLTIP;
+  }
+
+  public void setShowEditorToolTip(boolean value) {
+    SHOW_EDITOR_TOOLTIP = value;
+  }
+
   /**
    * @see #setupComponentAntialiasing(JComponent)
    */

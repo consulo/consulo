@@ -53,6 +53,10 @@ public final class Logger {
     debug(message);
   }
 
+  public void trace(Throwable message) {
+    debug(message);
+  }
+
   public boolean isDebugEnabled() {
     return myDelegate.isDebugEnabled();
   }

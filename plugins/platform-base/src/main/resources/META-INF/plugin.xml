@@ -99,7 +99,7 @@
                     interface="com.intellij.openapi.fileTypes.FileTypeFactory"/>
 
     <extensionPoint name="fileType"
-                    beanClass="com.intellij.openapi.fileTypes.impl.FileTypeBean" />
+                    beanClass="com.intellij.openapi.fileTypes.impl.FileTypeBean"/>
 
     <extensionPoint name="virtualFileSystem" interface="com.intellij.openapi.vfs.VirtualFileSystem"/>
 
@@ -214,7 +214,7 @@
       <with attribute="implementationClass" implements="com.intellij.navigation.ItemPresentationProvider"/>
     </extensionPoint>
 
-    <extensionPoint name="intentionMenuContributor"  interface="com.intellij.codeInsight.daemon.impl.IntentionMenuContributor"/>
+    <extensionPoint name="intentionMenuContributor" interface="com.intellij.codeInsight.daemon.impl.IntentionMenuContributor"/>
 
     <extensionPoint name="fileTypeDetector" interface="com.intellij.openapi.fileTypes.FileTypeRegistry$FileTypeDetector"/>
 
@@ -1169,11 +1169,11 @@
     <applicationService serviceInterface="com.intellij.openapi.projectRoots.impl.JdkVersionDetector"
                         serviceImplementation="com.intellij.openapi.projectRoots.impl.JdkVersionDetectorImpl"/>
 
-    <applicationService serviceImplementation="com.intellij.ide.browsers.WebBrowserManager" />
+    <applicationService serviceImplementation="com.intellij.ide.browsers.WebBrowserManager"/>
 
-    <applicationService serviceInterface="com.intellij.ide.browsers.BrowserLauncher" serviceImplementation="com.intellij.ide.browsers.BrowserLauncherImpl" />
+    <applicationService serviceInterface="com.intellij.ide.browsers.BrowserLauncher" serviceImplementation="com.intellij.ide.browsers.BrowserLauncherImpl"/>
 
-    <urlOpener implementation="com.intellij.ide.browsers.impl.DefaultUrlOpener" order="last" />
+    <urlOpener implementation="com.intellij.ide.browsers.impl.DefaultUrlOpener" order="last"/>
 
     <projectService serviceInterface="consulo.util.ProjectPropertiesComponent"
                     serviceImplementation="com.intellij.ide.util.ProjectPropertiesComponentImpl"/>
@@ -2569,21 +2569,25 @@
     <idIndexer filetype="PLAIN_TEXT" implementationClass="com.intellij.psi.impl.cache.impl.id.PlainTextIndexer"/>
     <todoIndexer filetype="PLAIN_TEXT" implementationClass="com.intellij.psi.impl.cache.impl.todo.PlainTextTodoIndexer"/>
 
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.GeneralHighlightingPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ChameleonSyntaxHighlightingPass$Factory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.InjectedGeneralHighlightingPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.LineMarkersPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ShowIntentionsPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.IdentifierHighlighterPassFactory"/>
     <textEditorHighlightingPassFactory implementation="com.intellij.refactoring.changeSignature.inplace.ChangeSignaturePassFactory"/>
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.CodeFoldingPassFactory"/>
-    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ExternalToolPassFactory"/>
-    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.GeneralHighlightingPassFactory"/>
-    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.LineMarkersPassFactory"/>
-    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.WolfPassFactory"/>
+    <!--<textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.focusMode.FocusModePassFactory"/>-->
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.hints.ParameterHintsPassFactory"/>
-    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.InjectedCodeFoldingPassFactory"/>
-    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.IdentifierHighlighterPassFactory"/>
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.IndentsPassFactory"/>
-    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ShowIntentionsPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.InjectedCodeFoldingPassFactory"/>
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.LocalInspectionsPassFactory"/>
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ShowAutoImportPassFactory"/>
-    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.InjectedGeneralHighlightingPassFactory"/>
+
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.WholeFileLocalInspectionsPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ExternalToolPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.WolfPassFactory"/>
+
 
     <applicationService serviceImplementation="com.intellij.ide.ScreenReaderSupportHandler" lazy="false"/>
     <applicationService serviceInterface="com.intellij.openapi.wm.impl.SystemDock" serviceImplementation="consulo.wm.impl.SystemDockImpl"/>
@@ -2598,15 +2602,16 @@
     <intentionMenuContributor implementation="com.intellij.codeInsight.daemon.impl.GutterIntentionMenuContributor"/>
     <intentionMenuContributor implementation="com.intellij.codeInsight.daemon.impl.CleanupIntentionMenuContributor"/>
 
-    <applicationService serviceImplementation="com.intellij.openapi.editor.impl.EditorMouseHoverPopupControl" />
-    <applicationService serviceImplementation="com.intellij.openapi.editor.EditorMouseHoverPopupManager" />
+    <applicationService serviceImplementation="com.intellij.openapi.editor.impl.EditorMouseHoverPopupControl"/>
+    <applicationService serviceImplementation="com.intellij.openapi.editor.EditorMouseHoverPopupManager"/>
 
     <editorFactoryMouseListener implementation="com.intellij.openapi.editor.EditorMouseHoverPopupManager$MyEditorMouseEventListener"/>
     <editorFactoryMouseMotionListener implementation="com.intellij.openapi.editor.EditorMouseHoverPopupManager$MyEditorMouseMotionEventListener"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.application.AsyncExecutionService" serviceImplementation="com.intellij.openapi.application.impl.AsyncExecutionServiceImpl" />
+    <applicationService serviceInterface="com.intellij.openapi.application.AsyncExecutionService" serviceImplementation="com.intellij.openapi.application.impl.AsyncExecutionServiceImpl"/>
 
-    <projectService serviceInterface="com.intellij.codeInsight.AutoPopupController" serviceImplementation="com.intellij.codeInsight.AutoPopupControllerImpl" />
+    <projectService serviceImplementation="com.intellij.codeInsight.daemon.impl.ErrorStripeUpdateManager"/>
+    <projectService serviceInterface="com.intellij.codeInsight.AutoPopupController" serviceImplementation="com.intellij.codeInsight.AutoPopupControllerImpl"/>
     <daemon.tooltipActionProvider order="last" id="defaultProvider" implementation="com.intellij.codeInsight.daemon.impl.DaemonTooltipActionProvider"/>
   </extensions>
 </consulo-plugin>

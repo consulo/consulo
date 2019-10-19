@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 package com.intellij.openapi.editor.ex;
-
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.RangeMarker;
@@ -47,7 +46,8 @@ public interface DocumentEx extends Document {
    * <p/>
    * The benefit to use this method over usual {@link #deleteString(int, int)} and {@link #replaceString(int, int, CharSequence)}
    * is that {@link #createRangeMarker(int, int, boolean) range markers} from the {@code [srcStart; srcEnd)} range have
-   * a chance to be preserved.
+   * a chance to be preserved. Default implementation doesn't preserve range markers, but has the same effect in terms of resulting
+   * text content.
    *
    * @param srcStart  start offset of the text to move (inclusive)
    * @param srcEnd    end offset of the text to move (exclusive)
@@ -92,7 +92,7 @@ public interface DocumentEx extends Document {
   boolean processRangeMarkers(@Nonnull Processor<? super RangeMarker> processor);
 
   /**
-   * Get range markers which {@link com.intellij.openapi.util.TextRange#intersects(int, int)} the specified range
+   * Get range markers which {@link TextRange#intersects(int, int)} the specified range
    * and hand them to the {@code processor} in their {@link RangeMarker#getStartOffset()} order
    */
   boolean processRangeMarkersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeMarker> processor);

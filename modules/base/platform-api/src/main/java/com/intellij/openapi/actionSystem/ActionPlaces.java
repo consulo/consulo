@@ -78,6 +78,8 @@ public abstract class ActionPlaces {
   public static final String NAVIGATION_BAR_POPUP = "NavBar";
   public static final String NAVIGATION_BAR_TOOLBAR = "NavBarToolbar";
 
+  public static final String RIGHT_EDITOR_GUTTER_POPUP = "RightEditorGutterPopup";
+
   public static final String TODO_VIEW_POPUP = "TodoViewPopup";
   public static final String TODO_VIEW_TOOLBAR = "TodoViewToolbar";
 

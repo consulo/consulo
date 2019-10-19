@@ -1,38 +1,26 @@
-/*
- * Copyright 2000-2015 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.editor.event.BulkAwareDocumentListener;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.util.text.CharArrayUtil;
-import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
+import kava.beans.PropertyChangeListener;
+
 import javax.annotation.Nullable;
 
 /**
- * Represents the contents of a text file loaded into memory, and possibly opened in an IDEA
- * text editor. Line breaks in the document text are always normalized as single \n characters,
+ * Represents the contents of a text file loaded into memory, and possibly opened in an IDE
+ * text editor. Line breaks in the document text are always normalized as single {@code \n} characters,
  * and are converted to proper format when the document is saved.
- * <p>
- * Please see <a href="http://confluence.jetbrains.net/display/IDEADEV/IntelliJ+IDEA+Architectural+Overview">IntelliJ IDEA Architectural Overview </a>
+ * <p/>
+ * Please see <a href="https://www.jetbrains.org/intellij/sdk/docs/basics/architectural_overview.html">IntelliJ Platform Architectural Overview</a>
  * for high-level overview.
  *
  * @see Editor#getDocument()
@@ -185,7 +173,7 @@ public interface Document extends UserDataHolder {
   /**
    * Checks if the document text is read-only.
    *
-   * @return true if the document text is writable, false if it is read-only.
+   * @return {@code true} if the document text is writable, {@code false} if it is read-only.
    * @see #fireReadOnlyModificationAttempt()
    */
   @Contract(pure = true)
@@ -221,9 +209,9 @@ public interface Document extends UserDataHolder {
   default void addDocumentListener(@Nonnull DocumentListener listener, @Nonnull Disposable parentDisposable) {
   }
 
-
   /**
-   * Removes a listener for receiving notifications about changes in the document content.
+   * Removes a listener for receiving notifications about changes in the document content, previously added via {@link #addDocumentListener(DocumentListener)}.
+   * Don't call this method for listeners added via {@link #addDocumentListener(DocumentListener, Disposable)}, as that might cause memory leaks.
    *
    * @param listener the listener instance.
    */
@@ -306,12 +294,6 @@ public interface Document extends UserDataHolder {
    * @param block the marker to remove.
    * @see #createGuardedBlock(int, int)
    */
-  /**
-   * Removes a marker marking a range of text in the document as read-only.
-   *
-   * @param block the marker to remove.
-   * @see #createGuardedBlock(int, int)
-   */
   default void removeGuardedBlock(@Nonnull RangeMarker block) {
   }
 
@@ -331,7 +313,7 @@ public interface Document extends UserDataHolder {
    *
    * @param start the start offset of the range for which the marker is requested.
    * @param end   the end offset of the range for which the marker is requested.
-   * @return the marker instance, or null if the specified range is not covered by a read-only marker.
+   * @return the marker instance, or {@code null} if the specified range is not covered by a read-only marker.
    */
   @Nullable
   default RangeMarker getRangeGuard(int start, int end) {

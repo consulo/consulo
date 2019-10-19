@@ -67,8 +67,7 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
   static void repaintErrorStripeAndIcon(@Nonnull Editor editor, @Nonnull Project project) {
     DesktopEditorMarkupModelImpl markup = (DesktopEditorMarkupModelImpl)editor.getMarkupModel();
     markup.repaintTrafficLightIcon();
-    DaemonListeners.repaintErrorStripeRenderer(editor, project);
-    //ErrorStripeUpdateManager.getInstance(project).repaintErrorStripePanel(editor);
+    ErrorStripeUpdateManager.getInstance(project).repaintErrorStripePanel(editor);
   }
 
   @Override

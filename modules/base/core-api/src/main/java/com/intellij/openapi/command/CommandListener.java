@@ -15,9 +15,13 @@
  */
 package com.intellij.openapi.command;
 
+import com.intellij.util.messages.Topic;
+
 import java.util.EventListener;
 
 public interface CommandListener extends EventListener {
+  Topic<CommandListener> TOPIC = new Topic<>("command events", CommandListener.class);
+
   default void commandStarted(CommandEvent event) {
   }
 
@@ -28,6 +32,9 @@ public interface CommandListener extends EventListener {
   }
 
   default void undoTransparentActionStarted() {
+  }
+
+  default void beforeUndoTransparentActionFinished() {
   }
 
   default void undoTransparentActionFinished() {

@@ -31,8 +31,8 @@ import com.intellij.psi.impl.FreeThreadedFileViewProvider;
 import com.intellij.psi.impl.PsiDocumentManagerBase;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
+
 import java.util.Collections;
 import java.util.List;
 

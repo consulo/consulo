@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2014 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.daemon.DaemonBundle;
@@ -28,25 +14,22 @@ import com.intellij.ui.HintHint;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.components.panels.VerticalBox;
 import com.intellij.ui.components.panels.Wrapper;
-import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.UIUtil;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
-/**
- * User: cdr
- */
 class TrafficProgressPanel extends JPanel {
   static final String MAX_TEXT = "100%";
   private static final String MIN_TEXT = "0%";
 
   private final JLabel statistics = new JLabel();
-  private final Map<JProgressBar, JLabel> myProgressToText = new HashMap<JProgressBar, JLabel>();
+  private final Map<JProgressBar, JLabel> myProgressToText = new HashMap<>();
 
   private final JLabel statusLabel = new JLabel();
   private final JLabel statusExtraLineLabel = new JLabel();
@@ -78,7 +61,7 @@ class TrafficProgressPanel extends JPanel {
     fakeStatusLargeEnough.errorCount = new int[]{1, 1, 1, 1};
     Project project = trafficLightRenderer.getProject();
     PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-    fakeStatusLargeEnough.passStati = new ArrayList<ProgressableTextEditorHighlightingPass>();
+    fakeStatusLargeEnough.passStati = new ArrayList<>();
     for (int i = 0; i < 3; i++) {
       fakeStatusLargeEnough.passStati
               .add(new ProgressableTextEditorHighlightingPass(project, null, DaemonBundle.message("pass.wolf"), psiFile, editor, TextRange.EMPTY_RANGE, false, HighlightInfoProcessor.getEmpty()) {
@@ -101,15 +84,14 @@ class TrafficProgressPanel extends JPanel {
   }
 
   int getMinWidth() {
-    return Math.max(Math.max(Math.max(getLabelMinWidth(statistics), getLabelMinWidth(statusExtraLineLabel)), getLabelMinWidth(statusLabel)),
-                    getLabelMinWidth(new JLabel("<html><b>Slow inspections progress report long line</b></html>")));
+    return Math.max(Math.max(Math.max(getLabelMinWidth(statistics), getLabelMinWidth(statusExtraLineLabel)), getLabelMinWidth(statusLabel)), getLabelMinWidth(new JLabel("<html><b>Slow inspections progress report long line</b></html>")));
   }
 
   private int getLabelMinWidth(@Nonnull JLabel label) {
     String text = label.getText();
     Icon icon = label.isEnabled() ? label.getIcon() : label.getDisabledIcon();
 
-    if ((icon == null) && (StringUtil.isEmpty(text))) {
+    if (icon == null && StringUtil.isEmpty(text)) {
       return 0;
     }
 
@@ -117,8 +99,8 @@ class TrafficProgressPanel extends JPanel {
     Rectangle paintTextR = new Rectangle();
     Rectangle paintViewR = new Rectangle(10000, 10000);
 
-    SwingUtilities.layoutCompoundLabel(label, getFontMetrics(getFont()), text, icon, label.getVerticalAlignment(), label.getHorizontalAlignment(), label.getVerticalTextPosition(),
-                                       label.getHorizontalTextPosition(), paintViewR, paintIconR, paintTextR, label.getIconTextGap());
+    SwingUtilities.layoutCompoundLabel(label, getFontMetrics(getFont()), text, icon, label.getVerticalAlignment(), label.getHorizontalAlignment(), label.getVerticalTextPosition(), label.getHorizontalTextPosition(),
+                                       paintViewR, paintIconR, paintTextR, label.getIconTextGap());
 
     return paintTextR.width;
   }
@@ -149,7 +131,7 @@ class TrafficProgressPanel extends JPanel {
 
   void updatePanel(@Nonnull TrafficLightRenderer.DaemonCodeAnalyzerStatus status, boolean isFake) {
     try {
-      boolean needRebuild = myTrafficLightRenderer.updatePanel(status, myTrafficLightRenderer.getProject());
+      boolean needRebuild = myTrafficLightRenderer.updatePanel(status);
       statusLabel.setText(myTrafficLightRenderer.statusLabel);
       if (myTrafficLightRenderer.statusExtraLine == null) {
         statusExtraLineLabel.setVisible(false);
@@ -219,7 +201,7 @@ class TrafficProgressPanel extends JPanel {
 
       Pair<JProgressBar, JLabel> pair = myTrafficLightRenderer.passes.get(pass);
       JProgressBar progressBar = pair.getFirst();
-      progressBar.putClientProperty("JComponent.sizeVariant", "mini");
+      UIUtil.applyStyle(UIUtil.ComponentStyle.MINI, progressBar);
       JLabel percLabel = pair.getSecond();
       myProgressToText.put(progressBar, percLabel);
       c.gridx = 0;

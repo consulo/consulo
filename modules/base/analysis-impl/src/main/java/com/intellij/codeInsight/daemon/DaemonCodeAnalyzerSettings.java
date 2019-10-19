@@ -40,6 +40,18 @@ public class DaemonCodeAnalyzerSettings {
     return false;
   }
 
+  public int getErrorStripeMarkMinHeight() {
+    return ERROR_STRIPE_MARK_MIN_HEIGHT;
+  }
+
+  public boolean isNextErrorActionGoesToErrorsFirst() {
+    return NEXT_ERROR_ACTION_GOES_TO_ERRORS_FIRST;
+  }
+
+  public void setNextErrorActionGoesToErrorsFirst(boolean value) {
+    NEXT_ERROR_ACTION_GOES_TO_ERRORS_FIRST = value;
+  }
+
   public boolean isImportHintEnabled() {
     return SHOW_ADD_IMPORT_HINTS;
   }

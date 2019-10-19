@@ -25,6 +25,7 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassFactory;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
 
@@ -33,7 +34,7 @@ import javax.annotation.Nullable;
 
 /**
  * @author cdr
-*/
+ */
 public class ShowAutoImportPassFactory implements TextEditorHighlightingPassFactory {
   @Override
   public void register(@Nonnull Registrar registrar) {
@@ -43,6 +44,6 @@ public class ShowAutoImportPassFactory implements TextEditorHighlightingPassFact
   @Override
   @Nullable
   public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull final Editor editor) {
-    return new ShowAutoImportPass(file.getProject(), file, editor);
+    return ApplicationManager.getApplication().isUnitTestMode() || DaemonListeners.canChangeFileSilently(file) ? new ShowAutoImportPass(file.getProject(), file, editor) : null;
   }
 }
