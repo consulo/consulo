@@ -1858,9 +1858,6 @@
     <projectService serviceInterface="com.intellij.openapi.module.ProjectLoadingErrorsNotifier"
                     serviceImplementation="com.intellij.openapi.module.impl.ProjectLoadingErrorsNotifierImpl"/>
 
-    <projectService serviceInterface="com.intellij.codeInsight.AutoPopupController"
-                    serviceImplementation="com.intellij.codeInsight.AutoPopupController"/>
-
     <projectService serviceInterface="consulo.codeStyle.ProjectCodeStyleFacade"
                     serviceImplementation="consulo.psi.impl.source.codeStyle.ProjectCodeStyleFacadeImpl"/>
 
@@ -2609,6 +2606,7 @@
 
     <applicationService serviceInterface="com.intellij.openapi.application.AsyncExecutionService" serviceImplementation="com.intellij.openapi.application.impl.AsyncExecutionServiceImpl" />
 
+    <projectService serviceInterface="com.intellij.codeInsight.AutoPopupController" serviceImplementation="com.intellij.codeInsight.AutoPopupControllerImpl" />
     <daemon.tooltipActionProvider order="last" id="defaultProvider" implementation="com.intellij.codeInsight.daemon.impl.DaemonTooltipActionProvider"/>
   </extensions>
 </consulo-plugin>

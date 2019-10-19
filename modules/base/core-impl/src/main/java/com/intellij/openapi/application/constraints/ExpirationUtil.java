@@ -20,11 +20,10 @@ import com.intellij.openapi.WeakReferenceDisposableWrapper;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.concurrency.AsyncPromise;
-import org.jetbrains.concurrency.Promise;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.function.Consumer;
 
 /**
  * from kotlin
@@ -40,7 +39,7 @@ public class ExpirationUtil {
       return ContainerUtil.getFirstItem(expirations);
     }
     else {
-      AsyncPromise<Void> job = new AsyncPromise<>();
+      Job job = new Job();
 
       for (Expiration expiration : expirations) {
         cancelJobOnExpiration(expiration, job);
@@ -50,10 +49,15 @@ public class ExpirationUtil {
     }
   }
 
-  private static Expiration.Handle cancelJobOnExpiration(Expiration expiration, AsyncPromise<Void> job) {
-    Expiration.Handle handle = expiration.invokeOnExpiration(() -> job.setError("rejected"));
-    job.onSuccess(aVoid -> handle.unregisterHandler());
-    return handle;
+  private static Expiration.Handle cancelJobOnExpiration(Expiration expiration, Job job) {
+    Expiration.Handle registration = expiration.invokeOnExpiration(() -> {
+      job.cancel();
+    });
+
+    job.invokeOnCompletion(throwable -> {
+      registration.unregisterHandler();
+    });
+    return registration;
   }
 
   public static boolean isDisposed(Disposable disposable) {
@@ -68,6 +72,7 @@ public class ExpirationUtil {
     if (!isDisposed(parent) && !isDisposing(parent)) {
       try {
         Disposer.register(parent, child);
+        return true;
       }
       catch (IncorrectOperationException e) { // Sorry but Disposer.register() is inherently thread-unsafe
       }
@@ -76,11 +81,13 @@ public class ExpirationUtil {
     return false;
   }
 
-  public static AutoCloseable cancelJobOnDisposal(Disposable thisDisposable, AsyncPromise<Void> job, boolean weaklyReferencedJob) {
+  public static AutoCloseable cancelJobOnDisposal(Disposable thisDisposable, Job job, boolean weaklyReferencedJob) {
     ExpirableConstrainedExecution.RunOnce runOnce = new ExpirableConstrainedExecution.RunOnce();
 
     Disposable child = () -> {
-      job.setError("rejected");
+      runOnce.invoke(() -> {
+        job.cancel();
+      });
     };
 
     Disposable childRef = !weaklyReferencedJob ? child : new WeakReferenceDisposableWrapper(child);
@@ -91,24 +98,24 @@ public class ExpirationUtil {
       };
     }
     else {
-      Runnable completionHandler = new Runnable() {
+      Consumer<Throwable> completionHandler = new Consumer<Throwable>() {
         @SuppressWarnings("unused")
         Disposable hardRefToChild = child; // transitive: job -> completionHandler -> child
 
         @Override
-        public void run() {
+        public void accept(Throwable t) {
           runOnce.invoke(() -> {
             Disposer.dispose(childRef);
           });
         }
       };
 
-      Promise<Void> jobCompletionUnregisteringHandle = job.onSuccess(aVoid -> completionHandler.run());
+      Disposable jobCompletionUnregisteringHandle = job.invokeOnCompletion(completionHandler);
 
       return () -> {
-        // fixme [VISTALL] we need this??
-        // jobCompletionUnregisteringHandle.dispose();
-        completionHandler.run();
+        jobCompletionUnregisteringHandle.dispose();
+
+        completionHandler.accept(null);
       };
     }
   }

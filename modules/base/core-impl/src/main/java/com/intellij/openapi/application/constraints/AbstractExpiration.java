@@ -1,7 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.application.constraints;
 
-import org.jetbrains.concurrency.AsyncPromise;
+import com.intellij.openapi.Disposable;
+
+import javax.annotation.Nonnull;
 
 /**
  * Expiration backed by a [Job] instance.
@@ -14,21 +16,22 @@ import org.jetbrains.concurrency.AsyncPromise;
  * from kotlin
  */
 public abstract class AbstractExpiration implements Expiration {
-  protected abstract AsyncPromise<Void> getJob();
+  protected abstract Job getJob();
 
   @Override
   public boolean isExpired() {
-    return getJob().isDone();
+    return getJob().isCompleted();
   }
 
+  @Nonnull
   @Override
-  public Handle invokeOnExpiration(Runnable runnable) {
-    getJob().onError(throwable -> {
-      runnable.run();
+  public Handle invokeOnExpiration(Runnable handler) {
+    Disposable disposable = getJob().invokeOnCompletion(true, throwable -> {
+      handler.run();
     });
+
     return () -> {
-      // fixme [vistall] we need do something??
-      // job.dispose();
+      disposable.dispose();
     };
   }
 }

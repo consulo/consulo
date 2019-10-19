@@ -2320,7 +2320,7 @@ public class ContainerUtil extends ContainerUtilRt {
   }
 
   @Contract(pure = true)
-  public static <T> int indexOfIdentity(@Nonnull List<T> list, T element) {
+  public static <T> int indexOfIdentity(@Nonnull List<? extends T> list, T element) {
     for (int i = 0, listSize = list.size(); i < listSize; i++) {
       if (list.get(i) == element) {
         return i;

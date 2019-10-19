@@ -9,7 +9,6 @@ import consulo.stream.StreamJava9;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -101,7 +100,7 @@ public abstract class BaseConstrainedExecution<E extends ConstrainedExecution<E>
   }
 
   @Override
-  public Executor asExecutor() {
+  public ConstrainedTaskExecutor asExecutor() {
     return new ConstrainedTaskExecutor(this, composeCancellationCondition(), composeExpiration());
   }
 

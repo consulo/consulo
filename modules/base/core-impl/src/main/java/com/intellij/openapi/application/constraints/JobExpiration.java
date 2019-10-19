@@ -15,20 +15,18 @@
  */
 package com.intellij.openapi.application.constraints;
 
-import org.jetbrains.concurrency.AsyncPromise;
-
 /**
  * from kotlin
  */
 public class JobExpiration extends AbstractExpiration {
-  private AsyncPromise<Void> job;
+  private Job job;
 
-  public JobExpiration(AsyncPromise<Void> job) {
+  public JobExpiration(Job job) {
     this.job = job;
   }
 
   @Override
-  protected AsyncPromise<Void> getJob() {
+  protected Job getJob() {
     return job;
   }
 }

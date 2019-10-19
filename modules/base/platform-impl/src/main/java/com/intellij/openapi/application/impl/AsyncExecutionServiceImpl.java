@@ -4,11 +4,13 @@ package com.intellij.openapi.application.impl;
 import com.intellij.openapi.application.*;
 import javax.annotation.Nonnull;
 
+import javax.inject.Singleton;
 import java.util.concurrent.Callable;
 
 /**
  * @author peter
  */
+@Singleton
 public class AsyncExecutionServiceImpl extends AsyncExecutionService {
   private static long ourWriteActionCounter = 0;
 
@@ -29,11 +31,11 @@ public class AsyncExecutionServiceImpl extends AsyncExecutionService {
   //  return new ExpirableExecutorImpl(executor);
   //}
   //
-  //@NotNull
-  //@Override
-  //protected AppUIExecutor createUIExecutor(@NotNull ModalityState modalityState) {
-  //  return new AppUIExecutorImpl(modalityState);
-  //}
+  @Nonnull
+  @Override
+  protected AppUIExecutor createUIExecutor(@Nonnull ModalityState modalityState) {
+    return new AppUIExecutorImpl(modalityState);
+  }
 
   @Nonnull
   @Override

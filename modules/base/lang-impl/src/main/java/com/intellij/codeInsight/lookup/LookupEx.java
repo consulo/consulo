@@ -15,8 +15,6 @@
  */
 package com.intellij.codeInsight.lookup;
 
-import com.intellij.openapi.ui.popup.JBPopup;
-
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -27,11 +25,6 @@ import java.awt.event.InputEvent;
 public interface LookupEx extends Lookup {
   void setCurrentItem(LookupElement item);
 
-  /**
-   * @deprecated use PopupPositionManager instead
-   */
-  void showItemPopup(JBPopup hint);
-  
   Component getComponent();
 
   void showElementActions(@Nullable InputEvent event);

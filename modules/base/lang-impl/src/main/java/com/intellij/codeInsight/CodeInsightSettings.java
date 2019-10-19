@@ -125,6 +125,10 @@ public class CodeInsightSettings implements PersistentStateComponent<Element>, C
           elementValueAttribute = "NAME")
   public String[] EXCLUDED_PACKAGES = ArrayUtil.EMPTY_STRING_ARRAY;
 
+  public boolean isSelectAutopopupSuggestionsByChars() {
+    return SELECT_AUTOPOPUP_SUGGESTIONS_BY_CHARS;
+  }
+
   @Transient
   @Nonnull
   public SmartBackspaceMode getBackspaceMode() {

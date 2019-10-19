@@ -22,6 +22,8 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.keymap.KeymapUtil;
+import com.intellij.openapi.project.DumbService;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.KeyedExtensionCollector;
 import com.intellij.openapi.util.Pair;
@@ -32,13 +34,13 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.Consumer;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.MultiMap;
+import consulo.annotations.RequiredReadAction;
 import consulo.codeInsight.completion.CompletionProvider;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredReadAction;
-
 import java.util.List;
 
 /**
@@ -247,6 +249,11 @@ public abstract class CompletionContributor {
 
   public static List<CompletionContributor> forLanguage(@Nonnull Language language) {
     return MyExtensionPointManager.INSTANCE.forKey(language);
+  }
+
+  @Nonnull
+  public static List<CompletionContributor> forLanguageHonorDumbness(@Nonnull Language language, @Nonnull Project project) {
+    return DumbService.getInstance(project).filterByDumbAwareness(forLanguage(language));
   }
 
   private static class MyExtensionPointManager extends KeyedExtensionCollector<CompletionContributor, Language> {

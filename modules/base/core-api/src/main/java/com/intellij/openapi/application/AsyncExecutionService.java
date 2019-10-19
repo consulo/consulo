@@ -14,8 +14,8 @@ public abstract class AsyncExecutionService {
   //@NotNull
   //protected abstract ExpirableExecutor createExecutor(@NotNull Executor executor);
   //
-  //@NotNull
-  //protected abstract AppUIExecutor createUIExecutor(@NotNull ModalityState modalityState);
+  @Nonnull
+  protected abstract AppUIExecutor createUIExecutor(@Nonnull ModalityState modalityState);
 
   @Nonnull
   protected abstract <T> NonBlockingReadAction<T> buildNonBlockingReadAction(@Nonnull Callable<T> computation);

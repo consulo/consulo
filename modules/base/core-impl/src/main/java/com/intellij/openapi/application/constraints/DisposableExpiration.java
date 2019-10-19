@@ -3,7 +3,6 @@ package com.intellij.openapi.application.constraints;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.NotNullLazyValue;
-import org.jetbrains.concurrency.AsyncPromise;
 
 import java.util.Objects;
 
@@ -17,30 +16,25 @@ import java.util.Objects;
 public class DisposableExpiration extends AbstractExpiration {
 
   private final Disposable myDisposable;
-  private NotNullLazyValue<AsyncPromise<Void>> job;
+  private NotNullLazyValue<Job> job;
 
   public DisposableExpiration(Disposable disposable) {
     myDisposable = disposable;
     job = NotNullLazyValue.createValue(() -> {
-      AsyncPromise<Void> job = new AsyncPromise<>();
+      Job job = new Job();
       ExpirationUtil.cancelJobOnDisposal(disposable, job, true);
       return job;
     });
   }
 
   @Override
-  protected AsyncPromise<Void> getJob() {
+  protected Job getJob() {
     return job.getValue();
   }
 
   @Override
   public boolean isExpired() {
-    return getJob().isDone() && ExpirationUtil.isDisposed(myDisposable);
-  }
-
-  @Override
-  public Handle invokeOnExpiration(Runnable runnable) {
-    return null;
+    return getJob().isCompleted() && ExpirationUtil.isDisposed(myDisposable);
   }
 
   @Override

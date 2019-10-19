@@ -1,36 +1,19 @@
-/*
- * Copyright 2000-2014 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.completion;
 
-import com.intellij.codeInsight.lookup.Lookup;
 import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.diagnostic.LogEventException;
 import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.injected.editor.EditorWindow;
 import com.intellij.lang.FileASTNode;
 import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Attachment;
-import consulo.logging.Logger;
 import com.intellij.openapi.diagnostic.RuntimeExceptionWithAttachments;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.RangeMarkerEx;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiDocumentManager;
@@ -38,6 +21,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.util.PsiUtilCore;
+import com.intellij.util.text.ImmutableCharSequence;
+import org.jetbrains.annotations.Contract;
 
 import java.util.List;
 
@@ -45,7 +30,6 @@ import java.util.List;
  * @author peter
  */
 class CompletionAssertions {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.completion.CompletionAssertions");
 
   static void assertCommitSuccessful(Editor editor, PsiFile psiFile) {
     Document document = editor.getDocument();
@@ -80,19 +64,15 @@ class CompletionAssertions {
     if (node != null) {
       message += "\nnode.length=" + node.getTextLength();
       String nodeText = node.getText();
-      if (nodeText != null) {
-        message += "\nnode.text.length=" + nodeText.length();
-      }
+      message += "\nnode.text.length=" + nodeText.length();
     }
     VirtualFile virtualFile = viewProvider.getVirtualFile();
     message += "\nvirtualFile=" + virtualFile;
     message += "\nvirtualFile.class=" + virtualFile.getClass();
     message += "\n" + DebugUtil.currentStackTrace();
 
-    throw new LogEventException("Commit unsuccessful", message,
-                                new Attachment(virtualFile.getPath() + "_file.txt", fileText),
-                                createAstAttachment(psiFile, psiFile),
-                                new Attachment("docText.txt", document.getText()));
+    throw new RuntimeExceptionWithAttachments("Commit unsuccessful", message, new Attachment(virtualFile.getPath() + "_file.txt", StringUtil.notNullize(fileText)), createAstAttachment(psiFile, psiFile),
+                                              new Attachment("docText.txt", document.getText()));
   }
 
   static void checkEditorValid(Editor editor) {
@@ -113,74 +93,55 @@ class CompletionAssertions {
     return new Attachment(originalFile.getViewProvider().getVirtualFile().getPath(), fileCopy.getText());
   }
 
-  static void assertFinalOffsets(PsiFile originalFile, CompletionContext context, PsiFile injected) {
-    if (context.getStartOffset() >= context.file.getTextLength()) {
-      String msg = "start outside the file; file=" + context.file + " " + context.file.getTextLength();
-      msg += "; injected=" + (injected != null);
-      msg += "; original " + originalFile + " " + originalFile.getTextLength();
-      throw new AssertionError(msg);
-    }
-    assert context.getStartOffset() >= 0 : "start < 0";
-  }
-
-  static void assertInjectedOffsets(int hostStartOffset,
-                                    InjectedLanguageManager injectedLanguageManager,
-                                    PsiFile injected,
-                                    DocumentWindow documentWindow) {
+  static void assertInjectedOffsets(int hostStartOffset, PsiFile injected, DocumentWindow documentWindow) {
     assert documentWindow != null : "no DocumentWindow for an injected fragment";
 
-    TextRange host = injectedLanguageManager.injectedToHost(injected, injected.getTextRange());
-    assert hostStartOffset >= host.getStartOffset() : "startOffset before injected";
-    assert hostStartOffset <= host.getEndOffset() : "startOffset after injected";
+    InjectedLanguageManager injectedLanguageManager = InjectedLanguageManager.getInstance(injected.getProject());
+    TextRange injectedRange = injected.getTextRange();
+    int hostMinOffset = injectedLanguageManager.injectedToHost(injected, injectedRange.getStartOffset(), true);
+    int hostMaxOffset = injectedLanguageManager.injectedToHost(injected, injectedRange.getEndOffset(), false);
+    assert hostStartOffset >= hostMinOffset : "startOffset before injected";
+    assert hostStartOffset <= hostMaxOffset : "startOffset after injected";
   }
 
   static void assertHostInfo(PsiFile hostCopy, OffsetMap hostMap) {
     PsiUtilCore.ensureValid(hostCopy);
-    if (hostMap.getOffset(CompletionInitializationContext.START_OFFSET) >= hostCopy.getTextLength()) {
+    if (hostMap.getOffset(CompletionInitializationContext.START_OFFSET) > hostCopy.getTextLength()) {
       throw new AssertionError("startOffset outside the host file: " + hostMap.getOffset(CompletionInitializationContext.START_OFFSET) + "; " + hostCopy);
     }
   }
 
-  static void assertCompletionPositionPsiConsistent(CompletionContext newContext,
-                                                    int offset,
-                                                    PsiFile fileCopy,
-                                                    PsiFile originalFile, PsiElement insertedElement) {
+  @Contract("_,_,_,null->fail")
+  static void assertCompletionPositionPsiConsistent(OffsetsInFile offsets, int offset, PsiFile originalFile, PsiElement insertedElement) {
+    PsiFile fileCopy = offsets.getFile();
     if (insertedElement == null) {
-      throw new LogEventException("No element at insertion offset",
-                                  "offset=" +
-                                  newContext.getStartOffset() +
-                                  "\n" +
-                                  DebugUtil.currentStackTrace(),
-                                  createFileTextAttachment(fileCopy, originalFile),
-                                  createAstAttachment(fileCopy, originalFile));
-    }
-
-    if (fileCopy.findElementAt(offset) != insertedElement) {
-      throw new AssertionError("wrong offset");
+      throw new RuntimeExceptionWithAttachments("No element at insertion offset", "offset=" + offset, createFileTextAttachment(fileCopy, originalFile), createAstAttachment(fileCopy, originalFile));
     }
 
     final TextRange range = insertedElement.getTextRange();
     CharSequence fileCopyText = fileCopy.getViewProvider().getContents();
-    if ((range.getEndOffset() > fileCopyText.length()) ||
-        !fileCopyText.subSequence(range.getStartOffset(), range.getEndOffset()).toString().equals(insertedElement.getText())) {
-      throw new LogEventException("Inconsistent completion tree", "range=" + range + "\n" + DebugUtil.currentStackTrace(),
-                                  createFileTextAttachment(fileCopy, originalFile), createAstAttachment(fileCopy, originalFile),
-                                  new Attachment("Element at caret.txt", insertedElement.getText()));
+    if ((range.getEndOffset() > fileCopyText.length()) || !isEquals(fileCopyText.subSequence(range.getStartOffset(), range.getEndOffset()), insertedElement.getNode().getChars())) {
+      throw new RuntimeExceptionWithAttachments("Inconsistent completion tree", "range=" + range, createFileTextAttachment(fileCopy, originalFile), createAstAttachment(fileCopy, originalFile),
+                                                new Attachment("Element at caret.txt", insertedElement.getText()));
     }
+  }
+
+  private static boolean isEquals(CharSequence left, CharSequence right) {
+    if (left == right) return true;
+    if (left instanceof ImmutableCharSequence && right instanceof ImmutableCharSequence) {
+      return left.equals(right);
+    }
+    return left.toString().equals(right.toString());
   }
 
   static void assertCorrectOriginalFile(String prefix, PsiFile file, PsiFile copy) {
     if (copy.getOriginalFile() != file) {
-      throw new AssertionError(prefix + " copied file doesn't have correct original: noOriginal=" + (copy.getOriginalFile() == copy) +
-                               "\n file " + fileInfo(file) +
-                               "\n copy " + fileInfo(copy));
+      throw new AssertionError(prefix + " copied file doesn't have correct original: noOriginal=" + (copy.getOriginalFile() == copy) + "\n file " + fileInfo(file) + "\n copy " + fileInfo(copy));
     }
   }
 
   private static String fileInfo(PsiFile file) {
-    return file + " of " + file.getClass() +
-           " in " + file.getViewProvider() + ", languages=" + file.getViewProvider().getLanguages() +
-           ", physical=" + file.isPhysical();
+    return file + " of " + file.getClass() + " in " + file.getViewProvider() + ", languages=" + file.getViewProvider().getLanguages() + ", physical=" + file.isPhysical();
   }
 
   static class WatchingInsertionContext extends InsertionContext {
@@ -189,11 +150,8 @@ class CompletionAssertions {
     DocumentEvent killer;
     private RangeMarkerSpy spy;
 
-    public WatchingInsertionContext(OffsetMap offsetMap, PsiFile file, char completionChar, List<LookupElement> items, Editor editor) {
-      super(offsetMap, completionChar, items.toArray(new LookupElement[items.size()]),
-            file, editor,
-            completionChar != Lookup.AUTO_INSERT_SELECT_CHAR && completionChar != Lookup.REPLACE_SELECT_CHAR &&
-            completionChar != Lookup.NORMAL_SELECT_CHAR);
+    WatchingInsertionContext(OffsetMap offsetMap, PsiFile file, char completionChar, List<LookupElement> items, Editor editor) {
+      super(offsetMap, completionChar, items.toArray(LookupElement.EMPTY_ARRAY), file, editor, shouldAddCompletionChar(completionChar));
     }
 
     @Override
@@ -212,10 +170,6 @@ class CompletionAssertions {
       spy = new RangeMarkerSpy(tailWatcher) {
         @Override
         protected void invalidated(DocumentEvent e) {
-          if (ApplicationManager.getApplication().isUnitTestMode()) {
-            LOG.error("Tail offset invalidated, say thanks to the "+ e);
-          }
-
           if (invalidateTrace == null) {
             invalidateTrace = new Throwable();
             killer = e;

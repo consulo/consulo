@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.intellij.codeInsight.lookup;
 
@@ -21,14 +7,14 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import kava.beans.PropertyChangeListener;
+
 public abstract class LookupManager {
-  public static LookupManager getInstance(Project project){
+  public static LookupManager getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, LookupManager.class);
   }
 
@@ -42,7 +28,7 @@ public abstract class LookupManager {
     final LookupEx lookup = getInstance(project).getActiveLookup();
     if (lookup == null) return null;
 
-    return InjectedLanguageUtil.getTopLevelEditor(lookup.getEditor()) == InjectedLanguageUtil.getTopLevelEditor(editor) ? lookup : null;
+    return lookup.getTopLevelEditor() == InjectedLanguageUtil.getTopLevelEditor(editor) ? lookup : null;
   }
 
   @Nullable
@@ -56,20 +42,27 @@ public abstract class LookupManager {
   }
 
   @Nullable
-  public abstract LookupEx showLookup(@Nonnull Editor editor,
-                                      @Nonnull LookupElement[] items,
-                                      @Nonnull String prefix,
-                                      @Nonnull LookupArranger arranger);
+  public abstract LookupEx showLookup(@Nonnull Editor editor, @Nonnull LookupElement[] items, @Nonnull String prefix, @Nonnull LookupArranger arranger);
 
   public abstract void hideActiveLookup();
+
+  public static void hideActiveLookup(@Nonnull Project project) {
+    LookupManager lookupManager = LookupManager.getInstance(project);
+    if (lookupManager != null) {
+      lookupManager.hideActiveLookup();
+    }
+  }
 
   @Nullable
   public abstract LookupEx getActiveLookup();
 
-  @NonNls public static final String PROP_ACTIVE_LOOKUP = "activeLookup";
+  @NonNls
+  public static final String PROP_ACTIVE_LOOKUP = "activeLookup";
 
   public abstract void addPropertyChangeListener(@Nonnull PropertyChangeListener listener);
+
   public abstract void addPropertyChangeListener(@Nonnull PropertyChangeListener listener, @Nonnull Disposable disposable);
+
   public abstract void removePropertyChangeListener(@Nonnull PropertyChangeListener listener);
 
   @Nonnull
