@@ -23,7 +23,16 @@ import java.util.EventListener;
  * @see {@link com.intellij.openapi.editor.EditorFactory#addEditorFactoryListener(com.intellij.openapi.editor.event.EditorFactoryListener)}
  */
 public interface EditorFactoryListener extends EventListener {
-  void editorCreated(@Nonnull EditorFactoryEvent event);
-  void editorReleased(@Nonnull EditorFactoryEvent event);
+  /**
+   * Called after {@link com.intellij.openapi.editor.Editor} instance has been created.
+   */
+  default void editorCreated(@Nonnull EditorFactoryEvent event) {
+  }
+
+  /**
+   * Called before {@link com.intellij.openapi.editor.Editor} instance will be released.
+   */
+  default void editorReleased(@Nonnull EditorFactoryEvent event) {
+  }
 }
 

@@ -1,33 +1,20 @@
-/*
- * Copyright 2000-2016 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.vfs.encoding;
 
 import com.intellij.concurrency.JobSchedulerImpl;
+import com.intellij.ide.AppLifecycleListener;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
-import com.intellij.openapi.editor.event.EditorFactoryAdapter;
+import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
+import com.intellij.openapi.editor.event.EditorFactoryListener;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
@@ -35,9 +22,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectLocator;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.UserDataHolderEx;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ObjectUtils;
@@ -51,25 +38,25 @@ import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.jetbrains.ide.PooledThreadExecutor;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
-
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Singleton
-@State(name = "Encoding", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/encoding.xml")})
+@State(name = "Encoding", storages = @Storage("encoding.xml"))
 public class EncodingManagerImpl extends EncodingManager implements PersistentStateComponent<EncodingManagerImpl.State>, Disposable {
   private static final Logger LOG = Logger.getInstance(EncodingManagerImpl.class);
-
   private static final Equality<Reference<Document>> REFERENCE_EQUALITY = new Equality<Reference<Document>>() {
     @Override
     public boolean equals(Reference<Document> o1, Reference<Document> o2) {
@@ -82,7 +69,7 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
 
   static class State {
     @Nonnull
-    private Charset myDefaultEncoding = CharsetToolkit.UTF8_CHARSET;
+    private Charset myDefaultEncoding = StandardCharsets.UTF_8;
 
     @Attribute("default_encoding")
     @Nonnull
@@ -102,18 +89,30 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
   private final ExecutorService changedDocumentExecutor =
           AppExecutorUtil.createBoundedApplicationPoolExecutor("EncodingManagerImpl Document Pool", PooledThreadExecutor.INSTANCE, JobSchedulerImpl.getJobPoolParallelism(), this);
 
-  @Inject
-  public EncodingManagerImpl(@Nonnull EditorFactory editorFactory) {
-    editorFactory.getEventMulticaster().addDocumentListener(new DocumentAdapter() {
+  private final AtomicBoolean myDisposed = new AtomicBoolean();
+
+  public EncodingManagerImpl() {
+    ApplicationManager.getApplication().getMessageBus().connect().subscribe(AppLifecycleListener.TOPIC, new AppLifecycleListener() {
       @Override
-      public void documentChanged(DocumentEvent e) {
+      public void appClosing() {
+        // should call before dispose in write action
+        // prevent any further re-detection and wait for the queue to clear
+        myDisposed.set(true);
+        clearDocumentQueue();
+      }
+    });
+
+    EditorFactory editorFactory = EditorFactory.getInstance();
+    editorFactory.getEventMulticaster().addDocumentListener(new DocumentListener() {
+      @Override
+      public void documentChanged(@Nonnull DocumentEvent e) {
         Document document = e.getDocument();
         if (isEditorOpenedFor(document)) {
           queueUpdateEncodingFromContent(document);
         }
       }
     }, this);
-    editorFactory.addEditorFactoryListener(new EditorFactoryAdapter() {
+    editorFactory.addEditorFactoryListener(new EditorFactoryListener() {
       @Override
       public void editorCreated(@Nonnull EditorFactoryEvent event) {
         queueUpdateEncodingFromContent(event.getEditor().getDocument());
@@ -121,33 +120,29 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
     }, this);
   }
 
-  private static boolean isEditorOpenedFor(Document document) {
+  private static boolean isEditorOpenedFor(@Nonnull Document document) {
     VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(document);
     if (virtualFile == null) return false;
     Project project = guessProject(virtualFile);
-    return project != null && !project.isDisposed() && FileEditorManager.getInstance(project).getEditors(virtualFile).length != 0;
+    return project != null && !project.isDisposed() && FileEditorManager.getInstance(project).isFileOpen(virtualFile);
   }
 
   @NonNls
   public static final String PROP_CACHED_ENCODING_CHANGED = "cachedEncoding";
 
-  private static final Key<String> DETECTING_ENCODING_KEY = Key.create("DETECTING_ENCODING_KEY");
-
   private void handleDocument(@Nonnull final Document document) {
-    if (document.getUserData(DETECTING_ENCODING_KEY) == null) return;
-    try {
-      VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(document);
-      if (virtualFile == null) return;
-      Project project = guessProject(virtualFile);
-      if (project != null && project.isDisposed()) return;
+    VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(document);
+    if (virtualFile == null) return;
+    Project project = guessProject(virtualFile);
+    while (true) {
+      if (project != null && project.isDisposed()) break;
+      int nRequests = addNumberOfRequestedRedetects(document, 0);
       Charset charset = LoadTextUtil.charsetFromContentOrNull(project, virtualFile, document.getImmutableCharSequence());
       Charset oldCached = getCachedCharsetFromContent(document);
       if (!Comparing.equal(charset, oldCached)) {
         setCachedCharsetFromContent(charset, oldCached, document);
       }
-    }
-    finally {
-      document.putUserData(DETECTING_ENCODING_KEY, null);
+      if (addNumberOfRequestedRedetects(document, -nRequests) == 0) break;
     }
   }
 
@@ -172,7 +167,7 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
     }
 
     final Project project = ProjectLocator.getInstance().guessProjectForFile(virtualFile);
-    return ApplicationManager.getApplication().runReadAction((Computable<Charset>)() -> {
+    return ReadAction.compute(() -> {
       Charset charsetFromContent = LoadTextUtil.charsetFromContentOrNull(project, virtualFile, document.getImmutableCharSequence());
       if (charsetFromContent != null) {
         setCachedCharsetFromContent(charsetFromContent, null, document);
@@ -183,23 +178,40 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
 
   @Override
   public void dispose() {
-    clearDocumentQueue();
+    myDisposed.set(true);
   }
 
-  private void queueUpdateEncodingFromContent(@Nonnull Document document) {
-    document.putUserData(DETECTING_ENCODING_KEY, "");
-    changedDocumentExecutor.execute(new DocumentEncodingDetectRequest(document));
+  // stores number of re-detection requests for this document
+  private static final Key<AtomicInteger> RUNNING_REDETECTS_KEY = Key.create("DETECTING_ENCODING_KEY");
+
+  private static int addNumberOfRequestedRedetects(@Nonnull Document document, int delta) {
+    AtomicInteger oldData = document.getUserData(RUNNING_REDETECTS_KEY);
+    if (oldData == null) {
+      oldData = ((UserDataHolderEx)document).putUserDataIfAbsent(RUNNING_REDETECTS_KEY, new AtomicInteger());
+    }
+    return oldData.addAndGet(delta);
+  }
+
+  void queueUpdateEncodingFromContent(@Nonnull Document document) {
+    if (myDisposed.get()) return; // ignore re-detect requests on app close
+    if (addNumberOfRequestedRedetects(document, 1) == 1) {
+      changedDocumentExecutor.execute(new DocumentEncodingDetectRequest(document, myDisposed));
+    }
   }
 
   private static class DocumentEncodingDetectRequest implements Runnable {
     private final Reference<Document> ref;
+    @Nonnull
+    private final AtomicBoolean myDisposed;
 
-    private DocumentEncodingDetectRequest(@Nonnull Document document) {
+    private DocumentEncodingDetectRequest(@Nonnull Document document, @Nonnull AtomicBoolean disposed) {
       ref = new WeakReference<>(document);
+      myDisposed = disposed;
     }
 
     @Override
     public void run() {
+      if (myDisposed.get()) return;
       Document document = ref.get();
       if (document == null) return; // document gced, don't bother
       ((EncodingManagerImpl)getInstance()).handleDocument(document);
@@ -213,12 +225,13 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
   }
 
   @Override
+  @Nonnull
   public State getState() {
     return myState;
   }
 
   @Override
-  public void loadState(State state) {
+  public void loadState(@Nonnull State state) {
     myState = state;
   }
 
@@ -263,19 +276,16 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
   }
 
   @Nullable
-  private static Project guessProject(final VirtualFile virtualFile) {
+  private static Project guessProject(@Nullable VirtualFile virtualFile) {
     return ProjectLocator.getInstance().guessProjectForFile(virtualFile);
   }
 
   @Override
   public void setEncoding(@Nullable VirtualFile virtualFileOrDir, @Nullable Charset charset) {
     Project project = guessProject(virtualFileOrDir);
-    EncodingProjectManager.getInstance(project).setEncoding(virtualFileOrDir, charset);
-  }
-
-  @Override
-  public boolean isUseUTFGuessing(final VirtualFile virtualFile) {
-    return true;
+    if (project != null) {
+      EncodingProjectManager.getInstance(project).setEncoding(virtualFileOrDir, charset);
+    }
   }
 
   @Override
