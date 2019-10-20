@@ -17,6 +17,7 @@ package consulo.container.plugin;
 
 import com.intellij.ide.plugins.HelpSetPath;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.plugins.PluginListenerDescriptor;
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.extensions.PluginId;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
@@ -115,6 +116,24 @@ public abstract class PluginDescriptorStub implements IdeaPluginDescriptor, Plug
   @Nonnull
   @Override
   public List<ComponentConfig> getProjectComponents() {
+    return Collections.emptyList();
+  }
+
+  @Nonnull
+  @Override
+  public List<PluginListenerDescriptor> getApplicationListeners() {
+    return Collections.emptyList();
+  }
+
+  @Nonnull
+  @Override
+  public List<PluginListenerDescriptor> getProjectListeners() {
+    return Collections.emptyList();
+  }
+
+  @Nonnull
+  @Override
+  public List<PluginListenerDescriptor> getModuleListeners() {
     return Collections.emptyList();
   }
 

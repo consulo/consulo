@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.project.impl;
 
+import com.intellij.ide.plugins.PluginListenerDescriptor;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.notification.*;
 import com.intellij.openapi.application.Application;
@@ -127,6 +128,12 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   @Override
   protected List<ComponentConfig> getComponentConfigs(PluginDescriptor ideaPluginDescriptor) {
     return ideaPluginDescriptor.getProjectComponents();
+  }
+
+  @Nonnull
+  @Override
+  protected List<PluginListenerDescriptor> getPluginListenerDescriptors(PluginDescriptor pluginDescriptor) {
+    return pluginDescriptor.getProjectListeners();
   }
 
   @Override

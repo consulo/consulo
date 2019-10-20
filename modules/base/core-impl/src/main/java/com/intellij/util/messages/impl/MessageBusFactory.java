@@ -20,6 +20,7 @@
 package com.intellij.util.messages.impl;
 
 import com.intellij.util.messages.MessageBus;
+import consulo.injecting.InjectingContainerOwner;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,11 +28,11 @@ import javax.annotation.Nullable;
 public class MessageBusFactory {
   private MessageBusFactory() {}
 
-  public static MessageBus newMessageBus(@Nonnull Object owner) {
+  public static MessageBusImpl newMessageBus(@Nonnull InjectingContainerOwner owner) {
     return new MessageBusImpl.RootBus(owner);
   }
 
-  public static MessageBus newMessageBus(@Nonnull Object owner, @Nullable MessageBus parentBus) {
+  public static MessageBusImpl newMessageBus(@Nonnull InjectingContainerOwner owner, @Nullable MessageBus parentBus) {
     return parentBus == null ? newMessageBus(owner) : new MessageBusImpl(owner, (MessageBusImpl)parentBus);
   }
 }

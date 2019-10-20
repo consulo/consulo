@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.messages.impl;
 
+import com.intellij.ide.plugins.PluginListenerDescriptor;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -9,16 +10,16 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.containers.MultiMap;
 import com.intellij.util.lang.CompoundRuntimeException;
-import com.intellij.util.messages.LazyListenerCreator;
-import com.intellij.util.messages.ListenerDescriptor;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
+import consulo.injecting.InjectingContainerOwner;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -56,7 +57,7 @@ public class MessageBusImpl implements MessageBus {
   private final List<MessageBusImpl> myChildBuses = ContainerUtil.createLockFreeCopyOnWriteList();
 
   @Nonnull
-  private volatile Map<String, List<ListenerDescriptor>> myTopicClassToListenerClass = Collections.emptyMap();
+  private MultiMap<String, PluginListenerDescriptor> myTopicClassToListenerClass = MultiMap.empty();
 
   private static final Object NA = new Object();
   private MessageBusImpl myParentBus;
@@ -64,14 +65,14 @@ public class MessageBusImpl implements MessageBus {
   private final RootBus myRootBus;
 
   //is used for debugging purposes
-  private final Object myOwner;
+  private final InjectingContainerOwner myOwner;
   private boolean myDisposed;
   private final Disposable myConnectionDisposable;
   private MessageDeliveryListener myMessageDeliveryListener;
 
   private final MessageBusConnectionImpl myLazyConnection;
 
-  public MessageBusImpl(@Nonnull Object owner, @Nonnull MessageBusImpl parentBus) {
+  public MessageBusImpl(@Nonnull InjectingContainerOwner owner, @Nonnull MessageBusImpl parentBus) {
     myOwner = owner;
     myConnectionDisposable = Disposer.newDisposable(myOwner.toString());
     myParentBus = parentBus;
@@ -87,7 +88,7 @@ public class MessageBusImpl implements MessageBus {
   }
 
   // root message bus constructor
-  private MessageBusImpl(@Nonnull Object owner) {
+  private MessageBusImpl(@Nonnull InjectingContainerOwner owner) {
     myOwner = owner;
     myConnectionDisposable = Disposer.newDisposable(myOwner.toString());
     myOrder = ArrayUtil.EMPTY_INT_ARRAY;
@@ -95,12 +96,9 @@ public class MessageBusImpl implements MessageBus {
     myLazyConnection = connect();
   }
 
-  /**
-   * Must be a concurrent map, because remove operation may be concurrently performed (synchronized only per topic).
-   */
   ///@ApiStatus.Internal
-  public void setLazyListeners(@Nonnull ConcurrentMap<String, List<ListenerDescriptor>> map) {
-    if (myTopicClassToListenerClass != Collections.<String, List<ListenerDescriptor>>emptyMap()) {
+  public void setLazyListeners(@Nonnull MultiMap<String, PluginListenerDescriptor> map) {
+    if (myTopicClassToListenerClass != MultiMap.<String, PluginListenerDescriptor>empty()) {
       throw new IllegalStateException("Already set: " + myTopicClassToListenerClass);
     }
     myTopicClassToListenerClass = map;
@@ -205,13 +203,14 @@ public class MessageBusImpl implements MessageBus {
       return publisher;
     }
 
-    List<ListenerDescriptor> listenerDescriptors = myTopicClassToListenerClass.remove(listenerClass.getName());
+    Collection<PluginListenerDescriptor> listenerDescriptors = myTopicClassToListenerClass.remove(listenerClass.getName());
     if (listenerDescriptors != null) {
-      LazyListenerCreator listenerCreator = (LazyListenerCreator)myOwner;
       List<Object> listeners = new ArrayList<>(listenerDescriptors.size());
-      for (ListenerDescriptor listenerDescriptor : listenerDescriptors) {
+      for (PluginListenerDescriptor listenerDescriptor : listenerDescriptors) {
         try {
-          listeners.add(listenerCreator.createListener(listenerDescriptor));
+          Class<?> listenerImplClass = Class.forName(listenerDescriptor.listenerClassName, false, listenerDescriptor.pluginDescriptor.getPluginClassLoader());
+          Object listenerImpl = myOwner.getInjectingContainer().getUnbindedInstance(listenerImplClass);
+          listeners.add(listenerImpl);
         }
         catch (ProcessCanceledException e) {
           throw e;
@@ -538,7 +537,7 @@ public class MessageBusImpl implements MessageBus {
       myClearedSubscribersCache = true;
     }
 
-    RootBus(@Nonnull Object owner) {
+    RootBus(@Nonnull InjectingContainerOwner owner) {
       super(owner);
     }
   }

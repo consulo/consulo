@@ -2616,4 +2616,8 @@
     <projectService serviceInterface="com.intellij.codeInsight.AutoPopupController" serviceImplementation="com.intellij.codeInsight.AutoPopupControllerImpl"/>
     <daemon.tooltipActionProvider order="last" id="defaultProvider" implementation="com.intellij.codeInsight.daemon.impl.DaemonTooltipActionProvider"/>
   </extensions>
+
+  <projectListeners>
+    <listener class="com.intellij.openapi.vfs.newvfs.impl.CachedFileType$PsiListener" topic="com.intellij.psi.util.PsiModificationTracker$Listener"/>
+  </projectListeners>
 </consulo-plugin>

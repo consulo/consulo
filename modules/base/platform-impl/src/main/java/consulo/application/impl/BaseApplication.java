@@ -21,6 +21,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.ActivityTracker;
 import com.intellij.ide.ApplicationLoadListener;
 import com.intellij.ide.StartupProgress;
+import com.intellij.ide.plugins.PluginListenerDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.AccessToken;
@@ -220,6 +221,12 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @Override
   protected List<ComponentConfig> getComponentConfigs(PluginDescriptor ideaPluginDescriptor) {
     return ideaPluginDescriptor.getAppComponents();
+  }
+
+  @Nonnull
+  @Override
+  protected List<PluginListenerDescriptor> getPluginListenerDescriptors(PluginDescriptor pluginDescriptor) {
+    return pluginDescriptor.getApplicationListeners();
   }
 
   protected void fireApplicationExiting() {

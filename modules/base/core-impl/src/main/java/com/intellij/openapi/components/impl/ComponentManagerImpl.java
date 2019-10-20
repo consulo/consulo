@@ -16,11 +16,11 @@
 package com.intellij.openapi.components.impl;
 
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.plugins.PluginListenerDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.*;
-import consulo.logging.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.ExtensionsArea;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
@@ -32,8 +32,10 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.UserDataHolderBase;
+import com.intellij.util.containers.MultiMap;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.impl.MessageBusFactory;
+import com.intellij.util.messages.impl.MessageBusImpl;
 import consulo.application.ApplicationProperties;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
@@ -41,6 +43,7 @@ import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.injecting.InjectingPoint;
 import consulo.injecting.key.InjectingKey;
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.TestOnly;
@@ -140,7 +143,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   protected volatile boolean temporarilyDisposed = false;
 
-  private MessageBus myMessageBus;
+  private MessageBusImpl myMessageBus;
 
   private final ComponentManager myParent;
 
@@ -170,7 +173,13 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   protected void buildInjectingContainer() {
-    myMessageBus = MessageBusFactory.newMessageBus(myName, myParent == null ? null : myParent.getMessageBus());
+    myMessageBus = MessageBusFactory.newMessageBus(this, myParent == null ? null : myParent.getMessageBus());
+
+    MultiMap<String, PluginListenerDescriptor> mapByTopic = new MultiMap<>();
+
+    fillListenerDescriptors(mapByTopic);
+
+    myMessageBus.setLazyListeners(mapByTopic);
 
     myExtensionsArea = new ExtensionsAreaImpl(this);
 
@@ -187,6 +196,18 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     bootstrapInjectingContainer(builder);
 
     myInjectingContainer = builder.build();
+  }
+
+  protected void fillListenerDescriptors(MultiMap<String, PluginListenerDescriptor> mapByTopic) {
+    for (PluginDescriptor plugin : PluginManager.getPlugins()) {
+      if (!PluginManagerCore.shouldSkipPlugin(plugin)) {
+        List<PluginListenerDescriptor> descriptors = getPluginListenerDescriptors(plugin);
+
+        for (PluginListenerDescriptor descriptor : descriptors) {
+          mapByTopic.putValue(descriptor.topicClassName, descriptor);
+        }
+      }
+    }
   }
 
   protected void registerExtensionPointsAndExtensions(ExtensionsAreaImpl area) {
@@ -212,6 +233,11 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   @Nonnull
   protected List<ComponentConfig> getComponentConfigs(PluginDescriptor ideaPluginDescriptor) {
+    return Collections.emptyList();
+  }
+
+  @Nonnull
+  protected List<PluginListenerDescriptor> getPluginListenerDescriptors(PluginDescriptor pluginDescriptor) {
     return Collections.emptyList();
   }
 
@@ -408,5 +434,10 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     myComponentsCreated = false;
     myNotLazyServices.clear();
     myDisposed = true;
+  }
+
+  @Override
+  public String toString() {
+    return myName;
   }
 }

@@ -16,6 +16,7 @@
 package consulo.container.plugin;
 
 import com.intellij.ide.plugins.HelpSetPath;
+import com.intellij.ide.plugins.PluginListenerDescriptor;
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.extensions.PluginId;
 import consulo.annotations.DeprecationInfo;
@@ -91,6 +92,15 @@ public interface PluginDescriptor {
 
   @Nonnull
   List<SimpleExtension> getSimpleExtensions();
+
+  @Nonnull
+  List<PluginListenerDescriptor> getApplicationListeners();
+
+  @Nonnull
+  List<PluginListenerDescriptor> getProjectListeners();
+
+  @Nonnull
+  List<PluginListenerDescriptor> getModuleListeners();
 
   @Deprecated
   @DeprecationInfo("This method is obsolete now. Bundled plugin is always platform modules - it can't load plugins")
