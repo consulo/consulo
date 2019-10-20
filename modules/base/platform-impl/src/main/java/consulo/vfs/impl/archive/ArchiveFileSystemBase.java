@@ -15,19 +15,17 @@
  */
 package consulo.vfs.impl.archive;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFilePointerCapableFileSystem;
 import com.intellij.openapi.vfs.impl.jar.JarHandler;
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.newvfs.VfsImplUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.URLUtil;
-import consulo.fileTypes.ArchiveFileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,7 +39,7 @@ import java.util.Set;
  * <p>
  * Base class for archive file types
  */
-public abstract class ArchiveFileSystemBase extends ArchiveFileSystem implements consulo.vfs.ArchiveFileSystem {
+public abstract class ArchiveFileSystemBase extends ArchiveFileSystem implements consulo.vfs.ArchiveFileSystem, VirtualFilePointerCapableFileSystem {
   private final Set<String> myNoCopyJarPaths;
   private final String myProtocol;
 

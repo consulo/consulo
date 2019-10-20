@@ -17,26 +17,30 @@ package com.intellij.psi;
 
 import com.intellij.openapi.util.Computable;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
-*/
-public class WeighingComparable<T,Loc> implements Comparable<WeighingComparable<T,Loc>>, ForceableComparable {
+ */
+public class WeighingComparable<T, Loc> implements Comparable<WeighingComparable<T, Loc>>, ForceableComparable {
   private static final Comparable NULL = new Comparable() {
     @Override
     public int compareTo(final Object o) {
       throw new UnsupportedOperationException("Method compareTo is not yet implemented in " + getClass().getName());
     }
+
+    @Override
+    public String toString() {
+      return "null";
+    }
   };
   @Nonnull
   private Comparable[] myComputedWeighs;
-  private final Computable<T> myElement;
+  private final Computable<? extends T> myElement;
   private final Loc myLocation;
-  private final Weigher<T,Loc>[] myWeighers;
+  private final Weigher<T, Loc>[] myWeighers;
 
-  public WeighingComparable(final Computable<T> element,
-                            @javax.annotation.Nullable final Loc location,
-                            final Weigher<T,Loc>[] weighers) {
+  public WeighingComparable(final Computable<? extends T> element, @Nullable final Loc location, final Weigher<T, Loc>[] weighers) {
     myElement = element;
     myLocation = location;
     myWeighers = weighers;
@@ -54,7 +58,7 @@ public class WeighingComparable<T,Loc> implements Comparable<WeighingComparable<
   }
 
   @Override
-  public int compareTo(@Nonnull final WeighingComparable<T,Loc> comparable) {
+  public int compareTo(@Nonnull final WeighingComparable<T, Loc> comparable) {
     if (myComputedWeighs == comparable.myComputedWeighs) return 0;
 
     for (int i = 0; i < myComputedWeighs.length; i++) {
@@ -75,7 +79,7 @@ public class WeighingComparable<T,Loc> implements Comparable<WeighingComparable<
     return 0;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private Comparable getWeight(final int index) {
     Comparable weight = myComputedWeighs[index];
     if (weight == null) {
@@ -93,7 +97,7 @@ public class WeighingComparable<T,Loc> implements Comparable<WeighingComparable<
       if (i != 0) builder.append(", ");
       builder.append(myWeighers[i]);
       builder.append("=");
-      builder.append(getWeight(i));
+      builder.append(myComputedWeighs[i]);
     }
     return builder.append("]").toString();
   }

@@ -1869,6 +1869,18 @@ public class StringUtil extends StringUtilRt {
     return StringUtilRt.endsWith(text, suffix);
   }
 
+  @Contract(pure = true)
+  public static boolean endsWith(@Nonnull CharSequence text, int start, int end, @Nonnull CharSequence suffix) {
+    int suffixLen = suffix.length();
+    if (end < suffixLen) return false;
+
+    for (int i = end - 1; i >= end - suffixLen && i >= start; i--) {
+      if (text.charAt(i) != suffix.charAt(i + suffixLen - end)) return false;
+    }
+
+    return true;
+  }
+
   @Nonnull
   @Contract(pure = true)
   public static String commonPrefix(@Nonnull String s1, @Nonnull String s2) {
@@ -2729,6 +2741,24 @@ public class StringUtil extends StringUtilRt {
     if (s1 == null) return -1;
     if (s2 == null) return 1;
     return ignoreCase ? s1.compareToIgnoreCase(s2) : s1.compareTo(s2);
+  }
+
+  @Contract(pure = true)
+  public static int compare(@Nullable CharSequence s1, @Nullable CharSequence s2, boolean ignoreCase) {
+    if (s1 == s2) return 0;
+    if (s1 == null) return -1;
+    if (s2 == null) return 1;
+
+    int length1 = s1.length();
+    int length2 = s2.length();
+    int i = 0;
+    for (; i < length1 && i < length2; i++) {
+      int diff = compare(s1.charAt(i), s2.charAt(i), ignoreCase);
+      if (diff != 0) {
+        return diff;
+      }
+    }
+    return length1 - length2;
   }
 
   @Contract(pure = true)

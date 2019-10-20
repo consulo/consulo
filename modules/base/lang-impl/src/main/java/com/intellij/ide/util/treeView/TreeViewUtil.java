@@ -21,10 +21,10 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderEx;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.PsiManagerEx;
-import com.intellij.util.containers.ConcurrentWeakHashMap;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.psi.PsiPackage;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -39,7 +39,7 @@ public class TreeViewUtil {
     final Project project = aPackage.getProject();
     ConcurrentMap<PsiPackage, Boolean> map = project.getUserData(SHOULD_ABBREV_PACK_KEY);
     if (map == null) {
-      final ConcurrentWeakHashMap<PsiPackage, Boolean> newMap = new ConcurrentWeakHashMap<PsiPackage, Boolean>();
+      final ConcurrentMap<PsiPackage, Boolean> newMap = ContainerUtil.createConcurrentWeakMap();
       map = ((UserDataHolderEx)project).putUserDataIfAbsent(SHOULD_ABBREV_PACK_KEY, newMap);
       if (map == newMap) {
         ((PsiManagerEx)PsiManager.getInstance(project)).registerRunnableToRunOnChange(new Runnable() {

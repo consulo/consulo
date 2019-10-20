@@ -74,6 +74,8 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   public static final String NAME_FILE = ".name";
 
   private final ProjectManager myManager;
+  @Nonnull
+  private final String myDirPath;
 
   private MyProjectManagerListener myProjectManagerListener;
 
@@ -90,6 +92,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   protected ProjectImpl(@Nonnull ProjectManager manager, @Nonnull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName, boolean noUIThread) {
     super(ApplicationManager.getApplication(), "Project " + (projectName == null ? dirPath : projectName), ExtensionAreaId.PROJECT);
+    myDirPath = dirPath;
 
     putUserData(CREATION_TIME, System.nanoTime());
 
@@ -474,10 +477,9 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   @Override
   public String toString() {
     return "Project" +
-           (isDisposed() ? " (Disposed" + (temporarilyDisposed ? " temporarily" : "") + ")" : isDefault() ? "" : " '" + getPresentableUrl() + "'") +
+           (isDisposed() ? " (Disposed" + (temporarilyDisposed ? " temporarily" : "") + ")" : isDefault() ? "" : " '" + myDirPath + "'") +
            (isDefault() ? " (Default)" : "") +
-           " " +
-           myName;
+           " " + myName;
   }
 
   public static void dropUnableToSaveProjectNotification(@Nonnull final Project project, Collection<File> readOnlyFiles) {

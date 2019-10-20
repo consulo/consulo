@@ -20,11 +20,14 @@
 package com.intellij.openapi.project;
 
 import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class ProjectLocator {
   
@@ -50,4 +53,23 @@ public abstract class ProjectLocator {
   */
   @Nonnull
   public abstract Collection<Project> getProjectsForFile(VirtualFile file);
+
+  public static <T, E extends Throwable> T computeWithPreferredProject(@Nonnull VirtualFile file, @Nonnull Project preferredProject, @Nonnull ThrowableComputable<T, E> action) throws E {
+    Map<VirtualFile, Project> local = ourPreferredProjects.get();
+    local.put(file, preferredProject);
+    try {
+      return action.compute();
+    }
+    finally {
+      local.remove(file);
+    }
+  }
+
+  @Nullable
+  static Project getPreferredProject(@Nonnull VirtualFile file) {
+    return ourPreferredProjects.get().get(file);
+  }
+
+  private static final ThreadLocal<Map<VirtualFile, Project>> ourPreferredProjects = ThreadLocal.withInitial(HashMap::new);
+
 }

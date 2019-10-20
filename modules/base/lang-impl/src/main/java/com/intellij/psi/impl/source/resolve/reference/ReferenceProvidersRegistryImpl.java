@@ -24,9 +24,9 @@ import com.intellij.psi.*;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FactoryMap;
+
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
-
 import java.util.*;
 
 @Singleton
@@ -35,49 +35,44 @@ public class ReferenceProvidersRegistryImpl extends ReferenceProvidersRegistry {
   private static final LanguageExtension<PsiReferenceProviderBean> REFERENCE_PROVIDER_EXTENSION = new LanguageExtension<PsiReferenceProviderBean>(PsiReferenceProviderBean.EP_NAME.getName());
 
   private static final Comparator<ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>> PRIORITY_COMPARATOR =
-    new Comparator<ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>>() {
-      @Override
-      public int compare(ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext> o1,
-                         ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext> o2) {
-        return Comparing.compare(o2.priority, o1.priority);
-      }
-    };
-
-  @SuppressWarnings({"MismatchedQueryAndUpdateOfCollection"})
-  private final Map<Language, PsiReferenceRegistrarImpl> myRegistrars = new FactoryMap<Language, PsiReferenceRegistrarImpl>() {
-    @Override
-    protected PsiReferenceRegistrarImpl create(Language language) {
-      PsiReferenceRegistrarImpl registrar = new PsiReferenceRegistrarImpl();
-      for (PsiReferenceContributor contributor : CONTRIBUTOR_EXTENSION.allForLanguage(language)) {
-        contributor.registerReferenceProviders(registrar);
-      }
-
-      List<PsiReferenceProviderBean> referenceProviderBeans = REFERENCE_PROVIDER_EXTENSION.allForLanguage(language);
-      for (final PsiReferenceProviderBean providerBean : referenceProviderBeans) {
-        final ElementPattern<PsiElement> pattern = providerBean.createElementPattern();
-        if (pattern != null) {
-          registrar.registerReferenceProvider(pattern, new PsiReferenceProvider() {
-
-            PsiReferenceProvider myProvider;
-
-            @Nonnull
+          new Comparator<ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>>() {
             @Override
-            public PsiReference[] getReferencesByElement(@Nonnull PsiElement element, @Nonnull ProcessingContext context) {
-              if (myProvider == null) {
-
-                myProvider = providerBean.instantiate();
-                if (myProvider == null) {
-                  myProvider = NULL_REFERENCE_PROVIDER;
-                }
-              }
-              return myProvider.getReferencesByElement(element, context);
+            public int compare(ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext> o1, ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext> o2) {
+              return Comparing.compare(o2.priority, o1.priority);
             }
-          });
-        }
-      }
-      return registrar;
+          };
+
+  private final Map<Language, PsiReferenceRegistrarImpl> myRegistrars = FactoryMap.create(language -> {
+    PsiReferenceRegistrarImpl registrar = new PsiReferenceRegistrarImpl();
+    for (PsiReferenceContributor contributor : CONTRIBUTOR_EXTENSION.allForLanguage(language)) {
+      contributor.registerReferenceProviders(registrar);
     }
-  };
+
+    List<PsiReferenceProviderBean> referenceProviderBeans = REFERENCE_PROVIDER_EXTENSION.allForLanguage(language);
+    for (final PsiReferenceProviderBean providerBean : referenceProviderBeans) {
+      final ElementPattern<PsiElement> pattern = providerBean.createElementPattern();
+      if (pattern != null) {
+        registrar.registerReferenceProvider(pattern, new PsiReferenceProvider() {
+
+          PsiReferenceProvider myProvider;
+
+          @Nonnull
+          @Override
+          public PsiReference[] getReferencesByElement(@Nonnull PsiElement element, @Nonnull ProcessingContext context) {
+            if (myProvider == null) {
+
+              myProvider = providerBean.instantiate();
+              if (myProvider == null) {
+                myProvider = NULL_REFERENCE_PROVIDER;
+              }
+            }
+            return myProvider.getReferencesByElement(element, context);
+          }
+        });
+      }
+    }
+    return registrar;
+  });
 
   @Override
   public synchronized PsiReferenceRegistrarImpl getRegistrar(Language language) {
@@ -85,13 +80,10 @@ public class ReferenceProvidersRegistryImpl extends ReferenceProvidersRegistry {
   }
 
   @Override
-  protected PsiReference[] doGetReferencesFromProviders(PsiElement context,
-                                                        PsiReferenceService.Hints hints) {
-    List<ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>> providersForContextLanguage =
-      getRegistrar(context.getLanguage()).getPairsByElement(context, hints);
+  protected PsiReference[] doGetReferencesFromProviders(PsiElement context, PsiReferenceService.Hints hints) {
+    List<ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>> providersForContextLanguage = getRegistrar(context.getLanguage()).getPairsByElement(context, hints);
 
-    List<ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>> providersForAllLanguages =
-      getRegistrar(Language.ANY).getPairsByElement(context, hints);
+    List<ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>> providersForAllLanguages = getRegistrar(Language.ANY).getPairsByElement(context, hints);
 
     int providersCount = providersForContextLanguage.size() + providersForAllLanguages.size();
 
@@ -100,15 +92,12 @@ public class ReferenceProvidersRegistryImpl extends ReferenceProvidersRegistry {
     }
 
     if (providersCount == 1) {
-      final ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext> firstProvider =
-        (providersForAllLanguages.isEmpty() ? providersForContextLanguage : providersForAllLanguages).get(0);
+      final ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext> firstProvider = (providersForAllLanguages.isEmpty() ? providersForContextLanguage : providersForAllLanguages).get(0);
       return firstProvider.provider.getReferencesByElement(context, firstProvider.processingContext);
     }
 
-    List<ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>> list =
-      ContainerUtil.concat(providersForContextLanguage, providersForAllLanguages);
-    @SuppressWarnings("unchecked")
-    ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>[] providers = list.toArray(new ProviderBinding.ProviderInfo[list.size()]);
+    List<ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>> list = ContainerUtil.concat(providersForContextLanguage, providersForAllLanguages);
+    @SuppressWarnings("unchecked") ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>[] providers = list.toArray(new ProviderBinding.ProviderInfo[list.size()]);
 
     Arrays.sort(providers, PRIORITY_COMPARATOR);
 
@@ -120,7 +109,7 @@ public class ReferenceProvidersRegistryImpl extends ReferenceProvidersRegistry {
       try {
         refs = trinity.provider.getReferencesByElement(context, trinity.processingContext);
       }
-      catch(IndexNotReadyException ex) {
+      catch (IndexNotReadyException ex) {
         continue;
       }
       if (trinity.priority != maxPriority) {

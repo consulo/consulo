@@ -15,16 +15,17 @@
  */
 package com.intellij.patterns;
 
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Key;
-import com.intellij.util.InstanceofCheckerGenerator;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 
 /**
  * @author peter
@@ -37,10 +38,10 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
   }
 
   protected ObjectPattern(final Class<T> aClass) {
-    final Condition<Object> checker = InstanceofCheckerGenerator.getInstance().getInstanceofChecker(aClass);
-    myCondition = new ElementPatternCondition<T>(new InitialPatternCondition<T>(aClass) {
+    this(new InitialPatternCondition<T>(aClass) {
+      @Override
       public boolean accepts(@Nullable final Object o, final ProcessingContext context) {
-        return checker.value(o);
+        return aClass.isInstance(o);
       }
     });
   }
@@ -190,7 +191,7 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
     return myCondition.toString();
   }
 
-  public static class Capture<T> extends ObjectPattern<T,Capture<T>> {
+  public static class Capture<T> extends ObjectPattern<T, Capture<T>> {
 
     public Capture(final Class<T> aClass) {
       super(aClass);

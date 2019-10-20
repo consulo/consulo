@@ -1543,7 +1543,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
 
   @TestOnly
   public void waitUntilRefreshed() {
-    VcsDirtyScopeVfsListener.getInstance(myProject).flushDirt();
+    VcsDirtyScopeVfsListener.getInstance(myProject).waitForAsyncTaskCompletion();
     myUpdater.waitUntilRefreshed();
     waitUpdateAlarm();
   }
@@ -1605,7 +1605,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
       updateImmediately();
       return true;
     }
-    VcsDirtyScopeVfsListener.getInstance(myProject).flushDirt();
+    VcsDirtyScopeVfsListener.getInstance(myProject).waitForAsyncTaskCompletion();
     myUpdater.waitUntilRefreshed();
     waitUpdateAlarm();
     return true;

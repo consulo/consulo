@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.indexing;
+package com.intellij.util.indexing.impl;
 
+import com.intellij.util.indexing.IndexId;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataInputOutputUtil;
 import com.intellij.util.io.KeyDescriptor;
@@ -27,14 +28,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * Created by Maxim.Mossienko on 4/7/2014.
- */
 public class InputIndexDataExternalizer<K> implements DataExternalizer<Collection<K>> {
   private final KeyDescriptor<K> myKeyDescriptor;
-  private final ID<K, ?> myIndexId;
+  private final IndexId<K, ?> myIndexId;
 
-  public InputIndexDataExternalizer(KeyDescriptor<K> keyDescriptor, ID<K, ?> indexId) {
+  public InputIndexDataExternalizer(KeyDescriptor<K> keyDescriptor, IndexId<K, ?> indexId) {
     myKeyDescriptor = keyDescriptor;
     myIndexId = indexId;
   }
@@ -57,7 +55,7 @@ public class InputIndexDataExternalizer<K> implements DataExternalizer<Collectio
   public Collection<K> read(@Nonnull DataInput in) throws IOException {
     try {
       final int size = DataInputOutputUtil.readINT(in);
-      final List<K> list = new ArrayList<K>(size);
+      final List<K> list = new ArrayList<>(size);
       for (int idx = 0; idx < size; idx++) {
         list.add(myKeyDescriptor.read(in));
       }

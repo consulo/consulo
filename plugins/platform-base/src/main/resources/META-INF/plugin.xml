@@ -324,6 +324,15 @@
     <extensionPoint name="indexPatternProvider"
                     interface="com.intellij.psi.search.IndexPatternProvider"/>
 
+    <extensionPoint name="indexImporterFactory"
+                    interface="com.intellij.index.IndexImporterFactory" />
+
+    <extensionPoint name="fileBasedIndex.providedLocator"
+                    interface="com.intellij.util.indexing.provided.ProvidedIndexExtensionLocator" />
+
+    <extensionPoint name="globalIndexFilter"
+                    interface="com.intellij.util.indexing.GlobalIndexFilter" />
+
     <extensionPoint name="refGraphAnnotator"
                     interface="com.intellij.codeInspection.reference.RefGraphAnnotator"/>
 
@@ -2027,8 +2036,8 @@
 
     <fileBasedIndex implementation="com.intellij.psi.impl.cache.impl.todo.TodoIndex"/>
     <fileBasedIndex implementation="com.intellij.psi.impl.cache.impl.id.IdIndexImpl"/>
-    <fileBasedIndex implementation="com.intellij.psi.search.FilenameIndex"/>
-    <fileBasedIndex implementation="com.intellij.psi.search.FileTypeIndex"/>
+    <fileBasedIndex implementation="com.intellij.psi.search.FilenameIndexImpl"/>
+    <fileBasedIndex implementation="com.intellij.psi.search.FileTypeIndexImpl"/>
     <fileBasedIndex implementation="com.intellij.psi.stubs.StubUpdatingIndex"/>
 
     <fileBasedIndex implementation="com.intellij.find.ngrams.TrigramIndex"/>
@@ -2615,7 +2624,20 @@
     <projectService serviceImplementation="com.intellij.codeInsight.daemon.impl.ErrorStripeUpdateManager"/>
     <projectService serviceInterface="com.intellij.codeInsight.AutoPopupController" serviceImplementation="com.intellij.codeInsight.AutoPopupControllerImpl"/>
     <daemon.tooltipActionProvider order="last" id="defaultProvider" implementation="com.intellij.codeInsight.daemon.impl.DaemonTooltipActionProvider"/>
+
+    <fileBasedIndex.providedLocator implementation="com.intellij.index.BasicProvidedExtensionLocator"/>
+
+    <vfs.asyncListener implementation="com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl$MyAsyncFileListener"/>
+    <vfs.asyncListener implementation="com.intellij.util.indexing.FileBasedIndexImpl$ChangedFilesCollector"/>
+
+    <applicationService serviceInterface="com.intellij.psi.search.FileNameIndexService" serviceImplementation="com.intellij.psi.search.FileNameIndexServiceImpl" />
+
+    <vfs.asyncListener implementation="com.intellij.openapi.vfs.impl.VirtualFilePointerManagerImpl$MyAsyncFileListener"/>
   </extensions>
+
+  <applicationListeners>
+    <listener class="com.intellij.util.gist.GistManagerImpl$MyBulkFileListener" topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
+  </applicationListeners>
 
   <projectListeners>
     <listener class="com.intellij.openapi.vfs.newvfs.impl.CachedFileType$PsiListener" topic="com.intellij.psi.util.PsiModificationTracker$Listener"/>

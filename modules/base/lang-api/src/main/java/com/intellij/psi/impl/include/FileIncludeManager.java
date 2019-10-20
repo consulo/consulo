@@ -24,6 +24,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.util.Processor;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Dmitry Avdeev
@@ -36,10 +37,12 @@ public abstract class FileIncludeManager {
 
   public abstract VirtualFile[] getIncludedFiles(@Nonnull VirtualFile file, boolean compileTimeOnly);
 
+  public abstract VirtualFile[] getIncludedFiles(@Nonnull VirtualFile file, boolean compileTimeOnly, boolean recursively);
+
   public abstract VirtualFile[] getIncludingFiles(@Nonnull VirtualFile file, boolean compileTimeOnly);
 
-  public abstract void processIncludingFiles(PsiFile context, Processor<Pair<VirtualFile, FileIncludeInfo>> processor);
+  public abstract void processIncludingFiles(PsiFile context, Processor<? super Pair<VirtualFile, FileIncludeInfo>> processor);
 
-  @javax.annotation.Nullable
-  public abstract PsiFileSystemItem resolveFileInclude(FileIncludeInfo info, PsiFile context);
+  @Nullable
+  public abstract PsiFileSystemItem resolveFileInclude(@Nonnull FileIncludeInfo info, @Nonnull PsiFile context);
 }

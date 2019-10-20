@@ -17,13 +17,12 @@
 package com.intellij.util.indexing;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.Iterator;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Dec 14, 2007
  */
 public abstract class ValueContainer<Value> {
   public interface IntIterator {
@@ -34,6 +33,7 @@ public abstract class ValueContainer<Value> {
     int size();
   }
 
+  @FunctionalInterface
   public interface IntPredicate {
     boolean contains(int id);
   }
@@ -51,14 +51,15 @@ public abstract class ValueContainer<Value> {
 
   public abstract int size();
 
+  @FunctionalInterface
   public interface ContainerAction<T> {
     boolean perform(int id, T value);
   }
 
-  public final boolean forEach(@Nonnull ContainerAction<Value> action) {
-    for (final ValueIterator<Value> valueIterator = getValueIterator(); valueIterator.hasNext();) {
+  public final boolean forEach(@Nonnull ContainerAction<? super Value> action) {
+    for (final ValueIterator<Value> valueIterator = getValueIterator(); valueIterator.hasNext(); ) {
       final Value value = valueIterator.next();
-      for (final IntIterator intIterator = valueIterator.getInputIdsIterator(); intIterator.hasNext();) {
+      for (final IntIterator intIterator = valueIterator.getInputIdsIterator(); intIterator.hasNext(); ) {
         if (!action.perform(intIterator.next(), value)) return false;
       }
     }

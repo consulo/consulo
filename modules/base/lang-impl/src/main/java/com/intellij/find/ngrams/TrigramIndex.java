@@ -20,10 +20,8 @@
 package com.intellij.find.ngrams;
 
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ThreadLocalCachedIntArray;
 import com.intellij.openapi.util.text.TrigramBuilder;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.impl.cache.impl.id.IdIndex;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.indexing.*;
@@ -33,7 +31,6 @@ import com.intellij.util.io.EnumeratorIntegerDescriptor;
 import com.intellij.util.io.KeyDescriptor;
 import gnu.trove.THashMap;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -43,17 +40,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
-public class TrigramIndex extends ScalarIndexExtension<Integer> implements CustomInputsIndexFileBasedIndexExtension<Integer> {
+public class TrigramIndex extends ScalarIndexExtension<Integer> implements CustomInputsIndexFileBasedIndexExtension<Integer>, DocumentChangeDependentIndex {
   public static final boolean ENABLED = SystemProperties.getBooleanProperty("idea.internal.trigramindex.enabled", true);
 
-  public static final ID<Integer,Void> INDEX_ID = ID.create("Trigram.Index");
+  public static final ID<Integer, Void> INDEX_ID = ID.create("Trigram.Index");
 
-  private static final FileBasedIndex.InputFilter INPUT_FILTER = new FileBasedIndex.InputFilter() {
-    @Override
-    public boolean acceptInput(@Nullable Project project, @Nonnull VirtualFile file) {
-      return isIndexable(file.getFileType());
-    }
-  };
+  private static final FileBasedIndex.InputFilter INPUT_FILTER = (project, file) -> isIndexable(file.getFileType());
 
   public static boolean isIndexable(FileType fileType) {
     return ENABLED && !fileType.isBinary();
@@ -99,13 +91,14 @@ public class TrigramIndex extends ScalarIndexExtension<Integer> implements Custo
 
   @Override
   public int getVersion() {
-    return ENABLED ? 3 + (IdIndex.ourSnapshotMappingsEnabled ? 0xFF:0) : 1;
+    return ENABLED ? 3 + (IdIndex.ourSnapshotMappingsEnabled ? 0xFF : 0) : 1;
   }
 
   @Override
   public boolean hasSnapshotMapping() {
     return true;
   }
+
   private static final ThreadLocalCachedIntArray spareBufferLocal = new ThreadLocalCachedIntArray();
 
   @Nonnull
@@ -118,14 +111,14 @@ public class TrigramIndex extends ScalarIndexExtension<Integer> implements Custo
 
         int[] buffer = spareBufferLocal.getBuffer(numberOfValues);
         int ptr = 0;
-        for(Integer i:value) {
+        for (Integer i : value) {
           buffer[ptr++] = i;
         }
-        Arrays.sort(buffer,0, numberOfValues);
+        Arrays.sort(buffer, 0, numberOfValues);
 
         DataInputOutputUtil.writeINT(out, numberOfValues);
         int prev = 0;
-        for(ptr=0; ptr< numberOfValues; ++ptr) {
+        for (ptr = 0; ptr < numberOfValues; ++ptr) {
           DataInputOutputUtil.writeLONG(out, (long)buffer[ptr] - prev);
           prev = buffer[ptr];
         }
@@ -135,9 +128,9 @@ public class TrigramIndex extends ScalarIndexExtension<Integer> implements Custo
       @Override
       public Collection<Integer> read(@Nonnull DataInput in) throws IOException {
         int size = DataInputOutputUtil.readINT(in);
-        ArrayList<Integer> result = new ArrayList<Integer>(size);
+        ArrayList<Integer> result = new ArrayList<>(size);
         int prev = 0;
-        while(size -- > 0) {
+        while (size-- > 0) {
           int l = (int)(DataInputOutputUtil.readLONG(in) + prev);
           result.add(l);
           prev = l;
@@ -149,9 +142,10 @@ public class TrigramIndex extends ScalarIndexExtension<Integer> implements Custo
 
   private static class MyTrigramProcessor extends TrigramBuilder.TrigramProcessor {
     Map<Integer, Void> map;
+
     @Override
     public boolean consumeTrigramsCount(int count) {
-      map = new THashMap<Integer, Void>(count);
+      map = new THashMap<>(count);
       return true;
     }
 

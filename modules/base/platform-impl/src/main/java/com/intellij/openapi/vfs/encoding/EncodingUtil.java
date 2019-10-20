@@ -23,14 +23,14 @@ import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileEvent;
+import com.intellij.openapi.vfs.newvfs.events.VFileContentChangeEvent;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.fileTypes.FileTypeWithPredefinedCharset;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -171,7 +171,7 @@ public class EncodingUtil {
 
     // if file was modified, the user will be asked here
     try {
-      EncodingProjectManagerImpl.suppressReloadDuring(() -> ((FileDocumentManagerImpl)documentManager).contentsChanged(new VirtualFileEvent(null, virtualFile, virtualFile.getName(), virtualFile.getParent())));
+      EncodingProjectManagerImpl.suppressReloadDuring(() -> ((FileDocumentManagerImpl)documentManager).contentsChanged(new VFileContentChangeEvent(null, virtualFile, 0, 0, false)));
     }
     finally {
       Disposer.dispose(disposable);
@@ -181,7 +181,7 @@ public class EncodingUtil {
   // returns file type description if the charset is hard-coded or null if file type does not restrict encoding
   private static String checkHardcodedCharsetFileType(@Nonnull VirtualFile virtualFile) {
     FileType fileType = virtualFile.getFileType();
-    if(fileType instanceof FileTypeWithPredefinedCharset) {
+    if (fileType instanceof FileTypeWithPredefinedCharset) {
       return ((FileTypeWithPredefinedCharset)fileType).getPredefinedCharset(virtualFile).getSecond();
     }
     return null;

@@ -28,7 +28,6 @@ import com.intellij.openapi.editor.colors.*;
 import com.intellij.openapi.editor.colors.impl.DelegateColorScheme;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.impl.EditorFactoryImpl;
-import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
@@ -39,9 +38,8 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.StringTokenizer;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
@@ -160,42 +158,35 @@ public class ConsoleViewUtil {
     }
 
     static final Map<Key, List<TextAttributesKey>> textAttributeKeys = ContainerUtil.newConcurrentMap();
-    static final Map<Key, TextAttributes> mergedTextAttributes = new ConcurrentFactoryMap<Key, TextAttributes>() {
-      @Nullable
-      @Override
-      protected TextAttributes create(Key contentKey) {
-        EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
-        TextAttributes result = scheme.getAttributes(HighlighterColors.TEXT);
-        for (TextAttributesKey key : textAttributeKeys.get(contentKey)) {
-          TextAttributes attributes = scheme.getAttributes(key);
-          if (attributes != null) {
-            result = TextAttributes.merge(result, attributes);
-          }
+    static final Map<Key, TextAttributes> mergedTextAttributes = ConcurrentFactoryMap.createMap(contentKey -> {
+      EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
+      TextAttributes result = scheme.getAttributes(HighlighterColors.TEXT);
+      for (TextAttributesKey key : textAttributeKeys.get(contentKey)) {
+        TextAttributes attributes = scheme.getAttributes(key);
+        if (attributes != null) {
+          result = TextAttributes.merge(result, attributes);
         }
-        return result;
       }
-    };
+      return result;
+    }) ;
 
-    static final Map<List<TextAttributesKey>, Key> keys = new ConcurrentFactoryMap<List<TextAttributesKey>, Key>() {
-      @Override
-      protected Key create(List<TextAttributesKey> keys) {
-        StringBuilder keyName = new StringBuilder("ConsoleViewUtil_");
-        for (TextAttributesKey key : keys) {
-          keyName.append("_").append(key.getExternalName());
+    static final Map<List<TextAttributesKey>, Key> keys = ConcurrentFactoryMap.createMap(keys -> {
+      StringBuilder keyName = new StringBuilder("ConsoleViewUtil_");
+      for (TextAttributesKey key : keys) {
+        keyName.append("_").append(key.getExternalName());
+      }
+      final Key newKey = new Key(keyName.toString());
+      textAttributeKeys.put(newKey, keys);
+      ConsoleViewContentType contentType = new ConsoleViewContentType(keyName.toString(), HighlighterColors.TEXT) {
+        @Override
+        public TextAttributes getAttributes() {
+          return mergedTextAttributes.get(newKey);
         }
-        final Key newKey = new Key(keyName.toString());
-        textAttributeKeys.put(newKey, keys);
-        ConsoleViewContentType contentType = new ConsoleViewContentType(keyName.toString(), HighlighterColors.TEXT) {
-          @Override
-          public TextAttributes getAttributes() {
-            return mergedTextAttributes.get(newKey);
-          }
-        };
+      };
 
-        registerNewConsoleViewType(newKey, contentType);
-        return newKey;
-      }
-    };
+      registerNewConsoleViewType(newKey, contentType);
+      return newKey;
+    });
   }
 
   public static void printWithHighlighting(@Nonnull ConsoleView console, @Nonnull String text, @Nonnull SyntaxHighlighter highlighter) {

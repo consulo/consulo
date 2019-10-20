@@ -19,9 +19,14 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.ProjectScope;
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 
 public class FindSymbolParameters {
+  public static FindSymbolParameters simple(@Nonnull Project project, boolean searchInLibraries) {
+    return new FindSymbolParameters("", "", searchScopeFor(project, searchInLibraries), ((FileBasedIndexImpl)FileBasedIndex.getInstance()).projectIndexableFiles(project));
+  }
+
   private final String myCompletePattern;
   private final String myLocalPatternName;
   private final GlobalSearchScope mySearchScope;

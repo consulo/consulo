@@ -166,17 +166,23 @@ public class PluginBeanParser {
 
     List<PluginListenerDescriptor> list = new ArrayList<PluginListenerDescriptor>();
 
-    for (SimpleXmlElement child : children) {
-      String implClass = child.getAttributeValue("class");
-      String topicClass = child.getAttributeValue("topic");
-      boolean activeInTestMode = Boolean.valueOf(child.getAttributeValue("activeInTestMode", "true"));
-      boolean activeInHeadlessMode = Boolean.valueOf(child.getAttributeValue("activeInHeadlessMode", "true"));
+    for (SimpleXmlElement listenersElement : children) {
+      for (SimpleXmlElement listenerElement : listenersElement.getChildren()) {
+        String implClass = listenerElement.getAttributeValue("class");
+        String topicClass = listenerElement.getAttributeValue("topic");
+        boolean activeInTestMode = Boolean.valueOf(listenerElement.getAttributeValue("activeInTestMode", "true"));
+        boolean activeInHeadlessMode = Boolean.valueOf(listenerElement.getAttributeValue("activeInHeadlessMode", "true"));
 
-      if (implClass == null || topicClass == null) {
-        throw new IllegalArgumentException();
+        if (implClass == null) {
+          throw new IllegalArgumentException("'class' empty: " + listenerElement);
+        }
+
+        if (topicClass == null) {
+          throw new IllegalArgumentException("'topic' empty: " + listenerElement);
+        }
+
+        list.add(new PluginListenerDescriptor(implClass, topicClass, activeInTestMode, activeInHeadlessMode));
       }
-
-      list.add(new PluginListenerDescriptor(implClass, topicClass, activeInTestMode, activeInHeadlessMode));
     }
 
     return list;

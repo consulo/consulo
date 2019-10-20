@@ -36,9 +36,8 @@ import com.intellij.util.ui.EmptyClipboardOwner;
 import com.intellij.util.ui.MouseEventAdapter;
 import com.intellij.util.ui.UIUtil;
 import consulo.logging.Logger;
-import javax.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
@@ -69,13 +68,7 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, IdeEvent
   });
   private final JRootPane myRootPane;
 
-  private final Map<String, PaintersHelper> myNamedPainters = new FactoryMap<String, PaintersHelper>() {
-    @Nullable
-    @Override
-    protected PaintersHelper create(String key) {
-      return new PaintersHelper(IdeGlassPaneImpl.this);
-    }
-  };
+  private final Map<String, PaintersHelper> myNamedPainters = FactoryMap.create(it -> new PaintersHelper(this));
 
   private boolean myPreprocessorActive;
   private final Map<Object, Cursor> myListener2Cursor = new LinkedHashMap<>();

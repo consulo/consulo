@@ -194,6 +194,6 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
 
   @Override
   public String toString() {
-    return "Module: '" + getName() + "'";
+    return "Module: '" + myName + "'";
   }
 }

@@ -49,6 +49,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
+import java.util.concurrent.ConcurrentMap;
 
 @Singleton
 public class TemplateManagerImpl extends TemplateManager implements Disposable {
@@ -613,9 +614,9 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     ProperTextRange editRange = ProperTextRange.create(startOffset, endOffset);
     assertRangeWithinDocument(editRange, file.getViewProvider().getDocument());
 
-    ConcurrentFactoryMap<Pair<ProperTextRange, String>, OffsetsInFile> map = CachedValuesManager.getCachedValue(file, () ->
+    ConcurrentMap<Pair<ProperTextRange, String>, OffsetsInFile> map = CachedValuesManager.getCachedValue(file, () ->
             CachedValueProvider.Result.create(
-                    ConcurrentFactoryMap.createConcurrentMap(
+                    ConcurrentFactoryMap.createMap(
                             key -> copyWithDummyIdentifier(new OffsetsInFile(file), key.first.getStartOffset(), key.first.getEndOffset(), key.second)),
                     file, file.getViewProvider().getDocument()));
     return map.get(Pair.create(editRange, replacement));

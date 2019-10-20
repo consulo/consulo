@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.indexing;
+package com.intellij.util.io;
 
 import com.intellij.openapi.util.io.ByteArraySequence;
-import com.intellij.util.io.DataExternalizer;
-
 import javax.annotation.Nonnull;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Created by Maxim.Mossienko on 5/7/2014.
+ * @author Maxim.Mossienko
  */
-class ByteSequenceDataExternalizer implements DataExternalizer<ByteArraySequence> {
-  static final ByteSequenceDataExternalizer INSTANCE = new ByteSequenceDataExternalizer();
+public class ByteSequenceDataExternalizer implements DataExternalizer<ByteArraySequence> {
+  public static final ByteSequenceDataExternalizer INSTANCE = new ByteSequenceDataExternalizer();
+
   @Override
   public void save(@Nonnull DataOutput out, ByteArraySequence value) throws IOException {
     out.write(value.getBytes(), value.getOffset(), value.getLength()); // todo fix double copying

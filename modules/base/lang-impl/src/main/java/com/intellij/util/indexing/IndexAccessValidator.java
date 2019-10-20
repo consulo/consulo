@@ -16,28 +16,32 @@
 package com.intellij.util.indexing;
 
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.ThrowableComputable;
 import javax.annotation.Nonnull;
 
 import java.text.MessageFormat;
 
-/**
- * Created by Maxim.Mossienko on 11/23/2015.
- */
 public class IndexAccessValidator {
   private final ThreadLocal<ID<?, ?>> ourAlreadyProcessingIndices = new ThreadLocal<>();
 
-  public void checkAccessingIndexDuringOtherIndexProcessing(@Nonnull ID<?, ?> indexKey) {
+  private void checkAccessingIndexDuringOtherIndexProcessing(@Nonnull ID<?, ?> indexKey) {
     final ID<?, ?> alreadyProcessingIndex = ourAlreadyProcessingIndices.get();
     if (alreadyProcessingIndex != null && alreadyProcessingIndex != indexKey) {
-      final String message = MessageFormat.format("Accessing ''{0}'' during processing ''{1}''. Nested different indices processing may cause deadlock",
-                                                  indexKey.toString(),
-                                                  alreadyProcessingIndex.toString());
+      final String message = MessageFormat.format("Accessing ''{0}'' during processing ''{1}''. Nested different indices processing may cause deadlock", indexKey.getName(), alreadyProcessingIndex.getName());
       if (ApplicationManager.getApplication().isUnitTestMode()) throw new RuntimeException(message);
       Logger.getInstance(FileBasedIndexImpl.class).error(message); // RuntimeException to skip rebuild
     }
   }
 
-  public void startedProcessingActivityForIndex(ID<?,?> indexId) { ourAlreadyProcessingIndices.set(indexId); }
-  public void stoppedProcessingActivityForIndex(ID<?,?> indexId) { ourAlreadyProcessingIndices.set(null); }
+  public <T, E extends Throwable> T validate(@Nonnull ID<?, ?> indexKey, @Nonnull ThrowableComputable<T, E> runnable) throws E {
+    checkAccessingIndexDuringOtherIndexProcessing(indexKey);
+    ourAlreadyProcessingIndices.set(indexKey);
+    try {
+      return runnable.compute();
+    }
+    finally {
+      ourAlreadyProcessingIndices.set(null);
+    }
+  }
 }

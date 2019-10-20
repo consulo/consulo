@@ -2271,13 +2271,17 @@ public class ContainerUtil extends ContainerUtilRt {
    */
   @Nonnull
   @Contract(pure = true)
-  public static <E> List<E> flatten(@Nonnull Iterable<? extends Collection<E>> collections) {
-    List<E> result = new ArrayList<E>();
-    for (Collection<E> list : collections) {
+  public static <E> List<E> flatten(@Nonnull Iterable<? extends Collection<? extends E>> collections) {
+    int totalSize = 0;
+    for (Collection<? extends E> list : collections) {
+      totalSize += list.size();
+    }
+    List<E> result = new ArrayList<>(totalSize);
+    for (Collection<? extends E> list : collections) {
       result.addAll(list);
     }
 
-    return result.isEmpty() ? ContainerUtil.<E>emptyList() : result;
+    return result.isEmpty() ? emptyList() : result;
   }
 
   /**
@@ -2577,15 +2581,13 @@ public class ContainerUtil extends ContainerUtilRt {
   @Nonnull
   @Contract(pure = true)
   public static <K, V> ConcurrentMap<K, V> createConcurrentSoftMap() {
-    //noinspection deprecation
-    return new ConcurrentSoftHashMap<K, V>();
+    return new ConcurrentSoftHashMap<>();
   }
 
   @Nonnull
-  @Contract(pure = true)
+  @Contract(value = " -> new", pure = true)
   public static <K, V> ConcurrentMap<K, V> createConcurrentWeakMap() {
-    //noinspection deprecation
-    return new ConcurrentWeakHashMap<K, V>();
+    return new ConcurrentWeakHashMap<>(0.75f);
   }
 
   @Nonnull
@@ -2741,6 +2743,12 @@ public class ContainerUtil extends ContainerUtilRt {
   @Contract(pure = true)
   public static <T> List<T> notNullize(@Nullable List<T> list) {
     return list == null ? ContainerUtilRt.<T>emptyList() : list;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <K, V> Map<K, V> notNullize(@Nullable Map<K, V> map) {
+    return map == null ? Collections.emptyMap() : map;
   }
 
   @Nonnull

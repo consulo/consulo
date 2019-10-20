@@ -22,7 +22,7 @@ import com.intellij.notification.NotificationAction;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.impl.NotificationsManagerImpl;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.util.Ref;
@@ -33,9 +33,9 @@ import com.intellij.ui.BalloonLayout;
 import com.intellij.ui.BalloonLayoutData;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.UIUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -234,30 +234,30 @@ public class IdeMessagePanel extends JPanel implements MessagePoolListener, Icon
       myNotificationPopupAlreadyShown = false;
     }
     else if (state == IdeFatalErrorsIcon.State.UnreadErrors && !myNotificationPopupAlreadyShown) {
-      ApplicationManager.getApplication().invokeLater(() -> {
-        String notificationText = tryGetFromMessages(myMessagePool.getFatalErrors(false, false));
-        showErrorNotification(notificationText);
-      });
-      myNotificationPopupAlreadyShown = true;
+      Project project = myFrame.getProject();
+
+      if(project != null) {
+        Application.get().invokeLater(() -> {
+          showErrorNotification(project);
+        });
+        myNotificationPopupAlreadyShown = true;
+      }
     }
   }
 
   private static final String ERROR_TITLE = DiagnosticBundle.message("error.new.notification.title");
   private static final String ERROR_LINK = DiagnosticBundle.message("error.new.notification.link");
 
-  private void showErrorNotification(@Nullable String notificationText) {
-    Notification notification = new Notification("", AllIcons.Ide.FatalError, notificationText == null ? ERROR_TITLE : "", null,
-                                                 notificationText == null ? "" : notificationText, NotificationType.ERROR, null);
+  private void showErrorNotification(@Nullable Project project) {
+    Notification notification = new Notification("", AllIcons.Ide.FatalError, ERROR_TITLE, null, null, NotificationType.ERROR, null);
 
-    if (notificationText == null) {
-      notification.addAction(new NotificationAction(ERROR_LINK) {
-        @Override
-        public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
-          notification.expire();
-          _openFatals(null);
-        }
-      });
-    }
+    notification.addAction(new NotificationAction(ERROR_LINK) {
+      @Override
+      public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
+        notification.expire();
+        _openFatals(null);
+      }
+    });
 
     BalloonLayout layout = myFrame.getBalloonLayout();
     assert layout != null;
@@ -269,35 +269,7 @@ public class IdeMessagePanel extends JPanel implements MessagePoolListener, Icon
     layoutData.fillColor = new JBColor(0XF5E6E7, 0X593D41);
     layoutData.borderColor = new JBColor(0XE0A8A9, 0X73454B);
 
-    Project project = myFrame.getProject();
-    assert project != null;
-
     Balloon balloon = NotificationsManagerImpl.createBalloon(myFrame, notification, false, false, Ref.create(layoutData), project);
     layout.add(balloon);
-  }
-
-  private static String tryGetFromMessages(List<AbstractMessage> messages) {
-    String result = null;
-    for (AbstractMessage message : messages) {
-      String s;
-      if (message instanceof LogMessageEx) {
-        s = ((LogMessageEx)message).getNotificationText();
-      }
-      else if (message instanceof GroupedLogMessage) {
-        s = tryGetFromMessages(((GroupedLogMessage)message).getMessages());
-      }
-      else {
-        return null;
-      }
-
-      if (result == null) {
-        result = s;
-      }
-      else if (!result.equals(s)) {
-        // if texts are different, show default
-        return null;
-      }
-    }
-    return result;
   }
 }

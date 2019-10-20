@@ -15,16 +15,17 @@
  */
 package com.intellij;
 
-import com.intellij.util.containers.ConcurrentWeakFactoryMap;
+import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.FactoryMap;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.util.Locale;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
@@ -45,6 +46,8 @@ import java.util.ResourceBundle;
  * @since 8/1/11 2:37 PM
  */
 public abstract class AbstractBundle {
+  private static final Logger LOG = Logger.getInstance(AbstractBundle.class);
+
   private Reference<ResourceBundle> myBundle;
   @NonNls private final String myPathToBundle;
 
@@ -70,21 +73,22 @@ public abstract class AbstractBundle {
     return bundle;
   }
 
-  @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-  private static final FactoryMap<ClassLoader, Map<String, SoftReference<ResourceBundle>>> ourCache =
-          new ConcurrentWeakFactoryMap<ClassLoader, Map<String, SoftReference<ResourceBundle>>>() {
-            @Override
-            protected Map<String, SoftReference<ResourceBundle>> create(ClassLoader key) {
-              return ContainerUtil.newConcurrentMap();
-            }
-          };
+  private static final Map<ClassLoader, Map<String, ResourceBundle>> ourCache = ConcurrentFactoryMap.createWeakMap(k -> ContainerUtil.createConcurrentSoftValueMap());
 
   public static ResourceBundle getResourceBundle(@Nonnull String pathToBundle, @Nonnull ClassLoader loader) {
-    Map<String, SoftReference<ResourceBundle>> map = ourCache.get(loader);
-    SoftReference<ResourceBundle> reference = map.get(pathToBundle);
-    ResourceBundle result = reference == null ? null : reference.get();
+    Map<String, ResourceBundle> map = ourCache.get(loader);
+    ResourceBundle result = map.get(pathToBundle);
     if (result == null) {
-      map.put(pathToBundle, new SoftReference<ResourceBundle>(result = ResourceBundle.getBundle(pathToBundle, Locale.getDefault(), loader)));
+      try {
+        ResourceBundle.Control control = ResourceBundle.Control.getControl(ResourceBundle.Control.FORMAT_PROPERTIES);
+        result = ResourceBundle.getBundle(pathToBundle, Locale.getDefault(), loader, control);
+      }
+      catch (MissingResourceException e) {
+        LOG.info("Cannot load resource bundle from *.properties file, falling back to slow class loading: " + pathToBundle);
+        ResourceBundle.clearCache(loader);
+        result = ResourceBundle.getBundle(pathToBundle, Locale.getDefault(), loader);
+      }
+      map.put(pathToBundle, result);
     }
     return result;
   }

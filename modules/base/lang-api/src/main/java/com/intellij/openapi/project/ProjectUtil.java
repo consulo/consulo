@@ -143,7 +143,7 @@ public class ProjectUtil {
     return calcRelativeToProjectPath(file, project, true);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static Project guessProjectForFile(VirtualFile file) {
     return ProjectLocator.getInstance().guessProjectForFile(file);
   }

@@ -1,56 +1,45 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.stubs;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.PathManager;
-import consulo.logging.Logger;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.ShutDownTracker;
-import com.intellij.util.io.AbstractStringEnumerator;
 import com.intellij.util.io.IOUtil;
 import com.intellij.util.io.PersistentStringEnumerator;
-
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+
+import java.io.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
+/*
  * @author max
  */
-@Singleton
-public class SerializationManagerImpl extends SerializationManagerEx implements Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.stubs.SerializationManagerImpl");
+public final class SerializationManagerImpl extends SerializationManagerEx implements Disposable {
+  private static final Logger LOG = Logger.getInstance(SerializationManagerImpl.class);
 
   private final AtomicBoolean myNameStorageCrashed = new AtomicBoolean(false);
-  private final File myFile = new File(PathManager.getIndexRoot(), "rep.names");
+  private final File myFile;
+  private final boolean myUnmodifiable;
   private final AtomicBoolean myShutdownPerformed = new AtomicBoolean(false);
-  private AbstractStringEnumerator myNameStorage;
+  private PersistentStringEnumerator myNameStorage;
   private StubSerializationHelper myStubSerializationHelper;
 
+  @SuppressWarnings("unused") // used from componentSets/Lang.xml:14
   public SerializationManagerImpl() {
+    this(new File(PathManager.getIndexRoot(), "rep.names"), false);
+  }
+
+  public SerializationManagerImpl(@Nonnull File nameStorageFile, boolean unmodifiable) {
+    myFile = nameStorageFile;
     myFile.getParentFile().mkdirs();
+    myUnmodifiable = unmodifiable;
     try {
       // we need to cache last id -> String mappings due to StringRefs and stubs indexing that initially creates stubs (doing enumerate on String)
       // and then index them (valueOf), also similar string items are expected to be enumerated during stubs processing
       myNameStorage = new PersistentStringEnumerator(myFile, true);
-      myStubSerializationHelper = new StubSerializationHelper(myNameStorage);
+      myStubSerializationHelper = new StubSerializationHelper(myNameStorage, unmodifiable, this);
     }
     catch (IOException e) {
       nameStorageCrashed();
@@ -60,12 +49,7 @@ public class SerializationManagerImpl extends SerializationManagerEx implements 
     }
     finally {
       registerSerializer(PsiFileStubImpl.TYPE);
-      ShutDownTracker.getInstance().registerShutdownTask(new Runnable() {
-        @Override
-        public void run() {
-          performShutdown();
-        }
-      });
+      ShutDownTracker.getInstance().registerShutdownTask(this::performShutdown);
     }
   }
 
@@ -83,12 +67,15 @@ public class SerializationManagerImpl extends SerializationManagerEx implements 
           myNameStorage.close();
         }
 
+        StubSerializationHelper prevHelper = myStubSerializationHelper;
+        if (myUnmodifiable) {
+          LOG.error("Data provided by unmodifiable serialization manager can be invalid after repair");
+        }
+
         IOUtil.deleteAllFilesStartingWith(myFile);
         myNameStorage = new PersistentStringEnumerator(myFile, true);
-        myStubSerializationHelper = new StubSerializationHelper(myNameStorage);
-        for (ObjectStubSerializer serializer : myAllSerializers) {
-          myStubSerializationHelper.assignId(serializer);
-        }
+        myStubSerializationHelper = new StubSerializationHelper(myNameStorage, myUnmodifiable, this);
+        myStubSerializationHelper.copyFrom(prevHelper);
       }
       catch (IOException e) {
         LOG.info(e);
@@ -115,7 +102,7 @@ public class SerializationManagerImpl extends SerializationManagerEx implements 
     repairNameStorage();
   }
 
-  protected void nameStorageCrashed() {
+  private void nameStorageCrashed() {
     myNameStorageCrashed.set(true);
   }
 
@@ -139,10 +126,9 @@ public class SerializationManagerImpl extends SerializationManagerEx implements 
   }
 
   @Override
-  public void registerSerializer(@Nonnull ObjectStubSerializer serializer) {
-    super.registerSerializer(serializer);
+  protected void registerSerializer(String externalId, Computable<ObjectStubSerializer> lazySerializer) {
     try {
-      myStubSerializationHelper.assignId(serializer);
+      myStubSerializationHelper.assignId(lazySerializer, externalId);
     }
     catch (IOException e) {
       LOG.info(e);
@@ -175,5 +161,12 @@ public class SerializationManagerImpl extends SerializationManagerEx implements 
       LOG.info(e);
       throw new RuntimeException(e);
     }
+  }
+
+  @Override
+  public void reSerialize(@Nonnull InputStream inStub, @Nonnull OutputStream outStub, @Nonnull SerializationManager newSerializationManager) throws IOException {
+    initSerializers();
+    newSerializationManager.initSerializers();
+    myStubSerializationHelper.reSerializeStub(new DataInputStream(inStub), new DataOutputStream(outStub), ((SerializationManagerImpl)newSerializationManager).myStubSerializationHelper);
   }
 }

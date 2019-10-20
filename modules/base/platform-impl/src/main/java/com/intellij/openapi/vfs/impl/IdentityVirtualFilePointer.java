@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.vfs.impl;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import javax.annotation.Nonnull;
@@ -22,9 +23,10 @@ import javax.annotation.Nonnull;
 /**
  * @author cdr
  */
-class IdentityVirtualFilePointer implements VirtualFilePointer {
+class IdentityVirtualFilePointer extends VirtualFilePointerImpl implements VirtualFilePointer, Disposable {
   private final VirtualFile myFile;
   private final String myUrl;
+  private volatile int useCount;
 
   IdentityVirtualFilePointer(VirtualFile file, @Nonnull String url) {
     myFile = file;
@@ -39,7 +41,7 @@ class IdentityVirtualFilePointer implements VirtualFilePointer {
 
   @Override
   public VirtualFile getFile() {
-    return myFile;
+    return isValid() ? myFile : null;
   }
 
   @Override
@@ -57,5 +59,15 @@ class IdentityVirtualFilePointer implements VirtualFilePointer {
   @Override
   public boolean isValid() {
     return myFile == null || myFile.isValid();
+  }
+
+  @Override
+  int incrementUsageCount(int delta) {
+    return useCount += delta;
+  }
+
+  @Override
+  public void dispose() {
+    incrementUsageCount(-1);
   }
 }
