@@ -27,15 +27,41 @@ import javax.inject.Provider;
  * @since 2018-08-26
  */
 class ProviderParameter implements Parameter {
+  private static class ProviderImpl implements Provider {
+    private PicoContainer myContainer;
+    private Class myClass;
+
+    private volatile Object myValue;
+
+    private ProviderImpl(PicoContainer container, Class aClass) {
+      myContainer = container;
+      myClass = aClass;
+    }
+
+    @Override
+    public Object get() {
+      Object value = myValue;
+      if (value != null) {
+        myContainer = null;
+        myClass = null;
+        return value;
+      }
+
+      value = myContainer.getComponentInstance(myClass);
+      myValue = value;
+      return value;
+    }
+  }
+
   private final Class<?> myType;
 
-  public ProviderParameter(Class<?> type) {
+  ProviderParameter(Class<?> type) {
     myType = type;
   }
 
   @Override
   public Object resolveInstance(PicoContainer picoContainer, ComponentAdapter componentAdapter, Class aClass) {
-    return (Provider<Object>)() -> picoContainer.getComponentInstance(myType);
+    return new ProviderImpl(picoContainer, myType);
   }
 
   @Override
