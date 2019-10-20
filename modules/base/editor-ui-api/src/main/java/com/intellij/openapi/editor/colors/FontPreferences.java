@@ -15,24 +15,27 @@
  */
 package com.intellij.openapi.editor.colors;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.FontSize;
 import com.intellij.openapi.util.SystemInfo;
+import consulo.platform.Platform;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.util.List;
 
 public interface FontPreferences {
   @NonNls @Nonnull
   String DEFAULT_FONT_NAME = getDefaultFontName();
-  int DEFAULT_FONT_SIZE = FontSize.SMALL.getSize();
+  int DEFAULT_FONT_SIZE = Platform.current().os().isWindows() ? 13 : FontSize.SMALL.getSize();
 
   float DEFAULT_LINE_SPACING = 1.0f;
+  String FALLBACK_FONT_FAMILY = "Monospaced";
   String MAC_OS_DEFAULT_FONT_FAMILY   = "Menlo";
   String LINUX_DEFAULT_FONT_FAMILY    = "DejaVu Sans Mono";
-  String WINDOWS_DEFAULT_FONT_FAMILY  = "Monospaced";
+  String WINDOWS_DEFAULT_FONT_FAMILY = "Consolas";
 
   @Nonnull
   List<String> getEffectiveFontFamilies();
@@ -69,7 +72,7 @@ public interface FontPreferences {
    *                        <code>null</code> if font family with the given name is registered at the current environment
    */
   @Nullable
-  static String getFallbackName(@Nonnull String fontName, int fontSize, @javax.annotation.Nullable EditorColorsScheme fallbackScheme) {
+  static String getFallbackName(@Nonnull String fontName, int fontSize, @Nullable EditorColorsScheme fallbackScheme) {
     Font plainFont = new Font(fontName, Font.PLAIN, fontSize);
     if (plainFont.getFamily().equals("Dialog") && !("Dialog".equals(fontName) || fontName.startsWith("Dialog."))) {
       return fallbackScheme == null ? DEFAULT_FONT_NAME : fallbackScheme.getEditorFontName();
@@ -78,14 +81,15 @@ public interface FontPreferences {
   }
 
   static String getDefaultFontName() {
+    if (SystemInfo.isWindows) return WINDOWS_DEFAULT_FONT_FAMILY;
     if (SystemInfo.isMacOSSnowLeopard) return MAC_OS_DEFAULT_FONT_FAMILY;
-    if (SystemInfo.isXWindow && !GraphicsEnvironment.isHeadless()) {
+    if (SystemInfo.isXWindow && !GraphicsEnvironment.isHeadless() && !ApplicationManager.getApplication().isCommandLine()) {
       for (Font font : GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()) {
         if (LINUX_DEFAULT_FONT_FAMILY.equals(font.getName())) {
           return font.getFontName();
         }
       }
     }
-    return WINDOWS_DEFAULT_FONT_FAMILY;
+    return FALLBACK_FONT_FAMILY;
   }
 }

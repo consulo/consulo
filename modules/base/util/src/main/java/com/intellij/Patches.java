@@ -144,11 +144,7 @@ public class Patches {
   public static boolean JDK_BUG_ID_8032832 = true;
 
   /**
-   * At JDK 9 - ligatures laggy
-   * JetBrains fixed it in their jdk
-   * fixed in JDK 10
-   * https://bugs.openjdk.java.net/browse/JDK-8196666
-   * https://bugs.openjdk.java.net/browse/JDK-8186317
+   * https://bugs.openjdk.java.net/browse/JDK-8220231
    */
-  public static boolean ALLOW_LIGATURES = SystemInfo.isJetBrainsJvm || SystemInfo.isJavaVersionAtLeast(10, 0, 0);
+  public static final boolean TEXT_LAYOUT_IS_SLOW = !SystemInfo.isJetBrainsJvm && !SystemInfo.isJavaVersionAtLeast(13, 0, 0);
 }
