@@ -32,6 +32,6 @@ public class MessageBusFactory {
   }
 
   public static MessageBus newMessageBus(@Nonnull Object owner, @Nullable MessageBus parentBus) {
-    return parentBus == null ? newMessageBus(owner) : new MessageBusImpl(owner, parentBus);
+    return parentBus == null ? newMessageBus(owner) : new MessageBusImpl(owner, (MessageBusImpl)parentBus);
   }
 }

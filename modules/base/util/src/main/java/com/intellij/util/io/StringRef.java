@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package com.intellij.util.io;
 
+import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -41,7 +42,6 @@ public class StringRef {
   private StringRef(final int id, @Nonnull AbstractStringEnumerator store) {
     this.id = id;
     this.store = store;
-    name = null;
   }
 
   public String getString() {
@@ -95,12 +95,12 @@ public class StringRef {
     return that == this || that instanceof StringRef && toString().equals(that.toString());
   }
 
-  @Nullable
+  @Contract("null -> null")
   public static String toString(@Nullable StringRef ref) {
     return ref != null ? ref.getString() : null;
   }
 
-  @Nullable
+  @Contract("null -> null; !null -> !null")
   public static StringRef fromString(@Nullable String source) {
     return source == null ? null : new StringRef(source);
   }
@@ -115,6 +115,12 @@ public class StringRef {
     final int nameId = DataInputOutputUtil.readINT(in);
 
     return nameId != 0 ? new StringRef(nameId, store) : null;
+  }
+
+  @Nullable
+  public static String stringFromStream(@Nonnull DataInput in, @Nonnull AbstractStringEnumerator store) throws IOException {
+    final int nameId = DataInputOutputUtil.readINT(in);
+    return nameId != 0 ? store.valueOf(nameId) : null;
   }
 
   @Nonnull

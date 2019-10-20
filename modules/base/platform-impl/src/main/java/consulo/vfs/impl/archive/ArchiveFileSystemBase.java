@@ -51,11 +51,6 @@ public abstract class ArchiveFileSystemBase extends ArchiveFileSystem implements
     myNoCopyJarPaths = noCopy ? null : ContainerUtil.newConcurrentSet(FileUtil.PATH_HASHING_STRATEGY);
   }
 
-  public boolean isMyFile(@Nonnull VirtualFile local) {
-    FileType fileType = FileTypeRegistry.getInstance().getFileTypeByFileName(local.getName());
-    return fileType instanceof ArchiveFileType && ((ArchiveFileType)fileType).getFileSystem() == this;
-  }
-
   @Nonnull
   public abstract ArchiveFile createArchiveFile(@Nonnull String filePath) throws IOException;
 

@@ -19,6 +19,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.util.text.CharArrayCharSequence;
 import gnu.trove.Equality;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -81,6 +82,18 @@ public class ArrayUtil extends ArrayUtilRt {
     System.arraycopy(array, 0, result, 0, Math.min(oldSize, newSize));
     return result;
   }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static short[] realloc(@Nonnull short[] array, final int newSize) {
+    if (newSize == 0) {
+      return ArrayUtilRt.EMPTY_SHORT_ARRAY;
+    }
+
+    final int oldSize = array.length;
+    return oldSize == newSize ? array : Arrays.copyOf(array, newSize);
+  }
+
   @Nonnull
   @Contract(pure=true)
   public static boolean[] realloc(@Nonnull boolean[] array, final int newSize) {
@@ -653,6 +666,15 @@ public class ArrayUtil extends ArrayUtilRt {
     return newArray;
   }
 
+  @Contract(pure = true)
+  public static int lexicographicCompare(@NotNull int[] obj1, @NotNull int[] obj2) {
+    for (int i = 0; i < Math.min(obj1.length, obj2.length); i++) {
+      int res = Integer.compare(obj1[i], obj2[i]);
+      if (res != 0) return res;
+    }
+    return Integer.compare(obj1.length, obj2.length);
+  }
+
   @Contract(pure=true)
   public static int lexicographicCompare(@Nonnull String[] obj1, @Nonnull String[] obj2) {
     for (int i = 0; i < Math.max(obj1.length, obj2.length); i++) {
@@ -910,6 +932,11 @@ public class ArrayUtil extends ArrayUtilRt {
   @Contract(pure=true)
   public static <T> T getLastElement(@Nullable T[] array) {
     return array != null && array.length > 0 ? array[array.length - 1] : null;
+  }
+
+  @Contract(pure = true)
+  public static int getLastElement(@Nullable int[] array, int defaultValue) {
+    return array == null || array.length == 0 ? defaultValue : array[array.length - 1];
   }
 
   @Contract(value = "null -> true", pure=true)

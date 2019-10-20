@@ -21,8 +21,9 @@ import com.intellij.openapi.vfs.impl.VirtualFileManagerImpl;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.vfs.newvfs.RefreshSession;
-
+import com.intellij.openapi.vfs.newvfs.impl.FileNameCache;
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -62,5 +63,21 @@ public class PlatformVirtualFileManager extends VirtualFileManagerImpl {
   @Override
   public long getStructureModificationCount() {
     return myManagingFS.getStructureModificationCount();
+  }
+
+  @Override
+  public VirtualFile findFileById(int id) {
+    return myManagingFS.findFileById(id);
+  }
+
+  @Nonnull
+  @Override
+  public CharSequence getVFileName(int nameId) {
+    return FileNameCache.getVFileName(nameId);
+  }
+
+  @Override
+  public int storeName(@Nonnull String name) {
+    return FileNameCache.storeName(name);
   }
 }

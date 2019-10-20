@@ -30,8 +30,8 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.vfs.RefreshableFileSystem;
 import gnu.trove.THashMap;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -47,6 +47,7 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
 
   private final Map<String, VirtualFileSystem> myVirtualFileSystems = new THashMap<>();
   private final List<VirtualFileSystem> myRefreshableFileSystems = new ArrayList<>();
+  private final List<AsyncFileListener> myAsyncFileListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   private int myRefreshCount = 0;
 
   @Inject
@@ -190,6 +191,17 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
   }
 
   @Override
+  public void addAsyncFileListener(@Nonnull AsyncFileListener listener, @Nonnull Disposable parentDisposable) {
+    myAsyncFileListeners.add(listener);
+    Disposer.register(parentDisposable, () -> myAsyncFileListeners.remove(listener));
+  }
+
+  //@ApiStatus.Internal
+  public List<AsyncFileListener> getAsyncFileListeners() {
+    return Collections.unmodifiableList(myAsyncFileListeners);
+  }
+
+  @Override
   public void notifyPropertyChanged(@Nonnull final VirtualFile virtualFile, @Nonnull final String property, final Object oldValue, final Object newValue) {
     final Application application = ApplicationManager.getApplication();
     final Runnable runnable = new Runnable() {
@@ -318,5 +330,16 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
     public void beforeFileMovement(@Nonnull VirtualFileMoveEvent event) {
       LOG.debug("beforeFileMovement: file = " + event.getFile() + ", oldParent = " + event.getOldParent() + ", newParent = " + event.getNewParent() + ", requestor = " + event.getRequestor());
     }
+  }
+
+  @Override
+  public int storeName(@Nonnull String name) {
+    throw new AbstractMethodError();
+  }
+
+  @Nonnull
+  @Override
+  public CharSequence getVFileName(int nameId) {
+    throw new AbstractMethodError();
   }
 }

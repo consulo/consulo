@@ -24,9 +24,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import org.jdom.JDOMException;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Collection;
@@ -87,4 +87,8 @@ public abstract class ProjectManagerEx extends ProjectManager {
 
   @Nonnull
   public abstract Disposable registerCloseProjectVeto(@Nonnull Predicate<Project> projectVeto);
+
+  @Nonnull
+  //@ApiStatus.Internal
+  public abstract String[] getAllExcludedUrls();
 }

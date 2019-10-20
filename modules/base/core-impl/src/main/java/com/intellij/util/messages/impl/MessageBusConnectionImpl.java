@@ -1,39 +1,22 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/*
- * @author max
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.messages.impl;
 
 import com.intellij.openapi.Disposable;
-import consulo.logging.Logger;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.SmartFMap;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.messages.MessageHandler;
 import com.intellij.util.messages.Topic;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 
-public class MessageBusConnectionImpl implements MessageBusConnection, Disposable {
+final class MessageBusConnectionImpl implements MessageBusConnection, Disposable {
   private static final Logger LOG = Logger.getInstance(MessageBusConnectionImpl.class);
 
   private final MessageBusImpl myBus;
@@ -41,36 +24,77 @@ public class MessageBusConnectionImpl implements MessageBusConnection, Disposabl
   private final ThreadLocal<Queue<Message>> myPendingMessages = MessageBusImpl.createThreadLocalQueue();
 
   private MessageHandler myDefaultHandler;
-  private volatile SmartFMap<Topic, Object> mySubscriptions = SmartFMap.emptyMap();
+  private volatile SmartFMap<Topic<?>, Object> mySubscriptions = SmartFMap.emptyMap();
 
-  public MessageBusConnectionImpl(@Nonnull MessageBusImpl bus) {
+  MessageBusConnectionImpl(@NotNull MessageBusImpl bus) {
     myBus = bus;
   }
 
   @Override
-  public <L> void subscribe(@Nonnull Topic<L> topic, @Nonnull L handler) throws IllegalStateException {
+  public <L> void subscribe(@NotNull Topic<L> topic, @NotNull L handler) {
+    boolean notifyBusAboutTopic = false;
     synchronized (myPendingMessages) {
-      if (mySubscriptions.get(topic) != null) {
-        throw new IllegalStateException("Subscription to " + topic + " already exists");
+      Object currentHandler = mySubscriptions.get(topic);
+      if (currentHandler == null) {
+        mySubscriptions = mySubscriptions.plus(topic, handler);
+        notifyBusAboutTopic = true;
       }
-      mySubscriptions = mySubscriptions.plus(topic, handler);
+      else if (currentHandler instanceof List<?>) {
+        //noinspection unchecked
+        ((List<L>)currentHandler).add(handler);
+      }
+      else {
+        List<Object> newList = new ArrayList<>();
+        newList.add(currentHandler);
+        newList.add(handler);
+        mySubscriptions = mySubscriptions.plus(topic, newList);
+      }
     }
-    myBus.notifyOnSubscription(this, topic);
+
+    if (notifyBusAboutTopic) {
+      myBus.notifyOnSubscription(this, topic);
+    }
+  }
+
+  // avoid notifyOnSubscription and map modification for each handler
+  <L> void subscribe(@NotNull Topic<L> topic, @NotNull List<Object> handlers) {
+    boolean notifyBusAboutTopic = false;
+    synchronized (myPendingMessages) {
+      Object currentHandler = mySubscriptions.get(topic);
+      if (currentHandler == null) {
+        mySubscriptions = mySubscriptions.plus(topic, handlers);
+        notifyBusAboutTopic = true;
+      }
+      else if (currentHandler instanceof List<?>) {
+        //noinspection unchecked
+        ((List<Object>)currentHandler).addAll(handlers);
+      }
+      else {
+        List<Object> newList = new ArrayList<>(handlers.size() + 1);
+        newList.add(currentHandler);
+        newList.addAll(handlers);
+        mySubscriptions = mySubscriptions.plus(topic, newList);
+      }
+    }
+
+    if (notifyBusAboutTopic) {
+      myBus.notifyOnSubscription(this, topic);
+    }
   }
 
   @Override
-  public <L> void subscribe(@Nonnull Topic<L> topic) throws IllegalStateException {
-    if (myDefaultHandler == null) {
-      throw new IllegalStateException("Connection must have default handler installed prior to any anonymous subscriptions. "
-                                      + "Target topic: " + topic);
+  public <L> void subscribe(@NotNull Topic<L> topic) throws IllegalStateException {
+    MessageHandler defaultHandler = myDefaultHandler;
+    if (defaultHandler == null) {
+      throw new IllegalStateException("Connection must have default handler installed prior to any anonymous subscriptions. " + "Target topic: " + topic);
     }
-    if (topic.getListenerClass().isInstance(myDefaultHandler)) {
-      throw new IllegalStateException("Can't subscribe to the topic '" + topic +"'. Default handler has incompatible type - expected: '" +
-                                      topic.getListenerClass() + "', actual: '" + myDefaultHandler.getClass() + "'");
+    if (topic.getListenerClass().isInstance(defaultHandler)) {
+      throw new IllegalStateException(
+              "Can't subscribe to the topic '" + topic + "'. Default handler has incompatible type - expected: '" + topic.getListenerClass() + "', actual: '" + defaultHandler.getClass() + "'");
     }
 
     //noinspection unchecked
-    subscribe(topic, (L)myDefaultHandler);
+    subscribe(topic, (L)defaultHandler);
   }
 
   @Override
@@ -80,12 +104,9 @@ public class MessageBusConnectionImpl implements MessageBusConnection, Disposabl
 
   @Override
   public void dispose() {
-    Queue<Message> jobs = myPendingMessages.get();
+    myPendingMessages.get();
     myPendingMessages.remove();
     myBus.notifyConnectionTerminated(this);
-    if (!jobs.isEmpty()) {
-      LOG.error("Not delivered events in the queue: " + jobs);
-    }
   }
 
   @Override
@@ -101,21 +122,25 @@ public class MessageBusConnectionImpl implements MessageBusConnection, Disposabl
     }
   }
 
-  void deliverMessage(@Nonnull Message message) {
+  void deliverMessage(@NotNull Message message) {
     final Message messageOnLocalQueue = myPendingMessages.get().poll();
     assert messageOnLocalQueue == message;
 
-    final Topic topic = message.getTopic();
-    final Object handler = mySubscriptions.get(topic);
-
+    Topic<?> topic = message.getTopic();
+    Object handler = mySubscriptions.get(topic);
     try {
-      Method listenerMethod = message.getListenerMethod();
-
       if (handler == myDefaultHandler) {
-        myDefaultHandler.handle(listenerMethod, message.getArgs());
+        myDefaultHandler.handle(message.getListenerMethod(), message.getArgs());
       }
       else {
-        listenerMethod.invoke(handler, message.getArgs());
+        if (handler instanceof List<?>) {
+          for (Object o : (List<?>)handler) {
+            myBus.invokeListener(message, o);
+          }
+        }
+        else {
+          myBus.invokeListener(message, handler);
+        }
       }
     }
     catch (AbstractMethodError e) {
@@ -135,12 +160,15 @@ public class MessageBusConnectionImpl implements MessageBusConnection, Disposabl
     }
   }
 
-  void scheduleMessageDelivery(@Nonnull Message message) {
+  void scheduleMessageDelivery(@NotNull Message message) {
     myPendingMessages.get().offer(message);
   }
 
-  boolean containsMessage(@Nonnull Topic topic) {
-    for (Message message : myPendingMessages.get()) {
+  boolean containsMessage(@NotNull Topic<?> topic) {
+    Queue<Message> pendingMessages = myPendingMessages.get();
+    if (pendingMessages.isEmpty()) return false;
+
+    for (Message message : pendingMessages) {
       if (message.getTopic() == topic) {
         return true;
       }
@@ -148,11 +176,12 @@ public class MessageBusConnectionImpl implements MessageBusConnection, Disposabl
     return false;
   }
 
+  @Override
   public String toString() {
     return mySubscriptions.toString();
   }
 
-  @Nonnull
+  @NotNull
   MessageBusImpl getBus() {
     return myBus;
   }

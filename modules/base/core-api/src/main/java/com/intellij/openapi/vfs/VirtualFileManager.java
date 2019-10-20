@@ -23,6 +23,7 @@ import com.intellij.util.io.URLUtil;
 import com.intellij.util.messages.Topic;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 
 /**
@@ -168,11 +169,25 @@ public abstract class VirtualFileManager implements ModificationTracker {
     return url.substring(index + URLUtil.SCHEME_SEPARATOR.length());
   }
 
+  /**
+   * @deprecated Use {@link #VFS_CHANGES} message bus topic.
+   */
   public abstract void addVirtualFileManagerListener(@Nonnull VirtualFileManagerListener listener);
 
+  /**
+   * @deprecated Use {@link #VFS_CHANGES} message bus topic.
+   */
   public abstract void addVirtualFileManagerListener(@Nonnull VirtualFileManagerListener listener, @Nonnull Disposable parentDisposable);
 
+  /**
+   * @deprecated Use {@link #VFS_CHANGES} message bus topic.
+   */
   public abstract void removeVirtualFileManagerListener(@Nonnull VirtualFileManagerListener listener);
+
+  /**
+   * Consider using extension point {@code vfs.asyncListener}.
+   */
+  public abstract void addAsyncFileListener(@Nonnull AsyncFileListener listener, @Nonnull Disposable parentDisposable);
 
   public abstract void notifyPropertyChanged(@Nonnull VirtualFile virtualFile, @Nonnull String property, Object oldValue, Object newValue);
 
@@ -191,4 +206,14 @@ public abstract class VirtualFileManager implements ModificationTracker {
    */
   public abstract long getStructureModificationCount();
 
+  public VirtualFile findFileById(int id) {
+    return null;
+  }
+
+  //@ApiStatus.Internal
+  public abstract int storeName(@Nonnull String name);
+
+  //@ApiStatus.Internal
+  @Nonnull
+  public abstract CharSequence getVFileName(int nameId);
 }

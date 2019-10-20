@@ -97,7 +97,7 @@ public class JarHandler extends ZipHandler {
       return originalFile;
     }
 
-    if (FSRecords.weHaveContentHashes) {
+    if (FSRecords.WE_HAVE_CONTENT_HASHES) {
       return getMirrorWithContentHash(originalFile, originalAttributes);
     }
 

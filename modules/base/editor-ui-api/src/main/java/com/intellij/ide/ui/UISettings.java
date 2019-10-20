@@ -519,6 +519,10 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     SHOW_EDITOR_TOOLTIP = value;
   }
 
+  public boolean getHideKnownExtensionInTabs() {
+    return HIDE_KNOWN_EXTENSION_IN_TABS;
+  }
+
   /**
    * @see #setupComponentAntialiasing(JComponent)
    */

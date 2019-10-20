@@ -20,8 +20,9 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.*;
 import gnu.trove.*;
 import org.jetbrains.annotations.Contract;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.util.HashMap;
@@ -599,11 +600,11 @@ public class ContainerUtil extends ContainerUtilRt {
     return res;
   }
 
-  public static <T> boolean processSortedListsInOrder(@Nonnull List<T> list1,
-                                                      @Nonnull List<T> list2,
-                                                      @Nonnull Comparator<? super T> comparator,
-                                                      boolean mergeEqualItems,
-                                                      @Nonnull Processor<T> processor) {
+  public static <T> void processSortedListsInOrder(@NotNull List<? extends T> list1,
+                                                   @NotNull List<? extends T> list2,
+                                                   @NotNull Comparator<? super T> comparator,
+                                                   boolean mergeEqualItems,
+                                                   @NotNull Consumer<? super T> processor) {
     int index1 = 0;
     int index2 = 0;
     while (index1 < list1.size() || index2 < list2.size()) {
@@ -618,7 +619,18 @@ public class ContainerUtil extends ContainerUtilRt {
         T element1 = list1.get(index1);
         T element2 = list2.get(index2);
         int c = comparator.compare(element1, element2);
-        if (c <= 0) {
+        if (c == 0) {
+          index1++;
+          index2++;
+          if (mergeEqualItems) {
+            e = element1;
+          }
+          else {
+            processor.consume(element1);
+            e = element2;
+          }
+        }
+        else if (c < 0) {
           e = element1;
           index1++;
         }
@@ -626,29 +638,16 @@ public class ContainerUtil extends ContainerUtilRt {
           e = element2;
           index2++;
         }
-        if (c == 0 && !mergeEqualItems) {
-          if (!processor.process(e)) return false;
-          index2++;
-          e = element2;
-        }
       }
-      if (!processor.process(e)) return false;
+      processor.consume(e);
     }
-
-    return true;
   }
 
-  @Nonnull
+  @NotNull
   @Contract(pure = true)
-  public static <T> List<T> mergeSortedLists(@Nonnull List<T> list1, @Nonnull List<T> list2, @Nonnull Comparator<? super T> comparator, boolean mergeEqualItems) {
-    final List<T> result = new ArrayList<T>(list1.size() + list2.size());
-    processSortedListsInOrder(list1, list2, comparator, mergeEqualItems, new Processor<T>() {
-      @Override
-      public boolean process(T t) {
-        result.add(t);
-        return true;
-      }
-    });
+  public static <T> List<T> mergeSortedLists(@NotNull List<? extends T> list1, @NotNull List<? extends T> list2, @NotNull Comparator<? super T> comparator, boolean mergeEqualItems) {
+    final List<T> result = new ArrayList<>(list1.size() + list2.size());
+    processSortedListsInOrder(list1, list2, comparator, mergeEqualItems, result::add);
     return result;
   }
 
@@ -2005,7 +2004,7 @@ public class ContainerUtil extends ContainerUtilRt {
   }
 
   @Contract(pure = true)
-  public static <T> boolean and(@Nonnull Iterable<T> iterable, @Nonnull Condition<? super T> condition) {
+  public static <T> boolean and(@NotNull Iterable<? extends T> iterable, @NotNull Condition<? super T> condition) {
     for (final T t : iterable) {
       if (!condition.value(t)) return false;
     }
@@ -2501,8 +2500,7 @@ public class ContainerUtil extends ContainerUtilRt {
   @Nonnull
   @Contract(pure = true)
   public static <V> ConcurrentIntObjectMap<V> createConcurrentIntObjectSoftValueMap() {
-    //noinspection deprecation
-    return new ConcurrentSoftValueIntObjectHashMap<V>();
+    return new ConcurrentIntKeySoftValueHashMap<>();
   }
 
   @Nonnull
@@ -2529,8 +2527,7 @@ public class ContainerUtil extends ContainerUtilRt {
   @Nonnull
   @Contract(pure = true)
   public static <V> ConcurrentIntObjectMap<V> createConcurrentIntObjectWeakValueMap() {
-    //noinspection deprecation
-    return new ConcurrentWeakValueIntObjectHashMap<V>();
+    return new ConcurrentIntKeyWeakValueHashMap<>();
   }
 
   @Nonnull

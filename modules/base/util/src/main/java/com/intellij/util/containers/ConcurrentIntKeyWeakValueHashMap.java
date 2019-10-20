@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,19 +21,19 @@ import com.intellij.openapi.util.Comparing;
 import javax.annotation.Nonnull;
 
 import java.lang.ref.ReferenceQueue;
-import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 
 /**
- * Concurrent int key -> soft value map
+ * Concurrent key:int -> weak value:V map
  * Null values are NOT allowed
- * @deprecated Use {@link ContainerUtil#createConcurrentIntObjectSoftValueMap()} instead
+ * Use {@link ContainerUtil#createConcurrentIntObjectWeakValueMap()} to create this
  */
-class ConcurrentSoftValueIntObjectHashMap<V> extends ConcurrentRefValueIntObjectHashMap<V> {
-  private static class MyRef<V> extends SoftReference<V> implements IntReference<V> {
+class ConcurrentIntKeyWeakValueHashMap<V> extends ConcurrentIntKeyRefValueHashMap<V> {
+  private static class MyRef<V> extends WeakReference<V> implements IntReference<V> {
     private final int hash;
     private final int key;
 
-    MyRef(int key, @Nonnull V referent, ReferenceQueue<V> queue) {
+    private MyRef(int key, @Nonnull V referent, @Nonnull ReferenceQueue<V> queue) {
       super(referent, queue);
       this.key = key;
       hash = referent.hashCode();
@@ -50,7 +50,8 @@ class ConcurrentSoftValueIntObjectHashMap<V> extends ConcurrentRefValueIntObject
       if (!(obj instanceof MyRef)) {
         return false;
       }
-      MyRef other = (MyRef)obj;
+      //noinspection unchecked
+      MyRef<V> other = (MyRef<V>)obj;
       return other.hash == hash && key == other.getKey() && Comparing.equal(v, other.get());
     }
 
@@ -60,8 +61,9 @@ class ConcurrentSoftValueIntObjectHashMap<V> extends ConcurrentRefValueIntObject
     }
   }
 
+  @Nonnull
   @Override
-  protected IntReference<V> createReference(int key, @Nonnull V value, ReferenceQueue<V> queue) {
-    return new MyRef<V>(key, value, queue);
+  protected IntReference<V> createReference(int key, @Nonnull V value, @Nonnull ReferenceQueue<V> queue) {
+    return new MyRef<>(key, value, queue);
   }
 }

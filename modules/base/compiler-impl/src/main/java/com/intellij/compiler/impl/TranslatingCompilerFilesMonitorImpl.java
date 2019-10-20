@@ -41,7 +41,6 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
-import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SLRUCache;
@@ -124,22 +123,16 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     @Nonnull
     @Override
     public Outputs createValue(Integer key) {
-      try {
-        final String dirName = FSRecords.getNames().valueOf(key);
-        final File storeFile;
-        if (StringUtil.isEmpty(dirName)) {
-          storeFile = null;
-        }
-        else {
-          final File compilerCacheDir = CompilerPaths.getCacheStoreDirectory(dirName);
-          storeFile = compilerCacheDir.exists() ? new File(compilerCacheDir, "paths_to_delete.dat") : null;
-        }
-        return new Outputs(storeFile, loadPathsToDelete(storeFile));
+      final String dirName = VirtualFileManager.getInstance().getVFileName(key).toString();
+      final File storeFile;
+      if (StringUtil.isEmpty(dirName)) {
+        storeFile = null;
       }
-      catch (IOException e) {
-        LOG.info(e);
-        return new Outputs(null, new HashMap<String, SourceUrlClassNamePair>());
+      else {
+        final File compilerCacheDir = CompilerPaths.getCacheStoreDirectory(dirName);
+        storeFile = compilerCacheDir.exists() ? new File(compilerCacheDir, "paths_to_delete.dat") : null;
       }
+      return new Outputs(storeFile, loadPathsToDelete(storeFile));
     }
 
     @Override
@@ -794,23 +787,11 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   }
 
   private int getProjectId(Project project) {
-    try {
-      return FSRecords.getNames().enumerate(CompilerPaths.getCompilerSystemDirectoryName(project));
-    }
-    catch (IOException e) {
-      LOG.info(e);
-    }
-    return -1;
+    return VirtualFileManager.getInstance().storeName(CompilerPaths.getCompilerSystemDirectoryName(project));
   }
 
   private int getModuleId(Module module) {
-    try {
-      return FSRecords.getNames().enumerate(module.getName().toLowerCase(Locale.US));
-    }
-    catch (IOException e) {
-      LOG.info(e);
-    }
-    return -1;
+    return VirtualFileManager.getInstance().storeName(module.getName().toLowerCase(Locale.US));
   }
 
   private static class OutputFileInfo {
@@ -819,9 +800,8 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     private final int myClassName;
 
     OutputFileInfo(final String sourcePath, @javax.annotation.Nullable String className) throws IOException {
-      final PersistentStringEnumerator symtable = FSRecords.getNames();
-      mySourcePath = symtable.enumerate(sourcePath);
-      myClassName = className != null ? symtable.enumerate(className) : -1;
+      mySourcePath = VirtualFileManager.getInstance().storeName(sourcePath);
+      myClassName = className != null ? VirtualFileManager.getInstance().storeName(className) : -1;
     }
 
     OutputFileInfo(final DataInput in) throws IOException {
@@ -830,24 +810,12 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
 
     String getSourceFilePath() {
-      try {
-        return FSRecords.getNames().valueOf(mySourcePath);
-      }
-      catch (IOException e) {
-        LOG.info(e);
-      }
-      return null;
+      return VirtualFileManager.getInstance().getVFileName(mySourcePath).toString();
     }
 
     @Nullable
     public String getClassName() {
-      try {
-        return myClassName < 0 ? null : FSRecords.getNames().valueOf(myClassName);
-      }
-      catch (IOException e) {
-        LOG.info(e);
-      }
-      return null;
+      return myClassName < 0 ? null : VirtualFileManager.getInstance().getVFileName(myClassName).toString();
     }
 
     public void save(final DataOutput out) throws IOException {
@@ -942,12 +910,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
 
     private void addOutputPath(final int projectId, String outputPath) {
-      try {
-        addOutputPath(projectId, FSRecords.getNames().enumerate(outputPath));
-      }
-      catch (IOException e) {
-        LOG.info(e);
-      }
+      addOutputPath(projectId, VirtualFileManager.getInstance().storeName(outputPath));
     }
 
     private void addOutputPath(final int projectId, final int outputPath) {
@@ -990,48 +953,31 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
     void processOutputPaths(final int projectId, final Proc proc) {
       if (myProjectToOutputPathMap != null) {
-        try {
-          final PersistentStringEnumerator symtable = FSRecords.getNames();
-          final Object val = myProjectToOutputPathMap.get(projectId);
-          if (val instanceof Integer) {
-            proc.execute(projectId, symtable.valueOf(((Integer)val).intValue()));
-          }
-          else if (val instanceof TIntHashSet) {
-            ((TIntHashSet)val).forEach(new TIntProcedure() {
-              @Override
-              public boolean execute(final int value) {
-                try {
-                  proc.execute(projectId, symtable.valueOf(value));
-                  return true;
-                }
-                catch (IOException e) {
-                  LOG.info(e);
-                  return false;
-                }
-              }
-            });
-          }
+        final Object val = myProjectToOutputPathMap.get(projectId);
+        if (val instanceof Integer) {
+          proc.execute(projectId, VirtualFileManager.getInstance().getVFileName(((Integer)val).intValue()).toString());
         }
-        catch (IOException e) {
-          LOG.info(e);
+        else if (val instanceof TIntHashSet) {
+          ((TIntHashSet)val).forEach(new TIntProcedure() {
+            @Override
+            public boolean execute(final int value) {
+              proc.execute(projectId, VirtualFileManager.getInstance().getVFileName(value).toString());
+              return true;
+            }
+          });
         }
       }
     }
 
     boolean isAssociated(int projectId, String outputPath) {
       if (myProjectToOutputPathMap != null) {
-        try {
-          final Object val = myProjectToOutputPathMap.get(projectId);
-          if (val instanceof Integer) {
-            return FileUtil.pathsEqual(outputPath, FSRecords.getNames().valueOf(((Integer)val).intValue()));
-          }
-          if (val instanceof TIntHashSet) {
-            final int _outputPath = FSRecords.getNames().enumerate(outputPath);
-            return ((TIntHashSet)val).contains(_outputPath);
-          }
+        final Object val = myProjectToOutputPathMap.get(projectId);
+        if (val instanceof Integer) {
+          return FileUtil.pathsEqual(outputPath, VirtualFileManager.getInstance().getVFileName(((Integer)val).intValue()).toString());
         }
-        catch (IOException e) {
-          LOG.info(e);
+        if (val instanceof TIntHashSet) {
+          final int _outputPath = VirtualFileManager.getInstance().storeName(outputPath);
+          return ((TIntHashSet)val).contains(_outputPath);
         }
       }
       return false;

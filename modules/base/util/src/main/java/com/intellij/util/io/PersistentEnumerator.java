@@ -51,17 +51,13 @@ public class PersistentEnumerator<Data> extends PersistentEnumeratorBase<Data> {
     this(file, dataDescriptor, initialSize, null, 0);
   }
 
-  public PersistentEnumerator(@Nonnull File file,
-                              @Nonnull KeyDescriptor<Data> dataDescriptor,
-                              int initialSize,
-                              @Nullable PagedFileStorage.StorageLockContext storageLockContext,
-                              int version) throws IOException {
-    super(file, new ResizeableMappedFile(file, initialSize, storageLockContext, -1, false), dataDescriptor, initialSize, new Version(VERSION + version),
-          new RecordBufferHandler(), true);
+  public PersistentEnumerator(@Nonnull File file, @Nonnull KeyDescriptor<Data> dataDescriptor, int initialSize, @Nullable PagedFileStorage.StorageLockContext storageLockContext, int version)
+          throws IOException {
+    super(file, new ResizeableMappedFile(file, initialSize, storageLockContext, -1, false), dataDescriptor, initialSize, new Version(VERSION + version), new RecordBufferHandler(), true);
   }
 
   @Override
-  protected  void setupEmptyFile() throws IOException {
+  protected void setupEmptyFile() throws IOException {
     allocVector(FIRST_VECTOR);
   }
 
@@ -74,9 +70,9 @@ public class PersistentEnumerator<Data> extends PersistentEnumeratorBase<Data> {
     lockStorage();
     try {
       for (int slotIdx = 0; slotIdx < slotsCount; slotIdx++) {
-        final int vector = myStorage.getInt(vectorStart + slotIdx * 4);
+        final int vector = myStorage.getInt(vectorStart + slotIdx * 4L);
         if (vector < 0) {
-          for (int record = -vector; record != 0; record = nextCanditate(record)) {
+          for (int record = -vector; record != 0; record = nextCandidate(record)) {
             if (!p.process(record)) return false;
           }
         }
@@ -141,7 +137,7 @@ public class PersistentEnumerator<Data> extends PersistentEnumeratorBase<Data> {
             return collision;
           }
 
-          collision = nextCanditate(collision);
+          collision = nextCandidate(collision);
         }
         while (collision != 0);
 
@@ -158,12 +154,12 @@ public class PersistentEnumerator<Data> extends PersistentEnumeratorBase<Data> {
             final int oldHCByte = hcByte(candidateHC, depth);
             if (valueHCByte == oldHCByte) {
               int newVector = allocVector(EMPTY_VECTOR);
-              myStorage.putInt(lastVector + oldHCByte * 4, newVector);
+              myStorage.putInt(lastVector + oldHCByte * 4L, newVector);
               lastVector = newVector;
             }
             else {
-              myStorage.putInt(lastVector + valueHCByte * 4, -newId);
-              myStorage.putInt(lastVector + oldHCByte * 4, vector);
+              myStorage.putInt(lastVector + valueHCByte * 4L, -newId);
+              myStorage.putInt(lastVector + oldHCByte * 4L, vector);
               break;
             }
             depth++;
@@ -211,7 +207,7 @@ public class PersistentEnumerator<Data> extends PersistentEnumeratorBase<Data> {
     return pos;
   }
 
-  private int nextCanditate(final int idx) throws IOException {
+  private int nextCandidate(final int idx) throws IOException {
     return -myStorage.getInt(idx);
   }
 

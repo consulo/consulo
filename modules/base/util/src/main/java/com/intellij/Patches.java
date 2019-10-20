@@ -109,12 +109,6 @@ public class Patches {
   public static final boolean USE_REFLECTION_TO_ACCESS_JDK11 = true;
 
   /**
-   * AtomicIntegerFieldUpdater does not work when SecurityManager is installed
-   * fixed in JDK8
-   */
-  public static final boolean JDK_BUG_ID_7103570 = true;
-
-  /**
    * Support default methods in JDI
    * See <a href="https://bugs.openjdk.java.net/browse/JDK-8042123">JDK-8042123</a>
    */

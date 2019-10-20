@@ -111,6 +111,8 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
     return array;
   }
 
+  private ExcludeRootsCache myExcludeRootsCache;
+
   @Inject
   public ProjectManagerImpl(@Nonnull Application application, @Nonnull VirtualFileManager virtualFileManager, ProgressManager progressManager) {
     myApplication = application;
@@ -118,6 +120,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
 
     MessageBus messageBus = application.getMessageBus();
 
+    myExcludeRootsCache = new ExcludeRootsCache(messageBus.connect());
     messageBus.connect().subscribe(TOPIC, new ProjectManagerListener() {
       @Override
       public void projectOpened(Project project, UIAccess uiAccess) {
@@ -801,6 +804,12 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
     AsyncResult<Project> projectAsyncResult = AsyncResult.undefined();
     loadProjectAsync((ProjectImpl)project, projectAsyncResult, false, ConversionResult.DUMMY, uiAccess);
     return projectAsyncResult;
+  }
+
+  @Nonnull
+  @Override
+  public String[] getAllExcludedUrls() {
+    return myExcludeRootsCache.getExcludedUrls();
   }
 
   @Nonnull

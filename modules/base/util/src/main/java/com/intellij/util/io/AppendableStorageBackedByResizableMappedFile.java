@@ -18,14 +18,11 @@ package com.intellij.util.io;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.util.Processor;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.io.*;
 import java.nio.ByteBuffer;
 
-/**
- * Created by Maxim.Mossienko on 1/9/14.
- */
 public class AppendableStorageBackedByResizableMappedFile extends ResizeableMappedFile {
   private final MyDataIS myReadStream;
   private byte[] myAppendBuffer;
@@ -33,15 +30,12 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
   private volatile int myBufferPosition;
   private static final int ourAppendBufferLength = 4096;
 
-  public AppendableStorageBackedByResizableMappedFile(final File file,
-                                                      int initialSize,
-                                                      @Nullable PagedFileStorage.StorageLockContext lockContext,
-                                                      int pageSize,
-                                                      boolean valuesAreBufferAligned) throws IOException {
+  public AppendableStorageBackedByResizableMappedFile(final File file, int initialSize, @Nullable PagedFileStorage.StorageLockContext lockContext, int pageSize, boolean valuesAreBufferAligned)
+          throws IOException {
     super(file, initialSize, lockContext, pageSize, valuesAreBufferAligned);
     myReadStream = new MyDataIS(this);
     myFileLength = (int)length();
-    myCompressedAppendableFile = /*CompressedAppendableFile.ENABLED &&*/ false ? new MyCompressedAppendableFile(file) :null;
+    myCompressedAppendableFile = /*CompressedAppendableFile.ENABLED &&*/ false ? new MyCompressedAppendableFile(file) : null;
   }
 
   private void flushKeyStoreBuffer() {
@@ -67,7 +61,7 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
   }
 
   private final CompressedAppendableFile myCompressedAppendableFile;
-  private final boolean testMode = false;
+  private static final boolean testMode = false;
 
   public <Data> Data read(final int addr, KeyDescriptor<Data> descriptor) throws IOException {
     Data tempData = null;
@@ -78,25 +72,20 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
     }
 
     if (myFileLength <= addr) {
-      Data data =
-              descriptor.read(new DataInputStream(new UnsyncByteArrayInputStream(myAppendBuffer, addr - myFileLength, myBufferPosition)));
-      if (tempData != null && !descriptor.isEqual(data, tempData)) {
-        assert false;
-      }
+      Data data = descriptor.read(new DataInputStream(new UnsyncByteArrayInputStream(myAppendBuffer, addr - myFileLength, myBufferPosition)));
+      assert tempData == null || descriptor.isEqual(data, tempData);
       return data;
     }
     // we do not need to flushKeyBuffer since we store complete records
     myReadStream.setup(addr, myFileLength);
     Data data = descriptor.read(myReadStream);
-    if (tempData != null && !descriptor.isEqual(data, tempData)) {
-      assert false;
-    }
+    assert tempData == null || descriptor.isEqual(data, tempData);
     return data;
   }
 
-  public <Data> boolean processAll(Processor<Data> processor, KeyDescriptor<Data> descriptor) throws IOException {
+  public <Data> boolean processAll(@Nonnull Processor<? super Data> processor, @Nonnull KeyDescriptor<Data> descriptor) throws IOException {
     assert !isDirty();
-    DataInputStream keysStream2 = myCompressedAppendableFile != null ?myCompressedAppendableFile.getStream(0) : null;
+    DataInputStream keysStream2 = myCompressedAppendableFile != null ? myCompressedAppendableFile.getStream(0) : null;
     if (!testMode && keysStream2 != null) {
       getPagedFileStorage().lock(); // todo support it inside myCompressedAppendableFile to avoid filling the cache
       try {
@@ -117,23 +106,20 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
       }
     }
 
-    DataInputStream keysStream = new DataInputStream(new BufferedInputStream(new LimitedInputStream(new FileInputStream(getPagedFileStorage().getFile()),
-                                                                                                    myFileLength) {
+    if (myFileLength == 0) return true;
+
+    try (DataInputStream keysStream = new DataInputStream(new BufferedInputStream(new LimitedInputStream(new FileInputStream(getPagedFileStorage().getFile()), myFileLength) {
       @Override
-      public int available() throws IOException {
+      public int available() {
         return remainingLimit();
       }
-    }, 32768));
-
-    try {
+    }, 32768))) {
       try {
         while (true) {
           Data key = descriptor.read(keysStream);
           if (keysStream2 != null) {
             Data tempKey = descriptor.read(keysStream2);
-            if (!descriptor.isEqual(key, tempKey)) {
-              assert false;
-            }
+            assert descriptor.isEqual(key, tempKey);
           }
           if (!processor.process(key)) return false;
         }
@@ -143,9 +129,6 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
       }
       return true;
     }
-    finally {
-      keysStream.close();
-    }
   }
 
   public int getCurrentLength() {
@@ -153,11 +136,10 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
     if (myCompressedAppendableFile != null) {
       currentLength = (int)myCompressedAppendableFile.length();
       if (testMode) {
-        if (currentLength != myBufferPosition + myFileLength) {
-          assert false;
-        }
+        assert currentLength == myBufferPosition + myFileLength;
       }
-    } else {
+    }
+    else {
       currentLength = myBufferPosition + myFileLength;
     }
 
@@ -198,13 +180,12 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
     return currentLength;
   }
 
-  public <Data> boolean checkBytesAreTheSame(final int addr, Data value, KeyDescriptor<Data> descriptor) throws IOException {
-    final DataInputStream compressedStream;
+  <Data> boolean checkBytesAreTheSame(final int addr, Data value, KeyDescriptor<Data> descriptor) throws IOException {
     final boolean[] sameValue = new boolean[1];
     OutputStream comparer;
 
     if (myCompressedAppendableFile != null) {
-      compressedStream = myCompressedAppendableFile.getStream(addr);
+      final DataInputStream compressedStream = myCompressedAppendableFile.getStream(addr);
 
       comparer = new OutputStream() {
         boolean same = true;
@@ -221,7 +202,8 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
           sameValue[0] = same;
         }
       };
-    } else {
+    }
+    else {
       comparer = buildOldComparerStream(addr, sameValue);
     }
 
@@ -235,9 +217,7 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
       out = new DataOutputStream(comparer2);
       descriptor.save(out, value);
       comparer2.close();
-      if (sameValue[0] != sameValue2[0]) {
-        assert false;
-      }
+      assert sameValue[0] == sameValue2[0];
     }
     return sameValue[0];
   }
@@ -252,15 +232,17 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
       comparer = new OutputStream() {
         int address = addr - myFileLength;
         boolean same = true;
+
         @Override
         public void write(int b) {
           if (same) {
             same = address < myBufferPosition && myAppendBuffer[address++] == (byte)b;
           }
         }
+
         @Override
         public void close() {
-          sameValue[0]  = same;
+          sameValue[0] = same;
         }
       };
     }
@@ -287,7 +269,7 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
 
         @Override
         public void close() {
-          sameValue[0]  = same;
+          sameValue[0] = same;
         }
       };
 
@@ -306,7 +288,7 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
   }
 
   private static class MyBufferedIS extends BufferedInputStream {
-    public MyBufferedIS(final InputStream in) {
+    MyBufferedIS(final InputStream in) {
       super(in, 512);
     }
 
@@ -321,14 +303,14 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
     private final File myFile;
     private DataOutputStream myChunkLengthTableStream;
 
-    public MyCompressedAppendableFile(File file) {
-      super(AppendableStorageBackedByResizableMappedFile.this.getPagedFileStorage().getFile());
+    MyCompressedAppendableFile(File file) {
+      super(getPagedFileStorage().getFile());
       myFile = file;
     }
 
     @Nonnull
     @Override
-    protected InputStream getChunkInputStream(File appendFile, long offset, int pageSize) throws IOException {
+    protected InputStream getChunkInputStream(File appendFile, long offset, int pageSize) {
       byte[] buf = new byte[pageSize];
       get(offset, buf, 0, pageSize);
 
@@ -337,12 +319,10 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
 
     @Override
     protected void saveChunk(BufferExposingByteArrayOutputStream compressedChunk, long endOfFileOffset) throws IOException {
-      AppendableStorageBackedByResizableMappedFile.super
-              .put(endOfFileOffset, compressedChunk.getInternalBuffer(), 0, compressedChunk.size());
+      AppendableStorageBackedByResizableMappedFile.super.put(endOfFileOffset, compressedChunk.getInternalBuffer(), 0, compressedChunk.size());
 
       if (myChunkLengthTableStream == null) {
-        myChunkLengthTableStream =
-                new DataOutputStream(new BufferedOutputStream(new FileOutputStream(getChunkLengthFile(), true)));
+        myChunkLengthTableStream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(getChunkLengthFile(), true)));
       }
 
       DataInputOutputUtil.writeINT(myChunkLengthTableStream, compressedChunk.size());
@@ -354,16 +334,20 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
 
       try {
         if (myChunkLengthTableStream != null) myChunkLengthTableStream.flush();
-      } catch (IOException ignore) {}
+      }
+      catch (IOException ignore) {
+      }
     }
 
     @Override
     public synchronized void dispose() {
       super.dispose();
-      if (myChunkLengthTableStream != null)  {
+      if (myChunkLengthTableStream != null) {
         try {
           myChunkLengthTableStream.close();
-        } catch (IOException ignore) {}
+        }
+        catch (IOException ignore) {
+        }
       }
     }
 
