@@ -7,7 +7,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -19,18 +19,18 @@ public class MessageListenerList<T> {
   private final Topic<T> myTopic;
   private final Map<T, MessageBusConnection> myListenerToConnectionMap = ContainerUtil.newConcurrentMap();
 
-  public MessageListenerList(@NotNull MessageBus messageBus, @NotNull Topic<T> topic) {
+  public MessageListenerList(@Nonnull MessageBus messageBus, @Nonnull Topic<T> topic) {
     myTopic = topic;
     myMessageBus = messageBus;
   }
 
-  public void add(@NotNull T listener) {
+  public void add(@Nonnull T listener) {
     final MessageBusConnection connection = myMessageBus.connect();
     connection.subscribe(myTopic, listener);
     myListenerToConnectionMap.put(listener, connection);
   }
 
-  public void add(@NotNull final T listener, @NotNull Disposable parentDisposable) {
+  public void add(@Nonnull final T listener, @Nonnull Disposable parentDisposable) {
     Disposer.register(parentDisposable, new Disposable() {
       @Override
       public void dispose() {
@@ -42,7 +42,7 @@ public class MessageListenerList<T> {
     myListenerToConnectionMap.put(listener, connection);
   }
 
-  public void remove(@NotNull T listener) {
+  public void remove(@Nonnull T listener) {
     final MessageBusConnection connection = myListenerToConnectionMap.remove(listener);
     if (connection != null) {
       connection.disconnect();

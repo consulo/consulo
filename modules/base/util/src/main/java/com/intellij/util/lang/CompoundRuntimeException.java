@@ -20,9 +20,9 @@ import com.intellij.util.EmptyConsumer;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ import java.util.List;
 public class CompoundRuntimeException extends RuntimeException {
   private final List<? extends Throwable> myExceptions;
 
-  public CompoundRuntimeException(@NotNull List<? extends Throwable> throwables) {
+  public CompoundRuntimeException(@Nonnull List<? extends Throwable> throwables) {
     myExceptions = throwables;
   }
 
@@ -78,7 +78,7 @@ public class CompoundRuntimeException extends RuntimeException {
     }, s::print);
   }
 
-  private String processAll(@NotNull Function<? super Throwable, String> exceptionProcessor, @NotNull Consumer<? super String> stringProcessor) {
+  private String processAll(@Nonnull Function<? super Throwable, String> exceptionProcessor, @Nonnull Consumer<? super String> stringProcessor) {
     if (myExceptions.size() == 1) {
       Throwable throwable = myExceptions.get(0);
       String s = exceptionProcessor.fun(throwable);

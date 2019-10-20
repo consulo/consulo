@@ -25,10 +25,11 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ex.ApplicationEx2;
 import consulo.vfs.ArchiveFileSystem;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -45,7 +46,7 @@ public class VfsRootAccess {
   private static boolean insideGettingRoots;
 
   @TestOnly
-  static void assertAccessInTests(@NotNull VirtualFileSystemEntry child, @NotNull NewVirtualFileSystem delegate) {
+  static void assertAccessInTests(@Nonnull VirtualFileSystemEntry child, @Nonnull NewVirtualFileSystem delegate) {
     final Application application = ApplicationManager.getApplication();
     if (SHOULD_PERFORM_ACCESS_CHECK &&
         application.isUnitTestMode() &&
@@ -153,7 +154,7 @@ public class VfsRootAccess {
   }
 
   @Nullable
-  private static String findInUserHome(@NotNull String path) {
+  private static String findInUserHome(@Nonnull String path) {
     try {
       // in case if we have a symlink like ~/.m2 -> /opt/.m2
       return FileUtil.toSystemIndependentName(new File(SystemProperties.getUserHome(), path).getCanonicalPath());
@@ -163,8 +164,8 @@ public class VfsRootAccess {
     }
   }
 
-  @NotNull
-  private static Collection<String> getAllRootUrls(@NotNull Project project) {
+  @Nonnull
+  private static Collection<String> getAllRootUrls(@Nonnull Project project) {
     insideGettingRoots = true;
     final Set<String> roots = new THashSet<>();
 
@@ -177,7 +178,7 @@ public class VfsRootAccess {
   }
 
   @TestOnly
-  public static void allowRootAccess(@NotNull Disposable disposable, @NotNull final String... roots) {
+  public static void allowRootAccess(@Nonnull Disposable disposable, @Nonnull final String... roots) {
     if (roots.length == 0) return;
     allowRootAccess(roots);
     Disposer.register(disposable, () -> disallowRootAccess(roots));
@@ -188,7 +189,7 @@ public class VfsRootAccess {
    */
   @Deprecated
   @TestOnly
-  public static void allowRootAccess(@NotNull String... roots) {
+  public static void allowRootAccess(@Nonnull String... roots) {
     for (String root : roots) {
       ourAdditionalRoots.add(StringUtil.trimEnd(FileUtil.toSystemIndependentName(root), '/'));
     }
@@ -199,7 +200,7 @@ public class VfsRootAccess {
    */
   @Deprecated
   @TestOnly
-  public static void disallowRootAccess(@NotNull String... roots) {
+  public static void disallowRootAccess(@Nonnull String... roots) {
     for (String root : roots) {
       ourAdditionalRoots.remove(StringUtil.trimEnd(FileUtil.toSystemIndependentName(root), '/'));
     }

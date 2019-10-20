@@ -19,9 +19,8 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.util.text.CharArrayCharSequence;
 import gnu.trove.Equality;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.io.File;
 import java.lang.reflect.Array;
@@ -667,7 +666,7 @@ public class ArrayUtil extends ArrayUtilRt {
   }
 
   @Contract(pure = true)
-  public static int lexicographicCompare(@NotNull int[] obj1, @NotNull int[] obj2) {
+  public static int lexicographicCompare(@Nonnull int[] obj1, @Nonnull int[] obj2) {
     for (int i = 0; i < Math.min(obj1.length, obj2.length); i++) {
       int res = Integer.compare(obj1[i], obj2[i]);
       if (res != 0) return res;

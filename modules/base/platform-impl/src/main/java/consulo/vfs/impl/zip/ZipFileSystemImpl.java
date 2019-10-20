@@ -20,8 +20,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.fileTypes.ZipArchiveFileType;
 import consulo.vfs.impl.archive.ArchiveFile;
 import consulo.vfs.impl.archive.ArchiveFileSystemBase;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
 
 import java.io.IOException;
@@ -36,7 +34,7 @@ public class ZipFileSystemImpl extends ArchiveFileSystemBase {
   }
 
   @Override
-  protected boolean isCorrectFileType(@NotNull VirtualFile local) {
+  protected boolean isCorrectFileType(@Nonnull VirtualFile local) {
     // special hack for jar files. eat them even when jar file type is register not as zip file system
     return super.isCorrectFileType(local) || Comparing.equal(local.getExtension(), "jar");
   }

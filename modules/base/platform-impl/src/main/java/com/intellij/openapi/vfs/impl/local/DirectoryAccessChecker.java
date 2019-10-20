@@ -12,7 +12,7 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -45,7 +45,7 @@ public class DirectoryAccessChecker {
   private static volatile long instanceEOL = 0;
 
   public static
-  @NotNull
+  @Nonnull
   FilenameFilter getFileFilter(File directory) {
     return !IS_ENABLED || directory.toPath().startsWith(USER_HOME_DIR) ? DirectoryFilter.ACCEPTING_FILTER : instance;
   }
@@ -85,7 +85,7 @@ public class DirectoryAccessChecker {
     private static final String USER_HOME_NAME = USER_HOME_PARENT != null && USER_HOME_PARENT.getParent() != null ? USER_HOME_DIR.getFileName().toString() : null;
 
     static
-    @NotNull
+    @Nonnull
     DirectoryFilter create() {
       Collection<Path> inaccessible = new HashSet<>();
       boolean userHomeMounted = false;

@@ -2,9 +2,9 @@
 package com.intellij.util.messages.impl;
 
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 @FunctionalInterface
 public interface MessageDeliveryListener {
-  void messageDelivered(@NotNull Topic<?> topic, @NotNull String messageName, @NotNull Object handler, long durationNanos);
+  void messageDelivered(@Nonnull Topic<?> topic, @Nonnull String messageName, @Nonnull Object handler, long durationNanos);
 }

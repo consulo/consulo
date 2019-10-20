@@ -26,9 +26,8 @@ import com.intellij.openapi.vfs.impl.ArchiveHandler;
 import com.intellij.util.io.URLUtil;
 import consulo.annotations.DeprecationInfo;
 import consulo.fileTypes.ArchiveFileType;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,8 +67,8 @@ public abstract class ArchiveFileSystem extends NewVirtualFileSystem {
     return entry.getFileSystem() != this ? null : VfsUtil.getRootFile(entry);
   }
 
-  @NotNull
-  public String getRootPathByLocal(@NotNull VirtualFile file) {
+  @Nonnull
+  public String getRootPathByLocal(@Nonnull VirtualFile file) {
     return composeRootPath(file.getPath());
   }
 
@@ -250,7 +249,7 @@ public abstract class ArchiveFileSystem extends NewVirtualFileSystem {
    * or {@code null} if the local file is of incorrect type.
    */
   @Nullable
-  public VirtualFile findLocalByRootPath(@NotNull String rootPath) {
+  public VirtualFile findLocalByRootPath(@Nonnull String rootPath) {
     String localPath = extractLocalPath(rootPath);
     VirtualFile local = StandardFileSystems.local().findFileByPath(localPath);
     return local != null && isCorrectFileType(local) ? local : null;
@@ -259,7 +258,7 @@ public abstract class ArchiveFileSystem extends NewVirtualFileSystem {
   /**
    * Implementations should return {@code false} if the given file may not host this file system.
    */
-  protected boolean isCorrectFileType(@NotNull VirtualFile local) {
+  protected boolean isCorrectFileType(@Nonnull VirtualFile local) {
     FileType fileType = FileTypeRegistry.getInstance().getFileTypeByFileName(local.getNameSequence());
     return fileType instanceof ArchiveFileType && ((ArchiveFileType)fileType).getFileSystem() == this;
   }

@@ -2,11 +2,10 @@
 package com.intellij.openapi.vfs;
 
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.SystemIndependent;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
@@ -32,44 +31,44 @@ public abstract class LocalFileSystem extends NewVirtualFileSystem {
   }
 
   @Nullable
-  public abstract VirtualFile findFileByIoFile(@NotNull File file);
+  public abstract VirtualFile findFileByIoFile(@Nonnull File file);
 
   @Nullable
-  public abstract VirtualFile refreshAndFindFileByIoFile(@NotNull File file);
+  public abstract VirtualFile refreshAndFindFileByIoFile(@Nonnull File file);
 
   /**
    * Performs a non-recursive synchronous refresh of specified files.
    *
    * @param files files to refresh.
    */
-  public abstract void refreshIoFiles(@NotNull Iterable<? extends File> files);
+  public abstract void refreshIoFiles(@Nonnull Iterable<? extends File> files);
 
-  public abstract void refreshIoFiles(@NotNull Iterable<? extends File> files, boolean async, boolean recursive, @Nullable Runnable onFinish);
+  public abstract void refreshIoFiles(@Nonnull Iterable<? extends File> files, boolean async, boolean recursive, @Nullable Runnable onFinish);
 
   /**
    * Performs a non-recursive synchronous refresh of specified files.
    *
    * @param files files to refresh.
    */
-  public abstract void refreshFiles(@NotNull Iterable<? extends VirtualFile> files);
+  public abstract void refreshFiles(@Nonnull Iterable<? extends VirtualFile> files);
 
-  public abstract void refreshFiles(@NotNull Iterable<? extends VirtualFile> files, boolean async, boolean recursive, @Nullable Runnable onFinish);
+  public abstract void refreshFiles(@Nonnull Iterable<? extends VirtualFile> files, boolean async, boolean recursive, @Nullable Runnable onFinish);
 
   public interface WatchRequest {
-    @NotNull
+    @Nonnull
     @SystemIndependent String getRootPath();
 
     boolean isToWatchRecursively();
   }
 
   @Nullable
-  public WatchRequest addRootToWatch(@NotNull String rootPath, boolean watchRecursively) {
+  public WatchRequest addRootToWatch(@Nonnull String rootPath, boolean watchRecursively) {
     Set<WatchRequest> result = addRootsToWatch(singleton(rootPath), watchRecursively);
     return result.size() == 1 ? result.iterator().next() : null;
   }
 
-  @NotNull
-  public Set<WatchRequest> addRootsToWatch(@NotNull Collection<String> rootPaths, boolean watchRecursively) {
+  @Nonnull
+  public Set<WatchRequest> addRootsToWatch(@Nonnull Collection<String> rootPaths, boolean watchRecursively) {
     if (rootPaths.isEmpty()) {
       return Collections.emptySet();
     }
@@ -81,18 +80,18 @@ public abstract class LocalFileSystem extends NewVirtualFileSystem {
     }
   }
 
-  public void removeWatchedRoot(@NotNull WatchRequest watchRequest) {
+  public void removeWatchedRoot(@Nonnull WatchRequest watchRequest) {
     removeWatchedRoots(singleton(watchRequest));
   }
 
-  public void removeWatchedRoots(@NotNull Collection<WatchRequest> watchRequests) {
+  public void removeWatchedRoots(@Nonnull Collection<WatchRequest> watchRequests) {
     if (!watchRequests.isEmpty()) {
       replaceWatchedRoots(watchRequests, null, null);
     }
   }
 
   @Nullable
-  public WatchRequest replaceWatchedRoot(@Nullable WatchRequest watchRequest, @NotNull String rootPath, boolean watchRecursively) {
+  public WatchRequest replaceWatchedRoot(@Nullable WatchRequest watchRequest, @Nonnull String rootPath, boolean watchRecursively) {
     Set<WatchRequest> requests = watchRequest != null ? singleton(watchRequest) : Collections.emptySet();
     Set<String> roots = singleton(rootPath);
     Set<WatchRequest> result = watchRecursively ? replaceWatchedRoots(requests, roots, null) : replaceWatchedRoots(requests, null, roots);
@@ -103,8 +102,8 @@ public abstract class LocalFileSystem extends NewVirtualFileSystem {
    * Stops watching given watch requests and starts watching new paths.
    * May do nothing and return the same set of requests when it contains exactly the same paths.
    */
-  @NotNull
-  public abstract Set<WatchRequest> replaceWatchedRoots(@NotNull Collection<WatchRequest> watchRequests, @Nullable Collection<String> recursiveRoots, @Nullable Collection<String> flatRoots);
+  @Nonnull
+  public abstract Set<WatchRequest> replaceWatchedRoots(@Nonnull Collection<WatchRequest> watchRequests, @Nullable Collection<String> recursiveRoots, @Nullable Collection<String> flatRoots);
 
   /**
    * Registers a handler that allows a version control system plugin to intercept file operations in the local file system
@@ -112,7 +111,7 @@ public abstract class LocalFileSystem extends NewVirtualFileSystem {
    *
    * @param handler the handler instance.
    */
-  public abstract void registerAuxiliaryFileOperationsHandler(@NotNull LocalFileOperationsHandler handler);
+  public abstract void registerAuxiliaryFileOperationsHandler(@Nonnull LocalFileOperationsHandler handler);
 
   /**
    * Unregisters a handler that allows a version control system plugin to intercept file operations in the local file system
@@ -120,5 +119,5 @@ public abstract class LocalFileSystem extends NewVirtualFileSystem {
    *
    * @param handler the handler instance.
    */
-  public abstract void unregisterAuxiliaryFileOperationsHandler(@NotNull LocalFileOperationsHandler handler);
+  public abstract void unregisterAuxiliaryFileOperationsHandler(@Nonnull LocalFileOperationsHandler handler);
 }

@@ -20,9 +20,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.*;
 import gnu.trove.*;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.util.HashMap;
@@ -600,11 +599,11 @@ public class ContainerUtil extends ContainerUtilRt {
     return res;
   }
 
-  public static <T> void processSortedListsInOrder(@NotNull List<? extends T> list1,
-                                                   @NotNull List<? extends T> list2,
-                                                   @NotNull Comparator<? super T> comparator,
+  public static <T> void processSortedListsInOrder(@Nonnull List<? extends T> list1,
+                                                   @Nonnull List<? extends T> list2,
+                                                   @Nonnull Comparator<? super T> comparator,
                                                    boolean mergeEqualItems,
-                                                   @NotNull Consumer<? super T> processor) {
+                                                   @Nonnull Consumer<? super T> processor) {
     int index1 = 0;
     int index2 = 0;
     while (index1 < list1.size() || index2 < list2.size()) {
@@ -643,9 +642,9 @@ public class ContainerUtil extends ContainerUtilRt {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Contract(pure = true)
-  public static <T> List<T> mergeSortedLists(@NotNull List<? extends T> list1, @NotNull List<? extends T> list2, @NotNull Comparator<? super T> comparator, boolean mergeEqualItems) {
+  public static <T> List<T> mergeSortedLists(@Nonnull List<? extends T> list1, @Nonnull List<? extends T> list2, @Nonnull Comparator<? super T> comparator, boolean mergeEqualItems) {
     final List<T> result = new ArrayList<>(list1.size() + list2.size());
     processSortedListsInOrder(list1, list2, comparator, mergeEqualItems, result::add);
     return result;
@@ -2004,7 +2003,7 @@ public class ContainerUtil extends ContainerUtilRt {
   }
 
   @Contract(pure = true)
-  public static <T> boolean and(@NotNull Iterable<? extends T> iterable, @NotNull Condition<? super T> condition) {
+  public static <T> boolean and(@Nonnull Iterable<? extends T> iterable, @Nonnull Condition<? super T> condition) {
     for (final T t : iterable) {
       if (!condition.value(t)) return false;
     }

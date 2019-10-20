@@ -7,8 +7,8 @@ import com.intellij.openapi.vfs.VirtualFileListener;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.Map;
@@ -20,9 +20,9 @@ public abstract class NewVirtualFileSystem implements FileSystemInterface, Cachi
   private final Map<VirtualFileListener, VirtualFileListener> myListenerWrappers = ContainerUtil.newConcurrentMap();
 
   @Nullable
-  public abstract VirtualFile findFileByPathIfCached(@NotNull String path);
+  public abstract VirtualFile findFileByPathIfCached(@Nonnull String path);
 
-  protected String normalize(@NotNull String path) {
+  protected String normalize(@Nonnull String path) {
     return path;
   }
 
@@ -37,27 +37,27 @@ public abstract class NewVirtualFileSystem implements FileSystemInterface, Cachi
   }
 
   @Override
-  public boolean isSymLink(@NotNull final VirtualFile file) {
+  public boolean isSymLink(@Nonnull final VirtualFile file) {
     return false;
   }
 
   @Override
-  public String resolveSymLink(@NotNull VirtualFile file) {
+  public String resolveSymLink(@Nonnull VirtualFile file) {
     return null;
   }
 
-  @NotNull
-  protected abstract String extractRootPath(@NotNull String path);
+  @Nonnull
+  protected abstract String extractRootPath(@Nonnull String path);
 
   @Override
-  public void addVirtualFileListener(@NotNull final VirtualFileListener listener) {
+  public void addVirtualFileListener(@Nonnull final VirtualFileListener listener) {
     VirtualFileListener wrapper = new VirtualFileFilteringListener(listener, this);
     VirtualFileManager.getInstance().addVirtualFileListener(wrapper);
     myListenerWrappers.put(listener, wrapper);
   }
 
   @Override
-  public void removeVirtualFileListener(@NotNull final VirtualFileListener listener) {
+  public void removeVirtualFileListener(@Nonnull final VirtualFileListener listener) {
     VirtualFileListener wrapper = myListenerWrappers.remove(listener);
     if (wrapper != null) {
       VirtualFileManager.getInstance().removeVirtualFileListener(wrapper);
@@ -66,33 +66,33 @@ public abstract class NewVirtualFileSystem implements FileSystemInterface, Cachi
 
   public abstract int getRank();
 
-  @NotNull
+  @Nonnull
   @Override
-  public abstract VirtualFile copyFile(Object requestor, @NotNull VirtualFile file, @NotNull VirtualFile newParent, @NotNull String copyName) throws IOException;
+  public abstract VirtualFile copyFile(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent, @Nonnull String copyName) throws IOException;
 
   @Override
-  @NotNull
-  public abstract VirtualFile createChildDirectory(Object requestor, @NotNull VirtualFile parent, @NotNull String dir) throws IOException;
+  @Nonnull
+  public abstract VirtualFile createChildDirectory(Object requestor, @Nonnull VirtualFile parent, @Nonnull String dir) throws IOException;
 
-  @NotNull
+  @Nonnull
   @Override
-  public abstract VirtualFile createChildFile(Object requestor, @NotNull VirtualFile parent, @NotNull String file) throws IOException;
-
-  @Override
-  public abstract void deleteFile(Object requestor, @NotNull VirtualFile file) throws IOException;
+  public abstract VirtualFile createChildFile(Object requestor, @Nonnull VirtualFile parent, @Nonnull String file) throws IOException;
 
   @Override
-  public abstract void moveFile(Object requestor, @NotNull VirtualFile file, @NotNull VirtualFile newParent) throws IOException;
+  public abstract void deleteFile(Object requestor, @Nonnull VirtualFile file) throws IOException;
 
   @Override
-  public abstract void renameFile(final Object requestor, @NotNull VirtualFile file, @NotNull String newName) throws IOException;
+  public abstract void moveFile(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent) throws IOException;
+
+  @Override
+  public abstract void renameFile(final Object requestor, @Nonnull VirtualFile file, @Nonnull String newName) throws IOException;
 
   public boolean markNewFilesAsDirty() {
     return false;
   }
 
-  @NotNull
-  public String getCanonicallyCasedName(@NotNull VirtualFile file) {
+  @Nonnull
+  public String getCanonicallyCasedName(@Nonnull VirtualFile file) {
     return file.getName();
   }
 
@@ -103,13 +103,13 @@ public abstract class NewVirtualFileSystem implements FileSystemInterface, Cachi
    * @return attributes of a given file, or {@code null} if the file doesn't exist.
    */
   @Nullable
-  public abstract FileAttributes getAttributes(@NotNull VirtualFile file);
+  public abstract FileAttributes getAttributes(@Nonnull VirtualFile file);
 
   /**
    * Returns {@code true} if {@code path} represents a directory with at least one child.
    * Override if your file system can answer this question more efficiently (e.g. without enumerating all children).
    */
-  public boolean hasChildren(@NotNull VirtualFile file) {
+  public boolean hasChildren(@Nonnull VirtualFile file) {
     return list(file).length != 0;
   }
 }

@@ -21,7 +21,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.text.FilePathHashingStrategy;
 import gnu.trove.THashSet;
 import gnu.trove.TIntHashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +36,7 @@ class FileLoadingTracker {
   private static final Set<String> ourPaths = new THashSet<>(getPathsToTrack(), FilePathHashingStrategy.create());
   private static final TIntHashSet ourLeafNameIds = new TIntHashSet(ourPaths.stream().mapToInt(path -> FileNameCache.storeName(StringUtil.getShortName(path, '/'))).toArray());
 
-  @NotNull
+  @Nonnull
   private static List<String> getPathsToTrack() {
     try {
       return StringUtil.split(Registry.stringValue("file.system.trace.loading"), ";");
@@ -46,7 +46,7 @@ class FileLoadingTracker {
     }
   }
 
-  static void fileLoaded(@NotNull VirtualDirectoryImpl parent, int nameId) {
+  static void fileLoaded(@Nonnull VirtualDirectoryImpl parent, int nameId) {
     if (ourLeafNameIds.contains(nameId)) {
       String path = parent.getPath() + "/" + FileNameCache.getVFileName(nameId).toString();
       if (ourPaths.contains(path)) {

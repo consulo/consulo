@@ -2,7 +2,7 @@
 package com.intellij.util.messages;
 
 import consulo.container.plugin.PluginDescriptor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 //@ApiStatus.Internal
 public final class ListenerDescriptor {
@@ -14,7 +14,7 @@ public final class ListenerDescriptor {
 
   public transient final PluginDescriptor pluginDescriptor;
 
-  public ListenerDescriptor(@NotNull String listenerClassName, @NotNull String topicClassName, boolean activeInTestMode, boolean activeInHeadlessMode, @NotNull PluginDescriptor pluginDescriptor) {
+  public ListenerDescriptor(@Nonnull String listenerClassName, @Nonnull String topicClassName, boolean activeInTestMode, boolean activeInHeadlessMode, @Nonnull PluginDescriptor pluginDescriptor) {
     this.listenerClassName = listenerClassName;
     this.topicClassName = topicClassName;
     this.activeInTestMode = activeInTestMode;

@@ -15,8 +15,8 @@ import com.intellij.util.messages.ListenerDescriptor;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.lang.reflect.InvocationHandler;
@@ -55,7 +55,7 @@ public class MessageBusImpl implements MessageBus {
   private final Map<Topic<?>, List<MessageBusConnectionImpl>> mySubscriberCache = ContainerUtil.newConcurrentMap();
   private final List<MessageBusImpl> myChildBuses = ContainerUtil.createLockFreeCopyOnWriteList();
 
-  @NotNull
+  @Nonnull
   private volatile Map<String, List<ListenerDescriptor>> myTopicClassToListenerClass = Collections.emptyMap();
 
   private static final Object NA = new Object();
@@ -71,7 +71,7 @@ public class MessageBusImpl implements MessageBus {
 
   private final MessageBusConnectionImpl myLazyConnection;
 
-  public MessageBusImpl(@NotNull Object owner, @NotNull MessageBusImpl parentBus) {
+  public MessageBusImpl(@Nonnull Object owner, @Nonnull MessageBusImpl parentBus) {
     myOwner = owner;
     myConnectionDisposable = Disposer.newDisposable(myOwner.toString());
     myParentBus = parentBus;
@@ -87,7 +87,7 @@ public class MessageBusImpl implements MessageBus {
   }
 
   // root message bus constructor
-  private MessageBusImpl(@NotNull Object owner) {
+  private MessageBusImpl(@Nonnull Object owner) {
     myOwner = owner;
     myConnectionDisposable = Disposer.newDisposable(myOwner.toString());
     myOrder = ArrayUtil.EMPTY_INT_ARRAY;
@@ -99,7 +99,7 @@ public class MessageBusImpl implements MessageBus {
    * Must be a concurrent map, because remove operation may be concurrently performed (synchronized only per topic).
    */
   ///@ApiStatus.Internal
-  public void setLazyListeners(@NotNull ConcurrentMap<String, List<ListenerDescriptor>> map) {
+  public void setLazyListeners(@Nonnull ConcurrentMap<String, List<ListenerDescriptor>> map) {
     if (myTopicClassToListenerClass != Collections.<String, List<ListenerDescriptor>>emptyMap()) {
       throw new IllegalStateException("Already set: " + myTopicClassToListenerClass);
     }
@@ -119,7 +119,7 @@ public class MessageBusImpl implements MessageBus {
   /**
    * calculates {@link #myOrder} for the given child bus
    */
-  @NotNull
+  @Nonnull
   private int[] nextOrder() {
     MessageBusImpl lastChild = ContainerUtil.getLastItem(myChildBuses);
 
@@ -131,7 +131,7 @@ public class MessageBusImpl implements MessageBus {
     return ArrayUtil.append(myOrder, lastChildIndex + 1);
   }
 
-  private void onChildBusDisposed(@NotNull MessageBusImpl childBus) {
+  private void onChildBusDisposed(@Nonnull MessageBusImpl childBus) {
     boolean removed = myChildBuses.remove(childBus);
     Map<MessageBusImpl, Integer> map = myRootBus.myWaitingBuses.get();
     if (map != null) map.remove(childBus);
@@ -140,7 +140,7 @@ public class MessageBusImpl implements MessageBus {
   }
 
   private static final class DeliveryJob {
-    DeliveryJob(@NotNull MessageBusConnectionImpl connection, @NotNull Message message) {
+    DeliveryJob(@Nonnull MessageBusConnectionImpl connection, @Nonnull Message message) {
       this.connection = connection;
       this.message = message;
     }
@@ -156,14 +156,14 @@ public class MessageBusImpl implements MessageBus {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public MessageBusConnectionImpl connect() {
     return connect(myConnectionDisposable);
   }
 
   @Override
-  @NotNull
-  public MessageBusConnectionImpl connect(@NotNull Disposable parentDisposable) {
+  @Nonnull
+  public MessageBusConnectionImpl connect(@Nonnull Disposable parentDisposable) {
     checkNotDisposed();
     MessageBusConnectionImpl connection = new MessageBusConnectionImpl(this);
     Disposer.register(parentDisposable, connection);
@@ -171,8 +171,8 @@ public class MessageBusImpl implements MessageBus {
   }
 
   @Override
-  @NotNull
-  public <L> L syncPublisher(@NotNull Topic<L> topic) {
+  @Nonnull
+  public <L> L syncPublisher(@Nonnull Topic<L> topic) {
     checkNotDisposed();
     @SuppressWarnings("unchecked") L publisher = (L)myPublishers.get(topic);
     if (publisher != null) {
@@ -197,8 +197,8 @@ public class MessageBusImpl implements MessageBus {
     }
   }
 
-  @NotNull
-  private <L> L subscribeLazyListeners(@NotNull Topic<L> topic, @NotNull Class<L> listenerClass) {
+  @Nonnull
+  private <L> L subscribeLazyListeners(@Nonnull Topic<L> topic, @Nonnull Class<L> listenerClass) {
     //noinspection unchecked
     L publisher = (L)myPublishers.get(topic);
     if (publisher != null) {
@@ -232,8 +232,8 @@ public class MessageBusImpl implements MessageBus {
     return publisher;
   }
 
-  @NotNull
-  private <L> InvocationHandler createTopicHandler(@NotNull Topic<L> topic) {
+  @Nonnull
+  private <L> InvocationHandler createTopicHandler(@Nonnull Topic<L> topic) {
     return (proxy, method, args) -> {
       if (method.getDeclaringClass().getName().equals("java.lang.Object")) {
         return EventDispatcher.handleObjectMethod(proxy, args, method.getName());
@@ -273,7 +273,7 @@ public class MessageBusImpl implements MessageBus {
   }
 
   @Override
-  public boolean hasUndeliveredEvents(@NotNull Topic<?> topic) {
+  public boolean hasUndeliveredEvents(@Nonnull Topic<?> topic) {
     if (myDisposed) return false;
     if (!isDispatchingAnything()) return false;
 
@@ -296,13 +296,13 @@ public class MessageBusImpl implements MessageBus {
     }
   }
 
-  @NotNull
+  @Nonnull
   @TestOnly
   String getOwner() {
     return myOwner.toString();
   }
 
-  private void calcSubscribers(@NotNull Topic<?> topic, @NotNull List<? super MessageBusConnectionImpl> result) {
+  private void calcSubscribers(@Nonnull Topic<?> topic, @Nonnull List<? super MessageBusConnectionImpl> result) {
     final List<MessageBusConnectionImpl> topicSubscribers = mySubscribers.get(topic);
     if (topicSubscribers != null) {
       result.addAll(topicSubscribers);
@@ -321,7 +321,7 @@ public class MessageBusImpl implements MessageBus {
     }
   }
 
-  private void postMessage(@NotNull Message message) {
+  private void postMessage(@Nonnull Message message) {
     checkNotDisposed();
     List<MessageBusConnectionImpl> topicSubscribers = getTopicSubscribers(message.getTopic());
     if (!topicSubscribers.isEmpty()) {
@@ -333,8 +333,8 @@ public class MessageBusImpl implements MessageBus {
     }
   }
 
-  @NotNull
-  private List<MessageBusConnectionImpl> getTopicSubscribers(@NotNull Topic<?> topic) {
+  @Nonnull
+  private List<MessageBusConnectionImpl> getTopicSubscribers(@Nonnull Topic<?> topic) {
     List<MessageBusConnectionImpl> topicSubscribers = mySubscriberCache.get(topic);
     if (topicSubscribers == null) {
       topicSubscribers = new ArrayList<>();
@@ -366,7 +366,7 @@ public class MessageBusImpl implements MessageBus {
     }
   }
 
-  private void sendMessage(@NotNull Message message) {
+  private void sendMessage(@Nonnull Message message) {
     pumpMessages();
     postMessage(message);
     pumpMessages();
@@ -390,7 +390,7 @@ public class MessageBusImpl implements MessageBus {
     }
   }
 
-  private static void pumpWaitingBuses(@NotNull List<? extends MessageBusImpl> buses) {
+  private static void pumpWaitingBuses(@Nonnull List<? extends MessageBusImpl> buses) {
     List<Throwable> exceptions = null;
     for (MessageBusImpl bus : buses) {
       if (bus.myDisposed) continue;
@@ -400,7 +400,7 @@ public class MessageBusImpl implements MessageBus {
     rethrowExceptions(exceptions);
   }
 
-  private static List<Throwable> appendExceptions(@Nullable List<Throwable> exceptions, @NotNull List<? extends Throwable> busExceptions) {
+  private static List<Throwable> appendExceptions(@Nullable List<Throwable> exceptions, @Nonnull List<? extends Throwable> busExceptions) {
     if (!busExceptions.isEmpty()) {
       if (exceptions == null) exceptions = new ArrayList<>(busExceptions.size());
       exceptions.addAll(busExceptions);
@@ -417,7 +417,7 @@ public class MessageBusImpl implements MessageBus {
     CompoundRuntimeException.throwIfNotEmpty(exceptions);
   }
 
-  private static boolean ensureAlive(@NotNull Map<MessageBusImpl, Integer> map, @NotNull MessageBusImpl bus) {
+  private static boolean ensureAlive(@Nonnull Map<MessageBusImpl, Integer> map, @Nonnull MessageBusImpl bus) {
     if (bus.myDisposed) {
       map.remove(bus);
       LOG.error("Accessing disposed message bus " + bus);
@@ -426,7 +426,7 @@ public class MessageBusImpl implements MessageBus {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   private List<Throwable> doPumpMessages() {
     Queue<DeliveryJob> queue = myMessageQueue.get();
     List<Throwable> exceptions = Collections.emptyList();
@@ -448,7 +448,7 @@ public class MessageBusImpl implements MessageBus {
     return exceptions;
   }
 
-  void notifyOnSubscription(@NotNull MessageBusConnectionImpl connection, @NotNull Topic<?> topic) {
+  void notifyOnSubscription(@Nonnull MessageBusConnectionImpl connection, @Nonnull Topic<?> topic) {
     checkNotDisposed();
     List<MessageBusConnectionImpl> topicSubscribers = mySubscribers.get(topic);
     if (topicSubscribers == null) {
@@ -468,7 +468,7 @@ public class MessageBusImpl implements MessageBus {
     }
   }
 
-  void notifyConnectionTerminated(@NotNull MessageBusConnectionImpl connection) {
+  void notifyConnectionTerminated(@Nonnull MessageBusConnectionImpl connection) {
     for (List<MessageBusConnectionImpl> topicSubscribers : mySubscribers.values()) {
       topicSubscribers.remove(connection);
     }
@@ -493,7 +493,7 @@ public class MessageBusImpl implements MessageBus {
     job.connection.deliverMessage(job.message);
   }
 
-  @NotNull
+  @Nonnull
   static <T> ThreadLocal<Queue<T>> createThreadLocalQueue() {
     return ThreadLocal.withInitial(ArrayDeque::new);
   }
@@ -506,7 +506,7 @@ public class MessageBusImpl implements MessageBus {
     myMessageDeliveryListener = listener;
   }
 
-  void invokeListener(@NotNull Message message, Object handler) throws IllegalAccessException, InvocationTargetException {
+  void invokeListener(@Nonnull Message message, Object handler) throws IllegalAccessException, InvocationTargetException {
     Method method = message.getListenerMethod();
     MessageDeliveryListener listener = myMessageDeliveryListener;
     if (listener == null) {
@@ -538,7 +538,7 @@ public class MessageBusImpl implements MessageBus {
       myClearedSubscribersCache = true;
     }
 
-    RootBus(@NotNull Object owner) {
+    RootBus(@Nonnull Object owner) {
       super(owner);
     }
   }
