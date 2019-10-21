@@ -8,7 +8,6 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Key;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.TestOnly;
 
@@ -53,7 +52,7 @@ public abstract class AutoPopupController implements Disposable {
 
   public abstract void cancelAllRequests();
 
-  public abstract void autoPopupParameterInfo(@Nonnull Editor editor, @Nullable PsiElement highlightedMethod);
+  public abstract void autoPopupParameterInfo(@Nonnull Editor editor, @Nullable Object highlightedMethod);
 
   @TestOnly
   public abstract void waitForDelayedActions(long timeout, @Nonnull TimeUnit unit) throws TimeoutException;
