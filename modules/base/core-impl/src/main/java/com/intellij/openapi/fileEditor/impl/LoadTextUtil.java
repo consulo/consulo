@@ -595,7 +595,7 @@ public final class LoadTextUtil {
     return lineSeparator;
   }
 
-  static String getDetectedLineSeparator(@Nonnull VirtualFile file) {
+  public static String getDetectedLineSeparator(@Nonnull VirtualFile file) {
     return file.getDetectedLineSeparator();
   }
 

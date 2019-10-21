@@ -24,8 +24,8 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Function;
 
@@ -122,7 +122,7 @@ public class LightFileDocumentManager extends FileDocumentManager {
   @Override
   @Nonnull
   public String getLineSeparator(VirtualFile file, Project project) {
-    return "";
+    return LoadTextUtil.getDetectedLineSeparator(file);
   }
 
   @Override
