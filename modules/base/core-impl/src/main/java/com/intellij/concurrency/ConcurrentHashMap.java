@@ -2266,7 +2266,7 @@ class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements ConcurrentMap
    * A padded cell for distributing counts.  Adapted from LongAdder
    * and Striped64.  See their internal docs for explanation.
    */
-  @sun.misc.Contended
+  //@sun.misc.Contended not avaliable in jdk9+ 
   static final class CounterCell {
     volatile long value;
 
