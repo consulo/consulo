@@ -22,11 +22,10 @@ import com.intellij.openapi.vfs.LocalFileOperationsHandler;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.Processor;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,19 +52,23 @@ public class MockLocalFileSystem extends LocalFileSystem {
   }
 
   @Override
-  public void refreshIoFiles(@Nonnull final Iterable<File> files) {
+  public void refreshIoFiles(@Nonnull Iterable<? extends File> files) {
+
   }
 
   @Override
-  public void refreshFiles(@Nonnull final Iterable<VirtualFile> files) {
+  public void refreshIoFiles(@Nonnull Iterable<? extends File> files, boolean async, boolean recursive, @Nullable Runnable onFinish) {
+
   }
 
   @Override
-  public void refreshIoFiles(@Nonnull Iterable<File> files, boolean async, boolean recursive, @Nullable Runnable onFinish) {
+  public void refreshFiles(@Nonnull Iterable<? extends VirtualFile> files) {
+
   }
 
   @Override
-  public void refreshFiles(@Nonnull Iterable<VirtualFile> files, boolean async, boolean recursive, @javax.annotation.Nullable Runnable onFinish) {
+  public void refreshFiles(@Nonnull Iterable<? extends VirtualFile> files, boolean async, boolean recursive, @Nullable Runnable onFinish) {
+
   }
 
   @Override
@@ -92,12 +95,6 @@ public class MockLocalFileSystem extends LocalFileSystem {
 
   @Override
   public void unregisterAuxiliaryFileOperationsHandler(@Nonnull final LocalFileOperationsHandler handler) {
-  }
-
-
-  @Override
-  public boolean processCachedFilesInSubtree(@Nonnull final VirtualFile file, @Nonnull final Processor<VirtualFile> processor) {
-    throw new UnsupportedOperationException("'processCachedFilesInSubtree' not implemented in " + getClass().getName());
   }
 
   @Override

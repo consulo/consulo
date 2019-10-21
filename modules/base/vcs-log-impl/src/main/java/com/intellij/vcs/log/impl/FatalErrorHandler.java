@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public interface FatalErrorHandler {
-  void consume(@Nullable Object source, @Nonnull Exception exception);
+  void consume(@Nullable Object source, @Nonnull Throwable exception);
 
   void displayFatalErrorMessage(@Nonnull String message);
 }
