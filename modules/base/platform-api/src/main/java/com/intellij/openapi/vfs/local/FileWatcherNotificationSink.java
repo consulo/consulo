@@ -18,8 +18,8 @@ package com.intellij.openapi.vfs.local;
 import com.intellij.notification.NotificationListener;
 import com.intellij.openapi.util.Pair;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 
 /**
@@ -28,7 +28,7 @@ import java.util.Collection;
 public interface FileWatcherNotificationSink {
   void notifyManualWatchRoots(@Nonnull Collection<String> roots);
 
-  void notifyMapping(@Nonnull Collection<Pair<String, String>> mapping);
+  void notifyMapping(@Nonnull Collection<? extends Pair<String, String>> mapping);
 
   void notifyDirtyPath(@Nonnull String path);
 

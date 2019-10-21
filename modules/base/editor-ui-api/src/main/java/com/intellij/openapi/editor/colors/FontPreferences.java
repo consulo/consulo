@@ -31,7 +31,7 @@ public interface FontPreferences {
   String DEFAULT_FONT_NAME = getDefaultFontName();
   int DEFAULT_FONT_SIZE = Platform.current().os().isWindows() ? 13 : FontSize.SMALL.getSize();
 
-  float DEFAULT_LINE_SPACING = 1.0f;
+  float DEFAULT_LINE_SPACING = 1.2f;
   String FALLBACK_FONT_FAMILY = "Monospaced";
   String MAC_OS_DEFAULT_FONT_FAMILY   = "Menlo";
   String LINUX_DEFAULT_FONT_FAMILY    = "DejaVu Sans Mono";
