@@ -30,6 +30,8 @@ import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.psi.LanguageFileViewProviders;
 import com.intellij.psi.LanguageSubstitutors;
@@ -92,6 +94,7 @@ public class LightApplicationBuilder {
       builder.bind(TreeUIHelper.class).to(LightTreeUIHelper.class);
       builder.bind(UiActivityMonitor.class).to(LightUiActivityMonitor.class);
       builder.bind(TreeAnchorizer.class).to(TreeAnchorizer.class);
+      builder.bind(ProgressManager.class).to(CoreProgressManager.class);
     }
   }
 
