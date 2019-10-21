@@ -20,8 +20,8 @@ import com.intellij.openapi.util.Pair;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectIntHashMap;
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
