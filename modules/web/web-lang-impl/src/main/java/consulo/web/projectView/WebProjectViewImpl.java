@@ -97,7 +97,7 @@ public class WebProjectViewImpl implements ProjectViewEx {
         if(selectedNode != null) {
           AbstractTreeNode value = selectedNode.getValue();
           if(value instanceof AbstractPsiBasedNode) {
-           return ((AbstractPsiBasedNode)value).getPsiElement();
+           return value.getValue();
           }
         }
         return null;
