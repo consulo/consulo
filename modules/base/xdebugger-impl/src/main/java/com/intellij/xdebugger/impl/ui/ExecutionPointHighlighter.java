@@ -1,29 +1,15 @@
-/*
- * Copyright 2000-2016 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.xdebugger.impl.ui;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
-import com.intellij.openapi.editor.colors.EditorColorsListener;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
+import com.intellij.openapi.editor.impl.EditorMouseHoverPopupControl;
 import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -40,10 +26,9 @@ import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
 import com.intellij.xdebugger.impl.XSourcePositionImpl;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import com.intellij.xdebugger.ui.DebuggerColors;
-import consulo.ui.RequiredUIAccess;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -58,63 +43,47 @@ public class ExecutionPointHighlighter {
   private OpenFileDescriptor myOpenFileDescriptor;
   private boolean myNotTopFrame;
   private GutterIconRenderer myGutterIconRenderer;
-  private static final Key<Boolean> EXECUTION_POINT_HIGHLIGHTER_KEY = Key.create("EXECUTION_POINT_HIGHLIGHTER_KEY");
+  public static final Key<Boolean> EXECUTION_POINT_HIGHLIGHTER_TOP_FRAME_KEY = Key.create("EXECUTION_POINT_HIGHLIGHTER_TOP_FRAME_KEY");
 
   private final AtomicBoolean updateRequested = new AtomicBoolean();
 
-  public ExecutionPointHighlighter(final Project project) {
+  public ExecutionPointHighlighter(@Nonnull Project project) {
     myProject = project;
 
     // Update highlighter colors if global color schema was changed
-    final EditorColorsManager colorsManager = EditorColorsManager.getInstance();
-    if (colorsManager != null) { // in some debugger tests EditorColorsManager component isn't loaded
-      colorsManager.addEditorColorsListener(new EditorColorsListener() {
-        @Override
-        public void globalSchemeChange(EditorColorsScheme scheme) {
-          ExecutionPointHighlighter.this.update(false);
-        }
-      }, project);
-    }
+    project.getMessageBus().connect().subscribe(EditorColorsManager.TOPIC, scheme -> update(false));
   }
 
-  public void show(final @Nonnull XSourcePosition position, final boolean notTopFrame,
-                   @Nullable final GutterIconRenderer gutterIconRenderer) {
+  public void show(final @Nonnull XSourcePosition position, final boolean notTopFrame, @Nullable final GutterIconRenderer gutterIconRenderer) {
     updateRequested.set(false);
-    AppUIUtil.invokeLaterIfProjectAlive(myProject, new Runnable() {
-      @Override
-      @RequiredUIAccess
-      public void run() {
-        updateRequested.set(false);
+    TransactionGuard.submitTransaction(myProject, () -> {
+      updateRequested.set(false);
 
-        mySourcePosition = position;
+      mySourcePosition = position;
 
-        ExecutionPointHighlighter.this.clearDescriptor();
-        myOpenFileDescriptor = XSourcePositionImpl.createOpenFileDescriptor(myProject, position);
-        if (!XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings().isScrollToCenter()) {
-          myOpenFileDescriptor.setScrollType(notTopFrame ? ScrollType.CENTER : ScrollType.MAKE_VISIBLE);
-        }
-        //see IDEA-125645 and IDEA-63459
-        //myOpenFileDescriptor.setUseCurrentWindow(true);
-
-        myGutterIconRenderer = gutterIconRenderer;
-        myNotTopFrame = notTopFrame;
-
-        ExecutionPointHighlighter.this.doShow(true);
+      clearDescriptor();
+      myOpenFileDescriptor = XSourcePositionImpl.createOpenFileDescriptor(myProject, position);
+      if (!XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings().isScrollToCenter()) {
+        myOpenFileDescriptor.setScrollType(notTopFrame ? ScrollType.CENTER : ScrollType.MAKE_VISIBLE);
       }
+      //see IDEA-125645 and IDEA-63459
+      //myOpenFileDescriptor.setUseCurrentWindow(true);
+
+      myGutterIconRenderer = gutterIconRenderer;
+      myNotTopFrame = notTopFrame;
+
+      doShow(true);
     });
   }
 
   public void hide() {
-    AppUIUtil.invokeOnEdt(new Runnable() {
-      @Override
-      public void run() {
-        updateRequested.set(false);
+    AppUIUtil.invokeOnEdt(() -> {
+      updateRequested.set(false);
 
-        ExecutionPointHighlighter.this.removeHighlighter();
-        ExecutionPointHighlighter.this.clearDescriptor();
-        myEditor = null;
-        myGutterIconRenderer = null;
-      }
+      removeHighlighter();
+      clearDescriptor();
+      myEditor = null;
+      myGutterIconRenderer = null;
     });
   }
 
@@ -138,29 +107,22 @@ public class ExecutionPointHighlighter {
 
   public void update(final boolean navigate) {
     if (updateRequested.compareAndSet(false, true)) {
-      ApplicationManager.getApplication().invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          if (updateRequested.compareAndSet(true, false)) {
-            ExecutionPointHighlighter.this.doShow(navigate);
-          }
+      ApplicationManager.getApplication().invokeLater(() -> {
+        if (updateRequested.compareAndSet(true, false)) {
+          doShow(navigate);
         }
       }, myProject.getDisposed());
     }
   }
 
   public void updateGutterIcon(@Nullable final GutterIconRenderer renderer) {
-    AppUIUtil.invokeOnEdt(new Runnable() {
-      @Override
-      public void run() {
-        if (myRangeHighlighter != null && myGutterIconRenderer != null) {
-          myRangeHighlighter.setGutterIconRenderer(renderer);
-        }
+    AppUIUtil.invokeOnEdt(() -> {
+      if (myRangeHighlighter != null && myGutterIconRenderer != null) {
+        myRangeHighlighter.setGutterIconRenderer(renderer);
       }
     });
   }
 
-  @RequiredUIAccess
   private void doShow(boolean navigate) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (ApplicationManager.getApplication().isUnitTestMode()) return;
@@ -191,7 +153,7 @@ public class ExecutionPointHighlighter {
 
   private void removeHighlighter() {
     if (myEditor != null) {
-      adjustCounter(myEditor, -1);
+      disableMouseHoverPopups(myEditor, false);
     }
 
     //if (myNotTopFrame && myEditor != null) {
@@ -205,7 +167,7 @@ public class ExecutionPointHighlighter {
   }
 
   private void addHighlighter() {
-    adjustCounter(myEditor, 1);
+    disableMouseHoverPopups(myEditor, true);
     int line = mySourcePosition.getLine();
     Document document = myEditor.getDocument();
     if (line < 0 || line >= document.getLineCount()) return;
@@ -218,25 +180,21 @@ public class ExecutionPointHighlighter {
     if (myRangeHighlighter != null) return;
 
     EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
-    TextAttributes attributes = myNotTopFrame ? scheme.getAttributes(DebuggerColors.NOT_TOP_FRAME_ATTRIBUTES)
-                                              : scheme.getAttributes(DebuggerColors.EXECUTIONPOINT_ATTRIBUTES);
+    TextAttributes attributes = myNotTopFrame ? scheme.getAttributes(DebuggerColors.NOT_TOP_FRAME_ATTRIBUTES) : scheme.getAttributes(DebuggerColors.EXECUTIONPOINT_ATTRIBUTES);
     MarkupModel markupModel = DocumentMarkupModel.forDocument(document, myProject, true);
     if (mySourcePosition instanceof HighlighterProvider) {
       TextRange range = ((HighlighterProvider)mySourcePosition).getHighlightRange();
       if (range != null) {
         TextRange lineRange = DocumentUtil.getLineTextRange(document, line);
-        range = range.intersection(lineRange);
-        if (range != null && !range.isEmpty() && !range.equals(lineRange)) {
-          myRangeHighlighter = markupModel.addRangeHighlighter(range.getStartOffset(), range.getEndOffset(),
-                                                               DebuggerColors.EXECUTION_LINE_HIGHLIGHTERLAYER, attributes,
-                                                               HighlighterTargetArea.EXACT_RANGE);
+        if (!range.equals(lineRange)) {
+          myRangeHighlighter = markupModel.addRangeHighlighter(range.getStartOffset(), range.getEndOffset(), DebuggerColors.EXECUTION_LINE_HIGHLIGHTERLAYER, attributes, HighlighterTargetArea.EXACT_RANGE);
         }
       }
     }
     if (myRangeHighlighter == null) {
       myRangeHighlighter = markupModel.addLineHighlighter(line, DebuggerColors.EXECUTION_LINE_HIGHLIGHTERLAYER, attributes);
     }
-    myRangeHighlighter.putUserData(EXECUTION_POINT_HIGHLIGHTER_KEY, true);
+    myRangeHighlighter.putUserData(EXECUTION_POINT_HIGHLIGHTER_TOP_FRAME_KEY, !myNotTopFrame);
     myRangeHighlighter.setEditorFilter(MarkupEditorFilterFactory.createIsNotDiffFilter());
     myRangeHighlighter.setGutterIconRenderer(myGutterIconRenderer);
   }
@@ -246,17 +204,17 @@ public class ExecutionPointHighlighter {
     return myRangeHighlighter != null && myRangeHighlighter.getTargetArea() == HighlighterTargetArea.LINES_IN_RANGE;
   }
 
-  private static void adjustCounter(@Nonnull final Editor editor, final int increment) {
+  private static void disableMouseHoverPopups(@Nonnull final Editor editor, final boolean disable) {
     if (ApplicationManager.getApplication().isUnitTestMode()) return;
 
-    // need to always invoke later to maintain order of increment/decrement
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        JComponent component = editor.getComponent();
-        Object o = component.getClientProperty(DesktopEditorImpl.IGNORE_MOUSE_TRACKING);
-        Integer value = ((o instanceof Integer) ? (Integer)o : 0) + increment;
-        component.putClientProperty(DesktopEditorImpl.IGNORE_MOUSE_TRACKING, value > 0 ? value : null);
+    // need to always invoke later to maintain order of enabling/disabling
+    //noinspection SSBasedInspection
+    SwingUtilities.invokeLater(() -> {
+      if (disable) {
+        EditorMouseHoverPopupControl.disablePopups(editor.getDocument());
+      }
+      else {
+        EditorMouseHoverPopupControl.enablePopups(editor.getDocument());
       }
     });
   }

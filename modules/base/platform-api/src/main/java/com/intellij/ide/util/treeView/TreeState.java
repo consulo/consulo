@@ -2,7 +2,7 @@
 package com.intellij.ide.util.treeView;
 
 import com.intellij.navigation.NavigationItem;
-import consulo.logging.Logger;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Progressive;
@@ -277,7 +277,7 @@ public class TreeState implements JDOMExternalizable {
       ContainerUtil.addIfNotNull(selection, treePath);
     }
     if (selection.isEmpty()) return;
-    tree.setSelectionPaths(selection.toArray(new TreePath[0]));
+    tree.setSelectionPaths(selection.toArray(TreeUtil.EMPTY_TREE_PATH));
     if (myScrollToSelection) {
       TreeUtil.showRowCentered(tree, tree.getRowForPath(selection.get(0)), true, true);
     }
@@ -431,8 +431,8 @@ public class TreeState implements JDOMExternalizable {
   }
 
   /**
-   * Temporary solution to resolve simultaneous expansions with async tree model.
-   * Not that the specified consumer must resolve async promise at the end.
+   * @deprecated Temporary solution to resolve simultaneous expansions with async tree model.
+   * Note that the specified consumer must resolve async promise at the end.
    */
   @Deprecated
   public static void expand(@Nonnull JTree tree, @Nonnull Consumer<? super AsyncPromise<Void>> consumer) {

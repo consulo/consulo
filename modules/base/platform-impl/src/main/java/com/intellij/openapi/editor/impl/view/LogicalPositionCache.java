@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2016 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.impl.view;
 
 import com.intellij.diagnostic.Dumpable;
@@ -22,6 +8,7 @@ import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.PrioritizedDocumentListener;
 import com.intellij.openapi.editor.impl.EditorDocumentPriorities;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.DocumentUtil;
 import javax.annotation.Nonnull;
 
@@ -33,7 +20,6 @@ import java.util.Collections;
  * Caches information allowing faster offset<->logicalPosition conversions even for long lines.
  * Requests for conversion can be made from under read action, document changes and cache invalidation should be done in EDT.
  */
-@SuppressWarnings("SynchronizeOnThis")
 class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, Dumpable {
   private final Document myDocument;
   private final EditorView myView;
@@ -57,17 +43,21 @@ class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, D
   }
 
   @Override
-  public void beforeDocumentChange(DocumentEvent event) {
+  public void beforeDocumentChange(@Nonnull DocumentEvent event) {
     myUpdateInProgress = true;
     myDocumentChangeOldEndLine = getAdjustedLineNumber(event.getOffset() + event.getOldLength());
   }
 
   @Override
-  public void documentChanged(DocumentEvent event) {
-    int startLine = myDocument.getLineNumber(event.getOffset());
-    int newEndLine = getAdjustedLineNumber(event.getOffset() + event.getNewLength());
-    invalidateLines(startLine, myDocumentChangeOldEndLine, newEndLine, isSimpleText(event.getNewFragment()));
-    myUpdateInProgress = false;
+  public void documentChanged(@Nonnull DocumentEvent event) {
+    try {
+      int startLine = myDocument.getLineNumber(event.getOffset());
+      int newEndLine = getAdjustedLineNumber(event.getOffset() + event.getNewLength());
+      invalidateLines(startLine, myDocumentChangeOldEndLine, newEndLine, isSimpleText(event.getNewFragment()));
+    }
+    finally {
+      myUpdateInProgress = false;
+    }
   }
 
   // text for which offset<->logicalColumn conversion is trivial
@@ -117,20 +107,20 @@ class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, D
       // (use case - com.intellij.openapi.editor.impl.CaretImpl.PositionMarker.changedUpdateImpl())
       int lineStartOffset = myDocument.getLineStartOffset(line);
       int lineEndOffset = myDocument.getLineEndOffset(line);
-      return calcOffset(myDocument, column, 0, lineStartOffset, lineEndOffset, myTabSize);
+      return calcOffset(myDocument.getImmutableCharSequence(), column, 0, lineStartOffset, lineEndOffset, myTabSize);
     }
     LineData lineData = getLineInfo(line);
     return lineData.logicalColumnToOffset(myDocument, line, myTabSize, column);
   }
 
-  private static int calcOffset(@Nonnull Document document, int column, int startColumn, int startOffset, int endOffset, int tabSize) {
+  static int calcOffset(@Nonnull CharSequence text, int column, int startColumn, int startOffset, int endOffset, int tabSize) {
     int currentColumn = startColumn;
-    CharSequence text = document.getImmutableCharSequence();
     for (int i = startOffset; i < endOffset; i++) {
-      if (text.charAt(i) == '\t') {
+      char c = text.charAt(i);
+      if (c == '\t') {
         currentColumn = (currentColumn / tabSize + 1) * tabSize;
       }
-      else if (DocumentUtil.isSurrogatePair(document, i)) {
+      else if (i + 1 < text.length() && Character.isHighSurrogate(c) && Character.isLowSurrogate(text.charAt(i + 1))) {
         if (currentColumn == column) return i;
       }
       else {
@@ -178,7 +168,8 @@ class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, D
     }
     if (oldEndLine < newEndLine) {
       myLines.addAll(oldEndLine + 1, Collections.nCopies(newEndLine - oldEndLine, preserveTrivialLines ? LineData.TRIVIAL : null));
-    } else if (oldEndLine > newEndLine) {
+    }
+    else if (oldEndLine > newEndLine) {
       myLines.subList(newEndLine + 1, oldEndLine + 1).clear();
     }
   }
@@ -243,7 +234,7 @@ class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, D
       int start = document.getLineStartOffset(line);
       int end = document.getLineEndOffset(line);
       int cacheSize = (end - start) / CACHE_FREQUENCY;
-      int[] cache = new int[cacheSize];
+      int[] cache = ArrayUtil.newIntArray(cacheSize);
       CharSequence text = document.getImmutableCharSequence();
       int column = 0;
       boolean hasTabsOrSurrogates = false;
@@ -295,9 +286,9 @@ class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, D
         int result = lineStartOffset + (pos + 1) * CACHE_FREQUENCY;
         return DocumentUtil.isInsideSurrogatePair(document, result) ? result - 1 : result;
       }
-      int startOffset = lineStartOffset + (- pos - 1) * CACHE_FREQUENCY;
-      int column = pos == -1 ? 0 : columnCache[- pos - 2];
-      return calcOffset(document, logicalColumn, column, startOffset, lineEndOffset, tabSize);
+      int startOffset = lineStartOffset + (-pos - 1) * CACHE_FREQUENCY;
+      int column = pos == -1 ? 0 : columnCache[-pos - 2];
+      return calcOffset(document.getImmutableCharSequence(), logicalColumn, column, startOffset, lineEndOffset, tabSize);
     }
   }
 }

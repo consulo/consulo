@@ -26,16 +26,12 @@ public abstract class IdeaTestCase extends PlatformTestCase {
   @Override
   protected void setUp() throws Exception {
     super.setUp();
-    VirtualFilePointerManagerImpl filePointerManager = (VirtualFilePointerManagerImpl)VirtualFilePointerManager.getInstance();
-    filePointerManager.storePointers();
   }
 
   @Override
   protected void tearDown() throws Exception {
     //myJavaFacade = null;
     super.tearDown();
-    VirtualFilePointerManagerImpl filePointerManager = (VirtualFilePointerManagerImpl)VirtualFilePointerManager.getInstance();
-    filePointerManager.assertPointersAreDisposed();
   }
 
 

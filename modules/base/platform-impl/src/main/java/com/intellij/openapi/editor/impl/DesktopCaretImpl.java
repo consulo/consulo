@@ -1,69 +1,60 @@
-/*
- * Copyright 2000-2017 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.impl;
 
+import com.intellij.diagnostic.AttachmentFactory;
 import com.intellij.diagnostic.Dumpable;
-import com.intellij.diagnostic.LogMessageEx;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.application.ApplicationManager;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.*;
+import com.intellij.openapi.editor.actionSystem.CaretSpecificDataContext;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.editor.actions.EditorActionUtil;
 import com.intellij.openapi.editor.event.CaretEvent;
 import com.intellij.openapi.editor.event.DocumentEvent;
+import com.intellij.openapi.editor.event.SelectionEvent;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.editor.ex.FoldingModelEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapHelper;
+import com.intellij.openapi.editor.impl.view.EditorPainter;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderBase;
-import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import com.intellij.util.text.CharArrayUtil;
-import com.intellij.util.ui.EmptyClipboardOwner;
-import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.TestOnly;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
-import java.util.List;
 
 public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpable {
-  private static final Logger LOG = Logger.getInstance(DesktopCaretImpl.class);
-  private static final Key<CaretVisualAttributes> VISUAL_ATTRIBUTES_KEY = Key.create("CaretAttributes");
+  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.impl.CaretImpl");
+  private static final Key<CaretVisualAttributes> VISUAL_ATTRIBUTES_KEY = new Key<>("CaretAttributes");
 
   private final DesktopEditorImpl myEditor;
+  @Nonnull
+  private final DesktopCaretModelImpl myCaretModel;
   private boolean isValid = true;
 
   private LogicalPosition myLogicalCaret;
-  private VerticalInfo myCaretInfo;
+  private VerticalInfo myVerticalInfo;
   private VisualPosition myVisibleCaret;
   private volatile PositionMarker myPositionMarker;
   private boolean myLeansTowardsLargerOffsets;
-  private int myVirtualSpaceOffset;
+  private int myLogicalColumnAdjustment;
+  int myVisualColumnAdjustment;
   private int myVisualLineStart;
   private int myVisualLineEnd;
   private boolean mySkipChangeRequests;
@@ -108,17 +99,17 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
 
   private int myDocumentUpdateCounter;
 
-  DesktopCaretImpl(DesktopEditorImpl editor) {
+  DesktopCaretImpl(@Nonnull DesktopEditorImpl editor, @Nonnull DesktopCaretModelImpl caretModel) {
     myEditor = editor;
+    myCaretModel = caretModel;
 
     myLogicalCaret = new LogicalPosition(0, 0);
     myVisibleCaret = new VisualPosition(0, 0);
-    myCaretInfo = new VerticalInfo(0, 0);
     myPositionMarker = new PositionMarker(0);
     myVisualLineStart = 0;
     Document doc = myEditor.getDocument();
     myVisualLineEnd = doc.getLineCount() > 1 ? doc.getLineStartOffset(1) : doc.getLineCount() == 0 ? 0 : doc.getLineEndOffset(0);
-    myDocumentUpdateCounter = editor.getCaretModel().myDocumentUpdateCounter;
+    myDocumentUpdateCounter = myCaretModel.myDocumentUpdateCounter;
   }
 
   @Override
@@ -133,29 +124,47 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
     if (mySkipChangeRequests) {
       return;
     }
-    myEditor.getCaretModel().doWithCaretMerging(() -> {
-      final LogicalPosition logicalPosition = myEditor.offsetToLogicalPosition(offset);
-      CaretEvent event = moveToLogicalPosition(logicalPosition, locateBeforeSoftWrap, null, false);
+    myCaretModel.doWithCaretMerging(() -> {
+      LogicalPosition logicalPosition = myEditor.offsetToLogicalPosition(offset);
+      CaretEvent event = moveToLogicalPosition(logicalPosition, locateBeforeSoftWrap, null, true, false);
       final LogicalPosition positionByOffsetAfterMove = myEditor.offsetToLogicalPosition(getOffset());
       if (!positionByOffsetAfterMove.equals(logicalPosition)) {
         StringBuilder debugBuffer = new StringBuilder();
-        moveToLogicalPosition(logicalPosition, locateBeforeSoftWrap, debugBuffer, true);
+        moveToLogicalPosition(logicalPosition, locateBeforeSoftWrap, debugBuffer, true, true);
         int actualOffset = getOffset();
         int textStart = Math.max(0, Math.min(offset, actualOffset) - 1);
         final DocumentEx document = myEditor.getDocument();
         int textEnd = Math.min(document.getTextLength() - 1, Math.max(offset, actualOffset) + 1);
         CharSequence text = document.getCharsSequence().subSequence(textStart, textEnd);
         int inverseOffset = myEditor.logicalPositionToOffset(logicalPosition);
-        LogMessageEx.error(
-                LOG, "caret moved to wrong offset. Please submit a dedicated ticket and attach current editor's text to it.",
-                "Requested: offset=" + offset + ", logical position='" + logicalPosition + "' but actual: offset=" +
-                actualOffset + ", logical position='" + myLogicalCaret + "' (" + positionByOffsetAfterMove + "). " + myEditor.dumpState() +
-                "\ninterested text [" + textStart + ";" + textEnd + "): '" + text + "'\n debug trace: " + debugBuffer +
-                "\nLogical position -> offset ('" + logicalPosition + "'->'" + inverseOffset + "')"
-        );
+        LOG.error("caret moved to wrong offset. Please submit a dedicated ticket and attach current editor's text to it.", new Throwable(), AttachmentFactory.createContext("Requested: offset=" +
+                                                                                                                                                                            offset +
+                                                                                                                                                                            ", logical position='" +
+                                                                                                                                                                            logicalPosition +
+                                                                                                                                                                            "' but actual: offset=" +
+                                                                                                                                                                            actualOffset +
+                                                                                                                                                                            ", logical position='" +
+                                                                                                                                                                            myLogicalCaret +
+                                                                                                                                                                            "' (" +
+                                                                                                                                                                            positionByOffsetAfterMove +
+                                                                                                                                                                            "). " +
+                                                                                                                                                                            myEditor.dumpState() +
+                                                                                                                                                                            "\ninterested text [" +
+                                                                                                                                                                            textStart +
+                                                                                                                                                                            ";" +
+                                                                                                                                                                            textEnd +
+                                                                                                                                                                            "): '" +
+                                                                                                                                                                            text +
+                                                                                                                                                                            "'\n debug trace: " +
+                                                                                                                                                                            debugBuffer +
+                                                                                                                                                                            "\nLogical position -> offset ('" +
+                                                                                                                                                                            logicalPosition +
+                                                                                                                                                                            "'->'" +
+                                                                                                                                                                            inverseOffset +
+                                                                                                                                                                            "')"));
       }
       if (event != null) {
-        myEditor.getCaretModel().fireCaretPositionChanged(event);
+        myCaretModel.fireCaretPositionChanged(event);
         EditorActionUtil.selectNonexpandableFold(myEditor);
       }
     });
@@ -164,7 +173,7 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
   @Nonnull
   @Override
   public CaretModel getCaretModel() {
-    return myEditor.getCaretModel();
+    return myCaretModel;
   }
 
   @Override
@@ -179,27 +188,28 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
       return;
     }
     if (myReportCaretMoves) {
-      LogMessageEx.error(LOG, "Unexpected caret move request");
+      LOG.error("Unexpected caret move request", new Throwable());
     }
     if (!myEditor.isStickySelection() && !myEditor.getDocument().isInEventsHandling()) {
       CopyPasteManager.getInstance().stopKillRings();
     }
-    myEditor.getCaretModel().doWithCaretMerging(() -> {
+    myCaretModel.doWithCaretMerging(() -> {
       updateCachedStateIfNeeded();
 
       int oldOffset = getOffset();
       int columnShift = _columnShift;
       if (withSelection && lineShift == 0) {
         if (columnShift == -1) {
-          int column = myVisibleCaret.column - (hasSelection() && oldOffset == getSelectionEnd() ? 2 : 1);
-          if (column >= 0 && myEditor.getInlayModel().hasInlineElementAt(new VisualPosition(myVisibleCaret.line, column))) {
-            columnShift = -2;
+          int column;
+          while ((column = myVisibleCaret.column + columnShift - (hasSelection() && oldOffset == getSelectionEnd() ? 1 : 0)) >= 0 &&
+                 myEditor.getInlayModel().hasInlineElementAt(new VisualPosition(myVisibleCaret.line, column))) {
+            columnShift--;
           }
         }
         else if (columnShift == 1) {
-          if (myEditor.getInlayModel().hasInlineElementAt(
-                  new VisualPosition(myVisibleCaret.line, myVisibleCaret.column + (hasSelection() && oldOffset == getSelectionStart() ? 1 : 0)))) {
-            columnShift = 2;
+          while (myEditor.getInlayModel()
+                  .hasInlineElementAt(new VisualPosition(myVisibleCaret.line, myVisibleCaret.column + columnShift - (hasSelection() && oldOffset == getSelectionStart() ? 0 : 1)))) {
+            columnShift++;
           }
         }
       }
@@ -224,15 +234,14 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
       boolean newLeansRight = lineShift == 0 && columnShift != 0 ? columnShift < 0 : visualCaret.leansRight;
 
       if (desiredX >= 0) {
-        newColumnNumber = myEditor.xyToVisualPosition(new Point(desiredX, Math.max(0, newLineNumber) * myEditor.getLineHeight())).column;
+        newColumnNumber = myEditor.xyToVisualPosition(new Point(desiredX, myEditor.visualLineToY(newLineNumber))).column;
       }
 
       Document document = myEditor.getDocument();
       if (!editorSettings.isVirtualSpace() && lineShift == 0 && columnShift == 1) {
         int lastLine = document.getLineCount() - 1;
         if (lastLine < 0) lastLine = 0;
-        if (newColumnNumber > EditorUtil.getLastVisualLineColumnNumber(myEditor, newLineNumber) &&
-            newLineNumber < myEditor.logicalToVisualPosition(new LogicalPosition(lastLine, 0)).line) {
+        if (newColumnNumber > EditorUtil.getLastVisualLineColumnNumber(myEditor, newLineNumber) && newLineNumber < myEditor.logicalToVisualPosition(new LogicalPosition(lastLine, 0)).line) {
           newColumnNumber = 0;
           newLineNumber++;
         }
@@ -306,7 +315,7 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
       }
       else {
         moveToVisualPosition(pos);
-        if (!editorSettings.isVirtualSpace() && columnShift == 0 && lastColumnNumber >=0) {
+        if (!editorSettings.isVirtualSpace() && columnShift == 0 && lastColumnNumber >= 0) {
           setLastColumnNumber(lastColumnNumber);
         }
       }
@@ -355,29 +364,22 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
 
   @Override
   public void moveToLogicalPosition(@Nonnull final LogicalPosition pos) {
-    myEditor.getCaretModel().doWithCaretMerging(() -> moveToLogicalPosition(pos, false, null, true));
+    myCaretModel.doWithCaretMerging(() -> moveToLogicalPosition(pos, false, null, false, true));
   }
 
 
-  private CaretEvent doMoveToLogicalPosition(@Nonnull LogicalPosition pos,
-                                             boolean locateBeforeSoftWrap,
-                                             @NonNls @Nullable StringBuilder debugBuffer,
-                                             boolean fireListeners) {
+  private CaretEvent doMoveToLogicalPosition(@Nonnull LogicalPosition pos, boolean locateBeforeSoftWrap, @NonNls @Nullable StringBuilder debugBuffer, boolean adjustForInlays, boolean fireListeners) {
     assertIsDispatchThread();
+    checkDisposal();
     updateCachedStateIfNeeded();
     if (debugBuffer != null) {
-      debugBuffer.append("Start moveToLogicalPosition(). Locate before soft wrap: ").append(locateBeforeSoftWrap).append(", position: ")
-              .append(pos).append("\n");
+      debugBuffer.append("Start moveToLogicalPosition(). Locate before soft wrap: ").append(locateBeforeSoftWrap).append(", position: ").append(pos).append("\n");
     }
     myDesiredX = -1;
     validateCallContext();
     int column = pos.column;
     int line = pos.line;
-    int softWrapLinesBefore = pos.softWrapLinesBeforeCurrentLogicalLine;
-    int softWrapLinesCurrent = pos.softWrapLinesOnCurrentLogicalLine;
-    int softWrapColumns = pos.softWrapColumnDiff;
     boolean leansForward = pos.leansForward;
-    boolean leansRight = pos.visualPositionLeansRight;
 
     Document doc = myEditor.getDocument();
 
@@ -390,12 +392,9 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
     }
     else if (line > lineCount - 1) {
       if (debugBuffer != null) {
-        debugBuffer.append("Resetting target logical line (").append(line).append(") to ").append(lineCount - 1)
-                .append(" as it is greater than total document lines number\n");
+        debugBuffer.append("Resetting target logical line (").append(line).append(") to ").append(lineCount - 1).append(" as it is greater than total document lines number\n");
       }
       line = lineCount - 1;
-      softWrapLinesBefore = 0;
-      softWrapLinesCurrent = 0;
     }
 
     EditorSettings editorSettings = myEditor.getSettings();
@@ -408,35 +407,22 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
         int oldColumn = column;
         column = lineEndColumnNumber;
         leansForward = true;
-        leansRight = true;
-        if (softWrapColumns != 0) {
-          softWrapColumns -= column - lineEndColumnNumber;
-        }
         if (debugBuffer != null) {
           debugBuffer.append("Resetting target logical column (").append(oldColumn).append(") to ").append(lineEndColumnNumber)
-                  .append(" because caret is not allowed to be located after line end (offset: ").append(lineEndOffset).append(", ")
-                  .append("logical position: ").append(endLinePosition).append("). Current soft wrap columns value: ").append(softWrapColumns)
-                  .append("\n");
+                  .append(" because caret is not allowed to be located after line end (offset: ").append(lineEndOffset).append(", ").append("logical position: ").append(endLinePosition)
+                  .append(").\n");
         }
       }
     }
 
     myEditor.getFoldingModel().flushCaretPosition(this);
 
-    VerticalInfo oldInfo = myCaretInfo;
+    VerticalInfo oldVerticalInfo = myVerticalInfo;
     LogicalPosition oldCaretPosition = myLogicalCaret;
     VisualPosition oldVisualPosition = myVisibleCaret;
+    boolean oldInVirtualSpace = isInVirtualSpace();
 
-    LogicalPosition logicalPositionToUse;
-    if (pos.visualPositionAware) {
-      logicalPositionToUse = new LogicalPosition(
-              line, column, softWrapLinesBefore, softWrapLinesCurrent, softWrapColumns, pos.foldedLines, pos.foldingColumnDiff,
-              leansForward, leansRight
-      );
-    }
-    else {
-      logicalPositionToUse = new LogicalPosition(line, column, leansForward);
-    }
+    LogicalPosition logicalPositionToUse = new LogicalPosition(line, column, leansForward);
     final int offset = myEditor.logicalPositionToOffset(logicalPositionToUse);
     if (debugBuffer != null) {
       debugBuffer.append("Resulting logical position to use: ").append(logicalPositionToUse).append(". It's mapped to offset ").append(offset).append("\n");
@@ -462,13 +448,13 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
       finally {
         mySkipChangeRequests = false;
       }
-      logicalPositionToUse = logicalPositionToUse.visualPositionAware ? logicalPositionToUse.withoutVisualPositionInfo() : logicalPositionToUse;
     }
 
-    setCurrentLogicalCaret(logicalPositionToUse);
+    myLogicalCaret = logicalPositionToUse;
     setLastColumnNumber(myLogicalCaret.column);
     myDesiredSelectionStartColumn = myDesiredSelectionEndColumn = -1;
     myVisibleCaret = myEditor.logicalToVisualPosition(myLogicalCaret);
+    myVisualColumnAdjustment = 0;
 
     updateOffsetsFromLogicalPosition();
     int newOffset = getOffset();
@@ -476,10 +462,17 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
       debugBuffer.append("Storing offset ").append(newOffset).append(" (mapped from logical position ").append(myLogicalCaret).append(")\n");
     }
 
+    if (adjustForInlays) {
+      VisualPosition correctPosition = EditorUtil.inlayAwareOffsetToVisualPosition(myEditor, newOffset);
+      assert correctPosition.line == myVisibleCaret.line;
+      myVisualColumnAdjustment = correctPosition.column - myVisibleCaret.column;
+      myVisibleCaret = correctPosition;
+    }
+
     updateVisualLineInfo();
 
     myEditor.updateCaretCursor();
-    requestRepaint(oldInfo);
+    requestRepaint(oldVerticalInfo);
 
     if (locateBeforeSoftWrap && SoftWrapHelper.isCaretAfterSoftWrap(this)) {
       int lineToUse = myVisibleCaret.line - 1;
@@ -502,17 +495,27 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
           }
         }
         else {
-          LogMessageEx.error(LOG, "Invalid editor dimension mapping", "Expected to map visual position '" +
-                                                                      visualPosition + "' to offset " + newOffset + " but got the following: -> logical position '" +
-                                                                      logicalPosition + "'; -> offset " + tmpOffset + ". State: " + myEditor.dumpState());
+          LOG.error("Invalid editor dimension mapping", new Throwable(), AttachmentFactory.createContext("Expected to map visual position '" +
+                                                                                                         visualPosition +
+                                                                                                         "' to offset " +
+                                                                                                         newOffset +
+                                                                                                         " but got the following: -> logical position '" +
+                                                                                                         logicalPosition +
+                                                                                                         "'; -> offset " +
+                                                                                                         tmpOffset +
+                                                                                                         ". State: " +
+                                                                                                         myEditor.dumpState()));
         }
       }
     }
 
-    if (!oldVisualPosition.equals(myVisibleCaret)) {
-      CaretEvent event = new CaretEvent(myEditor, this, oldCaretPosition, myLogicalCaret);
+    if (!oldVisualPosition.equals(myVisibleCaret) || !oldCaretPosition.equals(myLogicalCaret)) {
+      if (oldInVirtualSpace || isInVirtualSpace()) {
+        myCaretModel.validateEditorSize();
+      }
+      CaretEvent event = new CaretEvent(this, oldCaretPosition, myLogicalCaret);
       if (fireListeners) {
-        myEditor.getCaretModel().fireCaretPositionChanged(event);
+        myCaretModel.fireCaretPositionChanged(event);
       }
       else {
         return event;
@@ -523,49 +526,75 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
 
   private void updateOffsetsFromLogicalPosition() {
     int offset = myEditor.logicalPositionToOffset(myLogicalCaret);
+    PositionMarker oldMarker = myPositionMarker;
     myPositionMarker = new PositionMarker(offset);
+    oldMarker.dispose();
     myLeansTowardsLargerOffsets = myLogicalCaret.leansForward;
-    myVirtualSpaceOffset = myLogicalCaret.column - myEditor.offsetToLogicalPosition(offset).column;
+    myLogicalColumnAdjustment = myLogicalCaret.column - myEditor.offsetToLogicalPosition(offset).column;
   }
 
   private void setLastColumnNumber(int lastColumnNumber) {
     myLastColumnNumber = lastColumnNumber;
   }
 
-  private void requestRepaint(VerticalInfo oldCaretInfo) {
-    int lineHeight = myEditor.getLineHeight();
+  private void requestRepaint(VerticalInfo oldVerticalInfo) {
+    if (oldVerticalInfo == null) oldVerticalInfo = new VerticalInfo(0, 0, myEditor.getLineHeight());
+    if (myVerticalInfo == null) myVerticalInfo = new VerticalInfo(0, 0, myEditor.getLineHeight());
+
+    int oldY, oldHeight, newY, newHeight;
+    if (oldVerticalInfo.logicalLineY == myVerticalInfo.logicalLineY && oldVerticalInfo.logicalLineHeight == myVerticalInfo.logicalLineHeight) {
+      // caret moved within the same soft-wrapped line, repaint only original and target visual lines
+      oldY = oldVerticalInfo.y;
+      newY = myVerticalInfo.y;
+      oldHeight = newHeight = myEditor.getLineHeight();
+    }
+    else {
+      // caret moved between different (possible soft-wrapped) lines, repaint whole lines
+      // (to repaint soft-wrap markers and line numbers in gutter)
+      oldY = oldVerticalInfo.logicalLineY;
+      oldHeight = oldVerticalInfo.logicalLineHeight;
+      newY = myVerticalInfo.logicalLineY;
+      newHeight = myVerticalInfo.logicalLineHeight;
+    }
+
     Rectangle visibleArea = myEditor.getScrollingModel().getVisibleArea();
     final EditorGutterComponentEx gutter = myEditor.getGutterComponentEx();
     final EditorComponentImpl content = myEditor.getContentComponent();
-
-    int updateWidth = myEditor.getScrollPane().getHorizontalScrollBar().getValue() + visibleArea.width;
-    if (Math.abs(myCaretInfo.y - oldCaretInfo.y) <= 2 * lineHeight) {
-      int minY = Math.min(oldCaretInfo.y, myCaretInfo.y);
-      int maxY = Math.max(oldCaretInfo.y + oldCaretInfo.height, myCaretInfo.y + myCaretInfo.height);
-      content.repaintEditorComponent(0, minY, updateWidth, maxY - minY);
-      gutter.repaint(0, minY, gutter.getWidth(), maxY - minY);
+    int editorUpdateWidth = myEditor.getScrollPane().getHorizontalScrollBar().getValue() + visibleArea.width;
+    int gutterUpdateWidth = gutter.getWidth();
+    int additionalRepaintHeight = this == myCaretModel.getPrimaryCaret() && Registry.is("editor.adjust.right.margin") && EditorPainter.isMarginShown(myEditor) ? 1 : 0;
+    if ((oldY <= newY + newHeight) && (oldY + oldHeight >= newY)) { // repaint regions overlap
+      int y = Math.min(oldY, newY);
+      int height = Math.max(oldY + oldHeight, newY + newHeight) - y;
+      content.repaintEditorComponent(0, y - additionalRepaintHeight, editorUpdateWidth, height + additionalRepaintHeight);
+      gutter.repaint(0, y, gutterUpdateWidth, height);
     }
     else {
-      content.repaintEditorComponent(0, oldCaretInfo.y, updateWidth, oldCaretInfo.height + lineHeight);
-      gutter.repaint(0, oldCaretInfo.y, updateWidth, oldCaretInfo.height + lineHeight);
-      content.repaintEditorComponent(0, myCaretInfo.y, updateWidth, myCaretInfo.height + lineHeight);
-      gutter.repaint(0, myCaretInfo.y, updateWidth, myCaretInfo.height + lineHeight);
+      content.repaintEditorComponent(0, oldY - additionalRepaintHeight, editorUpdateWidth, oldHeight + additionalRepaintHeight);
+      gutter.repaint(0, oldY, gutterUpdateWidth, oldHeight);
+      content.repaintEditorComponent(0, newY - additionalRepaintHeight, editorUpdateWidth, newHeight + additionalRepaintHeight);
+      gutter.repaint(0, newY, gutterUpdateWidth, newHeight);
     }
   }
 
   @Override
   public void moveToVisualPosition(@Nonnull final VisualPosition pos) {
-    myEditor.getCaretModel().doWithCaretMerging(() -> moveToVisualPosition(pos, true));
+    moveToVisualPosition(pos, true);
   }
 
-  void moveToVisualPosition(@Nonnull VisualPosition pos, boolean fireListeners) {
+  private void moveToVisualPosition(@Nonnull final VisualPosition pos, boolean fireListeners) {
+    myCaretModel.doWithCaretMerging(() -> doMoveToVisualPosition(pos, fireListeners));
+  }
+
+  void doMoveToVisualPosition(@Nonnull VisualPosition pos, boolean fireListeners) {
     assertIsDispatchThread();
+    checkDisposal();
     validateCallContext();
     if (mySkipChangeRequests) {
       return;
     }
     if (myReportCaretMoves) {
-      LogMessageEx.error(LOG, "Unexpected caret move request");
+      LOG.error("Unexpected caret move request");
     }
     if (!myEditor.isStickySelection() && !myEditor.getDocument().isInEventsHandling() && !pos.equals(myVisibleCaret)) {
       CopyPasteManager.getInstance().stopKillRings();
@@ -596,12 +625,16 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
       }
     }
 
+    VisualPosition oldVisualPosition = myVisibleCaret;
     myVisibleCaret = new VisualPosition(line, column, leanRight);
 
-    VerticalInfo oldInfo = myCaretInfo;
+    VerticalInfo oldVerticalInfo = myVerticalInfo;
     LogicalPosition oldPosition = myLogicalCaret;
+    boolean oldInVirtualSpace = isInVirtualSpace();
 
-    setCurrentLogicalCaret(myEditor.visualToLogicalPosition(myVisibleCaret));
+    myLogicalCaret = myEditor.visualToLogicalPosition(myVisibleCaret);
+    VisualPosition mappedPosition = myEditor.logicalToVisualPosition(myLogicalCaret);
+    myVisualColumnAdjustment = mappedPosition.line == myVisibleCaret.line && myVisibleCaret.column > mappedPosition.column ? myVisibleCaret.column - mappedPosition.column : 0;
     updateOffsetsFromLogicalPosition();
 
     updateVisualLineInfo();
@@ -611,24 +644,26 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
     setLastColumnNumber(myLogicalCaret.column);
     myDesiredSelectionStartColumn = myDesiredSelectionEndColumn = -1;
     myEditor.updateCaretCursor();
-    requestRepaint(oldInfo);
+    requestRepaint(oldVerticalInfo);
 
-    if (fireListeners && !oldPosition.equals(myLogicalCaret)) {
-      CaretEvent event = new CaretEvent(myEditor, this, oldPosition, myLogicalCaret);
-      myEditor.getCaretModel().fireCaretPositionChanged(event);
+    if (!oldPosition.equals(myLogicalCaret) || !oldVisualPosition.equals(myVisibleCaret)) {
+      if (oldInVirtualSpace || isInVirtualSpace()) {
+        myCaretModel.validateEditorSize();
+      }
+      if (fireListeners) {
+        CaretEvent event = new CaretEvent(this, oldPosition, myLogicalCaret);
+        myCaretModel.fireCaretPositionChanged(event);
+      }
     }
   }
 
   @Nullable
-  CaretEvent moveToLogicalPosition(@Nonnull LogicalPosition pos,
-                                   boolean locateBeforeSoftWrap,
-                                   @Nullable StringBuilder debugBuffer,
-                                   boolean fireListeners) {
+  CaretEvent moveToLogicalPosition(@Nonnull LogicalPosition pos, boolean locateBeforeSoftWrap, @Nullable StringBuilder debugBuffer, boolean adjustForInlays, boolean fireListeners) {
     if (mySkipChangeRequests) {
       return null;
     }
     if (myReportCaretMoves) {
-      LogMessageEx.error(LOG, "Unexpected caret move request");
+      LOG.error("Unexpected caret move request");
     }
     if (!myEditor.isStickySelection() && !myEditor.getDocument().isInEventsHandling() && !pos.equals(myLogicalCaret)) {
       CopyPasteManager.getInstance().stopKillRings();
@@ -636,7 +671,7 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
 
     myReportCaretMoves = true;
     try {
-      return doMoveToLogicalPosition(pos, locateBeforeSoftWrap, debugBuffer, fireListeners);
+      return doMoveToLogicalPosition(pos, locateBeforeSoftWrap, debugBuffer, adjustForInlays, fireListeners);
     }
     finally {
       myReportCaretMoves = false;
@@ -648,14 +683,16 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
   }
 
   private void validateCallContext() {
-    LOG.assertTrue(!ApplicationManager.getApplication().isDispatchThread() || !myEditor.getCaretModel().myIsInUpdate,
-                   "Caret model is in its update process. All requests are illegal at this point.");
+    LOG.assertTrue(!ApplicationManager.getApplication().isDispatchThread() || !myCaretModel.myIsInUpdate, "Caret model is in its update process. All requests are illegal at this point.");
   }
 
   @Override
   public void dispose() {
-    if (myPositionMarker != null) {
+    PositionMarker positionMarker = myPositionMarker;
+    if (positionMarker != null) {
+      // null it first to avoid accessing invalid marker from other threads
       myPositionMarker = null;
+      positionMarker.dispose();
     }
     if (mySelectionMarker != null) {
       mySelectionMarker = null;
@@ -665,7 +702,7 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
 
   @Override
   public boolean isUpToDate() {
-    return !myEditor.getCaretModel().myIsInUpdate && !myReportCaretMoves;
+    return !myCaretModel.myIsInUpdate && !myReportCaretMoves;
   }
 
   @Nonnull
@@ -688,10 +725,13 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
   public int getOffset() {
     validateCallContext();
     validateContext(false);
-    PositionMarker marker = myPositionMarker;
-    if (marker == null) return 0; // caret was disposed
-    assert marker.isValid();
-    return marker.getStartOffset();
+    while (true) {
+      PositionMarker marker = myPositionMarker;
+      if (marker == null) return 0; // caret was disposed
+      int startOffset = marker.getStartOffset();
+      // double checking to avoid "concurrent dispose and return -1 from already disposed marker" race
+      if (marker.isValid() && marker == myPositionMarker) return startOffset;
+    }
   }
 
   @Override
@@ -706,66 +746,64 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
     return myVisualLineEnd;
   }
 
-  @Nonnull
-  private VerticalInfo createVerticalInfo(LogicalPosition position) {
-    Document document = myEditor.getDocument();
-    int logicalLine = position.line;
-    if (logicalLine >= document.getLineCount()) {
-      logicalLine = Math.max(0, document.getLineCount() - 1);
-    }
-    int startOffset = document.getLineStartOffset(logicalLine);
-    int endOffset = document.getLineEndOffset(logicalLine);
-
-    // There is a possible case that active logical line is represented on multiple lines due to soft wraps processing.
-    // We want to highlight those visual lines as 'active' then, so, we calculate 'y' position for the logical line start
-    // and height in accordance with the number of occupied visual lines.
-    int visualLine = myEditor.offsetToVisualLine(document.getLineStartOffset(logicalLine));
-    int y = myEditor.visibleLineToY(visualLine);
-    int lineHeight = myEditor.getLineHeight();
-    int height = lineHeight;
-    List<? extends SoftWrap> softWraps = myEditor.getSoftWrapModel().getSoftWrapsForRange(startOffset, endOffset);
-    for (SoftWrap softWrap : softWraps) {
-      height += StringUtil.countNewLines(softWrap.getText()) * lineHeight;
-    }
-
-    return new VerticalInfo(y, height);
-  }
-
   /**
    * Recalculates caret visual position without changing its logical position (called when soft wraps are changing)
    */
   void updateVisualPosition() {
     updateCachedStateIfNeeded();
-    VerticalInfo oldInfo = myCaretInfo;
-    LogicalPosition visUnawarePos = new LogicalPosition(myLogicalCaret.line, myLogicalCaret.column, myLogicalCaret.leansForward);
-    setCurrentLogicalCaret(visUnawarePos);
-    myVisibleCaret = myEditor.logicalToVisualPosition(myLogicalCaret);
+    VerticalInfo oldVerticalInfo = myVerticalInfo;
+    myLogicalCaret = new LogicalPosition(myLogicalCaret.line, myLogicalCaret.column, myLogicalCaret.leansForward);
+    VisualPosition visualPosition = myEditor.logicalToVisualPosition(myLogicalCaret);
+    myVisibleCaret = new VisualPosition(visualPosition.line, visualPosition.column + myVisualColumnAdjustment, visualPosition.leansRight);
     updateVisualLineInfo();
 
     myEditor.updateCaretCursor();
-    requestRepaint(oldInfo);
+    requestRepaint(oldVerticalInfo);
   }
 
   private void updateVisualLineInfo() {
     myVisualLineStart = myEditor.logicalPositionToOffset(myEditor.visualToLogicalPosition(new VisualPosition(myVisibleCaret.line, 0)));
     myVisualLineEnd = myEditor.logicalPositionToOffset(myEditor.visualToLogicalPosition(new VisualPosition(myVisibleCaret.line + 1, 0)));
+
+    int y = myEditor.visualLineToY(myVisibleCaret.line);
+
+    int logicalLineStartY;
+    if (myEditor.getSoftWrapModel().getSoftWrap(myVisualLineStart) == null) {
+      logicalLineStartY = y;
+    }
+    else {
+      int startVisualLine = myEditor.myView.offsetToVisualLine(EditorUtil.getNotFoldedLineStartOffset(myEditor, getOffset()), false);
+      logicalLineStartY = myEditor.visualLineToY(startVisualLine);
+    }
+
+    int logicalLineEndY;
+    if (myEditor.getSoftWrapModel().getSoftWrap(myVisualLineEnd) == null) {
+      logicalLineEndY = y;
+    }
+    else {
+      int endVisualLine = myEditor.myView.offsetToVisualLine(EditorUtil.getNotFoldedLineEndOffset(myEditor, getOffset()), true);
+      logicalLineEndY = myEditor.visualLineToY(endVisualLine);
+    }
+
+    myVerticalInfo = new VerticalInfo(y, logicalLineStartY, logicalLineEndY - logicalLineStartY + myEditor.getLineHeight());
   }
 
   void onInlayAdded(int offset) {
     updateCachedStateIfNeeded();
     int currentOffset = getOffset();
-    if (offset == currentOffset && myLogicalCaret.leansForward) {
-      VisualPosition pos = myEditor.offsetToVisualPosition(currentOffset, true, false);
-      moveToVisualPosition(pos);
+    if (offset == currentOffset) {
+      VisualPosition pos = EditorUtil.inlayAwareOffsetToVisualPosition(myEditor, offset);
+      moveToVisualPosition(pos, false);
     }
     else {
       updateVisualPosition();
     }
   }
 
-  private void setCurrentLogicalCaret(@Nonnull LogicalPosition position) {
-    myLogicalCaret = position;
-    myCaretInfo = createVerticalInfo(position);
+  void onInlayRemoved(int offset, int order) {
+    int currentOffset = getOffset();
+    if (offset == currentOffset && myVisualColumnAdjustment > 0 && myVisualColumnAdjustment > order) myVisualColumnAdjustment--;
+    updateVisualPosition();
   }
 
   int getWordAtCaretStart() {
@@ -807,13 +845,15 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
 
   private DesktopCaretImpl cloneWithoutSelection() {
     updateCachedStateIfNeeded();
-    DesktopCaretImpl clone = new DesktopCaretImpl(myEditor);
+    DesktopCaretImpl clone = new DesktopCaretImpl(myEditor, myCaretModel);
     clone.myLogicalCaret = myLogicalCaret;
-    clone.myCaretInfo = myCaretInfo;
+    clone.myVerticalInfo = myVerticalInfo;
     clone.myVisibleCaret = myVisibleCaret;
+    clone.myPositionMarker.dispose();
     clone.myPositionMarker = new PositionMarker(getOffset());
     clone.myLeansTowardsLargerOffsets = myLeansTowardsLargerOffsets;
-    clone.myVirtualSpaceOffset = myVirtualSpaceOffset;
+    clone.myLogicalColumnAdjustment = myLogicalColumnAdjustment;
+    clone.myVisualColumnAdjustment = myVisualColumnAdjustment;
     clone.myVisualLineStart = myVisualLineStart;
     clone.myVisualLineEnd = myVisualLineEnd;
     clone.mySkipChangeRequests = mySkipChangeRequests;
@@ -843,7 +883,7 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
     final VisualPosition newSelectionStartPosition;
     final VisualPosition newSelectionEndPosition;
     final boolean hasNewSelection;
-    if (hasSelection() || myDesiredSelectionStartColumn >=0 || myDesiredSelectionEndColumn >= 0) {
+    if (hasSelection() || myDesiredSelectionStartColumn >= 0 || myDesiredSelectionEndColumn >= 0) {
       VisualPosition startPosition = getSelectionStartPosition();
       VisualPosition endPosition = getSelectionEndPosition();
       VisualPosition leadPosition = getLeadSelectionPosition();
@@ -870,16 +910,15 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
       newSelectionStartColumn = -1;
       newSelectionEndColumn = -1;
     }
-    clone.moveToLogicalPosition(new LogicalPosition(newLine, myLastColumnNumber), false, null, false);
+    clone.moveToLogicalPosition(new LogicalPosition(newLine, myLastColumnNumber, myLeansTowardsLargerOffsets), false, null, false, false);
     clone.myLastColumnNumber = myLastColumnNumber;
     clone.myDesiredX = myDesiredX >= 0 ? myDesiredX : getCurrentX();
     clone.myDesiredSelectionStartColumn = newSelectionStartColumn;
     clone.myDesiredSelectionEndColumn = newSelectionEndColumn;
 
-    if (myEditor.getCaretModel().addCaret(clone, true)) {
+    if (myCaretModel.addCaret(clone, true)) {
       if (hasNewSelection) {
-        myEditor.getCaretModel().doWithCaretMerging(
-                () -> clone.setSelection(newSelectionStartPosition, newSelectionStartOffset, newSelectionEndPosition, newSelectionEndOffset));
+        myCaretModel.doWithCaretMerging(() -> clone.setSelection(newSelectionStartPosition, newSelectionStartOffset, newSelectionEndPosition, newSelectionEndOffset));
         if (!clone.isValid()) {
           return null;
         }
@@ -906,7 +945,7 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
   }
 
   /**
-   * @return  information on whether current selection's direction in known
+   * @return information on whether current selection's direction in known
    * @see #setUnknownDirection(boolean)
    */
   boolean isUnknownDirection() {
@@ -924,7 +963,6 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
    * <p/>
    * <b>Note:</b> when this method is called with {@code 'true'}, subsequent calls are guaranteed to return {@code true}
    * until selection is changed. 'Unknown direction' flag is automatically reset then.
-   *
    */
   void setUnknownDirection(boolean unknownDirection) {
     myUnknownDirection = unknownDirection;
@@ -957,8 +995,7 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
       }
     }
     else {
-      position = isVirtualSelectionEnabled() ? getVisualPosition() :
-                 myEditor.offsetToVisualPosition(getOffset(), getLogicalPosition().leansForward, false);
+      position = isVirtualSelectionEnabled() ? getVisualPosition() : myEditor.offsetToVisualPosition(getOffset(), getLogicalPosition().leansForward, false);
     }
     if (hasVirtualSelection()) {
       position = new VisualPosition(position.line, position.column + marker.startVirtualOffset);
@@ -972,8 +1009,7 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
     SelectionMarker marker = mySelectionMarker;
     if (hasSelection()) {
       VisualPosition visualPosition = getRangeMarkerStartPosition();
-      position = visualPosition == null ? myEditor.offsetToLogicalPosition(marker.getStartOffset()).leanForward(true)
-                                        : myEditor.visualToLogicalPosition(visualPosition);
+      position = visualPosition == null ? myEditor.offsetToLogicalPosition(marker.getStartOffset()).leanForward(true) : myEditor.visualToLogicalPosition(visualPosition);
     }
     else {
       position = getLogicalPosition();
@@ -1011,8 +1047,7 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
       }
     }
     else {
-      position = isVirtualSelectionEnabled() ? getVisualPosition() :
-                 myEditor.offsetToVisualPosition(getOffset(), getLogicalPosition().leansForward, false);
+      position = isVirtualSelectionEnabled() ? getVisualPosition() : myEditor.offsetToVisualPosition(getOffset(), getLogicalPosition().leansForward, false);
     }
     if (hasVirtualSelection()) {
       position = new VisualPosition(position.line, position.column + marker.endVirtualOffset);
@@ -1026,8 +1061,7 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
     SelectionMarker marker = mySelectionMarker;
     if (hasSelection()) {
       VisualPosition visualPosition = getRangeMarkerEndPosition();
-      position = visualPosition == null ? myEditor.offsetToLogicalPosition(marker.getEndOffset())
-                                        : myEditor.visualToLogicalPosition(visualPosition);
+      position = visualPosition == null ? myEditor.offsetToLogicalPosition(marker.getEndOffset()) : myEditor.visualToLogicalPosition(visualPosition);
     }
     else {
       position = getLogicalPosition();
@@ -1042,8 +1076,7 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
   public boolean hasSelection() {
     validateContext(false);
     SelectionMarker marker = mySelectionMarker;
-    return marker != null && marker.isValid() && (marker.getEndOffset() > marker.getStartOffset()
-                                                  || isVirtualSelectionEnabled() && marker.hasVirtualSelection());
+    return marker != null && marker.isValid() && (marker.getEndOffset() > marker.getStartOffset() || isVirtualSelectionEnabled() && marker.hasVirtualSelection());
   }
 
   @Override
@@ -1053,9 +1086,7 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
 
   @Override
   public void setSelection(int startOffset, int endOffset, boolean updateSystemSelection) {
-    doSetSelection(myEditor.offsetToVisualPosition(startOffset, true, false), startOffset,
-                   myEditor.offsetToVisualPosition(endOffset, false, true), endOffset,
-                   false, updateSystemSelection);
+    doSetSelection(myEditor.offsetToVisualPosition(startOffset, true, false), startOffset, myEditor.offsetToVisualPosition(endOffset, false, true), endOffset, false, updateSystemSelection, true);
   }
 
   @Override
@@ -1076,21 +1107,20 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
   }
 
   @Override
-  public void setSelection(@Nullable VisualPosition startPosition, int startOffset, @Nullable VisualPosition endPosition, int endOffset,
-                           boolean updateSystemSelection) {
+  public void setSelection(@Nullable VisualPosition startPosition, int startOffset, @Nullable VisualPosition endPosition, int endOffset, boolean updateSystemSelection) {
     VisualPosition startPositionToUse = startPosition == null ? myEditor.offsetToVisualPosition(startOffset, true, false) : startPosition;
     VisualPosition endPositionToUse = endPosition == null ? myEditor.offsetToVisualPosition(endOffset, false, true) : endPosition;
-    doSetSelection(startPositionToUse, startOffset, endPositionToUse, endOffset, true, updateSystemSelection);
+    doSetSelection(startPositionToUse, startOffset, endPositionToUse, endOffset, true, updateSystemSelection, true);
   }
 
-  private void doSetSelection(@Nonnull final VisualPosition startPosition,
-                              final int _startOffset,
-                              @Nonnull final VisualPosition endPosition,
-                              final int _endOffset,
-                              final boolean visualPositionAware,
-                              final boolean updateSystemSelection)
-  {
-    myEditor.getCaretModel().doWithCaretMerging(() -> {
+  void doSetSelection(@Nonnull final VisualPosition startPosition,
+                      final int _startOffset,
+                      @Nonnull final VisualPosition endPosition,
+                      final int _endOffset,
+                      final boolean visualPositionAware,
+                      final boolean updateSystemSelection,
+                      final boolean fireListeners) {
+    myCaretModel.doWithCaretMerging(() -> {
       int startOffset = DocumentUtil.alignToCodePointBoundary(myEditor.getDocument(), _startOffset);
       int endOffset = DocumentUtil.alignToCodePointBoundary(myEditor.getDocument(), _endOffset);
       myUnknownDirection = false;
@@ -1111,7 +1141,7 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
         return;
       }
 
-  /* Normalize selection */
+      /* Normalize selection */
       boolean switchedOffsets = false;
       if (startOffset > endOffset) {
         int tmp = startOffset;
@@ -1159,34 +1189,24 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
           setRangeMarkerEndPositionIsLead(true);
         }
 
-        if (isVirtualSelectionEnabled() &&
-            myEditor.getDocument().getLineNumber(startOffset) == myEditor.getDocument().getLineNumber(endOffset)) {
+        if (isVirtualSelectionEnabled() && myEditor.getDocument().getLineNumber(startOffset) == myEditor.getDocument().getLineNumber(endOffset)) {
           int endLineColumn = myEditor.offsetToVisualPosition(endOffset).column;
-          int startDiff =
-                  EditorUtil.isAtLineEnd(myEditor, switchedOffsets ? endOffset : startOffset) ? startPosition.column - endLineColumn : 0;
-          int endDiff =
-                  EditorUtil.isAtLineEnd(myEditor, switchedOffsets ? startOffset : endOffset) ? endPosition.column - endLineColumn : 0;
+          int startDiff = EditorUtil.isAtLineEnd(myEditor, switchedOffsets ? endOffset : startOffset) ? startPosition.column - endLineColumn : 0;
+          int endDiff = EditorUtil.isAtLineEnd(myEditor, switchedOffsets ? startOffset : endOffset) ? endPosition.column - endLineColumn : 0;
           marker.startVirtualOffset = Math.max(0, Math.min(startDiff, endDiff));
           marker.endVirtualOffset = Math.max(0, Math.max(startDiff, endDiff));
         }
       }
       mySelectionMarker = marker;
 
-      myEditor.getSelectionModel().fireSelectionChanged(oldSelectionStart, oldSelectionEnd, startOffset, endOffset);
+      if (fireListeners) {
+        myEditor.getSelectionModel().fireSelectionChanged(new SelectionEvent(myEditor, oldSelectionStart, oldSelectionEnd, startOffset, endOffset));
+      }
 
       if (updateSystemSelection) {
-        updateSystemSelection();
+        myCaretModel.updateSystemSelection();
       }
     });
-  }
-
-  private void updateSystemSelection() {
-    if (GraphicsEnvironment.isHeadless()) return;
-
-    final Clipboard clip = myEditor.getComponent().getToolkit().getSystemSelection();
-    if (clip != null) {
-      clip.setContents(new StringSelection(myEditor.getSelectionModel().getSelectedText(true)), EmptyClipboardOwner.INSTANCE);
-    }
   }
 
   @Override
@@ -1196,15 +1216,16 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
       // However, we don't want to do that for 'sticky selection'.
       return;
     }
-    myEditor.getCaretModel().doWithCaretMerging(() -> {
+    myCaretModel.doWithCaretMerging(() -> {
       validateContext(true);
-      int caretOffset = getOffset();
+      myUnknownDirection = false;
       RangeMarker marker = mySelectionMarker;
       if (marker != null && marker.isValid()) {
         int startOffset = marker.getStartOffset();
         int endOffset = marker.getEndOffset();
+        int caretOffset = getOffset();
         mySelectionMarker = null;
-        myEditor.getSelectionModel().fireSelectionChanged(startOffset, endOffset, caretOffset, caretOffset);
+        myEditor.getSelectionModel().fireSelectionChanged(new SelectionEvent(myEditor, startOffset, endOffset, caretOffset, caretOffset));
       }
     });
   }
@@ -1232,12 +1253,7 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
           }
         }
 
-        if (caretOffset == endOffset) {
-          return startOffset;
-        }
-        else {
-          return endOffset;
-        }
+        return caretOffset == endOffset ? startOffset : endOffset;
       }
     }
     return caretOffset;
@@ -1284,13 +1300,13 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
   @Override
   public void selectLineAtCaret() {
     validateContext(true);
-    myEditor.getCaretModel().doWithCaretMerging(() -> DesktopSelectionModelImpl.doSelectLineAtCaret(this));
+    myCaretModel.doWithCaretMerging(() -> DesktopSelectionModelImpl.doSelectLineAtCaret(this));
   }
 
   @Override
   public void selectWordAtCaret(final boolean honorCamelWordsSettings) {
     validateContext(true);
-    myEditor.getCaretModel().doWithCaretMerging(() -> {
+    myCaretModel.doWithCaretMerging(() -> {
       removeSelection();
       final EditorSettings settings = myEditor.getSettings();
       boolean camelTemp = settings.isCamelWords();
@@ -1302,7 +1318,10 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
 
       try {
         EditorActionHandler handler = EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_SELECT_WORD_AT_CARET);
-        handler.execute(myEditor, this, myEditor.getDataContext());
+        DataContext context = AnActionEvent.getInjectedDataContext(new CaretSpecificDataContext(myEditor.getDataContext(), this));
+        Caret caret = context.getData(CommonDataKeys.CARET);
+        assert caret != null;
+        handler.execute(caret.getEditor(), caret, context);
       }
       finally {
         if (needOverrideSetting) {
@@ -1373,7 +1392,8 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
 
   @Override
   public String toString() {
-    return "Caret at " + (myDocumentUpdateCounter == myEditor.getCaretModel().myDocumentUpdateCounter ? myVisibleCaret : getOffset()) +
+    return "Caret at " +
+           (myDocumentUpdateCounter == myCaretModel.myDocumentUpdateCounter ? myVisibleCaret : getOffset()) +
            (mySelectionMarker == null ? "" : ", selection marker: " + mySelectionMarker);
   }
 
@@ -1397,43 +1417,51 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
   @Override
   public void setVisualAttributes(@Nonnull CaretVisualAttributes attributes) {
     putUserData(VISUAL_ATTRIBUTES_KEY, attributes == CaretVisualAttributes.DEFAULT ? null : attributes);
-    requestRepaint(myCaretInfo);
+    requestRepaint(myVerticalInfo);
   }
 
   @Nonnull
   @Override
   public String dumpState() {
-    return "{valid: " + isValid +
-           ", update counter: " + myDocumentUpdateCounter +
-           ", position: " + myPositionMarker +
-           ", logical pos: " + myLogicalCaret +
-           ", visual pos: " + myVisibleCaret +
-           ", visual line start: " + myVisualLineStart +
-           ", visual line end: " + myVisualLineEnd +
-           ", skip change requests: " + mySkipChangeRequests +
-           ", desired selection start column: " + myDesiredSelectionStartColumn +
-           ", desired selection end column: " + myDesiredSelectionEndColumn +
-           ", report caret moves: " + myReportCaretMoves +
-           ", desired x: " + myDesiredX +
-           ", selection marker: " + mySelectionMarker +
-           ", rangeMarker start position: " + myRangeMarkerStartPosition +
-           ", rangeMarker end position: " + myRangeMarkerEndPosition +
-           ", rangeMarker end position is lead: " + myRangeMarkerEndPositionIsLead +
-           ", unknown direction: " + myUnknownDirection +
-           ", virtual space offset: " + myVirtualSpaceOffset + '}';
-  }
-
-  /**
-   * Encapsulates information about target vertical range info - its {@code 'y'} coordinate and height in pixels.
-   */
-  private static class VerticalInfo {
-    public final int y;
-    public final int height;
-
-    private VerticalInfo(int y, int height) {
-      this.y = y;
-      this.height = height;
-    }
+    return "{valid: " +
+           isValid +
+           ", update counter: " +
+           myDocumentUpdateCounter +
+           ", position: " +
+           myPositionMarker +
+           ", logical pos: " +
+           myLogicalCaret +
+           ", visual pos: " +
+           myVisibleCaret +
+           ", visual line start: " +
+           myVisualLineStart +
+           ", visual line end: " +
+           myVisualLineEnd +
+           ", skip change requests: " +
+           mySkipChangeRequests +
+           ", desired selection start column: " +
+           myDesiredSelectionStartColumn +
+           ", desired selection end column: " +
+           myDesiredSelectionEndColumn +
+           ", report caret moves: " +
+           myReportCaretMoves +
+           ", desired x: " +
+           myDesiredX +
+           ", selection marker: " +
+           mySelectionMarker +
+           ", rangeMarker start position: " +
+           myRangeMarkerStartPosition +
+           ", rangeMarker end position: " +
+           myRangeMarkerEndPosition +
+           ", rangeMarker end position is lead: " +
+           myRangeMarkerEndPositionIsLead +
+           ", unknown direction: " +
+           myUnknownDirection +
+           ", logical column adjustment: " +
+           myLogicalColumnAdjustment +
+           ", visual column adjustment: " +
+           myVisualColumnAdjustment +
+           '}';
   }
 
   @Nullable
@@ -1469,10 +1497,12 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
     InlayModelImpl inlayModel = myEditor.getInlayModel();
     int startOffset = marker.getStartOffset();
     int endOffset = marker.getEndOffset();
-    if (!myEditor.offsetToVisualPosition(startOffset, true, false).equals(myRangeMarkerStartPosition) &&
-        model.getSoftWrap(startOffset) == null && !inlayModel.hasInlineElementAt(startOffset) ||
-        !myEditor.offsetToVisualPosition(endOffset, false, true).equals(myRangeMarkerEndPosition)
-        && model.getSoftWrap(endOffset) == null && !inlayModel.hasInlineElementAt(endOffset)) {
+    if ((myRangeMarkerStartPosition == null || !myEditor.offsetToVisualPosition(startOffset, true, false).equals(myRangeMarkerStartPosition)) &&
+        model.getSoftWrap(startOffset) == null &&
+        !inlayModel.hasInlineElementAt(startOffset) ||
+        (myRangeMarkerEndPosition == null || !myEditor.offsetToVisualPosition(endOffset, false, true).equals(myRangeMarkerEndPosition)) &&
+        model.getSoftWrap(endOffset) == null &&
+        !inlayModel.hasInlineElementAt(endOffset)) {
       myRangeMarkerStartPosition = null;
       myRangeMarkerEndPosition = null;
     }
@@ -1480,17 +1510,31 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
 
   void updateCachedStateIfNeeded() {
     if (!ApplicationManager.getApplication().isDispatchThread()) return;
-    int modelCounter = myEditor.getCaretModel().myDocumentUpdateCounter;
+    int modelCounter = myCaretModel.myDocumentUpdateCounter;
     if (myDocumentUpdateCounter != modelCounter) {
-      LogicalPosition lp = myEditor.offsetToLogicalPosition(getOffset());
-      setCurrentLogicalCaret(new LogicalPosition(lp.line, lp.column + myVirtualSpaceOffset, myLeansTowardsLargerOffsets));
-      myVisibleCaret = myEditor.logicalToVisualPosition(myLogicalCaret);
-      updateVisualLineInfo();
-      setLastColumnNumber(myLogicalCaret.column);
-      myDesiredSelectionStartColumn = myDesiredSelectionEndColumn = -1;
-      myDesiredX = -1;
+      updateCachedState();
       myDocumentUpdateCounter = modelCounter;
     }
+  }
+
+  private void updateCachedState() {
+    LogicalPosition lp = myEditor.offsetToLogicalPosition(getOffset());
+    myLogicalCaret = new LogicalPosition(lp.line, lp.column + myLogicalColumnAdjustment, myLeansTowardsLargerOffsets);
+    VisualPosition visualPosition = myEditor.logicalToVisualPosition(myLogicalCaret);
+    myVisibleCaret = new VisualPosition(visualPosition.line, visualPosition.column + myVisualColumnAdjustment, visualPosition.leansRight);
+    updateVisualLineInfo();
+    setLastColumnNumber(myLogicalCaret.column);
+    myDesiredSelectionStartColumn = myDesiredSelectionEndColumn = -1;
+    myDesiredX = -1;
+  }
+
+  public boolean isInVirtualSpace() {
+    return myLogicalColumnAdjustment > 0;
+  }
+
+  private void checkDisposal() {
+    if (myEditor.isDisposed()) myEditor.throwDisposalError("Editor is already disposed");
+    if (!isValid) throw new IllegalStateException("Caret is invalid");
   }
 
   @TestOnly
@@ -1500,16 +1544,29 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
     LOG.assertTrue(!DocumentUtil.isInsideSurrogatePair(myEditor.getDocument(), getSelectionEnd()));
   }
 
+  private static class VerticalInfo {
+    private final int y; // y coordinate of caret
+    private final int logicalLineY; // y coordinate of caret's logical line start
+    private final int logicalLineHeight; // height of caret's logical line
+    // (if there are soft wraps, it's larger than a visual line's height)
+
+    private VerticalInfo(int y, int logicalLineY, int logicalLineHeight) {
+      this.y = y;
+      this.logicalLineY = logicalLineY;
+      this.logicalLineHeight = logicalLineHeight;
+    }
+  }
+
   class PositionMarker extends RangeMarkerImpl {
     private PositionMarker(int offset) {
-      super(myEditor.getDocument(), offset, offset, false);
-      myEditor.getCaretModel().myPositionMarkerTree.addInterval(this, offset, offset, false, false, false, 0);
+      super(myEditor.getDocument(), offset, offset, false, true);
+      myCaretModel.myPositionMarkerTree.addInterval(this, offset, offset, false, false, false, 0);
     }
 
     @Override
     public void dispose() {
       if (isValid()) {
-        myEditor.getCaretModel().myPositionMarkerTree.removeInterval(this);
+        myCaretModel.myPositionMarkerTree.removeInterval(this);
       }
     }
 
@@ -1521,7 +1578,8 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
         // Under certain conditions, when text is inserted at caret position, we position caret at the end of inserted text.
         // Ideally, client code should be responsible for positioning caret after document modification, but in case of
         // postponed formatting (after PSI modifications), this is hard to implement, so a heuristic below is used.
-        if (e.getOldLength() == 0 && oldOffset == e.getOffset() &&
+        if (e.getOldLength() == 0 &&
+            oldOffset == e.getOffset() &&
             !Boolean.TRUE.equals(myEditor.getUserData(DesktopEditorImpl.DISABLE_CARET_SHIFT_ON_WHITESPACE_INSERTION)) &&
             needToShiftWhiteSpaces(e)) {
           int afterInserted = e.getOffset() + e.getNewLength();
@@ -1537,7 +1595,7 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
       else {
         setValid(true);
         int newOffset = Math.min(intervalStart(), e.getOffset() + e.getNewLength());
-        if (!((DocumentEx)e.getDocument()).isInBulkUpdate() && e.isWholeTextReplaced()) {
+        if (!e.getDocument().isInBulkUpdate() && e.isWholeTextReplaced()) {
           try {
             final int line = ((DocumentEventImpl)e).translateLineViaDiff(myLogicalCaret.line);
             newOffset = myEditor.logicalPositionToOffset(new LogicalPosition(line, myLogicalCaret.column));
@@ -1550,18 +1608,26 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
         setIntervalStart(newOffset);
         setIntervalEnd(newOffset);
       }
-      if (oldOffset >= e.getOffset() && oldOffset <= e.getOffset() + e.getOldLength() && e.getNewLength() == 0 &&
-          myEditor.getInlayModel().hasInlineElementAt(e.getOffset())) {
-        myLeansTowardsLargerOffsets = true;
-      }
-      else if (oldOffset == e.getOffset()) {
-        myLeansTowardsLargerOffsets = false;
+      myLogicalColumnAdjustment = 0;
+      myVisualColumnAdjustment = 0;
+      if (oldOffset >= e.getOffset() && oldOffset <= e.getOffset() + e.getOldLength() && e.getNewLength() == 0 && e.getOldLength() > 0) {
+        int inlaysToTheLeft = myEditor.getInlayModel().getInlineElementsInRange(e.getOffset(), e.getOffset()).size();
+        boolean hasInlaysToTheRight = myEditor.getInlayModel().hasInlineElementAt(e.getOffset() + e.getOldLength());
+        if (inlaysToTheLeft > 0 || hasInlaysToTheRight) {
+          myLeansTowardsLargerOffsets = !hasInlaysToTheRight;
+          myVisualColumnAdjustment = hasInlaysToTheRight ? inlaysToTheLeft : 0;
+        }
+        else if (oldOffset == e.getOffset()) {
+          myLeansTowardsLargerOffsets = false;
+        }
       }
     }
 
     private boolean needToShiftWhiteSpaces(final DocumentEvent e) {
-      return e.getOffset() > 0 && Character.isWhitespace(e.getDocument().getImmutableCharSequence().charAt(e.getOffset() - 1)) &&
-             CharArrayUtil.containsOnlyWhiteSpaces(e.getNewFragment()) && !CharArrayUtil.containLineBreaks(e.getNewFragment());
+      return e.getOffset() > 0 &&
+             Character.isWhitespace(e.getDocument().getImmutableCharSequence().charAt(e.getOffset() - 1)) &&
+             CharArrayUtil.containsOnlyWhiteSpaces(e.getNewFragment()) &&
+             !CharArrayUtil.containLineBreaks(e.getNewFragment());
     }
 
     @Override
@@ -1581,8 +1647,8 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
     private int endVirtualOffset;
 
     private SelectionMarker(int start, int end) {
-      super(myEditor.getDocument(), start, end, false);
-      myEditor.getCaretModel().mySelectionMarkerTree.addInterval(this, start, end, false, false, false, 0);
+      super(myEditor.getDocument(), start, end, false, true);
+      myCaretModel.mySelectionMarkerTree.addInterval(this, start, end, false, false, false, 0);
     }
 
     private void resetVirtualSelection() {
@@ -1597,7 +1663,7 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
     @Override
     public void dispose() {
       if (isValid()) {
-        myEditor.getCaretModel().mySelectionMarkerTree.removeInterval(this);
+        myCaretModel.mySelectionMarkerTree.removeInterval(this);
       }
     }
 

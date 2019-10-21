@@ -126,6 +126,7 @@
         <include>org.apache.httpcomponents:httpclient</include>
         <include>org.apache.httpcomponents:httpmime</include>
         <include>org.iq80.snappy:snappy</include>
+        <include>org.lz4:lz4-java</include>
         <include>com.github.markusbernhardt:proxy-vole</include>
         <include>org.apache.commons:commons-imaging</include>
         <include>com.google.code.gson:gson</include>

@@ -14,12 +14,13 @@ import com.intellij.openapi.editor.impl.*;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapDrawingType;
 import com.intellij.openapi.editor.impl.softwrap.mapping.IncrementalCacheUpdateEvent;
 import com.intellij.openapi.editor.impl.softwrap.mapping.SoftWrapAwareDocumentParsingListenerAdapter;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.util.DocumentUtil;
 import gnu.trove.TIntArrayList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import org.jetbrains.annotations.TestOnly;
 
 import java.awt.*;
@@ -30,10 +31,11 @@ import java.util.stream.Stream;
 /**
  * Calculates width (in pixels) of editor contents.
  */
-class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedDocumentListener, Disposable, FoldingListener, Dumpable {
+class EditorSizeManager implements PrioritizedDocumentListener, Disposable, FoldingListener, InlayModel.Listener, Dumpable {
   private static final Logger LOG = Logger.getInstance(EditorSizeManager.class);
 
   private static final int UNKNOWN_WIDTH = Integer.MAX_VALUE;
+  private static final int SPECIFIC_LINES_RECALC_THRESHOLD = 2;
 
   private final EditorView myView;
   private final DesktopEditorImpl myEditor;
@@ -42,7 +44,11 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
   private final TIntArrayList myLineWidths = new TIntArrayList(); // cached widths of visual lines (in pixels)
   // negative value means an estimated (not precise) width
   // UNKNOWN_WIDTH(Integer.MAX_VALUE) means no value
+  private boolean myWidthIsValid = true;
   private int myWidthInPixels;
+  private int myWidthDefiningLineNumber;
+  private int myStartInvalidLine = Integer.MAX_VALUE;
+  private int myEndInvalidLine = 0;
 
   private int myMaxLineWithExtensionWidth;
   private int myWidestLineWithExtension;
@@ -58,8 +64,12 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
   private boolean myDirty; // true if we cannot calculate preferred size now because soft wrap model was invalidated after editor
   // became hidden. myLineWidths contents is irrelevant in such a state. Previously calculated preferred size
   // is kept until soft wraps will be recalculated and size calculations will become possible
+  private boolean myAfterLineEndInlayUpdated;
 
   private final List<TextRange> myDeferredRanges = new ArrayList<>();
+
+  private boolean myWidestBlockInlayValid;
+  private Inlay myWidestBlockInlay;
 
   private final SoftWrapAwareDocumentParsingListenerAdapter mySoftWrapChangeListener = new SoftWrapAwareDocumentParsingListenerAdapter() {
     @Override
@@ -81,6 +91,7 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
   @Override
   public void dispose() {
     myEditor.getSoftWrapModel().getApplianceManager().removeListener(mySoftWrapChangeListener);
+    invalidateCachedBlockInlayWidth();
   }
 
   @Override
@@ -89,7 +100,8 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
   }
 
   @Override
-  public void beforeDocumentChange(DocumentEvent event) {
+  public void beforeDocumentChange(@Nonnull DocumentEvent event) {
+    myAfterLineEndInlayUpdated = false;
     myDuringDocumentUpdate = true;
     if (myDocument.isInBulkUpdate()) return;
     myDocumentChangeStartOffset = event.getOffset();
@@ -97,10 +109,14 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
   }
 
   @Override
-  public void documentChanged(DocumentEvent event) {
+  public void documentChanged(@Nonnull DocumentEvent event) {
     myDuringDocumentUpdate = false;
     if (myDocument.isInBulkUpdate()) return;
     doInvalidateRange(myDocumentChangeStartOffset, myDocumentChangeEndOffset);
+    if (myAfterLineEndInlayUpdated) {
+      int lineEndOffset = DocumentUtil.getLineEndOffset(myDocumentChangeEndOffset, myDocument);
+      doInvalidateRange(lineEndOffset, lineEndOffset);
+    }
     assertValidState();
   }
 
@@ -126,13 +142,64 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
       onTextLayoutPerformed(range.getStartOffset(), range.getEndOffset());
     }
     myDeferredRanges.clear();
+    invalidateCachedBlockInlayWidth();
     assertValidState();
   }
 
   @Override
+  public void onAdded(@Nonnull Inlay inlay) {
+    if (myDocument.isInBulkUpdate()) return;
+
+    if (inlay.getPlacement() == Inlay.Placement.INLINE || inlay.getPlacement() == Inlay.Placement.AFTER_LINE_END) {
+      onLineInlayUpdate(inlay);
+    }
+    else if (myWidestBlockInlayValid && inlay.getWidthInPixels() > getCachedWidestBlockInlayWidth() && !myEditor.getFoldingModel().isOffsetCollapsed(inlay.getOffset())) {
+      myWidestBlockInlay = inlay;
+    }
+  }
+
+  @Override
+  public void onRemoved(@Nonnull Inlay inlay) {
+    if (myDocument.isInBulkUpdate()) return;
+
+    if (inlay.getPlacement() == Inlay.Placement.INLINE || inlay.getPlacement() == Inlay.Placement.AFTER_LINE_END) {
+      onLineInlayUpdate(inlay);
+    }
+    else if (inlay == myWidestBlockInlay) {
+      invalidateCachedBlockInlayWidth();
+    }
+  }
+
+  @Override
   public void onUpdated(@Nonnull Inlay inlay) {
-    if (myDuringDocumentUpdate || myDocument.isInBulkUpdate()) return;
-    doInvalidateRange(inlay.getOffset(), inlay.getOffset());
+    if (myDocument.isInBulkUpdate()) return;
+
+    if (inlay.getPlacement() == Inlay.Placement.INLINE || inlay.getPlacement() == Inlay.Placement.AFTER_LINE_END) {
+      onLineInlayUpdate(inlay);
+    }
+    else if (myWidestBlockInlayValid &&
+             (inlay == myWidestBlockInlay || inlay.getWidthInPixels() > getCachedWidestBlockInlayWidth() && !myEditor.getFoldingModel().isOffsetCollapsed(inlay.getOffset()))) {
+      if (inlay == myWidestBlockInlay) {
+        invalidateCachedBlockInlayWidth();
+      }
+      else {
+        myWidestBlockInlay = inlay;
+      }
+    }
+  }
+
+  private void onLineInlayUpdate(@Nonnull Inlay inlay) {
+    if (myDuringDocumentUpdate) {
+      if (inlay.getPlacement() == Inlay.Placement.AFTER_LINE_END) {
+        myAfterLineEndInlayUpdated = true;
+      }
+      return;
+    }
+    int offset = inlay.getOffset();
+    if (inlay.getPlacement() == Inlay.Placement.AFTER_LINE_END) {
+      offset = DocumentUtil.getLineEndOffset(offset, myDocument);
+    }
+    doInvalidateRange(offset, offset);
   }
 
   private void onSoftWrapRecalculationEnd(IncrementalCacheUpdateEvent event) {
@@ -157,15 +224,13 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
     Insets insets = myView.getInsets();
     int widthWithoutCaret = getTextPreferredWidth() + insets.left;
     int width = widthWithoutCaret;
-    boolean rightAligned = myEditor.isRightAligned();
-    if (!myDocument.isInBulkUpdate() && !rightAligned) {
+    if (!myDocument.isInBulkUpdate() && !myEditor.isRightAligned() && myEditor.getSettings().isVirtualSpace()) {
       DesktopCaretModelImpl caretModel = myEditor.getCaretModel();
       int caretMaxX = (caretModel.isIteratingOverCarets() ? Stream.of(caretModel.getCurrentCaret()) : caretModel.getAllCarets().stream())
-              .filter(Caret::isUpToDate)
-              .mapToInt(c -> (int)myView.visualPositionToXY(c.getVisualPosition()).getX())
-              .max().orElse(0);
+              .filter(caret -> caret.isUpToDate() && ((DesktopCaretImpl)caret).isInVirtualSpace()).mapToInt(c -> (int)myView.visualPositionToXY(c.getVisualPosition()).getX()).max().orElse(0);
       width = Math.max(width, caretMaxX);
     }
+    width = Math.max(width, insets.left + getMaximumVisibleBlockInlayWidth());
     if (shouldRespectAdditionalColumns(widthWithoutCaret)) {
       width += myEditor.getSettings().getAdditionalColumnsCount() * myView.getPlainSpaceWidth();
     }
@@ -182,10 +247,8 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
     boolean rightAligned = myEditor.isRightAligned();
     if (!myDocument.isInBulkUpdate() && !rightAligned) {
       DesktopCaretModelImpl caretModel = myEditor.getCaretModel();
-      int caretMaxX = (caretModel.isIteratingOverCarets() ? Stream.of(caretModel.getCurrentCaret()) : caretModel.getAllCarets().stream())
-              .filter(Caret::isUpToDate)
-              .filter(caret -> caret.getVisualPosition().line >= beginLine && caret.getVisualPosition().line < endLine)
-              .mapToInt(c -> (int)myView.visualPositionToXY(c.getVisualPosition()).getX())
+      int caretMaxX = (caretModel.isIteratingOverCarets() ? Stream.of(caretModel.getCurrentCaret()) : caretModel.getAllCarets().stream()).filter(Caret::isUpToDate)
+              .filter(caret -> caret.getVisualPosition().line >= beginLine && caret.getVisualPosition().line < endLine).mapToInt(c -> (int)myView.visualPositionToXY(c.getVisualPosition()).getX())
               .max().orElse(0);
       width = Math.max(width, caretMaxX);
     }
@@ -199,9 +262,11 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
     int lineHeight = myView.getLineHeight();
     if (myEditor.isOneLineMode()) return lineHeight;
 
+    int linesHeight = myView.visualLineToY(myEditor.getVisibleLineCount());
+
     // Preferred height of less than a single line height doesn't make sense:
     // at least a single line with a blinking caret on it is to be displayed
-    int size = Math.max(myEditor.getVisibleLineCount(), 1) * lineHeight;
+    int size = Math.max(linesHeight, lineHeight);
 
     EditorSettings settings = myEditor.getSettings();
     if (settings.isAdditionalPageAtBottom()) {
@@ -224,15 +289,29 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
   }
 
   private boolean shouldRespectAdditionalColumns(int widthWithoutCaret) {
-    return !myEditor.getSoftWrapModel().isSoftWrappingEnabled()
-           || myEditor.getSoftWrapModel().isRespectAdditionalColumns()
-           || widthWithoutCaret > myEditor.getScrollingModel().getVisibleArea().getWidth();
+    return !myEditor.getSoftWrapModel().isSoftWrappingEnabled() || myEditor.getSoftWrapModel().isRespectAdditionalColumns() || widthWithoutCaret > myEditor.getScrollingModel().getVisibleArea().getWidth();
   }
 
   private int getTextPreferredWidth() {
-    if (myWidthInPixels < 0) {
+    if (!myWidthIsValid) {
       assert !myDocument.isInBulkUpdate();
-      myWidthInPixels = calculateTextPreferredWidth();
+      boolean needFullScan = true;
+      if (myStartInvalidLine <= myEndInvalidLine && (myEndInvalidLine - myStartInvalidLine) < SPECIFIC_LINES_RECALC_THRESHOLD) {
+        Pair<Integer, Integer> pair = calculateTextPreferredWidth(myStartInvalidLine, myEndInvalidLine);
+        needFullScan = pair.first < myWidthInPixels && myStartInvalidLine <= myWidthDefiningLineNumber && myWidthDefiningLineNumber <= myEndInvalidLine;
+        if (pair.first >= myWidthInPixels) {
+          myWidthInPixels = pair.first;
+          myWidthDefiningLineNumber = pair.second;
+        }
+      }
+      if (needFullScan) {
+        Pair<Integer, Integer> pair = calculateTextPreferredWidth(0, Integer.MAX_VALUE);
+        myWidthInPixels = pair.first;
+        myWidthDefiningLineNumber = pair.second;
+      }
+      myWidthIsValid = true;
+      myStartInvalidLine = Integer.MAX_VALUE;
+      myEndInvalidLine = 0;
     }
     validateMaxLineWithExtension();
     return Math.max(myWidthInPixels, myMaxLineWithExtensionWidth);
@@ -241,9 +320,9 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
   // This method is currently used only with "idea.true.smooth.scrolling" experimental option.
   // We may optimize this computation by caching results and performing incremental updates.
   private int getTextPreferredWidthWithoutCaret(int beginLine, int endLine) {
-    if (myWidthInPixels < 0) {
+    if (!myWidthIsValid) {
       assert !myDocument.isInBulkUpdate();
-      calculateTextPreferredWidth();
+      calculateTextPreferredWidth(0, Integer.MAX_VALUE);
     }
     int maxWidth = beginLine == 0 && endLine == 0 ? (int)myView.getPrefixTextWidthInPixels() : 0;
     for (int i = beginLine; i < endLine && i < myLineWidths.size(); i++) {
@@ -262,20 +341,26 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
     }
   }
 
-  private int calculateTextPreferredWidth() {
-    if (checkDirty()) return 1;
+  // first number is the width, second number is the largest visual line number
+  private Pair<Integer, Integer> calculateTextPreferredWidth(int startVisualLine, int endVisualLine) {
+    if (checkDirty()) return Pair.pair(1, 0);
     assertValidState();
-    VisualLinesIterator iterator = new VisualLinesIterator(myEditor, 0);
+    VisualLinesIterator iterator = new VisualLinesIterator(myEditor, startVisualLine);
     int maxWidth = 0;
-    if (iterator.atEnd()) {
+    int largestLineNumber = 0;
+    if (startVisualLine == 0 && iterator.atEnd()) {
       maxWidth += myView.getPrefixTextWidthInPixels();
     }
     while (!iterator.atEnd()) {
       int width = getVisualLineWidth(iterator, true);
-      maxWidth = Math.max(maxWidth, width);
+      if (width > maxWidth) {
+        maxWidth = width;
+        largestLineNumber = iterator.getVisualLine();
+      }
+      if (iterator.getVisualLine() >= endVisualLine) break;
       iterator.advance();
     }
-    return maxWidth;
+    return Pair.create(maxWidth, largestLineNumber);
   }
 
   int getVisualLineWidth(VisualLinesIterator visualLinesIterator, boolean allowQuickCalculation) {
@@ -295,24 +380,29 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
     FoldRegion[] topLevelRegions = myEditor.getFoldingModel().fetchTopLevel();
     if (quickEvaluationListener != null &&
         (topLevelRegions == null || topLevelRegions.length == 0) && myEditor.getSoftWrapModel().getRegisteredSoftWraps().isEmpty() &&
-        !myView.getTextLayoutCache().hasCachedLayoutFor(visualLine) && !myEditor.getInlayModel().hasInlineElements()) {
+        !myView.getTextLayoutCache().hasCachedLayoutFor(visualLine) && !myEditor.getInlayModel().hasInlineElements() && !myEditor.getInlayModel().hasAfterLineEndElements()) {
       // fast path - speeds up editor opening
       quickEvaluationListener.run();
-      return myView.getLogicalPositionCache().offsetToLogicalColumn(visualLine,
-                                                                    myDocument.getLineEndOffset(visualLine) -
-                                                                    myDocument.getLineStartOffset(visualLine)) *
-             myView.getMaxCharWidth();
+      return (int)(myView.getLogicalPositionCache().offsetToLogicalColumn(visualLine, myDocument.getLineEndOffset(visualLine) - myDocument.getLineStartOffset(visualLine)) * myView.getMaxCharWidth());
     }
     float x = 0;
     int maxOffset = iterator.getVisualLineStartOffset();
     int leftInset = myView.getInsets().left;
-    for (VisualLineFragmentsIterator.Fragment fragment : VisualLineFragmentsIterator.create(myView, iterator,
-                                                                                            quickEvaluationListener, false)) {
+    for (VisualLineFragmentsIterator.Fragment fragment : VisualLineFragmentsIterator.create(myView, iterator, quickEvaluationListener, false)) {
       x = fragment.getEndX() - leftInset;
       maxOffset = Math.max(maxOffset, fragment.getMaxOffset());
     }
     if (myEditor.getSoftWrapModel().getSoftWrap(maxOffset) != null) {
       x += myEditor.getSoftWrapModel().getMinDrawingWidthInPixels(SoftWrapDrawingType.BEFORE_SOFT_WRAP_LINE_FEED);
+    }
+    else {
+      List<Inlay> inlays = myEditor.getInlayModel().getAfterLineEndElementsForLogicalLine(iterator.getEndLogicalLine());
+      if (!inlays.isEmpty()) {
+        x += myView.getPlainSpaceWidth();
+        for (Inlay inlay : inlays) {
+          x += inlay.getWidthInPixels();
+        }
+      }
     }
     return (int)x;
   }
@@ -320,6 +410,7 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
   void reset() {
     assert !myDocument.isInBulkUpdate();
     doInvalidateRange(0, myDocument.getTextLength());
+    invalidateCachedBlockInlayWidth();
   }
 
   void invalidateRange(int startOffset, int endOffset) {
@@ -357,10 +448,10 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
 
   private void doInvalidateRange(int startOffset, int endOffset) {
     if (checkDirty()) return;
-    myWidthInPixels = -1;
     int startVisualLine = myView.offsetToVisualLine(startOffset, false);
     int endVisualLine = myView.offsetToVisualLine(endOffset, true);
     int lineDiff = myEditor.getVisibleLineCount() - myLineWidths.size();
+    invalidateWidth(lineDiff == 0 && startVisualLine == endVisualLine, startVisualLine);
     if (lineDiff > 0) {
       int[] newEntries = new int[lineDiff];
       myLineWidths.insert(startVisualLine, newEntries);
@@ -382,9 +473,30 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
     myMaxLineWithExtensionWidth = width;
   }
 
+  private int getMaximumVisibleBlockInlayWidth() {
+    if (!myWidestBlockInlayValid) {
+      myWidestBlockInlayValid = true;
+      myWidestBlockInlay = null;
+      myEditor.getInlayModel().getBlockElementsInRange(0, myDocument.getTextLength()).forEach(inlay -> {
+        if (!myEditor.getFoldingModel().isOffsetCollapsed(inlay.getOffset()) && inlay.getWidthInPixels() > getCachedWidestBlockInlayWidth()) {
+          myWidestBlockInlay = inlay;
+        }
+      });
+    }
+    return getCachedWidestBlockInlayWidth();
+  }
+
+  private int getCachedWidestBlockInlayWidth() {
+    return myWidestBlockInlay == null ? 0 : myWidestBlockInlay.getWidthInPixels();
+  }
+
+  private void invalidateCachedBlockInlayWidth() {
+    myWidestBlockInlayValid = false;
+    myWidestBlockInlay = null;
+  }
+
   void textLayoutPerformed(int startOffset, int endOffset) {
-    assert 0 <= startOffset && startOffset < endOffset && endOffset <= myDocument.getTextLength()
-            : "startOffset=" + startOffset + ", endOffset=" + endOffset;
+    assert 0 <= startOffset && startOffset < endOffset && endOffset <= myDocument.getTextLength() : "startOffset=" + startOffset + ", endOffset=" + endOffset;
     if (myDocument.isInBulkUpdate()) return;
     if (myEditor.getFoldingModel().isInBatchFoldingOperation()) {
       myDeferredRanges.add(new TextRange(startOffset, endOffset));
@@ -411,13 +523,25 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
         }
       }
       if (sizeInvalidated) {
-        myWidthInPixels = -1;
+        invalidateWidth(startVisualLine == endVisualLine, startVisualLine);
         myEditor.getContentComponent().revalidate();
       }
     }
     finally {
       myEditor.setPurePaintingMode(purePaintingMode);
       myEditor.getFoldingModel().setFoldingEnabled(foldingEnabled);
+    }
+  }
+
+  private void invalidateWidth(boolean invalidateOneLine, int invalidVisualLine) {
+    myWidthIsValid = false;
+    if (invalidateOneLine) {
+      myStartInvalidLine = Math.min(myStartInvalidLine, invalidVisualLine);
+      myEndInvalidLine = Math.max(myEndInvalidLine, invalidVisualLine);
+    }
+    else {
+      myStartInvalidLine = 0;
+      myEndInvalidLine = Integer.MAX_VALUE;
     }
   }
 
@@ -443,6 +567,11 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
   @Override
   public String dumpState() {
     return "[cached width: " + myWidthInPixels +
+           ", longest visual line: " + myWidthDefiningLineNumber +
+           ", cached width is valid: " + myWidthIsValid +
+           ", widest block inlay: " + myWidestBlockInlay +
+           ", widest block inlay is valid: " + myWidestBlockInlayValid +
+           ", invalid visual lines: [" + myStartInvalidLine + ", " + myEndInvalidLine + "]" +
            ", max line with extension width: " + myMaxLineWithExtensionWidth +
            ", line widths: " + myLineWidths + "]";
   }
@@ -463,8 +592,7 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
       if (cachedWidth < 0 || cachedWidth == UNKNOWN_WIDTH) continue;
       Ref<Boolean> quickEvaluation = new Ref<>();
       int actualWidth = calculateLineWidth(new VisualLinesIterator(myEditor, visualLine), () -> quickEvaluation.set(Boolean.TRUE));
-      assert !quickEvaluation.isNull() || actualWidth == cachedWidth :
-              "Wrong cached width for visual line " + visualLine + ", cached: " + cachedWidth + ", actual: " + actualWidth;
+      assert !quickEvaluation.isNull() || actualWidth == cachedWidth : "Wrong cached width for visual line " + visualLine + ", cached: " + cachedWidth + ", actual: " + actualWidth;
     }
   }
 

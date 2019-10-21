@@ -22,6 +22,7 @@ import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import javax.annotation.Nonnull;
@@ -30,18 +31,25 @@ import javax.annotation.Nullable;
 /**
  * This class is an extension to range marker that tries to restore its range even in situations when target text referenced by it
  * is replaced.
- * <p>
+ * <p/>
  * Example: consider that the user selects all text at editor (Ctrl+A), copies it to the buffer (Ctrl+C) and performs paste (Ctrl+V).
  * All document text is replaced then but in essence it's the same, hence, we may want particular range markers to be still valid.
  *
  * @author max
  */
 class PersistentRangeMarker extends RangeMarkerImpl {
+  @Nonnull
   private LinesCols myLinesCols;
 
   PersistentRangeMarker(@Nonnull DocumentEx document, int startOffset, int endOffset, boolean register) {
-    super(document, startOffset, endOffset, register);
+    super(document, startOffset, endOffset, register, false);
     myLinesCols = ObjectUtils.assertNotNull(storeLinesAndCols(document, getStartOffset(), getEndOffset()));
+  }
+
+  // constructor which creates marker without document and saves it in the virtual file directly. Can be cheaper than loading document.
+  PersistentRangeMarker(@Nonnull VirtualFile virtualFile, int startOffset, int endOffset, int startLine, int startCol, int endLine, int endCol, boolean register) {
+    super(virtualFile, startOffset, endOffset, register);
+    myLinesCols = new LinesCols(startLine, startCol, endLine, endCol);
   }
 
   @Nullable
@@ -79,7 +87,7 @@ class PersistentRangeMarker extends RangeMarkerImpl {
   }
 
   @Nullable
-  static Pair<TextRange, LinesCols> translateViaDiff(@Nonnull final DocumentEventImpl event, @Nonnull LinesCols linesCols) {
+  static Pair.NonNull<TextRange, LinesCols> translateViaDiff(@Nonnull final DocumentEventImpl event, @Nonnull LinesCols linesCols) {
     try {
       int myStartLine = event.translateLineViaDiffStrict(linesCols.myStartLine);
       Document document = event.getDocument();
@@ -105,7 +113,7 @@ class PersistentRangeMarker extends RangeMarkerImpl {
         return null;
       }
 
-      return Pair.create(new TextRange(start, end), new LinesCols(myStartLine, linesCols.myStartColumn, myEndLine, linesCols.myEndColumn));
+      return Pair.createNonNull(new TextRange(start, end), new LinesCols(myStartLine, linesCols.myStartColumn, myEndLine, linesCols.myEndColumn));
     }
     catch (FilesTooBigForDiffException e) {
       return null;
@@ -128,16 +136,12 @@ class PersistentRangeMarker extends RangeMarkerImpl {
   }
 
   @Nullable
-  private static Pair<TextRange, LinesCols> applyChange(DocumentEvent event,
-                                                        Segment range,
-                                                        int intervalStart,
-                                                        int intervalEnd,
-                                                        boolean greedyLeft,
-                                                        boolean greedyRight,
-                                                        boolean stickingToRight,
-                                                        LinesCols linesCols) {
-    final boolean shouldTranslateViaDiff = PersistentRangeMarkerUtil.shouldTranslateViaDiff(event, range.getStartOffset(), range.getEndOffset());
-    Pair<TextRange, LinesCols> translated = null;
+  private static Pair.NonNull<TextRange, LinesCols> applyChange(@Nonnull DocumentEvent event, @Nonnull Segment range,
+                                                                int intervalStart, int intervalEnd,
+                                                                boolean greedyLeft, boolean greedyRight, boolean stickingToRight,
+                                                                @Nonnull LinesCols linesCols) {
+    boolean shouldTranslateViaDiff = PersistentRangeMarkerUtil.shouldTranslateViaDiff(event, range.getStartOffset(), range.getEndOffset());
+    Pair.NonNull<TextRange, LinesCols> translated = null;
     if (shouldTranslateViaDiff) {
       translated = translateViaDiff((DocumentEventImpl)event, linesCols);
     }
@@ -148,7 +152,7 @@ class PersistentRangeMarker extends RangeMarkerImpl {
       LinesCols lc = storeLinesAndCols(event.getDocument(), fallback.getStartOffset(), fallback.getEndOffset());
       if (lc == null) return null;
 
-      translated = Pair.create(fallback, lc);
+      translated = Pair.createNonNull(fallback, lc);
     }
     return translated;
   }
@@ -157,13 +161,8 @@ class PersistentRangeMarker extends RangeMarkerImpl {
   public String toString() {
     return "PersistentRangeMarker" +
            (isGreedyToLeft() ? "[" : "(") +
-           (isValid() ? "valid" : "invalid") +
-           "," +
-           getStartOffset() +
-           "," +
-           getEndOffset() +
-           " " +
-           myLinesCols +
+           (isValid() ? "valid" : "invalid") + "," + getStartOffset() + "," + getEndOffset() +
+           " " + myLinesCols +
            (isGreedyToRight() ? "]" : ")");
   }
 

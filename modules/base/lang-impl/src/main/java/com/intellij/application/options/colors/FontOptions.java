@@ -16,6 +16,7 @@
 
 package com.intellij.application.options.colors;
 
+import com.intellij.Patches;
 import com.intellij.application.options.OptionsConstants;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.application.ApplicationBundle;
@@ -113,6 +114,7 @@ public class FontOptions extends JPanel implements OptionsPanel{
     secondFontPanel.add(mySecondaryCombo);
 
     JPanel ligaturesPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
+    ligaturesPanel.setEnabled(!Patches.TEXT_LAYOUT_IS_SLOW);
     myEnableLigaturesCheckbox.setBorder(null);
     ligaturesPanel.add(myEnableLigaturesCheckbox);
     myLigaturesInfoLinkLabel = new LinkLabel<>(ApplicationBundle.message("ligatures.more.info"), null, new LinkListener<String>() {

@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.awt;
 
 import javax.annotation.Nonnull;
@@ -23,26 +9,33 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public class RelativePoint {
+  @Nonnull
+  private final Component myComponent;
+  @Nonnull
+  private final Point myPointOnComponent;
 
-  private Component myComponent;
-  private Point myPointOnComponent;
-
-  private Component myOriginalComponent;
-  private Point myOriginalPoint;
+  @Nonnull
+  private final Component myOriginalComponent;
+  @Nonnull
+  private final Point myOriginalPoint;
 
   public RelativePoint(@Nonnull MouseEvent event) {
-    init(event.getComponent(), event.getPoint());
-
-    myOriginalComponent = event.getComponent();
-    myOriginalPoint = event.getPoint();
-  }
-
-  public RelativePoint(@Nonnull Component aComponent, Point aPointOnComponent) {
-    init(aComponent, aPointOnComponent);
+    this(event.getComponent(), event.getPoint());
   }
 
   public RelativePoint(@Nonnull Point screenPoint) {
+    this(getTargetWindow(), calcPoint(screenPoint));
+  }
+
+  @Nonnull
+  private static Point calcPoint(@Nonnull Point screenPoint) {
     Point p = new Point(screenPoint.x, screenPoint.y);
+    SwingUtilities.convertPointFromScreen(p, getTargetWindow());
+    return p;
+  }
+
+  @Nonnull
+  private static Window getTargetWindow() {
     Window[] windows = Window.getWindows();
     Window targetWindow = null;
     for (Window each : windows) {
@@ -55,25 +48,24 @@ public class RelativePoint {
     if (targetWindow == null) {
       targetWindow = JOptionPane.getRootFrame();
     }
-
-    SwingUtilities.convertPointFromScreen(p, targetWindow);
-    init(targetWindow, p);
+    return targetWindow;
   }
 
-  private void init(@Nonnull Component aComponent, Point aPointOnComponent) {
-    if (aComponent.isShowing()) {
-      myComponent = SwingUtilities.getRootPane(aComponent);
+  public RelativePoint(@Nonnull Component aComponent, @Nonnull Point aPointOnComponent) {
+    JRootPane rootPane = SwingUtilities.getRootPane(aComponent);
+    if (aComponent.isShowing() && rootPane != null) {
+      myComponent = rootPane;
       myPointOnComponent = SwingUtilities.convertPoint(aComponent, aPointOnComponent, myComponent);
     }
     else {
       myComponent = aComponent;
       myPointOnComponent = aPointOnComponent;
     }
-
-    myOriginalComponent = myComponent;
-    myOriginalPoint = myPointOnComponent;
+    myOriginalComponent = aComponent;
+    myOriginalPoint = aPointOnComponent;
   }
 
+  @Nonnull
   public Component getComponent() {
     return myComponent;
   }
@@ -83,8 +75,11 @@ public class RelativePoint {
   }
 
   public Point getPoint(@Nullable Component aTargetComponent) {
-//todo: remove that after implementation of DND to html design time controls
-    if (aTargetComponent == null || aTargetComponent.getParent() == null || SwingUtilities.getWindowAncestor(aTargetComponent) == null) return new Point();
+    //todo: remove that after implementation of DND to html design time controls
+    boolean window = aTargetComponent instanceof Window;
+    if (aTargetComponent == null || !window && (aTargetComponent.getParent() == null || SwingUtilities.getWindowAncestor(aTargetComponent) == null)) {
+      return new Point();
+    }
 
     return SwingUtilities.convertPoint(getComponent(), getPoint(), aTargetComponent);
   }
@@ -97,26 +92,27 @@ public class RelativePoint {
 
   @Nonnull
   public Point getScreenPoint() {
-    final Point point = (Point) getPoint().clone();
+    final Point point = (Point)getPoint().clone();
     SwingUtilities.convertPointToScreen(point, getComponent());
     return point;
   }
 
   @Nonnull
   public MouseEvent toMouseEvent() {
-    return new MouseEvent(myComponent, 0, 0, 0, myPointOnComponent.x, myPointOnComponent.y, 1, false); 
+    return new MouseEvent(myComponent, 0, 0, 0, myPointOnComponent.x, myPointOnComponent.y, 1, false);
   }
 
+  @Override
   @Nonnull
   public String toString() {
     //noinspection HardCodedStringLiteral
-    return getPoint() + " on " + getComponent().toString();
+    return getPoint() + " on " + getComponent();
   }
 
   @Nonnull
   public static RelativePoint getCenterOf(@Nonnull JComponent component) {
     final Rectangle visibleRect = component.getVisibleRect();
-    final Point point = new Point(visibleRect.x + visibleRect.width/2, visibleRect.y + visibleRect.height/2);
+    final Point point = new Point(visibleRect.x + visibleRect.width / 2, visibleRect.y + visibleRect.height / 2);
     return new RelativePoint(component, point);
   }
 
@@ -135,6 +131,13 @@ public class RelativePoint {
   }
 
   @Nonnull
+  public static RelativePoint getSouthOf(@Nonnull JComponent component) {
+    final Rectangle visibleRect = component.getVisibleRect();
+    final Point point = new Point(visibleRect.x + visibleRect.width / 2, visibleRect.y + visibleRect.height);
+    return new RelativePoint(component, point);
+  }
+
+  @Nonnull
   public static RelativePoint getNorthWestOf(@Nonnull JComponent component) {
     final Rectangle visibleRect = component.getVisibleRect();
     final Point point = new Point(visibleRect.x, visibleRect.y);
@@ -142,6 +145,7 @@ public class RelativePoint {
   }
 
   @Nonnull
+  @SuppressWarnings("unused")
   public static RelativePoint getNorthEastOf(@Nonnull JComponent component) {
     final Rectangle visibleRect = component.getVisibleRect();
     final Point point = new Point(visibleRect.x + visibleRect.width, visibleRect.y);
@@ -155,10 +159,12 @@ public class RelativePoint {
     return new RelativePoint(root, screenPoint);
   }
 
+  @Nonnull
   public Component getOriginalComponent() {
     return myOriginalComponent;
   }
 
+  @Nonnull
   public Point getOriginalPoint() {
     return myOriginalPoint;
   }

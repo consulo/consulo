@@ -19,11 +19,12 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.DataInputOutputUtilRt;
 import com.intellij.util.ThrowableConsumer;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 /**
  * @author max
@@ -32,24 +33,23 @@ import java.io.IOException;
 public class DataInputOutputUtil extends DataInputOutputUtilRt {
   public static final long timeBase = 33L * 365L * 24L * 3600L * 1000L;
 
-  private DataInputOutputUtil() { }
+  private DataInputOutputUtil() {
+  }
 
   public static int readINT(@Nonnull DataInput record) throws IOException {
     return DataInputOutputUtilRt.readINT(record);
+  }
+
+  public static int readINT(@Nonnull ByteBuffer byteBuffer) {
+    return DataInputOutputUtilRt.readINT(byteBuffer);
   }
 
   public static void writeINT(@Nonnull DataOutput record, int val) throws IOException {
     DataInputOutputUtilRt.writeINT(record, val);
   }
 
-  @Nullable
-  public static StringRef readNAME(@Nonnull DataInput record, @Nonnull AbstractStringEnumerator nameStore) throws IOException {
-    return StringRef.fromStream(record, nameStore);
-  }
-
-  public static void writeNAME(@Nonnull DataOutput record, @Nullable String name, @Nonnull AbstractStringEnumerator nameStore) throws IOException {
-    final int nameId = name != null ? nameStore.enumerate(name) : 0;
-    writeINT(record, nameId);
+  public static void writeINT(@Nonnull ByteBuffer byteBuffer, int val) {
+    DataInputOutputUtilRt.writeINT(byteBuffer, val);
   }
 
   public static long readLONG(@Nonnull DataInput record) throws IOException {
@@ -69,18 +69,15 @@ public class DataInputOutputUtil extends DataInputOutputUtilRt {
   }
 
   public static void writeLONG(@Nonnull DataOutput record, long val) throws IOException {
-    if (0 <= val && val < 192) {
-      record.writeByte((int)val);
-    }
-    else {
+    if (0 > val || val >= 192) {
       record.writeByte(192 + (int)(val & 0x3F));
       val >>>= 6;
       while (val >= 128) {
         record.writeByte((int)(val & 0x7F) | 0x80);
         val >>>= 7;
       }
-      record.writeByte((int)val);
     }
+    record.writeByte((int)val);
   }
 
   public static int readSINT(@Nonnull DataInput record) throws IOException {
@@ -125,8 +122,7 @@ public class DataInputOutputUtil extends DataInputOutputUtilRt {
    * Writes the given (possibly null) element to the output using the given procedure to write the element if it's not null.
    * Should be coupled with {@link #readNullable}
    */
-  public static <T> void writeNullable(@Nonnull DataOutput out, @Nullable T value, @Nonnull ThrowableConsumer<T, IOException> writeValue)
-          throws IOException {
+  public static <T> void writeNullable(@Nonnull DataOutput out, @Nullable T value, @Nonnull ThrowableConsumer<T, IOException> writeValue) throws IOException {
     out.writeBoolean(value != null);
     if (value != null) writeValue.consume(value);
   }

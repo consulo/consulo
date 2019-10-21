@@ -24,7 +24,6 @@ import javax.annotation.Nonnull;
 /**
  * A helper class for working with file gists: associating persistent data with current VFS or PSI file contents.
  *
- * @since 171.*
  * @author peter
  */
 public abstract class GistManager {
@@ -36,11 +35,12 @@ public abstract class GistManager {
 
   /**
    * Create a new {@link VirtualFileGist}.
-   * @param id a unique identifier of this data
-   * @param version should be incremented each time the {@code externalizer} or {@code calcData} logic changes.
+   *
+   * @param id           a unique identifier of this data
+   * @param version      should be incremented each time the {@code externalizer} or {@code calcData} logic changes.
    * @param externalizer used to store the data to the disk and retrieve it
-   * @param calcData calculates the data by the file content when needed
-   * @param <Data> the type of the data to cache
+   * @param calcData     calculates the data by the file content when needed
+   * @param <Data>       the type of the data to cache
    * @return the gist object, where {@link VirtualFileGist#getFileData} can later be used to retrieve the cached data
    */
   @Nonnull
@@ -51,17 +51,20 @@ public abstract class GistManager {
 
   /**
    * Create a new {@link PsiFileGist}.
-   * @param id a unique identifier of this data
-   * @param version should be incremented each time the {@code externalizer} or {@code calcData} logic changes.
+   *
+   * @param id           a unique identifier of this data
+   * @param version      should be incremented each time the {@code externalizer} or {@code calcData} logic changes.
    * @param externalizer used to store the data to the disk and retrieve it
-   * @param calcData calculates the data by the file content when needed
-   * @param <Data> the type of the data to cache
+   * @param calcData     calculates the data by the file content when needed
+   * @param <Data>       the type of the data to cache
    * @return the gist object, where {@link PsiFileGist#getFileData} can later be used to retrieve the cached data
    */
   @Nonnull
-  public abstract <Data> PsiFileGist<Data> newPsiFileGist(@Nonnull String id,
-                                                          int version,
-                                                          @Nonnull DataExternalizer<Data> externalizer,
-                                                          @Nonnull NullableFunction<PsiFile, Data> calcData);
+  public abstract <Data> PsiFileGist<Data> newPsiFileGist(@Nonnull String id, int version, @Nonnull DataExternalizer<Data> externalizer, @Nonnull NullableFunction<PsiFile, Data> calcData);
+
+  /**
+   * Force all gists to be recalculated on the next request.
+   */
+  public abstract void invalidateData();
 
 }

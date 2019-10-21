@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2019 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,40 +16,46 @@
 package com.intellij.codeInsight.navigation;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.JBListUpdater;
+import com.intellij.openapi.ui.popup.JBPopup;
+import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.components.JBList;
-import com.intellij.ui.speedSearch.NameFilteringListModel;
+import com.intellij.ui.popup.AbstractPopup;
+import com.intellij.usages.UsageView;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
-import javax.swing.*;
-import java.util.List;
+import java.util.Comparator;
 
 /**
- * User: anna
+ * @deprecated please use {@link BackgroundUpdaterTask}
  */
-public abstract class ListBackgroundUpdaterTask extends BackgroundUpdaterTask<JBList> {
+@Deprecated
+public abstract class ListBackgroundUpdaterTask extends BackgroundUpdaterTask {
+
+  protected AbstractPopup myPopup;
+
+  /**
+   * @deprecated Use {@link #ListBackgroundUpdaterTask(Project, String, Comparator)}
+   */
+  @Deprecated
   public ListBackgroundUpdaterTask(@Nullable final Project project, @Nonnull final String title) {
-    super(project, title);
+    this(project, title, null);
   }
 
-  @Override
-  protected void paintBusy(final boolean paintBusy) {
-    final Runnable runnable = () -> myComponent.setPaintBusy(paintBusy);
-    //ensure start/end order
-    SwingUtilities.invokeLater(runnable);
+  public ListBackgroundUpdaterTask(@Nullable final Project project, @Nonnull final String title, @Nullable Comparator<PsiElement> comparator) {
+    super(project, title, comparator);
   }
 
-  @Override
-  protected void replaceModel(@Nonnull List<PsiElement> data) {
-    final Object selectedValue = myComponent.getSelectedValue();
-    final int index = myComponent.getSelectedIndex();
-    ((NameFilteringListModel)myComponent.getModel()).replaceAll(data);
-    if (index == 0) {
-      myComponent.setSelectedIndex(0);
-    }
-    else {
-      myComponent.setSelectedValue(selectedValue, true);
+  /**
+   * @deprecated please use {@link BackgroundUpdaterTask}
+   */
+  @Deprecated
+  public void init(@Nonnull AbstractPopup popup, @Nonnull Object component, @Nonnull Ref<UsageView> usageView) {
+    myPopup = popup;
+    if (component instanceof JBList) {
+      init((JBPopup)myPopup, new JBListUpdater((JBList)component), usageView);
     }
   }
 }

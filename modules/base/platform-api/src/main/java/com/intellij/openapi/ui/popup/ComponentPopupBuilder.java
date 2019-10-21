@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2014 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.ui.popup;
 
 import com.intellij.openapi.project.Project;
@@ -24,11 +10,12 @@ import com.intellij.util.BooleanFunction;
 import com.intellij.util.Processor;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
@@ -52,7 +39,7 @@ public interface ComponentPopupBuilder {
   ComponentPopupBuilder setFocusable(boolean focusable);
 
   @Nonnull
-  ComponentPopupBuilder setRequestFocusCondition(Project project, Condition<Project> condition);
+  ComponentPopupBuilder setRequestFocusCondition(@Nonnull Project project, @Nonnull Condition<? super Project> condition);
 
   /**
    * @see com.intellij.openapi.util.DimensionService
@@ -61,16 +48,16 @@ public interface ComponentPopupBuilder {
   ComponentPopupBuilder setDimensionServiceKey(@Nullable Project project, @NonNls String key, boolean useForXYLocation);
 
   @Nonnull
-  ComponentPopupBuilder setCancelCallback(Computable<Boolean> shouldProceed);
+  ComponentPopupBuilder setCancelCallback(@Nonnull Computable<Boolean> shouldProceed);
 
   @Nonnull
   ComponentPopupBuilder setCancelOnClickOutside(boolean cancel);
 
   @Nonnull
-  ComponentPopupBuilder addListener(JBPopupListener listener);
+  ComponentPopupBuilder addListener(@Nonnull JBPopupListener listener);
 
   @Nonnull
-  ComponentPopupBuilder setCancelOnMouseOutCallback(MouseChecker shouldCancel);
+  ComponentPopupBuilder setCancelOnMouseOutCallback(@Nonnull MouseChecker shouldCancel);
 
   @Nonnull
   JBPopup createPopup();
@@ -137,10 +124,10 @@ public interface ComponentPopupBuilder {
   ComponentPopupBuilder setCommandButton(@Nonnull ActiveComponent commandButton);
 
   @Nonnull
-  ComponentPopupBuilder setCouldPin(@Nullable Processor<JBPopup> callback);
+  ComponentPopupBuilder setCouldPin(@Nullable Processor<? super JBPopup> callback);
 
   @Nonnull
-  ComponentPopupBuilder setKeyboardActions(@Nonnull List<Pair<ActionListener, KeyStroke>> keyboardActions);
+  ComponentPopupBuilder setKeyboardActions(@Nonnull List<? extends Pair<ActionListener, KeyStroke>> keyboardActions);
 
   @Nonnull
   ComponentPopupBuilder setSettingButtons(@Nonnull Component button);
@@ -154,11 +141,22 @@ public interface ComponentPopupBuilder {
    * Allows to define custom strategy for processing {@link JBPopup#dispatchKeyEvent(KeyEvent)}.
    */
   @Nonnull
-  ComponentPopupBuilder setKeyEventHandler(@Nonnull BooleanFunction<KeyEvent> handler);
+  ComponentPopupBuilder setKeyEventHandler(@Nonnull BooleanFunction<? super KeyEvent> handler);
 
   @Nonnull
   ComponentPopupBuilder setShowBorder(boolean show);
 
   @Nonnull
   ComponentPopupBuilder setNormalWindowLevel(boolean b);
+
+  @Nonnull
+  default ComponentPopupBuilder setBorderColor(Color color) {
+    return this;
+  }
+
+  /**
+   * Set a handler to be called when popup is closed via {@link JBPopup#closeOk(InputEvent)}.
+   */
+  @Nonnull
+  ComponentPopupBuilder setOkHandler(@Nullable Runnable okHandler);
 }

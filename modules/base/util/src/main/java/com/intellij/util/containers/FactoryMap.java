@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2000-2019 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,31 +17,40 @@ package com.intellij.util.containers;
 
 import com.intellij.openapi.util.RecursionGuard;
 import com.intellij.openapi.util.RecursionManager;
-import com.intellij.util.ConcurrencyUtil;
+import com.intellij.util.DeprecatedMethodException;
 import com.intellij.util.Function;
-import com.intellij.util.ObjectUtil;
+import com.intellij.util.ObjectUtils;
 import gnu.trove.THashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentMap;
+import java.util.HashSet;
+import java.util.*;
+import java.util.function.Supplier;
 
 /**
- * @author peter
+ * a Map which computes the value associated with the key (via {@link #create(Object)} method) on first {@link #get(Object)} access.
+ * NOT THREAD SAFE.
+ * For thread-safe alternative please use {@link ConcurrentFactoryMap}
  */
 public abstract class FactoryMap<K, V> implements Map<K, V> {
-  private static final RecursionGuard ourGuard = RecursionManager.createGuard("factoryMap");
+  private Map<K, V> myMap;
 
-  // create map at once, no need to optimize here
-  private final Map<K, V> myMap = createMap();
+  /**
+   * @deprecated Use {@link #create(Function)} instead
+   */
+  @Deprecated
+  public FactoryMap() {
+    DeprecatedMethodException.report("Use FactoryMap.create*() instead");
+  }
+
+  private FactoryMap(boolean safe) {
+  }
+
 
   @Nonnull
   protected Map<K, V> createMap() {
-    return new THashMap<K, V>();
+    return new THashMap<>();
   }
 
   @Nullable
@@ -49,61 +58,70 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
 
   @Override
   public V get(Object key) {
-    Map<K, V> map = myMap;
+    Map<K, V> map = getMap();
     K k = notNull(key);
     V value = map.get(k);
     if (value == null) {
-      RecursionGuard.StackStamp stamp = ourGuard.markStack();
+      RecursionGuard.StackStamp stamp = RecursionManager.markStack();
+      //noinspection unchecked
       value = create((K)key);
       if (stamp.mayCacheNow()) {
         V v = notNull(value);
-        if (map instanceof ConcurrentMap) {
-          value = ConcurrencyUtil.cacheOrGet((ConcurrentMap<K, V>)map, k, v);
-        }
-        else {
-          map.put(k, v);
-        }
+        map.put(k, v);
       }
     }
-    return value == FAKE_NULL() ? null : value;
+    return nullize(value);
+  }
+
+  private Map<K, V> getMap() {
+    Map<K, V> map = myMap;
+    if (map == null) {
+      myMap = map = createMap();
+    }
+    return map;
   }
 
   private static <T> T FAKE_NULL() {
     //noinspection unchecked
-    return (T)ObjectUtil.NULL;
+    return (T)ObjectUtils.NULL;
   }
 
   private static <T> T notNull(final Object key) {
     //noinspection unchecked
-    return key == null ? FactoryMap.<T>FAKE_NULL() : (T)key;
+    return key == null ? FAKE_NULL() : (T)key;
+  }
+
+  @Nullable
+  private static <T> T nullize(T value) {
+    return value == FAKE_NULL() ? null : value;
   }
 
   @Override
   public final boolean containsKey(Object key) {
-    return myMap.containsKey(notNull(key));
+    return getMap().containsKey(notNull(key));
   }
 
   @Override
   public V put(K key, V value) {
     K k = notNull(key);
     V v = notNull(value);
-    v = myMap.put(k, v);
-    return v == FAKE_NULL() ? null : v;
+    v = getMap().put(k, v);
+    return nullize(v);
   }
 
   @Override
   public V remove(Object key) {
-    V v = myMap.remove(key);
-    return v == FAKE_NULL() ? null : v;
+    V v = getMap().remove(key);
+    return nullize(v);
   }
 
   @Nonnull
   @Override
   public Set<K> keySet() {
-    final Set<K> ts = myMap.keySet();
+    final Set<K> ts = getMap().keySet();
     K nullKey = FAKE_NULL();
     if (ts.contains(nullKey)) {
-      final HashSet<K> hashSet = new HashSet<K>(ts);
+      final java.util.HashSet<K> hashSet = new HashSet<>(ts);
       hashSet.remove(nullKey);
       hashSet.add(null);
       return hashSet;
@@ -111,41 +129,31 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
     return ts;
   }
 
-  @Nonnull
-  public Collection<V> notNullValues() {
-    final Collection<V> values = ContainerUtil.newArrayList(myMap.values());
-    for (Iterator<V> iterator = values.iterator(); iterator.hasNext(); ) {
-      if (iterator.next() == FAKE_NULL()) {
-        iterator.remove();
-      }
-    }
-    return values;
+  public boolean removeValue(Object value) {
+    Object t = notNull(value);
+    //noinspection SuspiciousMethodCalls
+    return getMap().values().remove(t);
   }
 
-  public boolean removeValue(Object value) {
-    Object t = ObjectUtil.notNull(value, FAKE_NULL());
-    //noinspection SuspiciousMethodCalls
-    return myMap.values().remove(t);
-  }
 
   @Override
   public void clear() {
-    myMap.clear();
+    getMap().clear();
   }
 
   @Override
   public int size() {
-    return myMap.size();
+    return getMap().size();
   }
 
   @Override
   public boolean isEmpty() {
-    return myMap.isEmpty();
+    return getMap().isEmpty();
   }
 
   @Override
   public boolean containsValue(final Object value) {
-    return myMap.containsValue(value);
+    return getMap().containsValue(value);
   }
 
   @Override
@@ -158,22 +166,39 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
   @Nonnull
   @Override
   public Collection<V> values() {
-    return myMap.values();
+    return ContainerUtil.map(getMap().values(), FactoryMap::nullize);
   }
 
   @Nonnull
   @Override
   public Set<Entry<K, V>> entrySet() {
-    return myMap.entrySet();
+    return ContainerUtil.map2Set(getMap().entrySet(), entry -> new AbstractMap.SimpleEntry<>(nullize(entry.getKey()), nullize(entry.getValue())));
   }
 
   @Nonnull
-  public static <K, V> FactoryMap<K, V> createMap(@Nonnull final Function<K, V> computeValue) {
-    return new FactoryMap<K, V>() {
+  public static <K, V> Map<K, V> create(@Nonnull final Function<? super K, ? extends V> computeValue) {
+    return new FactoryMap<K, V>(true) {
       @Nullable
       @Override
       protected V create(K key) {
         return computeValue.fun(key);
+      }
+    };
+  }
+
+  @Nonnull
+  public static <K, V> Map<K, V> createMap(@Nonnull final Function<? super K, ? extends V> computeValue, @Nonnull final Supplier<? extends Map<K, V>> mapCreator) {
+    return new FactoryMap<K, V>(true) {
+      @Nullable
+      @Override
+      protected V create(K key) {
+        return computeValue.fun(key);
+      }
+
+      @Nonnull
+      @Override
+      protected Map<K, V> createMap() {
+        return mapCreator.get();
       }
     };
   }

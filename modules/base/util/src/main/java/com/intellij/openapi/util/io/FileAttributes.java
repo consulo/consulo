@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package com.intellij.openapi.util.io;
 
 import org.intellij.lang.annotations.MagicConstant;
+import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
 
@@ -25,16 +26,20 @@ import static com.intellij.util.BitUtil.isSet;
  * @version 11.1
  * @see FileSystemUtil#getAttributes(String)
  */
-@SuppressWarnings("OctalInteger")
 public final class FileAttributes {
-  public enum Type { FILE, DIRECTORY, SPECIAL }
+  public enum Type {
+    FILE,
+    DIRECTORY,
+    SPECIAL
+  }
 
   public static final byte SYM_LINK = 0x01;
   public static final byte HIDDEN = 0x02;
   public static final byte READ_ONLY = 0x04;
 
   @MagicConstant(flags = {SYM_LINK, HIDDEN, READ_ONLY})
-  public @interface Flags { }
+  public @interface Flags {
+  }
 
   public static final FileAttributes BROKEN_SYMLINK = new FileAttributes(null, SYM_LINK, 0, 0);
 
@@ -71,6 +76,7 @@ public final class FileAttributes {
     this.lastModified = lastModified;
   }
 
+  @Nonnull
   private static Type type(boolean isDirectory, boolean isSpecial) {
     return isDirectory ? Type.DIRECTORY : isSpecial ? Type.SPECIAL : Type.FILE;
   }
@@ -125,7 +131,7 @@ public final class FileAttributes {
   @Override
   public int hashCode() {
     int result = type != null ? type.hashCode() : 0;
-    result = 31 * result + (int)flags;
+    result = 31 * result + flags;
     result = 31 * result + (int)(length ^ (length >>> 32));
     result = 31 * result + (int)(lastModified ^ (lastModified >>> 32));
     return result;
@@ -152,5 +158,11 @@ public final class FileAttributes {
 
     sb.append(']');
     return sb.toString();
+  }
+
+  @Nonnull
+  public static FileAttributes createFrom(byte fileAttributesType, byte flags, long length, long lastModified) {
+    Type type = fileAttributesType == -1 ? null : Type.values()[fileAttributesType];
+    return new FileAttributes(type, flags, length, lastModified);
   }
 }

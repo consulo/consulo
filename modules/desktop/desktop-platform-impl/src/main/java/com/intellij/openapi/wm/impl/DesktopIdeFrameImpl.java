@@ -496,9 +496,9 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
     final LineSeparatorPanel lineSeparatorPanel = new LineSeparatorPanel(project);
     statusBar.addWidget(lineSeparatorPanel, "before " + encodingPanel.ID());
 
-    final ToggleReadOnlyAttributePanel readOnlyAttributePanel = new ToggleReadOnlyAttributePanel(project);
+    final ToggleReadOnlyAttributePanel readOnlyAttributePanel = new ToggleReadOnlyAttributePanel();
 
-    final InsertOverwritePanel insertOverwritePanel = new InsertOverwritePanel(project);
+    final ColumnSelectionModePanel insertOverwritePanel = new ColumnSelectionModePanel(project);
     statusBar.addWidget(insertOverwritePanel, "after " + encodingPanel.ID());
     statusBar.addWidget(readOnlyAttributePanel, "after " + insertOverwritePanel.ID());
 

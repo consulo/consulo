@@ -60,16 +60,11 @@ public interface StatusBarWidget extends Disposable {
     @Nonnull
     String getText();
 
-    @Nonnull
-    @Deprecated
-    String getMaxPossibleText();
-
     float getAlignment();
   }
 
   interface MultipleTextValuesPresentation extends WidgetPresentation {
     /**
-     *
      * @return null means the widget is unable to show the popup
      */
     @Nullable
@@ -81,10 +76,18 @@ public interface StatusBarWidget extends Disposable {
 
     @Nonnull
     @Deprecated
-    String getMaxValue();
+    default String getMaxValue() {
+      return "";
+    }
+
+    @Nullable
+    default Image getIcon() {
+      return null;
+    }
   }
 
   class WidgetBorder {
+    public static final Border ICON = JBUI.Borders.empty(0, 4);
     public static final Border INSTANCE = JBUI.Borders.empty(0, 2);
     public static final Border WIDE = JBUI.Borders.empty(0, 4);
   }

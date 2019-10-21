@@ -91,6 +91,7 @@ public interface PlatformDataKeys extends CommonDataKeys {
 
   Key<String> PREDEFINED_TEXT = Key.create("predefined.text.value");
 
+  Key<Object> SPEED_SEARCH_COMPONENT = Key.create("speed.search.component.value");
   Key<String> SEARCH_INPUT_TEXT = Key.create("search.input.text.value");
   /**
    * Returns java.awt.Point to guess where to show context menu invoked by key.

@@ -16,10 +16,11 @@
 package com.intellij.openapi.project;
 
 import com.intellij.openapi.util.Computable;
+import consulo.logging.attachment.Attachment;
+import consulo.logging.attachment.AttachmentFactory;
+import consulo.logging.attachment.ExceptionWithAttachments;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.io.PrintStream;
-import java.io.PrintWriter;
 
 /**
  * Thrown on accessing indices when they're not ready, in so-called dumb mode. Possible fixes:
@@ -43,6 +44,10 @@ import java.io.PrintWriter;
  * to avoid index query by using alternative resolve (and findClass) strategy, which is significantly slower and might return null. To do this,
  * use {@link DumbService#setAlternativeResolveEnabled(boolean)}.
  *
+ * <li> If you're performing a long modal operation which leads to a root change in the middle (or otherwise causes indexing),
+ * but you need indices after that, you can call {@link DumbService#completeJustSubmittedTasks()} before performing
+ * those index queries.
+ *
  * <li> It's preferable to avoid the exception entirely by adding {@link DumbService#isDumb()} checks where necessary.
  * </ul>
  *
@@ -50,37 +55,29 @@ import java.io.PrintWriter;
  * @see DumbService
  * @see DumbAware
  */
-public class IndexNotReadyException extends RuntimeException {
-  @Nullable private final Throwable myStartTrace;
+public class IndexNotReadyException extends RuntimeException implements ExceptionWithAttachments {
+  @Nullable
+  private final Throwable myStartTrace;
 
-  public IndexNotReadyException() {
-    this(null);
-  }
-
-  public IndexNotReadyException(@Nullable Throwable startTrace) {
+  // constructor is private to not let ForkJoinTask.getThrowableException() clone this by reflection causing invalid nesting etc
+  private IndexNotReadyException(@Nullable Throwable startTrace) {
     super("Please change caller according to " + IndexNotReadyException.class.getName() + " documentation");
     myStartTrace = startTrace;
   }
 
+  @Nonnull
   @Override
-  public void printStackTrace(PrintStream s) {
-    super.printStackTrace(s);
-    if (myStartTrace != null) {
-      s.println();
-      s.println("-----------");
-      s.println("Indexing started at:");
-      myStartTrace.printStackTrace(s);
-    }
+  public Attachment[] getAttachments() {
+    return myStartTrace == null ? Attachment.EMPTY_ARRAY : new Attachment[]{AttachmentFactory.get().create("indexingStart", myStartTrace)};
   }
 
-  @Override
-  public void printStackTrace(PrintWriter s) {
-    super.printStackTrace(s);
-    if (myStartTrace != null) {
-      s.println();
-      s.println("-----------");
-      s.println("Indexing started at:");
-      myStartTrace.printStackTrace(s);
-    }
+  @Nonnull
+  public static IndexNotReadyException create() {
+    return create(null);
+  }
+
+  @Nonnull
+  public static IndexNotReadyException create(@Nullable Throwable startTrace) {
+    return new IndexNotReadyException(startTrace);
   }
 }

@@ -70,6 +70,11 @@
       <optional>true</optional>
     </dependency>
     <dependency>
+      <groupId>org.lz4</groupId>
+      <artifactId>lz4-java</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
       <groupId>oro</groupId>
       <artifactId>oro</artifactId>
       <optional>true</optional>

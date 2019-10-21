@@ -23,8 +23,6 @@ import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
 import com.intellij.icons.AllIcons;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageUtil;
-import com.intellij.openapi.Disposable;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.EditorBundle;
 import com.intellij.openapi.editor.HectorComponentPanel;
 import com.intellij.openapi.editor.HectorComponentPanelsProvider;
@@ -35,7 +33,6 @@ import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.profile.codeInspection.ui.ErrorsConfigurable;
@@ -45,10 +42,12 @@ import com.intellij.psi.PsiFile;
 import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.awt.RelativePoint;
+import com.intellij.util.Function;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-
+import consulo.logging.Logger;
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -81,14 +80,12 @@ public class HectorComponent extends JPanel {
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     final VirtualFile virtualFile = myFile.getContainingFile().getVirtualFile();
     LOG.assertTrue(virtualFile != null);
-    final boolean notInLibrary =
-      !fileIndex.isInLibrarySource(virtualFile) && !fileIndex.isInLibraryClasses(virtualFile) || fileIndex.isInContent(virtualFile);
+    final boolean notInLibrary = !fileIndex.isInLibrarySource(virtualFile) && !fileIndex.isInLibraryClasses(virtualFile) || fileIndex.isInContent(virtualFile);
     final FileViewProvider viewProvider = myFile.getViewProvider();
     final Set<Language> languages = new TreeSet<Language>(LanguageUtil.LANGUAGE_COMPARATOR);
     languages.addAll(viewProvider.getLanguages());
     for (Language language : languages) {
-      @SuppressWarnings("UseOfObsoleteCollectionType")
-      final Hashtable<Integer, JLabel> sliderLabels = new Hashtable<Integer, JLabel>();
+      @SuppressWarnings("UseOfObsoleteCollectionType") final Hashtable<Integer, JLabel> sliderLabels = new Hashtable<Integer, JLabel>();
       sliderLabels.put(1, new JLabel(EditorBundle.message("hector.none.slider.label"), AllIcons.Ide.HectorOff, SwingConstants.LEADING));
       sliderLabels.put(2, new JLabel(EditorBundle.message("hector.syntax.slider.label"), AllIcons.Ide.HectorSyntax, SwingConstants.LEADING));
       if (notInLibrary) {
@@ -105,7 +102,7 @@ public class HectorComponent extends JPanel {
         @Override
         public void stateChanged(ChangeEvent e) {
           int value = slider.getValue();
-          for (Enumeration<Integer> enumeration = sliderLabels.keys(); enumeration.hasMoreElements();) {
+          for (Enumeration<Integer> enumeration = sliderLabels.keys(); enumeration.hasMoreElements(); ) {
             Integer key = enumeration.nextElement();
             sliderLabels.get(key).setForeground(key.intValue() <= value ? UIUtil.getLabelForeground() : UIUtil.getLabelDisabledForeground());
           }
@@ -114,13 +111,11 @@ public class HectorComponent extends JPanel {
 
       final PsiFile psiRoot = viewProvider.getPsi(language);
       assert psiRoot != null : "No root in " + viewProvider + " for " + language;
-      slider.setValue(getValue(HighlightingLevelManager.getInstance(project).shouldHighlight(psiRoot), HighlightingLevelManager.getInstance(project).shouldInspect(
-        psiRoot)));
+      slider.setValue(getValue(HighlightingLevelManager.getInstance(project).shouldHighlight(psiRoot), HighlightingLevelManager.getInstance(project).shouldInspect(psiRoot)));
       mySliders.put(language, slider);
     }
 
-    GridBagConstraints gc = new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 0, 0, GridBagConstraints.NORTHWEST,
-                                                   GridBagConstraints.NONE, JBUI.insets(0, 5, 0, 0), 0, 0);
+    GridBagConstraints gc = new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 0, 0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, JBUI.insets(0, 5, 0, 0), 0, 0);
 
     JPanel panel = new JPanel(new GridBagLayout());
     panel.setBorder(IdeBorderFactory.createTitledBorder(EditorBundle.message("hector.highlighting.level.title"), false));
@@ -182,7 +177,7 @@ public class HectorComponent extends JPanel {
   public Dimension getPreferredSize() {
     final Dimension preferredSize = super.getPreferredSize();
     final int width = JBUI.scale(300);
-    if (preferredSize.width < width){
+    if (preferredSize.width < width) {
       preferredSize.width = width;
     }
     return preferredSize;
@@ -192,8 +187,7 @@ public class HectorComponent extends JPanel {
     for (JSlider slider : mySliders.values()) {
       slider.setOrientation(SwingConstants.HORIZONTAL);
       slider.setPreferredSize(JBUI.size(200, 40));
-      panel.add(slider, new GridBagConstraints(0, 1, 1, 1, 1, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-                                               JBUI.insets(5, 0, 5, 0), 0, 0));
+      panel.add(slider, new GridBagConstraints(0, 1, 1, 1, 1, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, JBUI.insets(5, 0, 5, 0), 0, 0));
     }
   }
 
@@ -206,52 +200,47 @@ public class HectorComponent extends JPanel {
       slider.setPreferredSize(JBUI.size(100, 100));
       borderPanel.add(new JLabel(language.getDisplayName()), BorderLayout.NORTH);
       borderPanel.add(slider, BorderLayout.CENTER);
-      panel.add(borderPanel, new GridBagConstraints(GridBagConstraints.RELATIVE, 1, 1, 1, 0, 1, GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
-                                                    JBUI.insets(0, 5, 0, 5), 0, 0));
+      panel.add(borderPanel, new GridBagConstraints(GridBagConstraints.RELATIVE, 1, 1, 1, 0, 1, GridBagConstraints.CENTER, GridBagConstraints.VERTICAL, JBUI.insets(0, 5, 0, 5), 0, 0));
     }
   }
 
-  public void showComponent(RelativePoint point) {
-    final JBPopup hector = JBPopupFactory.getInstance().createComponentPopupBuilder(this, this)
-      .setRequestFocus(true)
-      .setMovable(true)
-      .setCancelCallback(new Computable<Boolean>() {
-        @Override
-        public Boolean compute() {
-          for (HectorComponentPanel additionalPanel : myAdditionalPanels) {
-            if (!additionalPanel.canClose()) {
-              return Boolean.FALSE;
-            }
-          }
-          onClose();
-          return Boolean.TRUE;
+  public void showComponent(@Nonnull Component component, @Nonnull Function<? super Dimension, ? extends Point> offset) {
+    showComponent(new RelativePoint(component, offset.fun(getPreferredSize())));
+  }
+
+  public void showComponent(@Nonnull RelativePoint point) {
+    final JBPopup hector = JBPopupFactory.getInstance().createComponentPopupBuilder(this, this).setRequestFocus(true).setMovable(true).setCancelCallback(() -> {
+      for (HectorComponentPanel additionalPanel : myAdditionalPanels) {
+        if (!additionalPanel.canClose()) {
+          return Boolean.FALSE;
         }
-      })
-      .createPopup();
-    Disposer.register(myFile.getProject(), new Disposable() {
-      @Override
-      public void dispose() {
-        final JBPopup oldHector = getOldHector();
-        if (oldHector != null && !oldHector.isDisposed()) {
-          Disposer.dispose(oldHector);
-        }
-        Disposer.dispose(hector);
       }
+      onClose();
+      return Boolean.TRUE;
+    }).createPopup();
+    Disposer.register(myFile.getProject(), () -> {
+      final JBPopup oldHector = getOldHector();
+      if (oldHector != null && !oldHector.isDisposed()) {
+        Disposer.dispose(oldHector);
+      }
+      Disposer.dispose(hector);
     });
     final JBPopup oldHector = getOldHector();
-    if (oldHector != null){
+    if (oldHector != null) {
       oldHector.cancel();
-    } else {
-      myHectorRef = new WeakReference<JBPopup>(hector);
+    }
+    else {
+      myHectorRef = new WeakReference<>(hector);
+      // UIEventLogger.logUIEvent(UIEventId.HectorPopupDisplayed);
       hector.show(point);
     }
   }
 
   @Nullable
-  private JBPopup getOldHector(){
+  private JBPopup getOldHector() {
     if (myHectorRef == null) return null;
     final JBPopup hector = myHectorRef.get();
-    if (hector == null || !hector.isVisible()){
+    if (hector == null || !hector.isVisible()) {
       myHectorRef = null;
       return null;
     }
@@ -269,7 +258,6 @@ public class HectorComponent extends JPanel {
         }
       }
       forceDaemonRestart();
-      DaemonListeners.getInstance(myFile.getProject()).updateStatusBar();
     }
   }
 

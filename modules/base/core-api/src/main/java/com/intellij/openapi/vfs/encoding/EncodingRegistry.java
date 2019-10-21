@@ -18,9 +18,9 @@ package com.intellij.openapi.vfs.encoding;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.vfs.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.nio.charset.Charset;
 
 /**
@@ -28,6 +28,7 @@ import java.nio.charset.Charset;
  */
 public abstract class EncodingRegistry {
   public abstract boolean isNative2Ascii(@Nonnull VirtualFile virtualFile);
+
   public abstract boolean isNative2AsciiForPropertiesFiles();
 
   /**
@@ -37,21 +38,23 @@ public abstract class EncodingRegistry {
   public abstract Charset getDefaultCharset();
 
   /**
-   * @param virtualFile  file to get encoding for
+   * @param virtualFile       file to get encoding for
    * @param useParentDefaults true to determine encoding from the parent
    * @return encoding configured for this file in Settings|File Encodings or,
-   *         if useParentDefaults is true, encoding configured for nearest parent of virtualFile or,
-   *         null if there is no configured encoding found.
+   * if useParentDefaults is true, encoding configured for nearest parent of virtualFile or,
+   * null if there is no configured encoding found.
    */
   @Nullable
   public abstract Charset getEncoding(@Nullable VirtualFile virtualFile, boolean useParentDefaults);
 
   @Deprecated // return true always
-  public abstract boolean isUseUTFGuessing(VirtualFile virtualFile);
+  public boolean isUseUTFGuessing(VirtualFile virtualFile) {
+    return true;
+  }
 
   /**
    * @param virtualFileOrDir null means project
-   * @param charset null means remove mapping
+   * @param charset          null means remove mapping
    */
   public abstract void setEncoding(@Nullable VirtualFile virtualFileOrDir, @Nullable Charset charset);
 
@@ -69,8 +72,7 @@ public abstract class EncodingRegistry {
   }
 
 
-  public static <E extends Throwable> VirtualFile doActionAndRestoreEncoding(@Nonnull VirtualFile fileBefore,
-                                                                             @Nonnull ThrowableComputable<VirtualFile, E> action) throws E {
+  public static <E extends Throwable> VirtualFile doActionAndRestoreEncoding(@Nonnull VirtualFile fileBefore, @Nonnull ThrowableComputable<VirtualFile, E> action) throws E {
     EncodingRegistry registry = getInstance();
     Charset charsetBefore = registry.getEncoding(fileBefore, true);
     VirtualFile fileAfter = null;

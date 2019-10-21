@@ -15,10 +15,7 @@
  */
 package consulo.container.impl.parser;
 
-import com.intellij.ide.plugins.PluginBean;
-import com.intellij.ide.plugins.PluginDependency;
-import com.intellij.ide.plugins.PluginHelpSet;
-import com.intellij.ide.plugins.PluginVendor;
+import com.intellij.ide.plugins.*;
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.util.text.StringUtilRt;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
@@ -66,7 +63,7 @@ public class PluginBeanParser {
     }
 
     List<SimpleXmlElement> xiInclude = rootTag.getChildren("xi:include");
-    if(!xiInclude.isEmpty()) {
+    if (!xiInclude.isEmpty()) {
       for (SimpleXmlElement element : xiInclude) {
         imports.add(element.getAttributeValue("href"));
       }
@@ -133,6 +130,10 @@ public class PluginBeanParser {
       pluginBean.dependencies = pluginDependencies;
     }
 
+    pluginBean.applicationListeners = readListeners(rootTag, "applicationListeners");
+    pluginBean.projectListeners = readListeners(rootTag, "projectListeners");
+    pluginBean.moduleListeners = readListeners(rootTag, "moduleListeners");
+
     // region deprecated stuff
     List<ComponentConfig> appComponents = new ArrayList<ComponentConfig>();
     for (SimpleXmlElement appComponentElements : rootTag.getChildren("application-components")) {
@@ -155,6 +156,36 @@ public class PluginBeanParser {
     // endregion
 
     return pluginBean;
+  }
+
+  private static List<PluginListenerDescriptor> readListeners(SimpleXmlElement parent, String tagName) {
+    List<SimpleXmlElement> children = parent.getChildren(tagName);
+    if (children.isEmpty()) {
+      return Collections.emptyList();
+    }
+
+    List<PluginListenerDescriptor> list = new ArrayList<PluginListenerDescriptor>();
+
+    for (SimpleXmlElement listenersElement : children) {
+      for (SimpleXmlElement listenerElement : listenersElement.getChildren()) {
+        String implClass = listenerElement.getAttributeValue("class");
+        String topicClass = listenerElement.getAttributeValue("topic");
+        boolean activeInTestMode = Boolean.valueOf(listenerElement.getAttributeValue("activeInTestMode", "true"));
+        boolean activeInHeadlessMode = Boolean.valueOf(listenerElement.getAttributeValue("activeInHeadlessMode", "true"));
+
+        if (implClass == null) {
+          throw new IllegalArgumentException("'class' empty: " + listenerElement);
+        }
+
+        if (topicClass == null) {
+          throw new IllegalArgumentException("'topic' empty: " + listenerElement);
+        }
+
+        list.add(new PluginListenerDescriptor(implClass, topicClass, activeInTestMode, activeInHeadlessMode));
+      }
+    }
+
+    return list;
   }
 
   @Nonnull

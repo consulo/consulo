@@ -21,7 +21,6 @@ import com.intellij.codeInsight.actions.MultiCaretCodeInsightActionHandler;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.ide.highlighter.custom.SyntaxTable;
 import com.intellij.injected.editor.EditorWindow;
-import com.intellij.injected.editor.InjectedCaret;
 import com.intellij.lang.Commenter;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageCommenters;
@@ -41,15 +40,16 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.*;
+import com.intellij.psi.impl.source.tree.injected.InjectedCaret;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.containers.IntArrayList;
 import com.intellij.util.text.CharArrayUtil;
 import gnu.trove.THashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

@@ -19,6 +19,7 @@ import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.FileASTNode;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -28,8 +29,6 @@ import com.intellij.psi.stubs.PsiFileStub;
 import com.intellij.psi.stubs.PsiFileStubImpl;
 import com.intellij.psi.stubs.Stub;
 import com.intellij.psi.stubs.StubElement;
-import consulo.logging.Logger;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -43,13 +42,13 @@ public abstract class SubstrateRef {
   public abstract ASTNode getNode();
 
   @Nullable
-  public Stub getStub(int stubIndex) {
+  public Stub getStub() {
     return null;
   }
 
   @Nullable
-  public Stub getGreenStub(int index) {
-    return getStub(index);
+  public Stub getGreenStub() {
+    return getStub();
   }
 
   public abstract boolean isValid();
@@ -120,7 +119,7 @@ public abstract class SubstrateRef {
 
     @Nonnull
     @Override
-    public Stub getStub(int stubIndex) {
+    public Stub getStub() {
       return myStub;
     }
 
@@ -153,8 +152,7 @@ public abstract class SubstrateRef {
       ApplicationManager.getApplication().assertReadAccessAllowed();
 
       String reason = ((PsiFileStubImpl<?>)stub).getInvalidationReason();
-      PsiInvalidElementAccessException exception =
-              new PsiInvalidElementAccessException(myStub.getPsi(), "no psi for file stub " + stub + ", invalidation reason=" + reason, null);
+      PsiInvalidElementAccessException exception = new PsiInvalidElementAccessException(myStub.getPsi(), "no psi for file stub " + stub + ", invalidation reason=" + reason, null);
       if (PsiFileImpl.STUB_PSI_MISMATCH.equals(reason)) {
         // we're between finding stub-psi mismatch and the next EDT spot where the file is reparsed and stub rebuilt
         //    see com.intellij.psi.impl.source.PsiFileImpl.rebuildStub()

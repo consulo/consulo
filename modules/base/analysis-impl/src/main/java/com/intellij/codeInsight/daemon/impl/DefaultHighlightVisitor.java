@@ -104,7 +104,7 @@ class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
 
     if (myAnnotationHolder.hasAnnotations()) {
       for (Annotation annotation : myAnnotationHolder) {
-        myHolder.add(HighlightInfo.fromAnnotation(annotation, null, myBatchMode));
+        myHolder.add(HighlightInfo.fromAnnotation(annotation, myBatchMode));
       }
       myAnnotationHolder.clear();
     }

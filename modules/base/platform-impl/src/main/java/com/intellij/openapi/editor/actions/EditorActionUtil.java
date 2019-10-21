@@ -24,7 +24,6 @@
  */
 package com.intellij.openapi.editor.actions;
 
-import com.intellij.ide.ui.customization.CustomActionsSchema;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
@@ -828,20 +827,14 @@ public class EditorActionUtil {
     setupSelection(editor, isWithSelection, selectionStart, blockSelectionStart);
   }
 
-  public static EditorPopupHandler createEditorPopupHandler(@Nonnull final String groupId) {
-    return new EditorPopupHandler() {
-      @Override
-      public void invokePopup(final EditorMouseEvent event) {
-        if (!event.isConsumed() && event.getArea() == EditorMouseEventArea.EDITING_AREA) {
-          ActionGroup group = (ActionGroup)CustomActionsSchema.getInstance().getCorrectedAction(groupId);
-          showEditorPopup(event, group);
-        }
-      }
-    };
-  }
-
+  /**
+   * @deprecated Use {@link EditorEx#setContextMenuGroupId(String)} or
+   * {@link EditorEx#installPopupHandler(com.intellij.openapi.editor.ex.EditorPopupHandler)} instead. To be removed in version 2020.2.
+   */
+  @Deprecated
+  //@ApiStatus.ScheduledForRemoval(inVersion = "2020.2")
   public static EditorPopupHandler createEditorPopupHandler(@Nonnull final ActionGroup group) {
-    return new EditorPopupHandler() {
+    return new EditorPopupHandler () {
       @Override
       public void invokePopup(final EditorMouseEvent event) {
         showEditorPopup(event, group);

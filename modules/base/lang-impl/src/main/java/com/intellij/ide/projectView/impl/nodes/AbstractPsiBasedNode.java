@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.intellij.ide.projectView.impl.nodes;
 
@@ -27,6 +13,8 @@ import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.ValidateableNode;
 import com.intellij.navigation.NavigationItem;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
@@ -41,18 +29,18 @@ import com.intellij.pom.StatePreservingNavigatable;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilBase;
-import consulo.application.AccessRule;
+import com.intellij.psi.util.PsiUtilCore;
+import com.intellij.util.AstLoadingFilter;
 import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdaters;
-import consulo.logging.Logger;
 import consulo.ui.image.Image;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 
 /**
  * Class for node descriptors based on PsiElements. Subclasses should define
@@ -68,32 +56,32 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
   }
 
   @Nullable
-  public PsiElement getPsiElement() {
-    return extractPsiFromValue();
-  }
-
-  @Nullable
   protected abstract PsiElement extractPsiFromValue();
 
   @Nullable
   protected abstract Collection<AbstractTreeNode> getChildrenImpl();
 
-  protected abstract void updateImpl(final PresentationData data);
+  protected abstract void updateImpl(@Nonnull PresentationData data);
 
   @Override
   @Nonnull
-  public final Collection<AbstractTreeNode> getChildren() {
+  public final Collection<? extends AbstractTreeNode> getChildren() {
+    return AstLoadingFilter.disallowTreeLoading(this::doGetChildren);
+  }
+
+  @Nonnull
+  private Collection<? extends AbstractTreeNode> doGetChildren() {
     final PsiElement psiElement = extractPsiFromValue();
     if (psiElement == null) {
       return new ArrayList<>();
     }
-    final boolean valid = psiElement.isValid();
-    if (!LOG.assertTrue(valid)) {
+    if (!psiElement.isValid()) {
+      LOG.error(new IllegalStateException("Node contains invalid PSI: " + "\n" + getClass() + " [" + this + "]" + "\n" + psiElement.getClass() + " [" + psiElement + "]"));
       return Collections.emptyList();
     }
 
     final Collection<AbstractTreeNode> children = getChildrenImpl();
-    return children != null ? children : Collections.<AbstractTreeNode>emptyList();
+    return children != null ? children : Collections.emptyList();
   }
 
   @Override
@@ -103,12 +91,12 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
   }
 
   protected boolean isMarkReadOnly() {
-    final AbstractTreeNode parent = getParent();
+    final AbstractTreeNode<?> parent = getParent();
     if (parent == null) {
       return false;
     }
     if (parent instanceof AbstractPsiBasedNode) {
-      final PsiElement psiElement = ((AbstractPsiBasedNode)parent).extractPsiFromValue();
+      final PsiElement psiElement = ((AbstractPsiBasedNode<?>)parent).extractPsiFromValue();
       return psiElement instanceof PsiDirectory;
     }
 
@@ -116,16 +104,16 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
     return parentValue instanceof PsiDirectory || parentValue instanceof Module;
   }
 
-
   @Override
   public FileStatus getFileStatus() {
-    VirtualFile file = getVirtualFileForValue();
-    if (file == null) {
+    return computeFileStatus(getVirtualFileForValue(), Objects.requireNonNull(getProject()));
+  }
+
+  protected static FileStatus computeFileStatus(@Nullable VirtualFile virtualFile, @Nonnull Project project) {
+    if (virtualFile == null) {
       return FileStatus.NOT_CHANGED;
     }
-    else {
-      return FileStatusManager.getInstance(getProject()).getStatus(file);
-    }
+    return FileStatusManager.getInstance(project).getStatus(virtualFile);
   }
 
   @Nullable
@@ -134,14 +122,18 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
     if (psiElement == null) {
       return null;
     }
-    return PsiUtilBase.getVirtualFile(psiElement);
+    return PsiUtilCore.getVirtualFile(psiElement);
   }
 
   // Should be called in atomic action
 
   @Override
-  public void update(final PresentationData data) {
-    AccessRule.read(() -> {
+  public void update(@Nonnull final PresentationData data) {
+    AstLoadingFilter.disallowTreeLoading(() -> doUpdate(data));
+  }
+
+  private void doUpdate(@Nonnull PresentationData data) {
+    ApplicationManager.getApplication().runReadAction(() -> {
       if (!validate()) {
         return;
       }
@@ -223,13 +215,13 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
       return false;
     }
     final VirtualFile valueFile = containingFile.getVirtualFile();
-    return valueFile != null && file.equals(valueFile);
+    return file.equals(valueFile);
   }
 
   @Nullable
   public NavigationItem getNavigationItem() {
     final PsiElement psiElement = extractPsiFromValue();
-    return (psiElement instanceof NavigationItem) ? (NavigationItem)psiElement : null;
+    return psiElement instanceof NavigationItem ? (NavigationItem)psiElement : null;
   }
 
   @Override
@@ -246,14 +238,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
 
   @Override
   public void navigate(boolean requestFocus) {
-    if (canNavigate()) {
-      if (requestFocus) {
-        NavigationUtil.activateFileWithPsiElement(extractPsiFromValue(), true);
-      }
-      else {
-        getNavigationItem().navigate(requestFocus);
-      }
-    }
+    navigate(requestFocus, false);
   }
 
   @Override

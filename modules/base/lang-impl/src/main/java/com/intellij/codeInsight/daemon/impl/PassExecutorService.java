@@ -1,4 +1,4 @@
-// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.intellij.codeInsight.daemon.impl;
 
@@ -13,6 +13,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -24,7 +25,6 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
@@ -35,7 +35,6 @@ import com.intellij.util.Functions;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import consulo.application.ex.ApplicationEx2;
-import consulo.logging.Logger;
 import gnu.trove.THashMap;
 import gnu.trove.TIntObjectHashMap;
 import org.jetbrains.annotations.NonNls;
@@ -51,7 +50,7 @@ import java.util.regex.Pattern;
 /**
  * @author cdr
  */
-class PassExecutorService implements Disposable {
+final class PassExecutorService implements Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.daemon.impl.PassExecutorService");
   private static final boolean CHECK_CONSISTENCY = ApplicationManager.getApplication().isUnitTestMode();
 
@@ -189,7 +188,7 @@ class PassExecutorService implements Disposable {
     log(updateProgress, null, vFiles + " ----- starting " + threadsToStartCountdown.get(), freePasses);
 
     for (ScheduledPass dependentPass : dependentPasses) {
-      mySubmittedPasses.put(dependentPass, Job.NULL_JOB);
+      mySubmittedPasses.put(dependentPass, Job.nullJob());
     }
     for (ScheduledPass freePass : freePasses) {
       submit(freePass);
@@ -245,6 +244,13 @@ class PassExecutorService implements Disposable {
         @Override
         public void doApplyInformationToEditor() {
           pass.applyInformationToEditor();
+          if (document != null) {
+            VirtualFile file = FileDocumentManager.getInstance().getFile(document);
+            FileEditor[] editors = file == null ? new FileEditor[0] : FileEditorManager.getInstance(myProject).getEditors(file);
+            for (FileEditor editor : editors) {
+              repaintErrorStripeAndIcon(editor);
+            }
+          }
         }
       };
       textEditorHighlightingPass.setId(id.incrementAndGet());
@@ -309,7 +315,7 @@ class PassExecutorService implements Disposable {
 
     if (pass.isRunIntentionPassAfter() && fileEditor instanceof TextEditor) {
       Editor editor = ((TextEditor)fileEditor).getEditor();
-      ShowIntentionsPass ip = new ShowIntentionsPass(myProject, editor, -1);
+      ShowIntentionsPass ip = new ShowIntentionsPass(myProject, editor, false);
       ip.setId(nextPassId.incrementAndGet());
       ip.setCompletionPredecessorIds(new int[]{scheduledPass.myPass.getId()});
 
@@ -474,8 +480,8 @@ class PassExecutorService implements Disposable {
                                               @Nonnull final DaemonProgressIndicator updateProgress,
                                               @Nonnull final AtomicInteger threadsToStartCountdown,
                                               @Nonnull Runnable callbackOnApplied) {
-    ApplicationManager.getApplication().invokeLater((DumbAwareRunnable)() -> {
-      if (isDisposed() || myProject.isDisposed() || !fileEditor.isValid()) {
+    ApplicationManager.getApplication().invokeLater(() -> {
+      if (isDisposed() || !fileEditor.isValid()) {
         updateProgress.cancel();
       }
       if (updateProgress.isCanceled()) {
@@ -486,6 +492,7 @@ class PassExecutorService implements Disposable {
       try {
         if (fileEditor.getComponent().isDisplayable() || ApplicationManager.getApplication().isHeadlessEnvironment()) {
           pass.applyInformationToEditor();
+          repaintErrorStripeAndIcon(fileEditor);
           FileStatusMap fileStatusMap = DaemonCodeAnalyzerEx.getInstanceEx(myProject).getFileStatusMap();
           if (document != null) {
             fileStatusMap.markFileUpToDate(document, pass.getId());
@@ -516,8 +523,14 @@ class PassExecutorService implements Disposable {
     }, updateProgress.getModalityState());
   }
 
-  protected boolean isDisposed() {
-    return isDisposed;
+  private void repaintErrorStripeAndIcon(@Nonnull FileEditor fileEditor) {
+    if (fileEditor instanceof TextEditor) {
+      DefaultHighlightInfoProcessor.repaintErrorStripeAndIcon(((TextEditor)fileEditor).getEditor(), myProject);
+    }
+  }
+
+  private boolean isDisposed() {
+    return isDisposed || myProject.isDisposedOrDisposeInProgress();
   }
 
   @Nonnull

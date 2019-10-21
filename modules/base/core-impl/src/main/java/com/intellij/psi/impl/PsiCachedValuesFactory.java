@@ -1,29 +1,15 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.intellij.psi.impl;
 
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.ParameterizedCachedValueProvider;
-import com.intellij.psi.util.ParameterizedCachedValue;
 import com.intellij.psi.util.CachedValue;
-import com.intellij.util.*;
+import com.intellij.psi.util.CachedValueProvider;
+import com.intellij.psi.util.ParameterizedCachedValue;
+import com.intellij.psi.util.ParameterizedCachedValueProvider;
+import com.intellij.util.CachedValuesFactory;
 import javax.annotation.Nonnull;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -31,45 +17,23 @@ import javax.inject.Singleton;
  * @author Dmitry Avdeev
  */
 @Singleton
-public class PsiCachedValuesFactory implements CachedValuesFactory {
-
-  private final Project myProject;
+public final class PsiCachedValuesFactory implements CachedValuesFactory {
   private final PsiManager myManager;
 
   @Inject
-  public PsiCachedValuesFactory(PsiManager manager) {
-    myManager = manager;
-    myProject = manager.getProject();
+  public PsiCachedValuesFactory(@Nonnull PsiManager psiManager) {
+    myManager = psiManager;
   }
 
+  @Nonnull
   @Override
   public <T> CachedValue<T> createCachedValue(@Nonnull CachedValueProvider<T> provider, boolean trackValue) {
-    return trackValue ? new PsiCachedValueImpl<T>(myManager, provider) {
-      @Override
-      protected Object[] getDependencies(CachedValueProvider.Result<T> result) {
-        return getDependenciesPlusValue(result);
-      }
-    } : new PsiCachedValueImpl<>(myManager, provider);
+    return new PsiCachedValueImpl<>(myManager, provider, trackValue);
   }
 
+  @Nonnull
   @Override
-  public <T, P> ParameterizedCachedValue<T, P> createParameterizedCachedValue(@Nonnull ParameterizedCachedValueProvider<T, P> provider,
-                                                                              boolean trackValue) {
-    return trackValue ? new PsiParameterizedCachedValue<T, P>(myManager, provider) {
-      @Override
-      public boolean isFromMyProject(Project project) {
-        return myProject == project;
-      }
-
-      @Override
-      protected Object[] getDependencies(CachedValueProvider.Result<T> tResult) {
-        return getDependenciesPlusValue(tResult);
-      }
-    } : new PsiParameterizedCachedValue<T, P>(myManager, provider) {
-      @Override
-      public boolean isFromMyProject(Project project) {
-        return myProject == project;
-      }
-    };
+  public <T, P> ParameterizedCachedValue<T, P> createParameterizedCachedValue(@Nonnull ParameterizedCachedValueProvider<T, P> provider, boolean trackValue) {
+    return new PsiParameterizedCachedValue<>(myManager, provider, trackValue);
   }
 }

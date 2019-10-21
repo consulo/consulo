@@ -44,7 +44,7 @@ import java.awt.*;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-public final class ActionPopupMenuImpl extends ApplicationActivationListener.Adapter implements ActionPopupMenu {
+public final class ActionPopupMenuImpl implements ApplicationActivationListener, ActionPopupMenu {
 
   private final MyMenu myMenu;
   private final ActionManagerImpl myManager;
@@ -136,7 +136,7 @@ public final class ActionPopupMenuImpl extends ApplicationActivationListener.Ada
 
       private void disposeMenu() {
         myManager.removeActionPopup(ActionPopupMenuImpl.this);
-        MyMenu.this.removeAll();
+        removeAll();
         if (myConnection != null) {
           myConnection.disconnect();
         }
@@ -144,16 +144,11 @@ public final class ActionPopupMenuImpl extends ApplicationActivationListener.Ada
 
       @Override
       public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-        MyMenu.this.removeAll();
-        Utils.fillMenu(myGroup, MyMenu.this, !UISettings.getInstance().DISABLE_MNEMONICS, myPresentationFactory, myContext, myPlace, false,
-                       false, LaterInvocator.isInModalContext());
+        removeAll();
+        Utils.fillMenu(myGroup, MyMenu.this, !UISettings.getInstance().getDisableMnemonics(), myPresentationFactory, myContext, myPlace, false, LaterInvocator.isInModalContext(), false);
         myManager.addActionPopup(ActionPopupMenuImpl.this);
       }
     }
-  }
-
-  @Override
-  public void applicationActivated(IdeFrame ideFrame) {
   }
 
   @Override
@@ -162,5 +157,4 @@ public final class ActionPopupMenuImpl extends ApplicationActivationListener.Ada
       myMenu.setVisible(false);
     }
   }
-
 }

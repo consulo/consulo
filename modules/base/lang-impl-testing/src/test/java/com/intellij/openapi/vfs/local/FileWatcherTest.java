@@ -91,9 +91,9 @@ public abstract class FileWatcherTest extends PlatformLangTestCase {
     myWatcher = ((LocalFileSystemImpl)myFileSystem).getFileWatcher();
     assertNotNull(myWatcher);
     assertFalse(myWatcher.isOperational());
-    myWatcher.startup(new Consumer<Boolean>() {
+    myWatcher.startup(new Consumer<String>() {
       @Override
-      public void accept(Boolean reset) {
+      public void accept(String r) {
         myAlarm.cancelAllRequests();
         myAlarm.addRequest(() -> {
           myAccept = false;

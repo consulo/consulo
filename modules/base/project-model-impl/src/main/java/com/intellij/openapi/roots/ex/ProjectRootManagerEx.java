@@ -28,6 +28,8 @@ public abstract class ProjectRootManagerEx extends ProjectRootManager {
   // invokes runnable surrounded by beforeRootsChage()/rootsChanged() callbacks
   public abstract void makeRootsChange(@Nonnull Runnable runnable, boolean filetypes, boolean fireEvents);
 
+  public abstract void markRootsForRefresh();
+
   public abstract void mergeRootsChangesDuring(@Nonnull Runnable runnable);
 
   public abstract void clearScopesCachesForModules();

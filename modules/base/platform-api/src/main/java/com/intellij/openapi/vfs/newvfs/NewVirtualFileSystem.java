@@ -1,19 +1,4 @@
-/*
- * Copyright 2000-2012 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.vfs.newvfs;
 
 import com.intellij.openapi.util.io.FileAttributes;
@@ -21,24 +6,22 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileListener;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFileSystem;
-import org.jetbrains.annotations.NonNls;
+import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author max
  */
 public abstract class NewVirtualFileSystem implements FileSystemInterface, CachingVirtualFileSystem, VirtualFileSystem {
-  private final Map<VirtualFileListener, VirtualFileListener> myListenerWrappers = new HashMap<VirtualFileListener, VirtualFileListener>();
+  private final Map<VirtualFileListener, VirtualFileListener> myListenerWrappers = ContainerUtil.newConcurrentMap();
 
   @Nullable
-  public abstract VirtualFile findFileByPathIfCached(@Nonnull @NonNls final String path);
+  public abstract VirtualFile findFileByPathIfCached(@Nonnull String path);
 
-  @Nullable
   protected String normalize(@Nonnull String path) {
     return path;
   }
@@ -68,25 +51,22 @@ public abstract class NewVirtualFileSystem implements FileSystemInterface, Cachi
 
   @Override
   public void addVirtualFileListener(@Nonnull final VirtualFileListener listener) {
-    synchronized (myListenerWrappers) {
-      VirtualFileListener wrapper = new VirtualFileFilteringListener(listener, this);
-      VirtualFileManager.getInstance().addVirtualFileListener(wrapper);
-      myListenerWrappers.put(listener, wrapper);
-    }
+    VirtualFileListener wrapper = new VirtualFileFilteringListener(listener, this);
+    VirtualFileManager.getInstance().addVirtualFileListener(wrapper);
+    myListenerWrappers.put(listener, wrapper);
   }
 
   @Override
   public void removeVirtualFileListener(@Nonnull final VirtualFileListener listener) {
-    synchronized (myListenerWrappers) {
-      final VirtualFileListener wrapper = myListenerWrappers.remove(listener);
-      if (wrapper != null) {
-        VirtualFileManager.getInstance().removeVirtualFileListener(wrapper);
-      }
+    VirtualFileListener wrapper = myListenerWrappers.remove(listener);
+    if (wrapper != null) {
+      VirtualFileManager.getInstance().removeVirtualFileListener(wrapper);
     }
   }
 
   public abstract int getRank();
 
+  @Nonnull
   @Override
   public abstract VirtualFile copyFile(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent, @Nonnull String copyName) throws IOException;
 
@@ -94,6 +74,7 @@ public abstract class NewVirtualFileSystem implements FileSystemInterface, Cachi
   @Nonnull
   public abstract VirtualFile createChildDirectory(Object requestor, @Nonnull VirtualFile parent, @Nonnull String dir) throws IOException;
 
+  @Nonnull
   @Override
   public abstract VirtualFile createChildFile(Object requestor, @Nonnull VirtualFile parent, @Nonnull String file) throws IOException;
 
@@ -110,6 +91,7 @@ public abstract class NewVirtualFileSystem implements FileSystemInterface, Cachi
     return false;
   }
 
+  @Nonnull
   public String getCanonicallyCasedName(@Nonnull VirtualFile file) {
     return file.getName();
   }
@@ -118,9 +100,16 @@ public abstract class NewVirtualFileSystem implements FileSystemInterface, Cachi
    * Reads various file attributes in one shot (to reduce the number of native I/O calls).
    *
    * @param file file to get attributes of.
-   * @return attributes of a given file, or <code>null</code> if the file doesn't exist.
-   * @since 11.1
+   * @return attributes of a given file, or {@code null} if the file doesn't exist.
    */
   @Nullable
   public abstract FileAttributes getAttributes(@Nonnull VirtualFile file);
+
+  /**
+   * Returns {@code true} if {@code path} represents a directory with at least one child.
+   * Override if your file system can answer this question more efficiently (e.g. without enumerating all children).
+   */
+  public boolean hasChildren(@Nonnull VirtualFile file) {
+    return list(file).length != 0;
+  }
 }

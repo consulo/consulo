@@ -15,6 +15,7 @@
  */
 package com.intellij.codeInsight.completion;
 
+import com.intellij.codeInsight.lookup.Lookup;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupEvent;
 import com.intellij.featureStatistics.FeatureUsageTracker;
@@ -130,7 +131,7 @@ public class StatisticsUpdate implements Disposable {
     ((FeatureUsageTrackerImpl)FeatureUsageTracker.getInstance()).getCompletionStatistics().registerInvocation(mySpared);
   }
 
-  public void addSparedChars(CompletionProgressIndicator indicator, LookupElement item, InsertionContext context) {
+  public void addSparedChars(Lookup lookup, LookupElement item, InsertionContext context) {
     String textInserted;
     if (context.getOffsetMap().containsOffset(CompletionInitializationContext.START_OFFSET) &&
         context.getOffsetMap().containsOffset(InsertionContext.TAIL_OFFSET) &&
@@ -141,7 +142,7 @@ public class StatisticsUpdate implements Disposable {
       textInserted = item.getLookupString();
     }
     String withoutSpaces = StringUtil.replace(textInserted, new String[]{" ", "\t", "\n"}, new String[]{"", "", ""});
-    int spared = withoutSpaces.length() - indicator.getLookup().itemPattern(item).length();
+    int spared = withoutSpaces.length() - lookup.itemPattern(item).length();
     char completionChar = context.getCompletionChar();
 
     if (!LookupEvent.isSpecialCompletionChar(completionChar) && withoutSpaces.contains(String.valueOf(completionChar))) {

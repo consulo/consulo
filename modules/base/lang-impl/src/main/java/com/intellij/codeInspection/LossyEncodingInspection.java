@@ -119,7 +119,7 @@ public class LossyEncodingInspection extends LocalInspectionTool {
                                                         @Nonnull Charset charset,
                                                         @Nonnull List<ProblemDescriptor> descriptors) {
     if (FileDocumentManager.getInstance().isFileModified(virtualFile) // when file is modified, it's too late to reload it
-        || EncodingUtil.checkCanReload(virtualFile).second != null // can't reload in another encoding, no point trying
+        || !EncodingUtil.canReload(virtualFile) // can't reload in another encoding, no point trying
             ) {
       return true;
     }

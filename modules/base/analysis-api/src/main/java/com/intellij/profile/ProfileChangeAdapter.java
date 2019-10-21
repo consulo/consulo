@@ -15,9 +15,13 @@
  */
 package com.intellij.profile;
 
+import com.intellij.util.messages.Topic;
+
 import javax.annotation.Nullable;
 
 public interface ProfileChangeAdapter {
+  Topic<ProfileChangeAdapter> TOPIC = new Topic<>("ProfileChangeAdapter", ProfileChangeAdapter.class);
+
   default void profileChanged(@Nullable Profile profile) {
   }
 

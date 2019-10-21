@@ -179,9 +179,7 @@ public final class TrailingSpacesStripper extends FileDocumentManagerAdapter {
       caretOffsets[i] = caret.getOffset();
     }
 
-    boolean markAsNeedsStrippingLater =
-            ((DocumentImpl)document).stripTrailingSpaces(getProject(document, activeEditor),
-                                                         inChangedLinesOnly, skipCaretLines, caretOffsets);
+    boolean markAsNeedsStrippingLater = ((DocumentImpl)document).stripTrailingSpaces(getProject(document, activeEditor), inChangedLinesOnly, skipCaretLines ? caretOffsets : null);
 
     if (activeEditor != null && !ShutDownTracker.isShutdownHookRunning()) {
       activeEditor.getCaretModel().runBatchCaretOperation(() -> {

@@ -81,8 +81,8 @@ public abstract class MergeableLineMarkerInfo<T extends PsiElement> extends Line
   }
 
   @Nonnull
-  public static List<LineMarkerInfo> merge(@Nonnull List<MergeableLineMarkerInfo> markers) {
-    List<LineMarkerInfo> result = new SmartList<LineMarkerInfo>();
+  public static List<LineMarkerInfo<PsiElement>> merge(@Nonnull List<? extends MergeableLineMarkerInfo<PsiElement>> markers) {
+    List<LineMarkerInfo<PsiElement>> result = new SmartList<>();
     for (int i = 0; i < markers.size(); i++) {
       MergeableLineMarkerInfo marker = markers.get(i);
       List<MergeableLineMarkerInfo> toMerge = new SmartList<MergeableLineMarkerInfo>();

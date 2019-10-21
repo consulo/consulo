@@ -399,6 +399,22 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     return SHOW_STATUS_BAR;
   }
 
+  public int getMaxLookupWidth() {
+    return MAX_LOOKUP_WIDTH2;
+  }
+
+  public void setMaxLookupWidth(int width) {
+    MAX_LOOKUP_WIDTH2 = width;
+  }
+
+  public void setMaxLookupListHeight(int height) {
+    MAX_LOOKUP_LIST_HEIGHT = height;
+  }
+
+  public void setSortLookupElementsLexicographically(boolean value) {
+    SORT_LOOKUP_ELEMENTS_LEXICOGRAPHICALLY = value;
+  }
+
   public boolean getShowNavigationBar() {
     return SHOW_NAVIGATION_BAR;
   }
@@ -489,6 +505,22 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
   public boolean getCloseTabButtonOnTheRight() {
     return CLOSE_TAB_BUTTON_ON_THE_RIGHT;
+  }
+
+  public boolean getCycleScrolling() {
+    return CYCLE_SCROLLING;
+  }
+
+  public boolean getShowEditorToolTip() {
+    return SHOW_EDITOR_TOOLTIP;
+  }
+
+  public void setShowEditorToolTip(boolean value) {
+    SHOW_EDITOR_TOOLTIP = value;
+  }
+
+  public boolean getHideKnownExtensionInTabs() {
+    return HIDE_KNOWN_EXTENSION_IN_TABS;
   }
 
   /**

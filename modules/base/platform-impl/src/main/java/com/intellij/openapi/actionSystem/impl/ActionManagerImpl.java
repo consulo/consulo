@@ -171,9 +171,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
   private final List<ActionPopupMenuImpl> myPopups = new ArrayList<>();
 
-  private final Map<AnAction, DataContext> myQueuedNotifications = new LinkedHashMap<>();
-  private final Map<AnAction, AnActionEvent> myQueuedNotificationsEvents = new LinkedHashMap<>();
-
   private boolean myTransparentOnlyUpdate;
 
   private final List<AnActionListener> myActionListeners = ContainerUtil.createLockFreeCopyOnWriteList();
@@ -1059,21 +1056,19 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
   public void removeActionPopup(final ActionPopupMenuImpl menu) {
     final boolean removed = myPopups.remove(menu);
-    if (removed && myPopups.isEmpty()) {
-      flushActionPerformed();
-    }
+    //if (removed && menu instanceof ActionPopupMenu) {
+    //  for (ActionPopupMenuListener listener : myActionPopupMenuListeners) {
+    //    listener.actionPopupMenuReleased((ActionPopupMenu)menu);
+    //  }
+    //}
   }
 
   @Override
   public void queueActionPerformedEvent(final AnAction action, DataContext context, AnActionEvent event) {
-    if (!myPopups.isEmpty()) {
-      myQueuedNotifications.put(action, context);
-    }
-    else {
+    if (myPopups.isEmpty()) {
       fireAfterActionPerformed(action, context, event);
     }
   }
-
 
   @Override
   public boolean isActionPopupStackEmpty() {
@@ -1083,16 +1078,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   @Override
   public boolean isTransparentOnlyActionsUpdateNow() {
     return myTransparentOnlyUpdate;
-  }
-
-  private void flushActionPerformed() {
-    final Set<AnAction> actions = myQueuedNotifications.keySet();
-    for (final AnAction eachAction : actions) {
-      final DataContext eachContext = myQueuedNotifications.get(eachAction);
-      fireAfterActionPerformed(eachAction, eachContext, myQueuedNotificationsEvents.get(eachAction));
-    }
-    myQueuedNotifications.clear();
-    myQueuedNotificationsEvents.clear();
   }
 
   @Override
@@ -1106,13 +1091,11 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   }
 
   @Override
-  public void fireBeforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
-    if (action != null) {
-      myPrevPerformedActionId = myLastPreformedActionId;
-      myLastPreformedActionId = getId(action);
-      //noinspection AssignmentToStaticFieldFromInstanceMethod
-      LastActionTracker.ourLastActionId = myLastPreformedActionId;
-    }
+  public void fireBeforeActionPerformed(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull AnActionEvent event) {
+    myPrevPerformedActionId = myLastPreformedActionId;
+    myLastPreformedActionId = getId(action);
+
+    LastActionTracker.ourLastActionId = myLastPreformedActionId;
 
     for (AnActionListener listener : myActionListeners) {
       listener.beforeActionPerformed(action, dataContext, event);
@@ -1122,13 +1105,11 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   }
 
   @Override
-  public void fireAfterActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
-    if (action != null) {
-      myPrevPerformedActionId = myLastPreformedActionId;
-      myLastPreformedActionId = getId(action);
-      //noinspection AssignmentToStaticFieldFromInstanceMethod
-      LastActionTracker.ourLastActionId = myLastPreformedActionId;
-    }
+  public void fireAfterActionPerformed(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull AnActionEvent event) {
+    myPrevPerformedActionId = myLastPreformedActionId;
+    myLastPreformedActionId = getId(action);
+
+    LastActionTracker.ourLastActionId = myLastPreformedActionId;
 
     for (AnActionListener listener : myActionListeners) {
       try {

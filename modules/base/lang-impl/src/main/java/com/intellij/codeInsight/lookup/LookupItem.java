@@ -18,7 +18,6 @@ package com.intellij.codeInsight.lookup;
 
 import com.intellij.codeInsight.CharTailType;
 import com.intellij.codeInsight.TailType;
-import com.intellij.codeInsight.completion.CompletionUtil;
 import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.lookup.impl.ElementLookupRenderer;
@@ -30,9 +29,9 @@ import com.intellij.openapi.util.Key;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.util.HashSet;
 import java.util.Map;
@@ -217,7 +216,7 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
 
     if (lookupElement instanceof LookupItem) {
       final LookupItem<?> item = (LookupItem)lookupElement;
-      final TailType attr = item.getAttribute(CompletionUtil.TAIL_TYPE_ATTR);
+      final TailType attr = item.getAttribute(TAIL_TYPE_ATTR);
       if (attr != null) {
         return attr;
       }

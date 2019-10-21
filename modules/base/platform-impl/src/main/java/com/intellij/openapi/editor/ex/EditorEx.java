@@ -25,10 +25,8 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LineExtensionInfo;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.impl.TextDrawingCallback;
-import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
@@ -188,18 +186,6 @@ public interface EditorEx extends Editor {
 
   VirtualFile getVirtualFile();
 
-  /**
-   * @deprecated Use {@link #offsetToLogicalPosition(int)}
-   * or {@link EditorUtil#calcColumnNumber(Editor, CharSequence, int, int, int)} instead. To be removed in IDEA 2017.2.
-   */
-  int calcColumnNumber(@Nonnull CharSequence text, int start, int offset, int tabSize);
-
-  /**
-   * @deprecated Use {@link #offsetToLogicalPosition(int)}
-   * or {@link EditorUtil#calcColumnNumber(Editor, CharSequence, int, int, int)} instead. To be removed in IDEA 2017.2.
-   */
-  int calcColumnNumber(int offset, int lineIndex);
-
   TextDrawingCallback getTextDrawingCallback();
 
   @Nonnull
@@ -219,15 +205,6 @@ public interface EditorEx extends Editor {
    */
   @Nonnull
   EditorColorsScheme createBoundColorSchemeDelegate(@Nullable EditorColorsScheme customGlobalScheme);
-
-  /**
-   * Instructs current editor about soft wraps appliance appliance use-case.
-   * <p/>
-   * {@link SoftWrapAppliancePlaces#MAIN_EDITOR} is used by default.
-   *
-   * @param place soft wraps appliance appliance use-case
-   */
-  void setSoftWrapAppliancePlace(@Nonnull SoftWrapAppliancePlaces place);
 
   /**
    * Allows to define <code>'placeholder text'</code> for the current editor, i.e. virtual text that will be represented until
@@ -352,4 +329,33 @@ public interface EditorEx extends Editor {
    */
   @Nullable
   String getContextMenuGroupId();
+
+  /**
+   * Allows to override default editor's context popup logic.
+   * <p>
+   * Default handler shows a context menu corresponding to a certain action group
+   * registered in {@link ActionManager}. Group's id can be changed using {@link #setContextMenuGroupId(String)}. For inline custom visual
+   * elements (inlays) action group id is obtained from {@link EditorCustomElementRenderer#getContextMenuGroupId(Inlay)}.
+   * <p>
+   * If multiple handlers are installed, they are processed in order, starting from the most recently installed one. Processing stops when
+   * some handler returns {@code true} from {@link EditorPopupHandler#handlePopup(EditorMouseEvent)} method.
+   *
+   * @see #uninstallPopupHandler(EditorPopupHandler)
+   */
+  void installPopupHandler(@Nonnull EditorPopupHandler popupHandler);
+
+  /**
+   * Removes previously installed {@link EditorPopupHandler}.
+   *
+   * @see #installPopupHandler(EditorPopupHandler)
+   */
+  void uninstallPopupHandler(@Nonnull EditorPopupHandler popupHandler);
+
+  /**
+   * If {@code cursor} parameter value is not {@code null}, sets custom cursor to {@link #getContentComponent() editor's content component},
+   * otherwise restores default editor cursor management logic ({@code requestor} parameter value should be the same in both setting and
+   * restoring requests). 'Restoring' call for a requestor, which hasn't set a cursor previously, has no effect. If multiple requestors have
+   * currently set custom cursors, one of them will be used (it is unspecified, which one).
+   */
+  void setCustomCursor(@Nonnull Object requestor, @Nullable Cursor cursor);
 }

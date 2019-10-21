@@ -30,12 +30,18 @@ public abstract class ActionPlaces {
   /**
    * consider to use {@link #isMainMenuOrActionSearch(String)} instead
    */
+  public static final String KEYBOARD_SHORTCUT = "keyboard shortcut";
+  public static final String MOUSE_SHORTCUT = "mouse shortcut";
+  public static final String FORCE_TOUCH = "force touch";
   public static final String MAIN_MENU = "MainMenu";
+
   public static final String MAIN_TOOLBAR = "MainToolbar";
   public static final String EDITOR_POPUP = "EditorPopup";
   public static final String EDITOR_TOOLBAR = "EditorToolbar";
   public static final String EDITOR_TAB_POPUP = "EditorTabPopup";
   public static final String EDITOR_TAB = "EditorTab";
+  public static final String EDITOR_GUTTER = "ICON_NAVIGATION";
+  public static final String EDITOR_GUTTER_POPUP = "ICON_NAVIGATION_SECONDARY_BUTTON";
   public static final String COMMANDER_POPUP = "CommanderPopup";
   public static final String COMMANDER_TOOLBAR = "CommanderToolbar";
   public static final String CONTEXT_TOOLBAR = "ContextToolbar";
@@ -71,6 +77,8 @@ public abstract class ActionPlaces {
   public static final String STRUCTURE_VIEW_TOOLBAR = "StructureViewToolbar";
   public static final String NAVIGATION_BAR_POPUP = "NavBar";
   public static final String NAVIGATION_BAR_TOOLBAR = "NavBarToolbar";
+
+  public static final String RIGHT_EDITOR_GUTTER_POPUP = "RightEditorGutterPopup";
 
   public static final String TODO_VIEW_POPUP = "TodoViewPopup";
   public static final String TODO_VIEW_TOOLBAR = "TodoViewToolbar";
@@ -121,6 +129,7 @@ public abstract class ActionPlaces {
 
   public static final String DIFF_TOOLBAR = "DiffPopup";
   public static final String CHANGES_LOCAL_DIFF_SETTINGS = "CHANGES_LOCAL_DIFF_SETTINGS";
+  public static final String INTENTION_MENU = "IntentionMenu";
 
   private static final String[] ourToolbarPlaces =
           {EDITOR_TOOLBAR, PROJECT_VIEW_TOOLBAR, TOOLBAR, TESTTREE_VIEW_TOOLBAR, MAIN_TOOLBAR, ANT_EXPLORER_TOOLBAR, ANT_MESSAGES_TOOLBAR,
@@ -135,7 +144,7 @@ public abstract class ActionPlaces {
   }
 
   public static boolean isMainMenuOrActionSearch(String place) {
-    return MAIN_MENU.equals(place) || ACTION_SEARCH.equals(place);
+    return MAIN_MENU.equals(place) || ACTION_SEARCH.equals(place) || KEYBOARD_SHORTCUT.equals(place) || MOUSE_SHORTCUT.equals(place) || FORCE_TOUCH.equals(place);
   }
 
   private static final String[] ourPopupPlaces =

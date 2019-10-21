@@ -301,7 +301,7 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
   }
 
   private JBPopup createPopup(Runnable onDispose) {
-    return myComboBoxAction.createPopup(getDataContext(), onDispose);
+    return myComboBoxAction.createPopup(this, getDataContext(), onDispose);
   }
 
   protected void updateSize() {

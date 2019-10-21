@@ -27,8 +27,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.util.ui.JBUI;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.JTextComponent;
@@ -132,6 +132,12 @@ public class TextComponentEditorImpl extends UserDataHolderBase implements TextC
   @Nonnull
   public SoftWrapModel getSoftWrapModel() {
     return mySoftWrapModel;
+  }
+
+  @Nonnull
+  @Override
+  public EditorKind getEditorKind() {
+    return EditorKind.UNTYPED;
   }
 
   @Nonnull

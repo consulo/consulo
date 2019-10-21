@@ -26,8 +26,8 @@ import consulo.logging.Logger;
 import consulo.ui.migration.IconLoaderFacade;
 import consulo.ui.migration.SwingImageRef;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -149,6 +149,14 @@ public final class IconLoader {
   @Nullable
   public static SwingImageRef findIcon(URL url) {
     return findIcon(url, true);
+  }
+
+
+  @Nullable
+  public static Icon findIcon(@NonNls @Nonnull String path, boolean strict) {
+    Class callerClass = ReflectionUtil.getGrandCallerClass();
+    if (callerClass == null) return null;
+    return findIcon(path, callerClass, false, strict);
   }
 
   @Nullable

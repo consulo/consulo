@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.editor.colors;
 
+import com.intellij.openapi.util.Key;
 import com.intellij.ui.Gray;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
@@ -22,9 +23,12 @@ import org.jetbrains.annotations.NonNls;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 public final class ColorKey implements Comparable<ColorKey> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.colors.ColorKey");
+  public static final Key<Function<ColorKey, Color>> FUNCTION_KEY = Key.create("COLOR_KEY_FUNCTION");
+
+  private static final Logger LOG = Logger.getInstance(ColorKey.class);
   private static final Color NULL_COLOR = Gray._0;
 
   private final String myExternalName;

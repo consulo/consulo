@@ -49,6 +49,8 @@ public class TodoConfiguration implements PersistentStateComponent<Element> {
   private TodoFilter[] myTodoFilters;
   private IndexPattern[] myIndexPatterns;
 
+  @NonNls
+  public static final String PROP_MULTILINE = "multiLine";
   @NonNls public static final String PROP_TODO_PATTERNS = "todoPatterns";
   @NonNls public static final String PROP_TODO_FILTERS = "todoFilters";
   @NonNls private static final String ELEMENT_PATTERN = "pattern";

@@ -24,7 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
-public class PersistentEnumeratorDelegate<Data> implements Closeable, Forceable {
+public class PersistentEnumeratorDelegate<Data> implements DataEnumeratorEx<Data>, Closeable, Forceable {
   @Nonnull
   protected final PersistentEnumeratorBase<Data> myEnumerator;
 
@@ -32,12 +32,9 @@ public class PersistentEnumeratorDelegate<Data> implements Closeable, Forceable 
     this(file, dataDescriptor, initialSize, null);
   }
 
-  public PersistentEnumeratorDelegate(@Nonnull final File file,
-                                      @Nonnull KeyDescriptor<Data> dataDescriptor,
-                                      final int initialSize,
-                                      @Nullable PagedFileStorage.StorageLockContext lockContext) throws IOException {
-    myEnumerator = useBtree() ? new PersistentBTreeEnumerator<Data>(file, dataDescriptor, initialSize, lockContext) :
-                   new PersistentEnumerator<Data>(file, dataDescriptor, initialSize);
+  public PersistentEnumeratorDelegate(@Nonnull final File file, @Nonnull KeyDescriptor<Data> dataDescriptor, final int initialSize, @Nullable PagedFileStorage.StorageLockContext lockContext)
+          throws IOException {
+    myEnumerator = useBtree() ? new PersistentBTreeEnumerator<>(file, dataDescriptor, initialSize, lockContext) : new PersistentEnumerator<>(file, dataDescriptor, initialSize);
   }
 
   public PersistentEnumeratorDelegate(@Nonnull final File file,
@@ -45,8 +42,7 @@ public class PersistentEnumeratorDelegate<Data> implements Closeable, Forceable 
                                       final int initialSize,
                                       @Nullable PagedFileStorage.StorageLockContext lockContext,
                                       int version) throws IOException {
-    myEnumerator = useBtree() ? new PersistentBTreeEnumerator<Data>(file, dataDescriptor, initialSize, lockContext, version) :
-                   new PersistentEnumerator<Data>(file, dataDescriptor, initialSize, null, version);
+    myEnumerator = useBtree() ? new PersistentBTreeEnumerator<>(file, dataDescriptor, initialSize, lockContext, version) : new PersistentEnumerator<>(file, dataDescriptor, initialSize, null, version);
   }
 
   static boolean useBtree() {

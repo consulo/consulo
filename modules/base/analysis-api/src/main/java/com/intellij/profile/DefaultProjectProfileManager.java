@@ -18,27 +18,24 @@ package com.intellij.profile;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.MainConfigurationStateSplitter;
 import com.intellij.openapi.components.PersistentStateComponent;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.util.xmlb.annotations.OptionTag;
+import consulo.logging.Logger;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,10 +45,14 @@ import java.util.Map;
 public abstract class DefaultProjectProfileManager extends ProjectProfileManager implements PersistentStateComponent<Element> {
   protected static final Logger LOG = Logger.getInstance("#com.intellij.profile.DefaultProjectProfileManager");
 
-  @NonNls public static final String SCOPES = "scopes";
-  @NonNls protected static final String SCOPE = "scope";
-  @NonNls public static final String PROFILE = "profile";
-  @NonNls protected static final String NAME = "name";
+  @NonNls
+  public static final String SCOPES = "scopes";
+  @NonNls
+  protected static final String SCOPE = "scope";
+  @NonNls
+  public static final String PROFILE = "profile";
+  @NonNls
+  protected static final String NAME = "name";
 
   private static final String VERSION = "1.0";
 
@@ -59,22 +60,27 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
   protected final Project myProject;
 
   protected String myProjectProfile;
-  /** This field is used for serialization. Do not rename it or make access weaker */
+  /**
+   * This field is used for serialization. Do not rename it or make access weaker
+   */
   public boolean USE_PROJECT_PROFILE = true;
 
   private final ApplicationProfileManager myApplicationProfileManager;
 
   private final Map<String, Profile> myProfiles = new THashMap<String, Profile>();
   protected final DependencyValidationManager myHolder;
-  private final List<ProfileChangeAdapter> myProfilesListener = ContainerUtil.createLockFreeCopyOnWriteList();
-  @NonNls private static final String PROJECT_DEFAULT_PROFILE_NAME = "Project Default";
 
-  public DefaultProjectProfileManager(@Nonnull final Project project,
-                                      @Nonnull ApplicationProfileManager applicationProfileManager,
-                                      @Nonnull DependencyValidationManager holder) {
+  private final ProfileChangeAdapter myListenerPublisher;
+
+  @NonNls
+  private static final String PROJECT_DEFAULT_PROFILE_NAME = "Project Default";
+
+  public DefaultProjectProfileManager(@Nonnull final Project project, @Nonnull ApplicationProfileManager applicationProfileManager, @Nonnull DependencyValidationManager holder) {
     myProject = project;
     myHolder = holder;
     myApplicationProfileManager = applicationProfileManager;
+
+    myListenerPublisher = project.getMessageBus().syncPublisher(ProfileChangeAdapter.TOPIC);
   }
 
   @Nonnull
@@ -90,12 +96,10 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
   @Override
   public synchronized void updateProfile(@Nonnull Profile profile) {
     myProfiles.put(profile.getName(), profile);
-    for (ProfileChangeAdapter profileChangeAdapter : myProfilesListener) {
-      profileChangeAdapter.profileChanged(profile);
-    }
+    myListenerPublisher.profileChanged(profile);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public synchronized Element getState() {
     Element state = new Element("settings");
@@ -213,18 +217,16 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
     myProjectProfile = newProfile;
     USE_PROJECT_PROFILE = newProfile != null;
     if (oldProfile != null) {
-      for (ProfileChangeAdapter adapter : myProfilesListener) {
-        adapter.profileActivated(getProfile(oldProfile), newProfile != null ?  getProfile(newProfile) : null);
-      }
+      myListenerPublisher.profileActivated(getProfile(oldProfile), newProfile != null ? getProfile(newProfile) : null);
     }
   }
 
   @Nonnull
-  public synchronized Profile getProjectProfileImpl(){
+  public synchronized Profile getProjectProfileImpl() {
     if (!USE_PROJECT_PROFILE) {
       return myApplicationProfileManager.getRootProfile();
     }
-    if (myProjectProfile == null || myProfiles.isEmpty()){
+    if (myProjectProfile == null || myProfiles.isEmpty()) {
       setProjectProfile(PROJECT_DEFAULT_PROFILE_NAME);
       final Profile projectProfile = myApplicationProfileManager.createProfile();
       projectProfile.copyFrom(myApplicationProfileManager.getRootProfile());
@@ -232,7 +234,7 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
       projectProfile.setName(PROJECT_DEFAULT_PROFILE_NAME);
       myProfiles.put(PROJECT_DEFAULT_PROFILE_NAME, projectProfile);
     }
-    else if (!myProfiles.containsKey(myProjectProfile)){
+    else if (!myProfiles.containsKey(myProjectProfile)) {
       setProjectProfile(myProfiles.keySet().iterator().next());
     }
     final Profile profile = myProfiles.get(myProjectProfile);
@@ -240,18 +242,9 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
     return profile;
   }
 
+  @Deprecated
   public void addProfileChangeListener(@Nonnull final ProfileChangeAdapter profilesListener, @Nonnull Disposable parent) {
-    myProfilesListener.add(profilesListener);
-    Disposer.register(parent, new Disposable() {
-      @Override
-      public void dispose() {
-        myProfilesListener.remove(profilesListener);
-      }
-    });
-  }
-
-  public void removeProfileChangeListener(@Nonnull ProfileChangeAdapter profilesListener) {
-    myProfilesListener.remove(profilesListener);
+    myProject.getMessageBus().connect(parent).subscribe(ProfileChangeAdapter.TOPIC, profilesListener);
   }
 
   public static class ProfileStateSplitter extends MainConfigurationStateSplitter {
@@ -280,13 +273,10 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
   }
 
   protected void fireProfilesInitialized() {
-    for (ProfileChangeAdapter profileChangeAdapter : myProfilesListener) {
-      profileChangeAdapter.profilesInitialized();
-    }
+    myListenerPublisher.profilesInitialized();
   }
+
   protected void fireProfilesShutdown() {
-    for (ProfileChangeAdapter profileChangeAdapter : myProfilesListener) {
-      profileChangeAdapter.profilesShutdown();
-    }
+    myListenerPublisher.profilesShutdown();
   }
 }

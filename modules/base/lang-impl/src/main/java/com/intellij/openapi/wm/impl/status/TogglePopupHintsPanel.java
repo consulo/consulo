@@ -1,24 +1,11 @@
-/*
- * Copyright 2000-2016 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.intellij.openapi.wm.impl.status;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.impl.HectorComponent;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
+import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.PowerSaveMode;
 import com.intellij.openapi.application.ApplicationManager;
@@ -26,28 +13,31 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
+import com.intellij.profile.Profile;
+import com.intellij.profile.ProfileChangeAdapter;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.ui.UIBundle;
-import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.UIUtil;
-
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBarWidget.Multiframe, StatusBarWidget.IconPresentation {
-  private consulo.ui.image.Image myCurrentIcon;
+  private Image myCurrentIcon;
   private String myToolTipText;
 
-  public TogglePopupHintsPanel(@Nonnull final Project project) {
+  public TogglePopupHintsPanel(@Nonnull Project project) {
     super(project);
-    myCurrentIcon = AllIcons.Ide.HectorNo;
-    myConnection.subscribe(PowerSaveMode.TOPIC, this::updateStatus);
+    myCurrentIcon = ImageEffects.grayed(AllIcons.Ide.HectorOff);
   }
 
   @Override
@@ -67,8 +57,8 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
   }
 
   @Override
-  @Nonnull
-  public consulo.ui.image.Image getIcon() {
+  @Nullable
+  public Image getIcon() {
     return myCurrentIcon;
   }
 
@@ -80,16 +70,37 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
   @Override
   public Consumer<MouseEvent> getClickConsumer() {
     return e -> {
-      Point point = new Point(0, 0);
       final PsiFile file = getCurrentFile();
       if (file != null) {
         if (!DaemonCodeAnalyzer.getInstance(file.getProject()).isHighlightingAvailable(file)) return;
         final HectorComponent component = new HectorComponent(file);
-        final Dimension dimension = component.getPreferredSize();
-        point = new Point(point.x - dimension.width, point.y - dimension.height);
-        component.showComponent(new RelativePoint(e.getComponent(), point));
+        component.showComponent(e.getComponent(), d -> new Point(-d.width, -d.height));
       }
     };
+  }
+
+  @Override
+  public void install(@Nonnull StatusBar statusBar) {
+    super.install(statusBar);
+    myConnection.subscribe(PowerSaveMode.TOPIC, this::updateStatus);
+    InspectionProjectProfileManager.getInstance(myProject).addProfileChangeListener(new ProfileChangeAdapter() {
+      @Override
+      public void profilesInitialized() {
+        updateStatus();
+      }
+
+      @Override
+      public void profileActivated(@javax.annotation.Nullable Profile oldProfile, @javax.annotation.Nullable Profile profile) {
+        updateStatus();
+      }
+
+      @Override
+      public void profileChanged(@javax.annotation.Nullable Profile profile) {
+        updateStatus();
+      }
+    }, this);
+
+    //myConnection.subscribe(FileHighlightingSettingListener.SETTING_CHANGE, (__, ___) -> updateStatus());
   }
 
   @Override
@@ -104,7 +115,7 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
   }
 
   public void clear() {
-    myCurrentIcon = AllIcons.Ide.HectorNo;
+    myCurrentIcon = ImageEffects.grayed(AllIcons.Ide.HectorOff);
     myToolTipText = null;
     myStatusBar.updateWidget(ID());
   }
@@ -113,20 +124,20 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
     UIUtil.invokeLaterIfNeeded(() -> updateStatus(getCurrentFile()));
   }
 
+
   private void updateStatus(PsiFile file) {
     if (isDisposed()) return;
     if (isStateChangeable(file)) {
       if (PowerSaveMode.isEnabled()) {
-        myCurrentIcon = AllIcons.Ide.HectorNo;
+        myCurrentIcon = ImageEffects.grayed(AllIcons.Ide.HectorOff);
         myToolTipText = "Code analysis is disabled in power save mode.\n";
       }
-      else if (HighlightingLevelManager.getInstance(myProject).shouldInspect(file)) {
+      else if (HighlightingLevelManager.getInstance(getProject()).shouldInspect(file)) {
         myCurrentIcon = AllIcons.Ide.HectorOn;
-        myToolTipText = "Current inspection profile: " +
-                        InspectionProjectProfileManager.getInstance(file.getProject()).getInspectionProfile().getName() +
-                        ".\n";
+        InspectionProfileImpl profile = InspectionProjectProfileManager.getInstance(file.getProject()).getCurrentProfile();
+        if (profile.wasInitialized()) myToolTipText = "Current inspection profile: " + profile.getName() + ".\n";
       }
-      else if (HighlightingLevelManager.getInstance(myProject).shouldHighlight(file)) {
+      else if (HighlightingLevelManager.getInstance(getProject()).shouldHighlight(file)) {
         myCurrentIcon = AllIcons.Ide.HectorSyntax;
         myToolTipText = "Highlighting level is: Syntax.\n";
       }
@@ -137,7 +148,7 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
       myToolTipText += UIBundle.message("popup.hints.panel.click.to.configure.highlighting.tooltip.text");
     }
     else {
-      myCurrentIcon = AllIcons.Ide.HectorNo;
+      myCurrentIcon = file != null ? ImageEffects.grayed(AllIcons.Ide.HectorOff) : null;
       myToolTipText = null;
     }
 
@@ -153,7 +164,7 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
   @Nullable
   private PsiFile getCurrentFile() {
     VirtualFile virtualFile = getSelectedFile();
-    if (virtualFile != null && virtualFile.isValid()){
+    if (virtualFile != null && virtualFile.isValid()) {
       return PsiManager.getInstance(getProject()).findFile(virtualFile);
     }
     return null;

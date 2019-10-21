@@ -309,8 +309,7 @@ class FindInProjectTask {
             if (hasTrigrams) {
               return TrigramIndex.isIndexable(fileType) && fileBasedIndex.isIndexingCandidate(file, TrigramIndex.INDEX_ID);
             }
-            CacheBuilderRegistry registry = CacheBuilderRegistry.getInstance();
-            return IdIndex.isIndexable(fileType, registry) && fileBasedIndex.isIndexingCandidate(file, IdIndex.NAME);
+            return IdIndex.isIndexable(fileType) && fileBasedIndex.isIndexingCandidate(file, IdIndex.NAME);
           }
         });
         return true;

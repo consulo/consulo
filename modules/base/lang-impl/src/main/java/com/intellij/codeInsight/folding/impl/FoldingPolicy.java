@@ -1,51 +1,43 @@
-/*
- * Copyright 2000-2011 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.intellij.codeInsight.folding.impl;
 
-import com.intellij.lang.Language;
 import com.intellij.lang.folding.FoldingBuilder;
-import com.intellij.lang.folding.LanguageFolding;
-import com.intellij.openapi.extensions.Extensions;
+import com.intellij.lang.folding.FoldingDescriptor;
+import consulo.logging.Logger;
+import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class FoldingPolicy {
-  
-  private static final GenericElementSignatureProvider GENERIC_PROVIDER = new GenericElementSignatureProvider();
-  
-  private FoldingPolicy() {}
+  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.folding.impl.FoldingPolicy");
 
-  public static boolean isCollapseByDefault(PsiElement element) {
-    final Language lang = element.getLanguage();
-    final FoldingBuilder foldingBuilder = LanguageFolding.INSTANCE.forLanguage(lang);
-    return foldingBuilder != null && foldingBuilder.isCollapsedByDefault(element.getNode());
+  private static final GenericElementSignatureProvider GENERIC_PROVIDER = new GenericElementSignatureProvider();
+
+  private FoldingPolicy() {
+  }
+
+  static boolean isCollapsedByDefault(@Nonnull FoldingDescriptor foldingDescriptor, @Nonnull FoldingBuilder foldingBuilder) {
+    try {
+      return foldingBuilder.isCollapsedByDefault(foldingDescriptor);
+    }
+    catch (IndexNotReadyException e) {
+      LOG.error(e);
+      return false;
+    }
   }
 
   @Nullable
   public static String getSignature(@Nonnull PsiElement element) {
-    for(ElementSignatureProvider provider: Extensions.getExtensions(ElementSignatureProvider.EP_NAME)) {
+    for (ElementSignatureProvider provider : ElementSignatureProvider.EP_NAME.getExtensionList()) {
       String signature = provider.getSignature(element);
       if (signature != null) return signature;
     }
     return GENERIC_PROVIDER.getSignature(element);
   }
-  
+
   @Nullable
   public static PsiElement restoreBySignature(@Nonnull PsiFile file, @Nonnull String signature) {
     return restoreBySignature(file, signature, null);
@@ -53,19 +45,16 @@ public class FoldingPolicy {
 
   /**
    * Tries to restore target PSI element from the given file by the given signature.
-   * 
-   * @param file                   target PSI file
-   * @param signature              target element's signature
-   * @param processingInfoStorage  buffer used for tracing 'restore element' processing (if necessary)
-   * @return                       PSI element from the given PSI file that corresponds to the given signature (if found)
-   *                               <code>null</code> otherwise
+   *
+   * @param file                  target PSI file
+   * @param signature             target element's signature
+   * @param processingInfoStorage buffer used for tracing 'restore element' processing (if necessary)
+   * @return PSI element from the given PSI file that corresponds to the given signature (if found)
+   * {@code null} otherwise
    */
   @Nullable
-  public static PsiElement restoreBySignature(@Nonnull PsiFile file,
-                                              @Nonnull String signature,
-                                              @Nullable StringBuilder processingInfoStorage)
-  {
-    for(ElementSignatureProvider provider: Extensions.getExtensions(ElementSignatureProvider.EP_NAME)) {
+  public static PsiElement restoreBySignature(@Nonnull PsiFile file, @Nonnull String signature, @Nullable StringBuilder processingInfoStorage) {
+    for (ElementSignatureProvider provider : ElementSignatureProvider.EP_NAME.getExtensionList()) {
       PsiElement result = provider.restoreBySignature(file, signature, processingInfoStorage);
       if (result != null) return result;
     }

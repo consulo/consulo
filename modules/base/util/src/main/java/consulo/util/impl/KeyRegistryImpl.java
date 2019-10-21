@@ -19,6 +19,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ConcurrentIntObjectMap;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.containers.IntObjectMap;
 import consulo.util.KeyRegistry;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -40,9 +41,8 @@ public class KeyRegistryImpl implements KeyRegistry {
 
   @Override
   public Key<?> findKeyByName(String name, Function<Key<?>, String> nameFunc) {
-    for (ConcurrentIntObjectMap.IntEntry<Key> key : myAllKeys.entries()) {
+    for (IntObjectMap.Entry<Key> key : myAllKeys.entrySet()) {
       if (name.equals(nameFunc.fun(key.getValue()))) {
-        //noinspection unchecked
         return key.getValue();
       }
     }

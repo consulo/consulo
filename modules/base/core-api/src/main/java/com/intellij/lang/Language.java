@@ -242,6 +242,28 @@ public abstract class Language extends UserDataHolderBase implements Named {
   }
 
   @Nullable
+  //@ApiStatus.Internal
+  public LanguageFileType findMyFileType(FileType[] types) {
+    for (final FileType fileType : types) {
+      if (fileType instanceof LanguageFileType) {
+        final LanguageFileType languageFileType = (LanguageFileType)fileType;
+        if (languageFileType.getLanguage() == this && !languageFileType.isSecondary()) {
+          return languageFileType;
+        }
+      }
+    }
+    for (final FileType fileType : types) {
+      if (fileType instanceof LanguageFileType) {
+        final LanguageFileType languageFileType = (LanguageFileType)fileType;
+        if (isKindOf(languageFileType.getLanguage()) && !languageFileType.isSecondary()) {
+          return languageFileType;
+        }
+      }
+    }
+    return null;
+  }
+
+  @Nullable
   public Language getBaseLanguage() {
     return myBaseLanguage;
   }

@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2017 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui;
 
 import com.intellij.codeInsight.hint.TooltipController;
@@ -25,7 +11,7 @@ import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderBase;
-import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.panels.OpaquePanel;
 import javax.annotation.Nonnull;
@@ -133,7 +119,7 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
 
     myComponent.validate();
 
-    if (!myForceShowAsPopup && (myForceLightweightPopup || fitsLayeredPane(layeredPane, myComponent, new RelativePoint(parentComponent, new Point(x, y)), hintHint))) {
+    if (!myForceShowAsPopup && !hintHint.isPopupForced() && (myForceLightweightPopup || fitsLayeredPane(layeredPane, myComponent, new RelativePoint(parentComponent, new Point(x, y)), hintHint))) {
       beforeShow();
       final Dimension preferredSize = myComponent.getPreferredSize();
 
@@ -166,10 +152,8 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
           public boolean canBeDismissedOnTimeout() {
             return false;
           }
-        }.setToCenterIfSmall(hintHint.isMayCenterTooltip()).setPreferredPosition(hintHint.getPreferredPosition()).setHighlighterType(hintHint.isHighlighterType())
-                .setTextForeground(hintHint.getTextForeground()).setTextBackground(hintHint.getTextBackground()).setBorderColor(hintHint.getBorderColor()).setBorderInsets(hintHint.getBorderInsets())
-                .setFont(hintHint.getTextFont()).setCalloutShift(hintHint.getCalloutShift()).setPositionChangeShift(hintHint.getPositionChangeX(), hintHint.getPositionChangeY())
-                .setExplicitClose(hintHint.isExplicitClose()).setRequestFocus(hintHint.isRequestFocus()).setHint(true);
+        }.setToCenterIfSmall(hintHint.isMayCenterTooltip()).setPreferredPosition(hintHint.getPreferredPosition()).setHighlighterType(hintHint.isHighlighterType()).setTextForeground(hintHint.getTextForeground()).setTextBackground(hintHint.getTextBackground()).setBorderColor(hintHint.getBorderColor()).setBorderInsets(hintHint.getBorderInsets())
+                .setFont(hintHint.getTextFont()).setCalloutShift(hintHint.getCalloutShift()).setPositionChangeShift(hintHint.getPositionChangeX(), hintHint.getPositionChangeY()).setExplicitClose(hintHint.isExplicitClose()).setRequestFocus(hintHint.isRequestFocus()).setHint(true);
         myComponent.validate();
         Border border = hintHint.getComponentBorder();
         if (border != null) {
@@ -190,18 +174,24 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
     else {
       myIsRealPopup = true;
       Point actualPoint = new Point(x, y);
+      if (hintHint.getPreferredPosition() == Balloon.Position.atLeft) {
+        int width = myComponent.getPreferredSize().width;
+        actualPoint.translate(-width, 0);
+      }
       JComponent actualComponent = new OpaquePanel(new BorderLayout());
       actualComponent.add(myComponent, BorderLayout.CENTER);
       if (isAwtTooltip()) {
-        int inset = BalloonImpl.getNormalInset();
-        actualComponent.setBorder(new LineBorder(hintHint.getTextBackground(), inset));
+        if (!Registry.is("editor.new.mouse.hover.popups")) {
+          int inset = BalloonImpl.getNormalInset();
+          actualComponent.setBorder(new LineBorder(hintHint.getTextBackground(), inset));
+        }
         actualComponent.setBackground(hintHint.getTextBackground());
         actualComponent.validate();
       }
 
-      myPopup = JBPopupFactory.getInstance().createComponentPopupBuilder(actualComponent, myFocusRequestor).setRequestFocus(myFocusRequestor != null).setFocusable(myFocusRequestor != null)
-              .setResizable(myResizable).setMovable(myTitle != null).setTitle(myTitle).setModalContext(false).setShowShadow(isRealPopup() && !isForceHideShadow()).setCancelKeyEnabled(false)
-              .setCancelOnClickOutside(myCancelOnClickOutside).setCancelCallback(() -> {
+      myPopup = JBPopupFactory.getInstance().createComponentPopupBuilder(actualComponent, myFocusRequestor).setRequestFocus(myFocusRequestor != null || hintHint.isRequestFocus())
+              .setFocusable(myFocusRequestor != null || hintHint.isRequestFocus()).setResizable(myResizable).setMovable(myTitle != null).setTitle(myTitle).setModalContext(false)
+              .setShowShadow(isRealPopup() && !isForceHideShadow()).setCancelKeyEnabled(false).setCancelOnClickOutside(myCancelOnClickOutside).setCancelCallback(() -> {
                 onPopupCancel();
                 return true;
               }).setCancelOnOtherWindowOpen(myCancelOnOtherWindowOpen).createPopup();
@@ -238,7 +228,6 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
   }
 
   protected void beforeShow() {
-
   }
 
   public boolean vetoesHiding() {
@@ -339,13 +328,9 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
           if (layeredPane != null) {
             Rectangle bounds = myComponent.getBounds();
             try {
-              if (myFocusBackComponent != null) {
-                LayoutFocusTraversalPolicyExt.setOverridenDefaultComponent(myFocusBackComponent);
-              }
               layeredPane.remove(myComponent);
             }
             finally {
-              LayoutFocusTraversalPolicyExt.setOverridenDefaultComponent(null);
             }
 
             layeredPane.paintImmediately(bounds.x, bounds.y, bounds.width, bounds.height);
@@ -423,12 +408,9 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
     }
     else {
       if (myCurrentIdeTooltip != null) {
-        Point screenPoint = point.getScreenPoint();
-        if (!screenPoint.equals(new RelativePoint(myCurrentIdeTooltip.getComponent(), myCurrentIdeTooltip.getPoint()).getScreenPoint())) {
-          myCurrentIdeTooltip.setPoint(point.getPoint());
-          myCurrentIdeTooltip.setComponent(point.getComponent());
-          IdeTooltipManager.getInstance().show(myCurrentIdeTooltip, true, false);
-        }
+        myCurrentIdeTooltip.setPoint(point.getPoint());
+        myCurrentIdeTooltip.setComponent(point.getComponent());
+        IdeTooltipManager.getInstance().show(myCurrentIdeTooltip, true, false);
       }
       else {
         Point targetPoint = point.getPoint(myComponent.getParent());
@@ -441,7 +423,7 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
   }
 
   public void setSize(final Dimension size) {
-    if (myIsRealPopup && myPopup != null) {
+    if (myIsRealPopup && myPopup != null && !myPopup.isDisposed()) {
       // There is a possible case that a popup wraps target content component into other components which might have borders.
       // That's why we can't just apply component's size to the whole popup. It needs to be adjusted before that.
       JComponent popupContent = myPopup.getContent();
@@ -484,6 +466,8 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
       while (c != null) {
         if (c.getParent() instanceof JLayeredPane) {
           c.setSize(c.getPreferredSize());
+          c.revalidate();
+          c.repaint();
           break;
         }
         c = c.getParent();
@@ -500,7 +484,7 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
   }
 
   public boolean isInsideHint(RelativePoint target) {
-    if (myComponent == null || !myComponent.isShowing()) return false;
+    if (!myComponent.isShowing()) return false;
 
     if (myIsRealPopup) {
       Window wnd = SwingUtilities.getWindowAncestor(myComponent);

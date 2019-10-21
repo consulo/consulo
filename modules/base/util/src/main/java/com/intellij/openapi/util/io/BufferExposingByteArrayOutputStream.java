@@ -19,7 +19,8 @@ import com.intellij.util.io.UnsyncByteArrayOutputStream;
 import javax.annotation.Nonnull;
 
 public class BufferExposingByteArrayOutputStream extends UnsyncByteArrayOutputStream {
-  public BufferExposingByteArrayOutputStream() {}
+  public BufferExposingByteArrayOutputStream() {
+  }
 
   public BufferExposingByteArrayOutputStream(int size) {
     super(size);

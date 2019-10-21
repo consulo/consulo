@@ -126,7 +126,7 @@ public class ActionButtonUI extends ComponentUI {
 
     paintIcon(g, c, c.getIcon());
 
-    if (action instanceof ActionGroup && ((ActionGroup)action).isPopup()) {
+    if (c.shallPaintDownArrow()) {
 
       int x = JBUI.scale(5);
       int y = JBUI.scale(4);

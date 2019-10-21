@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.project.impl;
 
+import com.intellij.ide.plugins.PluginListenerDescriptor;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.notification.*;
 import com.intellij.openapi.application.Application;
@@ -26,7 +27,6 @@ import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -47,12 +47,12 @@ import com.intellij.openapi.wm.impl.FrameTitleBuilder;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.util.TimedReference;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.io.storage.HeavyProcessLatch;
 import consulo.application.AccessRule;
 import consulo.components.impl.PlatformComponentManagerImpl;
 import consulo.components.impl.stores.*;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.injecting.InjectingContainerBuilder;
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NonNls;
@@ -74,6 +74,8 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   public static final String NAME_FILE = ".name";
 
   private final ProjectManager myManager;
+  @Nonnull
+  private final String myDirPath;
 
   private MyProjectManagerListener myProjectManagerListener;
 
@@ -90,6 +92,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   protected ProjectImpl(@Nonnull ProjectManager manager, @Nonnull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName, boolean noUIThread) {
     super(ApplicationManager.getApplication(), "Project " + (projectName == null ? dirPath : projectName), ExtensionAreaId.PROJECT);
+    myDirPath = dirPath;
 
     putUserData(CREATION_TIME, System.nanoTime());
 
@@ -114,6 +117,11 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   }
 
   @Nullable
+  public String getCreationTrace() {
+    return getUserData(CREATION_TRACE);
+  }
+
+  @Nullable
   @Override
   protected ExtensionPointName<ServiceDescriptor> getServiceExtensionPointName() {
     return PROJECT_SERVICES;
@@ -123,6 +131,12 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   @Override
   protected List<ComponentConfig> getComponentConfigs(PluginDescriptor ideaPluginDescriptor) {
     return ideaPluginDescriptor.getProjectComponents();
+  }
+
+  @Nonnull
+  @Override
+  protected List<PluginListenerDescriptor> getPluginListenerDescriptors(PluginDescriptor pluginDescriptor) {
+    return pluginDescriptor.getProjectListeners();
   }
 
   @Override
@@ -463,10 +477,9 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   @Override
   public String toString() {
     return "Project" +
-           (isDisposed() ? " (Disposed" + (temporarilyDisposed ? " temporarily" : "") + ")" : isDefault() ? "" : " '" + getPresentableUrl() + "'") +
+           (isDisposed() ? " (Disposed" + (temporarilyDisposed ? " temporarily" : "") + ")" : isDefault() ? "" : " '" + myDirPath + "'") +
            (isDefault() ? " (Default)" : "") +
-           " " +
-           myName;
+           " " + myName;
   }
 
   public static void dropUnableToSaveProjectNotification(@Nonnull final Project project, Collection<File> readOnlyFiles) {

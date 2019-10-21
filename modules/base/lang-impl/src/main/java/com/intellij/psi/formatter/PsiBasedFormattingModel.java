@@ -19,20 +19,20 @@ package com.intellij.psi.formatter;
 import com.intellij.formatting.Block;
 import com.intellij.formatting.FormattingDocumentModel;
 import com.intellij.formatting.FormattingModelEx;
+import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.lang.ASTNode;
+import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.TokenType;
+import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.impl.source.SourceTreeToPsiMap;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import consulo.logging.Logger;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import java.util.List;
 
 public class PsiBasedFormattingModel implements FormattingModelEx {
 
@@ -45,16 +45,12 @@ public class PsiBasedFormattingModel implements FormattingModelEx {
   private final Block myRootBlock;
   protected boolean myCanModifyAllWhiteSpaces = false;
 
-  public PsiBasedFormattingModel(final PsiFile file,
-                                 @Nonnull final Block rootBlock,
-                                 final FormattingDocumentModelImpl documentModel) {
+  public PsiBasedFormattingModel(final PsiFile file, @Nonnull final Block rootBlock, final FormattingDocumentModelImpl documentModel) {
     myASTNode = SourceTreeToPsiMap.psiElementToTree(file);
     myDocumentModel = documentModel;
     myRootBlock = rootBlock;
     myProject = file.getProject();
   }
-
-
 
   @Override
   public TextRange replaceWhiteSpace(TextRange textRange, String whiteSpace) {
@@ -63,13 +59,13 @@ public class PsiBasedFormattingModel implements FormattingModelEx {
 
   @Override
   public TextRange replaceWhiteSpace(TextRange textRange, ASTNode nodeAfter, String whiteSpace) {
-    String whiteSpaceToUse
-            = myDocumentModel.adjustWhiteSpaceIfNecessary(whiteSpace, textRange.getStartOffset(), textRange.getEndOffset(), nodeAfter, true).toString();
+    String whiteSpaceToUse = myDocumentModel.adjustWhiteSpaceIfNecessary(whiteSpace, textRange.getStartOffset(), textRange.getEndOffset(), nodeAfter, true).toString();
     final String wsReplaced = replaceWithPSI(textRange, whiteSpaceToUse);
 
-    if (wsReplaced != null){
+    if (wsReplaced != null) {
       return new TextRange(textRange.getStartOffset(), textRange.getStartOffset() + wsReplaced.length());
-    } else {
+    }
+    else {
       return textRange;
     }
   }
@@ -90,29 +86,50 @@ public class PsiBasedFormattingModel implements FormattingModelEx {
     ASTNode leafElement = findElementAt(offset);
 
     if (leafElement != null) {
+      PsiFile hostFile = myASTNode.getPsi().getContainingFile();
+      TextRange effectiveRange = textRange;
+      List<DocumentWindow> injections = InjectedLanguageManager.getInstance(hostFile.getProject()).getCachedInjectedDocumentsInRange(hostFile, TextRange.from(offset, 0));
+      if (!injections.isEmpty()) {
+        PsiElement injectedElement = PsiDocumentManager.getInstance(myProject).getPsiFile(injections.get(0));
+        PsiLanguageInjectionHost host = InjectedLanguageUtil.findInjectionHost(injectedElement);
+        TextRange corrected = host == null ? null : correctRangeByInjection(textRange, host);
+        if (corrected != null) {
+          effectiveRange = corrected;
+        }
+      }
+
       if (leafElement.getPsi() instanceof PsiFile) {
         return null;
-      } else {
-        if (!leafElement.getPsi().isValid()) {
-          String message = "Invalid element found in '\n" +
-                           myASTNode.getText() +
-                           "\n' at " +
-                           offset +
-                           "(" +
-                           myASTNode.getText().substring(offset, Math.min(offset + 10, myASTNode.getTextLength()));
-          LOG.error(message);
-        }
-        return replaceWithPsiInLeaf(textRange, whiteSpace, leafElement);
       }
-    } else if (textRange.getEndOffset() == myASTNode.getTextLength()){
-
-      CodeStyleManager.getInstance(myProject).performActionWithFormatterDisabled(
-              (Runnable)() -> FormatterUtil.replaceLastWhiteSpace(myASTNode, whiteSpace, textRange));
-
+      else {
+        LOG.assertTrue(leafElement.getPsi().isValid());
+        return replaceWithPsiInLeaf(effectiveRange, whiteSpace, leafElement);
+      }
+    }
+    else if (textRange.getEndOffset() == myASTNode.getTextLength()) {
+      CodeStyleManager.getInstance(myProject).performActionWithFormatterDisabled((Runnable)() -> FormatterUtil.replaceLastWhiteSpace(myASTNode, whiteSpace, textRange));
       return whiteSpace;
-    } else {
+    }
+    else {
       return null;
     }
+  }
+
+  private static TextRange correctRangeByInjection(TextRange textRange, PsiLanguageInjectionHost host) {
+    ElementManipulator<PsiLanguageInjectionHost> manipulator = ElementManipulators.getManipulator(host);
+    if (manipulator == null) return null;
+
+    final TextRange injectionRangeInHost = manipulator.getRangeInElement(host);
+    final int hostStartOffset = host.getTextRange().getStartOffset();
+
+    final int injectedDocumentStartOffset = hostStartOffset + injectionRangeInHost.getStartOffset();
+    final int injectedDocumentEndOffset = hostStartOffset + injectionRangeInHost.getEndOffset();
+
+    if (textRange.getEndOffset() < injectedDocumentStartOffset || textRange.getStartOffset() > injectedDocumentEndOffset) {
+      return null;
+    }
+
+    return textRange.shiftLeft(injectedDocumentStartOffset);
   }
 
   @Nullable
@@ -121,8 +138,7 @@ public class PsiBasedFormattingModel implements FormattingModelEx {
       if (leafElement.getElementType() == TokenType.WHITE_SPACE) return null;
     }
 
-    CodeStyleManager.getInstance(myProject).performActionWithFormatterDisabled(
-            (Runnable)() -> FormatterUtil.replaceWhiteSpace(whiteSpace, leafElement, TokenType.WHITE_SPACE, textRange));
+    CodeStyleManager.getInstance(myProject).performActionWithFormatterDisabled((Runnable)() -> FormatterUtil.replaceWhiteSpace(whiteSpace, leafElement, TokenType.WHITE_SPACE, textRange));
 
     return whiteSpace;
   }
@@ -131,12 +147,17 @@ public class PsiBasedFormattingModel implements FormattingModelEx {
   protected ASTNode findElementAt(final int offset) {
     PsiFile containingFile = myASTNode.getPsi().getContainingFile();
     Project project = containingFile.getProject();
+
     assert !PsiDocumentManager.getInstance(project).isUncommited(myDocumentModel.getDocument());
     // TODO:default project can not be used for injections, because latter might wants (unavailable) indices
-    PsiElement psiElement = project.isDefault() ? null : InjectedLanguageUtil.findInjectedElementNoCommit(containingFile, offset);
-    if (psiElement == null) psiElement = containingFile.findElementAt(offset);
-    if (psiElement == null) return null;
-    return psiElement.getNode();
+
+    PsiElement psiElement = project.isDefault() ? null : InjectedLanguageManager.getInstance(containingFile.getProject()).findInjectedElementAt(containingFile, offset);
+    if (psiElement != null) {
+      return psiElement.getNode();
+    }
+
+    psiElement = containingFile.findElementAt(offset);
+    return psiElement != null ? psiElement.getNode() : null;
   }
 
   @Override

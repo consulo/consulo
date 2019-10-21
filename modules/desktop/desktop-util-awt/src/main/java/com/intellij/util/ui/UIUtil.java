@@ -17,7 +17,6 @@ package com.intellij.util.ui;
 
 import com.intellij.BundleBase;
 import com.intellij.openapi.Disposable;
-import consulo.logging.Logger;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.registry.Registry;
@@ -31,20 +30,20 @@ import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.containers.JBTreeTraverser;
-import com.intellij.util.ui.accessibility.ScreenReader;
 import consulo.annotations.DeprecationInfo;
 import consulo.desktop.util.awt.AllIconsHack;
-import consulo.desktop.util.awt.StringHtmlUtil;
 import consulo.desktop.util.awt.MorphColor;
-import consulo.ui.style.StyleManager;
+import consulo.desktop.util.awt.StringHtmlUtil;
 import consulo.desktop.util.awt.laf.BuildInLookAndFeel;
+import consulo.logging.Logger;
+import consulo.ui.style.StyleManager;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 import sun.java2d.SunGraphicsEnvironment;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.Timer;
 import javax.swing.*;
@@ -60,6 +59,7 @@ import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.plaf.basic.BasicRadioButtonUI;
 import javax.swing.plaf.basic.ComboPopup;
 import javax.swing.text.*;
+import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import javax.swing.undo.UndoManager;
@@ -73,7 +73,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.ImageObserver;
 import java.awt.image.PixelGrabber;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -185,38 +184,18 @@ public class UIUtil {
     }
   };
 
+  /**
+   * Alt+click does copy text from tooltip or balloon to clipboard.
+   * We collect this text from components recursively and this generic approach might 'grab' unexpected text fragments.
+   * To provide more accurate text scope you should mark dedicated component with putClientProperty(TEXT_COPY_ROOT, Boolean.TRUE)
+   * Note, main(root) components of BalloonImpl and AbstractPopup are already marked with this key
+   */
+  public static final Key<Boolean> TEXT_COPY_ROOT = Key.create("TEXT_COPY_ROOT");
+
   private static final String[] STANDARD_FONT_SIZES = {"8", "9", "10", "11", "12", "14", "16", "18", "20", "22", "24", "26", "28", "36", "48", "72"};
 
   @NonNls
   public static final String BORDER_LINE = "<hr size=1 noshade>";
-
-  private static StyleSheet DEFAULT_HTML_KIT_CSS;
-
-  public static void hackAWT() {
-    blockATKWrapper();
-    // save the default JRE CSS and ..
-    HTMLEditorKit kit = new HTMLEditorKit();
-    DEFAULT_HTML_KIT_CSS = kit.getStyleSheet();
-    // .. erase global ref to this CSS so no one can alter it
-    kit.setStyleSheet(null);
-
-    // Applied to all JLabel instances, including subclasses. Supported in JBSDK only.
-    UIManager.getDefaults().put("javax.swing.JLabel.userStyleSheet", UIUtil.JBHtmlEditorKit.createStyleSheet());
-  }
-
-  private static void blockATKWrapper() {
-    /*
-     * The method should be called before java.awt.Toolkit.initAssistiveTechnologies()
-     * which is called from Toolkit.getDefaultToolkit().
-     */
-    if (!(SystemInfo.isLinux && Registry.is("linux.jdk.accessibility.atkwrapper.block"))) return;
-
-    if (ScreenReader.isEnabled(ScreenReader.ATK_WRAPPER)) {
-      // Replace AtkWrapper with a dummy Object. It'll be instantiated & GC'ed right away, a NOP.
-      System.setProperty("javax.accessibility.assistive_technologies", "java.lang.Object");
-      getLogger().info(ScreenReader.ATK_WRAPPER + " is blocked, see IDEA-149219");
-    }
-  }
 
   public static void applyStyle(@Nonnull ComponentStyle componentStyle, @Nonnull Component comp) {
     if (!(comp instanceof JComponent)) return;
@@ -384,6 +363,8 @@ public class UIUtil {
 
   private static final Ref<Boolean> ourRetina = Ref.create(SystemInfo.isMac ? null : false);
 
+  private static volatile StyleSheet ourDefaultHtmlKitCss;
+
   private UIUtil() {
   }
 
@@ -502,6 +483,26 @@ public class UIUtil {
 
       return false;
     }
+  }
+
+  public static void configureHtmlKitStylesheet() {
+    if (ourDefaultHtmlKitCss != null) {
+      return;
+    }
+
+
+    // save the default JRE CSS and ..
+    HTMLEditorKit kit = new HTMLEditorKit();
+    ourDefaultHtmlKitCss = kit.getStyleSheet();
+    // .. erase global ref to this CSS so no one can alter it
+    kit.setStyleSheet(null);
+
+    // Applied to all JLabel instances, including subclasses. Supported in JBR only.
+    UIManager.getDefaults().put("javax.swing.JLabel.userStyleSheet", JBHtmlEditorKit.createStyleSheet());
+  }
+
+  public static StyleSheet getDefaultHtmlKitCss() {
+    return ourDefaultHtmlKitCss;
   }
 
   /**
@@ -955,6 +956,11 @@ public class UIUtil {
     return UIManager.getColor("Label.background");
   }
 
+  @Nonnull
+  public static Color getContextHelpForeground() {
+    return JBColor.namedColor("Label.infoForeground", new JBColor(Gray.x78, Gray.x8C));
+  }
+
   public static Color getLabelForeground() {
     return UIManager.getColor("Label.foreground");
   }
@@ -1107,7 +1113,7 @@ public class UIUtil {
   }
 
   public static Color getToolTipBackground() {
-    return UIManager.getColor("ToolTip.background");
+    return JBColor.namedColor("ToolTip.background", new JBColor(Gray.xF2, new Color(0x3c3f41)));
   }
 
   public static Color getToolTipForeground() {
@@ -1561,15 +1567,11 @@ public class UIUtil {
   }
 
   public static Insets getListCellPadding() {
-    return new Insets(getListCellVPadding(), getListCellHPadding(), getListCellVPadding(), getListCellHPadding());
+    return JBInsets.create(getListCellVPadding(), getListCellHPadding());
   }
 
   public static Insets getListViewportPadding() {
-    if (isUnderNativeMacLookAndFeel()) {
-      return new Insets(1, 0, 1, 0);
-    }
-    Insets listPopupInsets = UIManager.getInsets("listPopupInsets");
-    return listPopupInsets == null ? JBUI.emptyInsets() : listPopupInsets;
+    return isUnderNativeMacLookAndFeel() ? JBInsets.create(1, 0) : JBUI.emptyInsets();
   }
 
   public static boolean isToUseDottedCellBorder() {
@@ -2523,57 +2525,10 @@ public class UIUtil {
     return new JBHtmlEditorKit(noGapsBetweenParagraphs);
   }
 
-  public static class JBHtmlEditorKit extends HTMLEditorKit {
-    private final StyleSheet style;
-
-    public JBHtmlEditorKit() {
-      this(true);
-    }
-
-    public JBHtmlEditorKit(boolean noGapsBetweenParagraphs) {
-      style = createStyleSheet();
-      if (noGapsBetweenParagraphs) style.addRule("p { margin-top: 0; }");
-    }
-
-    @Override
-    public StyleSheet getStyleSheet() {
-      return style;
-    }
-
-    public static StyleSheet createStyleSheet() {
-      StyleSheet style = new StyleSheet();
-      style.addStyleSheet(isUnderDarkTheme() && !isUnderGTKLookAndFeel() ? (StyleSheet)UIManager.getDefaults().get("StyledEditorKit.JBDefaultStyle") : DEFAULT_HTML_KIT_CSS);
-      style.addRule("code { font-size: 100%; }"); // small by Swing's default
-      style.addRule("small { font-size: small; }"); // x-small by Swing's default
-      return style;
-    }
-
-    @Override
-    public void install(final JEditorPane pane) {
-      super.install(pane);
-      if (pane != null) {
-        // JEditorPane.HONOR_DISPLAY_PROPERTIES must be set after HTMLEditorKit is completely installed
-        pane.addPropertyChangeListener("editorKit", new PropertyChangeListener() {
-          @Override
-          public void propertyChange(PropertyChangeEvent e) {
-            Font font = getLabelFont();
-            assert font instanceof FontUIResource;
-            if (SystemInfo.isWindows) {
-              font = getFontWithFallback("Tahoma", font.getStyle(), font.getSize());
-            }
-            // In case JBUI user scale factor changes, the font will be auto-updated by BasicTextUI.installUI()
-            // with a font of the properly scaled size. And is then propagated to CSS, making HTML text scale dynamically.
-            pane.setFont(font);
-
-            // let CSS font properties inherit from the pane's font
-            pane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
-            pane.removePropertyChangeListener(this);
-          }
-        });
-      }
-    }
+  @Nonnull
+  public static FontUIResource getFontWithFallback(@Nonnull Font font) {
+    return getFontWithFallback(font.getFamily(), font.getStyle(), font.getSize());
   }
-
 
   public static FontUIResource getFontWithFallback(@Nonnull String familyName, @JdkConstants.FontStyle int style, int size) {
     Font fontWithFallback = new StyleContext().getFont(familyName, style, size);
@@ -3698,6 +3653,123 @@ public class UIUtil {
         source.removeKeyListener(keyAdapter);
       }
     });
+  }
+
+  /**
+   * Employs a common pattern to use {@code Graphics}. This is a non-distractive approach
+   * all modifications on {@code Graphics} are metter only inside the {@code Consumer} block
+   *
+   * @param originGraphics  graphics to work with
+   * @param drawingConsumer you can use the Graphics2D object here safely
+   */
+  public static void useSafely(@Nonnull Graphics originGraphics, @Nonnull Consumer<? super Graphics2D> drawingConsumer) {
+    Graphics2D graphics = (Graphics2D)originGraphics.create();
+    try {
+      drawingConsumer.consume(graphics);
+    }
+    finally {
+      graphics.dispose();
+    }
+  }
+
+  public static void setCursor(@Nonnull Component component, Cursor cursor) {
+    // cursor is updated by native code even if component has the same cursor, causing performance problems (IDEA-167733)
+    if (component.isCursorSet() && component.getCursor() == cursor) return;
+    component.setCursor(cursor);
+  }
+
+  /**
+   * This method (as opposed to {@link JEditorPane#scrollToReference}) supports also targets using {@code id} HTML attribute.
+   */
+  public static void scrollToReference(@Nonnull JEditorPane editor, @Nonnull String reference) {
+    Document document = editor.getDocument();
+    if (document instanceof HTMLDocument) {
+      Element elementById = ((HTMLDocument)document).getElement(reference);
+      if (elementById != null) {
+        try {
+          int pos = elementById.getStartOffset();
+          Rectangle r = editor.modelToView(pos);
+          if (r != null) {
+            r.height = editor.getVisibleRect().height;
+            editor.scrollRectToVisible(r);
+            editor.setCaretPosition(pos);
+          }
+        }
+        catch (BadLocationException e) {
+          getLogger().error(e);
+        }
+        return;
+      }
+    }
+    editor.scrollToReference(reference);
+  }
+
+  public static void runWhenFocused(@Nonnull Component component, @Nonnull Runnable runnable) {
+    assert component.isShowing();
+    if (component.isFocusOwner()) {
+      runnable.run();
+    }
+    else {
+      Disposable disposable = Disposer.newDisposable();
+      FocusListener focusListener = new FocusAdapter() {
+        @Override
+        public void focusGained(FocusEvent e) {
+          Disposer.dispose(disposable);
+          runnable.run();
+        }
+      };
+      HierarchyListener hierarchyListener = new HierarchyListener() {
+        @Override
+        public void hierarchyChanged(HierarchyEvent e) {
+          if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0 && !component.isShowing()) {
+            Disposer.dispose(disposable);
+          }
+        }
+      };
+      component.addFocusListener(focusListener);
+      component.addHierarchyListener(hierarchyListener);
+      Disposer.register(disposable, () -> {
+        component.removeFocusListener(focusListener);
+        component.removeHierarchyListener(hierarchyListener);
+      });
+    }
+  }
+
+  @Nonnull
+  public static Color getTooltipSeparatorColor() {
+    return JBColor.namedColor("Tooltip.separatorColor", 0xd1d1d1, 0x545658);
+  }
+
+  public static boolean isHelpButton(Component button) {
+    return button instanceof JButton && "help".equals(((JComponent)button).getClientProperty("JButton.buttonType"));
+  }
+
+  @Nonnull
+  public static Color getToolTipActionBackground() {
+    return JBColor.namedColor("ToolTip.Actions.background", new JBColor(Gray.xEB, new Color(0x43474a)));
+  }
+
+  public static void doNotScrollToCaret(@Nonnull JTextComponent textComponent) {
+    textComponent.setCaret(new DefaultCaret() {
+      @Override
+      protected void adjustVisibility(Rectangle nloc) {
+      }
+    });
+  }
+
+  @Nonnull
+  public static Dimension updateListRowHeight(@Nonnull Dimension size) {
+    size.height = Math.max(size.height, UIManager.getInt("List.rowHeight"));
+    return size;
+  }
+
+  //Escape error-prone HTML data (if any) when we use it in renderers, see IDEA-170768
+  public static <T> T htmlInjectionGuard(T toRender) {
+    if (toRender instanceof String && StringUtil.toLowerCase(((String)toRender)).startsWith("<html>")) {
+      //noinspection unchecked
+      return (T)("<html>" + StringUtil.escapeXmlEntities((String)toRender));
+    }
+    return toRender;
   }
 
   @Nonnull

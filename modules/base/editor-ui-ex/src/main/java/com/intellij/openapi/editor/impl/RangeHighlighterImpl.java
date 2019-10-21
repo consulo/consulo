@@ -21,6 +21,7 @@ import java.awt.*;
 
 /**
  * Implementation of the markup element for the editor and document.
+ *
  * @author max
  */
 class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx, Getter<RangeHighlighterEx> {
@@ -28,7 +29,7 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
   private static final Color NULL_COLOR = new Color(0, 0, 0); // must be new instance to work as a sentinel
   private static final Key<Boolean> VISIBLE_IF_FOLDED = Key.create("visible.folded");
 
-  private final MarkupModel myModel;
+  private final MarkupModelImpl myModel;
   private TextAttributes myTextAttributes;
   private LineMarkerRenderer myLineMarkerRenderer;
   private Color myErrorStripeColor;
@@ -50,14 +51,15 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
   static final byte RENDERERS_CHANGED_MASK = 32;
   static final byte FONT_STYLE_OR_COLOR_CHANGED_MASK = 64;
 
-  @MagicConstant(intValues = {AFTER_END_OF_LINE_MASK, ERROR_STRIPE_IS_THIN_MASK, TARGET_AREA_IS_EXACT_MASK, IN_BATCH_CHANGE_MASK,
-          CHANGED_MASK, RENDERERS_CHANGED_MASK, FONT_STYLE_OR_COLOR_CHANGED_MASK})
-  private @interface FlagConstant {}
+  @MagicConstant(intValues = {AFTER_END_OF_LINE_MASK, ERROR_STRIPE_IS_THIN_MASK, TARGET_AREA_IS_EXACT_MASK, IN_BATCH_CHANGE_MASK, CHANGED_MASK, RENDERERS_CHANGED_MASK, FONT_STYLE_OR_COLOR_CHANGED_MASK})
+  private @interface FlagConstant {
+  }
 
   @MagicConstant(flags = {CHANGED_MASK, RENDERERS_CHANGED_MASK, FONT_STYLE_OR_COLOR_CHANGED_MASK})
-  private @interface ChangeStatus {}
+  private @interface ChangeStatus {
+  }
 
-  RangeHighlighterImpl(@Nonnull MarkupModel model,
+  RangeHighlighterImpl(@Nonnull MarkupModelImpl model,
                        int start,
                        int end,
                        int layer,
@@ -65,7 +67,7 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
                        TextAttributes textAttributes,
                        boolean greedyToLeft,
                        boolean greedyToRight) {
-    super((DocumentEx)model.getDocument(), start, end,false);
+    super((DocumentEx)model.getDocument(), start, end, false, false);
     myTextAttributes = textAttributes;
     setFlag(TARGET_AREA_IS_EXACT_MASK, target == HighlighterTargetArea.EXACT_RANGE);
     myModel = model;
@@ -89,14 +91,17 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
 
   @Override
   public void setTextAttributes(@Nonnull TextAttributes textAttributes) {
+    boolean oldRenderedInScrollBar = isRenderedInScrollBar();
     TextAttributes old = myTextAttributes;
     myTextAttributes = textAttributes;
+    if (isRenderedInScrollBar() != oldRenderedInScrollBar) {
+      myModel.treeFor(this).updateRenderedFlags(this);
+    }
     if (old != textAttributes && (old == TextAttributes.ERASE_MARKER || textAttributes == TextAttributes.ERASE_MARKER)) {
       fireChanged(false, true);
     }
     else if (!Comparing.equal(old, textAttributes)) {
-      fireChanged(false, getFontStyle(old) != getFontStyle(textAttributes) ||
-                         !Comparing.equal(getForegroundColor(old), getForegroundColor(textAttributes)));
+      fireChanged(false, getFontStyle(old) != getFontStyle(textAttributes) || !Comparing.equal(getForegroundColor(old), getForegroundColor(textAttributes)));
     }
   }
 
@@ -131,8 +136,12 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
 
   @Override
   public void setLineMarkerRenderer(LineMarkerRenderer renderer) {
+    boolean oldRenderedInGutter = isRenderedInGutter();
     LineMarkerRenderer old = myLineMarkerRenderer;
     myLineMarkerRenderer = renderer;
+    if (isRenderedInGutter() != oldRenderedInGutter) {
+      myModel.treeFor(this).updateRenderedFlags(this);
+    }
     if (!Comparing.equal(old, renderer)) {
       fireChanged(true, false);
     }
@@ -159,8 +168,12 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
 
   @Override
   public void setGutterIconRenderer(GutterIconRenderer renderer) {
+    boolean oldRenderedInGutter = isRenderedInGutter();
     GutterMark old = myGutterIconRenderer;
     myGutterIconRenderer = renderer;
+    if (isRenderedInGutter() != oldRenderedInGutter) {
+      myModel.treeFor(this).updateRenderedFlags(this);
+    }
     if (!Comparing.equal(old, renderer)) {
       fireChanged(true, false);
     }
@@ -176,9 +189,13 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
 
   @Override
   public void setErrorStripeMarkColor(Color color) {
+    boolean oldRenderedInScrollBar = isRenderedInScrollBar();
     if (color == null) color = NULL_COLOR;
     Color old = myErrorStripeColor;
     myErrorStripeColor = color;
+    if (isRenderedInScrollBar() != oldRenderedInScrollBar) {
+      myModel.treeFor(this).updateRenderedFlags(this);
+    }
     if (!Comparing.equal(old, color)) {
       fireChanged(false, false);
     }
@@ -269,15 +286,13 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
   }
 
   private void fireChanged(boolean renderersChanged, boolean fontStyleOrColorChanged) {
-    if (myModel instanceof MarkupModelEx) {
-      if (isFlagSet(IN_BATCH_CHANGE_MASK)) {
-        setFlag(CHANGED_MASK, true);
-        if (renderersChanged) setFlag(RENDERERS_CHANGED_MASK, true);
-        if (fontStyleOrColorChanged) setFlag(FONT_STYLE_OR_COLOR_CHANGED_MASK, true);
-      }
-      else {
-        ((MarkupModelEx)myModel).fireAttributesChanged(this, renderersChanged, fontStyleOrColorChanged);
-      }
+    if (isFlagSet(IN_BATCH_CHANGE_MASK)) {
+      setFlag(CHANGED_MASK, true);
+      if (renderersChanged) setFlag(RENDERERS_CHANGED_MASK, true);
+      if (fontStyleOrColorChanged) setFlag(FONT_STYLE_OR_COLOR_CHANGED_MASK, true);
+    }
+    else {
+      myModel.fireAttributesChanged(this, renderersChanged, fontStyleOrColorChanged);
     }
   }
 
@@ -315,7 +330,7 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
   }
 
   @ChangeStatus
-  byte changeAttributesNoEvents(@Nonnull Consumer<RangeHighlighterEx> change) {
+  byte changeAttributesNoEvents(@Nonnull Consumer<? super RangeHighlighterEx> change) {
     assert !isFlagSet(IN_BATCH_CHANGE_MASK);
     assert !isFlagSet(CHANGED_MASK);
     setFlag(IN_BATCH_CHANGE_MASK, true);
@@ -384,6 +399,6 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
 
   @Override
   public String toString() {
-    return "RangeHighlighter: ("+getStartOffset()+","+getEndOffset()+"); layer:"+getLayer()+"; tooltip: "+getErrorStripeTooltip();
+    return "RangeHighlighter: (" + getStartOffset() + "," + getEndOffset() + "); layer:" + getLayer() + "; tooltip: " + getErrorStripeTooltip();
   }
 }

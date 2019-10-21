@@ -148,7 +148,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
 
     @Nonnull
     @Override
-    public DefaultActionGroup createPopupActionGroup(DataContext context) {
+    public DefaultActionGroup createPopupActionGroup(JComponent component) {
       final TreeSet<String> availableCategories = ((AvailablePluginsTableModel)myPluginsModel).getAvailableCategories();
       final DefaultActionGroup gr = new DefaultActionGroup();
       gr.add(createFilterByCategoryAction(AvailablePluginsTableModel.ALL));

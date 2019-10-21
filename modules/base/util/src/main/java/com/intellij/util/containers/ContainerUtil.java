@@ -20,9 +20,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.*;
 import gnu.trove.*;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.util.HashMap;
@@ -600,11 +599,11 @@ public class ContainerUtil extends ContainerUtilRt {
     return res;
   }
 
-  public static <T> boolean processSortedListsInOrder(@Nonnull List<T> list1,
-                                                      @Nonnull List<T> list2,
-                                                      @Nonnull Comparator<? super T> comparator,
-                                                      boolean mergeEqualItems,
-                                                      @Nonnull Processor<T> processor) {
+  public static <T> void processSortedListsInOrder(@Nonnull List<? extends T> list1,
+                                                   @Nonnull List<? extends T> list2,
+                                                   @Nonnull Comparator<? super T> comparator,
+                                                   boolean mergeEqualItems,
+                                                   @Nonnull Consumer<? super T> processor) {
     int index1 = 0;
     int index2 = 0;
     while (index1 < list1.size() || index2 < list2.size()) {
@@ -619,7 +618,18 @@ public class ContainerUtil extends ContainerUtilRt {
         T element1 = list1.get(index1);
         T element2 = list2.get(index2);
         int c = comparator.compare(element1, element2);
-        if (c <= 0) {
+        if (c == 0) {
+          index1++;
+          index2++;
+          if (mergeEqualItems) {
+            e = element1;
+          }
+          else {
+            processor.consume(element1);
+            e = element2;
+          }
+        }
+        else if (c < 0) {
           e = element1;
           index1++;
         }
@@ -627,29 +637,16 @@ public class ContainerUtil extends ContainerUtilRt {
           e = element2;
           index2++;
         }
-        if (c == 0 && !mergeEqualItems) {
-          if (!processor.process(e)) return false;
-          index2++;
-          e = element2;
-        }
       }
-      if (!processor.process(e)) return false;
+      processor.consume(e);
     }
-
-    return true;
   }
 
   @Nonnull
   @Contract(pure = true)
-  public static <T> List<T> mergeSortedLists(@Nonnull List<T> list1, @Nonnull List<T> list2, @Nonnull Comparator<? super T> comparator, boolean mergeEqualItems) {
-    final List<T> result = new ArrayList<T>(list1.size() + list2.size());
-    processSortedListsInOrder(list1, list2, comparator, mergeEqualItems, new Processor<T>() {
-      @Override
-      public boolean process(T t) {
-        result.add(t);
-        return true;
-      }
-    });
+  public static <T> List<T> mergeSortedLists(@Nonnull List<? extends T> list1, @Nonnull List<? extends T> list2, @Nonnull Comparator<? super T> comparator, boolean mergeEqualItems) {
+    final List<T> result = new ArrayList<>(list1.size() + list2.size());
+    processSortedListsInOrder(list1, list2, comparator, mergeEqualItems, result::add);
     return result;
   }
 
@@ -1309,11 +1306,11 @@ public class ContainerUtil extends ContainerUtilRt {
   }
 
   @Contract(pure = true)
-  public static <T, U extends T> U findInstance(@Nonnull Iterable<T> iterable, @Nonnull Class<U> aClass) {
+  public static <T, U extends T> U findInstance(@Nonnull Iterable<? extends T> iterable, @Nonnull Class<? extends U> aClass) {
     return findInstance(iterable.iterator(), aClass);
   }
 
-  public static <T, U extends T> U findInstance(@Nonnull Iterator<T> iterator, @Nonnull Class<U> aClass) {
+  public static <T, U extends T> U findInstance(@Nonnull Iterator<? extends T> iterator, @Nonnull Class<? extends U> aClass) {
     //noinspection unchecked
     return (U)find(iterator, FilteringIterator.instanceOf(aClass));
   }
@@ -2006,7 +2003,7 @@ public class ContainerUtil extends ContainerUtilRt {
   }
 
   @Contract(pure = true)
-  public static <T> boolean and(@Nonnull Iterable<T> iterable, @Nonnull Condition<? super T> condition) {
+  public static <T> boolean and(@Nonnull Iterable<? extends T> iterable, @Nonnull Condition<? super T> condition) {
     for (final T t : iterable) {
       if (!condition.value(t)) return false;
     }
@@ -2274,13 +2271,17 @@ public class ContainerUtil extends ContainerUtilRt {
    */
   @Nonnull
   @Contract(pure = true)
-  public static <E> List<E> flatten(@Nonnull Iterable<? extends Collection<E>> collections) {
-    List<E> result = new ArrayList<E>();
-    for (Collection<E> list : collections) {
+  public static <E> List<E> flatten(@Nonnull Iterable<? extends Collection<? extends E>> collections) {
+    int totalSize = 0;
+    for (Collection<? extends E> list : collections) {
+      totalSize += list.size();
+    }
+    List<E> result = new ArrayList<>(totalSize);
+    for (Collection<? extends E> list : collections) {
       result.addAll(list);
     }
 
-    return result.isEmpty() ? ContainerUtil.<E>emptyList() : result;
+    return result.isEmpty() ? emptyList() : result;
   }
 
   /**
@@ -2321,7 +2322,7 @@ public class ContainerUtil extends ContainerUtilRt {
   }
 
   @Contract(pure = true)
-  public static <T> int indexOfIdentity(@Nonnull List<T> list, T element) {
+  public static <T> int indexOfIdentity(@Nonnull List<? extends T> list, T element) {
     for (int i = 0, listSize = list.size(); i < listSize; i++) {
       if (list.get(i) == element) {
         return i;
@@ -2502,8 +2503,7 @@ public class ContainerUtil extends ContainerUtilRt {
   @Nonnull
   @Contract(pure = true)
   public static <V> ConcurrentIntObjectMap<V> createConcurrentIntObjectSoftValueMap() {
-    //noinspection deprecation
-    return new ConcurrentSoftValueIntObjectHashMap<V>();
+    return new ConcurrentIntKeySoftValueHashMap<>();
   }
 
   @Nonnull
@@ -2530,8 +2530,7 @@ public class ContainerUtil extends ContainerUtilRt {
   @Nonnull
   @Contract(pure = true)
   public static <V> ConcurrentIntObjectMap<V> createConcurrentIntObjectWeakValueMap() {
-    //noinspection deprecation
-    return new ConcurrentWeakValueIntObjectHashMap<V>();
+    return new ConcurrentIntKeyWeakValueHashMap<>();
   }
 
   @Nonnull
@@ -2582,15 +2581,13 @@ public class ContainerUtil extends ContainerUtilRt {
   @Nonnull
   @Contract(pure = true)
   public static <K, V> ConcurrentMap<K, V> createConcurrentSoftMap() {
-    //noinspection deprecation
-    return new ConcurrentSoftHashMap<K, V>();
+    return new ConcurrentSoftHashMap<>();
   }
 
   @Nonnull
-  @Contract(pure = true)
+  @Contract(value = " -> new", pure = true)
   public static <K, V> ConcurrentMap<K, V> createConcurrentWeakMap() {
-    //noinspection deprecation
-    return new ConcurrentWeakHashMap<K, V>();
+    return new ConcurrentWeakHashMap<>(0.75f);
   }
 
   @Nonnull
@@ -2746,6 +2743,12 @@ public class ContainerUtil extends ContainerUtilRt {
   @Contract(pure = true)
   public static <T> List<T> notNullize(@Nullable List<T> list) {
     return list == null ? ContainerUtilRt.<T>emptyList() : list;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <K, V> Map<K, V> notNullize(@Nullable Map<K, V> map) {
+    return map == null ? Collections.emptyMap() : map;
   }
 
   @Nonnull
@@ -3030,6 +3033,24 @@ public class ContainerUtil extends ContainerUtilRt {
   public static <K, V> Map<K, V> createWeakKeyWeakValueMap() {
     //noinspection deprecation
     return new WeakKeyWeakValueHashMap<>(true);
+  }
+
+  public static <T> boolean all(@Nonnull T[] collection, @Nonnull Condition<? super T> condition) {
+    for (T t : collection) {
+      if (!condition.value(t)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public static <T> boolean all(@Nonnull Collection<? extends T> collection, @Nonnull Condition<? super T> condition) {
+    for (T t : collection) {
+      if (!condition.value(t)) {
+        return false;
+      }
+    }
+    return true;
   }
 }
 

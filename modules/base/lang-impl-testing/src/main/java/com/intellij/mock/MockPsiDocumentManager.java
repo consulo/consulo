@@ -10,11 +10,11 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
+import consulo.annotations.RequiredReadAction;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.ui.RequiredUIAccess;
-import consulo.annotations.RequiredReadAction;
-
 import java.util.Collection;
 
 /**
@@ -51,6 +51,11 @@ public class MockPsiDocumentManager extends PsiDocumentManager {
   @RequiredUIAccess
   @Override
   public void commitAllDocuments() {
+  }
+
+  @Override
+  public boolean commitAllDocumentsUnderProgress() {
+    return false;
   }
 
   @Override
@@ -112,6 +117,11 @@ public class MockPsiDocumentManager extends PsiDocumentManager {
   }
 
   @Override
+  public void reparseFiles(@Nonnull Collection<? extends VirtualFile> files, boolean includeOpenFiles) {
+    
+  }
+
+  @Override
   public void addListener(@Nonnull Listener listener) {
     throw new UnsupportedOperationException("Method addListener is not yet implemented in " + getClass().getName());
   }
@@ -139,8 +149,8 @@ public class MockPsiDocumentManager extends PsiDocumentManager {
   }
 
   @Override
-  public void reparseFiles(@Nonnull Collection<VirtualFile> files, boolean includeOpenFiles) {
-    throw new UnsupportedOperationException();
+  public void performLaterWhenAllCommitted(@Nonnull Runnable runnable) {
+
   }
 
   @Override

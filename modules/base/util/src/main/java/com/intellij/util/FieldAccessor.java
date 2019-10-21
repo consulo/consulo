@@ -15,9 +15,8 @@
  */
 package com.intellij.util;
 
-import com.intellij.openapi.util.Ref;
 import consulo.logging.Logger;
-
+import com.intellij.openapi.util.Ref;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -30,22 +29,28 @@ import java.lang.reflect.Field;
  * @param <T> the type of the field
  */
 public class FieldAccessor<E, T> {
-  private static final Logger LOG = Logger.getInstance(FieldAccessor.class);
+  private static final Logger LOG = Logger.getInstance("#com.intellij.util.FieldAccessor");
 
   private Ref<Field> myFieldRef;
   private final Class<E> myClass;
   private final String myName;
+  private final Class<T> myType;
 
-  public FieldAccessor(@Nonnull Class<E> cls, @Nonnull String name) {
-    myClass = cls;
+  public FieldAccessor(@Nonnull Class<E> aClass, @Nonnull String name) {
+    this(aClass, name, null);
+  }
+
+  public FieldAccessor(@Nonnull Class<E> aClass, @Nonnull String name, @Nullable Class<T> type) {
+    myClass = aClass;
     myName = name;
+    myType = type;
   }
 
   public boolean isAvailable() {
     if (myFieldRef == null) {
       try {
-        myFieldRef = new Ref<Field>();
-        myFieldRef.set(myClass.getDeclaredField(myName));
+        myFieldRef = new Ref<>();
+        myFieldRef.set(ReflectionUtil.findAssignableField(myClass, myType, myName));
         myFieldRef.get().setAccessible(true);
       }
       catch (NoSuchFieldException e) {
@@ -58,9 +63,8 @@ public class FieldAccessor<E, T> {
   public T get(@Nullable E object) {
     if (!isAvailable()) return null;
     try {
-      @SuppressWarnings("unchecked")
-      T value = (T)myFieldRef.get().get(object);
-      return value;
+      //noinspection unchecked
+      return (T)myFieldRef.get().get(object);
     }
     catch (IllegalAccessException e) {
       LOG.warn("Field not accessible: " + myClass.getName() + "." + myName);

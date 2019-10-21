@@ -73,9 +73,11 @@ public class Patches {
 
   /**
    * XToolkit.getScreenInsets() may be very slow.
-   * See https://bugs.openjdk.java.net/browse/JDK-8004103.
+   * See https://bugs.openjdk.java.net/browse/JDK-8170937.
    */
-  public static final boolean JDK_BUG_ID_8004103 = SystemInfo.isXWindow && !GraphicsEnvironment.isHeadless() && SystemInfo.isJavaVersionAtLeast(7, 0, 0);
+  public static boolean isJdkBugId8004103() {
+    return SystemInfo.isXWindow && !GraphicsEnvironment.isHeadless();
+  }
 
   /**
    * No BindException when another program is using the port.
@@ -107,12 +109,6 @@ public class Patches {
   public static final boolean USE_REFLECTION_TO_ACCESS_JDK11 = true;
 
   /**
-   * AtomicIntegerFieldUpdater does not work when SecurityManager is installed
-   * fixed in JDK8
-   */
-  public static final boolean JDK_BUG_ID_7103570 = true;
-
-  /**
    * Support default methods in JDI
    * See <a href="https://bugs.openjdk.java.net/browse/JDK-8042123">JDK-8042123</a>
    */
@@ -142,11 +138,7 @@ public class Patches {
   public static boolean JDK_BUG_ID_8032832 = true;
 
   /**
-   * At JDK 9 - ligatures laggy
-   * JetBrains fixed it in their jdk
-   * fixed in JDK 10
-   * https://bugs.openjdk.java.net/browse/JDK-8196666
-   * https://bugs.openjdk.java.net/browse/JDK-8186317
+   * https://bugs.openjdk.java.net/browse/JDK-8220231
    */
-  public static boolean ALLOW_LIGATURES = SystemInfo.isJetBrainsJvm || SystemInfo.isJavaVersionAtLeast(10, 0, 0);
+  public static final boolean TEXT_LAYOUT_IS_SLOW = !SystemInfo.isJetBrainsJvm && !SystemInfo.isJavaVersionAtLeast(13, 0, 0);
 }

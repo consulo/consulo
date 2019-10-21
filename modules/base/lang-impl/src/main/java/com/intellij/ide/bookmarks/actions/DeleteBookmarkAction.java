@@ -41,8 +41,7 @@ class DeleteBookmarkAction extends DumbAwareAction {
 
   @Override
   public void update(AnActionEvent e) {
-    final boolean searchActive = ListWithFilter.isSearchActive(myList);
-    e.getPresentation().setEnabled(!searchActive && BookmarksAction.getSelectedBookmarks(myList).size() > 0);
+    e.getPresentation().setEnabled(BookmarksAction.getSelectedBookmarks(myList).size() > 0);
   }
 
   @Override

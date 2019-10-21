@@ -1,76 +1,33 @@
-/*
- * Copyright 2000-2015 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.impl.source.tree.injected;
 
 import com.intellij.injected.editor.DocumentWindow;
-import com.intellij.injected.editor.DocumentWindowImpl;
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.lang.Language;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.RangeMarker;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.FreeThreadedFileViewProvider;
-import com.intellij.psi.impl.source.tree.MarkersHolderFileViewProvider;
-import com.intellij.util.SmartList;
-import org.jetbrains.annotations.NonNls;
+import com.intellij.psi.impl.PsiManagerEx;
+import com.intellij.psi.templateLanguages.TemplateLanguageFileViewProvider;
 import javax.annotation.Nonnull;
 
 import java.util.List;
 
 /**
- * @author cdr
+ * @deprecated Use methods from {@link InjectedLanguageManager} instead
  */
-public class InjectedFileViewProvider extends SingleRootFileViewProvider implements FreeThreadedFileViewProvider,
-                                                                                    MarkersHolderFileViewProvider {
-  private Project myProject;
-  private final Object myLock = new Object();
-  private final DocumentWindowImpl myDocumentWindow;
-  private static final ThreadLocal<Boolean> disabledTemporarily = new ThreadLocal<Boolean>(){
-    @Override
-    protected Boolean initialValue() {
-      return false;
-    }
-  };
-  private boolean myPatchingLeaves;
-
-  InjectedFileViewProvider(@Nonnull PsiManager psiManager,
-                           @Nonnull VirtualFileWindow virtualFile,
-                           @Nonnull DocumentWindowImpl documentWindow,
-                           @Nonnull Language language) {
-    super(psiManager, (VirtualFile)virtualFile, true, language);
-    myDocumentWindow = documentWindow;
-    myProject = documentWindow.getShreds().getHostPointer().getProject();
-  }
-
-  @Override
-  public void rootChanged(@Nonnull PsiFile psiFile) {
-    super.rootChanged(psiFile);
+@Deprecated
+public interface InjectedFileViewProvider extends FileViewProvider, FreeThreadedFileViewProvider {
+  default void rootChangedImpl(@Nonnull PsiFile psiFile) {
     if (!isPhysical()) return; // injected PSI change happened inside reparse; ignore
-    if (myPatchingLeaves) return;
+    if (getPatchingLeaves()) return;
 
-    DocumentWindowImpl documentWindow = myDocumentWindow;
+    DocumentWindowImpl documentWindow = getDocument();
     List<PsiLanguageInjectionHost.Shred> shreds = documentWindow.getShreds();
     assert documentWindow.getHostRanges().length == shreds.size();
     String[] changes = documentWindow.calculateMinEditSequence(psiFile.getNode().getText());
@@ -88,8 +45,7 @@ public class InjectedFileViewProvider extends SingleRootFileViewProvider impleme
     }
   }
 
-  @Override
-  public FileViewProvider clone() {
+  default FileViewProvider cloneImpl() {
     final DocumentWindow oldDocumentWindow = ((VirtualFileWindow)getVirtualFile()).getDocumentWindow();
     Document hostDocument = oldDocumentWindow.getDelegate();
     final PsiDocumentManager documentManager = PsiDocumentManager.getInstance(getManager().getProject());
@@ -101,47 +57,40 @@ public class InjectedFileViewProvider extends SingleRootFileViewProvider impleme
     Segment firstTextRange = oldDocumentWindow.getHostRanges()[0];
     PsiElement hostElementCopy = hostPsiFileCopy.getViewProvider().findElementAt(firstTextRange.getStartOffset(), hostFileLanguage);
     assert hostElementCopy != null;
-    final Ref<FileViewProvider> provider = new Ref<FileViewProvider>();
-    PsiLanguageInjectionHost.InjectedPsiVisitor visitor = new PsiLanguageInjectionHost.InjectedPsiVisitor() {
-      @Override
-      public void visit(@Nonnull PsiFile injectedPsi, @Nonnull List<PsiLanguageInjectionHost.Shred> places) {
-        Document document = documentManager.getCachedDocument(injectedPsi);
-        if (document instanceof DocumentWindowImpl && oldDocumentWindow.areRangesEqual((DocumentWindowImpl)document)) {
-          provider.set(injectedPsi.getViewProvider());
-        }
+    final Ref<FileViewProvider> provider = new Ref<>();
+    PsiLanguageInjectionHost.InjectedPsiVisitor visitor = (injectedPsi, places) -> {
+      Document document = documentManager.getCachedDocument(injectedPsi);
+      if (document instanceof DocumentWindowImpl && oldDocumentWindow.areRangesEqual((DocumentWindowImpl)document)) {
+        provider.set(injectedPsi.getViewProvider());
       }
     };
     for (PsiElement current = hostElementCopy; current != null && current != hostPsiFileCopy; current = current.getParent()) {
-      current.putUserData(LANGUAGE_FOR_INJECTED_COPY_KEY, language);
+      current.putUserData(SingleRootInjectedFileViewProvider.LANGUAGE_FOR_INJECTED_COPY_KEY, language);
       try {
-        InjectedLanguageUtil.enumerate(current, hostPsiFileCopy, false, visitor);
+        InjectedLanguageManager.getInstance(hostPsiFileCopy.getProject()).enumerateEx(current, hostPsiFileCopy, false, visitor);
       }
       finally {
-        current.putUserData(LANGUAGE_FOR_INJECTED_COPY_KEY, null);
+        current.putUserData(SingleRootInjectedFileViewProvider.LANGUAGE_FOR_INJECTED_COPY_KEY, null);
       }
       if (provider.get() != null) break;
     }
     return provider.get();
   }
 
-  static Key<Language> LANGUAGE_FOR_INJECTED_COPY_KEY = Key.create("LANGUAGE_FOR_INJECTED_COPY_KEY");
   // returns true if shreds were set, false if old ones were reused
-  boolean setShreds(@Nonnull Place newShreds, @Nonnull Project project) {
-    synchronized (myLock) {
-      myProject = project;
-      Place oldShreds = myDocumentWindow.getShreds();
+  default boolean setShreds(@Nonnull Place newShreds) {
+    synchronized (getLock()) {
+      Place oldShreds = getDocument().getShreds();
       // try to reuse shreds, otherwise there are too many range markers disposals/re-creations
       if (same(oldShreds, newShreds)) {
         return false;
       }
-      else {
-        myDocumentWindow.setShreds(newShreds);
-        return true;
-      }
+      getDocument().setShreds(newShreds);
+      return true;
     }
   }
 
-  private static boolean same(Place oldShreds, Place newShreds) {
+  static boolean same(Place oldShreds, Place newShreds) {
     if (oldShreds == newShreds) return true;
     if (oldShreds.size() != newShreds.size()) return false;
     for (int i = 0; i < oldShreds.size(); i++) {
@@ -152,69 +101,54 @@ public class InjectedFileViewProvider extends SingleRootFileViewProvider impleme
     return true;
   }
 
-  boolean isValid() {
-    return getShreds().isValid();
-  }
-
-  boolean isDisposed() {
-    synchronized (myLock) {
-      return myProject.isDisposed();
-    }
-  }
-
-  Place getShreds() {
-    return myDocumentWindow.getShreds();
-  }
-
-  @Override
-  @Nonnull
-  public DocumentWindow getDocument() {
-    return myDocumentWindow;
-  }
-
-  @Override
-  public boolean isEventSystemEnabled() {
-    if (myLock == null) return true; // hack to avoid NPE when this method called from super class constructor
-    return !disabledTemporarily.get();
-  }
-
-  @Override
-  public boolean isPhysical() {
+  default boolean isPhysicalImpl() {
     return isEventSystemEnabled();
   }
 
-  public void performNonPhysically(Runnable runnable) {
-    synchronized (myLock) {
-      disabledTemporarily.set(true);
+  default void performNonPhysically(Runnable runnable) {
+    synchronized (getLock()) {
+      SingleRootInjectedFileViewProvider.disabledTemporarily.set(true);
       try {
         runnable.run();
       }
       finally {
-        disabledTemporarily.set(false);
+        SingleRootInjectedFileViewProvider.disabledTemporarily.set(false);
       }
     }
   }
 
-  @NonNls
-  @Override
-  public String toString() {
-    return "Injected file '"+getVirtualFile().getName()+"' " + (isValid() ? "" : " invalid") + (isPhysical() ? "" : " nonphysical");
+  boolean getPatchingLeaves();
+
+  void forceCachedPsi(@Nonnull PsiFile file);
+
+  Object getLock();
+
+  default boolean isValid() {
+    return getShreds().isValid();
   }
 
-  void setPatchingLeaves(boolean patchingLeaves) {
-    myPatchingLeaves = patchingLeaves;
+  default boolean isDisposed() {
+    return getManager().getProject().isDisposed();
+  }
+
+  default Place getShreds() {
+    return getDocument().getShreds();
+  }
+
+  default boolean isEventSystemEnabledImpl() {
+    return !SingleRootInjectedFileViewProvider.disabledTemporarily.get();
   }
 
   @Override
   @Nonnull
-  public RangeMarker[] getCachedMarkers() {
-    List<RangeMarker> markers = new SmartList<RangeMarker>();
-    for (PsiLanguageInjectionHost.Shred shred : myDocumentWindow.getShreds()) {
-      RangeMarker marker = (RangeMarker)shred.getHostRangeMarker();
-      if (marker != null) {
-        markers.add(marker);
-      }
-    }
-    return markers.toArray(new RangeMarker[markers.size()]);
+  DocumentWindowImpl getDocument();
+
+  static InjectedFileViewProvider create(@Nonnull PsiManagerEx manager, @Nonnull VirtualFileWindowImpl file, @Nonnull DocumentWindowImpl window, @Nonnull Language language) {
+    AbstractFileViewProvider original = (AbstractFileViewProvider)manager.getFileManager().createFileViewProvider(file, false);
+    return original instanceof TemplateLanguageFileViewProvider
+           ? new MultipleRootsInjectedFileViewProvider.Template(manager, file, window, language, original)
+           : original instanceof MultiplePsiFilesPerDocumentFileViewProvider
+             ? new MultipleRootsInjectedFileViewProvider(manager, file, window, language, original)
+             : new SingleRootInjectedFileViewProvider(manager, file, window, language);
   }
 }

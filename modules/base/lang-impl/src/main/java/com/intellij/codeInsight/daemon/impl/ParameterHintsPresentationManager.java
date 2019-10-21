@@ -23,7 +23,6 @@ import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorCustomElementRenderer;
 import com.intellij.openapi.editor.Inlay;
-import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.FontInfo;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.ui.GraphicsConfig;
@@ -166,7 +165,7 @@ public class ParameterHintsPresentationManager implements Disposable {
 
     @Nullable
     @Override
-    public String getContextMenuGroupId() {
+    public String getContextMenuGroupId(@Nonnull Inlay inlay) {
       return "ParameterNameHints";
     }
 
@@ -224,7 +223,7 @@ public class ParameterHintsPresentationManager implements Disposable {
             g.setFont(getFont(editor));
             Shape savedClip = g.getClip();
             g.clipRect(r.x + 3, r.y + 2, r.width - 6, r.height - 4);
-            int editorAscent = editor instanceof DesktopEditorImpl ? ((DesktopEditorImpl)editor).getAscent() : 0;
+            int editorAscent = editor.getAscent();
             FontMetrics metrics = fontMetrics.metrics;
             g.drawString(myText, r.x + 7, r.y + Math.max(editorAscent, (r.height + metrics.getAscent() - metrics.getDescent()) / 2) - 1);
             g.setClip(savedClip);

@@ -34,9 +34,9 @@ public class ZipFileSystemImpl extends ArchiveFileSystemBase {
   }
 
   @Override
-  public boolean isMyFile(@Nonnull VirtualFile local) {
+  protected boolean isCorrectFileType(@Nonnull VirtualFile local) {
     // special hack for jar files. eat them even when jar file type is register not as zip file system
-    return super.isMyFile(local) || Comparing.equal(local.getExtension(), "jar");
+    return super.isCorrectFileType(local) || Comparing.equal(local.getExtension(), "jar");
   }
 
   @Nonnull

@@ -21,6 +21,7 @@ import com.intellij.openapi.util.io.FileAttributes;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.VirtualFilePointerCapableFileSystem;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
@@ -41,7 +42,7 @@ import java.util.List;
 /**
  * @author max
  */
-public class TempFileSystem extends NewVirtualFileSystem implements RefreshableFileSystem {
+public class TempFileSystem extends NewVirtualFileSystem implements RefreshableFileSystem, VirtualFilePointerCapableFileSystem{
   public static final String PROTOCOL = "temp";
   private final FSItem myRoot = new FSDir(null, "/");
 

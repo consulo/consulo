@@ -127,7 +127,7 @@ public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEd
 
   @RequiredUIAccess
   protected void installEditorListeners() {
-    new TextDiffViewerUtil.EditorActionsPopup(createEditorPopupActions()).install(getEditors());
+    new TextDiffViewerUtil.EditorActionsPopup(createEditorPopupActions()).install(getEditors(), myPanel);
 
     new TextDiffViewerUtil.EditorFontSizeSynchronizer(getEditors()).install(this);
 

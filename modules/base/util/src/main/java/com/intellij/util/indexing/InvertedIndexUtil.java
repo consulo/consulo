@@ -18,7 +18,6 @@ package com.intellij.util.indexing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.containers.EmptyIntHashSet;
 import gnu.trove.TIntHashSet;
-import gnu.trove.TIntProcedure;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -26,12 +25,11 @@ import java.util.Collection;
 
 public class InvertedIndexUtil {
   @Nonnull
-  public static <K, V, I> TIntHashSet collectInputIdsContainingAllKeys(@Nonnull InvertedIndex<K, V, I> index,
-                                                                       @Nonnull Collection<K> dataKeys,
-                                                                       @Nullable Condition<K> keyChecker,
-                                                                       @Nullable Condition<V> valueChecker,
-                                                                       @Nullable ValueContainer.IntPredicate idChecker)
-          throws StorageException {
+  public static <K, V, I> TIntHashSet collectInputIdsContainingAllKeys(@Nonnull InvertedIndex<? super K, V, I> index,
+                                                                       @Nonnull Collection<? extends K> dataKeys,
+                                                                       @Nullable Condition<? super K> keyChecker,
+                                                                       @Nullable Condition<? super V> valueChecker,
+                                                                       @Nullable ValueContainer.IntPredicate idChecker) throws StorageException {
     TIntHashSet mainIntersection = null;
 
     for (K dataKey : dataKeys) {
@@ -52,20 +50,15 @@ public class InvertedIndexUtil {
         if (mainIntersection == null || iterator.size() < mainIntersection.size() || (predicate = valueIt.getValueAssociationPredicate()) == null) {
           while (iterator.hasNext()) {
             final int id = iterator.next();
-            if (mainIntersection == null && (idChecker == null || idChecker.contains(id)) ||
-                mainIntersection != null && mainIntersection.contains(id)
-                    ) {
+            if (mainIntersection == null && (idChecker == null || idChecker.contains(id)) || mainIntersection != null && mainIntersection.contains(id)) {
               copy.add(id);
             }
           }
         }
         else {
-          mainIntersection.forEach(new TIntProcedure() {
-            @Override
-            public boolean execute(int id) {
-              if (predicate.contains(id)) copy.add(id);
-              return true;
-            }
+          mainIntersection.forEach(id -> {
+            if (predicate.contains(id)) copy.add(id);
+            return true;
           });
         }
       }

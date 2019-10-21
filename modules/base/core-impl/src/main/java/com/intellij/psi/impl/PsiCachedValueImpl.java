@@ -25,13 +25,18 @@ import javax.annotation.Nullable;
 /**
  * @author Dmitry Avdeev
  */
-public class PsiCachedValueImpl<T> extends PsiCachedValue<T> implements CachedValue<T>  {
+public class PsiCachedValueImpl<T> extends PsiCachedValue<T> implements CachedValue<T> {
   private final CachedValueProvider<T> myProvider;
 
   public PsiCachedValueImpl(@Nonnull PsiManager manager, @Nonnull CachedValueProvider<T> provider) {
-    super(manager);
+    this(manager, provider, false);
+  }
+
+  PsiCachedValueImpl(@Nonnull PsiManager manager, @Nonnull CachedValueProvider<T> provider, boolean trackValue) {
+    super(manager, trackValue);
     myProvider = provider;
   }
+
   @Override
   @Nullable
   public T getValue() {

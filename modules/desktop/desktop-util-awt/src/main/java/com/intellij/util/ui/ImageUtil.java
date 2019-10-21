@@ -15,12 +15,13 @@
  */
 package com.intellij.util.ui;
 
+import com.intellij.ui.paint.PaintUtil;
 import com.intellij.util.ImageLoader;
 import com.intellij.util.JBHiDPIScaledImage;
 import com.intellij.util.RetinaImage;
 import org.jetbrains.annotations.Contract;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -34,6 +35,75 @@ import static com.intellij.util.ui.JBUI.ScaleType.SYS_SCALE;
  * @author Konstantin Bulenkov
  */
 public class ImageUtil {
+  /**
+   * Creates a HiDPI-aware BufferedImage in device scale.
+   *
+   * @param width  the width in user coordinate space
+   * @param height the height in user coordinate space
+   * @param type   the type of the image
+   * @return a HiDPI-aware BufferedImage in device scale
+   * @throws IllegalArgumentException if {@code width} or {@code height} is not greater than 0
+   */
+  @Nonnull
+  public static BufferedImage createImage(int width, int height, int type) {
+    if (UIUtil.isJreHiDPIEnabled()) {
+      return RetinaImage.create(width, height, type);
+    }
+    //noinspection UndesirableClassUsage
+    return new BufferedImage(width, height, type);
+  }
+
+  /**
+   * Creates a HiDPI-aware BufferedImage in the graphics config scale.
+   *
+   * @param gc     the graphics config
+   * @param width  the width in user coordinate space
+   * @param height the height in user coordinate space
+   * @param type   the type of the image
+   * @return a HiDPI-aware BufferedImage in the graphics scale
+   * @throws IllegalArgumentException if {@code width} or {@code height} is not greater than 0
+   */
+  @Nonnull
+  public static BufferedImage createImage(GraphicsConfiguration gc, int width, int height, int type) {
+    if (UIUtil.isJreHiDPI(gc)) {
+      return RetinaImage.create(gc, width, height, type);
+    }
+    //noinspection UndesirableClassUsage
+    return new BufferedImage(width, height, type);
+  }
+
+  /**
+   * Creates a HiDPI-aware BufferedImage in the graphics device scale.
+   *
+   * @param g      the graphics of the target device
+   * @param width  the width in user coordinate space
+   * @param height the height in user coordinate space
+   * @param type   the type of the image
+   * @return a HiDPI-aware BufferedImage in the graphics scale
+   * @throws IllegalArgumentException if {@code width} or {@code height} is not greater than 0
+   */
+  @Nonnull
+  public static BufferedImage createImage(Graphics g, int width, int height, int type) {
+    return createImage(g, width, height, type, PaintUtil.RoundingMode.FLOOR);
+  }
+
+  /**
+   * @throws IllegalArgumentException if {@code width} or {@code height} is not greater than 0
+   * @see #createImage(GraphicsConfiguration, double, double, int, PaintUtil.RoundingMode)
+   */
+  @Nonnull
+  public static BufferedImage createImage(Graphics g, double width, double height, int type, @Nonnull PaintUtil.RoundingMode rm) {
+    if (g instanceof Graphics2D) {
+      Graphics2D g2d = (Graphics2D)g;
+      if (UIUtil.isJreHiDPI(g2d)) {
+        return RetinaImage.create(g2d, width, height, type, rm);
+      }
+      //noinspection UndesirableClassUsage
+      return new BufferedImage(rm.round(width), rm.round(height), type);
+    }
+    return createImage(rm.round(width), rm.round(height), type);
+  }
+
   public static BufferedImage toBufferedImage(@Nonnull Image image) {
     return toBufferedImage(image, false);
   }

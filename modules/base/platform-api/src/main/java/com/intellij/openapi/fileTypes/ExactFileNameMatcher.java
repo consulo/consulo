@@ -38,7 +38,7 @@ public class ExactFileNameMatcher implements FileNameMatcher {
   }
 
   @Override
-  public boolean accept(@NonNls @Nonnull final CharSequence fileName) {
+  public boolean acceptsCharSequence(@NonNls @Nonnull final CharSequence fileName) {
     return Comparing.equal(fileName, myFileName, !myIgnoreCase);
   }
 

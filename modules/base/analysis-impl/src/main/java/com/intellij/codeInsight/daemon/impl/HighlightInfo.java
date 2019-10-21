@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2016 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.daemon.GutterMark;
@@ -42,62 +28,69 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.util.ArrayUtilRt;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.BitUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xml.util.XmlStringUtil;
-import consulo.ui.image.Image;
 import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class HighlightInfo implements Segment {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.daemon.impl.HighlightInfo");
 
-  // optimisation: if tooltip contains this marker object, then it replaced with description field in getTooltip()
+  // optimization: if tooltip contains this marker object, then it replaced with description field in getTooltip()
   private static final String DESCRIPTION_PLACEHOLDER = "\u0000";
-  JComponent fileLevelComponent;
+
+  private static final byte BIJECTIVE_MASK = 0x1;
+  private static final byte HAS_HINT_MASK = 0x2;
+  private static final byte FROM_INJECTION_MASK = 0x4;
+  private static final byte AFTER_END_OF_LINE_MASK = 0x8;
+  private static final byte FILE_LEVEL_ANNOTATION_MASK = 0x10;
+  private static final byte NEEDS_UPDATE_ON_TYPING_MASK = 0x20;
+
+  @MagicConstant(intValues = {BIJECTIVE_MASK, HAS_HINT_MASK, FROM_INJECTION_MASK, AFTER_END_OF_LINE_MASK, FILE_LEVEL_ANNOTATION_MASK, NEEDS_UPDATE_ON_TYPING_MASK})
+  private @interface FlagConstant {
+  }
+
   public final TextAttributes forcedTextAttributes;
   public final TextAttributesKey forcedTextAttributesKey;
-
   @Nonnull
   public final HighlightInfoType type;
-  private int group;
   public final int startOffset;
   public final int endOffset;
 
-  private int fixStartOffset;
-  private int fixEndOffset;
-  RangeMarker fixMarker; // null means it the same as highlighter
+  public List<Pair<IntentionActionDescriptor, TextRange>> quickFixActionRanges;
+  public List<Pair<IntentionActionDescriptor, RangeMarker>> quickFixActionMarkers;
 
   private final String description;
   private final String toolTip;
   @Nonnull
   private final HighlightSeverity severity;
-
-  final int navigationShift;
-
-  volatile RangeHighlighterEx highlighter; // modified in EDT only
-
-  public List<Pair<IntentionActionDescriptor, TextRange>> quickFixActionRanges;
-  public List<Pair<IntentionActionDescriptor, RangeMarker>> quickFixActionMarkers;
-
   private final GutterMark gutterIconRenderer;
   private final ProblemGroup myProblemGroup;
+  private final String inspectionToolId;
 
-  private volatile byte myFlags; // bit packed flags below:
-  private static final byte BIJECTIVE_MASK = 1;
-  private static final byte HAS_HINT_MASK = 2;
-  private static final byte FROM_INJECTION_MASK = 4;
-  private static final byte AFTER_END_OF_LINE_MASK = 8;
-  private static final byte FILE_LEVEL_ANNOTATION_MASK = 16;
-  private static final byte NEEDS_UPDATE_ON_TYPING_MASK = 32;
+  private int group;
+  private int fixStartOffset;
+  private int fixEndOffset;
+  private volatile byte myFlags;  // see `@FlagConstant`
+
+  final int navigationShift;
+  JComponent fileLevelComponent;
+  /**
+   * null means it the same as highlighter
+   */
+  @Nullable
+  RangeMarker fixMarker;
+  volatile RangeHighlighterEx highlighter; // modified in EDT only
   PsiElement psiElement;
 
   /**
@@ -106,10 +99,7 @@ public class HighlightInfo implements Segment {
   @Nullable
   public static HighlightInfo fromRangeHighlighter(@Nonnull RangeHighlighter highlighter) {
     Object errorStripeTooltip = highlighter.getErrorStripeTooltip();
-    if (errorStripeTooltip instanceof HighlightInfo) {
-      return (HighlightInfo) errorStripeTooltip;
-    }
-    return null;
+    return errorStripeTooltip instanceof HighlightInfo ? (HighlightInfo)errorStripeTooltip : null;
   }
 
   @Nonnull
@@ -117,7 +107,7 @@ public class HighlightInfo implements Segment {
     return new ProperTextRange(fixStartOffset, fixEndOffset);
   }
 
-  void setFromInjection(boolean fromInjection) {
+  void setFromInjection(@SuppressWarnings("SameParameterValue") boolean fromInjection) {
     setFlag(FROM_INJECTION_MASK, fromInjection);
   }
 
@@ -130,25 +120,37 @@ public class HighlightInfo implements Segment {
     return XmlStringUtil.wrapInHtml(decoded);
   }
 
-  private static String encodeTooltip(String toolTip, String description) {
-    if (toolTip == null || description == null) return toolTip;
-    String unescaped = StringUtil.unescapeXml(XmlStringUtil.stripHtml(toolTip));
+  /**
+   * Encodes \p tooltip so that substrings equal to a \p description
+   * are replaced with the special placeholder to reduce size of the
+   * tooltip. If encoding takes place, <html></html> tags are
+   * stripped of the tooltip.
+   *
+   * @param tooltip     - html text
+   * @param description - plain text (not escaped)
+   * @return encoded tooltip (stripped html text with one or more placeholder characters)
+   * or tooltip without changes.
+   */
+  private static String encodeTooltip(String tooltip, String description) {
+    if (tooltip == null || description == null || description.isEmpty()) return tooltip;
 
-    String encoded = description.isEmpty() ? unescaped : StringUtil.replace(unescaped, description, DESCRIPTION_PLACEHOLDER);
+    String encoded = StringUtil.replace(tooltip, XmlStringUtil.escapeString(description), DESCRIPTION_PLACEHOLDER);
     //noinspection StringEquality
-    if (encoded == unescaped) {
-      return toolTip;
+    if (encoded == tooltip) {
+      return tooltip;
     }
     if (encoded.equals(DESCRIPTION_PLACEHOLDER)) encoded = DESCRIPTION_PLACEHOLDER;
-    return encoded;
+    return XmlStringUtil.stripHtml(encoded);
   }
 
   public String getDescription() {
     return description;
   }
 
-  @MagicConstant(intValues = {BIJECTIVE_MASK, HAS_HINT_MASK, FROM_INJECTION_MASK, AFTER_END_OF_LINE_MASK, FILE_LEVEL_ANNOTATION_MASK, NEEDS_UPDATE_ON_TYPING_MASK})
-  private @interface FlagConstant {}
+  @Nullable
+  public String getInspectionToolId() {
+    return inspectionToolId;
+  }
 
   private boolean isFlagSet(@FlagConstant byte mask) {
     return BitUtil.isSet(myFlags, mask);
@@ -170,17 +172,17 @@ public class HighlightInfo implements Segment {
     setFlag(BIJECTIVE_MASK, bijective);
   }
 
-  public RangeHighlighterEx getHighlighter() {
-    return highlighter;
-  }
-
   @Nonnull
   public HighlightSeverity getSeverity() {
     return severity;
   }
 
+  public RangeHighlighterEx getHighlighter() {
+    return highlighter;
+  }
+
   /**
-   * modified in EDT only
+   * Modified only in EDT.
    */
   public void setHighlighter(@Nullable RangeHighlighterEx highlighter) {
     ApplicationManager.getApplication().assertIsDispatchThread();
@@ -192,7 +194,7 @@ public class HighlightInfo implements Segment {
   }
 
   @Nullable
-  public TextAttributes getTextAttributes(@Nullable final PsiElement element, @Nullable final EditorColorsScheme editorColorsScheme) {
+  public TextAttributes getTextAttributes(@Nullable PsiElement element, @Nullable EditorColorsScheme editorColorsScheme) {
     if (forcedTextAttributes != null) {
       return forcedTextAttributes;
     }
@@ -206,31 +208,32 @@ public class HighlightInfo implements Segment {
     return getAttributesByType(element, type, colorsScheme);
   }
 
-  public static TextAttributes getAttributesByType(@Nullable final PsiElement element,
-                                                   @Nonnull HighlightInfoType type,
-                                                   @Nonnull TextAttributesScheme colorsScheme) {
-    final SeverityRegistrar severityRegistrar = SeverityRegistrar
-            .getSeverityRegistrar(element != null ? element.getProject() : null);
-    final TextAttributes textAttributes = severityRegistrar.getTextAttributesBySeverity(type.getSeverity(element));
-    if (textAttributes != null) {
-      return textAttributes;
-    }
+  public static TextAttributes getAttributesByType(@Nullable PsiElement element, @Nonnull HighlightInfoType type, @Nonnull TextAttributesScheme colorsScheme) {
+    SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(element != null ? element.getProject() : null);
+    TextAttributes textAttributes = severityRegistrar.getTextAttributesBySeverity(type.getSeverity(element));
+    if (textAttributes != null) return textAttributes;
     TextAttributesKey key = type.getAttributesKey();
     return colorsScheme.getAttributes(key);
   }
 
+  /**
+   * @param element
+   * @param colorsScheme when null, a global scheme will be used
+   * @return
+   */
   @Nullable
-  Color getErrorStripeMarkColor(@Nonnull PsiElement element,
-                                @Nullable final EditorColorsScheme colorsScheme) { // if null global scheme will be used
+  @SuppressWarnings("deprecation")
+  Color getErrorStripeMarkColor(@Nonnull PsiElement element, @Nullable EditorColorsScheme colorsScheme) {
     if (forcedTextAttributes != null) {
       return forcedTextAttributes.getErrorStripeColor();
     }
+
     EditorColorsScheme scheme = getColorsScheme(colorsScheme);
     if (forcedTextAttributesKey != null) {
       TextAttributes forcedTextAttributes = scheme.getAttributes(forcedTextAttributesKey);
       if (forcedTextAttributes != null) {
-        final Color errorStripeColor = forcedTextAttributes.getErrorStripeColor();
-        // let's copy above behaviour of forcedTextAttributes stripe color, but I'm not sure that the behaviour is correct in general
+        Color errorStripeColor = forcedTextAttributes.getErrorStripeColor();
+        // let's copy above behaviour of forcedTextAttributes stripe color, but I'm not sure the behaviour is correct in general
         if (errorStripeColor != null) {
           return errorStripeColor;
         }
@@ -243,10 +246,10 @@ public class HighlightInfo implements Segment {
     if (getSeverity() == HighlightSeverity.WARNING) {
       return scheme.getAttributes(CodeInsightColors.WARNINGS_ATTRIBUTES).getErrorStripeColor();
     }
-    if (getSeverity() == HighlightSeverity.INFO){
+    if (getSeverity() == HighlightSeverity.INFO) {
       return scheme.getAttributes(CodeInsightColors.INFO_ATTRIBUTES).getErrorStripeColor();
     }
-    if (getSeverity() == HighlightSeverity.WEAK_WARNING){
+    if (getSeverity() == HighlightSeverity.WEAK_WARNING) {
       return scheme.getAttributes(CodeInsightColors.WEAK_WARNING_ATTRIBUTES).getErrorStripeColor();
     }
     if (getSeverity() == HighlightSeverity.GENERIC_SERVER_ERROR_OR_WARNING) {
@@ -255,47 +258,43 @@ public class HighlightInfo implements Segment {
 
     TextAttributes attributes = getAttributesByType(element, type, scheme);
     return attributes == null ? null : attributes.getErrorStripeColor();
-
   }
 
   @Nonnull
-  private static EditorColorsScheme getColorsScheme(@Nullable final EditorColorsScheme customScheme) {
-    if (customScheme != null) {
-      return customScheme;
-    }
-    return EditorColorsManager.getInstance().getGlobalScheme();
+  private static EditorColorsScheme getColorsScheme(@Nullable EditorColorsScheme customScheme) {
+    return customScheme != null ? customScheme : EditorColorsManager.getInstance().getGlobalScheme();
   }
 
   @Nullable
-  @NonNls
   private static String htmlEscapeToolTip(@Nullable String unescapedTooltip) {
     return unescapedTooltip == null ? null : XmlStringUtil.wrapInHtml(XmlStringUtil.escapeString(unescapedTooltip));
   }
 
   private static class Holder {
-    private static final List<HighlightInfoFilter> FILTERS = HighlightInfoFilter.EXTENSION_POINT_NAME.getExtensionList();
+    private static final HighlightInfoFilter[] FILTERS = HighlightInfoFilter.EXTENSION_POINT_NAME.getExtensions();
   }
 
   boolean needUpdateOnTyping() {
     return isFlagSet(NEEDS_UPDATE_ON_TYPING_MASK);
   }
 
-  HighlightInfo(@Nullable TextAttributes forcedTextAttributes,
-                @Nullable TextAttributesKey forcedTextAttributesKey,
-                @Nonnull HighlightInfoType type,
-                int startOffset,
-                int endOffset,
-                @Nullable String escapedDescription,
-                @Nullable String escapedToolTip,
-                @Nonnull HighlightSeverity severity,
-                boolean afterEndOfLine,
-                @Nullable Boolean needsUpdateOnTyping,
-                boolean isFileLevelAnnotation,
-                int navigationShift,
-                ProblemGroup problemGroup,
-                GutterMark gutterIconRenderer) {
+  protected HighlightInfo(@Nullable TextAttributes forcedTextAttributes,
+                          @Nullable TextAttributesKey forcedTextAttributesKey,
+                          @Nonnull HighlightInfoType type,
+                          int startOffset,
+                          int endOffset,
+                          @Nullable String escapedDescription,
+                          @Nullable String escapedToolTip,
+                          @Nonnull HighlightSeverity severity,
+                          boolean afterEndOfLine,
+                          @Nullable Boolean needsUpdateOnTyping,
+                          boolean isFileLevelAnnotation,
+                          int navigationShift,
+                          ProblemGroup problemGroup,
+                          @Nullable String inspectionToolId,
+                          GutterMark gutterIconRenderer) {
     if (startOffset < 0 || startOffset > endOffset) {
-      LOG.error("Incorrect highlightInfo bounds. description="+escapedDescription+"; startOffset="+startOffset+"; endOffset="+endOffset+";type="+type);
+      LOG.error("Incorrect highlightInfo bounds. description=" + escapedDescription + "; startOffset=" + startOffset + "; endOffset=" + endOffset + ";type=" + type);
     }
     this.forcedTextAttributes = forcedTextAttributes;
     this.forcedTextAttributesKey = forcedTextAttributesKey;
@@ -305,7 +304,7 @@ public class HighlightInfo implements Segment {
     fixStartOffset = startOffset;
     fixEndOffset = endOffset;
     description = escapedDescription;
-    // optimisation: do not retain extra memory if can recompute
+    // optimization: do not retain extra memory if can recompute
     toolTip = encodeTooltip(escapedToolTip, escapedDescription);
     this.severity = severity;
     setFlag(AFTER_END_OF_LINE_MASK, afterEndOfLine);
@@ -314,11 +313,13 @@ public class HighlightInfo implements Segment {
     this.navigationShift = navigationShift;
     myProblemGroup = problemGroup;
     this.gutterIconRenderer = gutterIconRenderer;
+    this.inspectionToolId = inspectionToolId;
   }
 
   private static boolean calcNeedUpdateOnTyping(@Nullable Boolean needsUpdateOnTyping, HighlightInfoType type) {
-    if (needsUpdateOnTyping != null) return needsUpdateOnTyping.booleanValue();
-
+    if (needsUpdateOnTyping != null) {
+      return needsUpdateOnTyping.booleanValue();
+    }
     if (type instanceof HighlightInfoType.UpdateOnTypingSuppressible) {
       return ((HighlightInfoType.UpdateOnTypingSuppressible)type).needsUpdateOnTyping();
     }
@@ -341,7 +342,7 @@ public class HighlightInfo implements Segment {
            Comparing.strEqual(info.getDescription(), getDescription());
   }
 
-  boolean equalsByActualOffset(@Nonnull HighlightInfo info) {
+  protected boolean equalsByActualOffset(@Nonnull HighlightInfo info) {
     if (info == this) return true;
 
     return info.getSeverity() == getSeverity() &&
@@ -360,19 +361,17 @@ public class HighlightInfo implements Segment {
   }
 
   @Override
-  @NonNls
   public String toString() {
-    @NonNls String s = "HighlightInfo(" + startOffset + "," + endOffset+")";
+    String s = "HighlightInfo(" + startOffset + "," + endOffset + ")";
     if (getActualStartOffset() != startOffset || getActualEndOffset() != endOffset) {
       s += "; actual: (" + getActualStartOffset() + "," + getActualEndOffset() + ")";
     }
     if (highlighter != null) s += " text='" + getText() + "'";
-    if (getDescription() != null) s+= ", description='" + getDescription() + "'";
+    if (getDescription() != null) s += ", description='" + getDescription() + "'";
     s += " severity=" + getSeverity();
     s += " group=" + getGroup();
-
     if (quickFixActionRanges != null) {
-      s+= "; quickFixes: "+quickFixActionRanges;
+      s += "; quickFixes: " + quickFixActionRanges;
     }
     if (gutterIconRenderer != null) {
       s += "; gutter: " + gutterIconRenderer;
@@ -393,46 +392,64 @@ public class HighlightInfo implements Segment {
     // only one 'range' call allowed
     @Nonnull
     Builder range(@Nonnull TextRange textRange);
+
     @Nonnull
     Builder range(@Nonnull ASTNode node);
+
     @Nonnull
     Builder range(@Nonnull PsiElement element);
+
+    @Nonnull
+    Builder range(@Nonnull PsiElement element, @Nonnull TextRange rangeInElement);
+
     @Nonnull
     Builder range(@Nonnull PsiElement element, int start, int end);
+
     @Nonnull
     Builder range(int start, int end);
 
     @Nonnull
     Builder gutterIconRenderer(@Nonnull GutterIconRenderer gutterIconRenderer);
+
     @Nonnull
     Builder problemGroup(@Nonnull ProblemGroup problemGroup);
+
+    @Nonnull
+    Builder inspectionToolId(@Nonnull String inspectionTool);
 
     // only one allowed
     @Nonnull
     Builder description(@Nonnull String description);
+
     @Nonnull
     Builder descriptionAndTooltip(@Nonnull String description);
 
     // only one allowed
     @Nonnull
     Builder textAttributes(@Nonnull TextAttributes attributes);
+
     @Nonnull
     Builder textAttributes(@Nonnull TextAttributesKey attributesKey);
 
     // only one allowed
     @Nonnull
     Builder unescapedToolTip(@Nonnull String unescapedToolTip);
+
     @Nonnull
     Builder escapedToolTip(@Nonnull String escapedToolTip);
 
     @Nonnull
     Builder endOfLine();
+
     @Nonnull
     Builder needsUpdateOnTyping(boolean update);
+
     @Nonnull
     Builder severity(@Nonnull HighlightSeverity severity);
+
     @Nonnull
     Builder fileLevelAnnotation();
+
     @Nonnull
     Builder navigationShift(int navigationShift);
 
@@ -476,6 +493,7 @@ public class HighlightInfo implements Segment {
 
     private GutterIconRenderer gutterIconRenderer;
     private ProblemGroup problemGroup;
+    private String inspectionToolId;
     private PsiElement psiElement;
 
     private B(@Nonnull HighlightInfoType type) {
@@ -500,6 +518,14 @@ public class HighlightInfo implements Segment {
 
     @Nonnull
     @Override
+    public Builder inspectionToolId(@Nonnull String inspectionToolId) {
+      assert this.inspectionToolId == null : "inspectionToolId already set";
+      this.inspectionToolId = inspectionToolId;
+      return this;
+    }
+
+    @Nonnull
+    @Override
     public Builder description(@Nonnull String description) {
       assert escapedDescription == null : "description already set";
       escapedDescription = description;
@@ -515,7 +541,7 @@ public class HighlightInfo implements Segment {
     @Nonnull
     @Override
     public Builder textAttributes(@Nonnull TextAttributes attributes) {
-      assert forcedTextAttributes == null : "textattributes already set";
+      assert forcedTextAttributes == null : "textAttributes already set";
       forcedTextAttributes = attributes;
       return this;
     }
@@ -523,7 +549,7 @@ public class HighlightInfo implements Segment {
     @Nonnull
     @Override
     public Builder textAttributes(@Nonnull TextAttributesKey attributesKey) {
-      assert forcedTextAttributesKey == null : "textattributesKey already set";
+      assert forcedTextAttributesKey == null : "textAttributesKey already set";
       forcedTextAttributesKey = attributesKey;
       return this;
     }
@@ -579,6 +605,13 @@ public class HighlightInfo implements Segment {
 
     @Nonnull
     @Override
+    public Builder range(@Nonnull PsiElement element, @Nonnull TextRange rangeInElement) {
+      TextRange absoluteRange = rangeInElement.shiftRight(element.getTextRange().getStartOffset());
+      return range(element, absoluteRange.getStartOffset(), absoluteRange.getEndOffset());
+    }
+
+    @Nonnull
+    @Override
     public Builder range(@Nonnull PsiElement element, int start, int end) {
       assert psiElement == null : " psiElement already set";
       psiElement = element;
@@ -626,8 +659,10 @@ public class HighlightInfo implements Segment {
     @Override
     public HighlightInfo create() {
       HighlightInfo info = createUnconditionally();
-      LOG.assertTrue(psiElement != null || severity == HighlightInfoType.SYMBOL_TYPE_SEVERITY || severity == HighlightInfoType.INJECTED_FRAGMENT_SEVERITY || ArrayUtilRt.find(HighlightSeverity.DEFAULT_SEVERITIES, severity) != -1,
-                     "Custom type requires not-null element to detect its text attributes");
+      LOG.assertTrue(psiElement != null ||
+                     severity == HighlightInfoType.SYMBOL_TYPE_SEVERITY ||
+                     severity == HighlightInfoType.INJECTED_FRAGMENT_SEVERITY ||
+                     ArrayUtil.find(HighlightSeverity.DEFAULT_SEVERITIES, severity) != -1, "Custom type requires not-null element to detect its text attributes");
 
       if (!isAcceptedByFilters(info, psiElement)) return null;
 
@@ -641,9 +676,8 @@ public class HighlightInfo implements Segment {
         severity = type.getSeverity(psiElement);
       }
 
-      return new HighlightInfo(forcedTextAttributes, forcedTextAttributesKey, type, startOffset, endOffset, escapedDescription,
-                               escapedToolTip, severity, isAfterEndOfLine, myNeedsUpdateOnTyping, isFileLevelAnnotation, navigationShift,
-                               problemGroup, gutterIconRenderer);
+      return new HighlightInfo(forcedTextAttributes, forcedTextAttributesKey, type, startOffset, endOffset, escapedDescription, escapedToolTip, severity, isAfterEndOfLine, myNeedsUpdateOnTyping,
+                               isFileLevelAnnotation, navigationShift, problemGroup, inspectionToolId, gutterIconRenderer);
     }
   }
 
@@ -658,38 +692,33 @@ public class HighlightInfo implements Segment {
 
   @Nonnull
   public static HighlightInfo fromAnnotation(@Nonnull Annotation annotation) {
-    return fromAnnotation(annotation, null, false);
+    return fromAnnotation(annotation, false);
   }
 
   @Nonnull
-  static HighlightInfo fromAnnotation(@Nonnull Annotation annotation, @Nullable TextRange fixedRange, boolean batchMode) {
-    final TextAttributes forcedAttributes = annotation.getEnforcedTextAttributes();
+  static HighlightInfo fromAnnotation(@Nonnull Annotation annotation, boolean batchMode) {
+    TextAttributes forcedAttributes = annotation.getEnforcedTextAttributes();
     TextAttributesKey key = annotation.getTextAttributes();
-    final TextAttributesKey forcedAttributesKey = forcedAttributes == null ? (key == HighlighterColors.NO_HIGHLIGHTING ? null : key) : null;
+    TextAttributesKey forcedAttributesKey = forcedAttributes == null && key != HighlighterColors.NO_HIGHLIGHTING ? key : null;
 
-    HighlightInfo info = new HighlightInfo(forcedAttributes, forcedAttributesKey, convertType(annotation),
-                                           fixedRange != null? fixedRange.getStartOffset() : annotation.getStartOffset(),
-                                           fixedRange != null? fixedRange.getEndOffset() : annotation.getEndOffset(),
-                                           annotation.getMessage(), annotation.getTooltip(),
-                                           annotation.getSeverity(), annotation.isAfterEndOfLine(), annotation.needsUpdateOnTyping(), annotation.isFileLevelAnnotation(),
-                                           0, annotation.getProblemGroup(), annotation.getGutterIconRenderer());
-    appendFixes(fixedRange, info, batchMode ? annotation.getBatchFixes() : annotation.getQuickFixes());
+    HighlightInfo info =
+            new HighlightInfo(forcedAttributes, forcedAttributesKey, convertType(annotation), annotation.getStartOffset(), annotation.getEndOffset(), annotation.getMessage(), annotation.getTooltip(),
+                              annotation.getSeverity(), annotation.isAfterEndOfLine(), annotation.needsUpdateOnTyping(), annotation.isFileLevelAnnotation(), 0, annotation.getProblemGroup(), null,
+                              annotation.getGutterIconRenderer());
+
+    List<? extends Annotation.QuickFixInfo> fixes = batchMode ? annotation.getBatchFixes() : annotation.getQuickFixes();
+    if (fixes != null) {
+      for (Annotation.QuickFixInfo quickFixInfo : fixes) {
+        TextRange range = quickFixInfo.textRange;
+        HighlightDisplayKey k = quickFixInfo.key != null ? quickFixInfo.key : HighlightDisplayKey.find(ANNOTATOR_INSPECTION_SHORT_NAME);
+        info.registerFix(quickFixInfo.quickFix, null, HighlightDisplayKey.getDisplayNameByKey(k), range, k);
+      }
+    }
+
     return info;
   }
 
   private static final String ANNOTATOR_INSPECTION_SHORT_NAME = "Annotator";
-
-  private static void appendFixes(@Nullable TextRange fixedRange, @Nonnull HighlightInfo info, @Nullable List<Annotation.QuickFixInfo> fixes) {
-    if (fixes != null) {
-      for (final Annotation.QuickFixInfo quickFixInfo : fixes) {
-        TextRange range = fixedRange != null ? fixedRange : quickFixInfo.textRange;
-        HighlightDisplayKey key = quickFixInfo.key != null
-                                  ? quickFixInfo.key
-                                  : HighlightDisplayKey.find(ANNOTATOR_INSPECTION_SHORT_NAME);
-        info.registerFix(quickFixInfo.quickFix, null, HighlightDisplayKey.getDisplayNameByKey(key), range, key);
-      }
-    }
-  }
 
   @Nonnull
   private static HighlightInfoType convertType(@Nonnull Annotation annotation) {
@@ -697,41 +726,47 @@ public class HighlightInfo implements Segment {
     if (type == ProblemHighlightType.LIKE_UNUSED_SYMBOL) return HighlightInfoType.UNUSED_SYMBOL;
     if (type == ProblemHighlightType.LIKE_UNKNOWN_SYMBOL) return HighlightInfoType.WRONG_REF;
     if (type == ProblemHighlightType.LIKE_DEPRECATED) return HighlightInfoType.DEPRECATED;
+    if (type == ProblemHighlightType.LIKE_MARKED_FOR_REMOVAL) return HighlightInfoType.MARKED_FOR_REMOVAL;
     return convertSeverity(annotation.getSeverity());
   }
 
   @Nonnull
+  @SuppressWarnings("deprecation")
   public static HighlightInfoType convertSeverity(@Nonnull HighlightSeverity severity) {
-    return severity == HighlightSeverity.ERROR? HighlightInfoType.ERROR :
-           severity == HighlightSeverity.WARNING ? HighlightInfoType.WARNING :
-           severity == HighlightSeverity.INFO ? HighlightInfoType.INFO :
-           severity == HighlightSeverity.WEAK_WARNING ? HighlightInfoType.WEAK_WARNING :
-           severity ==HighlightSeverity.GENERIC_SERVER_ERROR_OR_WARNING ? HighlightInfoType.GENERIC_WARNINGS_OR_ERRORS_FROM_SERVER :
-           HighlightInfoType.INFORMATION;
+    return severity == HighlightSeverity.ERROR
+           ? HighlightInfoType.ERROR
+           : severity == HighlightSeverity.WARNING
+             ? HighlightInfoType.WARNING
+             : severity == HighlightSeverity.INFO
+               ? HighlightInfoType.INFO
+               : severity == HighlightSeverity.WEAK_WARNING
+                 ? HighlightInfoType.WEAK_WARNING
+                 : severity == HighlightSeverity.GENERIC_SERVER_ERROR_OR_WARNING ? HighlightInfoType.GENERIC_WARNINGS_OR_ERRORS_FROM_SERVER : HighlightInfoType.INFORMATION;
   }
 
   @Nonnull
   public static ProblemHighlightType convertType(HighlightInfoType infoType) {
     if (infoType == HighlightInfoType.ERROR || infoType == HighlightInfoType.WRONG_REF) return ProblemHighlightType.ERROR;
-    if (infoType == HighlightInfoType.WARNING) return ProblemHighlightType.GENERIC_ERROR_OR_WARNING;
+    if (infoType == HighlightInfoType.WARNING) return ProblemHighlightType.WARNING;
     if (infoType == HighlightInfoType.INFORMATION) return ProblemHighlightType.INFORMATION;
     return ProblemHighlightType.WEAK_WARNING;
   }
 
   @Nonnull
+  @SuppressWarnings("deprecation")
   public static ProblemHighlightType convertSeverityToProblemHighlight(HighlightSeverity severity) {
-    return severity == HighlightSeverity.ERROR ? ProblemHighlightType.ERROR :
-           severity == HighlightSeverity.WARNING ? ProblemHighlightType.GENERIC_ERROR_OR_WARNING :
-           severity == HighlightSeverity.INFO ? ProblemHighlightType.INFO :
-           severity == HighlightSeverity.WEAK_WARNING ? ProblemHighlightType.WEAK_WARNING : ProblemHighlightType.INFORMATION;
+    return severity == HighlightSeverity.ERROR
+           ? ProblemHighlightType.ERROR
+           : severity == HighlightSeverity.WARNING
+             ? ProblemHighlightType.WARNING
+             : severity == HighlightSeverity.INFO ? ProblemHighlightType.INFO : severity == HighlightSeverity.WEAK_WARNING ? ProblemHighlightType.WEAK_WARNING : ProblemHighlightType.INFORMATION;
   }
-
 
   public boolean hasHint() {
     return isFlagSet(HAS_HINT_MASK);
   }
 
-  void setHint(final boolean hasHint) {
+  void setHint(boolean hasHint) {
     setFlag(HAS_HINT_MASK, hasHint);
   }
 
@@ -739,6 +774,7 @@ public class HighlightInfo implements Segment {
     RangeHighlighterEx h = highlighter;
     return h == null || !h.isValid() ? startOffset : h.getStartOffset();
   }
+
   public int getActualEndOffset() {
     RangeHighlighterEx h = highlighter;
     return h == null || !h.isValid() ? endOffset : h.getEndOffset();
@@ -751,28 +787,25 @@ public class HighlightInfo implements Segment {
     private final ProblemGroup myProblemGroup;
     private final HighlightSeverity mySeverity;
     private final String myDisplayName;
-    private final Image myIcon;
+    private final consulo.ui.image.Image myIcon;
     private Boolean myCanCleanup;
 
-    IntentionActionDescriptor(@Nonnull IntentionAction action, final List<IntentionAction> options, final String displayName) {
+    IntentionActionDescriptor(@Nonnull IntentionAction action, List<IntentionAction> options, String displayName) {
       this(action, options, displayName, null);
     }
 
-    public IntentionActionDescriptor(@Nonnull IntentionAction action, final Image icon) {
+    public IntentionActionDescriptor(@Nonnull IntentionAction action, consulo.ui.image.Image icon) {
       this(action, null, null, icon);
     }
 
-    IntentionActionDescriptor(@Nonnull IntentionAction action,
-                              @Nullable final List<IntentionAction> options,
-                              @Nullable final String displayName,
-                              @Nullable Image icon) {
+    IntentionActionDescriptor(@Nonnull IntentionAction action, @Nullable List<IntentionAction> options, @Nullable String displayName, @Nullable consulo.ui.image.Image icon) {
       this(action, options, displayName, icon, null, null, null);
     }
 
     public IntentionActionDescriptor(@Nonnull IntentionAction action,
-                                     @Nullable final List<IntentionAction> options,
-                                     @Nullable final String displayName,
-                                     @Nullable Image icon,
+                                     @Nullable List<IntentionAction> options,
+                                     @Nullable String displayName,
+                                     @Nullable consulo.ui.image.Image icon,
                                      @Nullable HighlightDisplayKey key,
                                      @Nullable ProblemGroup problemGroup,
                                      @Nullable HighlightSeverity severity) {
@@ -794,13 +827,18 @@ public class HighlightInfo implements Segment {
       return mySeverity == null || mySeverity.compareTo(HighlightSeverity.ERROR) >= 0;
     }
 
+    boolean isInformation() {
+      return HighlightSeverity.INFORMATION.equals(mySeverity);
+    }
+
     boolean canCleanup(@Nonnull PsiElement element) {
       if (myCanCleanup == null) {
-        InspectionProfile profile = InspectionProjectProfileManager.getInstance(element.getProject()).getInspectionProfile();
-        final HighlightDisplayKey key = myKey;
+        InspectionProfile profile = InspectionProjectProfileManager.getInstance(element.getProject()).getCurrentProfile();
+        HighlightDisplayKey key = myKey;
         if (key == null) {
           myCanCleanup = false;
-        } else {
+        }
+        else {
           InspectionToolWrapper toolWrapper = profile.getInspectionTool(key.toString(), element);
           myCanCleanup = toolWrapper != null && toolWrapper.isCleanupTool();
         }
@@ -827,21 +865,21 @@ public class HighlightInfo implements Segment {
       }
       IntentionManager intentionManager = IntentionManager.getInstance();
       List<IntentionAction> newOptions = intentionManager.getStandardIntentionOptions(key, element);
-      InspectionProfile profile = InspectionProjectProfileManager.getInstance(element.getProject()).getInspectionProfile();
+      InspectionProfile profile = InspectionProjectProfileManager.getInstance(element.getProject()).getCurrentProfile();
       InspectionToolWrapper toolWrapper = profile.getInspectionTool(key.toString(), element);
       if (!(toolWrapper instanceof LocalInspectionToolWrapper)) {
-        HighlightDisplayKey idkey = HighlightDisplayKey.findById(key.toString());
-        if (idkey != null) {
-          toolWrapper = profile.getInspectionTool(idkey.toString(), element);
+        HighlightDisplayKey idKey = HighlightDisplayKey.findById(key.toString());
+        if (idKey != null) {
+          toolWrapper = profile.getInspectionTool(idKey.toString(), element);
         }
       }
       if (toolWrapper != null) {
 
         myCanCleanup = toolWrapper.isCleanupTool();
 
-        final IntentionAction fixAllIntention = intentionManager.createFixAllIntention(toolWrapper, myAction);
-        InspectionProfileEntry wrappedTool = toolWrapper instanceof LocalInspectionToolWrapper ? ((LocalInspectionToolWrapper)toolWrapper).getTool()
-                                                                                               : ((GlobalInspectionToolWrapper)toolWrapper).getTool();
+        IntentionAction fixAllIntention = intentionManager.createFixAllIntention(toolWrapper, myAction);
+        InspectionProfileEntry wrappedTool =
+                toolWrapper instanceof LocalInspectionToolWrapper ? ((LocalInspectionToolWrapper)toolWrapper).getTool() : ((GlobalInspectionToolWrapper)toolWrapper).getTool();
         if (wrappedTool instanceof DefaultHighlightVisitorBasedInspection.AnnotatorBasedInspection) {
           List<IntentionAction> actions = Collections.emptyList();
           if (myProblemGroup instanceof SuppressableProblemGroup) {
@@ -860,7 +898,7 @@ public class HighlightInfo implements Segment {
         }
         ContainerUtil.addIfNotNull(newOptions, fixAllIntention);
         if (wrappedTool instanceof CustomSuppressableInspectionTool) {
-          final IntentionAction[] suppressActions = ((CustomSuppressableInspectionTool)wrappedTool).getSuppressActions(element);
+          IntentionAction[] suppressActions = ((CustomSuppressableInspectionTool)wrappedTool).getSuppressActions(element);
           if (suppressActions != null) {
             ContainerUtil.addAll(newOptions, suppressActions);
           }
@@ -868,16 +906,17 @@ public class HighlightInfo implements Segment {
         else {
           SuppressQuickFix[] suppressFixes = wrappedTool.getBatchSuppressActions(element);
           if (suppressFixes.length > 0) {
-            ContainerUtil.addAll(newOptions, ContainerUtil.map(suppressFixes, SuppressIntentionActionFromFix::convertBatchToSuppressIntentionAction));
+            newOptions.addAll(ContainerUtil.map(suppressFixes, SuppressIntentionActionFromFix::convertBatchToSuppressIntentionAction));
           }
         }
 
       }
       if (myProblemGroup instanceof SuppressableProblemGroup) {
-        final IntentionAction[] suppressActions = ((SuppressableProblemGroup)myProblemGroup).getSuppressActions(element);
+        IntentionAction[] suppressActions = ((SuppressableProblemGroup)myProblemGroup).getSuppressActions(element);
         ContainerUtil.addAll(newOptions, suppressActions);
       }
 
+      //noinspection SynchronizeOnThis
       synchronized (this) {
         options = myOptions;
         if (options == null) {
@@ -885,6 +924,7 @@ public class HighlightInfo implements Segment {
         }
         myKey = null;
       }
+
       return options;
     }
 
@@ -894,14 +934,13 @@ public class HighlightInfo implements Segment {
     }
 
     @Override
-    @NonNls
     public String toString() {
       String text = getAction().getText();
       return "descriptor: " + (text.isEmpty() ? getAction().getClass() : text);
     }
 
     @Nullable
-    public Image getIcon() {
+    public consulo.ui.image.Image getIcon() {
       return myIcon;
     }
 
@@ -940,11 +979,7 @@ public class HighlightInfo implements Segment {
     return highlighter.getDocument().getText(TextRange.create(highlighter));
   }
 
-  public void registerFix(@Nullable IntentionAction action,
-                          @Nullable List<IntentionAction> options,
-                          @Nullable String displayName,
-                          @Nullable TextRange fixRange,
-                          @Nullable HighlightDisplayKey key) {
+  public void registerFix(@Nullable IntentionAction action, @Nullable List<IntentionAction> options, @Nullable String displayName, @Nullable TextRange fixRange, @Nullable HighlightDisplayKey key) {
     if (action == null) return;
     if (fixRange == null) fixRange = new TextRange(startOffset, endOffset);
     if (quickFixActionRanges == null) {
@@ -952,19 +987,16 @@ public class HighlightInfo implements Segment {
     }
     IntentionActionDescriptor desc = new IntentionActionDescriptor(action, options, displayName, null, key, getProblemGroup(), getSeverity());
     quickFixActionRanges.add(Pair.create(desc, fixRange));
-    fixStartOffset = Math.min (fixStartOffset, fixRange.getStartOffset());
-    fixEndOffset = Math.max (fixEndOffset, fixRange.getEndOffset());
+    fixStartOffset = Math.min(fixStartOffset, fixRange.getStartOffset());
+    fixEndOffset = Math.max(fixEndOffset, fixRange.getEndOffset());
     if (action instanceof HintAction) {
       setHint(true);
     }
   }
 
-  public void unregisterQuickFix(@Nonnull Condition<IntentionAction> condition) {
-    for (Iterator<Pair<IntentionActionDescriptor, TextRange>> it = quickFixActionRanges.iterator(); it.hasNext();) {
-      Pair<IntentionActionDescriptor, TextRange> pair = it.next();
-      if (condition.value(pair.first.getAction())) {
-        it.remove();
-      }
+  public void unregisterQuickFix(@Nonnull Condition<? super IntentionAction> condition) {
+    if (quickFixActionRanges != null) {
+      quickFixActionRanges.removeIf(pair -> condition.value(pair.first.getAction()));
     }
   }
 }

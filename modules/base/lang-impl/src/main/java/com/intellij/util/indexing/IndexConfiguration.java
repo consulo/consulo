@@ -20,16 +20,15 @@ import com.intellij.openapi.util.Pair;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectIntHashMap;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 class IndexConfiguration {
-  private final Map<ID<?, ?>, Pair<UpdatableIndex<?, ?, FileContent>, FileBasedIndex.InputFilter>> myIndices =
-          new THashMap<>();
+  private final Map<ID<?, ?>, Pair<UpdatableIndex<?, ?, FileContent>, FileBasedIndex.InputFilter>> myIndices = new THashMap<>();
   private final TObjectIntHashMap<ID<?, ?>> myIndexIdToVersionMap = new TObjectIntHashMap<>();
   private final List<ID<?, ?>> myIndicesWithoutFileTypeInfo = new ArrayList<>();
   private final Map<FileType, List<ID<?, ?>>> myFileType2IndicesWithFileTypeInfoMap = new THashMap<>();
@@ -39,10 +38,8 @@ class IndexConfiguration {
     assert myFreezed;
     final Pair<UpdatableIndex<?, ?, FileContent>, FileBasedIndex.InputFilter> pair = myIndices.get(indexId);
 
-    assert pair != null : "Index data is absent for index " + indexId;
-
     //noinspection unchecked
-    return (UpdatableIndex<K, V, FileContent>)pair.getFirst();
+    return pair != null ? (UpdatableIndex<K, V, FileContent>)pair.getFirst() : null;
   }
 
   FileBasedIndex.InputFilter getInputFilter(@Nonnull ID<?, ?> indexId) {
@@ -59,31 +56,34 @@ class IndexConfiguration {
   }
 
   <K, V> void registerIndex(ID<K, V> name,
-                            UpdatableIndex<K, V, FileContent> index,
+                            @Nonnull UpdatableIndex<K, V, FileContent> index,
                             FileBasedIndex.InputFilter inputFilter,
                             int version,
-                            @Nullable Collection<FileType> associatedFileTypes
-  ) {
+                            @Nullable Collection<? extends FileType> associatedFileTypes) {
     assert !myFreezed;
 
     synchronized (myIndices) {
       myIndexIdToVersionMap.put(name, version);
 
-      if (associatedFileTypes != null && !associatedFileTypes.isEmpty()) {
-        for(FileType fileType:associatedFileTypes) {
-          List<ID<?, ?>> ids = myFileType2IndicesWithFileTypeInfoMap.get(fileType);
-          if (ids == null) myFileType2IndicesWithFileTypeInfoMap.put(fileType, ids = new ArrayList<>(5));
+      if (associatedFileTypes != null) {
+        for (FileType fileType : associatedFileTypes) {
+          List<ID<?, ?>> ids = myFileType2IndicesWithFileTypeInfoMap.computeIfAbsent(fileType, __ -> new ArrayList<>(5));
           ids.add(name);
         }
-      } else {
+      }
+      else {
         myIndicesWithoutFileTypeInfo.add(name);
       }
 
-      myIndices.put(name, new Pair<>(index, inputFilter));
+      Pair<UpdatableIndex<?, ?, FileContent>, FileBasedIndex.InputFilter> old = myIndices.put(name, new Pair<>(index, inputFilter));
+      if (old != null) {
+        throw new IllegalStateException("Index " + old.first + " already registered for the name '" + name + "'");
+      }
     }
   }
 
-  List<ID<?, ?>> getFileTypesForIndex(FileType fileType) {
+  @Nonnull
+  List<ID<?, ?>> getFileTypesForIndex(@Nonnull FileType fileType) {
     assert myFreezed;
     List<ID<?, ?>> ids = myFileType2IndicesWithFileTypeInfoMap.get(fileType);
     if (ids == null) ids = myIndicesWithoutFileTypeInfo;

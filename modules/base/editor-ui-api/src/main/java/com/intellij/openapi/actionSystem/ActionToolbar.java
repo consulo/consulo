@@ -16,6 +16,7 @@
 package com.intellij.openapi.actionSystem;
 
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -125,4 +126,10 @@ public interface ActionToolbar {
 
   @Nonnull
   List<AnAction> getActions();
+
+  default void setSecondaryActionsIcon(Image icon) {
+  }
+
+  default void setSecondaryActionsIcon(Image icon, boolean hideDropdownIcon) {
+  }
 }

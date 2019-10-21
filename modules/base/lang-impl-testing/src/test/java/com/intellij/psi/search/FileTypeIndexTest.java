@@ -16,7 +16,6 @@
 package com.intellij.psi.search;
 
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.ex.FakeFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -47,7 +46,7 @@ public abstract class FileTypeIndexTest extends LightPlatformCodeInsightFixtureT
         return "";
       }
     };
-    FileTypeIndex index = new FileTypeIndex(FileTypeManager.getInstance());
+    FileTypeIndexImpl index = new FileTypeIndexImpl();
     int version = index.getVersion();
 
     try {

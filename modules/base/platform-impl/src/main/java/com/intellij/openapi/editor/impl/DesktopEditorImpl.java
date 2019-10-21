@@ -1,31 +1,12 @@
-/*
- * Copyright 2000-2017 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.application.options.EditorFontsConstants;
-import com.intellij.codeInsight.hint.DocumentFragmentTooltipRenderer;
 import com.intellij.codeInsight.hint.EditorFragmentComponent;
-import com.intellij.codeInsight.hint.TooltipController;
-import com.intellij.codeInsight.hint.TooltipGroup;
-import com.intellij.concurrency.JobScheduler;
 import com.intellij.diagnostic.Dumpable;
 import com.intellij.ide.*;
 import com.intellij.ide.dnd.DnDManager;
 import com.intellij.ide.ui.UISettings;
-import com.intellij.ide.ui.customization.CustomActionsSchema;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
@@ -35,26 +16,23 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.*;
 import com.intellij.openapi.editor.colors.*;
 import com.intellij.openapi.editor.colors.impl.DelegateColorScheme;
 import com.intellij.openapi.editor.colors.impl.FontPreferencesImpl;
 import com.intellij.openapi.editor.event.*;
+import com.intellij.openapi.editor.ex.EditorPopupHandler;
 import com.intellij.openapi.editor.ex.*;
+import com.intellij.openapi.editor.ex.util.EditorScrollingPositionKeeper;
 import com.intellij.openapi.editor.ex.util.EditorUIUtil;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.ex.util.EmptyEditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.HighlighterClient;
 import com.intellij.openapi.editor.impl.event.MarkupModelListener;
-import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
 import com.intellij.openapi.editor.impl.view.EditorView;
-import com.intellij.openapi.editor.markup.GutterDraggableObject;
-import com.intellij.openapi.editor.markup.GutterIconRenderer;
-import com.intellij.openapi.editor.markup.RangeHighlighter;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.keymap.Keymap;
@@ -74,24 +52,27 @@ import com.intellij.openapi.wm.IdeGlassPane;
 import com.intellij.openapi.wm.IdeGlassPaneUtil;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
-import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.ui.components.JBScrollBar;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.mac.MacGestureSupportForEditor;
+import com.intellij.ui.mac.touchbar.TouchBarsManager;
+import com.intellij.ui.paint.PaintUtil;
+import com.intellij.ui.paint.PaintUtil.RoundingMode;
+import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.*;
 import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.*;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import consulo.annotations.DeprecationInfo;
 import consulo.application.TransactionGuardEx;
-import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
+import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.logging.Logger;
+import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 import org.intellij.lang.annotations.JdkConstants;
@@ -133,20 +114,25 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.IntFunction;
 
-@Deprecated
-@DeprecationInfo("Desktop only implementation")
-public final class DesktopEditorImpl extends UserDataHolderBase implements EditorEx, HighlighterClient, Queryable, Dumpable {
+public final class DesktopEditorImpl extends UserDataHolderBase implements EditorEx, HighlighterClient, Queryable, Dumpable/*, CodeStyleSettingsListener*/ {
   public static final int TEXT_ALIGNMENT_LEFT = 0;
   public static final int TEXT_ALIGNMENT_RIGHT = 1;
 
   private static final int MIN_FONT_SIZE = 8;
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.impl.EditorImpl");
+  private static final Logger LOG = Logger.getInstance(DesktopEditorImpl.class);
   private static final Key DND_COMMAND_KEY = Key.create("DndCommand");
+  /**
+   * @deprecated Use {@link EditorMouseHoverPopupControl} instead. To be removed in 2020.1.
+   */
   @NonNls
+  @Deprecated
+  //@ApiStatus.ScheduledForRemoval(inVersion = "2020.1")
   public static final Object IGNORE_MOUSE_TRACKING = "ignore_mouse_tracking";
   private static final Key<JComponent> PERMANENT_HEADER = Key.create("PERMANENT_HEADER");
   public static final Key<Boolean> DO_DOCUMENT_UPDATE_TEST = Key.create("DoDocumentUpdateTest");
-  static final Key<Boolean> FORCED_SOFT_WRAPS = Key.create("forced.soft.wraps");
+  public static final Key<Boolean> FORCED_SOFT_WRAPS = Key.create("forced.soft.wraps");
+  public static final Key<Boolean> SOFT_WRAPS_EXIST = Key.create("soft.wraps.exist");
+  @SuppressWarnings("WeakerAccess")
   public static final Key<Boolean> DISABLE_CARET_POSITION_KEEPING = Key.create("editor.disable.caret.position.keeping");
   static final Key<Boolean> DISABLE_CARET_SHIFT_ON_WHITESPACE_INSERTION = Key.create("editor.disable.caret.shift.on.whitespace.insertion");
   private static final boolean HONOR_CAMEL_HUMPS_ON_TRIPLE_CLICK = Boolean.parseBoolean(System.getProperty("idea.honor.camel.humps.on.triple.click"));
@@ -162,14 +148,21 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   @Nonnull
   private final EditorGutterComponentImpl myGutterComponent;
   private final TraceableDisposable myTraceableDisposable = Disposer.newTraceDisposable(true);
+  private final FocusModeModel myFocusModeModel;
+  private volatile long myLastTypedActionTimestamp = -1;
+  private String myLastTypedAction;
+  private final LatencyListener myLatencyPublisher;
 
   private static final Cursor EMPTY_CURSOR;
+  private final Map<Object, Cursor> myCustomCursors = new LinkedHashMap<>();
+  private Cursor myDefaultCursor;
+  boolean myCursorSetExternally;
 
   static {
     Cursor emptyCursor = null;
     if (!GraphicsEnvironment.isHeadless()) {
       try {
-        emptyCursor = Toolkit.getDefaultToolkit().createCustomCursor(UIUtil.createImage(1, 1, BufferedImage.TYPE_INT_ARGB), new Point(), "Empty cursor");
+        emptyCursor = Toolkit.getDefaultToolkit().createCustomCursor(ImageUtil.createImage(1, 1, BufferedImage.TYPE_INT_ARGB), new Point(), "Empty cursor");
       }
       catch (Exception e) {
         LOG.warn("Couldn't create an empty cursor", e);
@@ -244,7 +237,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
   @Nonnull
   private static final RepaintCursorCommand ourCaretBlinkingCommand = new RepaintCursorCommand();
-  private final DocumentBulkUpdateListener myBulkUpdateListener;
 
   @MouseSelectionState
   private int myMouseSelectionState;
@@ -261,16 +253,17 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   private static final int MOUSE_SELECTION_STATE_WORD_SELECTED = 1;
   private static final int MOUSE_SELECTION_STATE_LINE_SELECTED = 2;
 
-  private EditorHighlighter myHighlighter;
+  private volatile EditorHighlighter myHighlighter; // updated in EDT, but can be accessed from other threads (under read action)
   private Disposable myHighlighterDisposable = Disposer.newDisposable();
   private final TextDrawingCallback myTextDrawingCallback = new MyTextDrawingCallback();
 
   @MagicConstant(intValues = {VERTICAL_SCROLLBAR_LEFT, VERTICAL_SCROLLBAR_RIGHT})
   private int myScrollBarOrientation;
-  private boolean myMousePressedInsideSelection;
+  private boolean myKeepSelectionOnMousePress;
 
   private boolean myUpdateCursor;
-  private int myCaretUpdateVShift;
+  private final EditorScrollingPositionKeeper myScrollingPositionKeeper;
+  private boolean myRestoreScrollingPosition;
 
   @Nullable
   private final Project myProject;
@@ -295,6 +288,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   private boolean myEmbeddedIntoDialogWrapper;
   private int myDragOnGutterSelectionStartLine = -1;
   private RangeMarker myDraggedRange;
+  private boolean myDragStarted;
 
   @Nonnull
   private final JPanel myHeaderPanel;
@@ -339,10 +333,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   private DesktopCaretImpl myPrimaryCaret;
 
   public final boolean myDisableRtl = Registry.is("editor.disable.rtl");
-  public final Object myFractionalMetricsHintValue = Registry.is("editor.text.fractional.metrics")
-                                                     ? RenderingHints.VALUE_FRACTIONALMETRICS_ON
-                                                     : RenderingHints.VALUE_FRACTIONALMETRICS_OFF;
-
+  public final Object myFractionalMetricsHintValue = Registry.is("editor.text.fractional.metrics") ? RenderingHints.VALUE_FRACTIONALMETRICS_ON : RenderingHints.VALUE_FRACTIONALMETRICS_OFF;
   final EditorView myView;
 
   private boolean myCharKeyPressed;
@@ -352,6 +343,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   private boolean myErrorStripeNeedsRepaint;
 
   private String myContextMenuGroupId = IdeActions.GROUP_BASIC_EDITOR_POPUP;
+  private final List<EditorPopupHandler> myPopupHandlers = new ArrayList<>();
 
   private boolean myUseEditorAntialiasing = true;
 
@@ -367,14 +359,19 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
   private boolean myBackgroundImageSet;
 
-  DesktopEditorImpl(@Nonnull Document document, boolean viewer, @Nullable Project project) {
+  private final EditorKind myKind;
+
+  private boolean myScrollingToCaret;
+
+  DesktopEditorImpl(@Nonnull Document document, boolean viewer, @Nullable Project project, @Nonnull EditorKind kind) {
     assertIsDispatchThread();
     myProject = project;
     myDocument = (DocumentEx)document;
     myScheme = createBoundColorSchemeDelegate(null);
     myScrollPane = new MyScrollPane(); // create UI after scheme initialization
     myIsViewer = viewer;
-    mySettings = new SettingsImpl(this, project);
+    myKind = kind;
+    mySettings = new SettingsImpl(this, project, kind);
     if (!mySettings.isUseSoftWraps() && shouldSoftWrapsBeForced()) {
       mySettings.setUseSoftWrapsQuiet();
       putUserData(FORCED_SOFT_WRAPS, Boolean.TRUE);
@@ -387,7 +384,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     myDocumentMarkupModel = new EditorFilteringMarkupModelEx(this, documentMarkup);
     myFoldingModel = new FoldingModelImpl(this);
     myCaretModel = new DesktopCaretModelImpl(this);
-    myCaretModel.initCarets();
     myScrollingModel = new ScrollingModelImpl(this);
     myInlayModel = new InlayModelImpl(this);
     Disposer.register(myCaretModel, myInlayModel);
@@ -397,73 +393,20 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
     myImmediatePainter = new ImmediatePainter(this);
 
-    if (myDocument instanceof DocumentImpl) {
-      myBulkUpdateListener = new EditorDocumentBulkUpdateAdapter();
-      ((DocumentImpl)myDocument).addInternalBulkModeListener(myBulkUpdateListener);
-    }
-    else {
-      myBulkUpdateListener = null;
-    }
-
     myMarkupModelListener = new MarkupModelListener() {
-      private boolean areRenderersInvolved(@Nonnull RangeHighlighterEx highlighter) {
-        return highlighter.getCustomRenderer() != null ||
-               highlighter.getGutterIconRenderer() != null ||
-               highlighter.getLineMarkerRenderer() != null ||
-               highlighter.getLineSeparatorRenderer() != null;
-      }
-
       @Override
       public void afterAdded(@Nonnull RangeHighlighterEx highlighter) {
-        attributesChanged(highlighter, areRenderersInvolved(highlighter), EditorUtil.attributesImpactFontStyleOrColor(highlighter.getTextAttributes()));
+        onHighlighterChanged(highlighter, canImpactGutterSize(highlighter), EditorUtil.attributesImpactFontStyleOrColor(highlighter.getTextAttributes()));
       }
 
       @Override
       public void beforeRemoved(@Nonnull RangeHighlighterEx highlighter) {
-        attributesChanged(highlighter, areRenderersInvolved(highlighter), EditorUtil.attributesImpactFontStyleOrColor(highlighter.getTextAttributes()));
+        onHighlighterChanged(highlighter, canImpactGutterSize(highlighter), EditorUtil.attributesImpactFontStyleOrColor(highlighter.getTextAttributes()));
       }
 
       @Override
       public void attributesChanged(@Nonnull RangeHighlighterEx highlighter, boolean renderersChanged, boolean fontStyleOrColorChanged) {
-        if (myDocument.isInBulkUpdate()) return; // bulkUpdateFinished() will repaint anything
-
-        if (renderersChanged) {
-          updateGutterSize();
-        }
-
-        boolean errorStripeNeedsRepaint = renderersChanged || highlighter.getErrorStripeMarkColor() != null;
-        if (myDocumentChangeInProgress) {
-          // postpone repaint request, as folding model can be in inconsistent state and so coordinate
-          // conversions might give incorrect results
-          myErrorStripeNeedsRepaint |= errorStripeNeedsRepaint;
-          return;
-        }
-
-        int textLength = myDocument.getTextLength();
-
-        int start = Math.min(Math.max(highlighter.getAffectedAreaStartOffset(), 0), textLength);
-        int end = Math.min(Math.max(highlighter.getAffectedAreaEndOffset(), 0), textLength);
-
-        int startLine = start == -1 ? 0 : myDocument.getLineNumber(start);
-        int endLine = end == -1 ? myDocument.getLineCount() : myDocument.getLineNumber(end);
-        if (start != end && fontStyleOrColorChanged) {
-          myView.invalidateRange(start, end);
-        }
-        if (!myFoldingModel.isInBatchFoldingOperation()) { // at the end of batch folding operation everything is repainted
-          repaintLines(Math.max(0, startLine - 1), Math.min(endLine + 1, getDocument().getLineCount()));
-        }
-
-        // optimization: there is no need to repaint error stripe if the highlighter is invisible on it
-        if (errorStripeNeedsRepaint) {
-          if (myFoldingModel.isInBatchFoldingOperation()) {
-            myErrorStripeNeedsRepaint = true;
-          }
-          else {
-            myMarkupModel.repaint(start, end);
-          }
-        }
-
-        updateCaretCursor();
+        onHighlighterChanged(highlighter, renderersChanged, fontStyleOrColorChanged);
       }
     };
 
@@ -478,6 +421,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
     myFoldingModel.addListener(mySoftWrapModel, myCaretModel);
 
+    myInlayModel.addListener(myFoldingModel, myCaretModel);
     myInlayModel.addListener(myCaretModel, myCaretModel);
 
     myIndentsModel = new IndentsModelImpl(this);
@@ -488,9 +432,9 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       private IndentGuideDescriptor myCurrentCaretGuide;
 
       @Override
-      public void caretPositionChanged(CaretEvent e) {
+      public void caretPositionChanged(@Nonnull CaretEvent e) {
         if (myStickySelection) {
-          int selectionStart = Math.min(myStickySelectionStart, getDocument().getTextLength() - 1);
+          int selectionStart = Math.min(myStickySelectionStart, getDocument().getTextLength());
           mySelectionModel.setSelection(selectionStart, myCaretModel.getVisualPosition(), myCaretModel.getOffset());
         }
 
@@ -507,10 +451,10 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
           if (newGuide != null) {
             final Rectangle visibleArea = getScrollingModel().getVisibleArea();
-            final int line = newGuide.startLine;
-            if (logicalLineToY(line) < visibleArea.y) {
-              TextRange textRange = new TextRange(myDocument.getLineStartOffset(line), myDocument.getLineEndOffset(line));
-
+            final int endLine = newGuide.startLine;
+            if (logicalLineToY(endLine) < visibleArea.y) {
+              int startLine = Math.max(newGuide.codeConstructStartLine, endLine - EditorFragmentComponent.getAvailableVisualLinesAboveEditor(DesktopEditorImpl.this) + 1);
+              TextRange textRange = new TextRange(myDocument.getLineStartOffset(startLine), myDocument.getLineEndOffset(endLine));
               myCurrentHint = EditorFragmentComponent.showEditorFragmentHint(DesktopEditorImpl.this, textRange, false, false);
             }
           }
@@ -518,7 +462,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       }
 
       @Override
-      public void caretAdded(CaretEvent e) {
+      public void caretAdded(@Nonnull CaretEvent e) {
         if (myPrimaryCaret != null) {
           myPrimaryCaret.updateVisualPosition(); // repainting old primary caret's row background
         }
@@ -527,7 +471,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       }
 
       @Override
-      public void caretRemoved(CaretEvent e) {
+      public void caretRemoved(@Nonnull CaretEvent e) {
         repaintCaretRegion(e);
         myPrimaryCaret = myCaretModel.getPrimaryCaret(); // repainting new primary caret's row background
         myPrimaryCaret.updateVisualPosition();
@@ -536,32 +480,39 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
     myCaretCursor = new CaretCursor();
 
-    myFoldingModel.flushCaretShift();
+    myFoldingModel.disableScrollingPositionAdjustment();
     myScrollBarOrientation = VERTICAL_SCROLLBAR_RIGHT;
 
-    mySoftWrapModel.addSoftWrapChangeListener(new SoftWrapChangeListenerAdapter() {
+    mySoftWrapModel.addSoftWrapChangeListener(new SoftWrapChangeListener() {
       @Override
       public void recalculationEnds() {
         if (myCaretModel.isUpToDate()) {
           myCaretModel.updateVisualPosition();
         }
       }
+
+      @Override
+      public void softWrapsChanged() {
+        myGutterComponent.clearLineToGutterRenderersCache();
+      }
     });
 
     EditorHighlighter highlighter = new NullEditorHighlighter();
     setHighlighter(highlighter);
 
+    new FoldingPopupManager(this);
+
     myEditorComponent = new EditorComponentImpl(this);
     myVerticalScrollBar = (MyScrollBar)myScrollPane.getVerticalScrollBar();
-    myVerticalScrollBar.setOpaque(false);
+    if (shouldScrollBarBeOpaque()) myVerticalScrollBar.setOpaque(true);
     myPanel = new JPanel();
 
     UIUtil.putClientProperty(myPanel, UIUtil.NOT_IN_HIERARCHY_COMPONENTS, (Iterable<JComponent>)() -> {
       JComponent component = getPermanentHeaderComponent();
-      if (component != null && !component.isValid()) {
+      if (component != null && component.getParent() == null) {
         return Collections.singleton(component).iterator();
       }
-      return ContainerUtil.emptyIterator();
+      return Collections.emptyIterator();
     });
 
     myHeaderPanel = new MyHeaderPanel();
@@ -574,9 +525,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     myInlayModel.addListener(new InlayModel.SimpleAdapter() {
       @Override
       public void onUpdated(@Nonnull Inlay inlay) {
-        if (myDocument.isInEventsHandling() || myDocument.isInBulkUpdate()) return;
-        validateSize();
-        repaint(inlay.getOffset(), inlay.getOffset(), false);
+        onInlayUpdated(inlay);
       }
     }, myCaretModel);
 
@@ -590,9 +539,158 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
     updateCaretCursor();
 
-    if (SystemInfo.isJavaVersionAtLeast(8, 0, 0) && SystemInfo.isMacIntel64 && SystemInfo.isJetbrainsJvm && Registry.is("ide.mac.forceTouch")) {
+    if (SystemInfo.isMacIntel64 && SystemInfo.isJetBrainsJvm && Registry.is("ide.mac.forceTouch")) {
       new MacGestureSupportForEditor(getComponent());
     }
+
+    myScrollingModel.addVisibleAreaListener(this::moveCaretIntoViewIfCoveredByToolWindowBelow);
+
+    PropertyChangeListener propertyChangeListener = new PropertyChangeListener() {
+      @Override
+      public void propertyChange(PropertyChangeEvent e) {
+        if (Document.PROP_WRITABLE.equals(e.getPropertyName())) {
+          myEditorComponent.repaint();
+        }
+      }
+    };
+    myDocument.addPropertyChangeListener(propertyChangeListener);
+    Disposer.register(myDisposable, () -> myDocument.removePropertyChangeListener(propertyChangeListener));
+
+    //CodeStyleSettingsManager.getInstance(myProject).addListener(this);
+
+    myFocusModeModel = new FocusModeModel(this);
+    Disposer.register(myDisposable, myFocusModeModel);
+    myPopupHandlers.add(new DefaultPopupHandler());
+
+    myScrollingPositionKeeper = new EditorScrollingPositionKeeper(this);
+    Disposer.register(myDisposable, myScrollingPositionKeeper);
+
+    myLatencyPublisher = ApplicationManager.getApplication().getMessageBus().syncPublisher(LatencyListener.TOPIC);
+  }
+
+  public void applyFocusMode() {
+    myFocusModeModel.applyFocusMode(myCaretModel.getPrimaryCaret());
+  }
+
+  public boolean isInFocusMode(FoldRegion region) {
+    return myFocusModeModel.isInFocusMode(region);
+  }
+
+  public Segment getFocusModeRange() {
+    return myFocusModeModel.getFocusModeRange();
+  }
+
+  public FocusModeModel getFocusModeModel() {
+    return myFocusModeModel;
+  }
+
+  private boolean canImpactGutterSize(@Nonnull RangeHighlighterEx highlighter) {
+    if (highlighter.getGutterIconRenderer() != null) return true;
+    LineMarkerRenderer lineMarkerRenderer = highlighter.getLineMarkerRenderer();
+    if (lineMarkerRenderer == null) return false;
+    LineMarkerRendererEx.Position position = EditorGutterComponentImpl.getLineMarkerPosition(lineMarkerRenderer);
+    return position == LineMarkerRendererEx.Position.LEFT && !myGutterComponent.myForceLeftFreePaintersAreaShown ||
+           position == LineMarkerRendererEx.Position.RIGHT && !myGutterComponent.myForceRightFreePaintersAreaShown;
+  }
+
+  private void onHighlighterChanged(@Nonnull RangeHighlighterEx highlighter, boolean canImpactGutterSize, boolean fontStyleOrColorChanged) {
+    if (myDocument.isInBulkUpdate()) return; // bulkUpdateFinished() will repaint anything
+
+    if (canImpactGutterSize) {
+      updateGutterSize();
+    }
+
+    boolean errorStripeNeedsRepaint = highlighter.getErrorStripeMarkColor() != null;
+    if (myDocumentChangeInProgress) {
+      // postpone repaint request, as folding model can be in inconsistent state and so coordinate
+      // conversions might give incorrect results
+      myErrorStripeNeedsRepaint |= errorStripeNeedsRepaint;
+      return;
+    }
+
+    int textLength = myDocument.getTextLength();
+
+    int start = Math.min(Math.max(highlighter.getAffectedAreaStartOffset(), 0), textLength);
+    int end = Math.min(Math.max(highlighter.getAffectedAreaEndOffset(), 0), textLength);
+
+    if (getGutterComponentEx().getCurrentAccessibleLine() != null && AccessibleGutterLine.isAccessibleGutterElement(highlighter.getGutterIconRenderer())) {
+      escapeGutterAccessibleLine(start, end);
+    }
+    int startLine = start == -1 ? 0 : myDocument.getLineNumber(start);
+    int endLine = end == -1 ? myDocument.getLineCount() : myDocument.getLineNumber(end);
+    if (start != end && fontStyleOrColorChanged) {
+      myView.invalidateRange(start, end);
+    }
+    if (!myFoldingModel.isInBatchFoldingOperation()) { // at the end of batch folding operation everything is repainted
+      repaintLines(Math.max(0, startLine - 1), Math.min(endLine + 1, getDocument().getLineCount()));
+    }
+
+    // optimization: there is no need to repaint error stripe if the highlighter is invisible on it
+    if (errorStripeNeedsRepaint) {
+      if (myFoldingModel.isInBatchFoldingOperation()) {
+        myErrorStripeNeedsRepaint = true;
+      }
+      else {
+        myMarkupModel.repaint(start, end);
+      }
+    }
+
+    updateCaretCursor();
+  }
+
+  private void onInlayUpdated(@Nonnull Inlay inlay) {
+    if (myDocument.isInEventsHandling() || myDocument.isInBulkUpdate()) return;
+    validateSize();
+    int offset = inlay.getOffset();
+    Inlay.Placement placement = inlay.getPlacement();
+    if (placement == Inlay.Placement.INLINE) {
+      repaint(offset, offset, false);
+    }
+    else if (placement == Inlay.Placement.AFTER_LINE_END) {
+      int lineEndOffset = DocumentUtil.getLineEndOffset(offset, myDocument);
+      repaint(lineEndOffset, lineEndOffset, false);
+    }
+    else {
+      int visualLine = offsetToVisualLine(offset);
+      int y = visualLineToY(visualLine) - EditorUtil.getTotalInlaysHeight(myInlayModel.getBlockElementsForVisualLine(visualLine, true));
+      repaintToScreenBottomStartingFrom(y);
+    }
+  }
+
+  private void moveCaretIntoViewIfCoveredByToolWindowBelow(VisibleAreaEvent e) {
+    Rectangle oldRectangle = e.getOldRectangle();
+    Rectangle newRectangle = e.getNewRectangle();
+    if (!myScrollingToCaret && oldRectangle != null && oldRectangle.height != newRectangle.height && oldRectangle.y == newRectangle.y && newRectangle.height > 0) {
+      int caretY = myView.visualLineToY(myCaretModel.getVisualPosition().line);
+      if (caretY < oldRectangle.getMaxY() && caretY > newRectangle.getMaxY()) {
+        myScrollingToCaret = true;
+        ApplicationManager.getApplication().invokeLater(() -> {
+          myScrollingToCaret = false;
+          if (!isReleased) EditorUtil.runWithAnimationDisabled(this, () -> myScrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE));
+        }, ModalityState.any());
+      }
+    }
+  }
+
+  /**
+   * This method is intended to control a blit-accelerated scrolling, because transparent scrollbars suppress it.
+   * Blit-acceleration copies as much of the rendered area as possible and then repaints only newly exposed region.
+   * It is possible to disable blit-acceleration using by the registry key {@code editor.transparent.scrollbar=true}.
+   * Also, when there's a background image, blit-acceleration cannot be used (because of the static overlay).
+   * In such cases this method returns {@code false} to use transparent scrollbars as designed.
+   * Enabled blit-acceleration improves scrolling performance and reduces CPU usage
+   * (especially if drawing is compute-intensive).
+   * <p>
+   * To have both the hardware acceleration and the background image
+   * we need to completely redesign JViewport machinery to support independent layers,
+   * which is (probably) possible, but it's a rather cumbersome task.
+   * Smooth scrolling still works event without the blit-acceleration,
+   * but with suboptimal performance and CPU usage.
+   *
+   * @return {@code true} if a scrollbar should be opaque, {@code false} otherwise
+   */
+  boolean shouldScrollBarBeOpaque() {
+    return !myBackgroundImageSet && !Registry.is("editor.transparent.scrollbar");
   }
 
   public boolean shouldSoftWrapsBeForced() {
@@ -666,7 +764,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     myLineExtensionPainters.add(lineExtensionPainter);
   }
 
-  public boolean processLineExtensions(int line, Processor<LineExtensionInfo> processor) {
+  public boolean processLineExtensions(int line, Processor<? super LineExtensionInfo> processor) {
     for (IntFunction<Collection<LineExtensionInfo>> painter : myLineExtensionPainters) {
       for (LineExtensionInfo extension : painter.apply(line)) {
         if (!processor.process(extension)) {
@@ -712,6 +810,32 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   }
 
   @Override
+  public void installPopupHandler(@Nonnull EditorPopupHandler popupHandler) {
+    myPopupHandlers.add(popupHandler);
+  }
+
+  @Override
+  public void uninstallPopupHandler(@Nonnull EditorPopupHandler popupHandler) {
+    myPopupHandlers.remove(popupHandler);
+  }
+
+  @Nullable
+  private Cursor getCustomCursor() {
+    return ContainerUtil.getFirstItem(myCustomCursors.values());
+  }
+
+  @Override
+  public void setCustomCursor(@Nonnull Object requestor, @Nullable Cursor cursor) {
+    if (cursor == null) {
+      myCustomCursors.remove(requestor);
+    }
+    else {
+      myCustomCursors.put(requestor, cursor);
+    }
+    updateEditorCursor();
+  }
+
+  @Override
   public void setViewer(boolean isViewer) {
     myIsViewer = isViewer;
   }
@@ -740,11 +864,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   @Override
   public VirtualFile getVirtualFile() {
     return myVirtualFile;
-  }
-
-  @Override
-  public void setSoftWrapAppliancePlace(@Nonnull SoftWrapAppliancePlaces place) {
-    mySettings.setSoftWrapAppliancePlace(place);
   }
 
   @Override
@@ -795,6 +914,12 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     return myInlayModel;
   }
 
+  @Nonnull
+  @Override
+  public EditorKind getEditorKind() {
+    return myKind;
+  }
+
   @Override
   @Nonnull
   public EditorSettings getSettings() {
@@ -808,6 +933,10 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
   @Override
   public void reinitSettings() {
+    reinitSettings(true);
+  }
+
+  private void reinitSettings(boolean updateGutterSize) {
     assertIsDispatchThread();
 
     for (EditorColorsScheme scheme = myScheme; scheme instanceof DelegateColorScheme; scheme = ((DelegateColorScheme)scheme).getDelegate()) {
@@ -826,6 +955,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     ourCaretBlinkingCommand.setBlinkCaret(mySettings.isBlinkCaret());
     ourCaretBlinkingCommand.setBlinkPeriod(mySettings.getCaretBlinkPeriod());
     myView.reinitSettings();
+    myFoldingModel.refreshSettings();
     myFoldingModel.rebuild();
     myInlayModel.reinitSettings();
 
@@ -834,9 +964,8 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     }
 
     myHighlighter.setColorScheme(myScheme);
-    myFoldingModel.refreshSettings();
 
-    myGutterComponent.reinitSettings();
+    myGutterComponent.reinitSettings(updateGutterSize);
     myGutterComponent.revalidate();
 
     myEditorComponent.repaint();
@@ -850,8 +979,17 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     myCaretModel.updateVisualPosition();
 
     // make sure carets won't appear at invalid positions (e.g. on Tab width change)
-    for (Caret caret : getCaretModel().getAllCarets()) {
-      caret.moveToOffset(caret.getOffset());
+    getCaretModel().doWithCaretMerging(() -> myCaretModel.getAllCarets().forEach(caret -> caret.moveToOffset(caret.getOffset())));
+
+    if (myVirtualFile != null && myProject != null) {
+      final EditorNotifications editorNotifications = EditorNotifications.getInstance(myProject);
+      if (editorNotifications != null) {
+        editorNotifications.updateNotifications(myVirtualFile);
+      }
+    }
+
+    if (myFocusModeModel != null) {
+      myFocusModeModel.clearFocusMode();
     }
   }
 
@@ -875,11 +1013,11 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     if (isReleased) {
       throwDisposalError("Double release of editor:");
     }
-
     myTraceableDisposable.kill(null);
 
     isReleased = true;
     mySizeAdjustmentStrategy.cancelAllRequests();
+    cancelAutoResetForMouseSelectionState();
 
     myFoldingModel.dispose();
     mySoftWrapModel.release();
@@ -903,9 +1041,8 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     myEditorComponent.removeMouseMotionListener(myMouseMotionListener);
     myGutterComponent.removeMouseMotionListener(myMouseMotionListener);
 
-    if (myBulkUpdateListener != null) {
-      ((DocumentImpl)myDocument).removeInternalBulkModeListener(myBulkUpdateListener);
-    }
+    //CodeStyleSettingsManager.removeListener(myProject, this);
+
     Disposer.dispose(myDisposable);
     myVerticalScrollBar.setUI(null); // clear error panel's cached image
   }
@@ -933,7 +1070,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     myScrollPane.setRowHeaderView(myGutterComponent);
 
     myEditorComponent.setTransferHandler(new MyTransferHandler());
-    myEditorComponent.setAutoscrolls(true);
+    myEditorComponent.setAutoscrolls(false); // we have our own auto-scrolling code
 
     if (mayShowToolbar()) {
       JLayeredPane layeredPane = new JBLayeredPane() {
@@ -974,7 +1111,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
         if (e.getKeyCode() >= KeyEvent.VK_A && e.getKeyCode() <= KeyEvent.VK_Z) {
           myCharKeyPressed = true;
         }
-        KeyboardInternationalizationNotificationManager.showNotification();
       }
 
       @Override
@@ -1007,7 +1143,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
           int caretLine = caret.getLogicalPosition().line;
           repaintLines(caretLine, caretLine);
         }
-        fireFocusGained();
+        fireFocusGained(e);
       }
 
       @Override
@@ -1017,7 +1153,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
           int caretLine = caret.getLogicalPosition().line;
           repaintLines(caretLine, caretLine);
         }
-        fireFocusLost();
+        fireFocusLost(e);
       }
     });
 
@@ -1059,6 +1195,9 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       public void componentResized(@Nonnull ComponentEvent e) {
         myMarkupModel.recalcEditorDimensions();
         myMarkupModel.repaint(-1, -1);
+        if (!isRightAligned()) return;
+        updateCaretCursor();
+        myCaretCursor.repaint();
       }
     });
   }
@@ -1084,7 +1223,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     Rectangle visibleArea = myScrollingModel.getVisibleArea();
     Point zoomCenterRelative = zoomCenter == null ? new Point() : zoomCenter;
     Point zoomCenterAbsolute = new Point(visibleArea.x + zoomCenterRelative.x, visibleArea.y + zoomCenterRelative.y);
-    LogicalPosition zoomCenterLogical = xyToLogicalPosition(zoomCenterAbsolute).withoutVisualPositionInfo();
+    LogicalPosition zoomCenterLogical = xyToLogicalPosition(zoomCenterAbsolute);
     int oldLineHeight = getLineHeight();
     int intraLineOffset = zoomCenterAbsolute.y % oldLineHeight;
 
@@ -1115,7 +1254,10 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     final ActionCallback result = new ActionCallback();
 
     for (int i = 0; i < text.length(); i++) {
-      if (!processKeyTyped(text.charAt(i))) {
+      myLastTypedActionTimestamp = System.currentTimeMillis();
+      char c = text.charAt(i);
+      myLastTypedAction = Character.toString(c);
+      if (!processKeyTyped(c)) {
         result.setRejected();
         return result;
       }
@@ -1127,10 +1269,8 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   }
 
   private boolean processKeyTyped(char c) {
-    // [vova] This is patch for Mac OS X. Under Mac "input methods"
-    // is handled before our EventQueue consume upcoming KeyEvents.
-    IdeEventQueue queue = IdeEventQueue.getInstance();
-    if (queue.shouldNotTypeInEditor() || ProgressManager.getInstance().hasModalProgressIndicator()) {
+
+    if (ProgressManager.getInstance().hasModalProgressIndicator()) {
       return false;
     }
     FileDocumentManager manager = FileDocumentManager.getInstance();
@@ -1143,6 +1283,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
     Graphics graphics = GraphicsUtil.safelyGetGraphics(myEditorComponent);
     if (graphics != null) { // editor component is not showing
+      PaintUtil.alignTxToInt((Graphics2D)graphics, PaintUtil.insets2offset(getInsets()), true, false, RoundingMode.CEIL);
       processKeyTypedImmediately(c, graphics, context);
       graphics.dispose();
     }
@@ -1157,22 +1298,25 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   void processKeyTypedImmediately(char c, Graphics graphics, DataContext dataContext) {
     EditorActionPlan plan = new EditorActionPlan(this);
     EditorActionManager.getInstance().getTypedAction().beforeActionPerformed(this, c, dataContext, plan);
-    myImmediatePainter.paint(graphics, plan);
+    if (myImmediatePainter.paint(graphics, plan)) {
+      measureTypingLatency();
+      myLastTypedActionTimestamp = -1;
+    }
   }
 
   void processKeyTypedNormally(char c, DataContext dataContext) {
     EditorActionManager.getInstance().getTypedAction().actionPerformed(this, c, dataContext);
   }
 
-  private void fireFocusLost() {
+  private void fireFocusLost(@Nonnull FocusEvent event) {
     for (FocusChangeListener listener : myFocusListeners) {
-      listener.focusLost(this);
+      listener.focusLost(this, event);
     }
   }
 
-  private void fireFocusGained() {
+  private void fireFocusGained(@Nonnull FocusEvent event) {
     for (FocusChangeListener listener : myFocusListeners) {
-      listener.focusGained(this);
+      listener.focusGained(this, event);
     }
   }
 
@@ -1184,7 +1328,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     Disposer.dispose(myHighlighterDisposable);
 
     document.addDocumentListener(highlighter);
-    myHighlighter = highlighter;
     myHighlighterDisposable = () -> document.removeDocumentListener(highlighter);
     Disposer.register(myDisposable, myHighlighterDisposable);
     highlighter.setEditor(this);
@@ -1192,6 +1335,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     if (!(highlighter instanceof EmptyEditorHighlighter)) {
       EditorHighlighterCache.rememberEditorHighlighterForCachesOptimization(document, highlighter);
     }
+    myHighlighter = highlighter;
 
     if (myPanel != null) {
       reinitSettings();
@@ -1260,7 +1404,8 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     return myIsColumnMode;
   }
 
-  public int yToVisibleLine(int y) {
+  @Override
+  public int yToVisualLine(int y) {
     return myView.yToVisualLine(y);
   }
 
@@ -1289,11 +1434,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     return new Point((int)point2D.getX(), (int)point2D.getY());
   }
 
-  @Nonnull
-  Point2D offsetToXY(int offset, boolean leanTowardsLargerOffsets) {
-    return myView.offsetToXY(offset, leanTowardsLargerOffsets, false);
-  }
-
   @Override
   @Nonnull
   public VisualPosition offsetToVisualPosition(int offset) {
@@ -1304,6 +1444,16 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   @Nonnull
   public VisualPosition offsetToVisualPosition(int offset, boolean leanForward, boolean beforeSoftWrap) {
     return myView.offsetToVisualPosition(offset, leanForward, beforeSoftWrap);
+  }
+
+  public int offsetToVisualColumnInFoldRegion(@Nonnull FoldRegion region, int offset, boolean leanTowardsLargerOffsets) {
+    assertIsDispatchThread();
+    return myView.offsetToVisualColumnInFoldRegion(region, offset, leanTowardsLargerOffsets);
+  }
+
+  public int visualColumnToOffsetInFoldRegion(@Nonnull FoldRegion region, int visualColumn, boolean leansRight) {
+    assertIsDispatchThread();
+    return myView.visualColumnToOffsetInFoldRegion(region, visualColumn, leansRight);
   }
 
   @Override
@@ -1335,11 +1485,13 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     return visualToLogicalPosition(xyToVisualPosition(pp));
   }
 
+  private int logicalToVisualLine(int logicalLine) {
+    return logicalLine < myDocument.getLineCount() ? offsetToVisualLine(myDocument.getLineStartOffset(logicalLine)) : logicalToVisualPosition(new LogicalPosition(logicalLine, 0)).line;
+  }
+
   private int logicalLineToY(int line) {
-    int visualLine = line < myDocument.getLineCount()
-                     ? offsetToVisualLine(myDocument.getLineStartOffset(line))
-                     : logicalToVisualPosition(new LogicalPosition(line, 0)).line;
-    return visibleLineToY(visualLine);
+    int visualLine = logicalToVisualLine(line);
+    return visualLineToY(visualLine);
   }
 
   @Override
@@ -1369,14 +1521,15 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   public float getScale() {
     if (!Registry.is("editor.scale.gutter.icons")) return 1f;
     float normLineHeight = getLineHeight() / myScheme.getLineSpacing(); // normalized, as for 1.0f line spacing
-    return normLineHeight / JBUI.scale(16f);
+    return normLineHeight / JBUIScale.scale(16f);
   }
 
   public int findNearestDirectionBoundary(int offset, boolean lookForward) {
     return myView.findNearestDirectionBoundary(offset, lookForward);
   }
 
-  public int visibleLineToY(int line) {
+  @Override
+  public int visualLineToY(int line) {
     return myView.visualLineToY(line);
   }
 
@@ -1402,9 +1555,9 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     // We do repaint in case of equal offsets because there is a possible case that there is a soft wrap at the same offset and
     // it does occupy particular amount of visual space that may be necessary to repaint.
     if (startOffset <= endOffset) {
-      int startLine = myDocument.getLineNumber(startOffset);
-      int endLine = myDocument.getLineNumber(endOffset);
-      repaintLines(startLine, endLine);
+      int startLine = myView.offsetToVisualLine(startOffset, false);
+      int endLine = myView.offsetToVisualLine(endOffset, true);
+      doRepaint(startLine, endLine);
     }
   }
 
@@ -1413,12 +1566,16 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   }
 
   private void repaintToScreenBottom(int startLine) {
-    Rectangle visibleArea = getScrollingModel().getVisibleArea();
     int yStartLine = logicalLineToY(startLine);
+    repaintToScreenBottomStartingFrom(yStartLine);
+  }
+
+  private void repaintToScreenBottomStartingFrom(int y) {
+    Rectangle visibleArea = getScrollingModel().getVisibleArea();
     int yEndLine = visibleArea.y + visibleArea.height;
 
-    myEditorComponent.repaintEditorComponent(visibleArea.x, yStartLine, visibleArea.x + visibleArea.width, yEndLine - yStartLine);
-    myGutterComponent.repaint(0, yStartLine, myGutterComponent.getWidth(), yEndLine - yStartLine);
+    myEditorComponent.repaintEditorComponent(visibleArea.x, y, visibleArea.x + visibleArea.width, yEndLine - y);
+    myGutterComponent.repaint(0, y, myGutterComponent.getWidth(), yEndLine - y);
     ((DesktopEditorMarkupModelImpl)getMarkupModel()).repaint(-1, -1);
   }
 
@@ -1431,13 +1588,20 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   private void repaintLines(int startLine, int endLine) {
     if (!isShowing()) return;
 
-    Rectangle visibleArea = getScrollingModel().getVisibleArea();
-    int yStartLine = logicalLineToY(startLine);
-    int endVisLine = myDocument.getTextLength() <= 0 ? 0 : offsetToVisualLine(myDocument.getLineEndOffset(Math.min(myDocument.getLineCount() - 1, endLine)));
-    int height = endVisLine * getLineHeight() - yStartLine + getLineHeight() + 2;
+    int startVisualLine = logicalToVisualLine(startLine);
+    int endVisualLine = myDocument.getTextLength() <= 0 ? 0 : offsetToVisualLine(myDocument.getLineEndOffset(Math.min(myDocument.getLineCount() - 1, endLine)));
+    doRepaint(startVisualLine, endVisualLine);
+  }
 
-    myEditorComponent.repaintEditorComponent(visibleArea.x, yStartLine, visibleArea.x + visibleArea.width, height);
-    myGutterComponent.repaint(0, yStartLine, myGutterComponent.getWidth(), height);
+  /**
+   * Repaints visual lines in provided range (inclusive on both ends)
+   */
+  private void doRepaint(int startVisualLine, int endVisualLine) {
+    Rectangle visibleArea = getScrollingModel().getVisibleArea();
+    int yStart = visualLineToY(startVisualLine);
+    int height = visualLineToY(endVisualLine) + getLineHeight() + 2 - yStart;
+    myEditorComponent.repaintEditorComponent(visibleArea.x, yStart, visibleArea.x + visibleArea.width, height);
+    myGutterComponent.repaint(0, yStart, myGutterComponent.getWidth(), height);
   }
 
   private void bulkUpdateStarted() {
@@ -1445,7 +1609,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
     myScrollingModel.onBulkDocumentUpdateStarted();
 
-    saveCaretRelativePosition();
+    myScrollingPositionKeeper.savePosition();
 
     myCaretModel.onBulkDocumentUpdateStarted();
     mySoftWrapModel.onBulkDocumentUpdateStarted();
@@ -1467,11 +1631,11 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     updateCaretCursor();
 
     if (!Boolean.TRUE.equals(getUserData(DISABLE_CARET_POSITION_KEEPING))) {
-      restoreCaretRelativePosition();
+      myScrollingPositionKeeper.restorePosition(true);
     }
   }
 
-  private void beforeChangedUpdate() {
+  private void beforeChangedUpdate(DocumentEvent e) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
     myDocumentChangeInProgress = true;
@@ -1483,7 +1647,10 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       return;
     }
 
-    saveCaretRelativePosition();
+    myRestoreScrollingPosition = getCaretModel().getOffset() < e.getOffset() || getCaretModel().getOffset() > e.getOffset() + e.getOldLength();
+    if (myRestoreScrollingPosition) {
+      myScrollingPositionKeeper.savePosition();
+    }
   }
 
   void invokeDelayedErrorStripeRepaint() {
@@ -1503,6 +1670,10 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     }
 
     setMouseSelectionState(MOUSE_SELECTION_STATE_NONE);
+
+    if (getGutterComponentEx().getCurrentAccessibleLine() != null) {
+      escapeGutterAccessibleLine(e.getOffset(), e.getOffset() + e.getNewLength());
+    }
 
     validateSize();
 
@@ -1527,30 +1698,25 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       repaintLines(startLine, endLine);
     }
 
-    if (!Boolean.TRUE.equals(getUserData(DISABLE_CARET_POSITION_KEEPING)) &&
-        (getCaretModel().getOffset() < e.getOffset() || getCaretModel().getOffset() > e.getOffset() + e.getNewLength())) {
-      restoreCaretRelativePosition();
+    if (myRestoreScrollingPosition && !Boolean.TRUE.equals(getUserData(DISABLE_CARET_POSITION_KEEPING))) {
+      myScrollingPositionKeeper.restorePosition(true);
+    }
+  }
+
+  private void escapeGutterAccessibleLine(int offsetStart, int offsetEnd) {
+    int startVisLine = offsetToVisualLine(offsetStart);
+    int endVisLine = offsetToVisualLine(offsetEnd);
+    int line = getCaretModel().getPrimaryCaret().getVisualPosition().line;
+    if (startVisLine <= line && endVisLine >= line) {
+      getGutterComponentEx().escapeCurrentAccessibleLine();
     }
   }
 
   public void hideCursor() {
-    if (!myIsViewer && Registry.is("ide.hide.cursor.when.typing") && EMPTY_CURSOR != null && EMPTY_CURSOR != myEditorComponent.getCursor()) {
-      myEditorComponent.setCursor(EMPTY_CURSOR);
+    if (!myIsViewer && EMPTY_CURSOR != null && Registry.is("ide.hide.cursor.when.typing")) {
+      myDefaultCursor = EMPTY_CURSOR;
+      updateEditorCursor();
     }
-  }
-
-  private void saveCaretRelativePosition() {
-    Rectangle visibleArea = getScrollingModel().getVisibleArea();
-    Point pos = visualPositionToXY(getCaretModel().getVisualPosition());
-    myCaretUpdateVShift = pos.y - visibleArea.y;
-  }
-
-  private void restoreCaretRelativePosition() {
-    Point caretLocation = visualPositionToXY(getCaretModel().getVisualPosition());
-    int scrollOffset = caretLocation.y - myCaretUpdateVShift;
-    getScrollingModel().disableAnimation();
-    getScrollingModel().scrollVertically(scrollOffset);
-    getScrollingModel().enableAnimation();
   }
 
   public boolean isScrollToCaret() {
@@ -1579,7 +1745,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       ApplicationManager.getApplication().invokeLater(() -> {
         try {
           if (!isDisposed()) {
-            myGutterComponent.updateSizeOnShowNotify();
+            myGutterComponent.updateSize();
           }
         }
         finally {
@@ -1691,15 +1857,23 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
    * {@link #stopDumbLater} or {@link #stopDumb} must be performed in finally
    */
   public void startDumb() {
-    if (ApplicationManager.getApplication().isUnitTestMode()) return;
+    if (ApplicationManager.getApplication().isHeadlessEnvironment()) return;
+    if (!Registry.is("editor.dumb.mode.available")) return;
+    putUserData(BUFFER, null);
     Rectangle rect = ((JViewport)myEditorComponent.getParent()).getViewRect();
+    // The LCD text loop is enabled only for opaque images
     BufferedImage image = UIUtil.createImage(myEditorComponent, rect.width, rect.height, BufferedImage.TYPE_INT_RGB);
-    Graphics2D graphics = image.createGraphics();
-    graphics.translate(-rect.x, -rect.y);
+    Graphics imageGraphics = image.createGraphics();
+    imageGraphics.translate(-rect.x, -rect.y);
+    Graphics2D graphics = JBSwingUtilities.runGlobalCGTransform(myEditorComponent, imageGraphics);
     graphics.setClip(rect.x, rect.y, rect.width, rect.height);
     myEditorComponent.paintComponent(graphics);
     graphics.dispose();
     putUserData(BUFFER, image);
+  }
+
+  public boolean isDumb() {
+    return getUserData(BUFFER) != null;
   }
 
   void paint(@Nonnull Graphics2D g) {
@@ -1709,13 +1883,11 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       return;
     }
 
-    if (Registry.is("editor.dumb.mode.available")) {
-      final BufferedImage buffer = getUserData(BUFFER);
-      if (buffer != null) {
-        final Rectangle rect = getContentComponent().getVisibleRect();
-        UIUtil.drawImage(g, buffer, null, rect.x, rect.y);
-        return;
-      }
+    BufferedImage buffer = Registry.is("editor.dumb.mode.available") ? getUserData(BUFFER) : null;
+    if (buffer != null) {
+      Rectangle rect = getContentComponent().getVisibleRect();
+      UIUtil.drawImage(g, buffer, null, rect.x, rect.y);
+      return;
     }
 
     if (isReleased) {
@@ -1730,6 +1902,13 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     if (myProject != null && myProject.isDisposed()) return;
 
     myView.paint(g);
+
+    //boolean isBackgroundImageSet = IdeBackgroundUtil.isEditorBackgroundImageSet(myProject);
+    //if (myBackgroundImageSet != isBackgroundImageSet) {
+    //  myBackgroundImageSet = isBackgroundImageSet;
+    //  updateOpaque(myScrollPane.getHorizontalScrollBar());
+    //  updateOpaque(myScrollPane.getVerticalScrollBar());
+    //}
   }
 
   Color getDisposedBackground() {
@@ -1751,6 +1930,11 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     }
 
     myHeaderPanel.revalidate();
+    myHeaderPanel.repaint();
+
+    if (SystemInfo.isMac) {
+      TouchBarsManager.onUpdateEditorHeader(this, header);
+    }
   }
 
   @Override
@@ -1819,6 +2003,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     myPlaceholderAttributes = attributes;
   }
 
+  @Nullable
   public TextAttributes getPlaceholderAttributes() {
     return myPlaceholderAttributes;
   }
@@ -1885,6 +2070,8 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
            getSoftWrapModel().dumpState() +
            "\n\nfolding data: " +
            getFoldingModel().dumpState() +
+           "\ninlay model: " +
+           getInlayModel().dumpState() +
            (myDocument instanceof DocumentImpl ? "\n\ndocument info: " + ((DocumentImpl)myDocument).dumpState() : "") +
            "\nfont preferences: " +
            myScheme.getFontPreferences() +
@@ -1900,6 +2087,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     return myCaretCursor.getCaretLocations(onlyIfShown);
   }
 
+  @Override
   public int getAscent() {
     return myView.getAscent();
   }
@@ -1913,21 +2101,17 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     return myView.getDescent();
   }
 
+  public int getCharHeight() {
+    return myView.getCharHeight();
+  }
+
   @Nonnull
   public FontMetrics getFontMetrics(@JdkConstants.FontStyle int fontType) {
     EditorFontType ft;
-    if (fontType == Font.PLAIN) {
-      ft = EditorFontType.PLAIN;
-    }
-    else if (fontType == Font.BOLD) {
-      ft = EditorFontType.BOLD;
-    }
-    else if (fontType == Font.ITALIC) {
-      ft = EditorFontType.ITALIC;
-    }
-    else if (fontType == (Font.BOLD | Font.ITALIC)) {
-      ft = EditorFontType.BOLD_ITALIC;
-    }
+    if (fontType == Font.PLAIN) ft = EditorFontType.PLAIN;
+    else if (fontType == Font.BOLD) ft = EditorFontType.BOLD;
+    else if (fontType == Font.ITALIC) ft = EditorFontType.ITALIC;
+    else if (fontType == (Font.BOLD | Font.ITALIC)) ft = EditorFontType.BOLD_ITALIC;
     else {
       LOG.error("Unknown font type: " + fontType);
       ft = EditorFontType.PLAIN;
@@ -1941,11 +2125,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   }
 
   public Dimension getPreferredSize() {
-    return isReleased
-           ? new Dimension()
-           : Registry.is("idea.true.smooth.scrolling.dynamic.scrollbars")
-             ? new Dimension(getPreferredWidthOfVisibleLines(), myView.getPreferredHeight())
-             : myView.getPreferredSize();
+    return isReleased ? new Dimension() : Registry.is("idea.true.smooth.scrolling.dynamic.scrollbars") ? new Dimension(getPreferredWidthOfVisibleLines(), myView.getPreferredHeight()) : myView.getPreferredSize();
   }
 
   /* When idea.true.smooth.scrolling=true, this method is used to compute width of currently visible line range
@@ -2065,11 +2245,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     return lineIndex;
   }
 
-  @Override
-  public int calcColumnNumber(int offset, int lineIndex) {
-    return myView.offsetToLogicalPosition(offset).column;
-  }
-
   private VisualPosition getTargetPosition(int x, int y, boolean trimToLineWidth) {
     if (myDocument.getLineCount() == 0) {
       return new VisualPosition(0, 0);
@@ -2081,8 +2256,8 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       y = 0;
     }
     int visualLineCount = getVisibleLineCount();
-    if (yToVisibleLine(y) >= visualLineCount) {
-      y = visibleLineToY(Math.max(0, visualLineCount - 1));
+    if (yToVisualLine(y) >= visualLineCount) {
+      y = visualLineToY(Math.max(0, visualLineCount - 1));
     }
     VisualPosition visualPosition = xyToVisualPosition(new Point(x, y));
     if (trimToLineWidth && !mySettings.isVirtualSpace()) {
@@ -2135,17 +2310,12 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       return;
     }
 
-//    if (myMousePressedInsideSelection) getSelectionModel().removeSelection();
     final FoldRegion region = getFoldingModel().getFoldingPlaceholderAt(e.getPoint());
-    if (e.getX() >= 0 && e.getY() >= 0 && region != null && region == myMouseSelectedRegion) {
+    if (region != null && region == myMouseSelectedRegion) {
       getFoldingModel().runBatchFoldingOperation(() -> {
-        myFoldingModel.flushCaretShift();
+        myFoldingModel.disableScrollingPositionAdjustment();
         region.setExpanded(true);
       });
-
-      // The call below is performed because gutter's height is not updated sometimes, i.e. it sticks to the value that corresponds
-      // to the situation when fold region is collapsed. That causes bottom of the gutter to not be repainted and that looks really ugly.
-      myGutterComponent.updateSize();
     }
 
     // The general idea is to check if the user performed 'caret position change click' (left click most of the time) inside selection
@@ -2153,7 +2323,8 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     // is performed inside selection but it triggers context menu. We don't want to drop the selection then.
     if (myMousePressedEvent != null &&
         myMousePressedEvent.getClickCount() == 1 &&
-        myMousePressedInsideSelection &&
+        myKeepSelectionOnMousePress &&
+        !myDragStarted &&
         !myMousePressedEvent.isShiftDown() &&
         !myMousePressedEvent.isPopupTrigger() &&
         !isToggleCaretEvent(myMousePressedEvent) &&
@@ -2211,18 +2382,37 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       myGutterComponent.validateMousePointer(e);
     }
     else {
-      myGutterComponent.setActiveFoldRegion(null);
-      if (getSelectionModel().hasSelection() && (e.getModifiersEx() & (InputEvent.BUTTON1_DOWN_MASK | InputEvent.BUTTON2_DOWN_MASK)) == 0) {
-        int offset = logicalPositionToOffset(xyToLogicalPosition(e.getPoint()));
-        if (getSelectionModel().getSelectionStart() <= offset && offset < getSelectionModel().getSelectionEnd()) {
-          myEditorComponent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-          return;
-        }
-      }
-      if (!IdeGlassPaneImpl.hasPreProcessedCursor(myEditorComponent)) {
-        myEditorComponent.setCursor(UIUtil.getTextCursor(getBackgroundColor()));
+      myGutterComponent.setActiveFoldRegions(Collections.emptyList());
+      myDefaultCursor = getDefaultCursor(e);
+      updateEditorCursor();
+    }
+  }
+
+  private void updateEditorCursor() {
+    Cursor customCursor = getCustomCursor();
+    if (customCursor == null && myCursorSetExternally && myEditorComponent.isCursorSet()) {
+      Cursor cursor = myEditorComponent.getCursor();
+      if (cursor != Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR) &&
+          cursor != Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR) &&
+          cursor != EMPTY_CURSOR &&
+          (!SystemInfo.isMac || cursor != MacUIUtil.getInvertedTextCursor())) {
+        // someone else has set cursor, don't touch it
+        return;
       }
     }
+
+    UIUtil.setCursor(myEditorComponent, customCursor == null ? myDefaultCursor : customCursor);
+    myCursorSetExternally = false;
+  }
+
+  private Cursor getDefaultCursor(@Nonnull MouseEvent e) {
+    if (getSelectionModel().hasSelection() && (e.getModifiersEx() & (InputEvent.BUTTON1_DOWN_MASK | InputEvent.BUTTON2_DOWN_MASK)) == 0) {
+      int offset = logicalPositionToOffset(xyToLogicalPosition(e.getPoint()));
+      if (getSelectionModel().getSelectionStart() <= offset && offset < getSelectionModel().getSelectionEnd()) {
+        return Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
+      }
+    }
+    return UIUtil.getTextCursor(getBackgroundColor());
   }
 
   private void runMouseDraggedCommand(@Nonnull final MouseEvent e) {
@@ -2233,7 +2423,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   }
 
   private void processMouseDragged(@Nonnull MouseEvent e) {
-    if (!JBSwingUtilities.isLeftMouseButton(e) && !JBSwingUtilities.isMiddleMouseButton(e)) {
+    if (!SwingUtilities.isLeftMouseButton(e) && !SwingUtilities.isMiddleMouseButton(e) || (Registry.is("editor.disable.drag.with.right.button") && SwingUtilities.isRightMouseButton(e))) {
       return;
     }
 
@@ -2246,9 +2436,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       // further dragging (if any).
       if (myDragOnGutterSelectionStartLine >= 0) {
         mySelectionModel.removeSelection();
-        myCaretModel.moveToOffset(myDragOnGutterSelectionStartLine < myDocument.getLineCount()
-                                  ? myDocument.getLineStartOffset(myDragOnGutterSelectionStartLine)
-                                  : myDocument.getTextLength());
+        myCaretModel.moveToOffset(myDragOnGutterSelectionStartLine < myDocument.getLineCount() ? myDocument.getLineStartOffset(myDragOnGutterSelectionStartLine) : myDocument.getTextLength());
       }
       myDragOnGutterSelectionStartLine = -1;
     }
@@ -2285,7 +2473,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       dy = y - visibleArea.y;
     }
     else {
-      if (y > visibleArea.y + visibleArea.height) {
+      if (y > visibleArea.y + visibleArea.height && visibleArea.y + visibleArea.height < myEditorComponent.getHeight()) {
         dy = y - visibleArea.y - visibleArea.height;
       }
     }
@@ -2313,8 +2501,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       newVisualCaret = getCaretModel().getVisualPosition();
       int caretShift = newCaretOffset - mySavedSelectionStart;
 
-      if (myMousePressedEvent != null &&
-          getMouseEventArea(myMousePressedEvent) != EditorMouseEventArea.EDITING_AREA &&
+      if (myMousePressedEvent != null && getMouseEventArea(myMousePressedEvent) != EditorMouseEventArea.EDITING_AREA &&
           getMouseEventArea(myMousePressedEvent) != EditorMouseEventArea.LINE_NUMBERS_AREA) {
         selectionModel.setSelection(oldSelectionStart, newCaretOffset);
       }
@@ -2359,13 +2546,12 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
             return;
           }
 
-          if (!myMousePressedInsideSelection) {
+          if (!myKeepSelectionOnMousePress) {
             // There is a possible case that lead selection position should be adjusted in accordance with the mouse move direction.
             // E.g. consider situation when user selects the whole line by clicking at 'line numbers' area. 'Line end' is considered
             // to be lead selection point then. However, when mouse is dragged down we want to consider 'line start' to be
             // lead selection point.
-            if ((myMousePressArea == EditorMouseEventArea.LINE_NUMBERS_AREA || myMousePressArea == EditorMouseEventArea.LINE_MARKERS_AREA) &&
-                selectionModel.hasSelection()) {
+            if ((myMousePressArea == EditorMouseEventArea.LINE_NUMBERS_AREA || myMousePressArea == EditorMouseEventArea.LINE_MARKERS_AREA) && selectionModel.hasSelection()) {
               if (newCaretOffset >= selectionModel.getSelectionEnd()) {
                 oldSelectionStart = selectionModel.getSelectionStart();
                 oldVisLeadSelectionStart = selectionModel.getSelectionStartPosition();
@@ -2387,9 +2573,12 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
             if (caretShift != 0) {
               if (myMousePressedEvent != null) {
                 if (mySettings.isDndEnabled()) {
-                  boolean isCopy = UIUtil.isControlKeyDown(e) || isViewer() || !getDocument().isWritable();
-                  mySavedCaretOffsetForDNDUndoHack = oldCaretOffset;
-                  getContentComponent().getTransferHandler().exportAsDrag(getContentComponent(), e, isCopy ? TransferHandler.COPY : TransferHandler.MOVE);
+                  if (!myDragStarted) {
+                    myDragStarted = true;
+                    boolean isCopy = UIUtil.isControlKeyDown(e) || isViewer() || !getDocument().isWritable();
+                    mySavedCaretOffsetForDNDUndoHack = oldCaretOffset;
+                    getContentComponent().getTransferHandler().exportAsDrag(getContentComponent(), e, isCopy ? TransferHandler.COPY : TransferHandler.MOVE);
+                  }
                 }
                 else {
                   selectionModel.removeSelection();
@@ -2463,11 +2652,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     }
   }
 
-  private void setSelectionAndBlockActions(@Nonnull MouseEvent mouseDragEvent,
-                                           VisualPosition startPosition,
-                                           int startOffset,
-                                           VisualPosition endPosition,
-                                           int endOffset) {
+  private void setSelectionAndBlockActions(@Nonnull MouseEvent mouseDragEvent, VisualPosition startPosition, int startOffset, VisualPosition endPosition, int endOffset) {
     mySelectionModel.setSelection(startPosition, startOffset, endPosition, endOffset);
     if (myCurrentDragIsSubstantial || startOffset != endOffset || !Comparing.equal(startPosition, endPosition)) {
       onSubstantialDrag(mouseDragEvent);
@@ -2500,7 +2685,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     }
 
     private void setBlinkPeriod(int blinkPeriod) {
-      mySleepTime = blinkPeriod > 10 ? blinkPeriod : 10;
+      mySleepTime = Math.max(blinkPeriod, 10);
       start();
     }
 
@@ -2536,6 +2721,13 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
   void updateCaretCursor() {
     myUpdateCursor = true;
+    if (myCaretCursor.myIsShown) {
+      myCaretCursor.myStartTime = System.currentTimeMillis();
+    }
+    else {
+      myCaretCursor.myIsShown = true;
+      myCaretCursor.repaint();
+    }
   }
 
   private void setCursorPosition() {
@@ -2543,11 +2735,11 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     for (Caret caret : getCaretModel().getAllCarets()) {
       boolean isRtl = caret.isAtRtlLocation();
       VisualPosition caretPosition = caret.getVisualPosition();
-      Point pos1 = visualPositionToXY(caretPosition.leanRight(!isRtl));
-      Point pos2 = visualPositionToXY(new VisualPosition(caretPosition.line, Math.max(0, caretPosition.column + (isRtl ? -1 : 1)), isRtl));
-      int width = Math.abs(pos2.x - pos1.x);
+      Point2D pos1 = visualPositionToPoint2D(caretPosition.leanRight(!isRtl));
+      Point2D pos2 = visualPositionToPoint2D(new VisualPosition(caretPosition.line, Math.max(0, caretPosition.column + (isRtl ? -1 : 1)), isRtl));
+      float width = (float)Math.abs(pos2.getX() - pos1.getX());
       if (!isRtl && myInlayModel.hasInlineElementAt(caretPosition)) {
-        width = Math.min(width, (int)Math.ceil(myView.getPlainSpaceWidth()));
+        width = Math.min(width, (float)Math.ceil(myView.getPlainSpaceWidth()));
       }
       caretPoints.add(new CaretRectangle(pos1, width, caret, isRtl));
     }
@@ -2617,12 +2809,12 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   }
 
   public static class CaretRectangle {
-    public final Point myPoint;
-    public final int myWidth;
+    public final Point2D myPoint;
+    public final float myWidth;
     public final Caret myCaret;
     public final boolean myIsRtl;
 
-    private CaretRectangle(Point point, int width, Caret caret, boolean isRtl) {
+    private CaretRectangle(Point2D point, float width, Caret caret, boolean isRtl) {
       myPoint = point;
       myWidth = Math.max(width, 2);
       myCaret = caret;
@@ -2677,7 +2869,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     private void setPositions(CaretRectangle[] locations) {
       myStartTime = System.currentTimeMillis();
       myLocations = locations;
-      myIsShown = true;
     }
 
     private void repaint() {
@@ -2732,7 +2923,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       }
 
 
-      myTimer = UIUtil.createNamedTimer("Editor scroll timer", TIMER_PERIOD, e -> {
+      myTimer = TimerUtil.createNamedTimer("Editor scroll timer", TIMER_PERIOD, e -> {
         if (isDisposed()) {
           stop();
           return;
@@ -2825,6 +3016,36 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       if (offset < 0) return 0;
       if (offset > myDocument.getTextLength()) return myDocument.getTextLength();
       return offset;
+    }
+  }
+
+  private static void updateOpaque(JScrollBar bar) {
+    if (bar instanceof OpaqueAwareScrollBar) {
+      bar.setOpaque(((OpaqueAwareScrollBar)bar).myOpaque);
+    }
+  }
+
+  private class OpaqueAwareScrollBar extends JBScrollBar {
+    private boolean myOpaque;
+
+    private OpaqueAwareScrollBar(@JdkConstants.AdjustableOrientation int orientation) {
+      super(orientation);
+      UIUtil.putClientProperty(this, ColorKey.FUNCTION_KEY, key -> getColorsScheme().getColor(key));
+      addPropertyChangeListener("opaque", event -> {
+        revalidate();
+        repaint();
+      });
+    }
+
+    @Override
+    public void setOpaque(boolean opaque) {
+      myOpaque = opaque;
+      super.setOpaque(opaque || shouldScrollBarBeOpaque());
+    }
+
+    @Override
+    public boolean isOptimizedDrawingEnabled() {
+      return !myBackgroundImageSet;
     }
   }
 
@@ -2977,7 +3198,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   @Override
   public void setColorsScheme(@Nonnull EditorColorsScheme scheme) {
     assertIsDispatchThread();
-    myScheme = new MyColorSchemeDelegate(scheme);
+    myScheme = scheme;
     reinitSettings();
   }
 
@@ -2998,6 +3219,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   @Override
   public void setVerticalScrollbarOrientation(int type) {
     assertIsDispatchThread();
+    if (myScrollBarOrientation == type) return;
     int currentHorOffset = myScrollingModel.getHorizontalScrollOffset();
     myScrollBarOrientation = type;
     if (type == VERTICAL_SCROLLBAR_LEFT) {
@@ -3058,8 +3280,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       if (myMouseSelectionStateResetRunnable == null) {
         myMouseSelectionStateResetRunnable = () -> resetMouseSelectionState(null);
       }
-      myMouseSelectionStateAlarm.addRequest(myMouseSelectionStateResetRunnable, Registry.intValue("editor.mouseSelectionStateResetTimeout"),
-                                            ModalityState.stateForComponent(myEditorComponent));
+      myMouseSelectionStateAlarm.addRequest(myMouseSelectionStateResetRunnable, Registry.intValue("editor.mouseSelectionStateResetTimeout"), ModalityState.stateForComponent(myEditorComponent));
     }
   }
 
@@ -3099,15 +3320,34 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
   @Override
   public boolean processKeyTyped(@Nonnull KeyEvent e) {
+    myLastTypedActionTimestamp = -1;
     if (e.getID() != KeyEvent.KEY_TYPED) return false;
     char c = e.getKeyChar();
     if (UIUtil.isReallyTypedEvent(e)) { // Hack just like in javax.swing.text.DefaultEditorKit.DefaultKeyTypedAction
+      myLastTypedActionTimestamp = e.getWhen();
+      myLastTypedAction = Character.toString(c);
       processKeyTyped(c);
       return true;
     }
     else {
       return false;
     }
+  }
+
+  public void recordLatencyAwareAction(String actionId, long timestampMs) {
+    myLastTypedActionTimestamp = timestampMs;
+    myLastTypedAction = actionId;
+  }
+
+  void measureTypingLatency() {
+    if (myLastTypedActionTimestamp != -1) {
+      myLatencyPublisher.recordTypingLatency(this, myLastTypedAction, System.currentTimeMillis() - myLastTypedActionTimestamp);
+      myLastTypedActionTimestamp = -1;
+    }
+  }
+
+  public boolean isProcessingTypedAction() {
+    return myLastTypedActionTimestamp != -1;
   }
 
   void beforeModalityStateChanged() {
@@ -3131,8 +3371,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       boolean oldAvailable = oldFilter == null || oldFilter.value(highlighter);
       boolean newAvailable = filter == null || filter.value(highlighter);
       if (oldAvailable != newAvailable) {
-        myMarkupModelListener
-                .attributesChanged((RangeHighlighterEx)highlighter, true, EditorUtil.attributesImpactFontStyleOrColor(highlighter.getTextAttributes()));
+        myMarkupModelListener.attributesChanged((RangeHighlighterEx)highlighter, true, EditorUtil.attributesImpactFontStyleOrColor(highlighter.getTextAttributes()));
       }
     }
   }
@@ -3198,11 +3437,11 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     @Nonnull
     @Override
     public Rectangle getTextLocation(TextHitInfo offset) {
+      if (isDisposed()) return new Rectangle();
       Point caret = logicalPositionToXY(getCaretModel().getLogicalPosition());
       Rectangle r = new Rectangle(caret, new Dimension(1, getLineHeight()));
-      Point p = getContentComponent().getLocationOnScreen();
+      Point p = getLocationOnScreen(getContentComponent());
       r.translate(p.x, p.y);
-
       return r;
     }
 
@@ -3210,7 +3449,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     @Nullable
     public TextHitInfo getLocationOffset(int x, int y) {
       if (composedText != null) {
-        Point p = getContentComponent().getLocationOnScreen();
+        Point p = getLocationOnScreen(getContentComponent());
         p.x = x - p.x;
         p.y = y - p.y;
         int pos = logicalPositionToOffset(xyToLogicalPosition(p));
@@ -3219,6 +3458,23 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
         }
       }
       return null;
+    }
+
+    private Point getLocationOnScreen(Component component) {
+      Point location = new Point();
+      SwingUtilities.convertPointToScreen(location, component);
+      if (LOG.isDebugEnabled() && !component.isShowing()) {
+        Class<?> type = component.getClass();
+        Component parent = component.getParent();
+        while (parent != null && !parent.isShowing()) {
+          type = parent.getClass();
+          parent = parent.getParent();
+        }
+        String message = type.getName() + " is not showing";
+        if (parent != null) message += " on visible  " + parent.getClass().getName();
+        LOG.debug(message);
+      }
+      return location;
     }
 
     @Override
@@ -3329,15 +3585,18 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
     private void runUndoTransparent(@Nonnull final Runnable runnable) {
       CommandProcessor.getInstance().runUndoTransparentAction(() -> CommandProcessor.getInstance()
-              .executeCommand(myProject, () -> ApplicationManager.getApplication().runWriteAction(runnable), "", getDocument(), UndoConfirmationPolicy.DEFAULT,
-                              getDocument()));
+              .executeCommand(myProject, () -> ApplicationManager.getApplication().runWriteAction(runnable), "", getDocument(), UndoConfirmationPolicy.DEFAULT, getDocument()));
+    }
+
+    private boolean hasRelevantCommittedText(@Nonnull InputMethodEvent e) {
+      if (e.getCommittedCharacterCount() <= 0) return false;
+      AttributedCharacterIterator text = e.getText();
+      return text == null || text.first() != 0xA5 /* Yen character */;
     }
 
     private void replaceInputMethodText(@Nonnull InputMethodEvent e) {
-      if (myNeedToSelectPreviousChar &&
-          SystemInfo.isMac &&
-          (Registry.is("ide.mac.pressAndHold.brute.workaround") ||
-           Registry.is("ide.mac.pressAndHold.workaround") && (e.getCommittedCharacterCount() > 0 || e.getCaret() == null))) {
+      if (myNeedToSelectPreviousChar && SystemInfo.isMac &&
+          (Registry.is("ide.mac.pressAndHold.brute.workaround") || Registry.is("ide.mac.pressAndHold.workaround") && (hasRelevantCommittedText(e) || e.getCaret() == null))) {
         // This is required to support input of accented characters using press-and-hold method (http://support.apple.com/kb/PH11264).
         // JDK currently properly supports this functionality only for TextComponent/JTextComponent descendants.
         // For our editor component we need this workaround.
@@ -3375,7 +3634,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
         // committed text insertion
         if (commitCount > 0) {
-          //noinspection ForLoopThatDoesntUseLoopVariable
           for (char c = text.current(); commitCount > 0; c = text.next(), commitCount--) {
             if (c >= 0x20 && c != 0x7F) { // Hack just like in javax.swing.text.DefaultEditorKit.DefaultKeyTypedAction
               processKeyTyped(c);
@@ -3410,9 +3668,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       myMousePressArea = null;
       myLastMousePressedLocation = null;
       runMouseReleasedCommand(e);
-      if (!e.isConsumed() &&
-          myMousePressedEvent != null &&
-          !myMousePressedEvent.isConsumed() &&
+      if (!e.isConsumed() && myMousePressedEvent != null && !myMousePressedEvent.isConsumed() &&
           Math.abs(e.getX() - myMousePressedEvent.getX()) < EditorUtil.getSpaceWidth(Font.PLAIN, DesktopEditorImpl.this) &&
           Math.abs(e.getY() - myMousePressedEvent.getY()) < getLineHeight()) {
         runMouseClickedCommand(e);
@@ -3431,41 +3687,41 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       if (event.getArea() == EditorMouseEventArea.LINE_MARKERS_AREA) {
         myGutterComponent.mouseExited(e);
       }
-
-      TooltipController.getInstance().cancelTooltip(FOLDING_TOOLTIP_GROUP, e, true);
     }
 
     private void runMousePressedCommand(@Nonnull final MouseEvent e) {
       myLastMousePressedLocation = xyToLogicalPosition(e.getPoint());
       myCaretStateBeforeLastPress = isToggleCaretEvent(e) ? myCaretModel.getCaretsAndSelections() : Collections.emptyList();
       myCurrentDragIsSubstantial = false;
+      myDragStarted = false;
       clearDnDContext();
 
-
+      boolean forceProcessing = false;
       myMousePressedEvent = e;
       EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
 
       myExpectedCaretOffset = logicalPositionToOffset(myLastMousePressedLocation);
       try {
         for (EditorMouseListener mouseListener : myMouseListeners) {
+          boolean wasConsumed = event.isConsumed();
           mouseListener.mousePressed(event);
+          //noinspection deprecation
+          if (!wasConsumed && event.isConsumed() && mouseListener instanceof com.intellij.util.EditorPopupHandler) {
+            // compatibility with legacy code, this logic should be removed along with EditorPopupHandler
+            forceProcessing = true;
+          }
+          if (isReleased) return;
         }
       }
       finally {
         myExpectedCaretOffset = -1;
       }
 
-      if (event.getArea() == EditorMouseEventArea.LINE_MARKERS_AREA ||
-          event.getArea() == EditorMouseEventArea.FOLDING_OUTLINE_AREA && !isInsideGutterWhitespaceArea(e)) {
+      if (event.getArea() == EditorMouseEventArea.LINE_MARKERS_AREA || event.getArea() == EditorMouseEventArea.FOLDING_OUTLINE_AREA && !isInsideGutterWhitespaceArea(e)) {
         myDragOnGutterSelectionStartLine = EditorUtil.yPositionToLogicalLine(DesktopEditorImpl.this, e);
       }
 
-      // On some systems (for example on Linux) popup trigger is MOUSE_PRESSED event.
-      // But this trigger is always consumed by popup handler. In that case we have to
-      // also move caret.
-      if (event.isConsumed() && !(event.getMouseEvent().isPopupTrigger() || event.getArea() == EditorMouseEventArea.EDITING_AREA)) {
-        return;
-      }
+      if (event.isConsumed() && !forceProcessing) return;
 
       if (myCommandProcessor != null) {
         Runnable runnable = () -> {
@@ -3486,6 +3742,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
       for (EditorMouseListener listener : myMouseListeners) {
         listener.mouseClicked(event);
+        if (isReleased) return;
         if (event.isConsumed()) {
           e.consume();
           return;
@@ -3495,24 +3752,24 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
     private void runMouseReleasedCommand(@Nonnull final MouseEvent e) {
       myMultiSelectionInProgress = false;
-
       myDragOnGutterSelectionStartLine = -1;
+      myScrollingTimer.stop();
+
       if (e.isConsumed()) {
         return;
       }
 
-      myScrollingTimer.stop();
       EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
+      for (EditorMouseListener listener : myMouseListeners) {
+        listener.mouseReleased(event);
+        if (isReleased || event.isConsumed()) {
+          return;
+        }
+      }
+
       invokePopupIfNeeded(event);
       if (event.isConsumed()) {
         return;
-      }
-      for (EditorMouseListener listener : myMouseListeners) {
-        listener.mouseReleased(event);
-        if (event.isConsumed()) {
-          e.consume();
-          return;
-        }
       }
 
       if (myCommandProcessor != null) {
@@ -3528,6 +3785,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
       for (EditorMouseListener listener : myMouseListeners) {
         listener.mouseEntered(event);
+        if (isReleased) return;
         if (event.isConsumed()) {
           e.consume();
           return;
@@ -3539,6 +3797,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
       for (EditorMouseListener listener : myMouseListeners) {
         listener.mouseExited(event);
+        if (isReleased) return;
         if (event.isConsumed()) {
           e.consume();
           return;
@@ -3549,8 +3808,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     private boolean processMousePressed(@Nonnull final MouseEvent e) {
       myInitialMouseEvent = e;
 
-      if (myMouseSelectionState != MOUSE_SELECTION_STATE_NONE &&
-          System.currentTimeMillis() - myMouseSelectionChangeTimestamp > Registry.intValue("editor.mouseSelectionStateResetTimeout")) {
+      if (myMouseSelectionState != MOUSE_SELECTION_STATE_NONE && System.currentTimeMillis() - myMouseSelectionChangeTimestamp > Registry.intValue("editor.mouseSelectionStateResetTimeout")) {
         resetMouseSelectionState(e);
       }
 
@@ -3569,7 +3827,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
           int scrollShift = y - getScrollingModel().getVerticalScrollOffset();
           Runnable processor = () -> {
-            myFoldingModel.flushCaretShift();
+            myFoldingModel.disableScrollingPositionAdjustment();
             range.setExpanded(expansion);
             if (e.isAltDown()) {
               for (FoldRegion region : myFoldingModel.getAllFoldRegions()) {
@@ -3590,9 +3848,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       }
 
       if (e.getSource() == myGutterComponent) {
-        if (eventArea == EditorMouseEventArea.LINE_MARKERS_AREA ||
-            eventArea == EditorMouseEventArea.ANNOTATIONS_AREA ||
-            eventArea == EditorMouseEventArea.LINE_NUMBERS_AREA) {
+        if (eventArea == EditorMouseEventArea.LINE_MARKERS_AREA || eventArea == EditorMouseEventArea.ANNOTATIONS_AREA || eventArea == EditorMouseEventArea.LINE_NUMBERS_AREA) {
           if (!tweakSelectionIfNecessary(e)) {
             myGutterComponent.mousePressed(e);
           }
@@ -3614,8 +3870,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       // Don't move caret on mouse press above gutter line markers area (a place where break points, 'override', 'implements' etc icons
       // are drawn) and annotations area. E.g. we don't want to change caret position if a user sets new break point (clicks
       // at 'line markers' area).
-      boolean insideEditorRelatedAreas =
-              eventArea == EditorMouseEventArea.LINE_NUMBERS_AREA || eventArea == EditorMouseEventArea.EDITING_AREA || isInsideGutterWhitespaceArea(e);
+      boolean insideEditorRelatedAreas = eventArea == EditorMouseEventArea.LINE_NUMBERS_AREA || eventArea == EditorMouseEventArea.EDITING_AREA || isInsideGutterWhitespaceArea(e);
       if (insideEditorRelatedAreas) {
         VisualPosition visualPosition = getTargetPosition(x, y, true);
         LogicalPosition pos = visualToLogicalPosition(visualPosition);
@@ -3635,9 +3890,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
         }
         else if (e.getSource() != myGutterComponent && isCreateRectangularSelectionEvent(e)) {
           CaretState anchorCaretState = myCaretModel.getCaretsAndSelections().get(0);
-          LogicalPosition anchor = Objects.equals(anchorCaretState.getCaretPosition(), anchorCaretState.getSelectionStart())
-                                   ? anchorCaretState.getSelectionEnd()
-                                   : anchorCaretState.getSelectionStart();
+          LogicalPosition anchor = Objects.equals(anchorCaretState.getCaretPosition(), anchorCaretState.getSelectionStart()) ? anchorCaretState.getSelectionEnd() : anchorCaretState.getSelectionStart();
           if (anchor == null) anchor = myCaretModel.getLogicalPosition();
           mySelectionModel.setBlockSelection(anchor, pos);
         }
@@ -3657,8 +3910,10 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       int newEnd = mySelectionModel.getSelectionEnd();
 
       myMouseSelectedRegion = myFoldingModel.getFoldingPlaceholderAt(new Point(x, y));
-      myMousePressedInsideSelection =
-              mySelectionModel.hasSelection() && caretOffset >= mySelectionModel.getSelectionStart() && caretOffset <= mySelectionModel.getSelectionEnd();
+      myKeepSelectionOnMousePress = mySelectionModel.hasSelection() &&
+                                    caretOffset >= mySelectionModel.getSelectionStart() &&
+                                    caretOffset <= mySelectionModel.getSelectionEnd() &&
+                                    (SwingUtilities.isLeftMouseButton(e) && mySettings.isDndEnabled() || SwingUtilities.isRightMouseButton(e));
 
       boolean isNavigation = oldStart == oldEnd && newStart == newEnd && oldStart != newStart;
       if (getMouseEventArea(e) == EditorMouseEventArea.LINE_NUMBERS_AREA && e.getClickCount() == 1) {
@@ -3688,14 +3943,12 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
           }
         }
         else {
-          if (!myMousePressedInsideSelection && getSelectionModel().hasSelection()) {
+          if (!myKeepSelectionOnMousePress && getSelectionModel().hasSelection() && !isCreateRectangularSelectionEvent(e) && e.getClickCount() == 1) {
             setMouseSelectionState(MOUSE_SELECTION_STATE_NONE);
             mySelectionModel.setSelection(caretOffset, caretOffset);
           }
           else {
-            if (e.getButton() == MouseEvent.BUTTON1 &&
-                (eventArea == EditorMouseEventArea.EDITING_AREA || eventArea == EditorMouseEventArea.LINE_NUMBERS_AREA) &&
-                (!toggleCaret || lastPressCreatedCaret)) {
+            if (e.getButton() == MouseEvent.BUTTON1 && (eventArea == EditorMouseEventArea.EDITING_AREA || eventArea == EditorMouseEventArea.LINE_NUMBERS_AREA) && (!toggleCaret || lastPressCreatedCaret)) {
               switch (e.getClickCount()) {
                 case 2:
                   selectWordAtCaret(mySettings.isMouseClickSelectionHonorsCamelWords() && mySettings.isCamelWords());
@@ -3708,7 +3961,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
                     selectWordAtCaret(false);
                     break;
                   }
-                  //noinspection fallthrough
                 case 4:
                   mySelectionModel.selectLineAtCaret();
                   setMouseSelectionState(MOUSE_SELECTION_STATE_LINE_SELECTED);
@@ -3727,7 +3979,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   }
 
   private static boolean isColumnSelectionDragEvent(@Nonnull MouseEvent e) {
-    return e.isAltDown() && !e.isShiftDown() && !e.isControlDown() && !e.isMetaDown();
+    return isMouseActionEvent(e, IdeActions.ACTION_EDITOR_CREATE_RECTANGULAR_SELECTION_ON_MOUSE_DRAG);
   }
 
   private static boolean isToggleCaretEvent(@Nonnull MouseEvent e) {
@@ -3746,17 +3998,15 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     KeymapManager keymapManager = KeymapManager.getInstance();
     if (keymapManager == null) return false;
     Keymap keymap = keymapManager.getActiveKeymap();
-    if (keymap == null) return false;
     MouseShortcut mouseShortcut = KeymapUtil.createMouseShortcut(e);
     String[] mappedActions = keymap.getActionIds(mouseShortcut);
     if (!ArrayUtil.contains(actionId, mappedActions)) return false;
-    if (mappedActions.length < 2) return true;
+    if (mappedActions.length < 2 || e.getID() == MouseEvent.MOUSE_DRAGGED /* 'normal' actions are not invoked on mouse drag */) return true;
     ActionManager actionManager = ActionManager.getInstance();
     for (String mappedActionId : mappedActions) {
       if (actionId.equals(mappedActionId)) continue;
       AnAction action = actionManager.getAction(mappedActionId);
-      AnActionEvent actionEvent =
-              AnActionEvent.createFromAnAction(action, e, ActionPlaces.MAIN_MENU, DataManager.getInstance().getDataContext(e.getComponent()));
+      AnActionEvent actionEvent = AnActionEvent.createFromAnAction(action, e, ActionPlaces.MAIN_MENU, DataManager.getInstance().getDataContext(e.getComponent()));
       if (ActionUtil.lastUpdateAndCheckDumb(action, actionEvent, false)) return false;
     }
     return true;
@@ -3777,15 +4027,12 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
    * @return {@code true} if action that produces given event will trigger editor selection change; {@code false} otherwise
    */
   private boolean tweakSelectionEvent(@Nonnull MouseEvent e) {
-    return getSelectionModel().hasSelection() &&
-           e.getButton() == MouseEvent.BUTTON1 &&
-           e.isShiftDown() &&
-           getMouseEventArea(e) == EditorMouseEventArea.LINE_NUMBERS_AREA;
+    return getSelectionModel().hasSelection() && e.getButton() == MouseEvent.BUTTON1 && e.isShiftDown() && getMouseEventArea(e) == EditorMouseEventArea.LINE_NUMBERS_AREA;
   }
 
   /**
    * Checks if editor selection should be changed because of click at the given point at gutter and proceeds if necessary.
-   * <p>
+   * <p/>
    * The main idea is that selection can be changed during left mouse clicks on the gutter line numbers area with hold
    * {@code Shift} button. The selection should be adjusted if necessary.
    *
@@ -3803,7 +4050,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     int endSelectionOffset = getSelectionModel().getSelectionEnd();
     int endVisLine = offsetToVisualLine(endSelectionOffset - 1);
 
-    int clickVisLine = yToVisibleLine(e.getPoint().y);
+    int clickVisLine = yToVisualLine(e.getPoint().y);
 
     if (clickVisLine < startVisLine) {
       // Expand selection at backward direction.
@@ -3853,8 +4100,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     myUseEditorAntialiasing = value;
   }
 
-  private static final TooltipGroup FOLDING_TOOLTIP_GROUP = new TooltipGroup("FOLDING_TOOLTIP_GROUP", 10);
-
   private class MyMouseMotionListener implements MouseMotionListener {
     @Override
     public void mouseDragged(@Nonnull MouseEvent e) {
@@ -3868,6 +4113,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
       for (EditorMouseMotionListener listener : myMouseMotionListeners) {
         listener.mouseDragged(event);
+        if (isReleased) return;
       }
     }
 
@@ -3897,51 +4143,25 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
         myGutterComponent.mouseMoved(e);
       }
 
-      if (event.getArea() == EditorMouseEventArea.EDITING_AREA) {
-        FoldRegion fold = myFoldingModel.getFoldingPlaceholderAt(e.getPoint());
-        TooltipController controller = TooltipController.getInstance();
-        if (fold != null && !fold.shouldNeverExpand()) {
-          DocumentFragment range = createDocumentFragment(fold);
-          final Point p = SwingUtilities.convertPoint((Component)e.getSource(), e.getPoint(), getComponent().getRootPane().getLayeredPane());
-          controller.showTooltip(DesktopEditorImpl.this, p, new DocumentFragmentTooltipRenderer(range), false, FOLDING_TOOLTIP_GROUP);
-        }
-        else {
-          controller.cancelTooltip(FOLDING_TOOLTIP_GROUP, e, true);
-        }
-      }
-
       for (EditorMouseMotionListener listener : myMouseMotionListeners) {
         listener.mouseMoved(event);
+        if (isReleased) return;
       }
-    }
-
-    @Nonnull
-    private DocumentFragment createDocumentFragment(@Nonnull FoldRegion fold) {
-      final FoldingGroup group = fold.getGroup();
-      final int foldStart = fold.getStartOffset();
-      if (group != null) {
-        final int endOffset = myFoldingModel.getEndOffset(group);
-        if (offsetToVisualLine(endOffset) == offsetToVisualLine(foldStart)) {
-          return new DocumentFragment(myDocument, foldStart, endOffset);
-        }
-      }
-
-      final int oldEnd = fold.getEndOffset();
-      return new DocumentFragment(myDocument, foldStart, oldEnd);
     }
   }
 
   private class MyColorSchemeDelegate extends DelegateColorScheme {
     private final FontPreferencesImpl myFontPreferences = new FontPreferencesImpl();
     private final FontPreferencesImpl myConsoleFontPreferences = new FontPreferencesImpl();
-    private final Map<TextAttributesKey, TextAttributes> myOwnAttributes = ContainerUtilRt.newHashMap();
-    private final Map<ColorKey, Color> myOwnColors = ContainerUtilRt.newHashMap();
+    private final Map<TextAttributesKey, TextAttributes> myOwnAttributes = new HashMap<>();
+    private final Map<ColorKey, Color> myOwnColors = new HashMap<>();
     private final EditorColorsScheme myCustomGlobalScheme;
     private Map<EditorFontType, Font> myFontsMap;
     private int myMaxFontSize = EditorFontsConstants.getMaxEditorFontSize();
     private int myFontSize = -1;
     private int myConsoleFontSize = -1;
     private String myFaceName;
+    private Float myLineSpacing;
 
     private MyColorSchemeDelegate(@Nullable EditorColorsScheme globalScheme) {
       super(globalScheme == null ? EditorColorsManager.getInstance().getGlobalScheme() : globalScheme);
@@ -3969,7 +4189,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       myFontsMap.put(EditorFontType.CONSOLE_BOLD_ITALIC, new Font(consoleFontName, Font.BOLD | Font.ITALIC, consoleFontSize));
     }
 
-    private void updatePreferences(FontPreferencesImpl preferences, String fontName, int fontSize, FontPreferences delegatePreferences) {
+    private void updatePreferences(@Nonnull FontPreferencesImpl preferences, @Nonnull String fontName, int fontSize, @Nullable FontPreferences delegatePreferences) {
       preferences.clear();
       preferences.register(fontName, fontSize);
       if (delegatePreferences != null) {
@@ -4003,7 +4223,9 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     @Nullable
     @Override
     public Color getColor(ColorKey key) {
-      if (myOwnColors.containsKey(key)) return myOwnColors.get(key);
+      if (myOwnColors.containsKey(key)) {
+        return myOwnColors.get(key);
+      }
       return getDelegate().getColor(key);
     }
 
@@ -4075,6 +4297,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       reinitFontsAndSettings();
     }
 
+    @Nonnull
     @Override
     public Font getFont(EditorFontType key) {
       if (myFontsMap != null) {
@@ -4121,11 +4344,24 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     public int getConsoleFontSize() {
       return myConsoleFontSize == -1 ? super.getConsoleFontSize() : myConsoleFontSize;
     }
+
+    @Override
+    public float getLineSpacing() {
+      return myLineSpacing == null ? super.getLineSpacing() : myLineSpacing;
+    }
+
+    @Override
+    public void setLineSpacing(float lineSpacing) {
+      myLineSpacing = EditorFontsConstants.checkAndFixEditorLineSpacing(lineSpacing);
+      reinitSettings();
+    }
   }
 
   private static class ExplosionPainter extends AbstractPainter {
     private final Point myExplosionLocation;
     private final Image myImage;
+    @Nonnull
+    private final Disposable myPainterListenersDisposable;
 
     private static final long TIME_PER_FRAME = 30;
     private final int myWidth;
@@ -4136,9 +4372,10 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
     private final AtomicBoolean nrp = new AtomicBoolean(true);
 
-    ExplosionPainter(final Point explosionLocation, Image image) {
+    ExplosionPainter(final Point explosionLocation, Image image, @Nonnull Disposable painterListenersDisposable) {
       myExplosionLocation = new Point(explosionLocation.x, explosionLocation.y);
       myImage = image;
+      myPainterListenersDisposable = painterListenersDisposable;
       myWidth = myImage.getWidth(null);
       myHeight = myImage.getHeight(null);
     }
@@ -4158,7 +4395,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
       if (currentTimeMillis - lastRepaintTime < TIME_PER_FRAME) {
         UIUtil.drawImage(g, scaledImage, x, y, null);
-        JobScheduler.getScheduler().schedule(() -> component.repaint(x, y, myWidth, myHeight), TIME_PER_FRAME, TimeUnit.MILLISECONDS);
+        EdtExecutorService.getScheduledExecutorInstance().schedule(() -> component.repaint(x, y, myWidth, myHeight), TIME_PER_FRAME, TimeUnit.MILLISECONDS);
         return;
       }
       lastRepaintTime = currentTimeMillis;
@@ -4166,8 +4403,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       UIUtil.drawImage(g, scaledImage, x, y, null);
       if (frameIndex == TOTAL_FRAMES) {
         nrp.set(false);
-        IdeGlassPane glassPane = IdeGlassPaneUtil.find(component);
-        ApplicationManager.getApplication().invokeLater(() -> glassPane.removePainter(this));
+        ApplicationManager.getApplication().invokeLater(() -> Disposer.dispose(myPainterListenersDisposable));
         component.repaint(x, y, myWidth, myHeight);
       }
       component.repaint(x, y, myWidth, myHeight);
@@ -4194,9 +4430,11 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
               Point mouseLocationOnScreen = MouseInfo.getPointerInfo().getLocation();
               JComponent editorComponent = editor.getComponent();
               Point editorComponentLocationOnScreen = editorComponent.getLocationOnScreen();
-              IdeGlassPaneUtil.installPainter(editorComponent, new ExplosionPainter(
-                      new Point(mouseLocationOnScreen.x - editorComponentLocationOnScreen.x, mouseLocationOnScreen.y - editorComponentLocationOnScreen.y),
-                      editor.getGutterComponentEx().getDragImage((GutterIconRenderer)attachedObject)), editor.getDisposable());
+              Disposable painterListenersDisposable = Disposer.newDisposable("PainterListenersDisposable");
+              Disposer.register(editor.getDisposable(), painterListenersDisposable);
+              ExplosionPainter painter = new ExplosionPainter(new Point(mouseLocationOnScreen.x - editorComponentLocationOnScreen.x, mouseLocationOnScreen.y - editorComponentLocationOnScreen.y),
+                                                              editor.getGutterComponentEx().getDragImage((GutterIconRenderer)attachedObject), painterListenersDisposable);
+              IdeGlassPaneUtil.installPainter(editorComponent, painter, painterListenersDisposable);
               return true;
             }
           }
@@ -4266,14 +4504,13 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     @Override
     public boolean importData(TransferSupport support) {
       Component comp = support.getComponent();
-      if (!(comp instanceof JComponent)) return false;
-      return handleDrop(getEditor((JComponent)comp), support.getTransferable(), support.getDropAction());
+      return comp instanceof JComponent && handleDrop(getEditor((JComponent)comp), support.getTransferable(), support.getDropAction());
     }
 
     @Override
     public boolean canImport(@Nonnull JComponent comp, @Nonnull DataFlavor[] transferFlavors) {
-      Editor editor = getEditor(comp);
-      final EditorDropHandler dropHandler = ((DesktopEditorImpl)editor).getDropHandler();
+      DesktopEditorImpl editor = getEditor(comp);
+      final EditorDropHandler dropHandler = editor.getDropHandler();
       if (dropHandler != null && dropHandler.canHandleDrop(transferFlavors)) {
         return true;
       }
@@ -4348,7 +4585,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   private class EditorDocumentAdapter implements PrioritizedDocumentListener {
     @Override
     public void beforeDocumentChange(@Nonnull DocumentEvent e) {
-      beforeChangedUpdate();
+      beforeChangedUpdate(e);
     }
 
     @Override
@@ -4357,24 +4594,18 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     }
 
     @Override
-    public int getPriority() {
-      return EditorDocumentPriorities.EDITOR_DOCUMENT_ADAPTER;
-    }
-  }
-
-  private class EditorDocumentBulkUpdateAdapter implements DocumentBulkUpdateListener {
-    @Override
-    public void updateStarted(@Nonnull Document doc) {
-      if (doc != getDocument()) return;
-
+    public void bulkUpdateStarting(@Nonnull Document document) {
       bulkUpdateStarted();
     }
 
     @Override
-    public void updateFinished(@Nonnull Document doc) {
-      if (doc != getDocument()) return;
+    public void bulkUpdateFinished(@Nonnull Document document) {
+      DesktopEditorImpl.this.bulkUpdateFinished();
+    }
 
-      bulkUpdateFinished();
+    @Override
+    public int getPriority() {
+      return EditorDocumentPriorities.EDITOR_DOCUMENT_ADAPTER;
     }
   }
 
@@ -4382,11 +4613,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   @Nonnull
   public EditorGutter getGutter() {
     return getGutterComponentEx();
-  }
-
-  @Override
-  public int calcColumnNumber(@Nonnull CharSequence text, int start, int offset, int tabSize) {
-    return myView.offsetToLogicalPosition(offset).column;
   }
 
   public boolean isInDistractionFreeMode() {
@@ -4404,33 +4630,45 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   }
 
   private void invokePopupIfNeeded(EditorMouseEvent event) {
-    if (myContextMenuGroupId != null && event.getArea() == EditorMouseEventArea.EDITING_AREA && event.getMouseEvent().isPopupTrigger() && !event.isConsumed()) {
-      String contextMenuGroupId = myContextMenuGroupId;
-      Inlay inlay = myInlayModel.getElementAt(event.getMouseEvent().getPoint());
-      if (inlay != null) {
-        String inlayContextMenuGroupId = inlay.getRenderer().getContextMenuGroupId();
-        if (inlayContextMenuGroupId != null) contextMenuGroupId = inlayContextMenuGroupId;
-      }
-      AnAction action = CustomActionsSchema.getInstance().getCorrectedAction(contextMenuGroupId);
-      if (action instanceof ActionGroup) {
-        ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.EDITOR_POPUP, (ActionGroup)action);
-        MouseEvent e = event.getMouseEvent();
-        final Component c = e.getComponent();
-        if (c != null && c.isShowing()) {
-          popupMenu.getComponent().show(c, e.getX(), e.getY());
-        }
-        e.consume();
+    if (event.getArea() == EditorMouseEventArea.EDITING_AREA && event.getMouseEvent().isPopupTrigger() && !event.isConsumed()) {
+      for (int i = myPopupHandlers.size() - 1; i >= 0; i--) {
+        if (myPopupHandlers.get(i).handlePopup(event)) break;
       }
     }
   }
 
+  //@Override
+  //public void codeStyleSettingsChanged(@Nonnull CodeStyleSettingsChangeEvent event) {
+  //  if (myProject != null) {
+  //    if (event.getPsiFile() != null) {
+  //      PsiFile editorFile = PsiDocumentManager.getInstance(myProject).getCachedPsiFile(getDocument());
+  //      if (editorFile != event.getPsiFile()) return;
+  //    }
+  //    reinitSettings(false);
+  //  }
+  //}
+
   @TestOnly
-  public void validateState() {
+  void validateState() {
     myView.validateState();
     mySoftWrapModel.validateState();
     myFoldingModel.validateState();
     myCaretModel.validateState();
     myInlayModel.validateState();
+  }
+
+  private class DefaultPopupHandler extends ContextMenuPopupHandler.ById {
+    @Nullable
+    @Override
+    public String getActionGroupId(@Nonnull EditorMouseEvent event) {
+      String contextMenuGroupId = myContextMenuGroupId;
+      Inlay inlay = myInlayModel.getElementAt(event.getMouseEvent().getPoint());
+      if (inlay != null) {
+        String inlayContextMenuGroupId = inlay.getRenderer().getContextMenuGroupId(inlay);
+        if (inlayContextMenuGroupId != null) contextMenuGroupId = inlayContextMenuGroupId;
+      }
+      return contextMenuGroupId;
+    }
   }
 
   private class MyScrollPane extends JBScrollPane {
@@ -4469,6 +4707,12 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       }
 
       super.processMouseWheelEvent(e);
+    }
+
+    @Nonnull
+    @Override
+    public JScrollBar createHorizontalScrollBar() {
+      return new OpaqueAwareScrollBar(Adjustable.HORIZONTAL);
     }
 
     @Nonnull
@@ -4515,7 +4759,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       //noinspection ConstantConditions
       Component header = myHeaderPanel == null ? null : ArrayUtil.getFirstElement(myHeaderPanel.getComponents());
       boolean paintTop = thereIsSomethingAbove && header == null && UISettings.getInstance().getEditorTabPlacement() != SwingConstants.TOP;
-      return splitters == null ? super.getBorderInsets(c) : new Insets(paintTop ? 1 : 0, 0, 0, 0);
+      return splitters == null ? super.getBorderInsets(c) : JBUI.insetsTop(paintTop ? 1 : 0);
     }
 
     private boolean toolWindowIsNotEmpty() {
@@ -4549,7 +4793,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       super.validateTree();
       height -= getHeight();
 
-      if (height != 0) {
+      if (height != 0 && !(myOldHeight == 0 && getComponentCount() > 0 && getPermanentHeaderComponent() == getComponent(0))) {
         myVerticalScrollBar.setValue(myVerticalScrollBar.getValue() - height);
       }
       myOldHeight = getHeight();
@@ -4566,7 +4810,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   private static class NullEditorHighlighter extends EmptyEditorHighlighter {
     private static final TextAttributes NULL_ATTRIBUTES = new TextAttributes();
 
-    public NullEditorHighlighter() {
+    NullEditorHighlighter() {
       super(NULL_ATTRIBUTES);
     }
 

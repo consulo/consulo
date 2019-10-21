@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.intellij.openapi.editor;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.editor.colors.ColorKey;
 import com.intellij.openapi.editor.colors.EditorFontType;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -38,27 +39,25 @@ public interface TextAnnotationGutterProvider {
    * @param editor the editor in which the text will be drawn.
    * @return the text to draw, or null if no text should be drawn.
    */
-  @javax.annotation.Nullable
+  @Nullable
   String getLineText(int line, Editor editor);
 
-  @javax.annotation.Nullable
+  @Nullable
   String getToolTip(int line, Editor editor);
 
   EditorFontType getStyle(int line, Editor editor);
 
-  @javax.annotation.Nullable
+  @Nullable
   ColorKey getColor(int line, Editor editor);
 
   /**
    * Returns the background color for the text
    *
-   * @since 9.0.2
-   *
-   * @param line the line for which the background color is requested.
+   * @param line   the line for which the background color is requested.
    * @param editor the editor in which the text will be drawn.
    * @return the text to draw, or null if no text should be drawn.
    */
-  @javax.annotation.Nullable
+  @Nullable
   Color getBgColor(int line, Editor editor);
 
   /***
@@ -72,4 +71,12 @@ public interface TextAnnotationGutterProvider {
    * @see EditorGutter#closeAllAnnotations()
    */
   void gutterClosed();
+
+  /**
+   * If {@code true}, a couple of pixels will be added at both sides of displayed text (if it's not empty),
+   * otherwise the width of annotation will be equal to the width of provided text.
+   */
+  default boolean useMargin() {
+    return true;
+  }
 }

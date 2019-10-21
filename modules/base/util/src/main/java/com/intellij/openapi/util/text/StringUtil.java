@@ -22,6 +22,7 @@ import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.CharSequenceSubSequence;
+import com.intellij.util.text.MergingCharSequence;
 import com.intellij.util.text.StringFactory;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.Contract;
@@ -60,6 +61,15 @@ public class StringUtil extends StringUtilRt {
       return "'" + s + "'";
     }
   };
+
+  /**
+   * @return a lightweight CharSequence which results from replacing {@code [start, end)} range in the {@code charSeq} with {@code replacement}.
+   * Works in O(1), but retains references to the passed char sequences, so please use something else if you want them to be garbage-collected.
+   */
+  @Nonnull
+  public static MergingCharSequence replaceSubSequence(@Nonnull CharSequence charSeq, int start, int end, @Nonnull CharSequence replacement) {
+    return new MergingCharSequence(new MergingCharSequence(new CharSequenceSubSequence(charSeq, 0, start), replacement), new CharSequenceSubSequence(charSeq, end, charSeq.length()));
+  }
 
   @Nonnull
   @Contract(pure = true)
@@ -210,11 +220,16 @@ public class StringUtil extends StringUtilRt {
     return newText != null ? newText.toString() : "";
   }
 
+  @Contract(pure = true)
+  public static int indexOfIgnoreCase(@Nonnull String where, @Nonnull String what, int fromIndex) {
+    return indexOfIgnoreCase((CharSequence)where, what, fromIndex);
+  }
+
   /**
    * Implementation copied from {@link String#indexOf(String, int)} except character comparisons made case insensitive
    */
   @Contract(pure = true)
-  public static int indexOfIgnoreCase(@Nonnull String where, @Nonnull String what, int fromIndex) {
+  public static int indexOfIgnoreCase(@Nonnull CharSequence where, @Nonnull CharSequence what, int fromIndex) {
     int targetCount = what.length();
     int sourceCount = where.length();
 
@@ -236,6 +251,7 @@ public class StringUtil extends StringUtilRt {
     for (int i = fromIndex; i <= max; i++) {
       /* Look for first character. */
       if (!charsEqualIgnoreCase(where.charAt(i), first)) {
+        //noinspection StatementWithEmptyBody,AssignmentToForLoopParameter
         while (++i <= max && !charsEqualIgnoreCase(where.charAt(i), first)) ;
       }
 
@@ -243,6 +259,7 @@ public class StringUtil extends StringUtilRt {
       if (i <= max) {
         int j = i + 1;
         int end = j + targetCount - 1;
+        //noinspection StatementWithEmptyBody
         for (int k = 1; j < end && charsEqualIgnoreCase(where.charAt(j), what.charAt(k)); j++, k++) ;
 
         if (j == end) {
@@ -1436,6 +1453,22 @@ public class StringUtil extends StringUtilRt {
     return join(Arrays.asList(items), f, separator);
   }
 
+  public static <T> void join(@Nonnull Iterable<? extends T> items, @Nonnull Function<? super T, String> f, @Nonnull String separator, @Nonnull StringBuilder result) {
+    boolean isFirst = true;
+    for (T item : items) {
+      String string = f.fun(item);
+      if (!isEmpty(string)) {
+        if (isFirst) {
+          isFirst = false;
+        }
+        else {
+          result.append(separator);
+        }
+        result.append(string);
+      }
+    }
+  }
+
   @Nonnull
   @Contract(pure = true)
   public static <T> String join(@Nonnull Collection<? extends T> items,
@@ -1834,6 +1867,18 @@ public class StringUtil extends StringUtilRt {
   @Contract(pure = true)
   public static boolean endsWith(@Nonnull CharSequence text, @Nonnull CharSequence suffix) {
     return StringUtilRt.endsWith(text, suffix);
+  }
+
+  @Contract(pure = true)
+  public static boolean endsWith(@Nonnull CharSequence text, int start, int end, @Nonnull CharSequence suffix) {
+    int suffixLen = suffix.length();
+    if (end < suffixLen) return false;
+
+    for (int i = end - 1; i >= end - suffixLen && i >= start; i--) {
+      if (text.charAt(i) != suffix.charAt(i + suffixLen - end)) return false;
+    }
+
+    return true;
   }
 
   @Nonnull
@@ -2699,6 +2744,24 @@ public class StringUtil extends StringUtilRt {
   }
 
   @Contract(pure = true)
+  public static int compare(@Nullable CharSequence s1, @Nullable CharSequence s2, boolean ignoreCase) {
+    if (s1 == s2) return 0;
+    if (s1 == null) return -1;
+    if (s2 == null) return 1;
+
+    int length1 = s1.length();
+    int length2 = s2.length();
+    int i = 0;
+    for (; i < length1 && i < length2; i++) {
+      int diff = compare(s1.charAt(i), s2.charAt(i), ignoreCase);
+      if (diff != 0) {
+        return diff;
+      }
+    }
+    return length1 - length2;
+  }
+
+  @Contract(pure = true)
   public static int comparePairs(@Nullable String s1, @Nullable String t1, @Nullable String s2, @Nullable String t2, boolean ignoreCase) {
     final int compare = compare(s1, s2, ignoreCase);
     return compare != 0 ? compare : compare(t1, t2, ignoreCase);
@@ -3245,6 +3308,15 @@ public class StringUtil extends StringUtilRt {
       check();
       return delegate.subSequence(i, i1);
     }
+  }
+
+  /**
+   * @return {@code text} with some characters replaced with standard XML entities, e.g. '<' replaced with '{@code &lt;}'
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static String escapeXmlEntities(@Nonnull String text) {
+    return replace(text, REPLACES_DISP, REPLACES_REFS);
   }
 
   /** @deprecated use {@link #startsWithConcatenation(String, String...)} (to remove in IDEA 15) */

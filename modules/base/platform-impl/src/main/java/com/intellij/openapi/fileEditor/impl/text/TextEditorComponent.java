@@ -355,6 +355,14 @@ public class TextEditorComponent extends JBLoadingPanel implements DataProvider,
     }
   }
 
+  public void loadingFinished() {
+    if (isLoading()) {
+      stopLoading();
+    }
+
+    getContentPanel().setVisible(true);
+  }
+
   @Nonnull
   public VirtualFile getFile() {
     return myFile;

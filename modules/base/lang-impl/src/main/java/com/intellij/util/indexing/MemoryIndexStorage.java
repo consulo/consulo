@@ -32,7 +32,6 @@ import java.util.*;
  * This storage is needed for indexing yet unsaved data without saving those changes to 'main' backend storage
  *
  * @author Eugene Zhuravlev
- *         Date: Dec 10, 2007
  */
 public class MemoryIndexStorage<Key, Value> implements VfsAwareIndexStorage<Key, Value> {
   private final Map<Key, ChangeTrackingValueContainer<Value>> myMap = new HashMap<>();
@@ -57,17 +56,8 @@ public class MemoryIndexStorage<Key, Value> implements VfsAwareIndexStorage<Key,
     myIndexId = indexId;
   }
 
-  @Nonnull
-  public IndexStorage<Key, Value> getBackendStorage() {
-    return myBackendStorage;
-  }
-
   public void addBufferingStateListener(@Nonnull BufferingStateListener listener) {
     myListeners.add(listener);
-  }
-
-  public void removeBufferingStateListener(@Nonnull BufferingStateListener listener) {
-    myListeners.remove(listener);
   }
 
   public void setBufferingEnabled(boolean enabled) {
@@ -80,12 +70,17 @@ public class MemoryIndexStorage<Key, Value> implements VfsAwareIndexStorage<Key,
     }
   }
 
-  public boolean isBufferingEnabled() {
-    return myBufferingEnabled;
-  }
-
   public void clearMemoryMap() {
     myMap.clear();
+  }
+
+  public boolean clearMemoryMapForId(Key key, int fileId) {
+    ChangeTrackingValueContainer<Value> container = myMap.get(key);
+    if (container != null) {
+      container.dropAssociatedValue(fileId);
+      return true;
+    }
+    return false;
   }
 
   public void fireMemoryStorageCleared() {
@@ -130,7 +125,7 @@ public class MemoryIndexStorage<Key, Value> implements VfsAwareIndexStorage<Key,
   }
 
   @Override
-  public boolean processKeys(@Nonnull final Processor<Key> processor, GlobalSearchScope scope, IdFilter idFilter) throws StorageException {
+  public boolean processKeys(@Nonnull final Processor<? super Key> processor, GlobalSearchScope scope, IdFilter idFilter) throws StorageException {
     final Set<Key> stopList = new HashSet<>();
 
     Processor<Key> decoratingProcessor = key -> {
@@ -149,8 +144,7 @@ public class MemoryIndexStorage<Key, Value> implements VfsAwareIndexStorage<Key,
       }
       stopList.add(key);
     }
-    return ((VfsAwareIndexStorage<Key, Value>)myBackendStorage)
-            .processKeys(stopList.isEmpty() && myMap.isEmpty() ? processor : decoratingProcessor, scope, idFilter);
+    return ((VfsAwareIndexStorage<Key, Value>)myBackendStorage).processKeys(stopList.isEmpty() && myMap.isEmpty() ? processor : decoratingProcessor, scope, idFilter);
   }
 
   @Override

@@ -15,11 +15,8 @@
  */
 package consulo.vfs.newvfs;
 
-import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.vfs.newvfs.RefreshQueueImpl;
-import com.intellij.openapi.vfs.newvfs.RefreshSessionImpl;
 
-import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 
 /**
@@ -28,14 +25,4 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class NewRefreshQueueImpl extends RefreshQueueImpl {
-  @Override
-  public void execute(@Nonnull RefreshSessionImpl session) {
-    queueSession(session, session.getTransaction());
-  }
-
-  @Nonnull
-  @Override
-  protected AccessToken createHeavyLatch(String id) {
-    return AccessToken.EMPTY_ACCESS_TOKEN;
-  }
 }

@@ -17,7 +17,6 @@ package com.intellij.ui.speedSearch;
 
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
-import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;
@@ -33,8 +32,9 @@ public abstract class SpeedSearchSupply {
    * Client property key to use in jcomponents for passing the actual search query to renderers
    */
   public static final String SEARCH_QUERY_KEY = "SEARCH_QUERY";
-  private static final Key SPEED_SEARCH_COMPONENT_MARKER = Key.create("SPEED_SEARCH_COMPONENT_MARKER");
+  private static final Key SPEED_SEARCH_COMPONENT_MARKER = new Key("SPEED_SEARCH_COMPONENT_MARKER");
   public static final Key<String> SPEED_SEARCH_CURRENT_QUERY = Key.create("SPEED_SEARCH_CURRENT_QUERY");
+  public static final String ENTERED_PREFIX_PROPERTY_NAME = "enteredPrefix";
 
   @Nullable
   public static SpeedSearchSupply getSupply(@Nonnull final JComponent component) {
@@ -69,19 +69,16 @@ public abstract class SpeedSearchSupply {
 
   protected void installSupplyTo(final JComponent component) {
     component.putClientProperty(SPEED_SEARCH_COMPONENT_MARKER, this);
-    addChangeListener(new PropertyChangeListener() {
-      @Override
-      public void propertyChange(PropertyChangeEvent evt) {
-        component.repaint();
-      }
-    });
+    addChangeListener(evt -> component.repaint());
   }
 
   public abstract void addChangeListener(@Nonnull PropertyChangeListener listener);
+
   public abstract void removeChangeListener(@Nonnull PropertyChangeListener listener);
 
   /**
    * Find an element matching the searching query in the underlying component and select it there. Speed-search popup is not affected.
+   *
    * @param searchQuery text that the selected element should match
    */
   public abstract void findAndSelectElement(@Nonnull String searchQuery);

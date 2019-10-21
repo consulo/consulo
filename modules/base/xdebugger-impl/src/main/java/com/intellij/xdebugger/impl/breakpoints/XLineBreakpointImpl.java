@@ -19,6 +19,8 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.LazyRangeMarkerFactory;
+import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
@@ -60,7 +62,7 @@ import java.util.List;
 public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreakpointBase<XLineBreakpoint<P>, P, LineBreakpointState<P>>
         implements XLineBreakpoint<P> {
   @Nullable
-  private RangeHighlighter myHighlighter;
+  private RangeMarker myHighlighter;
   private final XLineBreakpointType<P> myType;
   private XSourcePosition mySourcePosition;
 
@@ -83,22 +85,49 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
       return;
     }
 
-    Document document = getDocument();
-    if (document == null) {
+    VirtualFile file = getFile();
+    if (file == null) {
       return;
+    }
+
+    // do not decompile files here
+    Document document = FileDocumentManager.getInstance().getCachedDocument(file);
+    if (document == null) {
+      // currently LazyRangeMarkerFactory creates document for non binary files
+      if (file.getFileType().isBinary()) {
+        if (myHighlighter == null) {
+          myHighlighter = LazyRangeMarkerFactory.getInstance(getProject()).createRangeMarker(file, getLine(), 0, true);
+        }
+        return;
+      }
+      document = FileDocumentManager.getInstance().getDocument(file);
+      if (document == null) {
+        return;
+      }
+    }
+
+    if (myHighlighter != null && !(myHighlighter instanceof RangeHighlighter)) {
+      removeHighlighter();
+      myHighlighter = null;
+    }
+
+    if (myType instanceof XBreakpointTypeWithDocumentDelegation) {
+      document = ((XBreakpointTypeWithDocumentDelegation)myType).getDocumentForHighlighting(document);
     }
 
     EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
     TextAttributes attributes = scheme.getAttributes(DebuggerColors.BREAKPOINT_ATTRIBUTES);
 
-    RangeHighlighter highlighter = myHighlighter;
-    if (highlighter != null &&
-        (!highlighter.isValid()
-         || !DocumentUtil.isValidOffset(highlighter.getStartOffset(), document)
-         || !Comparing.equal(highlighter.getTextAttributes(), attributes)
-         // it seems that this check is not needed - we always update line number from the highlighter
-         // and highlighter is removed on line and file change anyway
-         /*|| document.getLineNumber(highlighter.getStartOffset()) != getLine()*/)) {
+    if (!isEnabled()) {
+      attributes = attributes.clone();
+      attributes.setBackgroundColor(null);
+    }
+
+    RangeHighlighter highlighter = (RangeHighlighter)myHighlighter;
+    if (highlighter != null && (!highlighter.isValid() || !DocumentUtil.isValidOffset(highlighter.getStartOffset(), document) || !Comparing.equal(highlighter.getTextAttributes(), attributes)
+                                // it seems that this check is not needed - we always update line number from the highlighter
+                                // and highlighter is removed on line and file change anyway
+            /*|| document.getLineNumber(highlighter.getStartOffset()) != getLine()*/)) {
       removeHighlighter();
       highlighter = null;
     }
@@ -108,11 +137,9 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
       markupModel = (MarkupModelEx)DocumentMarkupModel.forDocument(document, getProject(), true);
       TextRange range = myType.getHighlightRange(this);
       if (range != null && !range.isEmpty()) {
-        range = range.intersection(DocumentUtil.getLineTextRange(document, getLine()));
-        if (range != null && !range.isEmpty()) {
-          highlighter = markupModel.addRangeHighlighter(range.getStartOffset(), range.getEndOffset(),
-                                                        DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER, attributes,
-                                                        HighlighterTargetArea.EXACT_RANGE);
+        TextRange lineRange = DocumentUtil.getLineTextRange(document, getLine());
+        if (range.intersects(lineRange)) {
+          highlighter = markupModel.addRangeHighlighter(range.getStartOffset(), range.getEndOffset(), DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER, attributes, HighlighterTargetArea.EXACT_RANGE);
         }
       }
       if (highlighter == null) {
@@ -188,7 +215,7 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
 
   @Nullable
   public RangeHighlighter getHighlighter() {
-    return myHighlighter;
+    return myHighlighter instanceof RangeHighlighter ? (RangeHighlighter)myHighlighter : null;
   }
 
   @Override
@@ -270,6 +297,7 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
   public void updatePosition() {
     if (myHighlighter != null && myHighlighter.isValid()) {
       setLine(myHighlighter.getDocument().getLineNumber(myHighlighter.getStartOffset()), false);
+      mySourcePosition = null; // need to clear this no matter what as the offset may be cached inside
     }
   }
 

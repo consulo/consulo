@@ -117,7 +117,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
   }
 
   @Nullable
-  private static Navigatable findMember(String pattern, PsiElement psiElement, VirtualFile file) {
+  private static Navigatable findMember(String memberPattern, PsiElement psiElement, VirtualFile file) {
     final PsiStructureViewFactory factory = LanguageStructureViewBuilder.INSTANCE.forLanguage(psiElement.getLanguage());
     final StructureViewBuilder builder = factory == null ? null : factory.getStructureViewBuilder(psiElement.getContainingFile());
     final FileEditor[] editors = FileEditorManager.getInstance(psiElement.getProject()).getEditors(file);
@@ -132,7 +132,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
         return null;
       }
 
-      final MinusculeMatcher matcher = new MinusculeMatcher(pattern, NameUtil.MatchingCaseSensitivity.NONE);
+      MinusculeMatcher matcher = NameUtil.buildMatcher(memberPattern).build();
       int max = Integer.MIN_VALUE;
       Object target = null;
       for (TreeElement treeElement : element.getChildren()) {

@@ -18,8 +18,8 @@ package com.intellij.openapi.fileTypes;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.nio.charset.Charset;
 
@@ -28,14 +28,30 @@ import java.nio.charset.Charset;
  */
 public abstract class LanguageFileType implements FileType {
   private final Language myLanguage;
+  private final boolean mySecondary;
 
   /**
    * Creates a language file type for the specified language.
    *
    * @param language The language used in the files of the type.
    */
-  protected LanguageFileType(@Nonnull final Language language) {
+  protected LanguageFileType(@Nonnull Language language) {
+    this(language, false);
+  }
+
+  /**
+   * Creates a language file type for the specified language.
+   *
+   * @param language  The language used in the files of the type.
+   * @param secondary If true, this language file type will never be returned as the associated file type for the language.
+   *                  (Used when a file type is reusing the language of another file type, e.g. XML).
+   */
+  protected LanguageFileType(@Nonnull Language language, boolean secondary) {
+    // passing Language instead of lazy resolve on getLanguage call (like LazyRunConfigurationProducer), is ok because:
+    // 1. Usage of FileType nearly always requires Language
+    // 2. FileType is created only on demand (if deprecated FileTypeFactory is not used).
     myLanguage = language;
+    mySecondary = secondary;
   }
 
   /**
@@ -51,5 +67,13 @@ public abstract class LanguageFileType implements FileType {
 
   public Charset extractCharsetFromFileContent(@Nullable Project project, @Nullable VirtualFile file, @Nonnull CharSequence content) {
     return null;
+  }
+
+  /**
+   * If true, this language file type will never be returned as the associated file type for the language.
+   * (Used when a file type is reusing the language of another file type, e.g. XML).
+   */
+  public boolean isSecondary() {
+    return mySecondary;
   }
 }

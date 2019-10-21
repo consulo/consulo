@@ -118,16 +118,6 @@ public class DisposerTest extends TestCase {
     selfDisposable.dispose();
   }
 
-  public void testDisposeAndReplace() throws Exception {
-    Disposer.register(myRoot, myFolder1);
-
-    Disposer.disposeChildAndReplace(myFolder1, myFolder2);
-    assertDisposed(myFolder1);
-
-    Disposer.dispose(myRoot);
-    assertDisposed(myRoot);
-    assertDisposed(myFolder2);
-  }
 
   public void testPostponedParentRegistration() throws Exception {
     Disposer.register(myFolder1, myLeaf1);
@@ -212,12 +202,12 @@ public class DisposerTest extends TestCase {
 
   private void assertDisposed(MyDisposable disposable) {
     assertTrue(disposable.isDisposed());
-    assertFalse(disposable.toString(), getTree().containsKey(disposable));
+    assertFalse(disposable.toString(), !Disposer.isDisposed(disposable));
 
     getTree().assertNoReferenceKeptInTree(disposable);
   }
 
-  private ObjectTree<Disposable> getTree() {
+  private ObjectTree getTree() {
     return ((DisposerInternalImpl)DisposerInternal.ourInstance).getTree();
   }
 

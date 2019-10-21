@@ -1,30 +1,18 @@
-/*
- * Copyright 2000-2014 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.event.SelectionListener;
 import com.intellij.openapi.editor.markup.TextAttributes;
+import com.intellij.openapi.util.Disposer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Provides services for selecting text in the IDEA text editor and retrieving information about the selection.
+ * Provides services for selecting text in the IDE's text editor and retrieving information about the selection.
  * Most of the methods here exist for compatibility reasons, corresponding functionality is also provided by {@link CaretModel} now.
  * <p>
- * In editor supporting multiple carets, each caret has its own associated selection range. Unless mentioned explicitly, methods of this
+ * In editors supporting multiple carets, each caret has its own associated selection range. Unless mentioned explicitly, methods of this
  * interface operate on the current caret (see {@link CaretModel#runForEachCaret(CaretAction)}), or 'primary' caret if current caret
  * is not defined.
  *
@@ -41,9 +29,9 @@ public interface SelectionModel {
   int getSelectionStart();
 
   /**
-   * @return    object that encapsulates information about visual position of selected text start if any
+   * @return object that encapsulates information about visual position of selected text start if any
    */
-  @javax.annotation.Nullable
+  @Nullable
   VisualPosition getSelectionStartPosition();
 
   /**
@@ -55,24 +43,24 @@ public interface SelectionModel {
   int getSelectionEnd();
 
   /**
-   * @return    object that encapsulates information about visual position of selected text end if any;
+   * @return object that encapsulates information about visual position of selected text end if any;
    */
-  @javax.annotation.Nullable
+  @Nullable
   VisualPosition getSelectionEndPosition();
 
   /**
    * Returns the text selected in the editor.
    *
-   * @return the selected text, or null if there is currently no selection.
+   * @return the selected text, or {@code null} if there is currently no selection.
    */
   @Nullable
   String getSelectedText();
 
   /**
-   * If <code>allCarets</code> is <code>true</code>, returns the concatenation of selections for all carets, or <code>null</code> if there
-   * are no selections. If <code>allCarets</code> is <code>false</code>, works just like {@link #getSelectedText}.
+   * If {@code allCarets} is {@code true}, returns the concatenation of selections for all carets, or {@code null} if there
+   * are no selections. If {@code allCarets} is {@code false}, works just like {@link #getSelectedText}.
    */
-  @javax.annotation.Nullable
+  @Nullable
   String getSelectedText(boolean allCarets);
 
   /**
@@ -81,12 +69,12 @@ public interface SelectionModel {
    * extended backward).
    *
    * @return the offset from which the selection was started, or the caret offset if there is
-   *         currently no selection.
+   * currently no selection.
    */
   int getLeadSelectionOffset();
 
   /**
-   * @return    object that encapsulates information about visual position from which the user started to extend the selection if any
+   * @return object that encapsulates information about visual position from which the user started to extend the selection if any
    */
   @Nullable
   VisualPosition getLeadSelectionPosition();
@@ -94,15 +82,15 @@ public interface SelectionModel {
   /**
    * Checks if a range of text is currently selected.
    *
-   * @return true if a range of text is selected, false otherwise.
+   * @return {@code true} if a range of text is selected, {@code false} otherwise.
    */
   boolean hasSelection();
 
   /**
-   * Checks if a range of text is currently selected. If <code>anyCaret</code> is <code>true</code>, check all existing carets in
-   * the document, and returns <code>true</code> if any of them has selection, otherwise checks only the current caret.
+   * Checks if a range of text is currently selected. If {@code anyCaret} is {@code true}, check all existing carets in
+   * the document, and returns {@code true} if any of them has selection, otherwise checks only the current caret.
    *
-   * @return true if a range of text is selected, false otherwise.
+   * @return {@code true} if a range of text is selected, {@code false} otherwise.
    */
   boolean hasSelection(boolean anyCaret);
 
@@ -119,24 +107,24 @@ public interface SelectionModel {
    * <p/>
    * That is the case for soft wraps-aware processing where the whole soft wraps virtual space is matched to the same offset.
    *
-   * @param startOffset     start selection offset
-   * @param endPosition     end visual position of the text range to select (<code>null</code> argument means that
-   *                        no specific visual position should be used)
-   * @param endOffset       end selection offset
+   * @param startOffset start selection offset
+   * @param endPosition end visual position of the text range to select ({@code null} argument means that
+   *                    no specific visual position should be used)
+   * @param endOffset   end selection offset
    */
-  void setSelection(int startOffset, @javax.annotation.Nullable VisualPosition endPosition, int endOffset);
+  void setSelection(int startOffset, @Nullable VisualPosition endPosition, int endOffset);
 
   /**
    * Selects target range based on its visual boundaries.
    * <p/>
    * That is the case for soft wraps-aware processing where the whole soft wraps virtual space is matched to the same offset.
    *
-   * @param startPosition   start visual position of the text range to select (<code>null</code> argument means that
-   *                        no specific visual position should be used)
-   * @param endPosition     end visual position of the text range to select (<code>null</code> argument means that
-   *                        no specific visual position should be used)
-   * @param startOffset     start selection offset
-   * @param endOffset       end selection offset
+   * @param startPosition start visual position of the text range to select ({@code null} argument means that
+   *                      no specific visual position should be used)
+   * @param endPosition   end visual position of the text range to select ({@code null} argument means that
+   *                      no specific visual position should be used)
+   * @param startOffset   start selection offset
+   * @param endOffset     end selection offset
    */
   void setSelection(@Nullable VisualPosition startPosition, int startOffset, @Nullable VisualPosition endPosition, int endOffset);
 
@@ -146,7 +134,7 @@ public interface SelectionModel {
   void removeSelection();
 
   /**
-   * Removes the selection in the editor. If <code>allCarets</code> is <code>true</code>, removes selections from all carets in the
+   * Removes the selection in the editor. If {@code allCarets} is {@code true}, removes selections from all carets in the
    * editor, otherwise, does this just for the current caret.
    */
   void removeSelection(boolean allCarets);
@@ -156,14 +144,24 @@ public interface SelectionModel {
    *
    * @param listener the listener instance.
    */
-  void addSelectionListener(SelectionListener listener);
+  void addSelectionListener(@Nonnull SelectionListener listener);
+
+  /**
+   * Adds a listener for receiving information about selection changes, which is removed when the given disposable is disposed.
+   *
+   * @param listener the listener instance.
+   */
+  default void addSelectionListener(@Nonnull SelectionListener listener, @Nonnull Disposable parentDisposable) {
+    addSelectionListener(listener);
+    Disposer.register(parentDisposable, () -> removeSelectionListener(listener));
+  }
 
   /**
    * Removes a listener for receiving information about selection changes.
    *
    * @param listener the listener instance.
    */
-  void removeSelectionListener(SelectionListener listener);
+  void removeSelectionListener(@Nonnull SelectionListener listener);
 
   /**
    * Selects the entire line of text at the caret position.
@@ -182,7 +180,7 @@ public interface SelectionModel {
 
   /**
    * Copies the currently selected text to the clipboard.
-   *
+   * <p>
    * When multiple selections exist in the document, all of them are copied, as a single piece of text.
    */
   void copySelectionToClipboard();

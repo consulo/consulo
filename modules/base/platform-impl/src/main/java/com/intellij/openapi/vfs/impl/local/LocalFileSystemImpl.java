@@ -24,6 +24,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFilePointerCapableFileSystem;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
@@ -45,7 +46,7 @@ import java.io.File;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-public final class LocalFileSystemImpl extends LocalFileSystemBase implements RefreshableFileSystem {
+public final class LocalFileSystemImpl extends LocalFileSystemBase implements RefreshableFileSystem, VirtualFilePointerCapableFileSystem {
   private static final String FS_ROOT = "/";
   private static final int STATUS_UPDATE_PERIOD = 1000;
 

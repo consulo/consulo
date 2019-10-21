@@ -22,6 +22,7 @@ import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Proxy;
+import java.util.function.Supplier;
 
 /**
  * @author peter
@@ -84,6 +85,11 @@ public class ObjectUtil {
     return value == null ? defaultValue : value;
   }
 
+  @Nonnull
+  public static <T> T notNull(@Nullable T value, @Nonnull Supplier<? extends T> defaultValue) {
+    return value == null ? defaultValue.get() : value;
+  }
+
   @Nullable
   public static <T> T tryCast(@Nullable Object obj, @Nonnull Class<T> clazz) {
     if (clazz.isInstance(obj)) {
@@ -143,6 +149,13 @@ public class ObjectUtil {
   @Nonnull
   public static Object sentinel(@Nonnull String name) {
     return new Sentinel(name);
+  }
+
+  /**
+   * They promise in http://mail.openjdk.java.net/pipermail/core-libs-dev/2018-February/051312.html that
+   * the object reference won't be removed by JIT and GC-ed until this call.
+   */
+  public static void reachabilityFence(@SuppressWarnings("unused") Object o) {
   }
 
   private static class Sentinel {

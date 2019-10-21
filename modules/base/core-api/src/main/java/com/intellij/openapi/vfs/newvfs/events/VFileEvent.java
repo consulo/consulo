@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.vfs.newvfs.events;
 
+import com.intellij.openapi.vfs.SavingRequestor;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import javax.annotation.Nonnull;
@@ -26,6 +27,7 @@ import javax.annotation.Nullable;
 public abstract class VFileEvent {
   private final boolean myIsFromRefresh;
   private final Object myRequestor;
+  private String myCachedPath;
 
   public VFileEvent(Object requestor, final boolean isFromRefresh) {
     myRequestor = requestor;
@@ -36,12 +38,35 @@ public abstract class VFileEvent {
     return myIsFromRefresh;
   }
 
+  /**
+   * Returns {@code true} if the VFS change described by the event is the save of a document.
+   */
+  public boolean isFromSave() {
+    return myRequestor instanceof SavingRequestor;
+  }
+
   public Object getRequestor() {
     return myRequestor;
   }
 
+  /**
+   * Returns the file path (in system independent format) affected by this event.<br/><br/>
+   * <p>
+   * Note that the path might be cached, thus can become out-of-date if requested later,
+   * asynchronously from the event dispatching procedure
+   * (e.g. {@code event.getPath()} can become not equal to {@code event.getFile().getPath()}).
+   */
   @Nonnull
-  public abstract String getPath();
+  public String getPath() {
+    String path = myCachedPath;
+    if (path == null) {
+      myCachedPath = path = computePath();
+    }
+    return path;
+  }
+
+  @Nonnull
+  protected abstract String computePath();
 
   /**
    * Returns the VirtualFile which this event belongs to.

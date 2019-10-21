@@ -33,17 +33,19 @@ import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubTree;
+import com.intellij.psi.templateLanguages.OuterLanguageElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IStrongWhitespaceHolderElementType;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TreeUtil {
   private static final Key<String> UNCLOSED_ELEMENT_PROPERTY = Key.create("UNCLOSED_ELEMENT_PROPERTY");
@@ -453,37 +455,20 @@ public class TreeUtil {
     }
   }
 
-  public static void bindStubsToTree(@Nonnull PsiFileImpl file, @Nonnull StubTree stubTree, @Nonnull FileElement tree) throws StubBindingException {
-    final ListIterator<StubElement<?>> stubs = stubTree.getPlainList().listIterator();
-    stubs.next();  // skip file root stub
-
-    final IStubFileElementType type = file.getElementTypeForStubBuilder();
-    assert type != null;
-    final StubBuilder builder = type.getBuilder();
-    tree.acceptTree(new RecursiveTreeElementWalkingVisitor() {
+  public static boolean containsOuterLanguageElements(@Nonnull ASTNode node) {
+    AtomicBoolean result = new AtomicBoolean(false);
+    ((TreeElement)node).acceptTree(new RecursiveTreeElementWalkingVisitor() {
       @Override
-      protected void visitNode(TreeElement node) {
-        CompositeElement parent = node.getTreeParent();
-        if (parent != null && builder.skipChildProcessingWhenBuildingStubs(parent, node)) {
+      protected void visitNode(TreeElement element) {
+        if (element instanceof OuterLanguageElement) {
+          result.set(true);
+          stopWalking();
           return;
         }
-
-        IElementType type = node.getElementType();
-        if (type instanceof IStubElementType && ((IStubElementType)type).shouldCreateStub(node)) {
-          final StubElement stub = stubs.hasNext() ? stubs.next() : null;
-          if (stub == null || stub.getStubType() != type) {
-            throw new StubBindingException("stub:" + stub + ", AST:" + type);
-          }
-
-          StubBasedPsiElementBase psi = (StubBasedPsiElementBase)node.getPsi();
-          //noinspection unchecked
-          ((StubBase)stub).setPsi(psi);
-          psi.setStubIndex(stubs.previousIndex());
-        }
-
-        super.visitNode(node);
+        super.visitNode(element);
       }
     });
+    return result.get();
   }
 
   @Nullable

@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.impl.smartPointers;
 
-import com.intellij.lang.LanguageUtil;
+import com.intellij.lang.Language;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ProperTextRange;
@@ -23,12 +23,9 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.FreeThreadedFileViewProvider;
 import javax.annotation.Nonnull;
 
-/**
- * User: cdr
- */
 class SmartPsiFileRangePointerImpl extends SmartPsiElementPointerImpl<PsiFile> implements SmartPsiFileRange {
-  SmartPsiFileRangePointerImpl(@Nonnull PsiFile containingFile, @Nonnull ProperTextRange range, boolean forInjected) {
-    super(containingFile, createElementInfo(containingFile, range, forInjected));
+  SmartPsiFileRangePointerImpl(@Nonnull SmartPointerManagerImpl manager, @Nonnull PsiFile containingFile, @Nonnull ProperTextRange range, boolean forInjected) {
+    super(manager, containingFile, createElementInfo(containingFile, range, forInjected));
   }
 
   @Nonnull
@@ -42,12 +39,12 @@ class SmartPsiFileRangePointerImpl extends SmartPsiElementPointerImpl<PsiFile> i
       }
     }
     if (!forInjected && range.equals(containingFile.getTextRange())) return new FileElementInfo(containingFile);
-    return new SelfElementInfo(project, range, Identikit.fromTypes(PsiElement.class, null, LanguageUtil.getRootLanguage(containingFile)), containingFile, forInjected);
+    return new SelfElementInfo(range, Identikit.fromTypes(PsiElement.class, null, Language.ANY), containingFile, forInjected);
   }
 
   @Override
   public PsiFile getContainingFile() {
-    return getElementInfo().restoreFile();
+    return getElementInfo().restoreFile(myManager);
   }
 
   @Override

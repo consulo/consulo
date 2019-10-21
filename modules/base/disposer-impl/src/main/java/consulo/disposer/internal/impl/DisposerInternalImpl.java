@@ -19,42 +19,21 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.TraceableDisposable;
 import com.intellij.openapi.util.TraceableDisposableImpl;
 import com.intellij.openapi.util.objectTree.ObjectTree;
-import com.intellij.openapi.util.objectTree.ObjectTreeAction;
+import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.internal.DisposerInternal;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.TestOnly;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.util.Map;
 
 public class DisposerInternalImpl extends DisposerInternal {
-  private final ObjectTree<Disposable> myTree;
+  private final ObjectTree myTree;
 
   public DisposerInternalImpl() {
-    try {
-      myTree = new ObjectTree<Disposable>(this);
-    }
-    catch (NoClassDefFoundError e) {
-      throw new RuntimeException("loader=" + DisposerInternalImpl.class.getClassLoader(), e);
-    }
+    myTree = new ObjectTree();
   }
-
-  private static final ObjectTreeAction<Disposable> ourDisposeAction = new ObjectTreeAction<Disposable>() {
-    @Override
-    public void execute(@Nonnull final Disposable each) {
-      //noinspection SSBasedInspection
-      each.dispose();
-    }
-
-    @Override
-    public void beforeTreeExecution(@Nonnull final Disposable parent) {
-      if (parent instanceof Disposable.Parent) {
-        ((Disposable.Parent)parent).beforeTreeDispose();
-      }
-    }
-  };
 
   private final Map<String, Disposable> myKeyDisposables = ContainerUtil.createConcurrentWeakMap();
 
@@ -108,8 +87,17 @@ public class DisposerInternalImpl extends DisposerInternal {
   }
 
   @Override
+  public boolean isDisposing(@Nonnull Disposable disposable) {
+    return myTree.isDisposing(disposable);
+  }
+
+  @Override
   public Disposable get(@Nonnull String key) {
     return myKeyDisposables.get(key);
+  }
+
+  public Throwable getDisposalTrace(@Nonnull Disposable disposable) {
+    return ObjectUtils.tryCast(getTree().getDisposalInfo(disposable), Throwable.class);
   }
 
   public void dispose(@Nonnull Disposable disposable) {
@@ -118,12 +106,7 @@ public class DisposerInternalImpl extends DisposerInternal {
 
   @Override
   public void dispose(@Nonnull Disposable disposable, boolean processUnregistered) {
-    myTree.executeAll(disposable, ourDisposeAction, processUnregistered);
-  }
-
-  @Override
-  public void disposeChildAndReplace(@Nonnull Disposable toDispose, @Nonnull Disposable toReplace) {
-    myTree.executeChildAndReplace(toDispose, toReplace, ourDisposeAction);
+    myTree.executeAll(disposable, processUnregistered);
   }
 
   @Override
@@ -132,7 +115,7 @@ public class DisposerInternalImpl extends DisposerInternal {
   }
 
   @Nonnull
-  public ObjectTree<Disposable> getTree() {
+  public ObjectTree getTree() {
     return myTree;
   }
 
@@ -145,11 +128,6 @@ public class DisposerInternalImpl extends DisposerInternal {
     if (ourDebugMode) {
       myTree.assertIsEmpty(throwError);
     }
-  }
-
-  @TestOnly
-  public boolean isEmpty() {
-    return ourDebugMode && myTree.isEmpty();
   }
 
   /**

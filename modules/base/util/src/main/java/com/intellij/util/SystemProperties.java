@@ -16,9 +16,9 @@
 package com.intellij.util;
 
 import org.jetbrains.annotations.NonNls;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -30,7 +30,8 @@ import javax.annotation.Nullable;
 public class SystemProperties {
   private static String ourTestUserName;
 
-  private SystemProperties() { }
+  private SystemProperties() {
+  }
 
   /**
    * Returns the value of the user.home system property.
@@ -119,7 +120,8 @@ public class SystemProperties {
       try {
         return Integer.parseInt(value);
       }
-      catch (NumberFormatException ignored) { }
+      catch (NumberFormatException ignored) {
+      }
     }
 
     return defaultValue;
@@ -139,6 +141,18 @@ public class SystemProperties {
       return Boolean.parseBoolean(value);
     }
 
+    return defaultValue;
+  }
+
+  public static float getFloatProperty(@Nonnull String key, float defaultValue) {
+    String value = System.getProperty(key);
+    if (value != null) {
+      try {
+        return Float.parseFloat(value);
+      }
+      catch (NumberFormatException ignored) {
+      }
+    }
     return defaultValue;
   }
 

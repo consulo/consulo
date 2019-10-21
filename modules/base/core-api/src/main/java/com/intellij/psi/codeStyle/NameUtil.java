@@ -15,13 +15,14 @@
  */
 package com.intellij.psi.codeStyle;
 
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -403,9 +404,10 @@ public class NameUtil {
   }
 
   public static class MatcherBuilder {
-    private String pattern;
+    private final String pattern;
     private String separators = "";
     private MatchingCaseSensitivity caseSensitivity = MatchingCaseSensitivity.NONE;
+    private boolean typoTolerant = Registry.is("ide.completion.typo.tolerance");
 
     public MatcherBuilder(String pattern) {
       this.pattern = pattern;
@@ -421,8 +423,13 @@ public class NameUtil {
       return this;
     }
 
+    public MatcherBuilder typoTolerant() {
+      this.typoTolerant = true;
+      return this;
+    }
+
     public MinusculeMatcher build() {
-      return new FixingLayoutMatcher(pattern, caseSensitivity, separators);
+      return typoTolerant ? FixingLayoutTypoTolerantMatcher.create(pattern, caseSensitivity, separators) : new FixingLayoutMatcher(pattern, caseSensitivity, separators);
     }
   }
 

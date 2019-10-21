@@ -57,7 +57,6 @@ public class DesktopTextEditorImpl extends UserDataHolderBase implements TextEdi
   @Nonnull
   protected final VirtualFile myFile;
   private final DesktopAsyncEditorLoader myAsyncLoader;
-  private final Future<?> myLoadingFinished;
 
   public DesktopTextEditorImpl(@Nonnull final Project project, @Nonnull final VirtualFile file, final DesktopTextEditorProvider provider) {
     myProject = project;
@@ -65,8 +64,9 @@ public class DesktopTextEditorImpl extends UserDataHolderBase implements TextEdi
     myChangeSupport = new PropertyChangeSupport(this);
     myComponent = createEditorComponent(project, file);
     Disposer.register(this, myComponent);
+
     myAsyncLoader = new DesktopAsyncEditorLoader(this, myComponent, provider);
-    myLoadingFinished = myAsyncLoader.start();
+    myAsyncLoader.start();
   }
 
   @Nonnull
@@ -127,7 +127,7 @@ public class DesktopTextEditorImpl extends UserDataHolderBase implements TextEdi
 
   @Override
   public void setState(@Nonnull final FileEditorState state) {
-    myAsyncLoader.setEditorState((TextEditorState)state);
+    myAsyncLoader.setEditorState((TextEditorState)state, true);
   }
 
   @Override
@@ -205,15 +205,5 @@ public class DesktopTextEditorImpl extends UserDataHolderBase implements TextEdi
   @Override
   public String toString() {
     return "Editor: "+myComponent.getFile();
-  }
-
-  @TestOnly
-  public void waitForLoaded(long timeout, @Nonnull TimeUnit unit) throws TimeoutException {
-    try {
-      myLoadingFinished.get(timeout, unit);
-    }
-    catch (InterruptedException | ExecutionException e) {
-      throw new RuntimeException(e);
-    }
   }
 }

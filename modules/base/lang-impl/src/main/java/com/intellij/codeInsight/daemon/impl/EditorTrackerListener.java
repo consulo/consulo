@@ -17,11 +17,14 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.openapi.editor.Editor;
-import javax.annotation.Nonnull;
+import com.intellij.util.messages.Topic;
 
+import javax.annotation.Nonnull;
 import java.util.EventListener;
 import java.util.List;
 
 public interface EditorTrackerListener extends EventListener{
+  Topic<EditorTrackerListener> TOPIC = new Topic<>(EditorTrackerListener.class.getSimpleName(), EditorTrackerListener.class, Topic.BroadcastDirection.NONE);
+
   void activeEditorsChanged(@Nonnull List<Editor> activeEditors);
 }

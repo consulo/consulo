@@ -17,7 +17,6 @@ package com.intellij.openapi.vfs;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.util.*;
@@ -25,9 +24,11 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.encoding.EncodingRegistry;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.LineSeparator;
+import consulo.logging.Logger;
+import org.intellij.lang.annotations.MagicConstant;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,6 +53,7 @@ import java.nio.charset.Charset;
  * @see VirtualFileManager
  */
 public abstract class VirtualFile extends UserDataHolderBase implements ModificationTracker {
+
   public static final Key<Object> REQUESTOR_MARKER = Key.create("REQUESTOR_MARKER");
   public static final VirtualFile[] EMPTY_ARRAY = new VirtualFile[0];
 
@@ -89,7 +91,7 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    * @see VirtualFileListener#propertyChanged
    * @see VirtualFilePropertyEvent#getPropertyName
    */
-  public static final String PROP_HIDDEN = VFileProperty.HIDDEN.getName();
+  public static final String PROP_HIDDEN = "HIDDEN";
 
   /**
    * Used as a property name in the {@link VirtualFilePropertyEvent} fired when a symlink target of a
@@ -100,11 +102,19 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    */
   public static final String PROP_SYMLINK_TARGET = "symlink";
 
+  /**
+   * Acceptable values for "propertyName" argument of {@link VFilePropertyChangeEvent#VFilePropertyChangeEvent VFilePropertyChangeEvent()}.
+   */
+  @MagicConstant(stringValues = {PROP_NAME, PROP_ENCODING, PROP_HIDDEN, PROP_WRITABLE, PROP_SYMLINK_TARGET})
+  public @interface PropName {
+  }
+
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.VirtualFile");
   private static final Key<byte[]> BOM_KEY = Key.create("BOM");
   private static final Key<Charset> CHARSET_KEY = Key.create("CHARSET");
 
-  protected VirtualFile() { }
+  protected VirtualFile() {
+  }
 
   /**
    * Gets the name of this file.
@@ -188,7 +198,7 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    * Otherwise the same value as <code>{@link #getName}</code> method returns is returned.
    *
    * @return the name without extension
-   *         if there is no '.' in it
+   * if there is no '.' in it
    */
   @Nonnull
   public String getNameWithoutExtension() {
@@ -252,8 +262,8 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    * work with those provided by a user.
    *
    * @return <code>getPath()</code> if there are no symbolic links in a file's path;
-   *         <code>getCanonicalFile().getPath()</code> if the link was successfully resolved;
-   *         <code>null</code> otherwise
+   * <code>getCanonicalFile().getPath()</code> if the link was successfully resolved;
+   * <code>null</code> otherwise
    * @since 11.1
    */
   @Nullable
@@ -268,8 +278,8 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    * work with those provided by a user.
    *
    * @return <code>this</code> if there are no symbolic links in a file's path;
-   *         instance of <code>VirtualFile</code> if the link was successfully resolved;
-   *         <code>null</code> otherwise
+   * instance of <code>VirtualFile</code> if the link was successfully resolved;
+   * <code>null</code> otherwise
    * @since 11.1
    */
   @Nullable
@@ -329,8 +339,8 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
 
   /**
    * @return the {@link FileType} of this file.
-   *         When IDEA has no idea what the file type is (i.e. file type is not registered via {@link FileTypeRegistry}),
-   *         it returns {@link com.intellij.openapi.fileTypes.FileTypes#UNKNOWN}
+   * When IDEA has no idea what the file type is (i.e. file type is not registered via {@link FileTypeRegistry}),
+   * it returns {@link com.intellij.openapi.fileTypes.FileTypes#UNKNOWN}
    */
   @SuppressWarnings("JavadocReference")
   @Nonnull
@@ -588,7 +598,7 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    * after closing the stream.<p>
    * <p/>
    * Normally you should not use this method.
-   *
+   * <p>
    * Writes BOM first, if there is any. See <a href=http://unicode.org/faq/utf_bom.html>Unicode Byte Order Mark FAQ</a> for an explanation.
    *
    * @param requestor            any object to control who called this method. Note that
@@ -693,7 +703,7 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
 
   /**
    * @return whether file name equals to this name
-   *         result depends on the filesystem specifics
+   * result depends on the filesystem specifics
    */
   protected boolean nameEquals(@Nonnull String name) {
     return getName().equals(name);
@@ -731,7 +741,9 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
     return false;
   }
 
-  /** @deprecated use {@link VirtualFileSystem#isValidName(String)} (to be removed in IDEA 18) */
+  /**
+   * @deprecated use {@link VirtualFileSystem#isValidName(String)} (to be removed in IDEA 18)
+   */
   @SuppressWarnings("unused")
   public static boolean isValidName(@Nonnull String name) {
     return name.length() > 0 && name.indexOf('\\') < 0 && name.indexOf('/') < 0;
@@ -747,9 +759,33 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
   public String getDetectedLineSeparator() {
     return getUserData(DETECTED_LINE_SEPARATOR_KEY);
   }
+
   public void setDetectedLineSeparator(@Nullable String separator) {
     putUserData(DETECTED_LINE_SEPARATOR_KEY, separator);
   }
 
-  public void setPreloadedContentHint(byte[] preloadedContentHint) { }
+  public void setPreloadedContentHint(byte[] preloadedContentHint) {
+  }
+
+  /**
+   * Returns {@code true} if this file is a symlink that is either <i>recursive</i> (i.e. points to this file' parent) or
+   * <i>circular</i> (i.e. its path has a form of "/.../linkX/.../linkX").
+   */
+  public boolean isRecursiveOrCircularSymLink() {
+    if (!is(VFileProperty.SYMLINK)) return false;
+    VirtualFile resolved = getCanonicalFile();
+    // invalid symlink
+    if (resolved == null) return false;
+    // if it's recursive
+    if (VfsUtilCore.isAncestor(resolved, this, false)) return true;
+
+    // check if it's circular - any symlink above resolves to my target too
+    for (VirtualFile p = getParent(); p != null; p = p.getParent()) {
+      if (p.is(VFileProperty.SYMLINK)) {
+        VirtualFile parentResolved = p.getCanonicalFile();
+        if (resolved.equals(parentResolved)) return true;
+      }
+    }
+    return false;
+  }
 }

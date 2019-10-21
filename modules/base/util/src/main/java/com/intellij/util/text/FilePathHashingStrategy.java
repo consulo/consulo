@@ -24,7 +24,8 @@ import javax.annotation.Nonnull;
  * @author max
  */
 public class FilePathHashingStrategy {
-  private FilePathHashingStrategy() { }
+  private FilePathHashingStrategy() {
+  }
 
   @Nonnull
   public static TObjectHashingStrategy<String> create() {
@@ -32,7 +33,12 @@ public class FilePathHashingStrategy {
   }
 
   @Nonnull
+  public static TObjectHashingStrategy<CharSequence> createForCharSequence() {
+    return SystemInfo.isFileSystemCaseSensitive ? CharSequenceHashingStrategy.CASE_SENSITIVE : CharSequenceHashingStrategy.CASE_INSENSITIVE;
+  }
+
+  @Nonnull
   public static TObjectHashingStrategy<String> create(boolean caseSensitive) {
-    return caseSensitive ? ContainerUtil.<String>canonicalStrategy() : CaseInsensitiveStringHashingStrategy.INSTANCE;
+    return caseSensitive ? ContainerUtil.canonicalStrategy() : CaseInsensitiveStringHashingStrategy.INSTANCE;
   }
 }

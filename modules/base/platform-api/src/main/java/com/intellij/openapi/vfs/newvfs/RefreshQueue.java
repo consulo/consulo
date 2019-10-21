@@ -34,35 +34,27 @@ public abstract class RefreshQueue {
 
   @Nonnull
   public final RefreshSession createSession(boolean async, boolean recursive, @Nullable Runnable finishRunnable) {
-    return createSession(async, recursive, finishRunnable, getDefaultModalityState());
+    return createSession(async, recursive, finishRunnable, ModalityState.defaultModalityState());
   }
 
   @Nonnull
   public abstract RefreshSession createSession(boolean async, boolean recursive, @Nullable Runnable finishRunnable, @Nonnull ModalityState state);
 
   public final void refresh(boolean async, boolean recursive, @Nullable Runnable finishRunnable, @Nonnull VirtualFile... files) {
-    refresh(async, recursive, finishRunnable, getDefaultModalityState(), files);
+    refresh(async, recursive, finishRunnable, ModalityState.defaultModalityState(), files);
   }
 
   public final void refresh(boolean async, boolean recursive, @Nullable Runnable finishRunnable, @Nonnull Collection<? extends VirtualFile> files) {
-    refresh(async, recursive, finishRunnable, getDefaultModalityState(), files);
+    refresh(async, recursive, finishRunnable, ModalityState.defaultModalityState(), files);
   }
 
-  public final void refresh(boolean async,
-                            boolean recursive,
-                            @Nullable Runnable finishRunnable,
-                            @Nonnull ModalityState state,
-                            @Nonnull VirtualFile... files) {
+  public final void refresh(boolean async, boolean recursive, @Nullable Runnable finishRunnable, @Nonnull ModalityState state, @Nonnull VirtualFile... files) {
     RefreshSession session = createSession(async, recursive, finishRunnable, state);
     session.addAllFiles(files);
     session.launch();
   }
 
-  public final void refresh(boolean async,
-                            boolean recursive,
-                            @Nullable Runnable finishRunnable,
-                            @Nonnull ModalityState state,
-                            @Nonnull Collection<? extends VirtualFile> files) {
+  public final void refresh(boolean async, boolean recursive, @Nullable Runnable finishRunnable, @Nonnull ModalityState state, @Nonnull Collection<? extends VirtualFile> files) {
     RefreshSession session = createSession(async, recursive, finishRunnable, state);
     session.addAllFiles(files);
     session.launch();
@@ -71,9 +63,4 @@ public abstract class RefreshQueue {
   public abstract void processSingleEvent(@Nonnull VFileEvent event);
 
   public abstract void cancelSession(long id);
-
-  @Nonnull
-  protected ModalityState getDefaultModalityState() {
-    return ModalityState.NON_MODAL;
-  }
 }

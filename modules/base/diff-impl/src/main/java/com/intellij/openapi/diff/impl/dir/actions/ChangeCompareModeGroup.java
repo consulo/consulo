@@ -81,7 +81,7 @@ public class ChangeCompareModeGroup extends ComboBoxAction implements ShortcutPr
 
   @Nonnull
   @Override
-  public DefaultActionGroup createPopupActionGroup(DataContext context) {
+  public DefaultActionGroup createPopupActionGroup(JComponent button) {
     return myGroup;
   }
 

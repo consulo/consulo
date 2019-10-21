@@ -27,8 +27,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -43,7 +43,7 @@ class LazyEditor extends UserDataHolderBase implements Editor {
   private final PsiFile myFile;
   private Editor myEditor;
 
-  public LazyEditor(PsiFile file) {
+  LazyEditor(PsiFile file) {
     myFile = file;
   }
 
@@ -129,6 +129,12 @@ class LazyEditor extends UserDataHolderBase implements Editor {
   @Override
   public InlayModel getInlayModel() {
     return getEditor().getInlayModel();
+  }
+
+  @Nonnull
+  @Override
+  public EditorKind getEditorKind() {
+    return getEditor().getEditorKind();
   }
 
   @Override
@@ -297,5 +303,10 @@ class LazyEditor extends UserDataHolderBase implements Editor {
   @Nonnull
   public IndentsModel getIndentsModel() {
     return getEditor().getIndentsModel();
+  }
+
+  @Override
+  public int getAscent() {
+    return getEditor().getAscent();
   }
 }

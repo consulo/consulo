@@ -15,6 +15,7 @@
  */
 package consulo.ui.web.internal.ex;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.editor.markup.TextAttributes;
@@ -166,12 +167,12 @@ public class WebCaretModelImpl implements CaretModel {
   }
 
   @Override
-  public void setCaretsAndSelections(@Nonnull List<CaretState> caretStates) {
+  public void setCaretsAndSelections(@Nonnull List<? extends CaretState> caretStates) {
 
   }
 
   @Override
-  public void setCaretsAndSelections(@Nonnull List<CaretState> caretStates, boolean updateSystemSelection) {
+  public void setCaretsAndSelections(@Nonnull List<? extends CaretState> caretStates, boolean updateSystemSelection) {
 
   }
 
@@ -188,6 +189,11 @@ public class WebCaretModelImpl implements CaretModel {
 
   @Override
   public void runForEachCaret(@Nonnull CaretAction action, boolean reverseOrder) {
+
+  }
+
+  @Override
+  public void addCaretActionListener(@Nonnull CaretActionListener listener, @Nonnull Disposable disposable) {
 
   }
 

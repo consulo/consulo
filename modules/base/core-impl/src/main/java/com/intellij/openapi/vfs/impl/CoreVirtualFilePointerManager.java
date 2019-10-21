@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package com.intellij.openapi.vfs.impl;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerContainer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerListener;
@@ -28,27 +27,23 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
-@Deprecated
-public class CoreVirtualFilePointerManager extends VirtualFilePointerManager {
+public class CoreVirtualFilePointerManager extends VirtualFilePointerManager implements Disposable {
   @Nonnull
   @Override
   public VirtualFilePointer create(@Nonnull String url, @Nonnull Disposable parent, @Nullable VirtualFilePointerListener listener) {
-    VirtualFile vFile = VirtualFileManager.getInstance().findFileByUrl(url);
-    return new IdentityVirtualFilePointer(vFile, url);
+    return new LightFilePointer(url);
   }
 
   @Nonnull
   @Override
   public VirtualFilePointer create(@Nonnull VirtualFile file, @Nonnull Disposable parent, @Nullable VirtualFilePointerListener listener) {
-    return new IdentityVirtualFilePointer(file, file.getUrl());
+    return new LightFilePointer(file);
   }
 
   @Nonnull
   @Override
-  public VirtualFilePointer duplicate(@Nonnull VirtualFilePointer pointer,
-                                      @Nonnull Disposable parent,
-                                      @Nullable VirtualFilePointerListener listener) {
-    return new IdentityVirtualFilePointer(pointer.getFile(), pointer.getUrl());
+  public VirtualFilePointer duplicate(@Nonnull VirtualFilePointer pointer, @Nonnull Disposable parent, @Nullable VirtualFilePointerListener listener) {
+    return new LightFilePointer(pointer.getUrl());
   }
 
   @Nonnull
@@ -63,12 +58,14 @@ public class CoreVirtualFilePointerManager extends VirtualFilePointerManager {
     return new VirtualFilePointerContainerImpl(this, parent, listener);
   }
 
+  @Nonnull
   @Override
-  public void dispose() {
+  public VirtualFilePointer createDirectoryPointer(@Nonnull String url, boolean recursively, @Nonnull Disposable parent, @Nonnull VirtualFilePointerListener listener) {
+    return create(url, parent, listener);
   }
 
   @Override
-  public long getModificationCount() {
-    return 0;
+  public void dispose() {
+
   }
 }

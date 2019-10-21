@@ -376,7 +376,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
   private class SwitchEngineAction extends ComboBoxAction {
     @Nonnull
     @Override
-    public DefaultActionGroup createPopupActionGroup(DataContext context) {
+    public DefaultActionGroup createPopupActionGroup(JComponent component) {
       final DefaultActionGroup engChooser = new DefaultActionGroup();
       for (final CoverageEngine engine : collectEngines()) {
         engChooser.add(new AnAction(engine.getPresentableText()) {

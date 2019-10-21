@@ -148,6 +148,19 @@ public class PathManager {
     return getHomePath() + File.separator + BIN_FOLDER;
   }
 
+  /**
+   * Looks for a file in all possible bin directories.
+   *
+   * @return first that exists, or {@code null} if nothing found.
+   * @see #findBinFileWithException(String)
+   */
+  @Nullable
+  public static File findBinFile(@Nonnull String fileName) {
+    File file = new File(getBinPath(), fileName);
+    if (file.isFile()) return file;
+    return null;
+  }
+
   @Nonnull
   public static String getLibPath() {
     return getHomePath() + File.separator + LIB_FOLDER;

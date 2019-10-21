@@ -16,10 +16,9 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ProjectComponent;
-import consulo.logging.Logger;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
@@ -33,9 +32,9 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
-import com.intellij.util.EventDispatcher;
 import com.intellij.util.SmartList;
 import consulo.awt.TargetAWT;
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Window;
 import consulo.wm.util.IdeFrameUtil;
@@ -49,6 +48,9 @@ import java.util.*;
 
 @Singleton
 public class EditorTracker implements ProjectComponent {
+  public static EditorTracker getInstance(Project project) {
+    return ServiceManager.getService(project, EditorTracker.class);
+  }
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.daemon.impl.EditorTracker");
 
   private final WindowManager myWindowManager;
@@ -58,8 +60,6 @@ public class EditorTracker implements ProjectComponent {
   private final Map<Window, WindowAdapter> myWindowToWindowFocusListenerMap = new HashMap<>();
   private final Map<Editor, Window> myEditorToWindowMap = new HashMap<>();
   private List<Editor> myActiveEditors = Collections.emptyList(); // accessed in EDT only
-
-  private final EventDispatcher<EditorTrackerListener> myDispatcher = EventDispatcher.create(EditorTrackerListener.class);
 
   private IdeFrame myIdeFrame;
   private Window myActiveWindow;
@@ -246,11 +246,7 @@ public class EditorTracker implements ProjectComponent {
       }
     }
 
-    myDispatcher.getMulticaster().activeEditorsChanged(editors);
-  }
-
-  void addEditorTrackerListener(@Nonnull EditorTrackerListener listener, @Nonnull Disposable parentDisposable) {
-    myDispatcher.addListener(listener, parentDisposable);
+    myProject.getMessageBus().syncPublisher(EditorTrackerListener.TOPIC).activeEditorsChanged(editors);
   }
 
   private class MyEditorFactoryListener implements EditorFactoryListener {

@@ -15,21 +15,20 @@
  */
 package com.intellij.openapi.diff;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.LineSeparator;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -46,6 +45,7 @@ public class FileContent extends DiffContent {
     myProject = project;
     myFile = file;
     myDocumentManager = FileDocumentManager.getInstance();
+    myType = file.getFileType();
   }
 
   public Document getDocument() {
@@ -94,22 +94,9 @@ public class FileContent extends DiffContent {
       file = lfs.refreshAndFindFileByIoFile(tempFile);
     }
     if (file != null) {
-      final FileContent fileContent = new FileContent(project, file);
-      fileContent.myType = detectType(file);
-      return fileContent;
+      return new FileContent(project, file);
     }
     throw new IOException("Can not create temp file for revision content");
-  }
-
-  @Nullable  
-  private static FileType detectType(@Nonnull VirtualFile file) {
-    FileType type = FileTypeManager.getInstance().getFileTypeByFile(file);
-    if (isUnknown(type)) {
-      type = FileTypeManager.getInstance().detectFileTypeFromContent(file);
-    }
-    // the type is left null intentionally: according to the contract of #getContentType, 
-    // if file type is null it may be taken from another diff content
-    return isUnknown(type) ? null : type;   
   }
 
   private static boolean isUnknown(@Nonnull FileType type) {

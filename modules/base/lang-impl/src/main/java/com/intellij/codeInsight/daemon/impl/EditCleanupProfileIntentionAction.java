@@ -31,8 +31,8 @@ import javax.annotation.Nonnull;
 /**
  * Created by anna on 5/13/2014.
  */
-class EditCleanupProfileIntentionAction implements IntentionAction {
-  static final EditCleanupProfileIntentionAction INSTANCE = new EditCleanupProfileIntentionAction();
+public class EditCleanupProfileIntentionAction implements IntentionAction {
+  public static final EditCleanupProfileIntentionAction INSTANCE = new EditCleanupProfileIntentionAction();
   private EditCleanupProfileIntentionAction() {}
 
   @Override

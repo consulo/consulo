@@ -18,6 +18,7 @@ package com.intellij.psi.stubs;
 
 import com.intellij.util.io.*;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -35,19 +36,23 @@ public class StubInputStream extends DataInputStream {
     myNameStorage = nameStorage;
   }
 
+  @Nonnull
   public String readUTFFast() throws IOException {
     return IOUtil.readUTFFast(myStringIOBuffer, this);
   }
 
+  @Nullable
   public StringRef readName() throws IOException {
-    return DataInputOutputUtil.readNAME(this, myNameStorage);
+    return StringRef.fromStream(this, myNameStorage);
+  }
+
+  @Nullable
+  public String readNameString() throws IOException {
+    return StringRef.stringFromStream(this, myNameStorage);
   }
 
   public int readVarInt() throws IOException {
     return DataInputOutputUtil.readINT(this);
   }
 
-  public String stringFromId(int id) throws IOException {
-    return myNameStorage.valueOf(id);
-  }
 }

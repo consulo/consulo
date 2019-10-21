@@ -43,14 +43,15 @@ public abstract class FontLayoutService {
   }
 
   @Nonnull
-  public abstract GlyphVector layoutGlyphVector(@Nonnull Font font, @Nonnull FontRenderContext fontRenderContext,
-                                                @Nonnull char[] chars, int start, int end, boolean isRtl);
+  public abstract GlyphVector layoutGlyphVector(@Nonnull Font font, @Nonnull FontRenderContext fontRenderContext, @Nonnull char[] chars, int start, int end, boolean isRtl);
 
   public abstract int charWidth(@Nonnull FontMetrics fontMetrics, char c);
 
   public abstract int charWidth(@Nonnull FontMetrics fontMetrics, int codePoint);
 
   public abstract float charWidth2D(@Nonnull FontMetrics fontMetrics, int codePoint);
+
+  public abstract int stringWidth(@Nonnull FontMetrics fontMetrics, @Nonnull String str);
 
   public abstract int getHeight(@Nonnull FontMetrics fontMetrics);
 
@@ -66,20 +67,23 @@ public abstract class FontLayoutService {
     private static final int LAYOUT_NO_PAIRED_CHARS_AT_SCRIPT_SPLIT = 8;
 
     private final Method myHandleCharWidthMethod;
+    private final Method myGetLatinCharWidthMethod;
 
     private DefaultFontLayoutService() {
       myHandleCharWidthMethod = ReflectionUtil.getDeclaredMethod(FontDesignMetrics.class, "handleCharWidth", int.class);
       if (myHandleCharWidthMethod == null) {
         LOG.warn("Couldn't access FontDesignMetrics.handleCharWidth method");
       }
+      myGetLatinCharWidthMethod = ReflectionUtil.getDeclaredMethod(FontDesignMetrics.class, "getLatinCharWidth", char.class);
+      if (myGetLatinCharWidthMethod == null) {
+        LOG.warn("Couldn't access FontDesignMetrics.getLatinCharWidth method");
+      }
     }
 
     @Nonnull
     @Override
-    public GlyphVector layoutGlyphVector(@Nonnull Font font, @Nonnull FontRenderContext fontRenderContext,
-                                         @Nonnull char[] chars, int start, int end, boolean isRtl) {
-      return font.layoutGlyphVector(fontRenderContext, chars, start, end, (isRtl ? Font.LAYOUT_RIGHT_TO_LEFT : Font.LAYOUT_LEFT_TO_RIGHT) |
-                                                                          LAYOUT_NO_PAIRED_CHARS_AT_SCRIPT_SPLIT);
+    public GlyphVector layoutGlyphVector(@Nonnull Font font, @Nonnull FontRenderContext fontRenderContext, @Nonnull char[] chars, int start, int end, boolean isRtl) {
+      return font.layoutGlyphVector(fontRenderContext, chars, start, end, (isRtl ? Font.LAYOUT_RIGHT_TO_LEFT : Font.LAYOUT_LEFT_TO_RIGHT) | LAYOUT_NO_PAIRED_CHARS_AT_SCRIPT_SPLIT);
     }
 
     @Override
@@ -94,15 +98,30 @@ public abstract class FontLayoutService {
 
     @Override
     public float charWidth2D(@Nonnull FontMetrics fontMetrics, int codePoint) {
-      if (myHandleCharWidthMethod != null && fontMetrics instanceof FontDesignMetrics) {
-        try {
-          return (float)myHandleCharWidthMethod.invoke(fontMetrics, codePoint);
+      if (fontMetrics instanceof FontDesignMetrics) {
+        if (codePoint < 256 && myGetLatinCharWidthMethod != null) {
+          try {
+            return (float)myGetLatinCharWidthMethod.invoke(fontMetrics, (char)codePoint);
+          }
+          catch (Exception e) {
+            LOG.debug(e);
+          }
         }
-        catch (Exception e) {
-          LOG.debug(e);
+        if (myHandleCharWidthMethod != null) {
+          try {
+            return (float)myHandleCharWidthMethod.invoke(fontMetrics, codePoint);
+          }
+          catch (Exception e) {
+            LOG.debug(e);
+          }
         }
       }
       return charWidth(fontMetrics, codePoint);
+    }
+
+    @Override
+    public int stringWidth(@Nonnull FontMetrics fontMetrics, @Nonnull String str) {
+      return fontMetrics.stringWidth(str);
     }
 
     @Override

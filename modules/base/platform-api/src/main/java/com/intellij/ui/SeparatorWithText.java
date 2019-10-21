@@ -17,9 +17,13 @@ package com.intellij.ui;
 
 import com.intellij.ide.ui.UISettings;
 import com.intellij.util.ui.JBInsets;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
 
+import javax.accessibility.Accessible;
+import javax.accessibility.AccessibleContext;
+import javax.accessibility.AccessibleRole;
 import javax.swing.*;
 import java.awt.*;
 
@@ -28,7 +32,7 @@ import static javax.swing.SwingConstants.CENTER;
 import static javax.swing.SwingConstants.LEFT;
 import static javax.swing.SwingUtilities.layoutCompoundLabel;
 
-public class SeparatorWithText extends JComponent {
+public class SeparatorWithText extends JComponent implements Accessible {
 
   private String myCaption;
   private int myPrefWidth;
@@ -39,8 +43,8 @@ public class SeparatorWithText extends JComponent {
     setBorder(BorderFactory.createEmptyBorder(getVgap(), 0, getVgap(), 0));
     setFont(UIUtil.getLabelFont());
     setFont(getFont().deriveFont(Font.BOLD));
-    setForeground(GroupedElementsRenderer.POPUP_SEPARATOR_FOREGROUND);
-    setTextForeground(GroupedElementsRenderer.POPUP_SEPARATOR_TEXT_FOREGROUND);
+    setForeground(JBUI.CurrentTheme.Popup.separatorColor());
+    setTextForeground(JBUI.CurrentTheme.Popup.separatorTextColor());
   }
 
   public Color getTextForeground() {
@@ -63,6 +67,7 @@ public class SeparatorWithText extends JComponent {
     myAlignment = captionCentered ? CENTER : LEFT;
   }
 
+  @Override
   public Dimension getPreferredSize() {
     return isPreferredSizeSet() ? super.getPreferredSize() : getPreferredFontSize();
   }
@@ -81,6 +86,7 @@ public class SeparatorWithText extends JComponent {
     return size;
   }
 
+  @Override
   public Dimension getMinimumSize() {
     return isMinimumSizeSet() ? super.getMinimumSize() : getPreferredFontSize();
   }
@@ -89,6 +95,7 @@ public class SeparatorWithText extends JComponent {
     myPrefWidth = width;
   }
 
+  @Override
   protected void paintComponent(Graphics g) {
     g.setColor(getForeground());
 
@@ -128,11 +135,31 @@ public class SeparatorWithText extends JComponent {
     FILL.paint((Graphics2D)g, x, y, width, 1, null);
   }
 
-  protected String getCaption() {
+  public String getCaption() {
     return myCaption == null || myCaption.trim().isEmpty() ? null : myCaption;
   }
 
   public void setCaption(String captionAboveOf) {
     myCaption = captionAboveOf;
+  }
+
+  @Override
+  public AccessibleContext getAccessibleContext() {
+    if (accessibleContext == null) {
+      accessibleContext = new AccessibleSeparatorWithText();
+    }
+    return accessibleContext;
+  }
+
+  protected class AccessibleSeparatorWithText extends AccessibleJComponent {
+    @Override
+    public AccessibleRole getAccessibleRole() {
+      return AccessibleRole.LABEL;
+    }
+
+    @Override
+    public String getAccessibleName() {
+      return myCaption;
+    }
   }
 }

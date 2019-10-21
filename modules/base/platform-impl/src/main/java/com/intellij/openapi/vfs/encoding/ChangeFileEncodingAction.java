@@ -32,12 +32,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectLocator;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
+import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.Function;
-import consulo.ui.RequiredUIAccess;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import javax.swing.*;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
@@ -55,28 +55,25 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
     this.allowDirectories = allowDirectories;
   }
 
-  @RequiredUIAccess
   private boolean checkEnabled(@Nonnull VirtualFile virtualFile) {
     if (allowDirectories && virtualFile.isDirectory()) return true;
     FileDocumentManager documentManager = FileDocumentManager.getInstance();
     Document document = documentManager.getDocument(virtualFile);
     if (document == null) return false;
 
-    return EncodingUtil.checkCanConvert(virtualFile) == null || EncodingUtil.checkCanReload(virtualFile).second == null;
+    return EncodingUtil.checkCanConvert(virtualFile) == null || EncodingUtil.checkCanReload(virtualFile, null) == null;
   }
 
-  @RequiredUIAccess
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     VirtualFile myFile = e.getData(CommonDataKeys.VIRTUAL_FILE);
     boolean enabled = myFile != null && checkEnabled(myFile);
     e.getPresentation().setEnabled(enabled);
     e.getPresentation().setVisible(myFile != null);
   }
 
-  @RequiredUIAccess
   @Override
-  public final void actionPerformed(final AnActionEvent e) {
+  public final void actionPerformed(@Nonnull final AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
 
     ListPopup popup = createPopup(dataContext);
@@ -86,7 +83,6 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
   }
 
   @Nullable
-  @RequiredUIAccess
   public ListPopup createPopup(@Nonnull DataContext dataContext) {
     final VirtualFile virtualFile = dataContext.getData(CommonDataKeys.VIRTUAL_FILE);
     if (virtualFile == null) return null;
@@ -99,118 +95,71 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
 
     final byte[] bytes;
     try {
-      bytes = virtualFile.isDirectory() ? null : virtualFile.contentsToByteArray();
+      bytes = virtualFile.isDirectory() ? null : VfsUtilCore.loadBytes(virtualFile);
     }
     catch (IOException e) {
       return null;
     }
     DefaultActionGroup group = createActionGroup(virtualFile, editor, document, bytes, null);
 
-    return JBPopupFactory.getInstance()
-            .createActionGroupPopup(getTemplatePresentation().getText(), group, dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
+    return JBPopupFactory.getInstance().createActionGroupPopup(getTemplatePresentation().getText(), group, dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
   }
 
-  public DefaultActionGroup createActionGroup(@Nonnull final VirtualFile myFile,
-                                              final Editor editor,
-                                              final Document document,
-                                              final byte[] bytes,
-                                              @Nullable final String clearItemText) {
-    final String text = document == null ? null : document.getText();
-
+  public DefaultActionGroup createActionGroup(@Nullable final VirtualFile myFile, final Editor editor, final Document document, final byte[] bytes, @Nullable final String clearItemText) {
     return new ChooseFileEncodingAction(myFile) {
-      @RequiredUIAccess
       @Override
       public void update(@Nonnull final AnActionEvent e) {
       }
 
       @Nonnull
       @Override
-      public DefaultActionGroup createPopupActionGroup(DataContext context) {
-        return createCharsetsActionGroup(clearItemText, null, new Function<Charset, String>() {
-          @Override
-          public String fun(Charset charset) {
-            assert myFile.isDirectory() || text != null : charset;
-            EncodingUtil.Magic8 safeToReload =
-                    myFile.isDirectory() ? EncodingUtil.Magic8.ABSOLUTELY : EncodingUtil.isSafeToReloadIn(myFile, text, bytes, charset);
-            boolean enabled = safeToReload != EncodingUtil.Magic8.NO_WAY;
-            if (!enabled) {
-              EncodingUtil.Magic8 safeToConvert =
-                      myFile.isDirectory() ? EncodingUtil.Magic8.ABSOLUTELY : EncodingUtil.isSafeToConvertTo(myFile, text, bytes, charset);
-              enabled = safeToConvert != EncodingUtil.Magic8.NO_WAY;
-            }
-            return enabled ? "Change encoding to '" + charset.displayName() + "'" : null;
-          }
-        }); // no 'clear'
+      protected DefaultActionGroup createPopupActionGroup(JComponent button) {
+        return createCharsetsActionGroup(clearItemText, null, charset -> "Change encoding to '" + charset.displayName() + "'");
+        // no 'clear'
       }
 
       @Override
       protected void chosen(@Nullable VirtualFile virtualFile, @Nonnull Charset charset) {
-        if (virtualFile != null) {
-          ChangeFileEncodingAction.this.chosen(document, editor, virtualFile, bytes, charset);
-        }
+        ChangeFileEncodingAction.this.chosen(document, editor, virtualFile, bytes, charset);
       }
     }.createPopupActionGroup(null);
   }
 
   // returns true if charset was changed, false if failed
-  protected boolean chosen(final Document document, final Editor editor, @Nonnull final VirtualFile virtualFile, byte[] bytes, @Nonnull final Charset charset) {
-
+  protected boolean chosen(final Document document, final Editor editor, @Nullable final VirtualFile virtualFile, byte[] bytes, @Nonnull final Charset charset) {
+    if (virtualFile == null) return false;
     String text = document.getText();
     EncodingUtil.Magic8 isSafeToConvert = EncodingUtil.isSafeToConvertTo(virtualFile, text, bytes, charset);
     EncodingUtil.Magic8 isSafeToReload = EncodingUtil.isSafeToReloadIn(virtualFile, text, bytes, charset);
 
     final Project project = ProjectLocator.getInstance().guessProjectForFile(virtualFile);
+    return changeTo(project, document, editor, virtualFile, charset, isSafeToConvert, isSafeToReload);
+  }
+
+  public static boolean changeTo(Project project, @Nonnull Document document,
+                                 Editor editor,
+                                 @Nonnull VirtualFile virtualFile,
+                                 @Nonnull Charset charset,
+                                 @Nonnull EncodingUtil.Magic8 isSafeToConvert, @Nonnull EncodingUtil.Magic8 isSafeToReload) {
     final Charset oldCharset = virtualFile.getCharset();
     final Runnable undo;
     final Runnable redo;
 
     if (isSafeToConvert == EncodingUtil.Magic8.ABSOLUTELY && isSafeToReload == EncodingUtil.Magic8.ABSOLUTELY) {
       //change and forget
-      undo = new Runnable() {
-        @Override
-        public void run() {
-          EncodingManager.getInstance().setEncoding(virtualFile, oldCharset);
-        }
-      };
-      redo = new Runnable() {
-        @Override
-        public void run() {
-          EncodingManager.getInstance().setEncoding(virtualFile, charset);
-        }
-      };
+      undo = () -> EncodingManager.getInstance().setEncoding(virtualFile, oldCharset);
+      redo = () -> EncodingManager.getInstance().setEncoding(virtualFile, charset);
     }
     else {
       IncompatibleEncodingDialog dialog = new IncompatibleEncodingDialog(virtualFile, charset, isSafeToReload, isSafeToConvert);
       dialog.show();
       if (dialog.getExitCode() == IncompatibleEncodingDialog.RELOAD_EXIT_CODE) {
-        undo = new Runnable() {
-          @Override
-          public void run() {
-            EncodingUtil.reloadIn(virtualFile, oldCharset);
-          }
-        };
-        redo = new Runnable() {
-          @Override
-          public void run() {
-            EncodingUtil.reloadIn(virtualFile, charset);
-          }
-        };
+        undo = () -> EncodingUtil.reloadIn(virtualFile, oldCharset, project);
+        redo = () -> EncodingUtil.reloadIn(virtualFile, charset, project);
       }
       else if (dialog.getExitCode() == IncompatibleEncodingDialog.CONVERT_EXIT_CODE) {
-        undo = new Runnable() {
-          @Override
-          @RequiredUIAccess
-          public void run() {
-            EncodingUtil.saveIn(document, editor, virtualFile, oldCharset);
-          }
-        };
-        redo = new Runnable() {
-          @Override
-          @RequiredUIAccess
-          public void run() {
-            EncodingUtil.saveIn(document, editor, virtualFile, charset);
-          }
-        };
+        undo = () -> EncodingUtil.saveIn(document, editor, virtualFile, oldCharset);
+        redo = () -> EncodingUtil.saveIn(document, editor, virtualFile, charset);
       }
       else {
         return false;
@@ -234,12 +183,9 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
     };
 
     redo.run();
-    CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-      @Override
-      public void run() {
-        UndoManager undoManager = project == null ? UndoManager.getGlobalInstance() : UndoManager.getInstance(project);
-        undoManager.undoableActionPerformed(action);
-      }
+    CommandProcessor.getInstance().executeCommand(project, () -> {
+      UndoManager undoManager = project == null ? UndoManager.getGlobalInstance() : UndoManager.getInstance(project);
+      undoManager.undoableActionPerformed(action);
     }, "Change encoding for '" + virtualFile.getName() + "'", null, UndoConfirmationPolicy.REQUEST_CONFIRMATION);
 
     return true;

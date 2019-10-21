@@ -66,6 +66,11 @@ public class IdeaPluginDescriptorImpl extends PluginDescriptorStub {
   private List<SimpleXmlElement> myActionsElements = Collections.emptyList();
   private List<ComponentConfig> myAppComponents = Collections.emptyList();
   private List<ComponentConfig> myProjectComponents = Collections.emptyList();
+
+  private List<PluginListenerDescriptor> myApplicationListeners = Collections.emptyList();
+  private List<PluginListenerDescriptor> myProjectListeners = Collections.emptyList();
+  private List<PluginListenerDescriptor> myModuleListeners = Collections.emptyList();
+
   private boolean myDeleted = false;
   private ClassLoader myLoader;
   private Collection<HelpSetPath> myHelpSets = Collections.emptyList();
@@ -184,12 +189,28 @@ public class IdeaPluginDescriptorImpl extends PluginDescriptorStub {
         }
       }
     }
+
+    for (PluginListenerDescriptor descriptor : myApplicationListeners) {
+      descriptor.pluginDescriptor = this;
+    }
+
+    for (PluginListenerDescriptor descriptor : myProjectListeners) {
+      descriptor.pluginDescriptor = this;
+    }
+
+    for (PluginListenerDescriptor descriptor : myModuleListeners) {
+      descriptor.pluginDescriptor = this;
+    }
   }
 
   private void extendPlugin(PluginBean pluginBean) {
     myAppComponents = mergeElements(myAppComponents, pluginBean.applicationComponents);
     myProjectComponents = mergeElements(myProjectComponents, pluginBean.projectComponents);
     myActionsElements = mergeElements(myActionsElements, pluginBean.actions);
+
+    myApplicationListeners = mergeElements(myApplicationListeners, pluginBean.applicationListeners);
+    myProjectListeners = mergeElements(myProjectListeners, pluginBean.projectListeners);
+    myModuleListeners = mergeElements(myModuleListeners, pluginBean.moduleListeners);
 
     List<ExtensionInfo> extensions = pluginBean.extensions;
     if (extensions != null && !extensions.isEmpty()) {
@@ -341,7 +362,7 @@ public class IdeaPluginDescriptorImpl extends PluginDescriptorStub {
       fillLibs(new File(myPath, "lib"), result);
 
       // special case until we move to JRE11
-      if(SystemInfoRt.isJavaVersionAtLeast(11, 0, 0)) {
+      if (SystemInfoRt.isJavaVersionAtLeast(11, 0, 0)) {
         fillLibs(new File(myPath, "lib_11"), result);
       }
 
@@ -399,6 +420,24 @@ public class IdeaPluginDescriptorImpl extends PluginDescriptorStub {
   @Override
   public String getUrl() {
     return url;
+  }
+
+  @Nonnull
+  @Override
+  public List<PluginListenerDescriptor> getApplicationListeners() {
+    return myApplicationListeners;
+  }
+
+  @Nonnull
+  @Override
+  public List<PluginListenerDescriptor> getProjectListeners() {
+    return myProjectListeners;
+  }
+
+  @Nonnull
+  @Override
+  public List<PluginListenerDescriptor> getModuleListeners() {
+    return myModuleListeners;
   }
 
   @Override

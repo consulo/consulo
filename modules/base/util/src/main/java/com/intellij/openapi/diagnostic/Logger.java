@@ -53,6 +53,10 @@ public final class Logger {
     debug(message);
   }
 
+  public void trace(Throwable message) {
+    debug(message);
+  }
+
   public boolean isDebugEnabled() {
     return myDelegate.isDebugEnabled();
   }
@@ -113,6 +117,10 @@ public final class Logger {
   }
 
   public void error(@NonNls String message, Attachment... attachments) {
+    error(message);
+  }
+  
+  public void error(@NonNls String message, Throwable throwable, Attachment... attachments) {
     error(message);
   }
 

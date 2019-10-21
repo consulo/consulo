@@ -62,6 +62,10 @@ public class HyperlinkLabel extends HighlightableComponent {
          JBColor.BLUE);
   }
 
+  public HyperlinkLabel(String text, Color background) {
+    this(text, JBColor.BLUE, background, JBColor.BLUE);
+  }
+
   public HyperlinkLabel(String text, final Color textForegroundColor, final Color textBackgroundColor, final Color textEffectColor) {
     myAnchorAttributes =
       new TextAttributes(textForegroundColor, textBackgroundColor, textEffectColor, EffectType.LINE_UNDERSCORE, Font.PLAIN);

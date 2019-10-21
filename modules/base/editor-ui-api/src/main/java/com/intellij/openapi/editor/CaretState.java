@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,26 +19,44 @@ import javax.annotation.Nullable;
 
 public class CaretState {
   private final LogicalPosition caretPosition;
+  private final int visualColumnAdjustment;
   private final LogicalPosition selectionStart;
   private final LogicalPosition selectionEnd;
 
-  public CaretState(@Nullable LogicalPosition position, @javax.annotation.Nullable LogicalPosition start, @javax.annotation.Nullable LogicalPosition end) {
-    caretPosition = position;
-    selectionStart = start;
-    selectionEnd = end;
+  public CaretState(@Nullable LogicalPosition caretPosition, @Nullable LogicalPosition selectionStart, @Nullable LogicalPosition selectionEnd) {
+    this(caretPosition, 0, selectionStart, selectionEnd);
   }
 
-  @javax.annotation.Nullable
-  public LogicalPosition getCaretPosition(){
+  /**
+   * @param visualColumnAdjustment see {@link #getVisualColumnAdjustment()}
+   */
+  public CaretState(@Nullable LogicalPosition caretPosition, int visualColumnAdjustment, @Nullable LogicalPosition selectionStart, @Nullable LogicalPosition selectionEnd) {
+    this.caretPosition = caretPosition;
+    this.visualColumnAdjustment = visualColumnAdjustment;
+    this.selectionStart = selectionStart;
+    this.selectionEnd = selectionEnd;
+  }
+
+  @Nullable
+  public LogicalPosition getCaretPosition() {
     return caretPosition;
   }
 
-  @javax.annotation.Nullable
+  /**
+   * Sometimes logical caret position is not fully determining its visual position (e.g. around inlays). This value should be added to the
+   * result of {@code editor.logicalToVisualPosition(caretState.getCaretPosition())}'s column,
+   * if one needs to calculate caret's visual position.
+   */
+  public int getVisualColumnAdjustment() {
+    return visualColumnAdjustment;
+  }
+
+  @Nullable
   public LogicalPosition getSelectionStart() {
     return selectionStart;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public LogicalPosition getSelectionEnd() {
     return selectionEnd;
   }
@@ -47,6 +65,7 @@ public class CaretState {
   public String toString() {
     return "CaretState{" +
            "caretPosition=" + caretPosition +
+           (visualColumnAdjustment == 0 ? "" : (", visualColumnAdjustment=" + visualColumnAdjustment)) +
            ", selectionStart=" + selectionStart +
            ", selectionEnd=" + selectionEnd +
            '}';

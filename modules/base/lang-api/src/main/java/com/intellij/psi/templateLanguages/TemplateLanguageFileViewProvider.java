@@ -17,6 +17,7 @@ package com.intellij.psi.templateLanguages;
 
 import com.intellij.lang.Language;
 import com.intellij.psi.FileViewProvider;
+import com.intellij.psi.tree.IElementType;
 import javax.annotation.Nonnull;
 
 /**
@@ -38,4 +39,16 @@ public interface TemplateLanguageFileViewProvider extends FileViewProvider {
    */
   @Nonnull
   Language getTemplateDataLanguage();
+
+  /**
+   * Should return content type that is used to override file content type for template data language.
+   * It is required for template language injections to override non-base language content type properly
+   *
+   * @param language for which we want to create a file
+   * @return content element type for non-base language, null otherwise
+   */
+  //@ApiStatus.Experimental
+  default IElementType getContentElementType(@Nonnull Language language) {
+    return null;
+  }
 }

@@ -165,11 +165,6 @@ public class RecentProjectPanel extends JPanel {
           }
         }
       }
-
-      @Override
-      public void update(@Nonnull AnActionEvent e) {
-        e.getPresentation().setEnabled(!ListWithFilter.isSearchActive(myList));
-      }
     };
     removeRecentProjectAction.registerCustomShortcutSet(CustomShortcutSet.fromString("DELETE", "BACK_SPACE"), myList, parentDisposable);
 

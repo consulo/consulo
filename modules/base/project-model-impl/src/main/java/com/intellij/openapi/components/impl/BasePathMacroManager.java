@@ -139,19 +139,9 @@ public class BasePathMacroManager extends PathMacroManager {
   }
 
   private class MyTrackingPathMacroSubstitutor implements TrackingPathMacroSubstitutor {
-    private final Map<String, Set<String>> myMacroToComponentNames = new FactoryMap<String, Set<String>>() {
-      @Override
-      protected Set<String> create(String key) {
-        return new HashSet<String>();
-      }
-    };
+    private final Map<String, Set<String>> myMacroToComponentNames = FactoryMap.create(k -> new HashSet<>());
 
-    private final Map<String, Set<String>> myComponentNameToMacros = new FactoryMap<String, Set<String>>() {
-      @Override
-      protected Set<String> create(String key) {
-        return new HashSet<String>();
-      }
-    };
+    private final Map<String, Set<String>> myComponentNameToMacros = FactoryMap.create(k -> new HashSet<>());
 
     public MyTrackingPathMacroSubstitutor() {
     }

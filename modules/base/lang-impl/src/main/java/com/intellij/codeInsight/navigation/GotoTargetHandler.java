@@ -165,7 +165,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
       }
     };
 
-    final PopupChooserBuilder builder = new PopupChooserBuilder(list);
+    final PopupChooserBuilder<?> builder = new PopupChooserBuilder(list);
     builder.setFilteringEnabled(o -> {
       if (o instanceof AdditionalAction) {
         return ((AdditionalAction)o).getText();

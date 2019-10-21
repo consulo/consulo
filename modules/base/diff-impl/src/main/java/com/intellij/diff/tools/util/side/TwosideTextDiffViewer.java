@@ -36,7 +36,6 @@ import com.intellij.diff.util.LineCol;
 import com.intellij.diff.util.Side;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.event.DocumentEvent;
@@ -46,11 +45,11 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.util.Key;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
+import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.List;
 
@@ -158,7 +157,7 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
 
   @RequiredUIAccess
   protected void installEditorListeners() {
-    new TextDiffViewerUtil.EditorActionsPopup(createEditorPopupActions()).install(getEditors());
+    new TextDiffViewerUtil.EditorActionsPopup(createEditorPopupActions()).install(getEditors(), myPanel);
 
     new TextDiffViewerUtil.EditorFontSizeSynchronizer(getEditors()).install(this);
 

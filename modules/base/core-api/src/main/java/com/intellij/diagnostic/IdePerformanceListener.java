@@ -1,23 +1,10 @@
-/*
- * Copyright 2000-2015 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.diagnostic;
 
 import com.intellij.util.messages.Topic;
 import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import java.io.File;
 
 public interface IdePerformanceListener {
@@ -26,31 +13,40 @@ public interface IdePerformanceListener {
   /**
    * Invoked after thread state has been dumped to a file.
    */
-  void dumpedThreads(@Nonnull File toFile, @Nonnull ThreadDump dump);
+  default void dumpedThreads(@Nonnull File toFile, @Nonnull ThreadDump dump) {
+  }
 
   /**
    * Invoked when IDE has detected that the UI hasn't responded for some time (5 seconds by default)
    */
-  void uiFreezeStarted();
+  default void uiFreezeStarted() {
+  }
 
   /**
    * Invoked after the UI has become responsive again following a {@link #uiFreezeStarted()} event.
+   *
    * @param lengthInSeconds approximate length in seconds of the interval that the IDE was unresponsive
+   * @deprecated use {@link #uiFreezeFinished(long, File)}
    */
-  void uiFreezeFinished(int lengthInSeconds);
-
-  /**
-   * Empty implementation of {@link IdePerformanceListener}
-   */
-  class Adapter implements IdePerformanceListener {
-    @Override
-    public void dumpedThreads(@Nonnull File toFile, @Nonnull ThreadDump dump) { }
-
-    @Override
-    public void uiFreezeStarted() { }
-
-    @Override
-    public void uiFreezeFinished(int lengthInSeconds) { }
+  @Deprecated
+  default void uiFreezeFinished(int lengthInSeconds) {
   }
 
+  /**
+   * Invoked after the UI has become responsive again following a {@link #uiFreezeStarted()} event.
+   *
+   * @param durationMs freeze duration in milliseconds
+   * @param reportDir  folder where all freeze report data is collected
+   */
+  default void uiFreezeFinished(long durationMs, @Nullable File reportDir) {
+    uiFreezeFinished((int)(durationMs / 1000));
+  }
+
+  /**
+   * Invoked on each UI response sampled every <code>performance.watcher.sampling.interval.ms</code> set in the Registry.
+   *
+   * @param latencyMs time between scheduling a UI event and executing it, in milliseconds
+   */
+  default void uiResponded(long latencyMs) {
+  }
 }

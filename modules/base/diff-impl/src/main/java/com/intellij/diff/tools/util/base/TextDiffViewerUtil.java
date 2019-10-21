@@ -29,22 +29,23 @@ import com.intellij.icons.AllIcons;
 import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
-import consulo.logging.Logger;
-import com.intellij.openapi.editor.actions.EditorActionUtil;
-import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.editor.ex.EditorPopupHandler;
+import com.intellij.openapi.editor.impl.ContextMenuPopupHandler;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.Condition;
 import com.intellij.ui.ToggleActionButton;
-import com.intellij.util.EditorPopupHandler;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
-
 import javax.annotation.Nonnull;
+
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -186,7 +187,7 @@ public class TextDiffViewerUtil {
 
     @Nonnull
     @Override
-    public DefaultActionGroup createPopupActionGroup(DataContext context) {
+    public DefaultActionGroup createPopupActionGroup(JComponent c) {
       initChildren();
       return myChildren;
     }
@@ -480,7 +481,7 @@ public class TextDiffViewerUtil {
     }
   }
 
-  public static class EditorActionsPopup extends EditorPopupHandler {
+  public static class EditorActionsPopup {
     @Nonnull
     private final List<? extends AnAction> myEditorPopupActions;
 
@@ -488,19 +489,13 @@ public class TextDiffViewerUtil {
       myEditorPopupActions = editorPopupActions;
     }
 
-    public void install(@Nonnull List<? extends EditorEx> editors) {
-      for (EditorEx editor : editors) {
-        editor.addEditorMouseListener(this);
-        editor.setContextMenuGroupId(null); // disabling default context menu
-      }
-    }
+    public void install(@Nonnull List<? extends EditorEx> editors, @Nonnull JComponent component) {
+      ActionUtil.recursiveRegisterShortcutSet(new DefaultActionGroup(myEditorPopupActions), component, null);
 
-    @Override
-    public void invokePopup(final EditorMouseEvent event) {
-      if (myEditorPopupActions.isEmpty()) return;
-      ActionGroup group = new DefaultActionGroup(myEditorPopupActions);
-      EditorPopupHandler handler = EditorActionUtil.createEditorPopupHandler(group);
-      handler.invokePopup(event);
+      EditorPopupHandler handler = new ContextMenuPopupHandler.Simple(myEditorPopupActions.isEmpty() ? null : new DefaultActionGroup(myEditorPopupActions));
+      for (EditorEx editor : editors) {
+        editor.installPopupHandler(handler);
+      }
     }
   }
 }

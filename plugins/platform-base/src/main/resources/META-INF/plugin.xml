@@ -60,6 +60,13 @@
       <with attribute="implementationClass" implements="consulo.extensions.ExtensionExtender"/>
     </extensionPoint>
 
+    <extensionPoint name="editorFactoryDocumentListener" interface="com.intellij.openapi.editor.event.DocumentListener"/>
+    <extensionPoint name="editorFactoryMouseListener" interface="com.intellij.openapi.editor.event.EditorMouseListener"/>
+    <extensionPoint name="editorFactoryMouseMotionListener" interface="com.intellij.openapi.editor.event.EditorMouseMotionListener"/>
+    <extensionPoint name="editorFactoryListener" interface="com.intellij.openapi.editor.event.EditorFactoryListener"/>
+
+    <extensionPoint name="vfs.asyncListener" interface="com.intellij.openapi.vfs.AsyncFileListener" />
+
     <extensionPoint name="generatedSourcesFilter" interface="com.intellij.openapi.roots.GeneratedSourcesFilter"/>
     <extensionPoint name="defaultLibraryRootDetector" interface="com.intellij.openapi.roots.libraries.ui.RootDetector"/>
 
@@ -92,6 +99,9 @@
 
     <extensionPoint name="fileTypeFactory"
                     interface="com.intellij.openapi.fileTypes.FileTypeFactory"/>
+
+    <extensionPoint name="fileType"
+                    beanClass="com.intellij.openapi.fileTypes.impl.FileTypeBean"/>
 
     <extensionPoint name="virtualFileSystem" interface="com.intellij.openapi.vfs.VirtualFileSystem"/>
 
@@ -206,6 +216,8 @@
       <with attribute="implementationClass" implements="com.intellij.navigation.ItemPresentationProvider"/>
     </extensionPoint>
 
+    <extensionPoint name="intentionMenuContributor" interface="com.intellij.codeInsight.daemon.impl.IntentionMenuContributor"/>
+
     <extensionPoint name="fileTypeDetector" interface="com.intellij.openapi.fileTypes.FileTypeRegistry$FileTypeDetector"/>
 
     <extensionPoint name="pathMacroFilter" interface="com.intellij.openapi.application.PathMacroFilter"/>
@@ -312,6 +324,15 @@
     <extensionPoint name="indexPatternProvider"
                     interface="com.intellij.psi.search.IndexPatternProvider"/>
 
+    <extensionPoint name="indexImporterFactory"
+                    interface="com.intellij.index.IndexImporterFactory" />
+
+    <extensionPoint name="fileBasedIndex.providedLocator"
+                    interface="com.intellij.util.indexing.provided.ProvidedIndexExtensionLocator" />
+
+    <extensionPoint name="globalIndexFilter"
+                    interface="com.intellij.util.indexing.GlobalIndexFilter" />
+
     <extensionPoint name="refGraphAnnotator"
                     interface="com.intellij.codeInspection.reference.RefGraphAnnotator"/>
 
@@ -322,6 +343,10 @@
     <extensionPoint name="highlightErrorFilter"
                     interface="com.intellij.codeInsight.highlighting.HighlightErrorFilter"
                     area="PROJECT"/>
+
+    <extensionPoint name="daemon.tooltipActionProvider"
+                    interface="com.intellij.codeInsight.daemon.impl.tooltips.TooltipActionProvider"/>
+
     <extensionPoint name="errorQuickFixProvider"
                     interface="com.intellij.codeInsight.daemon.impl.analysis.ErrorQuickFixProvider"/>
 
@@ -1155,11 +1180,11 @@
     <applicationService serviceInterface="com.intellij.openapi.projectRoots.impl.JdkVersionDetector"
                         serviceImplementation="com.intellij.openapi.projectRoots.impl.JdkVersionDetectorImpl"/>
 
-    <applicationService serviceImplementation="com.intellij.ide.browsers.WebBrowserManager" />
+    <applicationService serviceImplementation="com.intellij.ide.browsers.WebBrowserManager"/>
 
-    <applicationService serviceInterface="com.intellij.ide.browsers.BrowserLauncher" serviceImplementation="com.intellij.ide.browsers.BrowserLauncherImpl" />
+    <applicationService serviceInterface="com.intellij.ide.browsers.BrowserLauncher" serviceImplementation="com.intellij.ide.browsers.BrowserLauncherImpl"/>
 
-    <urlOpener implementation="com.intellij.ide.browsers.impl.DefaultUrlOpener" order="last" />
+    <urlOpener implementation="com.intellij.ide.browsers.impl.DefaultUrlOpener" order="last"/>
 
     <projectService serviceInterface="consulo.util.ProjectPropertiesComponent"
                     serviceImplementation="com.intellij.ide.util.ProjectPropertiesComponentImpl"/>
@@ -1376,6 +1401,9 @@
 
     <projectService serviceInterface="com.intellij.util.indexing.FileBasedIndexScanRunnableCollector"
                     serviceImplementation="com.intellij.util.indexing.FileBasedIndexScanRunnableCollectorImpl"/>
+
+    <projectService serviceInterface="com.intellij.codeInsight.daemon.impl.IntentionsUI"
+                    serviceImplementation="com.intellij.codeInsight.daemon.impl.IntentionsUIImpl"/>
 
     <fileTypeFactory implementation="com.intellij.openapi.fileTypes.impl.PlatformFileTypeFactory"/>
     <postStartupActivity implementation="com.intellij.openapi.fileTypes.impl.ApproveRemovedMappingsActivity"/>
@@ -1819,7 +1847,7 @@
     <projectService serviceInterface="com.intellij.psi.PsiFileFactory"
                     serviceImplementation="com.intellij.psi.impl.PsiFileFactoryImpl"/>
     <projectService serviceInterface="com.intellij.psi.text.BlockSupport"
-                    serviceImplementation="com.intellij.psi.impl.source.text.BlockSupportImpl"/>
+                    serviceImplementation="com.intellij.psi.impl.BlockSupportImpl"/>
     <projectService serviceInterface="com.intellij.psi.SmartPointerManager"
                     serviceImplementation="com.intellij.psi.impl.smartPointers.SmartPointerManagerImpl"/>
     <projectService serviceInterface="com.intellij.psi.codeStyle.CodeStyleManager"
@@ -1840,9 +1868,6 @@
 
     <projectService serviceInterface="com.intellij.openapi.module.ProjectLoadingErrorsNotifier"
                     serviceImplementation="com.intellij.openapi.module.impl.ProjectLoadingErrorsNotifierImpl"/>
-
-    <projectService serviceInterface="com.intellij.codeInsight.AutoPopupController"
-                    serviceImplementation="com.intellij.codeInsight.AutoPopupController"/>
 
     <projectService serviceInterface="consulo.codeStyle.ProjectCodeStyleFacade"
                     serviceImplementation="consulo.psi.impl.source.codeStyle.ProjectCodeStyleFacadeImpl"/>
@@ -2011,8 +2036,8 @@
 
     <fileBasedIndex implementation="com.intellij.psi.impl.cache.impl.todo.TodoIndex"/>
     <fileBasedIndex implementation="com.intellij.psi.impl.cache.impl.id.IdIndexImpl"/>
-    <fileBasedIndex implementation="com.intellij.psi.search.FilenameIndex"/>
-    <fileBasedIndex implementation="com.intellij.psi.search.FileTypeIndex"/>
+    <fileBasedIndex implementation="com.intellij.psi.search.FilenameIndexImpl"/>
+    <fileBasedIndex implementation="com.intellij.psi.search.FileTypeIndexImpl"/>
     <fileBasedIndex implementation="com.intellij.psi.stubs.StubUpdatingIndex"/>
 
     <fileBasedIndex implementation="com.intellij.find.ngrams.TrigramIndex"/>
@@ -2270,7 +2295,6 @@
                            implementationClass="com.intellij.psi.impl.source.resolve.reference.ArbitraryPlaceUrlReferenceProvider"/>
 
     <uiDebuggerExtension implementation="com.intellij.ui.debugger.extensions.ActionTracer"/>
-    <uiDebuggerExtension implementation="com.intellij.openapi.util.objectTree.DisposerDebugger"/>
 
     <globalInspection shortName="Annotator" displayName="Annotator" groupKey="inspection.general.tools.group.name" groupBundle="messages.InspectionsBundle"
                       enabledByDefault="true" level="ERROR"
@@ -2556,21 +2580,25 @@
     <idIndexer filetype="PLAIN_TEXT" implementationClass="com.intellij.psi.impl.cache.impl.id.PlainTextIndexer"/>
     <todoIndexer filetype="PLAIN_TEXT" implementationClass="com.intellij.psi.impl.cache.impl.todo.PlainTextTodoIndexer"/>
 
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.GeneralHighlightingPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ChameleonSyntaxHighlightingPass$Factory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.InjectedGeneralHighlightingPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.LineMarkersPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ShowIntentionsPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.IdentifierHighlighterPassFactory"/>
     <textEditorHighlightingPassFactory implementation="com.intellij.refactoring.changeSignature.inplace.ChangeSignaturePassFactory"/>
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.CodeFoldingPassFactory"/>
-    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ExternalToolPassFactory"/>
-    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.GeneralHighlightingPassFactory"/>
-    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.LineMarkersPassFactory"/>
-    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.WolfPassFactory"/>
+    <!--<textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.focusMode.FocusModePassFactory"/>-->
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.hints.ParameterHintsPassFactory"/>
-    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.InjectedCodeFoldingPassFactory"/>
-    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.IdentifierHighlighterPassFactory"/>
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.IndentsPassFactory"/>
-    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ShowIntentionsPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.InjectedCodeFoldingPassFactory"/>
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.LocalInspectionsPassFactory"/>
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ShowAutoImportPassFactory"/>
-    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.InjectedGeneralHighlightingPassFactory"/>
+
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.WholeFileLocalInspectionsPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ExternalToolPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.WolfPassFactory"/>
+
 
     <applicationService serviceImplementation="com.intellij.ide.ScreenReaderSupportHandler" lazy="false"/>
     <applicationService serviceInterface="com.intellij.openapi.wm.impl.SystemDock" serviceImplementation="consulo.wm.impl.SystemDockImpl"/>
@@ -2580,5 +2608,38 @@
     <lang.formatter.restriction implementation="com.intellij.formatting.ExcludedFileFormattingRestriction"/>
 
     <codeStyleIndentHelperExtension implementation="consulo.consulo.psi.impl.source.codeStyle.DefaultIndentHelperExtension" order="last"/>
+
+    <intentionMenuContributor implementation="com.intellij.codeInsight.daemon.impl.DoNotShowInspectionIntentionMenuContributor"/>
+    <intentionMenuContributor implementation="com.intellij.codeInsight.daemon.impl.GutterIntentionMenuContributor"/>
+    <intentionMenuContributor implementation="com.intellij.codeInsight.daemon.impl.CleanupIntentionMenuContributor"/>
+
+    <applicationService serviceImplementation="com.intellij.openapi.editor.impl.EditorMouseHoverPopupControl"/>
+    <applicationService serviceImplementation="com.intellij.openapi.editor.EditorMouseHoverPopupManager"/>
+
+    <editorFactoryMouseListener implementation="com.intellij.openapi.editor.EditorMouseHoverPopupManager$MyEditorMouseEventListener"/>
+    <editorFactoryMouseMotionListener implementation="com.intellij.openapi.editor.EditorMouseHoverPopupManager$MyEditorMouseMotionEventListener"/>
+
+    <applicationService serviceInterface="com.intellij.openapi.application.AsyncExecutionService" serviceImplementation="com.intellij.openapi.application.impl.AsyncExecutionServiceImpl"/>
+
+    <projectService serviceImplementation="com.intellij.codeInsight.daemon.impl.ErrorStripeUpdateManager"/>
+    <projectService serviceInterface="com.intellij.codeInsight.AutoPopupController" serviceImplementation="com.intellij.codeInsight.AutoPopupControllerImpl"/>
+    <daemon.tooltipActionProvider order="last" id="defaultProvider" implementation="com.intellij.codeInsight.daemon.impl.DaemonTooltipActionProvider"/>
+
+    <fileBasedIndex.providedLocator implementation="com.intellij.index.BasicProvidedExtensionLocator"/>
+
+    <vfs.asyncListener implementation="com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl$MyAsyncFileListener"/>
+    <vfs.asyncListener implementation="com.intellij.util.indexing.FileBasedIndexImpl$ChangedFilesCollector"/>
+
+    <applicationService serviceInterface="com.intellij.psi.search.FileNameIndexService" serviceImplementation="com.intellij.psi.search.FileNameIndexServiceImpl" />
+
+    <vfs.asyncListener implementation="com.intellij.openapi.vfs.impl.VirtualFilePointerManagerImpl$MyAsyncFileListener"/>
   </extensions>
+
+  <applicationListeners>
+    <listener class="com.intellij.util.gist.GistManagerImpl$MyBulkFileListener" topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
+  </applicationListeners>
+
+  <projectListeners>
+    <listener class="com.intellij.openapi.vfs.newvfs.impl.CachedFileType$PsiListener" topic="com.intellij.psi.util.PsiModificationTracker$Listener"/>
+  </projectListeners>
 </consulo-plugin>

@@ -50,6 +50,10 @@ public interface Logger {
     debug(message);
   }
 
+  default void trace(Throwable message) {
+    debug(message);
+  }
+
   public abstract boolean isDebugEnabled();
 
   public abstract void debug(@NonNls String message);
@@ -96,6 +100,10 @@ public interface Logger {
   }
 
   default void error(@NonNls String message, Attachment... attachments) {
+    error(message);
+  }
+
+  default void error(@NonNls String message, @Nullable Throwable throwable,  Attachment... attachments) {
     error(message);
   }
 

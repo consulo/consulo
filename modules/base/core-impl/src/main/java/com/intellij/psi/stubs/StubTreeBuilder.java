@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,28 +28,24 @@ import com.intellij.psi.StubBuilder;
 import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IStubFileElementType;
-import com.intellij.util.Function;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FileContent;
-import com.intellij.util.indexing.FileContentImpl;
 import com.intellij.util.indexing.IndexingDataKeys;
+import com.intellij.util.indexing.PsiDependentFileContent;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import consulo.annotations.RequiredReadAction;
-
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class StubTreeBuilder {
   private static final Key<Stub> stubElementKey = Key.create("stub.tree.for.file.content");
 
-  private StubTreeBuilder() { }
+  private StubTreeBuilder() {
+  }
 
   @Nullable
-  @RequiredReadAction
   public static Stub buildStubTree(final FileContent inputData) {
     Stub data = inputData.getUserData(stubElementKey);
     if (data != null) return data;
@@ -70,8 +66,8 @@ public class StubTreeBuilder {
       }
       else {
         CharSequence contentAsText = inputData.getContentAsText();
-        FileContentImpl fileContent = (FileContentImpl)inputData;
-        PsiFile psi = fileContent.getPsiFileForPsiDependentIndex();
+        PsiDependentFileContent fileContent = (PsiDependentFileContent)inputData;
+        PsiFile psi = fileContent.getPsiFile();
         final FileViewProvider viewProvider = psi.getViewProvider();
         psi = viewProvider.getStubBindingRoot();
         psi.putUserData(IndexingDataKeys.FILE_TEXT_CONTENT_KEY, contentAsText);
@@ -84,12 +80,12 @@ public class StubTreeBuilder {
           if (stubFileElementType != null) {
             final StubBuilder stubBuilder = stubFileElementType.getBuilder();
             if (stubBuilder instanceof LightStubBuilder) {
-              LightStubBuilder.FORCED_AST.set(fileContent.getLighterASTForPsiDependentIndex());
+              LightStubBuilder.FORCED_AST.set(fileContent.getLighterAST());
             }
             data = stubBuilder.buildStubTree(psi);
 
             final List<Pair<IStubFileElementType, PsiFile>> stubbedRoots = getStubbedRoots(viewProvider);
-            final List<PsiFileStub> stubs = new ArrayList<PsiFileStub>(stubbedRoots.size());
+            final List<PsiFileStub> stubs = new ArrayList<>(stubbedRoots.size());
             stubs.add((PsiFileStub)data);
 
             for (Pair<IStubFileElementType, PsiFile> stubbedRoot : stubbedRoots) {
@@ -103,8 +99,9 @@ public class StubTreeBuilder {
               if (element instanceof PsiFileStub) {
                 stubs.add((PsiFileStub)element);
               }
+              ensureNormalizedOrder(element);
             }
-            final PsiFileStub[] stubsArray = stubs.toArray(new PsiFileStub[stubs.size()]);
+            final PsiFileStub[] stubsArray = stubs.toArray(PsiFileStub.EMPTY_ARRAY);
             for (PsiFileStub stub : stubsArray) {
               if (stub instanceof PsiFileStubImpl) {
                 ((PsiFileStubImpl)stub).setStubRoots(stubsArray);
@@ -118,16 +115,24 @@ public class StubTreeBuilder {
         }
       }
 
+      ensureNormalizedOrder(data);
       inputData.putUserData(stubElementKey, data);
       return data;
     }
   }
 
-  /** Order is deterministic. First element matches {@link FileViewProvider#getStubBindingRoot()} */
+  private static void ensureNormalizedOrder(Stub element) {
+    if (element instanceof StubBase<?>) {
+      ((StubBase)element).myStubList.finalizeLoadingStage();
+    }
+  }
+
+  /**
+   * Order is deterministic. First element matches {@link FileViewProvider#getStubBindingRoot()}
+   */
   @Nonnull
   public static List<Pair<IStubFileElementType, PsiFile>> getStubbedRoots(@Nonnull FileViewProvider viewProvider) {
-    final List<Trinity<Language, IStubFileElementType, PsiFile>> roots =
-            new SmartList<Trinity<Language, IStubFileElementType, PsiFile>>();
+    final List<Trinity<Language, IStubFileElementType, PsiFile>> roots = new SmartList<>();
     final PsiFile stubBindingRoot = viewProvider.getStubBindingRoot();
     for (Language language : viewProvider.getLanguages()) {
       final PsiFile file = viewProvider.getPsi(language);
@@ -139,20 +144,12 @@ public class StubTreeBuilder {
       }
     }
 
-    ContainerUtil.sort(roots, new Comparator<Trinity<Language, IStubFileElementType, PsiFile>>() {
-      @Override
-      public int compare(Trinity<Language, IStubFileElementType, PsiFile> o1, Trinity<Language, IStubFileElementType, PsiFile> o2) {
-        if (o1.third == stubBindingRoot) return o2.third == stubBindingRoot ? 0 : -1;
-        else if (o2.third == stubBindingRoot) return 1;
-        else return StringUtil.compare(o1.first.getID(), o2.first.getID(), false);
-      }
+    ContainerUtil.sort(roots, (o1, o2) -> {
+      if (o1.third == stubBindingRoot) return o2.third == stubBindingRoot ? 0 : -1;
+      else if (o2.third == stubBindingRoot) return 1;
+      else return StringUtil.compare(o1.first.getID(), o2.first.getID(), false);
     });
 
-    return ContainerUtil.map(roots, new Function<Trinity<Language, IStubFileElementType, PsiFile>, Pair<IStubFileElementType, PsiFile>>() {
-      @Override
-      public Pair<IStubFileElementType, PsiFile> fun(Trinity<Language, IStubFileElementType, PsiFile> trinity) {
-        return Pair.create(trinity.second, trinity.third);
-      }
-    });
+    return ContainerUtil.map(roots, trinity -> Pair.create(trinity.second, trinity.third));
   }
 }

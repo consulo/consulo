@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2014 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.intellij.psi.impl.cache.impl.id;
 
@@ -20,16 +6,20 @@ import com.intellij.lang.cacheBuilder.CacheBuilderRegistry;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
+import com.intellij.openapi.project.DumbService;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.UsageSearchContext;
+import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.indexing.*;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.InlineKeyDescriptor;
 import com.intellij.util.io.KeyDescriptor;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -38,13 +28,12 @@ import java.util.Map;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Jan 16, 2008
  */
-public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> {
+public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> implements DocumentChangeDependentIndex {
   @NonNls
   public static final ID<IdIndexEntry, Integer> NAME = ID.create("IdIndex");
 
-  private final FileBasedIndex.InputFilter myInputFilter;
+  private final FileBasedIndex.InputFilter myInputFilter = (project, file) -> isIndexable(file.getFileType());
 
   public static final boolean ourSnapshotMappingsEnabled = SystemProperties.getBooleanProperty("idea.index.snapshot.mappings.enabled", true);
 
@@ -76,7 +65,7 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> {
     @Override
     @Nonnull
     public Map<IdIndexEntry, Integer> map(@Nonnull final FileContent inputData) {
-      final IdIndexer indexer = IdTableBuilding.getFileTypeIndexer(myRegistry, inputData.getFileType());
+      final IdIndexer indexer = IdTableBuilding.getFileTypeIndexer(inputData.getFileType());
       if (indexer != null) {
         return indexer.map(inputData);
       }
@@ -84,14 +73,6 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> {
       return Collections.emptyMap();
     }
   };
-
-  protected final CacheBuilderRegistry myRegistry;
-
-  @Inject
-  IdIndex(CacheBuilderRegistry registry) {
-    myRegistry = registry;
-    myInputFilter = (project, file) -> isIndexable(file.getFileType(), registry);
-  }
 
   @Override
   public int getVersion() {
@@ -133,12 +114,25 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> {
     return myInputFilter;
   }
 
-  public static boolean isIndexable(FileType fileType, CacheBuilderRegistry registry) {
-    return fileType instanceof LanguageFileType || fileType instanceof CustomSyntaxTableFileType || IdTableBuilding.isIdIndexerRegistered(fileType) || registry.getCacheBuilder(fileType) != null;
+  public static boolean isIndexable(FileType fileType) {
+    return fileType instanceof LanguageFileType ||
+           fileType instanceof CustomSyntaxTableFileType ||
+           IdTableBuilding.isIdIndexerRegistered(fileType) ||
+           CacheBuilderRegistry.getInstance().getCacheBuilder(fileType) != null;
   }
 
   @Override
   public boolean hasSnapshotMapping() {
     return true;
+  }
+
+  public static boolean hasIdentifierInFile(@Nonnull PsiFile file, @Nonnull String name) {
+    PsiUtilCore.ensureValid(file);
+    if (file.getVirtualFile() == null || DumbService.isDumb(file.getProject())) {
+      return StringUtil.contains(file.getViewProvider().getContents(), name);
+    }
+
+    GlobalSearchScope scope = GlobalSearchScope.fileScope(file);
+    return !FileBasedIndex.getInstance().getContainingFiles(NAME, new IdIndexEntry(name, true), scope).isEmpty();
   }
 }

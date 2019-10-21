@@ -20,15 +20,13 @@ import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeInsight.folding.impl.FoldingUpdate;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredReadAction;
 
-class InjectedCodeFoldingPass extends TextEditorHighlightingPass implements DumbAware {
+class InjectedCodeFoldingPass extends TextEditorHighlightingPass {
   private static final Key<Boolean> THE_FIRST_TIME_KEY = Key.create("FirstInjectedFoldingPass");
   private Runnable myRunnable;
   private final Editor myEditor;
@@ -40,7 +38,6 @@ class InjectedCodeFoldingPass extends TextEditorHighlightingPass implements Dumb
     myFile = file;
   }
 
-  @RequiredReadAction
   @Override
   public void doCollectInformation(@Nonnull ProgressIndicator progress) {
     boolean firstTime = CodeFoldingPass.isFirstTime(myFile, myEditor, THE_FIRST_TIME_KEY);
@@ -56,7 +53,7 @@ class InjectedCodeFoldingPass extends TextEditorHighlightingPass implements Dumb
     synchronized (this) {
       runnable = myRunnable;
     }
-    if (runnable != null){
+    if (runnable != null) {
       try {
         runnable.run();
       }

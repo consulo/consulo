@@ -21,7 +21,7 @@ package com.intellij.psi.stubs;
 
 import com.google.common.base.MoreObjects;
 import com.intellij.lang.Language;
-import consulo.logging.Logger;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiFile;
@@ -30,8 +30,8 @@ import com.intellij.psi.impl.source.PsiFileWithStubSupport;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.util.SmartList;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -78,8 +78,10 @@ public class PsiFileStubImpl<T extends PsiFile> extends StubBase<T> implements P
     return TYPE;
   }
 
+  /**
+   * Don't call this method, it's public for implementation reasons
+   */
   @Nonnull
-  @Override
   public PsiFileStub[] getStubRoots() {
     if (myStubRoots != null) return myStubRoots;
 
@@ -93,7 +95,7 @@ public class PsiFileStubImpl<T extends PsiFile> extends StubBase<T> implements P
 
     StubTree baseTree = getOrCalcStubTree(stubBindingRoot);
     if (baseTree != null) {
-      final List<PsiFileStub> roots = new SmartList<PsiFileStub>(baseTree.getRoot());
+      final List<PsiFileStub> roots = new SmartList<>(baseTree.getRoot());
       final List<Pair<IStubFileElementType, PsiFile>> stubbedRoots = StubTreeBuilder.getStubbedRoots(viewProvider);
       for (Pair<IStubFileElementType, PsiFile> stubbedRoot : stubbedRoots) {
         if (stubbedRoot.second == stubBindingRoot) continue;
@@ -103,7 +105,7 @@ public class PsiFileStubImpl<T extends PsiFile> extends StubBase<T> implements P
           roots.add(root);
         }
       }
-      final PsiFileStub[] rootsArray = roots.toArray(new PsiFileStub[roots.size()]);
+      final PsiFileStub[] rootsArray = roots.toArray(PsiFileStub.EMPTY_ARRAY);
       for (PsiFileStub root : rootsArray) {
         if (root instanceof PsiFileStubImpl) {
           ((PsiFileStubImpl)root).setStubRoots(rootsArray);
@@ -141,14 +143,7 @@ public class PsiFileStubImpl<T extends PsiFile> extends StubBase<T> implements P
   public String getDiagnostics() {
     ObjectStubTree stubTree = ObjectStubTree.getStubTree(this);
     T file = myFile;
-    Integer lastStubTreeHash = file == null ? null : file.getUserData(ObjectStubTree.LAST_STUB_TREE_HASH);
     return toString() +
-           MoreObjects.toStringHelper("")
-                   .add("myFile", file)
-                   .add("myInvalidationReason", myInvalidationReason)
-                   .add("myStubRoots", Arrays.toString(myStubRoots))
-                   .add("stubTree", stubTree)
-                   .add("lastStubTreeHash", lastStubTreeHash)
-                   .toString();
+           MoreObjects.toStringHelper("").add("myFile", file).add("myInvalidationReason", myInvalidationReason).add("myStubRoots", Arrays.toString(myStubRoots)).add("stubTree", stubTree).toString();
   }
 }

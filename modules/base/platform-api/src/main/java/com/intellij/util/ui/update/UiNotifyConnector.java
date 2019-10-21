@@ -19,7 +19,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.util.Disposer;
 import javax.annotation.Nonnull;
 
@@ -29,18 +28,19 @@ import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import java.lang.ref.WeakReference;
 
-public class UiNotifyConnector implements Disposable, HierarchyListener{
+public class UiNotifyConnector implements Disposable, HierarchyListener {
 
   @Nonnull
   private final WeakReference<Component> myComponent;
   private Activatable myTarget;
 
   public UiNotifyConnector(@Nonnull final Component component, @Nonnull final Activatable target) {
-    myComponent = new WeakReference<Component>(component);
+    myComponent = new WeakReference<>(component);
     myTarget = target;
     if (component.isShowing()) {
       showNotify();
-    } else {
+    }
+    else {
       hideNotify();
     }
     if (isDisposed()) return;
@@ -52,24 +52,22 @@ public class UiNotifyConnector implements Disposable, HierarchyListener{
     if (isDisposed()) return;
 
     if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) > 0) {
-      final Runnable runnable = new DumbAwareRunnable() {
-        @Override
-        public void run() {
-          final Component c = myComponent.get();
-          if (isDisposed() || c == null) return;
+      final Runnable runnable = () -> {
+        final Component c = myComponent.get();
+        if (isDisposed() || c == null) return;
 
-          if (c.isShowing()) {
-            showNotify();
-          }
-          else {
-            hideNotify();
-          }
+        if (c.isShowing()) {
+          showNotify();
+        }
+        else {
+          hideNotify();
         }
       };
       final Application app = ApplicationManager.getApplication();
       if (app != null && app.isDispatchThread()) {
         app.invokeLater(runnable, ModalityState.current());
-      } else {
+      }
+      else {
         //noinspection SSBasedInspection
         SwingUtilities.invokeLater(runnable);
       }
@@ -84,11 +82,15 @@ public class UiNotifyConnector implements Disposable, HierarchyListener{
     myTarget.showNotify();
   }
 
+  protected void hideOnDispose() {
+    myTarget.hideNotify();
+  }
+
   @Override
   public void dispose() {
     if (isDisposed()) return;
 
-    myTarget.hideNotify();
+    hideOnDispose();
     final Component c = myComponent.get();
     if (c != null) {
       c.removeHierarchyListener(this);
@@ -125,6 +127,10 @@ public class UiNotifyConnector implements Disposable, HierarchyListener{
       disposeIfNeeded();
     }
 
+    @Override
+    protected void hideOnDispose() {
+    }
+
     private void disposeIfNeeded() {
       if (myShown && myHidden) {
         Disposer.dispose(this);
@@ -133,6 +139,10 @@ public class UiNotifyConnector implements Disposable, HierarchyListener{
   }
 
   public static void doWhenFirstShown(@Nonnull JComponent c, @Nonnull final Runnable runnable) {
+    doWhenFirstShown((Component)c, runnable);
+  }
+
+  public static void doWhenFirstShown(@Nonnull Component c, @Nonnull final Runnable runnable) {
     Activatable activatable = new Activatable() {
       @Override
       public void showNotify() {

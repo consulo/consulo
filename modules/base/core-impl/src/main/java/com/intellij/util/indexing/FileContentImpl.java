@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2014 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.indexing;
 
 import com.intellij.lang.FileASTNode;
@@ -23,11 +9,11 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.DefaultProjectFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.LanguageSubstitutors;
 import com.intellij.psi.PsiDocumentManager;
@@ -38,42 +24,55 @@ import consulo.lang.LanguageVersion;
 import consulo.lang.LanguageVersionResolvers;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 /**
  * @author nik
- *
+ * <p>
  * Class is not final since it is overridden in Upsource
  */
-public class FileContentImpl extends UserDataHolderBase implements FileContent {
-  protected final VirtualFile myFile;
-  protected final String myFileName;
-  protected final FileType myFileType;
-  protected final Charset myCharset;
-  protected byte[] myContent;
-  protected CharSequence myContentAsText;
-  protected final long myStamp;
-  protected byte[] myHash;
+public class FileContentImpl extends IndexedFileImpl implements PsiDependentFileContent {
+  private Charset myCharset;
+  private byte[] myContent;
+  private CharSequence myContentAsText;
+  private final long myStamp;
+  private byte[] myHash;
   private boolean myLighterASTShouldBeThreadSafe;
+  private final boolean myPhysicalContent;
 
-  @Override
-  public Project getProject() {
-    return getUserData(IndexingDataKeys.PROJECT);
+  public FileContentImpl(@Nonnull final VirtualFile file, @Nonnull final CharSequence contentAsText, long documentStamp) {
+    this(file, contentAsText, null, documentStamp, false);
+  }
+
+  public FileContentImpl(@Nonnull final VirtualFile file, @Nonnull final byte[] content) {
+    this(file, null, content, -1, true);
+  }
+
+  FileContentImpl(@Nonnull final VirtualFile file) {
+    this(file, null, null, -1, true);
+  }
+
+  private FileContentImpl(@Nonnull VirtualFile file, CharSequence contentAsText, byte[] content, long stamp, boolean physicalContent) {
+    super(file, FileTypeRegistry.getInstance().getFileTypeByFile(file, content));
+    myContentAsText = contentAsText;
+    myContent = content;
+    myStamp = stamp;
+    myPhysicalContent = physicalContent;
   }
 
   private static final Key<PsiFile> CACHED_PSI = Key.create("cached psi from content");
 
-  /**
-   * @return psiFile associated with the content. If the file was not set on FileContentCreation, it will be created on the spot
-   */
   @Nonnull
   @Override
   public PsiFile getPsiFile() {
+    return getPsiFileForPsiDependentIndex();
+  }
+
+  @Nonnull
+  private PsiFile getFileFromText() {
     PsiFile psi = getUserData(IndexingDataKeys.PSI_FILE);
 
     if (psi == null) {
@@ -88,11 +87,12 @@ public class FileContentImpl extends UserDataHolderBase implements FileContent {
     return psi;
   }
 
-  public @Nonnull
-  LighterAST getLighterASTForPsiDependentIndex() {
+  @Override
+  @Nonnull
+  public LighterAST getLighterAST() {
     LighterAST lighterAST = getUserData(IndexingDataKeys.LIGHTER_AST_NODE_KEY);
     if (lighterAST == null) {
-      FileASTNode node = getPsiFileForPsiDependentIndex().getNode();
+      FileASTNode node = getPsiFile().getNode();
       lighterAST = myLighterASTShouldBeThreadSafe ? new TreeBackedLighterAST(node) : node.getLighterAST();
       putUserData(IndexingDataKeys.LIGHTER_AST_NODE_KEY, lighterAST);
     }
@@ -113,60 +113,35 @@ public class FileContentImpl extends UserDataHolderBase implements FileContent {
     if (project == null) {
       project = DefaultProjectFactory.getInstance().getDefaultProject();
     }
-    return createFileFromText(project, text, (LanguageFileType)getFileTypeWithoutSubstitution(), myFile, myFileName);
+    FileType fileType = getFileTypeWithoutSubstitution();
+    if (!(fileType instanceof LanguageFileType)) {
+      throw new AssertionError("PSI can be created only for a file with LanguageFileType but actual is " + fileType.getClass() + "." +
+                               "\nPlease use a proper FileBasedIndexExtension#getInputFilter() implementation for the caller index");
+    }
+    return createFileFromText(project, text, (LanguageFileType)fileType, myFile, myFileName);
   }
 
   @Nonnull
   @RequiredReadAction
-  public static PsiFile createFileFromText(@Nonnull Project project, @Nonnull CharSequence text, @Nonnull LanguageFileType fileType,
-                                           @Nonnull VirtualFile file, @Nonnull String fileName) {
-    final Language language = fileType.getLanguage();
-    final Language substitutedLanguage = LanguageSubstitutors.INSTANCE.substituteLanguage(language, file, project);
-    LanguageVersion languageVersion =
-            LanguageVersionResolvers.INSTANCE.forLanguage(substitutedLanguage).getLanguageVersion(substitutedLanguage, project, file);
-    return PsiFileFactory.getInstance(project).createFileFromText(fileName, languageVersion, text, false, false, true, file);
+  public static PsiFile createFileFromText(@Nonnull Project project, @Nonnull CharSequence text, @Nonnull LanguageFileType fileType, @Nonnull VirtualFile file, @Nonnull String fileName) {
+    Language language = fileType.getLanguage();
+    Language substitutedLanguage = LanguageSubstitutors.INSTANCE.substituteLanguage(language, file, project);
+    LanguageVersion languageVersion = LanguageVersionResolvers.INSTANCE.forLanguage(substitutedLanguage).getLanguageVersion(substitutedLanguage, project, file);
+    PsiFile psiFile = PsiFileFactory.getInstance(project).createFileFromText(fileName, languageVersion, text, false, false, false, file);
+    if (psiFile == null) {
+      throw new IllegalStateException("psiFile is null. language = " + language.getID() + ", substitutedLanguage = " + substitutedLanguage.getID());
+    }
+    return psiFile;
   }
 
   public static class IllegalDataException extends RuntimeException {
-    public IllegalDataException(final String message) {
+    IllegalDataException(final String message) {
       super(message);
     }
   }
 
-  public FileContentImpl(@Nonnull final VirtualFile file, @Nonnull final CharSequence contentAsText, final Charset charset) {
-    this(file, contentAsText, null, charset, -1);
-  }
-
-  public FileContentImpl(@Nonnull final VirtualFile file, @Nonnull final CharSequence contentAsText, final Charset charset, long documentStamp) {
-    this(file, contentAsText, null, charset, documentStamp);
-  }
-
-  public FileContentImpl(@Nonnull final VirtualFile file, @Nonnull final byte[] content) {
-    this(file, null, content, LoadTextUtil.detectCharsetAndSetBOM(file, content), -1);
-  }
-
-  public FileContentImpl(@Nonnull final VirtualFile file) {
-    this(file, null, null, null, -1);
-  }
-
-  private FileContentImpl(@Nonnull VirtualFile file,
-                          CharSequence contentAsText,
-                          byte[] content,
-                          Charset charset,
-                          long stamp
-  ) {
-    myFile = file;
-    myContentAsText = contentAsText;
-    myContent = content;
-    myCharset = charset;
-    myFileType = file.getFileType();
-    // remember name explicitly because the file could be renamed afterwards
-    myFileName = file.getName();
-    myStamp = stamp;
-  }
-
   @Nonnull
-  public FileType getSubstitutedFileType() {
+  private FileType getSubstitutedFileType() {
     return SubstitutedFileType.substituteFileType(myFile, myFileType, getProject());
   }
 
@@ -180,7 +155,7 @@ public class FileContentImpl extends UserDataHolderBase implements FileContent {
     }
   }
 
-  public FileType getFileTypeWithoutSubstitution() {
+  private FileType getFileTypeWithoutSubstitution() {
     return myFileType;
   }
 
@@ -202,27 +177,27 @@ public class FileContentImpl extends UserDataHolderBase implements FileContent {
     return myFileName;
   }
 
+  @Nonnull
   public Charset getCharset() {
-    return myCharset;
+    Charset charset = myCharset;
+    if (charset == null) {
+      myCharset = charset = myFile.getCharset();
+    }
+    return charset;
   }
 
   public long getStamp() {
     return myStamp;
   }
 
+  @Nonnull
   @Override
   public byte[] getContent() {
-    if (myContent == null) {
-      if (myContentAsText != null) {
-        try {
-          myContent = myCharset != null ? myContentAsText.toString().getBytes(myCharset.name()) : myContentAsText.toString().getBytes();
-        }
-        catch (UnsupportedEncodingException e) {
-          throw new RuntimeException(e);
-        }
-      }
+    byte[] content = myContent;
+    if (content == null) {
+      myContent = content = myContentAsText.toString().getBytes(getCharset());
     }
-    return myContent;
+    return content;
   }
 
   @Nonnull
@@ -235,13 +210,12 @@ public class FileContentImpl extends UserDataHolderBase implements FileContent {
     if (content != null) {
       return content;
     }
-    if (myContentAsText == null) {
-      if (myContent != null) {
-        myContentAsText = LoadTextUtil.getTextByBinaryPresentation(myContent, myCharset);
-        myContent = null; // help gc, indices are expected to use bytes or chars but not both
-      }
+    CharSequence contentAsText = myContentAsText;
+    if (contentAsText == null) {
+      myContentAsText = contentAsText = LoadTextUtil.getTextByBinaryPresentation(myContent, myFile);
+      myContent = null; // help gc, indices are expected to use bytes or chars but not both
     }
-    return myContentAsText;
+    return contentAsText;
   }
 
   @Override
@@ -249,8 +223,8 @@ public class FileContentImpl extends UserDataHolderBase implements FileContent {
     return myFileName;
   }
 
-  public @Nullable
-  byte[] getHash() {
+  @Nullable
+  public byte[] getHash() {
     return myHash;
   }
 
@@ -258,23 +232,30 @@ public class FileContentImpl extends UserDataHolderBase implements FileContent {
     myHash = hash;
   }
 
+  /**
+   * @deprecated use {@link FileContent#getPsiFile()}
+   */
+  @SuppressWarnings("DeprecatedIsStillUsed")
+  @Deprecated
   @Nonnull
   public PsiFile getPsiFileForPsiDependentIndex() {
-    Document document = FileDocumentManager.getInstance().getCachedDocument(getFile());
     PsiFile psi = null;
-    if (document != null) {
-      PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(getProject());
-      if (psiDocumentManager.isUncommited(document)) {
-        PsiFile existingPsi = psiDocumentManager.getPsiFile(document);
-        if(existingPsi != null) {
-          psi = existingPsi;
+    if (!myPhysicalContent) {
+      Document document = FileDocumentManager.getInstance().getCachedDocument(getFile());
+
+      if (document != null) {
+        PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(getProject());
+        if (psiDocumentManager.isUncommited(document)) {
+          PsiFile existingPsi = psiDocumentManager.getPsiFile(document);
+          if (existingPsi != null) {
+            psi = existingPsi;
+          }
         }
       }
     }
     if (psi == null) {
-      psi = getPsiFile();
+      psi = getFileFromText();
     }
     return psi;
   }
-
 }

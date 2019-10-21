@@ -88,18 +88,18 @@ public class XDebuggerInlayUtil {
       FontPreferences fontPreferences = colorsScheme.getFontPreferences();
       TextAttributes attributes = editor.getColorsScheme().getAttributes(DebuggerColors.INLINED_VALUES_EXECUTION_LINE);
       int fontStyle = attributes == null ? Font.PLAIN : attributes.getFontType();
-      return ComplementaryFontsRegistry.getFontAbleToDisplay('a', fontStyle, fontPreferences,
-                                                             FontInfo.getFontRenderContext(editor.getContentComponent()));
+      return ComplementaryFontsRegistry.getFontAbleToDisplay('a', fontStyle, fontPreferences, FontInfo.getFontRenderContext(editor.getContentComponent()));
     }
 
     @Override
-    public int calcWidthInPixels(@Nonnull Editor editor) {
-      FontInfo fontInfo = getFontInfo(editor);
+    public int calcWidthInPixels(@Nonnull Inlay inlay) {
+      FontInfo fontInfo = getFontInfo(inlay.getEditor());
       return fontInfo.fontMetrics().stringWidth(myText);
     }
 
     @Override
-    public void paint(@Nonnull Editor editor, @Nonnull Graphics g, @Nonnull Rectangle r, @Nonnull TextAttributes textAttributes) {
+    public void paint(@Nonnull Inlay inlay, @Nonnull Graphics g, @Nonnull Rectangle r, @Nonnull TextAttributes textAttributes) {
+      Editor editor = inlay.getEditor();
       TextAttributes attributes = editor.getColorsScheme().getAttributes(DebuggerColors.INLINED_VALUES_EXECUTION_LINE);
       if (attributes == null) return;
       Color fgColor = attributes.getForegroundColor();
