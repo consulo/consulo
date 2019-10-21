@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,14 @@
  */
 package com.intellij.openapi.editor.ex.util;
 
-import consulo.logging.Logger;
-
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.util.ArrayUtil;
 import javax.annotation.Nonnull;
 
 /**
  * This class is a data structure specialized for working with the indexed segments, i.e. it holds numerous mappings like
  * {@code 'index <-> (start; end)'} and provides convenient way for working with them, e.g. find index by particular offset that
- * belongs to target <code>(start; end)</code> segment etc.
+ * belongs to target {@code (start; end)} segment etc.
  * <p/>
  * Not thread-safe.
  */
@@ -31,7 +31,7 @@ public class SegmentArray {
   protected int[] myStarts;
   protected int[] myEnds;
 
-  protected int mySegmentCount = 0;
+  protected int mySegmentCount;
   protected static final int INITIAL_SIZE = 64;
 
   protected SegmentArray() {
@@ -77,12 +77,9 @@ public class SegmentArray {
   }
 
   @Nonnull
-  protected static int[] reallocateArray(@Nonnull int[] array, int index) {
+  private static int[] reallocateArray(@Nonnull int[] array, int index) {
     if (index < array.length) return array;
-
-    int[] newArray = new int[calcCapacity(array.length, index)];
-    System.arraycopy(array, 0, newArray, 0, array.length);
-    return newArray;
+    return ArrayUtil.realloc(array, calcCapacity(array.length, index));
   }
 
   protected int noSegmentsAvailable(int offset) {
@@ -93,6 +90,10 @@ public class SegmentArray {
     throw new IndexOutOfBoundsException("Wrong offset: " + offset + ". Should be in range: [0, " + lastValidOffset + "]");
   }
 
+  /**
+   * @throws IllegalStateException if a gap between segments is detected, or if there are no segments and an index for a positive offset is
+   *                               requested
+   */
   public final int findSegmentIndex(int offset) {
     if (mySegmentCount <= 0) {
       return offset == 0 ? 0 : noSegmentsAvailable(offset);
@@ -127,7 +128,9 @@ public class SegmentArray {
 
   protected int segmentNotFound(int offset, int start) {
     // This means that there is a gap at given offset
-    assert myStarts[start] <= offset && offset < myEnds[start] : start;
+    if (offset < myStarts[start] || offset >= myEnds[start]) {
+      throw new IllegalStateException("Gap at offset " + offset + " near segment " + start);
+    }
     return start;
   }
 
@@ -171,13 +174,13 @@ public class SegmentArray {
   }
 
   protected void insert(@Nonnull SegmentArray segmentArray, int startIndex) {
-    myStarts = insert(myStarts, segmentArray.myStarts, startIndex, segmentArray.getSegmentCount());
-    myEnds = insert(myEnds, segmentArray.myEnds, startIndex, segmentArray.getSegmentCount());
+    myStarts = insert(myStarts, segmentArray.myStarts, startIndex, segmentArray.getSegmentCount(), mySegmentCount);
+    myEnds = insert(myEnds, segmentArray.myEnds, startIndex, segmentArray.getSegmentCount(), mySegmentCount);
     mySegmentCount += segmentArray.getSegmentCount();
   }
 
   @Nonnull
-  protected int[] insert(@Nonnull int[] array, @Nonnull int[] insertArray, int startIndex, int insertLength) {
+  protected static int[] insert(@Nonnull int[] array, @Nonnull int[] insertArray, int startIndex, int insertLength, int mySegmentCount) {
     int[] newArray = reallocateArray(array, mySegmentCount + insertLength);
     if (startIndex < mySegmentCount) {
       System.arraycopy(newArray, startIndex, newArray, startIndex + insertLength, mySegmentCount - startIndex);
