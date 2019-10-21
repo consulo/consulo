@@ -172,7 +172,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   public FileTypeManagerImpl(Application application, SchemesManagerFactory schemesManagerFactory, ApplicationPropertiesComponent propertiesComponent) {
     int fileTypeChangedCounter = propertiesComponent.getInt("fileTypeChangedCounter", 0);
     fileTypeChangedCount = new AtomicInteger(fileTypeChangedCounter);
-    autoDetectedAttribute = new FileAttribute("AUTO_DETECTION_CACHE_ATTRIBUTE", fileTypeChangedCounter, true);
+    autoDetectedAttribute = new FileAttribute("AUTO_DETECTION_CACHE_ATTRIBUTE", fileTypeChangedCounter + getVersionFromDetectors(), true);
 
     myMessageBus = application.getMessageBus();
     mySchemeManager = schemesManagerFactory.createSchemesManager(FILE_SPEC, new BaseSchemeProcessor<AbstractFileType>() {
@@ -1856,5 +1856,14 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   @Override
   public void dispose() {
     LOG.info(String.format("%s auto-detected files. Detection took %s ms", counterAutoDetect, elapsedAutoDetect));
+  }
+
+  @VisibleForTesting
+  public static int getVersionFromDetectors() {
+    int version = 0;
+    for (FileTypeDetector detector : FileTypeDetector.EP_NAME.getExtensions()) {
+      version += detector.getVersion();
+    }
+    return version;
   }
 }
