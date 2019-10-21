@@ -15,6 +15,7 @@
  */
 package consulo.test.light.impl;
 
+import com.intellij.ide.plugins.PluginListenerDescriptor;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.impl.ModalityStateEx;
@@ -24,6 +25,7 @@ import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.ThrowableComputable;
+import com.intellij.util.containers.MultiMap;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.injecting.InjectingContainerBuilder;
@@ -54,6 +56,10 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
     ApplicationManager.setApplication(this, myLastDisposable);
 
     buildInjectingContainer();
+  }
+
+  @Override
+  protected void fillListenerDescriptors(MultiMap<String, PluginListenerDescriptor> mapByTopic) {
   }
 
   @Override

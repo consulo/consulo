@@ -21,7 +21,7 @@ message()
   else
     echo "ERROR: $TITLE\n$1"
   fi
-}
+}                                                              L
 
 UNAME=`which uname`
 GREP=`which egrep`
