@@ -24,6 +24,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,7 +59,7 @@ public abstract class TranslatingCompilerFilesMonitor {
                     Collection<Trinity<File, String, Boolean>> toDelete);
 
   public abstract void update(CompileContext context,
-              @javax.annotation.Nullable String outputRoot,
+              @Nullable String outputRoot,
               Collection<TranslatingCompiler.OutputItem> successfullyCompiled,
               VirtualFile[] filesToRecompile) throws IOException;
 

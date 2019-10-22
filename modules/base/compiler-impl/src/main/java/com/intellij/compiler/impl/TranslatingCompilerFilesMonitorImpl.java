@@ -41,6 +41,7 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
+import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SLRUCache;
@@ -85,18 +86,19 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @Singleton
 public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFilesMonitor implements Disposable {
-  private static final Logger LOG = Logger.getInstance("#consulo.compiler.impl.TranslatingCompilerFilesMonitor");
+  private static final Logger LOG = Logger.getInstance(TranslatingCompilerFilesMonitorImpl.class);
+
   private static final boolean ourDebugMode = false;
 
-  private static final FileAttribute ourSourceFileAttribute = new FileAttribute("_make_source_file_info_", 3);
-  private static final FileAttribute ourOutputFileAttribute = new FileAttribute("_make_output_file_info_", 3);
+  private static final FileAttribute ourSourceFileAttribute = new FileAttribute("_make_source_file_info_", 3, false);
+  private static final FileAttribute ourOutputFileAttribute = new FileAttribute("_make_output_file_info_", 3, false);
   private static final Key<Map<String, VirtualFile>> SOURCE_FILES_CACHE = Key.create("_source_url_to_vfile_cache_");
 
   private final Object myDataLock = new Object();
 
   private final TIntHashSet mySuspendedProjects = new TIntHashSet(); // projectId for all projects that should not be monitored
 
-  private final TIntObjectHashMap<TIntHashSet> mySourcesToRecompile = new TIntObjectHashMap<TIntHashSet>();
+  private final TIntObjectHashMap<TIntHashSet> mySourcesToRecompile = new TIntObjectHashMap<>();
   // ProjectId->set of source file paths
   private PersistentHashMap<Integer, TIntObjectHashMap<Pair<Integer, Integer>>> myOutputRootsStorage;
   // ProjectId->map[moduleId->Pair(outputDirId, testOutputDirId)]
@@ -123,7 +125,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     @Nonnull
     @Override
     public Outputs createValue(Integer key) {
-      final String dirName = VirtualFileManager.getInstance().getVFileName(key).toString();
+      final String dirName = getFilePath(key);
       final File storeFile;
       if (StringUtil.isEmpty(dirName)) {
         storeFile = null;
@@ -144,41 +146,35 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     @Override
     @Nonnull
     public File createValue(final Project project) {
-      Disposer.register(project, new Disposable() {
-        @Override
-        public void dispose() {
-          myGeneratedDataPaths.remove(project);
-        }
-      });
+      Disposer.register(project, () -> myGeneratedDataPaths.remove(project));
       return CompilerPaths.getGeneratedDataDirectory(project);
     }
   };
-  private final SLRUCache<Integer, TIntObjectHashMap<Pair<Integer, Integer>>> myProjectOutputRoots =
-          new SLRUCache<Integer, TIntObjectHashMap<Pair<Integer, Integer>>>(2, 2) {
-            @Override
-            protected void onDropFromCache(Integer key, TIntObjectHashMap<Pair<Integer, Integer>> value) {
-              try {
-                myOutputRootsStorage.put(key, value);
-              }
-              catch (IOException e) {
-                LOG.info(e);
-              }
-            }
+  private final SLRUCache<Integer, TIntObjectHashMap<Pair<Integer, Integer>>> myProjectOutputRoots = new SLRUCache<Integer, TIntObjectHashMap<Pair<Integer, Integer>>>(2, 2) {
+    @Override
+    protected void onDropFromCache(Integer key, TIntObjectHashMap<Pair<Integer, Integer>> value) {
+      try {
+        myOutputRootsStorage.put(key, value);
+      }
+      catch (IOException e) {
+        LOG.info(e);
+      }
+    }
 
-            @Override
-            @Nonnull
-            public TIntObjectHashMap<Pair<Integer, Integer>> createValue(Integer key) {
-              TIntObjectHashMap<Pair<Integer, Integer>> map = null;
-              try {
-                ensureOutputStorageInitialized();
-                map = myOutputRootsStorage.get(key);
-              }
-              catch (IOException e) {
-                LOG.info(e);
-              }
-              return map != null ? map : new TIntObjectHashMap<Pair<Integer, Integer>>();
-            }
-          };
+    @Override
+    @Nonnull
+    public TIntObjectHashMap<Pair<Integer, Integer>> createValue(Integer key) {
+      TIntObjectHashMap<Pair<Integer, Integer>> map = null;
+      try {
+        ensureOutputStorageInitialized();
+        map = myOutputRootsStorage.get(key);
+      }
+      catch (IOException e) {
+        LOG.info(e);
+      }
+      return map != null ? map : new TIntObjectHashMap<>();
+    }
+  };
   private final ProjectManager myProjectManager;
   private final TIntIntHashMap myInitInProgress = new TIntIntHashMap(); // projectId for successfully initialized projects
   private final Object myAsyncScanLock = new Object();
@@ -241,7 +237,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static VirtualFile getSourceFileByOutput(VirtualFile outputFile) {
     final OutputFileInfo outputFileInfo = loadOutputInfo(outputFile);
     if (outputFileInfo != null) {
@@ -265,7 +261,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     final int projectId = getProjectId(project);
     final CompilerManager configuration = CompilerManager.getInstance(project);
     final boolean _forceCompile = forceCompile || isRebuild || myForceCompiling;
-    final Set<VirtualFile> selectedForRecompilation = new HashSet<VirtualFile>();
+    final Set<VirtualFile> selectedForRecompilation = new HashSet<>();
     synchronized (myDataLock) {
       final TIntHashSet pathsToRecompile = mySourcesToRecompile.get(projectId);
       if (_forceCompile || pathsToRecompile != null && !pathsToRecompile.isEmpty()) {
@@ -328,7 +324,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         try {
           final VirtualFileManager vfm = VirtualFileManager.getInstance();
           final LocalFileSystem lfs = LocalFileSystem.getInstance();
-          final List<String> zombieEntries = new ArrayList<String>();
+          final List<String> zombieEntries = new ArrayList<>();
           final Map<String, VirtualFile> srcFileCache = getFileCache(context);
           for (Map.Entry<String, SourceUrlClassNamePair> entry : outputs.getEntries()) {
             final String outputPath = entry.getKey();
@@ -366,7 +362,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
             if (lfs.findFileByPath(outputPath) != null) {
               //noinspection UnnecessaryBoxing
               final File file = new File(outputPath);
-              toDelete.add(new Trinity<File, String, Boolean>(file, classNamePair.getClassName(), Boolean.valueOf(sourcePresent)));
+              toDelete.add(new Trinity<>(file, classNamePair.getClassName(), Boolean.valueOf(sourcePresent)));
               if (LOG.isDebugEnabled() || ourDebugMode) {
                 final String message = "Found file to delete: " + file;
                 LOG.debug(message);
@@ -401,7 +397,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   private static Map<String, VirtualFile> getFileCache(CompileContext context) {
     Map<String, VirtualFile> cache = context.getUserData(SOURCE_FILES_CACHE);
     if (cache == null) {
-      context.putUserData(SOURCE_FILES_CACHE, cache = new HashMap<String, VirtualFile>());
+      context.putUserData(SOURCE_FILES_CACHE, cache = new HashMap<>());
     }
     return cache;
   }
@@ -416,7 +412,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
   @Override
   public void update(final CompileContext context,
-                     @javax.annotation.Nullable final String outputRoot,
+                     @Nullable final String outputRoot,
                      final Collection<TranslatingCompiler.OutputItem> successfullyCompiled,
                      final VirtualFile[] filesToRecompile) throws IOException {
     myForceCompiling = false;
@@ -431,8 +427,8 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         @Override
         public void run() {
           try {
-            final Map<VirtualFile, SourceFileInfo> compiledSources = new HashMap<VirtualFile, SourceFileInfo>();
-            final Set<VirtualFile> forceRecompile = new HashSet<VirtualFile>();
+            final Map<VirtualFile, SourceFileInfo> compiledSources = new HashMap<>();
+            final Set<VirtualFile> forceRecompile = new HashSet<>();
 
             for (TranslatingCompiler.OutputItem item : successfullyCompiled) {
               final VirtualFile sourceFile = item.getSourceFile();
@@ -549,7 +545,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   }
 
   private static Map<String, SourceUrlClassNamePair> loadPathsToDelete(@Nullable final File file) {
-    final Map<String, SourceUrlClassNamePair> map = new HashMap<String, SourceUrlClassNamePair>();
+    final Map<String, SourceUrlClassNamePair> map = new HashMap<>();
     try {
       if (file != null && file.length() > 0) {
         final DataInputStream is = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
@@ -596,7 +592,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   }
 
   private TIntObjectHashMap<Pair<Integer, Integer>> buildOutputRootsLayout(ProjectRef projRef) {
-    final TIntObjectHashMap<Pair<Integer, Integer>> map = new TIntObjectHashMap<Pair<Integer, Integer>>();
+    final TIntObjectHashMap<Pair<Integer, Integer>> map = new TIntObjectHashMap<>();
     for (Module module : ModuleManager.getInstance(projRef.get()).getModules()) {
       ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
 
@@ -604,44 +600,37 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
       final int first = output != null ? Math.abs(getFileId(output)) : -1;
       final VirtualFile testsOutput = moduleCompilerPathsManager.getCompilerOutput(TestContentFolderTypeProvider.getInstance());
       final int second = testsOutput != null ? Math.abs(getFileId(testsOutput)) : -1;
-      map.put(getModuleId(module), new Pair<Integer, Integer>(first, second));
+      map.put(getModuleId(module), new Pair<>(first, second));
     }
     return map;
   }
 
   private void initOutputRootsFile(File rootsFile) throws IOException {
-    myOutputRootsStorage = new PersistentHashMap<Integer, TIntObjectHashMap<Pair<Integer, Integer>>>(rootsFile, EnumeratorIntegerDescriptor.INSTANCE,
-                                                                                                     new DataExternalizer<TIntObjectHashMap<Pair<Integer, Integer>>>() {
-                                                                                                       @Override
-                                                                                                       public void save(DataOutput out,
-                                                                                                                        TIntObjectHashMap<Pair<Integer, Integer>> value)
-                                                                                                               throws IOException {
-                                                                                                         for (final TIntObjectIterator<Pair<Integer, Integer>>
-                                                                                                                      it = value.iterator(); it.hasNext(); ) {
-                                                                                                           it.advance();
-                                                                                                           DataInputOutputUtil.writeINT(out, it.key());
-                                                                                                           final Pair<Integer, Integer> pair = it.value();
-                                                                                                           DataInputOutputUtil.writeINT(out, pair.first);
-                                                                                                           DataInputOutputUtil.writeINT(out, pair.second);
-                                                                                                         }
-                                                                                                       }
+    myOutputRootsStorage = new PersistentHashMap<>(rootsFile, EnumeratorIntegerDescriptor.INSTANCE, new DataExternalizer<TIntObjectHashMap<Pair<Integer, Integer>>>() {
+      @Override
+      public void save(DataOutput out, TIntObjectHashMap<Pair<Integer, Integer>> value) throws IOException {
+        for (final TIntObjectIterator<Pair<Integer, Integer>> it = value.iterator(); it.hasNext(); ) {
+          it.advance();
+          DataInputOutputUtil.writeINT(out, it.key());
+          final Pair<Integer, Integer> pair = it.value();
+          DataInputOutputUtil.writeINT(out, pair.first);
+          DataInputOutputUtil.writeINT(out, pair.second);
+        }
+      }
 
-                                                                                                       @Override
-                                                                                                       public TIntObjectHashMap<Pair<Integer, Integer>> read(
-                                                                                                               DataInput in) throws IOException {
-                                                                                                         final DataInputStream _in = (DataInputStream)in;
-                                                                                                         final TIntObjectHashMap<Pair<Integer, Integer>> map =
-                                                                                                                 new TIntObjectHashMap<Pair<Integer, Integer>>();
-                                                                                                         while (_in.available() > 0) {
-                                                                                                           final int key = DataInputOutputUtil.readINT(_in);
-                                                                                                           final int first = DataInputOutputUtil.readINT(_in);
-                                                                                                           final int second = DataInputOutputUtil.readINT(_in);
-                                                                                                           map.put(key,
-                                                                                                                   new Pair<Integer, Integer>(first, second));
-                                                                                                         }
-                                                                                                         return map;
-                                                                                                       }
-                                                                                                     });
+      @Override
+      public TIntObjectHashMap<Pair<Integer, Integer>> read(DataInput in) throws IOException {
+        final DataInputStream _in = (DataInputStream)in;
+        final TIntObjectHashMap<Pair<Integer, Integer>> map = new TIntObjectHashMap<>();
+        while (_in.available() > 0) {
+          final int key = DataInputOutputUtil.readINT(_in);
+          final int first = DataInputOutputUtil.readINT(_in);
+          final int second = DataInputOutputUtil.readINT(_in);
+          map.put(key, new Pair<>(first, second));
+        }
+        return map;
+      }
+    });
   }
 
   @Override
@@ -696,7 +685,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private static SourceFileInfo loadSourceInfo(final VirtualFile file) {
     try {
       final DataInputStream is = ourSourceFileAttribute.readAttribute(file);
@@ -743,7 +732,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private static OutputFileInfo loadOutputInfo(final VirtualFile file) {
     try {
       final DataInputStream is = ourOutputFileAttribute.readAttribute(file);
@@ -787,11 +776,11 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   }
 
   private int getProjectId(Project project) {
-    return VirtualFileManager.getInstance().storeName(CompilerPaths.getCompilerSystemDirectoryName(project));
+    return cacheFilePath(CompilerPaths.getCompilerSystemDirectoryName(project));
   }
 
   private int getModuleId(Module module) {
-    return VirtualFileManager.getInstance().storeName(module.getName().toLowerCase(Locale.US));
+    return cacheFilePath(module.getName().toLowerCase(Locale.US));
   }
 
   private static class OutputFileInfo {
@@ -799,9 +788,9 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
     private final int myClassName;
 
-    OutputFileInfo(final String sourcePath, @javax.annotation.Nullable String className) throws IOException {
-      mySourcePath = VirtualFileManager.getInstance().storeName(sourcePath);
-      myClassName = className != null ? VirtualFileManager.getInstance().storeName(className) : -1;
+    OutputFileInfo(final String sourcePath, @Nullable String className) throws IOException {
+      mySourcePath = cacheFilePath(sourcePath);
+      myClassName = className != null ? cacheFilePath(className) : -1;
     }
 
     OutputFileInfo(final DataInput in) throws IOException {
@@ -810,12 +799,12 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
 
     String getSourceFilePath() {
-      return VirtualFileManager.getInstance().getVFileName(mySourcePath).toString();
+      return getFilePath(mySourcePath);
     }
 
     @Nullable
     public String getClassName() {
-      return myClassName < 0 ? null : VirtualFileManager.getInstance().getVFileName(myClassName).toString();
+      return myClassName < 0 ? null : getFilePath(myClassName);
     }
 
     public void save(final DataOutput out) throws IOException {
@@ -910,12 +899,12 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
 
     private void addOutputPath(final int projectId, String outputPath) {
-      addOutputPath(projectId, VirtualFileManager.getInstance().storeName(outputPath));
+      addOutputPath(projectId, cacheFilePath(outputPath));
     }
 
     private void addOutputPath(final int projectId, final int outputPath) {
       if (myProjectToOutputPathMap == null) {
-        myProjectToOutputPathMap = new TIntObjectHashMap<Serializable>(1, 0.98f);
+        myProjectToOutputPathMap = new TIntObjectHashMap<>(1, 0.98f);
         myProjectToOutputPathMap.put(projectId, outputPath);
       }
       else {
@@ -955,13 +944,13 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
       if (myProjectToOutputPathMap != null) {
         final Object val = myProjectToOutputPathMap.get(projectId);
         if (val instanceof Integer) {
-          proc.execute(projectId, VirtualFileManager.getInstance().getVFileName(((Integer)val).intValue()).toString());
+          proc.execute(projectId, getFilePath(((Integer)val).intValue()));
         }
         else if (val instanceof TIntHashSet) {
           ((TIntHashSet)val).forEach(new TIntProcedure() {
             @Override
             public boolean execute(final int value) {
-              proc.execute(projectId, VirtualFileManager.getInstance().getVFileName(value).toString());
+              proc.execute(projectId, getFilePath(value));
               return true;
             }
           });
@@ -973,10 +962,10 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
       if (myProjectToOutputPathMap != null) {
         final Object val = myProjectToOutputPathMap.get(projectId);
         if (val instanceof Integer) {
-          return FileUtil.pathsEqual(outputPath, VirtualFileManager.getInstance().getVFileName(((Integer)val).intValue()).toString());
+          return FileUtil.pathsEqual(outputPath, getFilePath(((Integer)val).intValue()));
         }
         if (val instanceof TIntHashSet) {
-          final int _outputPath = VirtualFileManager.getInstance().storeName(outputPath);
+          final int _outputPath = cacheFilePath(outputPath);
           return ((TIntHashSet)val).contains(_outputPath);
         }
       }
@@ -991,7 +980,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
       return Collections.emptyList();
     }
 
-    final ArrayList<String> result = new ArrayList<String>();
+    final ArrayList<String> result = new ArrayList<>();
 
     info.processOutputPaths(getProjectId(project), new Proc() {
       @Override
@@ -1199,7 +1188,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
             try {
               final IntermediateOutputCompiler[] compilers = CompilerManager.getInstance(projRef.get()).getCompilers(IntermediateOutputCompiler.class);
 
-              final Set<VirtualFile> intermediateRoots = new HashSet<VirtualFile>();
+              final Set<VirtualFile> intermediateRoots = new HashSet<>();
               if (compilers.length > 0) {
                 final Module[] modules = ModuleManager.getInstance(projRef.get()).getModules();
                 for (IntermediateOutputCompiler compiler : compilers) {
@@ -1207,13 +1196,11 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                     if (module.isDisposed() || module.getModuleDirUrl() == null) {
                       continue;
                     }
-                    final VirtualFile outputRoot =
-                            LocalFileSystem.getInstance().refreshAndFindFileByPath(CompilerPaths.getGenerationOutputPath(compiler, module, false));
+                    final VirtualFile outputRoot = LocalFileSystem.getInstance().refreshAndFindFileByPath(CompilerPaths.getGenerationOutputPath(compiler, module, false));
                     if (outputRoot != null) {
                       intermediateRoots.add(outputRoot);
                     }
-                    final VirtualFile testsOutputRoot =
-                            LocalFileSystem.getInstance().refreshAndFindFileByPath(CompilerPaths.getGenerationOutputPath(compiler, module, true));
+                    final VirtualFile testsOutputRoot = LocalFileSystem.getInstance().refreshAndFindFileByPath(CompilerPaths.getGenerationOutputPath(compiler, module, true));
                     if (testsOutputRoot != null) {
                       intermediateRoots.add(testsOutputRoot);
                     }
@@ -1287,7 +1274,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
   private class MyProjectManagerListener extends ProjectManagerAdapter {
 
-    final Map<Project, MessageBusConnection> myConnections = new HashMap<Project, MessageBusConnection>();
+    final Map<Project, MessageBusConnection> myConnections = new HashMap<>();
 
     @Override
     public void projectOpened(final Project project) {
@@ -1338,8 +1325,8 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
             final VirtualFile[] rootsBefore = myRootsBefore;
             myRootsBefore = null;
             final VirtualFile[] rootsAfter = getRootsForScan(projRef.get());
-            final Set<VirtualFile> newRoots = new HashSet<VirtualFile>();
-            final Set<VirtualFile> oldRoots = new HashSet<VirtualFile>();
+            final Set<VirtualFile> newRoots = new HashSet<>();
+            final Set<VirtualFile> oldRoots = new HashSet<>();
             {
               if (rootsAfter.length > 0) {
                 ContainerUtil.addAll(newRoots, rootsAfter);
@@ -1415,7 +1402,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         if (parent != null) {
           final String oldName = (String)event.getOldValue();
           final String root = parent.getPath() + "/" + oldName;
-          final Set<File> toMark = new THashSet<File>(FileUtil.FILE_HASHING_STRATEGY);
+          final Set<File> toMark = new THashSet<>(FileUtil.FILE_HASHING_STRATEGY);
           if (eventFile.isDirectory()) {
             VfsUtilCore.visitChildrenRecursively(eventFile, new VirtualFileVisitor() {
               private StringBuilder filePath = new StringBuilder(root);
@@ -1485,7 +1472,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         }
       }
 
-      final Set<File> pathsToMark = new THashSet<File>(FileUtil.FILE_HASHING_STRATEGY);
+      final Set<File> pathsToMark = new THashSet<>(FileUtil.FILE_HASHING_STRATEGY);
 
       processRecursively(eventFile, true, new FileProcessor() {
         private final TIntArrayList myAssociatedProjectIds = new TIntArrayList();
@@ -1580,7 +1567,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
 
     private void markDirtyIfSource(final VirtualFile file, final boolean fromMove) {
-      final Set<File> pathsToMark = new THashSet<File>(FileUtil.FILE_HASHING_STRATEGY);
+      final Set<File> pathsToMark = new THashSet<>(FileUtil.FILE_HASHING_STRATEGY);
       processRecursively(file, false, new FileProcessor() {
         @Override
         public void execute(final VirtualFile file) {
@@ -1670,7 +1657,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         }
       });
       if (notifyServer && !isIgnoredOrUnderIgnoredDirectory(file)) {
-        final Set<File> pathsToMark = new THashSet<File>(FileUtil.FILE_HASHING_STRATEGY);
+        final Set<File> pathsToMark = new THashSet<>(FileUtil.FILE_HASHING_STRATEGY);
         boolean dbOnly = !isInContent.get();
         processRecursively(file, dbOnly, new FileProcessor() {
           @Override
@@ -1735,7 +1722,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     addSourceForRecompilation(projectId, srcFile, loadSourceInfo(srcFile));
   }
 
-  private void addSourceForRecompilation(final int projectId, final VirtualFile srcFile, @javax.annotation.Nullable final SourceFileInfo srcInfo) {
+  private void addSourceForRecompilation(final int projectId, final VirtualFile srcFile, @Nullable final SourceFileInfo srcInfo) {
     final boolean alreadyMarked;
     synchronized (myDataLock) {
       TIntHashSet set = mySourcesToRecompile.get(projectId);
@@ -1773,7 +1760,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   }
 
   private VirtualFile[] getRootsForScan(Project project) {
-    List<VirtualFile> list = new ArrayList<VirtualFile>();
+    List<VirtualFile> list = new ArrayList<>();
     Module[] modules = ModuleManager.getInstance(project).getModules();
     List<TranslatingCompilerFilesMonitorHelper> extensions = TranslatingCompilerFilesMonitorHelper.EP_NAME.getExtensionList();
     for (Module module : modules) {
@@ -1817,7 +1804,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
       myFileSystem = LocalFileSystem.getInstance();
     }
 
-    public void setRootBeingDeleted(@javax.annotation.Nullable VirtualFile rootBeingDeleted) {
+    public void setRootBeingDeleted(@Nullable VirtualFile rootBeingDeleted) {
       myRootBeingDeleted = rootBeingDeleted;
     }
 
@@ -1879,6 +1866,14 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
   }
 
+  private static int cacheFilePath(@Nonnull String filePath) {
+    return FSRecords.getNameId(filePath);
+  }
+
+  private static String getFilePath(int id) {
+    return FSRecords.getName(id);
+  }
+
   public static final class ProjectRef extends Ref<Project> {
     static class ProjectClosedException extends RuntimeException {
     }
@@ -1899,12 +1894,12 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
   private static class Outputs {
     private boolean myIsDirty = false;
-    @javax.annotation.Nullable
+    @Nullable
     private final File myStoreFile;
     private final Map<String, SourceUrlClassNamePair> myMap;
     private final AtomicInteger myRefCount = new AtomicInteger(1);
 
-    Outputs(@javax.annotation.Nullable File storeFile, Map<String, SourceUrlClassNamePair> map) {
+    Outputs(@Nullable File storeFile, Map<String, SourceUrlClassNamePair> map) {
       myStoreFile = storeFile;
       myMap = map;
     }
