@@ -18,6 +18,7 @@ package com.intellij.execution.filters;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.colors.*;
+import com.intellij.openapi.editor.markup.HighlighterLayer;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
@@ -33,33 +34,17 @@ import java.util.Map;
  * @version 1.0
  */
 public interface Filter {
-
   Filter[] EMPTY_ARRAY = new Filter[0];
 
   class Result extends ResultItem {
-
-    private static final Map<TextAttributesKey, TextAttributes> GRAYED_BY_NORMAL_CACHE = ContainerUtil.newConcurrentMap(2);
-    static {
-      Application application = ApplicationManager.getApplication();
-      if(application != null) {
-        application.getMessageBus().connect().subscribe(EditorColorsManager.TOPIC, scheme -> {
-          // invalidate cache on Appearance Theme/Editor Scheme change
-          GRAYED_BY_NORMAL_CACHE.clear();
-        });
-      }
-    }
-
-    protected NextAction myNextAction = NextAction.EXIT;
-    protected final List<ResultItem> myResultItems;
+    private NextAction myNextAction = NextAction.EXIT;
+    private final List<? extends ResultItem> myResultItems;
 
     public Result(final int highlightStartOffset, final int highlightEndOffset, @Nullable final HyperlinkInfo hyperlinkInfo) {
       this(highlightStartOffset, highlightEndOffset, hyperlinkInfo, null);
     }
 
-    public Result(final int highlightStartOffset,
-                  final int highlightEndOffset,
-                  @Nullable final HyperlinkInfo hyperlinkInfo,
-                  @Nullable final TextAttributes highlightAttributes) {
+    public Result(final int highlightStartOffset, final int highlightEndOffset, @Nullable final HyperlinkInfo hyperlinkInfo, @Nullable final TextAttributes highlightAttributes) {
       super(highlightStartOffset, highlightEndOffset, hyperlinkInfo, highlightAttributes, null);
       myResultItems = null;
     }
@@ -73,27 +58,23 @@ public interface Filter {
       myResultItems = null;
     }
 
-    public Result(final int highlightStartOffset,
-                  final int highlightEndOffset,
-                  @Nullable final HyperlinkInfo hyperlinkInfo,
-                  final boolean grayedHyperlink) {
-      super(highlightStartOffset, highlightEndOffset, hyperlinkInfo,
-            grayedHyperlink ? getGrayedHyperlinkAttributes(CodeInsightColors.HYPERLINK_ATTRIBUTES) : null,
-            grayedHyperlink ? getGrayedHyperlinkAttributes(CodeInsightColors.FOLLOWED_HYPERLINK_ATTRIBUTES) : null);
+    public Result(final int highlightStartOffset, final int highlightEndOffset, @Nullable final HyperlinkInfo hyperlinkInfo, final boolean grayedHyperlink) {
+      super(highlightStartOffset, highlightEndOffset, hyperlinkInfo, grayedHyperlink);
       myResultItems = null;
     }
 
-    public Result(@Nonnull List<ResultItem> resultItems) {
+    public Result(@Nonnull List<? extends ResultItem> resultItems) {
       super(-1, -1, null, null, null);
       myResultItems = resultItems;
     }
 
+    @Nonnull
     public List<ResultItem> getResultItems() {
-      List<ResultItem> resultItems = myResultItems;
+      List<? extends ResultItem> resultItems = myResultItems;
       if (resultItems == null) {
         resultItems = Collections.singletonList(this);
       }
-      return resultItems;
+      return Collections.unmodifiableList(resultItems);
     }
 
     /**
@@ -156,6 +137,97 @@ public interface Filter {
     public void setNextAction(NextAction nextAction) {
       myNextAction = nextAction;
     }
+  }
+
+  enum NextAction {
+    EXIT,
+    CONTINUE_FILTERING,
+  }
+
+  class ResultItem {
+    private static final Map<TextAttributesKey, TextAttributes> GRAYED_BY_NORMAL_CACHE = ContainerUtil.newConcurrentMap(2);
+
+    static {
+      Application application = ApplicationManager.getApplication();
+      if (application != null) {
+        application.getMessageBus().connect().subscribe(EditorColorsManager.TOPIC, __ -> {
+          // invalidate cache on Appearance Theme/Editor Scheme change
+          GRAYED_BY_NORMAL_CACHE.clear();
+        });
+      }
+    }
+
+    private final int highlightStartOffset;
+    private final int highlightEndOffset;
+    /**
+     * @deprecated use {@link #getHighlightAttributes()} instead, the visibility of this field will be decreased.
+     */
+    @Deprecated
+    @Nullable
+    public final TextAttributes highlightAttributes;
+    /**
+     * @deprecated use {@link #getHyperlinkInfo()} instead, the visibility of this field will be decreased.
+     */
+    @Deprecated
+    @Nullable
+    public final HyperlinkInfo hyperlinkInfo;
+
+    private final TextAttributes myFollowedHyperlinkAttributes;
+
+    public ResultItem(final int highlightStartOffset, final int highlightEndOffset, @Nullable final HyperlinkInfo hyperlinkInfo) {
+      this(highlightStartOffset, highlightEndOffset, hyperlinkInfo, null, null);
+    }
+
+    public ResultItem(final int highlightStartOffset, final int highlightEndOffset, @Nullable final HyperlinkInfo hyperlinkInfo, @Nullable final TextAttributes highlightAttributes) {
+      this(highlightStartOffset, highlightEndOffset, hyperlinkInfo, highlightAttributes, null);
+    }
+
+    public ResultItem(int highlightStartOffset, int highlightEndOffset, @Nullable HyperlinkInfo hyperlinkInfo, boolean grayedHyperlink) {
+      this(highlightStartOffset, highlightEndOffset, hyperlinkInfo, grayedHyperlink ? getGrayedHyperlinkAttributes(CodeInsightColors.HYPERLINK_ATTRIBUTES) : null,
+           grayedHyperlink ? getGrayedHyperlinkAttributes(CodeInsightColors.FOLLOWED_HYPERLINK_ATTRIBUTES) : null);
+    }
+
+    public ResultItem(final int highlightStartOffset,
+                      final int highlightEndOffset,
+                      @Nullable final HyperlinkInfo hyperlinkInfo,
+                      @Nullable final TextAttributes highlightAttributes,
+                      @Nullable final TextAttributes followedHyperlinkAttributes) {
+      this.highlightStartOffset = highlightStartOffset;
+      this.highlightEndOffset = highlightEndOffset;
+      this.hyperlinkInfo = hyperlinkInfo;
+      this.highlightAttributes = highlightAttributes;
+      myFollowedHyperlinkAttributes = followedHyperlinkAttributes;
+    }
+
+    public int getHighlightStartOffset() {
+      return highlightStartOffset;
+    }
+
+    public int getHighlightEndOffset() {
+      return highlightEndOffset;
+    }
+
+    @Nullable
+    public TextAttributes getHighlightAttributes() {
+      return highlightAttributes;
+    }
+
+    @Nullable
+    public TextAttributes getFollowedHyperlinkAttributes() {
+      return myFollowedHyperlinkAttributes;
+    }
+
+    @Nullable
+    public HyperlinkInfo getHyperlinkInfo() {
+      return hyperlinkInfo;
+    }
+
+    /**
+     * See {@link HighlighterLayer} for available predefined layers.
+     */
+    public int getHighlighterLayer() {
+      return getHyperlinkInfo() != null ? HighlighterLayer.HYPERLINK : HighlighterLayer.CONSOLE_FILTER;
+    }
 
     @Nullable
     private static TextAttributes getGrayedHyperlinkAttributes(@Nonnull TextAttributesKey normalHyperlinkAttrsKey) {
@@ -174,96 +246,14 @@ public interface Filter {
     }
   }
 
-  enum NextAction {
-    EXIT, CONTINUE_FILTERING,
-  }
-
-  class ResultItem {
-    /**
-     * @deprecated use getter, the visibility of this field will be decreased.
-     */
-    @Deprecated
-    public final int highlightStartOffset;
-    /**
-     * @deprecated use getter, the visibility of this field will be decreased.
-     */
-    @Deprecated
-    public final int highlightEndOffset;
-    /**
-     * @deprecated use getter, the visibility of this field will be decreased.
-     */
-    @Deprecated @Nullable
-    public final TextAttributes highlightAttributes;
-    /**
-     * @deprecated use getter, the visibility of this field will be decreased.
-     */
-    @Deprecated @Nullable
-    public final HyperlinkInfo hyperlinkInfo;
-
-    private final TextAttributes myFollowedHyperlinkAttributes;
-
-    @SuppressWarnings("deprecation")
-    public ResultItem(final int highlightStartOffset, final int highlightEndOffset, @Nullable final HyperlinkInfo hyperlinkInfo) {
-      this(highlightStartOffset, highlightEndOffset, hyperlinkInfo, null, null);
-    }
-
-    @SuppressWarnings("deprecation")
-    public ResultItem(final int highlightStartOffset,
-                      final int highlightEndOffset,
-                      @Nullable final HyperlinkInfo hyperlinkInfo,
-                      @Nullable final TextAttributes highlightAttributes) {
-      this(highlightStartOffset, highlightEndOffset, hyperlinkInfo, highlightAttributes, null);
-    }
-
-    @SuppressWarnings("deprecation")
-    public ResultItem(final int highlightStartOffset,
-                      final int highlightEndOffset,
-                      @Nullable final HyperlinkInfo hyperlinkInfo,
-                      @Nullable final TextAttributes highlightAttributes,
-                      @Nullable final TextAttributes followedHyperlinkAttributes) {
-      this.highlightStartOffset = highlightStartOffset;
-      this.highlightEndOffset = highlightEndOffset;
-      this.hyperlinkInfo = hyperlinkInfo;
-      this.highlightAttributes = highlightAttributes;
-      myFollowedHyperlinkAttributes = followedHyperlinkAttributes;
-    }
-
-    public int getHighlightStartOffset() {
-      //noinspection deprecation
-      return highlightStartOffset;
-    }
-
-    public int getHighlightEndOffset() {
-      //noinspection deprecation
-      return highlightEndOffset;
-    }
-
-    @Nullable
-    public TextAttributes getHighlightAttributes() {
-      //noinspection deprecation
-      return highlightAttributes;
-    }
-
-    @Nullable
-    public TextAttributes getFollowedHyperlinkAttributes() {
-      return myFollowedHyperlinkAttributes;
-    }
-
-    @Nullable
-    public HyperlinkInfo getHyperlinkInfo() {
-      //noinspection deprecation
-      return hyperlinkInfo;
-    }
-  }
-
   /**
    * Filters line by creating an instance of {@link Result}.
    *
    * @param line         The line to be filtered. Note that the line must contain a line
    *                     separator at the end.
    * @param entireLength The length of the entire text including the line passed for filtration.
-   * @return <tt>null</tt>, if there was no match, otherwise, an instance of {@link Result}
+   * @return {@code null} if there was no match. Otherwise, an instance of {@link Result}
    */
   @Nullable
-  Result applyFilter(String line, int entireLength);
+  Result applyFilter(@Nonnull String line, int entireLength);
 }

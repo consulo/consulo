@@ -2,7 +2,7 @@
 package com.intellij.openapi.application.constraints;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.NotNullLazyValue;
+import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.HashSet;
 
@@ -115,7 +115,7 @@ public abstract class ExpirableConstrainedExecution<E extends ConstrainedExecuti
     return cloneWith(ArrayUtil.append(constraints, expirableConstraint), cancellationConditions, appendSet(this.expirationSet, expirableHandle));
   }
 
-  private final NotNullLazyValue<Expiration> compositeExpiration = NotNullLazyValue.createValue(() -> ExpirationUtil.composeExpiration(getExpirationSet()));
+  private final NullableLazyValue<Expiration> compositeExpiration = NullableLazyValue.createValue(() -> ExpirationUtil.composeExpiration(getExpirationSet()));
 
   @Nullable
   @Override

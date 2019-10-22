@@ -523,6 +523,14 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     return HIDE_KNOWN_EXTENSION_IN_TABS;
   }
 
+  public boolean getOverrideConsoleCycleBufferSize() {
+    return OVERRIDE_CONSOLE_CYCLE_BUFFER_SIZE;
+  }
+
+  public int getConsoleCycleBufferSizeKb() {
+    return CONSOLE_CYCLE_BUFFER_SIZE_KB;
+  }
+
   /**
    * @see #setupComponentAntialiasing(JComponent)
    */

@@ -16,10 +16,7 @@
 package com.intellij.execution.impl;
 
 import com.intellij.execution.ExecutionBundle;
-import com.intellij.execution.process.OSProcessHandler;
-import com.intellij.execution.process.ProcessAdapter;
-import com.intellij.execution.process.ProcessEvent;
-import com.intellij.execution.process.ProcessHandler;
+import com.intellij.execution.process.*;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
@@ -93,6 +90,11 @@ public class ConsoleViewRunningState extends ConsoleState {
   @Override
   public boolean isFinished() {
     return myProcessHandler == null || myProcessHandler.isProcessTerminated();
+  }
+
+  @Override
+  public boolean isCommandLine(@Nonnull String line) {
+    return myProcessHandler instanceof BaseProcessHandler && line.equals(((BaseProcessHandler)myProcessHandler).getCommandLine());
   }
 
   @Override

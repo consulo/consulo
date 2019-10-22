@@ -20,9 +20,9 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.ServiceManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.UnknownFileType;
@@ -44,9 +44,10 @@ import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtilRt;
+import consulo.logging.Logger;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
@@ -60,6 +61,9 @@ public class VcsUtil {
 
   public final static String MAX_VCS_LOADED_SIZE_KB = "idea.max.vcs.loaded.size.kb";
   private static final int ourMaxLoadedFileSize = computeLoadedFileSize();
+
+  private static final int MAX_COMMIT_MESSAGE_LENGTH = 50000;
+  private static final int MAX_COMMIT_MESSAGE_LINES = 3000;
 
   public static int getMaxVcsLoadedFileSize() {
     return ourMaxLoadedFileSize;
@@ -703,5 +707,34 @@ public class VcsUtil {
   @Nonnull
   public static <T> Stream<T> concat(@Nonnull Stream<T>... streams) {
     return toStream(streams).reduce(Stream.empty(), Stream::concat);
+  }
+
+  @Nonnull
+  public static String trimCommitMessageToSaneSize(@Nonnull String message) {
+    int nthLine = nthIndexOf(message, '\n', MAX_COMMIT_MESSAGE_LINES);
+    if (nthLine != -1 && nthLine < MAX_COMMIT_MESSAGE_LENGTH) {
+      return trimCommitMessageAt(message, nthLine);
+    }
+    if (message.length() > MAX_COMMIT_MESSAGE_LENGTH + 50) {
+      return trimCommitMessageAt(message, MAX_COMMIT_MESSAGE_LENGTH);
+    }
+    return message;
+  }
+
+  private static String trimCommitMessageAt(@Nonnull String message, int index) {
+    return String.format("%s\n\n... Commit message is too long and was truncated by %s ...", message.substring(0, index), ApplicationNamesInfo.getInstance().getProductName());
+  }
+
+  private static int nthIndexOf(@Nonnull String text, char c, int n) {
+    assert n > 0;
+    int length = text.length();
+    int count = 0;
+    for (int i = 0; i < length; i++) {
+      if (text.charAt(i) == c) {
+        count++;
+        if (count == n) return i;
+      }
+    }
+    return -1;
   }
 }

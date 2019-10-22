@@ -60,6 +60,8 @@
       <with attribute="implementationClass" implements="consulo.extensions.ExtensionExtender"/>
     </extensionPoint>
 
+    <extensionPoint name="dateTimeFormatter" beanClass="com.intellij.util.text.DateTimeFormatterBean" />
+
     <extensionPoint name="editorFactoryDocumentListener" interface="com.intellij.openapi.editor.event.DocumentListener"/>
     <extensionPoint name="editorFactoryMouseListener" interface="com.intellij.openapi.editor.event.EditorMouseListener"/>
     <extensionPoint name="editorFactoryMouseMotionListener" interface="com.intellij.openapi.editor.event.EditorMouseMotionListener"/>
@@ -2632,6 +2634,11 @@
     <vfs.asyncListener implementation="com.intellij.openapi.vfs.impl.VirtualFilePointerManagerImpl$MyAsyncFileListener"/>
 
     <projectService serviceImplementation="com.intellij.psi.impl.source.tree.injected.ConcatenationInjectorManager" />
+
+    <dateTimeFormatter id="vcs.annotate" name="VCS Annotate"/>
+    <dateTimeFormatter id="vcs.log" name="VCS Log"/>
+
+    <applicationService serviceImplementation="com.intellij.util.text.DateTimeFormatManager" />
   </extensions>
 
   <applicationListeners>

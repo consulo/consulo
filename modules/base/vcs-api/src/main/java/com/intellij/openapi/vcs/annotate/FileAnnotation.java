@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.vcs.annotate;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.localVcs.UpToDateLineNumberProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.VcsKey;
@@ -27,9 +26,11 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
+import com.intellij.util.text.JBDateFormat;
+import consulo.logging.Logger;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -256,6 +257,10 @@ public abstract class FileAnnotation {
     List<List<VcsRevisionNumber>> getOrderedRevisions();
   }
 
+  @Nonnull
+  public static String formatDate(@Nonnull Date date) {
+    return JBDateFormat.getFormatter("vcs.annotate").formatPrettyDate(date);
+  }
 
   @javax.annotation.Nullable
   private static CurrentFileRevisionProvider createDefaultCurrentFileRevisionProvider(@Nonnull FileAnnotation annotation) {

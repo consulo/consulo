@@ -1,20 +1,10 @@
-/*
- * Copyright 2000-2015 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.execution.impl;
 
+import com.intellij.execution.filters.ConsoleDependentFilterProvider;
+import com.intellij.execution.filters.ConsoleFilterProvider;
+import com.intellij.execution.filters.ConsoleFilterProviderEx;
+import com.intellij.execution.filters.Filter;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.ide.ui.LafManager;
@@ -27,6 +17,7 @@ import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.*;
 import com.intellij.openapi.editor.colors.impl.DelegateColorScheme;
 import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.editor.ex.util.EmptyEditorHighlighter;
 import com.intellij.openapi.editor.impl.EditorFactoryImpl;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileTypes.FileType;
@@ -34,25 +25,25 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.StringTokenizer;
-
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-import static com.intellij.execution.ui.ConsoleViewContentType.registerNewConsoleViewType;
 
 /**
  * @author peter
  */
 public class ConsoleViewUtil {
 
-  public static final Key<Boolean> EDITOR_IS_CONSOLE_VIEW = Key.create("EDITOR_IS_CONSOLE_VIEW");
   public static final Key<Boolean> EDITOR_IS_CONSOLE_HISTORY_VIEW = Key.create("EDITOR_IS_CONSOLE_HISTORY_VIEW");
 
   private static final Key<Boolean> REPLACE_ACTION_ENABLED = Key.create("REPLACE_ACTION_ENABLED");
@@ -62,13 +53,14 @@ public class ConsoleViewUtil {
     EditorFactory editorFactory = EditorFactory.getInstance();
     Document document = ((EditorFactoryImpl)editorFactory).createDocument(true);
     UndoUtil.disableUndoFor(document);
-    EditorEx editor = (EditorEx)editorFactory.createViewer(document, project);
+    EditorEx editor = (EditorEx)editorFactory.createViewer(document, project, EditorKind.CONSOLE);
     setupConsoleEditor(editor, foldingOutlineShown, lineMarkerAreaShown);
     return editor;
   }
 
   public static void setupConsoleEditor(@Nonnull final EditorEx editor, final boolean foldingOutlineShown, final boolean lineMarkerAreaShown) {
     ApplicationManager.getApplication().runReadAction(() -> {
+
       final EditorSettings editorSettings = editor.getSettings();
       editorSettings.setLineMarkerAreaShown(lineMarkerAreaShown);
       editorSettings.setIndentGuidesShown(false);
@@ -81,14 +73,29 @@ public class ConsoleViewUtil {
       editorSettings.setCaretRowShown(false);
       editor.getGutterComponentEx().setPaintBackground(false);
 
-      editor.putUserData(EDITOR_IS_CONSOLE_VIEW, true);
-
       final DelegateColorScheme scheme = updateConsoleColorScheme(editor.getColorsScheme());
-      if (UISettings.getInstance().PRESENTATION_MODE) {
-        scheme.setEditorFontSize(UISettings.getInstance().PRESENTATION_MODE_FONT_SIZE);
+      if (UISettings.getInstance().getPresentationMode()) {
+        scheme.setEditorFontSize(UISettings.getInstance().getPresentationModeFontSize());
       }
       editor.setColorsScheme(scheme);
+      editor.setHighlighter(new NullEditorHighlighter());
     });
+  }
+
+  private static class NullEditorHighlighter extends EmptyEditorHighlighter {
+    private static final TextAttributes NULL_ATTRIBUTES = new TextAttributes();
+
+    NullEditorHighlighter() {
+      super(NULL_ATTRIBUTES);
+    }
+
+    @Override
+    public void setAttributes(TextAttributes attributes) {
+    }
+
+    @Override
+    public void setColorScheme(@Nonnull EditorColorsScheme scheme) {
+    }
   }
 
   @Nonnull
@@ -122,6 +129,7 @@ public class ConsoleViewUtil {
         return getConsoleLineSpacing();
       }
 
+      @Nonnull
       @Override
       public Font getFont(EditorFontType key) {
         return super.getFont(EditorFontType.getConsoleType(key));
@@ -135,7 +143,7 @@ public class ConsoleViewUtil {
   }
 
   public static boolean isConsoleViewEditor(@Nonnull Editor editor) {
-    return editor.getUserData(EDITOR_IS_CONSOLE_VIEW) == Boolean.TRUE;
+    return editor.getEditorKind() == (EditorKind.CONSOLE);
   }
 
   public static boolean isReplaceActionEnabledForConsoleViewEditor(@Nonnull Editor editor) {
@@ -146,12 +154,11 @@ public class ConsoleViewUtil {
     editor.putUserData(REPLACE_ACTION_ENABLED, true);
   }
 
-  @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
   private static class ColorCache {
     static {
       LafManager.getInstance().addLafManagerListener(new LafManagerListener() {
         @Override
-        public void lookAndFeelChanged(LafManager source) {
+        public void lookAndFeelChanged(@Nonnull LafManager source) {
           mergedTextAttributes.clear();
         }
       });
@@ -168,7 +175,7 @@ public class ConsoleViewUtil {
         }
       }
       return result;
-    }) ;
+    });
 
     static final Map<List<TextAttributesKey>, Key> keys = ConcurrentFactoryMap.createMap(keys -> {
       StringBuilder keyName = new StringBuilder("ConsoleViewUtil_");
@@ -184,7 +191,7 @@ public class ConsoleViewUtil {
         }
       };
 
-      registerNewConsoleViewType(newKey, contentType);
+      ConsoleViewContentType.registerNewConsoleViewType(newKey, contentType);
       return newKey;
     });
   }
@@ -216,7 +223,10 @@ public class ConsoleViewUtil {
   @Nonnull
   public static ConsoleViewContentType getContentTypeForToken(@Nonnull IElementType tokenType, @Nonnull SyntaxHighlighter highlighter) {
     TextAttributesKey[] keys = highlighter.getTokenHighlights(tokenType);
-    return keys.length == 0 ? ConsoleViewContentType.NORMAL_OUTPUT : ConsoleViewContentType.getConsoleViewType(ColorCache.keys.get(Arrays.asList(keys)));
+    if (keys.length == 0) {
+      return ConsoleViewContentType.NORMAL_OUTPUT;
+    }
+    return ConsoleViewContentType.getConsoleViewType(ColorCache.keys.get(Arrays.asList(keys)));
   }
 
   public static void printAsFileType(@Nonnull ConsoleView console, @Nonnull String text, @Nonnull FileType fileType) {
@@ -227,5 +237,24 @@ public class ConsoleViewUtil {
     else {
       console.print(text, ConsoleViewContentType.NORMAL_OUTPUT);
     }
+  }
+
+  @Nonnull
+  public static List<Filter> computeConsoleFilters(@Nonnull Project project, @Nullable ConsoleView consoleView, @Nonnull GlobalSearchScope searchScope) {
+    List<Filter> result = new ArrayList<>();
+    for (ConsoleFilterProvider eachProvider : ConsoleFilterProvider.FILTER_PROVIDERS.getExtensions()) {
+      Filter[] filters;
+      if (consoleView != null && eachProvider instanceof ConsoleDependentFilterProvider) {
+        filters = ((ConsoleDependentFilterProvider)eachProvider).getDefaultFilters(consoleView, project, searchScope);
+      }
+      else if (eachProvider instanceof ConsoleFilterProviderEx) {
+        filters = ((ConsoleFilterProviderEx)eachProvider).getDefaultFilters(project, searchScope);
+      }
+      else {
+        filters = eachProvider.getDefaultFilters(project);
+      }
+      ContainerUtil.addAll(result, filters);
+    }
+    return result;
   }
 }
