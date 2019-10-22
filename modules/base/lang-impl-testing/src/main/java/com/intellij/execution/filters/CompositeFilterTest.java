@@ -15,97 +15,22 @@
  */
 package com.intellij.execution.filters;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.project.DumbModeTask;
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ModificationTracker;
-import junit.framework.Assert;
-import javax.annotation.Nonnull;
-import org.junit.Before;
-import org.junit.Test;
+import com.intellij.mock.MockDumbService;
+import consulo.testFramework.MockApplicationTestCase;
+import org.junit.Assert;
 
-import javax.swing.*;
 import java.util.List;
 
-public class CompositeFilterTest {
+public class CompositeFilterTest extends MockApplicationTestCase {
 
   protected CompositeFilter myCompositeFilter;
 
-  @Before
+  @Override
   public void setUp() throws Exception {
-    myCompositeFilter = new CompositeFilter(new DumbService() {
-      @Override
-      public ModificationTracker getModificationTracker() {
-        return null;
-      }
-
-      @Override
-      public boolean isDumb() {
-        return false;
-      }
-
-      @Override
-      public void runWhenSmart(Runnable runnable) {
-      }
-
-      @Override
-      public void waitForSmartMode() {
-      }
-
-      @Override
-      public void smartInvokeLater(@Nonnull Runnable runnable) {
-
-      }
-
-      @Override
-      public void smartInvokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
-
-      }
-
-      @Override
-      public void queueTask(@Nonnull DumbModeTask task) {
-
-      }
-
-      @Override
-      public void cancelTask(@Nonnull DumbModeTask task) {
-
-      }
-
-      @Override
-      public void completeJustSubmittedTasks() {
-
-      }
-
-      @Override
-      public JComponent wrapGently(@Nonnull JComponent dumbUnawareContent, @Nonnull Disposable parentDisposable) {
-        return null;
-      }
-
-      @Override
-      public void showDumbModeNotification(String message) {
-      }
-
-      @Override
-      public Project getProject() {
-        return null;
-      }
-
-      @Override
-      public void setAlternativeResolveEnabled(boolean enabled) {
-
-      }
-
-      @Override
-      public boolean isAlternativeResolveEnabled() {
-        return false;
-      }
-    });
+    super.setUp();
+    myCompositeFilter = new CompositeFilter(new MockDumbService(null));
   }
 
-  @Test
   public void testApplyNextFilter() throws Exception {
     Assert.assertNull(applyFilter());
 
@@ -149,18 +74,18 @@ public class CompositeFilterTest {
   }
 
   private Filter returnResultFilter() {
-    return (line, entireLength) -> createResult();
+    return (line, entireLength) -> createFilterResult();
   }
 
   private Filter returnContinuingResultFilter() {
     return (line, entireLength) -> {
-      Filter.Result result = createResult();
+      Filter.Result result = createFilterResult();
       result.setNextAction(Filter.NextAction.CONTINUE_FILTERING);
       return result;
     };
   }
 
-  private Filter.Result createResult() {
+  private Filter.Result createFilterResult() {
     return new Filter.Result(1, 1, null, null);
   }
 }
