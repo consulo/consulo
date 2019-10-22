@@ -60,14 +60,14 @@
       <with attribute="implementationClass" implements="consulo.extensions.ExtensionExtender"/>
     </extensionPoint>
 
-    <extensionPoint name="dateTimeFormatter" beanClass="com.intellij.util.text.DateTimeFormatterBean" />
+    <extensionPoint name="dateTimeFormatter" beanClass="com.intellij.util.text.DateTimeFormatterBean"/>
 
     <extensionPoint name="editorFactoryDocumentListener" interface="com.intellij.openapi.editor.event.DocumentListener"/>
     <extensionPoint name="editorFactoryMouseListener" interface="com.intellij.openapi.editor.event.EditorMouseListener"/>
     <extensionPoint name="editorFactoryMouseMotionListener" interface="com.intellij.openapi.editor.event.EditorMouseMotionListener"/>
     <extensionPoint name="editorFactoryListener" interface="com.intellij.openapi.editor.event.EditorFactoryListener"/>
 
-    <extensionPoint name="vfs.asyncListener" interface="com.intellij.openapi.vfs.AsyncFileListener" />
+    <extensionPoint name="vfs.asyncListener" interface="com.intellij.openapi.vfs.AsyncFileListener"/>
 
     <extensionPoint name="generatedSourcesFilter" interface="com.intellij.openapi.roots.GeneratedSourcesFilter"/>
     <extensionPoint name="defaultLibraryRootDetector" interface="com.intellij.openapi.roots.libraries.ui.RootDetector"/>
@@ -327,13 +327,13 @@
                     interface="com.intellij.psi.search.IndexPatternProvider"/>
 
     <extensionPoint name="indexImporterFactory"
-                    interface="com.intellij.index.IndexImporterFactory" />
+                    interface="com.intellij.index.IndexImporterFactory"/>
 
     <extensionPoint name="fileBasedIndex.providedLocator"
-                    interface="com.intellij.util.indexing.provided.ProvidedIndexExtensionLocator" />
+                    interface="com.intellij.util.indexing.provided.ProvidedIndexExtensionLocator"/>
 
     <extensionPoint name="globalIndexFilter"
-                    interface="com.intellij.util.indexing.GlobalIndexFilter" />
+                    interface="com.intellij.util.indexing.GlobalIndexFilter"/>
 
     <extensionPoint name="refGraphAnnotator"
                     interface="com.intellij.codeInspection.reference.RefGraphAnnotator"/>
@@ -2629,16 +2629,19 @@
     <vfs.asyncListener implementation="com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl$MyAsyncFileListener"/>
     <vfs.asyncListener implementation="com.intellij.util.indexing.FileBasedIndexImpl$ChangedFilesCollector"/>
 
-    <applicationService serviceInterface="com.intellij.psi.search.FileNameIndexService" serviceImplementation="com.intellij.psi.search.FileNameIndexServiceImpl" />
+    <applicationService serviceInterface="com.intellij.psi.search.FileNameIndexService" serviceImplementation="com.intellij.psi.search.FileNameIndexServiceImpl"/>
 
     <vfs.asyncListener implementation="com.intellij.openapi.vfs.impl.VirtualFilePointerManagerImpl$MyAsyncFileListener"/>
 
-    <projectService serviceImplementation="com.intellij.psi.impl.source.tree.injected.ConcatenationInjectorManager" />
+    <projectService serviceImplementation="com.intellij.psi.impl.source.tree.injected.ConcatenationInjectorManager"/>
 
     <dateTimeFormatter id="vcs.annotate" name="VCS Annotate"/>
     <dateTimeFormatter id="vcs.log" name="VCS Log"/>
 
-    <applicationService serviceImplementation="com.intellij.util.text.DateTimeFormatManager" />
+    <applicationService serviceImplementation="com.intellij.util.text.DateTimeFormatManager"/>
+
+    <applicationService serviceInterface="com.intellij.openapi.command.undo.DocumentReferenceManager" serviceImplementation="com.intellij.openapi.command.impl.DocumentReferenceManagerImpl"
+                        lazy="false"/>
   </extensions>
 
   <applicationListeners>
