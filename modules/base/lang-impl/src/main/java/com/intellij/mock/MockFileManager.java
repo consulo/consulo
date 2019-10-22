@@ -23,33 +23,30 @@ import com.intellij.psi.SingleRootFileViewProvider;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.file.impl.FileManager;
 import com.intellij.util.containers.FactoryMap;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author peter
  */
 public class MockFileManager implements FileManager {
   private final PsiManagerEx myManager;
-  private final FactoryMap<VirtualFile,FileViewProvider> myViewProviders = new FactoryMap<VirtualFile, FileViewProvider>() {
-    @Override
-    protected FileViewProvider create(final VirtualFile key) {
-      return new SingleRootFileViewProvider(myManager, key);
-    }
-  };
+  private final Map<VirtualFile,FileViewProvider> myViewProviders;
+
+  public MockFileManager(final PsiManagerEx manager) {
+    myManager = manager;
+    myViewProviders = FactoryMap.create(key -> new SingleRootFileViewProvider(manager, key));
+  }
 
   @Override
   @Nonnull
   public FileViewProvider createFileViewProvider(@Nonnull final VirtualFile file, final boolean physical) {
     return new SingleRootFileViewProvider(myManager, file, physical);
-  }
-
-  public MockFileManager(final PsiManagerEx manager) {
-    myManager = manager;
   }
 
   @Override

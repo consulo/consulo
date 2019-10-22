@@ -93,20 +93,12 @@ class VirtualFileGistImpl<Data> implements VirtualFileGist<Data> {
     }
   }
 
-  @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-  private static final Map<Pair<String, Integer>, FileAttribute> ourAttributes = new FactoryMap<Pair<String, Integer>, FileAttribute>() {
-    @Nullable
-    @Override
-    protected FileAttribute create(Pair<String, Integer> key) {
-      return new FileAttribute(key.first, key.second, false);
-    }
-  };
+  private static final Map<Pair<String, Integer>, FileAttribute> ourAttributes = FactoryMap.create(key -> new FileAttribute(key.first, key.second, false));
 
   private FileAttribute getFileAttribute(Project project) {
     synchronized (ourAttributes) {
       return ourAttributes.get(Pair.create(myId + project.getLocationHash(), myVersion + ourInternalVersion));
     }
   }
-
 }
 

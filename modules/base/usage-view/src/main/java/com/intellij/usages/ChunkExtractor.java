@@ -18,7 +18,6 @@ package com.intellij.usages;
 import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.lexer.Lexer;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.HighlighterColors;
@@ -46,8 +45,9 @@ import com.intellij.util.Processor;
 import com.intellij.util.containers.FactoryMap;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.StringFactory;
-import javax.annotation.Nonnull;
+import consulo.logging.Logger;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -92,12 +92,7 @@ public class ChunkExtractor {
         @Nonnull
         @Override
         protected Map<PsiFile, ChunkExtractor> create() {
-          return new FactoryMap<PsiFile, ChunkExtractor>() {
-            @Override
-            protected ChunkExtractor create(PsiFile psiFile) {
-              return new ChunkExtractor(psiFile);
-            }
-          };
+          return FactoryMap.create(ChunkExtractor::new);
         }
       };
     }
@@ -299,7 +294,13 @@ public class ChunkExtractor {
     return false;
   }
 
-  private static void addChunk(@Nonnull CharSequence chars, int start, int end, @Nonnull TextAttributes originalAttrs, boolean bold, @javax.annotation.Nullable UsageType usageType, @Nonnull List<TextChunk> result) {
+  private static void addChunk(@Nonnull CharSequence chars,
+                               int start,
+                               int end,
+                               @Nonnull TextAttributes originalAttrs,
+                               boolean bold,
+                               @javax.annotation.Nullable UsageType usageType,
+                               @Nonnull List<TextChunk> result) {
     if (start >= end) return;
 
     TextAttributes attrs = bold ? TextAttributes.merge(originalAttrs, new TextAttributes(null, null, null, null, Font.BOLD)) : originalAttrs;
