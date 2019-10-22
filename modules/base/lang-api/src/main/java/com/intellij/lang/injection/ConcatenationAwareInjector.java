@@ -22,9 +22,13 @@
  */
 package com.intellij.lang.injection;
 
+import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
+
 import javax.annotation.Nonnull;
 
 public interface ConcatenationAwareInjector {
-  void getLanguagesToInject(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement... operands);
+  ExtensionPointName<ConcatenationAwareInjector> EP_NAME = ExtensionPointName.create("com.intellij.concatenationAwareInjector");
+
+  void inject(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement... operands);
 }

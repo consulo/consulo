@@ -423,11 +423,8 @@
     <extensionPoint name="daemon.changeLocalityDetector"
                     interface="com.intellij.codeInsight.daemon.ChangeLocalityDetector"/>
 
-    <extensionPoint name="languageInjector"
-                    interface="com.intellij.psi.LanguageInjector"/>
-    <extensionPoint name="concatenationAwareInjector"
-                    interface="com.intellij.lang.injection.ConcatenationAwareInjector"
-                    area="PROJECT"/>
+    <extensionPoint name="languageInjector" interface="com.intellij.psi.LanguageInjector"/>
+    <extensionPoint name="concatenationAwareInjector" interface="com.intellij.lang.injection.ConcatenationAwareInjector" area="PROJECT"/>
     <extensionPoint name="multiHostInjector"
                     beanClass="consulo.lang.injection.MultiHostInjectorExtensionPoint"
                     area="PROJECT">
@@ -2633,6 +2630,8 @@
     <applicationService serviceInterface="com.intellij.psi.search.FileNameIndexService" serviceImplementation="com.intellij.psi.search.FileNameIndexServiceImpl" />
 
     <vfs.asyncListener implementation="com.intellij.openapi.vfs.impl.VirtualFilePointerManagerImpl$MyAsyncFileListener"/>
+
+    <projectService serviceImplementation="com.intellij.psi.impl.source.tree.injected.ConcatenationInjectorManager" />
   </extensions>
 
   <applicationListeners>
