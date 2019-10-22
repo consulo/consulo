@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,22 +21,19 @@ import com.intellij.execution.testframework.ui.BaseTestsOutputConsoleView;
 import com.intellij.execution.testframework.ui.TestsOutputConsolePrinter;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
+import java.util.*;
 
-import java.util.StringTokenizer;
-
-/**
- * @author Sergey Simonchik
- */
 public final class TestProxyPrinterProvider {
 
   private final TestProxyFilterProvider myFilterProvider;
-  private BaseTestsOutputConsoleView myTestOutputConsoleView;
+  private final BaseTestsOutputConsoleView myTestOutputConsoleView;
 
-  public TestProxyPrinterProvider(@Nonnull BaseTestsOutputConsoleView testsOutputConsoleView,
-                                  @Nonnull TestProxyFilterProvider filterProvider) {
+  public TestProxyPrinterProvider(@Nonnull BaseTestsOutputConsoleView testsOutputConsoleView, @Nonnull TestProxyFilterProvider filterProvider) {
     myTestOutputConsoleView = testsOutputConsoleView;
     myFilterProvider = filterProvider;
   }
@@ -44,7 +41,7 @@ public final class TestProxyPrinterProvider {
   @Nullable
   public Printer getPrinterByType(@Nonnull String nodeType, @Nonnull String nodeName, @Nullable String nodeArguments) {
     Filter filter = myFilterProvider.getFilter(nodeType, nodeName, nodeArguments);
-    if (filter != null) {
+    if (filter != null && !Disposer.isDisposed(myTestOutputConsoleView)) {
       return new HyperlinkPrinter(myTestOutputConsoleView, HyperlinkPrinter.ERROR_CONTENT_TYPE, filter);
     }
     return null;
@@ -52,20 +49,13 @@ public final class TestProxyPrinterProvider {
 
   private static class HyperlinkPrinter extends TestsOutputConsolePrinter {
 
-    public static final Condition<ConsoleViewContentType> ERROR_CONTENT_TYPE = new Condition<ConsoleViewContentType>() {
-      @Override
-      public boolean value(ConsoleViewContentType contentType) {
-        return ConsoleViewContentType.ERROR_OUTPUT == contentType;
-      }
-    };
+    public static final Condition<ConsoleViewContentType> ERROR_CONTENT_TYPE = contentType -> ConsoleViewContentType.ERROR_OUTPUT == contentType;
     private static final String NL = "\n";
 
-    private final Condition<ConsoleViewContentType> myContentTypeCondition;
+    private final Condition<? super ConsoleViewContentType> myContentTypeCondition;
     private final Filter myFilter;
 
-    public HyperlinkPrinter(@Nonnull BaseTestsOutputConsoleView testsOutputConsoleView,
-                            @Nonnull Condition<ConsoleViewContentType> contentTypeCondition,
-                            @Nonnull Filter filter) {
+    HyperlinkPrinter(@Nonnull BaseTestsOutputConsoleView testsOutputConsoleView, @Nonnull Condition<? super ConsoleViewContentType> contentTypeCondition, @Nonnull Filter filter) {
       super(testsOutputConsoleView, testsOutputConsoleView.getProperties(), null);
       myContentTypeCondition = contentTypeCondition;
       myFilter = filter;
@@ -95,18 +85,38 @@ public final class TestProxyPrinterProvider {
     }
 
     private void printLine(@Nonnull String line, @Nonnull ConsoleViewContentType contentType) {
-      Filter.Result result = myFilter.applyFilter(line, line.length());
+      Filter.Result result;
+      try {
+        result = myFilter.applyFilter(line, line.length());
+      }
+      catch (Throwable t) {
+        throw new RuntimeException("Error while applying " + myFilter + " to '" + line + "'", t);
+      }
       if (result != null) {
-        defaultPrint(line.substring(0, result.highlightStartOffset), contentType);
-        String linkText = line.substring(result.highlightStartOffset, result.highlightEndOffset);
-        printHyperlink(linkText, result.hyperlinkInfo);
-        defaultPrint(line.substring(result.highlightEndOffset), contentType);
+        List<Filter.ResultItem> items = sort(result.getResultItems());
+        int lastOffset = 0;
+        for (Filter.ResultItem item : items) {
+          defaultPrint(line.substring(lastOffset, item.getHighlightStartOffset()), contentType);
+          String linkText = line.substring(item.getHighlightStartOffset(), item.getHighlightEndOffset());
+          printHyperlink(linkText, item.getHyperlinkInfo());
+          lastOffset = item.getHighlightEndOffset();
+        }
+        defaultPrint(line.substring(lastOffset), contentType);
       }
       else {
         defaultPrint(line, contentType);
       }
     }
 
+    @Nonnull
+    private static List<Filter.ResultItem> sort(@Nonnull List<Filter.ResultItem> items) {
+      if (items.size() <= 1) {
+        return items;
+      }
+      List<Filter.ResultItem> copy = new ArrayList<>(items);
+      Collections.sort(copy, Comparator.comparingInt(Filter.ResultItem::getHighlightStartOffset));
+      return copy;
+    }
   }
 
 }
