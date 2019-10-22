@@ -19,6 +19,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.util.diff.Diff;
 import com.intellij.util.diff.FilesTooBigForDiffException;
+
 import javax.annotation.Nonnull;
 
 public class DocumentEventImpl extends DocumentEvent {
@@ -36,14 +37,10 @@ public class DocumentEventImpl extends DocumentEvent {
   private final int myInitialStartOffset;
   private final int myInitialOldLength;
 
-  public DocumentEventImpl(@Nonnull Document document,
-                           int offset,
-                           @Nonnull CharSequence oldString,
-                           @Nonnull CharSequence newString,
-                           long oldTimeStamp,
-                           boolean wholeTextReplaced) {
+  public DocumentEventImpl(@Nonnull Document document, int offset, @Nonnull CharSequence oldString, @Nonnull CharSequence newString, long oldTimeStamp, boolean wholeTextReplaced) {
     this(document, offset, oldString, newString, oldTimeStamp, wholeTextReplaced, offset, oldString.length());
   }
+
   public DocumentEventImpl(@Nonnull Document document,
                            int offset,
                            @Nonnull CharSequence oldString,
@@ -69,7 +66,6 @@ public class DocumentEventImpl extends DocumentEvent {
     myIsWholeDocReplaced = getDocument().getTextLength() != 0 && wholeTextReplaced;
     assert initialStartOffset >= 0 : initialStartOffset;
     assert initialOldLength >= 0 : initialOldLength;
-    assert initialStartOffset+initialOldLength <= document.getTextLength() : "initialStartOffset = " + initialStartOffset + "; initialOldLength = " + initialOldLength+";document.getTextLength() = " + document.getTextLength();
   }
 
   @Override
@@ -126,6 +122,7 @@ public class DocumentEventImpl extends DocumentEvent {
     return myOldTimeStamp;
   }
 
+  @Override
   @SuppressWarnings("HardCodedStringLiteral")
   public String toString() {
     return "DocumentEventImpl[myOffset=" + myOffset + ", myOldLength=" + myOldLength + ", myNewLength=" + myNewLength +
@@ -173,7 +170,7 @@ public class DocumentEventImpl extends DocumentEvent {
 
   // line numbers in Diff.Change are relative to change start
   private Diff.Change reBuildDiffIfNeeded() throws FilesTooBigForDiffException {
-    if (myChange == TOO_BIG_FILE) throw new FilesTooBigForDiffException(0);
+    if (myChange == TOO_BIG_FILE) throw new FilesTooBigForDiffException();
     if (myChange == null) {
       try {
         myChange = Diff.buildChanges(myOldString, myNewString);

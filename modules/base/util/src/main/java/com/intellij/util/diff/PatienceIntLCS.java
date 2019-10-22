@@ -29,11 +29,11 @@ class PatienceIntLCS {
   private final BitSet myChanges1;
   private final BitSet myChanges2;
 
-  public PatienceIntLCS(int[] first, int[] second) {
+  PatienceIntLCS(int[] first, int[] second) {
     this(first, second, 0, first.length, 0, second.length, new BitSet(first.length), new BitSet(second.length));
   }
 
-  public PatienceIntLCS(int[] first, int[] second, int start1, int count1, int start2, int count2, BitSet changes1, BitSet changes2) {
+  PatienceIntLCS(int[] first, int[] second, int start1, int count1, int start2, int count2, BitSet changes1, BitSet changes2) {
     myFirst = first;
     mySecond = second;
     myStart1 = start1;
@@ -86,8 +86,8 @@ class PatienceIntLCS {
 
       if (matching == null) {
         if (thresholdCheckCounter >= 0) checkReduction(count1, count2);
-        IntLCS intLCS = new IntLCS(myFirst, mySecond, start1, count1, start2, count2, myChanges1, myChanges2);
-        intLCS.execute();
+        MyersLCS intLCS = new MyersLCS(myFirst, mySecond, start1, count1, start2, count2, myChanges1, myChanges2);
+        intLCS.executeLinear();
       }
       else {
         int s1, s2, c1, c2;
@@ -165,6 +165,6 @@ class PatienceIntLCS {
   private void checkReduction(int count1, int count2) throws FilesTooBigForDiffException {
     if (count1 * 2 < myCount1) return;
     if (count2 * 2 < myCount2) return;
-    throw new FilesTooBigForDiffException(0);
+    throw new FilesTooBigForDiffException();
   }
 }
