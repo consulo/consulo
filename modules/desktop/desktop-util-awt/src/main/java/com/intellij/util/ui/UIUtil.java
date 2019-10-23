@@ -597,7 +597,7 @@ public class UIUtil {
    * On macOS such JBSDK supports jreHiDPI, but it's not capable to provide device scale
    * via GraphicsDevice transform matrix (the scale should be retrieved via DetectRetinaKit).
    */
-  static boolean isJreHiDPI_earlierVersion() {
+  public static boolean isJreHiDPI_earlierVersion() {
     isJreHiDPIEnabled();
     return jreHiDPI_earlierVersion;
   }

@@ -1,6 +1,6 @@
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.search;
 
-import com.intellij.concurrency.AsyncFuture;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.AbstractQuery;
@@ -8,26 +8,19 @@ import com.intellij.util.Processor;
 import javax.annotation.Nonnull;
 
 /**
-* @author peter
-*/
+ * @author peter
+ */
 public class SearchRequestQuery extends AbstractQuery<PsiReference> {
   private final Project myProject;
   private final SearchRequestCollector myRequests;
 
-  public SearchRequestQuery(Project project, SearchRequestCollector requests) {
+  public SearchRequestQuery(@Nonnull Project project, @Nonnull SearchRequestCollector requests) {
     myProject = project;
     myRequests = requests;
   }
 
-
-  @Nonnull
   @Override
-  protected AsyncFuture<Boolean> processResultsAsync(@Nonnull Processor<PsiReference> consumer) {
-    return PsiSearchHelper.getInstance(myProject).processRequestsAsync(myRequests, consumer);
-  }
-
-  @Override
-  protected boolean processResults(@Nonnull Processor<PsiReference> consumer) {
+  protected boolean processResults(@Nonnull Processor<? super PsiReference> consumer) {
     return PsiSearchHelper.getInstance(myProject).processRequests(myRequests, consumer);
   }
 

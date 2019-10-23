@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2015 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.search.searches;
 
 import com.intellij.openapi.application.DumbAwareSearchParameters;
@@ -25,12 +11,13 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Locates all references to a specified PSI element.
  *
- * @see PsiReference
  * @author max
+ * @see PsiReference
  */
 public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, ReferencesSearch.SearchParameters> {
   public static final ExtensionPointName<QueryExecutor> EP_NAME = ExtensionPointName.create("com.intellij.referencesSearch");
@@ -42,12 +29,13 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
   public static class SearchParameters implements DumbAwareSearchParameters {
     private final PsiElement myElementToSearch;
     private final SearchScope myScope;
+    private volatile SearchScope myEffectiveScope;
     private final boolean myIgnoreAccessScope;
     private final SearchRequestCollector myOptimizer;
     private final Project myProject;
     private final boolean isSharedOptimizer;
 
-    public SearchParameters(@Nonnull PsiElement elementToSearch, @Nonnull SearchScope scope, boolean ignoreAccessScope, @javax.annotation.Nullable SearchRequestCollector optimizer) {
+    public SearchParameters(@Nonnull PsiElement elementToSearch, @Nonnull SearchScope scope, boolean ignoreAccessScope, @Nullable SearchRequestCollector optimizer) {
       myElementToSearch = elementToSearch;
       myScope = scope;
       myIgnoreAccessScope = ignoreAccessScope;
@@ -58,6 +46,11 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
 
     public SearchParameters(@Nonnull PsiElement elementToSearch, @Nonnull SearchScope scope, final boolean ignoreAccessScope) {
       this(elementToSearch, scope, ignoreAccessScope, null);
+    }
+
+    @Override
+    public boolean isQueryValid() {
+      return myElementToSearch.isValid();
     }
 
     @Override
@@ -81,7 +74,7 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
 
 
     /**
-     * Same as {@link #getScopeDeterminedByUser()}. Use {@link #getEffectiveSearchScope} instead
+     * @deprecated Same as {@link #getScopeDeterminedByUser()}, use {@link #getEffectiveSearchScope} instead
      */
     @Deprecated
     @Nonnull
@@ -99,12 +92,19 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
     }
 
     @Nonnull
-    public SearchScope getEffectiveSearchScope () {
+    public SearchScope getEffectiveSearchScope() {
       if (myIgnoreAccessScope) {
         return myScope;
       }
-      SearchScope accessScope = PsiSearchHelper.SERVICE.getInstance(myElementToSearch.getProject()).getUseScope(myElementToSearch);
-      return myScope.intersectWith(accessScope);
+
+      SearchScope scope = myEffectiveScope;
+      if (scope == null) {
+        if (!myElementToSearch.isValid()) return GlobalSearchScope.EMPTY_SCOPE;
+
+        SearchScope useScope = PsiSearchHelper.getInstance(myElementToSearch.getProject()).getUseScope(myElementToSearch);
+        myEffectiveScope = scope = myScope.intersectWith(useScope);
+      }
+      return scope;
     }
   }
 
@@ -123,7 +123,7 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
   /**
    * Searches for references to the specified element in the specified scope.
    *
-   * @param element the element (declaration) the references to which are requested.
+   * @param element     the element (declaration) the references to which are requested.
    * @param searchScope the scope in which the search is performed.
    * @return the query allowing to enumerate the references.
    */
@@ -136,8 +136,8 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
    * Searches for references to the specified element in the specified scope, optionally returning also references which
    * are invalid because of access rules (e.g. references to a private method from a different class).
    *
-   * @param element the element (declaration) the references to which are requested.
-   * @param searchScope the scope in which the search is performed.
+   * @param element           the element (declaration) the references to which are requested.
+   * @param searchScope       the scope in which the search is performed.
    * @param ignoreAccessScope if true, references which are invalid because of access rules are included in the results.
    * @return the query allowing to enumerate the references.
    */
@@ -163,25 +163,20 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
 
     final PsiElement element = parameters.getElementToSearch();
 
-    return uniqueResults(new MergeQuery<PsiReference>(result, new SearchRequestQuery(PsiUtilCore.getProjectInReadAction(element), requests)));
+    return uniqueResults(new MergeQuery<>(result, new SearchRequestQuery(PsiUtilCore.getProjectInReadAction(element), requests)));
   }
 
   @Nonnull
-  private static Query<PsiReference> uniqueResults(@Nonnull Query<PsiReference> composite) {
-    return new UniqueResultsQuery<PsiReference, ReferenceDescriptor>(composite, ContainerUtil.<ReferenceDescriptor>canonicalStrategy(), ReferenceDescriptor.MAPPER);
+  private static Query<PsiReference> uniqueResults(@Nonnull Query<? extends PsiReference> composite) {
+    return new UniqueResultsQuery<>(composite, ContainerUtil.canonicalStrategy(), ReferenceDescriptor.MAPPER);
   }
 
   public static void searchOptimized(@Nonnull PsiElement element,
                                      @Nonnull SearchScope searchScope,
                                      boolean ignoreAccessScope,
                                      @Nonnull SearchRequestCollector collector,
-                                     @Nonnull final Processor<PsiReference> processor) {
-    searchOptimized(element, searchScope, ignoreAccessScope, collector, false, new PairProcessor<PsiReference, SearchRequestCollector>() {
-      @Override
-      public boolean process(PsiReference psiReference, SearchRequestCollector collector) {
-        return processor.process(psiReference);
-      }
-    });
+                                     @Nonnull final Processor<? super PsiReference> processor) {
+    searchOptimized(element, searchScope, ignoreAccessScope, collector, false, (psiReference, collector1) -> processor.process(psiReference));
   }
 
   public static void searchOptimized(@Nonnull PsiElement element,
@@ -189,7 +184,7 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
                                      boolean ignoreAccessScope,
                                      @Nonnull SearchRequestCollector collector,
                                      final boolean inReadAction,
-                                     @Nonnull PairProcessor<PsiReference, SearchRequestCollector> processor) {
+                                     @Nonnull PairProcessor<? super PsiReference, ? super SearchRequestCollector> processor) {
     final SearchRequestCollector nested = new SearchRequestCollector(collector.getSearchSession());
     Query<PsiReference> query = search(new SearchParameters(element, searchScope, ignoreAccessScope, nested));
     collector.searchQuery(new QuerySearchRequest(query, nested, inReadAction, processor));

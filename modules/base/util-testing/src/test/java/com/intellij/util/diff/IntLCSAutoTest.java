@@ -16,7 +16,7 @@
 package com.intellij.util.diff;
 
 import junit.framework.TestCase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.BitSet;
 import java.util.Random;
@@ -45,7 +45,7 @@ public class IntLCSAutoTest extends TestCase {
     }
   }
 
-  private void doTestLCS(int maxLength, int charCount, @NotNull Type type) throws FilesTooBigForDiffException {
+  private void doTestLCS(int maxLength, int charCount, @Nonnull Type type) throws FilesTooBigForDiffException {
     int[] sequence1 = generateSequence(maxLength, charCount);
     int[] sequence2 = generateSequence(maxLength, charCount);
 
@@ -71,11 +71,11 @@ public class IntLCSAutoTest extends TestCase {
     verifyLCS(sequence1, sequence2, start1, count1, start2, count2, changes1, changes2);
   }
 
-  public static void verifyLCS(@NotNull int[] sequence1, @NotNull int[] sequence2, @NotNull BitSet changes1, @NotNull BitSet changes2) {
+  public static void verifyLCS(@Nonnull int[] sequence1, @Nonnull int[] sequence2, @Nonnull BitSet changes1, @Nonnull BitSet changes2) {
     verifyLCS(sequence1, sequence2, 0, sequence1.length, 0, sequence2.length, changes1, changes2);
   }
 
-  private static void verifyLCS(@NotNull int[] sequence1, @NotNull int[] sequence2, int start1, int count1, int start2, int count2, @NotNull BitSet changes1, @NotNull BitSet changes2) {
+  private static void verifyLCS(@Nonnull int[] sequence1, @Nonnull int[] sequence2, int start1, int count1, int start2, int count2, @Nonnull BitSet changes1, @Nonnull BitSet changes2) {
     int index1 = changes1.nextClearBit(start1);
     int index2 = changes2.nextClearBit(start2);
 
@@ -91,7 +91,7 @@ public class IntLCSAutoTest extends TestCase {
     assertTrue(index1 >= start1 + count1 && index2 >= start2 + count2);
   }
 
-  @NotNull
+  @Nonnull
   private int[] generateSequence(int maxLength, int charCount) {
     int[] result = new int[RNG.nextInt(maxLength / 2) + maxLength / 2];
     for (int i = 0; i < result.length; i++) {

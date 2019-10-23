@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.vcs.impl.projectlevelman;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import consulo.logging.Logger;
 import com.intellij.openapi.project.DumbAwareRunnable;
@@ -46,7 +47,7 @@ import static com.intellij.util.containers.ContainerUtil.map;
 import static com.intellij.util.containers.ContainerUtil.mapNotNull;
 import static java.util.function.Function.identity;
 
-public class NewMappings {
+public class NewMappings implements Disposable {
 
   public static final Comparator<VcsDirectoryMapping> MAPPINGS_COMPARATOR = Comparator.comparing(VcsDirectoryMapping::getDirectory);
 
@@ -74,7 +75,7 @@ public class NewMappings {
     myFileStatusManager = fileStatusManager;
     myLock = new Object();
     myVcsToPaths = MultiMap.createOrderedSet();
-    myFileWatchRequestsManager = new FileWatchRequestsManager(myProject, this, LocalFileSystem.getInstance());
+    myFileWatchRequestsManager = new FileWatchRequestsManager(myProject, this);
     myDefaultVcsRootPolicy = DefaultVcsRootPolicy.getInstance(project);
     myActiveVcses = new AbstractVcs[0];
 
@@ -443,6 +444,11 @@ public class NewMappings {
 
   private boolean removeVcsFromMap(VcsDirectoryMapping mapping, String oldVcs) {
     return myVcsToPaths.remove(oldVcs, mapping);
+  }
+
+  @Override
+  public void dispose() {
+    
   }
 
   private static class MyVcsActivator {

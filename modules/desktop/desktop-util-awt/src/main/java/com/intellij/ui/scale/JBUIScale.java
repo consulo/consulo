@@ -15,8 +15,11 @@
  */
 package com.intellij.ui.scale;
 
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.UIUtil;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 
 /**
@@ -38,5 +41,21 @@ public class JBUIScale {
 
   public static float scale(float pixel) {
     return JBUI.scale(pixel);
+  }
+
+  /**
+   * Returns the system scale factor, corresponding to the graphics configuration.
+   * In the IDE-managed HiDPI mode defaults to {@link #sysScale()}
+   */
+  public static float sysScale(@Nullable GraphicsConfiguration gc) {
+    if (UIUtil.isJreHiDPIEnabled() && gc != null) {
+      if (gc.getDevice().getType() != GraphicsDevice.TYPE_PRINTER) {
+        if (SystemInfo.isMac && UIUtil.isJreHiDPI_earlierVersion()) {
+          return UIUtil.DetectRetinaKit.isOracleMacRetinaDevice(gc.getDevice()) ? 2f : 1f;
+        }
+        return (float)gc.getDefaultTransform().getScaleX();
+      }
+    }
+    return JBUI.sysScale();
   }
 }

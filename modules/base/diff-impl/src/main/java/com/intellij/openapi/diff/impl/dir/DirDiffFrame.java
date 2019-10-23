@@ -22,9 +22,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.FrameWrapper;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.WindowState;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 
 /**
@@ -57,8 +59,8 @@ public class DirDiffFrame extends FrameWrapper {
 
 
   @Override
-  protected void loadFrameState() {
-    super.loadFrameState();
+  protected void loadFrameState(@Nullable WindowState state) {
+    super.loadFrameState(state);
     myPanel.setupSplitter();
   }
 }

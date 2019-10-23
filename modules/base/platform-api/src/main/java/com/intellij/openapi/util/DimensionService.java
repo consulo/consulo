@@ -1,39 +1,25 @@
-/*
- * Copyright 2000-2015 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.util;
 
 import com.intellij.openapi.components.*;
-import consulo.logging.Logger;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.ScreenUtil;
+import com.intellij.ui.scale.JBUIScale;
+import com.intellij.util.containers.ObjectIntHashMap;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
-import gnu.trove.TObjectIntHashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+
 import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
@@ -44,13 +30,13 @@ import java.util.Map;
  * sizes of window, dialogs, etc.
  */
 @Singleton
-@State(name = "DimensionService", storages = @Storage(value = "dimensions.xml", roamingType = RoamingType.DISABLED))
-public class DimensionService implements PersistentStateComponent<Element> {
+@State(name = "DimensionService", storages = @Storage(value = "window.state.xml", roamingType = RoamingType.DISABLED))
+public class DimensionService extends SimpleModificationTracker implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(DimensionService.class);
 
-  private final Map<String, Point> myKey2Location;
-  private final Map<String, Dimension> myKey2Size;
-  private final TObjectIntHashMap<String> myKey2ExtendedState;
+  private final Map<String, Point> myKey2Location = new LinkedHashMap<>();
+  private final Map<String, Dimension> myKey2Size = new LinkedHashMap<>();
+  private final ObjectIntHashMap<String> myKey2ExtendedState = new ObjectIntHashMap<>();
   @NonNls
   private static final String EXTENDED_STATE = "extendedState";
   @NonNls
@@ -74,20 +60,13 @@ public class DimensionService implements PersistentStateComponent<Element> {
     return ServiceManager.getService(DimensionService.class);
   }
 
-  @Inject
-  private DimensionService() {
-    myKey2Location = new LinkedHashMap<String, Point>();
-    myKey2Size = new LinkedHashMap<String, Dimension>();
-    myKey2ExtendedState = new TObjectIntHashMap<String>();
-  }
-
   /**
    * @param key a String key to perform a query for.
-   * @return point stored under the specified <code>key</code>. The method returns
-   * <code>null</code> if there is no stored value under the <code>key</code>. If point
-   * is outside of current screen bounds then the method returns <code>null</code>. It
+   * @return point stored under the specified {@code key}. The method returns
+   * {@code null} if there is no stored value under the {@code key}. If point
+   * is outside of current screen bounds then the method returns {@code null}. It
    * properly works in multi-monitor configuration.
-   * @throws java.lang.IllegalArgumentException if <code>key</code> is <code>null</code>.
+   * @throws IllegalArgumentException if {@code key} is {@code null}.
    */
   @Nullable
   public synchronized Point getLocation(String key) {
@@ -96,81 +75,54 @@ public class DimensionService implements PersistentStateComponent<Element> {
 
   @Nullable
   public synchronized Point getLocation(@Nonnull String key, Project project) {
-    Point point = myKey2Location.get(realKey(key, project));
+    Point point = project == null ? null : WindowStateService.getInstance(project).getLocation(key);
+    if (point != null) return point;
+
+    Pair<String, Float> pair = keyPair(key, project);
+    point = myKey2Location.get(pair.first);
+    if (point != null) {
+      point = (Point)point.clone();
+      float scale = pair.second;
+      point.setLocation(point.x / scale, point.y / scale);
+    }
     if (point != null && !ScreenUtil.getScreenRectangle(point).contains(point)) {
       point = null;
     }
-    return point != null ? (Point)point.clone() : null;
+    return point;
   }
 
   /**
-   * This method is not use {@link DimensionService#realKey} because welcome frame can't calc screen position when it not showed (it always showed on first
-   * screen device)
-   *
-   * @param key a String key to perform a query for.
-   * @return point stored under the specified <code>key</code>. The method returns
-   * <code>null</code> if there is no stored value under the <code>key</code>. If point
-   * is outside of current screen bounds then the method returns <code>null</code>. It
-   * properly works in multi-monitor configuration.
-   * @throws java.lang.IllegalArgumentException if <code>key</code> is <code>null</code>.
-   */
-  @Nullable
-  public synchronized Point getLocationNoRealKey(@Nonnull String key) {
-    Point point = myKey2Location.get(key);
-    if (point != null && !ScreenUtil.getScreenRectangle(point).contains(point)) {
-      point = null;
-    }
-    return point != null ? (Point)point.clone() : null;
-  }
-
-  /**
-   * Store specified <code>point</code> under the <code>key</code>. If <code>point</code> is
-   * <code>null</code> then the value stored under <code>key</code> will be removed.
+   * Store specified {@code point} under the {@code key}. If {@code point} is
+   * {@code null} then the value stored under {@code key} will be removed.
    *
    * @param key   a String key to store location for.
    * @param point location to save.
-   * @throws java.lang.IllegalArgumentException if <code>key</code> is <code>null</code>.
+   * @throws IllegalArgumentException if {@code key} is {@code null}.
    */
   public synchronized void setLocation(String key, Point point) {
     setLocation(key, point, guessProject());
   }
 
   public synchronized void setLocation(@Nonnull String key, Point point, Project project) {
-    key = realKey(key, project);
-
+    getWindowStateService(project).putLocation(key, point);
+    Pair<String, Float> pair = keyPair(key, project);
     if (point != null) {
-      myKey2Location.put(key, (Point)point.clone());
+      point = (Point)point.clone();
+      float scale = pair.second;
+      point.setLocation(point.x * scale, point.y * scale);
+      myKey2Location.put(pair.first, point);
     }
     else {
       myKey2Location.remove(key);
     }
-  }
-
-  /**
-   * Store specified <code>point</code> under the <code>key</code>. If <code>point</code> is
-   * <code>null</code> then the value stored under <code>key</code> will be removed.
-   * <p>
-   * This method is not use {@link DimensionService#realKey} because welcome frame can't calc screen position when it not showed (it always showed on first
-   * screen device)
-   *
-   * @param key   a String key to store location for.
-   * @param point location to save.
-   * @throws java.lang.IllegalArgumentException if <code>key</code> is <code>null</code>.
-   */
-  public synchronized void setLocationNoRealKey(@Nonnull String key, Point point) {
-    if (point != null) {
-      myKey2Location.put(key, (Point)point.clone());
-    }
-    else {
-      myKey2Location.remove(key);
-    }
+    incModificationCount();
   }
 
   /**
    * @param key a String key to perform a query for.
-   * @return point stored under the specified <code>key</code>. The method returns
-   * <code>null</code> if there is no stored value under the <code>key</code>.
-   * @throws java.lang.IllegalArgumentException if <code>key</code> is <code>null</code>.
+   * @return point stored under the specified {@code key}. The method returns
+   * {@code null} if there is no stored value under the {@code key}.
+   * @throws IllegalArgumentException if {@code key} is {@code null}.
    */
   @Nullable
   public synchronized Dimension getSize(@Nonnull @NonNls String key) {
@@ -179,31 +131,44 @@ public class DimensionService implements PersistentStateComponent<Element> {
 
   @Nullable
   public synchronized Dimension getSize(@Nonnull @NonNls String key, Project project) {
-    Dimension size = myKey2Size.get(realKey(key, project));
-    return size != null ? (Dimension)size.clone() : null;
+    Dimension size = project == null ? null : WindowStateService.getInstance(project).getSize(key);
+    if (size != null) return size;
+
+    Pair<String, Float> pair = keyPair(key, project);
+    size = myKey2Size.get(pair.first);
+    if (size != null) {
+      size = (Dimension)size.clone();
+      float scale = pair.second;
+      size.setSize(size.width / scale, size.height / scale);
+    }
+    return size;
   }
 
   /**
-   * Store specified <code>size</code> under the <code>key</code>. If <code>size</code> is
-   * <code>null</code> then the value stored under <code>key</code> will be removed.
+   * Store specified {@code size} under the {@code key}. If {@code size} is
+   * {@code null} then the value stored under {@code key} will be removed.
    *
    * @param key  a String key to to save size for.
    * @param size a Size to save.
-   * @throws java.lang.IllegalArgumentException if <code>key</code> is <code>null</code>.
+   * @throws IllegalArgumentException if {@code key} is {@code null}.
    */
   public synchronized void setSize(@Nonnull @NonNls String key, Dimension size) {
     setSize(key, size, guessProject());
   }
 
   public synchronized void setSize(@Nonnull @NonNls String key, Dimension size, Project project) {
-    key = realKey(key, project);
-
+    getWindowStateService(project).putSize(key, size);
+    Pair<String, Float> pair = keyPair(key, project);
     if (size != null) {
-      myKey2Size.put(key, (Dimension)size.clone());
+      size = (Dimension)size.clone();
+      float scale = pair.second;
+      size.setSize(size.width * scale, size.height * scale);
+      myKey2Size.put(pair.first, size);
     }
     else {
-      myKey2Size.remove(key);
+      myKey2Size.remove(pair.first);
     }
+    incModificationCount();
   }
 
   @Override
@@ -243,7 +208,7 @@ public class DimensionService implements PersistentStateComponent<Element> {
   }
 
   @Override
-  public void loadState(final Element element) {
+  public void loadState(@Nonnull final Element element) {
     myKey2Location.clear();
     myKey2Size.clear();
     myKey2ExtendedState.clear();
@@ -273,32 +238,22 @@ public class DimensionService implements PersistentStateComponent<Element> {
     }
   }
 
-  @Deprecated
-  /**
-   * @deprecated Use {@link com.intellij.ide.util.PropertiesComponent}
-   */ public void setExtendedState(String key, int extendedState) {
-    myKey2ExtendedState.put(key, extendedState);
-  }
-
-  @Deprecated
-  /**
-   * @deprecated Use {@link com.intellij.ide.util.PropertiesComponent}
-   */ public int getExtendedState(String key) {
-    if (!myKey2ExtendedState.containsKey(key)) return -1;
-    return myKey2ExtendedState.get(key);
-  }
-
   @Nullable
   private static Project guessProject() {
     final Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
     return openProjects.length == 1 ? openProjects[0] : null;
   }
 
+  /**
+   * @return Pair(key, scale) where:
+   * key is the HiDPI-aware key,
+   * scale is the HiDPI-aware factor to transform size metrics.
+   */
   @Nonnull
-  private static String realKey(String key, @Nullable Project project) {
+  private static Pair<String, Float> keyPair(String key, @Nullable Project project) {
     GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
     if (env.isHeadlessInstance()) {
-      return key + ".headless";
+      return new Pair<>(key + ".headless", 1f);
     }
 
     consulo.ui.Window uiWindow = null;
@@ -315,6 +270,7 @@ public class DimensionService implements PersistentStateComponent<Element> {
     }
 
     Rectangle screen = new Rectangle(0, 0, 0, 0);
+    GraphicsDevice gd = null;
     if (uiWindow != null) {
       Window awtWindow = TargetAWT.to(uiWindow);
       final Point topLeft = awtWindow.getLocation();
@@ -323,18 +279,31 @@ public class DimensionService implements PersistentStateComponent<Element> {
         Rectangle bounds = device.getDefaultConfiguration().getBounds();
         if (bounds.contains(center)) {
           screen = bounds;
+          gd = device;
           break;
         }
       }
     }
-    else {
-      GraphicsConfiguration gc = env.getScreenDevices()[0].getDefaultConfiguration();
-      screen = gc.getBounds();
+    if (gd == null) {
+      gd = env.getDefaultScreenDevice();
+      screen = gd.getDefaultConfiguration().getBounds();
+    }
+    float scale = 1f;
+    if (UIUtil.isJreHiDPIEnabled()) {
+      scale = JBUIScale.sysScale(gd.getDefaultConfiguration());
+      // normalize screen bounds
+      screen.setBounds((int)Math.floor(screen.x * scale), (int)Math.floor(screen.y * scale), (int)Math.ceil(screen.width * scale), (int)Math.ceil(screen.height * scale));
     }
     String realKey = key + '.' + screen.x + '.' + screen.y + '.' + screen.width + '.' + screen.height;
-    if (JBUI.isHiDPI()) {
-      realKey += "@" + (((int)(96 * JBUI.scale(1f)))) + "dpi";
+    if (JBUI.isPixHiDPI(gd.getDefaultConfiguration())) {
+      int dpi = ((int)(96 * JBUI.pixScale(gd.getDefaultConfiguration())));
+      realKey += "@" + dpi + "dpi";
     }
-    return realKey;
+    return new Pair<>(realKey, scale);
+  }
+
+  @Nonnull
+  private static WindowStateService getWindowStateService(@Nullable Project project) {
+    return project == null ? WindowStateService.getInstance() : WindowStateService.getInstance(project);
   }
 }

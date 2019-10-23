@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.util;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.ArrayUtil;
@@ -25,6 +24,7 @@ import com.intellij.util.io.URLUtil;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.CharSequenceReader;
 import com.intellij.util.text.StringFactory;
+import consulo.logging.Logger;
 import org.jdom.*;
 import org.jdom.filter.ElementFilter;
 import org.jdom.filter.Filter;
@@ -35,11 +35,12 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
+import javax.annotation.Nonnull;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.io.*;
 import java.lang.ref.SoftReference;
 import java.net.URL;
@@ -53,6 +54,11 @@ import java.util.List;
  */
 @SuppressWarnings({"HardCodedStringLiteral"})
 public class JDOMUtil {
+  private static final String X = "x";
+  private static final String Y = "y";
+  private static final String WIDTH = "width";
+  private static final String HEIGHT = "height";
+
   private static final ThreadLocal<SoftReference<SAXBuilder>> ourSaxBuilder = new ThreadLocal<SoftReference<SAXBuilder>>();
 
   private JDOMUtil() {
@@ -857,5 +863,133 @@ public class JDOMUtil {
   @Nonnull
   public static Element internElement(@Nonnull Element element) {
     return ourJDOMInterner.internElement(element);
+  }
+
+  /**
+   * Not required if you use XmlSerializator.
+   *
+   * @see XmlStringUtil#escapeIllegalXmlChars(String)
+   */
+  @Nonnull
+  public static String removeControlChars(@Nonnull String text) {
+    StringBuilder result = null;
+    for (int i = 0; i < text.length(); i++) {
+      char c = text.charAt(i);
+      if (!Verifier.isXMLCharacter(c)) {
+        if (result == null) {
+          result = new StringBuilder(text.length());
+          result.append(text, 0, i);
+        }
+        continue;
+      }
+
+      if (result != null) {
+        result.append(c);
+      }
+    }
+    return result == null ? text : result.toString();
+  }
+
+
+  @Nullable
+  public static Point getLocation(@Nullable Element element) {
+    return element == null ? null : getLocation(element, X, Y);
+  }
+
+  @Nullable
+  public static Point getLocation(@Nonnull Element element, @Nonnull String x, @Nonnull String y) {
+    String sX = element.getAttributeValue(x);
+    if (sX == null) return null;
+    String sY = element.getAttributeValue(y);
+    if (sY == null) return null;
+    try {
+      return new Point(Integer.parseInt(sX), Integer.parseInt(sY));
+    }
+    catch (NumberFormatException ignored) {
+      return null;
+    }
+  }
+
+  @Nonnull
+  public static Element setLocation(@Nonnull Element element, @Nonnull Point location) {
+    return setLocation(element, X, Y, location);
+  }
+
+  @Nonnull
+  public static Element setLocation(@Nonnull Element element, @Nonnull String x, @Nonnull String y, @Nonnull Point location) {
+    return element.setAttribute(x, Integer.toString(location.x)).setAttribute(y, Integer.toString(location.y));
+  }
+
+
+  @Nullable
+  public static Dimension getSize(@Nullable Element element) {
+    return element == null ? null : getSize(element, WIDTH, HEIGHT);
+  }
+
+  @Nullable
+  public static Dimension getSize(@Nonnull Element element, @Nonnull String width, @Nonnull String height) {
+    String sWidth = element.getAttributeValue(width);
+    if (sWidth == null) return null;
+    String sHeight = element.getAttributeValue(height);
+    if (sHeight == null) return null;
+    try {
+      int iWidth = Integer.parseInt(sWidth);
+      if (iWidth <= 0) return null;
+      int iHeight = Integer.parseInt(sHeight);
+      if (iHeight <= 0) return null;
+      return new Dimension(iWidth, iHeight);
+    }
+    catch (NumberFormatException ignored) {
+      return null;
+    }
+  }
+
+  @Nonnull
+  public static Element setSize(@Nonnull Element element, @Nonnull Dimension size) {
+    return setSize(element, WIDTH, HEIGHT, size);
+  }
+
+  @Nonnull
+  public static Element setSize(@Nonnull Element element, @Nonnull String width, @Nonnull String height, @Nonnull Dimension size) {
+    return element.setAttribute(width, Integer.toString(size.width)).setAttribute(height, Integer.toString(size.height));
+  }
+
+
+  @Nullable
+  public static Rectangle getBounds(@Nullable Element element) {
+    return element == null ? null : getBounds(element, X, Y, WIDTH, HEIGHT);
+  }
+
+  @Nullable
+  public static Rectangle getBounds(@Nonnull Element element, @Nonnull String x, @Nonnull String y, @Nonnull String width, @Nonnull String height) {
+    String sX = element.getAttributeValue(x);
+    if (sX == null) return null;
+    String sY = element.getAttributeValue(y);
+    if (sY == null) return null;
+    String sWidth = element.getAttributeValue(width);
+    if (sWidth == null) return null;
+    String sHeight = element.getAttributeValue(height);
+    if (sHeight == null) return null;
+    try {
+      int iWidth = Integer.parseInt(sWidth);
+      if (iWidth <= 0) return null;
+      int iHeight = Integer.parseInt(sHeight);
+      if (iHeight <= 0) return null;
+      return new Rectangle(Integer.parseInt(sX), Integer.parseInt(sY), iWidth, iHeight);
+    }
+    catch (NumberFormatException ignored) {
+      return null;
+    }
+  }
+
+  @Nonnull
+  public static Element setBounds(@Nonnull Element element, @Nonnull Rectangle bounds) {
+    return setBounds(element, X, Y, WIDTH, HEIGHT, bounds);
+  }
+
+  @Nonnull
+  public static Element setBounds(@Nonnull Element element, @Nonnull String x, @Nonnull String y, @Nonnull String width, @Nonnull String height, @Nonnull Rectangle bounds) {
+    return element.setAttribute(x, Integer.toString(bounds.x)).setAttribute(y, Integer.toString(bounds.y)).setAttribute(width, Integer.toString(bounds.width))
+            .setAttribute(height, Integer.toString(bounds.height));
   }
 }

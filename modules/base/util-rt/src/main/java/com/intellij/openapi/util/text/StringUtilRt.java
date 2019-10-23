@@ -55,6 +55,18 @@ public class StringUtilRt {
   }
 
   @Contract(pure = true)
+  public static long parseLong(@Nullable String string, long defaultValue) {
+    if (string != null) {
+      try {
+        return Long.parseLong(string);
+      }
+      catch (NumberFormatException ignored) {
+      }
+    }
+    return defaultValue;
+  }
+
+  @Contract(pure = true)
   public static boolean charsEqualIgnoreCase(char a, char b) {
     return a == b || toUpperCase(a) == toUpperCase(b) || toLowerCase(a) == toLowerCase(b);
   }

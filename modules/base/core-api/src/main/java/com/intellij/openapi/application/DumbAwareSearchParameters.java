@@ -16,6 +16,7 @@
 package com.intellij.openapi.application;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.util.QueryParameters;
 import javax.annotation.Nonnull;
 
 /**
@@ -24,7 +25,8 @@ import javax.annotation.Nonnull;
  *
  * @author peter
  */
-public interface DumbAwareSearchParameters {
+public interface DumbAwareSearchParameters extends QueryParameters {
+  @Override
   @Nonnull
   Project getProject();
 }

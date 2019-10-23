@@ -1,46 +1,29 @@
-/*
- * Copyright 2000-2016 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.search;
 
 import com.intellij.codeInsight.ContainerProvider;
-import com.intellij.openapi.util.ThrowableComputable;
+import com.intellij.openapi.application.ReadAction;
+import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.Processor;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.application.AccessRule;
-
 import javax.annotation.Nonnull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author peter
  */
 public class SearchRequestCollector {
+  private static final ExtensionPointName<ScopeOptimizer> CODE_USAGE_SCOPE_OPTIMIZER_EP_NAME = ExtensionPointName.create("com.intellij.codeUsageScopeOptimizer");
+
   private final Object lock = new Object();
-  private final List<PsiSearchRequest> myWordRequests = ContainerUtil.newArrayList();
-  private final List<QuerySearchRequest> myQueryRequests = ContainerUtil.newArrayList();
-  private final List<Processor<Processor<PsiReference>>> myCustomSearchActions = ContainerUtil.newArrayList();
+  private final List<PsiSearchRequest> myWordRequests = new ArrayList<>();
+  private final List<QuerySearchRequest> myQueryRequests = new ArrayList<>();
+  private final List<Processor<Processor<? super PsiReference>>> myCustomSearchActions = new ArrayList<>();
   private final SearchSession mySession;
 
   public SearchRequestCollector(@Nonnull SearchSession session) {
@@ -61,8 +44,7 @@ public class SearchRequestCollector {
   }
 
   public void searchWord(@Nonnull String word, @Nonnull SearchScope searchScope, short searchContext, boolean caseSensitive, @Nonnull PsiElement searchTarget) {
-    searchWord(word, searchScope, searchContext, caseSensitive, getContainerName(searchTarget), new SingleTargetRequestResultProcessor(searchTarget),
-               searchTarget);
+    searchWord(word, searchScope, searchContext, caseSensitive, getContainerName(searchTarget), searchTarget, new SingleTargetRequestResultProcessor(searchTarget));
   }
 
   private void searchWord(@Nonnull String word,
@@ -70,12 +52,26 @@ public class SearchRequestCollector {
                           short searchContext,
                           boolean caseSensitive,
                           String containerName,
-                          @Nonnull RequestResultProcessor processor,
-                          PsiElement searchTarget) {
+                          PsiElement searchTarget, @Nonnull RequestResultProcessor processor) {
     if (!makesSenseToSearch(word, searchScope)) return;
 
-    Collection<PsiSearchRequest> requests =
-            Collections.singleton(new PsiSearchRequest(searchScope, word, searchContext, caseSensitive, containerName, processor));
+    Collection<PsiSearchRequest> requests = null;
+    if (searchTarget != null && searchScope instanceof GlobalSearchScope && ((searchContext & UsageSearchContext.IN_CODE) != 0 || searchContext == UsageSearchContext.ANY)) {
+
+      SearchScope restrictedCodeUsageSearchScope = ReadAction.compute(() -> ScopeOptimizer.calculateOverallRestrictedUseScope(CODE_USAGE_SCOPE_OPTIMIZER_EP_NAME.getExtensions(), searchTarget));
+      if (restrictedCodeUsageSearchScope != null) {
+        short exceptCodeSearchContext = searchContext == UsageSearchContext.ANY
+                                        ? UsageSearchContext.IN_COMMENTS | UsageSearchContext.IN_STRINGS | UsageSearchContext.IN_FOREIGN_LANGUAGES | UsageSearchContext.IN_PLAIN_TEXT
+                                        : (short)(searchContext ^ UsageSearchContext.IN_CODE);
+        SearchScope searchCodeUsageEffectiveScope = searchScope.intersectWith(restrictedCodeUsageSearchScope);
+        requests = Arrays.asList(new PsiSearchRequest(searchCodeUsageEffectiveScope, word, UsageSearchContext.IN_CODE, caseSensitive, containerName, processor),
+                                 new PsiSearchRequest(searchScope, word, exceptCodeSearchContext, caseSensitive, containerName, processor));
+      }
+    }
+    if (requests == null) {
+      requests = Collections.singleton(new PsiSearchRequest(searchScope, word, searchContext, caseSensitive, containerName, processor));
+    }
+
     synchronized (lock) {
       myWordRequests.addAll(requests);
     }
@@ -87,19 +83,18 @@ public class SearchRequestCollector {
                          boolean caseSensitive,
                          @Nonnull PsiElement searchTarget,
                          @Nonnull RequestResultProcessor processor) {
-    searchWord(word, searchScope, searchContext, caseSensitive, getContainerName(searchTarget), processor, searchTarget);
+    searchWord(word, searchScope, searchContext, caseSensitive, getContainerName(searchTarget), searchTarget, processor);
   }
 
   private static String getContainerName(@Nonnull final PsiElement target) {
-    ThrowableComputable<String,RuntimeException> action = () -> {
+    return ReadAction.compute(() -> {
       PsiElement container = getContainer(target);
       return container instanceof PsiNamedElement ? ((PsiNamedElement)container).getName() : null;
-    };
-    return AccessRule.read(action);
+    });
   }
 
   private static PsiElement getContainer(@Nonnull PsiElement refElement) {
-    for (ContainerProvider provider : ContainerProvider.EP_NAME.getExtensionList()) {
+    for (ContainerProvider provider : ContainerProvider.EP_NAME.getExtensions()) {
       final PsiElement container = provider.getContainer(refElement);
       if (container != null) return container;
     }
@@ -110,16 +105,11 @@ public class SearchRequestCollector {
   }
 
   /**
-   * use {@link #searchWord(String, SearchScope, short, boolean, PsiElement)}
-   * instead
+   * @deprecated use {@link #searchWord(String, SearchScope, short, boolean, PsiElement)}
    */
   @Deprecated
-  public void searchWord(@Nonnull String word,
-                         @Nonnull SearchScope searchScope,
-                         short searchContext,
-                         boolean caseSensitive,
-                         @Nonnull RequestResultProcessor processor) {
-    searchWord(word, searchScope, searchContext, caseSensitive, null, processor, null);
+  public void searchWord(@Nonnull String word, @Nonnull SearchScope searchScope, short searchContext, boolean caseSensitive, @Nonnull RequestResultProcessor processor) {
+    searchWord(word, searchScope, searchContext, caseSensitive, null, null, processor);
   }
 
   private static boolean makesSenseToSearch(@Nonnull String word, @Nonnull SearchScope searchScope) {
@@ -137,7 +127,7 @@ public class SearchRequestCollector {
     }
   }
 
-  public void searchCustom(@Nonnull Processor<Processor<PsiReference>> searchAction) {
+  public void searchCustom(@Nonnull Processor<Processor<? super PsiReference>> searchAction) {
     synchronized (lock) {
       myCustomSearchActions.add(searchAction);
     }
@@ -149,7 +139,7 @@ public class SearchRequestCollector {
   }
 
   @Nonnull
-  private <T> List<T> takeRequests(@Nonnull List<T> list) {
+  private <T> List<T> takeRequests(@Nonnull List<? extends T> list) {
     synchronized (lock) {
       final List<T> requests = new ArrayList<>(list);
       list.clear();
@@ -163,7 +153,7 @@ public class SearchRequestCollector {
   }
 
   @Nonnull
-  public List<Processor<Processor<PsiReference>>> takeCustomSearchActions() {
+  public List<Processor<Processor<? super PsiReference>>> takeCustomSearchActions() {
     return takeRequests(myCustomSearchActions);
   }
 
