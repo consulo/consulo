@@ -2642,6 +2642,8 @@
 
     <applicationService serviceInterface="com.intellij.openapi.command.undo.DocumentReferenceManager" serviceImplementation="com.intellij.openapi.command.impl.DocumentReferenceManagerImpl"
                         lazy="false"/>
+
+    <applicationService serviceInterface="com.intellij.codeInsight.editorActions.TabOutScopesTracker" serviceImplementation="com.intellij.codeInsight.editorActions.TabOutScopesTrackerImpl" />
   </extensions>
 
   <applicationListeners>

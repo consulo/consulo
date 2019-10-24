@@ -3052,5 +3052,22 @@ public class ContainerUtil extends ContainerUtilRt {
     }
     return true;
   }
+
+  /**
+   * Returns the only item from the collection or null if collection is empty or contains more than one item
+   *
+   * @param items collection to get the item from
+   * @param <T>   type of collection element
+   * @return the only collection element or null
+   */
+  @Contract(pure = true)
+  public static <T> T getOnlyItem(@Nullable final Collection<? extends T> items) {
+    return getOnlyItem(items, null);
+  }
+
+  @Contract(pure = true)
+  public static <T> T getOnlyItem(@Nullable final Collection<? extends T> items, @Nullable final T defaultResult) {
+    return items == null || items.size() != 1 ? defaultResult : items.iterator().next();
+  }
 }
 

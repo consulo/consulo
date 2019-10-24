@@ -375,6 +375,7 @@ public class TypedHandler extends TypedActionHandlerBase {
         throw new AssertionError("Unknown char " + lparenChar);
       }
       editor.getDocument().insertString(offset, text);
+      TabOutScopesTracker.getInstance().registerEmptyScope(editor, offset);
     }
   }
 
@@ -476,6 +477,7 @@ public class TypedHandler extends TypedActionHandlerBase {
       if (offset == document.getTextLength() ||
           !Character.isUnicodeIdentifierPart(document.getCharsSequence().charAt(offset))) { //any better heuristic or an API?
         document.insertString(offset, String.valueOf(quote));
+        TabOutScopesTracker.getInstance().registerEmptyScope(editor, offset);
       }
     }
 
