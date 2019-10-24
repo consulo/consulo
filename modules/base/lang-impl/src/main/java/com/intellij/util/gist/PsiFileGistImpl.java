@@ -46,10 +46,7 @@ class PsiFileGistImpl<Data> implements PsiFileGist<Data> {
   private final VirtualFileGist.GistCalculator<Data> myCalculator;
   private final Key<CachedValue<Data>> myCacheKey;
 
-  PsiFileGistImpl(@Nonnull String id,
-                  int version,
-                  @Nonnull DataExternalizer<Data> externalizer,
-                  @Nonnull NullableFunction<PsiFile, Data> calculator) {
+  PsiFileGistImpl(@Nonnull String id, int version, @Nonnull DataExternalizer<Data> externalizer, @Nonnull NullableFunction<PsiFile, Data> calculator) {
     myCalculator = (project, file) -> {
       PsiFile psiFile = getPsiFile(project, file);
       return psiFile == null ? null : calculator.fun(psiFile);
@@ -63,11 +60,10 @@ class PsiFileGistImpl<Data> implements PsiFileGist<Data> {
     ApplicationManager.getApplication().assertReadAccessAllowed();
 
     if (shouldUseMemoryStorage(file)) {
-      return CachedValuesManager.getManager(file.getProject()).getCachedValue(
-              file, myCacheKey, () -> {
-                Data data = myCalculator.calcData(file.getProject(), file.getViewProvider().getVirtualFile());
-                return CachedValueProvider.Result.create(data, file, ourReindexTracker);
-              }, false);
+      return CachedValuesManager.getManager(file.getProject()).getCachedValue(file, myCacheKey, () -> {
+        Data data = myCalculator.calcData(file.getProject(), file.getViewProvider().getVirtualFile());
+        return CachedValueProvider.Result.create(data, file, ourReindexTracker);
+      }, false);
     }
 
     file.putUserData(myCacheKey, null);
@@ -84,7 +80,7 @@ class PsiFileGistImpl<Data> implements PsiFileGist<Data> {
 
   private static PsiFile getPsiFile(@Nonnull Project project, @Nonnull VirtualFile file) {
     PsiFile psi = PsiManager.getInstance(project).findFile(file);
-    if (psi == null || !(psi instanceof PsiFileImpl) || ((PsiFileImpl)psi).isContentsLoaded()) {
+    if (!(psi instanceof PsiFileImpl) || ((PsiFileImpl)psi).isContentsLoaded()) {
       return psi;
     }
 
