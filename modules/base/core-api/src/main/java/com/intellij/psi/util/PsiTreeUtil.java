@@ -35,9 +35,8 @@ import consulo.lang.LanguageVersionResolver;
 import consulo.lang.LanguageVersionResolvers;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
@@ -606,30 +605,6 @@ public class PsiTreeUtil {
 
   @Nullable
   @Contract("null, _ -> null")
-  public static PsiElement skipSiblingsForward(@Nullable PsiElement element, @Nonnull Class... elementClasses) {
-    if (element == null) return null;
-    NextSibling:
-    for (PsiElement e = element.getNextSibling(); e != null; e = e.getNextSibling()) {
-      if (instanceOf(e, elementClasses)) continue NextSibling;
-      return e;
-    }
-    return null;
-  }
-
-  @Nullable
-  @Contract("null, _ -> null")
-  public static PsiElement skipSiblingsBackward(@Nullable PsiElement element, @Nonnull Class... elementClasses) {
-    if (element == null) return null;
-    NextSibling:
-    for (PsiElement e = element.getPrevSibling(); e != null; e = e.getPrevSibling()) {
-      if (instanceOf(e, elementClasses)) continue NextSibling;
-      return e;
-    }
-    return null;
-  }
-
-  @Nullable
-  @Contract("null, _ -> null")
   public static PsiElement skipParentsOfType(@Nullable PsiElement element, @Nonnull Class... parentClasses) {
     if (element == null) return null;
     NextSibling:
@@ -1088,7 +1063,7 @@ public class PsiTreeUtil {
   @SafeVarargs
   @Nullable
   @Contract("null, _ -> null")
-  public static PsiElement skipSiblingsForward(@Nullable PsiElement element, @NotNull Class<? extends PsiElement>... elementClasses) {
+  public static PsiElement skipSiblingsForward(@Nullable PsiElement element, @Nonnull Class<? extends PsiElement>... elementClasses) {
     if (element == null) return null;
     for (PsiElement e = element.getNextSibling(); e != null; e = e.getNextSibling()) {
       if (!PsiTreeUtil.instanceOf(e, elementClasses)) {
@@ -1113,7 +1088,7 @@ public class PsiTreeUtil {
   @SafeVarargs
   @Nullable
   @Contract("null, _ -> null")
-  public static PsiElement skipSiblingsBackward(@Nullable PsiElement element, @NotNull Class<? extends PsiElement>... elementClasses) {
+  public static PsiElement skipSiblingsBackward(@Nullable PsiElement element, @Nonnull Class<? extends PsiElement>... elementClasses) {
     if (element == null) {
       return null;
     }
