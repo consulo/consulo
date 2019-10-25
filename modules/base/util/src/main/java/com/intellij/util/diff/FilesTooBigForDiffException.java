@@ -5,7 +5,8 @@ import com.intellij.openapi.util.registry.Registry;
 /**
  * @author irengrig
  */
-public class FilesTooBigForDiffException extends Exception {
+public class
+FilesTooBigForDiffException extends Exception {
   public static final int DELTA_THRESHOLD_SIZE = Registry.intValue("diff.delta.threshold.size");
   // Do not try to compare two lines by-word after this much fails.
   public static final int MAX_BAD_LINES = 3;

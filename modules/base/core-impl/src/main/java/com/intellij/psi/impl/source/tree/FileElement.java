@@ -21,6 +21,7 @@ import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.RecursionManager;
 import com.intellij.openapi.util.StackOverflowPreventedException;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiInvalidElementAccessException;
 import com.intellij.psi.StubBuilder;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.source.CharTableImpl;
@@ -30,8 +31,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.ILightStubFileElementType;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.util.CharTable;
-import consulo.annotations.RequiredReadAction;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,6 @@ public class FileElement extends LazyParseableElement implements FileASTNode, Ge
   private volatile boolean myDetached;
   private volatile AstSpine myStubbedSpine;
 
-  @RequiredReadAction
   @Override
   protected PsiElement createPsiNoLock() {
     return myDetached ? null : super.createPsiNoLock();
@@ -54,12 +53,12 @@ public class FileElement extends LazyParseableElement implements FileASTNode, Ge
   }
 
   @Override
-  @Nonnull
+  @NotNull
   public CharTable getCharTable() {
     return myCharTable;
   }
 
-  @Nonnull
+  @NotNull
   @Override
   public LighterAST getLighterAST() {
     IElementType contentType = getElementType();
@@ -69,20 +68,17 @@ public class FileElement extends LazyParseableElement implements FileASTNode, Ge
     return new TreeBackedLighterAST(this);
   }
 
-  public FileElement(@Nonnull IElementType type, CharSequence text) {
+  public FileElement(@NotNull IElementType type, CharSequence text) {
     super(type, text);
-  }
-
-  @Deprecated  // for 8.1 API compatibility
-  public FileElement(IElementType type) {
-    super(type, null);
   }
 
   @Override
   public PsiManagerEx getManager() {
     CompositeElement treeParent = getTreeParent();
     if (treeParent != null) return treeParent.getManager();
-    return (PsiManagerEx)getPsi().getManager(); //TODO: cache?
+    PsiElement psi = getPsi();
+    if (psi == null) throw PsiInvalidElementAccessException.createByNode(this, null);
+    return (PsiManagerEx)psi.getManager();
   }
 
   @Override
@@ -92,13 +88,7 @@ public class FileElement extends LazyParseableElement implements FileASTNode, Ge
     return psiElementCopy.getTreeElement();
   }
 
-  @Override
-  protected void clearPsi() {
-    super.clearPsi();
-    myStubbedSpine = null;
-  }
-
-  public void setCharTable(@Nonnull CharTable table) {
+  public void setCharTable(@NotNull CharTable table) {
     myCharTable = table;
   }
 
@@ -107,7 +97,13 @@ public class FileElement extends LazyParseableElement implements FileASTNode, Ge
     return this;
   }
 
-  @Nonnull
+  @Override
+  public void clearCaches() {
+    super.clearCaches();
+    myStubbedSpine = null;
+  }
+
+  @NotNull
   public final AstSpine getStubbedSpine() {
     AstSpine result = myStubbedSpine;
     if (result == null) {

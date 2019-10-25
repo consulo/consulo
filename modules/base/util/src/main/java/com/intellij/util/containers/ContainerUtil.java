@@ -19,7 +19,7 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.*;
 import gnu.trove.*;
-import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Contract;import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -30,7 +30,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;import java.util.function.IntFunction;
 
 @SuppressWarnings({"UtilityClassWithoutPrivateConstructor", "MethodOverridesStaticMethodOfSuperclass"})
 public class ContainerUtil extends ContainerUtilRt {
@@ -973,6 +973,57 @@ public class ContainerUtil extends ContainerUtilRt {
     return findAll(collection, condition);
   }
 
+  /**
+   * @return iterator with elements from the original {@param iterator} which are valid according to {@param filter} predicate.
+   */
+  @NotNull
+  @Contract(pure = true)
+  public static <T> Iterator<T> filterIterator(@NotNull final Iterator<? extends T> iterator, @NotNull final Condition<? super T> filter) {
+    return new Iterator<T>() {
+      T next;
+      boolean hasNext;
+
+      {
+        findNext();
+      }
+
+      @Override
+      public boolean hasNext() {
+        return hasNext;
+      }
+
+      private void findNext() {
+        hasNext = false;
+        while (iterator.hasNext()) {
+          T t = iterator.next();
+          if (filter.value(t)) {
+            next = t;
+            hasNext = true;
+            break;
+          }
+        }
+      }
+
+      @Override
+      public T next() {
+        T result;
+        if (hasNext) {
+          result = next;
+          findNext();
+        }
+        else {
+          throw new NoSuchElementException();
+        }
+        return result;
+      }
+
+      @Override
+      public void remove() {
+        iterator.remove();
+      }
+    };
+  }
+
   @Nonnull
   @Contract(pure = true)
   public static int[] filter(@Nonnull int[] collection, @Nonnull TIntProcedure condition) {
@@ -1605,6 +1656,27 @@ public class ContainerUtil extends ContainerUtilRt {
       @Override
       public U next() {
         return mapper.fun(iterator.next());
+      }
+
+      @Override
+      public void remove() {
+        iterator.remove();
+      }
+    };
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <U> Iterator<U> mapIterator(@NotNull TIntIterator iterator, @NotNull IntFunction<? extends U> mapper) {
+    return new Iterator<U>() {
+      @Override
+      public boolean hasNext() {
+        return iterator.hasNext();
+      }
+
+      @Override
+      public U next() {
+        return mapper.apply(iterator.next());
       }
 
       @Override

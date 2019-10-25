@@ -29,9 +29,9 @@ import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.impl.source.PsiFileWithStubSupport;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.util.SmartList;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -52,11 +52,11 @@ public class PsiFileStubImpl<T extends PsiFile> extends StubBase<T> implements P
   }
 
   @Override
-  public void setPsi(@Nonnull final T psi) {
+  public void setPsi(@NotNull final T psi) {
     myFile = psi;
   }
 
-  public void clearPsi(@Nonnull String reason) {
+  public void clearPsi(@NotNull String reason) {
     myInvalidationReason = reason;
     myFile = null;
   }
@@ -72,7 +72,7 @@ public class PsiFileStubImpl<T extends PsiFile> extends StubBase<T> implements P
     return null;
   }
 
-  @Nonnull
+  @NotNull
   @Override
   public IStubFileElementType getType() {
     return TYPE;
@@ -81,7 +81,7 @@ public class PsiFileStubImpl<T extends PsiFile> extends StubBase<T> implements P
   /**
    * Don't call this method, it's public for implementation reasons
    */
-  @Nonnull
+  @NotNull
   public PsiFileStub[] getStubRoots() {
     if (myStubRoots != null) return myStubRoots;
 
@@ -129,7 +129,7 @@ public class PsiFileStubImpl<T extends PsiFile> extends StubBase<T> implements P
     return result;
   }
 
-  public void setStubRoots(@Nonnull PsiFileStub[] roots) {
+  public void setStubRoots(@NotNull PsiFileStub[] roots) {
     if (roots.length == 0) {
       Logger.getInstance(getClass()).error("Incorrect psi file stub roots count" + this + "," + getStubType());
     }
