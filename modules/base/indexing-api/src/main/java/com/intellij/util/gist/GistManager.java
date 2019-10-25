@@ -19,6 +19,8 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.io.DataExternalizer;
+import consulo.annotations.DeprecationInfo;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -29,6 +31,8 @@ import javax.annotation.Nonnull;
 public abstract class GistManager {
 
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use constructor injecting")
   public static GistManager getInstance() {
     return ApplicationManager.getApplication().getComponent(GistManager.class);
   }

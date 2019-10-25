@@ -19,10 +19,14 @@ import com.intellij.util.io.DataExternalizer;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.inject.Singleton;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Singleton
 public final class GistManagerImpl extends GistManager {
   private static final Logger LOG = Logger.getInstance(GistManagerImpl.class);
   private static final Set<String> ourKnownIds = ContainerUtil.newConcurrentSet();
@@ -30,10 +34,17 @@ public final class GistManagerImpl extends GistManager {
   private final AtomicInteger myReindexCount = new AtomicInteger(PropertiesComponent.getInstance().getInt(ourPropertyName, 0));
 
   static final class MyBulkFileListener implements BulkFileListener {
+    private Provider<GistManager> myGistManager;
+
+    @Inject
+    MyBulkFileListener(Provider<GistManager> gistManager) {
+      myGistManager = gistManager;
+    }
+
     @Override
     public void after(@Nonnull List<? extends VFileEvent> events) {
       if (events.stream().anyMatch(MyBulkFileListener::shouldDropCache)) {
-        ((GistManagerImpl)GistManager.getInstance()).invalidateGists();
+        ((GistManagerImpl)myGistManager.get()).invalidateGists();
       }
     }
 
