@@ -41,7 +41,6 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
-import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SLRUCache;
@@ -166,7 +165,6 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     public TIntObjectHashMap<Pair<Integer, Integer>> createValue(Integer key) {
       TIntObjectHashMap<Pair<Integer, Integer>> map = null;
       try {
-        ensureOutputStorageInitialized();
         map = myOutputRootsStorage.get(key);
       }
       catch (IOException e) {
@@ -175,20 +173,27 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
       return map != null ? map : new TIntObjectHashMap<>();
     }
   };
+
+  private static final int VERSION = 2;
+
   private final ProjectManager myProjectManager;
   private final TIntIntHashMap myInitInProgress = new TIntIntHashMap(); // projectId for successfully initialized projects
   private final Object myAsyncScanLock = new Object();
 
   private boolean myForceCompiling;
 
+  private PersistentStringEnumerator myFilePathsEnumerator;
+
+  private boolean myInitialized;
+
   @Inject
   public TranslatingCompilerFilesMonitorImpl(VirtualFileManager vfsManager, ProjectManager projectManager, Application application) {
     myProjectManager = projectManager;
 
+    ensureOutputStorageInitialized();
+
     projectManager.addProjectManagerListener(new MyProjectManagerListener());
     vfsManager.addVirtualFileListener(new MyVfsListener(), application);
-
-    ensureOutputStorageInitialized();
   }
 
   @Override
@@ -207,7 +212,6 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
 
     synchronized (myProjectOutputRoots) {
-      ensureOutputStorageInitialized();
       myProjectOutputRoots.remove(projectId);
       try {
         myOutputRootsStorage.remove(projectId);
@@ -411,10 +415,8 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   }
 
   @Override
-  public void update(final CompileContext context,
-                     @Nullable final String outputRoot,
-                     final Collection<TranslatingCompiler.OutputItem> successfullyCompiled,
-                     final VirtualFile[] filesToRecompile) throws IOException {
+  public void update(final CompileContext context, @Nullable final String outputRoot, final Collection<TranslatingCompiler.OutputItem> successfullyCompiled, final VirtualFile[] filesToRecompile)
+          throws IOException {
     myForceCompiling = false;
     final Project project = context.getProject();
     final DependencyCache dependencyCache = ((CompileContextEx)context).getDependencyCache();
@@ -532,6 +534,10 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     return new File(CompilerPaths.getCompilerSystemDirectory(), "output_roots.dat");
   }
 
+  private static File getFilePathsFile() {
+    return new File(CompilerPaths.getCompilerSystemDirectory(), "file_paths.dat");
+  }
+
   private static void deleteStorageFiles(File tableFile) {
     final File[] files = tableFile.getParentFile().listFiles();
     if (files != null) {
@@ -572,23 +578,85 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   }
 
   private void ensureOutputStorageInitialized() {
-    if (myOutputRootsStorage != null) {
-      return;
+    if (myInitialized) {
+      throw new IllegalArgumentException();
     }
-    final File rootsFile = getOutputRootsFile();
+
+    int i = readVersion();
+    if (i != VERSION) {
+      try {
+        dropCache();
+        
+        FileUtil.writeToFile(getFileVersion(), String.valueOf(VERSION));
+      }
+      catch (IOException e) {
+        LOG.error(e);
+      }
+    }
+
     try {
-      initOutputRootsFile(rootsFile);
+      initOutputRootsFile();
     }
     catch (IOException e) {
       LOG.info(e);
-      deleteStorageFiles(rootsFile);
+
+      dropCache();
+
       try {
-        initOutputRootsFile(rootsFile);
+        initOutputRootsFile();
       }
       catch (IOException e1) {
         LOG.error(e1);
       }
     }
+  }
+
+  private void close() {
+    boolean failed = false;
+    try {
+      myFilePathsEnumerator.close();
+    }
+    catch (IOException e) {
+      LOG.error(e);
+      failed = true;
+    }
+
+    try {
+      myOutputRootsStorage.close();
+    }
+    catch (IOException e) {
+      LOG.error(e);
+      failed = true;
+    }
+
+    if (failed) {
+      dropCache();
+    }
+  }
+
+  private static void dropCache() {
+    try {
+      deleteStorageFiles(getOutputRootsFile());
+      deleteStorageFiles(getFilePathsFile());
+    }
+    catch (Exception e) {
+      LOG.warn(e);
+    }
+  }
+
+  private static int readVersion() {
+    File versionFile = getFileVersion();
+    try {
+      return StringUtil.parseInt(FileUtil.loadFile(versionFile), -1);
+    }
+    catch (IOException ignored) {
+    }
+
+    return -1;
+  }
+
+  private static File getFileVersion() {
+    return new File(CompilerPaths.getCompilerSystemDirectory(), "tr_compiler_ver");
   }
 
   private TIntObjectHashMap<Pair<Integer, Integer>> buildOutputRootsLayout(ProjectRef projRef) {
@@ -605,8 +673,10 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     return map;
   }
 
-  private void initOutputRootsFile(File rootsFile) throws IOException {
-    myOutputRootsStorage = new PersistentHashMap<>(rootsFile, EnumeratorIntegerDescriptor.INSTANCE, new DataExternalizer<TIntObjectHashMap<Pair<Integer, Integer>>>() {
+  private void initOutputRootsFile() throws IOException {
+    myFilePathsEnumerator = new PersistentStringEnumerator(getFilePathsFile());
+
+    myOutputRootsStorage = new PersistentHashMap<>(getOutputRootsFile(), EnumeratorIntegerDescriptor.INSTANCE, new DataExternalizer<TIntObjectHashMap<Pair<Integer, Integer>>>() {
       @Override
       public void save(DataOutput out, TIntObjectHashMap<Pair<Integer, Integer>> value) throws IOException {
         for (final TIntObjectIterator<Pair<Integer, Integer>> it = value.iterator(); it.hasNext(); ) {
@@ -631,6 +701,8 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         return map;
       }
     });
+
+    myInitialized = true;
   }
 
   @Override
@@ -646,16 +718,8 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
       }
     }
 
-    try {
-      final PersistentHashMap<Integer, TIntObjectHashMap<Pair<Integer, Integer>>> storage = myOutputRootsStorage;
-      if (storage != null) {
-        storage.close();
-      }
-    }
-    catch (IOException e) {
-      LOG.info(e);
-      deleteStorageFiles(getOutputRootsFile());
-    }
+
+    close();
   }
 
   private static void savePathsToDelete(final File file, final Map<String, SourceUrlClassNamePair> outputs) {
@@ -1866,12 +1930,34 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
   }
 
-  private static int cacheFilePath(@Nonnull String filePath) {
-    return FSRecords.getNameId(filePath);
+  private static int cacheFilePath(String filePath) {
+    TranslatingCompilerFilesMonitorImpl monitor = (TranslatingCompilerFilesMonitorImpl)TranslatingCompilerFilesMonitor.getInstance();
+    return monitor.cacheFilePath0(filePath);
   }
 
   private static String getFilePath(int id) {
-    return FSRecords.getName(id);
+    TranslatingCompilerFilesMonitorImpl monitor = (TranslatingCompilerFilesMonitorImpl)TranslatingCompilerFilesMonitor.getInstance();
+    return monitor.getFilePath0(id);
+  }
+
+  private int cacheFilePath0(@Nonnull String filePath) {
+    try {
+      return myFilePathsEnumerator.enumerate(filePath);
+    }
+    catch (IOException e) {
+      LOG.error(e);
+      return -1;
+    }
+  }
+
+  private String getFilePath0(int id) {
+    try {
+      return myFilePathsEnumerator.valueOf(id);
+    }
+    catch (IOException e) {
+      LOG.error(e);
+      return null;
+    }
   }
 
   public static final class ProjectRef extends Ref<Project> {
