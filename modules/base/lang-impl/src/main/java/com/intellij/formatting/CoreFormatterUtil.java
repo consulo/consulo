@@ -15,21 +15,20 @@
  */
 package com.intellij.formatting;
 
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.codeStyle.CodeStyleConstraints;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 /**
  * Contains utility methods for core formatter processing.
- *
- * @author Denis Zhdanov
- * @since 4/28/11 4:16 PM
  */
 public class CoreFormatterUtil {
 
@@ -39,22 +38,28 @@ public class CoreFormatterUtil {
   @Nonnull
   public static FormattingModel buildModel(@Nonnull FormattingModelBuilder builder,
                                            @Nonnull PsiElement element,
+                                           @Nonnull TextRange range,
                                            @Nonnull CodeStyleSettings settings,
                                            @Nonnull FormattingMode mode) {
     if (builder instanceof FormattingModelBuilderEx) {
-      return ((FormattingModelBuilderEx)builder).createModel(element, settings, mode);
+      return ((FormattingModelBuilderEx)builder).createModel(element, range, settings, mode);
     }
     else {
       return builder.createModel(element, settings);
     }
   }
 
+  @Nonnull
+  public static FormattingModel buildModel(@Nonnull FormattingModelBuilder builder, @Nonnull PsiElement element, @Nonnull CodeStyleSettings settings, @Nonnull FormattingMode mode) {
+    return buildModel(builder, element, element.getTextRange(), settings, mode);
+  }
+
   /**
    * Checks if there is an {@link AlignmentImpl} object that should be used during adjusting
    * {@link AbstractBlockWrapper#getWhiteSpace() white space} of the given block.
    *
-   * @param block     target block
-   * @return          alignment object to use during adjusting white space of the given block if any; <code>null</code> otherwise
+   * @param block target block
+   * @return alignment object to use during adjusting white space of the given block if any; {@code null} otherwise
    */
   @Nullable
   public static AlignmentImpl getAlignment(final @Nonnull AbstractBlockWrapper block) {
@@ -91,29 +96,24 @@ public class CoreFormatterUtil {
    * @return non-line feed symbols to the left of the given wrapped block
    */
   public static int getStartColumn(@Nullable LeafBlockWrapper block) {
-    if (block != null) {
-      int result = 0;
-      while (true) {
-        final WhiteSpace whiteSpace = block.getWhiteSpace();
-        result += whiteSpace.getTotalSpaces();
-        if (whiteSpace.containsLineFeeds()) {
-          return result;
-        }
-        block = block.getPreviousBlock();
-        if (block == null) return result;
-        result += block.getSymbolsAtTheLastLine();
-        if (block.containsLineFeeds()) return result;
-      }
-    }
-    else {
-      return -1;
+    if (block == null) return -1;
+
+    int result = 0;
+    while (true) {
+      final WhiteSpace whiteSpace = block.getWhiteSpace();
+      result += whiteSpace.getTotalSpaces();
+      if (whiteSpace.containsLineFeeds()) return result;
+      block = block.getPreviousBlock();
+      if (result > CodeStyleConstraints.MAX_RIGHT_MARGIN || block == null) return result;
+      result += block.getSymbolsAtTheLastLine();
+      if (block.containsLineFeeds()) return result;
     }
   }
 
   /**
    * Tries to find the closest block that starts before the given block and contains line feeds.
    *
-   * @return closest block to the given block that contains line feeds if any; <code>null</code> otherwise
+   * @return closest block to the given block that contains line feeds if any; {@code null} otherwise
    */
   @Nullable
   public static AbstractBlockWrapper getIndentedParentBlock(@Nonnull AbstractBlockWrapper block) {
@@ -141,9 +141,9 @@ public class CoreFormatterUtil {
    *     }
    * </pre>
    * <p/>
-   * It's possible that blocks <code>'i'</code> and <code>'buffer'</code> should be aligned. As formatter processes document from
-   * start to end that means that requirement to shift block <code>'i'</code> to the right is discovered only during
-   * <code>'buffer'</code> block processing. I.e. formatter returns to the previously processed block (<code>'i'</code>), modifies
+   * It's possible that blocks {@code 'i'} and {@code 'buffer'} should be aligned. As formatter processes document from
+   * start to end that means that requirement to shift block {@code 'i'} to the right is discovered only during
+   * {@code 'buffer'} block processing. I.e. formatter returns to the previously processed block ({@code 'i'}), modifies
    * its white space and continues from that location (performs 'backward' shift).
    * <p/>
    * Here is one very important moment - there is a possible case that formatting blocks are configured in a way that they are
@@ -155,52 +155,46 @@ public class CoreFormatterUtil {
    *       bloh), bluh);
    * </pre>
    * <p/>
-   * Consider that pairs of blocks <code>'blih'; 'bloh'</code> and <code>'bleh', 'bluh'</code> should be aligned
+   * Consider that pairs of blocks {@code 'blih'; 'bloh'} and {@code 'bleh', 'bluh'} should be aligned
    * and backward shift is possible for them. Here is how formatter works:
    * <ol>
-   *   <li>
-   *      Processing reaches <b>'bloh'</b> block. It's aligned to <code>'blih'</code> block. Current document state:
-   *      <p/>
-   *      <pre>
+   * <li>
+   * Processing reaches <b>'bloh'</b> block. It's aligned to {@code 'blih'} block. Current document state:
+   * <p/>
+   * <pre>
    *          blah(bleh(blih,
    *                    bloh), bluh);
    *      </pre>
-   *   </li>
-   *   <li>
-   *      Processing reaches <b>'bluh'</b> block. It's aligned to <code>'blih'</code> block and backward shift is allowed, hence,
-   *      <code>'blih'</code> block is moved to the right and processing contnues from it. Current document state:
-   *      <pre>
+   * </li>
+   * <li>
+   * Processing reaches <b>'bluh'</b> block. It's aligned to {@code 'blih'} block and backward shift is allowed, hence,
+   * {@code 'blih'} block is moved to the right and processing contnues from it. Current document state:
+   * <pre>
    *          blah(            bleh(blih,
    *                    bloh), bluh);
    *      </pre>
-   *   </li>
-   *   <li>
-   *      Processing reaches <b>'bloh'</b> block. It's configured to be aligned to <code>'blih'</code> block, hence, it's moved
-   *      to the right:
-   *      <pre>
+   * </li>
+   * <li>
+   * Processing reaches <b>'bloh'</b> block. It's configured to be aligned to {@code 'blih'} block, hence, it's moved
+   * to the right:
+   * <pre>
    *          blah(            bleh(blih,
    *                                bloh), bluh);
    *      </pre>
-   *   </li>
-   *   <li>We have endless loop then;</li>
+   * </li>
+   * <li>We have endless loop then;</li>
    * </ol>
    * So, that implies that we can't use backward alignment if the blocks are configured in a way that backward alignment
    * appliance produces endless loop. This method encapsulates the logic for checking if backward alignment can be applied.
    *
-   * @param first                  the first aligned block
-   * @param second                 the second aligned block
-   * @param alignmentMappings      block aligned mappings info
-   * @return                       <code>true</code> if backward alignment is possible; <code>false</code> otherwise
+   * @param first             the first aligned block
+   * @param second            the second aligned block
+   * @param alignmentMappings block aligned mappings info
+   * @return {@code true} if backward alignment is possible; {@code false} otherwise
    */
-  public static boolean allowBackwardAlignment(@Nonnull LeafBlockWrapper first, @Nonnull LeafBlockWrapper second,
-                                               @Nonnull Map<AbstractBlockWrapper, Set<AbstractBlockWrapper>> alignmentMappings)
-  {
-    Set<AbstractBlockWrapper> blocksBeforeCurrent = new HashSet<AbstractBlockWrapper>();
-    for (
-            LeafBlockWrapper previousBlock = second.getPreviousBlock();
-            previousBlock != null;
-            previousBlock = previousBlock.getPreviousBlock())
-    {
+  public static boolean allowBackwardAlignment(@Nonnull LeafBlockWrapper first, @Nonnull LeafBlockWrapper second, @Nonnull Map<AbstractBlockWrapper, Set<AbstractBlockWrapper>> alignmentMappings) {
+    Set<AbstractBlockWrapper> blocksBeforeCurrent = new HashSet<>();
+    for (LeafBlockWrapper previousBlock = second.getPreviousBlock(); previousBlock != null; previousBlock = previousBlock.getPreviousBlock()) {
       Set<AbstractBlockWrapper> blocks = alignmentMappings.get(previousBlock);
       if (blocks != null) {
         blocksBeforeCurrent.addAll(blocks);
@@ -211,11 +205,7 @@ public class CoreFormatterUtil {
       }
     }
 
-    for (
-            LeafBlockWrapper next = first.getNextBlock();
-            next != null && !next.getWhiteSpace().containsLineFeeds();
-            next = next.getNextBlock())
-    {
+    for (LeafBlockWrapper next = first.getNextBlock(); next != null && !next.getWhiteSpace().containsLineFeeds(); next = next.getNextBlock()) {
       if (blocksBeforeCurrent.contains(next)) {
         return false;
       }
@@ -226,14 +216,12 @@ public class CoreFormatterUtil {
   /**
    * Calculates indent for the given block and target start offset according to the given indent options.
    *
-   * @param options                 indent options to use
-   * @param block                   target wrapped block
-   * @param tokenBlockStartOffset   target wrapped block offset
-   * @return                        indent to use for the given parameters
+   * @param options               indent options to use
+   * @param block                 target wrapped block
+   * @param tokenBlockStartOffset target wrapped block offset
+   * @return indent to use for the given parameters
    */
-  public static IndentData getIndent(CommonCodeStyleSettings.IndentOptions options, AbstractBlockWrapper block,
-                                     final int tokenBlockStartOffset)
-  {
+  public static IndentData getIndent(CommonCodeStyleSettings.IndentOptions options, AbstractBlockWrapper block, final int tokenBlockStartOffset) {
     final IndentImpl indent = block.getIndent();
     if (indent.getType() == Indent.Type.CONTINUATION) {
       return new IndentData(options.CONTINUATION_INDENT_SIZE);
@@ -248,7 +236,7 @@ public class CoreFormatterUtil {
     }
     if (indent.getType() == Indent.Type.LABEL) return new IndentData(options.LABEL_INDENT_SIZE);
     if (indent.getType() == Indent.Type.NONE) return new IndentData(0);
-    if (indent.getType() == Indent.Type.SPACES) return new IndentData(0, indent.getSpaces());
+    if (indent.getType() == Indent.Type.SPACES) return new IndentData(indent.getSpaces(), 0);
     return new IndentData(options.INDENT_SIZE);
   }
 

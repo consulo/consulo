@@ -16,8 +16,9 @@
 package com.intellij.formatting.engine;
 
 import com.intellij.formatting.*;
-import com.intellij.formatting.FormatProcessor;
+import com.intellij.psi.codeStyle.CodeStyleConstraints;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class IndentAdjuster {
@@ -35,7 +36,7 @@ public class IndentAdjuster {
    *
    * @return new current block if we need to rollback, null otherwise
    */
-  public LeafBlockWrapper adjustIndent(LeafBlockWrapper block) {
+  LeafBlockWrapper adjustIndent(LeafBlockWrapper block) {
     AlignmentImpl alignment = CoreFormatterUtil.getAlignment(block);
     WhiteSpace whiteSpace = block.getWhiteSpace();
 
@@ -104,40 +105,50 @@ public class IndentAdjuster {
     }
   }
 
-  public IndentInfo adjustLineIndent(LeafBlockWrapper currentBlock, FormatProcessor.ChildAttributesInfo info) {
+  public IndentInfo adjustLineIndent(FormatProcessor.ChildAttributesInfo info) {
     AbstractBlockWrapper parent = info.parent;
     ChildAttributes childAttributes = info.attributes;
     int index = info.index;
 
-    int alignOffset = getAlignOffsetBefore(childAttributes.getAlignment(), null);
-    if (alignOffset == -1) {
+    AlignWhiteSpace alignWhiteSpace = getAlignOffsetBefore(childAttributes.getAlignment());
+    if (alignWhiteSpace == null) {
       return parent.calculateChildOffset(myBlockIndentOptions.getIndentOptions(parent), childAttributes, index).createIndentInfo();
     }
     else {
-      AbstractBlockWrapper indentedParentBlock = CoreFormatterUtil.getIndentedParentBlock(currentBlock);
-      if (indentedParentBlock == null) {
-        return new IndentInfo(0, 0, alignOffset);
-      }
-      else {
-        int indentOffset = indentedParentBlock.getWhiteSpace().getIndentOffset();
-        if (indentOffset > alignOffset) {
-          return new IndentInfo(0, 0, alignOffset);
-        }
-        else {
-          return new IndentInfo(0, indentOffset, alignOffset - indentOffset);
-        }
-      }
+      return new IndentInfo(0, alignWhiteSpace.indentSpaces, alignWhiteSpace.alignSpaces);
     }
   }
 
-  private static int getAlignOffsetBefore(@Nullable final Alignment alignment, @Nullable final LeafBlockWrapper blockAfter) {
-    if (alignment == null) return -1;
-    final LeafBlockWrapper alignRespBlock = ((AlignmentImpl)alignment).getOffsetRespBlockBefore(blockAfter);
-    if (alignRespBlock != null) {
-      return CoreFormatterUtil.getStartColumn(alignRespBlock);
-    }
-    else {
-      return -1;
+  private static class AlignWhiteSpace {
+    int indentSpaces = 0;
+    int alignSpaces = 0;
+  }
+
+  private static AlignWhiteSpace getAlignOffsetBefore(@Nullable final Alignment alignment) {
+    if (alignment == null) return null;
+    final LeafBlockWrapper alignRespBlock = ((AlignmentImpl)alignment).getOffsetRespBlockBefore(null);
+    return alignRespBlock != null ? getStartColumn(alignRespBlock) : null;
+  }
+
+  private static AlignWhiteSpace getStartColumn(@Nonnull LeafBlockWrapper block) {
+    AlignWhiteSpace alignWhitespace = new AlignWhiteSpace();
+    while (true) {
+      final WhiteSpace whiteSpace = block.getWhiteSpace();
+      alignWhitespace.alignSpaces += whiteSpace.getSpaces();
+
+      if (whiteSpace.containsLineFeeds()) {
+        alignWhitespace.indentSpaces += whiteSpace.getIndentSpaces();
+        return alignWhitespace;
+      }
+      else {
+        alignWhitespace.alignSpaces += whiteSpace.getIndentSpaces();
+      }
+
+      block = block.getPreviousBlock();
+      if (alignWhitespace.alignSpaces > CodeStyleConstraints.MAX_RIGHT_MARGIN || block == null) return alignWhitespace;
+      alignWhitespace.alignSpaces += block.getSymbolsAtTheLastLine();
+      if (block.containsLineFeeds()) return alignWhitespace;
     }
   }
+
 }

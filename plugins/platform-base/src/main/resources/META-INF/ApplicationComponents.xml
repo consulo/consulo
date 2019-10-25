@@ -148,11 +148,6 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.formatting.FormatterEx</interface-class>
-      <implementation-class>com.intellij.formatting.FormatterImpl</implementation-class>
-    </component>
-
-    <component>
       <interface-class>com.intellij.util.indexing.FileBasedIndex</interface-class>
       <implementation-class>com.intellij.util.indexing.FileBasedIndexImpl</implementation-class>
     </component>
@@ -205,11 +200,6 @@
 
     <component>
       <implementation-class>com.intellij.codeInsight.preview.ImageOrColorPreviewManager</implementation-class>
-    </component>
-
-    <component>
-      <interface-class>com.intellij.util.gist.GistManager</interface-class>
-      <implementation-class>com.intellij.util.gist.GistManagerImpl</implementation-class>
     </component>
   </application-components>
 </consulo-plugin>

@@ -17,7 +17,7 @@
 package com.intellij.formatting;
 
 import com.intellij.formatting.engine.*;
-import consulo.logging.Logger;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
@@ -32,30 +32,25 @@ public class FormatProcessor {
   private static final Logger LOG = Logger.getInstance("#com.intellij.formatting.FormatProcessor");
 
   private final WrapBlocksState myWrapState;
-  private boolean myReformatContext;
+  private final boolean myReformatContext;
   private final Document myDocument;
 
   @Nonnull
   private final FormattingProgressCallback myProgressCallback;
 
   @Nonnull
-  private StateProcessor myStateProcessor;
+  private final StateProcessor myStateProcessor;
 
   public FormatProcessor(final FormattingDocumentModel docModel,
                          Block rootBlock,
                          CodeStyleSettings settings,
                          CommonCodeStyleSettings.IndentOptions indentOptions,
                          @Nullable FormatTextRanges affectedRanges,
-                         @Nonnull FormattingProgressCallback progressCallback)
-  {
-    this(docModel, rootBlock, new FormatOptions(settings, indentOptions, affectedRanges, false), progressCallback);
+                         @Nonnull FormattingProgressCallback progressCallback) {
+    this(docModel, rootBlock, new FormatOptions(settings, indentOptions, affectedRanges), progressCallback);
   }
 
-  public FormatProcessor(final FormattingDocumentModel model,
-                         Block block,
-                         FormatOptions options,
-                         @Nonnull FormattingProgressCallback callback)
-  {
+  public FormatProcessor(final FormattingDocumentModel model, Block block, FormatOptions options, @Nonnull FormattingProgressCallback callback) {
     myProgressCallback = callback;
 
     CommonCodeStyleSettings.IndentOptions defaultIndentOption = options.myIndentOptions;
@@ -63,15 +58,15 @@ public class FormatProcessor {
     BlockIndentOptions blockIndentOptions = new BlockIndentOptions(settings, defaultIndentOption, block);
 
     myDocument = model.getDocument();
-    myReformatContext = options.myReformatContext;
+    myReformatContext = options.isReformatWithContext();
 
-    final InitialInfoBuilder builder = prepareToBuildBlocksSequentially(block, model, options, settings, defaultIndentOption, myProgressCallback);
+    final InitialInfoBuilder builder = prepareToBuildBlocksSequentially(block, model, options, defaultIndentOption, myProgressCallback);
     myWrapState = new WrapBlocksState(builder, blockIndentOptions);
 
     FormatTextRanges ranges = options.myAffectedRanges;
 
     if (ranges != null && myReformatContext) {
-      AdjustFormatRangesState adjustRangesState = new AdjustFormatRangesState(block, ranges);
+      AdjustFormatRangesState adjustRangesState = new AdjustFormatRangesState(block, ranges, model);
       myStateProcessor = new StateProcessor(adjustRangesState);
       myStateProcessor.setNextState(myWrapState);
     }
@@ -189,13 +184,11 @@ public class FormatProcessor {
     }
 
     IndentAdjuster adjuster = myWrapState.getIndentAdjuster();
-    return adjuster.adjustLineIndent(current, info);
+    return adjuster.adjustLineIndent(info);
   }
 
   @Nullable
-  private static ChildAttributesInfo getChildAttributesInfo(@Nonnull final Block block,
-                                                            final int index,
-                                                            @Nullable AbstractBlockWrapper parent) {
+  private static ChildAttributesInfo getChildAttributesInfo(@Nonnull final Block block, final int index, @Nullable AbstractBlockWrapper parent) {
     if (parent == null) {
       return null;
     }
@@ -239,7 +232,6 @@ public class FormatProcessor {
     AbstractBlockWrapper parentBlockToUse = getLastNestedCompositeBlockForSameRange(parent);
     if (!(parentBlockToUse instanceof CompositeBlockWrapper)) return 0;
     final List<AbstractBlockWrapper> subBlocks = ((CompositeBlockWrapper)parentBlockToUse).getChildren();
-    //noinspection ConstantConditions
     if (subBlocks != null) {
       for (int i = 0; i < subBlocks.size(); i++) {
         AbstractBlockWrapper block = subBlocks.get(i);
@@ -295,9 +287,7 @@ public class FormatProcessor {
     if (current.getParent() == null) return null;
 
     if (current.getEndOffset() <= offset) {
-      while (!current.isIncomplete() &&
-             current.getParent() != null &&
-             current.getParent().getEndOffset() <= offset) {
+      while (!current.isIncomplete() && current.getParent() != null && current.getParent().getEndOffset() <= offset) {
         current = current.getParent();
       }
       if (current.isIncomplete()) return current;
@@ -336,8 +326,8 @@ public class FormatProcessor {
    * There is a possible case that particular block is a composite block that contains number of nested composite blocks
    * that all target the same text range. This method allows to derive the most nested block that shares the same range (if any).
    *
-   * @param block   block to check
-   * @return        the most nested block of the given one that shares the same text range if any; given block otherwise
+   * @param block block to check
+   * @return the most nested block of the given one that shares the same text range if any; given block otherwise
    */
   @Nonnull
   private static AbstractBlockWrapper getLastNestedCompositeBlockForSameRange(@Nonnull final AbstractBlockWrapper block) {
@@ -354,9 +344,7 @@ public class FormatProcessor {
       }
 
       candidate = subBlocks.get(0);
-      if (candidate.getStartOffset() == block.getStartOffset() && candidate.getEndOffset() == block.getEndOffset()
-          && candidate instanceof CompositeBlockWrapper)
-      {
+      if (candidate.getStartOffset() == block.getStartOffset() && candidate.getEndOffset() == block.getEndOffset() && candidate instanceof CompositeBlockWrapper) {
         result = candidate;
       }
       else {
@@ -392,27 +380,22 @@ public class FormatProcessor {
     public CommonCodeStyleSettings.IndentOptions myIndentOptions;
 
     public FormatTextRanges myAffectedRanges;
-    public boolean myReformatContext;
 
     public int myInterestingOffset;
 
-    public FormatOptions(CodeStyleSettings settings,
-                         CommonCodeStyleSettings.IndentOptions options,
-                         FormatTextRanges ranges,
-                         boolean reformatContext) {
-      this(settings, options, ranges, reformatContext, -1);
+    public FormatOptions(CodeStyleSettings settings, CommonCodeStyleSettings.IndentOptions options, FormatTextRanges ranges) {
+      this(settings, options, ranges, -1);
     }
 
-    public FormatOptions(CodeStyleSettings settings,
-                         CommonCodeStyleSettings.IndentOptions options,
-                         FormatTextRanges ranges,
-                         boolean reformatContext,
-                         int interestingOffset) {
+    public FormatOptions(CodeStyleSettings settings, CommonCodeStyleSettings.IndentOptions options, FormatTextRanges ranges, int interestingOffset) {
       mySettings = settings;
       myIndentOptions = options;
       myAffectedRanges = ranges;
-      myReformatContext = reformatContext;
       myInterestingOffset = interestingOffset;
+    }
+
+    public boolean isReformatWithContext() {
+      return myAffectedRanges != null && myAffectedRanges.isExtendToContext();
     }
   }
 }
