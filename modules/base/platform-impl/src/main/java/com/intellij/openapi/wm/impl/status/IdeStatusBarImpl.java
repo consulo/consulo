@@ -171,7 +171,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx, IdeEven
     setBorder(JBUI.Borders.empty());
 
     myInfoAndProgressPanel = new InfoAndProgressPanel();
-    addWidget(myInfoAndProgressPanel, Position.CENTER);
+    addWidget(myInfoAndProgressPanel, Position.CENTER, "__IGNORED__");
 
     setOpaque(true);
     updateUI();

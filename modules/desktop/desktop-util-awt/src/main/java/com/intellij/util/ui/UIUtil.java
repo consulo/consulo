@@ -203,11 +203,10 @@ public class UIUtil {
     JComponent c = (JComponent)comp;
 
     if (isUnderAquaBasedLookAndFeel()) {
-      c.putClientProperty("JComponent.sizeVariant", componentStyle == ComponentStyle.REGULAR ? "regular" : componentStyle == ComponentStyle.SMALL ? "small" : "mini");
+      c.putClientProperty("JComponent.sizeVariant", StringUtil.toLowerCase(componentStyle.name()));
     }
-    else {
-      c.setFont(getFont(componentStyle == ComponentStyle.REGULAR ? FontSize.NORMAL : componentStyle == ComponentStyle.SMALL ? FontSize.SMALL : FontSize.MINI, c.getFont()));
-    }
+    FontSize fontSize = componentStyle == ComponentStyle.MINI ? FontSize.MINI : componentStyle == ComponentStyle.SMALL ? FontSize.SMALL : FontSize.NORMAL;
+    c.setFont(getFont(fontSize, c.getFont()));
     Container p = c.getParent();
     if (p != null) {
       SwingUtilities.updateComponentTreeUI(p);

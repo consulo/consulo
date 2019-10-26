@@ -96,6 +96,16 @@ public class MockDumbService extends DumbService {
     return false;
   }
 
+  @Override
+  public void suspendIndexingAndRun(@Nonnull String activityName, @Nonnull Runnable activity) {
+
+  }
+
+  @Override
+  public boolean isSuspendedDumbMode() {
+    return false;
+  }
+
   public void smartInvokeLater(@Nonnull final Runnable runnable) {
     runnable.run();
   }

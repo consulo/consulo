@@ -15,173 +15,40 @@
  */
 package consulo.ide.ui.laf.modern;
 
-import com.intellij.util.ui.GraphicsUtil;
-import com.intellij.util.ui.JBUI;
-import sun.swing.SwingUtilities2;
+import com.intellij.ide.ui.laf.darcula.ui.DarculaProgressBarUI;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.basic.BasicProgressBarUI;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Area;
-import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 
-/**
- * @author VISTALL
- * @since 05.08.14
- * <p/>
- * Based on {@link com.intellij.ide.ui.laf.darcula.ui.DarculaProgressBarUI}
- */
-public class ModernProgressBarUI extends BasicProgressBarUI {
-
-  @SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass", "UnusedDeclaration"})
+public class ModernProgressBarUI extends DarculaProgressBarUI {
   public static ComponentUI createUI(JComponent c) {
-    c.setBorder(JBUI.Borders.empty().asUIResource());
     return new ModernProgressBarUI();
   }
 
-  protected volatile int offset = 0;
-
   @Override
-  protected void paintIndeterminate(Graphics g, JComponent c) {
-    if (!(g instanceof Graphics2D)) {
-      return;
-    }
-
-    Insets b = progressBar.getInsets(); // area for border
-    int barRectWidth = progressBar.getWidth() - (b.right + b.left);
-    int barRectHeight = progressBar.getHeight() - (b.top + b.bottom);
-
-    if (barRectWidth <= 0 || barRectHeight <= 0) {
-      return;
-    }
-    //boxRect = getBox(boxRect);
-    g.setColor(c.getForeground());
-    int w = c.getWidth();
-    int h = c.getHeight();
-    g.fillRect(0, 0, w, h);
-    g.setColor(UIManager.getColor("ProgressBar.stepColor2"));
-    GraphicsUtil.setupAAPainting(g);
-    Path2D.Double path = new Path2D.Double();
-    int ww = getPeriodLength() / 2;
-    path.moveTo(0, 0);
-    path.lineTo(ww, 0);
-    path.lineTo(ww - h / 2, h);
-    path.lineTo(-h / 2, h);
-    path.lineTo(0, 0);
-    path.closePath();
-    int x = -offset;
-    while (x < Math.max(c.getWidth(), c.getHeight())) {
-      g.translate(x, 0);
-      ((Graphics2D)g).fill(path);
-      g.translate(-x, 0);
-      x += getPeriodLength();
-    }
-    offset = (offset + 1) % getPeriodLength();
-    Area area = new Area(new Rectangle2D.Double(0, 0, w, h));
-    area.subtract(new Area(new Rectangle2D.Double(0, 0, w, h)));
-    ((Graphics2D)g).setPaint(ModernUIUtil.getDisabledBorderColor());
-    ((Graphics2D)g).fill(area);
-   /* area.subtract(new Area(new RoundRectangle2D.Double(0,0,w, h, 9,9)));
-    ((Graphics2D)g).setPaint(c.getParent().getBackground());
-    ((Graphics2D)g).fill(area);
-    g.drawRect(1,1, w-3, h-3);   */
-
-    // Deal with possible text painting
-    if (progressBar.isStringPainted()) {
-      if (progressBar.getOrientation() == SwingConstants.HORIZONTAL) {
-        paintString(g, b.left, b.top, barRectWidth, barRectHeight, boxRect.x, boxRect.width);
-      }
-      else {
-        paintString(g, b.left, b.top, barRectWidth, barRectHeight, boxRect.y, boxRect.height);
-      }
-    }
+  protected Color getFinishedColor() {
+    return UIManager.getColor("ProgressBar.stepColor2");
   }
 
   @Override
-  protected void paintDeterminate(Graphics g, JComponent c) {
-    if (!(g instanceof Graphics2D)) {
-      return;
-    }
-
-    if (progressBar.getOrientation() != SwingConstants.HORIZONTAL || !c.getComponentOrientation().isLeftToRight()) {
-      super.paintDeterminate(g, c);
-      return;
-    }
-    GraphicsUtil.setupAAPainting(g);
-    Insets b = progressBar.getInsets(); // area for border
-    final int w = progressBar.getWidth();
-    final int h = progressBar.getHeight();
-    int barRectWidth = w - (b.right + b.left);
-    int barRectHeight = h - (b.top + b.bottom);
-
-    if (barRectWidth <= 0 || barRectHeight <= 0) {
-      return;
-    }
-
-    int amountFull = getAmountFull(b, barRectWidth, barRectHeight);
-
-    g.setColor(ModernUIUtil.getDisabledBorderColor());
-    g.fillRect(0, 0, w, h);
-    g.setColor(c.getForeground());
-    g.fillRect(0, 0, amountFull, h);
-
-    // Deal with possible text painting
-    if (progressBar.isStringPainted()) {
-      paintString(g, b.left, b.top, barRectWidth, barRectHeight, amountFull, b);
-    }
-
-  }
-
-  private void paintString(Graphics g, int x, int y, int w, int h, int fillStart, int amountFull) {
-    if (!(g instanceof Graphics2D)) {
-      return;
-    }
-
-    Graphics2D g2 = (Graphics2D)g;
-    String progressString = progressBar.getString();
-    g2.setFont(progressBar.getFont());
-    Point renderLocation = getStringPlacement(g2, progressString, x, y, w, h);
-    Rectangle oldClip = g2.getClipBounds();
-
-    if (progressBar.getOrientation() == JProgressBar.HORIZONTAL) {
-      g2.setColor(getSelectionBackground());
-      SwingUtilities2.drawString(progressBar, g2, progressString, renderLocation.x, renderLocation.y);
-      g2.setColor(getSelectionForeground());
-      g2.clipRect(fillStart, y, amountFull, h);
-      SwingUtilities2.drawString(progressBar, g2, progressString, renderLocation.x, renderLocation.y);
-    }
-    else { // VERTICAL
-      g2.setColor(getSelectionBackground());
-      AffineTransform rotate = AffineTransform.getRotateInstance(Math.PI / 2);
-      g2.setFont(progressBar.getFont().deriveFont(rotate));
-      renderLocation = getStringPlacement(g2, progressString, x, y, w, h);
-      SwingUtilities2.drawString(progressBar, g2, progressString, renderLocation.x, renderLocation.y);
-      g2.setColor(getSelectionForeground());
-      g2.clipRect(x, fillStart, w, amountFull);
-      SwingUtilities2.drawString(progressBar, g2, progressString, renderLocation.x, renderLocation.y);
-    }
-    g2.setClip(oldClip);
+  protected Color getStartColor() {
+    return getFinishedColor();
   }
 
   @Override
-  protected Dimension getPreferredInnerHorizontal() {
-    return JBUI.size(146, 12).asUIResource();
+  protected Color getEndColor() {
+    return getStartColor().darker();
   }
 
   @Override
-  protected Dimension getPreferredInnerVertical() {
-    return JBUI.size(12, 146).asUIResource();
+  protected int getDefaultWidth() {
+    return 12;
   }
 
   @Override
-  protected int getBoxLength(int availableLength, int otherDimension) {
-    return availableLength;
-  }
-
-  protected int getPeriodLength() {
-    return JBUI.scale(16);
+  protected Shape getShapedRect(float x, float y, float w, float h, float ar) {
+    return new Rectangle2D.Float(x, y, w, h);
   }
 }

@@ -24,47 +24,64 @@ import com.intellij.openapi.progress.util.ProgressIndicatorListenerAdapter;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
-import consulo.logging.Logger;
-
+import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.messages.Topic;
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
+import java.util.Set;
 
 /**
  * @author peter
  */
-public class ProgressSuspender {
-  private static final Logger LOGGER = Logger.getInstance(ProgressSuspender.class);
-
+public class ProgressSuspender implements AutoCloseable {
   private static final Key<ProgressSuspender> PROGRESS_SUSPENDER = Key.create("PROGRESS_SUSPENDER");
+  public static final Topic<SuspenderListener> TOPIC = Topic.create("ProgressSuspender", SuspenderListener.class);
 
   private final Object myLock = new Object();
-  private final Thread myThread;
   private static final Application ourApp = ApplicationManager.getApplication();
+  @Nonnull
+  private final String mySuspendedText;
+  @Nullable
+  private String myTempReason;
+  private final SuspenderListener myPublisher;
   private volatile boolean mySuspended;
   private final CoreProgressManager.CheckCanceledHook myHook = this::freezeIfNeeded;
+  private final Set<ProgressIndicator> myProgresses = ContainerUtil.newConcurrentSet();
+  private boolean myClosed;
 
-  private ProgressSuspender(@Nonnull ProgressIndicatorEx progress) {
+  private ProgressSuspender(@Nonnull ProgressIndicatorEx progress, @Nonnull String suspendedText) {
+    mySuspendedText = suspendedText;
     assert progress.isRunning();
     assert ProgressIndicatorProvider.getGlobalProgressIndicator() == progress;
-    myThread = Thread.currentThread();
+    myPublisher = ApplicationManager.getApplication().getMessageBus().syncPublisher(TOPIC);
 
-    ((UserDataHolder)progress).putUserData(PROGRESS_SUSPENDER, this);
+    attachToProgress(progress);
 
     new ProgressIndicatorListenerAdapter() {
       @Override
       public void cancelled() {
-        setSuspended(false);
+        resumeProcess();
       }
     }.installToProgress(progress);
+
+    myPublisher.suspendableProgressAppeared(this);
   }
 
-  public static void markSuspendable(@Nonnull ProgressIndicator indicator) {
-    if (!(indicator instanceof ProgressIndicatorEx)) {
-      LOGGER.error("Indicator is not impl ProgressIndicatorEx: " + indicator);
-      return;
+  @Override
+  public void close() {
+    synchronized (myLock) {
+      myClosed = true;
+      mySuspended = false;
+      ((ProgressManagerImpl)ProgressManager.getInstance()).removeCheckCanceledHook(myHook);
     }
+    for (ProgressIndicator progress : myProgresses) {
+      ((UserDataHolder)progress).putUserData(PROGRESS_SUSPENDER, null);
+    }
+  }
 
-    new ProgressSuspender((ProgressIndicatorEx)indicator);
+  public static ProgressSuspender markSuspendable(@Nonnull ProgressIndicator indicator, @Nonnull String suspendedText) {
+    return new ProgressSuspender((ProgressIndicatorEx)indicator, suspendedText);
   }
 
   @Nullable
@@ -72,31 +89,58 @@ public class ProgressSuspender {
     return indicator instanceof UserDataHolder ? ((UserDataHolder)indicator).getUserData(PROGRESS_SUSPENDER) : null;
   }
 
+  /**
+   * Associates an additional progress indicator with this suspender, so that its {@code #checkCanceled} can later block the calling thread.
+   */
+  public void attachToProgress(@Nonnull ProgressIndicatorEx progress) {
+    myProgresses.add(progress);
+    ((UserDataHolder)progress).putUserData(PROGRESS_SUSPENDER, this);
+  }
+
+  @Nonnull
+  public String getSuspendedText() {
+    synchronized (myLock) {
+      return myTempReason != null ? myTempReason : mySuspendedText;
+    }
+  }
+
   public boolean isSuspended() {
     return mySuspended;
   }
 
-  public void setSuspended(boolean suspended) {
+  /**
+   * @param reason if provided, is displayed in the UI instead of suspended text passed into constructor until the progress is resumed
+   */
+  public void suspendProcess(@Nullable String reason) {
     synchronized (myLock) {
-      if (suspended == mySuspended) return;
+      if (mySuspended || myClosed) return;
 
-      mySuspended = suspended;
+      mySuspended = true;
+      myTempReason = reason;
 
-      ProgressManagerImpl manager = (ProgressManagerImpl)ProgressManager.getInstance();
-      if (suspended) {
-        manager.addCheckCanceledHook(myHook);
-      }
-      else {
-        manager.removeCheckCanceledHook(myHook);
-
-        myLock.notifyAll();
-      }
-
+      ((ProgressManagerImpl)ProgressManager.getInstance()).addCheckCanceledHook(myHook);
     }
+
+    myPublisher.suspendedStatusChanged(this);
+  }
+
+  public void resumeProcess() {
+    synchronized (myLock) {
+      if (!mySuspended) return;
+
+      mySuspended = false;
+      myTempReason = null;
+
+      ((ProgressManagerImpl)ProgressManager.getInstance()).removeCheckCanceledHook(myHook);
+
+      myLock.notifyAll();
+    }
+
+    myPublisher.suspendedStatusChanged(this);
   }
 
   private boolean freezeIfNeeded(@Nullable ProgressIndicator current) {
-    if (current == null || ourApp.isReadAccessAllowed() || !CoreProgressManager.isThreadUnderIndicator(current, myThread)) {
+    if (current == null || !myProgresses.contains(current) || ourApp.isReadAccessAllowed()) {
       return false;
     }
 
@@ -110,6 +154,20 @@ public class ProgressSuspender {
       }
 
       return true;
+    }
+  }
+
+  public interface SuspenderListener {
+    /**
+     * Called (on any thread) when a new progress is created with suspension capability
+     */
+    default void suspendableProgressAppeared(@Nonnull ProgressSuspender suspender) {
+    }
+
+    /**
+     * Called (on any thread) when a progress is suspended or resumed
+     */
+    default void suspendedStatusChanged(@Nonnull ProgressSuspender suspender) {
     }
   }
 

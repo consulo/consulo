@@ -92,6 +92,8 @@ public interface EditorsSplitters extends AWTComponentProvider {
   @Nullable
   VirtualFile getCurrentFile();
 
+  boolean isShowing();
+
   @Nonnull
   default Component getUIComponent() {
     throw new UnsupportedOperationException("Unsupported platform");

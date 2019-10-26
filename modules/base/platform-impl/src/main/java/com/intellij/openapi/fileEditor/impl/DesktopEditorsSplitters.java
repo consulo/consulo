@@ -343,6 +343,11 @@ public class DesktopEditorsSplitters implements Disposable, EditorsSplitters {
   }
 
   @Override
+  public boolean isShowing() {
+    return myComponent.isShowing();
+  }
+
+  @Override
   @Nonnull
   public VirtualFile[] getOpenFiles() {
     final Set<VirtualFile> files = new ArrayListSet<>();

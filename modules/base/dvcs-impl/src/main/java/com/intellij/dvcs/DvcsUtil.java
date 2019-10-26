@@ -208,7 +208,7 @@ public class DvcsUtil {
 
   @Nonnull
   public static AccessToken workingTreeChangeStarted(@Nonnull Project project) {
-    ApplicationManager.getApplication().getMessageBus().syncPublisher(BatchFileChangeListener.TOPIC).batchChangeStarted(project);
+    ApplicationManager.getApplication().getMessageBus().syncPublisher(BatchFileChangeListener.TOPIC).batchChangeStarted(project, null);
     return HeavyProcessLatch.INSTANCE.processStarted("Changing DVCS working tree");
   }
 
