@@ -15,9 +15,10 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

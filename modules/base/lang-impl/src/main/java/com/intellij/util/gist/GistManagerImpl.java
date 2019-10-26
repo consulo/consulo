@@ -3,7 +3,7 @@ package com.intellij.util.gist;
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.vfs.VirtualFile;

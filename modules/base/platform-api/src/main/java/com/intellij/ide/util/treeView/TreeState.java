@@ -2,7 +2,6 @@
 package com.intellij.ide.util.treeView;
 
 import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Progressive;
@@ -21,6 +20,7 @@ import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Tag;
+import consulo.logging.Logger;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

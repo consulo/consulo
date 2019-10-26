@@ -3,7 +3,6 @@ package com.intellij.util;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.registry.RegistryValue;
@@ -14,6 +13,7 @@ import com.intellij.psi.ResolveResult;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
+import consulo.logging.Logger;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;

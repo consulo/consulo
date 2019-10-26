@@ -4,7 +4,6 @@ package com.intellij.codeInsight.completion;
 import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -25,6 +24,8 @@ import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.reference.SoftReference;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.util.Objects;

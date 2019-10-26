@@ -13,7 +13,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;

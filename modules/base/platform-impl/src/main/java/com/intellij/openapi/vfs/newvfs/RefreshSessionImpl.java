@@ -3,7 +3,6 @@ package com.intellij.openapi.vfs.newvfs;
 
 import com.intellij.codeInsight.daemon.impl.FileStatusMap;
 import com.intellij.openapi.application.*;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.vfs.AsyncFileListener;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -15,6 +14,8 @@ import com.intellij.openapi.vfs.newvfs.persistent.RefreshWorker;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.TransactionGuardEx;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

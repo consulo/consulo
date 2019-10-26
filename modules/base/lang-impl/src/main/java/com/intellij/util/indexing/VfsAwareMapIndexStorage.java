@@ -17,7 +17,6 @@
 package com.intellij.util.indexing;
 
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
@@ -32,6 +31,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.impl.MapIndexStorage;
 import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.io.*;
+import consulo.logging.Logger;
 import gnu.trove.TIntHashSet;
 import javax.annotation.Nonnull;
 

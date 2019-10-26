@@ -15,7 +15,7 @@
  */
 package com.intellij.util.indexing;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;

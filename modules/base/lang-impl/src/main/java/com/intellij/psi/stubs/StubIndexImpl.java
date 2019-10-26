@@ -8,7 +8,6 @@ package com.intellij.psi.stubs;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ModificationTracker;
@@ -35,6 +34,7 @@ import com.intellij.util.indexing.impl.*;
 import com.intellij.util.indexing.provided.ProvidedIndexExtension;
 import com.intellij.util.io.*;
 import com.intellij.util.io.DataOutputStream;
+import consulo.logging.Logger;
 import gnu.trove.*;
 import javax.annotation.Nonnull;
 

@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.stubs;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiBinaryFile;

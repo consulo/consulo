@@ -2,7 +2,6 @@
 package com.intellij.psi.impl.source.codeStyle;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.TextRange;
@@ -11,6 +10,8 @@ import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

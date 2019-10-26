@@ -2,7 +2,7 @@
 package com.intellij.util.indexing;
 
 import com.intellij.index.IndexImporterFactory;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.indexing.impl.InputData;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -10,7 +10,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationListener;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.progress.ProgressManager;

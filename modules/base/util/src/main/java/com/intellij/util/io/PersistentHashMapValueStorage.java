@@ -5,7 +5,7 @@
  */
 package com.intellij.util.io;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.ThreadLocalCachedByteArray;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;

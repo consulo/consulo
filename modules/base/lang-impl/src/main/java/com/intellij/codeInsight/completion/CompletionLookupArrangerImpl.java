@@ -10,7 +10,7 @@ import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.codeInsight.template.impl.LiveTemplateLookupElement;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.patterns.StandardPatterns;

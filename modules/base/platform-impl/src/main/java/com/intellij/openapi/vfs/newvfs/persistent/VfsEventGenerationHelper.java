@@ -2,7 +2,7 @@
 package com.intellij.openapi.vfs.newvfs.persistent;
 
 import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;

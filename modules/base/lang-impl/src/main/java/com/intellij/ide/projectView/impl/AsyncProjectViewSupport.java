@@ -11,7 +11,6 @@ import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.AbstractTreeUpdater;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.registry.Registry;
@@ -28,6 +27,8 @@ import com.intellij.util.SmartList;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.tree.TreeUtil;
 import javax.annotation.Nonnull;
+
+import consulo.logging.Logger;
 import org.jetbrains.concurrency.Promise;
 
 import javax.swing.*;

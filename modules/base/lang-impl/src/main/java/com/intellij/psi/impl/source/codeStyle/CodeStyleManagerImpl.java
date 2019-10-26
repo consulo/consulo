@@ -8,7 +8,7 @@ import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.lang.*;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.fileTypes.FileType;

@@ -16,7 +16,6 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.project.DumbAwareAction;
@@ -33,6 +32,8 @@ import com.intellij.util.PlatformIcons;
 import com.intellij.util.ui.AbstractLayoutManager;
 import com.intellij.util.ui.AsyncProcessIcon;
 import com.intellij.util.ui.UIUtil;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

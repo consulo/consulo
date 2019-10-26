@@ -19,13 +19,13 @@
  */
 package com.intellij.psi.stubs;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.ThreadLocalCachedValue;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.io.DigestUtil;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

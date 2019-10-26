@@ -2,7 +2,7 @@
 package com.intellij.openapi.project;
 
 import com.intellij.ide.caches.FileContent;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.vfs.InvalidVirtualFileAccessException;

@@ -2,7 +2,6 @@
 package com.intellij.openapi.util;
 
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.IdeFocusManager;
@@ -15,6 +14,7 @@ import com.intellij.util.containers.hash.LinkedHashMap;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

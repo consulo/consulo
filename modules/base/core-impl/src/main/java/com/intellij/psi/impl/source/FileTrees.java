@@ -17,7 +17,7 @@ package com.intellij.psi.impl.source;
 
 import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Getter;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.DebugUtil;

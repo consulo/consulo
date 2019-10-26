@@ -1,13 +1,14 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.execution.process;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.io.BaseDataReader;
 import com.intellij.util.io.BaseInputStreamReader;
 import com.intellij.util.io.BaseOutputReader;
 import com.intellij.util.io.BaseOutputReader.Options;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

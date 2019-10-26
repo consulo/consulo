@@ -3,7 +3,6 @@ package com.intellij.openapi.vfs.newvfs.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.SystemInfo;
@@ -28,6 +27,7 @@ import com.intellij.util.PairConsumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.keyFMap.KeyFMap;
 import com.intellij.util.text.CharSequenceHashingStrategy;
+import consulo.logging.Logger;
 import gnu.trove.THashSet;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TIntHashSet;

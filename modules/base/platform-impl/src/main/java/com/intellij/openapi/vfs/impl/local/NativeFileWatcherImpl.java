@@ -9,7 +9,6 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.ShutDownTracker;
@@ -23,6 +22,7 @@ import com.intellij.util.TimeoutUtil;
 import com.intellij.util.io.BaseDataReader;
 import com.intellij.util.io.BaseOutputReader;
 import com.sun.jna.Platform;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

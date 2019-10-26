@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vfs.newvfs.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.text.FilePathHashingStrategy;

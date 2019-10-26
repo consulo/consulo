@@ -6,7 +6,7 @@ import com.intellij.formatting.engine.ExpandableIndent;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;

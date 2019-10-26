@@ -4,7 +4,6 @@ package com.intellij.util.concurrency;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
@@ -12,6 +11,8 @@ import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.util.ThreeState;
 import javax.annotation.Nonnull;
+
+import consulo.logging.Logger;
 import org.jetbrains.concurrency.AsyncPromise;
 import org.jetbrains.concurrency.CancellablePromise;
 import org.jetbrains.concurrency.Obsolescent;

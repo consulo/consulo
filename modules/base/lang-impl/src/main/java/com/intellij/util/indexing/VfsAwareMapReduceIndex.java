@@ -6,7 +6,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.io.ByteArraySequence;
 import com.intellij.openapi.vfs.VirtualFile;

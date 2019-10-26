@@ -3,7 +3,7 @@ package com.intellij.openapi.vfs.newvfs.impl;
 
 import com.intellij.openapi.application.ApplicationListener;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.vfs.InvalidVirtualFileAccessException;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;

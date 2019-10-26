@@ -19,7 +19,7 @@ import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoFilter;
 import com.intellij.lang.annotation.AnnotationSession;
 import com.intellij.lang.annotation.HighlightSeverity;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.colors.TextAttributesScheme;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;

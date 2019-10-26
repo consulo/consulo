@@ -19,7 +19,6 @@ import com.intellij.lang.Language;
 import com.intellij.lang.LanguageParserDefinitions;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -39,6 +38,8 @@ import com.intellij.util.indexing.impl.forward.EmptyForwardIndex;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataInputOutputUtil;
 import com.intellij.util.io.PersistentHashMapValueStorage;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

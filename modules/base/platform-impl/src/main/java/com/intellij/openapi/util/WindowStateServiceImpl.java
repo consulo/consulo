@@ -3,11 +3,11 @@ package com.intellij.openapi.util;
 
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.ScreenUtil;
+import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

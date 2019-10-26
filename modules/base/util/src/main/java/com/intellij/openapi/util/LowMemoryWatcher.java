@@ -16,8 +16,8 @@
 package com.intellij.openapi.util;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.containers.WeakList;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 

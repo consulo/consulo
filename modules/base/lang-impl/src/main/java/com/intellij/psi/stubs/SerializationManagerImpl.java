@@ -3,7 +3,7 @@ package com.intellij.psi.stubs;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.util.io.IOUtil;

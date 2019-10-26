@@ -2,12 +2,13 @@
 package com.intellij.util.io;
 
 import com.intellij.openapi.Forceable;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ConcurrentIntObjectMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.hash.LinkedHashMap;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

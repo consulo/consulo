@@ -21,7 +21,7 @@ package com.intellij.psi.stubs;
 
 import com.google.common.base.MoreObjects;
 import com.intellij.lang.Language;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiFile;

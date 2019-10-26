@@ -16,7 +16,7 @@
 package com.intellij.util.indexing;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.ThrowableComputable;
 import javax.annotation.Nonnull;
 

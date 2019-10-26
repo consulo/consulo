@@ -16,10 +16,11 @@
 
 package com.intellij.psi.stubs;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.logging.Logger;
+
 import javax.annotation.Nullable;
 
 import java.lang.reflect.Field;

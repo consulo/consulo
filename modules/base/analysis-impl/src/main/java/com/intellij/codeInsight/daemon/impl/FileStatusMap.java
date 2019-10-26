@@ -6,7 +6,7 @@ import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassManager;
 import com.intellij.codeInsight.daemon.ProblemHighlightFilter;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.RangeMarker;

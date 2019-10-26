@@ -22,7 +22,6 @@ import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -46,6 +45,8 @@ import com.intellij.psi.stubs.StubTextInconsistencyException;
 import com.intellij.psi.util.PsiUtilBase;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.Collections;

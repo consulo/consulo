@@ -8,7 +8,6 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorGutterAction;
 import com.intellij.openapi.editor.TextAnnotationGutterProvider;
@@ -42,6 +41,8 @@ import com.intellij.util.ui.update.Update;
 import com.intellij.vcs.history.VcsHistoryProviderEx;
 import com.intellij.vcsUtil.VcsUtil;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

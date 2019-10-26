@@ -15,10 +15,10 @@
  */
 package com.intellij.util.indexing.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.indexing.StorageException;
+import consulo.logging.Logger;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectObjectProcedure;
 import javax.annotation.Nonnull;

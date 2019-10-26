@@ -8,7 +8,6 @@ import com.intellij.openapi.application.ApplicationListener;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.CaretModel;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -30,6 +29,8 @@ import com.intellij.ui.LightweightHint;
 import com.intellij.util.ThreeState;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

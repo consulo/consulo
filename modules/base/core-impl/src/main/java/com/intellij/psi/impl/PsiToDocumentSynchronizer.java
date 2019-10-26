@@ -18,7 +18,7 @@ package com.intellij.psi.impl;
 
 import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.project.Project;

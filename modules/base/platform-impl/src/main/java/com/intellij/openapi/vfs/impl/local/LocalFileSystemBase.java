@@ -3,7 +3,7 @@ package com.intellij.openapi.vfs.impl.local;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.*;
 import com.intellij.openapi.util.text.StringUtil;

@@ -3,7 +3,7 @@
 package com.intellij.formatting;
 
 import com.intellij.formatting.engine.ExpandableIndent;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;

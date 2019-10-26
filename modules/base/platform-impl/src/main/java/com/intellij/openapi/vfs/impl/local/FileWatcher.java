@@ -5,7 +5,6 @@ import com.intellij.notification.*;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.registry.Registry;
@@ -16,6 +15,7 @@ import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.TestOnly;
 

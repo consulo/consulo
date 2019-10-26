@@ -16,7 +16,7 @@
 
 package com.intellij.util.indexing.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.IntIntFunction;
 import com.intellij.util.SmartList;
 import com.intellij.util.indexing.ValueContainer;

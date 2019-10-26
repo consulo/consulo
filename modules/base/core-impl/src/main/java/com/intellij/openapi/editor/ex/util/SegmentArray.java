@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.ex.util;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.ArrayUtil;
 import javax.annotation.Nonnull;
 

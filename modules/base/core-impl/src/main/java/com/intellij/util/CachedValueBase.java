@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
@@ -11,6 +10,8 @@ import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.ProfilingInfo;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.containers.NotNullList;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

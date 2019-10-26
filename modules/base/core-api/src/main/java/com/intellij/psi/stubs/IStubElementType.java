@@ -7,7 +7,7 @@ package com.intellij.psi.stubs;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import gnu.trove.THashSet;

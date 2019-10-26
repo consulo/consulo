@@ -2,7 +2,7 @@
 package com.intellij.util.messages.impl;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.SmartFMap;

@@ -24,7 +24,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.TransactionGuard;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.*;
 import com.intellij.openapi.roots.ContentIterator;

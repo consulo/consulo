@@ -3,7 +3,7 @@ package com.intellij.psi.stubs;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.LogUtil;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.StreamUtil;

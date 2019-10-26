@@ -15,7 +15,7 @@
  */
 package com.intellij.util.indexing.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.indexing.IndexId;
 

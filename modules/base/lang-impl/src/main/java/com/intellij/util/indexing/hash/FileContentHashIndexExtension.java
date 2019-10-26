@@ -2,7 +2,7 @@
 package com.intellij.util.indexing.hash;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.vfs.newvfs.persistent.ContentHashesUtil;

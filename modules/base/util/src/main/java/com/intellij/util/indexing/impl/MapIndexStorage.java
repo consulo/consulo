@@ -15,7 +15,7 @@
  */
 package com.intellij.util.indexing.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.IntIntFunction;
 import com.intellij.util.Processor;
