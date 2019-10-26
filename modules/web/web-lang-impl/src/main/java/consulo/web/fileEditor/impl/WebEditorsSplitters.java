@@ -192,4 +192,9 @@ public class WebEditorsSplitters extends EditorsSplittersBase implements Editors
   public VirtualFile getCurrentFile() {
     return null;
   }
+
+  @Override
+  public boolean isShowing() {
+    return true;
+  }
 }
