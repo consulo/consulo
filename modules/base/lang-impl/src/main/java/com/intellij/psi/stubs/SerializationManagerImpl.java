@@ -9,6 +9,8 @@ import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.util.io.IOUtil;
 import com.intellij.util.io.PersistentStringEnumerator;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import java.io.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -16,6 +18,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /*
  * @author max
  */
+@Singleton
 public final class SerializationManagerImpl extends SerializationManagerEx implements Disposable {
   private static final Logger LOG = Logger.getInstance(SerializationManagerImpl.class);
 
@@ -26,7 +29,7 @@ public final class SerializationManagerImpl extends SerializationManagerEx imple
   private PersistentStringEnumerator myNameStorage;
   private StubSerializationHelper myStubSerializationHelper;
 
-  @SuppressWarnings("unused") // used from componentSets/Lang.xml:14
+  @Inject
   public SerializationManagerImpl() {
     this(new File(PathManager.getIndexRoot(), "rep.names"), false);
   }
