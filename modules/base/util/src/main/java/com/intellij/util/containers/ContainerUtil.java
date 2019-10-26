@@ -19,8 +19,7 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.*;
 import gnu.trove.*;
-import org.jetbrains.annotations.Contract;import org.jetbrains.annotations.NotNull;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.Contract;import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Array;
@@ -976,9 +975,9 @@ public class ContainerUtil extends ContainerUtilRt {
   /**
    * @return iterator with elements from the original {@param iterator} which are valid according to {@param filter} predicate.
    */
-  @NotNull
+  @Nonnull
   @Contract(pure = true)
-  public static <T> Iterator<T> filterIterator(@NotNull final Iterator<? extends T> iterator, @NotNull final Condition<? super T> filter) {
+  public static <T> Iterator<T> filterIterator(@Nonnull final Iterator<? extends T> iterator, @Nonnull final Condition<? super T> filter) {
     return new Iterator<T>() {
       T next;
       boolean hasNext;
@@ -1667,7 +1666,7 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @Nonnull
   @Contract(pure = true)
-  public static <U> Iterator<U> mapIterator(@NotNull TIntIterator iterator, @NotNull IntFunction<? extends U> mapper) {
+  public static <U> Iterator<U> mapIterator(@Nonnull TIntIterator iterator, @Nonnull IntFunction<? extends U> mapper) {
     return new Iterator<U>() {
       @Override
       public boolean hasNext() {

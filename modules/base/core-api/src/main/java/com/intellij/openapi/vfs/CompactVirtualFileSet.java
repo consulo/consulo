@@ -5,7 +5,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
 import gnu.trove.TIntHashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -25,7 +25,7 @@ public class CompactVirtualFileSet extends AbstractSet<VirtualFile> {
   public CompactVirtualFileSet() {
   }
 
-  public CompactVirtualFileSet(@NotNull Collection<? extends VirtualFile> files) {
+  public CompactVirtualFileSet(@Nonnull Collection<? extends VirtualFile> files) {
     addAll(files);
   }
 
@@ -46,7 +46,7 @@ public class CompactVirtualFileSet extends AbstractSet<VirtualFile> {
   }
 
   @Override
-  public boolean add(@NotNull VirtualFile file) {
+  public boolean add(@Nonnull VirtualFile file) {
     if (frozen) {
       throw new UnsupportedOperationException();
     }
@@ -109,7 +109,7 @@ public class CompactVirtualFileSet extends AbstractSet<VirtualFile> {
     frozen = true;
   }
 
-  public boolean process(@NotNull Processor<? super VirtualFile> processor) {
+  public boolean process(@Nonnull Processor<? super VirtualFile> processor) {
     VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
     BitSet ids = fileIds;
     if (ids != null) {
@@ -137,7 +137,7 @@ public class CompactVirtualFileSet extends AbstractSet<VirtualFile> {
     return (ids == null ? 0 : ids.cardinality()) + (idSet == null ? 0 : idSet.size()) + weirdFiles.size();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Iterator<VirtualFile> iterator() {
     BitSet ids = fileIds;

@@ -19,8 +19,8 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.testFramework.ReadOnlyLightVirtualFile;
 import com.intellij.util.CharTable;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class TreeElement extends UserDataHolderBase implements ASTNode, Cloneable {
   public static final TreeElement[] EMPTY_ARRAY = new TreeElement[0];
@@ -31,16 +31,16 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
   private final IElementType myType;
   private volatile int myStartOffsetInParent = -1;
 
-  public TreeElement(@NotNull IElementType type) {
+  public TreeElement(@Nonnull IElementType type) {
     myType = type;
   }
 
-  private static PsiFileImpl getCachedFile(@NotNull TreeElement each) {
+  private static PsiFileImpl getCachedFile(@Nonnull TreeElement each) {
     FileElement node = (FileElement)SharedImplUtil.findFileElement(each);
     return node == null ? null : (PsiFileImpl)node.getCachedPsi();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Object clone() {
     TreeElement clone = (TreeElement)super.clone();
@@ -79,7 +79,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
   @Override
   public abstract LeafElement findLeafElementAt(int offset);
 
-  @NotNull
+  @Nonnull
   public abstract char[] textToCharArray();
 
   @Override
@@ -144,17 +144,17 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
     return getStartOffset();
   }
 
-  public boolean textMatches(@NotNull CharSequence buffer, int startOffset, int endOffset) {
+  public boolean textMatches(@Nonnull CharSequence buffer, int startOffset, int endOffset) {
     return textMatches(buffer, startOffset) == endOffset;
   }
 
-  protected abstract int textMatches(@NotNull CharSequence buffer, int start);
+  protected abstract int textMatches(@Nonnull CharSequence buffer, int start);
 
-  public boolean textMatches(@NotNull CharSequence seq) {
+  public boolean textMatches(@Nonnull CharSequence seq) {
     return textMatches(seq, 0, seq.length());
   }
 
-  public boolean textMatches(@NotNull PsiElement element) {
+  public boolean textMatches(@Nonnull PsiElement element) {
     return getTextLength() == element.getTextLength() && textMatches(element.getText());
   }
 
@@ -221,13 +221,13 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
 
   public abstract int hc(); // Used in tree diffing
 
-  public abstract void acceptTree(@NotNull TreeElementVisitor visitor);
+  public abstract void acceptTree(@Nonnull TreeElementVisitor visitor);
 
   protected void onInvalidated() {
     DebugUtil.onInvalidated(this);
   }
 
-  public void rawInsertBeforeMe(@NotNull TreeElement firstNew) {
+  public void rawInsertBeforeMe(@Nonnull TreeElement firstNew) {
     final TreeElement anchorPrev = getTreePrev();
     if (anchorPrev == null) {
       firstNew.rawRemoveUpToLast();
@@ -251,7 +251,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
     DebugUtil.checkTreeStructure(this);
   }
 
-  public void rawInsertAfterMe(@NotNull TreeElement firstNew) {
+  public void rawInsertAfterMe(@Nonnull TreeElement firstNew) {
     rawInsertAfterMeWithoutNotifications(firstNew);
 
     final CompositeElement parent = getTreeParent();
@@ -260,7 +260,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
     }
   }
 
-  final void rawInsertAfterMeWithoutNotifications(@NotNull TreeElement firstNew) {
+  final void rawInsertAfterMeWithoutNotifications(@Nonnull TreeElement firstNew) {
     firstNew.rawRemoveUpToWithoutNotifications(null, false);
     final CompositeElement p = getTreeParent();
     final TreeElement treeNext = getTreeNext();
@@ -396,7 +396,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public IElementType getElementType() {
     return myType;
   }

@@ -2,7 +2,7 @@
 package com.intellij.util;
 
 import com.intellij.openapi.progress.ProgressIndicator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Defines general contract for processing that may be executed by parts, i.e. it remembers the state after every iteration
@@ -29,7 +29,7 @@ public interface SequentialTask {
    */
   boolean iteration();
 
-  default boolean iteration(@NotNull ProgressIndicator indicator) {
+  default boolean iteration(@Nonnull ProgressIndicator indicator) {
     return iteration();
   }
 

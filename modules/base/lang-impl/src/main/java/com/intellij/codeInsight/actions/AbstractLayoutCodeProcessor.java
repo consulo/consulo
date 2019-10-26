@@ -40,9 +40,9 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import consulo.logging.Logger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -53,7 +53,7 @@ import java.util.concurrent.FutureTask;
 public abstract class AbstractLayoutCodeProcessor {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.actions.AbstractLayoutCodeProcessor");
 
-  @NotNull
+  @Nonnull
   protected final Project myProject;
   private final Module myModule;
 
@@ -72,11 +72,11 @@ public abstract class AbstractLayoutCodeProcessor {
 
   private LayoutCodeInfoCollector myInfoCollector;
 
-  protected AbstractLayoutCodeProcessor(@NotNull Project project, String commandName, String progressText, boolean processChangedTextOnly) {
+  protected AbstractLayoutCodeProcessor(@Nonnull Project project, String commandName, String progressText, boolean processChangedTextOnly) {
     this(project, (Module)null, commandName, progressText, processChangedTextOnly);
   }
 
-  protected AbstractLayoutCodeProcessor(@NotNull AbstractLayoutCodeProcessor previous, @NotNull String commandName, @NotNull String progressText) {
+  protected AbstractLayoutCodeProcessor(@Nonnull AbstractLayoutCodeProcessor previous, @Nonnull String commandName, @Nonnull String progressText) {
     myProject = previous.myProject;
     myModule = previous.myModule;
     myDirectory = previous.myDirectory;
@@ -93,7 +93,7 @@ public abstract class AbstractLayoutCodeProcessor {
     myInfoCollector = previous.myInfoCollector;
   }
 
-  protected AbstractLayoutCodeProcessor(@NotNull Project project, @Nullable Module module, String commandName, String progressText, boolean processChangedTextOnly) {
+  protected AbstractLayoutCodeProcessor(@Nonnull Project project, @Nullable Module module, String commandName, String progressText, boolean processChangedTextOnly) {
     myProject = project;
     myModule = module;
     myDirectory = null;
@@ -104,7 +104,7 @@ public abstract class AbstractLayoutCodeProcessor {
     myProcessChangedTextOnly = processChangedTextOnly;
   }
 
-  protected AbstractLayoutCodeProcessor(@NotNull Project project, PsiDirectory directory, boolean includeSubdirs, String progressText, String commandName, boolean processChangedTextOnly) {
+  protected AbstractLayoutCodeProcessor(@Nonnull Project project, PsiDirectory directory, boolean includeSubdirs, String progressText, String commandName, boolean processChangedTextOnly) {
     myProject = project;
     myModule = null;
     myDirectory = directory;
@@ -115,7 +115,7 @@ public abstract class AbstractLayoutCodeProcessor {
     myProcessChangedTextOnly = processChangedTextOnly;
   }
 
-  protected AbstractLayoutCodeProcessor(@NotNull Project project, PsiFile file, String progressText, String commandName, boolean processChangedTextOnly) {
+  protected AbstractLayoutCodeProcessor(@Nonnull Project project, PsiFile file, String progressText, String commandName, boolean processChangedTextOnly) {
     myProject = project;
     myModule = null;
     myFile = file;
@@ -125,7 +125,7 @@ public abstract class AbstractLayoutCodeProcessor {
     myProcessChangedTextOnly = processChangedTextOnly;
   }
 
-  protected AbstractLayoutCodeProcessor(@NotNull Project project, PsiFile[] files, String progressText, String commandName, @Nullable Runnable postRunnable, boolean processChangedTextOnly) {
+  protected AbstractLayoutCodeProcessor(@Nonnull Project project, PsiFile[] files, String progressText, String commandName, @Nullable Runnable postRunnable, boolean processChangedTextOnly) {
     myProject = project;
     myModule = null;
     myFiles = ContainerUtil.filter(files, AbstractLayoutCodeProcessor::canBeFormatted);
@@ -140,7 +140,7 @@ public abstract class AbstractLayoutCodeProcessor {
   }
 
   @Nullable
-  private FutureTask<Boolean> getPreviousProcessorTask(@NotNull PsiFile file, boolean processChangedTextOnly) {
+  private FutureTask<Boolean> getPreviousProcessorTask(@Nonnull PsiFile file, boolean processChangedTextOnly) {
     return myPreviousCodeProcessor != null ? myPreviousCodeProcessor.preprocessFile(file, processChangedTextOnly) : null;
   }
 
@@ -154,7 +154,7 @@ public abstract class AbstractLayoutCodeProcessor {
     }
   }
 
-  public void addFileFilter(@NotNull VirtualFileFilter filter) {
+  public void addFileFilter(@Nonnull VirtualFileFilter filter) {
     myFilters.add(filter);
   }
 
@@ -171,10 +171,10 @@ public abstract class AbstractLayoutCodeProcessor {
    * is finished correctly or not (exception occurred, user cancelled formatting etc)
    * @throws IncorrectOperationException if unexpected exception occurred during formatting
    */
-  @NotNull
-  protected abstract FutureTask<Boolean> prepareTask(@NotNull PsiFile file, boolean processChangedTextOnly) throws IncorrectOperationException;
+  @Nonnull
+  protected abstract FutureTask<Boolean> prepareTask(@Nonnull PsiFile file, boolean processChangedTextOnly) throws IncorrectOperationException;
 
-  public FutureTask<Boolean> preprocessFile(@NotNull PsiFile file, boolean processChangedTextOnly) throws IncorrectOperationException {
+  public FutureTask<Boolean> preprocessFile(@Nonnull PsiFile file, boolean processChangedTextOnly) throws IncorrectOperationException {
     final FutureTask<Boolean> previousTask = getPreviousProcessorTask(file, processChangedTextOnly);
     final FutureTask<Boolean> currentTask = prepareTask(file, processChangedTextOnly);
 
@@ -205,7 +205,7 @@ public abstract class AbstractLayoutCodeProcessor {
     runProcessFiles();
   }
 
-  @NotNull
+  @Nonnull
   private FileRecursiveIterator build() {
     if (myFiles != null) {
       return new FileRecursiveIterator(myProject, myFiles);
@@ -222,13 +222,13 @@ public abstract class AbstractLayoutCodeProcessor {
     return new FileRecursiveIterator(myProject);
   }
 
-  @NotNull
+  @Nonnull
   private FileRecursiveIterator buildChangedFilesIterator() {
     List<PsiFile> files = getChangedFilesFromContext();
     return new FileRecursiveIterator(myProject, files);
   }
 
-  @NotNull
+  @Nonnull
   private List<PsiFile> getChangedFilesFromContext() {
     List<PsiDirectory> dirs = getAllSearchableDirsFromContext();
     return FormatChangedTextUtil.getChangedFilesFromDirs(myProject, dirs);
@@ -250,7 +250,7 @@ public abstract class AbstractLayoutCodeProcessor {
     return dirs;
   }
 
-  private void runProcessFile(@NotNull final PsiFile file) {
+  private void runProcessFile(@Nonnull final PsiFile file) {
     assert file.isValid() : "Invalid " + file.getLanguage() + " PSI file " + file.getName();
 
     Document document = PsiDocumentManager.getInstance(myProject).getDocument(file);
@@ -416,7 +416,7 @@ public abstract class AbstractLayoutCodeProcessor {
     private boolean myStopFormatting;
     private PsiFile next;
 
-    ReformatFilesTask(@NotNull ProgressIndicator indicator) {
+    ReformatFilesTask(@Nonnull ProgressIndicator indicator) {
       myFileTreeIterator = ReadAction.compute(() -> build());
       myCountingIterator = ReadAction.compute(() -> build());
       myProcessors = getAllProcessors();
@@ -457,7 +457,7 @@ public abstract class AbstractLayoutCodeProcessor {
       return ReadAction.compute(() -> file.isWritable() && canBeFormatted(file) && acceptedByFilters(file));
     }
 
-    private void performFileProcessing(@NotNull PsiFile file) {
+    private void performFileProcessing(@Nonnull PsiFile file) {
       for (AbstractLayoutCodeProcessor processor : myProcessors) {
         FutureTask<Boolean> writeTask = ReadAction.compute(() -> processor.prepareTask(file, myProcessChangedTextOnly));
 
@@ -485,12 +485,12 @@ public abstract class AbstractLayoutCodeProcessor {
       }
     }
 
-    private void updateIndicatorText(@NotNull String upperLabel, @NotNull String downLabel) {
+    private void updateIndicatorText(@Nonnull String upperLabel, @Nonnull String downLabel) {
       myProgressIndicator.setText(upperLabel);
       myProgressIndicator.setText2(downLabel);
     }
 
-    private String getPresentablePath(@NotNull PsiFile file) {
+    private String getPresentablePath(@Nonnull PsiFile file) {
       VirtualFile vFile = file.getVirtualFile();
       return vFile != null ? ProjectUtil.calcRelativeToProjectPath(vFile, myProject) : file.getName();
     }
@@ -519,7 +519,7 @@ public abstract class AbstractLayoutCodeProcessor {
     }
   }
 
-  private boolean acceptedByFilters(@NotNull PsiFile file) {
+  private boolean acceptedByFilters(@Nonnull PsiFile file) {
     VirtualFile vFile = file.getVirtualFile();
     if (vFile == null) {
       return false;
@@ -534,7 +534,7 @@ public abstract class AbstractLayoutCodeProcessor {
     return true;
   }
 
-  static List<TextRange> getSelectedRanges(@NotNull SelectionModel selectionModel) {
+  static List<TextRange> getSelectedRanges(@Nonnull SelectionModel selectionModel) {
     final List<TextRange> ranges = new SmartList<>();
     if (selectionModel.hasSelection()) {
       TextRange range = TextRange.create(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd());
@@ -543,7 +543,7 @@ public abstract class AbstractLayoutCodeProcessor {
     return ranges;
   }
 
-  void handleFileTooBigException(Logger logger, FilesTooBigForDiffException e, @NotNull PsiFile file) {
+  void handleFileTooBigException(Logger logger, FilesTooBigForDiffException e, @Nonnull PsiFile file) {
     logger.info("Error while calculating changed ranges for: " + file.getVirtualFile(), e);
     if (!ApplicationManager.getApplication().isUnitTestMode()) {
       Notification notification =

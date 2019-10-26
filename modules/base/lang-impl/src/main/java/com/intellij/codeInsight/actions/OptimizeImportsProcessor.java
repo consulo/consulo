@@ -27,10 +27,10 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.codeStyle.CodeStyleManagerImpl;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import javax.annotation.Nonnull;import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.FutureTask;
@@ -47,37 +47,37 @@ public class OptimizeImportsProcessor extends AbstractLayoutCodeProcessor {
     super(project, COMMAND_NAME, PROGRESS_TEXT, false);
   }
 
-  public OptimizeImportsProcessor(@NotNull Project project, Module module) {
+  public OptimizeImportsProcessor(@Nonnull Project project, Module module) {
     super(project, module, COMMAND_NAME, PROGRESS_TEXT, false);
   }
 
-  public OptimizeImportsProcessor(@NotNull Project project, PsiDirectory directory, boolean includeSubdirs) {
+  public OptimizeImportsProcessor(@Nonnull Project project, PsiDirectory directory, boolean includeSubdirs) {
     super(project, directory, includeSubdirs, PROGRESS_TEXT, COMMAND_NAME, false);
   }
 
-  public OptimizeImportsProcessor(@NotNull Project project, PsiDirectory directory, boolean includeSubdirs, boolean processOnlyVcsChangedFiles) {
+  public OptimizeImportsProcessor(@Nonnull Project project, PsiDirectory directory, boolean includeSubdirs, boolean processOnlyVcsChangedFiles) {
     super(project, directory, includeSubdirs, PROGRESS_TEXT, COMMAND_NAME, processOnlyVcsChangedFiles);
   }
 
-  public OptimizeImportsProcessor(@NotNull Project project, PsiFile file) {
+  public OptimizeImportsProcessor(@Nonnull Project project, PsiFile file) {
     super(project, file, PROGRESS_TEXT, COMMAND_NAME, false);
   }
 
-  public OptimizeImportsProcessor(@NotNull Project project, PsiFile[] files, Runnable postRunnable) {
+  public OptimizeImportsProcessor(@Nonnull Project project, PsiFile[] files, Runnable postRunnable) {
     this(project, files, COMMAND_NAME, postRunnable);
   }
 
-  public OptimizeImportsProcessor(@NotNull Project project, PsiFile[] files, String commandName, Runnable postRunnable) {
+  public OptimizeImportsProcessor(@Nonnull Project project, PsiFile[] files, String commandName, Runnable postRunnable) {
     super(project, files, PROGRESS_TEXT, commandName, postRunnable, false);
   }
 
-  public OptimizeImportsProcessor(@NotNull AbstractLayoutCodeProcessor processor) {
+  public OptimizeImportsProcessor(@Nonnull AbstractLayoutCodeProcessor processor) {
     super(processor, COMMAND_NAME, PROGRESS_TEXT);
   }
 
   @Override
-  @NotNull
-  protected FutureTask<Boolean> prepareTask(@NotNull PsiFile file, boolean processChangedTextOnly) {
+  @Nonnull
+  protected FutureTask<Boolean> prepareTask(@Nonnull PsiFile file, boolean processChangedTextOnly) {
     if (DumbService.isDumb(file.getProject())) {
       return new FutureTask<>(EmptyRunnable.INSTANCE, true);
     }
@@ -110,7 +110,7 @@ public class OptimizeImportsProcessor extends AbstractLayoutCodeProcessor {
     return new FutureTask<>(runnable, true);
   }
 
-  private void retrieveAndStoreNotificationInfo(@NotNull Runnable runnable) {
+  private void retrieveAndStoreNotificationInfo(@Nonnull Runnable runnable) {
     if (runnable instanceof ImportOptimizer.CollectingInfoRunnable) {
       String optimizerMessage = ((ImportOptimizer.CollectingInfoRunnable)runnable).getUserNotificationInfo();
       myOptimizerNotifications.add(optimizerMessage != null ? new NotificationInfo(optimizerMessage) : NOTHING_CHANGED_NOTIFICATION);
@@ -148,7 +148,7 @@ public class OptimizeImportsProcessor extends AbstractLayoutCodeProcessor {
     private final boolean mySomethingChanged;
     private final String myMessage;
 
-    NotificationInfo(@NotNull String message) {
+    NotificationInfo(@Nonnull String message) {
       this(true, message);
     }
 

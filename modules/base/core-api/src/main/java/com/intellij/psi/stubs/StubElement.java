@@ -7,9 +7,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.ArrayFactory;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -23,26 +23,26 @@ public interface StubElement<T extends PsiElement> extends Stub {
   StubElement getParentStub();
 
   @Override
-  @NotNull
+  @Nonnull
   List<StubElement> getChildrenStubs();
 
   @Nullable
-  <P extends PsiElement, S extends StubElement<P>> S findChildStubByType(@NotNull IStubElementType<S, P> elementType);
+  <P extends PsiElement, S extends StubElement<P>> S findChildStubByType(@Nonnull IStubElementType<S, P> elementType);
 
   T getPsi();
 
-  @NotNull
-  <E extends PsiElement> E[] getChildrenByType(@NotNull IElementType elementType, final E[] array);
+  @Nonnull
+  <E extends PsiElement> E[] getChildrenByType(@Nonnull IElementType elementType, final E[] array);
 
-  @NotNull
-  <E extends PsiElement> E[] getChildrenByType(@NotNull TokenSet filter, final E[] array);
+  @Nonnull
+  <E extends PsiElement> E[] getChildrenByType(@Nonnull TokenSet filter, final E[] array);
 
-  @NotNull
-  <E extends PsiElement> E[] getChildrenByType(@NotNull IElementType elementType, @NotNull ArrayFactory<E> f);
+  @Nonnull
+  <E extends PsiElement> E[] getChildrenByType(@Nonnull IElementType elementType, @Nonnull ArrayFactory<E> f);
 
-  @NotNull
-  <E extends PsiElement> E[] getChildrenByType(@NotNull TokenSet filter, @NotNull ArrayFactory<E> f);
+  @Nonnull
+  <E extends PsiElement> E[] getChildrenByType(@Nonnull TokenSet filter, @Nonnull ArrayFactory<E> f);
 
   @Nullable
-  <E extends PsiElement> E getParentStubOfType(@NotNull Class<E> parentClass);
+  <E extends PsiElement> E getParentStubOfType(@Nonnull Class<E> parentClass);
 }
