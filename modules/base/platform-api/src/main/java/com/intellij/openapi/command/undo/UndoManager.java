@@ -46,6 +46,10 @@ public interface UndoManager {
 
   boolean isRedoInProgress();
 
+  default boolean isUndoOrRedoInProgress() {
+    return isUndoInProgress() || isRedoInProgress();
+  }
+
   void undo(@Nullable FileEditor editor);
 
   void redo(@Nullable FileEditor editor);

@@ -163,8 +163,6 @@ public class UndoManagerImpl implements UndoManager, Disposable {
       }
     }, this);
 
-    Disposer.register(this, new DocumentUndoProvider(myProject));
-
     myUndoProviders = myProject == null
                       ? UndoProvider.EP_NAME.getExtensionList()
                       : UndoProvider.PROJECT_EP_NAME.getExtensionList(myProject);

@@ -1,46 +1,61 @@
-/*
- * Copyright 2000-2017 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.command.impl;
 
 import com.intellij.history.LocalHistory;
 import com.intellij.history.core.LocalHistoryFacade;
+import com.intellij.history.core.changes.Change;
+import com.intellij.history.core.changes.ContentChange;
+import com.intellij.history.core.changes.StructuralChange;
 import com.intellij.history.integration.IdeaGateway;
+import com.intellij.history.integration.LocalHistoryImpl;
 import com.intellij.openapi.command.undo.*;
-import consulo.logging.Logger;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.newvfs.BulkFileListener;
+import com.intellij.openapi.vfs.newvfs.events.*;
 import com.intellij.util.FileContentUtilCore;
-
 import javax.annotation.Nonnull;
-import java.io.IOException;
 
-public abstract class FileUndoProvider implements UndoProvider, VirtualFileListener {
+import java.io.IOException;
+import java.util.List;
+
+public class FileUndoProvider implements UndoProvider, BulkFileListener {
   public static final Logger LOG = Logger.getInstance(FileUndoProvider.class);
 
-  private final Key<DocumentReference> DELETION_WAS_UNDOABLE = Key.create(FileUndoProvider.class.getName() + ".DeletionWasUndoable");
+  private final Key<DocumentReference> DELETION_WAS_UNDOABLE = new Key<>(FileUndoProvider.class.getName() + ".DeletionWasUndoable");
 
-  protected Project myProject;
-  protected boolean myIsInsideCommand;
+  private final Project myProject;
+  private boolean myIsInsideCommand;
 
-  protected LocalHistoryFacade myLocalHistory;
-  protected IdeaGateway myGateway;
+  private LocalHistoryFacade myLocalHistory;
+  private IdeaGateway myGateway;
 
-  protected long myLastChangeId;
+  private long myLastChangeId;
+
+  protected FileUndoProvider() {
+    this(null);
+  }
+
+  protected FileUndoProvider(Project project) {
+    myProject = project;
+    if (myProject == null) return;
+
+    LocalHistoryImpl localHistory = LocalHistoryImpl.getInstanceImpl();
+    myLocalHistory = localHistory.getFacade();
+    myGateway = localHistory.getGateway();
+    if (myLocalHistory == null || myGateway == null) return; // local history was not initialized (e.g. in headless environment)
+
+    localHistory.addVFSListenerAfterLocalHistoryOne(this, project);
+    myLocalHistory.addListener(new LocalHistoryFacade.Listener() {
+      @Override
+      public void changeAdded(Change c) {
+        if (!(c instanceof StructuralChange) || c instanceof ContentChange) return;
+        myLastChangeId = c.getId();
+      }
+    }, myProject);
+  }
 
   @Override
   public void commandStarted(Project p) {
@@ -55,57 +70,66 @@ public abstract class FileUndoProvider implements UndoProvider, VirtualFileListe
   }
 
   @Override
-  public void fileCreated(@Nonnull VirtualFileEvent e) {
-    processEvent(e);
+  public void before(@Nonnull List<? extends VFileEvent> events) {
+    for (VFileEvent e : events) {
+      if (e instanceof VFileContentChangeEvent) {
+        beforeContentsChange((VFileContentChangeEvent)e);
+      }
+      else if (e instanceof VFileDeleteEvent) {
+        beforeFileDeletion((VFileDeleteEvent)e);
+      }
+    }
   }
 
   @Override
-  public void propertyChanged(@Nonnull VirtualFilePropertyEvent e) {
-    if (!e.getPropertyName().equals(VirtualFile.PROP_NAME)) return;
-    processEvent(e);
+  public void after(@Nonnull List<? extends VFileEvent> events) {
+    for (VFileEvent e : events) {
+      if (e instanceof VFileCreateEvent || e instanceof VFileMoveEvent || e instanceof VFilePropertyChangeEvent && ((VFilePropertyChangeEvent)e).isRename()) {
+        VirtualFile file = e.getFile();
+        if (file != null) {
+          processEvent(e, file);
+        }
+      }
+      else if (e instanceof VFileDeleteEvent) {
+        fileDeleted((VFileDeleteEvent)e);
+      }
+    }
   }
 
-  @Override
-  public void fileMoved(@Nonnull VirtualFileMoveEvent e) {
-    processEvent(e);
-  }
-
-  private void processEvent(VirtualFileEvent e) {
-    if (!shouldProcess(e)) return;
-    if (isUndoable(e)) {
-      registerUndoableAction(e);
+  private void processEvent(@Nonnull VFileEvent e, @Nonnull VirtualFile file) {
+    if (!shouldProcess(e, file)) return;
+    if (isUndoable(e, file)) {
+      registerUndoableAction(file);
     }
     else {
-      registerNonUndoableAction(e);
+      registerNonUndoableAction(file);
     }
   }
 
-  @Override
-  public void beforeContentsChange(@Nonnull VirtualFileEvent e) {
-    if (!shouldProcess(e)) return;
-    if (isUndoable(e)) return;
-    registerNonUndoableAction(e);
+  private void beforeContentsChange(@Nonnull VFileContentChangeEvent e) {
+    VirtualFile file = e.getFile();
+    if (!shouldProcess(e, file)) return;
+    if (isUndoable(e, file)) return;
+    registerNonUndoableAction(file);
   }
 
-  @Override
-  public void beforeFileDeletion(@Nonnull VirtualFileEvent e) {
-    if (!shouldProcess(e)) {
-      invalidateActionsFor(e);
+  private void beforeFileDeletion(@Nonnull VFileDeleteEvent e) {
+    VirtualFile file = e.getFile();
+    if (!shouldProcess(e, file)) {
+      invalidateActionsFor(file);
       return;
     }
-    if (isUndoable(e)) {
-      VirtualFile file = e.getFile();
-      file.putUserData(DELETION_WAS_UNDOABLE, createDocumentReference(e));
+    if (isUndoable(e, file)) {
+      file.putUserData(DELETION_WAS_UNDOABLE, createDocumentReference(file));
     }
     else {
-      registerNonUndoableAction(e);
+      registerNonUndoableAction(file);
     }
   }
 
-  @Override
-  public void fileDeleted(@Nonnull VirtualFileEvent e) {
-    if (!shouldProcess(e)) return;
+  private void fileDeleted(@Nonnull VFileDeleteEvent e) {
     VirtualFile f = e.getFile();
+    if (!shouldProcess(e, f)) return;
 
     DocumentReference ref = f.getUserData(DELETION_WAS_UNDOABLE);
     if (ref != null) {
@@ -114,44 +138,49 @@ public abstract class FileUndoProvider implements UndoProvider, VirtualFileListe
     }
   }
 
-  private boolean shouldProcess(VirtualFileEvent e) {
-    return !myProject.isDisposed() &&
-           LocalHistory.getInstance().isUnderControl(e.getFile()) &&
-           myIsInsideCommand &&
-           !FileContentUtilCore.FORCE_RELOAD_REQUESTOR.equals(e.getRequestor());
+  private boolean shouldProcess(@Nonnull VFileEvent e, VirtualFile file) {
+    if (!myIsInsideCommand || myProject.isDisposed()) {
+      return false;
+    }
+
+    Object requestor = e.getRequestor();
+    if (FileContentUtilCore.FORCE_RELOAD_REQUESTOR.equals(requestor) /*|| requestor instanceof StorageManagerFileWriteRequestor*/) {
+      return false;
+    }
+    return LocalHistory.getInstance().isUnderControl(file);
   }
 
-  private static boolean isUndoable(VirtualFileEvent e) {
-    return !e.isFromRefresh() || e.getFile().getUserData(UndoConstants.FORCE_RECORD_UNDO) == Boolean.TRUE;
+  private static boolean isUndoable(@Nonnull VFileEvent e, @Nonnull VirtualFile file) {
+    return !e.isFromRefresh() || file.getUserData(UndoConstants.FORCE_RECORD_UNDO) == Boolean.TRUE;
   }
 
-  private void registerUndoableAction(VirtualFileEvent e) {
-    registerUndoableAction(createDocumentReference(e));
+  private void registerUndoableAction(@Nonnull VirtualFile file) {
+    registerUndoableAction(createDocumentReference(file));
   }
 
   private void registerUndoableAction(DocumentReference ref) {
     getUndoManager().undoableActionPerformed(new MyUndoableAction(ref));
   }
 
-  private void registerNonUndoableAction(VirtualFileEvent e) {
-    getUndoManager().nonundoableActionPerformed(createDocumentReference(e), true);
+  private void registerNonUndoableAction(@Nonnull VirtualFile file) {
+    getUndoManager().nonundoableActionPerformed(createDocumentReference(file), true);
   }
 
-  private void invalidateActionsFor(VirtualFileEvent e) {
+  private void invalidateActionsFor(@Nonnull VirtualFile file) {
     if (myProject == null || !myProject.isDisposed()) {
-      ((UndoManagerImpl)getUndoManager()).invalidateActionsFor(createDocumentReference(e));
+      getUndoManager().invalidateActionsFor(createDocumentReference(file));
     }
   }
 
-  private static DocumentReference createDocumentReference(VirtualFileEvent e) {
-    return DocumentReferenceManager.getInstance().create(e.getFile());
+  private static DocumentReference createDocumentReference(@Nonnull VirtualFile file) {
+    return DocumentReferenceManager.getInstance().create(file);
   }
 
-  private UndoManager getUndoManager() {
+  private UndoManagerImpl getUndoManager() {
     if (myProject != null) {
-      return UndoManager.getInstance(myProject);
+      return (UndoManagerImpl)UndoManager.getInstance(myProject);
     }
-    return UndoManager.getGlobalInstance();
+    return (UndoManagerImpl)UndoManager.getGlobalInstance();
   }
 
   private class MyUndoableAction extends GlobalUndoableAction {

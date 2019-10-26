@@ -2650,6 +2650,8 @@
 
     <applicationService serviceInterface="com.intellij.formatting.Formatter" serviceImplementation="com.intellij.formatting.FormatterImpl" />
     <applicationService serviceInterface="com.intellij.util.gist.GistManager" serviceImplementation="com.intellij.util.gist.GistManagerImpl" />
+
+    <editorFactoryDocumentListener implementation="com.intellij.openapi.command.impl.DocumentUndoProvider"/>
   </extensions>
 
   <applicationListeners>

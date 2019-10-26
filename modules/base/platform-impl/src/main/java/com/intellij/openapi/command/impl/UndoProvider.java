@@ -23,5 +23,6 @@ public interface UndoProvider {
   ExtensionPointName<UndoProvider> PROJECT_EP_NAME = ExtensionPointName.create("com.intellij.projectUndoProvider");
 
   void commandStarted(Project project);
+
   void commandFinished(Project project);
 }
