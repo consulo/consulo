@@ -16,6 +16,7 @@
 package com.intellij.ide.projectView;
 
 import com.intellij.ide.util.treeView.AbstractTreeNode;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
@@ -38,7 +39,7 @@ import java.util.*;
 /**
  * A node in the project view tree.
  *
- * @see TreeStructureProvider#modify(com.intellij.ide.util.treeView.AbstractTreeNode, java.util.Collection, com.intellij.ide.projectView.ViewSettings)
+ * @see TreeStructureProvider#modify(AbstractTreeNode, Collection, ViewSettings)
  */
 
 public abstract class ProjectViewNode <Value> extends AbstractTreeNode<Value> implements RootsProvider {
@@ -83,23 +84,28 @@ public abstract class ProjectViewNode <Value> extends AbstractTreeNode<Value> im
     return mySettings;
   }
 
+  @Nonnull
   public static List<AbstractTreeNode> wrap(Collection objects,
                                             Project project,
                                             Class<? extends AbstractTreeNode> nodeClass,
                                             ViewSettings settings) {
     try {
-      ArrayList<AbstractTreeNode> result = new ArrayList<AbstractTreeNode>();
+      List<AbstractTreeNode> result = new ArrayList<>(objects.size());
       for (Object object : objects) {
         result.add(createTreeNode(nodeClass, project, object, settings));
       }
       return result;
     }
+    catch (ProcessCanceledException e) {
+      throw e;
+    }
     catch (Exception e) {
       LOG.error(e);
-      return new ArrayList<AbstractTreeNode>();
+      return new ArrayList<>();
     }
   }
 
+  @SuppressWarnings("unchecked")
   public static AbstractTreeNode createTreeNode(Class<? extends AbstractTreeNode> nodeClass,
                                                 Project project,
                                                 Object value,
@@ -113,13 +119,7 @@ public abstract class ProjectViewNode <Value> extends AbstractTreeNode<Value> im
       try {
         return constructor.newInstance(parameters);
       }
-      catch (InstantiationException e) {
-      }
-      catch (IllegalAccessException e) {
-      }
-      catch (IllegalArgumentException e) {
-      }
-      catch (InvocationTargetException e) {
+      catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ignored) {
       }
     }
     throw new InstantiationException("no constructor found in " + nodeClass);
@@ -210,7 +210,7 @@ public abstract class ProjectViewNode <Value> extends AbstractTreeNode<Value> im
     return true;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public String getTitle() {
     return null;
   }
@@ -244,17 +244,17 @@ public abstract class ProjectViewNode <Value> extends AbstractTreeNode<Value> im
    * have not null comparable keys.
    * @return Comparable object.
    */
-  @javax.annotation.Nullable
+  @Nullable
   public Comparable getSortKey() {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public Comparable getManualOrderKey() {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public String getQualifiedNameSortKey() {
     return null;
   }
