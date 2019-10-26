@@ -586,7 +586,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     if (i != VERSION) {
       try {
         dropCache();
-        
+
         FileUtil.writeToFile(getFileVersion(), String.valueOf(VERSION));
       }
       catch (IOException e) {
@@ -1945,7 +1945,13 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
       return myFilePathsEnumerator.enumerate(filePath);
     }
     catch (IOException e) {
-      LOG.error(e);
+      try {
+        myFilePathsEnumerator.markCorrupted();
+        dropCache();
+      }
+      catch (Exception ignored) {
+      }
+      LOG.warn(e);
       return -1;
     }
   }
@@ -1955,8 +1961,14 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
       return myFilePathsEnumerator.valueOf(id);
     }
     catch (IOException e) {
-      LOG.error(e);
-      return null;
+      try {
+        myFilePathsEnumerator.markCorrupted();
+        dropCache();
+      }
+      catch (Exception ignored) {
+      }
+      LOG.warn(e);
+      return "";
     }
   }
 
