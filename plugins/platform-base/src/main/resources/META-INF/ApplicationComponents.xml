@@ -185,11 +185,6 @@
     </component>
 
     <component>
-      <interface-class>consulo.compiler.impl.TranslatingCompilerFilesMonitor</interface-class>
-      <implementation-class>com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl</implementation-class>
-    </component>
-
-    <component>
       <implementation-class>consulo.bundle.impl.PredefinedBundlesLoader</implementation-class>
     </component>
 

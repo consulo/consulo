@@ -24,15 +24,14 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.ModuleCompilerPathsManager;
-import consulo.logging.Logger;
 import consulo.roots.ContentFolderTypeProvider;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -42,8 +41,6 @@ import java.util.Map;
  */
 @Singleton
 public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager implements PersistentStateComponent<Element>, Disposable {
-  public static final Logger LOGGER = Logger.getInstance(ModuleCompilerPathsManagerImpl.class);
-
   @NonNls
   private static final String MODULE_OUTPUT_TAG = "module";
   @NonNls

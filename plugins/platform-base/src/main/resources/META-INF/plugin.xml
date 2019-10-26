@@ -516,7 +516,7 @@
       <with attribute="implementationClass" implements="com.intellij.formatting.FormattingModelBuilder"/>
     </extensionPoint>
 
-    <extensionPoint name="externalFormatProcessor" interface="com.intellij.psi.codeStyle.ExternalFormatProcessor" />
+    <extensionPoint name="externalFormatProcessor" interface="com.intellij.psi.codeStyle.ExternalFormatProcessor"/>
 
     <extensionPoint name="lang.formatter.restriction" interface="com.intellij.lang.LanguageFormattingRestriction"/>
     <extensionPoint name="lang.importOptimizer" beanClass="com.intellij.lang.LanguageExtensionPoint">
@@ -579,7 +579,7 @@
     <extensionPoint name="useScopeEnlarger" interface="com.intellij.psi.search.UseScopeEnlarger"/>
     <extensionPoint name="resolveScopeEnlarger" interface="com.intellij.psi.ResolveScopeEnlarger"/>
     <extensionPoint name="resolveScopeProvider" interface="com.intellij.psi.ResolveScopeProvider"/>
-    <extensionPoint name="codeUsageScopeOptimizer" interface="com.intellij.psi.search.ScopeOptimizer" />
+    <extensionPoint name="codeUsageScopeOptimizer" interface="com.intellij.psi.search.ScopeOptimizer"/>
 
     <extensionPoint name="gotoClassContributor"
                     interface="com.intellij.navigation.ChooseByNameContributor"/>
@@ -2646,16 +2646,21 @@
     <applicationService serviceInterface="com.intellij.openapi.command.undo.DocumentReferenceManager" serviceImplementation="com.intellij.openapi.command.impl.DocumentReferenceManagerImpl"
                         lazy="false"/>
 
-    <applicationService serviceInterface="com.intellij.codeInsight.editorActions.TabOutScopesTracker" serviceImplementation="com.intellij.codeInsight.editorActions.TabOutScopesTrackerImpl" />
+    <applicationService serviceInterface="com.intellij.codeInsight.editorActions.TabOutScopesTracker" serviceImplementation="com.intellij.codeInsight.editorActions.TabOutScopesTrackerImpl"/>
 
-    <applicationService serviceInterface="com.intellij.formatting.Formatter" serviceImplementation="com.intellij.formatting.FormatterImpl" />
-    <applicationService serviceInterface="com.intellij.util.gist.GistManager" serviceImplementation="com.intellij.util.gist.GistManagerImpl" />
+    <applicationService serviceInterface="com.intellij.formatting.Formatter" serviceImplementation="com.intellij.formatting.FormatterImpl"/>
+    <applicationService serviceInterface="com.intellij.util.gist.GistManager" serviceImplementation="com.intellij.util.gist.GistManagerImpl"/>
 
     <editorFactoryDocumentListener implementation="com.intellij.openapi.command.impl.DocumentUndoProvider"/>
+
+    <vfs.asyncListener implementation="consulo.compiler.impl.TranslationCompilerFilesMonitorVfsListener"/>
+
+    <applicationService serviceInterface="consulo.compiler.impl.TranslatingCompilerFilesMonitor" serviceImplementation="com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl"/>
   </extensions>
 
   <applicationListeners>
     <listener class="com.intellij.util.gist.GistManagerImpl$MyBulkFileListener" topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
+    <listener class="com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl$ProjectListener" topic="com.intellij.openapi.project.ProjectManagerListener"/>
   </applicationListeners>
 
   <projectListeners>

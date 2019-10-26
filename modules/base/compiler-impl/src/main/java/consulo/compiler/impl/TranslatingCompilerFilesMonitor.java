@@ -16,16 +16,16 @@
 package consulo.compiler.impl;
 
 import com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.TranslatingCompiler;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.vfs.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -39,7 +39,7 @@ import java.util.List;
 public abstract class TranslatingCompilerFilesMonitor {
   @Nonnull
   public static TranslatingCompilerFilesMonitor getInstance() {
-    return ApplicationManager.getApplication().getComponent(TranslatingCompilerFilesMonitor.class);
+    return ServiceManager.getService(TranslatingCompilerFilesMonitor.class);
   }
 
   public abstract void suspendProject(Project project);
