@@ -20,10 +20,16 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolder;
 import consulo.ui.image.Image;
-
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
+/**
+ * @deprecated use {@link XAttachPresentationGroup} instead
+ */
+@Deprecated
 public class XDefaultLocalAttachGroup implements XLocalAttachGroup {
+  public static final XDefaultLocalAttachGroup INSTANCE = new XDefaultLocalAttachGroup();
+
   @Override
   public int getOrder() {
     return 0;
@@ -37,18 +43,31 @@ public class XDefaultLocalAttachGroup implements XLocalAttachGroup {
 
   @Nonnull
   @Override
-  public Image getProcessIcon(@Nonnull Project project, @Nonnull ProcessInfo info, @Nonnull UserDataHolder dataHolder) {
-    return AllIcons.RunConfigurations.Application;
+  public Image getItemIcon(@Nonnull Project project, @Nonnull ProcessInfo info, @Nonnull UserDataHolder dataHolder) {
+    return getProcessIcon(project, info, dataHolder);
   }
 
   @Nonnull
   @Override
-  public String getProcessDisplayText(@Nonnull Project project, @Nonnull ProcessInfo info, @Nonnull UserDataHolder dataHolder) {
-    return info.getExecutableDisplayName();
+  public String getItemDisplayText(@Nonnull Project project, @Nonnull ProcessInfo info, @Nonnull UserDataHolder dataHolder) {
+    return getProcessDisplayText(project, info, dataHolder);
+  }
+
+  @Nullable
+  @Override
+  public String getItemDescription(@Nonnull Project project, @Nonnull ProcessInfo info, @Nonnull UserDataHolder dataHolder) {
+    return null;
   }
 
   @Override
-  public int compare(@Nonnull Project project, @Nonnull ProcessInfo a, @Nonnull ProcessInfo b, @Nonnull UserDataHolder dataHolder) {
-    return a.getPid() - b.getPid();
+  @Nonnull
+  public Image getProcessIcon(@Nonnull Project project, @Nonnull ProcessInfo info, @Nonnull UserDataHolder dataHolder) {
+    return AllIcons.RunConfigurations.Application;
+  }
+
+  @Override
+  @Nonnull
+  public String getProcessDisplayText(@Nonnull Project project, @Nonnull ProcessInfo info, @Nonnull UserDataHolder dataHolder) {
+    return info.getExecutableDisplayName();
   }
 }

@@ -19,7 +19,8 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.*;
 import gnu.trove.*;
-import org.jetbrains.annotations.Contract;import javax.annotation.Nonnull;
+import org.jetbrains.annotations.Contract;
+import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Array;
@@ -29,7 +30,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.CopyOnWriteArrayList;import java.util.function.IntFunction;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.IntFunction;
 
 @SuppressWarnings({"UtilityClassWithoutPrivateConstructor", "MethodOverridesStaticMethodOfSuperclass"})
 public class ContainerUtil extends ContainerUtilRt {
@@ -482,8 +484,8 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @Nonnull
   @Contract(pure = true)
-  public static <E> ImmutableList<E> immutableList(@Nonnull List<E> list) {
-    return new ImmutableListBackedByList<E>(list);
+  public static <E> ImmutableList<E> immutableList(@Nonnull List<? extends E> list) {
+    return new ImmutableListBackedByList<>(list);
   }
 
   @Nonnull
@@ -529,9 +531,9 @@ public class ContainerUtil extends ContainerUtilRt {
   }
 
   private static class ImmutableListBackedByList<E> extends ImmutableList<E> {
-    private final List<E> myStore;
+    private final List<? extends E> myStore;
 
-    private ImmutableListBackedByList(@Nonnull List<E> list) {
+    private ImmutableListBackedByList(@Nonnull List<? extends E> list) {
       myStore = list;
     }
 

@@ -54,5 +54,7 @@
     <moduleImportProvider implementation="consulo.sandboxPlugin.lang.moduleImport.Sand2ModuleImportProvider" />
 
     <remoteServer.type implementation="consulo.sandboxPlugin.ide.remoteServer.SandServerType" />
+
+    <xdebugger.attachDebuggerProvider implementation="consulo.sandboxPlugin.ide.debugger.attach.SandAttachToProcessProvider" />
   </extensions>
 </consulo-plugin>

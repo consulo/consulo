@@ -17,7 +17,6 @@ package com.intellij.util;
 
 import com.intellij.execution.process.UnixProcessManager;
 import com.intellij.openapi.application.PathManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.SystemInfo;
@@ -29,11 +28,12 @@ import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.FixedFuture;
 import com.intellij.util.io.BaseOutputReader;
 import com.intellij.util.text.CaseInsensitiveStringHashingStrategy;
+import consulo.logging.Logger;
 import gnu.trove.THashMap;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -197,7 +197,7 @@ public class EnvironmentUtil {
       if (rv != 0 || lines.isEmpty()) {
         throw new Exception("rv:" + rv + " text:" + lines.length() + " out:" + StringUtil.trimEnd(gobbler.getText(), '\n'));
       }
-      return parseEnv(lines, lineSeparator);
+      return parseEnv(lines.split(lineSeparator));
     }
 
     protected List<String> getShellProcessCommand() throws Exception {
@@ -217,16 +217,15 @@ public class EnvironmentUtil {
   }
 
   @Nonnull
-  private static Map<String, String> parseEnv(String text, String lineSeparator) throws Exception {
-    Set<String> toIgnore = new HashSet<String>(Arrays.asList("_", "PWD", "SHLVL", DISABLE_OMZ_AUTO_UPDATE));
+  public static Map<String, String> parseEnv(String... lines) {
+    Set<String> toIgnore = new HashSet<>(Arrays.asList("_", "PWD", "SHLVL", DISABLE_OMZ_AUTO_UPDATE));
     Map<String, String> env = System.getenv();
-    Map<String, String> newEnv = new HashMap<String, String>();
+    Map<String, String> newEnv = new HashMap<>();
 
-    String[] lines = text.split(lineSeparator);
     for (String line : lines) {
       int pos = line.indexOf('=');
       if (pos <= 0) {
-        throw new Exception("malformed:" + line);
+        throw new RuntimeException("malformed:" + line);
       }
       String name = line.substring(0, pos);
       if (!toIgnore.contains(name)) {
