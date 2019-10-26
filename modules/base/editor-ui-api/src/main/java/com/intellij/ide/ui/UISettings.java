@@ -531,6 +531,10 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     return CONSOLE_CYCLE_BUFFER_SIZE_KB;
   }
 
+  public boolean getShowDirectoryForNonUniqueFilenames() {
+    return SHOW_DIRECTORY_FOR_NON_UNIQUE_FILENAMES;
+  }
+
   /**
    * @see #setupComponentAntialiasing(JComponent)
    */

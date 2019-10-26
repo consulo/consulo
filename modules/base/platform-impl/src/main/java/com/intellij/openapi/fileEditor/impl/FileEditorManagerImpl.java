@@ -64,7 +64,6 @@ import com.intellij.ui.docking.DockManager;
 import com.intellij.ui.docking.impl.DockManagerImpl;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.messages.impl.MessageListenerList;
 import com.intellij.util.ui.UIUtil;
@@ -333,6 +332,13 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
   @Nonnull
   public String getFileTooltipText(@Nonnull VirtualFile file) {
+    List<EditorTabTitleProvider> availableProviders = DumbService.getDumbAwareExtensions(myProject, EditorTabTitleProvider.EP_NAME);
+    for (EditorTabTitleProvider provider : availableProviders) {
+      String text = provider.getEditorTabTooltipText(myProject, file);
+      if (text != null) {
+        return text;
+      }
+    }
     return FileUtil.getLocationRelativeToUserHome(file.getPresentableUrl());
   }
 
