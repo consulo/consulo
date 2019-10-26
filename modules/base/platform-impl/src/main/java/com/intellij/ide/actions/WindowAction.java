@@ -22,8 +22,9 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFrame;
-import javax.annotation.Nonnull;
+import consulo.awt.TargetAWT;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -35,7 +36,9 @@ public abstract class WindowAction extends AnAction implements DumbAware {
   }
 
   private static boolean isEnabledFor(Window window) {
-    if (window == null || window instanceof IdeFrame) return false;
+    if (window == null) return false;
+    consulo.ui.Window uiWindow = TargetAWT.from(window);
+    if(uiWindow != null && uiWindow.getUserData(IdeFrame.KEY) != null) return false;
     if (window instanceof Dialog && !((Dialog)window).isResizable()) return false;
     JRootPane root = getRootPane(window);
     if (root == null) return true;
