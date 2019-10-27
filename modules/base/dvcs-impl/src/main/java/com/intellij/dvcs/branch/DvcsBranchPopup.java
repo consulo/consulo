@@ -24,7 +24,6 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.ListPopup;
@@ -33,7 +32,6 @@ import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.VcsNotifier;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.DeprecationInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -77,7 +75,6 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
     myPopup = new BranchActionGroupPopup(title + myRepoTitleInfo, myProject, preselectActionCondition, createActions(), dimensionKey);
 
     initBranchSyncPolicyIfNotInitialized();
-    setCurrentBranchInfo();
     warnThatBranchesDivergedIfNeeded();
   }
 
@@ -96,11 +93,6 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
         myVcsSettings.setSyncSetting(DvcsSyncSettings.Value.DONT_SYNC);
       }
     }
-  }
-
-  protected void setCurrentBranchInfo() {
-    String branchText = "Current branch : ";
-    myPopup.setAdText(branchText + myCurrentRepository.getCurrentBranchName(), SwingConstants.CENTER);
   }
 
   private void notifyAboutSyncedBranches() {
