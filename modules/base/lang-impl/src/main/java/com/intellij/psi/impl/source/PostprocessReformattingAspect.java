@@ -10,7 +10,6 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationListener;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.progress.ProgressManager;
@@ -44,12 +43,13 @@ import com.intellij.util.containers.JBIterable;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.TextRangeUtil;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 
@@ -68,6 +68,7 @@ public class PostprocessReformattingAspect implements PomModelAspect {
 
   private final ThreadLocal<Context> myContext = ThreadLocal.withInitial(Context::new);
 
+  @Inject
   public PostprocessReformattingAspect(Project project, PsiManager psiManager, TreeAspect treeAspect, CommandProcessor processor) {
     myProject = project;
     myPsiManager = psiManager;

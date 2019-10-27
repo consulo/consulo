@@ -35,14 +35,15 @@ import com.intellij.util.FileContentUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import java.util.*;
 
 //todo listen & notifyListeners readonly events?
+@Singleton
 public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
   private final boolean myUnitTestMode = ApplicationManager.getApplication().isUnitTestMode();
 
@@ -86,8 +87,13 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
       if (myUnitTestMode) {
         myStopTrackingDocuments = true;
         try {
-          LOG.error("Too many uncommitted documents for " + myProject + "(" + myUncommittedDocuments.size() + ")" +
-                    ":\n" + StringUtil.join(myUncommittedDocuments, "\n") +
+          LOG.error("Too many uncommitted documents for " +
+                    myProject +
+                    "(" +
+                    myUncommittedDocuments.size() +
+                    ")" +
+                    ":\n" +
+                    StringUtil.join(myUncommittedDocuments, "\n") +
                     (myProject instanceof ProjectImpl ? "\n\n Project creation trace: " + ((ProjectImpl)myProject).getCreationTrace() : ""));
         }
         finally {

@@ -98,6 +98,10 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
       }
     }
 
+    if(beforeEvents.isEmpty() && afterEvents.isEmpty() && newFilesSet.isEmpty()) {
+      return null;
+    }
+
     return new ChangeApplier() {
       @Override
       public void beforeVfsChange() {
