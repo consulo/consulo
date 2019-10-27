@@ -18,8 +18,8 @@ package com.intellij.openapi.editor.impl;
 import com.intellij.util.BitUtil;
 import com.intellij.util.Processor;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -40,6 +40,7 @@ public abstract class RedBlackTree<K> extends AtomicInteger {
   void incModCount() {
     incrementAndGet();
   }
+
   int getModCount() {
     return get();
   }
@@ -217,10 +218,7 @@ public abstract class RedBlackTree<K> extends AtomicInteger {
   }
 
   private void deleteCase3(Node<K> n) {
-    if (isBlack(n.getParent()) &&
-        isBlack(n.sibling()) &&
-        isBlack(n.sibling().getLeft()) &&
-        isBlack(n.sibling().getRight())) {
+    if (isBlack(n.getParent()) && isBlack(n.sibling()) && isBlack(n.sibling().getLeft()) && isBlack(n.sibling().getRight())) {
       n.sibling().setRed();
       deleteCase1(n.getParent());
     }
@@ -230,10 +228,7 @@ public abstract class RedBlackTree<K> extends AtomicInteger {
   }
 
   private void deleteCase4(Node<K> n) {
-    if (!isBlack(n.getParent()) &&
-        isBlack(n.sibling()) &&
-        isBlack(n.sibling().getLeft()) &&
-        isBlack(n.sibling().getRight())) {
+    if (!isBlack(n.getParent()) && isBlack(n.sibling()) && isBlack(n.sibling().getLeft()) && isBlack(n.sibling().getRight())) {
       n.sibling().setRed();
       n.getParent().setBlack();
     }
@@ -243,18 +238,12 @@ public abstract class RedBlackTree<K> extends AtomicInteger {
   }
 
   private void deleteCase5(Node<K> n) {
-    if (n == n.getParent().getLeft() &&
-        isBlack(n.sibling()) &&
-        !isBlack(n.sibling().getLeft()) &&
-        isBlack(n.sibling().getRight())) {
+    if (n == n.getParent().getLeft() && isBlack(n.sibling()) && !isBlack(n.sibling().getLeft()) && isBlack(n.sibling().getRight())) {
       n.sibling().setRed();
       n.sibling().getLeft().setBlack();
       rotateRight(n.sibling());
     }
-    else if (n == n.getParent().getRight() &&
-             isBlack(n.sibling()) &&
-             !isBlack(n.sibling().getRight()) &&
-             isBlack(n.sibling().getLeft())) {
+    else if (n == n.getParent().getRight() && isBlack(n.sibling()) && !isBlack(n.sibling().getRight()) && isBlack(n.sibling().getLeft())) {
       n.sibling().setRed();
       n.sibling().getRight().setBlack();
       rotateLeft(n.sibling());
@@ -368,12 +357,15 @@ public abstract class RedBlackTree<K> extends AtomicInteger {
     public boolean isBlack() {
       return isFlagSet(COLOR_MASK);
     }
+
     private void setBlack() {
       setFlag(COLOR_MASK, true);
     }
+
     void setRed() {
       setFlag(COLOR_MASK, false);
     }
+
     public void setColor(boolean isBlack) {
       setFlag(COLOR_MASK, isBlack);
     }
@@ -382,6 +374,7 @@ public abstract class RedBlackTree<K> extends AtomicInteger {
   public int size() {
     return nodeSize;
   }
+
   int nodeSize() {
     return nodeSize;
   }

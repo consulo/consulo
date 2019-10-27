@@ -21,7 +21,7 @@ message()
   else
     echo "ERROR: $TITLE\n$1"
   fi
-}
+}                                                              L
 
 UNAME=`which uname`
 GREP=`which egrep`
@@ -110,29 +110,25 @@ fi
 # Collect JVM options and properties.
 # ---------------------------------------------------------------------
 
-MAIN_CLASS_NAME="$IDEA_MAIN_CLASS_NAME"
-if [ -z "$MAIN_CLASS_NAME" ]; then
-  MAIN_CLASS_NAME="com.intellij.idea.Main"
-fi
+MAIN_CLASS_NAME="consulo.desktop.boot.main.Main"
 
 VM_OPTIONS_FILE="$ROOT_DIR/consulo$BITS.vmoptions"
 
 if [ -r "$VM_OPTIONS_FILE" ]; then
   VM_OPTIONS=`"$CAT" "$VM_OPTIONS_FILE" | "$GREP" -v "^#.*" | "$TR" '\n' ' '`
-  VM_OPTIONS="$VM_OPTIONS -Djb.vmOptionsFile=\"$VM_OPTIONS_FILE\""
+  VM_OPTIONS="$VM_OPTIONS -Djb.vmOptionsFile=\"$VM_OPTIONS_FILE\" -Dconsulo.vm.options.file=\"$VM_OPTIONS_FILE\""
 fi
 
-COMMON_JVM_ARGS="\"-Xbootclasspath/a:$IDE_HOME/lib/consulo-desktop-boot.jar\" -Didea.home.path=\"$IDE_HOME\" -Didea.properties.file=\"$ROOT_DIR/consulo.properties\""
+COMMON_JVM_ARGS="-Dconsulo.home.path=\"$IDE_HOME\" -Didea.home.path=\"$IDE_HOME\" -Didea.properties.file=\"$ROOT_DIR/consulo.properties\" -Dconsulo.properties.file=\"$ROOT_DIR/consulo.properties\""
 IDE_JVM_ARGS=""
 ALL_JVM_ARGS="$VM_OPTIONS $COMMON_JVM_ARGS $IDE_JVM_ARGS $AGENT $REQUIRED_JVM_ARGS"
 
-CLASSPATH="$IDE_HOME/lib/consulo-desktop-bootstrap.jar"
-CLASSPATH="$CLASSPATH:$IDE_HOME/lib/consulo-util.jar"
-CLASSPATH="$CLASSPATH:$IDE_HOME/lib/consulo-util-rt.jar"
-CLASSPATH="$CLASSPATH:$IDE_HOME/lib/jdom.jar"
-CLASSPATH="$CLASSPATH:$IDE_HOME/lib/trove4j.jar"
-CLASSPATH="$CLASSPATH:$IDE_HOME/lib/jna.jar"
-CLASSPATH="$CLASSPATH:$IDE_HOME/lib/jna-platform.jar"
+CLASSPATH="$IDE_HOME/boot/consulo-bootstrap.jar"
+CLASSPATH="$CLASSPATH:$IDE_HOME/boot/consulo-container-api.jar"
+CLASSPATH="$CLASSPATH:$IDE_HOME/boot/consulo-container-impl.jar"
+CLASSPATH="$CLASSPATH:$IDE_HOME/boot/consulo-desktop-bootstrap.jar"
+CLASSPATH="$CLASSPATH:$IDE_HOME/boot/consulo-util-rt.jar"
+
 if [ -n "$IDEA_CLASSPATH" ]; then
   CLASSPATH="$CLASSPATH:$IDEA_CLASSPATH"
 fi

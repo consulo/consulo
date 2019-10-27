@@ -16,11 +16,11 @@
 package com.intellij.openapi.ui;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.FocusWatcher;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.UIBundle;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

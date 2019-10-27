@@ -35,7 +35,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.undo.UndoManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.diff.LineTokenizer;
 import com.intellij.openapi.editor.*;
@@ -249,7 +249,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
 
   @RequiredUIAccess
   protected void installEditorListeners() {
-    new TextDiffViewerUtil.EditorActionsPopup(createEditorPopupActions()).install(getEditors());
+    new TextDiffViewerUtil.EditorActionsPopup(createEditorPopupActions()).install(getEditors(), myPanel);
   }
 
   //

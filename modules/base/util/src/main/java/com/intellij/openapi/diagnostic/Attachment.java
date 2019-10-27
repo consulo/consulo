@@ -1,11 +1,14 @@
 package com.intellij.openapi.diagnostic;
 
 import com.intellij.util.*;
-import javax.annotation.Nonnull;
+import consulo.annotations.DeprecationInfo;
 
+import javax.annotation.Nonnull;
 import java.io.UnsupportedEncodingException;
 
-public class Attachment {
+@Deprecated
+@DeprecationInfo("Use consulo.logging.attachment.Attachment")
+public class Attachment implements consulo.logging.attachment.Attachment {
   public static Attachment[] EMPTY_ARRAY = new Attachment[0];
 
   public static ArrayFactory<Attachment> ARRAY_FACTORY = new ArrayFactory<Attachment>() {
@@ -46,26 +49,32 @@ public class Attachment {
     }
   }
 
+  @Override
   public String getDisplayText() {
     return myDisplayText;
   }
 
+  @Override
   public String getPath() {
     return myPath;
   }
 
+  @Override
   public String getName() {
     return PathUtilRt.getFileName(myPath);
   }
 
+  @Override
   public String getEncodedBytes() {
     return Base64Converter.encode(myBytes);
   }
 
+  @Override
   public boolean isIncluded() {
     return myIncluded;
   }
 
+  @Override
   public void setIncluded(Boolean included) {
     myIncluded = included;
   }

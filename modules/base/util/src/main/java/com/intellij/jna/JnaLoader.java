@@ -15,18 +15,24 @@
  */
 package com.intellij.jna;
 
-import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.SystemInfo;
 import com.sun.jna.Native;
+import consulo.logging.Logger;
 
 public class JnaLoader {
   private static volatile boolean ourJnaLoaded = false;
 
-  public static void load(Logger logger) {
-    long t = System.currentTimeMillis();
-    int ptrSize = Native.POINTER_SIZE;
-    t = System.currentTimeMillis() - t;
-    logger.info("JNA library (" + (ptrSize << 3) + "-bit) loaded in " + t + " ms");
-    ourJnaLoaded = true;
+  public static synchronized void load(Logger logger) {
+    try {
+      long t = System.currentTimeMillis();
+      int ptrSize = Native.POINTER_SIZE;
+      t = System.currentTimeMillis() - t;
+      logger.info("JNA library (" + (ptrSize << 3) + "-bit) loaded in " + t + " ms");
+      ourJnaLoaded = true;
+    }
+    catch (Throwable t) {
+      logger.error("Unable to load JNA library (OS: " + SystemInfo.OS_NAME + " " + SystemInfo.OS_VERSION + ")", t);
+    }
   }
 
   public static boolean isLoaded() {

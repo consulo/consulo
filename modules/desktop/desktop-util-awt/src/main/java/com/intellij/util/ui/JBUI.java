@@ -1,12 +1,15 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.ui;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
+import com.intellij.ui.ColorUtil;
+import com.intellij.ui.Gray;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.border.CustomLineBorder;
+import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.Function;
 import com.intellij.util.LazyInitializer.NotNullValue;
 import com.intellij.util.LazyInitializer.NullableValue;
@@ -14,6 +17,7 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.desktop.util.awt.component.VerticalLayoutPanel;
+import consulo.logging.Logger;
 import gnu.trove.TDoubleObjectHashMap;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
@@ -40,6 +44,230 @@ import static com.intellij.util.ui.JBUI.ScaleType.*;
  */
 @SuppressWarnings("UseJBColor")
 public class JBUI {
+  public static class CurrentTheme {
+    public static class Advertiser {
+      private static final JBInsets DEFAULT_AD_INSETS = JBInsets.create(1, 5);
+
+      @Nonnull
+      public static Color foreground() {
+        Color foreground = JBUI.CurrentTheme.BigPopup.advertiserForeground();
+        return JBColor.namedColor("Popup.Advertiser.foreground", foreground);
+      }
+
+      @Nonnull
+      public static Color background() {
+        Color background = JBUI.CurrentTheme.BigPopup.advertiserBackground();
+        return JBColor.namedColor("Popup.Advertiser.background", background);
+      }
+
+      @Nonnull
+      public static Border border() {
+        return new JBEmptyBorder(insets("Popup.Advertiser.borderInsets", DEFAULT_AD_INSETS));
+      }
+
+      @Nonnull
+      public static Color borderColor() {
+        return JBColor.namedColor("Popup.Advertiser.borderColor", Gray._135);
+      }
+    }
+
+    public static class ActionButton {
+      @Nonnull
+      public static Color pressedBackground() {
+        return JBColor.namedColor("ActionButton.pressedBackground", Gray.xCF);
+      }
+
+      @Nonnull
+      public static Color pressedBorder() {
+        return JBColor.namedColor("ActionButton.pressedBorderColor", Gray.xCF);
+      }
+
+      @Nonnull
+      public static Color hoverBackground() {
+        return JBColor.namedColor("ActionButton.hoverBackground", Gray.xDF);
+      }
+
+      @Nonnull
+      public static Color hoverBorder() {
+        return JBColor.namedColor("ActionButton.hoverBorderColor", Gray.xDF);
+      }
+
+      @Nonnull
+      public static Color hoverSeparatorColor() {
+        return JBColor.namedColor("ActionButton.hoverSeparatorColor", new JBColor(Gray.xB3, Gray.x6B));
+      }
+    }
+
+    public static class StatusBar {
+      @Nonnull
+      public static Color hoverBackground() {
+        return JBColor.namedColor("StatusBar.hoverBackground", ActionButton.hoverBackground());
+      }
+    }
+
+    public static class CustomFrameDecorations {
+      @Nonnull
+      public static Color separatorForeground() {
+        return JBColor.namedColor("Separator.separatorColor", new JBColor(0xcdcdcd, 0x515151));
+      }
+
+      @Nonnull
+      public static Color titlePaneButtonHoverBackground() {
+        return JBColor.namedColor("TitlePane.Button.hoverBackground", new JBColor(ColorUtil.withAlpha(Color.BLACK, .1), ColorUtil.withAlpha(Color.WHITE, .1)));
+      }
+
+      @Nonnull
+      public static Color titlePaneButtonPressBackground() {
+        return titlePaneButtonHoverBackground();
+      }
+
+      @Nonnull
+      public static Color titlePaneInactiveBackground() {
+        return JBColor.namedColor("TitlePane.inactiveBackground", titlePaneBackground());
+      }
+
+      @Nonnull
+      public static Color titlePaneBackground(boolean active) {
+        return active ? titlePaneBackground() : titlePaneInactiveBackground();
+      }
+
+      @Nonnull
+      public static Color titlePaneBackground() {
+        return JBColor.namedColor("TitlePane.background", paneBackground());
+      }
+
+      @Nonnull
+      public static Color titlePaneInfoForeground() {
+        return JBColor.namedColor("TitlePane.infoForeground", new JBColor(0x616161, 0x919191));
+      }
+
+      @Nonnull
+      public static Color titlePaneInactiveInfoForeground() {
+        return JBColor.namedColor("TitlePane.inactiveInfoForeground", new JBColor(0xA6A6A6, 0x737373));
+      }
+
+      @Nonnull
+      public static Color paneBackground() {
+        return JBColor.namedColor("Panel.background", Gray.xCD);
+      }
+    }
+
+    public static class Link {
+      @Nonnull
+      public static Color linkColor() {
+        return JBColor.namedColor("Link.activeForeground", JBColor.namedColor("link.foreground", 0x589df6));
+      }
+
+      @Nonnull
+      public static Color linkHoverColor() {
+        return JBColor.namedColor("Link.hoverForeground", JBColor.namedColor("link.hover.foreground", linkColor()));
+      }
+
+      @Nonnull
+      public static Color linkPressedColor() {
+        return JBColor.namedColor("Link.pressedForeground", JBColor.namedColor("link.pressed.foreground", new JBColor(0xf00000, 0xba6f25)));
+      }
+
+      @Nonnull
+      public static Color linkVisitedColor() {
+        return JBColor.namedColor("Link.visitedForeground", JBColor.namedColor("link.visited.foreground", new JBColor(0x800080, 0x9776a9)));
+      }
+    }
+
+    public static class BigPopup {
+      @Nonnull
+      public static Color headerBackground() {
+        return JBColor.namedColor("SearchEverywhere.Header.background", 0xf2f2f2);
+      }
+
+      @Nonnull
+      public static Insets tabInsets() {
+        return JBInsets.create(0, 12);
+      }
+
+      @Nonnull
+      public static Color selectedTabColor() {
+        return JBColor.namedColor("SearchEverywhere.Tab.selectedBackground", 0xdedede);
+      }
+
+      @Nonnull
+      public static Color selectedTabTextColor() {
+        return JBColor.namedColor("SearchEverywhere.Tab.selectedForeground", 0x000000);
+      }
+
+      @Nonnull
+      public static Color searchFieldBackground() {
+        return JBColor.namedColor("SearchEverywhere.SearchField.background", 0xffffff);
+      }
+
+      @Nonnull
+      public static Color searchFieldBorderColor() {
+        return JBColor.namedColor("SearchEverywhere.SearchField.borderColor", 0xbdbdbd);
+      }
+
+      @Nonnull
+      public static Insets searchFieldInsets() {
+        return insets(0, 6, 0, 5);
+      }
+
+      public static int maxListHeight() {
+        return JBUIScale.scale(600);
+      }
+
+      @Nonnull
+      public static Color listSeparatorColor() {
+        return JBColor.namedColor("SearchEverywhere.List.separatorColor", Gray.xDC);
+      }
+
+      @Nonnull
+      public static Color listTitleLabelForeground() {
+        return JBColor.namedColor("SearchEverywhere.List.separatorForeground", UIUtil.getLabelDisabledForeground());
+      }
+
+      @Nonnull
+      public static Color searchFieldGrayForeground() {
+        return JBColor.namedColor("SearchEverywhere.SearchField.infoForeground", JBColor.GRAY);
+      }
+
+      @Nonnull
+      public static Color advertiserForeground() {
+        return JBColor.namedColor("SearchEverywhere.Advertiser.foreground", JBColor.GRAY);
+      }
+
+      @Nonnull
+      public static Border advertiserBorder() {
+        return new JBEmptyBorder(insets("SearchEverywhere.Advertiser.foreground", insetsLeft(8)));
+      }
+
+      @Nonnull
+      public static Color advertiserBackground() {
+        return JBColor.namedColor("SearchEverywhere.Advertiser.background", 0xf2f2f2);
+      }
+    }
+
+    public static class Popup {
+      public static Color separatorColor() {
+        return JBColor.namedColor("Popup.separatorColor", new JBColor(Color.gray.brighter(), Gray.x51));
+      }
+
+      public static Color separatorTextColor() {
+        return JBColor.namedColor("Popup.separatorForeground", Color.gray);
+      }
+
+      public static int toolbarHeight() {
+        return scale(28);
+      }
+
+      public static Color toolbarBorderColor() {
+        return UIUtil.getBorderColor();
+      }
+
+      public static Color toolbarPanelColor() {
+        return UIUtil.getPanelBackground();
+      }
+    }
+  }
+
   private static final Logger LOG = Logger.getInstance("#com.intellij.util.ui.JBUI");
 
   public static final String USER_SCALE_FACTOR_PROPERTY = "JBUI.userScaleFactor";
@@ -150,8 +378,7 @@ public class JBUI {
     @Nonnull
     public Scale of(double value) {
       return Scale.create(value, this);
-    }
-  }
+    }}
 
   /**
    * A scale factor of a particular type.

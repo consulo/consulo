@@ -21,7 +21,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.application.impl.ModalityStateEx;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.TaskInfo;
 import com.intellij.openapi.project.Project;
@@ -34,6 +33,9 @@ import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.messages.Topic;
 import com.intellij.util.ui.UIUtil;
+import consulo.logging.Logger;
+import consulo.platform.Platform;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -96,7 +98,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
     setModalityProgress(shouldShowBackground ? null : this);
 
     Component parent = parentComponent;
-    if (parent == null && project == null && !ApplicationManager.getApplication().isHeadlessEnvironment()) {
+    if (parent == null && project == null && !ApplicationManager.getApplication().isHeadlessEnvironment() && !Platform.current().isWebService()) {
       parent = JOptionPane.getRootFrame();
     }
 
@@ -173,14 +175,14 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
   }
 
   final void enterModality() {
-    if (myModalityProgress == this && !myModalityEntered) {
+    if (isModalEntity() && !myModalityEntered) {
       LaterInvocator.enterModal(this, (ModalityStateEx)getModalityState());
       myModalityEntered = true;
     }
   }
 
   final void exitModality() {
-    if (myModalityProgress == this && myModalityEntered) {
+    if (isModalEntity() && myModalityEntered) {
       myModalityEntered = false;
       LaterInvocator.leaveModal(this);
     }

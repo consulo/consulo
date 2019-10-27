@@ -18,13 +18,17 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.level>1.6</java.level>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-annotations</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-logging-api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -48,6 +52,11 @@
     </dependency>
     <!--external-->
     <dependency>
+      <groupId>jaxen</groupId>
+      <artifactId>jaxen</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
       <groupId>net.java.dev.jna</groupId>
       <artifactId>jna</artifactId>
     </dependency>
@@ -58,6 +67,11 @@
     <dependency>
       <groupId>org.iq80.snappy</groupId>
       <artifactId>snappy</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.lz4</groupId>
+      <artifactId>lz4-java</artifactId>
       <optional>true</optional>
     </dependency>
     <dependency>

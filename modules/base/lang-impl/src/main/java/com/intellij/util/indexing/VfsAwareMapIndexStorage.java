@@ -17,7 +17,6 @@
 package com.intellij.util.indexing;
 
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
@@ -30,18 +29,19 @@ import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.ConcurrentIntObjectMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.impl.MapIndexStorage;
-import com.intellij.util.io.*;
 import com.intellij.util.io.DataOutputStream;
+import com.intellij.util.io.*;
+import consulo.logging.Logger;
 import gnu.trove.TIntHashSet;
-import gnu.trove.TIntProcedure;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import org.jetbrains.annotations.TestOnly;
+
+import javax.annotation.Nullable;
 import java.io.*;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Dec 20, 2007
  */
 public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<Key, Value> implements VfsAwareIndexStorage<Key, Value> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.util.indexing.impl.MapIndexStorage");
@@ -52,12 +52,11 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
 
   private static final ConcurrentIntObjectMap<Boolean> ourInvalidatedSessionIds = ContainerUtil.createConcurrentIntObjectMap();
 
-  public VfsAwareMapIndexStorage(@Nonnull File storageFile,
-                                 @Nonnull KeyDescriptor<Key> keyDescriptor,
-                                 @Nonnull DataExternalizer<Value> valueExternalizer,
-                                 final int cacheSize
-  ) throws IOException {
-    this(storageFile, keyDescriptor, valueExternalizer, cacheSize, false, false);
+  @TestOnly
+  public VfsAwareMapIndexStorage(@Nonnull File storageFile, @Nonnull KeyDescriptor<Key> keyDescriptor, @Nonnull DataExternalizer<Value> valueExternalizer, final int cacheSize, final boolean readOnly)
+          throws IOException {
+    super(storageFile, keyDescriptor, valueExternalizer, cacheSize, false, true, readOnly, null);
+    myBuildKeyHashToVirtualFileMapping = false;
   }
 
   public VfsAwareMapIndexStorage(@Nonnull File storageFile,
@@ -66,16 +65,15 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
                                  final int cacheSize,
                                  boolean keyIsUniqueForIndexedFile,
                                  boolean buildKeyHashToVirtualFileMapping) throws IOException {
-    super(storageFile, keyDescriptor, valueExternalizer, cacheSize, keyIsUniqueForIndexedFile, false);
-    myBuildKeyHashToVirtualFileMapping = buildKeyHashToVirtualFileMapping && FileBasedIndex.ourEnableTracingOfKeyHashToVirtualFileMapping;
+    super(storageFile, keyDescriptor, valueExternalizer, cacheSize, keyIsUniqueForIndexedFile, false, false, null);
+    myBuildKeyHashToVirtualFileMapping = buildKeyHashToVirtualFileMapping;
     initMapAndCache();
   }
 
   @Override
   protected void initMapAndCache() throws IOException {
     super.initMapAndCache();
-    myKeyHashToVirtualFileMapping = myBuildKeyHashToVirtualFileMapping ?
-                                    new AppendableStorageBackedByResizableMappedFile(getProjectFile(), 4096, null, PagedFileStorage.MB, true) : null;
+    myKeyHashToVirtualFileMapping = myBuildKeyHashToVirtualFileMapping ? new AppendableStorageBackedByResizableMappedFile(getProjectFile(), 4096, null, PagedFileStorage.MB, true) : null;
   }
 
   @Override
@@ -92,7 +90,8 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
     myKeyHashToVirtualFileMapping.getPagedFileStorage().lock();
     try {
       r.run();
-    } finally {
+    }
+    finally {
       myKeyHashToVirtualFileMapping.getPagedFileStorage().unlock();
     }
   }
@@ -125,14 +124,14 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
   }
 
   @Override
-  public void clear() throws StorageException{
+  public void clear() throws StorageException {
     try {
       if (myKeyHashToVirtualFileMapping != null) {
         withLock(() -> myKeyHashToVirtualFileMapping.close());
       }
     }
     catch (RuntimeException e) {
-      LOG.error(e);
+      LOG.info(e);
     }
     try {
       if (myKeyHashToVirtualFileMapping != null) IOUtil.deleteAllFilesStartingWith(getProjectFile());
@@ -144,18 +143,20 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
   }
 
   @Override
-  public boolean processKeys(@Nonnull final Processor<Key> processor, GlobalSearchScope scope, final IdFilter idFilter) throws StorageException {
+  public boolean processKeys(@Nonnull final Processor<? super Key> processor, GlobalSearchScope scope, final IdFilter idFilter) throws StorageException {
     l.lock();
     try {
       myCache.clear(); // this will ensure that all new keys are made into the map
+
       if (myBuildKeyHashToVirtualFileMapping && idFilter != null) {
         TIntHashSet hashMaskSet = null;
         long l = System.currentTimeMillis();
+        GlobalSearchScope filterScope = idFilter.getEffectiveFilteringScope();
+        GlobalSearchScope effectiveFilteringScope = filterScope != null ? filterScope : scope;
 
-        File fileWithCaches = getSavedProjectFileValueIds(myLastScannedId, scope);
-        final boolean useCachedHashIds = ENABLE_CACHED_HASH_IDS &&
-                                         (scope instanceof ProjectScopeImpl || scope instanceof ProjectAndLibrariesScope) &&
-                                         fileWithCaches != null;
+        File fileWithCaches = getSavedProjectFileValueIds(myLastScannedId, effectiveFilteringScope);
+        final boolean useCachedHashIds =
+                ENABLE_CACHED_HASH_IDS && (effectiveFilteringScope instanceof ProjectScopeImpl || effectiveFilteringScope instanceof ProjectAndLibrariesScope) && fileWithCaches != null;
         int id = myKeyHashToVirtualFileMapping.getCurrentLength();
 
         if (useCachedHashIds && id == myLastScannedId) {
@@ -180,15 +181,15 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
             ProgressManager.checkCanceled();
 
             myKeyHashToVirtualFileMapping.processAll(key -> {
+              ProgressManager.checkCanceled();
               if (!idFilter.containsFileId(key[1])) return true;
               finalHashMaskSet.add(key[0]);
-              ProgressManager.checkCanceled();
               return true;
             }, IntPairInArrayKeyDescriptor.INSTANCE);
           });
 
           if (useCachedHashIds) {
-            saveHashedIds(hashMaskSet, id, scope);
+            saveHashedIds(hashMaskSet, id, effectiveFilteringScope);
           }
         }
 
@@ -216,64 +217,44 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
 
   @Nonnull
   private static TIntHashSet loadHashedIds(@Nonnull File fileWithCaches) throws IOException {
-    DataInputStream inputStream = null;
-    try {
-      inputStream = new DataInputStream(new BufferedInputStream(new FileInputStream(fileWithCaches)));
+    try (DataInputStream inputStream = new DataInputStream(new BufferedInputStream(new FileInputStream(fileWithCaches)))) {
       int capacity = DataInputOutputUtil.readINT(inputStream);
       TIntHashSet hashMaskSet = new TIntHashSet(capacity);
-      while(capacity > 0) {
+      while (capacity > 0) {
         hashMaskSet.add(DataInputOutputUtil.readINT(inputStream));
         --capacity;
       }
-      inputStream.close();
       return hashMaskSet;
-    }
-    finally {
-      if (inputStream != null) {
-        try {
-          inputStream.close();
-        }
-        catch (IOException ignored) {}
-      }
     }
   }
 
   private void saveHashedIds(@Nonnull TIntHashSet hashMaskSet, int largestId, @Nonnull GlobalSearchScope scope) {
     File newFileWithCaches = getSavedProjectFileValueIds(largestId, scope);
     assert newFileWithCaches != null;
-    DataOutputStream stream = null;
 
-    boolean savedSuccessfully = false;
-    try {
-      stream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(newFileWithCaches)));
+    boolean savedSuccessfully;
+    try (DataOutputStream stream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(newFileWithCaches)))) {
       DataInputOutputUtil.writeINT(stream, hashMaskSet.size());
-      final DataOutputStream finalStream = stream;
-      savedSuccessfully = hashMaskSet.forEach(new TIntProcedure() {
-        @Override
-        public boolean execute(int value) {
-          try {
-            DataInputOutputUtil.writeINT(finalStream, value);
-            return true;
-          } catch (IOException ex) {
-            return false;
-          }
+      savedSuccessfully = hashMaskSet.forEach(value -> {
+        try {
+          DataInputOutputUtil.writeINT(stream, value);
+          return true;
+        }
+        catch (IOException ex) {
+          return false;
         }
       });
     }
     catch (IOException ignored) {
+      savedSuccessfully = false;
     }
-    finally {
-      if (stream != null) {
-        try {
-          stream.close();
-          if (savedSuccessfully) myLastScannedId = largestId;
-        }
-        catch (IOException ignored) {}
-      }
+    if (savedSuccessfully) {
+      myLastScannedId = largestId;
     }
   }
 
   private static volatile File mySessionDirectory;
+
   private static File getSessionDir() {
     File sessionDirectory = mySessionDirectory;
     if (sessionDirectory == null) {
@@ -282,7 +263,8 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
         if (sessionDirectory == null) {
           try {
             mySessionDirectory = sessionDirectory = FileUtil.createTempDirectory(new File(PathManager.getTempPath()), Long.toString(System.currentTimeMillis()), "", true);
-          } catch (IOException ex) {
+          }
+          catch (IOException ex) {
             throw new RuntimeException("Can not create temp directory", ex);
           }
         }
@@ -302,7 +284,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
   public void addValue(final Key key, final int inputId, final Value value) throws StorageException {
     try {
       if (myKeyHashToVirtualFileMapping != null) {
-        withLock(() -> myKeyHashToVirtualFileMapping.append(new int[] { myKeyDescriptor.getHashCode(key), inputId }, IntPairInArrayKeyDescriptor.INSTANCE));
+        withLock(() -> myKeyHashToVirtualFileMapping.append(new int[]{myKeyDescriptor.getHashCode(key), inputId}, IntPairInArrayKeyDescriptor.INSTANCE));
         int lastScannedId = myLastScannedId;
         if (lastScannedId != 0) { // we have write lock
           ourInvalidatedSessionIds.cacheOrGet(lastScannedId, Boolean.TRUE);
@@ -318,6 +300,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
 
   private static class IntPairInArrayKeyDescriptor implements KeyDescriptor<int[]>, DifferentSerializableBytesImplyNonEqualityPolicy {
     private static final IntPairInArrayKeyDescriptor INSTANCE = new IntPairInArrayKeyDescriptor();
+
     @Override
     public void save(@Nonnull DataOutput out, int[] value) throws IOException {
       DataInputOutputUtil.writeINT(out, value[0]);
@@ -326,7 +309,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
 
     @Override
     public int[] read(@Nonnull DataInput in) throws IOException {
-      return new int[] {DataInputOutputUtil.readINT(in), DataInputOutputUtil.readINT(in)};
+      return new int[]{DataInputOutputUtil.readINT(in), DataInputOutputUtil.readINT(in)};
     }
 
     @Override

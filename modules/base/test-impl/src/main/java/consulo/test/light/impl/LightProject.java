@@ -15,13 +15,18 @@
  */
 package consulo.test.light.impl;
 
+import com.intellij.ide.plugins.PluginListenerDescriptor;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.containers.MultiMap;
+import consulo.annotations.RequiredWriteAction;
 import consulo.injecting.InjectingContainerBuilder;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,6 +47,10 @@ public class LightProject extends ComponentManagerImpl implements Project {
     myRegistrator = registrator;
 
     buildInjectingContainer();
+  }
+
+  @Override
+  protected void fillListenerDescriptors(MultiMap<String, PluginListenerDescriptor> mapByTopic) {
   }
 
   @Override
@@ -111,6 +120,13 @@ public class LightProject extends ComponentManagerImpl implements Project {
   @Override
   public void save() {
 
+  }
+
+  @RequiredWriteAction
+  @Nonnull
+  @Override
+  public AsyncResult<Void> saveAsync(UIAccess uiAccess) {
+    return AsyncResult.resolved();
   }
 
   @Override

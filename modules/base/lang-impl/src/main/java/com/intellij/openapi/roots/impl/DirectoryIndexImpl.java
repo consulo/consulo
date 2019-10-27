@@ -16,7 +16,6 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.ProjectTopics;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileTypeEvent;
 import com.intellij.openapi.fileTypes.FileTypeListener;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -36,6 +35,8 @@ import com.intellij.util.Query;
 import com.intellij.util.containers.ConcurrentIntObjectMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.annotations.RequiredReadAction;
+import consulo.logging.Logger;
 import consulo.roots.ContentFolderTypeProvider;
 
 import javax.annotation.Nonnull;
@@ -55,7 +56,8 @@ public class DirectoryIndexImpl extends DirectoryIndex {
   private volatile RootIndex myRootIndex = null;
 
   @Inject
-  public DirectoryIndexImpl(@Nonnull Project project) {
+  @RequiredReadAction
+  public DirectoryIndexImpl(@Nonnull Project project, @Nonnull ModuleManager moduleManager) {
     myProject = project;
     myConnection = project.getMessageBus().connect(project);
     myConnection.subscribe(FileTypeManager.TOPIC, new FileTypeListener() {
@@ -89,7 +91,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
       }
     }, project);
 
-    markContentRootsForRefresh();
+    markContentRootsForRefresh(moduleManager);
 
     Disposer.register(project, () -> {
       myDisposed = true;
@@ -97,8 +99,9 @@ public class DirectoryIndexImpl extends DirectoryIndex {
     });
   }
 
-  private void markContentRootsForRefresh() {
-    Module[] modules = ModuleManager.getInstance(myProject).getModules();
+  @RequiredReadAction
+  private void markContentRootsForRefresh(ModuleManager moduleManager) {
+    Module[] modules = moduleManager.getModules();
     for (Module module : modules) {
       VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
       for (VirtualFile contentRoot : contentRoots) {

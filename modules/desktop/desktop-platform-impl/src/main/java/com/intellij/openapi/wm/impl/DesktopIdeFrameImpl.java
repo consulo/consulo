@@ -29,7 +29,7 @@ import com.intellij.openapi.actionSystem.impl.MouseGestureManager;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.*;
@@ -48,6 +48,7 @@ import com.intellij.ui.mac.MacMainFrameDecorator;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
+import consulo.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.application.impl.FrameTitleUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.desktop.internal.window.JFrameAsUIWindow;
@@ -185,8 +186,6 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         Toolkit.getDefaultToolkit().removePropertyChangeListener("win.xpstyle.themeActive", myWindowsBorderUpdater);
         myWindowsBorderUpdater = null;
       }
-
-      FocusTrackback.release(this);
 
       super.dispose();
     }
@@ -360,7 +359,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         if (isTemporaryDisposed()) return;
 
         final Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-        if (openProjects.length > 1 || openProjects.length == 1 && SystemInfo.isMacSystemMenu) {
+        if (openProjects.length > 1 || openProjects.length == 1 && TopApplicationMenuUtil.isMacSystemMenu) {
           if (myProject != null && myProject.isOpen()) {
             ProjectUtil.closeAndDispose(myProject);
           }
@@ -476,10 +475,6 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
       }
     }
 
-    if (project == null) {
-      FocusTrackback.release(myJFrame);
-    }
-
     if (myJFrame.isVisible() && myRestoreFullScreen) {
       toggleFullScreen(true);
       myRestoreFullScreen = false;
@@ -501,9 +496,9 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
     final LineSeparatorPanel lineSeparatorPanel = new LineSeparatorPanel(project);
     statusBar.addWidget(lineSeparatorPanel, "before " + encodingPanel.ID());
 
-    final ToggleReadOnlyAttributePanel readOnlyAttributePanel = new ToggleReadOnlyAttributePanel(project);
+    final ToggleReadOnlyAttributePanel readOnlyAttributePanel = new ToggleReadOnlyAttributePanel();
 
-    final InsertOverwritePanel insertOverwritePanel = new InsertOverwritePanel(project);
+    final ColumnSelectionModePanel insertOverwritePanel = new ColumnSelectionModePanel(project);
     statusBar.addWidget(insertOverwritePanel, "after " + encodingPanel.ID());
     statusBar.addWidget(readOnlyAttributePanel, "after " + insertOverwritePanel.ID());
 
@@ -598,7 +593,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
       try {
         Field modalBlockerField = Window.class.getDeclaredField("modalBlocker");
         modalBlockerField.setAccessible(true);
-        final Window modalBlocker = (Window)modalBlockerField.get(this);
+        final Window modalBlocker = (Window)modalBlockerField.get(myJFrame);
         if (modalBlocker != null) {
           ApplicationManager.getApplication().invokeLater(() -> toggleFullScreen(state), ModalityState.NON_MODAL);
           return true;

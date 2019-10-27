@@ -20,7 +20,7 @@
  */
 package com.intellij.codeInsight.hint;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import javax.annotation.Nonnull;

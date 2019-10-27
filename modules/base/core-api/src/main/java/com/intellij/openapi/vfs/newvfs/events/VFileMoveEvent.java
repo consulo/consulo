@@ -54,12 +54,18 @@ public class VFileMoveEvent extends VFileEvent {
   @Override
   @NonNls
   public String toString() {
-    return "VfsEvent[move " + myFile.getName() +" from " + myOldParent + " to " + myNewParent + "]";
+    return "VfsEvent[move " + myFile.getName() + " from " + myOldParent + " to " + myNewParent + "]";
   }
 
   @Nonnull
   @Override
   public String getPath() {
+    return computePath();
+  }
+
+  @Nonnull
+  @Override
+  protected String computePath() {
     return myFile.getPath();
   }
 
@@ -96,7 +102,13 @@ public class VFileMoveEvent extends VFileEvent {
     return result;
   }
 
+  @Nonnull
   public String getOldPath() {
     return myOldParent.getPath() + "/" + myFile.getName();
+  }
+
+  @Nonnull
+  public String getNewPath() {
+    return myNewParent.getPath() + "/" + myFile.getName();
   }
 }

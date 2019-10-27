@@ -1,6 +1,6 @@
 package com.intellij.util.io;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 
 class IOStatistics {
   static final boolean DEBUG = System.getProperty("io.access.debug") != null;

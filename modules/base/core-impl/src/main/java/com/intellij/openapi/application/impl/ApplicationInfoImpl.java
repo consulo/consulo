@@ -15,22 +15,22 @@
  */
 package com.intellij.openapi.application.impl;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.BuildNumber;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.annotations.DeprecationInfo;
+import consulo.logging.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.inject.Singleton;
-import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Calendar;
@@ -53,10 +53,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   private String myBuildNumber = null;
   private String myCompanyName = "consulo.io";
   private String myCompanyUrl = "https://consulo.io";
-  private Color myAboutForeground = Color.black;
-  private Color myAboutLinkColor = null;
-
-  private String myAboutImageUrl = null;
 
   private Calendar myBuildDate = null;
   private String myDocumentationUrl;
@@ -69,38 +65,59 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   private String myMacKeymapUrl;
   private boolean myHasHelp = true;
   private boolean myHasContextHelp = true;
-  @NonNls private String myHelpFileName = "ideahelp.jar";
-  @NonNls private String myHelpRootName = "idea";
-  @NonNls private String myWebHelpUrl = "https://github.com/consulo/consulo/wiki";
+  @NonNls
+  private String myHelpFileName = "ideahelp.jar";
+  @NonNls
+  private String myHelpRootName = "idea";
+  @NonNls
+  private String myWebHelpUrl = "https://github.com/consulo/consulo/wiki";
 
-  private Rectangle myAboutLogoRect;
-
-  @NonNls private static final String ELEMENT_VERSION = "version";
-  @NonNls private static final String ATTRIBUTE_MAJOR = "major";
-  @NonNls private static final String ATTRIBUTE_MINOR = "minor";
-  @NonNls private static final String ATTRIBUTE_NAME = "name";
-  @NonNls private static final String ELEMENT_BUILD = "build";
-  @NonNls private static final String ELEMENT_COMPANY = "company";
-  @NonNls private static final String ATTRIBUTE_NUMBER = "number";
-  @NonNls private static final String ATTRIBUTE_DATE = "date";
-  @NonNls private static final String ATTRIBUTE_URL = "url";
-  @NonNls private static final String ATTRIBUTE_ABOUT_FOREGROUND_COLOR = "foreground";
-  @NonNls private static final String ATTRIBUTE_ABOUT_LINK_COLOR = "linkColor";
-  @NonNls private static final String ELEMENT_ABOUT = "about";
-  @NonNls private static final String HELP_ELEMENT_NAME = "help";
-  @NonNls private static final String ATTRIBUTE_HELP_FILE = "file";
-  @NonNls private static final String ATTRIBUTE_HELP_ROOT = "root";
-  @NonNls private static final String ELEMENT_DOCUMENTATION = "documentation";
-  @NonNls private static final String ELEMENT_SUPPORT = "support";
-  @NonNls private static final String ELEMENT_FEEDBACK = "feedback";
-  @NonNls private static final String ATTRIBUTE_RELEASE_URL = "release-url";
-  @NonNls private static final String ATTRIBUTE_WEBHELP_URL = "webhelp-url";
-  @NonNls private static final String ATTRIBUTE_HAS_HELP = "has-help";
-  @NonNls private static final String ATTRIBUTE_HAS_CONTEXT_HELP = "has-context-help";
-  @NonNls private static final String ELEMENT_WHATSNEW = "whatsnew";
-  @NonNls private static final String ELEMENT_KEYMAP = "keymap";
-  @NonNls private static final String ATTRIBUTE_WINDOWS_URL = "win";
-  @NonNls private static final String ATTRIBUTE_MAC_URL = "mac";
+  @NonNls
+  private static final String ELEMENT_VERSION = "version";
+  @NonNls
+  private static final String ATTRIBUTE_MAJOR = "major";
+  @NonNls
+  private static final String ATTRIBUTE_MINOR = "minor";
+  @NonNls
+  private static final String ATTRIBUTE_NAME = "name";
+  @NonNls
+  private static final String ELEMENT_BUILD = "build";
+  @NonNls
+  private static final String ELEMENT_COMPANY = "company";
+  @NonNls
+  private static final String ATTRIBUTE_NUMBER = "number";
+  @NonNls
+  private static final String ATTRIBUTE_DATE = "date";
+  @NonNls
+  private static final String ATTRIBUTE_URL = "url";
+  @NonNls
+  private static final String HELP_ELEMENT_NAME = "help";
+  @NonNls
+  private static final String ATTRIBUTE_HELP_FILE = "file";
+  @NonNls
+  private static final String ATTRIBUTE_HELP_ROOT = "root";
+  @NonNls
+  private static final String ELEMENT_DOCUMENTATION = "documentation";
+  @NonNls
+  private static final String ELEMENT_SUPPORT = "support";
+  @NonNls
+  private static final String ELEMENT_FEEDBACK = "feedback";
+  @NonNls
+  private static final String ATTRIBUTE_RELEASE_URL = "release-url";
+  @NonNls
+  private static final String ATTRIBUTE_WEBHELP_URL = "webhelp-url";
+  @NonNls
+  private static final String ATTRIBUTE_HAS_HELP = "has-help";
+  @NonNls
+  private static final String ATTRIBUTE_HAS_CONTEXT_HELP = "has-context-help";
+  @NonNls
+  private static final String ELEMENT_WHATSNEW = "whatsnew";
+  @NonNls
+  private static final String ELEMENT_KEYMAP = "keymap";
+  @NonNls
+  private static final String ATTRIBUTE_WINDOWS_URL = "win";
+  @NonNls
+  private static final String ATTRIBUTE_MAC_URL = "mac";
 
   public ApplicationInfoImpl() {
     load();
@@ -150,11 +167,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   @NonNls
   private String getHelpJarPath() {
     return PathManager.getHomePath() + File.separator + "help" + File.separator + myHelpFileName;
-  }
-
-  @Override
-  public String getAboutImageUrl() {
-    return myAboutImageUrl;
   }
 
   @Override
@@ -208,15 +220,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   }
 
   @Override
-  public Color getAboutForeground() {
-    return myAboutForeground;
-  }
-
-  public Color getAboutLinkColor() {
-    return myAboutLinkColor;
-  }
-
-  @Override
   public String getFullApplicationName() {
     @NonNls StringBuilder buffer = new StringBuilder();
     buffer.append(getVersionName());
@@ -224,17 +227,12 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
     buffer.append(getMajorVersion());
 
     String minorVersion = getMinorVersion();
-    if (!StringUtil.isEmpty(minorVersion)){
+    if (!StringUtil.isEmpty(minorVersion)) {
       buffer.append(".");
       buffer.append(getMinorVersion());
     }
 
     return buffer.toString();
-  }
-
-  @Override
-  public Rectangle getAboutLogoRect() {
-    return myAboutLogoRect;
   }
 
   private static ApplicationInfoImpl ourShadowInstance;
@@ -280,16 +278,14 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
       if (dateString.equals("__BUILD_DATE__")) {
         myBuildDate = new GregorianCalendar();
         try {
-          final JarFile bootJar = new JarFile(PathManager.getHomePath() + File.separator + "lib" + File.separator + "boot.jar");
-          try {
+          String jarPathForClass = PathManager.getJarPathForClass(Application.class);
+          try (JarFile bootJar = new JarFile(jarPathForClass)) {
             final JarEntry jarEntry = bootJar.entries().nextElement(); // /META-INF is always updated on build
             myBuildDate.setTime(new Date(jarEntry.getTime()));
           }
-          finally {
-            bootJar.close();
-          }
         }
-        catch (Exception ignore) { }
+        catch (Exception ignore) {
+        }
       }
       else {
         myBuildDate = parseDate(dateString);
@@ -297,40 +293,12 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
     }
 
     String consuloBuildNumber = System.getProperty("consulo.build.number");
-    if(consuloBuildNumber != null) {
+    if (consuloBuildNumber != null) {
       myBuildNumber = consuloBuildNumber;
     }
 
     Thread currentThread = Thread.currentThread();
     currentThread.setName(currentThread.getName() + " " + myMajorVersion + "." + myMinorVersion + "#" + myBuildNumber);
-
-    Element aboutLogoElement = parentNode.getChild(ELEMENT_ABOUT);
-    if (aboutLogoElement != null) {
-      myAboutImageUrl = aboutLogoElement.getAttributeValue(ATTRIBUTE_URL);
-
-      String v = aboutLogoElement.getAttributeValue(ATTRIBUTE_ABOUT_FOREGROUND_COLOR);
-      if (v != null) {
-        myAboutForeground = parseColor(v);
-      }
-      String c = aboutLogoElement.getAttributeValue(ATTRIBUTE_ABOUT_LINK_COLOR);
-      if (c != null) {
-        myAboutLinkColor = parseColor(c);
-      }
-
-      String logoX = aboutLogoElement.getAttributeValue("logoX");
-      String logoY = aboutLogoElement.getAttributeValue("logoY");
-      String logoW = aboutLogoElement.getAttributeValue("logoW");
-      String logoH = aboutLogoElement.getAttributeValue("logoH");
-      if (logoX != null && logoY != null && logoW != null && logoH != null) {
-        try {
-          myAboutLogoRect =
-            new Rectangle(Integer.parseInt(logoX), Integer.parseInt(logoY), Integer.parseInt(logoW), Integer.parseInt(logoH));
-        }
-        catch (NumberFormatException nfe) {
-          // ignore
-        }
-      }
-    }
 
     Element helpElement = parentNode.getChild(HELP_ELEMENT_NAME);
     if (helpElement != null) {
@@ -378,8 +346,7 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   }
 
   private static GregorianCalendar parseDate(final String dateString) {
-    @SuppressWarnings("MultipleVariablesInDeclaration")
-    int year = 0, month = 0, day = 0, hour = 0, minute = 0;
+    @SuppressWarnings("MultipleVariablesInDeclaration") int year = 0, month = 0, day = 0, hour = 0, minute = 0;
     try {
       year = Integer.parseInt(dateString.substring(0, 4));
       month = Integer.parseInt(dateString.substring(4, 6));
@@ -389,20 +356,18 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
         minute = Integer.parseInt(dateString.substring(10, 12));
       }
     }
-    catch (Exception ignore) { }
+    catch (Exception ignore) {
+    }
     if (month > 0) month--;
     return new GregorianCalendar(year, month, day, hour, minute);
   }
 
-  private static Color parseColor(final String colorString) {
-    final long rgb = Long.parseLong(colorString, 16);
-    return new Color((int)rgb, rgb > 0xffffff);
-  }
-
   private static volatile boolean myInPerformanceTest;
+
   public static boolean isInPerformanceTest() {
     return myInPerformanceTest;
   }
+
   public static void setInPerformanceTest(boolean inPerformanceTest) {
     myInPerformanceTest = inPerformanceTest;
   }

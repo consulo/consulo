@@ -15,276 +15,203 @@
  */
 package org.jetbrains.concurrency;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.Getter;
-import com.intellij.util.Consumer;
-import com.intellij.util.Function;
+import com.intellij.openapi.diagnostic.ControlFlowException;
+import consulo.logging.Logger;
+import com.intellij.util.ExceptionUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
-@Deprecated
-public class AsyncPromise<T> extends Promise<T> implements Getter<T> {
+public class AsyncPromise<T> implements CancellablePromise<T>, InternalPromiseUtil.CompletablePromise<T> {
   private static final Logger LOG = Logger.getInstance(AsyncPromise.class);
 
-  public static final RuntimeException OBSOLETE_ERROR = Promise.createError("Obsolete");
+  private final CompletableFuture<T> f;
+  private final AtomicBoolean hasErrorHandler;
 
-  private volatile Consumer<T> done;
-  private volatile Consumer<Throwable> rejected;
+  public AsyncPromise() {
+    this(new CompletableFuture<>(), new AtomicBoolean());
+  }
 
-  protected volatile State state = State.PENDING;
-  // result object or error message
-  private volatile Object result;
+  private AsyncPromise(CompletableFuture<T> f, AtomicBoolean hasErrorHandler) {
+    this.f = f;
+    this.hasErrorHandler = hasErrorHandler;
+  }
+
+  @Override
+  public boolean isDone() {
+    return f.isDone();
+  }
+
+  @Override
+  public T get() throws InterruptedException, ExecutionException {
+    if (isCancelled()) {
+      return null;
+    }
+
+    try {
+      return f.get();
+    }
+    catch (CancellationException ignored) {
+      return null;
+    }
+  }
+
+  @Override
+  public T get(long timeout, @Nonnull TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+    if (isCancelled()) {
+      return null;
+    }
+
+    try {
+      return f.get(timeout, unit);
+    }
+    catch (CancellationException ignored) {
+      return null;
+    }
+  }
+
+  @Override
+  public boolean isCancelled() {
+    return f.isCancelled();
+  }
+
+  @Override
+  public boolean cancel(boolean mayInterruptIfRunning) {
+    return !isCancelled() && f.cancel(mayInterruptIfRunning);
+  }
+
+  @Override
+  public void cancel() {
+    cancel(false);
+  }
 
   @Nonnull
   @Override
   public State getState() {
-    return state;
+    if (!f.isDone()) {
+      return State.PENDING;
+    }
+    else if (f.isCompletedExceptionally()) {
+      return State.REJECTED;
+    }
+    else {
+      return State.SUCCEEDED;
+    }
   }
 
   @Nonnull
   @Override
-  public Promise<T> done(@Nonnull Consumer<T> done) {
-    if (isObsolete(done)) {
-      return this;
-    }
-
-    switch (state) {
-      case PENDING:
-        break;
-      case FULFILLED:
-        //noinspection unchecked
-        done.consume((T)result);
-        return this;
-      case REJECTED:
-        return this;
-    }
-
-    this.done = setHandler(this.done, done);
-    return this;
-  }
-
-  @Nonnull
-  @Override
-  public Promise<T> rejected(@Nonnull Consumer<Throwable> rejected) {
-    if (isObsolete(rejected)) {
-      return this;
-    }
-
-    switch (state) {
-      case PENDING:
-        break;
-      case FULFILLED:
-        return this;
-      case REJECTED:
-        rejected.consume((Throwable)result);
-        return this;
-    }
-
-    this.rejected = setHandler(this.rejected, rejected);
-    return this;
-  }
-
-  @Override
-  public T get() {
-    //noinspection unchecked
-    return state == State.FULFILLED ? (T)result : null;
-  }
-
-  @SuppressWarnings("SynchronizeOnThis")
-  private static final class CompoundConsumer<T> implements Consumer<T> {
-    private List<Consumer<T>> consumers = new ArrayList<>();
-
-    public CompoundConsumer(@Nonnull Consumer<T> c1, @Nonnull Consumer<T> c2) {
-      synchronized (this) {
-        consumers.add(c1);
-        consumers.add(c2);
-      }
-    }
-
-    @Override
-    public void consume(T t) {
-      List<Consumer<T>> list;
-      synchronized (this) {
-        list = consumers;
-        consumers = null;
-      }
-
-      if (list != null) {
-        for (Consumer<T> consumer : list) {
-          if (!isObsolete(consumer)) {
-            consumer.consume(t);
+  public Promise<T> onSuccess(@Nonnull Consumer<? super T> handler) {
+    return new AsyncPromise<>(f.whenComplete((value, exception) -> {
+      if (exception == null && !InternalPromiseUtil.isHandlerObsolete(handler)) {
+        try {
+          handler.accept(value);
+        }
+        catch (Throwable e) {
+          if (!(e instanceof ControlFlowException)) {
+            LOG.error(e);
           }
         }
       }
-    }
-
-    public void add(@Nonnull Consumer<T> consumer) {
-      synchronized (this) {
-        if (consumers != null) {
-          consumers.add(consumer);
-        }
-      }
-    }
-  }
-
-  @Override
-  @Nonnull
-  public <SUB_RESULT> Promise<SUB_RESULT> then(@Nonnull final Function<T, SUB_RESULT> fulfilled) {
-    switch (state) {
-      case PENDING:
-        break;
-      case FULFILLED:
-        //noinspection unchecked
-        return new DonePromise<>(fulfilled.fun((T)result));
-      case REJECTED:
-        return new RejectedPromise<>((Throwable)result);
-    }
-
-    final AsyncPromise<SUB_RESULT> promise = new AsyncPromise<>();
-    addHandlers(result -> {
-      try {
-        if (fulfilled instanceof Obsolescent && ((Obsolescent)fulfilled).isObsolete()) {
-          promise.setError(OBSOLETE_ERROR);
-        }
-        else {
-          promise.setResult(fulfilled.fun(result));
-        }
-      }
-      catch (Throwable e) {
-        promise.setError(e);
-      }
-    }, promise::setError);
-    return promise;
-  }
-
-  @Override
-  public void notify(@Nonnull final AsyncPromise<T> child) {
-    LOG.assertTrue(child != this);
-
-    switch (state) {
-      case PENDING:
-        break;
-      case FULFILLED:
-        //noinspection unchecked
-        child.setResult((T)result);
-        return;
-      case REJECTED:
-        child.setError((Throwable)result);
-        return;
-    }
-
-    addHandlers(result -> {
-      try {
-        child.setResult(result);
-      }
-      catch (Throwable e) {
-        child.setError(e);
-      }
-    }, child::setError);
-  }
-
-
-  @Override
-  @Nonnull
-  public Promise<T> processed(@Nonnull final AsyncPromise<T> fulfilled) {
-    switch (state) {
-      case PENDING:
-        break;
-      case FULFILLED:
-        //noinspection unchecked
-        fulfilled.setResult((T)result);
-        return this;
-      case REJECTED:
-        fulfilled.setError((Throwable)result);
-        return this;
-    }
-
-    addHandlers(result -> {
-      try {
-        fulfilled.setResult(result);
-      }
-      catch (Throwable e) {
-        fulfilled.setError(e);
-      }
-    }, fulfilled::setError);
-    return this;
-  }
-
-  private void addHandlers(@Nonnull Consumer<T> done, @Nonnull Consumer<Throwable> rejected) {
-    this.done = setHandler(this.done, done);
-    this.rejected = setHandler(this.rejected, rejected);
+    }), hasErrorHandler);
   }
 
   @Nonnull
-  private static <T> Consumer<T> setHandler(@Nullable Consumer<T> oldConsumer, @Nonnull Consumer<T> newConsumer) {
-    if (oldConsumer == null) {
-      return newConsumer;
+  @Override
+  public Promise<T> onError(@Nonnull Consumer<Throwable> rejected) {
+    hasErrorHandler.set(true);
+    return new AsyncPromise<>(f.whenComplete((value, exception) -> {
+      if (exception != null) {
+        Throwable toReport = (exception instanceof CompletionException && exception.getCause() != null) ? exception.getCause() : exception;
+
+        if (!InternalPromiseUtil.isHandlerObsolete(rejected)) {
+          rejected.accept(toReport);
+        }
+      }
+    }), hasErrorHandler);
+  }
+
+  @Nonnull
+  @Override
+  public Promise<T> onProcessed(@Nonnull Consumer<? super T> processed) {
+    hasErrorHandler.set(true);
+    return new AsyncPromise<>(f.whenComplete((value, exception) -> {
+      if (!InternalPromiseUtil.isHandlerObsolete(processed)) {
+        processed.accept(value);
+      }
+    }), hasErrorHandler);
+  }
+
+  @Nullable
+  @Override
+  public T blockingGet(int timeout, @Nonnull TimeUnit timeUnit) throws TimeoutException, ExecutionException {
+    try {
+      return get(timeout, timeUnit);
     }
-    else if (oldConsumer instanceof CompoundConsumer) {
-      ((CompoundConsumer<T>)oldConsumer).add(newConsumer);
-      return oldConsumer;
+    catch (ExecutionException e) {
+      if (e.getCause() == InternalPromiseUtil.OBSOLETE_ERROR) {
+        return null;
+      }
+
+      ExceptionUtil.rethrowUnchecked(e.getCause());
+      throw e;
     }
-    else {
-      return new CompoundConsumer<>(oldConsumer, newConsumer);
+    catch (InterruptedException e) {
+      throw new RuntimeException(e);
     }
   }
 
-  public void setResult(T result) {
-    if (state != State.PENDING) {
-      return;
+  @Nonnull
+  @Override
+  public <SUB_RESULT> Promise<SUB_RESULT> then(@Nonnull com.intellij.util.Function<? super T, ? extends SUB_RESULT> done) {
+    return new AsyncPromise<>(f.thenApply(done::fun), hasErrorHandler);
+  }
+
+  @Nonnull
+  @Override
+  public <SUB_RESULT> Promise<SUB_RESULT> thenAsync(@Nonnull com.intellij.util.Function<? super T, Promise<SUB_RESULT>> doneF) {
+    Function<T, CompletableFuture<SUB_RESULT>> convert = it -> {
+      Promise<SUB_RESULT> promise = doneF.fun(it);
+      CompletableFuture<SUB_RESULT> future = new CompletableFuture<>();
+
+      promise.onSuccess(future::complete).onError(future::completeExceptionally);
+      return future;
+    };
+    return new AsyncPromise<>(f.thenCompose(convert), hasErrorHandler);
+  }
+
+  @Nonnull
+  @Override
+  @SuppressWarnings("unchecked")
+  public Promise<T> processed(@Nonnull Promise<? super T> child) {
+    if (!(child instanceof AsyncPromise)) {
+      return this;
     }
-
-    this.result = result;
-    state = State.FULFILLED;
-
-    Consumer<T> done = this.done;
-    clearHandlers();
-    if (done != null && !isObsolete(done)) {
-      done.consume(result);
-    }
+    return onSuccess(((AsyncPromise)child)::setResult).onError(((AsyncPromise)child)::setError);
   }
 
-  static boolean isObsolete(@Nullable Consumer<?> consumer) {
-    return consumer instanceof Obsolescent && ((Obsolescent)consumer).isObsolete();
+  @Override
+  public void setResult(@Nullable T t) {
+    f.complete(t);
   }
 
-  public boolean setError(@Nonnull String error) {
-    return setError(Promise.createError(error));
-  }
-
+  @Override
   public boolean setError(@Nonnull Throwable error) {
-    if (state != State.PENDING) {
+    if (!f.completeExceptionally(error)) {
       return false;
     }
 
-    result = error;
-    state = State.REJECTED;
-
-    Consumer<Throwable> rejected = this.rejected;
-    clearHandlers();
-    if (rejected != null) {
-      if (!isObsolete(rejected)) {
-        rejected.consume(error);
-      }
-    }
-    else {
-      Promise.logError(LOG, error);
+    if (!hasErrorHandler.get()) {
+      Promises.errorIfNotMessage(LOG, error);
     }
     return true;
   }
 
-  private void clearHandlers() {
-    done = null;
-    rejected = null;
-  }
-
-  @Override
-  public Promise<T> processed(@Nonnull final Consumer<T> processed) {
-    done(processed);
-    rejected(error -> processed.consume(null));
-    return this;
+  public void setError(@Nonnull String error) {
+    setError(Promises.createError(error));
   }
 }

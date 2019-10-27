@@ -34,6 +34,7 @@ import com.intellij.openapi.editor.colors.impl.DelegateColorScheme;
 import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
+import com.intellij.openapi.editor.impl.ContextMenuPopupHandler;
 import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
@@ -49,8 +50,9 @@ import com.intellij.util.Function;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;
-import javax.annotation.Nonnull;
+import consulo.ui.UIAccess;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -98,7 +100,7 @@ class EventLogConsole {
     installNotificationsFont(editor);
     myProjectModel.getProject().getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerAdapter() {
       @Override
-      public void projectClosed(Project project) {
+      public void projectClosed(Project project, UIAccess uiAccess) {
         if (project == myProjectModel.getProject()) {
           EditorFactory.getInstance().releaseEditor(editor);
         }
@@ -110,14 +112,12 @@ class EventLogConsole {
     final ClearLogAction clearLog = new ClearLogAction(this);
     clearLog.registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.CONSOLE_CLEAR_ALL).getShortcutSet(), editor.getContentComponent());
 
-    editor.setContextMenuGroupId(null); // disabling default context menu
-    editor.addEditorMouseListener(new EditorPopupHandler() {
-      public void invokePopup(final EditorMouseEvent event) {
+    editor.installPopupHandler(new ContextMenuPopupHandler() {
+      @Nullable
+      @Override
+      public ActionGroup getActionGroup(@Nonnull EditorMouseEvent event) {
         final ActionManager actionManager = ActionManager.getInstance();
-        DefaultActionGroup actions = createPopupActions(actionManager, clearLog, editor, event);
-        final ActionPopupMenu menu = actionManager.createActionPopupMenu(ActionPlaces.EDITOR_POPUP, actions);
-        final MouseEvent mouseEvent = event.getMouseEvent();
-        menu.getComponent().show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
+        return createPopupActions(actionManager, clearLog, editor, event);
       }
     });
     return editor;

@@ -23,6 +23,7 @@ import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.ui.BalloonLayout;
 import com.vaadin.shared.ui.window.WindowMode;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.shared.Rectangle2D;
 import consulo.ui.web.internal.TargetVaddin;
@@ -60,7 +61,7 @@ public class WebIdeFrameImpl implements IdeFrameEx {
     myWindow.addListener(Window.CloseListener.class, () -> {
       myWindow.close();
 
-      ProjectManager.getInstance().closeProjectAsync(myProject);
+      ProjectManager.getInstance().closeAndDisposeAsync(myProject, UIAccess.current());
     });
 
     myWindow.setContent(myRootView.getComponent());

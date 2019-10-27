@@ -18,7 +18,6 @@ package com.intellij.vcs.log.ui.actions;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.actions.RefreshAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.vcs.log.VcsLogDataKeys;
 import com.intellij.vcs.log.VcsLogUi;
 import com.intellij.vcs.log.data.VcsLogFilterer;
@@ -26,6 +25,7 @@ import com.intellij.vcs.log.impl.VcsLogManager;
 import com.intellij.vcs.log.impl.VcsLogUtil;
 import com.intellij.vcs.log.ui.VcsLogInternalDataKeys;
 import com.intellij.vcs.log.ui.VcsLogUiImpl;
+import consulo.logging.Logger;
 
 public class RefreshLogAction extends RefreshAction {
   private static final Logger LOG = Logger.getInstance(RefreshLogAction.class);

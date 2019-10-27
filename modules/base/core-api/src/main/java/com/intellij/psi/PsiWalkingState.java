@@ -16,7 +16,7 @@
 
 package com.intellij.psi;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.WalkingState;
 import javax.annotation.Nonnull;
 

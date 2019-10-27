@@ -24,7 +24,6 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
@@ -44,6 +43,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.Exported;
 import consulo.annotations.RequiredReadAction;
+import consulo.bundle.BundleHolder;
 import consulo.bundle.SdkUtil;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.MutableModuleExtension;
@@ -71,37 +71,37 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
   @Nullable
   private final Condition<SdkTypeId> myCreationFilter;
 
-  public SdkComboBox(@Nonnull final ProjectSdksModel sdksModel) {
+  public SdkComboBox(@Nonnull final BundleHolder sdksModel) {
     this(sdksModel, null, false);
   }
 
-  public SdkComboBox(@Nonnull ProjectSdksModel sdksModel,
+  public SdkComboBox(@Nonnull BundleHolder sdksModel,
                      @Nullable Condition<SdkTypeId> filter,
                      boolean withNoneItem) {
     this(sdksModel, filter, filter, withNoneItem);
   }
 
-  public SdkComboBox(@Nonnull ProjectSdksModel sdksModel,
+  public SdkComboBox(@Nonnull BundleHolder sdksModel,
                      @Nullable Condition<SdkTypeId> filter,
                      @Nullable String nullItemName) {
     this(sdksModel, filter, filter, nullItemName, null);
   }
 
-  public SdkComboBox(@Nonnull ProjectSdksModel sdksModel,
+  public SdkComboBox(@Nonnull BundleHolder sdksModel,
                      @Nullable Condition<SdkTypeId> filter,
                      @Nullable Condition<SdkTypeId> creationFilter,
                      boolean withNoneItem) {
     this(sdksModel, filter, creationFilter, withNoneItem ? ProjectBundle.message("sdk.combo.box.item") : null, null);
   }
 
-  public SdkComboBox(@Nonnull ProjectSdksModel sdksModel,
+  public SdkComboBox(@Nonnull BundleHolder sdksModel,
                      @Nullable Condition<SdkTypeId> filter,
                      @Nullable Condition<SdkTypeId> creationFilter,
                      @Nullable String nullItemName) {
     this(sdksModel, filter, creationFilter, nullItemName, null);
   }
 
-  public SdkComboBox(@Nonnull ProjectSdksModel sdksModel,
+  public SdkComboBox(@Nonnull BundleHolder sdksModel,
                      @Nullable Condition<SdkTypeId> filter,
                      @Nullable Condition<SdkTypeId> creationFilter,
                      @Nullable final String nullItemName,
@@ -474,20 +474,15 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
   }
 
   private static class SdkComboBoxModel extends DefaultComboBoxModel {
-    public SdkComboBoxModel(@Nonnull SdkModel sdksModel,
+    public SdkComboBoxModel(@Nonnull BundleHolder sdksModel,
                             @Nullable Condition<Sdk> sdkFilter,
                             @Nullable String noneItemName) {
-      Sdk[] sdks = sdksModel.getSdks();
+      Sdk[] sdks = sdksModel.getBundles();
       if (sdkFilter != null) {
         final List<Sdk> filtered = ContainerUtil.filter(sdks, sdkFilter);
         sdks = filtered.toArray(new Sdk[filtered.size()]);
       }
-      Arrays.sort(sdks, new Comparator<Sdk>() {
-        @Override
-        public int compare(final Sdk s1, final Sdk s2) {
-          return s1.getName().compareToIgnoreCase(s2.getName());
-        }
-      });
+      Arrays.sort(sdks, (s1, s2) -> s1.getName().compareToIgnoreCase(s2.getName()));
 
       if (noneItemName != null) {
         addElement(new NullSdkComboBoxItem());

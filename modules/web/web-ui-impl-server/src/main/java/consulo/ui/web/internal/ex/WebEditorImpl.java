@@ -30,7 +30,6 @@ import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.impl.SettingsImpl;
 import com.intellij.openapi.editor.impl.TextDrawingCallback;
-import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
@@ -47,6 +46,7 @@ import org.intellij.lang.annotations.MagicConstant;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.util.Collection;
 import java.util.function.IntFunction;
 
@@ -95,7 +95,7 @@ public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.
     assert myDocument != null;
 
     myEditorColorsScheme = EditorColorsManager.getInstance().getGlobalScheme();
-    mySettings = new SettingsImpl(this, project);
+    mySettings = new SettingsImpl(this, project, EditorKind.MAIN_EDITOR);
   }
 
   @Override
@@ -314,16 +314,6 @@ public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.
   }
 
   @Override
-  public int calcColumnNumber(@Nonnull CharSequence text, int start, int offset, int tabSize) {
-    return 0;
-  }
-
-  @Override
-  public int calcColumnNumber(int offset, int lineIndex) {
-    return 0;
-  }
-
-  @Override
   public TextDrawingCallback getTextDrawingCallback() {
     return null;
   }
@@ -344,11 +334,6 @@ public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.
   @Override
   public EditorColorsScheme createBoundColorSchemeDelegate(@Nullable EditorColorsScheme customGlobalScheme) {
     return null;
-  }
-
-  @Override
-  public void setSoftWrapAppliancePlace(@Nonnull SoftWrapAppliancePlaces place) {
-
   }
 
   @Override
@@ -415,6 +400,21 @@ public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.
   @Override
   public String getContextMenuGroupId() {
     return null;
+  }
+
+  @Override
+  public void installPopupHandler(@Nonnull EditorPopupHandler popupHandler) {
+
+  }
+
+  @Override
+  public void uninstallPopupHandler(@Nonnull EditorPopupHandler popupHandler) {
+
+  }
+
+  @Override
+  public void setCustomCursor(@Nonnull Object requestor, @Nullable Cursor cursor) {
+
   }
 
   @Nonnull
@@ -548,6 +548,12 @@ public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.
   @Nonnull
   @Override
   public InlayModel getInlayModel() {
+    return null;
+  }
+
+  @Nonnull
+  @Override
+  public EditorKind getEditorKind() {
     return null;
   }
 }

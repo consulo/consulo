@@ -26,7 +26,7 @@ import com.intellij.diff.util.DiffUtil;
 import com.intellij.ide.presentation.VirtualFilePresentation;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.diff.impl.mergeTool.MergeVersion;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;

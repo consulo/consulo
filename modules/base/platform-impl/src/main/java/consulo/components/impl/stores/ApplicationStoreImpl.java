@@ -16,13 +16,13 @@
 package consulo.components.impl.stores;
 
 import com.intellij.application.options.PathMacrosImpl;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.messages.MessageBus;
-import consulo.application.ex.ApplicationEx2;
 import consulo.components.impl.stores.storage.DirectoryStorageData;
 import consulo.components.impl.stores.storage.StateStorageFacade;
 import consulo.components.impl.stores.storage.StateStorageManager;
@@ -40,13 +40,13 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
 
   private static final String ROOT_ELEMENT_NAME = "application";
 
-  private final ApplicationEx2 myApplication;
+  private final Application myApplication;
   private final StateStorageManager myStateStorageManager;
 
   private String myConfigPath;
 
   @Inject
-  public ApplicationStoreImpl(ApplicationEx2 application, ApplicationPathMacroManager pathMacroManager, Provider<ApplicationDefaultStoreCache> applicationDefaultStoreCache) {
+  public ApplicationStoreImpl(Application application, ApplicationPathMacroManager pathMacroManager, Provider<ApplicationDefaultStoreCache> applicationDefaultStoreCache) {
     super(applicationDefaultStoreCache);
     myApplication = application;
     myStateStorageManager = new StateStorageManagerImpl(pathMacroManager.createTrackingSubstitutor(), ROOT_ELEMENT_NAME, application, () -> null, StateStorageFacade.JAVA_IO) {

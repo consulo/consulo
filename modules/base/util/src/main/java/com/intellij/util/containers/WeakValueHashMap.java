@@ -15,36 +15,47 @@
  */
 package com.intellij.util.containers;
 
+import com.intellij.util.DeprecatedMethodException;
 import gnu.trove.TObjectHashingStrategy;
 import javax.annotation.Nonnull;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 
-public final class WeakValueHashMap<K,V> extends RefValueHashMap<K,V> {
+/**
+ * @deprecated use {@link ContainerUtil#createWeakValueMap()} instead
+ */
+@Deprecated
+public final class WeakValueHashMap<K, V> extends RefValueHashMap<K, V> {
   private static class MyWeakReference<K, T> extends WeakReference<T> implements MyReference<K, T> {
     private final K key;
 
-    private MyWeakReference(K key, T referent, ReferenceQueue<? super T> q) {
+    private MyWeakReference(@Nonnull K key, T referent, ReferenceQueue<? super T> q) {
       super(referent, q);
       this.key = key;
     }
 
+    @Nonnull
     @Override
     public K getKey() {
       return key;
     }
   }
 
+  /**
+   * @deprecated use {@link ContainerUtil#createWeakValueMap()} instead
+   */
+  @Deprecated
   public WeakValueHashMap() {
+    DeprecatedMethodException.report("Use ContainerUtil.createWeakValueMap() instead");
   }
 
-  public WeakValueHashMap(@Nonnull TObjectHashingStrategy<K> strategy) {
+  WeakValueHashMap(@Nonnull TObjectHashingStrategy<K> strategy) {
     super(strategy);
   }
 
   @Override
-  protected MyReference<K, V> createReference(@Nonnull K key, V value, @Nonnull ReferenceQueue<V> queue) {
-    return new MyWeakReference<K, V>(key, value, queue);
+  protected MyReference<K, V> createReference(@Nonnull K key, V value, @Nonnull ReferenceQueue<? super V> queue) {
+    return new MyWeakReference<>(key, value, queue);
   }
 }

@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.changes;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -1543,7 +1543,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
 
   @TestOnly
   public void waitUntilRefreshed() {
-    VcsDirtyScopeVfsListener.getInstance(myProject).flushDirt();
+    VcsDirtyScopeVfsListener.getInstance(myProject).waitForAsyncTaskCompletion();
     myUpdater.waitUntilRefreshed();
     waitUpdateAlarm();
   }
@@ -1605,7 +1605,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
       updateImmediately();
       return true;
     }
-    VcsDirtyScopeVfsListener.getInstance(myProject).flushDirt();
+    VcsDirtyScopeVfsListener.getInstance(myProject).waitForAsyncTaskCompletion();
     myUpdater.waitUntilRefreshed();
     waitUpdateAlarm();
     return true;

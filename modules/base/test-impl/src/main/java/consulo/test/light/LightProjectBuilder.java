@@ -17,6 +17,8 @@ package consulo.test.light;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.psi.PsiFileFactory;

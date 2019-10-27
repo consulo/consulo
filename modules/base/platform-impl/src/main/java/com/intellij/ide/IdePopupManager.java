@@ -1,42 +1,32 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
+import com.intellij.openapi.keymap.impl.IdeKeyEventDispatcher;
 import com.intellij.openapi.ui.popup.IdePopupEventDispatcher;
 import com.intellij.openapi.ui.popup.JBPopup;
+import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFrame;
-import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
-
+import consulo.wm.util.IdeFrameUtil;
 import javax.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.util.List;
 
 public final class IdePopupManager implements IdeEventQueue.EventDispatcher {
-  private static final Logger LOG = Logger.getInstance("com.intellij.ide.IdePopupManager");
+  private static final Logger LOG = Logger.getInstance(IdePopupManager.class);
 
   private final List<IdePopupEventDispatcher> myDispatchStack = ContainerUtil.createLockFreeCopyOnWriteList();
+  private boolean myIgnoreNextKeyTypedEvent;
 
   boolean isPopupActive() {
     for (IdePopupEventDispatcher each : myDispatchStack) {
@@ -45,55 +35,62 @@ public final class IdePopupManager implements IdeEventQueue.EventDispatcher {
       }
     }
 
-    return myDispatchStack.size() > 0;
+    return !myDispatchStack.isEmpty();
   }
 
   @Override
   public boolean dispatch(@Nonnull final AWTEvent e) {
     LOG.assertTrue(isPopupActive());
 
-    if (e.getID() == WindowEvent.WINDOW_LOST_FOCUS) {
-      ApplicationManager.getApplication().invokeLater(() -> {
-        if (!isPopupActive()) return;
+    if (e.getID() == WindowEvent.WINDOW_LOST_FOCUS || e.getID() == WindowEvent.WINDOW_DEACTIVATED) {
+      if (!isPopupActive()) return false;
 
-        boolean shouldCloseAllPopup = false;
+      Window focused = ((WindowEvent)e).getOppositeWindow();
+      if (focused == null) {
+        focused = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
+      }
 
-        Window focused = ((WindowEvent)e).getOppositeWindow();
-        if (focused == null) {
-          focused = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
-        }
+      Component ultimateParentForFocusedComponent = UIUtil.findUltimateParent(focused);
+      Window sourceWindow = ((WindowEvent)e).getWindow();
+      Component ultimateParentForEventWindow = UIUtil.findUltimateParent(sourceWindow);
 
-        if (focused == null) {
+      boolean shouldCloseAllPopup = false;
+      if (ultimateParentForEventWindow == null || ultimateParentForFocusedComponent == null) {
+        shouldCloseAllPopup = true;
+      }
+
+      consulo.ui.Window uiWindow = TargetAWT.from((Window)ultimateParentForEventWindow);
+      IdeFrame ultimateParentWindowForEvent = IdeFrameUtil.findRootIdeFrame(uiWindow);
+
+      if (!shouldCloseAllPopup && ultimateParentWindowForEvent != null) {
+        if (ultimateParentWindowForEvent.isInFullScreen() && !ultimateParentForFocusedComponent.equals(ultimateParentForEventWindow)) {
           shouldCloseAllPopup = true;
         }
+      }
 
-        Component ultimateParentForFocusedComponent = UIUtil.findUltimateParent(focused);
-        Component ultimateParentForEventWindow = UIUtil.findUltimateParent(((WindowEvent)e).getWindow());
-
-        if (!shouldCloseAllPopup && ultimateParentForEventWindow == null || ultimateParentForFocusedComponent == null) {
-          shouldCloseAllPopup = true;
+      if (shouldCloseAllPopup) {
+        closeAllPopups();
+      }
+    }
+    else if (e instanceof KeyEvent) {
+      // the following is copied from IdeKeyEventDispatcher
+      KeyEvent keyEvent = (KeyEvent)e;
+      Object source = keyEvent.getSource();
+      if (myIgnoreNextKeyTypedEvent) {
+        if (KeyEvent.KEY_TYPED == e.getID()) return true;
+        myIgnoreNextKeyTypedEvent = false;
+      }
+      else if (SystemInfo.isMac && InputEvent.ALT_DOWN_MASK == keyEvent.getModifiersEx() && Registry.is("ide.mac.alt.mnemonic.without.ctrl") && source instanceof Component) {
+        // the myIgnoreNextKeyTypedEvent changes event processing to support Alt-based mnemonics on Mac only
+        if (KeyEvent.KEY_TYPED == e.getID() && !IdeEventQueue.getInstance().isInputMethodEnabled() || IdeKeyEventDispatcher.hasMnemonicInWindow((Component)source, keyEvent)) {
+          myIgnoreNextKeyTypedEvent = true;
+          return false;
         }
-
-        if (!shouldCloseAllPopup && ultimateParentForEventWindow instanceof Window) {
-          consulo.ui.Window uiWindow = TargetAWT.from((Window)ultimateParentForFocusedComponent);
-
-          IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
-          if(ideFrame instanceof IdeFrameEx) {
-            IdeFrameEx ultimateParentWindowForEvent = (IdeFrameEx)ideFrame;
-            if (ultimateParentWindowForEvent.isInFullScreen() && !ultimateParentForFocusedComponent.equals(ultimateParentForEventWindow)) {
-              shouldCloseAllPopup = true;
-            }
-          }
-        }
-
-        if (shouldCloseAllPopup) {
-          closeAllPopups();
-        }
-      });
+      }
     }
 
     if (e instanceof KeyEvent || e instanceof MouseEvent) {
-      for (int i = myDispatchStack.size() - 1; (i >= 0 && i < myDispatchStack.size()); i--) {
+      for (int i = myDispatchStack.size() - 1; i >= 0 && i < myDispatchStack.size(); i--) {
         final boolean dispatched = myDispatchStack.get(i).dispatch(e);
         if (dispatched) return true;
       }
@@ -113,12 +110,12 @@ public final class IdePopupManager implements IdeEventQueue.EventDispatcher {
   }
 
   public boolean closeAllPopups(boolean forceRestoreFocus) {
-    if (myDispatchStack.size() == 0) return false;
+    if (myDispatchStack.isEmpty()) return false;
 
     boolean closed = true;
     for (IdePopupEventDispatcher each : myDispatchStack) {
       if (forceRestoreFocus) {
-        each.setRestoreFocusSilentely();
+        each.setRestoreFocusSilently();
       }
       closed &= each.close();
     }
@@ -137,6 +134,7 @@ public final class IdePopupManager implements IdeEventQueue.EventDispatcher {
   }
 
   public boolean isPopupWindow(Window w) {
-    return myDispatchStack.stream().flatMap(IdePopupEventDispatcher::getPopupStream).map(JBPopup::getContent).anyMatch(jbPopupContent -> SwingUtilities.getWindowAncestor(jbPopupContent) == w);
+    return myDispatchStack.stream().flatMap(IdePopupEventDispatcher::getPopupStream).filter(popup -> !popup.isDisposed()).map(JBPopup::getContent)
+            .anyMatch(jbPopupContent -> SwingUtilities.getWindowAncestor(jbPopupContent) == w);
   }
 }

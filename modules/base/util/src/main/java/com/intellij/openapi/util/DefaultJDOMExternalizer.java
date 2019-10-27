@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.ReflectionUtil;
 import org.jdom.Element;
 import org.jdom.Verifier;

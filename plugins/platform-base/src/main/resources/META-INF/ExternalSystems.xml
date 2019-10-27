@@ -13,7 +13,7 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin>
+<consulo-plugin>
   <actions>
     <action id="ExternalSystem.RefreshAllProjects"
             class="com.intellij.openapi.externalSystem.action.RefreshAllExternalProjectsAction"
@@ -92,4 +92,4 @@
     <!--Execution-->
     <programRunner implementation="com.intellij.openapi.externalSystem.service.execution.ExternalSystemTaskRunner"/>
   </extensions>
-</idea-plugin>
+</consulo-plugin>

@@ -21,7 +21,6 @@ package com.intellij.ui;
 
 import com.intellij.ide.PowerSaveMode;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.util.Comparing;
@@ -37,6 +36,7 @@ import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.logging.Logger;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

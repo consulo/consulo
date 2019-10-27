@@ -25,7 +25,7 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.popup.JBPopup;
@@ -488,6 +488,9 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     final Frame[] all = Frame.getFrames();
     for (Frame each : all) {
       consulo.ui.Window uiWindow = TargetAWT.from(each);
+      if(uiWindow == null) {
+        continue;
+      }
 
       IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
       if (ideFrame != null) {
@@ -534,6 +537,9 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     final Frame[] frames = Frame.getFrames();
     for (Frame each : frames) {
       consulo.ui.Window uiWindow = TargetAWT.from(each);
+      if(uiWindow == null) {
+        continue;
+      }
 
       IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
       if (ideFrame instanceof IdeFrameEx) {

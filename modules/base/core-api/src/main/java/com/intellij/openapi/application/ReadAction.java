@@ -15,24 +15,19 @@
  */
 package com.intellij.openapi.application;
 
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ThrowableRunnable;
 import consulo.annotations.DeprecationInfo;
 import consulo.application.AccessRule;
-
+import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 
-@Deprecated
-@DeprecationInfo("Use consulo.application.Action#read()")
-public abstract class ReadAction<T> extends BaseActionRunnable<T> {
-  @Nonnull
-  @Override
-  public RunResult<T> execute() {
-    final RunResult<T> result = new RunResult<T>(this);
-    return ApplicationManager.getApplication().runReadAction((Computable<RunResult<T>>)result::run);
-  }
+import java.util.concurrent.Callable;
 
+@Nonnull
+@Deprecated
+@DeprecationInfo("Use AccessRule.writeAsync()")
+public final class ReadAction<T>  {
   @Deprecated
   public static AccessToken start() {
     return ApplicationManager.getApplication().acquireReadActionLock();
@@ -47,4 +42,26 @@ public abstract class ReadAction<T> extends BaseActionRunnable<T> {
   public static <T, E extends Throwable> T compute(@Nonnull ThrowableComputable<T, E> action) throws E {
     return AccessRule.read(action);
   }
+
+  /**
+   * Create an {@link NonBlockingReadAction} builder to run the given Runnable in non-blocking read action on a background thread.
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static NonBlockingReadAction<Void> nonBlocking(@Nonnull Runnable task) {
+    return nonBlocking(() -> {
+      task.run();
+      return null;
+    });
+  }
+
+  /**
+   * Create an {@link NonBlockingReadAction} builder to run the given Callable in a non-blocking read action on a background thread.
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> NonBlockingReadAction<T> nonBlocking(@Nonnull Callable<T> task) {
+    return AsyncExecutionService.getService().buildNonBlockingReadAction(task);
+  }
+
 }

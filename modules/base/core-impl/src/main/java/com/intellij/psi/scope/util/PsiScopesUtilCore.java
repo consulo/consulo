@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.scope.util;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiInvalidElementAccessException;

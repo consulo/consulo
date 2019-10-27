@@ -21,7 +21,6 @@ import com.intellij.ide.ProhibitAWTEvents;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.keymap.impl.IdeKeyEventDispatcher;
 import com.intellij.openapi.project.Project;
@@ -33,11 +32,12 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.ObjectUtil;
-import com.intellij.util.containers.WeakValueHashMap;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.awt.TargetAWT;
 import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.awt.impl.FromSwingWindowWrapper;
 import consulo.ide.base.BaseDataManager;
+import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.ex.ToolWindowFloatingDecorator;
 import org.jetbrains.annotations.NonNls;
@@ -64,7 +64,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
     // that have DataContext as a field.
     private final Reference<Component> myRef;
     private Map<Key, Object> myUserData;
-    private final Map<Key, Object> myCachedData = new WeakValueHashMap<>();
+    private final Map<Key, Object> myCachedData = ContainerUtil.createWeakValueMap();
 
     public MyDataContext(final Component component) {
       myEventCount = -1;
@@ -143,7 +143,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
     private Map<Key, Object> getOrCreateMap() {
       Map<Key, Object> userData = myUserData;
       if (userData == null) {
-        myUserData = userData = new WeakValueHashMap<>();
+        myUserData = userData = ContainerUtil.createWeakValueMap();
       }
       return userData;
     }
@@ -249,11 +249,6 @@ public class DesktopDataManagerImpl extends BaseDataManager {
         activeWindow = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
         if (activeWindow == null) return null;
       }
-    }
-
-    IdeFocusManager fm = IdeFocusManager.findInstanceByComponent(activeWindow);
-    if (fm.isFocusBeingTransferred()) {
-      return null;
     }
 
     // In case we have an active floating toolwindow and some component in another window focused,

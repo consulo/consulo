@@ -16,7 +16,7 @@
 package com.intellij.openapi.diff.impl.incrementalMerge.ui;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.diff.impl.DiffUtil;
 import com.intellij.openapi.diff.impl.highlighting.FragmentSide;
 import com.intellij.openapi.diff.impl.splitter.DividerPolygon;

@@ -18,7 +18,8 @@ package consulo.roots.ui.configuration.classpath.dependencyTab;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.ex.FileSystemTreeImpl;
+import com.intellij.openapi.fileChooser.FileSystemTree;
+import com.intellij.openapi.fileChooser.FileSystemTreeFactory;
 import com.intellij.openapi.fileChooser.impl.FileChooserUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.LibraryOrderEntry;
@@ -44,8 +45,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtil;
 import consulo.roots.ModifiableModuleRootLayer;
 import consulo.roots.types.BinariesOrderRootType;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
@@ -56,7 +57,7 @@ import java.util.*;
  */
 public class FileOrDirectoryDependencyTabContext extends AddModuleDependencyTabContext {
   private final FileChooserDescriptor myFileChooserDescriptor;
-  private FileSystemTreeImpl myFileSystemTree;
+  private FileSystemTree myFileSystemTree;
 
   private final HashMap<LibraryRootsComponentDescriptor, LibraryType> myLibraryTypes;
   private final DefaultLibraryRootsComponentDescriptor myDefaultDescriptor;
@@ -83,7 +84,7 @@ public class FileOrDirectoryDependencyTabContext extends AddModuleDependencyTabC
     Module module = myClasspathPanel.getRootModel().getModule();
 
     myFileChooserDescriptor = createFileChooserDescriptor();
-    myFileSystemTree = new FileSystemTreeImpl(module.getProject(), myFileChooserDescriptor);
+    myFileSystemTree = FileSystemTreeFactory.getInstance().createFileSystemTree(module.getProject(), myFileChooserDescriptor);
     Disposer.register(parent, myFileSystemTree);
     myFileSystemTree.showHiddens(true);
     final VirtualFile dirForSelect = ObjectUtil.chooseNotNull(module.getModuleDir(), module.getProject().getBaseDir());

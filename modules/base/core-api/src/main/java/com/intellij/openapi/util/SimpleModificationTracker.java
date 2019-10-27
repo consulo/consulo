@@ -15,25 +15,18 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.Patches;
 import com.intellij.util.xmlb.annotations.Transient;
 
-import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
+import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 
 /**
  * @author Max Medvedev
- * @since 28.03.2014
  */
 @Transient
 public class SimpleModificationTracker implements ModificationTracker {
-  static {
-    //noinspection ConstantConditions
-    assert Patches.JDK_BUG_ID_7103570;
-  }
+  private static final AtomicLongFieldUpdater<SimpleModificationTracker> UPDATER = AtomicLongFieldUpdater.newUpdater(SimpleModificationTracker.class, "myCounter");
 
-  private static final AtomicIntegerFieldUpdater<SimpleModificationTracker> UPDATER = AtomicIntegerFieldUpdater.newUpdater(SimpleModificationTracker.class, "myCounter");
-
-  public volatile int myCounter;  // is public to work around JDK-7103570
+  private volatile long myCounter;
 
   @Override
   public long getModificationCount() {

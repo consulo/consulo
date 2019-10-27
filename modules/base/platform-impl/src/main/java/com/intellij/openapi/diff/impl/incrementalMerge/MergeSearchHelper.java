@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.diff.impl.incrementalMerge;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.impl.highlighting.FragmentSide;
 import com.intellij.openapi.diff.impl.incrementalMerge.ui.MergePanel2;
 import com.intellij.openapi.editor.Editor;
@@ -23,6 +22,7 @@ import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.event.CaretEvent;
 import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.util.Key;
+import consulo.logging.Logger;
 
 import java.util.Iterator;
 

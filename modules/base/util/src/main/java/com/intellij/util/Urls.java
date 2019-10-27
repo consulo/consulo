@@ -15,11 +15,11 @@
  */
 package com.intellij.util;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.io.URLUtil;
+import consulo.logging.Logger;
 import gnu.trove.TObjectHashingStrategy;
 
 import javax.annotation.Nonnull;

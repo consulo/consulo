@@ -16,26 +16,26 @@
 package com.intellij.psi.impl.source.tree.injected;
 
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.containers.JBIterable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class ClassMapCachingNulls<T> {
-  private final Map<Class, T[]> myBackingMap;
+class ClassMapCachingNulls<T> {
+  private final Map<Class<?>, T[]> myBackingMap;
   private final T[] myEmptyArray;
-  private final Map<Class, T[]> myMap = ContainerUtil.newConcurrentMap();
+  private final List<? extends T> myOrderingArray;
+  private final Map<Class<?>, T[]> myMap = ContainerUtil.newConcurrentMap();
 
-  public ClassMapCachingNulls(@Nonnull Map<Class, T[]> backingMap, T[] emptyArray) {
+  ClassMapCachingNulls(@Nonnull Map<Class<?>, T[]> backingMap, T[] emptyArray, @Nonnull List<? extends T> orderingArray) {
     myBackingMap = backingMap;
     myEmptyArray = emptyArray;
+    myOrderingArray = orderingArray;
   }
 
   @Nullable
-  public T[] get(Class aClass) {
+  T[] get(Class<?> aClass) {
     T[] value = myMap.get(aClass);
     if (value != null) {
       if (value == myEmptyArray) {
@@ -50,7 +50,7 @@ public class ClassMapCachingNulls<T> {
     return cache(aClass, result);
   }
 
-  private T[] cache(Class aClass, List<T> result) {
+  private T[] cache(Class<?> aClass, List<T> result) {
     T[] value;
     if (result == null) {
       myMap.put(aClass, myEmptyArray);
@@ -64,45 +64,36 @@ public class ClassMapCachingNulls<T> {
     return value;
   }
 
-  private List<T> getFromBackingMap(Class aClass) {
+  @Nullable
+  private List<T> getFromBackingMap(Class<?> aClass) {
     T[] value = myBackingMap.get(aClass);
-    List<T> result = null;
+    Set<T> result = null;
     if (value != null) {
       assert value.length != 0;
-      result = new ArrayList<T>(Arrays.asList(value));
+      result = new HashSet<>(Arrays.asList(value));
     }
-    for (final Class aClass1 : aClass.getInterfaces()) {
-      result = addFromUpper(result, aClass1);
-    }
-    final Class superclass = aClass.getSuperclass();
-    if (superclass != null) {
+    for (Class<?> superclass : JBIterable.<Class<?>>of(aClass.getSuperclass()).append(aClass.getInterfaces())) {
       result = addFromUpper(result, superclass);
     }
-    return result;
+
+    if (result == null) return null;
+    return ContainerUtil.filter(myOrderingArray, result::contains);
   }
 
-  private List<T> addFromUpper(List<T> value, Class superclass) {
+  private Set<T> addFromUpper(Set<T> value, Class<?> superclass) {
     T[] fromUpper = get(superclass);
     if (fromUpper != null) {
       assert fromUpper.length != 0;
       if (value == null) {
-        value = new ArrayList<T>(fromUpper.length);
+        value = new HashSet<>(fromUpper.length);
       }
-      for (T t : fromUpper) {
-        if (!value.contains(t)) {
-          value.add(t);
-        }
-      }
+      Collections.addAll(value, fromUpper);
       assert !value.isEmpty();
     }
     return value;
   }
 
-  public Map<Class, T[]> getBackingMap() {
+  Map<Class<?>, T[]> getBackingMap() {
     return myBackingMap;
-  }
-
-  public void clearCache() {
-    myMap.clear();
   }
 }

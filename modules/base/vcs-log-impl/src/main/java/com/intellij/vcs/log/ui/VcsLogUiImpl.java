@@ -3,7 +3,6 @@ package com.intellij.vcs.log.ui;
 import com.google.common.util.concurrent.SettableFuture;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.progress.ProgressManager;
@@ -26,6 +25,8 @@ import com.intellij.vcs.log.impl.VcsLogImpl;
 import com.intellij.vcs.log.ui.frame.MainFrame;
 import com.intellij.vcs.log.ui.frame.VcsLogGraphTable;
 import com.intellij.vcs.log.ui.tables.GraphTableModel;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

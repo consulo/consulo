@@ -20,16 +20,15 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.util.DimensionService;
+import com.intellij.openapi.util.WindowStateService;
 import com.intellij.ui.JBSplitter;
 import com.intellij.ui.OnePixelSplitter;
-import com.intellij.util.ui.JBUI;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
-import java.awt.*;
 import java.awt.Component;
+import java.awt.*;
 
 /**
  * @author VISTALL
@@ -128,9 +127,10 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
 
     if (dimensionKey != null) {
       final Project projectGuess = DataManager.getInstance().getDataContext(rightComponent).getData(CommonDataKeys.PROJECT);
-      Dimension size = DimensionService.getInstance().getSize(dimensionKey, projectGuess);
+      WindowStateService stateService = projectGuess == null ? WindowStateService.getInstance() : WindowStateService.getInstance(projectGuess);
+      Dimension size = stateService.getSize(dimensionKey);
       if (size == null) {
-        DimensionService.getInstance().setSize(dimensionKey, JBUI.size(getDefaultSize()));
+        stateService.putSize(dimensionKey, getDefaultSize());
       }
     }
   }

@@ -1,72 +1,64 @@
-/*
- * Copyright 2000-2016 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.gist;
 
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
+import consulo.logging.Logger;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.openapi.vfs.newvfs.events.VFilePropertyChangeEvent;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
+import com.intellij.ui.GuiUtils;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.DataExternalizer;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * @author peter
- */
 @Singleton
-public class GistManagerImpl extends GistManager {
+public final class GistManagerImpl extends GistManager {
+  private static final Logger LOG = Logger.getInstance(GistManagerImpl.class);
   private static final Set<String> ourKnownIds = ContainerUtil.newConcurrentSet();
   private static final String ourPropertyName = "file.gist.reindex.count";
   private final AtomicInteger myReindexCount = new AtomicInteger(PropertiesComponent.getInstance().getInt(ourPropertyName, 0));
 
-  public GistManagerImpl() {
-    ApplicationManager.getApplication().getMessageBus().connect().subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener.Adapter() {
-      @Override
-      public void after(@Nonnull List<? extends VFileEvent> events) {
-        if (events.stream().anyMatch(this::shouldDropCache)) {
-          invalidateData();
-        }
-      }
+  static final class MyBulkFileListener implements BulkFileListener {
+    private Provider<GistManager> myGistManager;
 
-      private boolean shouldDropCache(VFileEvent e) {
-        if (!(e instanceof VFilePropertyChangeEvent)) return false;
+    @Inject
+    MyBulkFileListener(Provider<GistManager> gistManager) {
+      myGistManager = gistManager;
+    }
 
-        String propertyName = ((VFilePropertyChangeEvent)e).getPropertyName();
-        return propertyName.equals(VirtualFile.PROP_NAME) || propertyName.equals(VirtualFile.PROP_ENCODING);
+    @Override
+    public void after(@Nonnull List<? extends VFileEvent> events) {
+      if (events.stream().anyMatch(MyBulkFileListener::shouldDropCache)) {
+        ((GistManagerImpl)myGistManager.get()).invalidateGists();
       }
-    });
+    }
+
+    private static boolean shouldDropCache(VFileEvent e) {
+      if (!(e instanceof VFilePropertyChangeEvent)) return false;
+
+      String propertyName = ((VFilePropertyChangeEvent)e).getPropertyName();
+      return propertyName.equals(VirtualFile.PROP_NAME) || propertyName.equals(VirtualFile.PROP_ENCODING);
+    }
   }
 
   @Nonnull
   @Override
-  public <Data> VirtualFileGist<Data> newVirtualFileGist(@Nonnull String id,
-                                                         int version,
-                                                         @Nonnull DataExternalizer<Data> externalizer,
-                                                         @Nonnull VirtualFileGist.GistCalculator<Data> calcData) {
+  public <Data> VirtualFileGist<Data> newVirtualFileGist(@Nonnull String id, int version, @Nonnull DataExternalizer<Data> externalizer, @Nonnull VirtualFileGist.GistCalculator<Data> calcData) {
     if (!ourKnownIds.add(id)) {
       throw new IllegalArgumentException("Gist '" + id + "' is already registered");
     }
@@ -76,10 +68,7 @@ public class GistManagerImpl extends GistManager {
 
   @Nonnull
   @Override
-  public <Data> PsiFileGist<Data> newPsiFileGist(@Nonnull String id,
-                                                 int version,
-                                                 @Nonnull DataExternalizer<Data> externalizer,
-                                                 @Nonnull NullableFunction<PsiFile, Data> calculator) {
+  public <Data> PsiFileGist<Data> newPsiFileGist(@Nonnull String id, int version, @Nonnull DataExternalizer<Data> externalizer, @Nonnull NullableFunction<PsiFile, Data> calculator) {
     return new PsiFileGistImpl<>(id, version, externalizer, calculator);
   }
 
@@ -87,10 +76,27 @@ public class GistManagerImpl extends GistManager {
     return myReindexCount.get();
   }
 
+  @Override
   public void invalidateData() {
+    invalidateGists();
+    invalidateDependentCaches();
+  }
+
+  private void invalidateGists() {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Invalidating gists", new Throwable());
+    }
     // Clear all cache at once to simplify and speedup this operation.
     // It can be made per-file if cache recalculation ever becomes an issue.
     PropertiesComponent.getInstance().setValue(ourPropertyName, myReindexCount.incrementAndGet(), 0);
+  }
+
+  private static void invalidateDependentCaches() {
+    GuiUtils.invokeLaterIfNeeded(() -> {
+      for (Project project : ProjectManager.getInstance().getOpenProjects()) {
+        PsiManager.getInstance(project).dropPsiCaches();
+      }
+    }, ModalityState.NON_MODAL);
   }
 
   @TestOnly

@@ -18,7 +18,7 @@ package com.intellij.vcs.log.impl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
@@ -210,7 +210,7 @@ public class VcsLogManager implements Disposable {
     private final AtomicBoolean myIsBroken = new AtomicBoolean(false);
 
     @Override
-    public void consume(@Nullable Object source, @Nonnull final Exception e) {
+    public void consume(@Nullable Object source, @Nonnull final Throwable e) {
       if (myIsBroken.compareAndSet(false, true)) {
         processError(source, e);
       }
@@ -219,7 +219,7 @@ public class VcsLogManager implements Disposable {
       }
     }
 
-    protected void processError(@Nullable Object source, @Nonnull Exception e) {
+    protected void processError(@Nullable Object source, @Nonnull Throwable e) {
       if (myRecreateMainLogHandler != null) {
         ApplicationManager.getApplication().invokeLater(() -> {
           String message = "Fatal error, VCS Log re-created: " + e.getMessage();

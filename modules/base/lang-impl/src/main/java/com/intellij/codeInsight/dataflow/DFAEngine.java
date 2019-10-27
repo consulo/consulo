@@ -16,7 +16,7 @@ package com.intellij.codeInsight.dataflow;
 
 import com.intellij.codeInsight.controlflow.ControlFlowUtil;
 import com.intellij.codeInsight.controlflow.Instruction;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 
 import java.util.*;

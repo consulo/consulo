@@ -22,22 +22,21 @@ import javax.annotation.Nonnull;
 
 import java.util.Map;
 
-public class EmptyInputDataDiffBuilder<Key, Value> extends InputDataDiffBuilder<Key,Value> {
+//@ApiStatus.Experimental
+public class EmptyInputDataDiffBuilder<Key, Value> extends InputDataDiffBuilder<Key, Value> {
   public EmptyInputDataDiffBuilder(int inputId) {
     super(inputId);
   }
 
   @Override
-  public void differentiate(@Nonnull Map<Key, Value> newData,
-                            @Nonnull final KeyValueUpdateProcessor<Key, Value> addProcessor,
-                            @Nonnull KeyValueUpdateProcessor<Key, Value> updateProcessor,
-                            @Nonnull RemovedKeyProcessor<Key> removeProcessor) throws StorageException {
-    processKeys(newData, addProcessor, myInputId);
+  public boolean differentiate(@Nonnull Map<Key, Value> newData,
+                               @Nonnull final KeyValueUpdateProcessor<? super Key, ? super Value> addProcessor,
+                               @Nonnull KeyValueUpdateProcessor<? super Key, ? super Value> updateProcessor,
+                               @Nonnull RemovedKeyProcessor<? super Key> removeProcessor) throws StorageException {
+    return processKeys(newData, addProcessor, myInputId);
   }
 
-  static <Key, Value >void processKeys(@Nonnull Map<Key, Value> currentData,
-                                       @Nonnull final KeyValueUpdateProcessor<Key, Value> processor,
-                                       final int inputId)
+  static <Key, Value> boolean processKeys(@Nonnull Map<Key, Value> currentData, @Nonnull final KeyValueUpdateProcessor<? super Key, ? super Value> processor, final int inputId)
           throws StorageException {
     if (currentData instanceof THashMap) {
       final StorageException[] exception = new StorageException[]{null};
@@ -63,5 +62,7 @@ public class EmptyInputDataDiffBuilder<Key, Value> extends InputDataDiffBuilder<
         processor.process(entry.getKey(), entry.getValue(), inputId);
       }
     }
+
+    return true;
   }
 }

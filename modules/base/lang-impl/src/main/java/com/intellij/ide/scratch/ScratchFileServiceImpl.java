@@ -27,7 +27,6 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
@@ -70,6 +69,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentMap;
 
 
 @Singleton
@@ -383,13 +383,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
   }
 
   public static class UsageTypeExtension implements UsageTypeProvider {
-    private static final ConcurrentFactoryMap<RootType, UsageType> ourUsageTypes = new ConcurrentFactoryMap<RootType, UsageType>() {
-      @Nullable
-      @Override
-      protected UsageType create(RootType key) {
-        return new UsageType("Usage in " + key.getDisplayName());
-      }
-    };
+    private static final ConcurrentMap<RootType, UsageType> ourUsageTypes = ConcurrentFactoryMap.createMap(key -> new UsageType("Usage in " + key.getDisplayName()));
 
     @Nullable
     @Override

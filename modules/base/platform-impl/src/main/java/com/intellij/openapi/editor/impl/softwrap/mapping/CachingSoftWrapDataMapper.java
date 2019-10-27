@@ -17,12 +17,13 @@ package com.intellij.openapi.editor.impl.softwrap.mapping;
 
 import com.intellij.diagnostic.Dumpable;
 import com.intellij.openapi.diagnostic.Attachment;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.*;
+import com.intellij.openapi.editor.SoftWrap;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.impl.TextChangeImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapsStorage;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -31,41 +32,34 @@ import java.util.Collections;
 import java.util.List;
 
 public class CachingSoftWrapDataMapper implements SoftWrapAwareDocumentParsingListener, Dumpable {
+  private static final Logger LOG = Logger.getInstance(CachingSoftWrapDataMapper.class);
 
-  private static final Logger LOG = Logger.getInstance("#" + CachingSoftWrapDataMapper.class.getName());
+  private final List<SoftWrapImpl> myAffectedByUpdateSoftWraps = new ArrayList<>();
+  private final EditorEx myEditor;
+  private final SoftWrapsStorage myStorage;
 
-  private final List<SoftWrapImpl>             myAffectedByUpdateSoftWraps           = new ArrayList<>();
-
-  private final EditorEx                           myEditor;
-  private final SoftWrapsStorage                   myStorage;
-
-  public CachingSoftWrapDataMapper(@Nonnull EditorEx editor, @Nonnull SoftWrapsStorage storage)
-  {
+  public CachingSoftWrapDataMapper(@Nonnull EditorEx editor, @Nonnull SoftWrapsStorage storage) {
     myEditor = editor;
     myStorage = storage;
   }
 
-  boolean matchesOldSoftWrap(SoftWrap newSoftWrap, int lengthDiff) {
-    return Collections.binarySearch(myAffectedByUpdateSoftWraps, new SoftWrapImpl(new TextChangeImpl(newSoftWrap.getText(),
-                                                                                                     newSoftWrap.getStart() - lengthDiff,
-                                                                                                     newSoftWrap.getEnd() - lengthDiff),
-                                                                                  newSoftWrap.getIndentInColumns(),
-                                                                                  newSoftWrap.getIndentInPixels()),
-                                    (o1, o2) -> {
-                                      int offsetDiff = o1.getStart() - o2.getStart();
-                                      if (offsetDiff != 0) {
-                                        return offsetDiff;
-                                      }
-                                      int textDiff = o1.getText().toString().compareTo(o2.getText().toString());
-                                      if (textDiff != 0) {
-                                        return textDiff;
-                                      }
-                                      int colIndentDiff = o1.getIndentInColumns() - o2.getIndentInColumns();
-                                      if (colIndentDiff != 0) {
-                                        return colIndentDiff;
-                                      }
-                                      return o1.getIndentInPixels() - o2.getIndentInPixels();
-                                    }) >= 0;
+  public boolean matchesOldSoftWrap(SoftWrap newSoftWrap, int lengthDiff) {
+    return Collections.binarySearch(myAffectedByUpdateSoftWraps, new SoftWrapImpl(new TextChangeImpl(newSoftWrap.getText(), newSoftWrap.getStart() - lengthDiff, newSoftWrap.getEnd() - lengthDiff),
+                                                                                  newSoftWrap.getIndentInColumns(), newSoftWrap.getIndentInPixels()), (o1, o2) -> {
+      int offsetDiff = o1.getStart() - o2.getStart();
+      if (offsetDiff != 0) {
+        return offsetDiff;
+      }
+      int textDiff = o1.getText().toString().compareTo(o2.getText().toString());
+      if (textDiff != 0) {
+        return textDiff;
+      }
+      int colIndentDiff = o1.getIndentInColumns() - o2.getIndentInColumns();
+      if (colIndentDiff != 0) {
+        return colIndentDiff;
+      }
+      return o1.getIndentInPixels() - o2.getIndentInPixels();
+    }) >= 0;
   }
 
   @Override
@@ -92,8 +86,6 @@ public class CachingSoftWrapDataMapper implements SoftWrapAwareDocumentParsingLi
 
   /**
    * Determines which soft wraps were not affected by recalculation, and shifts them to their new offsets.
-   *
-   * @return Change in soft wraps count after recalculation
    */
   private void advanceSoftWrapOffsets(@Nonnull IncrementalCacheUpdateEvent event) {
     int lengthDiff = event.getLengthDiff();
@@ -103,20 +95,21 @@ public class CachingSoftWrapDataMapper implements SoftWrapAwareDocumentParsingLi
     int softWrappedLinesDiff = myStorage.getNumberOfSoftWrapsInRange(event.getStartOffset() + 1, myEditor.getDocument().getTextLength());
     boolean softWrapsChanged = softWrappedLinesDiff > 0;
     for (int i = 0; i < myAffectedByUpdateSoftWraps.size(); i++) {
-      SoftWrap softWrap = myAffectedByUpdateSoftWraps.get(i);
+      SoftWrapImpl softWrap = myAffectedByUpdateSoftWraps.get(i);
       if (firstIndex < 0) {
         if (softWrap.getStart() > recalcEndOffsetTranslated) {
           firstIndex = i;
           if (lengthDiff == 0) {
             break;
           }
-        } else {
+        }
+        else {
           softWrappedLinesDiff--;
           softWrapsChanged = true;
         }
       }
       if (firstIndex >= 0 && i >= firstIndex) {
-        ((SoftWrapImpl)softWrap).advance(lengthDiff);
+        softWrap.advance(lengthDiff);
       }
     }
     if (firstIndex >= 0) {

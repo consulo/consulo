@@ -24,7 +24,6 @@ import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SchemesManager;
 import com.intellij.openapi.project.DumbAwareAction;
@@ -41,6 +40,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.logging.Logger;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

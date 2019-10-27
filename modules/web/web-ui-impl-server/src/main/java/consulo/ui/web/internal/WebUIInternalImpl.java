@@ -20,11 +20,11 @@ import consulo.annotations.Internal;
 import consulo.ui.*;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
-import consulo.ui.layout.*;
 import consulo.ui.impl.model.ImmutableListModelImpl;
+import consulo.ui.impl.model.MutableListModelImpl;
+import consulo.ui.layout.*;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
-import consulo.ui.impl.model.MutableListModelImpl;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
@@ -44,7 +44,6 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 11-Jun-16
  */
-@Internal
 public class WebUIInternalImpl extends UIInternal {
   @Override
   public CheckBox _Components_checkBox() {

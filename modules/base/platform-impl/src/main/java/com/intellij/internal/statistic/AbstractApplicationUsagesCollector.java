@@ -18,11 +18,12 @@ package com.intellij.internal.statistic;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.internal.statistic.persistence.ApplicationStatisticsPersistence;
 import com.intellij.internal.statistic.persistence.ApplicationStatisticsPersistenceComponent;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.hash.HashMap;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

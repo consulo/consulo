@@ -25,7 +25,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import consulo.annotations.RequiredReadAction;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -41,15 +40,16 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
   private volatile long myNextChunkThreshold; // the value myProgressCount should exceed to generate next fireProgressAdvanced event
   private final String myPresentableName;
   protected final PsiFile myFile;
-  @Nullable private final Editor myEditor;
+  @Nullable
+  private final Editor myEditor;
   @Nonnull
-  protected final TextRange myRestrictRange;
+  final TextRange myRestrictRange;
   @Nonnull
-  protected final HighlightInfoProcessor myHighlightInfoProcessor;
-  protected HighlightingSession myHighlightingSession;
+  final HighlightInfoProcessor myHighlightInfoProcessor;
+  HighlightingSession myHighlightingSession;
 
   protected ProgressableTextEditorHighlightingPass(@Nonnull Project project,
-                                                   @javax.annotation.Nullable final Document document,
+                                                   @Nullable final Document document,
                                                    @Nonnull String presentableName,
                                                    @Nullable PsiFile file,
                                                    @Nullable Editor editor,
@@ -73,15 +73,14 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
     advanceProgress(Math.max(1, myProgressLimit - myProgressCount.get()));
   }
 
-  @RequiredReadAction
   @Override
   public final void doCollectInformation(@Nonnull final ProgressIndicator progress) {
     if (!(progress instanceof DaemonProgressIndicator)) {
-      throw new IncorrectOperationException("Highlighting must be run under DaemonProgressIndicator, but got: "+progress);
+      throw new IncorrectOperationException("Highlighting must be run under DaemonProgressIndicator, but got: " + progress);
     }
     myFinished = false;
     if (myFile != null) {
-      myHighlightingSession = HighlightingSessionImpl.getOrCreateHighlightingSession(myFile, myEditor, (DaemonProgressIndicator)progress, getColorsScheme());
+      myHighlightingSession = HighlightingSessionImpl.getOrCreateHighlightingSession(myFile, (DaemonProgressIndicator)progress, getColorsScheme());
     }
     try {
       collectInformationWithProgress(progress);
@@ -101,9 +100,6 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
     applyInformationWithProgress();
     DaemonCodeAnalyzerEx daemonCodeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(myProject);
     daemonCodeAnalyzer.getFileStatusMap().markFileUpToDate(myDocument, getId());
-    if (myHighlightingSession != null) {
-      myHighlightInfoProcessor.progressIsAdvanced(myHighlightingSession, 1);  //causes traffic light repaint
-    }
   }
 
   protected abstract void applyInformationWithProgress();
@@ -131,6 +127,8 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
     return myFinished;
   }
 
+  // null means do not show progress
+  @Nullable
   protected String getPresentableName() {
     return myPresentableName;
   }
@@ -151,7 +149,7 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
       if (current >= myNextChunkThreshold) {
         double progress = getProgress();
         myNextChunkThreshold += Math.max(1, myProgressLimit / 100);
-        myHighlightInfoProcessor.progressIsAdvanced(myHighlightingSession, progress);
+        myHighlightInfoProcessor.progressIsAdvanced(myHighlightingSession, getEditor(), progress);
       }
     }
   }
@@ -165,7 +163,7 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
   }
 
   static class EmptyPass extends TextEditorHighlightingPass {
-    EmptyPass(final Project project, @javax.annotation.Nullable final Document document) {
+    EmptyPass(final Project project, @Nullable final Document document) {
       super(project, document, false);
     }
 

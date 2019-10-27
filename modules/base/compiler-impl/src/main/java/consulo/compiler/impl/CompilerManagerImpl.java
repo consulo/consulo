@@ -56,7 +56,7 @@ import java.util.*;
 import java.util.concurrent.Semaphore;
 
 @Singleton
-@State(name = "CompilerManager", storages = @Storage(value = "compiler.xml"))
+@State(name = "CompilerManager", storages = @Storage("compiler.xml"))
 public class CompilerManagerImpl extends CompilerManager implements PersistentStateComponent<Element> {
   private class ListenerNotificator implements CompileStatusNotification {
     @Nullable
@@ -93,6 +93,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   @Inject
   public CompilerManagerImpl(final Project project) {
     myProject = project;
+    Disposer.register(project, myExcludedEntriesConfiguration);
 
     if (myProject.isDefault()) {
       return;
@@ -101,7 +102,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     myEventPublisher = project.getMessageBus().syncPublisher(CompilerTopics.COMPILATION_STATUS);
 
     List<TranslatingCompiler> translatingCompilers = new ArrayList<>();
-    for (Compiler compiler : Compiler.EP_NAME.getExtensions(project)) {
+    for (Compiler compiler : Compiler.EP_NAME.getExtensionList(project)) {
       compiler.registerCompilableFileTypes(myCompilableFileTypes::add);
 
       if (compiler instanceof TranslatingCompiler) {

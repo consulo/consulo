@@ -21,5 +21,9 @@ import javax.annotation.Nonnull;
 public interface PomChangeSet {
   @Nonnull
   PomModelAspect getAspect();
+
   void merge(@Nonnull PomChangeSet blocked);
+
+  default void beforeNestedTransaction() {
+  }
 }

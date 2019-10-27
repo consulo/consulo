@@ -17,7 +17,7 @@ package consulo.application.impl;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.AccessToken;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ExceptionUtil;

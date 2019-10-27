@@ -20,7 +20,7 @@ import com.intellij.application.options.codeStyle.CodeStyleSchemesModel;
 import com.intellij.application.options.codeStyle.excludedFiles.ExcludedFilesList;
 import com.intellij.lang.Language;
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
@@ -354,7 +354,7 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
   }
 
   @Override
-  public void setModel(@Nullable CodeStyleSchemesModel model) {
+  public void setModel(@Nonnull CodeStyleSchemesModel model) {
     super.setModel(model);
     myExcludedFilesList.setSchemesModel(model);
   }

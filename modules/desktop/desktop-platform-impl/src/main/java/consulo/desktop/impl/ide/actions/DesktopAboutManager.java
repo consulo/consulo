@@ -15,7 +15,7 @@
  */
 package consulo.desktop.impl.ide.actions;
 
-import com.intellij.ide.actions.AboutDialog;
+import com.intellij.ide.actions.AboutNewDialog;
 import consulo.ide.actions.AboutManager;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Window;
@@ -32,7 +32,6 @@ public class DesktopAboutManager implements AboutManager {
   @RequiredUIAccess
   @Override
   public void showAbout(@Nullable Window parentWindow) {
-    AboutDialog aboutDialog = new AboutDialog(parentWindow);
-    aboutDialog.toUIWindow().show();
+    new AboutNewDialog().showAsync();
   }
 }

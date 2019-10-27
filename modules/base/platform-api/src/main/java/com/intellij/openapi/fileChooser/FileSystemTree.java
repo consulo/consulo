@@ -19,8 +19,8 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
 
@@ -59,6 +59,6 @@ public interface FileSystemTree extends Disposable {
   void showHiddens(boolean showHidden);
 
   interface Listener {
-    void selectionChanged(List<VirtualFile> selection);
+    void selectionChanged(@Nonnull List<? extends VirtualFile> selection);
   }
 }

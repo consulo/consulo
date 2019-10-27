@@ -39,7 +39,7 @@
           <systemProperties>
             <systemProperty>
               <name>consulo.web.work.directory</name>
-              <value>${project.basedir}/../../../sandbox/web/target/consulo-sandbox-web-${project.version}-main/workdir/</value>
+              <value>${project.basedir}/../../../sandbox/web/target/consulo-sandbox-web-${project.version}-main/Consulo/</value>
             </systemProperty>
           </systemProperties>
         </configuration>

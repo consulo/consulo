@@ -34,6 +34,7 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileListener;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.application.AccessRule;
@@ -171,7 +172,7 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
     return label(myVcs.putSystemLabel(name, getProjectId(p), color));
   }
 
-  public void addVFSListenerAfterLocalHistoryOne(VirtualFileListener virtualFileListener, Disposable disposable) {
+  public void addVFSListenerAfterLocalHistoryOne(BulkFileListener virtualFileListener, Disposable disposable) {
     myEventDispatcher.addVirtualFileListener(virtualFileListener, disposable);
   }
 

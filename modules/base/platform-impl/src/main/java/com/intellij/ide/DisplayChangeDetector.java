@@ -15,7 +15,7 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import sun.awt.DisplayChangedListener;
 
 import java.awt.*;

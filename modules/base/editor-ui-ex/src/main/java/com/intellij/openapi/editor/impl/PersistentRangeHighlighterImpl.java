@@ -19,7 +19,6 @@ import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
 import com.intellij.openapi.editor.markup.HighlighterTargetArea;
-import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.diff.FilesTooBigForDiffException;
@@ -28,11 +27,13 @@ import javax.annotation.Nullable;
 
 /**
  * Implementation of the markup element for the editor and document.
+ *
  * @author max
  */
 class PersistentRangeHighlighterImpl extends RangeHighlighterImpl {
   private int myLine; // for PersistentRangeHighlighterImpl only
-  static PersistentRangeHighlighterImpl create(@Nonnull MarkupModel model,
+
+  static PersistentRangeHighlighterImpl create(@Nonnull MarkupModelImpl model,
                                                int offset,
                                                int layer,
                                                @Nonnull HighlighterTargetArea target,
@@ -43,12 +44,7 @@ class PersistentRangeHighlighterImpl extends RangeHighlighterImpl {
     return new PersistentRangeHighlighterImpl(model, startOffset, line, layer, target, textAttributes);
   }
 
-  private PersistentRangeHighlighterImpl(@Nonnull MarkupModel model,
-                                         int startOffset,
-                                         int line,
-                                         int layer,
-                                         @Nonnull HighlighterTargetArea target,
-                                         @Nullable TextAttributes textAttributes) {
+  private PersistentRangeHighlighterImpl(@Nonnull MarkupModelImpl model, int startOffset, int line, int layer, @Nonnull HighlighterTargetArea target, @Nullable TextAttributes textAttributes) {
     super(model, startOffset, model.getDocument().getLineEndOffset(line), layer, target, textAttributes, false, false);
 
     myLine = line;

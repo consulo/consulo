@@ -16,7 +16,7 @@
 
 package com.intellij.codeInspection.reference;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.SmartPsiElementPointer;
 import org.jdom.Element;

@@ -17,7 +17,7 @@
 package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 
 import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;

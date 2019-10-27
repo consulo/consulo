@@ -33,7 +33,7 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -57,6 +57,7 @@ import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import gnu.trove.THashMap;
@@ -669,7 +670,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     }
 
     @Override
-    public void projectClosed(final Project project) {
+    public void projectClosed(final Project project, UIAccess uiAccess) {
       if (myContent != null && project == myProject) {
         myContent.getManager().removeContent(myContent, true);
         dispose(); // Dispose content even if content manager refused to.

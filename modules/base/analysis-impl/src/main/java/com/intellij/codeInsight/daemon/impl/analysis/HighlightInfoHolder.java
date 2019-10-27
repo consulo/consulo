@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,8 @@ import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoFilter;
 import com.intellij.lang.annotation.AnnotationSession;
 import com.intellij.lang.annotation.HighlightSeverity;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.colors.TextAttributesScheme;
-import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
@@ -31,18 +29,17 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 public class HighlightInfoHolder {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder");
 
   private final PsiFile myContextFile;
-  private final List<HighlightInfoFilter> myFilters;
+  private final HighlightInfoFilter[] myFilters;
   private final AnnotationSession myAnnotationSession;
   private int myErrorCount;
   private final List<HighlightInfo> myInfos = new ArrayList<>(5);
 
-  public HighlightInfoHolder(@Nonnull final PsiFile contextFile, @Nonnull final List<HighlightInfoFilter> filters) {
+  public HighlightInfoHolder(@Nonnull PsiFile contextFile, @Nonnull HighlightInfoFilter... filters) {
     myContextFile = contextFile;
     myAnnotationSession = new AnnotationSession(contextFile);
     myFilters = filters;
@@ -73,8 +70,7 @@ public class HighlightInfoHolder {
     return myErrorCount != 0;
   }
 
-  public boolean addAll(Collection<? extends HighlightInfo> highlightInfos) {
-    if (highlightInfos == null) return false;
+  public boolean addAll(@Nonnull Collection<? extends HighlightInfo> highlightInfos) {
     LOG.assertTrue(highlightInfos != this);
     boolean added = false;
     for (final HighlightInfo highlightInfo : highlightInfos) {
@@ -87,6 +83,7 @@ public class HighlightInfoHolder {
     return myInfos.size();
   }
 
+  @Nonnull
   public HighlightInfo get(final int i) {
     return myInfos.get(i);
   }
@@ -96,11 +93,12 @@ public class HighlightInfoHolder {
     return myContextFile.getProject();
   }
 
+  @Nonnull
   public PsiFile getContextFile() {
     return myContextFile;
   }
 
-  private boolean accepted(HighlightInfo info) {
+  private boolean accepted(@Nonnull HighlightInfo info) {
     for (HighlightInfoFilter filter : myFilters) {
       if (!filter.accept(info, getContextFile())) return false;
     }
@@ -109,15 +107,6 @@ public class HighlightInfoHolder {
 
   @Nonnull
   public TextAttributesScheme getColorsScheme() {
-    return new TextAttributesScheme() {
-      @Override
-      public TextAttributes getAttributes(TextAttributesKey key) {
-        return key.getDefaultAttributes();
-      }
-
-      @Override
-      public void fillAttributes(@Nonnull Map<TextAttributesKey, TextAttributes> map) {
-      }
-    };
+    return key -> key.getDefaultAttributes();
   }
 }

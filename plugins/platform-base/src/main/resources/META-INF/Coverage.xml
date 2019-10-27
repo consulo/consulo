@@ -13,14 +13,14 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin version="2">
+<consulo-plugin>
   <project-components>
     <component>
       <interface-class>com.intellij.coverage.CoverageDataManager</interface-class>
       <implementation-class>com.intellij.coverage.CoverageDataManagerImpl</implementation-class>
-      <option name="workspace" value="true"/>
     </component>
   </project-components>
+
   <extensionPoints>
     <extensionPoint name="coverageRunner" interface="com.intellij.coverage.CoverageRunner"/>
     <extensionPoint name="coverageEngine" interface="com.intellij.coverage.CoverageEngine"/>
@@ -47,4 +47,4 @@
     </group>
   </actions>
 
-</idea-plugin>
+</consulo-plugin>

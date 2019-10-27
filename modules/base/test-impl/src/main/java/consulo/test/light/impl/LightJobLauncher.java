@@ -17,14 +17,16 @@ package consulo.test.light.impl;
 
 import com.intellij.concurrency.Job;
 import com.intellij.concurrency.JobLauncher;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.util.Consumer;
 import com.intellij.util.Processor;
-
 import javax.annotation.Nonnull;
+
+import javax.annotation.Nullable;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author VISTALL
@@ -32,11 +34,11 @@ import java.util.concurrent.TimeUnit;
  */
 public class LightJobLauncher extends JobLauncher {
   @Override
-  public <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<T> things,
+  public <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<? extends T> things,
                                                      ProgressIndicator progress,
                                                      boolean runInReadAction,
                                                      boolean failFastOnAcquireReadAction,
-                                                     @Nonnull Processor<? super T> thingProcessor) {
+                                                     @Nonnull Processor<? super T> thingProcessor) throws ProcessCanceledException {
     for (T thing : things) {
       if (!thingProcessor.process(thing)) return false;
     }
@@ -45,35 +47,10 @@ public class LightJobLauncher extends JobLauncher {
 
   @Nonnull
   @Override
-  public Job<Void> submitToJobThread(@Nonnull Runnable action, Consumer<Future> onDoneCallback) {
+  public Job<Void> submitToJobThread(@Nonnull Runnable action, @Nullable Consumer<? super Future<?>> onDoneCallback) {
     action.run();
     if (onDoneCallback != null) {
-      onDoneCallback.consume(new Future() {
-        @Override
-        public boolean cancel(boolean mayInterruptIfRunning) {
-          return false;
-        }
-
-        @Override
-        public boolean isCancelled() {
-          return false;
-        }
-
-        @Override
-        public boolean isDone() {
-          return true;
-        }
-
-        @Override
-        public Object get() {
-          return null;
-        }
-
-        @Override
-        public Object get(long timeout, @Nonnull TimeUnit unit) {
-          return null;
-        }
-      });
+      onDoneCallback.consume(CompletableFuture.completedFuture(null));
     }
     return Job.NULL_JOB;
   }

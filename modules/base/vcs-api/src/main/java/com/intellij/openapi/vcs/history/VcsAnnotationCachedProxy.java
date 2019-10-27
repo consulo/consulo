@@ -16,7 +16,6 @@
 package com.intellij.openapi.vcs.history;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.vcs.AbstractVcs;
@@ -32,6 +31,8 @@ import com.intellij.openapi.vcs.diff.DiffProvider;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ObjectUtils;
 import com.intellij.vcsUtil.VcsUtil;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 /**

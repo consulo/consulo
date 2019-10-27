@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.wm.IdeFrame;
 import com.sun.jna.Function;
 import com.sun.jna.Memory;

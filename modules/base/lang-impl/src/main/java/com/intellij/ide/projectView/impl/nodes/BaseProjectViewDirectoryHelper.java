@@ -24,8 +24,8 @@ import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
+import com.intellij.ide.util.treeView.AbstractTreeUi;
 import com.intellij.ide.util.treeView.TreeViewUtil;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -47,14 +47,15 @@ import com.intellij.util.PathUtil;
 import consulo.annotations.RequiredReadAction;
 import consulo.ide.projectView.ShowExcludedFilesProjectViewPaneOptionProvider;
 import consulo.ide.projectView.impl.nodes.PackageElement;
+import consulo.logging.Logger;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
 import consulo.vfs.ArchiveFileSystem;
 import consulo.vfs.util.ArchiveVfsUtil;
 import gnu.trove.THashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 public class BaseProjectViewDirectoryHelper {
@@ -103,8 +104,7 @@ public class BaseProjectViewDirectoryHelper {
     }
 
     PsiPackage parentPackage;
-    if (!ProjectRootsUtil.isSourceRoot(directory) && aPackage != null && !aPackage.getQualifiedName().isEmpty() &&
-        parentValue instanceof PsiDirectory) {
+    if (!ProjectRootsUtil.isSourceRoot(directory) && aPackage != null && !aPackage.getQualifiedName().isEmpty() && parentValue instanceof PsiDirectory) {
 
       parentPackage = PsiPackageManager.getInstance(project).findAnyPackage(((PsiDirectory)parentValue));
     }
@@ -126,8 +126,7 @@ public class BaseProjectViewDirectoryHelper {
 
   @RequiredReadAction
   public static boolean isEmptyMiddleDirectory(PsiDirectory directory, final boolean strictlyEmpty) {
-    return PsiPackageManager.getInstance(directory.getProject()).findAnyPackage(directory) != null &&
-           PackageNodeUtil.isEmptyMiddlePackage(directory, null, strictlyEmpty);
+    return PsiPackageManager.getInstance(directory.getProject()).findAnyPackage(directory) != null && PackageNodeUtil.isEmptyMiddlePackage(directory, null, strictlyEmpty);
   }
 
   public static boolean canRepresent(Object element, PsiDirectory directory) {
@@ -143,9 +142,12 @@ public class BaseProjectViewDirectoryHelper {
   }
 
   @RequiredReadAction
-  public static Collection<AbstractTreeNode> getDirectoryChildren(final PsiDirectory psiDirectory,
-                                                                  final ViewSettings settings,
-                                                                  final boolean withSubDirectories) {
+  public static Collection<AbstractTreeNode> getDirectoryChildren(final PsiDirectory psiDirectory, final ViewSettings settings, final boolean withSubDirectories) {
+    return AbstractTreeUi.calculateYieldingToWriteAction(() -> doGetDirectoryChildren(psiDirectory, settings, withSubDirectories));
+  }
+
+  @RequiredReadAction
+  public static Collection<AbstractTreeNode> doGetDirectoryChildren(final PsiDirectory psiDirectory, final ViewSettings settings, final boolean withSubDirectories) {
     final List<AbstractTreeNode> children = new ArrayList<>();
     final Project project = psiDirectory.getProject();
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
@@ -242,7 +244,7 @@ public class BaseProjectViewDirectoryHelper {
                                                  ViewSettings viewSettings,
                                                  boolean withSubDirectories) {
     for (PsiElement child : children) {
-      LOGGER.assertTrue(child.isValid());
+      LOGGER.assertTrue(child.isValid(), "Element " + child.getClass() + " not valid");
 
       final VirtualFile vFile;
       if (child instanceof PsiFile) {
@@ -255,8 +257,7 @@ public class BaseProjectViewDirectoryHelper {
           vFile = dir.getVirtualFile();
           if (!vFile.equals(projectFileIndex.getSourceRootForFile(vFile))) { // if is not a source root
             if (viewSettings.isHideEmptyMiddlePackages() && !skipDirectory(psiDir) && isEmptyMiddleDirectory(dir, true)) {
-              processPsiDirectoryChildren(dir, directoryChildrenInProject(dir, viewSettings), container, projectFileIndex, moduleFileIndex, viewSettings,
-                                          withSubDirectories); // expand it recursively
+              processPsiDirectoryChildren(dir, directoryChildrenInProject(dir, viewSettings), container, projectFileIndex, moduleFileIndex, viewSettings, withSubDirectories); // expand it recursively
               continue;
             }
           }

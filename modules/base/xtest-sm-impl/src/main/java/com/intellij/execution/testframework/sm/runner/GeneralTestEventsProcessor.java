@@ -20,12 +20,13 @@ import com.intellij.execution.testframework.sm.runner.events.*;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.containers.TransferToEDTQueue;
 import com.intellij.util.ui.UIUtil;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

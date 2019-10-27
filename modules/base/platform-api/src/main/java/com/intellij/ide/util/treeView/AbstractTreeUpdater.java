@@ -18,7 +18,7 @@ package com.intellij.ide.util.treeView;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Disposer;
@@ -39,7 +39,6 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
 
   private final LinkedList<TreeUpdatePass> myNodeQueue = new LinkedList<>();
   private final AbstractTreeBuilder myTreeBuilder;
-  private Runnable myRunBeforeUpdate;
   private final List<Runnable> myRunAfterUpdate = new ArrayList<>();
   private final MergingUpdateQueue myUpdateQueue;
 
@@ -225,11 +224,6 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
   }
 
   public synchronized void performUpdate() {
-    if (myRunBeforeUpdate != null) {
-      myRunBeforeUpdate.run();
-      myRunBeforeUpdate = null;
-    }
-
     while (!myNodeQueue.isEmpty()) {
       if (isInPostponeMode()) break;
 
@@ -312,11 +306,6 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
         myRunAfterUpdate.add(runnable);
       }
     }
-  }
-
-  @Deprecated
-  public synchronized void runBeforeUpdate(final Runnable runnable) {
-    myRunBeforeUpdate = runnable;
   }
 
   public synchronized long getUpdateCount() {

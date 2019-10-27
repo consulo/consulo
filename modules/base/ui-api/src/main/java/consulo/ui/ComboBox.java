@@ -19,6 +19,7 @@ import consulo.ui.model.ListModel;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -33,6 +34,11 @@ public interface ComboBox<E> extends ValueComponent<E> {
   @SafeVarargs
   static <E> ComboBox<E> create(@Nonnull E... elements) {
     return UIInternal.get()._Components_comboBox(ListModel.create(Arrays.asList(elements)));
+  }
+
+  @Nonnull
+  static <E> ComboBox<E> create(@Nonnull Collection<E> elements) {
+    return UIInternal.get()._Components_comboBox(ListModel.create(elements));
   }
 
   @Nonnull

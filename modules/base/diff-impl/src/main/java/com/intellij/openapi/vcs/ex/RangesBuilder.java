@@ -16,12 +16,13 @@
 package com.intellij.openapi.vcs.ex;
 
 import com.intellij.diff.util.DiffUtil;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.diff.Diff;
 import com.intellij.util.diff.FilesTooBigForDiffException;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

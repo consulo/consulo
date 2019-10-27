@@ -19,7 +19,7 @@ package com.intellij.execution.impl;
 import com.intellij.execution.*;
 import com.intellij.execution.configurations.*;
 import com.intellij.execution.runners.ProgramRunner;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.extensions.ExtensionException;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;

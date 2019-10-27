@@ -23,6 +23,7 @@ import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import junit.framework.Assert;
 
+import java.util.EventListener;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +31,7 @@ import java.util.Map;
  * @author cdr
  */
 public class EditorListenerTracker {
-  private final Map<Class, List> before;
+  private final Map<Class<? extends EventListener>, List<? extends EventListener>> before;
   private final boolean myDefaultProjectInitialized;
 
   public EditorListenerTracker() {
@@ -46,9 +47,9 @@ public class EditorListenerTracker {
       if (myDefaultProjectInitialized != ((DefaultProjectFactoryImpl)DefaultProjectFactory.getInstance()).isDefaultProjectInitialized()) return;
 
       EditorEventMulticasterImpl multicaster = (EditorEventMulticasterImpl)EditorFactory.getInstance().getEventMulticaster();
-      Map<Class, List> after = multicaster.getListeners();
+      Map<Class<? extends EventListener>, List<? extends EventListener>> after = multicaster.getListeners();
       Map<Class, List> leaked = new LinkedHashMap<Class, List>();
-      for (Map.Entry<Class, List> entry : after.entrySet()) {
+      for (Map.Entry<Class<? extends EventListener>, List<? extends EventListener>> entry : after.entrySet()) {
         Class aClass = entry.getKey();
         List beforeList = before.get(aClass);
         List afterList = entry.getValue();

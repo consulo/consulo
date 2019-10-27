@@ -22,6 +22,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.TextTransferable;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.container.plugin.PluginDescriptor;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -53,10 +54,10 @@ public class PluginTable extends JBTable {
       @Nullable
       @Override
       protected Transferable createTransferable(JComponent c) {
-        final IdeaPluginDescriptor[] selectedValues = getSelectedObjects();
+        final PluginDescriptor[] selectedValues = getSelectedObjects();
         if (selectedValues == null) return null;
-        final String text = StringUtil.join(selectedValues, IdeaPluginDescriptor::getName, ", ");
-        final String htmlText = "<body>\n<ul>\n" + StringUtil.join(selectedValues, IdeaPluginDescriptor::getName, "</li>\n<li>") + "</ul>\n</body>\n";
+        final String text = StringUtil.join(selectedValues, PluginDescriptor::getName, ", ");
+        final String htmlText = "<body>\n<ul>\n" + StringUtil.join(selectedValues, PluginDescriptor::getName, "</li>\n<li>") + "</ul>\n</body>\n";
         return new TextTransferable(XmlStringUtil.wrapInHtml(htmlText), text);
       }
 
@@ -98,15 +99,15 @@ public class PluginTable extends JBTable {
     return ((PluginTableModel)getModel()).view.toArray();
   }
 
-  public IdeaPluginDescriptor getObjectAt(int row) {
+  public PluginDescriptor getObjectAt(int row) {
     return ((PluginTableModel)getModel()).getObjectAt(convertRowIndexToModel(row));
   }
 
-  public void select(IdeaPluginDescriptor... descriptors) {
+  public void select(PluginDescriptor... descriptors) {
     PluginTableModel tableModel = (PluginTableModel)getModel();
     getSelectionModel().clearSelection();
     for (int i = 0; i < tableModel.getRowCount(); i++) {
-      IdeaPluginDescriptor descriptorAt = tableModel.getObjectAt(i);
+      PluginDescriptor descriptorAt = tableModel.getObjectAt(i);
       if (ArrayUtil.find(descriptors, descriptorAt) != -1) {
         final int row = convertRowIndexToView(i);
         getSelectionModel().addSelectionInterval(row, row);
@@ -115,19 +116,19 @@ public class PluginTable extends JBTable {
     TableUtil.scrollSelectionToVisible(this);
   }
 
-  public IdeaPluginDescriptor getSelectedObject() {
-    IdeaPluginDescriptor selected = null;
+  public PluginDescriptor getSelectedObject() {
+    PluginDescriptor selected = null;
     if (getSelectedRowCount() > 0) {
       selected = getObjectAt(getSelectedRow());
     }
     return selected;
   }
 
-  public IdeaPluginDescriptor[] getSelectedObjects() {
-    IdeaPluginDescriptor[] selection = null;
+  public PluginDescriptor[] getSelectedObjects() {
+    PluginDescriptor[] selection = null;
     if (getSelectedRowCount() > 0) {
       int[] poses = getSelectedRows();
-      selection = new IdeaPluginDescriptor[poses.length];
+      selection = new PluginDescriptor[poses.length];
       for (int i = 0; i < poses.length; i++) {
         selection[i] = getObjectAt(poses[i]);
       }

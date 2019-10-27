@@ -15,16 +15,16 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ImageLoader;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.JBImageIcon;
 import com.intellij.util.ui.JBUI;
 import consulo.annotations.DeprecationInfo;
+import consulo.container.plugin.util.PlatformServiceLocator;
+import consulo.logging.Logger;
 import consulo.ui.migration.IconLoaderFacade;
 import consulo.ui.migration.SwingImageRef;
-import consulo.util.ServiceLoaderUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -39,7 +39,7 @@ import java.util.List;
 public final class IconLoader {
   private static final Logger LOG = Logger.getInstance(IconLoader.class);
 
-  private static IconLoaderFacade ourIconLoaderFacade = ServiceLoaderUtil.loadSingleOrError(IconLoaderFacade.class);
+  private static IconLoaderFacade ourIconLoaderFacade = PlatformServiceLocator.findImplementation(IconLoaderFacade.class);
 
   public static boolean STRICT = false;
 
@@ -149,6 +149,14 @@ public final class IconLoader {
   @Nullable
   public static SwingImageRef findIcon(URL url) {
     return findIcon(url, true);
+  }
+
+
+  @Nullable
+  public static Icon findIcon(@NonNls @Nonnull String path, boolean strict) {
+    Class callerClass = ReflectionUtil.getGrandCallerClass();
+    if (callerClass == null) return null;
+    return findIcon(path, callerClass, false, strict);
   }
 
   @Nullable

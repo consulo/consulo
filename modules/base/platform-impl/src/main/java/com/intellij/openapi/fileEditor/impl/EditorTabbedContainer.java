@@ -29,7 +29,6 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.UniqueVFilePathBuilder;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.fileEditor.impl.text.FileDropHandler;
@@ -60,8 +59,8 @@ import com.intellij.util.ui.UIUtil;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -363,37 +362,31 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
     }
   }
 
-  public static String calcTabTitle(final Project project, final VirtualFile file) {
-    for (EditorTabTitleProvider provider : EditorTabTitleProvider.EP_NAME.getExtensionList()) {
-      final String result = provider.getEditorTabTitle(project, file);
-      if (result != null) {
-        return result;
-      }
-    }
-
-    return file.getPresentableName();
+  /**
+   * @deprecated Use {@link EditorTabPresentationUtil#getEditorTabTitle(Project, VirtualFile, EditorWindow)}
+   */
+  @Deprecated
+  @Nonnull
+  public static String calcTabTitle(@Nonnull Project project, @Nonnull VirtualFile file) {
+    return EditorTabPresentationUtil.getEditorTabTitle(project, file, null);
   }
 
-  public static String calcFileName(final Project project, final VirtualFile file) {
-    for (EditorTabTitleProvider provider : EditorTabTitleProvider.EP_NAME.getExtensionList()) {
-      final String result = provider.getEditorTabTitle(project, file);
-      if (result != null) {
-        return result;
-      }
-    }
-    return UniqueVFilePathBuilder.getInstance().getUniqueVirtualFilePath(project, file);
+  /**
+   * @deprecated Use {@link EditorTabPresentationUtil#getUniqueEditorTabTitle(Project, VirtualFile, EditorWindow)}
+   */
+  @Deprecated
+  @Nonnull
+  public static String calcFileName(@Nonnull Project project, @Nonnull VirtualFile file) {
+    return EditorTabPresentationUtil.getUniqueEditorTabTitle(project, file, null);
   }
 
+  /**
+   * @deprecated Use {@link EditorTabPresentationUtil#getEditorTabBackgroundColor(Project, VirtualFile, EditorWindow)}
+   */
+  @Deprecated
   @Nullable
   public static Color calcTabColor(@Nonnull Project project, @Nonnull VirtualFile file) {
-    for (EditorTabColorProvider provider : EditorTabColorProvider.EP_NAME.getExtensionList()) {
-      final Color result = provider.getEditorTabColor(project, file);
-      if (result != null) {
-        return result;
-      }
-    }
-
-    return null;
+    return EditorTabPresentationUtil.getEditorTabBackgroundColor(project, file, null);
   }
 
   public Component getComponentAt(final int i) {

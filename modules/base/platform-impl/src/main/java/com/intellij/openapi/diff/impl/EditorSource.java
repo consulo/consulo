@@ -16,7 +16,7 @@
 package com.intellij.openapi.diff.impl;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.diff.DiffContent;
 import com.intellij.openapi.diff.impl.highlighting.FragmentSide;
 import com.intellij.openapi.editor.ex.EditorEx;

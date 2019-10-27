@@ -5,7 +5,7 @@ import com.intellij.coverage.CoverageRunner;
 import com.intellij.coverage.CoverageSuite;
 import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;

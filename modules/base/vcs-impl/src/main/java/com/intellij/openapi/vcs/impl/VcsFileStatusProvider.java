@@ -16,7 +16,6 @@
 package com.intellij.openapi.vcs.impl;
 
 import com.intellij.ide.scratch.ScratchUtil;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
@@ -27,7 +26,10 @@ import com.intellij.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl;
 import com.intellij.openapi.vcs.rollback.RollbackEnvironment;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThreeState;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -42,7 +44,6 @@ public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContent
   private final ChangeListManager myChangeListManager;
   private final VcsDirtyScopeManager myDirtyScopeManager;
   private final VcsConfiguration myConfiguration;
-  private final VcsBaseContentProvider[] myAdditionalProviders;
   private boolean myHaveEmptyContentRevisions;
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.impl.VcsFileStatusProvider");
@@ -61,7 +62,6 @@ public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContent
     myConfiguration = configuration;
     myHaveEmptyContentRevisions = true;
     myFileStatusManager.setFileStatusProvider(this);
-    myAdditionalProviders = VcsBaseContentProvider.EP_NAME.getExtensions(project);
 
     changeListManager.addChangeListListener(new ChangeListAdapter() {
       @Override
@@ -155,7 +155,7 @@ public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContent
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public BaseContent getBaseRevision(@Nonnull final VirtualFile file) {
     if (!isHandledByVcs(file)) {
       VcsBaseContentProvider provider = findProviderFor(file);
@@ -169,9 +169,9 @@ public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContent
     return new BaseContentImpl(beforeRevision);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private VcsBaseContentProvider findProviderFor(@Nonnull VirtualFile file) {
-    for (VcsBaseContentProvider support : myAdditionalProviders) {
+    for (VcsBaseContentProvider support : VcsBaseContentProvider.EP_NAME.getExtensionList(myProject)) {
       if (support.isSupported(file)) return support;
     }
     return null;
@@ -200,7 +200,7 @@ public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContent
       return myContentRevision.getRevisionNumber();
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     @Override
     public String loadContent() {
       String content;

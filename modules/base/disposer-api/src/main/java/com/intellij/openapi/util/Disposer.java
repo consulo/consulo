@@ -18,8 +18,8 @@ package com.intellij.openapi.util;
 import com.intellij.openapi.Disposable;
 import consulo.disposer.internal.DisposerInternal;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 
 public class Disposer {
@@ -65,16 +65,20 @@ public class Disposer {
     return ourInternal.isDisposed(disposable);
   }
 
+  public static Throwable getDisposalTrace(@Nonnull Disposable disposable) {
+    return ourInternal.getDisposalTrace(disposable);
+  }
+
+  public static boolean isDisposing(@Nonnull Disposable disposable) {
+    return ourInternal.isDisposing(disposable);
+  }
+
   public static void dispose(@Nonnull Disposable disposable) {
     dispose(disposable, true);
   }
 
   public static void dispose(@Nonnull Disposable disposable, boolean processUnregistered) {
     ourInternal.dispose(disposable, processUnregistered);
-  }
-
-  public static void disposeChildAndReplace(@Nonnull Disposable toDispose, @Nonnull Disposable toReplace) {
-    ourInternal.disposeChildAndReplace(toDispose, toReplace);
   }
 
   public static boolean isDebugMode() {

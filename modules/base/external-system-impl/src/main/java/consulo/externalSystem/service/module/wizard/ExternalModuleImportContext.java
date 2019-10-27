@@ -15,11 +15,27 @@
  */
 package consulo.externalSystem.service.module.wizard;
 
+import com.intellij.openapi.externalSystem.service.settings.AbstractImportFromExternalSystemControl;
+import com.intellij.openapi.project.Project;
 import consulo.moduleImport.ModuleImportContext;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 30-Jan-17
  */
-public class ExternalModuleImportContext extends ModuleImportContext {
+public class ExternalModuleImportContext<C extends AbstractImportFromExternalSystemControl> extends ModuleImportContext {
+  private final AbstractExternalModuleImportProvider<C> myImportProvider;
+
+  public ExternalModuleImportContext(@Nullable Project project, AbstractExternalModuleImportProvider<C> importProvider) {
+    super(project);
+    myImportProvider = importProvider;
+  }
+
+  @Nonnull
+  public AbstractExternalModuleImportProvider<C> getImportProvider() {
+    return myImportProvider;
+  }
 }

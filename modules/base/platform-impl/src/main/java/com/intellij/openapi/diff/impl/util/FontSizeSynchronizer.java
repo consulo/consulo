@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.diff.impl.util;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.diff.impl.incrementalMerge.ui.EditorPlace;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;

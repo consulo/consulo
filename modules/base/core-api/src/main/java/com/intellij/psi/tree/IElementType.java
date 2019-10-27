@@ -16,7 +16,7 @@
 package com.intellij.psi.tree;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.ArrayFactory;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;

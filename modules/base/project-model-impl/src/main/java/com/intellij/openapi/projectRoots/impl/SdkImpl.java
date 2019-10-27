@@ -19,7 +19,7 @@ package com.intellij.openapi.projectRoots.impl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.projectRoots.*;
 import com.intellij.openapi.projectRoots.ex.SdkRoot;
 import com.intellij.openapi.projectRoots.ex.SdkRootContainer;

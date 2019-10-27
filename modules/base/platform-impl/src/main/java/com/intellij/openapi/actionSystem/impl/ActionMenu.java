@@ -27,6 +27,7 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.ui.plaf.gtk.GtkMenuUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.awt.TargetAWT;
 import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
 import kava.beans.PropertyChangeEvent;
@@ -72,7 +73,7 @@ public final class ActionMenu extends JMenu {
     init();
 
     // addNotify won't be called for menus in MacOS system menu
-    if (SystemInfo.isMacSystemMenu) {
+    if (TopApplicationMenuUtil.isMacSystemMenu) {
       installSynchronizer();
     }
   }
@@ -266,7 +267,7 @@ public final class ActionMenu extends JMenu {
   }
 
   private boolean isTopMenuBar() {
-    return SystemInfo.isMacSystemMenu && myPlace == ActionPlaces.MAIN_MENU;
+    return TopApplicationMenuUtil.isMacSystemMenu && myPlace == ActionPlaces.MAIN_MENU;
   }
 
   private boolean isTopMenuBarAfterOpenJDKMemLeakFix() {
@@ -290,7 +291,7 @@ public final class ActionMenu extends JMenu {
       for (Component menuComponent : getMenuComponents()) {
         if (menuComponent instanceof ActionMenu) {
           ((ActionMenu)menuComponent).clearItems();
-          if (SystemInfo.isMacSystemMenu) {
+          if (TopApplicationMenuUtil.isMacSystemMenu) {
             // hideNotify is not called on Macs
             ((ActionMenu)menuComponent).uninstallSynchronizer();
           }
@@ -334,7 +335,7 @@ public final class ActionMenu extends JMenu {
       String name = e.getPropertyName();
       if (Presentation.PROP_VISIBLE.equals(name)) {
         setVisible(myPresentation.isVisible());
-        if (SystemInfo.isMacSystemMenu && myPlace.equals(ActionPlaces.MAIN_MENU)) {
+        if (TopApplicationMenuUtil.isMacSystemMenu && myPlace.equals(ActionPlaces.MAIN_MENU)) {
           validate();
         }
       }

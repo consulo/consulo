@@ -85,7 +85,7 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
 
   private boolean myFullScreen;
 
-  IdeRootPane(ActionManager actionManager, DataManager dataManager, Application application, final IdeFrame frame) {
+  public IdeRootPane(ActionManager actionManager, DataManager dataManager, Application application, final IdeFrame frame) {
     myActionManager = actionManager;
 
     myContentPane.add(myNorthPanel, BorderLayout.NORTH);
@@ -157,7 +157,7 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
    * If {@code toolWindowsPane} is {@code null} then the method just removes
    * the current tool windows pane.
    */
-  final void setToolWindowsPane(@Nullable final ToolWindowPanel toolWindowsPane) {
+  public final void setToolWindowsPane(@Nullable final ToolWindowPanel toolWindowsPane) {
     final JComponent contentPane = (JComponent)getContentPane();
     if(myToolWindowsPane != null){
       contentPane.remove((Component)myToolWindowsPane);
@@ -183,7 +183,7 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
     return myContentPane = new IdePanePanel(new BorderLayout());
   }
 
-  void updateToolbar() {
+  public void updateToolbar() {
     removeToolbar();
     myToolbar = createToolbar();
     myNorthPanel.add(myToolbar, 0);
@@ -198,14 +198,14 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
     }
   }
 
-  void updateNorthComponents() {
+  public void updateNorthComponents() {
     for (IdeRootPaneNorthExtension northComponent : myNorthComponents) {
       northComponent.revalidate();
     }
     myContentPane.revalidate();
   }
 
-  void updateMainMenuActions(){
+  public void updateMainMenuActions(){
     ((IdeMenuBar)menuBar).updateMenuActions();
     menuBar.repaint();
   }
@@ -250,7 +250,7 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
   }
 
   @Nullable
-  final StatusBar getStatusBar() {
+  public final StatusBar getStatusBar() {
     return myStatusBar;
   }
 
@@ -266,7 +266,7 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
     myStatusBar.setVisible(UISettings.getInstance().getShowStatusBar() && !UISettings.getInstance().getPresentationMode());
   }
 
-  void installNorthComponents(final Project project) {
+  public void installNorthComponents(final Project project) {
     ContainerUtil.addAll(myNorthComponents, Extensions.getExtensions(IdeRootPaneNorthExtension.EP_NAME, project));
     for (IdeRootPaneNorthExtension northComponent : myNorthComponents) {
       myNorthPanel.add(northComponent.getComponent());
@@ -274,7 +274,7 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
     }
   }
 
-  void deinstallNorthComponents(){
+  public void deinstallNorthComponents(){
     for (IdeRootPaneNorthExtension northComponent : myNorthComponents) {
       myNorthPanel.remove(northComponent.getComponent());
       Disposer.dispose(northComponent);

@@ -17,7 +17,6 @@ package com.intellij.openapi.ui.impl;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.ui.FocusTrackback;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +27,7 @@ import java.awt.event.MouseMotionListener;
 /**
  * @author Konstantin Bulenkov
  */
-interface AbstractDialog extends Disposable {
+public interface AbstractDialog extends Disposable {
   void setUndecorated(boolean undecorated);
 
   void addMouseListener(MouseListener listener);
@@ -98,6 +97,4 @@ interface AbstractDialog extends Disposable {
   void show();
 
   IdeFocusManager getFocusManager();
-
-  FocusTrackback getFocusTrackback();
 }

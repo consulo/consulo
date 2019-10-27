@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,8 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
+import javax.annotation.Nonnull;
 
 /**
  * @author Kirill.Kalishev
@@ -23,15 +24,15 @@ import com.intellij.openapi.diagnostic.Logger;
  */
 public abstract class NamedRunnable implements Runnable {
   private static final Logger LOG = Logger.getInstance(NamedRunnable.class);
-  private String myName;
+  private final String myName;
 
-  protected NamedRunnable(String name) {
+  protected NamedRunnable(@Nonnull String name) {
     myName = name;
   }
 
-  protected void debug(Object message) {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug(myName + ": " + message);
+  protected void trace(Object message) {
+    if (LOG.isTraceEnabled()) {
+      LOG.trace(myName + ": " + message);
     }
   }
 

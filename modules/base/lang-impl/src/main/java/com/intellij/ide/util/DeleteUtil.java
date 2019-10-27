@@ -39,12 +39,8 @@ public class DeleteUtil {
       return MessageFormat.format(messageTemplate, type + " \"" + name + "\"");
     }
 
-    FactoryMap<String, Integer> countMap = new FactoryMap<String, Integer>() {
-      @Override
-      protected Integer create(final String key) {
-        return 0;
-      }
-    };
+    Map<String, Integer> countMap = FactoryMap.create(k -> 0);
+
     Map<String, String> pluralToSingular = new HashMap<String, String>();
     int directoryCount = 0;
     String containerType = null;

@@ -18,6 +18,8 @@ package com.intellij.openapi.fileEditor.impl;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.fileEditor.impl.EditorWindow;
+import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
 
@@ -25,8 +27,18 @@ import javax.annotation.Nullable;
  * @author yole
  */
 public interface EditorTabTitleProvider {
-  ExtensionPointName<EditorTabTitleProvider> EP_NAME = ExtensionPointName.create("com.intellij.editorTabTitleProvider"); 
+  ExtensionPointName<EditorTabTitleProvider> EP_NAME = ExtensionPointName.create("com.intellij.editorTabTitleProvider");
 
   @Nullable
-  String getEditorTabTitle(final Project project, VirtualFile file);
+  String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file);
+
+  @Nullable
+  default String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file, @Nullable EditorWindow editorWindow) {
+    return getEditorTabTitle(project, file);
+  }
+
+  @Nullable
+  default String getEditorTabTooltipText(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
+    return null;
+  }
 }

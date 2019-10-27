@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.util.text;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
@@ -23,11 +22,13 @@ import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.CharSequenceSubSequence;
+import com.intellij.util.text.MergingCharSequence;
 import com.intellij.util.text.StringFactory;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.*;
@@ -60,6 +61,15 @@ public class StringUtil extends StringUtilRt {
       return "'" + s + "'";
     }
   };
+
+  /**
+   * @return a lightweight CharSequence which results from replacing {@code [start, end)} range in the {@code charSeq} with {@code replacement}.
+   * Works in O(1), but retains references to the passed char sequences, so please use something else if you want them to be garbage-collected.
+   */
+  @Nonnull
+  public static MergingCharSequence replaceSubSequence(@Nonnull CharSequence charSeq, int start, int end, @Nonnull CharSequence replacement) {
+    return new MergingCharSequence(new MergingCharSequence(new CharSequenceSubSequence(charSeq, 0, start), replacement), new CharSequenceSubSequence(charSeq, end, charSeq.length()));
+  }
 
   @Nonnull
   @Contract(pure = true)
@@ -210,11 +220,16 @@ public class StringUtil extends StringUtilRt {
     return newText != null ? newText.toString() : "";
   }
 
+  @Contract(pure = true)
+  public static int indexOfIgnoreCase(@Nonnull String where, @Nonnull String what, int fromIndex) {
+    return indexOfIgnoreCase((CharSequence)where, what, fromIndex);
+  }
+
   /**
    * Implementation copied from {@link String#indexOf(String, int)} except character comparisons made case insensitive
    */
   @Contract(pure = true)
-  public static int indexOfIgnoreCase(@Nonnull String where, @Nonnull String what, int fromIndex) {
+  public static int indexOfIgnoreCase(@Nonnull CharSequence where, @Nonnull CharSequence what, int fromIndex) {
     int targetCount = what.length();
     int sourceCount = where.length();
 
@@ -236,6 +251,7 @@ public class StringUtil extends StringUtilRt {
     for (int i = fromIndex; i <= max; i++) {
       /* Look for first character. */
       if (!charsEqualIgnoreCase(where.charAt(i), first)) {
+        //noinspection StatementWithEmptyBody,AssignmentToForLoopParameter
         while (++i <= max && !charsEqualIgnoreCase(where.charAt(i), first)) ;
       }
 
@@ -243,6 +259,7 @@ public class StringUtil extends StringUtilRt {
       if (i <= max) {
         int j = i + 1;
         int end = j + targetCount - 1;
+        //noinspection StatementWithEmptyBody
         for (int k = 1; j < end && charsEqualIgnoreCase(where.charAt(j), what.charAt(k)); j++, k++) ;
 
         if (j == end) {
@@ -304,7 +321,7 @@ public class StringUtil extends StringUtilRt {
   @Contract(value = "null -> null; !null -> !null", pure = true)
   public static String toLowerCase(@Nullable final String str) {
     //noinspection ConstantConditions
-    return str == null ? null : str.toLowerCase();
+    return str == null ? null : str.toLowerCase(Locale.US);
   }
 
   @Nonnull
@@ -1127,55 +1144,9 @@ public class StringUtil extends StringUtilRt {
     return s != null && !s.isEmpty();
   }
 
-  @Contract(value = "null -> true", pure=true)
-  public static boolean isEmpty(@Nullable String s) {
-    return s == null || s.isEmpty();
-  }
-
-  @Contract(value = "null -> true",pure = true)
-  public static boolean isEmpty(@Nullable CharSequence cs) {
-    return cs == null || cs.length() == 0;
-  }
-
   @Contract(pure = true)
   public static int length(@Nullable CharSequence cs) {
     return cs == null ? 0 : cs.length();
-  }
-
-  @Nonnull
-  @Contract(pure = true)
-  public static String notNullize(@Nullable final String s) {
-    return notNullize(s, "");
-  }
-
-  @Nonnull
-  @Contract(pure = true)
-  public static String notNullize(@Nullable final String s, @Nonnull String defaultValue) {
-    return s == null ? defaultValue : s;
-  }
-
-  @Nonnull
-  @Contract(pure = true)
-  public static String notNullizeIfEmpty(@Nullable final String s, @Nonnull String defaultValue) {
-    return isEmpty(s) ? defaultValue : s;
-  }
-
-  @Nullable
-  @Contract(pure = true)
-  public static String nullize(@Nullable final String s) {
-    return nullize(s, false);
-  }
-
-  @Nullable
-  @Contract(pure = true)
-  public static String nullize(@Nullable final String s, boolean nullizeSpaces) {
-    if (nullizeSpaces) {
-      if (isEmptyOrSpaces(s)) return null;
-    }
-    else {
-      if (isEmpty(s)) return null;
-    }
-    return s;
   }
 
   @Contract(value = "null -> true",pure = true)
@@ -1480,6 +1451,22 @@ public class StringUtil extends StringUtilRt {
   @Contract(pure = true)
   public static <T> String join(@Nonnull T[] items, @Nonnull Function<T, String> f, @Nonnull @NonNls String separator) {
     return join(Arrays.asList(items), f, separator);
+  }
+
+  public static <T> void join(@Nonnull Iterable<? extends T> items, @Nonnull Function<? super T, String> f, @Nonnull String separator, @Nonnull StringBuilder result) {
+    boolean isFirst = true;
+    for (T item : items) {
+      String string = f.fun(item);
+      if (!isEmpty(string)) {
+        if (isFirst) {
+          isFirst = false;
+        }
+        else {
+          result.append(separator);
+        }
+        result.append(string);
+      }
+    }
   }
 
   @Nonnull
@@ -1882,6 +1869,18 @@ public class StringUtil extends StringUtilRt {
     return StringUtilRt.endsWith(text, suffix);
   }
 
+  @Contract(pure = true)
+  public static boolean endsWith(@Nonnull CharSequence text, int start, int end, @Nonnull CharSequence suffix) {
+    int suffixLen = suffix.length();
+    if (end < suffixLen) return false;
+
+    for (int i = end - 1; i >= end - suffixLen && i >= start; i--) {
+      if (text.charAt(i) != suffix.charAt(i + suffixLen - end)) return false;
+    }
+
+    return true;
+  }
+
   @Nonnull
   @Contract(pure = true)
   public static String commonPrefix(@Nonnull String s1, @Nonnull String s2) {
@@ -2084,6 +2083,12 @@ public class StringUtil extends StringUtilRt {
   @Contract(pure = true)
   public static CharSequence last(@Nonnull CharSequence text, final int length, boolean prependEllipsis) {
     return text.length() > length ? (prependEllipsis ? "..." : "") + text.subSequence(text.length() - length, text.length()) : text;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String firstLast(@Nonnull String text, int length) {
+    return text.length() > length ? text.subSequence(0, length / 2) + "\u2026" + text.subSequence(text.length() - length / 2 - 1, text.length()) : text;
   }
 
   @Nonnull
@@ -2739,6 +2744,24 @@ public class StringUtil extends StringUtilRt {
   }
 
   @Contract(pure = true)
+  public static int compare(@Nullable CharSequence s1, @Nullable CharSequence s2, boolean ignoreCase) {
+    if (s1 == s2) return 0;
+    if (s1 == null) return -1;
+    if (s2 == null) return 1;
+
+    int length1 = s1.length();
+    int length2 = s2.length();
+    int i = 0;
+    for (; i < length1 && i < length2; i++) {
+      int diff = compare(s1.charAt(i), s2.charAt(i), ignoreCase);
+      if (diff != 0) {
+        return diff;
+      }
+    }
+    return length1 - length2;
+  }
+
+  @Contract(pure = true)
   public static int comparePairs(@Nullable String s1, @Nullable String t1, @Nullable String s2, @Nullable String t2, boolean ignoreCase) {
     final int compare = compare(s1, s2, ignoreCase);
     return compare != 0 ? compare : compare(t1, t2, ignoreCase);
@@ -3285,6 +3308,15 @@ public class StringUtil extends StringUtilRt {
       check();
       return delegate.subSequence(i, i1);
     }
+  }
+
+  /**
+   * @return {@code text} with some characters replaced with standard XML entities, e.g. '<' replaced with '{@code &lt;}'
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static String escapeXmlEntities(@Nonnull String text) {
+    return replace(text, REPLACES_DISP, REPLACES_REFS);
   }
 
   /** @deprecated use {@link #startsWithConcatenation(String, String...)} (to remove in IDEA 15) */

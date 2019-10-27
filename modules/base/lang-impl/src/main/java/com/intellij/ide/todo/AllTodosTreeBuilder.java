@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-/**
- * @author Vladimir Kondratyev
- */
 package com.intellij.ide.todo;
 
 import com.intellij.openapi.project.Project;
@@ -25,14 +22,22 @@ import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 
-public class AllTodosTreeBuilder extends TodoTreeBuilder{
-  public AllTodosTreeBuilder(JTree tree,DefaultTreeModel treeModel,Project project){
-    super(tree,treeModel,project);
+public class AllTodosTreeBuilder extends TodoTreeBuilder {
+  /**
+   * To be deleted in 2020.1
+   */
+  @Deprecated
+  public AllTodosTreeBuilder(JTree tree, DefaultTreeModel treeModel, Project project) {
+    this(tree, project);
+  }
+
+  public AllTodosTreeBuilder(JTree tree, Project project) {
+    super(tree, project);
   }
 
   @Override
   @Nonnull
-  protected TodoTreeStructure createTreeStructure(){
+  protected TodoTreeStructure createTreeStructure() {
     return new AllTodosTreeStructure(myProject);
   }
 }

@@ -15,7 +15,6 @@
  */
 package com.intellij.vcs.log.data;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.VcsException;
@@ -32,6 +31,8 @@ import com.intellij.vcs.log.impl.VcsLogFilterCollectionImpl.VcsLogFilterCollecti
 import com.intellij.vcs.log.impl.VcsLogHashFilterImpl;
 import com.intellij.vcs.log.impl.VcsLogUtil;
 import com.intellij.vcs.log.util.StopWatch;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

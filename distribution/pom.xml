@@ -25,14 +25,13 @@
         <version>${maven.assembly.plugin}</version>
         <executions>
           <execution>
-            <id>create-archive-win</id>
+            <id>create-archive</id>
             <configuration>
               <descriptors>
                 <descriptor>${project.basedir}/src/assembly/win.xml</descriptor>
                 <descriptor>${project.basedir}/src/assembly/linux.xml</descriptor>
                 <descriptor>${project.basedir}/src/assembly/mac.xml</descriptor>
               </descriptors>
-              <attach>false</attach>
             </configuration>
             <phase>package</phase>
             <goals>
@@ -83,12 +82,12 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-desktop-platform-impl</artifactId>
+      <artifactId>consulo-sand-language-plugin</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-desktop-graph-impl</artifactId>
+      <artifactId>consulo-desktop-platform-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -99,6 +98,11 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-desktop-ui-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-desktop-graph-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -121,11 +125,30 @@
       <artifactId>consulo-disposer-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-bootstrap</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <!--copied from consulo-bundle module-->
 
     <!--optional dependency-->
     <dependency>
-      <groupId>org.apache.ws.xmlrpc</groupId>
-      <artifactId>xmlrpc</artifactId>
+      <groupId>org.apache.xmlrpc</groupId>
+      <artifactId>xmlrpc-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlrpc</groupId>
+      <artifactId>xmlrpc-server</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlrpc</groupId>
+      <artifactId>xmlrpc-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.ws.commons</groupId>
+      <artifactId>ws-commons-util</artifactId>
     </dependency>
     <dependency>
       <groupId>io.netty</groupId>
@@ -138,6 +161,10 @@
     <dependency>
       <groupId>io.netty</groupId>
       <artifactId>netty-transport</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jaxen</groupId>
+      <artifactId>jaxen</artifactId>
     </dependency>
     <dependency>
       <groupId>io.netty</groupId>
@@ -158,6 +185,10 @@
     <dependency>
       <groupId>org.iq80.snappy</groupId>
       <artifactId>snappy</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.lz4</groupId>
+      <artifactId>lz4-java</artifactId>
     </dependency>
     <dependency>
       <groupId>javax.help</groupId>
@@ -194,6 +225,22 @@
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>kava.beans</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.jaxb</groupId>
+      <artifactId>jaxb-runtime</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.istack</groupId>
+      <artifactId>istack-commons-runtime</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.activation</groupId>
+      <artifactId>jakarta.activation-api</artifactId>
     </dependency>
   </dependencies>
 </project>

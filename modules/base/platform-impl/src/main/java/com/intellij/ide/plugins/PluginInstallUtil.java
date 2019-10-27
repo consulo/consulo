@@ -18,10 +18,11 @@ package com.intellij.ide.plugins;
 import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.util.containers.ArrayListSet;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.ide.plugins.InstalledPluginsState;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,15 +38,15 @@ public class PluginInstallUtil {
   }
 
   @Nonnull
-  public static Set<IdeaPluginDescriptor> getPluginsForInstall(List<IdeaPluginDescriptor> pluginsToInstall, List<IdeaPluginDescriptor> allPlugins) {
+  public static Set<PluginDescriptor> getPluginsForInstall(List<PluginDescriptor> pluginsToInstall, List<PluginDescriptor> allPlugins) {
     final List<PluginId> pluginIds = new ArrayList<>();
-    for (IdeaPluginDescriptor pluginNode : pluginsToInstall) {
+    for (PluginDescriptor pluginNode : pluginsToInstall) {
       pluginIds.add(pluginNode.getPluginId());
     }
 
-    final Set<IdeaPluginDescriptor> toInstallAll = new ArrayListSet<>();
+    final Set<PluginDescriptor> toInstallAll = new ArrayListSet<>();
 
-    for (IdeaPluginDescriptor toInstall : pluginsToInstall) {
+    for (PluginDescriptor toInstall : pluginsToInstall) {
       Set<PluginNode> depends = new ArrayListSet<>();
       collectDepends(toInstall, pluginIds, depends, allPlugins);
 
@@ -59,10 +60,10 @@ public class PluginInstallUtil {
     return toInstallAll;
   }
 
-  private static void collectDepends(@Nonnull IdeaPluginDescriptor toInstall,
+  private static void collectDepends(@Nonnull PluginDescriptor toInstall,
                                      @Nonnull List<PluginId> toInstallOthers,
                                      @Nonnull Set<PluginNode> depends,
-                                     @Nonnull List<IdeaPluginDescriptor> repoPlugins) {
+                                     @Nonnull List<PluginDescriptor> repoPlugins) {
     PluginId[] dependentPluginIds = toInstall.getDependentPluginIds();
     InstalledPluginsState pluginsState = InstalledPluginsState.getInstance();
 
@@ -88,8 +89,8 @@ public class PluginInstallUtil {
   }
 
   @Nullable
-  private static IdeaPluginDescriptor findDescriptionInRepo(PluginId depPluginId, List<IdeaPluginDescriptor> allPlugins) {
-    for (IdeaPluginDescriptor plugin : allPlugins) {
+  private static PluginDescriptor findDescriptionInRepo(PluginId depPluginId, List<PluginDescriptor> allPlugins) {
+    for (PluginDescriptor plugin : allPlugins) {
       if (plugin.getPluginId().equals(depPluginId)) {
         return plugin;
       }
@@ -100,7 +101,7 @@ public class PluginInstallUtil {
   public static void prepareToUninstall(PluginId pluginId) throws IOException {
     if (PluginManager.isPluginInstalled(pluginId)) {
       // add command to delete the 'action script' file
-      IdeaPluginDescriptor pluginDescriptor = PluginManager.getPlugin(pluginId);
+      PluginDescriptor pluginDescriptor = PluginManager.getPlugin(pluginId);
       if (pluginDescriptor != null) {
         StartupActionScriptManager.ActionCommand deleteOld = new StartupActionScriptManager.DeleteCommand(pluginDescriptor.getPath());
         StartupActionScriptManager.addActionCommand(deleteOld);

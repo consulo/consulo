@@ -4,7 +4,6 @@ import com.intellij.codeInsight.editorActions.smartEnter.SmartEnterProcessor;
 import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.openapi.actionSystem.IdeActions;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
@@ -17,6 +16,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.OrderedSet;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

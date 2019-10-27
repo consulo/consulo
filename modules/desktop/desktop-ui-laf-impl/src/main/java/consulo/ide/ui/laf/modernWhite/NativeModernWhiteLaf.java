@@ -15,6 +15,7 @@
  */
 package consulo.ide.ui.laf.modernWhite;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
@@ -24,9 +25,10 @@ import java.util.Map;
  * @since 02.03.14
  */
 public class NativeModernWhiteLaf extends ModernWhiteLaf {
+  @Nonnull
   @Override
-  public UIDefaults getDefaults() {
-    UIDefaults defaults = super.getDefaults();
+  public UIDefaults getDefaultsImpl(UIDefaults superDefaults) {
+    UIDefaults defaults = super.getDefaultsImpl(superDefaults);
     if (DwmApi.Wrapper.DwmIsCompositionEnabled()) {
       int[] colorWithAlpha = DwmApi.Wrapper.DwmGetColorizationColor();
 

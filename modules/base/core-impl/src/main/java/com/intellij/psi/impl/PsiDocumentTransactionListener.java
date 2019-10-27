@@ -22,10 +22,13 @@ package com.intellij.psi.impl;
 import com.intellij.openapi.editor.Document;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.messages.Topic;
+import javax.annotation.Nonnull;
 
 public interface PsiDocumentTransactionListener {
   Topic<PsiDocumentTransactionListener> TOPIC = new Topic<PsiDocumentTransactionListener>("psi.DocumentTransactionListener", PsiDocumentTransactionListener.class, Topic.BroadcastDirection.TO_PARENT);
 
-  void transactionStarted(Document doc, PsiFile file);
-  void transactionCompleted(Document doc, PsiFile file);
+  void transactionStarted(@Nonnull Document document, @Nonnull PsiFile file);
+
+  default void transactionCompleted(@Nonnull Document document, @Nonnull PsiFile file) {
+  }
 }

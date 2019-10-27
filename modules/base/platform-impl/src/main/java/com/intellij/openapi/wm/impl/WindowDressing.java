@@ -40,7 +40,7 @@ public class WindowDressing {
       }
 
       @Override
-      public void projectClosed(Project project) {
+      public void projectClosed(Project project, UIAccess uiAccess) {
         getWindowActionGroup(actionManager).removeProject(project);
       }
     });

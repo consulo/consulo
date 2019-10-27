@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,13 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
-import com.intellij.util.Function;
+import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,39 +29,40 @@ import java.util.Map;
 
 /**
  * For exactly same refresh requests buffering:
- *
- * - refresh requests can be merged into one, but general principle is that each request should be reliably followed by refresh action 
+ * <p/>
+ * - refresh requests can be merged into one, but general principle is that each request should be reliably followed by refresh action
  * - at the moment only one refresh action is being done
  * - if request had been submitted while refresh action was in progress, new refresh action is initiated right after first refresh action finishes
- *
  */
 public class RequestsMerger {
-  private static final Logger LOG = Logger.getInstance(RequestsMerger.class);
-  private static final int ourDelay = 300;
+  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.RequestsMerger");
 
   private final MyWorker myWorker;
 
   private final Object myLock = new Object();
 
   private MyState myState;
-  private final Consumer<Runnable> myAlarm;
-  
-  private final List<Runnable> myWaitingStartListeners;
-  private final List<Runnable> myWaitingFinishListeners;
+  private final Consumer<? super Runnable> myAlarm;
 
-  public RequestsMerger(final Runnable runnable, final Consumer<Runnable> alarm) {
+  private final List<Runnable> myWaitingStartListeners = new ArrayList<>();
+  private final List<Runnable> myWaitingFinishListeners = new ArrayList<>();
+
+  public RequestsMerger(final Runnable runnable, final Consumer<? super Runnable> alarm) {
     myAlarm = alarm;
     myWorker = new MyWorker(runnable);
 
     myState = MyState.empty;
-
-    myWaitingStartListeners = new ArrayList<Runnable>();
-    myWaitingFinishListeners = new ArrayList<Runnable>();
   }
 
   public void request() {
     LOG.debug("ext: request");
     doAction(MyAction.request);
+  }
+
+  public boolean isEmpty() {
+    synchronized (myLock) {
+      return MyState.empty.equals(myState);
+    }
   }
 
   public void waitRefresh(final Runnable runnable) {
@@ -72,35 +73,23 @@ public class RequestsMerger {
     request();
   }
 
-  public void ensureInitialization(final Runnable runnable) {
-    LOG.debug("ext: ensure init");
-    synchronized (myLock) {
-      if (myWorker.isInitialized()) {
-        runnable.run();
-        return;
-      }
-      myWaitingStartListeners.add(runnable);
-    }
-    request();
-  }
-
   private class MyWorker implements Runnable {
-    private boolean myInitialized;
+    private volatile boolean myInitialized;
     private final Runnable myRunnable;
 
     private MyWorker(Runnable runnable) {
       myRunnable = runnable;
     }
 
+    @Override
     public void run() {
       LOG.debug("worker: started refresh");
       try {
         doAction(MyAction.start);
         myRunnable.run();
-        synchronized (myLock) {
-          myInitialized = true;
-        }
-      } finally {
+        myInitialized = true;
+      }
+      finally {
         doAction(MyAction.finish);
       }
     }
@@ -122,12 +111,8 @@ public class RequestsMerger {
 
       LOG.debug("doAction: oldState: " + oldState.name() + ", newState: " + myState.name());
 
-      if (LOG.isDebugEnabled() && (exitActions != null)) {
-        final String debugExitActions = StringUtil.join(exitActions, new Function<MyExitAction, String>() {
-          public String fun(MyExitAction exitAction) {
-            return exitAction.name();
-          }
-        }, " ");
+      if (LOG.isDebugEnabled() && exitActions != null) {
+        final String debugExitActions = StringUtil.join(exitActions, exitAction -> exitAction.name(), " ");
         LOG.debug("exit actions: " + debugExitActions);
       }
       if (exitActions != null) {
@@ -135,8 +120,9 @@ public class RequestsMerger {
           if (MyExitAction.markStart.equals(exitAction)) {
             myWaitingFinishListeners.addAll(myWaitingStartListeners);
             myWaitingStartListeners.clear();
-          } else if (MyExitAction.markEnd.equals(exitAction)) {
-            toBeCalled = new ArrayList<Runnable>(myWaitingFinishListeners);
+          }
+          else if (MyExitAction.markEnd.equals(exitAction)) {
+            toBeCalled = new ArrayList<>(myWaitingFinishListeners);
             myWaitingFinishListeners.clear();
           }
         }
@@ -159,8 +145,9 @@ public class RequestsMerger {
     LOG.debug("doAction: END " + action.name());
   }
 
-  private static enum MyState {
+  private enum MyState {
     empty() {
+      @Override
       @Nonnull
       public MyState transition(MyAction action) {
         if (MyAction.request.equals(action)) {
@@ -168,19 +155,24 @@ public class RequestsMerger {
         }
         logWrongAction(this, action);
         return this;
-      }},
+      }
+    },
     inProgress() {
+      @Override
       @Nonnull
       public MyState transition(MyAction action) {
         if (MyAction.finish.equals(action)) {
-          return MyState.empty;
-        } else if (MyAction.request.equals(action)) {
+          return empty;
+        }
+        else if (MyAction.request.equals(action)) {
           return MyState.inProgressRequestSubmitted;
         }
         logWrongAction(this, action);
         return this;
-      }},
+      }
+    },
     inProgressRequestSubmitted() {
+      @Override
       @Nonnull
       public MyState transition(MyAction action) {
         if (MyAction.finish.equals(action)) {
@@ -190,19 +182,23 @@ public class RequestsMerger {
           logWrongAction(this, action);
         }
         return this;
-      }},
+      }
+    },
     requestSubmitted() {
+      @Override
       @Nonnull
       public MyState transition(MyAction action) {
         if (MyAction.start.equals(action)) {
-          return MyState.inProgress;
-        } else if (MyAction.finish.equals(action)) {
+          return inProgress;
+        }
+        else if (MyAction.finish.equals(action)) {
           // to be able to be started by another request
           logWrongAction(this, action);
-          return MyState.empty;
+          return empty;
         }
         return this;
-      }};
+      }
+    };
 
     // under lock
     @Nonnull
@@ -214,7 +210,7 @@ public class RequestsMerger {
   }
 
   private static class MyTransitionAction {
-    private final static Map<Pair<MyState, MyState>, MyExitAction[]> myMap = new HashMap<Pair<MyState, MyState>, MyExitAction[]>();
+    private static final Map<Couple<MyState>, MyExitAction[]> myMap = new HashMap<>();
 
     static {
       add(MyState.empty, MyState.requestSubmitted, MyExitAction.submitRequestToExecutor);
@@ -227,24 +223,24 @@ public class RequestsMerger {
       add(MyState.inProgress, MyState.requestSubmitted, MyExitAction.markEnd);
     }
 
-    private static void add(final MyState from , final MyState to, final MyExitAction... action) {
-      myMap.put(new Pair<MyState, MyState>(from, to), action);
+    private static void add(final MyState from, final MyState to, final MyExitAction... action) {
+      myMap.put(Couple.of(from, to), action);
     }
 
     @Nullable
     public static MyExitAction[] getExit(final MyState from, final MyState to) {
-      return myMap.get(new Pair<MyState, MyState>(from, to));
+      return myMap.get(Couple.of(from, to));
     }
   }
 
-  private static enum MyExitAction {
+  private enum MyExitAction {
     empty,
     submitRequestToExecutor,
     markStart,
     markEnd
   }
 
-  private static enum MyAction {
+  private enum MyAction {
     request,
     start,
     finish

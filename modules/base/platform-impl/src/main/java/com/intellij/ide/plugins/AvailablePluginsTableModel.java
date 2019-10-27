@@ -23,6 +23,7 @@
 package com.intellij.ide.plugins;
 
 import com.intellij.util.ui.ColumnInfo;
+import consulo.container.plugin.PluginDescriptor;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public class AvailablePluginsTableModel extends PluginTableModel {
   }
 
   @Override
-  public boolean isPluginDescriptorAccepted(IdeaPluginDescriptor descriptor) {
+  public boolean isPluginDescriptorAccepted(PluginDescriptor descriptor) {
     final String category = descriptor.getCategory();
     if (category != null) {
       if (!ALL.equals(myCategory) && !category.equals(myCategory)) return false;
@@ -70,10 +71,10 @@ public class AvailablePluginsTableModel extends PluginTableModel {
     return myAvailableCategories;
   }
 
-  private static void updateStatus(final IdeaPluginDescriptor descr) {
+  private static void updateStatus(final PluginDescriptor descr) {
     if (descr instanceof PluginNode) {
       final PluginNode node = (PluginNode)descr;
-      IdeaPluginDescriptor existing = PluginManager.getPlugin(descr.getPluginId());
+      PluginDescriptor existing = PluginManager.getPlugin(descr.getPluginId());
       if (existing != null) {
         node.setStatus(PluginNode.STATUS_INSTALLED);
         node.setInstalledVersion(existing.getVersion());
@@ -82,7 +83,7 @@ public class AvailablePluginsTableModel extends PluginTableModel {
   }
 
   @Override
-  public void updatePluginsList(List<IdeaPluginDescriptor> list) {
+  public void updatePluginsList(List<PluginDescriptor> list) {
     view.clear();
     myAvailableCategories.clear();
     filtered.clear();
@@ -90,7 +91,7 @@ public class AvailablePluginsTableModel extends PluginTableModel {
     //  For each downloadable plugin we need to know whether its counterpart
     //  is already installed, and if yes compare the difference in versions:
     //  availability of newer versions will be indicated separately.
-    for (IdeaPluginDescriptor descr : list) {
+    for (PluginDescriptor descr : list) {
       updateStatus(descr);
       view.add(descr);
       final String category = descr.getCategory();
@@ -106,9 +107,9 @@ public class AvailablePluginsTableModel extends PluginTableModel {
   }
 
   @Override
-  public void filter(final List<IdeaPluginDescriptor> filtered) {
+  public void filter(final List<PluginDescriptor> filtered) {
     view.clear();
-    for (IdeaPluginDescriptor descriptor : filtered) {
+    for (PluginDescriptor descriptor : filtered) {
       view.add(descriptor);
     }
     super.filter(filtered);

@@ -29,7 +29,6 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -46,6 +45,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -119,7 +119,7 @@ public class LossyEncodingInspection extends LocalInspectionTool {
                                                         @Nonnull Charset charset,
                                                         @Nonnull List<ProblemDescriptor> descriptors) {
     if (FileDocumentManager.getInstance().isFileModified(virtualFile) // when file is modified, it's too late to reload it
-        || EncodingUtil.checkCanReload(virtualFile).second != null // can't reload in another encoding, no point trying
+        || !EncodingUtil.canReload(virtualFile) // can't reload in another encoding, no point trying
             ) {
       return true;
     }

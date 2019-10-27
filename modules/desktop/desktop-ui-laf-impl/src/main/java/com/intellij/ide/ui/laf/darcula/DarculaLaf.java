@@ -26,8 +26,7 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.util.containers.hash.HashMap;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.desktop.util.awt.laf.BuildInLookAndFeel;
-import consulo.ui.desktop.internal.laf.textBoxWithExpandAction.SupportTextBoxWithExpandActionLaf;
+import consulo.ide.ui.laf.BaseLookAndFeel;
 import sun.awt.AppContext;
 
 import javax.annotation.Nonnull;
@@ -53,7 +52,7 @@ import java.util.Properties;
 /**
  * @author Konstantin Bulenkov
  */
-public class DarculaLaf extends BasicLookAndFeel implements BuildInLookAndFeel, SupportTextBoxWithExpandActionLaf {
+public class DarculaLaf extends BaseLookAndFeel {
   public static final String NAME = "Darcula";
   BasicLookAndFeel base;
 
@@ -88,8 +87,9 @@ public class DarculaLaf extends BasicLookAndFeel implements BuildInLookAndFeel, 
     e.printStackTrace();
   }
 
+  @Nonnull
   @Override
-  public UIDefaults getDefaults() {
+  public UIDefaults getDefaultsImpl(UIDefaults superDefaults) {
     try {
       final UIDefaults metalDefaults = new MetalLookAndFeel().getDefaults();
       final UIDefaults defaults = base.getDefaults();
@@ -111,16 +111,13 @@ public class DarculaLaf extends BasicLookAndFeel implements BuildInLookAndFeel, 
       defaults.remove("Spinner.arrowButtonBorder");
       defaults.put("Spinner.arrowButtonSize", JBUI.size(16, 5).asUIResource());
       MetalLookAndFeel.setCurrentTheme(createMetalTheme());
-      if (SystemInfo.isWindows) {
-        //JFrame.setDefaultLookAndFeelDecorated(true);
-      }
       defaults.put("EditorPane.font", defaults.getFont("TextField.font"));
       return defaults;
     }
     catch (Exception e) {
       log(e);
     }
-    return super.getDefaults();
+    return super.getDefaultsImpl(superDefaults);
   }
 
   protected DefaultMetalTheme createMetalTheme() {

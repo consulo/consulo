@@ -18,7 +18,7 @@ package consulo.components.impl.stores.storage;
 import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import consulo.components.impl.stores.DefaultStateSerializer;
 import org.jdom.Element;
 

@@ -1,64 +1,45 @@
-/*
- * Copyright 2000-2014 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.vfs.newvfs.persistent;
 
 import com.intellij.openapi.util.ThreadLocalCachedValue;
-import com.intellij.util.io.DifferentSerializableBytesImplyNonEqualityPolicy;
-import com.intellij.util.io.KeyDescriptor;
-import com.intellij.util.io.PagedFileStorage;
-import com.intellij.util.io.PersistentBTreeEnumerator;
+import com.intellij.util.io.*;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
-/**
- * Created by Maxim.Mossienko on 4/4/2014.
- */
 public class ContentHashesUtil {
   public static final ThreadLocalCachedValue<MessageDigest> HASHER_CACHE = new ThreadLocalCachedValue<MessageDigest>() {
+    @Nonnull
     @Override
     public MessageDigest create() {
       return createHashDigest();
     }
 
     @Override
-    protected void init(MessageDigest value) {
+    protected void init(@Nonnull MessageDigest value) {
       value.reset();
     }
   };
 
-  public static MessageDigest createHashDigest() {
-    try {
-      return MessageDigest.getInstance("SHA1");
-    } catch (NoSuchAlgorithmException ex) {
-      assert false:"Every Java implementation should have SHA1 support"; // http://docs.oracle.com/javase/7/docs/api/java/security/MessageDigest.html
-    }
-    return null;
+  @Nonnull
+  static MessageDigest createHashDigest() {
+    return DigestUtil.sha1();
   }
 
   private static final int SIGNATURE_LENGTH = 20;
 
   public static class HashEnumerator extends PersistentBTreeEnumerator<byte[]> {
-    public HashEnumerator(File contentsHashesFile, PagedFileStorage.StorageLockContext storageLockContext) throws IOException {
+    public HashEnumerator(@Nonnull File contentsHashesFile) throws IOException {
+      this(contentsHashesFile, null);
+    }
+
+    public HashEnumerator(@Nonnull File contentsHashesFile, @Nullable PagedFileStorage.StorageLockContext storageLockContext) throws IOException {
       super(contentsHashesFile, new ContentHashesDescriptor(), 64 * 1024, storageLockContext);
     }
 
@@ -72,14 +53,15 @@ public class ContentHashesUtil {
       return super.getLargestId() / SIGNATURE_LENGTH;
     }
 
-    private final ThreadLocal<Boolean> myProcessingKeyAtIndex = new ThreadLocal<Boolean>();
+    private final ThreadLocal<Boolean> myProcessingKeyAtIndex = new ThreadLocal<>();
 
     @Override
     protected boolean isKeyAtIndex(byte[] value, int idx) throws IOException {
       myProcessingKeyAtIndex.set(Boolean.TRUE);
       try {
-        return super.isKeyAtIndex(value, addrToIndex(indexToAddr(idx)* SIGNATURE_LENGTH));
-      } finally {
+        return super.isKeyAtIndex(value, addrToIndex(indexToAddr(idx) * SIGNATURE_LENGTH));
+      }
+      finally {
         myProcessingKeyAtIndex.set(null);
       }
     }
@@ -87,7 +69,12 @@ public class ContentHashesUtil {
     @Override
     public byte[] valueOf(int idx) throws IOException {
       if (myProcessingKeyAtIndex.get() == Boolean.TRUE) return super.valueOf(idx);
-      return super.valueOf(addrToIndex(indexToAddr(idx)* SIGNATURE_LENGTH));
+      return super.valueOf(addrToIndex(indexToAddr(idx) * SIGNATURE_LENGTH));
+    }
+
+    @Override
+    public int tryEnumerate(byte[] value) throws IOException {
+      return super.tryEnumerate(value);
     }
   }
 

@@ -13,7 +13,7 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin>
+<consulo-plugin>
   <extensionPoints>
     <extensionPoint name="codeInsight.template.postfixTemplateProvider"
                     beanClass="com.intellij.lang.LanguageExtensionPoint">
@@ -33,4 +33,4 @@
         instance="com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesConfigurable"/>
     <completion.contributor language="any" implementationClass="com.intellij.codeInsight.template.postfix.completion.PostfixTemplateCompletionContributor"/>
   </extensions>
-</idea-plugin>
+</consulo-plugin>

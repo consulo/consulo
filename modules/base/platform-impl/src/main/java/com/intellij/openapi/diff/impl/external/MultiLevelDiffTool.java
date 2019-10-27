@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.diff.*;
 import com.intellij.openapi.diff.impl.CompositeDiffPanel;
 import com.intellij.openapi.diff.impl.DiffUtil;

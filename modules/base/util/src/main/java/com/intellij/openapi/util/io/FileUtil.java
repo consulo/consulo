@@ -17,7 +17,7 @@ package com.intellij.openapi.util.io;
 
 import com.intellij.CommonBundle;
 import com.intellij.Patches;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
@@ -31,9 +31,9 @@ import com.intellij.util.text.StringFactory;
 import gnu.trove.TObjectHashingStrategy;
 import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.Contract;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.lang.reflect.Method;
@@ -55,6 +55,7 @@ public class FileUtil extends FileUtilRt {
   public static final int REGEX_PATTERN_FLAGS = SystemInfo.isFileSystemCaseSensitive ? 0 : Pattern.CASE_INSENSITIVE;
 
   public static final TObjectHashingStrategy<String> PATH_HASHING_STRATEGY = FilePathHashingStrategy.create();
+  public static final TObjectHashingStrategy<CharSequence> PATH_CHAR_SEQUENCE_HASHING_STRATEGY = FilePathHashingStrategy.createForCharSequence();
 
   public static final TObjectHashingStrategy<File> FILE_HASHING_STRATEGY = SystemInfo.isFileSystemCaseSensitive ? ContainerUtil.<File>canonicalStrategy() : new TObjectHashingStrategy<File>() {
     @Override
@@ -431,29 +432,6 @@ public class FileUtil extends FileUtilRt {
       File tempFile = new File(parent, name);
       if (!tempFile.exists()) return tempFile;
     }
-  }
-
-  public static boolean delete(@Nonnull File file) {
-    if (NIOReflect.IS_AVAILABLE) {
-      return deleteRecursivelyNIO(file);
-    }
-    return deleteRecursively(file);
-  }
-
-  private static boolean deleteRecursively(@Nonnull File file) {
-    FileAttributes attributes = FileSystemUtil.getAttributes(file);
-    if (attributes == null) return true;
-
-    if (attributes.isDirectory() && !attributes.isSymLink()) {
-      File[] files = file.listFiles();
-      if (files != null) {
-        for (File child : files) {
-          if (!deleteRecursively(child)) return false;
-        }
-      }
-    }
-
-    return deleteFile(file);
   }
 
   public static boolean createParentDirs(@Nonnull File file) {
@@ -1453,14 +1431,6 @@ public class FileUtil extends FileUtilRt {
     }
     list.add(path.substring(index, path.length()));
     return list;
-  }
-
-  public static boolean isJarOrZip(@Nonnull File file) {
-    if (file.isDirectory()) {
-      return false;
-    }
-    final String name = file.getName();
-    return StringUtil.endsWithIgnoreCase(name, ".jar") || StringUtil.endsWithIgnoreCase(name, ".zip");
   }
 
   public static boolean visitFiles(@Nonnull File root, @Nonnull Processor<File> processor) {

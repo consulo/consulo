@@ -21,8 +21,10 @@ import com.intellij.execution.*;
 import com.intellij.execution.configurations.*;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.components.*;
-import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.DumbService;
@@ -37,7 +39,7 @@ import com.intellij.ui.IconDeferrer;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
-import com.intellij.util.containers.WeakHashMap;
+import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import consulo.util.ProjectPropertiesComponent;
 import gnu.trove.THashMap;
@@ -63,7 +65,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   private final Map<String, RunnerAndConfigurationSettings> myTemplateConfigurationsMap = new TreeMap<>();
   private final Map<String, RunnerAndConfigurationSettings> myConfigurations = new LinkedHashMap<>(); // template configurations are not included here
   private final Map<String, Boolean> mySharedConfigurations = new THashMap<>();
-  private final Map<RunConfiguration, List<BeforeRunTask>> myConfigurationToBeforeTasksMap = new WeakHashMap<>();
+  private final Map<RunConfiguration, List<BeforeRunTask>> myConfigurationToBeforeTasksMap = ContainerUtil.createWeakMap();
 
   // When readExternal not all configuration may be loaded, so we need to remember the selected configuration
   // so that when it is eventually loaded, we can mark is as a selected.

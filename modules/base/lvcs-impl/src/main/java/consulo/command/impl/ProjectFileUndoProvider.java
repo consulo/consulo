@@ -33,20 +33,6 @@ import javax.inject.Inject;
 public class ProjectFileUndoProvider extends FileUndoProvider {
   @Inject
   ProjectFileUndoProvider(@Nonnull Project project) {
-    myProject = project;
-
-    LocalHistoryImpl localHistory = LocalHistoryImpl.getInstanceImpl();
-    myLocalHistory = localHistory.getFacade();
-    myGateway = localHistory.getGateway();
-    if (myLocalHistory == null || myGateway == null) return; // local history was not initialized (e.g. in headless environment)
-
-    localHistory.addVFSListenerAfterLocalHistoryOne(this, project);
-    myLocalHistory.addListener(new LocalHistoryFacade.Listener() {
-      @Override
-      public void changeAdded(Change c) {
-        if (!(c instanceof StructuralChange) || c instanceof ContentChange) return;
-        myLastChangeId = c.getId();
-      }
-    }, myProject);
+    super(project);
   }
 }

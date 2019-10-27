@@ -16,7 +16,6 @@
 package com.intellij.openapi.updateSettings.impl;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.InstalledPluginsTableModel;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.RepositoryHelper;
@@ -24,7 +23,7 @@ import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.ui.Messages;
@@ -34,20 +33,17 @@ import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.io.HttpRequests;
 import com.intellij.util.io.ZipUtil;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
 import consulo.util.io2.PathUtil;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -59,12 +55,12 @@ public class PluginDownloader {
   private static final Logger LOG = Logger.getInstance(PluginDownloader.class);
 
   @Nonnull
-  public static PluginDownloader createDownloader(@Nonnull IdeaPluginDescriptor descriptor, boolean viaUpdate) {
+  public static PluginDownloader createDownloader(@Nonnull PluginDescriptor descriptor, boolean viaUpdate) {
     return createDownloader(descriptor, null, viaUpdate);
   }
 
   @Nonnull
-  public static PluginDownloader createDownloader(@Nonnull IdeaPluginDescriptor descriptor, @Nullable String platformVersion, boolean viaUpdate) {
+  public static PluginDownloader createDownloader(@Nonnull PluginDescriptor descriptor, @Nullable String platformVersion, boolean viaUpdate) {
     String url = RepositoryHelper.buildUrlForDownload(UpdateSettings.getInstance().getChannel(), descriptor.getPluginId().toString(), platformVersion, false, viaUpdate);
 
     return new PluginDownloader(descriptor, url);
@@ -77,11 +73,11 @@ public class PluginDownloader {
   private File myOldFile;
   private String myDescription;
 
-  private final IdeaPluginDescriptor myDescriptor;
+  private final PluginDescriptor myDescriptor;
 
   private boolean myIsPlatform;
 
-  public PluginDownloader(@Nonnull IdeaPluginDescriptor pluginDescriptor, @Nonnull String pluginUrl) {
+  public PluginDownloader(@Nonnull PluginDescriptor pluginDescriptor, @Nonnull String pluginUrl) {
     myPluginId = pluginDescriptor.getPluginId();
     myDescriptor = pluginDescriptor;
     myPluginUrl = pluginUrl;
@@ -89,7 +85,7 @@ public class PluginDownloader {
   }
 
   public boolean prepareToInstall(ProgressIndicator pi) throws IOException {
-    IdeaPluginDescriptor descriptor = null;
+    PluginDescriptor descriptor = null;
     if (!Boolean.getBoolean(StartupActionScriptManager.STARTUP_WIZARD_MODE) && PluginManager.isPluginInstalled(myPluginId)) {
       //store old plugins file
       descriptor = PluginManager.getPlugin(myPluginId);
@@ -259,7 +255,7 @@ public class PluginDownloader {
     return myDescription;
   }
 
-  public IdeaPluginDescriptor getDescriptor() {
+  public PluginDescriptor getDescriptor() {
     return myDescriptor;
   }
 }

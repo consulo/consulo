@@ -1,28 +1,17 @@
-/*
- * Copyright 2000-2017 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.intellij.ide.projectView.impl;
 
 import com.intellij.ide.DataManager;
+import com.intellij.ide.IdeBundle;
 import com.intellij.ide.PsiCopyPasteManager;
 import com.intellij.ide.SelectInTarget;
 import com.intellij.ide.dnd.*;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.ide.projectView.BaseProjectTreeBuilder;
 import com.intellij.ide.projectView.ProjectView;
+import com.intellij.ide.projectView.ProjectViewNode;
+import com.intellij.ide.projectView.RootsProvider;
 import com.intellij.ide.projectView.impl.nodes.AbstractModuleNode;
 import com.intellij.ide.projectView.impl.nodes.AbstractProjectNode;
 import com.intellij.ide.projectView.impl.nodes.ModuleGroupNode;
@@ -51,16 +40,23 @@ import com.intellij.problems.ProblemListener;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.refactoring.move.MoveHandler;
+import com.intellij.ui.tree.TreePathUtil;
+import com.intellij.ui.tree.TreeVisitor;
+import com.intellij.ui.tree.project.ProjectFileNode;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtils;
-import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.HashMap;
+import com.intellij.util.containers.JBIterable;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.annotations.DeprecationInfo;
 import consulo.ide.projectView.impl.ProjectViewPaneOptionProvider;
+import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.TestOnly;
+import org.jetbrains.concurrency.Promise;
+import org.jetbrains.concurrency.Promises;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -73,27 +69,28 @@ import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Predicate;
 
 public abstract class AbstractProjectViewPane extends UserDataHolderBase implements DataProvider, Disposable, BusyObject {
+  private static final Logger LOG = Logger.getInstance(AbstractProjectViewPane.class);
   public static final ExtensionPointName<AbstractProjectViewPane> EP_NAME = ExtensionPointName.create("com.intellij.projectViewPane");
 
   @Nonnull
   protected final Project myProject;
-  private Runnable myTreeChangeListener;
   protected DnDAwareTree myTree;
   protected AbstractTreeStructure myTreeStructure;
   private AbstractTreeBuilder myTreeBuilder;
   // subId->Tree state; key may be null
   private final Map<String, TreeState> myReadTreeState = new HashMap<>();
+  private final AtomicBoolean myTreeStateRestored = new AtomicBoolean();
   private String mySubId;
   @NonNls
-  private static final String ELEMENT_SUBPANE = "subPane";
+  private static final String ELEMENT_SUB_PANE = "subPane";
   @NonNls
-  private static final String ATTRIBUTE_SUBID = "subId";
+  private static final String ATTRIBUTE_SUB_ID = "subId";
 
   private DnDTarget myDropTarget;
   private DnDSource myDragSource;
@@ -125,22 +122,15 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         queueUpdateByProblem();
       }
     };
-    project.getMessageBus().connect().subscribe(ProblemListener.TOPIC, problemListener);
+    project.getMessageBus().connect(this).subscribe(ProblemListener.TOPIC, problemListener);
     Disposer.register(project, this);
   }
 
+  @Deprecated
   protected final void fireTreeChangeListener() {
-    if (myTreeChangeListener != null) myTreeChangeListener.run();
   }
 
-  public final void setTreeChangeListener(@Nonnull Runnable listener) {
-    myTreeChangeListener = listener;
-  }
-
-  public final void removeTreeChangeListener() {
-    myTreeChangeListener = null;
-  }
-
+  @Nonnull
   public abstract String getTitle();
 
   @Nonnull
@@ -158,6 +148,10 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     if (Comparing.strEqual(mySubId, subId)) return;
     saveExpandedPaths();
     mySubId = subId;
+    onSubIdChange();
+  }
+
+  protected void onSubIdChange() {
   }
 
   public boolean isInitiallyVisible() {
@@ -166,6 +160,11 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
 
   public boolean supportsManualOrder() {
     return false;
+  }
+
+  @Nonnull
+  protected String getManualOrderOptionText() {
+    return IdeBundle.message("action.manual.order");
   }
 
   /**
@@ -182,6 +181,12 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     throw new IllegalStateException("should not call");
   }
 
+  @Nonnull
+  public consulo.ui.image.Image getPresentableSubIdIcon(@Nonnull String subId) {
+    return getIcon();
+  }
+
+  @Nonnull
   public abstract JComponent createComponent();
 
   public JComponent getComponentToFocus() {
@@ -190,18 +195,17 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
 
   public void expand(@Nullable final Object[] path, final boolean requestFocus) {
     if (getTreeBuilder() == null || path == null) return;
-    getTreeBuilder().buildNodeForPath(path);
+    AbstractTreeUi ui = getTreeBuilder().getUi();
+    if (ui != null) ui.buildNodeForPath(path);
 
-    DefaultMutableTreeNode node = getTreeBuilder().getNodeForPath(path);
+    DefaultMutableTreeNode node = ui == null ? null : ui.getNodeForPath(path);
     if (node == null) {
       return;
     }
     TreePath treePath = new TreePath(node.getPath());
     myTree.expandPath(treePath);
     if (requestFocus) {
-      IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
-        IdeFocusManager.getGlobalInstance().requestFocus(myTree, true);
-      });
+      IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(myTree, true));
     }
     TreeUtil.selectPath(myTree, treePath);
   }
@@ -227,21 +231,36 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
   @Nonnull
   public abstract ActionCallback updateFromRoot(boolean restoreExpandedPaths);
 
+  public void updateFrom(Object element, boolean forceResort, boolean updateStructure) {
+    AbstractTreeBuilder builder = getTreeBuilder();
+    if (builder != null) {
+      builder.queueUpdateFrom(element, forceResort, updateStructure);
+    }
+    else if (element instanceof PsiElement) {
+      AsyncProjectViewSupport support = getAsyncSupport();
+      if (support != null) support.updateByElement((PsiElement)element, updateStructure);
+    }
+  }
+
   public abstract void select(Object element, VirtualFile file, boolean requestFocus);
 
-  public void selectModule(final Module module, final boolean requestFocus) {
+  public void selectModule(@Nonnull Module module, final boolean requestFocus) {
     doSelectModuleOrGroup(module, requestFocus);
   }
 
-  private void doSelectModuleOrGroup(final Object toSelect, final boolean requestFocus) {
+  private void doSelectModuleOrGroup(@Nonnull Object toSelect, final boolean requestFocus) {
     ToolWindowManager windowManager = ToolWindowManager.getInstance(myProject);
     final Runnable runnable = () -> {
-      ProjectView projectView = ProjectView.getInstance(myProject);
       if (requestFocus) {
-        projectView.changeView(getId(), getSubId());
+        ProjectView projectView = ProjectView.getInstance(myProject);
+        if (projectView != null) {
+          projectView.changeView(getId(), getSubId());
+        }
       }
-      ((BaseProjectTreeBuilder)getTreeBuilder())
-              .selectInWidth(toSelect, requestFocus, node -> node instanceof AbstractModuleNode || node instanceof ModuleGroupNode || node instanceof AbstractProjectNode);
+      BaseProjectTreeBuilder builder = (BaseProjectTreeBuilder)getTreeBuilder();
+      if (builder != null) {
+        builder.selectInWidth(toSelect, requestFocus, node -> node instanceof AbstractModuleNode || node instanceof ModuleGroupNode || node instanceof AbstractProjectNode);
+      }
     };
     if (requestFocus) {
       windowManager.getToolWindow(ToolWindowId.PROJECT_VIEW).activate(runnable);
@@ -251,7 +270,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     }
   }
 
-  public void selectModuleGroup(ModuleGroup moduleGroup, boolean requestFocus) {
+  public void selectModuleGroup(@Nonnull ModuleGroup moduleGroup, boolean requestFocus) {
     doSelectModuleOrGroup(moduleGroup, requestFocus);
   }
 
@@ -259,7 +278,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     return myTree == null ? null : myTree.getSelectionPaths();
   }
 
-  public void addToolbarActions(DefaultActionGroup actionGroup) {
+  public void addToolbarActions(@Nonnull DefaultActionGroup actionGroup) {
   }
 
   public void addToolbarActionsImpl(DefaultActionGroup actionGroup) {
@@ -270,18 +289,14 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
   }
 
   @Nonnull
-  protected <T extends NodeDescriptor> List<T> getSelectedNodes(final Class<T> nodeClass) {
+  protected <T extends NodeDescriptor> List<T> getSelectedNodes(@Nonnull Class<T> nodeClass) {
     TreePath[] paths = getSelectionPaths();
     if (paths == null) return Collections.emptyList();
     final ArrayList<T> result = new ArrayList<>();
     for (TreePath path : paths) {
-      Object lastPathComponent = path.getLastPathComponent();
-      if (lastPathComponent instanceof DefaultMutableTreeNode) {
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode)lastPathComponent;
-        Object userObject = node.getUserObject();
-        if (userObject != null && ReflectionUtil.isAssignable(nodeClass, userObject.getClass())) {
-          result.add((T)userObject);
-        }
+      T userObject = TreeUtil.getLastUserObject(nodeClass, path);
+      if (userObject != null) {
+        result.add(userObject);
       }
     }
     return result;
@@ -289,32 +304,25 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
 
   @Override
   public Object getData(@Nonnull Key<?> dataId) {
+    Object data = myTreeStructure instanceof AbstractTreeStructureBase ? ((AbstractTreeStructureBase)myTreeStructure).getDataFromProviders(getSelectedNodes(AbstractTreeNode.class), dataId) : null;
+    if (data != null) {
+      return data;
+    }
     if (CommonDataKeys.NAVIGATABLE_ARRAY == dataId) {
       TreePath[] paths = getSelectionPaths();
       if (paths == null) return null;
       final ArrayList<Navigatable> navigatables = new ArrayList<>();
       for (TreePath path : paths) {
-        Object lastPathComponent = path.getLastPathComponent();
-        if (lastPathComponent instanceof DefaultMutableTreeNode) {
-          DefaultMutableTreeNode node = (DefaultMutableTreeNode)lastPathComponent;
-          Object userObject = node.getUserObject();
-          if (userObject instanceof Navigatable) {
-            navigatables.add((Navigatable)userObject);
-          }
-          else if (node instanceof Navigatable) {
-            navigatables.add((Navigatable)node);
-          }
+        Object node = path.getLastPathComponent();
+        Object userObject = TreeUtil.getUserObject(node);
+        if (userObject instanceof Navigatable) {
+          navigatables.add((Navigatable)userObject);
+        }
+        else if (node instanceof Navigatable) {
+          navigatables.add((Navigatable)node);
         }
       }
-      if (navigatables.isEmpty()) {
-        return null;
-      }
-      else {
-        return navigatables.toArray(new Navigatable[navigatables.size()]);
-      }
-    }
-    if (myTreeStructure instanceof AbstractTreeStructureBase) {
-      return ((AbstractTreeStructureBase)myTreeStructure).getDataFromProviders(getSelectedNodes(AbstractTreeNode.class), dataId);
+      return navigatables.isEmpty() ? null : navigatables.toArray(new Navigatable[0]);
     }
     return null;
   }
@@ -322,22 +330,22 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
   // used for sorting tabs in the tabbed pane
   public abstract int getWeight();
 
+  @Nonnull
   public abstract SelectInTarget createSelectInTarget();
 
   public final TreePath getSelectedPath() {
-    return TreeUtil.getSelectedPathIfOne(myTree);
+    return myTree == null ? null : TreeUtil.getSelectedPathIfOne(myTree);
   }
 
   public final NodeDescriptor getSelectedDescriptor() {
-    final DefaultMutableTreeNode node = getSelectedNode();
-    if (node == null) return null;
-    Object userObject = node.getUserObject();
-    if (userObject instanceof NodeDescriptor) {
-      return (NodeDescriptor)userObject;
-    }
-    return null;
+    return TreeUtil.getLastUserObject(NodeDescriptor.class, getSelectedPath());
   }
 
+  /**
+   * @see TreeUtil#getUserObject(Object)
+   * @deprecated AbstractProjectViewPane#getSelectedPath
+   */
+  @Deprecated
   public final DefaultMutableTreeNode getSelectedNode() {
     TreePath path = getSelectedPath();
     return path == null ? null : ObjectUtils.tryCast(path.getLastPathComponent(), DefaultMutableTreeNode.class);
@@ -350,25 +358,32 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
 
   @Nonnull
   public final PsiElement[] getSelectedPSIElements() {
-    List<PsiElement> psiElements = new ArrayList<>();
-    for (Object element : getSelectedElements()) {
-      final PsiElement psiElement = getPSIElement(element);
-      if (psiElement != null) {
-        psiElements.add(psiElement);
-      }
+    TreePath[] paths = getSelectionPaths();
+    if (paths == null) return PsiElement.EMPTY_ARRAY;
+    List<PsiElement> result = new ArrayList<>();
+    for (TreePath path : paths) {
+      result.addAll(getElementsFromNode(path.getLastPathComponent()));
     }
-    return PsiUtilCore.toPsiElementArray(psiElements);
+    return PsiUtilCore.toPsiElementArray(result);
   }
 
+  @Nonnull
+  public List<PsiElement> getElementsFromNode(@Nullable Object node) {
+    Object value = getValueFromNode(node);
+    JBIterable<?> it = value instanceof PsiElement || value instanceof VirtualFile
+                       ? JBIterable.of(value)
+                       : value instanceof Object[] ? JBIterable.of((Object[])value) : value instanceof Iterable ? JBIterable.from((Iterable<?>)value) : JBIterable.of(TreeUtil.getUserObject(node));
+    return it.flatten(o -> o instanceof RootsProvider ? ((RootsProvider)o).getRoots() : Collections.singleton(o))
+            .map(o -> o instanceof VirtualFile ? PsiUtilCore.findFileSystemItem(myProject, (VirtualFile)o) : o).filter(PsiElement.class).filter(PsiElement::isValid).toList();
+  }
+
+  /**
+   * @deprecated use {@link AbstractProjectViewPane#getElementsFromNode(Object)}
+   **/
+  @Deprecated
   @Nullable
-  protected PsiElement getPSIElement(@Nullable final Object element) {
-    if (element instanceof PsiElement) {
-      PsiElement psiElement = (PsiElement)element;
-      if (psiElement.isValid()) {
-        return psiElement;
-      }
-    }
-    return null;
+  public PsiElement getPSIElementFromNode(@Nullable TreeNode node) {
+    return ContainerUtil.getFirstItem(getElementsFromNode(node));
   }
 
   @Nullable
@@ -387,7 +402,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     ArrayList<Object> list = new ArrayList<>(paths.length);
     for (TreePath path : paths) {
       Object lastPathComponent = path.getLastPathComponent();
-      Object element = getElementFromTreeNode(lastPathComponent);
+      Object element = getValueFromNode(lastPathComponent);
       if (element instanceof Object[]) {
         Collections.addAll(list, (Object[])element);
       }
@@ -399,34 +414,21 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
   }
 
   @Nullable
-  public Object getElementFromTreeNode(@Nullable final Object treeNode) {
-    if (treeNode instanceof DefaultMutableTreeNode) {
-      DefaultMutableTreeNode node = (DefaultMutableTreeNode)treeNode;
-      return exhumeElementFromNode(node);
-    }
-    return null;
+  public Object getValueFromNode(@Nullable Object node) {
+    return extractValueFromNode(node);
   }
 
-  private TreeNode[] getSelectedTreeNodes() {
-    TreePath[] paths = getSelectionPaths();
-    if (paths == null) return null;
-    final List<TreeNode> result = new ArrayList<>();
-    for (TreePath path : paths) {
-      Object lastPathComponent = path.getLastPathComponent();
-      if (lastPathComponent instanceof DefaultMutableTreeNode) {
-        result.add((TreeNode)lastPathComponent);
-      }
-    }
-    return result.toArray(new TreeNode[result.size()]);
+  /**
+   * @deprecated use {@link AbstractProjectViewPane#getValueFromNode(Object)}
+   **/
+  @Deprecated
+  protected Object exhumeElementFromNode(DefaultMutableTreeNode node) {
+    return getValueFromNode(node);
   }
 
-
-  protected Object exhumeElementFromNode(final DefaultMutableTreeNode node) {
-    return extractUserObject(node);
-  }
-
-  public static Object extractUserObject(DefaultMutableTreeNode node) {
-    Object userObject = node.getUserObject();
+  @Nullable
+  public static Object extractValueFromNode(@Nullable Object node) {
+    Object userObject = TreeUtil.getUserObject(node);
     Object element = null;
     if (userObject instanceof AbstractTreeNode) {
       AbstractTreeNode descriptor = (AbstractTreeNode)userObject;
@@ -449,17 +451,21 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     return myTreeBuilder;
   }
 
-  public void readExternal(Element element) throws InvalidDataException {
-    List<Element> subPanes = element.getChildren(ELEMENT_SUBPANE);
+  public AbstractTreeStructure getTreeStructure() {
+    return myTreeStructure;
+  }
+
+  public void readExternal(@Nonnull Element element) {
+    List<Element> subPanes = element.getChildren(ELEMENT_SUB_PANE);
     for (Element subPane : subPanes) {
-      String subId = subPane.getAttributeValue(ATTRIBUTE_SUBID);
+      String subId = subPane.getAttributeValue(ATTRIBUTE_SUB_ID);
       TreeState treeState = TreeState.createFrom(subPane);
       if (!treeState.isEmpty()) {
         myReadTreeState.put(subId, treeState);
       }
     }
 
-    for (ProjectViewPaneOptionProvider provider : ProjectViewPaneOptionProvider.EX_NAME.getExtensions()) {
+    for (ProjectViewPaneOptionProvider provider : ProjectViewPaneOptionProvider.EX_NAME.getExtensionList()) {
       KeyWithDefaultValue key = provider.getKey();
 
       String valueOfKey = JDOMExternalizerUtil.readField(element, key.toString());
@@ -469,19 +475,20 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     }
   }
 
-  public void writeExternal(Element element) throws WriteExternalException {
+  public void writeExternal(Element element) {
     saveExpandedPaths();
-    for (String subId : myReadTreeState.keySet()) {
-      TreeState treeState = myReadTreeState.get(subId);
-      Element subPane = new Element(ELEMENT_SUBPANE);
+    for (Map.Entry<String, TreeState> entry : myReadTreeState.entrySet()) {
+      String subId = entry.getKey();
+      TreeState treeState = entry.getValue();
+      Element subPane = new Element(ELEMENT_SUB_PANE);
       if (subId != null) {
-        subPane.setAttribute(ATTRIBUTE_SUBID, subId);
+        subPane.setAttribute(ATTRIBUTE_SUB_ID, subId);
       }
       treeState.writeExternal(subPane);
       element.addContent(subPane);
     }
 
-    for (ProjectViewPaneOptionProvider provider : ProjectViewPaneOptionProvider.EX_NAME.getExtensions()) {
+    for (ProjectViewPaneOptionProvider provider : ProjectViewPaneOptionProvider.EX_NAME.getExtensionList()) {
       KeyWithDefaultValue key = provider.getKey();
       Object value = getUserData(key);
       //noinspection unchecked
@@ -503,28 +510,55 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
   }
 
   protected void saveExpandedPaths() {
+    myTreeStateRestored.set(false);
     if (myTree != null) {
       TreeState treeState = TreeState.createOn(myTree);
       if (!treeState.isEmpty()) {
         myReadTreeState.put(getSubId(), treeState);
       }
+      else {
+        myReadTreeState.remove(getSubId());
+      }
     }
   }
 
   public final void restoreExpandedPaths() {
+    if (myTree == null || myTreeStateRestored.getAndSet(true)) return;
     TreeState treeState = myReadTreeState.get(getSubId());
     if (treeState != null && !treeState.isEmpty()) {
       treeState.applyTo(myTree);
     }
+    else if (myTree.isSelectionEmpty()) {
+      TreeUtil.promiseSelectFirst(myTree);
+    }
+  }
+
+  @Deprecated
+  @DeprecationInfo("Don't use this method. Use project from AnEvent")
+  public Project getProject() {
+    return myProject;
+  }
+
+  @Nonnull
+  protected Comparator<NodeDescriptor> createComparator() {
+    return new GroupByTypeComparator(ProjectView.getInstance(myProject), getId());
   }
 
   public void installComparator() {
     installComparator(getTreeBuilder());
   }
 
-  public void installComparator(AbstractTreeBuilder treeBuilder) {
-    final ProjectView projectView = ProjectView.getInstance(myProject);
-    treeBuilder.setNodeDescriptorComparator(new GroupByTypeComparator(projectView, getId()));
+  void installComparator(AbstractTreeBuilder treeBuilder) {
+    installComparator(treeBuilder, createComparator());
+  }
+
+  @TestOnly
+  public void installComparator(@Nonnull Comparator<? super NodeDescriptor> comparator) {
+    installComparator(getTreeBuilder(), comparator);
+  }
+
+  protected void installComparator(AbstractTreeBuilder builder, @Nonnull Comparator<? super NodeDescriptor> comparator) {
+    if (builder != null) builder.setNodeDescriptorComparator(comparator);
   }
 
   public JTree getTree() {
@@ -551,7 +585,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
       }
     }
     if (!directories.isEmpty()) {
-      return directories.toArray(new PsiDirectory[directories.size()]);
+      return directories.toArray(PsiDirectory.EMPTY_ARRAY);
     }
 
     final PsiElement[] elements = getSelectedPSIElements();
@@ -583,17 +617,20 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
       }
     }
     else {
-      final DefaultMutableTreeNode selectedNode = getSelectedNode();
-      if (selectedNode != null) {
-        return getSelectedDirectoriesInAmbiguousCase(selectedNode);
+      TreePath path = getSelectedPath();
+      if (path != null) {
+        Object component = path.getLastPathComponent();
+        if (component instanceof DefaultMutableTreeNode) {
+          return getSelectedDirectoriesInAmbiguousCase(((DefaultMutableTreeNode)component).getUserObject());
+        }
+        return getSelectedDirectoriesInAmbiguousCase(component);
       }
     }
     return PsiDirectory.EMPTY_ARRAY;
   }
 
   @Nonnull
-  protected PsiDirectory[] getSelectedDirectoriesInAmbiguousCase(@Nonnull final DefaultMutableTreeNode node) {
-    final Object userObject = node.getUserObject();
+  protected PsiDirectory[] getSelectedDirectoriesInAmbiguousCase(Object userObject) {
     if (userObject instanceof AbstractModuleNode) {
       final Module module = ((AbstractModuleNode)userObject).getValue();
       if (module != null) {
@@ -607,7 +644,16 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
             dirs.add(directory);
           }
         }
-        return dirs.toArray(new PsiDirectory[dirs.size()]);
+        return dirs.toArray(PsiDirectory.EMPTY_ARRAY);
+      }
+    }
+    else if (userObject instanceof ProjectViewNode) {
+      VirtualFile file = ((ProjectViewNode)userObject).getVirtualFile();
+      if (file != null && file.isValid() && file.isDirectory()) {
+        PsiDirectory directory = PsiManager.getInstance(myProject).findDirectory(file);
+        if (directory != null) {
+          return new PsiDirectory[]{directory};
+        }
       }
     }
     return PsiDirectory.EMPTY_ARRAY;
@@ -616,7 +662,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
   // Drag'n'Drop stuff
 
   @Nullable
-  public static PsiElement[] getTransferedPsiElements(Transferable transferable) {
+  public static PsiElement[] getTransferedPsiElements(@Nonnull Transferable transferable) {
     try {
       final Object transferData = transferable.getTransferData(DnDEventImpl.ourDataFlavor);
       if (transferData instanceof TransferableWrapper) {
@@ -630,7 +676,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
   }
 
   @Nullable
-  public static TreeNode[] getTransferedTreeNodes(Transferable transferable) {
+  public static TreeNode[] getTransferedTreeNodes(@Nonnull Transferable transferable) {
     try {
       final Object transferData = transferable.getTransferData(DnDEventImpl.ourDataFlavor);
       if (transferData instanceof TransferableWrapper) {
@@ -645,17 +691,19 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
 
   protected void enableDnD() {
     if (!ApplicationManager.getApplication().isHeadlessEnvironment()) {
-      myDropTarget = new ProjectViewDropTarget(myTree, new Retriever() {
+      myDropTarget = new ProjectViewDropTarget(myTree, myProject) {
+        @Nullable
         @Override
-        public PsiElement getPsiElement(@Nullable TreeNode node) {
-          return getPSIElement(getElementFromTreeNode(node));
+        protected PsiElement getPsiElement(@Nonnull TreePath path) {
+          return ContainerUtil.getFirstItem(getElementsFromNode(path.getLastPathComponent()));
         }
 
+        @Nullable
         @Override
-        public Module getModule(TreeNode treeNode) {
-          return getNodeModule(getElementFromTreeNode(treeNode));
+        protected Module getModule(@Nonnull PsiElement element) {
+          return getNodeModule(element);
         }
-      }, myProject) {
+
         @Override
         public void cleanUpOnLeave() {
           beforeDnDLeave();
@@ -711,7 +759,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     @Override
     public DnDDragStartBean startDragging(DnDAction action, Point dragOrigin) {
       final PsiElement[] psiElements = getSelectedPSIElements();
-      final TreeNode[] nodes = getSelectedTreeNodes();
+      TreePath[] paths = getSelectionPaths();
       return new DnDDragStartBean(new TransferableWrapper() {
 
         @Override
@@ -719,9 +767,15 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
           return PsiCopyPasteManager.asFileList(psiElements);
         }
 
+        @Nullable
+        @Override
+        public TreePath[] getTreePaths() {
+          return paths;
+        }
+
         @Override
         public TreeNode[] getTreeNodes() {
-          return nodes;
+          return TreePathUtil.toTreeNodes(getTreePaths());
         }
 
         @Override
@@ -731,8 +785,9 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
       });
     }
 
+    @Nullable
     @Override
-    public Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin) {
+    public Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin, @Nonnull DnDDragStartBean bean) {
       final TreePath[] paths = getSelectionPaths();
       if (paths == null) return null;
 
@@ -763,7 +818,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     }
   }
 
-  private static boolean canDragElements(Object[] elements, DataContext dataContext, int dragAction) {
+  private static boolean canDragElements(@Nonnull Object[] elements, @Nonnull DataContext dataContext, int dragAction) {
     for (Object element : elements) {
       if (element instanceof Module) {
         return true;
@@ -773,14 +828,86 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
   }
 
   @Nonnull
-  public Project getProject() {
-    return myProject;
+  @Override
+  public AsyncResult<Void> getReady(@Nonnull Object requestor) {
+    if (myTreeBuilder == null) return AsyncResult.resolved();
+    if (myTreeBuilder.isDisposed()) return AsyncResult.rejected();
+    ActionCallback ready = myTreeBuilder.getUi().getReady(requestor);
+    AsyncResult<Void> result = new AsyncResult<>();
+    ready.doWhenDone(() -> result.setDone());
+    ready.doWhenRejected((er) -> result.reject(er));
+    return result;
+  }
+
+  @TestOnly
+  @Deprecated
+  @Nonnull
+  public Promise<TreePath> promisePathToElement(@Nonnull Object element) {
+    AbstractTreeBuilder builder = getTreeBuilder();
+    if (builder != null) {
+      DefaultMutableTreeNode node = builder.getNodeForElement(element);
+      if (node == null) return Promises.rejectedPromise();
+      return Promises.resolvedPromise(new TreePath(node.getPath()));
+    }
+    TreeVisitor visitor = createVisitor(element);
+    if (visitor == null || myTree == null) return Promises.rejectedPromise();
+    return TreeUtil.promiseVisit(myTree, visitor);
+  }
+
+  AsyncProjectViewSupport getAsyncSupport() {
+    return null;
   }
 
   @Nonnull
-  @Override
-  public AsyncResult<Void> getReady(@Nonnull Object requestor) {
-    if (myTreeBuilder == null || myTreeBuilder.isDisposed()) return AsyncResult.rejected();
-    return myTreeBuilder.getUi().getReady(requestor);
+  static List<TreeVisitor> createVisitors(@Nonnull Object... objects) {
+    List<TreeVisitor> list = new ArrayList<>();
+    for (Object object : objects) {
+      TreeVisitor visitor = createVisitor(object);
+      ContainerUtil.addIfNotNull(list, visitor);
+    }
+    return ContainerUtil.immutableList(list);
+  }
+
+  @Nullable
+  public static TreeVisitor createVisitor(@Nonnull Object object) {
+    if (object instanceof AbstractTreeNode) {
+      AbstractTreeNode node = (AbstractTreeNode)object;
+      object = node.getValue();
+    }
+    if (object instanceof ProjectFileNode) {
+      ProjectFileNode node = (ProjectFileNode)object;
+      object = node.getVirtualFile();
+    }
+    if (object instanceof VirtualFile) return createVisitor((VirtualFile)object);
+    if (object instanceof PsiElement) return createVisitor((PsiElement)object);
+    LOG.warn("unsupported object: " + object);
+    return null;
+  }
+
+  @Nonnull
+  public static TreeVisitor createVisitor(@Nonnull VirtualFile file) {
+    return createVisitor(null, file);
+  }
+
+  @Nullable
+  public static TreeVisitor createVisitor(@Nonnull PsiElement element) {
+    return createVisitor(element, null);
+  }
+
+  @Nullable
+  public static TreeVisitor createVisitor(@Nullable PsiElement element, @Nullable VirtualFile file) {
+    return createVisitor(element, file, null);
+  }
+
+  @Nullable
+  static TreeVisitor createVisitor(@Nullable PsiElement element, @Nullable VirtualFile file, @Nullable List<? super TreePath> collector) {
+    Predicate<? super TreePath> predicate = collector == null ? null : path -> {
+      collector.add(path);
+      return false;
+    };
+    if (element != null && element.isValid()) return new ProjectViewNodeVisitor(element, file, predicate);
+    if (file != null) return new ProjectViewFileVisitor(file, predicate);
+    LOG.warn(element != null ? "element invalidated: " + element : "cannot create visitor without element and/or file");
+    return null;
   }
 }

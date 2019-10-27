@@ -1,9 +1,10 @@
 package com.intellij.ide.browsers;
 
+import consulo.ui.image.Image;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import javax.swing.*;
+import javax.annotation.Nullable;
+import java.util.List;
 import java.util.UUID;
 
 public abstract class WebBrowser {
@@ -17,7 +18,7 @@ public abstract class WebBrowser {
   public abstract BrowserFamily getFamily();
 
   @Nonnull
-  public abstract Icon getIcon();
+  public abstract Image getIcon();
 
   @Nullable
   public abstract String getPath();
@@ -27,4 +28,8 @@ public abstract class WebBrowser {
 
   @Nullable
   public abstract BrowserSpecificSettings getSpecificSettings();
+
+  public void addOpenUrlParameter(@Nonnull List<? super String> command, @Nonnull String url) {
+    command.add(url);
+  }
 }

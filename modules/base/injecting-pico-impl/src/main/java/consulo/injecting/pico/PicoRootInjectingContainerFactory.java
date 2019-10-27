@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class PicoRootInjectingContainerFactory implements RootInjectingContainerFactory {
   private static final InjectingContainer ROOT = new InjectingContainer() {
-    @Nullable
+    @Nonnull
     @Override
     public <T> T getInstance(@Nonnull Class<T> clazz) {
       throw new UnsupportedOperationException();

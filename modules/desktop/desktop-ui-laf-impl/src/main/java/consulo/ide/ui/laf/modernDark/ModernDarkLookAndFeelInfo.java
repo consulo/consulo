@@ -16,16 +16,16 @@
 package consulo.ide.ui.laf.modernDark;
 
 import com.intellij.ide.IdeBundle;
+import consulo.desktop.ui.laf.LookAndFeelInfoWithClassLoader;
 import consulo.ide.ui.laf.LafWithColorScheme;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 02.03.14
  */
-public class ModernDarkLookAndFeelInfo extends UIManager.LookAndFeelInfo implements LafWithColorScheme {
+public class ModernDarkLookAndFeelInfo extends LookAndFeelInfoWithClassLoader implements LafWithColorScheme {
   public ModernDarkLookAndFeelInfo(){
     super(IdeBundle.message("modern.dark.intellij.look.and.feel"), ModernDarkLaf.class.getName());
   }

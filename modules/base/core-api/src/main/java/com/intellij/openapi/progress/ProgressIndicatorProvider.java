@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2019 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,17 +32,17 @@ public abstract class ProgressIndicatorProvider {
 
   @Nullable
   public static ProgressIndicator getGlobalProgressIndicator() {
-    return getInstance().getProgressIndicator();
+    ProgressManager instance = ProgressManager.ourInstance;
+    return instance == null ? null : instance.getProgressIndicator();
   }
 
+  /**
+   * @deprecated use {@link ProgressManager#executeNonCancelableSection(Runnable)} instead
+   */
   @Nonnull
-  @Deprecated // use ProgressManager.executeNonCancelableSection() instead
-  public abstract NonCancelableSection startNonCancelableSection();
-
-  @Nonnull
-  @Deprecated // use ProgressManager.executeNonCancelableSection() instead
+  @Deprecated
   public static NonCancelableSection startNonCancelableSectionIfSupported() {
-    return getInstance().startNonCancelableSection();
+    throw new UnsupportedOperationException();
   }
 
   public static void checkCanceled() throws ProcessCanceledException {

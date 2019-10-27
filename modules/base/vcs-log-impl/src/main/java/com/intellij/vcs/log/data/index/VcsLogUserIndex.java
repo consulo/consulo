@@ -16,7 +16,7 @@
 package com.intellij.vcs.log.data.index;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.DataIndexer;

@@ -16,7 +16,7 @@
 package com.intellij.util.ui;
 
 import com.intellij.openapi.diagnostic.LogUtil;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.ListWithSelection;
 
 import javax.swing.*;

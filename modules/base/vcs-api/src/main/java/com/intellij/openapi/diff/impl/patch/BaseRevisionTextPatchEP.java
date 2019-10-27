@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.diff.impl.patch;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.FilePath;
@@ -24,6 +23,8 @@ import com.intellij.openapi.vcs.actions.VcsContextFactory;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.CommitContext;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.io.File;

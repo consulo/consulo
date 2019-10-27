@@ -96,7 +96,7 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
   @Nullable
   @Override
   public JComponent createComponent() {
-    if (Platform.isUnifiedVariant()) {
+    if (Platform.current().isWebService()) {
       return null;
     }
 

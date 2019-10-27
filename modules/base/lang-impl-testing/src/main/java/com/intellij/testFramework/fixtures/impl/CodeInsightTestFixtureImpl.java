@@ -65,15 +65,16 @@ import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
-import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.ExtensionsArea;
-import com.intellij.openapi.fileEditor.*;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.fileEditor.FileEditor;
+import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
@@ -109,7 +110,6 @@ import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.ui.UIUtil;
 import consulo.codeInsight.TargetElementUtil;
 import consulo.codeInsight.TargetElementUtilEx;
-import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.ui.UIAccess;
 import gnu.trove.THashMap;
 import junit.framework.Assert;
@@ -1452,23 +1452,7 @@ public class CodeInsightTestFixtureImpl extends BaseFixture implements CodeInsig
 
   @Nonnull
   public static List<HighlightInfo> instantiateAndRun(@Nonnull PsiFile file, @Nonnull Editor editor, @Nonnull int[] toIgnore, boolean canChangeDocument) {
-    Project project = file.getProject();
-    ensureIndexesUpToDate(project);
-    DaemonCodeAnalyzerImpl codeAnalyzer = (DaemonCodeAnalyzerImpl)DaemonCodeAnalyzer.getInstance(project);
-    TextEditor textEditor = TextEditorProvider.getInstance().getTextEditor(editor);
-    ProcessCanceledException exception = null;
-    for (int i = 0; i < 100; i++) {
-      try {
-        List<HighlightInfo> infos = codeAnalyzer.runPasses(file, editor.getDocument(), textEditor, toIgnore, canChangeDocument, null);
-        infos.addAll(DaemonCodeAnalyzerEx.getInstanceEx(project).getFileLevelHighlights(project, file));
-        return infos;
-      }
-      catch (ProcessCanceledException e) {
-        exception = e;
-      }
-    }
-    // unable to highlight after 100 retries
-    throw exception;
+    return Collections.emptyList();
   }
 
   public static void ensureIndexesUpToDate(Project project) {

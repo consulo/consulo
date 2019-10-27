@@ -22,6 +22,11 @@
   </formats>
   <includeBaseDirectory>false</includeBaseDirectory>
 
+  <componentDescriptors>
+    <componentDescriptor>${project.basedir}/src/platform.base_mac.xml</componentDescriptor>
+    <componentDescriptor>${project.basedir}/src/platform.desktop_mac.xml</componentDescriptor>
+  </componentDescriptors>
+
   <fileSets>
     <fileSet>
       <directory>${project.basedir}/boot/mac/</directory>
@@ -45,36 +50,4 @@
       <outputDirectory>${file.separator}Consulo.app${file.separator}Contents${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}</outputDirectory>
     </fileSet>
   </fileSets>
-
-  <dependencySets>
-    <dependencySet>
-      <outputDirectory>${file.separator}Consulo.app${file.separator}Contents${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}lib</outputDirectory>
-      <unpack>false</unpack>
-      <scope>runtime</scope>
-      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-      <excludes>
-        <exclude>consulo:consulo-bundle</exclude>
-        <exclude>consulo:consulo-platform-base-plugin</exclude>
-        <exclude>consulo:consulo-platform-desktop-plugin</exclude>
-      </excludes>
-    </dependencySet>
-    <dependencySet>
-      <outputDirectory>${file.separator}Consulo.app${file.separator}Contents${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}plugins${file.separator}platform-independent${file.separator}lib</outputDirectory>
-      <unpack>false</unpack>
-      <scope>runtime</scope>
-      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-      <includes>
-        <include>consulo:consulo-platform-base-plugin</include>
-      </includes>
-    </dependencySet>
-    <dependencySet>
-      <outputDirectory>${file.separator}Consulo.app${file.separator}Contents${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}plugins${file.separator}platform-desktop${file.separator}lib</outputDirectory>
-      <unpack>false</unpack>
-      <scope>runtime</scope>
-      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-      <includes>
-        <include>consulo:consulo-platform-desktop-plugin</include>
-      </includes>
-    </dependencySet>
-  </dependencySets>
 </assembly>

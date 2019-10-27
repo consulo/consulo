@@ -15,8 +15,8 @@
  */
 package com.intellij.ide.dnd;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.StreamUtil;
+import consulo.logging.Logger;
 
 import javax.annotation.Nullable;
 import java.awt.datatransfer.DataFlavor;

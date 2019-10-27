@@ -20,6 +20,8 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -30,7 +32,6 @@ public abstract class CodeStyleAbstractConfigurable implements Configurable, Opt
   private final CodeStyleSettings mySettings;
   private final CodeStyleSettings myCloneSettings;
   private final String myDisplayName;
-  private CodeStyleSchemesModel myModel;
 
   public CodeStyleAbstractConfigurable(@Nonnull CodeStyleSettings settings, CodeStyleSettings cloneSettings,
                                        final String displayName) {
@@ -44,15 +45,16 @@ public abstract class CodeStyleAbstractConfigurable implements Configurable, Opt
     return myDisplayName;
   }
 
+  @RequiredUIAccess
   @Override
   public JComponent createComponent() {
     myPanel = createPanel(myCloneSettings);
-    myPanel.setModel(myModel);
     return myPanel.getPanel();
   }
 
   protected abstract CodeStyleAbstractPanel createPanel(final CodeStyleSettings settings);
 
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     if (myPanel != null) {
@@ -60,6 +62,7 @@ public abstract class CodeStyleAbstractConfigurable implements Configurable, Opt
     }
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     reset(mySettings);
@@ -75,11 +78,13 @@ public abstract class CodeStyleAbstractConfigurable implements Configurable, Opt
     }
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     return myPanel != null && myPanel.isModified(mySettings);
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     if (myPanel != null) {
@@ -92,11 +97,10 @@ public abstract class CodeStyleAbstractConfigurable implements Configurable, Opt
     return myPanel;
   }
 
-  public void setModel(final CodeStyleSchemesModel model) {
+  public void setModel(@Nonnull CodeStyleSchemesModel model) {
     if (myPanel != null) {
       myPanel.setModel(model);
     }
-    myModel = model;
   }
 
   public void onSomethingChanged() {

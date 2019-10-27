@@ -1,7 +1,6 @@
 package com.intellij.openapi.externalSystem.service.internal;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.model.task.*;
 import com.intellij.openapi.externalSystem.service.ExternalSystemFacadeManager;
@@ -11,6 +10,8 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemBundle;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ArrayUtil;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.util.concurrent.atomic.AtomicReference;

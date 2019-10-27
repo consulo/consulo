@@ -35,15 +35,6 @@ public interface FocusRequestor extends Disposable {
   @Nonnull
   AsyncResult<Void> requestFocus(@Nonnull consulo.ui.Component c, boolean forced);
 
-  /**
-   * Runs a request focus command, actual focus request is defined by the user in the command itself
-   *
-   * @param forced - if true - focus request is explicit, must be fulfilled, if false - can be dropped
-   * @return action callback that either notifies when the focus was obtained or focus request was droppped
-   */
-  @Nonnull
-  AsyncResult<Void> requestFocus(@Nonnull FocusCommand command, boolean forced);
-
   // TODO [VISTALL] AWT & Swing dependency
 
   // region AWT & Swing dependency

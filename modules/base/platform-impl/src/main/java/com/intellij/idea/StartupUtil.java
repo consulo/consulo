@@ -21,7 +21,6 @@ import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
@@ -31,13 +30,21 @@ import com.intellij.ui.AppUIUtil;
 import com.intellij.util.EnvironmentUtil;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.container.StartupError;
+import consulo.container.impl.ExitCodes;
+import consulo.logging.Logger;
+import consulo.logging.internal.LoggerFactory;
+import consulo.logging.internal.LoggerFactoryInitializer;
 import consulo.start.CommandLineArgs;
 import consulo.start.ImportantFolderLocker;
-import consulo.util.logging.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.management.ManagementFactory;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -61,56 +68,51 @@ public class StartupUtil {
 
   @Nonnull
   public static synchronized ImportantFolderLocker getLocker() {
-    if(ourFolderLocker == null) {
+    if (ourFolderLocker == null) {
       throw new IllegalArgumentException("Called #getLocker() before app start");
     }
     return ourFolderLocker;
   }
 
   public static void prepareAndStart(String[] args, BiFunction<String, String, ImportantFolderLocker> lockFactory, PairConsumer<Boolean, CommandLineArgs> appStarter) {
-    boolean newConfigFolder = false;
+    boolean newConfigFolder;
     CommandLineArgs commandLineArgs = CommandLineArgs.parse(args);
 
     if (commandLineArgs.isShowHelp()) {
       CommandLineArgs.printUsage();
-      System.exit(Main.USAGE_INFO);
+      System.exit(ExitCodes.USAGE_INFO);
     }
 
     if (commandLineArgs.isShowVersion()) {
       ApplicationInfoEx infoEx = ApplicationInfoImpl.getShadowInstance();
       System.out.println(infoEx.getFullApplicationName());
-      System.exit(Main.VERSION_INFO);
+      System.exit(ExitCodes.VERSION_INFO);
     }
 
-    if (!Main.isHeadless()) {
-      AppUIUtil.updateFrameClass();
-      newConfigFolder = !new File(PathManager.getConfigPath()).exists();
-    }
-
-    List<LoggerFactory> factories = ContainerUtil.newArrayList(ServiceLoader.load(LoggerFactory.class, StartupUtil.class.getClassLoader()));
-    ContainerUtil.weightSort(factories, LoggerFactory::getPriority);
-    LoggerFactory factory = factories.get(0);
-    Logger.setFactory(factory);
+    AppUIUtil.updateFrameClass();
+    newConfigFolder = !new File(PathManager.getConfigPath()).exists();
 
     ActivationResult result = lockSystemFolders(lockFactory, args);
     if (result == ActivationResult.ACTIVATED) {
       System.exit(0);
     }
     else if (result != ActivationResult.STARTED) {
-      System.exit(Main.INSTANCE_CHECK_FAILED);
+      System.exit(ExitCodes.INSTANCE_CHECK_FAILED);
     }
 
-    Logger log = Logger.getInstance(Main.class);
-    startLogging(log, factory);
+    Logger log = Logger.getInstance(StartupUtil.class);
+    logStartupInfo(log);
     loadSystemLibraries(log);
     fixProcessEnvironment(log);
 
-    if (!Main.isHeadless()) {
-      AppUIUtil.updateWindowIcon(JOptionPane.getRootFrame());
-      AppUIUtil.registerBundledFonts();
-    }
-
     appStarter.consume(newConfigFolder, commandLineArgs);
+  }
+
+  public static void initializeLogger() {
+    List<LoggerFactory> factories = ContainerUtil.newArrayList(ServiceLoader.load(LoggerFactory.class, StartupUtil.class.getClassLoader()));
+    ContainerUtil.weightSort(factories, LoggerFactory::getPriority);
+    LoggerFactory factory = factories.get(0);
+    LoggerFactoryInitializer.setFactory(factory);
   }
 
   private enum ActivationResult {
@@ -132,7 +134,7 @@ public class StartupUtil {
       status = ourFolderLocker.lock(args);
     }
     catch (Exception e) {
-      Main.showMessage("Cannot Lock System Folders", e);
+      showMessage("Cannot Lock System Folders", e);
       return ActivationResult.FAILED;
     }
 
@@ -151,18 +153,17 @@ public class StartupUtil {
       System.out.println("Already running");
       return ActivationResult.ACTIVATED;
     }
-    else if (Main.isHeadless() || status == ImportantFolderLocker.ActivateStatus.CANNOT_ACTIVATE) {
+    else if (status == ImportantFolderLocker.ActivateStatus.CANNOT_ACTIVATE) {
       String message = "Only one instance of " + ApplicationNamesInfo.getInstance().getFullProductName() + " can be run at a time.";
-      Main.showMessage("Too Many Instances", message, true);
+      showMessage("Too Many Instances", message, true, false);
     }
 
     return ActivationResult.FAILED;
   }
 
   private static void fixProcessEnvironment(Logger log) {
-    if (!Main.isCommandLine()) {
-      System.setProperty("__idea.mac.env.lock", "unlocked");
-    }
+    System.setProperty("__idea.mac.env.lock", "unlocked");
+
     boolean envReady = EnvironmentUtil.isEnvironmentReady();  // trigger environment loading
     if (!envReady) {
       log.info("initializing environment");
@@ -181,12 +182,8 @@ public class StartupUtil {
     if (System.getProperty("jna.nosys") == null) {
       System.setProperty("jna.nosys", "true");  // prefer bundled JNA dispatcher lib
     }
-    try {
-      JnaLoader.load(log);
-    }
-    catch (Throwable t) {
-      log.error("Unable to load JNA library (OS: " + SystemInfo.OS_NAME + " " + SystemInfo.OS_VERSION + ")", t);
-    }
+
+    JnaLoader.load(log);
 
     if (SystemInfo.isWin2kOrNewer) {
       IdeaWin32.isAvailable();  // logging is done there
@@ -198,7 +195,9 @@ public class StartupUtil {
     }
   }
 
-  private static void startLogging(final Logger log, LoggerFactory factory) {
+  private static void logStartupInfo(final Logger log) {
+    LoggerFactory factory = LoggerFactoryInitializer.getFactory();
+
     Runtime.getRuntime().addShutdownHook(new Thread("Shutdown hook - logging") {
       @Override
       public void run() {
@@ -220,6 +219,80 @@ public class StartupUtil {
     List<String> arguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
     if (arguments != null) {
       log.info("JVM Args: " + StringUtil.join(arguments, " "));
+    }
+  }
+
+  public static void showMessage(String title, Throwable t) {
+    StringWriter message = new StringWriter();
+    boolean graphError = false;
+    AWTError awtError = findGraphicsError(t);
+    if (awtError != null) {
+      message.append("Failed to initialize graphics environment\n\n");
+      graphError = true;
+      t = awtError;
+    }
+    else {
+      message.append("Internal error. Please post to ");
+      message.append("https://discuss.consulo.io");
+      message.append("\n\n");
+    }
+
+    t.printStackTrace(new PrintWriter(message));
+    showMessage(title, message.toString(), true, graphError);
+  }
+
+  private static AWTError findGraphicsError(Throwable t) {
+    while (t != null) {
+      if (t instanceof AWTError) {
+        return (AWTError)t;
+      }
+      t = t.getCause();
+    }
+    return null;
+  }
+
+  // Copy&Paste from desktop Main
+  public static void showMessage(String title, String message, boolean error, boolean graphError) {
+    if (StartupError.hasStartupError) {
+      return;
+    }
+
+    PrintStream stream = error ? System.err : System.out;
+    stream.println("\n" + title + ": " + message);
+
+    boolean headless = GraphicsEnvironment.isHeadless() || graphError;
+    if (!headless) {
+      try {
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+      }
+      catch (Throwable ignore) {
+      }
+
+      StartupError.hasStartupError = true;
+
+      try {
+        JTextPane textPane = new JTextPane();
+        textPane.setEditable(false);
+        textPane.setText(message.replaceAll("\t", "    "));
+        textPane.setBackground(UIManager.getColor("Panel.background"));
+        textPane.setCaretPosition(0);
+        JScrollPane scrollPane = new JScrollPane(textPane, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setBorder(null);
+
+        int maxHeight = Toolkit.getDefaultToolkit().getScreenSize().height / 2;
+        int maxWidth = Toolkit.getDefaultToolkit().getScreenSize().width / 2;
+        Dimension component = scrollPane.getPreferredSize();
+        if (component.height > maxHeight || component.width > maxWidth) {
+          scrollPane.setPreferredSize(new Dimension(Math.min(maxWidth, component.width), Math.min(maxHeight, component.height)));
+        }
+
+        int type = error ? JOptionPane.ERROR_MESSAGE : JOptionPane.WARNING_MESSAGE;
+        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), scrollPane, title, type);
+      }
+      catch (Throwable t) {
+        stream.println("\nAlso, an UI exception occurred on attempt to show above message:");
+        t.printStackTrace(stream);
+      }
     }
   }
 }

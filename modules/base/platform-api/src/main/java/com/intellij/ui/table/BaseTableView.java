@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.table;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.config.Storage;
 import com.intellij.util.ui.ListTableModel;
 import org.jetbrains.annotations.NonNls;

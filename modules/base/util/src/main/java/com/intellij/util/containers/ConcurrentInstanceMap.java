@@ -18,21 +18,27 @@ package com.intellij.util.containers;
 
 import javax.annotation.Nonnull;
 
+import java.util.Map;
+
 /**
  * @author peter
  */
-public class ConcurrentInstanceMap<T> extends ConcurrentFactoryMap<Class<? extends T>,T>{
-  @Override
+public class ConcurrentInstanceMap {
+  private ConcurrentInstanceMap() {
+  }
+
   @Nonnull
-  protected T create(final Class<? extends T> key) {
+  public static <T> Map<Class<? extends T>, T> create() {
+    return ConcurrentFactoryMap.createMap(ConcurrentInstanceMap::calculate);
+  }
+
+  @Nonnull
+  public static <T> T calculate(@Nonnull Class<? extends T> key) {
     try {
       return key.newInstance();
     }
-    catch (InstantiationException e) {
-      throw new RuntimeException(e);
-    }
-    catch (IllegalAccessException e) {
-      throw new RuntimeException(e);
+    catch (InstantiationException | IllegalAccessException e) {
+      throw new RuntimeException("Couldn't instantiate " + key, e);
     }
   }
 }

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.diff.impl.patch.apply;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.diff.impl.patch.ApplyPatchContext;
 import com.intellij.openapi.diff.impl.patch.FilePatch;
 import com.intellij.openapi.fileEditor.FileEditorManager;

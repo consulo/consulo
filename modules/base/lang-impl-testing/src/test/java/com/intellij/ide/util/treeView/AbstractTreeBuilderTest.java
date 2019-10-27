@@ -540,16 +540,13 @@ abstract class AbstractTreeBuilderTest extends BaseTreeTestCase<BaseTreeTestCase
             false);
 
       initRootNode();
-
     }
 
-
     @Override
-    protected void sortChildren(Comparator<TreeNode> nodeComparator, DefaultMutableTreeNode node, ArrayList<TreeNode> children) {
+    protected void sortChildren(Comparator<? super TreeNode> nodeComparator, DefaultMutableTreeNode node, List<? extends TreeNode> children) {
       super.sortChildren(nodeComparator, node, children);
       addEntry(node.toString());
     }
-
     @Override
     public boolean isToEnsureSelectionOnFocusGained() {
       return myEnsureSelection;

@@ -15,18 +15,20 @@
  */
 package com.intellij.openapi.project.impl;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.plugins.PluginListenerDescriptor;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.notification.*;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.components.*;
-import com.intellij.openapi.extensions.impl.ExtensionAreaId;
+import com.intellij.openapi.components.ComponentConfig;
+import com.intellij.openapi.components.ProjectComponent;
+import com.intellij.openapi.components.ServiceDescriptor;
+import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbAwareRunnable;
@@ -36,6 +38,7 @@ import com.intellij.openapi.project.ProjectManagerAdapter;
 import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.startup.StartupManager;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -44,11 +47,14 @@ import com.intellij.openapi.wm.impl.FrameTitleBuilder;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.util.TimedReference;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.io.storage.HeavyProcessLatch;
+import consulo.application.AccessRule;
 import consulo.components.impl.PlatformComponentManagerImpl;
 import consulo.components.impl.stores.*;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.injecting.InjectingContainerBuilder;
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -62,20 +68,20 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ProjectImpl extends PlatformComponentManagerImpl implements ProjectEx {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.project.impl.ProjectImpl");
+  private static final Logger LOG = Logger.getInstance(ProjectImpl.class);
   private static final ExtensionPointName<ServiceDescriptor> PROJECT_SERVICES = ExtensionPointName.create("com.intellij.projectService");
 
   public static final String NAME_FILE = ".name";
 
-  private ProjectManager myManager;
+  private final ProjectManager myManager;
+  @Nonnull
+  private final String myDirPath;
 
   private MyProjectManagerListener myProjectManagerListener;
 
   private final AtomicBoolean mySavingInProgress = new AtomicBoolean(false);
 
   public boolean myOptimiseTestLoadSpeed;
-  @NonNls
-  public static final String TEMPLATE_PROJECT_NAME = "Default (Template) Project";
 
   private String myName;
 
@@ -86,6 +92,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   protected ProjectImpl(@Nonnull ProjectManager manager, @Nonnull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName, boolean noUIThread) {
     super(ApplicationManager.getApplication(), "Project " + (projectName == null ? dirPath : projectName), ExtensionAreaId.PROJECT);
+    myDirPath = dirPath;
 
     putUserData(CREATION_TIME, System.nanoTime());
 
@@ -106,7 +113,12 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
     myManager = manager;
 
-    myName = isDefault() ? TEMPLATE_PROJECT_NAME : projectName == null ? getStateStore().getProjectName() : projectName;
+    myName = projectName;
+  }
+
+  @Nullable
+  public String getCreationTrace() {
+    return getUserData(CREATION_TRACE);
   }
 
   @Nullable
@@ -117,13 +129,21 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   @Nonnull
   @Override
-  protected ComponentConfig[] getComponentConfigs(IdeaPluginDescriptor ideaPluginDescriptor) {
+  protected List<ComponentConfig> getComponentConfigs(PluginDescriptor ideaPluginDescriptor) {
     return ideaPluginDescriptor.getProjectComponents();
+  }
+
+  @Nonnull
+  @Override
+  protected List<PluginListenerDescriptor> getPluginListenerDescriptors(PluginDescriptor pluginDescriptor) {
+    return pluginDescriptor.getProjectListeners();
   }
 
   @Override
   public void setProjectName(@Nonnull String projectName) {
-    if (!projectName.equals(myName)) {
+    String name = getName();
+
+    if (!projectName.equals(name)) {
       myName = projectName;
       StartupManager.getInstance(this).runWhenProjectIsInitialized(new DumbAwareRunnable() {
         @Override
@@ -204,13 +224,15 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   @Nonnull
   @Override
   public String getName() {
+    if(myName == null) {
+      myName = getStateStore().getProjectName();
+    }
     return myName;
   }
 
   @NonNls
   @Override
   public String getPresentableUrl() {
-    if (myName == null) return null;  // not yet initialized
     return getStateStore().getPresentableUrl();
   }
 
@@ -266,8 +288,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
       return;
     }
 
-    HeavyProcessLatch.INSTANCE.prioritizeUiActivity();
-
     try {
       if (!isDefault()) {
         String projectBasePath = getStateStore().getProjectBasePath();
@@ -296,8 +316,13 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
   }
 
+  @Nonnull
   @Override
-  public void saveAsync() {
+  public AsyncResult<Void> saveAsync(@Nonnull UIAccess uiAccess) {
+    return AccessRule.writeAsync(() -> saveAsyncImpl(uiAccess));
+  }
+
+  private void saveAsyncImpl(@Nonnull UIAccess uiAccess) {
     if (ApplicationManagerEx.getApplicationEx().isDoNotSave()) {
       // no need to save
       return;
@@ -306,6 +331,8 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     if (!mySavingInProgress.compareAndSet(false, true)) {
       return;
     }
+
+    //HeavyProcessLatch.INSTANCE.prioritizeUiActivity();
 
     try {
       if (!isDefault()) {
@@ -327,7 +354,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         }
       }
 
-      StoreUtil.saveAsync(getStateStore(), this);
+      StoreUtil.saveAsync(getStateStore(), uiAccess, this);
     }
     finally {
       mySavingInProgress.set(false);
@@ -349,8 +376,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
       myManager.removeProjectManagerListener(this, myProjectManagerListener);
     }
 
-    myManager = null;
-    myName = null;
     myProjectManagerListener = null;
 
     if (!application.isDisposed()) {
@@ -388,13 +413,13 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   private class MyProjectManagerListener extends ProjectManagerAdapter {
     @Override
-    public void projectOpened(Project project) {
+    public void projectOpened(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
       LOG.assertTrue(project == ProjectImpl.this);
       ProjectImpl.this.projectOpened();
     }
 
     @Override
-    public void projectClosed(Project project) {
+    public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
       LOG.assertTrue(project == ProjectImpl.this);
       ProjectImpl.this.projectClosed();
     }
@@ -452,10 +477,9 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   @Override
   public String toString() {
     return "Project" +
-           (isDisposed() ? " (Disposed" + (temporarilyDisposed ? " temporarily" : "") + ")" : isDefault() ? "" : " '" + getPresentableUrl() + "'") +
+           (isDisposed() ? " (Disposed" + (temporarilyDisposed ? " temporarily" : "") + ")" : isDefault() ? "" : " '" + myDirPath + "'") +
            (isDefault() ? " (Default)" : "") +
-           " " +
-           myName;
+           " " + myName;
   }
 
   public static void dropUnableToSaveProjectNotification(@Nonnull final Project project, Collection<File> readOnlyFiles) {

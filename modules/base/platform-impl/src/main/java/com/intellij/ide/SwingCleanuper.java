@@ -29,6 +29,7 @@ import com.intellij.openapi.wm.StatusBar;
 import com.intellij.util.Alarm;
 import com.intellij.util.BitUtil;
 import com.intellij.util.ReflectionUtil;
+import consulo.ui.UIAccess;
 import consulo.wm.util.IdeFrameUtil;
 import org.jetbrains.annotations.NonNls;
 
@@ -73,7 +74,7 @@ public final class SwingCleanuper {
       // memory leak we (if the project was closed and a new one was not opened yet) request focus to the status bar and after
       // the focus events have passed the queue, we put 'null' to the DefaultKeyboardFocusManager.realOppositeComponent field.
       @Override
-      public void projectClosed(final Project project) {
+      public void projectClosed(final Project project, UIAccess uiAccess) {
         myAlarm.cancelAllRequests();
         myAlarm.addRequest(() -> {
           // request focus into some focusable component inside IdeFrame

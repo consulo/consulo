@@ -19,15 +19,12 @@ import com.apple.eawt.Application;
 import com.apple.eawt.ApplicationAdapter;
 import com.apple.eawt.ApplicationEvent;
 import com.intellij.Patches;
+import com.intellij.ide.CommandLineProcessor;
 import com.intellij.ide.DataManager;
-import com.intellij.ide.actions.OpenFileAction;
-import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.TransactionGuard;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -38,6 +35,8 @@ import com.intellij.ui.mac.foundation.ID;
 import com.intellij.util.ThrowableRunnable;
 import com.sun.jna.Callback;
 import consulo.ide.actions.AboutManager;
+import consulo.logging.Logger;
+import consulo.start.CommandLineArgs;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Window;
 
@@ -101,16 +100,14 @@ public class MacOSDefaultMenuInitializer {
           final String filename = applicationEvent.getFilename();
           if (filename == null) return;
 
-          TransactionGuard.submitTransaction(ApplicationManager.getApplication(), () -> {
-            File file = new File(filename);
-            if (ProjectUtil.open(file.getAbsolutePath(), project, true) != null) {
-              ApplicationStarter.getInstance().setPerformProjectLoad(false);
-              return;
-            }
-            if (project != null && file.exists()) {
-              OpenFileAction.openFile(filename, project);
+          TransactionGuard.submitTransaction(com.intellij.openapi.application.Application.get(), () -> {
+            CommandLineArgs args = new CommandLineArgs();
+            args.setFile(filename);
+
+            CommandLineProcessor.processExternalCommandLine(args, null).doWhenDone(project1 -> {
               applicationEvent.setHandled(true);
-            }
+              ApplicationStarter.getInstance().setPerformProjectLoad(false);
+            });
           });
         }
       });
@@ -178,22 +175,21 @@ public class MacOSDefaultMenuInitializer {
       Method setOpenFileHandler = desktopClass.getDeclaredMethod("setOpenFileHandler", openFilesHandler);
       setOpenFileHandler.invoke(desktop, Proxy.newProxyInstance(classLoader, new Class[]{openFilesHandler}, new InvocationHandler() {
         @Override
-        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-          Object eventObject = args[0];
+        public Object invoke(Object proxy, Method method, Object[] methodArgs) throws Throwable {
+          Object eventObject = methodArgs[0];
           try {
             List files = (List)getFiles.invoke(eventObject);
             final Project project = getProject();
 
             if(files != null) {
               File file = (File)files.get(0);
-              TransactionGuard.submitTransaction(ApplicationManager.getApplication(), () -> {
-                if (ProjectUtil.open(file.getAbsolutePath(), project, true) != null) {
+              TransactionGuard.submitTransaction(com.intellij.openapi.application.Application.get(), () -> {
+                CommandLineArgs args = new CommandLineArgs();
+                args.setFile(file.getPath());
+
+                CommandLineProcessor.processExternalCommandLine(args, null).doWhenDone(project1 -> {
                   ApplicationStarter.getInstance().setPerformProjectLoad(false);
-                  return;
-                }
-                if (project != null && file.exists()) {
-                  OpenFileAction.openFile(file.getPath(), project);
-                }
+                });
               });
             }
           }

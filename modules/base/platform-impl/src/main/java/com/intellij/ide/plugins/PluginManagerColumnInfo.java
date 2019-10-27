@@ -23,9 +23,10 @@ import com.intellij.ui.LightColors;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.UIUtil;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.ide.plugins.InstalledPluginsState;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
@@ -39,7 +40,7 @@ import java.util.Comparator;
  * Time: 2:55:50 PM
  * To change this template use Options | File Templates.
  */
-public class PluginManagerColumnInfo extends ColumnInfo<IdeaPluginDescriptor, String> {
+public class PluginManagerColumnInfo extends ColumnInfo<PluginDescriptor, String> {
   public static final int COLUMN_NAME = 0;
   public static final int COLUMN_DOWNLOADS = 1;
   public static final int COLUMN_RATE = 2;
@@ -66,7 +67,8 @@ public class PluginManagerColumnInfo extends ColumnInfo<IdeaPluginDescriptor, St
     myModel = model;
   }
 
-  public String valueOf(IdeaPluginDescriptor base) {
+  @Override
+  public String valueOf(PluginDescriptor base) {
     if (columnIdx == COLUMN_NAME) {
       return base.getName();
     }
@@ -76,7 +78,7 @@ public class PluginManagerColumnInfo extends ColumnInfo<IdeaPluginDescriptor, St
     }
     if (columnIdx == COLUMN_DATE) {
       //  Base class IdeaPluginDescriptor does not declare this field.
-      long date = (base instanceof PluginNode) ? ((PluginNode)base).getDate() : ((IdeaPluginDescriptorImpl)base).getDate();
+      long date = (base instanceof PluginNode) ? ((PluginNode)base).getDate() : 0;
       if (date != 0) {
         return DateFormatUtil.formatDate(date);
       }
@@ -114,7 +116,7 @@ public class PluginManagerColumnInfo extends ColumnInfo<IdeaPluginDescriptor, St
   }
 
 
-  public static boolean isDownloaded(@Nonnull IdeaPluginDescriptor node) {
+  public static boolean isDownloaded(@Nonnull PluginDescriptor node) {
     if (node instanceof PluginNode && ((PluginNode)node).getStatus() == PluginNode.STATUS_DOWNLOADED) return true;
     final PluginId pluginId = node.getPluginId();
     if (PluginManager.isPluginInstalled(pluginId)) {
@@ -124,8 +126,8 @@ public class PluginManagerColumnInfo extends ColumnInfo<IdeaPluginDescriptor, St
   }
 
   @Override
-  public Comparator<IdeaPluginDescriptor> getComparator() {
-    final Comparator<IdeaPluginDescriptor> comparator = getColumnComparator();
+  public Comparator<PluginDescriptor> getComparator() {
+    final Comparator<PluginDescriptor> comparator = getColumnComparator();
     if (isSortByStatus()) {
       final RowSorter.SortKey defaultSortKey = myModel.getDefaultSortKey();
       final int up = defaultSortKey != null && defaultSortKey.getSortOrder() == SortOrder.ASCENDING ? -1 : 1;
@@ -166,7 +168,7 @@ public class PluginManagerColumnInfo extends ColumnInfo<IdeaPluginDescriptor, St
     return comparator;
   }
 
-  protected Comparator<IdeaPluginDescriptor> getColumnComparator() {
+  protected Comparator<PluginDescriptor> getColumnComparator() {
     if (isSortByName()) {
       return (o1, o2) -> StringUtil.compare(o1.getName(), o2.getName(), true);
     }
@@ -194,8 +196,8 @@ public class PluginManagerColumnInfo extends ColumnInfo<IdeaPluginDescriptor, St
     }
     if (isSortByDate()) {
       return (o1, o2) -> {
-        long date1 = (o1 instanceof PluginNode) ? ((PluginNode)o1).getDate() : ((IdeaPluginDescriptorImpl)o1).getDate();
-        long date2 = (o2 instanceof PluginNode) ? ((PluginNode)o2).getDate() : ((IdeaPluginDescriptorImpl)o2).getDate();
+        long date1 = (o1 instanceof PluginNode) ? ((PluginNode)o1).getDate() : 0;
+        long date2 = (o2 instanceof PluginNode) ? ((PluginNode)o2).getDate() : 0;
         if (date1 < date2) {
           return -1;
         }
@@ -227,6 +229,7 @@ public class PluginManagerColumnInfo extends ColumnInfo<IdeaPluginDescriptor, St
     return PluginNode.STATUS_MISSING;
   }
 
+  @Override
   public Class getColumnClass() {
     if (columnIdx == COLUMN_DOWNLOADS) {
       return Integer.class;
@@ -240,7 +243,8 @@ public class PluginManagerColumnInfo extends ColumnInfo<IdeaPluginDescriptor, St
     return UIUtil.getLabelFont();
   }
 
-  public TableCellRenderer getRenderer(IdeaPluginDescriptor o) {
+  @Override
+  public TableCellRenderer getRenderer(PluginDescriptor o) {
     if (columnIdx == COLUMN_RATE) {
       return new DefaultTableCellRenderer(){
         private RatesPanel myPanel = new RatesPanel();
@@ -268,6 +272,7 @@ public class PluginManagerColumnInfo extends ColumnInfo<IdeaPluginDescriptor, St
       myPluginDescriptor = pluginDescriptor;
     }
 
+    @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
       Component orig = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
       final Color bg = orig.getBackground();

@@ -16,9 +16,10 @@
 
 package com.intellij.psi;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.IncorrectOperationException;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 /**

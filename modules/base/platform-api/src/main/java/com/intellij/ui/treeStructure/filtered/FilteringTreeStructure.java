@@ -21,10 +21,9 @@ import com.intellij.ide.util.treeView.PresentableNodeDescriptor;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.ui.speedSearch.ElementFilter;
 import com.intellij.ui.treeStructure.SimpleNode;
-import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-
 import javax.annotation.Nonnull;
+
 import java.util.*;
 
 /**
@@ -34,12 +33,16 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
   private final ElementFilter<Object> myFilter;
   private final AbstractTreeStructure myBaseStructure;
   protected final FilteringNode myRoot;
-  protected final HashSet<FilteringNode> myLeaves = new HashSet<FilteringNode>();
-  private final Map<FilteringNode, List<FilteringNode>> myNodesCache = new HashMap<FilteringNode, List<FilteringNode>>();
+  protected final HashSet<FilteringNode> myLeaves = new HashSet<>();
+  private final Map<FilteringNode, List<FilteringNode>> myNodesCache = new HashMap<>();
 
-  protected enum State {UNKNOWN, VISIBLE, HIDDEN}
+  protected enum State {
+    UNKNOWN,
+    VISIBLE,
+    HIDDEN
+  }
 
-  private final Map<Object, FilteringNode> myDescriptors2Nodes = new HashMap<Object, FilteringNode>();
+  private final Map<Object, FilteringNode> myDescriptors2Nodes = new HashMap<>();
 
   public FilteringTreeStructure(@Nonnull ElementFilter filter, @Nonnull AbstractTreeStructure originalStructure) {
     this(filter, originalStructure, true);
@@ -67,8 +70,9 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
     Object[] delegates = myBaseStructure.getChildElements(delegate);
     if (delegates == null || delegates.length == 0 || duplicate) {
       myLeaves.add(node);
-    } else {
-      ArrayList<FilteringNode> nodes = new ArrayList<FilteringNode>(delegates.length);
+    }
+    else {
+      ArrayList<FilteringNode> nodes = new ArrayList<>(delegates.length);
       for (Object d : delegates) {
         boolean isDuplicate = myDescriptors2Nodes.containsKey(d);
         if (!isDuplicate) {
@@ -80,6 +84,9 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
       myNodesCache.put(node, nodes);
       for (FilteringNode n : nodes) {
         addToCache(n, false);
+      }
+      if (nodes.isEmpty()) {
+        myLeaves.add(node);
       }
     }
   }
@@ -95,7 +102,8 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
           if (node != null && state == State.HIDDEN) {
             state = getState(node);
           }
-        } else {
+        }
+        else {
           break;
         }
       }
@@ -121,34 +129,36 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
     return myDescriptors2Nodes.get(nodeObject);
   }
 
+  @Nonnull
   @Override
   public FilteringNode getRootElement() {
     return myRoot;
   }
 
+  @Nonnull
   @Override
-  public Object[] getChildElements(Object element) {
-    return ((FilteringNode) element).getChildren();
+  public Object[] getChildElements(@Nonnull Object element) {
+    return ((FilteringNode)element).getChildren();
   }
 
   @Override
-  public Object getParentElement(Object element) {
-    return ((FilteringNode) element).getParent();
+  public Object getParentElement(@Nonnull Object element) {
+    return ((FilteringNode)element).getParent();
   }
 
   @Override
-  public boolean isAlwaysLeaf(Object element) {
+  public boolean isAlwaysLeaf(@Nonnull Object element) {
     return element instanceof FilteringNode && ((FilteringNode)element).isAlwaysLeaf();
   }
 
   @Override
-  public boolean isToBuildChildrenInBackground(Object element) {
+  public boolean isToBuildChildrenInBackground(@Nonnull Object element) {
     return myBaseStructure.isToBuildChildrenInBackground(element);
   }
 
   @Override
   @Nonnull
-  public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
+  public NodeDescriptor createDescriptor(@Nonnull Object element, NodeDescriptor parentDescriptor) {
     return element instanceof FilteringNode ? (FilteringNode)element : new FilteringNode((SimpleNode)parentDescriptor, element);
   }
 
@@ -195,7 +205,7 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
 
     public List<FilteringNode> children() {
       List<FilteringNode> nodes = myNodesCache.get(this);
-      return nodes == null ? Collections.<FilteringNode>emptyList() : nodes;
+      return nodes == null ? Collections.emptyList() : nodes;
     }
 
     @Override
@@ -209,10 +219,9 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
     }
 
     @Override
-    public boolean isHighlightableContentNode(final PresentableNodeDescriptor kid) {
+    public boolean isHighlightableContentNode(@Nonnull final PresentableNodeDescriptor kid) {
       return myDelegate instanceof PresentableNodeDescriptor && ((PresentableNodeDescriptor)myDelegate).isHighlightableContentNode(kid);
     }
-
 
 
     @Override
@@ -227,7 +236,8 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
         PresentableNodeDescriptor node = (PresentableNodeDescriptor)myDelegate;
         node.update();
         apply(node.getPresentation());
-      } else if (myDelegate != null) {
+      }
+      else if (myDelegate != null) {
         NodeDescriptor descriptor = myBaseStructure.createDescriptor(myDelegate, getParentDescriptor());
         descriptor.update();
         setIcon(descriptor.getIcon());
@@ -235,25 +245,21 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
       }
     }
 
+    @Nonnull
     @Override
     public SimpleNode[] getChildren() {
       List<FilteringNode> nodes = myNodesCache.get(this);
       if (nodes == null) {
-        return myDelegate instanceof SimpleNode ? ContainerUtil.map(((SimpleNode)myDelegate).getChildren(), new Function<SimpleNode, SimpleNode>() {
-          @Override
-          public SimpleNode fun(SimpleNode node) {
-            return new FilteringNode(FilteringNode.this, node);
-          }
-        }, NO_CHILDREN) : NO_CHILDREN;
+        return myDelegate instanceof SimpleNode ? ContainerUtil.map(((SimpleNode)myDelegate).getChildren(), node -> new FilteringNode(this, node), NO_CHILDREN) : NO_CHILDREN;
       }
 
-      ArrayList<FilteringNode> result = new ArrayList<FilteringNode>();
+      ArrayList<FilteringNode> result = new ArrayList<>();
       for (FilteringNode node : nodes) {
         if (node.state == State.VISIBLE) {
           result.add(node);
         }
       }
-      return result.toArray(new FilteringNode[result.size()]);
+      return result.toArray(new FilteringNode[0]);
     }
 
     @Override

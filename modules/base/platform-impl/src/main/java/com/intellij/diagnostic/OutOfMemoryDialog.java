@@ -17,7 +17,6 @@ package com.intellij.diagnostic;
 
 import com.intellij.diagnostic.VMOptions.MemoryKind;
 import com.intellij.ide.IdeBundle;
-import com.intellij.idea.Main;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
@@ -27,9 +26,10 @@ import com.intellij.util.MemoryDumpHelper;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.ui.JBUI;
+import consulo.container.impl.ExitCodes;
 import consulo.ui.RequiredUIAccess;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -92,7 +92,7 @@ public class OutOfMemoryDialog extends DialogWrapper {
       @Override
       protected void doAction(ActionEvent e) {
         save();
-        System.exit(Main.OUT_OF_MEMORY);
+        System.exit(ExitCodes.OUT_OF_MEMORY);
       }
     };
     myShutdownAction.putValue(DialogWrapper.DEFAULT_ACTION, true);

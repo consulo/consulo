@@ -15,8 +15,6 @@
  */
 package com.intellij.openapi.roots.ui.configuration.projectRoot;
 
-import com.intellij.ide.util.projectWizard.WizardContext;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
@@ -27,11 +25,7 @@ import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.roots.libraries.LibraryType;
 import com.intellij.openapi.roots.libraries.ui.OrderRoot;
-import consulo.roots.types.BinariesOrderRootType;
-import consulo.roots.types.SourcesOrderRootType;
 import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelProvider;
-import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
-import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.ExistingLibraryEditor;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditor;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.NewLibraryEditor;
@@ -41,10 +35,13 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.util.text.UniqueNameGenerator;
+import consulo.logging.Logger;
+import consulo.roots.types.BinariesOrderRootType;
+import consulo.roots.types.SourcesOrderRootType;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -111,20 +108,6 @@ public class LibrariesContainerFactory {
       }
     });
   }
-
-  @Nonnull
-  public static LibrariesContainer createContainer(@Nonnull WizardContext context, @Nonnull ModulesProvider modulesProvider) {
-    final LibrariesContainer container;
-    if (modulesProvider instanceof ModulesConfigurator) {
-      ModulesConfigurator configurator = (ModulesConfigurator)modulesProvider;
-      container = createContainer(configurator.getContext());
-    }
-    else {
-      container = createContainer(context.getProject());
-    }
-    return container;
-  }
-
 
   private abstract static class LibrariesContainerBase implements LibrariesContainer {
     private UniqueNameGenerator myNameGenerator;

@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.controlflow;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Function;

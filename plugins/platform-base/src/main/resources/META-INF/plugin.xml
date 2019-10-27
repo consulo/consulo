@@ -13,80 +13,33 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
+<consulo-plugin>
   <id>com.intellij</id>
   <name>Platform: base</name>
+  <resource-bundle>messages.ActionsBundle</resource-bundle>
 
-  <xi:include href="/META-INF/Actions.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/Diff.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/ProjectComponents.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/ApplicationComponents.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/ExternalSystems.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/RemoteServers.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/Bundled.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/BackgroundTaskByVfsChange.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/Compiler.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/EarlyAccessProgram.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/Graph.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/Copyright.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/VcsLog.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/DVcs.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/PostfixTemplates.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/Coverage.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/XDebugger.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-  <xi:include href="/META-INF/Configurables.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-
-  <xi:include href="/META-INF/Scratch.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-
-  <xi:include href="/META-INF/ExternalStorage.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-
-  <xi:include href="/META-INF/BuildInServer.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
-
-  <xi:include href="/META-INF/TipsOfTheDay.xml" xpointer="xpointer(/idea-plugin/*)">
-    <xi:fallback/>
-  </xi:include>
+  <import path="/META-INF/Actions.xml"/>
+  <import path="/META-INF/Diff.xml"/>
+  <import path="/META-INF/ProjectComponents.xml"/>
+  <import path="/META-INF/ApplicationComponents.xml"/>
+  <import path="/META-INF/ExternalSystems.xml"/>
+  <import path="/META-INF/RemoteServers.xml"/>
+  <import path="/META-INF/Bundled.xml"/>
+  <import path="/META-INF/BackgroundTaskByVfsChange.xml"/>
+  <import path="/META-INF/Compiler.xml"/>
+  <import path="/META-INF/EarlyAccessProgram.xml"/>
+  <import path="/META-INF/Graph.xml"/>
+  <import path="/META-INF/Copyright.xml"/>
+  <import path="/META-INF/VcsLog.xml"/>
+  <import path="/META-INF/DVcs.xml"/>
+  <import path="/META-INF/PostfixTemplates.xml"/>
+  <import path="/META-INF/Coverage.xml"/>
+  <import path="/META-INF/XDebugger.xml"/>
+  <import path="/META-INF/Configurables.xml"/>
+  <import path="/META-INF/Scratch.xml"/>
+  <import path="/META-INF/ExternalStorage.xml"/>
+  <import path="/META-INF/BuildInServer.xml"/>
+  <import path="/META-INF/TipsOfTheDay.xml"/>
 
   <extensionPoints>
     <extensionPoint name="listOfElements" beanClass="consulo.extensions.ListOfElementsEP"/>
@@ -106,6 +59,15 @@
     <extensionPoint name="extensionExtender" beanClass="com.intellij.util.KeyedLazyInstanceEP">
       <with attribute="implementationClass" implements="consulo.extensions.ExtensionExtender"/>
     </extensionPoint>
+
+    <extensionPoint name="dateTimeFormatter" beanClass="com.intellij.util.text.DateTimeFormatterBean"/>
+
+    <extensionPoint name="editorFactoryDocumentListener" interface="com.intellij.openapi.editor.event.DocumentListener"/>
+    <extensionPoint name="editorFactoryMouseListener" interface="com.intellij.openapi.editor.event.EditorMouseListener"/>
+    <extensionPoint name="editorFactoryMouseMotionListener" interface="com.intellij.openapi.editor.event.EditorMouseMotionListener"/>
+    <extensionPoint name="editorFactoryListener" interface="com.intellij.openapi.editor.event.EditorFactoryListener"/>
+
+    <extensionPoint name="vfs.asyncListener" interface="com.intellij.openapi.vfs.AsyncFileListener"/>
 
     <extensionPoint name="generatedSourcesFilter" interface="com.intellij.openapi.roots.GeneratedSourcesFilter"/>
     <extensionPoint name="defaultLibraryRootDetector" interface="com.intellij.openapi.roots.libraries.ui.RootDetector"/>
@@ -139,6 +101,9 @@
 
     <extensionPoint name="fileTypeFactory"
                     interface="com.intellij.openapi.fileTypes.FileTypeFactory"/>
+
+    <extensionPoint name="fileType"
+                    beanClass="com.intellij.openapi.fileTypes.impl.FileTypeBean"/>
 
     <extensionPoint name="virtualFileSystem" interface="com.intellij.openapi.vfs.VirtualFileSystem"/>
 
@@ -253,6 +218,8 @@
       <with attribute="implementationClass" implements="com.intellij.navigation.ItemPresentationProvider"/>
     </extensionPoint>
 
+    <extensionPoint name="intentionMenuContributor" interface="com.intellij.codeInsight.daemon.impl.IntentionMenuContributor"/>
+
     <extensionPoint name="fileTypeDetector" interface="com.intellij.openapi.fileTypes.FileTypeRegistry$FileTypeDetector"/>
 
     <extensionPoint name="pathMacroFilter" interface="com.intellij.openapi.application.PathMacroFilter"/>
@@ -339,9 +306,6 @@
     <extensionPoint name="packaging.sourceItemProvider" interface="com.intellij.packaging.ui.PackagingSourceItemsProvider"/>
     <extensionPoint name="packaging.artifactType" interface="com.intellij.packaging.artifacts.ArtifactType"/>
 
-    <!--new project wizard-->
-    <extensionPoint name="projectImportProvider" interface="com.intellij.projectImport.ProjectImportProvider"/>
-    <extensionPoint name="projectImportBuilder" interface="com.intellij.projectImport.ProjectImportBuilder"/>
     <extensionPoint name="moduleImportProvider" interface="consulo.moduleImport.ModuleImportProvider"/>
 
     <extensionPoint name="codeInsight.wordCompletionFilter" beanClass="com.intellij.lang.LanguageExtensionPoint">
@@ -362,6 +326,15 @@
     <extensionPoint name="indexPatternProvider"
                     interface="com.intellij.psi.search.IndexPatternProvider"/>
 
+    <extensionPoint name="indexImporterFactory"
+                    interface="com.intellij.index.IndexImporterFactory"/>
+
+    <extensionPoint name="fileBasedIndex.providedLocator"
+                    interface="com.intellij.util.indexing.provided.ProvidedIndexExtensionLocator"/>
+
+    <extensionPoint name="globalIndexFilter"
+                    interface="com.intellij.util.indexing.GlobalIndexFilter"/>
+
     <extensionPoint name="refGraphAnnotator"
                     interface="com.intellij.codeInspection.reference.RefGraphAnnotator"/>
 
@@ -372,6 +345,10 @@
     <extensionPoint name="highlightErrorFilter"
                     interface="com.intellij.codeInsight.highlighting.HighlightErrorFilter"
                     area="PROJECT"/>
+
+    <extensionPoint name="daemon.tooltipActionProvider"
+                    interface="com.intellij.codeInsight.daemon.impl.tooltips.TooltipActionProvider"/>
+
     <extensionPoint name="errorQuickFixProvider"
                     interface="com.intellij.codeInsight.daemon.impl.analysis.ErrorQuickFixProvider"/>
 
@@ -448,11 +425,8 @@
     <extensionPoint name="daemon.changeLocalityDetector"
                     interface="com.intellij.codeInsight.daemon.ChangeLocalityDetector"/>
 
-    <extensionPoint name="languageInjector"
-                    interface="com.intellij.psi.LanguageInjector"/>
-    <extensionPoint name="concatenationAwareInjector"
-                    interface="com.intellij.lang.injection.ConcatenationAwareInjector"
-                    area="PROJECT"/>
+    <extensionPoint name="languageInjector" interface="com.intellij.psi.LanguageInjector"/>
+    <extensionPoint name="concatenationAwareInjector" interface="com.intellij.lang.injection.ConcatenationAwareInjector" area="PROJECT"/>
     <extensionPoint name="multiHostInjector"
                     beanClass="consulo.lang.injection.MultiHostInjectorExtensionPoint"
                     area="PROJECT">
@@ -542,6 +516,8 @@
       <with attribute="implementationClass" implements="com.intellij.formatting.FormattingModelBuilder"/>
     </extensionPoint>
 
+    <extensionPoint name="externalFormatProcessor" interface="com.intellij.psi.codeStyle.ExternalFormatProcessor"/>
+
     <extensionPoint name="lang.formatter.restriction" interface="com.intellij.lang.LanguageFormattingRestriction"/>
     <extensionPoint name="lang.importOptimizer" beanClass="com.intellij.lang.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.lang.ImportOptimizer"/>
@@ -603,6 +579,7 @@
     <extensionPoint name="useScopeEnlarger" interface="com.intellij.psi.search.UseScopeEnlarger"/>
     <extensionPoint name="resolveScopeEnlarger" interface="com.intellij.psi.ResolveScopeEnlarger"/>
     <extensionPoint name="resolveScopeProvider" interface="com.intellij.psi.ResolveScopeProvider"/>
+    <extensionPoint name="codeUsageScopeOptimizer" interface="com.intellij.psi.search.ScopeOptimizer"/>
 
     <extensionPoint name="gotoClassContributor"
                     interface="com.intellij.navigation.ChooseByNameContributor"/>
@@ -689,7 +666,7 @@
     <extensionPoint name="fileTemplateGroup"
                     interface="com.intellij.ide.fileTemplates.FileTemplateGroupDescriptorFactory"/>
     <extensionPoint name="colorProvider"
-                    interface="com.intellij.openapi.editor.ElementColorProvider"/>
+                    interface="consulo.language.editor.ElementColorProvider"/>
     <extensionPoint name="createFromTemplateHandler"
                     interface="com.intellij.ide.fileTemplates.CreateFromTemplateHandler"/>
     <extensionPoint name="defaultTemplatePropertiesProvider"
@@ -1205,10 +1182,16 @@
     <applicationService serviceInterface="com.intellij.openapi.projectRoots.impl.JdkVersionDetector"
                         serviceImplementation="com.intellij.openapi.projectRoots.impl.JdkVersionDetectorImpl"/>
 
+    <applicationService serviceImplementation="com.intellij.ide.browsers.WebBrowserManager"/>
+
+    <applicationService serviceInterface="com.intellij.ide.browsers.BrowserLauncher" serviceImplementation="com.intellij.ide.browsers.BrowserLauncherImpl"/>
+
+    <urlOpener implementation="com.intellij.ide.browsers.impl.DefaultUrlOpener" order="last"/>
+
     <projectService serviceInterface="consulo.util.ProjectPropertiesComponent"
                     serviceImplementation="com.intellij.ide.util.ProjectPropertiesComponentImpl"/>
 
-    <applicationService serviceImplementation="com.intellij.openapi.wm.impl.WindowDressing" lazy="false" />
+    <applicationService serviceImplementation="com.intellij.openapi.wm.impl.WindowDressing" lazy="false"/>
 
     <applicationService serviceInterface="com.intellij.openapi.vfs.tracker.VirtualFileTracker"
                         serviceImplementation="com.intellij.openapi.vfs.tracker.VirtualFileTrackerImpl"/>
@@ -1251,7 +1234,7 @@
 
     <applicationService serviceInterface="com.intellij.openapi.vfs.impl.http.RemoteFileManager"
                         serviceImplementation="com.intellij.openapi.vfs.impl.http.RemoteFileManagerImpl"/>
-    <applicationService serviceImplementation="consulo.components.impl.stores.ApplicationDefaultStoreCache" />
+    <applicationService serviceImplementation="consulo.components.impl.stores.ApplicationDefaultStoreCache"/>
 
     <applicationService serviceInterface="com.intellij.ui.TreeUIHelper"
                         serviceImplementation="com.intellij.ui.TreeUIHelperImpl"/>
@@ -1269,8 +1252,6 @@
                         serviceImplementation="com.intellij.ide.dnd.DnDManagerImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.vfs.encoding.EncodingManager"
                         serviceImplementation="com.intellij.openapi.vfs.encoding.EncodingManagerImpl"/>
-    <applicationService serviceInterface="com.intellij.openapi.fileChooser.FileSystemTreeFactory"
-                        serviceImplementation="com.intellij.openapi.fileChooser.ex.FileSystemTreeFactoryImpl"/>
     <applicationService serviceInterface="com.intellij.ide.plugins.PluginManagerUISettings"
                         serviceImplementation="com.intellij.ide.plugins.PluginManagerUISettings"/>
     <applicationService serviceImplementation="com.intellij.ide.ui.UISettings"/>
@@ -1361,7 +1342,7 @@
     <applicationService serviceInterface="com.intellij.execution.process.ProcessHandlerFactory"
                         serviceImplementation="com.intellij.execution.process.ProcessHandlerFactoryImpl"/>
 
-    <applicationService serviceInterface="com.intellij.ide.UiActivityMonitor" serviceImplementation="com.intellij.ide.UiActivityMonitorImpl" />
+    <applicationService serviceInterface="com.intellij.ide.UiActivityMonitor" serviceImplementation="com.intellij.ide.UiActivityMonitorImpl"/>
 
     <projectService serviceInterface="com.intellij.openapi.vfs.ReadonlyStatusHandler"
                     serviceImplementation="com.intellij.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl"/>
@@ -1422,6 +1403,9 @@
 
     <projectService serviceInterface="com.intellij.util.indexing.FileBasedIndexScanRunnableCollector"
                     serviceImplementation="com.intellij.util.indexing.FileBasedIndexScanRunnableCollectorImpl"/>
+
+    <projectService serviceInterface="com.intellij.codeInsight.daemon.impl.IntentionsUI"
+                    serviceImplementation="com.intellij.codeInsight.daemon.impl.IntentionsUIImpl"/>
 
     <fileTypeFactory implementation="com.intellij.openapi.fileTypes.impl.PlatformFileTypeFactory"/>
     <postStartupActivity implementation="com.intellij.openapi.fileTypes.impl.ApproveRemovedMappingsActivity"/>
@@ -1488,6 +1472,8 @@
     <postStartupActivity implementation="com.intellij.ui.breadcrumbs.BreadcrumbsInitializingActivity" order="before OpenFilesActivity"/>
 
     <preloadingActivity implementation="com.intellij.openapi.actionSystem.impl.ActionPreloader"/>
+    <preloadingActivity implementation="consulo.bundle.impl.PredefinedBundlesLoader"/>
+    <preloadingActivity implementation="com.intellij.ide.SystemHealthMonitor"/>
 
     <patch.extension implementation="com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP"/>
     <patch.extension implementation="com.intellij.openapi.diff.impl.patch.CharsetEP"/>
@@ -1619,11 +1605,8 @@
                          parentId="project.propCompiler"
                          instance="consulo.compiler.options.CompilerExcludedConfigurable"/>
 
-    <checkoutListener implementation="com.intellij.openapi.vcs.checkout.ProjectDirCheckoutListener"/>
     <checkoutListener implementation="com.intellij.openapi.vcs.checkout.ProjectImporterCheckoutListener"/>
-    <vcsAwareCheckoutListener implementation="com.intellij.openapi.vcs.checkout.NewProjectCheckoutListener"/>
-
-    <gotoFileContributor implementation="com.intellij.ide.util.gotoByName.ProjectBaseDirNavigationContributor"/>
+    <vcsAwareCheckoutListener implementation="com.intellij.openapi.vcs.checkout.RegisterMappingCheckoutListener"/>
 
     <orderRootType implementation="consulo.roots.types.BinariesOrderRootType"/>
     <orderRootTypeEditor key="binaries"
@@ -1866,7 +1849,7 @@
     <projectService serviceInterface="com.intellij.psi.PsiFileFactory"
                     serviceImplementation="com.intellij.psi.impl.PsiFileFactoryImpl"/>
     <projectService serviceInterface="com.intellij.psi.text.BlockSupport"
-                    serviceImplementation="com.intellij.psi.impl.source.text.BlockSupportImpl"/>
+                    serviceImplementation="com.intellij.psi.impl.BlockSupportImpl"/>
     <projectService serviceInterface="com.intellij.psi.SmartPointerManager"
                     serviceImplementation="com.intellij.psi.impl.smartPointers.SmartPointerManagerImpl"/>
     <projectService serviceInterface="com.intellij.psi.codeStyle.CodeStyleManager"
@@ -1887,9 +1870,6 @@
 
     <projectService serviceInterface="com.intellij.openapi.module.ProjectLoadingErrorsNotifier"
                     serviceImplementation="com.intellij.openapi.module.impl.ProjectLoadingErrorsNotifierImpl"/>
-
-    <projectService serviceInterface="com.intellij.codeInsight.AutoPopupController"
-                    serviceImplementation="com.intellij.codeInsight.AutoPopupController"/>
 
     <projectService serviceInterface="consulo.codeStyle.ProjectCodeStyleFacade"
                     serviceImplementation="consulo.psi.impl.source.codeStyle.ProjectCodeStyleFacadeImpl"/>
@@ -2058,8 +2038,8 @@
 
     <fileBasedIndex implementation="com.intellij.psi.impl.cache.impl.todo.TodoIndex"/>
     <fileBasedIndex implementation="com.intellij.psi.impl.cache.impl.id.IdIndexImpl"/>
-    <fileBasedIndex implementation="com.intellij.psi.search.FilenameIndex"/>
-    <fileBasedIndex implementation="com.intellij.psi.search.FileTypeIndex"/>
+    <fileBasedIndex implementation="com.intellij.psi.search.FilenameIndexImpl"/>
+    <fileBasedIndex implementation="com.intellij.psi.search.FileTypeIndexImpl"/>
     <fileBasedIndex implementation="com.intellij.psi.stubs.StubUpdatingIndex"/>
 
     <fileBasedIndex implementation="com.intellij.find.ngrams.TrigramIndex"/>
@@ -2317,7 +2297,6 @@
                            implementationClass="com.intellij.psi.impl.source.resolve.reference.ArbitraryPlaceUrlReferenceProvider"/>
 
     <uiDebuggerExtension implementation="com.intellij.ui.debugger.extensions.ActionTracer"/>
-    <uiDebuggerExtension implementation="com.intellij.openapi.util.objectTree.DisposerDebugger"/>
 
     <globalInspection shortName="Annotator" displayName="Annotator" groupKey="inspection.general.tools.group.name" groupBundle="messages.InspectionsBundle"
                       enabledByDefault="true" level="ERROR"
@@ -2436,7 +2415,7 @@
     <projectService serviceInterface="com.intellij.psi.impl.file.PsiPackageHelper"
                     serviceImplementation="com.intellij.psi.impl.file.PsiPackageHelperImpl"/>
 
-    <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.ProjectSettingsService" />
+    <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.ProjectSettingsService"/>
 
     <projectService serviceInterface="com.intellij.refactoring.RefactoringFactory"
                     serviceImplementation="com.intellij.refactoring.openapi.impl.RefactoringFactoryImpl"/>
@@ -2603,28 +2582,92 @@
     <idIndexer filetype="PLAIN_TEXT" implementationClass="com.intellij.psi.impl.cache.impl.id.PlainTextIndexer"/>
     <todoIndexer filetype="PLAIN_TEXT" implementationClass="com.intellij.psi.impl.cache.impl.todo.PlainTextTodoIndexer"/>
 
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.GeneralHighlightingPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ChameleonSyntaxHighlightingPass$Factory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.InjectedGeneralHighlightingPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.LineMarkersPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ShowIntentionsPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.IdentifierHighlighterPassFactory"/>
     <textEditorHighlightingPassFactory implementation="com.intellij.refactoring.changeSignature.inplace.ChangeSignaturePassFactory"/>
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.CodeFoldingPassFactory"/>
-    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ExternalToolPassFactory"/>
-    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.GeneralHighlightingPassFactory"/>
-    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.LineMarkersPassFactory"/>
-    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.WolfPassFactory"/>
+    <!--<textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.focusMode.FocusModePassFactory"/>-->
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.hints.ParameterHintsPassFactory"/>
-    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.InjectedCodeFoldingPassFactory"/>
-    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.IdentifierHighlighterPassFactory"/>
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.IndentsPassFactory"/>
-    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ShowIntentionsPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.InjectedCodeFoldingPassFactory"/>
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.LocalInspectionsPassFactory"/>
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ShowAutoImportPassFactory"/>
-    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.InjectedGeneralHighlightingPassFactory"/>
+
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.WholeFileLocalInspectionsPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ExternalToolPassFactory"/>
+    <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.WolfPassFactory"/>
+
 
     <applicationService serviceImplementation="com.intellij.ide.ScreenReaderSupportHandler" lazy="false"/>
+    <applicationService serviceInterface="com.intellij.openapi.wm.impl.SystemDock" serviceImplementation="consulo.wm.impl.SystemDockImpl"/>
 
     <projectService serviceInterface="com.intellij.problems.WolfTheProblemSolver" serviceImplementation="com.intellij.codeInsight.problems.WolfTheProblemSolverImpl" lazy="false"/>
 
     <lang.formatter.restriction implementation="com.intellij.formatting.ExcludedFileFormattingRestriction"/>
 
     <codeStyleIndentHelperExtension implementation="consulo.consulo.psi.impl.source.codeStyle.DefaultIndentHelperExtension" order="last"/>
+
+    <intentionMenuContributor implementation="com.intellij.codeInsight.daemon.impl.DoNotShowInspectionIntentionMenuContributor"/>
+    <intentionMenuContributor implementation="com.intellij.codeInsight.daemon.impl.GutterIntentionMenuContributor"/>
+    <intentionMenuContributor implementation="com.intellij.codeInsight.daemon.impl.CleanupIntentionMenuContributor"/>
+
+    <applicationService serviceImplementation="com.intellij.openapi.editor.impl.EditorMouseHoverPopupControl"/>
+    <applicationService serviceImplementation="com.intellij.openapi.editor.EditorMouseHoverPopupManager"/>
+
+    <editorFactoryMouseListener implementation="com.intellij.openapi.editor.EditorMouseHoverPopupManager$MyEditorMouseEventListener"/>
+    <editorFactoryMouseMotionListener implementation="com.intellij.openapi.editor.EditorMouseHoverPopupManager$MyEditorMouseMotionEventListener"/>
+
+    <applicationService serviceInterface="com.intellij.openapi.application.AsyncExecutionService" serviceImplementation="com.intellij.openapi.application.impl.AsyncExecutionServiceImpl"/>
+
+    <projectService serviceImplementation="com.intellij.codeInsight.daemon.impl.ErrorStripeUpdateManager"/>
+    <projectService serviceInterface="com.intellij.codeInsight.AutoPopupController" serviceImplementation="com.intellij.codeInsight.AutoPopupControllerImpl"/>
+    <daemon.tooltipActionProvider order="last" id="defaultProvider" implementation="com.intellij.codeInsight.daemon.impl.DaemonTooltipActionProvider"/>
+
+    <fileBasedIndex.providedLocator implementation="com.intellij.index.BasicProvidedExtensionLocator"/>
+
+    <vfs.asyncListener implementation="com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl$MyAsyncFileListener"/>
+    <vfs.asyncListener implementation="com.intellij.util.indexing.FileBasedIndexImpl$ChangedFilesCollector"/>
+
+    <applicationService serviceInterface="com.intellij.psi.search.FileNameIndexService" serviceImplementation="com.intellij.psi.search.FileNameIndexServiceImpl"/>
+
+    <vfs.asyncListener implementation="com.intellij.openapi.vfs.impl.VirtualFilePointerManagerImpl$MyAsyncFileListener"/>
+
+    <projectService serviceImplementation="com.intellij.psi.impl.source.tree.injected.ConcatenationInjectorManager"/>
+
+    <dateTimeFormatter id="vcs.annotate" name="VCS Annotate"/>
+    <dateTimeFormatter id="vcs.log" name="VCS Log"/>
+
+    <applicationService serviceImplementation="com.intellij.util.text.DateTimeFormatManager"/>
+
+    <applicationService serviceInterface="com.intellij.openapi.command.undo.DocumentReferenceManager" serviceImplementation="com.intellij.openapi.command.impl.DocumentReferenceManagerImpl"
+                        lazy="false"/>
+
+    <applicationService serviceInterface="com.intellij.codeInsight.editorActions.TabOutScopesTracker" serviceImplementation="com.intellij.codeInsight.editorActions.TabOutScopesTrackerImpl"/>
+
+    <applicationService serviceInterface="com.intellij.formatting.Formatter" serviceImplementation="com.intellij.formatting.FormatterImpl"/>
+    <applicationService serviceInterface="com.intellij.util.gist.GistManager" serviceImplementation="com.intellij.util.gist.GistManagerImpl"/>
+
+    <editorFactoryDocumentListener implementation="com.intellij.openapi.command.impl.DocumentUndoProvider"/>
+
+    <vfs.asyncListener implementation="consulo.compiler.impl.TranslationCompilerFilesMonitorVfsListener"/>
+    <vfs.asyncListener implementation="consulo.roots.impl.ContentEntryFileListener" />
+
+    <applicationService serviceInterface="consulo.compiler.impl.TranslatingCompilerFilesMonitor" serviceImplementation="com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl"/>
+
+    <applicationService serviceInterface="com.intellij.openapi.project.ProjectManager" serviceImplementation="com.intellij.openapi.project.impl.ProjectManagerImpl" />
+    <applicationService serviceInterface="com.intellij.openapi.vfs.pointers.VirtualFilePointerManager" serviceImplementation="com.intellij.openapi.vfs.impl.VirtualFilePointerManagerImpl"/>
   </extensions>
-</idea-plugin>
+
+  <applicationListeners>
+    <listener class="com.intellij.util.gist.GistManagerImpl$MyBulkFileListener" topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
+    <listener class="com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl$ProjectListener" topic="com.intellij.openapi.project.ProjectManagerListener"/>
+  </applicationListeners>
+
+  <projectListeners>
+    <listener class="com.intellij.openapi.vfs.newvfs.impl.CachedFileType$PsiListener" topic="com.intellij.psi.util.PsiModificationTracker$Listener"/>
+  </projectListeners>
+</consulo-plugin>

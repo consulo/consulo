@@ -1,42 +1,29 @@
-/*
- * Copyright 2000-2012 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-/**
- * @author cdr
- */
 package com.intellij.ide.projectView.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.SelectInTarget;
 import com.intellij.ide.impl.ProjectPaneSelectInTarget;
+import com.intellij.ide.projectView.BaseProjectTreeBuilder;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.nodes.BaseProjectViewDirectoryHelper;
 import com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode;
 import com.intellij.ide.util.treeView.AbstractTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.AbstractTreeUpdater;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.KeyWithDefaultValue;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.psi.PsiDirectory;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.inject.Inject;
 import javax.swing.tree.DefaultTreeModel;
+import java.awt.*;
 
 public class ProjectViewPane extends AbstractProjectViewPSIPane {
   @NonNls
@@ -47,6 +34,7 @@ public class ProjectViewPane extends AbstractProjectViewPSIPane {
     super(project);
   }
 
+  @Nonnull
   @Override
   public String getTitle() {
     return IdeBundle.message("title.project");
@@ -58,39 +46,48 @@ public class ProjectViewPane extends AbstractProjectViewPSIPane {
     return ID;
   }
 
+  @Nonnull
   @Override
   public consulo.ui.image.Image getIcon() {
     return AllIcons.General.ProjectTab;
   }
 
+
+  @Nonnull
   @Override
   public SelectInTarget createSelectInTarget() {
     return new ProjectPaneSelectInTarget(myProject);
   }
 
+  @Nonnull
   @Override
-  protected AbstractTreeUpdater createTreeUpdater(AbstractTreeBuilder treeBuilder) {
+  protected AbstractTreeUpdater createTreeUpdater(@Nonnull AbstractTreeBuilder treeBuilder) {
     return new ProjectViewTreeUpdater(treeBuilder);
   }
 
+  @Nonnull
   @Override
   public ProjectAbstractTreeStructureBase createStructure() {
     return new ProjectViewPaneTreeStructure();
   }
 
+  @Nonnull
   @Override
-  protected ProjectViewTree createTree(DefaultTreeModel treeModel) {
-    return new ProjectViewTree(myProject, treeModel) {
+  protected ProjectViewTree createTree(@Nonnull DefaultTreeModel treeModel) {
+    return new ProjectViewTree(treeModel) {
       @Override
       public String toString() {
         return getTitle() + " " + super.toString();
       }
-    };
-  }
 
-  @Nonnull
-  public String getComponentName() {
-    return "ProjectPane";
+      @Override
+      public void setFont(Font font) {
+        if (Registry.is("bigger.font.in.project.view")) {
+          font = font.deriveFont(font.getSize() + 1.0f);
+        }
+        super.setFont(font);
+      }
+    };
   }
 
   // should be first
@@ -105,19 +102,22 @@ public class ProjectViewPane extends AbstractProjectViewPSIPane {
     }
 
     @Override
-    public boolean addSubtreeToUpdateByElement(Object element) {
+    public boolean addSubtreeToUpdateByElement(@Nonnull Object element) {
       if (element instanceof PsiDirectory && !myProject.isDisposed()) {
         final PsiDirectory dir = (PsiDirectory)element;
         final ProjectTreeStructure treeStructure = (ProjectTreeStructure)myTreeStructure;
         PsiDirectory dirToUpdateFrom = dir;
-        if (!treeStructure.isFlattenPackages() && treeStructure.isHideEmptyMiddlePackages()) {
-          // optimization: this check makes sense only if flattenPackages == false && HideEmptyMiddle == true
+
+        // optimization
+        // isEmptyMiddleDirectory can be slow when project VFS is not fully loaded (initial dumb mode).
+        // It's easiest to disable the optimization in any dumb mode
+        if (!treeStructure.isFlattenPackages() && treeStructure.isHideEmptyMiddlePackages() && !DumbService.isDumb(myProject)) {
           while (dirToUpdateFrom != null && BaseProjectViewDirectoryHelper.isEmptyMiddleDirectory(dirToUpdateFrom, true)) {
             dirToUpdateFrom = dirToUpdateFrom.getParentDirectory();
           }
         }
         boolean addedOk;
-        while (!(addedOk = super.addSubtreeToUpdateByElement(dirToUpdateFrom == null? myTreeStructure.getRootElement() : dirToUpdateFrom))) {
+        while (!(addedOk = super.addSubtreeToUpdateByElement(dirToUpdateFrom == null ? myTreeStructure.getRootElement() : dirToUpdateFrom))) {
           if (dirToUpdateFrom == null) {
             break;
           }
@@ -136,7 +136,7 @@ public class ProjectViewPane extends AbstractProjectViewPSIPane {
     }
 
     @Override
-    protected AbstractTreeNode createRoot(final Project project, ViewSettings settings) {
+    protected AbstractTreeNode createRoot(@Nonnull final Project project, @Nonnull ViewSettings settings) {
       return new ProjectViewProjectNode(project, settings);
     }
 
@@ -147,5 +147,30 @@ public class ProjectViewPane extends AbstractProjectViewPSIPane {
       assert value != null;
       return value;
     }
+
+
+    @Override
+    public boolean isToBuildChildrenInBackground(@Nonnull Object element) {
+      return Registry.is("ide.projectView.ProjectViewPaneTreeStructure.BuildChildrenInBackground");
+    }
   }
+
+  @Override
+  protected BaseProjectTreeBuilder createBuilder(@Nonnull DefaultTreeModel model) {
+    return null;
+  }
+
+  //public static boolean canBeSelectedInProjectView(@NotNull Project project, @NotNull VirtualFile file) {
+  //  final VirtualFile archiveFile;
+  //
+  //  if (file.getFileSystem() instanceof ArchiveFileSystem) archiveFile = ((ArchiveFileSystem)file.getFileSystem()).getLocalByEntry(file);
+  //  else archiveFile = null;
+  //
+  //  ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
+  //  return (archiveFile != null && index.getContentRootForFile(archiveFile, false) != null) ||
+  //         index.getContentRootForFile(file, false) != null ||
+  //         index.isInLibrary(file) ||
+  //         Comparing.equal(file.getParent(), project.getBaseDir()) ||
+  //         ScratchProjectViewPane.isScratchesMergedIntoProjectTab() && ScratchUtil.isScratch(file);
+  //}
 }

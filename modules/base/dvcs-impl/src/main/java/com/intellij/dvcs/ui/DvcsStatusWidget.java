@@ -19,7 +19,6 @@ import com.intellij.dvcs.repo.Repository;
 import com.intellij.dvcs.repo.VcsRepositoryManager;
 import com.intellij.dvcs.repo.VcsRepositoryMappingListener;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.project.Project;
@@ -34,6 +33,7 @@ import com.intellij.openapi.wm.impl.status.EditorBasedWidget;
 import com.intellij.util.Consumer;
 import javax.annotation.Nonnull;
 
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 
 import java.awt.event.MouseEvent;

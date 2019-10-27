@@ -17,14 +17,17 @@ package com.intellij.openapi.project;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.Topic;
 import consulo.annotations.DeprecationInfo;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import org.jdom.JDOMException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 
 /**
@@ -54,6 +57,20 @@ public abstract class ProjectManager {
   @Deprecated
   @DeprecationInfo("Use ProjectManager#TOPIC")
   public abstract void addProjectManagerListener(@Nonnull ProjectManagerListener listener, @Nonnull Disposable parentDisposable);
+
+  @Nonnull
+  public abstract AsyncResult<Project> openProjectAsync(@Nonnull VirtualFile file, @Nonnull UIAccess uiAccess);
+
+  @Nonnull
+  public abstract AsyncResult<Project> openProjectAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess);
+
+  @Nonnull
+  public AsyncResult<Void> closeAndDisposeAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    return closeAndDisposeAsync(project, uiAccess, true, true, true);
+  }
+
+  @Nonnull
+  public abstract AsyncResult<Void> closeAndDisposeAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess, boolean checkCanClose, boolean save, boolean dispose);
 
   /**
    * Removes global listener from all projects.
@@ -125,15 +142,12 @@ public abstract class ProjectManager {
   @RequiredUIAccess
   public abstract boolean closeProject(@Nonnull Project project);
 
-  @RequiredUIAccess
-  public abstract boolean closeProjectAsync(@Nonnull Project project);
-
   /**
    * Asynchronously reloads the specified project.
    *
    * @param project the project to reload.
    */
-  public abstract void reloadProject(@Nonnull Project project);
+  public abstract void reloadProject(@Nonnull Project project, @Nonnull UIAccess uiAccess);
 
   /**
    * Create new project in given location.

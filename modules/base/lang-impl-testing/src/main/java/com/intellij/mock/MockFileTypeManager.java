@@ -68,10 +68,6 @@ public class MockFileTypeManager extends FileTypeManagerEx {
   }
 
   @Override
-  public void registerFileType(@Nonnull FileType type, @Nonnull List<FileNameMatcher> defaultAssociations) {
-  }
-
-  @Override
   public void fireFileTypesChanged() {
   }
 
@@ -79,6 +75,12 @@ public class MockFileTypeManager extends FileTypeManagerEx {
   @Nonnull
   public FileType getFileTypeByFileName(@Nonnull String fileName) {
     return fileType;
+  }
+
+  @Nonnull
+  @Override
+  public FileType getFileTypeByFileName(@Nonnull @NonNls CharSequence fileName) {
+    return null;
   }
 
   @Override
@@ -100,12 +102,17 @@ public class MockFileTypeManager extends FileTypeManagerEx {
   }
 
   @Override
-  public boolean isFileIgnored(@Nonnull CharSequence name) {
+  public boolean isFileIgnored(@NonNls @Nonnull VirtualFile file) {
     return false;
   }
 
   @Override
-  public boolean isFileIgnored(@NonNls @Nonnull VirtualFile file) {
+  public void registerFileType(@Nonnull FileType type, @Nonnull List<? extends FileNameMatcher> defaultAssociations) {
+
+  }
+
+  @Override
+  public boolean isFileIgnored(@NonNls @Nonnull String name) {
     return false;
   }
 
@@ -180,12 +187,6 @@ public class MockFileTypeManager extends FileTypeManagerEx {
   @Override
   public boolean isFileOfType(@Nonnull VirtualFile file, @Nonnull FileType type) {
     return false;
-  }
-
-  @Nonnull
-  @Override
-  public FileType detectFileTypeFromContent(@Nonnull VirtualFile file) {
-    return UnknownFileType.INSTANCE;
   }
 
   @javax.annotation.Nullable

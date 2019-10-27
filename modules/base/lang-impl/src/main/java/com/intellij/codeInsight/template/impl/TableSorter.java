@@ -34,7 +34,7 @@ package com.intellij.codeInsight.template.impl;
  * @author Philip Milne
  */
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.ui.ClickListener;
 import com.intellij.util.ArrayUtil;
 

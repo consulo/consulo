@@ -41,5 +41,6 @@ public class PluginJsonNode {
   public String platformVersion;
   public String[] dependencies;
   public String[] optionalDependencies;
-  public Extension[] extensions;
+  // public Extension[] extensions;  old extensions impl
+  public Extension[] extensionsV2;
 }

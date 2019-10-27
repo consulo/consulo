@@ -1,12 +1,14 @@
-// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.paint;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.util.ui.JBUI.ScaleContext;
-import com.intellij.util.ui.JBUI.ScaleType;
+import com.intellij.ui.scale.JBUIScale;
+import com.intellij.util.ui.JBUI;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
@@ -14,8 +16,6 @@ import java.awt.geom.Rectangle2D;
 
 import static com.intellij.ui.paint.PaintUtil.RoundingMode.FLOOR;
 import static com.intellij.ui.paint.PaintUtil.RoundingMode.ROUND;
-import static com.intellij.util.ui.JBUI.ScaleType.PIX_SCALE;
-import static com.intellij.util.ui.JBUI.ScaleType.USR_SCALE;
 
 /**
  * Utility methods for pixel-perfect painting in JRE-managed HiDPI mode.
@@ -23,8 +23,8 @@ import static com.intellij.util.ui.JBUI.ScaleType.USR_SCALE;
  * It's assumed that the {@link ScaleType#USR_SCALE} factor is already applied to the values (given in the user space)
  * passed to the methods of this class. So the user scale factor is not taken into account.
  *
- * @see ScaleType
  * @author tav
+ * @see ScaleType
  */
 public class PaintUtil {
   /**
@@ -48,6 +48,15 @@ public class PaintUtil {
       public int round(double value) {
         return (int)Math.round(value);
       }
+    },
+    /**
+     * Rounds with flooring .5 value
+     */
+    ROUND_FLOOR_BIAS {
+      @Override
+      public int round(double value) {
+        return (int)Math.ceil(value - 0.5);
+      }
     };
 
     /**
@@ -56,8 +65,7 @@ public class PaintUtil {
      * @param value the value to round
      * @return the rounded value
      */
-    public abstract int round(double value);
-  }
+    public abstract int round(double value);}
 
   /**
    * Defines whether a value should be aligned with the nearest integer odd/even value in the device space.
@@ -65,42 +73,44 @@ public class PaintUtil {
   public enum ParityMode {
     EVEN,
     ODD;
+
     /**
      * Returns true for {@code EVEN}.
      */
     public boolean even() {
       return this == EVEN;
     }
+
     /**
      * Returns parity of the value.
      */
     public static ParityMode of(int value) {
       return value % 2 == 0 ? EVEN : ODD;
     }
+
     /**
      * Returns inverted parity mode.
      */
     public static ParityMode invert(ParityMode pm) {
       return pm == EVEN ? ODD : EVEN;
-    }
-  }
+    }}
 
   /**
    * @see #getParityMode(double, ScaleContext, RoundingMode)
    */
   public static ParityMode getParityMode(double usrValue, @Nonnull Graphics2D g) {
-    return getParityMode(usrValue, ScaleContext.create(g), null);
+    return getParityMode(usrValue, JBUI.ScaleContext.create(g), null);
   }
 
   /**
    * Returns parity of the value converted to the device space with the given rounding mode ({@code ROUND} if null).
    *
    * @param usrValue the value, given in the user space
-   * @param ctx the scale context (the user scale is ignored)
-   * @param rm the rounding mode to apply
+   * @param ctx      the scale context (the user scale is ignored)
+   * @param rm       the rounding mode to apply
    * @return the parity of the value in the device space
    */
-  public static ParityMode getParityMode(double usrValue, @Nonnull ScaleContext ctx, @Nullable RoundingMode rm) {
+  public static ParityMode getParityMode(double usrValue, @Nonnull JBUI.ScaleContext ctx, @Nullable RoundingMode rm) {
     int devValue = devValue(usrValue, getScale(ctx), rm == null ? ROUND : rm);
     return ParityMode.of(devValue);
   }
@@ -109,61 +119,70 @@ public class PaintUtil {
    * @see #alignToInt(double, ScaleContext, RoundingMode, ParityMode)
    */
   public static double alignToInt(double usrValue, @Nonnull Graphics2D g) {
-    return alignToInt(usrValue, ScaleContext.create(g), null, null);
+    return alignToInt(usrValue, JBUI.ScaleContext.create(g), null, null);
   }
 
   /**
    * @see #alignToInt(double, ScaleContext, RoundingMode, ParityMode)
    */
   public static double alignToInt(double usrValue, @Nonnull Graphics2D g, @Nullable RoundingMode rm) {
-    return alignToInt(usrValue, ScaleContext.create(g), rm, null);
+    return alignToInt(usrValue, JBUI.ScaleContext.create(g), rm, null);
   }
 
   /**
    * @see #alignToInt(double, ScaleContext, RoundingMode, ParityMode)
    */
   public static double alignToInt(double usrValue, @Nonnull Graphics2D g, @Nullable ParityMode pm) {
-    return alignToInt(usrValue, ScaleContext.create(g), null, pm);
+    return alignToInt(usrValue, JBUI.ScaleContext.create(g), null, pm);
   }
 
   /**
-   * Returns the value in the user aligned with the integer value in the device space, applying the rounding and parity modes.
+   * Returns the value in the user space aligned with the integer value in the device space, applying the rounding and parity modes.
    * If the rounding mode is null - {@code ROUND} is applied. If the parity mode is null - it's ignored, otherwise the value
    * converted to the device space is aligned with the nearest integer odd/even value by the provided rounding mode.
    * For instance, 2.1 would be floor'd to odd 1, ceil'd and round'ed to odd 3. Also, 1.9 would be floor'd to odd 1, ceil'd to
    * odd 3 and round'ed to odd 1.
    *
    * @param usrValue the value to align, given in the user space
-   * @param ctx the scale context, the user scale is ignored
-   * @param rm the rounding mode to apply ({@code ROUND} if null)
-   * @param pm the parity mode to apply (ignored if null)
+   * @param ctx      the scale context, the user scale is ignored
+   * @param rm       the rounding mode to apply ({@code ROUND} if null)
+   * @param pm       the parity mode to apply (ignored if null)
    * @return the aligned value, in the user space
    */
-  public static double alignToInt(double usrValue, @Nonnull ScaleContext ctx, @Nullable RoundingMode rm, @Nullable ParityMode pm) {
+  public static double alignToInt(double usrValue, @Nonnull JBUI.ScaleContext ctx, @Nullable RoundingMode rm, @Nullable ParityMode pm) {
     if (rm == null) rm = ROUND;
     double scale = getScale(ctx);
+    if (scale == 0) return 0;
+
     int devValue = devValue(usrValue, scale, pm != null && rm == ROUND ? FLOOR : rm);
     if (pm != null && ParityMode.of(devValue) != pm) {
-      devValue += (rm == FLOOR) ? -1 : 1;
+      devValue += rm == FLOOR ? -1 : 1;
     }
     return devValue / scale;
+  }
+
+  /**
+   * @see #alignToInt(double, ScaleContext, RoundingMode, ParityMode)
+   */
+  public static double alignToInt(double usrValue, @Nonnull JBUI.ScaleContext ctx) {
+    return alignToInt(usrValue, ctx, null, null);
   }
 
   /**
    * Converts the value from the user to the device space.
    *
    * @param usrValue the value in the user space
-   * @param g the graphics
+   * @param g        the graphics
    * @return the converted value
    */
   public static double devValue(double usrValue, @Nonnull Graphics2D g) {
-    return devValue(usrValue, ScaleContext.create(g));
+    return devValue(usrValue, JBUI.ScaleContext.create(g));
   }
 
   /**
    * @see #devValue(double, Graphics2D)
    */
-  public static double devValue(double usrValue, @Nonnull ScaleContext ctx) {
+  public static double devValue(double usrValue, @Nonnull JBUI.ScaleContext ctx) {
     return usrValue * getScale(ctx);
   }
 
@@ -182,21 +201,26 @@ public class PaintUtil {
     return 1 / devValue(1, g);
   }
 
-  private static double getScale(ScaleContext ctx) {
+  private static double getScale(JBUI.ScaleContext ctx) {
     // exclude the user scale, unless it's zero
-    return ctx.getScale(USR_SCALE) == 0 ? 0 : ctx.getScale(PIX_SCALE) / ctx.getScale(USR_SCALE);
+    double scale = ctx.getScale(JBUI.ScaleType.USR_SCALE) == 0 ? 0 : ctx.getScale(JBUI.ScaleType.PIX_SCALE) / ctx.getScale(JBUI.ScaleType.USR_SCALE);
+    if (scale <= 0) {
+      //Logger.getInstance(PaintUtil.class).warn("bad scale in the context: " + ctx.toString(), new Throwable());
+    }
+    return scale;
   }
 
   /**
    * Aligns the x or/and y translate of the graphics to the integer coordinate if the graphics has fractional scale transform,
    * otherwise does nothing.
    *
-   * @param g the graphics to align
+   * @param g      the graphics to align
    * @param offset x/y offset to take into account when provided (this may be e.g. insets left/top)
    * @param alignX should the x-translate be aligned
    * @param alignY should the y-translate be aligned
    * @return the original graphics transform when aligned, otherwise null
    */
+  @Nullable
   public static AffineTransform alignTxToInt(@Nonnull Graphics2D g, @Nullable Point2D offset, boolean alignX, boolean alignY, RoundingMode rm) {
     try {
       AffineTransform tx = g.getTransform();
@@ -230,16 +254,17 @@ public class PaintUtil {
   /**
    * Aligns the graphics rectangular clip to int coordinates if the graphics has fractional scale transform.
    *
-   * @param g the graphics to align
+   * @param g      the graphics to align
    * @param alignH should the x/width be aligned
    * @param alignV should the y/height be aligned
-   * @param xyRM the rounding mode to apply to the clip's x/y
-   * @param whRM the rounding mode to apply to the clip's width/height
+   * @param xyRM   the rounding mode to apply to the clip's x/y
+   * @param whRM   the rounding mode to apply to the clip's width/height
    * @return the original graphics clip when aligned, otherwise null
    */
+  @Nullable
   public static Shape alignClipToInt(@Nonnull Graphics2D g, boolean alignH, boolean alignV, RoundingMode xyRM, RoundingMode whRM) {
     Shape clip = g.getClip();
-    if ((clip instanceof Rectangle2D) && isFractionalScale(g.getTransform())) {
+    if (clip instanceof Rectangle2D && isFractionalScale(g.getTransform())) {
       Rectangle2D rect = (Rectangle2D)clip;
       double x = rect.getX();
       double y = rect.getY();
@@ -260,6 +285,57 @@ public class PaintUtil {
   }
 
   /**
+   * Returns (in user space) the fractional part of the XY {@code comp}'s offset relative to its {@code JRootPane} ancestor.
+   * <p>
+   * Used for repainting a {@code JComponent} in a UI hierarchy via an image buffer on fractional scale graphics.
+   * <pre>
+   * class MyPainter {
+   *   void paintToBuffer() {
+   *     JComponent myComp = getMyComp();
+   *     Point2D offset = getFractOffsetInRootPane(myComp);
+   *     Image buffer = getBufferForMyComp(myComp);
+   *     Graphics2D g2d = (Graphics2D)buffer.getGraphics();
+   *     // the fractional part of myComp's offset affects J2D rounding logic and so the final rasterization of myComp
+   *     // the offset is set on g2d to have the same myComp's rasterization as in original JRootPane full repaint
+   *     // otherwise pixel floating effect can be observed
+   *     g2d.translate(offset.getX(), offset.getY());
+   *     myComp.paint(g2d);
+   *   }
+   *   void paint(Graphics2D g2d) { // g2d is translated to myComp's parent XY
+   *     JComponent myComp = getMyComp();
+   *     Point2D offset = getFractOffsetInRootPane(myComp);
+   *     Image buffer = getBufferForMyComp(myComp); // already painted buffer
+   *     g2d.translate(myComp.getX() - offset.getX(), myComp.getY() - offset.getY()); // negate the fractional offset set above
+   *     UIUtil.paintImage(g2d, buffer, 0, 0, null);
+   *   }
+   * }
+   * </pre>
+   */
+  @Nonnull
+  public static Point2D getFractOffsetInRootPane(@Nonnull JComponent comp) {
+    if (!comp.isShowing() || !isFractionalScale(comp.getGraphicsConfiguration().getDefaultTransform())) return new Point2D.Double();
+    int x = 0;
+    int y = 0;
+    while (!(comp instanceof JRootPane) && comp != null) {
+      x += comp.getX();
+      y += comp.getY();
+      comp = (JComponent)comp.getParent();
+    }
+    double scale = JBUIScale.sysScale(comp);
+    double sx = x * scale;
+    double sy = y * scale;
+    return new Point2D.Double((sx - (int)sx) / scale, (sy - (int)sy) / scale);
+  }
+
+  /**
+   * Returns negated Point2D instance.
+   */
+  @Nonnull
+  public static Point2D negate(@Nonnull Point2D pt) {
+    return new Point2D.Double(-pt.getX(), -pt.getY());
+  }
+
+  /**
    * Returns true if the transform matrix contains fractional scale element.
    */
   public static boolean isFractionalScale(@Nonnull AffineTransform tx) {
@@ -271,9 +347,9 @@ public class PaintUtil {
   /**
    * Calls the {@code paint} action with the provided antialiasing.
    *
-   * @param g the graphics to paint on
+   * @param g       the graphics to paint on
    * @param valueAA a value for the {@link RenderingHints#KEY_ANTIALIASING} key
-   * @param paint the paint action
+   * @param paint   the paint action
    */
   public static void paintWithAA(@Nonnull Graphics2D g, @Nonnull Object valueAA, @Nonnull Runnable paint) {
     if (valueAA == RenderingHints.VALUE_ANTIALIAS_DEFAULT) {
@@ -284,7 +360,8 @@ public class PaintUtil {
     g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, valueAA);
     try {
       paint.run();
-    } finally {
+    }
+    finally {
       g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, key);
     }
   }

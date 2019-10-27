@@ -90,9 +90,4 @@ public class PlainTextParserDefinition implements ParserDefinition {
   public PsiFile createFile(FileViewProvider viewProvider) {
     return new PsiPlainTextFileImpl(viewProvider);
   }
-
-  @Override
-  public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
-    return SpaceRequirements.MAY;
-  }
 }

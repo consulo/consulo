@@ -15,35 +15,25 @@
  */
 package com.intellij.util.containers;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.LowMemoryWatcher;
 import javax.annotation.Nonnull;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-/**
- * User: Maxim.Mossienko
- * Date: 2/4/13
- * Time: 4:50 PM
- */
 public class RecentStringInterner {
   private final int myStripeMask;
   private final SLRUCache<String, String>[] myInterns;
   private final Lock[] myStripeLocks;
-  // LowMemoryWatcher relies on field holding it
-  @SuppressWarnings({"FieldCanBeLocal", "UnusedDeclaration"})
-  private final LowMemoryWatcher myLowMemoryWatcher;
 
-  public RecentStringInterner() {
-    this(8192);
-  }
-
-  public RecentStringInterner(int capacity) {
+  public RecentStringInterner(@Nonnull Disposable parentDisposable) {
     final int stripes = 16;
     //noinspection unchecked
     myInterns = new SLRUCache[stripes];
     myStripeLocks = new Lock[myInterns.length];
-    for(int i = 0; i < myInterns.length; ++i) {
+    int capacity = 8192;
+    for (int i = 0; i < myInterns.length; ++i) {
       myInterns[i] = new SLRUCache<String, String>(capacity / stripes, capacity / stripes) {
         @Nonnull
         @Override
@@ -52,7 +42,7 @@ public class RecentStringInterner {
         }
 
         @Override
-        protected void putToProtectedQueue(String key, String value) {
+        protected void putToProtectedQueue(String key, @Nonnull String value) {
           super.putToProtectedQueue(value, value);
         }
       };
@@ -61,12 +51,7 @@ public class RecentStringInterner {
 
     assert Integer.highestOneBit(stripes) == stripes;
     myStripeMask = stripes - 1;
-    myLowMemoryWatcher = LowMemoryWatcher.register(new Runnable() {
-      @Override
-      public void run() {
-        clear();
-      }
-    });
+    LowMemoryWatcher.register(this::clear, parentDisposable);
   }
 
   public String get(String s) {
@@ -75,13 +60,14 @@ public class RecentStringInterner {
     try {
       myStripeLocks[stripe].lock();
       return myInterns[stripe].get(s);
-    } finally {
+    }
+    finally {
       myStripeLocks[stripe].unlock();
     }
   }
 
   public void clear() {
-    for(int i = 0; i < myInterns.length; ++i) {
+    for (int i = 0; i < myInterns.length; ++i) {
       try {
         myStripeLocks[i].lock();
         myInterns[i].clear();

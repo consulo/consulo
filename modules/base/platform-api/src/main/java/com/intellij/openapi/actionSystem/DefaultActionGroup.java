@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.FunctionUtil;
 import com.intellij.util.containers.ContainerUtil;
@@ -101,10 +101,12 @@ public class DefaultActionGroup extends ActionGroup {
     add(action, Constraints.LAST, actionManager);
   }
 
+  @Deprecated
   public final void add(@Nonnull AnAction action) {
     addAction(action, Constraints.LAST);
   }
 
+  @Deprecated
   public final ActionInGroup addAction(@Nonnull AnAction action) {
     return addAction(action, Constraints.LAST);
   }
@@ -126,10 +128,12 @@ public class DefaultActionGroup extends ActionGroup {
    *                                  <li>constraint is null
    *                                  <li>action is already in the group
    */
+  @Deprecated
   public final void add(@Nonnull AnAction action, @Nonnull Constraints constraint) {
     add(action, constraint, ActionManager.getInstance());
   }
 
+  @Deprecated
   public final ActionInGroup addAction(@Nonnull AnAction action, @Nonnull Constraints constraint) {
     return addAction(action, constraint, ActionManager.getInstance());
   }

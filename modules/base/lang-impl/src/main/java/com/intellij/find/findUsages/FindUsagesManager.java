@@ -27,7 +27,6 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.Extensions;
@@ -53,8 +52,8 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.StatusBar;
-import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.psi.*;
+import com.intellij.psi.impl.PsiManagerImpl;
 import com.intellij.psi.search.*;
 import com.intellij.ui.LightweightHint;
 import com.intellij.ui.content.Content;
@@ -67,6 +66,7 @@ import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -355,7 +355,11 @@ public class FindUsagesManager {
 
       ThrowableComputable<Project, RuntimeException> action1 = () -> scopeFile != null ? scopeFile.getProject() : primaryElements[0].getProject();
       Project project = AccessRule.read(action1);
-      dropResolveCacheRegularly(ProgressManager.getInstance().getProgressIndicator(), project);
+
+      ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
+      LOG.assertTrue(indicator != null, "Must run under progress. see ProgressManager.run*");
+
+      ((PsiManagerImpl)PsiManager.getInstance(project)).dropResolveCacheRegularly(indicator);
 
       if (scopeFile != null) {
         optionsClone.searchScope = new LocalSearchScope(scopeFile);
@@ -437,26 +441,6 @@ public class FindUsagesManager {
                                                                createPresentation(primaryElements[0], findUsagesOptions, shouldOpenInNewTab()), null);
     myHistory.add(targets[0]);
     return usageView;
-  }
-
-  private static void dropResolveCacheRegularly(ProgressIndicator indicator, @Nonnull final Project project) {
-    if (indicator instanceof ProgressIndicatorEx) {
-      ((ProgressIndicatorEx)indicator).addStateDelegate(new ProgressIndicatorBase() {
-        volatile long lastCleared = System.currentTimeMillis();
-
-        @Override
-        public void setFraction(double fraction) {
-          super.setFraction(fraction);
-          long current = System.currentTimeMillis();
-          if (current - lastCleared >= 500) {
-            lastCleared = current;
-            // fraction is changed when each file is processed =>
-            // resolve caches used when searching in that file are likely to be not needed anymore
-            PsiManager.getInstance(project).dropResolveCaches();
-          }
-        }
-      });
-    }
   }
 
   @Nonnull

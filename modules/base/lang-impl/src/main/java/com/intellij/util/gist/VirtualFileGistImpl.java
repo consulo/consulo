@@ -16,7 +16,7 @@
 package com.intellij.util.gist;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
@@ -58,7 +58,7 @@ class VirtualFileGistImpl<Data> implements VirtualFileGist<Data> {
   }
 
   @Override
-  public Data getFileData(@Nonnull Project project, @Nonnull VirtualFile file) {
+  public Data getFileData(@Nullable Project project, @Nonnull VirtualFile file) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     ProgressManager.checkCanceled();
 
@@ -93,20 +93,12 @@ class VirtualFileGistImpl<Data> implements VirtualFileGist<Data> {
     }
   }
 
-  @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-  private static final Map<Pair<String, Integer>, FileAttribute> ourAttributes = new FactoryMap<Pair<String, Integer>, FileAttribute>() {
-    @Nullable
-    @Override
-    protected FileAttribute create(Pair<String, Integer> key) {
-      return new FileAttribute(key.first, key.second, false);
-    }
-  };
+  private static final Map<Pair<String, Integer>, FileAttribute> ourAttributes = FactoryMap.create(key -> new FileAttribute(key.first, key.second, false));
 
-  private FileAttribute getFileAttribute(Project project) {
+  private FileAttribute getFileAttribute(@Nullable Project project) {
     synchronized (ourAttributes) {
-      return ourAttributes.get(Pair.create(myId + project.getLocationHash(), myVersion + ourInternalVersion));
+      return ourAttributes.get(Pair.create(myId + (project == null ? "###noProject###" : project.getLocationHash()), myVersion + ourInternalVersion));
     }
   }
-
 }
 

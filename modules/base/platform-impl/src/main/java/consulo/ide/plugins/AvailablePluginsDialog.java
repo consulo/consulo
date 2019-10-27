@@ -16,7 +16,7 @@
 package consulo.ide.plugins;
 
 import com.intellij.CommonBundle;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;
 import com.intellij.openapi.util.text.StringUtil;

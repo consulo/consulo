@@ -25,6 +25,11 @@ public class CachedValueImpl<T> extends CachedValueBase<T> implements CachedValu
   private final CachedValueProvider<T> myProvider;
 
   public CachedValueImpl(@Nonnull CachedValueProvider<T> provider) {
+    this(provider, false);
+  }
+
+  CachedValueImpl(@Nonnull CachedValueProvider<T> provider, boolean trackValue) {
+    super(trackValue);
     myProvider = provider;
   }
 
@@ -45,7 +50,7 @@ public class CachedValueImpl<T> extends CachedValueBase<T> implements CachedValu
   }
 
   @Override
-  public boolean isFromMyProject(Project project) {
+  public boolean isFromMyProject(@Nonnull Project project) {
     return true;
   }
 }

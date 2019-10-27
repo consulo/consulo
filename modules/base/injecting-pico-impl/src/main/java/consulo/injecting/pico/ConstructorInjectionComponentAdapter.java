@@ -15,10 +15,10 @@
  */
 package consulo.injecting.pico;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
 import org.picocontainer.*;
 import org.picocontainer.Parameter;
 import org.picocontainer.defaults.*;

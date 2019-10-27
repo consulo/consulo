@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.diff.impl.mergeTool;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.diff.ActionButtonPresentation;
 import com.intellij.openapi.diff.DiffRequestFactory;
 import com.intellij.openapi.diff.MergeRequest;

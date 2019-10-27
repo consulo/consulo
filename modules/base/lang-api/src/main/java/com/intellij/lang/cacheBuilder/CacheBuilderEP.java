@@ -17,10 +17,10 @@
 package com.intellij.lang.cacheBuilder;
 
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.PluginAware;
 import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.logging.Logger;
 
 /**
  * @author yole

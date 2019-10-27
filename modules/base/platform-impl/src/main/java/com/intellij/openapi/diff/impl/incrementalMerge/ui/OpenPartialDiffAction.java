@@ -16,7 +16,7 @@
 package com.intellij.openapi.diff.impl.incrementalMerge.ui;
 
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.diff.DocumentContent;
 import com.intellij.openapi.diff.SimpleDiffRequest;

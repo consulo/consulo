@@ -19,7 +19,7 @@ import com.intellij.diagnostic.ThreadDumper;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.diagnostic.Attachment;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.util.containers.ConcurrentList;
 import com.intellij.util.containers.ContainerUtil;
@@ -29,16 +29,18 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.LockSupport;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Read-Write lock optimised for mostly reads.
- * Scales better than {@link java.util.concurrent.locks.ReentrantReadWriteLock} with a number of readers due to reduced contention thanks to thread local structures.
+ * Scales better than {@link ReentrantReadWriteLock} with a number of readers due to reduced contention thanks to thread local structures.
  * The lock has writer preference, i.e. no reader can obtain read lock while there is a writer pending.
  * NOT reentrant.
- * Writer assumed to issue write requests from the dedicated thread {@link #writeThread} only.
- * Readers must not issue read requests from the write thread {@link #writeThread}.
+ * Writer assumed to issue write requests from the dedicated thread {@link #myWriteThreads} only.
+ * Readers must not issue read requests from the write thread {@link #myWriteThreads}.
  * <br>
  * Based on paper <a href="http://mcg.cs.tau.ac.il/papers/ppopp2013-rwlocks.pdf">"NUMA-Aware Reader-Writer Locks" by Calciu, Dice, Lev, Luchangco, Marathe, Shavit.</a><br>
  * The elevator pitch explanation of the algorithm:<br>
@@ -47,7 +49,7 @@ import java.util.concurrent.locks.LockSupport;
  */
 public class ReadMostlyRWLock {
   private static final Logger LOG = Logger.getInstance(ReadMostlyRWLock.class);
-  private final Thread writeThread;
+  private final Set<Thread> myWriteThreads;
   volatile boolean writeRequested;  // this writer is requesting or obtained the write access
   private volatile boolean writeAcquired;   // this writer obtained the write lock
   // All reader threads are registered here. Dead readers are garbage collected in writeUnlock().
@@ -55,10 +57,12 @@ public class ReadMostlyRWLock {
 
   private final Map<Thread, SuspensionId> privilegedReaders = new ConcurrentHashMap<>();
 
+  private volatile Thread myLastParkedThread;
+
   private volatile SuspensionId currentSuspension;
 
-  public ReadMostlyRWLock(@Nonnull Thread writeThread) {
-    this.writeThread = writeThread;
+  public ReadMostlyRWLock(@Nonnull Thread... writeThreads) {
+    this.myWriteThreads = ContainerUtil.newHashSet(writeThreads);
   }
 
   // Each reader thread has instance of this struct in its thread local. it's also added to global "readers" list.
@@ -82,7 +86,7 @@ public class ReadMostlyRWLock {
   });
 
   public boolean isWriteThread() {
-    return Thread.currentThread() == writeThread;
+    return myWriteThreads.contains(Thread.currentThread());
   }
 
   public boolean isReadLockedByThisThread() {
@@ -153,7 +157,9 @@ public class ReadMostlyRWLock {
     Reader status = R.get();
     status.readRequested = false;
     if (writeRequested) {
-      LockSupport.unpark(writeThread);  // parked by writeLock()
+      Thread lastParkedThread = myLastParkedThread;
+      myLastParkedThread = null;
+      LockSupport.unpark(lastParkedThread);  // parked by writeLock()
     }
   }
 
@@ -192,6 +198,8 @@ public class ReadMostlyRWLock {
       }
 
       if (iter > SPIN_TO_WAIT_FOR_LOCK) {
+        myLastParkedThread = Thread.currentThread();
+
         LockSupport.parkNanos(this, 1000000);  // unparked by readUnlock
       }
       else {
@@ -224,6 +232,10 @@ public class ReadMostlyRWLock {
       privilegedReaders.clear();
       LOG.error("Pooled threads created during write action suspension should have been terminated: " + offenderNames, new Attachment("threadDump.txt", ThreadDumper.dumpThreadsToString()));
     }
+  }
+
+  public boolean isInImpatientReader() {
+    return R.get().impatientReads;
   }
 
   @Nullable
@@ -279,13 +291,13 @@ public class ReadMostlyRWLock {
   }
 
   private void checkWriteThreadAccess() {
-    if (Thread.currentThread() != writeThread) {
-      throw new IllegalStateException("Current thread: " + Thread.currentThread() + "; expected: " + writeThread);
+    if (!myWriteThreads.contains(Thread.currentThread())) {
+      throw new IllegalStateException("Current thread: " + Thread.currentThread() + "; expected: " + myWriteThreads);
     }
   }
 
   private void checkReadThreadAccess() {
-    if (Thread.currentThread() == writeThread) {
+    if (myWriteThreads.contains(Thread.currentThread())) {
       throw new IllegalStateException("Must not start read from the write thread: " + Thread.currentThread());
     }
   }

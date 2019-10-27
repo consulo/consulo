@@ -18,9 +18,9 @@ package com.intellij.patterns.compiler;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ConcurrentFactoryMap;
+
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,27 +31,19 @@ import java.util.Map;
  */
 @Singleton
 public class PatternCompilerFactoryImpl extends PatternCompilerFactory {
-  public static final ExtensionPointName<PatternClassBean> PATTERN_CLASS_EP =
-    new ExtensionPointName<PatternClassBean>("com.intellij.patterns.patternClass");
+  public static final ExtensionPointName<PatternClassBean> PATTERN_CLASS_EP = new ExtensionPointName<PatternClassBean>("com.intellij.patterns.patternClass");
 
 
-  private final Map<String, Class[]> myClasses = new ConcurrentFactoryMap<String, Class[]>() {
-    @Override
-    protected Class[] create(String key) {
-      final ArrayList<Class> result = new ArrayList<Class>(1);
-      final List<String> typeList = key == null? null : Arrays.asList(key.split(",|\\s"));
-      for (PatternClassBean bean : PATTERN_CLASS_EP.getExtensions()) {
-        if (typeList == null || typeList.contains(bean.getAlias())) result.add(bean.getPatternClass());
-      }
-      return result.isEmpty()? ArrayUtil.EMPTY_CLASS_ARRAY : result.toArray(new Class[result.size()]);
+  private final Map<String, Class[]> myClasses = ConcurrentFactoryMap.createMap(key -> {
+    final ArrayList<Class> result = new ArrayList<Class>(1);
+    final List<String> typeList = key == null ? null : Arrays.asList(key.split(",|\\s"));
+    for (PatternClassBean bean : PATTERN_CLASS_EP.getExtensions()) {
+      if (typeList == null || typeList.contains(bean.getAlias())) result.add(bean.getPatternClass());
     }
-  };
-  private final Map<List<Class>, PatternCompiler> myCompilers = new ConcurrentFactoryMap<List<Class>, PatternCompiler>() {
-    @Override
-    protected PatternCompiler create(List<Class> key) {
-      return new PatternCompilerImpl(key);
-    }
-  };
+    return result.isEmpty() ? ArrayUtil.EMPTY_CLASS_ARRAY : result.toArray(new Class[result.size()]);
+  });
+
+  private final Map<List<Class>, PatternCompiler> myCompilers = ConcurrentFactoryMap.createMap(PatternCompilerImpl::new);
 
   @Nonnull
   @Override

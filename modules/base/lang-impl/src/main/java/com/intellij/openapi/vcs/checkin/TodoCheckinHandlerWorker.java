@@ -18,7 +18,6 @@ package com.intellij.openapi.vcs.checkin;
 import com.intellij.ide.todo.TodoFilter;
 import com.intellij.ide.todo.TodoIndexPatternProvider;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.ex.DiffFragment;
 import com.intellij.openapi.diff.impl.ComparisonPolicy;
 import com.intellij.openapi.diff.impl.fragments.LineFragment;
@@ -53,6 +52,8 @@ import com.intellij.util.PairConsumer;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.diff.FilesTooBigForDiffException;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -21,7 +21,6 @@ import com.intellij.lang.Language;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Attachment;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileType;
@@ -47,6 +46,7 @@ import com.intellij.util.TimeoutUtil;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.lang.LanguageVersion;
+import consulo.logging.Logger;
 import consulo.psi.PsiElementWithSubtreeChangeNotifier;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
@@ -744,5 +744,13 @@ public class PsiUtilCore {
       if (psiFile != null) result.add(psiFile);
     }
     return PsiUtilCore.toPsiFileArray(result);
+  }
+
+  @Nullable
+  public static PsiFileSystemItem findFileSystemItem(@Nullable Project project, @Nullable VirtualFile file) {
+    if (project == null || file == null) return null;
+    if (project.isDisposed() || !file.isValid()) return null;
+    PsiManager psiManager = PsiManager.getInstance(project);
+    return file.isDirectory() ? psiManager.findDirectory(file) : psiManager.findFile(file);
   }
 }

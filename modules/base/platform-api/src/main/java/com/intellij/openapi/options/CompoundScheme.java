@@ -15,7 +15,8 @@
  */
 package com.intellij.openapi.options;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.lang.reflect.Constructor;

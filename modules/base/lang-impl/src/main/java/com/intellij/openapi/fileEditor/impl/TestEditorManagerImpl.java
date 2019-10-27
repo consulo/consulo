@@ -18,7 +18,7 @@ package com.intellij.openapi.fileEditor.impl;
 import com.intellij.ide.highlighter.HighlighterFactory;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -45,6 +45,7 @@ import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -73,7 +74,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
 
     project.getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerAdapter() {
       @Override
-      public void projectClosed(Project project) {
+      public void projectClosed(Project project, UIAccess uiAccess) {
         if (project == myProject) {
           closeAllFiles();
         }

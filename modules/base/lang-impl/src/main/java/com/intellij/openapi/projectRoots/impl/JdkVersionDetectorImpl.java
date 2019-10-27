@@ -16,8 +16,8 @@
 package com.intellij.openapi.projectRoots.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.NotNullFunction;
+import consulo.logging.Logger;
 
 import javax.annotation.Nullable;
 import javax.inject.Singleton;

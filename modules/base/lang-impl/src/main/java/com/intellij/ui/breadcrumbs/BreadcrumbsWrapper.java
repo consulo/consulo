@@ -19,7 +19,7 @@ import com.intellij.codeInsight.highlighting.HighlightManager;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.lang.Language;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorGutter;
 import com.intellij.openapi.editor.LogicalPosition;

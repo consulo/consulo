@@ -1,4 +1,5 @@
-<idea-plugin>
+<consulo-plugin>
+  <id>consulo.sandbox.plugin</id>
   <name>Sand Language</name>
   <platformVersion>SNAPSHOT</platformVersion>
 
@@ -49,7 +50,11 @@
                 canCloseContents="true"
                 factoryClass="consulo.sandboxPlugin.ide.toolwindow.SandToolWindowFactory"/>
     <newModuleBuilder implementation="consulo.sandboxPlugin.ide.module.SandNewModuleBuilder"/>
+    <moduleImportProvider implementation="consulo.sandboxPlugin.lang.moduleImport.SandModuleImportProvider" />
+    <moduleImportProvider implementation="consulo.sandboxPlugin.lang.moduleImport.Sand2ModuleImportProvider" />
 
     <remoteServer.type implementation="consulo.sandboxPlugin.ide.remoteServer.SandServerType" />
+
+    <xdebugger.attachDebuggerProvider implementation="consulo.sandboxPlugin.ide.debugger.attach.SandAttachToProcessProvider" />
   </extensions>
-</idea-plugin>
+</consulo-plugin>

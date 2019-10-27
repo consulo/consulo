@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.util;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 
 public class LineRange {
   private static final Logger LOG = Logger.getInstance(LineRange.class);

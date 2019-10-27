@@ -18,6 +18,8 @@ package consulo.backgroundTaskByVfsChange;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 import java.util.List;
@@ -40,6 +42,7 @@ public abstract class BackgroundTaskByVfsChangeManager {
                                                            @Nonnull VirtualFile virtualFile,
                                                            @Nonnull String name);
 
+  @RequiredUIAccess
   public abstract void openManageDialog(@Nonnull VirtualFile virtualFile);
 
   @Nonnull

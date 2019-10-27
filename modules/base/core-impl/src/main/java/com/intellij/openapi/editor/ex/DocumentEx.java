@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,29 @@
  */
 package com.intellij.openapi.editor.ex;
 
-
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.RangeMarker;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.util.Processor;
 import javax.annotation.Nonnull;
 
+import java.util.Collections;
 import java.util.List;
 
 public interface DocumentEx extends Document {
-  void setStripTrailingSpacesEnabled(boolean isEnabled);
+  default void setStripTrailingSpacesEnabled(boolean isEnabled) {
+  }
 
   @Nonnull
   LineIterator createLineIterator();
 
   void setModificationStamp(long modificationStamp);
 
-  void addEditReadOnlyListener(@Nonnull EditReadOnlyListener listener);
+  default void addEditReadOnlyListener(@Nonnull EditReadOnlyListener listener) {
+  }
 
-  void removeEditReadOnlyListener(@Nonnull EditReadOnlyListener listener);
+  default void removeEditReadOnlyListener(@Nonnull EditReadOnlyListener listener) {
+  }
 
   void replaceText(@Nonnull CharSequence chars, long newModificationStamp);
 
@@ -42,46 +46,44 @@ public interface DocumentEx extends Document {
    * <p/>
    * The benefit to use this method over usual {@link #deleteString(int, int)} and {@link #replaceString(int, int, CharSequence)}
    * is that {@link #createRangeMarker(int, int, boolean) range markers} from the {@code [srcStart; srcEnd)} range have
-   * a chance to be preserved.
+   * a chance to be preserved. Default implementation doesn't preserve range markers, but has the same effect in terms of resulting
+   * text content.
    *
    * @param srcStart  start offset of the text to move (inclusive)
    * @param srcEnd    end offset of the text to move (exclusive)
    * @param dstOffset the offset to insert the text to. Must be outside of the (srcStart, srcEnd) range.
    */
-  void moveText(int srcStart, int srcEnd, int dstOffset);
+  default void moveText(int srcStart, int srcEnd, int dstOffset) {
+    assert srcStart <= srcEnd && (dstOffset <= srcStart || dstOffset >= srcEnd);
+    if (srcStart < srcEnd && (dstOffset < srcStart || dstOffset > srcEnd)) {
+      String fragment = getText(new TextRange(srcStart, srcEnd));
+      insertString(dstOffset, fragment);
+      int shift = dstOffset < srcStart ? srcEnd - srcStart : 0;
+      deleteString(srcStart + shift, srcEnd + shift);
+    }
+  }
 
-  void suppressGuardedExceptions();
-  void unSuppressGuardedExceptions();
+  default void suppressGuardedExceptions() {
+  }
 
-  boolean isInEventsHandling();
+  default void unSuppressGuardedExceptions() {
+  }
 
-  void clearLineModificationFlags();
+  default boolean isInEventsHandling() {
+    return false;
+  }
+
+  default void clearLineModificationFlags() {
+  }
 
   boolean removeRangeMarker(@Nonnull RangeMarkerEx rangeMarker);
 
-  void registerRangeMarker(@Nonnull RangeMarkerEx rangeMarker,
-                           int start,
-                           int end,
-                           boolean greedyToLeft,
-                           boolean greedyToRight,
-                           int layer);
-
-  boolean isInBulkUpdate();
-
-  /**
-   * Enters or exits 'bulk' mode for processing of document changes. Bulk mode should be used when a large number of document changes
-   * are applied in batch (without user interaction for each change). In this mode, to improve performance, some activities that usually
-   * happen on each document change will be muted, with reconciliation happening on bulk mode exit.
-   * <br>
-   * Certain operations shouldn't be invoked in bulk mode as they can return invalid results or lead to exception. They include: querying
-   * or updating folding or soft wrap data, editor position recalculation functions (offset to logical position, logical to visual position,
-   * etc), querying or updating caret position or selection state.
-   */
-  void setInBulkUpdate(boolean value);
+  void registerRangeMarker(@Nonnull RangeMarkerEx rangeMarker, int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer);
 
   @Nonnull
-  List<RangeMarker> getGuardedBlocks();
-
+  default List<RangeMarker> getGuardedBlocks() {
+    return Collections.emptyList();
+  }
 
   /**
    * Get all range markers
@@ -90,7 +92,7 @@ public interface DocumentEx extends Document {
   boolean processRangeMarkers(@Nonnull Processor<? super RangeMarker> processor);
 
   /**
-   * Get range markers which {@link com.intellij.openapi.util.TextRange#intersects(int, int)} the specified range
+   * Get range markers which {@link TextRange#intersects(int, int)} the specified range
    * and hand them to the {@code processor} in their {@link RangeMarker#getStartOffset()} order
    */
   boolean processRangeMarkersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeMarker> processor);
@@ -98,7 +100,9 @@ public interface DocumentEx extends Document {
   /**
    * @return modification stamp. Guaranteed to be strictly increasing on each change unlike the {@link #getModificationStamp()} which can change arbitrarily.
    */
-  int getModificationSequence();
+  default int getModificationSequence() {
+    return 0;
+  }
 }
 
 

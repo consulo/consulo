@@ -23,10 +23,9 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.BitUtil;
 import consulo.ui.RequiredUIAccess;
-import consulo.platform.Platform;
 import consulo.ui.UIAccess;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.awt.event.InputEvent;
 import java.io.File;
 import java.util.List;
@@ -72,7 +71,7 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
       return;
     }
 
-    Platform.hacky(() -> ProjectUtil.open(myProjectPath, project, forceOpenInNewFrame), () -> ProjectUtil.openAsync(myProjectPath, null, forceOpenInNewFrame, UIAccess.get()));
+    ProjectUtil.openAsync(myProjectPath, project, forceOpenInNewFrame, UIAccess.current());
   }
 
   @Nonnull

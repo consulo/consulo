@@ -22,7 +22,6 @@
  */
 package com.intellij.openapi.vcs.changes.shelf;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.impl.patch.ApplyPatchException;
 import com.intellij.openapi.diff.impl.patch.PatchSyntaxException;
 import com.intellij.openapi.diff.impl.patch.TextFilePatch;
@@ -36,6 +35,8 @@ import com.intellij.openapi.vcs.changes.*;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

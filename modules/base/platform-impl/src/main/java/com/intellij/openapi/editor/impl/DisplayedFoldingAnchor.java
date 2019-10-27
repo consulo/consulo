@@ -16,16 +16,31 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.openapi.editor.FoldRegion;
+import javax.annotation.Nonnull;
 
 class DisplayedFoldingAnchor {
-  enum Type {COLLAPSED, EXPANDED_TOP, EXPANDED_BOTTOM}
+  enum Type {
+    COLLAPSED(false),
+    COLLAPSED_SINGLE_LINE(true),
+    EXPANDED_TOP(false),
+    EXPANDED_BOTTOM(false),
+    EXPANDED_SINGLE_LINE(true);
 
-  public final FoldRegion foldRegion;
-  public final int visualLine;
-  public final int foldRegionVisualLines;
-  public final Type type;
+    public final boolean singleLine;
 
-  DisplayedFoldingAnchor(FoldRegion foldRegion, int visualLine, int foldRegionVisualLines, Type type) {
+    Type(boolean singleLine) {
+      this.singleLine = singleLine;
+    }
+  }
+
+  @Nonnull
+  final FoldRegion foldRegion;
+  final int visualLine;
+  final int foldRegionVisualLines;
+  @Nonnull
+  final Type type;
+
+  DisplayedFoldingAnchor(@Nonnull FoldRegion foldRegion, int visualLine, int foldRegionVisualLines, @Nonnull Type type) {
     this.foldRegion = foldRegion;
     this.visualLine = visualLine;
     this.foldRegionVisualLines = foldRegionVisualLines;

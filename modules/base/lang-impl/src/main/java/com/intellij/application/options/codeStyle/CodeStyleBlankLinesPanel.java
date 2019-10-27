@@ -16,7 +16,6 @@
 package com.intellij.application.options.codeStyle;
 
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
@@ -31,6 +30,7 @@ import com.intellij.ui.components.fields.IntegerField;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.logging.Logger;
 import gnu.trove.THashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

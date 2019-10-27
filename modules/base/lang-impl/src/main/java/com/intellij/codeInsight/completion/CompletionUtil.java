@@ -1,58 +1,36 @@
-/*
- * Copyright 2000-2015 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.intellij.codeInsight.completion;
 
-import com.intellij.codeInsight.CodeInsightSettings;
 import com.intellij.codeInsight.TailType;
 import com.intellij.codeInsight.lookup.Lookup;
 import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupItem;
 import com.intellij.codeInsight.lookup.LookupValueWithPsiElement;
-import com.intellij.diagnostic.LogEventException;
 import com.intellij.diagnostic.ThreadDumper;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.lang.Language;
+import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.diagnostic.Attachment;
+import com.intellij.openapi.diagnostic.RuntimeExceptionWithAttachments;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.NotNullLazyValue;
+import com.intellij.openapi.keymap.KeymapUtil;
+import com.intellij.openapi.project.Project;
+import com.intellij.patterns.CharPattern;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.filters.TrueFilter;
-import com.intellij.util.ExceptionUtil;
 import com.intellij.util.UnmodifiableIterator;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.HashMap;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
-import static com.intellij.patterns.PlatformPatterns.character;
-
 public class CompletionUtil {
-  public static final Key<TailType> TAIL_TYPE_ATTR = LookupItem.TAIL_TYPE_ATTR;
 
   private static final CompletionData ourGenericCompletionData = new CompletionData() {
     {
@@ -61,35 +39,12 @@ public class CompletionUtil {
       registerVariant(variant);
     }
   };
-  private static final HashMap<FileType, NotNullLazyValue<CompletionData>> ourCustomCompletionDatas = new HashMap<FileType, NotNullLazyValue<CompletionData>>();
-
-  public static final @NonNls String DUMMY_IDENTIFIER = CompletionInitializationContext.DUMMY_IDENTIFIER;
-  public static final @NonNls String DUMMY_IDENTIFIER_TRIMMED = DUMMY_IDENTIFIER.trim();
-
-  public static boolean startsWith(String text, String prefix) {
-    //if (text.length() <= prefix.length()) return false;
-    return toLowerCase(text).startsWith(toLowerCase(prefix));
-  }
-
-  private static String toLowerCase(String text) {
-    CodeInsightSettings settings = CodeInsightSettings.getInstance();
-    switch (settings.COMPLETION_CASE_SENSITIVE) {
-      case CodeInsightSettings.NONE:
-        return text.toLowerCase();
-
-      case CodeInsightSettings.FIRST_LETTER: {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append(text.toLowerCase());
-        if (buffer.length() > 0) {
-          buffer.setCharAt(0, text.charAt(0));
-        }
-        return buffer.toString();
-      }
-
-      default:
-        return text;
-    }
-  }
+  public static final
+  @NonNls
+  String DUMMY_IDENTIFIER = CompletionInitializationContext.DUMMY_IDENTIFIER;
+  public static final
+  @NonNls
+  String DUMMY_IDENTIFIER_TRIMMED = DUMMY_IDENTIFIER.trim();
 
   @Nullable
   public static CompletionData getCompletionDataByElement(@Nullable final PsiElement position, @Nonnull PsiFile originalFile) {
@@ -110,19 +65,21 @@ public class CompletionUtil {
   }
 
   @Nullable
-  public static CompletionData getCompletionDataByFileType(FileType fileType) {
-    for(CompletionDataEP ep: Extensions.getExtensions(CompletionDataEP.EP_NAME)) {
+  private static CompletionData getCompletionDataByFileType(FileType fileType) {
+    for (CompletionDataEP ep : CompletionDataEP.EP_NAME.getExtensionList()) {
       if (ep.fileType.equals(fileType.getName())) {
         return ep.getHandler();
       }
     }
-    final NotNullLazyValue<CompletionData> lazyValue = ourCustomCompletionDatas.get(fileType);
-    return lazyValue == null ? null : lazyValue.getValue();
+    return null;
   }
 
+  public static boolean shouldShowFeature(CompletionParameters parameters, @NonNls final String id) {
+    return shouldShowFeature(parameters.getPosition().getProject(), id);
+  }
 
-  public static boolean shouldShowFeature(final CompletionParameters parameters, @NonNls final String id) {
-    if (FeatureUsageTracker.getInstance().isToBeAdvertisedInLookup(id, parameters.getPosition().getProject())) {
+  public static boolean shouldShowFeature(Project project, @NonNls String id) {
+    if (FeatureUsageTracker.getInstance().isToBeAdvertisedInLookup(id, project)) {
       FeatureUsageTracker.getInstance().triggerFeatureShown(id);
       return true;
     }
@@ -134,7 +91,7 @@ public class CompletionUtil {
   }
 
   public static String findJavaIdentifierPrefix(final PsiElement insertedElement, final int offset) {
-    return findIdentifierPrefix(insertedElement, offset, character().javaIdentifierPart(), character().javaIdentifierStart());
+    return findIdentifierPrefix(insertedElement, offset, CharPattern.javaIdentifierPartCharacter(), CharPattern.javaIdentifierStartCharacter());
   }
 
   public static String findReferenceOrAlphanumericPrefix(CompletionParameters parameters) {
@@ -143,17 +100,26 @@ public class CompletionUtil {
   }
 
   public static String findAlphanumericPrefix(CompletionParameters parameters) {
-    return findIdentifierPrefix(parameters.getPosition().getContainingFile(), parameters.getOffset(), character().letterOrDigit(), character().letterOrDigit());
+    return findIdentifierPrefix(parameters.getPosition().getContainingFile(), parameters.getOffset(), CharPattern.letterOrDigitCharacter(), CharPattern.letterOrDigitCharacter());
   }
 
-  public static String findIdentifierPrefix(PsiElement insertedElement, int offset, ElementPattern<Character> idPart,
-                                            ElementPattern<Character> idStart) {
-    if(insertedElement == null) return "";
-    final String text = insertedElement.getText();
+  public static String findIdentifierPrefix(PsiElement insertedElement, int offset, ElementPattern<Character> idPart, ElementPattern<Character> idStart) {
+    if (insertedElement == null) return "";
+    int startOffset = insertedElement.getTextRange().getStartOffset();
+    return findInText(offset, startOffset, idPart, idStart, insertedElement.getNode().getChars());
+  }
 
-    final int offsetInElement = offset - insertedElement.getTextRange().getStartOffset();
+  @SuppressWarnings("unused") // used in Rider
+  public static String findIdentifierPrefix(@Nonnull Document document, int offset, ElementPattern<Character> idPart, ElementPattern<Character> idStart) {
+    final String text = document.getText();
+    return findInText(offset, 0, idPart, idStart, text);
+  }
+
+  @Nonnull
+  private static String findInText(int offset, int startOffset, ElementPattern<Character> idPart, ElementPattern<Character> idStart, CharSequence text) {
+    final int offsetInElement = offset - startOffset;
     int start = offsetInElement - 1;
-    while (start >=0 ) {
+    while (start >= 0) {
       if (!idPart.accepts(text.charAt(start))) break;
       --start;
     }
@@ -161,7 +127,7 @@ public class CompletionUtil {
       start++;
     }
 
-    return text.substring(start + 1, offsetInElement).trim();
+    return text.subSequence(start + 1, offsetInElement).toString().trim();
   }
 
   @Nullable
@@ -213,14 +179,14 @@ public class CompletionUtil {
   @Nullable
   public static PsiElement getTargetElement(LookupElement lookupElement) {
     PsiElement psiElement = lookupElement.getPsiElement();
-    if (psiElement != null) {
+    if (psiElement != null && psiElement.isValid()) {
       return getOriginalElement(psiElement);
     }
 
     Object object = lookupElement.getObject();
     if (object instanceof LookupValueWithPsiElement) {
       final PsiElement element = ((LookupValueWithPsiElement)object).getElement();
-      if (element != null) return getOriginalElement(element);
+      if (element != null && element.isValid()) return getOriginalElement(element);
     }
 
     return null;
@@ -235,41 +201,6 @@ public class CompletionUtil {
   public static <T extends PsiElement> T getOriginalOrSelf(@Nonnull T psi) {
     final T element = getOriginalElement(psi);
     return element == null ? psi : element;
-  }
-
-  /**
-   * Filters _names for strings that match given matcher and sorts them.
-   * "Start matching" items go first, then others.
-   * Within both groups names are sorted lexicographically in a case-insensitive way.
-   */
-  public static LinkedHashSet<String> sortMatching(final PrefixMatcher matcher, Collection<String> _names) {
-    ProgressManager.checkCanceled();
-    if (matcher.getPrefix().isEmpty()) {
-      return ContainerUtil.newLinkedHashSet(_names);
-    }
-
-    List<String> sorted = new ArrayList<String>();
-    for (String name : _names) {
-      if (matcher.prefixMatches(name)) {
-        sorted.add(name);
-      }
-    }
-
-    ProgressManager.checkCanceled();
-    Collections.sort(sorted, String.CASE_INSENSITIVE_ORDER);
-    ProgressManager.checkCanceled();
-
-    LinkedHashSet<String> result = new LinkedHashSet<String>();
-    for (String name : sorted) {
-      if (matcher.isStartMatch(name)) {
-        result.add(name);
-      }
-    }
-
-    ProgressManager.checkCanceled();
-
-    result.addAll(sorted);
-    return result;
   }
 
   public static Iterable<String> iterateLookupStrings(@Nonnull final LookupElement element) {
@@ -299,13 +230,23 @@ public class CompletionUtil {
             }
           }
 
-          private LogEventException handleCME(ConcurrentModificationException e) {
-            final Attachment dump = new Attachment("threadDump.txt", ThreadDumper.dumpThreadsToString());
-            return new LogEventException("Error while traversing lookup strings of " + element + " of " + element.getClass(),
-                                         ExceptionUtil.getThrowableText(e), dump);
+          private RuntimeException handleCME(ConcurrentModificationException cme) {
+            RuntimeExceptionWithAttachments ewa = new RuntimeExceptionWithAttachments("Error while traversing lookup strings of " + element + " of " + element.getClass(), (String)null,
+                                                                                      new Attachment("threadDump.txt", ThreadDumper.dumpThreadsToString()));
+            ewa.initCause(cme);
+            return ewa;
           }
         };
       }
     };
+  }
+
+  /**
+   * @return String representation of action shortcut. Useful while advertising something
+   * @see #advertise(CompletionParameters)
+   */
+  @Nonnull
+  public static String getActionShortcut(@NonNls @Nonnull final String actionId) {
+    return KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(actionId));
   }
 }

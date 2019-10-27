@@ -29,8 +29,9 @@ import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
+import consulo.application.CallChain;
 import consulo.ui.RequiredUIAccess;
-import consulo.application.AccessRule;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -51,8 +52,7 @@ public class SynchronizeCurrentFileAction extends AnAction implements DumbAware 
   }
 
   private static String getMessage(VirtualFile[] files) {
-    return files.length == 1 ? IdeBundle.message("action.synchronize.file", files[0].getName())
-                             : IdeBundle.message("action.synchronize.selected.files");
+    return files.length == 1 ? IdeBundle.message("action.synchronize.file", files[0].getName()) : IdeBundle.message("action.synchronize.selected.files");
   }
 
   @RequiredUIAccess
@@ -62,14 +62,14 @@ public class SynchronizeCurrentFileAction extends AnAction implements DumbAware 
     final VirtualFile[] files = getFiles(e);
     if (project == null || files == null || files.length == 0) return;
 
-    AccessRule.writeAsync(() -> {
+    CallChain.first(UIAccess.current()).linkWrite(() -> {
       for (VirtualFile file : files) {
         final VirtualFileSystem fs = file.getFileSystem();
         if (fs instanceof LocalFileSystem && file instanceof NewVirtualFile) {
           ((NewVirtualFile)file).markDirtyRecursively();
         }
       }
-    }).doWhenDone(() -> {
+    }).linkUI(() -> {
       final Runnable postRefreshAction = () -> {
         final VcsDirtyScopeManager dirtyScopeManager = VcsDirtyScopeManager.getInstance(project);
         for (VirtualFile f : files) {
@@ -89,7 +89,7 @@ public class SynchronizeCurrentFileAction extends AnAction implements DumbAware 
       };
 
       RefreshQueue.getInstance().refresh(true, true, postRefreshAction, files);
-    });
+    }).toss();
   }
 
   @Nullable

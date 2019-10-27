@@ -15,7 +15,6 @@
  */
 package com.intellij.ide.plugins.pluginsAdvertisement;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationGroup;
@@ -28,13 +27,18 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownExtension;
 import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.EditorNotifications;
 import com.intellij.util.ui.UIUtil;
-import consulo.ide.plugins.SimpleExtension;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.SimpleExtension;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
-import javax.annotation.Nonnull;
+import consulo.ide.updateSettings.UpdateSettings;
+import consulo.ui.UIAccess;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.event.HyperlinkEvent;
 import java.util.*;
 
@@ -42,8 +46,8 @@ public class PluginsAdvertiser implements StartupActivity, DumbAware {
   private static NotificationGroup ourGroup = new NotificationGroup("Plugins Suggestion", NotificationDisplayType.STICKY_BALLOON, true);
 
   @Override
-  public void runActivity(@Nonnull final Project project) {
-    consulo.ide.updateSettings.UpdateSettings updateSettings = consulo.ide.updateSettings.UpdateSettings.getInstance();
+  public void runActivity(@Nonnull UIAccess uiAccess, @Nonnull final Project project) {
+    UpdateSettings updateSettings = UpdateSettings.getInstance();
     if (!updateSettings.isEnable()) {
       return;
     }
@@ -65,12 +69,12 @@ public class PluginsAdvertiser implements StartupActivity, DumbAware {
         return;
       }
 
-      final Set<IdeaPluginDescriptor> ids = new HashSet<>();
+      final Set<PluginDescriptor> ids = new HashSet<>();
       for (UnknownExtension feature : unknownExtensions) {
-        final Set<IdeaPluginDescriptor> descriptors = findByFeature(pluginDescriptors, feature);
+        final Set<PluginDescriptor> descriptors = findByFeature(pluginDescriptors, feature);
         //do not suggest to download disabled plugins
         final List<String> disabledPlugins = PluginManagerCore.getDisabledPlugins();
-        for (IdeaPluginDescriptor id : descriptors) {
+        for (PluginDescriptor id : descriptors) {
           if (!disabledPlugins.contains(id.getPluginId().getIdString())) {
             ids.add(id);
           }
@@ -81,31 +85,31 @@ public class PluginsAdvertiser implements StartupActivity, DumbAware {
         return;
       }
 
-      ourGroup.createNotification(ourGroup.getDisplayId(), "Features covered by non-installed plugins are detected.<br>" +
-                                                           "<a href=\"configure\">Configure plugins...</a><br>" +
-                                                           "<a href=\"ignore\">Ignore All</a>", NotificationType.INFORMATION, (notification, event) -> {
-        if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-          final String description = event.getDescription();
-          if ("ignore".equals(description)) {
-            for (UnknownExtension feature : unknownExtensions) {
-              collectorSuggester.ignoreFeature(feature);
-            }
-            notification.expire();
-          }
-          else if ("configure".equals(description)) {
-            notification.expire();
+      ourGroup.createNotification(ourGroup.getDisplayId(),
+                                  "Features covered by non-installed plugins are detected.<br>" + "<a href=\"configure\">Configure plugins...</a><br>" + "<a href=\"ignore\">Ignore All</a>",
+                                  NotificationType.INFORMATION, (notification, event) -> {
+                if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                  final String description = event.getDescription();
+                  if ("ignore".equals(description)) {
+                    for (UnknownExtension feature : unknownExtensions) {
+                      collectorSuggester.ignoreFeature(feature);
+                    }
+                    notification.expire();
+                  }
+                  else if ("configure".equals(description)) {
+                    notification.expire();
 
-            new PluginsAdvertiserDialog(project, new ArrayList<>(ids)).show();
-          }
-        }
-      }).notify(project);
+                    new PluginsAdvertiserDialog(project, new ArrayList<>(ids)).show();
+                  }
+                }
+              }).notify(project);
     });
   }
 
   @Nonnull
-  public static Set<IdeaPluginDescriptor> findByFeature(List<IdeaPluginDescriptor> descriptors, UnknownExtension feature) {
-    Set<IdeaPluginDescriptor> filter = new LinkedHashSet<>();
-    for (IdeaPluginDescriptor descriptor : descriptors) {
+  public static Set<PluginDescriptor> findByFeature(List<PluginDescriptor> descriptors, UnknownExtension feature) {
+    Set<PluginDescriptor> filter = new LinkedHashSet<>();
+    for (PluginDescriptor descriptor : descriptors) {
       for (SimpleExtension simpleExtension : descriptor.getSimpleExtensions()) {
         // check is is my extension
         if (feature.getExtensionKey().equals(simpleExtension.getKey())) {
@@ -120,14 +124,49 @@ public class PluginsAdvertiser implements StartupActivity, DumbAware {
     return filter;
   }
 
-  private static boolean isMyFeature(String value, UnknownExtension feature) {
+  private static boolean isMyFeature(String extensionValue, UnknownExtension feature) {
     if (feature.getExtensionKey().equals(FileTypeFactory.FILE_TYPE_FACTORY_EP.getName())) {
-      FileNameMatcher matcher = FileNameMatcherFactory.getInstance().createMatcher(value);
-
-      return matcher.accept(feature.getValue());
+      FileNameMatcher matcher = createMatcher(extensionValue);
+      return matcher != null && matcher.accept(feature.getValue());
     }
     else {
-      return value.equals(feature.getValue());
+      return extensionValue.equals(feature.getValue());
+    }
+  }
+
+  /**
+   * for correct specification - see hub impl
+   */
+  @Nullable
+  public static FileNameMatcher createMatcher(@Nonnull String extensionValue) {
+    if (extensionValue.length() < 2) {
+      return null;
+    }
+
+    List<String> values = StringUtil.split(extensionValue, "|");
+
+    String id = values.get(0);
+    if (id.length() != 1) {
+      return null;
+    }
+
+
+    FileNameMatcherFactory factory = FileNameMatcherFactory.getInstance();
+    String value = values.get(1);
+
+    char idChar = id.charAt(0);
+
+    switch (idChar) {
+      case '?':
+        return factory.createWildcardFileNameMatcher(value);
+      case '*':
+        return factory.createExtensionFileNameMatcher(value);
+      case '!':
+        return factory.createExactFileNameMatcher(value, true);
+      case '¡':
+        return factory.createExactFileNameMatcher(value, false);
+      default:
+        return null;
     }
   }
 }

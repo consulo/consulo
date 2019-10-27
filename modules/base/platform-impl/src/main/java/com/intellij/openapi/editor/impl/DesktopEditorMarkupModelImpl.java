@@ -24,6 +24,7 @@
  */
 package com.intellij.openapi.editor.impl;
 
+import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.hint.*;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.Disposable;
@@ -41,6 +42,7 @@ import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.DisposerUtil;
 import com.intellij.openapi.util.ProperTextRange;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.ui.*;
@@ -134,6 +136,8 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
   }
 
   public boolean showToolTipByMouseMove(final MouseEvent e) {
+    boolean newLook = Registry.is("editor.new.mouse.hover.popups");
+
     if (myEditor.getVisibleLineCount() == 0) return false;
     MouseEvent me = new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), 0, e.getY() + 1, e.getClickCount(), e.isPopupTrigger());
 
@@ -160,7 +164,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
       me = new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), me.getX(), y + 1, e.getClickCount(), e.isPopupTrigger());
       bigRenderer = myTooltipRendererProvider.calcTooltipRenderer(highlighters);
       if (bigRenderer != null) {
-        myErrorPanel.showTooltip(me, bigRenderer, createHint(me));
+        myErrorPanel.showTooltip(me, bigRenderer, createHint(me).setForcePopup(newLook));
         return true;
       }
       return false;
@@ -422,7 +426,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
 
   private static class BasicTooltipRendererProvider implements ErrorStripTooltipRendererProvider {
     @Override
-    public TooltipRenderer calcTooltipRenderer(@Nonnull final Collection<RangeHighlighter> highlighters) {
+    public TooltipRenderer calcTooltipRenderer(@Nonnull final Collection<? extends RangeHighlighter> highlighters) {
       LineTooltipRenderer bigRenderer = null;
       //do not show same tooltip twice
       Set<String> tooltips = null;
@@ -431,7 +435,9 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
         final Object tooltipObject = highlighter.getErrorStripeTooltip();
         if (tooltipObject == null) continue;
 
-        final String text = tooltipObject.toString();
+        final String text = tooltipObject instanceof HighlightInfo ? ((HighlightInfo)tooltipObject).getToolTip() : tooltipObject.toString();
+        if (text == null) continue;
+
         if (tooltips == null) {
           tooltips = new THashSet<>();
         }
@@ -549,7 +555,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
           public Dimension getPreferredSize() {
             int width = myEditor.getGutterComponentEx().getWidth() + myEditor.getScrollingModel().getVisibleArea().width;
             if (!ToolWindowManagerEx.getInstanceEx(myEditor.getProject()).getIdsOn(ToolWindowAnchor.LEFT).isEmpty()) width--;
-            return new Dimension(width - BalloonImpl.POINTER_WIDTH, myEditor.getLineHeight() * (myEndVisualLine - myStartVisualLine));
+            return new Dimension(width - BalloonImpl.POINTER_LENGTH.get(), myEditor.getLineHeight() * (myEndVisualLine - myStartVisualLine));
           }
 
           @Override

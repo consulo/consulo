@@ -21,6 +21,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Allows a custom language plugin to build a formatting model for a file in the language, or
@@ -31,11 +32,11 @@ import javax.annotation.Nonnull;
  * as the language's whitespace tokens. See {@link com.intellij.lang.ParserDefinition}
  *
  * @see com.intellij.lang.LanguageFormatting
- * @see FormattingModelProvider#createFormattingModelForPsiFile(com.intellij.psi.PsiFile, Block, com.intellij.psi.codeStyle.CodeStyleSettings)
+ * @see FormattingModelProvider#createFormattingModelForPsiFile(PsiFile, Block, CodeStyleSettings)
  */
 
 public interface FormattingModelBuilder {
-  
+
   /**
    * Requests building the formatting model for a section of the file containing
    * the specified PSI element and its children.
@@ -51,11 +52,13 @@ public interface FormattingModelBuilder {
    * Returns the TextRange which should be processed by the formatter in order to calculate the
    * indent for a new line when a line break is inserted at the specified offset.
    *
-   * @param file   the file in which the line break is inserted.
-   * @param offset the line break offset.
+   * @param file            the file in which the line break is inserted.
+   * @param offset          the line break offset.
    * @param elementAtOffset the parameter at {@code offset}
    * @return the range to reformat, or null if the default range should be used
    */
-  @javax.annotation.Nullable
-  TextRange getRangeAffectingIndent(PsiFile file, int offset, ASTNode elementAtOffset);
+  @Nullable
+  default TextRange getRangeAffectingIndent(PsiFile file, int offset, ASTNode elementAtOffset) {
+    return null;
+  }
 }

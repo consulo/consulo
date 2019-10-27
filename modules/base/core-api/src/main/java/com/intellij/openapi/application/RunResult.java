@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.application;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 
 

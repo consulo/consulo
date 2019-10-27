@@ -17,7 +17,7 @@
 package com.intellij.usageView;
 
 import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;

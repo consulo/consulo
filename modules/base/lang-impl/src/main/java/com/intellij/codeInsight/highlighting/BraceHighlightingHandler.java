@@ -28,6 +28,7 @@ import com.intellij.codeInsight.CodeInsightSettings;
 import com.intellij.codeInsight.hint.EditorFragmentComponent;
 import com.intellij.injected.editor.EditorWindow;
 import com.intellij.lang.Language;
+import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -66,7 +67,7 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.Alarm;
 import com.intellij.util.Processor;
-import com.intellij.util.containers.WeakHashMap;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;
 
 import javax.annotation.Nonnull;
@@ -88,7 +89,7 @@ public class BraceHighlightingHandler {
    * Is intended to be used to avoid submitting unnecessary new processing request from EDT, i.e. it's assumed that the collection
    * is accessed from the single thread (EDT).
    */
-  private static final Set<Editor> PROCESSED_EDITORS = Collections.newSetFromMap(new WeakHashMap<Editor, Boolean>());
+  private static final Set<Editor> PROCESSED_EDITORS = Collections.newSetFromMap(ContainerUtil.createWeakMap());
 
   @Nonnull
   private final Project myProject;
@@ -190,7 +191,7 @@ public class BraceHighlightingHandler {
     Document document = editor.getDocument();
     // when document is committed, try to highlight braces in injected lang - it's fast
     if (PsiDocumentManager.getInstance(project).isCommitted(document)) {
-      final PsiElement injectedElement = InjectedLanguageUtil.findInjectedElementNoCommit(psiFile, offset);
+      final PsiElement injectedElement = InjectedLanguageManager.getInstance(psiFile.getProject()).findInjectedElementAt(psiFile, offset);
       if (injectedElement != null /*&& !(injectedElement instanceof PsiWhiteSpace)*/) {
         final PsiFile injected = injectedElement.getContainingFile();
         if (injected != null) {

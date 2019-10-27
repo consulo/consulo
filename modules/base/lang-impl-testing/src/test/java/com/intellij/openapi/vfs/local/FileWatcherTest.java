@@ -17,7 +17,6 @@ package com.intellij.openapi.vfs.local;
 
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
@@ -35,6 +34,8 @@ import com.intellij.util.Function;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.io.File;
@@ -90,9 +91,9 @@ public abstract class FileWatcherTest extends PlatformLangTestCase {
     myWatcher = ((LocalFileSystemImpl)myFileSystem).getFileWatcher();
     assertNotNull(myWatcher);
     assertFalse(myWatcher.isOperational());
-    myWatcher.startup(new Consumer<Boolean>() {
+    myWatcher.startup(new Consumer<String>() {
       @Override
-      public void accept(Boolean reset) {
+      public void accept(String r) {
         myAlarm.cancelAllRequests();
         myAlarm.addRequest(() -> {
           myAccept = false;

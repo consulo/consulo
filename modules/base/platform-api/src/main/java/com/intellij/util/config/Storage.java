@@ -17,7 +17,7 @@ package com.intellij.util.config;
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.containers.HashMap;
 
 import java.util.Collections;

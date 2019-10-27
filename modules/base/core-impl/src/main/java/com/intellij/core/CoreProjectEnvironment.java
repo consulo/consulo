@@ -20,11 +20,9 @@ import com.intellij.mock.MockFileIndexFacade;
 import com.intellij.mock.MockProject;
 import com.intellij.mock.MockResolveScopeManager;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.roots.FileIndexFacade;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.PsiManager;
@@ -63,11 +61,11 @@ public class CoreProjectEnvironment {
     myProject.registerService(ResolveCache.class, new ResolveCache(myProject));
 
     registerProjectExtensionPoint(PsiTreeChangePreprocessor.EP_NAME, PsiTreeChangePreprocessor.class);
-    myPsiManager = new PsiManagerImpl(myProject, null, null, myFileIndexFacade, modificationTracker);
+    myPsiManager = new PsiManagerImpl(myProject, () -> myFileIndexFacade, modificationTracker);
     ((FileManagerImpl)myPsiManager.getFileManager()).markInitialized();
     registerProjectComponent(PsiManager.class, myPsiManager);
 
-    registerProjectComponent(PsiDocumentManager.class, new CorePsiDocumentManager(myProject, myPsiManager, new MockDocumentCommitProcessor()));
+    registerProjectComponent(PsiDocumentManager.class, new CorePsiDocumentManager(myProject, new MockDocumentCommitProcessor()));
 
     myProject.registerService(ResolveScopeManager.class, createResolveScopeManager(myPsiManager));
 

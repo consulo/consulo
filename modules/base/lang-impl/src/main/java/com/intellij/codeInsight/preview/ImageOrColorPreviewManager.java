@@ -17,7 +17,6 @@
 package com.intellij.codeInsight.preview;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -36,9 +35,9 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.WeakHashMap;
-import javax.annotation.Nonnull;
+import consulo.logging.Logger;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -157,7 +156,7 @@ public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotion
       return Collections.emptySet();
     }
 
-    final Set<PsiElement> elements = Collections.newSetFromMap(new WeakHashMap<PsiElement, Boolean>());
+    final Set<PsiElement> elements = Collections.newSetFromMap(ContainerUtil.createWeakMap());
     final int offset = editor.logicalPositionToOffset(editor.xyToLogicalPosition(point));
     if (documentManager.isCommitted(document)) {
       ContainerUtil.addIfNotNull(elements, InjectedLanguageUtil.findElementAtNoCommit(psiFile, offset));

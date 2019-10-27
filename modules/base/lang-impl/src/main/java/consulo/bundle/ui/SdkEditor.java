@@ -15,7 +15,7 @@
  */
 package consulo.bundle.ui;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.ui.BaseSdkEditor;

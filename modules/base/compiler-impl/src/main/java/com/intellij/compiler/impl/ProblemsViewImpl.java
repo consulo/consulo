@@ -17,7 +17,6 @@ package com.intellij.compiler.impl;
 
 import com.intellij.compiler.ProblemsView;
 import com.intellij.ide.errorTreeView.impl.ErrorTreeViewConfiguration;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.EmptyRunnable;
@@ -31,6 +30,7 @@ import com.intellij.ui.content.MessageView;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

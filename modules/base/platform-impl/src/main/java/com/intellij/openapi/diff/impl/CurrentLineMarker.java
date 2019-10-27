@@ -16,13 +16,13 @@
 package com.intellij.openapi.diff.impl;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.CaretModel;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.CaretEvent;
 import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.editor.markup.HighlighterLayer;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
+import consulo.logging.Logger;
 
 public class CurrentLineMarker implements CaretListener {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.CurrentLineMarker");

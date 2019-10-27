@@ -19,21 +19,22 @@ import com.intellij.CommonBundle;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.HelpSetPath;
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.ui.Messages;
+import consulo.container.plugin.PluginDescriptor;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.help.BadIDException;
 import javax.help.HelpSet;
 import javax.inject.Singleton;
 import java.awt.*;
 import java.net.URL;
+import java.util.Collection;
 
 @Singleton
 public class DesktopHelpManagerImpl extends HelpManager {
@@ -84,9 +85,9 @@ public class DesktopHelpManagerImpl extends HelpManager {
     if (mainHelpSet == null) return null;
 
     // merge plugins help sets
-    IdeaPluginDescriptor[] pluginDescriptors = PluginManagerCore.getPlugins();
-    for (IdeaPluginDescriptor pluginDescriptor : pluginDescriptors) {
-      HelpSetPath[] sets = pluginDescriptor.getHelpSets();
+    PluginDescriptor[] pluginDescriptors = PluginManagerCore.getPlugins();
+    for (PluginDescriptor pluginDescriptor : pluginDescriptors) {
+      Collection<HelpSetPath> sets = pluginDescriptor.getHelpSets();
       for (HelpSetPath hsPath : sets) {
         String url = "jar:file:///" + pluginDescriptor.getPath().getAbsolutePath() + "/help/" + hsPath.getFile() + "!";
         if (!hsPath.getPath().startsWith("/")) {

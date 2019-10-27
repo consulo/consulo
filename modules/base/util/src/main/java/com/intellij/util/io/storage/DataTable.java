@@ -21,7 +21,7 @@ package com.intellij.util.io.storage;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.Forceable;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.util.io.PagePool;
 import com.intellij.util.io.RandomAccessDataFile;

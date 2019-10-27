@@ -115,6 +115,12 @@ public final class TestWindowManager extends WindowManagerEx {
     public void install(IdeFrame frame) {
     }
 
+    @Nullable
+    @Override
+    public Project getProject() {
+      return null;
+    }
+
     @Override
     public void setInfo(@Nullable String s, @Nullable String requestor) {
     }

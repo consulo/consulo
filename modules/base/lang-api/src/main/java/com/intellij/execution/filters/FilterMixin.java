@@ -19,17 +19,14 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.util.Consumer;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import java.util.List;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 8/3/11
- * Time: 4:50 PM
- */
 public interface FilterMixin {
   boolean shouldRunHeavy();
-  void applyHeavyFilter(@Nonnull Document copiedFragment, int startOffset, int startLineNumber, @Nonnull Consumer<AdditionalHighlight> consumer);
+
+  void applyHeavyFilter(@Nonnull Document copiedFragment, int startOffset, int startLineNumber, @Nonnull Consumer<? super AdditionalHighlight> consumer);
 
   @Nonnull
   String getUpdateMessage();
@@ -39,8 +36,7 @@ public interface FilterMixin {
       super(start, end, null);
     }
 
-    @SuppressWarnings("unused")
-    public AdditionalHighlight(@Nonnull List<Filter.ResultItem> resultItems) {
+    public AdditionalHighlight(@Nonnull List<? extends Filter.ResultItem> resultItems) {
       super(resultItems);
     }
 
@@ -54,8 +50,8 @@ public interface FilterMixin {
       return getHighlightEndOffset();
     }
 
-    @javax.annotation.Nullable
-    public TextAttributes getTextAttributes(@javax.annotation.Nullable final TextAttributes source) {
+    @Nullable
+    public TextAttributes getTextAttributes(@Nullable final TextAttributes source) {
       return null;
     }
   }

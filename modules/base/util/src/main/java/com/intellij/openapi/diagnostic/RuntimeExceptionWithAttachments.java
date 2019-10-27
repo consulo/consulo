@@ -1,53 +1,31 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.diagnostic;
 
-import javax.annotation.Nonnull;
+import consulo.annotations.DeprecationInfo;
+import consulo.logging.attachment.Attachment;
+
 import javax.annotation.Nullable;
 
 /**
  * @author peter
  */
 @SuppressWarnings("ExceptionClassNameDoesntEndWithException")
-public class RuntimeExceptionWithAttachments extends RuntimeException implements ExceptionWithAttachments {
-  private final String myUserMessage;
-  private final Attachment[] myAttachments;
-
+@Deprecated
+@DeprecationInfo("Use consulo.logging.attachment.RuntimeExceptionWithAttachments")
+public class RuntimeExceptionWithAttachments extends consulo.logging.attachment.RuntimeExceptionWithAttachments {
   public RuntimeExceptionWithAttachments(String message, Attachment... attachments) {
-    super(message);
-    myUserMessage = null;
-    myAttachments = attachments;
+    super(message, attachments);
   }
 
   public RuntimeExceptionWithAttachments(Throwable cause, Attachment... attachments) {
-    super(cause);
-    myUserMessage = null;
-    myAttachments = attachments;
+    super(cause, attachments);
   }
 
   public RuntimeExceptionWithAttachments(String message, @Nullable Throwable cause, Attachment... attachments) {
-    super(message, cause);
-    myUserMessage = null;
-    myAttachments = attachments;
+    super(message, cause, attachments);
   }
 
-  /**
-   * Corresponds to {@link Logger#error(String, Throwable, Attachment...)}
-   * ({@code LOG.error(userMessage, new RuntimeException(details), attachments)}).
-   */
   public RuntimeExceptionWithAttachments(String userMessage, String details, Attachment... attachments) {
-    super(details);
-    myUserMessage = userMessage;
-    myAttachments = attachments;
-  }
-
-  @Nonnull
-  public String getUserMessage() {
-    return myUserMessage;
-  }
-
-  @Nonnull
-  @Override
-  public Attachment[] getAttachments() {
-    return myAttachments;
+    super(userMessage, details, attachments);
   }
 }

@@ -1,95 +1,83 @@
-/*
- * Copyright 2000-2015 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.util.objectTree;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.progress.ProcessCanceledException;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
+import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.WeakHashMap;
-import consulo.disposer.internal.impl.DisposerInternalImpl;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Consumer;
 
-public final class ObjectTree<T> {
-  private static final Logger LOG = Logger.getInstance(ObjectTree.class);
-
-  private final List<ObjectTreeListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+public final class ObjectTree {
+  private static final ThreadLocal<Throwable> ourTopmostDisposeTrace = new ThreadLocal<>();
 
   // identity used here to prevent problems with hashCode/equals overridden by not very bright minds
-  private final Set<T> myRootObjects = ContainerUtil.newIdentityTroveSet(); // guarded by treeLock
-  private final Map<T, ObjectNode<T>> myObject2NodeMap = ContainerUtil.newIdentityTroveMap(); // guarded by treeLock
-  private final Map<Object, Object> myDisposedObjects = new WeakHashMap<Object, Object>(100, 0.5f, ContainerUtil.identityStrategy()); // guarded by treeLock
+  private final Set<Disposable> myRootObjects = ContainerUtil.newIdentityTroveSet(); // guarded by treeLock
+  private final Map<Disposable, ObjectNode> myObject2NodeMap = ContainerUtil.newIdentityTroveMap(); // guarded by treeLock
+  // Disposable to trace or boolean marker (if trace unavailable)
+  private final Map<Disposable, Object> myDisposedObjects = ContainerUtil.createWeakMap(100, 0.5f, ContainerUtil.identityStrategy()); // guarded by treeLock
 
-  private final List<ObjectNode<T>> myExecutedNodes = new ArrayList<ObjectNode<T>>(); // guarded by myExecutedNodes
-  private final List<T> myExecutedUnregisteredNodes = new ArrayList<T>(); // guarded by myExecutedUnregisteredNodes
+  private final List<ObjectNode> myExecutedNodes = new ArrayList<>(); // guarded by myExecutedNodes
+  private final List<Disposable> myExecutedUnregisteredObjects = new ArrayList<>(); // guarded by myExecutedUnregisteredObjects
 
   final Object treeLock = new Object();
 
-  private final AtomicLong myModification = new AtomicLong(0);
-
-  private final DisposerInternalImpl myDisposerInternal;
-
-  public ObjectTree(DisposerInternalImpl disposerInternal) {
-    myDisposerInternal = disposerInternal;
-  }
-
-  ObjectNode<T> getNode(@Nonnull T object) {
+  private ObjectNode getNode(@Nonnull Disposable object) {
     return myObject2NodeMap.get(object);
   }
 
   /**
    * @param object
    * @param node null means remove
-   * @return
    */
-  ObjectNode<T> putNode(@Nonnull T object, @Nullable ObjectNode<T> node) {
-    return node == null ? myObject2NodeMap.remove(object) : myObject2NodeMap.put(object, node);
+  void putNode(@Nonnull Disposable object, @Nullable ObjectNode node) {
+    if (node == null) {
+      myObject2NodeMap.remove(object);
+    }
+    else {
+      myObject2NodeMap.put(object, node);
+    }
   }
 
   @Nonnull
-  final List<ObjectNode<T>> getNodesInExecution() {
+  final List<ObjectNode> getNodesInExecution() {
     return myExecutedNodes;
   }
 
-  public final void register(@Nonnull T parent, @Nonnull T child) {
-    if (parent == child) throw new IllegalArgumentException("Cannot register to itself: "+parent);
-    Object wasDisposed = getDisposalInfo(parent);
-    if (wasDisposed != null) {
-      throw new IncorrectOperationException("Sorry but parent: " + parent + " has already been disposed " +
-                                            "(see the cause for stacktrace) so the child: "+child+" will never be disposed",
-                                            wasDisposed instanceof Throwable ? (Throwable)wasDisposed : null);
-    }
-
+  public final void register(@Nonnull Disposable parent, @Nonnull Disposable child) {
+    if (parent == child) throw new IllegalArgumentException("Cannot register to itself: " + parent);
     synchronized (treeLock) {
+      Object wasDisposed = getDisposalInfo(parent);
+      if (wasDisposed != null) {
+        throw new IncorrectOperationException("Sorry but parent: " + parent + " has already been disposed " + "(see the cause for stacktrace) so the child: " + child + " will never be disposed",
+                                              wasDisposed instanceof Throwable ? (Throwable)wasDisposed : null);
+      }
+
+      if (isDisposing(parent)) {
+        throw new IncorrectOperationException("Sorry but parent: " + parent + " is being disposed so the child: " + child + " will never be disposed");
+      }
+
       myDisposedObjects.remove(child); // if we dispose thing and then register it back it means it's not disposed anymore
-      ObjectNode<T> parentNode = getNode(parent);
+      ObjectNode parentNode = getNode(parent);
       if (parentNode == null) parentNode = createNodeFor(parent, null);
 
-      ObjectNode<T> childNode = getNode(child);
+      ObjectNode childNode = getNode(child);
       if (childNode == null) {
         childNode = createNodeFor(child, parentNode);
       }
       else {
-        ObjectNode<T> oldParent = childNode.getParent();
+        ObjectNode oldParent = childNode.getParent();
         if (oldParent != null) {
           oldParent.removeChild(childNode);
         }
@@ -99,28 +87,26 @@ public final class ObjectTree<T> {
       checkWasNotAddedAlready(parentNode, childNode);
 
       parentNode.addChild(childNode);
-
-      fireRegistered(childNode.getObject());
     }
   }
 
-  public Object getDisposalInfo(@Nonnull T parent) {
+  public Object getDisposalInfo(@Nonnull Disposable object) {
     synchronized (treeLock) {
-      return myDisposedObjects.get(parent);
+      return myDisposedObjects.get(object);
     }
   }
 
-  private void checkWasNotAddedAlready(ObjectNode<T> childNode, @Nonnull ObjectNode<T> parentNode) {
-    for (ObjectNode<T> node = childNode; node != null; node = node.getParent()) {
+  private static void checkWasNotAddedAlready(@Nonnull ObjectNode childNode, @Nonnull ObjectNode parentNode) {
+    for (ObjectNode node = childNode; node != null; node = node.getParent()) {
       if (node == parentNode) {
-        throw new IncorrectOperationException("'"+childNode.getObject() + "' was already added as a child of '" + parentNode.getObject()+"'");
+        throw new IncorrectOperationException("'" + childNode.getObject() + "' was already added as a child of '" + parentNode.getObject() + "'");
       }
     }
   }
 
   @Nonnull
-  private ObjectNode<T> createNodeFor(@Nonnull T object, @Nullable ObjectNode<T> parentNode) {
-    final ObjectNode<T> newNode = new ObjectNode<T>(myDisposerInternal, this, parentNode, object, getNextModification());
+  private ObjectNode createNodeFor(@Nonnull Disposable object, @Nullable ObjectNode parentNode) {
+    final ObjectNode newNode = new ObjectNode(this, parentNode, object);
     if (parentNode == null) {
       myRootObjects.add(object);
     }
@@ -128,170 +114,146 @@ public final class ObjectTree<T> {
     return newNode;
   }
 
-  private long getNextModification() {
-    return myModification.incrementAndGet();
-  }
-
-  public final boolean executeAll(@Nonnull T object, @Nonnull ObjectTreeAction<T> action, boolean processUnregistered) {
-    ObjectNode<T> node;
+  public final void executeAll(@Nonnull Disposable object, boolean processUnregistered) {
+    ObjectNode node;
     synchronized (treeLock) {
       node = getNode(object);
     }
-    if (node == null) {
-      if (processUnregistered) {
-        rememberDisposedTrace(object);
-        executeUnregistered(object, action);
-        return true;
-      }
-      return false;
+    boolean needTrace = (node != null || processUnregistered) && Disposer.isDebugMode() && ourTopmostDisposeTrace.get() == null;
+    if (needTrace) {
+      ourTopmostDisposeTrace.set(ThrowableInterner.intern(new Throwable()));
     }
-    node.execute(action);
-    return true;
+    try {
+      if (node == null) {
+        if (processUnregistered) {
+          rememberDisposedTrace(object);
+          executeUnregistered(object);
+        }
+      }
+      else {
+        ObjectNode parent = node.getParent();
+        List<Throwable> exceptions = new SmartList<>();
+        node.execute(exceptions);
+        if (parent != null) {
+          synchronized (treeLock) {
+            parent.removeChild(node);
+          }
+        }
+        handleExceptions(exceptions);
+      }
+    }
+    finally {
+      if (needTrace) {
+        ourTopmostDisposeTrace.remove();
+      }
+    }
   }
 
-  @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
-  static <T> void executeActionWithRecursiveGuard(@Nonnull T object,
-                                                  @Nonnull List<T> recursiveGuard,
-                                                  @Nonnull final ObjectTreeAction<T> action) {
+  private static void handleExceptions(@Nonnull List<? extends Throwable> exceptions) {
+    if (!exceptions.isEmpty()) {
+      for (Throwable exception : exceptions) {
+        if (!(exception instanceof ProcessCanceledException)) {
+          getLogger().error(exception);
+        }
+      }
+
+      ProcessCanceledException pce = ContainerUtil.findInstance(exceptions, ProcessCanceledException.class);
+      if (pce != null) {
+        throw pce;
+      }
+    }
+  }
+
+  public boolean isDisposing(@Nonnull Disposable disposable) {
+    List<ObjectNode> guard = getNodesInExecution();
+    //noinspection SynchronizationOnLocalVariableOrMethodParameter
+    synchronized (guard) {
+      for (ObjectNode node : guard) {
+        if (node.getObject() == disposable) return true;
+      }
+    }
+    return false;
+  }
+
+  static <T> void executeActionWithRecursiveGuard(@Nonnull T object, @Nonnull List<T> recursiveGuard, @Nonnull Consumer<? super T> action) {
+    //noinspection SynchronizationOnLocalVariableOrMethodParameter
     synchronized (recursiveGuard) {
-      if (ArrayUtil.indexOf(recursiveGuard, object, ContainerUtil.<T>identityStrategy()) != -1) return;
+      if (ArrayUtil.indexOf(recursiveGuard, object, ContainerUtil.identityStrategy()) != -1) return;
       recursiveGuard.add(object);
     }
 
     try {
-      action.execute(object);
+      action.accept(object);
     }
     finally {
+      //noinspection SynchronizationOnLocalVariableOrMethodParameter
       synchronized (recursiveGuard) {
-        int i = ArrayUtil.lastIndexOf(recursiveGuard, object, ContainerUtil.<T>identityStrategy());
+        int i = ArrayUtil.lastIndexOf(recursiveGuard, object, ContainerUtil.identityStrategy());
         assert i != -1;
         recursiveGuard.remove(i);
       }
     }
   }
 
-  private void executeUnregistered(@Nonnull final T object, @Nonnull final ObjectTreeAction<T> action) {
-    executeActionWithRecursiveGuard(object, myExecutedUnregisteredNodes, action);
-  }
-
-  public final void executeChildAndReplace(@Nonnull T toExecute,
-                                           @Nonnull T toReplace,
-                                           @Nonnull ObjectTreeAction<T> action) {
-    final ObjectNode<T> toExecuteNode;
-    T parentObject;
-    synchronized (treeLock) {
-      toExecuteNode = getNode(toExecute);
-      if (toExecuteNode == null) throw new IllegalArgumentException("Object " + toExecute + " wasn't registered or already disposed");
-
-      final ObjectNode<T> parent = toExecuteNode.getParent();
-      if (parent == null) throw new IllegalArgumentException("Object " + toExecute + " is not connected to the tree - doesn't have parent");
-      parentObject = parent.getObject();
-    }
-
-    toExecuteNode.execute(action);
-    register(parentObject, toReplace);
-  }
-
-  public boolean containsKey(@Nonnull T object) {
-    synchronized (treeLock) {
-      return getNode(object) != null;
-    }
+  private void executeUnregistered(@Nonnull Disposable disposable) {
+    executeActionWithRecursiveGuard(disposable, myExecutedUnregisteredObjects, Disposable::dispose);
   }
 
   @TestOnly
-  // public for Upsource
-  public void assertNoReferenceKeptInTree(@Nonnull T disposable) {
+  void assertNoReferenceKeptInTree(@Nonnull Disposable disposable) {
     synchronized (treeLock) {
-      Collection<ObjectNode<T>> nodes = myObject2NodeMap.values();
-      for (ObjectNode<T> node : nodes) {
+      for (Map.Entry<Disposable, ObjectNode> entry : myObject2NodeMap.entrySet()) {
+        Disposable key = entry.getKey();
+        assert key != disposable;
+        ObjectNode node = entry.getValue();
         node.assertNoReferencesKept(disposable);
       }
     }
   }
 
-  void removeRootObject(@Nonnull T object) {
+  void removeRootObject(@Nonnull Disposable object) {
     myRootObjects.remove(object);
   }
 
-  @SuppressWarnings({"UseOfSystemOutOrSystemErr", "HardCodedStringLiteral"})
   public void assertIsEmpty(boolean throwError) {
     synchronized (treeLock) {
-      for (T object : myRootObjects) {
+      for (Disposable object : myRootObjects) {
         if (object == null) continue;
-        ObjectNode<T> objectNode = getNode(object);
+        ObjectNode objectNode = getNode(object);
         if (objectNode == null) continue;
         while (objectNode.getParent() != null) {
           objectNode = objectNode.getParent();
         }
         final Throwable trace = objectNode.getTrace();
-        RuntimeException exception = new RuntimeException("Memory leak detected: '" + object + "' of " + object.getClass()
-                                                          + "\nSee the cause for the corresponding Disposer.register() stacktrace:\n",
-                                                          trace);
+        RuntimeException exception =
+                new RuntimeException("Memory leak detected: '" + object + "' of " + object.getClass() + "\nSee the cause for the corresponding Disposer.register() stacktrace:\n", trace);
         if (throwError) {
           throw exception;
         }
-        LOG.error(exception);
+        getLogger().error(exception);
       }
     }
   }
 
-  @TestOnly
-  public boolean isEmpty() {
-    synchronized (treeLock) {
-      return myRootObjects.isEmpty();
-    }
-  }
-
   @Nonnull
-  Set<T> getRootObjects() {
+  private static Logger getLogger() {
+    return Logger.getInstance("#com.intellij.openapi.util.objectTree.ObjectTree");
+  }
+
+  void rememberDisposedTrace(@Nonnull Disposable object) {
     synchronized (treeLock) {
-      return myRootObjects;
-    }
-  }
-
-  void addListener(@Nonnull ObjectTreeListener listener) {
-    myListeners.add(listener);
-  }
-
-  void removeListener(@Nonnull ObjectTreeListener listener) {
-    myListeners.remove(listener);
-  }
-
-  private void fireRegistered(@Nonnull Object object) {
-    for (ObjectTreeListener each : myListeners) {
-      each.objectRegistered(object);
-    }
-  }
-
-  void fireExecuted(@Nonnull Object object) {
-    for (ObjectTreeListener each : myListeners) {
-      each.objectExecuted(object);
-    }
-    rememberDisposedTrace(object);
-  }
-
-  private void rememberDisposedTrace(@Nonnull Object object) {
-    synchronized (treeLock) {
-      myDisposedObjects.put(object, myDisposerInternal.isDebugMode() ? ThrowableInterner.intern(new Throwable()) : Boolean.TRUE);
-    }
-  }
-
-  int size() {
-    synchronized (treeLock) {
-      return myObject2NodeMap.size();
+      Throwable trace = ourTopmostDisposeTrace.get();
+      myDisposedObjects.put(object, trace != null ? trace : Boolean.TRUE);
     }
   }
 
   @Nullable
-  public <D extends Disposable> D findRegisteredObject(@Nonnull T parentDisposable, @Nonnull D object) {
+  public <D extends Disposable> D findRegisteredObject(@Nonnull Disposable parentDisposable, @Nonnull D object) {
     synchronized (treeLock) {
-      ObjectNode<T> parentNode = getNode(parentDisposable);
+      ObjectNode parentNode = getNode(parentDisposable);
       if (parentNode == null) return null;
       return parentNode.findChildEqualTo(object);
     }
   }
 
-  long getModification() {
-    return myModification.get();
-  }
 }

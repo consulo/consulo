@@ -17,32 +17,33 @@ package com.intellij.idea.starter;
 
 import com.intellij.ide.*;
 import com.intellij.ide.plugins.PluginManager;
-import com.intellij.ide.plugins.PluginManagerCore;
+import com.intellij.ide.plugins.cl.PluginLoadStatistics;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.impl.DesktopApplicationImpl;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.DesktopWindowManagerImpl;
 import com.intellij.openapi.wm.impl.SystemDock;
-import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.ui.DesktopSplash;
-import consulo.annotations.Internal;
 import consulo.application.ApplicationProperties;
+import consulo.container.util.StatCollector;
 import consulo.ide.customize.FirstStartCustomizeUtil;
+import consulo.logging.Logger;
 import consulo.start.CommandLineArgs;
+import consulo.start.WelcomeFrameManager;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
-@Internal
 public class DesktopApplicationPostStarter extends ApplicationPostStarter {
   private static final Logger LOG = Logger.getInstance(DesktopApplicationPostStarter.class);
 
@@ -82,8 +83,9 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
   }
 
   @Override
-  public void main(ApplicationEx app, boolean newConfigFolder, @Nonnull CommandLineArgs args) {
-    SystemDock.updateMenu();
+  @RequiredUIAccess
+  public void main(StatCollector stat, Runnable appInitializeMark, ApplicationEx app, boolean newConfigFolder, @Nonnull CommandLineArgs args) {
+    SystemDock.getInstance().updateMenu();
 
     // if OS has dock, RecentProjectsManager will be already created, but not all OS have dock, so, we trigger creation here to ensure that RecentProjectsManager app listener will be added
     RecentProjectsManager.getInstance();
@@ -96,8 +98,11 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
 
     RecentProjectsManagerBase recentProjectsManager = RecentProjectsManagerBase.getInstanceEx();
 
-    LOG.info("App initialization took " + (System.nanoTime() - PluginManager.startupStart) / 1000000 + " ms");
-    PluginManagerCore.dumpPluginClassStatistics();
+    appInitializeMark.run();
+
+    stat.dump("Startup statistics", LOG::info);
+
+    PluginLoadStatistics.get().dumpPluginClassStatistics(LOG::info);
 
     app.invokeAndWait(() -> {
       StartupProgress desktopSplash = mySplashRef.get();
@@ -120,19 +125,18 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
       windowManager.showFrame();
     }
     else {
-      WelcomeFrame.showNow();
+      WelcomeFrameManager.getInstance().showFrame();
     }
 
     app.invokeLater(() -> {
       if (!args.isNoRecentProjects()) {
-        Project projectFromCommandLine = null;
+        AsyncResult<Project> projectFromCommandLine = AsyncResult.rejected();
+
         if (myApplicationStarter.isPerformProjectLoad()) {
           projectFromCommandLine = CommandLineProcessor.processExternalCommandLine(args, null);
         }
 
-        if (projectFromCommandLine == null) {
-          recentProjectsManager.doReopenLastProject();
-        }
+        projectFromCommandLine.doWhenRejected(recentProjectsManager::doReopenLastProject);
       }
 
       SwingUtilities.invokeLater(PluginManager::reportPluginError);

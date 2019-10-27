@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -31,9 +30,9 @@ import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.CollectionQuery;
 import com.intellij.util.EmptyQuery;
 import com.intellij.util.Query;
-import com.intellij.util.containers.ConcurrentHashSet;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
+import consulo.logging.Logger;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.OrderEntryWithTracking;
@@ -69,7 +68,7 @@ public class RootIndex {
   };
 
   private final Map<String, List<VirtualFile>> myDirectoriesByPackageNameCache = ContainerUtil.newConcurrentMap();
-  private final Set<String> myNonExistentPackages = new ConcurrentHashSet<>();
+  private final Set<String> myNonExistentPackages = ContainerUtil.newConcurrentSet();
   private final InfoCache myInfoCache;
   @Nonnull
   private final Project myProject;

@@ -38,6 +38,9 @@ import com.intellij.util.ui.JBDimension;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginManager;
+import consulo.platform.Platform;
 import consulo.ui.RequiredUIAccess;
 import net.miginfocom.swing.MigLayout;
 
@@ -398,7 +401,10 @@ public class SearchTextArea extends NonOpaquePanel implements PropertyChangeList
       ui = "com.intellij.find.DefaultSearchTextAreaLafHelper";
     }
     try {
-      Class<?> aClass = Class.forName(ui);
+      // it's desktop - if not it's and errror anyway
+      PluginDescriptor platformPlugin = PluginManager.findPlugin(Platform.current().getPluginId());
+      assert platformPlugin != null;
+      Class<?> aClass = Class.forName(ui, true, platformPlugin.getPluginClassLoader());
       Constructor<?> constructor = aClass.getDeclaredConstructor(SearchTextArea.class);
       constructor.setAccessible(true);
       return (SearchTextAreaLafHelper)constructor.newInstance(this);

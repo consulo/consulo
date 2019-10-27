@@ -16,13 +16,15 @@
 package com.intellij.diagnostic;
 
 import com.intellij.errorreport.ErrorReportSender;
+import com.intellij.openapi.application.ApplicationInfo;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginIds;
+import consulo.container.plugin.PluginManager;
 import consulo.external.api.ErrorReportBean;
 import com.intellij.errorreport.error.AuthorizationFailedException;
 import com.intellij.errorreport.error.UpdateAvailableException;
 import com.intellij.errorreport.error.WebServiceException;
 import com.intellij.ide.DataManager;
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManager;
 import com.intellij.idea.ActionsBundle;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationAction;
@@ -44,6 +46,7 @@ import com.intellij.util.Consumer;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.webService.WebServiceApi;
+import consulo.logging.Logger;
 import consulo.platform.impl.action.LastActionTracker;
 
 import javax.annotation.Nonnull;
@@ -55,6 +58,8 @@ import java.util.Set;
  * @author max
  */
 public class ITNReporter extends ErrorReportSubmitter {
+  private static final Logger LOG = Logger.getInstance(ITNReporter.class);
+
   public static final ITNReporter ourInternalInstance = new ITNReporter();
 
   private static String ourPreviousErrorReporterId;
@@ -95,9 +100,20 @@ public class ITNReporter extends ErrorReportSubmitter {
     if (t != null) {
       Set<PluginId> pluginIds = IdeErrorsDialog.findPluginIds(t);
       for (PluginId pluginId : pluginIds) {
-        final IdeaPluginDescriptor pluginDescriptor = PluginManager.getPlugin(pluginId);
+        final PluginDescriptor pluginDescriptor = PluginManager.findPlugin(pluginId);
         if (pluginDescriptor != null) {
-          errorBean.addAffectedPlugin(pluginId, StringUtil.notNullize(pluginDescriptor.getVersion(), "?"));
+          String version = pluginDescriptor.getVersion();
+          if(StringUtil.isEmpty(version)) {
+            if(PluginIds.isPlatformPlugin(pluginId)) {
+              version = ApplicationInfo.getInstance().getBuild().asString();
+            }
+          }
+
+          if (StringUtil.isEmpty(version)) {
+            LOG.error("There not version for plugin: " + pluginId + ", name: " + pluginDescriptor.getName());
+            continue;
+          }
+          errorBean.addAffectedPlugin(pluginId, version);
         }
       }
     }

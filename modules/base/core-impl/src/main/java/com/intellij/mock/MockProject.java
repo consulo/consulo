@@ -16,11 +16,14 @@
 package com.intellij.mock;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotations.RequiredWriteAction;
+import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -117,6 +120,13 @@ public class MockProject extends MockComponentManager implements Project {
 
   @Override
   public void save() {
+  }
+
+  @RequiredWriteAction
+  @Nonnull
+  @Override
+  public AsyncResult<Void> saveAsync(UIAccess uiAccess) {
+    return AsyncResult.resolved();
   }
 
   @Override

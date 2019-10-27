@@ -25,8 +25,8 @@ import com.intellij.util.ui.UIUtil;
 import consulo.actionSystem.ex.ComboBoxButton;
 import consulo.actionSystem.ex.ComboBoxButtonImpl;
 import consulo.ui.RequiredUIAccess;
-
 import javax.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -63,8 +63,8 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
   }
 
   @Nonnull
-  public JBPopup createPopup(@Nonnull DataContext context, @Nonnull Runnable onDispose) {
-    DefaultActionGroup group = createPopupActionGroup(context);
+  public JBPopup createPopup(@Nonnull JComponent component, @Nonnull DataContext context, @Nonnull Runnable onDispose) {
+    DefaultActionGroup group = createPopupActionGroup(component, context);
 
     ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(getPopupTitle(), group, context, false, shouldShowDisabledActions(), false, onDispose, getMaxRows(), getPreselectCondition());
     popup.setMinimumSize(new Dimension(getMinWidth(), getMinHeight()));
@@ -94,7 +94,12 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
   }
 
   @Nonnull
-  public abstract DefaultActionGroup createPopupActionGroup(DataContext context);
+  protected abstract DefaultActionGroup createPopupActionGroup(JComponent button);
+
+  @Nonnull
+  protected DefaultActionGroup createPopupActionGroup(JComponent button, @Nonnull DataContext dataContext) {
+    return createPopupActionGroup(button);
+  }
 
   public int getMaxRows() {
     return 30;

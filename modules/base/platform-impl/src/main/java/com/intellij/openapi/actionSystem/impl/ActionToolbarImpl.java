@@ -22,8 +22,8 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.util.Computable;
@@ -45,6 +45,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.ide.base.BaseDataManager;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -128,6 +129,10 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
   private JComponent myTargetComponent;
   private boolean myReservePlaceAutoPopupIcon = true;
   private boolean myAddSeparatorFirst;
+
+  public ActionToolbarImpl(@Nonnull String place, @Nonnull final ActionGroup actionGroup, boolean horizontal) {
+    this(place, actionGroup, horizontal, false, DataManager.getInstance(), ActionManagerEx.getInstanceEx(), KeymapManagerEx.getInstanceEx(), false);
+  }
 
   public ActionToolbarImpl(String place,
                            @Nonnull final ActionGroup actionGroup,
@@ -1094,7 +1099,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
       }
     });
     myPopup = builder.createPopup();
-    final AnActionListener.Adapter listener = new AnActionListener.Adapter() {
+    final AnActionListener listener = new AnActionListener() {
       @Override
       public void afterActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
         final JBPopup popup = myPopup;
@@ -1103,14 +1108,8 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
         }
       }
     };
-    ActionManager.getInstance().addAnActionListener(listener);
+    Application.get().getMessageBus().connect(popupToolbar).subscribe(AnActionListener.TOPIC, listener);
     Disposer.register(myPopup, popupToolbar);
-    Disposer.register(popupToolbar, new Disposable() {
-      @Override
-      public void dispose() {
-        ActionManager.getInstance().removeAnActionListener(listener);
-      }
-    });
 
     myPopup.showInScreenCoordinates(this, location);
 
@@ -1184,7 +1183,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
                         final KeymapManagerEx keymapManager,
                         JComponent parent) {
       super(place, actionGroup, horizontal, false, dataManager, actionManager, keymapManager, true);
-      myActionManager.addAnActionListener(this);
+      Application.get().getMessageBus().connect(this).subscribe(AnActionListener.TOPIC, this);
       myParent = parent;
     }
 
@@ -1196,7 +1195,6 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
 
     @Override
     public void dispose() {
-      myActionManager.removeAnActionListener(this);
     }
 
     @Override

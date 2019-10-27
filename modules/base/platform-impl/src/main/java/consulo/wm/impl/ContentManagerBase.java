@@ -19,13 +19,13 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.content.*;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.SmartList;
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.wm.ContentEx;
@@ -57,7 +57,7 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
   private final Set<Content> myContentWithChangedComponent = new HashSet<>();
 
   private boolean myDisposed;
-  private final Project myProject;
+  protected final Project myProject;
 
   protected final List<DataProvider> myDataProviders = new SmartList<>();
   private List<Content> mySelectionHistory = new ArrayList<>();

@@ -30,7 +30,6 @@ import com.intellij.openapi.vfs.VirtualFileFilter;
 import com.intellij.ui.ColoredTableCellRenderer;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.ui.table.JBTable;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 
@@ -41,8 +40,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author peter
@@ -55,9 +54,8 @@ public abstract class LanguagePerFileConfigurable<T> implements SearchableConfig
   private final String myOverrideQuestion;
   private final String myOverrideTitle;
   private AbstractFileTreeTable<T> myTreeView;
-  private JScrollPane myTreePanel;
-  private JPanel myPanel;
-  private JLabel myLabel;
+
+  private final String myCaption;
 
   protected LanguagePerFileConfigurable(@Nonnull Project project, Class<T> valueClass, PerFileMappings<T> mappings, String caption, String treeTableTitle, String overrideQuestion, String overrideTitle) {
     myProject = project;
@@ -66,14 +64,20 @@ public abstract class LanguagePerFileConfigurable<T> implements SearchableConfig
     myTreeTableTitle = treeTableTitle;
     myOverrideQuestion = overrideQuestion;
     myOverrideTitle = overrideTitle;
-    myLabel.setText(caption);
+    myCaption = caption;
   }
 
+  @RequiredUIAccess
   @Override
   public JComponent createComponent() {
+    JLabel caption = new JLabel(myCaption);
+
+    JPanel panel = new JPanel(new BorderLayout());
+    panel.add(caption, BorderLayout.NORTH);
+
     myTreeView = new MyTreeTable();
-    myTreePanel.setViewportView(myTreeView);
-    return myPanel;
+    panel.add(ScrollPaneFactory.createScrollPane(myTreeView), BorderLayout.CENTER);
+    return panel;
   }
 
   @Nullable
@@ -110,10 +114,6 @@ public abstract class LanguagePerFileConfigurable<T> implements SearchableConfig
 
   public void selectFile(@Nonnull VirtualFile virtualFile) {
     myTreeView.select(virtualFile instanceof VirtualFileWindow? ((VirtualFileWindow)virtualFile).getDelegate() : virtualFile);
-  }
-
-  private void createUIComponents() {
-    myTreePanel = ScrollPaneFactory.createScrollPane(new JBTable());
   }
 
   protected abstract String visualize(@Nonnull T t);
@@ -258,7 +258,7 @@ public abstract class LanguagePerFileConfigurable<T> implements SearchableConfig
 
     @Override
     @Nonnull
-    public DefaultActionGroup createPopupActionGroup(DataContext context) {
+    public DefaultActionGroup createPopupActionGroup(JComponent component) {
       return createGroup(true);
     }
 

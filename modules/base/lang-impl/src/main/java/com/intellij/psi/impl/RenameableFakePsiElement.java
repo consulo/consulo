@@ -102,6 +102,6 @@ public abstract class RenameableFakePsiElement extends FakePsiElement implements
   @Override
   @Nullable
   public TextRange getTextRange() {
-    return TextRange.from(0, 0);
+    return TextRange.EMPTY_RANGE;
   }
 }

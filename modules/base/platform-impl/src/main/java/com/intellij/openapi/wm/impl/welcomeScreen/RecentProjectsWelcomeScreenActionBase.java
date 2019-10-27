@@ -23,8 +23,8 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.ui.speedSearch.NameFilteringListModel;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ import java.util.List;
  */
 public abstract class RecentProjectsWelcomeScreenActionBase extends DumbAwareAction {
   @Nullable
-  public static DefaultListModel getDataModel(AnActionEvent e) {
+  public static DefaultListModel getDataModel(@Nonnull AnActionEvent e) {
     final JList list = getList(e);
     if (list != null) {
       ListModel model = list.getModel();
@@ -50,9 +50,9 @@ public abstract class RecentProjectsWelcomeScreenActionBase extends DumbAwareAct
   }
 
   @Nonnull
-  public static List<AnAction> getSelectedElements(AnActionEvent e) {
+  public static List<AnAction> getSelectedElements(@Nonnull AnActionEvent e) {
     final JList list = getList(e);
-    final List<AnAction> actions = new ArrayList<AnAction>();
+    final List<AnAction> actions = new ArrayList<>();
     if (list != null) {
       for (Object value : list.getSelectedValues()) {
         if (value instanceof AnAction) {
@@ -64,7 +64,7 @@ public abstract class RecentProjectsWelcomeScreenActionBase extends DumbAwareAct
   }
 
   @Nullable
-  public static JList getList(AnActionEvent e) {
+  public static JList getList(@Nonnull AnActionEvent e) {
     final Component component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
     if (component instanceof JList) {
       return (JList)component;
@@ -72,7 +72,7 @@ public abstract class RecentProjectsWelcomeScreenActionBase extends DumbAwareAct
     return null;
   }
 
-  public static boolean hasGroupSelected(AnActionEvent e) {
+  public static boolean hasGroupSelected(@Nonnull AnActionEvent e) {
     for (AnAction action : getSelectedElements(e)) {
       if (action instanceof ProjectGroupActionGroup) {
         return true;
@@ -81,7 +81,7 @@ public abstract class RecentProjectsWelcomeScreenActionBase extends DumbAwareAct
     return false;
   }
 
-  public static void rebuildRecentProjectsList(AnActionEvent e) {
+  public static void rebuildRecentProjectsList(@Nonnull AnActionEvent e) {
     final DefaultListModel model = getDataModel(e);
     if (model != null) {
       rebuildRecentProjectDataModel(model);

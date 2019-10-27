@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.impl;
 import com.intellij.codeInsight.editorActions.TextBlockTransferable;
 import com.intellij.codeInsight.editorActions.TextBlockTransferableData;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.util.TextRange;

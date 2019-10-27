@@ -21,8 +21,8 @@ import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.LazyInstance;
 import com.intellij.util.xmlb.annotations.Attribute;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 
 /**
@@ -63,5 +63,16 @@ public class TooltipLinkHandlerEP extends AbstractExtensionPointBean {
       }
     }
     return null;
+  }
+
+  @Nonnull
+  public static String getDescriptionTitle(@Nonnull String ref, @Nonnull Editor editor) {
+    for (TooltipLinkHandlerEP ep : EP_NAME.getExtensionList()) {
+      if (ref.startsWith(ep.prefix)) {
+        String refSuffix = ref.substring(ep.prefix.length());
+        return ep.myHandler.getValue().getDescriptionTitle(refSuffix, editor);
+      }
+    }
+    return TooltipLinkHandler.INSPECTION_INFO;
   }
 }

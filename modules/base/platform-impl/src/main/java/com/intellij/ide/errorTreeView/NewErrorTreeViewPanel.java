@@ -24,7 +24,6 @@ import com.intellij.ide.errorTreeView.impl.ErrorTreeViewConfiguration;
 import com.intellij.ide.errorTreeView.impl.ErrorViewTextExporter;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.Project;
@@ -45,6 +44,7 @@ import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.ui.MutableErrorTreeView;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

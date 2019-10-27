@@ -15,11 +15,10 @@
  */
 package com.intellij.openapi.util;
 
+import com.intellij.util.ClassLoaderUtilRt;
 import com.intellij.util.ThrowableRunnable;
-import com.intellij.util.lang.UrlClassLoader;
-import javax.annotation.Nonnull;
 
-public class ClassLoaderUtil {
+public class ClassLoaderUtil extends ClassLoaderUtilRt {
   private ClassLoaderUtil() {
   }
 
@@ -45,8 +44,7 @@ public class ClassLoaderUtil {
     }
   }
 
-  public static <E extends Throwable> void runWithClassLoader(final ClassLoader classLoader, final ThrowableRunnable<E> runnable)
-    throws E {
+  public static <E extends Throwable> void runWithClassLoader(final ClassLoader classLoader, final ThrowableRunnable<E> runnable) throws E {
     final ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
     try {
       Thread.currentThread().setContextClassLoader(classLoader);
@@ -57,8 +55,7 @@ public class ClassLoaderUtil {
     }
   }
 
-  public static <T, E extends Throwable> T runWithClassLoader(final ClassLoader classLoader, final ThrowableComputable<T, E> computable)
-    throws E {
+  public static <T, E extends Throwable> T runWithClassLoader(final ClassLoader classLoader, final ThrowableComputable<T, E> computable) throws E {
     final ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
     try {
       Thread.currentThread().setContextClassLoader(classLoader);
@@ -66,19 +63,6 @@ public class ClassLoaderUtil {
     }
     finally {
       Thread.currentThread().setContextClassLoader(oldClassLoader);
-    }
-  }
-
-  public static void addPlatformLoaderParentIfOnJdk9(@Nonnull UrlClassLoader.Builder builder) {
-    if (SystemInfo.IS_AT_LEAST_JAVA9) {
-      // on Java 8, 'tools.jar' is on a classpath; on Java 9, its classes are available via the platform loader
-      try {
-        ClassLoader platformCl = (ClassLoader)ClassLoader.class.getMethod("getPlatformClassLoader").invoke(null);
-        builder.parent(platformCl);
-      }
-      catch (Exception e) {
-        throw new RuntimeException(e);
-      }
     }
   }
 }

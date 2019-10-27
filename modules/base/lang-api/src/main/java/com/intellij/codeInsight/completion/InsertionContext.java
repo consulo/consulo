@@ -1,31 +1,15 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.completion;
 
+import com.intellij.codeInsight.lookup.Lookup;
 import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.lang.Language;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import com.intellij.psi.util.PsiUtilCore;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -88,8 +72,8 @@ public class InsertionContext {
     return myOffsetMap;
   }
 
-  public OffsetKey trackOffset(int offset, boolean moveableToRight) {
-    final OffsetKey key = OffsetKey.create("tracked", moveableToRight);
+  public OffsetKey trackOffset(int offset, boolean movableToRight) {
+    final OffsetKey key = OffsetKey.create("tracked", movableToRight);
     getOffsetMap().addOffset(key, offset);
     return key;
   }
@@ -114,19 +98,17 @@ public class InsertionContext {
     return myOffsetMap.getOffset(CompletionInitializationContext.SELECTION_END_OFFSET);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public Runnable getLaterRunnable() {
     return myLaterRunnable;
   }
 
-  public void setLaterRunnable(@javax.annotation.Nullable final Runnable laterRunnable) {
+  public void setLaterRunnable(@Nullable final Runnable laterRunnable) {
     myLaterRunnable = laterRunnable;
   }
 
   /**
-   * Whether completionChar should be added to document at tail offset (see {@link #TAIL_OFFSET}) after insert handler.
-   * By default this value is true (should be added).
-   * @param addCompletionChar
+   * @param addCompletionChar Whether completionChar should be added to document at tail offset (see {@link #TAIL_OFFSET}) after insert handler (default: {@code true}).
    */
   public void setAddCompletionChar(final boolean addCompletionChar) {
     myAddCompletionChar = addCompletionChar;
@@ -136,8 +118,8 @@ public class InsertionContext {
     return myAddCompletionChar;
   }
 
-  public CommonCodeStyleSettings getCodeStyleSettings() {
-    Language lang = PsiUtilCore.getLanguageAtOffset(getFile(), getTailOffset());
-    return CodeStyleSettingsManager.getSettings(getProject()).getCommonSettings(lang);
+
+  public static boolean shouldAddCompletionChar(char completionChar) {
+    return completionChar != Lookup.AUTO_INSERT_SELECT_CHAR && completionChar != Lookup.REPLACE_SELECT_CHAR && completionChar != Lookup.NORMAL_SELECT_CHAR;
   }
 }

@@ -80,6 +80,7 @@ public class CodeStyleSchemesModel {
     return mySettingsToClone.get(scheme);
   }
 
+  @Nonnull
   public CodeStyleScheme getSelectedScheme(){
     if (myUsePerProjectSettings) {
       return myProjectScheme;

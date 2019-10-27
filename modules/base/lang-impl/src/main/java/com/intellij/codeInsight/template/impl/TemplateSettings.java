@@ -20,7 +20,7 @@ import com.intellij.codeInsight.template.Template;
 import com.intellij.ide.plugins.cl.IdeaPluginClassLoader;
 import com.intellij.openapi.application.ex.DecodeDefaultsUtil;
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.options.BaseSchemeProcessor;
 import com.intellij.openapi.options.SchemesManager;
 import com.intellij.openapi.options.SchemesManagerFactory;

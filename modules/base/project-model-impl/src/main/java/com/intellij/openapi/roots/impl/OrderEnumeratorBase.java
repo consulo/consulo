@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
+import consulo.logging.Logger;
 import consulo.roots.ModuleRootLayer;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;

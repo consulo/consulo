@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.util.ReflectionUtil;

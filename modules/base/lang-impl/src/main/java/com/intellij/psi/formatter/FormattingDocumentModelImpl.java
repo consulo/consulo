@@ -19,7 +19,7 @@ package com.intellij.psi.formatter;
 import com.intellij.formatting.FormattingDocumentModel;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.project.Project;

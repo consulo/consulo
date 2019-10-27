@@ -15,12 +15,14 @@
  */
 package consulo.ui.desktop.internal;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.AsyncResult;
+import consulo.components.impl.stores.ComponentStoreImpl;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.Supplier;
 
@@ -35,6 +37,11 @@ public class AWTUIAccessImpl implements UIAccess {
   @Override
   public boolean isValid() {
     return true;
+  }
+
+  @Override
+  public boolean isHeadless() {
+    return GraphicsEnvironment.isHeadless();
   }
 
   @Nonnull
@@ -56,6 +63,7 @@ public class AWTUIAccessImpl implements UIAccess {
 
   @Override
   public void giveAndWait(@Nonnull Runnable runnable) {
+    ComponentStoreImpl.assertIfInsideSavingSession();
     try {
       SwingUtilities.invokeAndWait(runnable);
     }

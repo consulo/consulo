@@ -19,6 +19,7 @@ import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Comparator;
 
 /**
@@ -37,7 +38,7 @@ public interface ToolWindowPanel {
   @Nonnull
   FinalizableCommand createSetEditorComponentCmd(Object component, @Nonnull Runnable finishCallBack);
 
-  @Nonnull
+  @Nullable
   FinalizableCommand createRemoveButtonCmd(@Nonnull String id, @Nonnull Runnable finishCallBack);
 
   @Nonnull

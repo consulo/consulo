@@ -15,17 +15,17 @@
  */
 package com.intellij.ide.customize;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.ui.CheckboxTree;
 import com.intellij.ui.CheckedTreeNode;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.ide.customize.CustomizeSelectTemplateStepPanel;
 import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -37,22 +37,22 @@ import java.util.Set;
 
 public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
 
-  private final MultiMap<String, IdeaPluginDescriptor> myPluginDescriptors;
+  private final MultiMap<String, PluginDescriptor> myPluginDescriptors;
   private final CustomizeSelectTemplateStepPanel myTemplateStepPanel;
   private final CheckedTreeNode myRoot;
 
-  public CustomizePluginsStepPanel(MultiMap<String, IdeaPluginDescriptor> pluginDescriptors, @Nullable CustomizeSelectTemplateStepPanel templateStepPanel) {
+  public CustomizePluginsStepPanel(MultiMap<String, PluginDescriptor> pluginDescriptors, @Nullable CustomizeSelectTemplateStepPanel templateStepPanel) {
     myPluginDescriptors = pluginDescriptors;
     myTemplateStepPanel = templateStepPanel;
     setLayout(new BorderLayout());
 
     myRoot = new CheckedTreeNode(null);
-    for (Map.Entry<String, Collection<IdeaPluginDescriptor>> entry : pluginDescriptors.entrySet()) {
+    for (Map.Entry<String, Collection<PluginDescriptor>> entry : pluginDescriptors.entrySet()) {
       String key = entry.getKey();
-      Collection<IdeaPluginDescriptor> value = entry.getValue();
+      Collection<PluginDescriptor> value = entry.getValue();
 
       DefaultMutableTreeNode groupNode = new DefaultMutableTreeNode(key);
-      for (IdeaPluginDescriptor ideaPluginDescriptor : value) {
+      for (PluginDescriptor ideaPluginDescriptor : value) {
         CheckedTreeNode newChild = new CheckedTreeNode(ideaPluginDescriptor);
         newChild.setChecked(false);
         groupNode.add(newChild);
@@ -74,9 +74,9 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
         boolean state = node.isChecked();
 
         Object userObject = node.getUserObject();
-        if(userObject instanceof IdeaPluginDescriptor) {
+        if(userObject instanceof PluginDescriptor) {
           Set<String> deepDependencies = new THashSet<String>();
-          collectDeepDependencies(deepDependencies, (IdeaPluginDescriptor)userObject);
+          collectDeepDependencies(deepDependencies, (PluginDescriptor)userObject);
           setupChecked(myRoot, deepDependencies, state);
         }
         repaint();
@@ -98,12 +98,12 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
     add(ScrollPaneFactory.createScrollPane(checkboxTree, true), BorderLayout.CENTER);
   }
 
-  private void collectDeepDependencies(Set<String> deepDependencies, IdeaPluginDescriptor ideaPluginDescriptor) {
+  private void collectDeepDependencies(Set<String> deepDependencies, PluginDescriptor ideaPluginDescriptor) {
     for (PluginId depPluginId : ideaPluginDescriptor.getDependentPluginIds()) {
       String idString = depPluginId.getIdString();
       deepDependencies.add(idString);
 
-      for (IdeaPluginDescriptor pluginDescriptor : myPluginDescriptors.values()) {
+      for (PluginDescriptor pluginDescriptor : myPluginDescriptors.values()) {
         if(pluginDescriptor.getPluginId().equals(depPluginId)) {
           collectDeepDependencies(deepDependencies, pluginDescriptor);
         }
@@ -114,11 +114,11 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
   private static String getValueOfNode(Object value) {
     if (value instanceof CheckedTreeNode) {
       Object userObject = ((DefaultMutableTreeNode)value).getUserObject();
-      if (!(userObject instanceof IdeaPluginDescriptor)) {
+      if (!(userObject instanceof PluginDescriptor)) {
         return null;
       }
 
-      return ((IdeaPluginDescriptor)userObject).getName();
+      return ((PluginDescriptor)userObject).getName();
     }
     else if (value instanceof DefaultMutableTreeNode) {
       Object userObject = ((DefaultMutableTreeNode)value).getUserObject();
@@ -143,8 +143,8 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
 
   private static void setupChecked(DefaultMutableTreeNode treeNode, Set<String> set, Boolean state) {
     Object userObject = treeNode.getUserObject();
-    if (userObject instanceof IdeaPluginDescriptor) {
-      String id = ((IdeaPluginDescriptor)userObject).getPluginId().getIdString();
+    if (userObject instanceof PluginDescriptor) {
+      String id = ((PluginDescriptor)userObject).getPluginId().getIdString();
       boolean contains = set.contains(id);
       if(state == null) {
         ((CheckedTreeNode)treeNode).setChecked(contains);
@@ -162,18 +162,18 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
   }
 
   @Nonnull
-  public Set<IdeaPluginDescriptor> getPluginsForDownload() {
-    Set<IdeaPluginDescriptor> set = new THashSet<IdeaPluginDescriptor>();
+  public Set<PluginDescriptor> getPluginsForDownload() {
+    Set<PluginDescriptor> set = new THashSet<PluginDescriptor>();
     collect(myRoot, set);
     return set;
   }
 
-  private static void collect(DefaultMutableTreeNode treeNode, Set<IdeaPluginDescriptor> set) {
+  private static void collect(DefaultMutableTreeNode treeNode, Set<PluginDescriptor> set) {
     Object userObject = treeNode.getUserObject();
-    if (userObject instanceof IdeaPluginDescriptor) {
+    if (userObject instanceof PluginDescriptor) {
       CheckedTreeNode checkedTreeNode = (CheckedTreeNode)treeNode;
       if (checkedTreeNode.isChecked()) {
-        set.add(((IdeaPluginDescriptor)userObject));
+        set.add(((PluginDescriptor)userObject));
       }
     }
 

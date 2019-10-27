@@ -13,7 +13,6 @@ import com.intellij.ide.util.treeView.AlphaComparator;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.swing.tree.DefaultTreeModel;
@@ -32,11 +31,6 @@ class TestProjectViewPSIPane extends AbstractProjectViewPSIPane {
   @Override
   public SelectInTarget createSelectInTarget() {
     return null;
-  }
-
-  @NonNls
-  public String getComponentName() {
-    return "comp name";
   }
 
   @Override

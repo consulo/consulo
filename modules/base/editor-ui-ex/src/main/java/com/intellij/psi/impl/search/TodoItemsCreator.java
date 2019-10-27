@@ -1,37 +1,22 @@
-/*
- * Copyright 2000-2011 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.impl.search;
 
 import com.intellij.ide.todo.TodoConfiguration;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.search.IndexPattern;
 import com.intellij.psi.search.IndexPatternOccurrence;
 import com.intellij.psi.search.TodoItem;
 import com.intellij.psi.search.TodoPattern;
+import javax.annotation.Nonnull;
 
 /**
  * @author irengrig
  * moved from PsiSearchHelperImpl
- *         Date: 2/21/11
- *         Time: 10:47 AM
  */
 public class TodoItemsCreator {
-  private final static Logger LOG = Logger.getInstance("#com.intellij.psi.impl.search.TodoItemsCreator");
-  private TodoPattern[] myTodoPatterns;
+  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.search.TodoItemsCreator");
+  private final TodoPattern[] myTodoPatterns;
 
   public TodoItemsCreator() {
     myTodoPatterns = TodoConfiguration.getInstance().getTodoPatterns();
@@ -39,12 +24,12 @@ public class TodoItemsCreator {
 
   public TodoItem createTodo(IndexPatternOccurrence occurrence) {
     final TextRange occurrenceRange = occurrence.getTextRange();
-    return new TodoItemImpl(occurrence.getFile(), occurrenceRange.getStartOffset(), occurrenceRange.getEndOffset(),
-                                 mapPattern(occurrence.getPattern()));
+    return new TodoItemImpl(occurrence.getFile(), occurrenceRange.getStartOffset(), occurrenceRange.getEndOffset(), mapPattern(occurrence.getPattern()), occurrence.getAdditionalTextRanges());
   }
 
-  private TodoPattern mapPattern(final IndexPattern pattern) {
-    for(TodoPattern todoPattern: myTodoPatterns) {
+  @Nonnull
+  private TodoPattern mapPattern(@Nonnull IndexPattern pattern) {
+    for (TodoPattern todoPattern : myTodoPatterns) {
       if (todoPattern.getIndexPattern() == pattern) {
         return todoPattern;
       }

@@ -15,7 +15,7 @@
  */
 package com.intellij.packageDependencies.ui;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiQualifiedNamedElement;

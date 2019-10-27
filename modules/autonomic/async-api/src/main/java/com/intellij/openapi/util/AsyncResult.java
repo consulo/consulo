@@ -152,6 +152,13 @@ public class AsyncResult<T> extends ActionCallback {
   }
 
   @Nonnull
+  @Override
+  public AsyncResult<T> rejectWithThrowable(Throwable error) {
+    super.rejectWithThrowable(error);
+    return this;
+  }
+
+  @Nonnull
   public AsyncResult<T> doWhenDone(@Nonnull final Consumer<T> consumer) {
     doWhenDone(() -> consumer.accept(myResult));
     return this;

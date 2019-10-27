@@ -15,7 +15,7 @@
  */
 package consulo.util;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 
 /**
  * @author VISTALL

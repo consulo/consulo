@@ -15,8 +15,8 @@
  */
 package com.intellij.codeInspection;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.*;
+import consulo.logging.Logger;
 import org.intellij.lang.annotations.Language;
 import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NonNls;

@@ -27,14 +27,12 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.SequentialModalProgressTask;
 import com.intellij.util.SequentialTask;
-import com.intellij.util.containers.ConcurrentHashMap;
-import com.intellij.util.containers.ConcurrentHashSet;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import consulo.ui.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentMap;
@@ -71,7 +69,7 @@ public class FormattingProgressTask extends SequentialModalProgressTask implemen
     TOTAL_WEIGHT = weight;
   }
 
-  private final ConcurrentMap<EventType, Collection<Runnable>> myCallbacks = new ConcurrentHashMap<EventType, Collection<Runnable>>();
+  private final ConcurrentMap<EventType, Collection<Runnable>> myCallbacks = ContainerUtil.newConcurrentMap();
 
   private final WeakReference<VirtualFile> myFile;
   private final WeakReference<Document>    myDocument;
@@ -143,7 +141,7 @@ public class FormattingProgressTask extends SequentialModalProgressTask implemen
   private Collection<Runnable> getCallbacks(@Nonnull EventType eventType) {
     Collection<Runnable> result = myCallbacks.get(eventType);
     if (result == null) {
-      Collection<Runnable> candidate = myCallbacks.putIfAbsent(eventType, result = new ConcurrentHashSet<Runnable>());
+      Collection<Runnable> candidate = myCallbacks.putIfAbsent(eventType, result = ContainerUtil.newConcurrentSet());
       if (candidate != null) {
         result = candidate;
       }

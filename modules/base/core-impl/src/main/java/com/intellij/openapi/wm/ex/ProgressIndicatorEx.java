@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.wm.ex;
 
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.TaskInfo;
-import com.intellij.openapi.progress.util.ProgressIndicatorStacked;
 import javax.annotation.Nonnull;
 
-public interface ProgressIndicatorEx extends ProgressIndicatorStacked {
+public interface ProgressIndicatorEx extends ProgressIndicator {
   void addStateDelegate(@Nonnull ProgressIndicatorEx delegate);
 
   void finish(@Nonnull TaskInfo task);
@@ -29,4 +29,6 @@ public interface ProgressIndicatorEx extends ProgressIndicatorStacked {
   boolean wasStarted();
 
   void processFinish();
+
+  void initStateFrom(@Nonnull ProgressIndicator indicator);
 }

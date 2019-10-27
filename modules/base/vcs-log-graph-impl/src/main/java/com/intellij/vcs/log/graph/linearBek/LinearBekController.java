@@ -15,7 +15,6 @@
  */
 package com.intellij.vcs.log.graph.linearBek;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.graph.actions.GraphAction;
@@ -32,6 +31,8 @@ import com.intellij.vcs.log.graph.impl.facade.CascadeController;
 import com.intellij.vcs.log.graph.impl.facade.GraphChangesUtil;
 import com.intellij.vcs.log.graph.impl.facade.bek.BekIntMap;
 import com.intellij.vcs.log.graph.utils.LinearGraphUtils;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

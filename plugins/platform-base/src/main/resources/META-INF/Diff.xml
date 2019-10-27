@@ -13,7 +13,7 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin>
+<consulo-plugin>
   <extensionPoints>
     <extensionPoint name="diff.DiffTool" interface="com.intellij.diff.DiffTool"/>
     <extensionPoint name="diff.merge.MergeTool" interface="com.intellij.diff.merge.MergeTool"/>
@@ -53,4 +53,4 @@
 
     <getDataRule implementation="com.intellij.diff.actions.impl.DiffNavigatableArrayRule"/>
   </extensions>
-</idea-plugin>
+</consulo-plugin>

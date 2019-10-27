@@ -23,8 +23,12 @@ import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.ui.Messages;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginIds;
 import consulo.ide.plugins.InstalledPluginsState;
+import consulo.ui.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
@@ -43,21 +47,22 @@ public class UninstallPluginAction extends AnAction implements DumbAware {
     host = mgr;
   }
 
+  @RequiredUIAccess
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     if (!pluginTable.isShowing()) {
       presentation.setEnabled(false);
       return;
     }
-    IdeaPluginDescriptor[] selection = pluginTable.getSelectedObjects();
+    PluginDescriptor[] selection = pluginTable.getSelectedObjects();
     boolean enabled = (selection != null);
 
     if (enabled) {
-      for (IdeaPluginDescriptor descriptor : selection) {
+      for (PluginDescriptor descriptor : selection) {
         if (descriptor instanceof IdeaPluginDescriptorImpl) {
           final IdeaPluginDescriptorImpl ideaPluginDescriptor = (IdeaPluginDescriptorImpl)descriptor;
-          if (ideaPluginDescriptor.isDeleted() || ideaPluginDescriptor.isBundled()) {
+          if (ideaPluginDescriptor.isDeleted() || PluginIds.isPlatformPlugin(ideaPluginDescriptor.getPluginId())) {
             enabled = false;
             break;
           }
@@ -71,13 +76,14 @@ public class UninstallPluginAction extends AnAction implements DumbAware {
     presentation.setEnabled(enabled);
   }
 
+  @RequiredUIAccess
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     uninstall(host, pluginTable.getSelectedObjects());
     pluginTable.updateUI();
   }
 
-  public static void uninstall(PluginManagerMain host, IdeaPluginDescriptor... selection) {
+  public static void uninstall(PluginManagerMain host, PluginDescriptor... selection) {
     String message;
 
     if (selection.length == 1) {
@@ -88,7 +94,7 @@ public class UninstallPluginAction extends AnAction implements DumbAware {
     }
     if (Messages.showYesNoDialog(host.getMainPanel(), message, IdeBundle.message("title.plugin.uninstall"), Messages.getQuestionIcon()) != Messages.YES) return;
 
-    for (IdeaPluginDescriptor descriptor : selection) {
+    for (PluginDescriptor descriptor : selection) {
       IdeaPluginDescriptorImpl pluginDescriptor = (IdeaPluginDescriptorImpl)descriptor;
 
       boolean actualDelete = true;

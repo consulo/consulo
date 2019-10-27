@@ -15,6 +15,7 @@
  */
 package com.intellij.ide.diff;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.presentation.VirtualFilePresentation;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -32,11 +33,10 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.pom.Navigatable;
-import com.intellij.util.PlatformIcons;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -123,8 +123,8 @@ public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
   }
 
   @Override
-  public Icon getIcon() {
-    return isContainer() ? PlatformIcons.FOLDER_ICON : VirtualFilePresentation.getAWTIcon(myFile);
+  public Image getIcon() {
+    return isContainer() ? AllIcons.Nodes.Folder : VirtualFilePresentation.getIcon(myFile);
   }
 
   @Override

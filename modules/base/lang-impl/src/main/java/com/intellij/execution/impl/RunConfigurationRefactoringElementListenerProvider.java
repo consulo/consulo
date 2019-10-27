@@ -18,7 +18,7 @@ package com.intellij.execution.impl;
 import com.intellij.execution.RunManager;
 import com.intellij.execution.configurations.RefactoringListenerProvider;
 import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.refactoring.listeners.RefactoringElementListener;
 import com.intellij.refactoring.listeners.RefactoringElementListenerComposite;

@@ -41,18 +41,13 @@ public class PersistentStringEnumerator extends PersistentEnumeratorDelegate<Str
     this(file, initialSize, null);
   }
 
-  public PersistentStringEnumerator(@Nonnull final File file,
-                                    final int initialSize,
-                                    @Nullable PagedFileStorage.StorageLockContext lockContext) throws IOException {
+  public PersistentStringEnumerator(@Nonnull final File file, final int initialSize, @Nullable PagedFileStorage.StorageLockContext lockContext) throws IOException {
     this(file, initialSize, false, lockContext);
   }
 
-  private PersistentStringEnumerator(@Nonnull final File file,
-                                     final int initialSize,
-                                     boolean cacheLastMappings,
-                                     @Nullable PagedFileStorage.StorageLockContext lockContext) throws IOException {
+  private PersistentStringEnumerator(@Nonnull final File file, final int initialSize, boolean cacheLastMappings, @Nullable PagedFileStorage.StorageLockContext lockContext) throws IOException {
     super(file, EnumeratorStringDescriptor.INSTANCE, initialSize, lockContext);
-    myCache = cacheLastMappings ? new CachingEnumerator<String>(new DataEnumerator<String>() {
+    myCache = cacheLastMappings ? new CachingEnumerator<>(new DataEnumerator<String>() {
       @Override
       public int enumerate(@Nullable String value) throws IOException {
         return PersistentStringEnumerator.super.enumerate(value);
@@ -81,10 +76,5 @@ public class PersistentStringEnumerator extends PersistentEnumeratorDelegate<Str
   public void close() throws IOException {
     super.close();
     if (myCache != null) myCache.close();
-  }
-
-  @Override
-  public void markCorrupted() {
-    myEnumerator.markCorrupted();
   }
 }

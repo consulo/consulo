@@ -15,80 +15,83 @@
  */
 package com.intellij.lang;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.containers.ConcurrentMultiMap;
 import com.intellij.util.containers.MultiMap;
 import consulo.annotations.Exported;
 import consulo.annotations.Immutable;
 import consulo.lang.LanguageVersion;
 import consulo.lang.LanguageVersionDefines;
 import consulo.util.pointers.Named;
-import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The base class for all programming language support implementations. Specific language implementations should inherit from this class
- * and its register instance wrapped with {@link com.intellij.openapi.fileTypes.LanguageFileType} instance through
+ * and its register instance wrapped with {@link LanguageFileType} instance through
  * <code>FileTypeManager.getInstance().registerFileType</code>
  * There should be exactly one instance of each Language.
- * It is usually created when creating {@link com.intellij.openapi.fileTypes.LanguageFileType} and can be retrieved later
+ * It is usually created when creating {@link LanguageFileType} and can be retrieved later
  * with {@link #findInstance(Class)}.
  */
 public abstract class Language extends UserDataHolderBase implements Named {
   private static final Logger LOG = Logger.getInstance(Language.class);
 
+  // this fields must be before ANY field due registration
   private static final Map<Class<? extends Language>, Language> ourRegisteredLanguages = new ConcurrentHashMap<>();
-  private static final MultiMap<String, LanguageVersion> ourRegisteredMimeTypes = new ConcurrentMultiMap<>();
-  private static final Map<String, Language> ourRegisteredIDs = new THashMap<>();
+  private static final Map<String, Language> ourRegisteredIDs = new ConcurrentHashMap<>();
+
+  public static final Language ANY = new Language("") {
+    @Override
+    public String toString() {
+      return "Language: ANY";
+    }
+  };
+
+  private static final NotNullLazyValue<MultiMap<String, LanguageVersion>> ourRegisteredMimeTypesValue = NotNullLazyValue.createValue(() -> {
+    MultiMap<String, LanguageVersion> mimeTypesMap = new MultiMap<>();
+
+    Collection<Language> registeredLanguages = getRegisteredLanguages();
+
+    for (Language language : registeredLanguages) {
+      LanguageVersion[] versions = language.getVersions();
+      for (LanguageVersion version : versions) {
+        for (String mimeType : version.getMimeTypes()) {
+          mimeTypesMap.putValue(mimeType, version);
+        }
+      }
+
+      String[] mimeTypes = language.getMimeTypes();
+      for (String mimeType : mimeTypes) {
+        for (LanguageVersion version : versions) {
+          mimeTypesMap.putValue(mimeType, version);
+        }
+      }
+    }
+
+    return mimeTypesMap;
+  });
 
   private final Language myBaseLanguage;
   private final String myID;
   private final String[] myMimeTypes;
 
-  public static final Language ANY = new Language("") {
-    @Override
-    public String toString() {
-      //noinspection HardCodedStringLiteral
-      return "Language: ANY";
+  private NotNullLazyValue<LanguageVersion[]> myVersions = NotNullLazyValue.createValue(() -> {
+    LanguageVersion[] versions = findVersions();
+    if (versions.length == 0) {
+      throw new IllegalArgumentException("Language version is empty for language: " + Language.this);
     }
-  };
-
-  private NotNullLazyValue<LanguageVersion[]> myVersions = new NotNullLazyValue<LanguageVersion[]>() {
-    @Nonnull
-    @Override
-    protected LanguageVersion[] compute() {
-      LanguageVersion[] versions = findVersions();
-      if (versions.length == 0) {
-        throw new IllegalArgumentException("Language version is empty for language: " + Language.this);
-      }
-
-      for (LanguageVersion version : versions) {
-        for (String mimeType : version.getMimeTypes()) {
-          ourRegisteredMimeTypes.putValue(mimeType, version);
-        }
-      }
-
-      String[] mimeTypes = Language.this.getMimeTypes();
-      for (String mimeType : mimeTypes) {
-        for (LanguageVersion version : versions) {
-          ourRegisteredMimeTypes.putValue(mimeType, version);
-        }
-      }
-
-      return versions;
-    }
-  };
+    return versions;
+  });
 
   protected Language(@Nonnull @NonNls String id) {
     this(id, ArrayUtil.EMPTY_STRING_ARRAY);
@@ -128,7 +131,7 @@ public abstract class Language extends UserDataHolderBase implements Named {
    */
   @Nonnull
   public static Collection<Language> getRegisteredLanguages() {
-    return new ArrayList<>(ourRegisteredLanguages.values());
+    return Collections.unmodifiableCollection(ourRegisteredLanguages.values());
   }
 
   /**
@@ -136,8 +139,8 @@ public abstract class Language extends UserDataHolderBase implements Named {
    * @return instance of the <code>klass</code> language registered if any.
    */
   @Nullable
+  @SuppressWarnings("unchecked")
   public static <T extends Language> T findInstance(Class<T> klass) {
-    //noinspection unchecked
     return (T)ourRegisteredLanguages.get(klass);
   }
 
@@ -152,7 +155,7 @@ public abstract class Language extends UserDataHolderBase implements Named {
       return Collections.emptyList();
     }
 
-    Collection<LanguageVersion> versions = ourRegisteredMimeTypes.get(mimeType);
+    Collection<LanguageVersion> versions = ourRegisteredMimeTypesValue.getValue().get(mimeType);
     Set<Language> languages = new HashSet<>();
     for (LanguageVersion version : versions) {
       languages.add(version.getLanguage());
@@ -163,8 +166,8 @@ public abstract class Language extends UserDataHolderBase implements Named {
   @Nonnull
   @Exported
   public static Collection<LanguageVersion> findVersionsByMimeType(@Nullable String mimeType) {
-    Collection<LanguageVersion> versions = ourRegisteredMimeTypes.get(mimeType);
-    return new ArrayList<>(versions);
+    MultiMap<String, LanguageVersion> map = ourRegisteredMimeTypesValue.getValue();
+    return Collections.unmodifiableCollection(map.get(mimeType));
   }
 
   @Nonnull
@@ -233,6 +236,28 @@ public abstract class Language extends UserDataHolderBase implements Named {
     for (final FileType fileType : types) {
       if (fileType instanceof LanguageFileType && isKindOf(((LanguageFileType)fileType).getLanguage())) {
         return (LanguageFileType)fileType;
+      }
+    }
+    return null;
+  }
+
+  @Nullable
+  //@ApiStatus.Internal
+  public LanguageFileType findMyFileType(FileType[] types) {
+    for (final FileType fileType : types) {
+      if (fileType instanceof LanguageFileType) {
+        final LanguageFileType languageFileType = (LanguageFileType)fileType;
+        if (languageFileType.getLanguage() == this && !languageFileType.isSecondary()) {
+          return languageFileType;
+        }
+      }
+    }
+    for (final FileType fileType : types) {
+      if (fileType instanceof LanguageFileType) {
+        final LanguageFileType languageFileType = (LanguageFileType)fileType;
+        if (isKindOf(languageFileType.getLanguage()) && !languageFileType.isSecondary()) {
+          return languageFileType;
+        }
       }
     }
     return null;

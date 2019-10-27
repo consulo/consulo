@@ -16,7 +16,7 @@
 package com.intellij.openapi.wm.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;

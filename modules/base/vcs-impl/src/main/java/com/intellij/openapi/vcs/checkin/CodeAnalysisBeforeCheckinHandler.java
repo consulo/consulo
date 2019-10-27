@@ -19,7 +19,7 @@ package com.intellij.openapi.vcs.checkin;
 import com.intellij.CommonBundle;
 import com.intellij.codeInsight.CodeSmellInfo;
 import com.intellij.lang.annotation.HighlightSeverity;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;

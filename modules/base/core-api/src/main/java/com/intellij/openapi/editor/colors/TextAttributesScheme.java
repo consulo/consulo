@@ -23,5 +23,6 @@ import java.util.Map;
 public interface TextAttributesScheme {
   TextAttributes getAttributes(TextAttributesKey key);
 
-  void fillAttributes(@Nonnull Map<TextAttributesKey, TextAttributes> map);
+  default void fillAttributes(@Nonnull Map<TextAttributesKey, TextAttributes> map) {
+  }
 }

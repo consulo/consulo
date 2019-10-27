@@ -18,6 +18,8 @@ package consulo.ui;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginManager;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -34,7 +36,18 @@ import java.util.function.Function;
 public interface UIDecorator {
   NotNullLazyValue<List<UIDecorator>> ourDecorators = NotNullLazyValue.createValue(() -> {
     List<UIDecorator> list = new ArrayList<>();
-    ContainerUtil.addAll(list, ServiceLoader.load(UIDecorator.class, UIDecorator.class.getClassLoader()));
+
+    if(PluginManager.isInitialized()) {
+      Iterable<PluginDescriptor> plugins = PluginManager.getPlugins();
+      for (PluginDescriptor plugin : plugins) {
+        ServiceLoader<UIDecorator> loader = ServiceLoader.load(UIDecorator.class, plugin.getPluginClassLoader());
+
+        for (UIDecorator uiDecorator : loader) {
+          list.add(uiDecorator);
+        }
+      }
+    }
+
     ContainerUtil.weightSort(list, UIDecorator::getWeight);
     return Collections.unmodifiableList(list);
   });

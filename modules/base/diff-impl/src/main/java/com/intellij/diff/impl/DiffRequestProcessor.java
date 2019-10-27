@@ -37,7 +37,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.project.DumbAware;
@@ -579,7 +579,7 @@ public abstract class DiffRequestProcessor implements Disposable {
 
     @Nonnull
     @Override
-    public DefaultActionGroup createPopupActionGroup(DataContext context) {
+    public DefaultActionGroup createPopupActionGroup(JComponent button) {
       DefaultActionGroup group = new DefaultActionGroup();
       for (DiffTool tool : getAvailableFittedTools()) {
         group.add(new DiffToolToggleAction(tool));

@@ -23,7 +23,7 @@ import com.intellij.dvcs.repo.RepositoryManager;
 import com.intellij.ide.file.BatchFileChangeListener;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.Extensions;
@@ -208,7 +208,7 @@ public class DvcsUtil {
 
   @Nonnull
   public static AccessToken workingTreeChangeStarted(@Nonnull Project project) {
-    ApplicationManager.getApplication().getMessageBus().syncPublisher(BatchFileChangeListener.TOPIC).batchChangeStarted(project);
+    ApplicationManager.getApplication().getMessageBus().syncPublisher(BatchFileChangeListener.TOPIC).batchChangeStarted(project, null);
     return HeavyProcessLatch.INSTANCE.processStarted("Changing DVCS working tree");
   }
 

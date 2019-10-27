@@ -20,16 +20,16 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.impl.LaterInvocator;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.ui.UIUtil;
+import consulo.actionSystem.ex.TopApplicationMenuUtil;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -74,6 +74,15 @@ public class Utils {
     else {
       LOG.error("update failed for ActionGroup: " + action + "[" + presentation.getText() + "]", exc);
     }
+  }
+
+  /**
+   * @return actions from the given and nested non-popup groups that are visible after updating
+   */
+  public static List<AnAction> expandActionGroup(boolean isInModalContext, @Nonnull ActionGroup group, PresentationFactory presentationFactory, @Nonnull DataContext context, String place) {
+    ArrayList<AnAction> list = new ArrayList<>();
+    expandActionGroup(isInModalContext, group, list, presentationFactory, context, place, ActionManager.getInstance());
+    return list;
   }
 
   @Deprecated
@@ -355,7 +364,7 @@ public class Utils {
     expandActionGroup(isInModalContext, group, list, presentationFactory, context, place, ActionManager.getInstance(), false,
                       group instanceof CompactActionGroup, true, false);
 
-    final boolean fixMacScreenMenu = SystemInfo.isMacSystemMenu && isWindowMenu && Registry.is("actionSystem.mac.screenMenuNotUpdatedFix");
+    final boolean fixMacScreenMenu = TopApplicationMenuUtil.isMacSystemMenu && isWindowMenu && Registry.is("actionSystem.mac.screenMenuNotUpdatedFix");
     final ArrayList<Component> children = new ArrayList<>();
 
     for (int i = 0, size = list.size(); i < size; i++) {
@@ -437,23 +446,21 @@ public class Utils {
     menuBuilt.doWhenDone(() -> {
       if (!mayDataContextBeInvalid) return;
 
-      if (IdeFocusManager.getInstance(null).isFocusBeingTransferred()) {
-        IdeFocusManager.getInstance(null).doWhenFocusSettlesDown(() -> {
-          if (!component.isShowing()) return;
+      IdeFocusManager.getInstance(null).doWhenFocusSettlesDown(() -> {
+        if (!component.isShowing()) return;
 
-          DataContext context1 = DataManager.getInstance().getDataContext();
-          expandActionGroup(LaterInvocator.isInModalContext(), group, new ArrayList<>(), presentationFactory, context1, place, ActionManager.getInstance());
+        DataContext context1 = DataManager.getInstance().getDataContext();
+        expandActionGroup(LaterInvocator.isInModalContext(), group, new ArrayList<>(), presentationFactory, context1, place, ActionManager.getInstance());
 
-          for (Component each : children) {
-            if (each instanceof ActionMenuItem) {
-              ((ActionMenuItem)each).updateContext(context1);
-            }
-            else if (each instanceof ActionMenu) {
-              ((ActionMenu)each).updateContext(context1);
-            }
+        for (Component each : children) {
+          if (each instanceof ActionMenuItem) {
+            ((ActionMenuItem)each).updateContext(context1);
           }
-        });
-      }
+          else if (each instanceof ActionMenu) {
+            ((ActionMenu)each).updateContext(context1);
+          }
+        }
+      });
     });
 
   }

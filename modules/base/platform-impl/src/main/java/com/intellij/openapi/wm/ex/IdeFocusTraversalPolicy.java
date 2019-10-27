@@ -15,10 +15,11 @@
  */
 package com.intellij.openapi.wm.ex;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.impl.EditorComponentImpl;
 import com.intellij.openapi.fileEditor.impl.EditorWindowHolder;
 import com.intellij.util.ReflectionUtil;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

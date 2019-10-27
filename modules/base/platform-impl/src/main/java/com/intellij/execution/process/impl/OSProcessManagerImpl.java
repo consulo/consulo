@@ -18,7 +18,7 @@ package com.intellij.execution.process.impl;
 import com.intellij.execution.process.OSProcessManager;
 import com.intellij.execution.process.RunnerWinProcess;
 import com.intellij.execution.process.UnixProcessManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import javax.annotation.Nonnull;

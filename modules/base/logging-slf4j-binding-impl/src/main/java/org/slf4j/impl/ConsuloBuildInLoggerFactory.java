@@ -24,6 +24,6 @@ import org.slf4j.Logger;
 public class ConsuloBuildInLoggerFactory implements ILoggerFactory {
   @Override
   public Logger getLogger(String name) {
-    return new ConsuloBuildInLoggerAdapter(com.intellij.openapi.diagnostic.Logger.getInstance(name));
+    return new ConsuloBuildInLoggerAdapter(consulo.logging.Logger.getInstance(name));
   }
 }

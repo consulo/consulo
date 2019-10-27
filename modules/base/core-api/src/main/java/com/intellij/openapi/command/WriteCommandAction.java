@@ -17,7 +17,6 @@ package com.intellij.openapi.command;
 
 import com.intellij.codeInsight.FileModificationService;
 import com.intellij.openapi.application.*;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
@@ -26,6 +25,8 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ThrowableRunnable;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

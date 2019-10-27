@@ -30,15 +30,15 @@ import com.intellij.ui.Gray;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.tree.TreeUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class PackageDependenciesNode extends DefaultMutableTreeNode implements Navigatable{
   private static final EmptyIcon EMPTY_ICON = new EmptyIcon(0, IconUtil.getEmptyIcon(false).getIconHeight());
@@ -225,7 +225,7 @@ public class PackageDependenciesNode extends DefaultMutableTreeNode implements N
 
   public void sortChildren() {
     if (isSorted()) return;
-    final List children = TreeUtil.childrenToArray(this);
+    final List children = TreeUtil.listChildren(this);
     Collections.sort(children, new DependencyNodeComparator());
     removeAllChildren();
     TreeUtil.addChildrenTo(this, children);

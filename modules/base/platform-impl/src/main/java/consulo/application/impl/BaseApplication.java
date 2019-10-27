@@ -21,7 +21,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.ActivityTracker;
 import com.intellij.ide.ApplicationLoadListener;
 import com.intellij.ide.StartupProgress;
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.plugins.PluginListenerDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.AccessToken;
@@ -33,12 +33,11 @@ import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.application.impl.ReadMostlyRWLock;
 import com.intellij.openapi.components.ComponentConfig;
-import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
@@ -53,7 +52,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.PausesStat;
-import com.intellij.util.ReflectionUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.containers.Stack;
@@ -65,7 +63,9 @@ import consulo.components.impl.PlatformComponentManagerImpl;
 import consulo.components.impl.stores.ApplicationStoreImpl;
 import consulo.components.impl.stores.IApplicationStore;
 import consulo.components.impl.stores.StoreUtil;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.injecting.InjectingContainerBuilder;
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
@@ -75,6 +75,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -171,6 +172,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   private final ExecutorService myThreadExecutorsService = PooledThreadExecutor.INSTANCE;
 
+  // FIXME [VISTALL] we need this?
   protected final Stack<Class> myWriteActionsStack = new Stack<>();
 
   private final long myStartTime;
@@ -217,8 +219,14 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   @Nonnull
   @Override
-  protected ComponentConfig[] getComponentConfigs(IdeaPluginDescriptor ideaPluginDescriptor) {
+  protected List<ComponentConfig> getComponentConfigs(PluginDescriptor ideaPluginDescriptor) {
     return ideaPluginDescriptor.getAppComponents();
+  }
+
+  @Nonnull
+  @Override
+  protected List<PluginListenerDescriptor> getPluginListenerDescriptors(PluginDescriptor pluginDescriptor) {
+    return pluginDescriptor.getApplicationListeners();
   }
 
   protected void fireApplicationExiting() {
@@ -280,7 +288,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   }
 
   private void fireBeforeApplicationLoaded() {
-    for (ApplicationLoadListener listener : ApplicationLoadListener.EP_NAME.getExtensions()) {
+    for (ApplicationLoadListener listener : ApplicationLoadListener.EP_NAME.getExtensionList()) {
       try {
         listener.beforeApplicationLoaded();
       }
@@ -299,8 +307,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   // public for testing purposes
   public void _saveSettings() {
     if (mySaveSettingsIsInProgress.compareAndSet(false, true)) {
-      HeavyProcessLatch.INSTANCE.prioritizeUiActivity();
-
       try {
         StoreUtil.save(getStateStore(), null);
       }
@@ -545,6 +551,11 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     return true;
   }
 
+  @Override
+  public boolean isInImpatientReader() {
+    return myLock.isInImpatientReader();
+  }
+
   private void startRead() {
     myLock.readLock();
   }
@@ -599,7 +610,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   protected void startWrite(@Nonnull Class clazz) {
     assertWriteActionStart();
 
-    HeavyProcessLatch.INSTANCE.stopThreadPrioritizing(); // let non-cancellable read actions complete faster, if present
     boolean writeActionPending = myWriteActionPending;
     if (myGatherStatistics && myWriteActionsStack.isEmpty() && !writeActionPending) {
       ActionPauses.WRITE.started();
@@ -694,18 +704,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     finally {
       endWrite(clazz);
     }
-  }
-
-  @RequiredUIAccess
-  @Override
-  public boolean hasWriteAction(@Nonnull Class<?> actionClass) {
-    assertReadAccessAllowed();
-
-    for (int i = myWriteActionsStack.size() - 1; i >= 0; i--) {
-      Class action = myWriteActionsStack.get(i);
-      if (actionClass == action || ReflectionUtil.isAssignable(actionClass, action)) return true;
-    }
-    return false;
   }
 
   @Override

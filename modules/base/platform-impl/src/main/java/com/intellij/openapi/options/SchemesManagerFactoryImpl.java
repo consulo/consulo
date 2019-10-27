@@ -21,7 +21,7 @@ import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.ServiceBean;
 import com.intellij.openapi.components.SettingsSavingComponent;
 import consulo.components.impl.stores.StreamProvider;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ex.ApplicationEx2;
 import consulo.util.pointers.Named;

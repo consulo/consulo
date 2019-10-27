@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2019 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,28 @@
 package com.intellij.openapi.fileTypes.ex;
 
 import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.FileTypeFactory;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import javax.annotation.Nonnull;
 
 /**
  * @author max
  */
-public abstract class FileTypeManagerEx extends FileTypeManager{
-  public static FileTypeManagerEx getInstanceEx(){
-    return (FileTypeManagerEx) getInstance();
+public abstract class FileTypeManagerEx extends FileTypeManager {
+  public static FileTypeManagerEx getInstanceEx() {
+    return (FileTypeManagerEx)getInstance();
   }
 
+  /**
+   * @deprecated use {@code com.intellij.fileType} extension point or {@link FileTypeFactory} instead
+   */
+  @Deprecated
   public abstract void registerFileType(@Nonnull FileType fileType);
+
+  /**
+   * @deprecated use {@code com.intellij.fileType} extension point or {@link FileTypeFactory} instead
+   */
+  @Deprecated
   public abstract void unregisterFileType(@Nonnull FileType fileType);
 
   public abstract boolean isIgnoredFilesListEqualToCurrent(@Nonnull String list);

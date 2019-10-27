@@ -17,7 +17,7 @@ package com.intellij.psi.codeStyle.arrangement;
 
 import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
 import com.intellij.lang.Language;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.Ref;

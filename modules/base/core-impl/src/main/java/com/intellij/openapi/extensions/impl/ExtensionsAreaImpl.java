@@ -15,23 +15,24 @@
  */
 package com.intellij.openapi.extensions.impl;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.openapi.components.ComponentManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.*;
+import consulo.logging.Logger;
+import com.intellij.openapi.extensions.ExtensionPoint;
+import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.extensions.ExtensionsArea;
+import com.intellij.openapi.extensions.PluginId;
+import com.intellij.openapi.util.text.StringUtil;
+import consulo.container.impl.parser.ExtensionInfo;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.util.nodep.xml.node.SimpleXmlElement;
 import gnu.trove.THashMap;
-import org.jdom.Attribute;
 import org.jdom.Element;
-import org.jdom.Namespace;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Map;
 
 public class ExtensionsAreaImpl implements ExtensionsArea {
-  private static final Logger LOGGER = Logger.getInstance(ExtensionsAreaImpl.class);
-
-  public static final String ATTRIBUTE_AREA = "area";
+  private static final Logger LOG = Logger.getInstance(ExtensionsAreaImpl.class);
 
   private static final boolean DEBUG_REGISTRATION = false;
 
@@ -50,8 +51,7 @@ public class ExtensionsAreaImpl implements ExtensionsArea {
     myAreaInstance = areaInstance;
   }
 
-  public void registerExtensionPoint(@Nonnull IdeaPluginDescriptor pluginDescriptor, @Nonnull Element extensionPointElement) {
-    assert pluginDescriptor.getPluginId() != null;
+  public void registerExtensionPoint(@Nonnull PluginDescriptor pluginDescriptor, @Nonnull SimpleXmlElement extensionPointElement) {
     final String pluginId = pluginDescriptor.getPluginId().getIdString();
     String epName = extensionPointElement.getAttributeValue("qualifiedName");
     if (epName == null) {
@@ -60,6 +60,9 @@ public class ExtensionsAreaImpl implements ExtensionsArea {
         throw new RuntimeException("'name' attribute not specified for extension point in '" + pluginId + "' plugin");
       }
       epName = pluginId + '.' + name;
+    }
+    else {
+      LOG.warn("Using 'qualifiedName' which is deprecated. " + extensionPointElement + ". PluginId: " + pluginId);
     }
 
     String beanClassName = extensionPointElement.getAttributeValue("beanClass");
@@ -84,32 +87,34 @@ public class ExtensionsAreaImpl implements ExtensionsArea {
     registerExtensionPoint(epName, className, pluginDescriptor, kind);
   }
 
-  public void registerExtension(@Nonnull final IdeaPluginDescriptor pluginDescriptor, @Nonnull final Element extensionElement) {
+  public void registerExtension(@Nonnull final PluginDescriptor pluginDescriptor, @Nonnull ExtensionInfo extensionInfo) {
     final PluginId pluginId = pluginDescriptor.getPluginId();
 
-    String epName = extractEPName(extensionElement);
+    String epName = extractEPName(extensionInfo);
+
+    SimpleXmlElement element = extensionInfo.getElement();
 
     ExtensionComponentAdapter adapter;
     final ExtensionPointImpl extensionPoint = getExtensionPoint(epName);
     if (extensionPoint.getKind() == ExtensionPoint.Kind.INTERFACE) {
-      String implClass = extensionElement.getAttributeValue("implementation");
+      String implClass = element.getAttributeValue("implementation");
       if (implClass == null) {
         throw new RuntimeException("'implementation' attribute not specified for '" + epName + "' extension in '" + pluginId.getIdString() + "' plugin");
       }
-      adapter = new ExtensionComponentAdapter(implClass, extensionElement, pluginDescriptor, shouldDeserializeInstance(extensionElement));
+      adapter = new ExtensionComponentAdapter(implClass, mapElement(element), pluginDescriptor, shouldDeserializeInstance(element));
     }
     else {
-      adapter = new ExtensionComponentAdapter(extensionPoint.getClassName(), extensionElement, pluginDescriptor, true);
+      adapter = new ExtensionComponentAdapter(extensionPoint.getClassName(), mapElement(element), pluginDescriptor, true);
     }
     extensionPoint.registerExtensionAdapter(adapter);
   }
 
-  private static boolean shouldDeserializeInstance(Element extensionElement) {
+  private static boolean shouldDeserializeInstance(SimpleXmlElement extensionElement) {
     // has content
-    if (!extensionElement.getContent().isEmpty()) return true;
+    if (!extensionElement.getChildren().isEmpty()) return true;
     // has custom attributes
-    for (Attribute attribute : extensionElement.getAttributes()) {
-      final String name = attribute.getName();
+    for (Map.Entry<String, String> attribute : extensionElement.getAttributes().entrySet()) {
+      final String name = attribute.getKey();
       if (!"implementation".equals(name) && !"id".equals(name) && !"order".equals(name)) {
         return true;
       }
@@ -117,34 +122,41 @@ public class ExtensionsAreaImpl implements ExtensionsArea {
     return false;
   }
 
-  public static String extractEPName(final Element extensionElement) {
-    String epName = extensionElement.getAttributeValue("point");
-
-    if (epName == null) {
-      final Element parentElement = extensionElement.getParentElement();
-      final String ns = parentElement != null ? parentElement.getAttributeValue("defaultExtensionNs") : null;
-
-      if (ns != null) {
-        epName = ns + '.' + extensionElement.getName();
-      }
-      else {
-        Namespace namespace = extensionElement.getNamespace();
-        epName = namespace.getURI() + '.' + extensionElement.getName();
-      }
+  @Nonnull
+  private static Element mapElement(SimpleXmlElement simpleXmlElement) {
+    Element element = new Element(simpleXmlElement.getName());
+    for (SimpleXmlElement child : simpleXmlElement.getChildren()) {
+      element.addContent(mapElement(child));
     }
-    return epName;
+
+    for (Map.Entry<String, String> entry : simpleXmlElement.getAttributes().entrySet()) {
+      element.setAttribute(entry.getKey(), entry.getValue());
+    }
+
+    String text = simpleXmlElement.getText();
+    if(!StringUtil.isEmptyOrSpaces(text)) {
+      element.setText(text);
+    }
+
+    return element;
+  }
+
+  public static String extractEPName(final ExtensionInfo extensionElement) {
+    SimpleXmlElement element = extensionElement.getElement();
+    String pluginId = extensionElement.getPluginId();
+    return pluginId + "." + element.getName();
   }
 
   public Throwable getCreationTrace() {
     return myCreationTrace;
   }
 
-  public void registerExtensionPoint(@Nonnull String extensionPointName, @Nonnull String extensionPointBeanClass, @Nullable IdeaPluginDescriptor descriptor, @Nonnull ExtensionPoint.Kind kind) {
+  public void registerExtensionPoint(@Nonnull String extensionPointName, @Nonnull String extensionPointBeanClass, @Nonnull PluginDescriptor descriptor, @Nonnull ExtensionPoint.Kind kind) {
     if (hasExtensionPoint(extensionPointName)) {
       if (DEBUG_REGISTRATION) {
         final ExtensionPointImpl oldEP = getExtensionPoint(extensionPointName);
-        LOGGER.error("Duplicate registration for EP: " + extensionPointName + ": original plugin " + oldEP.getDescriptor().getPluginId() + ", new plugin " + descriptor.getPluginId(),
-                     myEPTraces.get(extensionPointName));
+        LOG.error("Duplicate registration for EP: " + extensionPointName + ": original plugin " + oldEP.getDescriptor().getPluginId() + ", new plugin " + descriptor.getPluginId(),
+                  myEPTraces.get(extensionPointName));
       }
       throw new RuntimeException("Duplicate registration for EP: " + extensionPointName);
     }
@@ -153,7 +165,7 @@ public class ExtensionsAreaImpl implements ExtensionsArea {
   }
 
   public void registerExtensionPoint(@Nonnull ExtensionPointImpl extensionPoint) {
-    if(myLocked) {
+    if (myLocked) {
       throw new IllegalArgumentException("locked");
     }
 

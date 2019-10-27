@@ -20,7 +20,6 @@ import com.intellij.lang.Commenter;
 import com.intellij.lang.LanguageCommenters;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileType;
@@ -39,6 +38,8 @@ import com.maddyhome.idea.copyright.pattern.EntityUtil;
 import com.maddyhome.idea.copyright.pattern.VelocityHelper;
 import com.maddyhome.idea.copyright.util.FileTypeUtil;
 import consulo.copyright.config.CopyrightFileConfig;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

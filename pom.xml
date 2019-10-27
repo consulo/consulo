@@ -26,7 +26,6 @@
     <module>plugins/sandLanguage</module>
 
     <module>modules/desktop/desktop-main</module>
-    <module>modules/desktop/desktop-boot</module>
     <module>modules/desktop/desktop-bootstrap</module>
     <module>modules/desktop/desktop-ui-impl</module>
     <module>modules/desktop/desktop-platform-impl</module>
@@ -36,7 +35,7 @@
     <module>modules/desktop/desktop-util-awt</module>
     <module>plugins/platform-desktop</module>
 
-    <module>modules/web/web-boot</module>
+    <module>modules/web/web-bootstrap</module>
     <module>modules/web/web-ui-impl-client</module>
     <module>modules/web/web-ui-impl-shared</module>
     <module>modules/web/web-ui-impl-server</module>
@@ -53,12 +52,15 @@
     <module>modules/base/annotations</module>
     <module>modules/base/analysis-api</module>
     <module>modules/base/analysis-impl</module>
+    <module>modules/base/bootstrap</module>
     <module>modules/base/built-in-server-api</module>
     <module>modules/base/built-in-server-impl</module>
     <module>modules/base/core-api</module>
     <module>modules/base/core-impl</module>
     <module>modules/base/compiler-api</module>
     <module>modules/base/compiler-impl</module>
+    <module>modules/base/container-api</module>
+    <module>modules/base/container-impl</module>
     <module>modules/base/diff-api</module>
     <module>modules/base/diff-impl</module>
     <module>modules/base/disposer-api</module>
@@ -119,9 +121,11 @@
     <module>modules/base/injecting-api</module>
     <module>modules/base/injecting-pico-impl</module>
 
+    <module>modules/base9/language-editor-api</module>
+
+    <module>modules/base9/logging-api</module>
     <module>modules/base/logging-slf4j-binding-impl</module>
-    <module>modules/base/logging-log4j-impl</module>
-    <module>modules/base/logging-log4j2-impl</module>
+    <module>modules/base9/logging-log4j2-impl</module>
 
     <module>modules/base/test-impl</module>
 

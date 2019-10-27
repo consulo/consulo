@@ -19,7 +19,7 @@ package com.intellij.packageDependencies.ui;
 import com.intellij.analysis.AnalysisScopeBundle;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.ide.util.scopeChooser.PackageSetChooserCombo;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;

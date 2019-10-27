@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vfs.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileAttributes;
 import com.intellij.openapi.util.io.FileSystemUtil;
@@ -168,7 +168,7 @@ public abstract class ZipHandler extends ArchiveHandler {
                                  long size,
                                  long time,
                                  @Nonnull String entryName) {
-    CharSequence sequence = shortName instanceof ByteArrayCharSequence ? shortName : ByteArrayCharSequence.convertToBytesIfAsciiString(shortName);
+    CharSequence sequence = shortName instanceof ByteArrayCharSequence ? shortName : ByteArrayCharSequence.convertToBytesIfPossible(shortName);
     EntryInfo info = new EntryInfo(sequence, isDirectory, size, time, parentInfo);
     map.put(entryName, info);
     return info;

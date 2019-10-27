@@ -1,3 +1,4 @@
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.mock;
 
 import com.intellij.openapi.editor.Document;
@@ -9,54 +10,45 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
-import com.intellij.util.containers.WeakFactoryMap;
-import consulo.ui.RequiredUIAccess;
-import consulo.annotations.RequiredReadAction;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.lang.ref.Reference;
 
-@Deprecated
 public class MockFileDocumentManagerImpl extends FileDocumentManager {
   private static final Key<VirtualFile> MOCK_VIRTUAL_FILE_KEY = Key.create("MockVirtualFile");
-  private final Function<CharSequence, Document> myFactory;
+  private final Function<? super CharSequence, ? extends Document> myFactory;
   @Nullable
-  private final Key<Reference<Document>> myCachedDocumentKey;
+  private final Key<Document> myCachedDocumentKey;
 
-  public MockFileDocumentManagerImpl(Function<CharSequence, Document> factory, @Nullable Key<Reference<Document>> cachedDocumentKey) {
+  public MockFileDocumentManagerImpl(Function<? super CharSequence, ? extends Document> factory, @Nullable Key<Document> cachedDocumentKey) {
     myFactory = factory;
     myCachedDocumentKey = cachedDocumentKey;
   }
 
-  private final WeakFactoryMap<VirtualFile,Document> myDocuments = new WeakFactoryMap<VirtualFile, Document>() {
-    @Override
-    protected Document create(final VirtualFile key) {
-      if (key.isDirectory() || isBinaryWithoutDecompiler(key)) return null;
+  private static final Key<Document> MOCK_DOC_KEY = Key.create("MOCK_DOC_KEY");
 
-      CharSequence text = LoadTextUtil.loadText(key);
-      final Document document = myFactory.fun(text);
-      document.putUserData(MOCK_VIRTUAL_FILE_KEY, key);
-      return document;
-    }
+  private static boolean isBinaryWithoutDecompiler(VirtualFile file) {
+    final FileType ft = file.getFileType();
+    return ft.isBinary() && BinaryFileTypeDecompilers.INSTANCE.forFileType(ft) == null;
+  }
 
-    private boolean isBinaryWithoutDecompiler(VirtualFile file) {
-      final FileType ft = file.getFileType();
-      return ft.isBinary() && BinaryFileTypeDecompilers.INSTANCE.forFileType(ft) == null;
-    }
-  };
-
-  @RequiredReadAction
   @Override
   public Document getDocument(@Nonnull VirtualFile file) {
-    return myDocuments.get(file);
+    Document document = file.getUserData(MOCK_DOC_KEY);
+    if (document == null) {
+      if (file.isDirectory() || isBinaryWithoutDecompiler(file)) return null;
+
+      CharSequence text = LoadTextUtil.loadText(file);
+      document = myFactory.fun(text);
+      document.putUserData(MOCK_VIRTUAL_FILE_KEY, file);
+      document = file.putUserDataIfAbsent(MOCK_DOC_KEY, document);
+    }
+    return document;
   }
 
   @Override
   public Document getCachedDocument(@Nonnull VirtualFile file) {
     if (myCachedDocumentKey != null) {
-      Reference<Document> reference = file.getUserData(myCachedDocumentKey);
-      return reference != null ? reference.get() : null;
+      return file.getUserData(myCachedDocumentKey);
     }
     return null;
   }
@@ -66,17 +58,14 @@ public class MockFileDocumentManagerImpl extends FileDocumentManager {
     return document.getUserData(MOCK_VIRTUAL_FILE_KEY);
   }
 
-  @RequiredUIAccess
   @Override
   public void saveAllDocuments() {
   }
 
-  @RequiredUIAccess
   @Override
   public void saveDocument(@Nonnull Document document) {
   }
 
-  @RequiredUIAccess
   @Override
   public void saveDocumentAsIs(@Nonnull Document document) {
   }
@@ -84,7 +73,7 @@ public class MockFileDocumentManagerImpl extends FileDocumentManager {
   @Override
   @Nonnull
   public Document[] getUnsavedDocuments() {
-    return new Document[0];
+    return Document.EMPTY_ARRAY;
   }
 
   @Override
@@ -97,20 +86,23 @@ public class MockFileDocumentManagerImpl extends FileDocumentManager {
     return false;
   }
 
-  @RequiredUIAccess
+  @Override
+  public boolean isPartialPreviewOfALargeFile(@Nonnull Document document) {
+    return false;
+  }
+
   @Override
   public void reloadFromDisk(@Nonnull Document document) {
   }
 
-  @RequiredUIAccess
   @Override
-  public void reloadFiles(final VirtualFile... files) {
+  public void reloadFiles(@Nonnull final VirtualFile... files) {
   }
 
   @Override
   @Nonnull
   public String getLineSeparator(VirtualFile file, Project project) {
-    return LoadTextUtil.getDetectedLineSeparator(file);
+    return "";
   }
 
   @Override

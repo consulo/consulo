@@ -42,8 +42,7 @@ HANDLE hEvent;
 HANDLE hSingleInstanceWatcherThread;
 const int FILE_MAPPING_SIZE = 16000;
 
-#define BOOT "consulo-desktop-boot.jar"
-#define BOOTCLASSPATH "consulo-desktop-bootstrap.jar;consulo-util.jar;consulo-util-rt.jar;jdom.jar;trove4j.jar;jna.jar;jna-platform.jar"
+#define BOOTCLASSPATH "consulo-bootstrap.jar;consulo-container-api.jar;consulo-container-impl.jar;consulo-desktop-bootstrap.jar;consulo-util-rt.jar"
 #define CONSULO_JRE "CONSULO_JRE"
 
 #ifdef _M_X64
@@ -213,6 +212,8 @@ bool FindJVMInRegistry()
     return true;
   if (FindJVMInRegistryWithVersion("11", true))
     return true;
+  if (FindJVMInRegistryWithVersion("12", true))
+    return true;
 
   //obsolete java versions
   if (FindJVMInRegistryWithVersion("1.7", true))
@@ -233,6 +234,8 @@ bool FindJVMInRegistry()
   if (FindJVMInRegistryWithVersion("10", false))
     return true;
   if (FindJVMInRegistryWithVersion("11", false))
+    return true;
+  if (FindJVMInRegistryWithVersion("12", false))
     return true;
 
   //obsolete java versions
@@ -357,10 +360,10 @@ bool LoadVMOptionsFile(const TCHAR* path, std::vector<std::string>& vmOptionLine
   return true;
 }
 
-std::string CollectLibJars(const std::string& jarList)
+std::string CollectBootJars(const std::string& jarList)
 {
-  std::string libDir = GetAdjacentDir("lib");
-  if (libDir.size() == 0 || !FileExists(libDir))
+  std::string bootDir = GetAdjacentDir("boot");
+  if (bootDir.size() == 0 || !FileExists(bootDir))
   {
     return "";
   }
@@ -378,7 +381,7 @@ std::string CollectLibJars(const std::string& jarList)
     {
       result += ";";
     }
-    result += libDir;
+    result += bootDir;
     result += jarList.substr(pos, delimiterPos - pos);
 
 
@@ -390,7 +393,7 @@ std::string CollectLibJars(const std::string& jarList)
 std::string BuildClassPath()
 {
   std::string classpathLibs = std::string(BOOTCLASSPATH);
-  std::string result = CollectLibJars(classpathLibs);
+  std::string result = CollectBootJars(classpathLibs);
   return result;
 }
 
@@ -399,14 +402,6 @@ bool AddClassPathOptions(std::vector<std::string>& vmOptionLines)
   std::string classPath = BuildClassPath();
   if (classPath.size() == 0) return false;
   vmOptionLines.push_back(std::string("-Djava.class.path=") + classPath);
-
-  std::string bootClassPathLibs = std::string(BOOT);
-  std::string bootClassPath = CollectLibJars(bootClassPathLibs);
-  if (bootClassPath.size() > 0)
-  {
-    vmOptionLines.push_back(std::string("-Xbootclasspath/a:") + bootClassPath);
-  }
-
   return true;
 }
 
@@ -550,7 +545,7 @@ jobjectArray PrepareCommandLine()
 
 bool RunMainClass()
 {
-  std::string mainClassName = LoadStdString(IDS_MAIN_CLASS);
+  std::string mainClassName = "consulo/desktop/boot/main/Main";
   jclass mainClass = env->FindClass(mainClassName.c_str());
   if (!mainClass)
   {
@@ -590,7 +585,7 @@ void CallCommandLineProcessor(const std::wstring& curDir, const std::wstring& ar
   attachArgs.group = NULL;
   jvm->AttachCurrentThread((void**)&env, &attachArgs);
 
-  std::string processorClassName = LoadStdString(IDS_COMMAND_LINE_PROCESSOR_CLASS);
+  std::string processorClassName = "consulo/desktop/boot/main/windows/WindowsCommandLineProcessor";
   jclass processorClass = env->FindClass(processorClassName.c_str());
   if (processorClass)
   {

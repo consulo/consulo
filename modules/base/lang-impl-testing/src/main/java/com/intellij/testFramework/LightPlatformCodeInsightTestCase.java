@@ -24,7 +24,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Key;
 import consulo.testFramework.util.TestPathUtil;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;

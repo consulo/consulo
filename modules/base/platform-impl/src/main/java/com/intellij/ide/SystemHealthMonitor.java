@@ -17,25 +17,15 @@ package com.intellij.ide;
 
 import com.intellij.concurrency.JobScheduler;
 import com.intellij.diagnostic.VMOptions;
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.util.ExecUtil;
 import com.intellij.jna.JnaLoader;
 import com.intellij.notification.*;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.ui.MessageType;
+import com.intellij.openapi.application.*;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.popup.Balloon;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.HyperlinkAdapter;
-import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.ui.JBUI;
@@ -45,39 +35,35 @@ import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import consulo.application.AccessRule;
-import consulo.start.CommandLineArgs;
+import consulo.logging.Logger;
 import consulo.util.ApplicationPropertiesComponent;
 import org.jetbrains.annotations.PropertyKey;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
-import java.awt.*;
 import java.io.File;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-@Singleton
-public class SystemHealthMonitor {
+public class SystemHealthMonitor extends PreloadingActivity {
   private static final Logger LOG = Logger.getInstance(SystemHealthMonitor.class);
 
   private static final NotificationGroup GROUP = new NotificationGroup("System Health", NotificationDisplayType.STICKY_BALLOON, false);
-  private static final NotificationGroup LOG_GROUP = NotificationGroup.logOnlyGroup("System Health (minor)");
 
   private final ApplicationPropertiesComponent myProperties;
 
   @Inject
   public SystemHealthMonitor(@Nonnull ApplicationPropertiesComponent properties) {
     myProperties = properties;
+  }
 
+  @Override
+  public void preload(@Nonnull ProgressIndicator indicator) {
     checkRuntime();
     checkReservedCodeCacheSize();
-    checkIBus();
     checkSignalBlocking();
     checkHiDPIMode();
     startDiskSpaceMonitoring();
@@ -94,24 +80,6 @@ public class SystemHealthMonitor {
     int reservedCodeCacheSize = VMOptions.readOption(VMOptions.MemoryKind.CODE_CACHE, true);
     if (reservedCodeCacheSize > 0 && reservedCodeCacheSize < minReservedCodeCacheSize) {
       showNotification(new KeyHyperlinkAdapter("vmoptions.warn.message"), reservedCodeCacheSize, minReservedCodeCacheSize);
-    }
-  }
-
-  private void checkIBus() {
-    if (SystemInfo.isXWindow) {
-      String xim = System.getenv("XMODIFIERS");
-      if (xim != null && xim.contains("im=ibus")) {
-        String version = ExecUtil.execAndReadLine(new GeneralCommandLine("ibus-daemon", "--version"));
-        if (version != null) {
-          Matcher m = Pattern.compile("ibus-daemon - Version ([0-9.]+)").matcher(version);
-          if (m.find() && StringUtil.compareVersionNumbers(m.group(1), "1.5.11") < 0) {
-            String fix = System.getenv("IBUS_ENABLE_SYNC_MODE");
-            if (fix == null || fix.isEmpty() || fix.equals("0") || fix.equalsIgnoreCase("false")) {
-              showNotification(new KeyHyperlinkAdapter("ibus.blocking.warn.message"));
-            }
-          }
-        }
-      }
     }
   }
 
@@ -135,7 +103,7 @@ public class SystemHealthMonitor {
 
   private void checkHiDPIMode() {
     // if switched from JRE-HiDPI to IDE-HiDPI
-    boolean switchedHiDPIMode = SystemInfo.isJetbrainsJvm && "true".equalsIgnoreCase(System.getProperty("sun.java2d.uiScale.enabled")) && !UIUtil.isJreHiDPIEnabled();
+    boolean switchedHiDPIMode = SystemInfo.isJetBrainsJvm && "true".equalsIgnoreCase(System.getProperty("sun.java2d.uiScale.enabled")) && !UIUtil.isJreHiDPIEnabled();
     if (SystemInfo.isWindows && ((switchedHiDPIMode && JBUI.isHiDPI(JBUI.sysScale())) || RemoteDesktopService.isRemoteSession())) {
       showNotification(new KeyHyperlinkAdapter("ide.set.hidpi.mode"));
     }
@@ -149,35 +117,16 @@ public class SystemHealthMonitor {
 
     String message = IdeBundle.message(key, params) + IdeBundle.message("sys.health.acknowledge.link");
 
-    Application app = ApplicationManager.getApplication();
-    app.getMessageBus().connect(app).subscribe(AppLifecycleListener.TOPIC, new AppLifecycleListener() {
-      @Override
-      public void appFrameCreated(CommandLineArgs commandLineArgs, @Nonnull boolean willOpenProject) {
-        app.invokeLater(() -> {
-          JComponent component = WindowManager.getInstance().findVisibleFrame().getRootPane();
-          if (component != null) {
-            Rectangle rect = component.getVisibleRect();
-            JBPopupFactory.getInstance()
-                    .createHtmlTextBalloonBuilder(message, MessageType.WARNING, adapter)
-                    .setFadeoutTime(-1)
-                    .setHideOnFrameResize(false)
-                    .setHideOnLinkClick(true)
-                    .setDisposable(app)
-                    .createBalloon()
-                    .show(new RelativePoint(component, new Point(rect.x + 30, rect.y + rect.height - 10)), Balloon.Position.above);
-          }
-
-          Notification notification = LOG_GROUP.createNotification("", message, NotificationType.WARNING,
-                                                                   new NotificationListener.Adapter() {
-                                                                     @Override
-                                                                     protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e) {
-                                                                       adapter.hyperlinkActivated(e);
-                                                                     }
-                                                                   });
-          notification.setImportant(true);
-          Notifications.Bus.notify(notification);
-        });
-      }
+    Application app = Application.get();
+    app.invokeLater(() -> {
+      Notification notification = GROUP.createNotification("", message, NotificationType.WARNING, new NotificationListener.Adapter() {
+        @Override
+        protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e) {
+          adapter.hyperlinkActivated(e);
+        }
+      });
+      notification.setImportant(true);
+      Notifications.Bus.notify(notification);
     });
   }
 
@@ -222,7 +171,7 @@ public class SystemHealthMonitor {
             ourFreeSpaceCalculation.set(null);
 
             if (fileUsableSpace < LOW_DISK_SPACE_THRESHOLD) {
-              ThrowableComputable<NotificationsConfiguration,RuntimeException> action = () -> NotificationsConfiguration.getNotificationsConfiguration();
+              ThrowableComputable<NotificationsConfiguration, RuntimeException> action = () -> NotificationsConfiguration.getNotificationsConfiguration();
               if (AccessRule.read(action) == null) {
                 ourFreeSpaceCalculation.set(future);
                 restart(1);
@@ -268,6 +217,7 @@ public class SystemHealthMonitor {
   private interface LibC extends Library {
     int SIGINT = 2;
     long SIG_IGN = 1L;
+
     int sigaction(int signum, Pointer act, Pointer oldact);
   }
 

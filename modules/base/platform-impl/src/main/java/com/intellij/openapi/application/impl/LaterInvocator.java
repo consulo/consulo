@@ -8,7 +8,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ModalityStateListener;
 import com.intellij.openapi.application.TransactionGuard;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
@@ -21,6 +20,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
@@ -98,7 +98,7 @@ public class LaterInvocator {
   private static final ConcurrentMap<Window, ModalityStateEx> ourWindowModalities = ContainerUtil.createConcurrentWeakMap();
 
   @Nonnull
-  static ModalityStateEx modalityStateForWindow(@Nonnull Window window) {
+  public static ModalityStateEx modalityStateForWindow(@Nonnull Window window) {
     return ourWindowModalities.computeIfAbsent(window, __ -> {
       for (ModalityStateEx state : ourModalityStack) {
         if (state.getModalEntities().contains(window)) {
@@ -117,24 +117,24 @@ public class LaterInvocator {
   }
 
   @Nonnull
-  static AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull Condition<?> expired) {
+  public static AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull Condition<?> expired) {
     ModalityState modalityState = ModalityState.defaultModalityState();
     return invokeLater(runnable, modalityState, expired);
   }
 
   @Nonnull
-  static AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
+  public static AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
     return invokeLater(runnable, modalityState, Conditions.FALSE);
   }
 
   @Nonnull
-  static AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState, @Nonnull Condition<?> expired) {
+  public static AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState, @Nonnull Condition<?> expired) {
     AsyncResult<Void> callback = new AsyncResult<>();
     invokeLaterWithCallback(runnable, modalityState, expired, callback);
     return callback;
   }
 
-  static void invokeLaterWithCallback(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState, @Nonnull Condition<?> expired, @Nullable ActionCallback callback) {
+  public static void invokeLaterWithCallback(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState, @Nonnull Condition<?> expired, @Nullable ActionCallback callback) {
     if (expired.value(null)) {
       if (callback != null) {
         callback.setRejected();
@@ -148,7 +148,7 @@ public class LaterInvocator {
     requestFlush();
   }
 
-  static void invokeAndWait(@Nonnull final Runnable runnable, @Nonnull ModalityState modalityState) {
+  public static void invokeAndWait(@Nonnull final Runnable runnable, @Nonnull ModalityState modalityState) {
     LOG.assertTrue(!isDispatchThread());
 
     final Semaphore semaphore = new Semaphore();

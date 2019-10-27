@@ -15,18 +15,18 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.BitUtil;
+import consulo.logging.Logger;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ToolkitBugsProcessor {
-  private static final Logger LOG = Logger.getInstance("ToolkitBugProcessor");
+  private static final Logger LOG = Logger.getInstance(ToolkitBugsProcessor.class);
 
   private final List<Handler> myHandlers = new ArrayList<>();
 

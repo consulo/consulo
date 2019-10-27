@@ -30,7 +30,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
 import com.intellij.openapi.editor.ex.EditorEx;
@@ -375,6 +375,7 @@ public class TypedHandler extends TypedActionHandlerBase {
         throw new AssertionError("Unknown char " + lparenChar);
       }
       editor.getDocument().insertString(offset, text);
+      TabOutScopesTracker.getInstance().registerEmptyScope(editor, offset);
     }
   }
 
@@ -476,6 +477,7 @@ public class TypedHandler extends TypedActionHandlerBase {
       if (offset == document.getTextLength() ||
           !Character.isUnicodeIdentifierPart(document.getCharsSequence().charAt(offset))) { //any better heuristic or an API?
         document.insertString(offset, String.valueOf(quote));
+        TabOutScopesTracker.getInstance().registerEmptyScope(editor, offset);
       }
     }
 

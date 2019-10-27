@@ -16,7 +16,7 @@
 
 package com.intellij.codeEditor.printing;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.util.containers.HashMap;
 import org.jdom.Document;

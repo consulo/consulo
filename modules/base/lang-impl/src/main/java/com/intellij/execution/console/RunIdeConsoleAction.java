@@ -27,7 +27,6 @@ import com.intellij.execution.ui.actions.CloseAction;
 import com.intellij.ide.scratch.ScratchFileService;
 import com.intellij.ide.script.IdeScriptBindings;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
@@ -52,6 +51,8 @@ import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import consulo.logging.Logger;
 import org.jetbrains.ide.script.IdeScriptEngine;
 import org.jetbrains.ide.script.IdeScriptEngineManager;
 

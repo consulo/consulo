@@ -23,7 +23,6 @@ import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.compiler.CompilerPaths;
 import com.intellij.openapi.compiler.generic.*;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
@@ -34,6 +33,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.io.KeyDescriptor;
 import consulo.application.AccessRule;
+import consulo.logging.Logger;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
 

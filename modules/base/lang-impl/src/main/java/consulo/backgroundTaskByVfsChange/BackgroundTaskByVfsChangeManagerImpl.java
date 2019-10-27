@@ -31,6 +31,7 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.xmlb.XmlSerializer;
 import consulo.backgroundTaskByVfsChange.ui.BackgroundTaskByVfsChangeManageDialog;
+import consulo.ui.RequiredUIAccess;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -78,9 +79,10 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
     return task;
   }
 
+  @RequiredUIAccess
   @Override
   public void openManageDialog(@Nonnull VirtualFile virtualFile) {
-    new BackgroundTaskByVfsChangeManageDialog(myProject, virtualFile).show();
+    new BackgroundTaskByVfsChangeManageDialog(myProject, virtualFile).showAsync();
   }
 
   @Nonnull

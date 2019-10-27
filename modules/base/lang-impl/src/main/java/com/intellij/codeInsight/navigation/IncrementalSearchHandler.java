@@ -23,7 +23,7 @@ import com.intellij.codeInsight.template.impl.editorActions.TypedActionHandlerBa
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.IdeActions;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;

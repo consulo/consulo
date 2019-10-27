@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.diff.ex;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.impl.DiffPanelImpl;
 import com.intellij.openapi.diff.impl.DiffSideView;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -23,6 +22,8 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.ui.DialogWrapperDialog;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.IdeFocusManager;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

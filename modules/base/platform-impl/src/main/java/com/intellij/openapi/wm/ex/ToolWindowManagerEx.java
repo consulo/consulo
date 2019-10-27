@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.wm.ex;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
@@ -22,10 +23,13 @@ import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowEP;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.impl.ToolWindowLayout;
+import consulo.annotations.DeprecationInfo;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.swing.*;
 import java.util.List;
 
 public abstract class ToolWindowManagerEx extends ToolWindowManager {
@@ -36,10 +40,16 @@ public abstract class ToolWindowManagerEx extends ToolWindowManager {
     return (ToolWindowManagerEx)getInstance(project);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use ToolWindowManagerListener#TOPIC")
   public abstract void addToolWindowManagerListener(@Nonnull ToolWindowManagerListener l);
 
+  @Deprecated
+  @DeprecationInfo("Use ToolWindowManagerListener#TOPIC")
   public abstract void addToolWindowManagerListener(@Nonnull ToolWindowManagerListener l, @Nonnull Disposable parentDisposable);
 
+  @Deprecated
+  @DeprecationInfo("Use ToolWindowManagerListener#TOPIC")
   public abstract void removeToolWindowManagerListener(@Nonnull ToolWindowManagerListener l);
 
   /**
@@ -90,6 +100,10 @@ public abstract class ToolWindowManagerEx extends ToolWindowManager {
   @Deprecated
   public String getLastActiveToolWindowId(@Nullable Condition<javax.swing.JComponent> condition) {
     return null;
+  }
+
+  public Icon getLocationIcon(String toolWindowId, Image defaultPinImage) {
+    return AllIcons.General.AutohideOff;
   }
   // endregion
 }

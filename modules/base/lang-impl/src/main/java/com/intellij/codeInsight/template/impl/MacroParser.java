@@ -21,7 +21,7 @@ import com.intellij.codeInsight.template.Expression;
 import com.intellij.codeInsight.template.Macro;
 import com.intellij.codeInsight.template.macro.MacroFactory;
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.tree.IElementType;
 import javax.annotation.Nonnull;

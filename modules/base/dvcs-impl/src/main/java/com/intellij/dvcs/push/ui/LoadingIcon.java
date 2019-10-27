@@ -15,7 +15,7 @@
  */
 package com.intellij.dvcs.push.ui;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.ImageLoader;
 import com.intellij.util.ui.JBImageIcon;
 import com.intellij.util.ui.UIUtil;

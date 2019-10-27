@@ -29,10 +29,12 @@ public class StepAdapter implements Step {
   private final List<StepListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
   @Override
-  public void _init() {}
+  public void _init() {
+  }
 
   @Override
-  public void _commit(boolean finishChosen) throws CommitStepException {}
+  public void _commit(boolean finishChosen) throws CommitStepException {
+  }
 
   @Override
   public JComponent getComponent() {
@@ -50,7 +52,7 @@ public class StepAdapter implements Step {
   }
 
   public void fireStateChanged() {
-    for (StepListener listener: myListeners) {
+    for (StepListener listener : myListeners) {
       listener.stateChanged();
     }
   }

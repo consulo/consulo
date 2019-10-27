@@ -32,13 +32,13 @@ import com.intellij.psi.codeStyle.*;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.EditorNotifications;
 import com.intellij.util.Processor;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.jetbrains.annotations.TestOnly;
-import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;
+import consulo.ui.RequiredUIAccess;
+import org.jetbrains.annotations.TestOnly;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static com.intellij.psi.codeStyle.EditorNotificationInfo.ActionLabelData;
 
@@ -46,17 +46,10 @@ import static com.intellij.psi.codeStyle.EditorNotificationInfo.ActionLabelData;
  * @author Rustam Vishnyakov
  */
 public class DetectedIndentOptionsNotificationProvider implements EditorNotificationProvider<EditorNotificationPanel>, DumbAware {
-  private static final Key<EditorNotificationPanel> KEY = Key.create("indent.options.notification.provider");
   private static final Key<Boolean> NOTIFIED_FLAG = Key.create("indent.options.notification.provider.status");
   protected static final Key<Boolean> DETECT_INDENT_NOTIFICATION_SHOWN_KEY = Key.create("indent.options.notification.provider.status.test.notification.shown");
 
   private static boolean myShowNotificationInTest = false;
-
-  @Nonnull
-  @Override
-  public Key<EditorNotificationPanel> getKey() {
-    return KEY;
-  }
 
   @RequiredReadAction
   @RequiredUIAccess

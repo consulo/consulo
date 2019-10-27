@@ -16,18 +16,21 @@
 package com.intellij.mock;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.*;
+import com.intellij.openapi.application.AccessToken;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationListener;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.impl.ModalityStateEx;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.ThrowableComputable;
-import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -67,6 +70,12 @@ public class MockApplication extends MockComponentManager implements Application
   @Override
   public consulo.ui.image.Image getIcon() {
     throw new IllegalArgumentException();
+  }
+
+  @Nonnull
+  @Override
+  public UIAccess getLastUIAccess() {
+    return null;
   }
 
   @RequiredReadAction
@@ -174,12 +183,6 @@ public class MockApplication extends MockComponentManager implements Application
   @Override
   public AccessToken acquireWriteActionLock(@Nonnull Class marker) {
     return AccessToken.EMPTY_ACCESS_TOKEN;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public boolean hasWriteAction(@Nullable Class<?> actionClass) {
-    return false;
   }
 
   @Override

@@ -41,7 +41,7 @@ import java.util.Set;
 )
 public class EditorSettingsExternalizable implements PersistentStateComponent<EditorSettingsExternalizable.OptionSet> {
   public static final UINumericRange BLINKING_RANGE = new UINumericRange(500, 10, 1500);
-  public static final UINumericRange QUICK_DOC_DELAY_RANGE = new UINumericRange(500, 1, 5000);
+  public static final UINumericRange TOOLTIPS_DELAY_RANGE = new UINumericRange(500, 1, 5000);
 
   //Q: make it interface?
   public static final class OptionSet {
@@ -54,7 +54,7 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     @NonNls public String STRIP_TRAILING_SPACES = STRIP_TRAILING_SPACES_CHANGED;
     public boolean IS_ENSURE_NEWLINE_AT_EOF = false;
     public boolean SHOW_QUICK_DOC_ON_MOUSE_OVER_ELEMENT = false;
-    public int QUICK_DOC_ON_MOUSE_OVER_DELAY_MS = QUICK_DOC_DELAY_RANGE.initial;
+    public int TOOLTIPS_DELAY_MS = TOOLTIPS_DELAY_RANGE.initial;
     public boolean SHOW_INTENTION_BULB = true;
     public boolean IS_CARET_BLINKING = true;
     public int CARET_BLINKING_PERIOD = BLINKING_RANGE.initial;
@@ -393,12 +393,25 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     myOptions.SHOW_QUICK_DOC_ON_MOUSE_OVER_ELEMENT = show;
   }
 
+  /**
+   * @deprecated Use {@link #getTooltipsDelay()} instead
+   */
+  @Deprecated
   public int getQuickDocOnMouseOverElementDelayMillis() {
-    return QUICK_DOC_DELAY_RANGE.fit(myOptions.QUICK_DOC_ON_MOUSE_OVER_DELAY_MS);
+    return getTooltipsDelay();
   }
 
+  public int getTooltipsDelay() {
+    return TOOLTIPS_DELAY_RANGE.fit(myOptions.TOOLTIPS_DELAY_MS);
+  }
+
+  public void setTooltipsDelay(int delay) {
+    myOptions.TOOLTIPS_DELAY_MS = TOOLTIPS_DELAY_RANGE.fit(delay);
+  }
+
+  @Deprecated
   public void setQuickDocOnMouseOverElementDelayMillis(int delay) {
-    myOptions.QUICK_DOC_ON_MOUSE_OVER_DELAY_MS = QUICK_DOC_DELAY_RANGE.fit(delay);
+    setTooltipsDelay(delay);
   }
 
   public boolean isShowIntentionBulb() {

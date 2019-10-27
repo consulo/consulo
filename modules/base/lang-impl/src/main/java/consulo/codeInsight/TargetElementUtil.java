@@ -17,7 +17,6 @@
 package consulo.codeInsight;
 
 import com.intellij.codeInsight.completion.CompletionUtil;
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.lookup.Lookup;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupManager;
@@ -42,11 +41,11 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.Immutable;
-import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 /**
@@ -129,9 +128,6 @@ public class TargetElementUtil {
     Document document = editor.getDocument();
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
     if (file == null) return null;
-    if (ApplicationManager.getApplication().isDispatchThread()) {
-      PsiDocumentManager.getInstance(project).commitAllDocuments();
-    }
 
     offset = adjustOffset(file, document, offset);
 
@@ -237,17 +233,7 @@ public class TargetElementUtil {
       return referenceOrReferencedElement;
     }
 
-    PsiManager manager = file.getManager();
-    PsiElement refElement = ref.resolve();
-    if (refElement == null) {
-      if (ApplicationManager.getApplication().isDispatchThread()) {
-        DaemonCodeAnalyzer.getInstance(manager.getProject()).updateVisibleHighlighters(editor);
-      }
-      return null;
-    }
-    else {
-      return refElement;
-    }
+    return null;
   }
 
   @Nullable

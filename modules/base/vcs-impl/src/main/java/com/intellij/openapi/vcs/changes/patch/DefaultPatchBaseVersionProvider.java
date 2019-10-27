@@ -22,7 +22,7 @@
  */
 package com.intellij.openapi.vcs.changes.patch;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;

@@ -16,20 +16,20 @@
 
 package com.intellij.ide.util.treeView;
 
+import consulo.logging.Logger;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import com.intellij.openapi.diagnostic.Logger;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class TreeBuilderUtil {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.util.treeView.TreeBuilderUtil");
+  private static final Logger LOG = Logger.getInstance(TreeBuilderUtil.class);
 
   public static void storePaths(AbstractTreeBuilder treeBuilder, DefaultMutableTreeNode root, List<Object> pathsToExpand, List<Object> selectionPaths, boolean storeElementsOnly) {
     if (!treeBuilder.wasRootNodeInitialized()) return;
@@ -46,8 +46,8 @@ public class TreeBuilderUtil {
   }
 
   private static void _storePaths(JTree tree, DefaultMutableTreeNode root, List<Object> pathsToExpand, List<Object> selectionPaths, boolean storeElementsOnly) {
-    ArrayList childNodes = TreeUtil.childrenToArray(root);
-    for (final Object childNode1 : childNodes) {
+    List<TreeNode> childNodes = TreeUtil.listChildren(root);
+    for (final TreeNode childNode1 : childNodes) {
       DefaultMutableTreeNode childNode = (DefaultMutableTreeNode)childNode1;
       TreePath path = new TreePath(childNode.getPath());
       final Object userObject = childNode.getUserObject();

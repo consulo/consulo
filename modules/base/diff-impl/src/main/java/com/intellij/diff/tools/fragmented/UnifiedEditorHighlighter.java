@@ -16,7 +16,6 @@
 package com.intellij.diff.tools.fragmented;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.event.DocumentEvent;
@@ -27,6 +26,8 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.tree.IElementType;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

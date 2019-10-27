@@ -15,10 +15,14 @@
  */
 package com.intellij.openapi.wm.ex;
 
+import com.intellij.util.messages.Topic;
+
 import javax.annotation.Nonnull;
 import java.util.EventListener;
 
 public interface ToolWindowManagerListener extends EventListener {
+  Topic<ToolWindowManagerListener> TOPIC = new Topic<>("tool window events", ToolWindowManagerListener.class);
+
   /**
    * Invoked when tool window with specified <code>id</code> is registered in {@link ToolWindowManagerEx}.
    *

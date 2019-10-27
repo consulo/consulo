@@ -15,35 +15,28 @@
  */
 package com.intellij.openapi.roots.ui.configuration.actions;
 
-import com.intellij.ide.impl.util.NewProjectUtilPlatform;
-import com.intellij.ide.util.newProjectWizard.AddModuleWizard;
-import com.intellij.ide.util.projectWizard.ModuleBuilder;
+import com.intellij.ide.impl.util.NewOrImportModuleUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
-import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ide.newProject.ui.NewProjectDialog;
+import consulo.ide.newProject.ui.NewProjectPanel;
 import consulo.ui.RequiredUIAccess;
-import consulo.ide.newProject.NewProjectDialog;
-import consulo.moduleImport.ModuleImportContext;
-import consulo.moduleImport.ModuleImportProvider;
+import consulo.ui.fileChooser.FileChooser;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import java.util.List;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Jan 5, 2004
+ * Date: Jan 5, 2004
  */
 public class NewModuleAction extends AnAction implements DumbAware {
   public NewModuleAction() {
@@ -59,18 +52,6 @@ public class NewModuleAction extends AnAction implements DumbAware {
     }
     final VirtualFile virtualFile = e.getData(CommonDataKeys.VIRTUAL_FILE);
 
-    VirtualFile moduleDir = selectModuleDirectory(project, virtualFile);
-    if(moduleDir == null) {
-      return;
-    }
-
-    NewProjectDialog dialog = new NewProjectDialog(project, moduleDir);
-    if (dialog.showAndGet()) {
-      NewProjectUtilPlatform.doCreate(dialog.getProjectPanel(), project, moduleDir);
-    }
-  }
-
-  private static VirtualFile selectModuleDirectory(Project project, VirtualFile virtualFile) {
     final ModuleManager moduleManager = ModuleManager.getInstance(project);
     FileChooserDescriptor fileChooserDescriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
       @Override
@@ -90,40 +71,16 @@ public class NewModuleAction extends AnAction implements DumbAware {
     };
     fileChooserDescriptor.setTitle(ProjectBundle.message("choose.module.home"));
 
-    return FileChooser.chooseFile(fileChooserDescriptor, project, virtualFile != null && virtualFile.isDirectory() ? virtualFile : null);
-  }
 
-  @Nullable
-  @SuppressWarnings("unchecked")
-  public static Module createModuleFromWizard(Project project, @Nullable Object dataFromContext, AddModuleWizard wizard) {
-    final ModuleImportProvider importProvider = wizard.getImportProvider();
-    if (importProvider instanceof ModuleBuilder) {
-      final ModuleBuilder moduleBuilder = (ModuleBuilder)importProvider;
-      if (moduleBuilder.getName() == null) {
-        moduleBuilder.setName(wizard.getProjectName());
-      }
-      if (moduleBuilder.getModuleDirPath() == null) {
-        moduleBuilder.setModuleDirPath(wizard.getModuleDirPath());
-      }
-    }
-    if (!importProvider.validate(project, project)) {
-      return null;
-    }
-    Module module;
-    if (importProvider instanceof ModuleBuilder) {
-      module = ((ModuleBuilder)importProvider).commitModule(project, null);
-      return module;
-    }
-    else {
-      ModuleImportContext context = wizard.getWizardContext().getModuleImportContext(importProvider);
-      List<Module> modules = importProvider.commit(context, project, null, DefaultModulesProvider.createForProject(project), null);
-      if (context.isOpenProjectSettingsAfter()) {
-        ModulesConfigurator.showDialog(project, null, null);
-      }
-      module = modules.isEmpty() ? null : modules.get(0);
-    }
-    project.save();
-    return module;
+    AsyncResult<VirtualFile> chooseAsync = FileChooser.chooseFile(fileChooserDescriptor, project, virtualFile != null && virtualFile.isDirectory() ? virtualFile : null);
+    chooseAsync.doWhenDone(moduleDir -> {
+      NewProjectDialog dialog = new NewProjectDialog(project, moduleDir);
+
+      dialog.showAsync().doWhenDone(() -> {
+        NewProjectPanel panel = dialog.getProjectPanel();
+        NewOrImportModuleUtil.doCreate(panel, project, moduleDir);
+      });
+    });
   }
 
   @RequiredUIAccess

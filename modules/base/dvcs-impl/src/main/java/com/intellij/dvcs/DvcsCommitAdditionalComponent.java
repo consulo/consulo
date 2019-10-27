@@ -16,7 +16,6 @@
 package com.intellij.dvcs;
 
 import com.intellij.dvcs.ui.DvcsBundle;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
@@ -32,6 +31,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.NonFocusableCheckBox;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

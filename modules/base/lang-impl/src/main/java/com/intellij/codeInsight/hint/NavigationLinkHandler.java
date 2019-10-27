@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.hint;
 
 import com.intellij.codeInsight.highlighting.TooltipLinkHandler;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.vfs.LocalFileSystem;

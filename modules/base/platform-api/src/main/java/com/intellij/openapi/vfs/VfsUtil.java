@@ -16,7 +16,6 @@
 package com.intellij.openapi.vfs;
 
 import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.util.Comparing;
@@ -31,6 +30,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.io.URLUtil;
 import consulo.fileTypes.ArchiveFileType;
+import consulo.logging.Logger;
 import consulo.vfs.ArchiveFileSystem;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;

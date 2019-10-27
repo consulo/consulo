@@ -16,7 +16,6 @@
 
 package com.intellij.patterns.compiler;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringHash;
@@ -30,6 +29,7 @@ import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.containers.StringInterner;
+import consulo.logging.Logger;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import javax.annotation.Nullable;

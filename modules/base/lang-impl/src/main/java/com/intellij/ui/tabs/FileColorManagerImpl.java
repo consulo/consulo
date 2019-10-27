@@ -240,6 +240,9 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
   @Nullable
   public Color getFileColor(@Nonnull final VirtualFile file) {
     initProjectLevelConfigurations();
+    if(!file.isValid()) {
+      return null;
+    }
     final PsiFile psiFile = PsiManager.getInstance(getProject()).findFile(file);
     if (psiFile != null) {
       return getFileColor(psiFile);

@@ -30,7 +30,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
@@ -45,8 +45,10 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.xml.util.XmlStringUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginIds;
 import consulo.ide.updateSettings.UpdateSettings;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -236,7 +238,7 @@ public abstract class PluginManagerMain implements Disposable {
 
   @RequiredUIAccess
   public void refresh() {
-    final IdeaPluginDescriptor[] descriptors = myPluginTable.getSelectedObjects();
+    final PluginDescriptor[] descriptors = myPluginTable.getSelectedObjects();
     pluginInfoUpdate(descriptors != null && descriptors.length == 1 ? descriptors[0] : null, myFilter.getFilter(), myDescriptionTextArea, myPluginHeaderPanel,
                      this);
     myActionToolbar.updateActionsImmediately();
@@ -253,8 +255,8 @@ public abstract class PluginManagerMain implements Disposable {
     return myPluginsModel.dependent(pluginDescriptor);
   }
 
-  protected void modifyPluginsList(List<IdeaPluginDescriptor> list) {
-    IdeaPluginDescriptor[] selected = myPluginTable.getSelectedObjects();
+  protected void modifyPluginsList(List<PluginDescriptor> list) {
+    PluginDescriptor[] selected = myPluginTable.getSelectedObjects();
     myPluginsModel.updatePluginsList(list);
     myPluginsModel.filter(myFilter.getFilter().toLowerCase());
     if (selected != null) {
@@ -280,7 +282,7 @@ public abstract class PluginManagerMain implements Disposable {
     setDownloadStatus(true);
 
     ApplicationManager.getApplication().executeOnPooledThread(() -> {
-      Ref<List<IdeaPluginDescriptor>> ref = Ref.create();
+      Ref<List<PluginDescriptor>> ref = Ref.create();
       List<String> errorMessages = new ArrayList<>();
 
       try {
@@ -293,7 +295,7 @@ public abstract class PluginManagerMain implements Disposable {
 
       UIUtil.invokeLaterIfNeeded(() -> {
         setDownloadStatus(false);
-        List<IdeaPluginDescriptor> list = ref.get();
+        List<PluginDescriptor> list = ref.get();
 
         if (list != null) {
           modifyPluginsList(list);
@@ -310,7 +312,7 @@ public abstract class PluginManagerMain implements Disposable {
     });
   }
 
-  protected abstract void propagateUpdates(List<IdeaPluginDescriptor> list);
+  protected abstract void propagateUpdates(List<PluginDescriptor> list);
 
   protected void setDownloadStatus(boolean status) {
     myPluginTable.setPaintBusy(status);
@@ -329,7 +331,7 @@ public abstract class PluginManagerMain implements Disposable {
     requireShutdown = false;
   }
 
-  public static void pluginInfoUpdate(IdeaPluginDescriptor plugin,
+  public static void pluginInfoUpdate(PluginDescriptor plugin,
                                       @Nullable String filter,
                                       @Nonnull JEditorPane descriptionTextArea,
                                       @Nonnull PluginHeaderPanel header,
@@ -353,7 +355,7 @@ public abstract class PluginManagerMain implements Disposable {
       sb.append(changeNotes);
     }
 
-    if (!plugin.isBundled()) {
+    if (!PluginIds.isPlatformPlugin(plugin.getPluginId())) {
       String vendor = plugin.getVendor();
       String vendorEmail = plugin.getVendorEmail();
       String vendorUrl = plugin.getVendorUrl();
@@ -479,13 +481,13 @@ public abstract class PluginManagerMain implements Disposable {
 
     @Override
     public String getElementText(Object element) {
-      return ((IdeaPluginDescriptor)element).getName();
+      return ((PluginDescriptor)element).getName();
     }
 
     @Override
     public void selectElement(Object element, String selectedText) {
       for (int i = 0; i < myComponent.getRowCount(); i++) {
-        if (myComponent.getObjectAt(i).getName().equals(((IdeaPluginDescriptor)element).getName())) {
+        if (myComponent.getObjectAt(i).getName().equals(((PluginDescriptor)element).getName())) {
           myComponent.setRowSelectionInterval(i, i);
           TableUtil.scrollSelectionToVisible(myComponent);
           break;
@@ -494,11 +496,11 @@ public abstract class PluginManagerMain implements Disposable {
     }
   }
 
-  public void select(IdeaPluginDescriptor... descriptors) {
+  public void select(PluginDescriptor... descriptors) {
     myPluginTable.select(descriptors);
   }
 
-  protected static boolean isAccepted(String filter, Set<String> search, IdeaPluginDescriptor descriptor) {
+  protected static boolean isAccepted(String filter, Set<String> search, PluginDescriptor descriptor) {
     if (StringUtil.isEmpty(filter)) return true;
     if (isAccepted(search, filter, descriptor.getName())) {
       return true;
@@ -532,7 +534,7 @@ public abstract class PluginManagerMain implements Disposable {
   }
 
 
-  public static void notifyPluginsWereInstalled(@Nonnull Collection<? extends IdeaPluginDescriptor> installed, Project project) {
+  public static void notifyPluginsWereInstalled(@Nonnull Collection<? extends PluginDescriptor> installed, Project project) {
     String pluginName = installed.size() == 1 ? installed.iterator().next().getName() : null;
     notifyPluginsWereUpdated(pluginName != null ? "Plugin \'" + pluginName + "\' was successfully installed" : "Plugins were installed", project);
   }

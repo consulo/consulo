@@ -16,11 +16,10 @@
 package consulo.ide.customize;
 
 import com.intellij.ide.customize.CustomizeIDEWizardDialog;
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.RepositoryHelper;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.SystemInfo;
@@ -29,6 +28,7 @@ import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.DownloadUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.ide.updateSettings.UpdateSettings;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -78,11 +78,11 @@ public class FirstStartCustomizeUtil {
     };
 
     Application.get().executeOnPooledThread(() -> {
-      MultiMap<String, IdeaPluginDescriptor> pluginDescriptors = new MultiMap<>();
+      MultiMap<String, PluginDescriptor> pluginDescriptors = new MultiMap<>();
       MultiMap<String, String> predefinedTemplateSets = new MultiMap<>();
       try {
-        List<IdeaPluginDescriptor> ideaPluginDescriptors = RepositoryHelper.loadOnlyPluginsFromRepository(null, UpdateSettings.getInstance().getChannel());
-        for (IdeaPluginDescriptor ideaPluginDescriptor : ideaPluginDescriptors) {
+        List<PluginDescriptor> ideaPluginDescriptors = RepositoryHelper.loadOnlyPluginsFromRepository(null, UpdateSettings.getInstance().getChannel());
+        for (PluginDescriptor ideaPluginDescriptor : ideaPluginDescriptors) {
           pluginDescriptors.putValue(ideaPluginDescriptor.getCategory(), ideaPluginDescriptor);
         }
         loadPredefinedTemplateSets(predefinedTemplateSets);

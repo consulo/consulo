@@ -13,13 +13,8 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin>
+<consulo-plugin>
   <application-components>
-    <component>
-      <interface-class>com.intellij.openapi.project.ProjectManager</interface-class>
-      <implementation-class>com.intellij.openapi.project.impl.ProjectManagerImpl</implementation-class>
-    </component>
-
     <component>
       <interface-class>com.intellij.openapi.fileTypes.FileTypeManager</interface-class>
       <implementation-class>com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl</implementation-class>
@@ -28,11 +23,6 @@
     <component>
       <interface-class>com.intellij.openapi.vfs.VirtualFileManager</interface-class>
       <implementation-class>com.intellij.openapi.vfs.PlatformVirtualFileManager</implementation-class>
-    </component>
-
-    <component>
-      <interface-class>com.intellij.openapi.vfs.pointers.VirtualFilePointerManager</interface-class>
-      <implementation-class>com.intellij.openapi.vfs.impl.VirtualFilePointerManagerImpl</implementation-class>
     </component>
 
     <component>
@@ -68,11 +58,6 @@
     <component>
       <interface-class>consulo.command.undo.ApplicationUndoManager</interface-class>
       <implementation-class>consulo.command.undo.impl.ApplicationUndoManagerImpl</implementation-class>
-    </component>
-
-    <component>
-      <interface-class>com.intellij.openapi.command.undo.DocumentReferenceManager</interface-class>
-      <implementation-class>com.intellij.openapi.command.impl.DocumentReferenceManagerImpl</implementation-class>
     </component>
 
     <component>
@@ -153,11 +138,6 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.formatting.FormatterEx</interface-class>
-      <implementation-class>com.intellij.formatting.FormatterImpl</implementation-class>
-    </component>
-
-    <component>
       <interface-class>com.intellij.util.indexing.FileBasedIndex</interface-class>
       <implementation-class>com.intellij.util.indexing.FileBasedIndexImpl</implementation-class>
     </component>
@@ -190,20 +170,6 @@
     </component>
 
     <component>
-      <implementation-class>com.intellij.ide.SystemHealthMonitor</implementation-class>
-      <headless-implementation-class/>
-    </component>
-
-    <component>
-      <interface-class>consulo.compiler.impl.TranslatingCompilerFilesMonitor</interface-class>
-      <implementation-class>com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl</implementation-class>
-    </component>
-
-    <component>
-      <implementation-class>consulo.bundle.impl.PredefinedBundlesLoader</implementation-class>
-    </component>
-
-    <component>
       <interface-class>com.intellij.openapi.editor.EditorLastActionTracker</interface-class>
       <implementation-class>com.intellij.openapi.editor.impl.EditorLastActionTrackerImpl</implementation-class>
     </component>
@@ -211,10 +177,5 @@
     <component>
       <implementation-class>com.intellij.codeInsight.preview.ImageOrColorPreviewManager</implementation-class>
     </component>
-
-    <component>
-      <interface-class>com.intellij.util.gist.GistManager</interface-class>
-      <implementation-class>com.intellij.util.gist.GistManagerImpl</implementation-class>
-    </component>
   </application-components>
-</idea-plugin>
+</consulo-plugin>

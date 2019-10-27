@@ -26,6 +26,7 @@ import com.intellij.ide.DeleteProvider;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.SelectInTarget;
 import com.intellij.ide.impl.PackagesPaneSelectInTarget;
+import com.intellij.ide.projectView.BaseProjectTreeBuilder;
 import com.intellij.ide.projectView.ProjectView;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.nodes.PackageNodeUtil;
@@ -47,6 +48,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiUtilCore;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.ide.projectView.impl.nodes.PackageElement;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
@@ -85,17 +87,25 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
     return ID;
   }
 
+  @Override
   public AbstractTreeStructure getTreeStructure() {
     return myTreeStructure;
   }
 
   @Override
-  protected PsiElement getPSIElement(@Nullable final Object element) {
-    if (element instanceof PackageElement) {
-      PsiPackage aPackage = ((PackageElement)element).getPackage();
-      return aPackage != null && aPackage.isValid() ? aPackage : null;
+  public BaseProjectTreeBuilder createBuilder(@Nonnull DefaultTreeModel model) {
+    return null;
+  }
+
+  @Nonnull
+  @Override
+  public List<PsiElement> getElementsFromNode(@Nullable Object node) {
+    Object o = getValueFromNode(node);
+    if (o instanceof PackageElement) {
+      PsiPackage aPackage = ((PackageElement)o).getPackage();
+      return ContainerUtil.createMaybeSingletonList(aPackage.isValid() ? aPackage : null);
     }
-    return super.getPSIElement(element);
+    return super.getElementsFromNode(node);
   }
 
   @Override

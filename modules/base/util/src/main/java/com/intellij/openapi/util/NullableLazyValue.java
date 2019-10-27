@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
  * @author peter
  */
 public abstract class NullableLazyValue<T> {
-  public static <E> NullableLazyValue<E> of(@Nonnull final Factory<E> factory) {
+  public static <E> NullableLazyValue<E> createValue(@Nonnull final Factory<? extends E> factory) {
     return new NullableLazyValue<E>() {
       @Nullable
       @Override
@@ -30,6 +30,11 @@ public abstract class NullableLazyValue<T> {
         return factory.create();
       }
     };
+  }
+
+  @Deprecated
+  public static <E> NullableLazyValue<E> of(@Nonnull final Factory<E> factory) {
+    return createValue(factory);
   }
 
   private boolean myComputed;

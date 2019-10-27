@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 /*
  * @author max
@@ -22,52 +8,52 @@ package com.intellij.ui.speedSearch;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.ui.*;
+import com.intellij.ui.DocumentAdapter;
+import com.intellij.ui.LightColors;
+import com.intellij.ui.SearchTextField;
+import com.intellij.ui.UIBundle;
 import com.intellij.util.Function;
 import com.intellij.util.ui.ComponentWithEmptyText;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.FocusEvent;
 
 public class ListWithFilter<T> extends JPanel implements DataProvider {
-  private final JList myList;
+  private final JList<T> myList;
   private final SearchTextField mySearchField = new SearchTextField(false);
   private final NameFilteringListModel<T> myModel;
-  private final JScrollPane myScroller;
+  private final JScrollPane myScrollPane;
   private final MySpeedSearch mySpeedSearch;
+  private boolean myAutoPackHeight = true;
 
   @Override
-  public Object getData(@Nonnull @NonNls Key<?> dataId) {
+  public Object getData(@Nonnull @NonNls Key dataId) {
     if (SpeedSearchSupply.SPEED_SEARCH_CURRENT_QUERY == dataId) {
       return mySearchField.getText();
     }
     return null;
   }
 
-  public static boolean isSearchActive(JList list) {
-    final ListWithFilter listWithFilter = UIUtil.getParentOfType(ListWithFilter.class, list);
-    return listWithFilter != null && listWithFilter.mySpeedSearch.searchFieldShown;
+  @Nonnull
+  public static <T> JComponent wrap(@Nonnull JList<? extends T> list, @Nonnull JScrollPane scrollPane, @Nullable Function<? super T, String> namer) {
+    return wrap(list, scrollPane, namer, false);
   }
 
-  public static JComponent wrap(JList list) {
-    return wrap(list, ScrollPaneFactory.createScrollPane(list), StringUtil.createToStringFunction(Object.class));
+  @Nonnull
+  public static <T> JComponent wrap(@Nonnull JList<? extends T> list, @Nonnull JScrollPane scrollPane, @Nullable Function<? super T, String> namer, boolean highlightAllOccurrences) {
+    return new ListWithFilter<>(list, scrollPane, namer, highlightAllOccurrences);
   }
 
-  public static <T> JComponent wrap(JList list, JScrollPane scroller, Function<T, String> namer) {
-    return new ListWithFilter<T>(list, scroller, namer);
-  }
-
-  private ListWithFilter(JList list, JScrollPane scroller, Function<T, String> namer) {
+  private ListWithFilter(@Nonnull JList<T> list, @Nonnull JScrollPane scrollPane, @Nullable Function<? super T, String> namer, boolean highlightAllOccurrences) {
     super(new BorderLayout());
 
     if (list instanceof ComponentWithEmptyText) {
@@ -75,49 +61,36 @@ public class ListWithFilter<T> extends JPanel implements DataProvider {
     }
 
     myList = list;
-    myScroller = scroller;
+    myScrollPane = scrollPane;
 
     mySearchField.getTextEditor().setFocusable(false);
     mySearchField.setVisible(false);
 
     add(mySearchField, BorderLayout.NORTH);
-    add(myScroller, BorderLayout.CENTER);
+    add(myScrollPane, BorderLayout.CENTER);
 
-    mySpeedSearch = new MySpeedSearch();
+    mySpeedSearch = new MySpeedSearch(highlightAllOccurrences);
     mySpeedSearch.setEnabled(namer != null);
 
-    myList.addKeyListener(new KeyAdapter() {
-      public void keyPressed(final KeyEvent e) {
-        mySpeedSearch.process(e);
-      }
-    });
-    //new AnAction(){
-    //  @Override
-    //  public void actionPerformed(AnActionEvent e) {
-    //    final InputEvent event = e.getInputEvent();
-    //    if (event instanceof KeyEvent) {
-    //      mySpeedSearch.process((KeyEvent)event);
-    //    }
-    //  }
-    //
-    //  @Override
-    //  public void update(AnActionEvent e) {
-    //    e.getPresentation().setEnabled(mySpeedSearch.searchFieldShown);
-    //  }
-    //}.registerCustomShortcutSet(CustomShortcutSet.fromString("BACK_SPACE", "DELETE"), list);
-    final int selectedIndex = myList.getSelectedIndex();
-    final int modelSize = myList.getModel().getSize();
-    myModel = new NameFilteringListModel<T>(myList, namer, new Condition<String>() {
-      public boolean value(String s) {
-        return mySpeedSearch.shouldBeShowing(s);
-      }
-    }, mySpeedSearch);
+    myList.addKeyListener(mySpeedSearch);
+    int selectedIndex = myList.getSelectedIndex();
+    int modelSize = myList.getModel().getSize();
+    myModel = new NameFilteringListModel<>(myList.getModel(), namer, mySpeedSearch::shouldBeShowing, () -> StringUtil.notNullize(mySpeedSearch.getFilter()));
+    myList.setModel(myModel);
     if (myModel.getSize() == modelSize) {
       myList.setSelectedIndex(selectedIndex);
     }
 
     setBackground(list.getBackground());
     //setFocusable(true);
+  }
+
+  @Override
+  protected void processFocusEvent(FocusEvent e) {
+    super.processFocusEvent(e);
+    if (e.getID() == FocusEvent.FOCUS_GAINED) {
+      IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(myList, true));
+    }
   }
 
   public boolean resetFilter() {
@@ -136,19 +109,22 @@ public class ListWithFilter<T> extends JPanel implements DataProvider {
     boolean searchFieldShown;
     boolean myInUpdate;
 
-    private MySpeedSearch() {
+    private MySpeedSearch(boolean highlightAllOccurrences) {
+      super(highlightAllOccurrences);
       // native mac "clear button" is not captured by SearchTextField.onFieldCleared
       mySearchField.addDocumentListener(new DocumentAdapter() {
         @Override
-        protected void textChanged(DocumentEvent e) {
+        protected void textChanged(@Nonnull DocumentEvent e) {
           if (myInUpdate) return;
           if (mySearchField.getText().isEmpty()) {
             mySpeedSearch.reset();
           }
         }
       });
+      installSupplyTo(myList);
     }
 
+    @Override
     public void update() {
       myInUpdate = true;
       mySearchField.getTextEditor().setBackground(UIUtil.getTextFieldBackground());
@@ -167,17 +143,22 @@ public class ListWithFilter<T> extends JPanel implements DataProvider {
       revalidate();
     }
 
+    @Override
+    public void noHits() {
+      mySearchField.getTextEditor().setBackground(LightColors.RED);
+    }
+
     private void revalidate() {
       JBPopup popup = PopupUtil.getPopupContainerFor(mySearchField);
       if (popup != null) {
-        popup.pack(false, true);
+        popup.pack(false, myAutoPackHeight);
       }
       ListWithFilter.this.revalidate();
     }
   }
 
   protected void onSpeedSearchPatternChanged() {
-    T prevSelection = (T)myList.getSelectedValue(); // save to restore the selection on filter drop
+    T prevSelection = myList.getSelectedValue(); // save to restore the selection on filter drop
     myModel.refilter();
     if (myModel.getSize() > 0) {
       int fullMatchIndex = mySpeedSearch.isHoldingFilter() ? myModel.getClosestMatchIndex() : myModel.getElementIndex(prevSelection);
@@ -185,28 +166,32 @@ public class ListWithFilter<T> extends JPanel implements DataProvider {
         myList.setSelectedIndex(fullMatchIndex);
       }
 
-      if (myModel.getSize() <= myList.getSelectedIndex() || !myModel.contains((T)myList.getSelectedValue())) {
+      if (myModel.getSize() <= myList.getSelectedIndex() || !myModel.contains(myList.getSelectedValue())) {
         myList.setSelectedIndex(0);
       }
     }
     else {
-      mySearchField.getTextEditor().setBackground(LightColors.RED);
+      mySpeedSearch.noHits();
       revalidate();
     }
   }
 
-  public JList getList() {
+  @Nonnull
+  public JList<T> getList() {
     return myList;
   }
 
+  @Nonnull
   public JScrollPane getScrollPane() {
-    return myScroller;
+    return myScrollPane;
+  }
+
+  public void setAutoPackHeight(boolean autoPackHeight) {
+    myAutoPackHeight = autoPackHeight;
   }
 
   @Override
   public void requestFocus() {
-    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
-      IdeFocusManager.getGlobalInstance().requestFocus(myList, true);
-    });
+    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(myList, true));
   }
 }

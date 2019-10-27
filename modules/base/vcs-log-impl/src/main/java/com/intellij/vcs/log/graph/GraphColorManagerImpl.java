@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.graph;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
 import com.intellij.util.containers.hash.LinkedHashMap;

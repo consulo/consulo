@@ -15,10 +15,7 @@
  */
 package consulo.externalSystem.service.module.wizard;
 
-import com.intellij.ide.util.projectWizard.ModuleWizardStep;
-import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.externalSystem.model.DataNode;
 import com.intellij.openapi.externalSystem.model.ExternalSystemDataKeys;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
@@ -37,7 +34,6 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemBundle;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -47,32 +43,33 @@ import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
-import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.annotations.RequiredReadAction;
+import consulo.logging.Logger;
 import consulo.moduleImport.ModuleImportProvider;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.wizard.WizardStep;
+import consulo.ui.wizard.WizardStepValidationException;
 
 import javax.annotation.Nonnull;
-
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
  * @since 30-Jan-17
  */
-public abstract class AbstractExternalModuleImportProvider<C extends AbstractImportFromExternalSystemControl>
-        implements ModuleImportProvider<ExternalModuleImportContext> {
+public abstract class AbstractExternalModuleImportProvider<C extends AbstractImportFromExternalSystemControl> implements ModuleImportProvider<ExternalModuleImportContext<C>> {
   private static final Logger LOG = Logger.getInstance(AbstractExternalModuleImportProvider.class);
 
   @Nonnull
@@ -95,7 +92,7 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
     return myExternalSystemId;
   }
 
-  protected abstract void doPrepare(@Nonnull WizardContext context);
+  protected abstract void doPrepare(@Nonnull ExternalModuleImportContext<C> context);
 
   protected abstract void beforeCommit(@Nonnull DataNode<ProjectData> dataNode, @Nonnull Project project);
 
@@ -111,29 +108,25 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
   @Nonnull
   protected abstract File getExternalProjectConfigToUse(@Nonnull File file);
 
-  protected abstract void applyExtraSettings(@Nonnull WizardContext context);
+  protected abstract void applyExtraSettings(@Nonnull ExternalModuleImportContext<C> context);
 
 
-  public void prepare(@Nonnull WizardContext context) {
+  public void prepare(@Nonnull ExternalModuleImportContext<C> context) {
     myControl.reset();
-    String pathToUse = context.getProjectFileDirectory();
+    String pathToUse = context.getPath();
     myControl.setLinkedProjectPath(pathToUse);
     doPrepare(context);
   }
 
   @Nonnull
-  public C getControl(@javax.annotation.Nullable Project currentProject) {
+  public C getControl(@Nullable Project currentProject) {
     myControl.setCurrentProject(currentProject);
     return myControl;
   }
 
-  @Nonnull
+  @RequiredReadAction
   @Override
-  public List<Module> commit(@Nonnull ExternalModuleImportContext context,
-                             @Nonnull final Project project,
-                             ModifiableModuleModel model,
-                             @Nonnull ModulesProvider modulesProvider,
-                             ModifiableArtifactModel artifactModel) {
+  public void process(@Nonnull ExternalModuleImportContext<C> context, @Nonnull final Project project, @Nonnull ModifiableModuleModel model, @Nonnull Consumer<Module> newModuleConsumer) {
     project.putUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT, Boolean.TRUE);
     final DataNode<ProjectData> externalProjectNode = getExternalProjectNode();
     if (externalProjectNode != null) {
@@ -178,8 +171,7 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
                 @Override
                 public void run(@Nonnull final ProgressIndicator indicator) {
                   if (project.isDisposed()) return;
-                  ExternalSystemResolveProjectTask task =
-                          new ExternalSystemResolveProjectTask(myExternalSystemId, project, projectSettings.getExternalProjectPath(), false);
+                  ExternalSystemResolveProjectTask task = new ExternalSystemResolveProjectTask(myExternalSystemId, project, projectSettings.getExternalProjectPath(), false);
                   task.execute(indicator, ExternalSystemTaskNotificationListener.EP_NAME.getExtensions());
                   DataNode<ProjectData> projectWithResolvedLibraries = task.getExternalProject();
                   if (projectWithResolvedLibraries == null) {
@@ -195,10 +187,9 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
         }
       }
     });
-    return Collections.emptyList();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public DataNode<ProjectData> getExternalProjectNode() {
     return myExternalProjectNode;
   }
@@ -206,38 +197,37 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
   /**
    * Asks current builder to ensure that target external project is defined.
    *
-   * @param wizardContext current wizard context
-   * @throws ConfigurationException if gradle project is not defined and can't be constructed
+   * @param context current wizard context
+   * @throws WizardStepValidationException if gradle project is not defined and can't be constructed
    */
   @SuppressWarnings("unchecked")
-  public void ensureProjectIsDefined(@Nonnull WizardContext wizardContext) throws ConfigurationException {
+  public void ensureProjectIsDefined(@Nonnull ExternalModuleImportContext<C> context) throws WizardStepValidationException {
     final String externalSystemName = myExternalSystemId.getReadableName();
     File projectFile = getProjectFile();
     if (projectFile == null) {
-      throw new ConfigurationException(ExternalSystemBundle.message("error.project.undefined"));
+      throw new WizardStepValidationException(ExternalSystemBundle.message("error.project.undefined"));
     }
     projectFile = getExternalProjectConfigToUse(projectFile);
-    final Ref<ConfigurationException> error = new Ref<>();
+    final Ref<WizardStepValidationException> error = new Ref<>();
     final ExternalProjectRefreshCallback callback = new ExternalProjectRefreshCallback() {
       @Override
-      public void onSuccess(@javax.annotation.Nullable DataNode<ProjectData> externalProject) {
+      public void onSuccess(@Nullable DataNode<ProjectData> externalProject) {
         myExternalProjectNode = externalProject;
       }
 
       @Override
-      public void onFailure(@Nonnull String errorMessage, @javax.annotation.Nullable String errorDetails) {
+      public void onFailure(@Nonnull String errorMessage, @Nullable String errorDetails) {
         if (!StringUtil.isEmpty(errorDetails)) {
           LOG.warn(errorDetails);
         }
-        error.set(new ConfigurationException(ExternalSystemBundle.message("error.resolve.with.reason", errorMessage),
-                                             ExternalSystemBundle.message("error.resolve.generic")));
+        error.set(new WizardStepValidationException(ExternalSystemBundle.message("error.resolve.with.reason", errorMessage)));
       }
     };
 
-    final Project project = getProject(wizardContext);
+    final Project project = getContextOrDefaultProject(context);
     final File finalProjectFile = projectFile;
     final String externalProjectPath = FileUtil.toCanonicalPath(finalProjectFile.getAbsolutePath());
-    final Ref<ConfigurationException> exRef = new Ref<>();
+    final Ref<WizardStepValidationException> exRef = new Ref<>();
     executeAndRestoreDefaultProjectSettings(project, new Runnable() {
       @Override
       public void run() {
@@ -245,22 +235,22 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
           ExternalSystemUtil.refreshProject(project, myExternalSystemId, externalProjectPath, callback, true, ProgressExecutionMode.MODAL_SYNC);
         }
         catch (IllegalArgumentException e) {
-          exRef.set(new ConfigurationException(e.getMessage(), ExternalSystemBundle.message("error.cannot.parse.project", externalSystemName)));
+          exRef.set(new WizardStepValidationException(ExternalSystemBundle.message("error.cannot.parse.project", externalSystemName)));
         }
       }
     });
-    ConfigurationException ex = exRef.get();
+    WizardStepValidationException ex = exRef.get();
     if (ex != null) {
       throw ex;
     }
     if (myExternalProjectNode == null) {
-      ConfigurationException exception = error.get();
+      WizardStepValidationException exception = error.get();
       if (exception != null) {
         throw exception;
       }
     }
     else {
-      applyProjectSettings(wizardContext);
+      applyProjectSettings(context);
     }
   }
 
@@ -269,18 +259,17 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
    *
    * @param context storage for the project/module settings.
    */
-  public void applyProjectSettings(@Nonnull WizardContext context) {
+  public void applyProjectSettings(@Nonnull ExternalModuleImportContext<C> context) {
     if (myExternalProjectNode == null) {
       assert false;
       return;
     }
-    context.setProjectName(myExternalProjectNode.getData().getInternalName());
-    context.setProjectFileDirectory(myExternalProjectNode.getData().getIdeProjectFileDirectoryPath());
+    context.setName(myExternalProjectNode.getData().getInternalName());
+    context.setPath(myExternalProjectNode.getData().getIdeProjectFileDirectoryPath());
     applyExtraSettings(context);
   }
 
-
-  @javax.annotation.Nullable
+  @Nullable
   private File getProjectFile() {
     String path = myControl.getProjectSettings().getExternalProjectPath();
     return path == null ? null : new File(path);
@@ -380,15 +369,15 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
 
   /**
    * Allows to get {@link Project} instance to use. Basically, there are two alternatives -
-   * {@link WizardContext#getProject() project from the current wizard context} and
+   * {@link ExternalModuleImportContext#getProject() project from the current wizard context} and
    * {@link ProjectManager#getDefaultProject() default project}.
    *
-   * @param wizardContext current wizard context
+   * @param context current wizard context
    * @return {@link Project} instance to use
    */
   @Nonnull
-  public Project getProject(@Nonnull WizardContext wizardContext) {
-    Project result = wizardContext.getProject();
+  public Project getContextOrDefaultProject(@Nonnull ExternalModuleImportContext<C> context) {
+    Project result = context.getProject();
     if (result == null) {
       result = ProjectManager.getInstance().getDefaultProject();
     }
@@ -396,14 +385,14 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
   }
 
   @Override
-  public ModuleWizardStep[] createSteps(@Nonnull WizardContext context, @Nonnull ExternalModuleImportContext moduleImportContext) {
-    return new ModuleWizardStep[]{new SelectExternalProjectStep(context)};
+  public void buildSteps(@Nonnull Consumer<WizardStep<ExternalModuleImportContext<C>>> consumer, @Nonnull ExternalModuleImportContext<C> context) {
+    consumer.accept(new SelectExternalProjectStep<>());
   }
 
   @Nonnull
   @Override
-  public ExternalModuleImportContext createContext() {
-    return new ExternalModuleImportContext();
+  public ExternalModuleImportContext<C> createContext(@Nullable Project project) {
+    return new ExternalModuleImportContext<>(project, this);
   }
 
   @Override

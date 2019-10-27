@@ -37,7 +37,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.event.VisibleAreaListener;
@@ -164,7 +164,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
 
 
     new MyFocusOppositePaneAction().install(myPanel);
-    new TextDiffViewerUtil.EditorActionsPopup(createEditorPopupActions()).install(editors);
+    new TextDiffViewerUtil.EditorActionsPopup(createEditorPopupActions()).install(editors, myPanel);
 
     new TextDiffViewerUtil.EditorFontSizeSynchronizer(editors).install(this);
 

@@ -21,8 +21,10 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.impl.LaterInvocator;
-import com.intellij.openapi.components.*;
-import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.components.ProjectComponent;
+import com.intellij.openapi.components.RoamingType;
+import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
+import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import com.intellij.openapi.diff.impl.patch.*;
 import com.intellij.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
 import com.intellij.openapi.diff.impl.patch.formove.CustomBinaryPatchApplier;
@@ -57,12 +59,13 @@ import com.intellij.util.text.CharArrayCharSequence;
 import com.intellij.util.text.UniqueNameGenerator;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.vcsUtil.FilesProgress;
+import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jdom.Parent;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.event.ChangeEvent;
@@ -108,11 +111,11 @@ public class ShelveChangesManager implements ProjectComponent, JDOMExternalizabl
   private final Project myProject;
 
   @Inject
-  public ShelveChangesManager(final Project project) {
+  public ShelveChangesManager(Project project, ProjectPathMacroManager projectPathMacroManager, SchemesManagerFactory schemesManagerFactory, ChangeListManager changeListManager) {
     myProject = project;
-    myPathMacroSubstitutor = PathMacroManager.getInstance(myProject).createTrackingSubstitutor();
+    myPathMacroSubstitutor = projectPathMacroManager.createTrackingSubstitutor();
     myBus = project.getMessageBus();
-    mySchemeManager = SchemesManagerFactory.getInstance().createSchemesManager(SHELVE_MANAGER_DIR_PATH, new BaseSchemeProcessor<ShelvedChangeList>() {
+    mySchemeManager = schemesManagerFactory.createSchemesManager(SHELVE_MANAGER_DIR_PATH, new BaseSchemeProcessor<ShelvedChangeList>() {
       @Nullable
       @Override
       public ShelvedChangeList readScheme(@Nonnull Element element, boolean duringLoad) throws InvalidDataException {
@@ -147,7 +150,7 @@ public class ShelveChangesManager implements ProjectComponent, JDOMExternalizabl
     // do not try to ignore when new project created,
     // because it may lead to predefined ignore creation conflict; see ConvertExcludedToIgnoredTest etc
     if (shelfDirectory.exists()) {
-      ChangeListManager.getInstance(project).addDirectoryToIgnoreImplicitly(shelfDirectory.getAbsolutePath());
+      changeListManager.addDirectoryToIgnoreImplicitly(shelfDirectory.getAbsolutePath());
     }
   }
 
@@ -363,7 +366,7 @@ public class ShelveChangesManager implements ProjectComponent, JDOMExternalizabl
                                              @Nonnull final List<ShelvedChangeList> selectedChangeLists,
                                              @Nonnull final List<ShelvedChange> selectedChanges,
                                              @Nonnull final List<ShelvedBinaryFile> selectedBinaryChanges,
-                                             @javax.annotation.Nullable final LocalChangeList forcePredefinedOneChangelist) {
+                                             @Nullable final LocalChangeList forcePredefinedOneChangelist) {
     ProgressManager.getInstance().run(new Task.Backgroundable(project, VcsBundle.message("unshelve.changes.progress.title"), true) {
       @Override
       public void run(@Nonnull ProgressIndicator indicator) {
@@ -566,8 +569,8 @@ public class ShelveChangesManager implements ProjectComponent, JDOMExternalizabl
 
   @CalledInAny
   public void unshelveChangeList(final ShelvedChangeList changeList,
-                                 @javax.annotation.Nullable final List<ShelvedChange> changes,
-                                 @javax.annotation.Nullable final List<ShelvedBinaryFile> binaryFiles,
+                                 @Nullable final List<ShelvedChange> changes,
+                                 @Nullable final List<ShelvedBinaryFile> binaryFiles,
                                  @Nullable final LocalChangeList targetChangeList,
                                  boolean showSuccessNotification) {
     unshelveChangeList(changeList, changes, binaryFiles, targetChangeList, showSuccessNotification, false, false, null, null);
@@ -576,7 +579,7 @@ public class ShelveChangesManager implements ProjectComponent, JDOMExternalizabl
   @CalledInAny
   public void unshelveChangeList(final ShelvedChangeList changeList,
                                  @Nullable final List<ShelvedChange> changes,
-                                 @javax.annotation.Nullable final List<ShelvedBinaryFile> binaryFiles,
+                                 @Nullable final List<ShelvedBinaryFile> binaryFiles,
                                  @Nullable final LocalChangeList targetChangeList,
                                  final boolean showSuccessNotification,
                                  final boolean systemOperation,
@@ -795,7 +798,7 @@ public class ShelveChangesManager implements ProjectComponent, JDOMExternalizabl
     notifyStateChanged();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private ShelvedChangeList createRecycledChangelist(ShelvedChangeList changeList) throws IOException {
     final File newPatchDir = generateUniqueSchemePatchDir(changeList.DESCRIPTION, true);
     final File newPath = getPatchFileInConfigDir(newPatchDir);

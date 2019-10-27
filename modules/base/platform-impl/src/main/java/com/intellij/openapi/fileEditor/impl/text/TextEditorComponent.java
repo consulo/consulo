@@ -20,7 +20,6 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -52,6 +51,7 @@ import com.intellij.util.FileContentUtilCore;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.JBSwingUtilities;
 import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -62,7 +62,7 @@ import java.awt.*;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-class TextEditorComponent extends JBLoadingPanel implements DataProvider, Disposable {
+public class TextEditorComponent extends JBLoadingPanel implements DataProvider, Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.text.TextEditorComponent");
 
   private final Project myProject;
@@ -86,7 +86,7 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider, Dispos
    */
   private boolean myValid;
 
-  TextEditorComponent(@Nonnull final Project project, @Nonnull final VirtualFile file, @Nonnull final DesktopTextEditorImpl textEditor) {
+  public TextEditorComponent(@Nonnull final Project project, @Nonnull final VirtualFile file, @Nonnull final DesktopTextEditorImpl textEditor) {
     super(new BorderLayout(), textEditor);
 
     myProject = project;
@@ -162,7 +162,7 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider, Dispos
    * @return most recently used editor. This method never returns {@code null}.
    */
   @Nonnull
-  Editor getEditor() {
+  public Editor getEditor() {
     return myEditor;
   }
 
@@ -353,6 +353,14 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider, Dispos
         }
       }
     }
+  }
+
+  public void loadingFinished() {
+    if (isLoading()) {
+      stopLoading();
+    }
+
+    getContentPanel().setVisible(true);
   }
 
   @Nonnull

@@ -29,7 +29,7 @@ import javax.swing.*;
 import java.util.Set;
 
 public abstract class ProgressManager extends ProgressIndicatorProvider {
-  private static ProgressManager ourInstance = CachedSingletonsRegistry.markCachedField(ProgressManager.class);
+  static ProgressManager ourInstance = CachedSingletonsRegistry.markCachedField(ProgressManager.class);
 
   @Nonnull
   @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
@@ -42,23 +42,31 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
   }
 
   public abstract boolean hasProgressIndicator();
+
   public abstract boolean hasModalProgressIndicator();
+
   public abstract boolean hasUnsafeProgressIndicator();
 
   /**
-   * Runs given process synchronously (in calling thread).
+   * Runs the given process synchronously in calling thread, associating this thread with the specified progress indicator.
+   * This means that it'll be returned by {@link ProgressManager#getProgressIndicator()} inside the {@code process},
+   * and {@link ProgressManager#checkCanceled()} will throw a {@link ProcessCanceledException} if the progress indicator is canceled.
+   *
+   * @param progress an indicator to use, {@code null} means reuse current progress
    */
-  public abstract void runProcess(@Nonnull Runnable process, ProgressIndicator progress) throws ProcessCanceledException;
+  public abstract void runProcess(@Nonnull Runnable process, @Nullable ProgressIndicator progress) throws ProcessCanceledException;
 
   /**
-   * Runs given process synchronously (in calling thread).
+   * Performs the given computation synchronously in calling thread and returns its result, associating this thread with the specified progress indicator.
+   * This means that it'll be returned by {@link ProgressManager#getProgressIndicator()} inside the {@code process},
+   * and {@link ProgressManager#checkCanceled()} will throw a {@link ProcessCanceledException} if the progress indicator is canceled.
+   *
+   * @param progress an indicator to use, {@code null} means reuse current progress
    */
-  public abstract <T> T runProcess(@Nonnull Computable<T> process, ProgressIndicator progress) throws ProcessCanceledException;
+  public abstract <T> T runProcess(@Nonnull Computable<T> process, @Nullable ProgressIndicator progress) throws ProcessCanceledException;
 
   @Override
-  public ProgressIndicator getProgressIndicator() {
-    return null;
-  }
+  public abstract ProgressIndicator getProgressIndicator();
 
   public static void progress(@Nonnull String text) throws ProcessCanceledException {
     progress(text, "");
@@ -84,14 +92,10 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
   public abstract void executeNonCancelableSection(@Nonnull Runnable runnable);
 
   /**
-   * to be removed in 2017.2
-   */
-  @Deprecated
-  public abstract void setCancelButtonText(String cancelButtonText);
-
-  /**
    * Runs the specified operation in a background thread and shows a modal progress dialog in the
    * main thread while the operation is executing.
+   * If a dialog can't be shown (e.g. under write action or in headless environment),
+   * runs the given operation synchronously in the calling thread.
    *
    * @param process       the operation to execute.
    * @param progressTitle the title of the progress window.
@@ -107,6 +111,8 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
   /**
    * Runs the specified operation in a background thread and shows a modal progress dialog in the
    * main thread while the operation is executing.
+   * If a dialog can't be shown (e.g. under write action or in headless environment),
+   * runs the given operation synchronously in the calling thread.
    *
    * @param process       the operation to execute.
    * @param progressTitle the title of the progress window.
@@ -123,6 +129,8 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
   /**
    * Runs the specified operation in a background thread and shows a modal progress dialog in the
    * main thread while the operation is executing.
+   * If a dialog can't be shown (e.g. under write action or in headless environment),
+   * runs the given operation synchronously in the calling thread.
    *
    * @param process         the operation to execute.
    * @param progressTitle   the title of the progress window.
@@ -150,11 +158,13 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
    * @param canceledRunnable a callback to be called in Swing UI thread if the process have been canceled by the user.
    * @deprecated use {@link #run(Task)}
    */
+  @Deprecated
   public abstract void runProcessWithProgressAsynchronously(@Nonnull Project project,
                                                             @Nonnull @Nls String progressTitle,
                                                             @Nonnull Runnable process,
                                                             @Nullable Runnable successRunnable,
                                                             @Nullable Runnable canceledRunnable);
+
   /**
    * Runs a specified {@code process} in a background thread and shows a progress dialog, which can be made non-modal by pressing
    * background button. Upon successful termination of the process a {@code successRunnable} will be called in Swing UI thread and
@@ -169,6 +179,7 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
    * @param option           progress indicator behavior controller.
    * @deprecated use {@link #run(Task)}
    */
+  @Deprecated
   public abstract void runProcessWithProgressAsynchronously(@Nonnull Project project,
                                                             @Nonnull @Nls String progressTitle,
                                                             @Nonnull Runnable process,
@@ -193,7 +204,8 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
 
   public abstract void runProcessWithProgressAsynchronously(@Nonnull Task.Backgroundable task, @Nonnull ProgressIndicator progressIndicator);
 
-  protected void indicatorCanceled(@Nonnull ProgressIndicator indicator) { }
+  protected void indicatorCanceled(@Nonnull ProgressIndicator indicator) {
+  }
 
   public static void canceled(@Nonnull ProgressIndicator indicator) {
     getInstance().indicatorCanceled(indicator);
@@ -234,11 +246,20 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
    * <li>action started to execute, but was aborted using {@link ProcessCanceledException} when some other thread initiated
    * write action</li>
    * </ul>
-   * @param action the code to execute under read action
+   *
+   * @param action    the code to execute under read action
    * @param indicator progress indicator that should be cancelled if a write action is about to start. Can be null.
-   * @since 171.*
    */
   public abstract boolean runInReadActionWithWriteActionPriority(@Nonnull final Runnable action, @Nullable ProgressIndicator indicator);
 
   public abstract boolean isInNonCancelableSection();
+
+  /**
+   * Performs the given computation while giving more priority to the current thread
+   * (by forcing all other non-prioritized threads to sleep a bit whenever they call {@link #checkCanceled()}.<p></p>
+   * <p>
+   * This is intended for relatively short (expected to be under 10 seconds) background activities that the user is waiting for
+   * (e.g. code navigation), and which shouldn't be slowed down by CPU-intensive background tasks like highlighting or indexing.
+   */
+  public abstract <T, E extends Throwable> T computePrioritized(@Nonnull ThrowableComputable<T, E> computable) throws E;
 }

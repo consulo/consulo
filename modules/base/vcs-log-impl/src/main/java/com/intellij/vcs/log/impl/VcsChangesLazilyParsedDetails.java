@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.vcs.LocalFilePath;

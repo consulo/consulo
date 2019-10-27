@@ -15,12 +15,12 @@
  */
 package com.intellij.psi.codeStyle.arrangement;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.arrangement.group.ArrangementGroupingRule;
 import com.intellij.psi.codeStyle.arrangement.match.*;
 import com.intellij.psi.codeStyle.arrangement.std.*;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
 import gnu.trove.THashSet;
 import org.jdom.Attribute;
 import org.jdom.Element;

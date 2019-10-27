@@ -148,39 +148,6 @@ public final class VfsFileBasedStorage extends XmlElementStorage {
         myCachedVirtualFile = StorageUtil.writeFile(myFile, this, file, content, isUseXmlProlog() ? myLineSeparator : null);
       }
     }
-
-    @Override
-    protected void doSaveAsync(@Nullable Element element) throws IOException {
-      if (myLineSeparator == null) {
-        myLineSeparator = isUseLfLineSeparatorByDefault() ? LineSeparator.LF : LineSeparator.getSystemLineSeparator();
-      }
-
-      byte[] content = element == null ? null : StorageUtil.writeToBytes(element, myLineSeparator.getSeparatorString());
-
-      try {
-        if (myStreamProvider != null && myStreamProvider.isEnabled()) {
-          // stream provider always use LF separator
-          saveForProvider(myLineSeparator == LineSeparator.LF ? content : null, element);
-        }
-      }
-      catch (Throwable e) {
-        LOG.error(e);
-      }
-
-      if (content == null) {
-        StorageUtil.deleteFile(myFile, this, getVirtualFile());
-        myCachedVirtualFile = null;
-      }
-      else {
-        VirtualFile file = getVirtualFile();
-        if (file == null || !file.exists()) {
-          FileUtil.createParentDirs(myFile);
-          file = null;
-        }
-
-        StorageUtil.writeFileAsync(myFile, this, file, content, isUseXmlProlog() ? myLineSeparator : null).doWhenDone((f) -> myCachedVirtualFile = f);
-      }
-    }
   }
 
   @Override

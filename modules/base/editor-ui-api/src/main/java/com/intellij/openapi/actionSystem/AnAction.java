@@ -373,6 +373,18 @@ public abstract class AnAction implements PossiblyDumbAware {
     return e == null ? null : e.getData(CommonDataKeys.PROJECT);
   }
 
+  /**
+   * Returns default action text.
+   * This method must be overridden in case template presentation contains user data like Project name,
+   * Run Configuration name, etc
+   *
+   * @return action presentable text without private user data
+   */
+  @Nullable
+  public String getTemplateText() {
+    return getTemplatePresentation().getText();
+  }
+
   @Override
   public String toString() {
     return getTemplatePresentation().toString();

@@ -17,7 +17,6 @@ package com.intellij.lang.impl;
 
 import com.intellij.lang.*;
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
@@ -27,12 +26,12 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.TokenType;
+import com.intellij.psi.impl.BlockSupportImpl;
+import com.intellij.psi.impl.DiffLog;
 import com.intellij.psi.impl.source.CharTableImpl;
 import com.intellij.psi.impl.source.resolve.FileContextUtil;
-import com.intellij.psi.impl.source.text.BlockSupportImpl;
-import com.intellij.psi.impl.source.text.DiffLog;
-import com.intellij.psi.impl.source.tree.*;
 import com.intellij.psi.impl.source.tree.Factory;
+import com.intellij.psi.impl.source.tree.*;
 import com.intellij.psi.text.BlockSupport;
 import com.intellij.psi.tree.*;
 import com.intellij.util.*;
@@ -45,21 +44,21 @@ import com.intellij.util.diff.FlyweightCapableTreeStructure;
 import com.intellij.util.diff.ShallowNodeComparator;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.lang.LanguageVersion;
+import consulo.logging.Logger;
 import gnu.trove.TIntObjectHashMap;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author max
  */
-public class PsiBuilderImpl extends UserDataHolderBase implements PsiBuilder {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.lang.impl.PsiBuilderImpl");
+public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuilder {
+  private static final Logger LOG = Logger.getInstance(PsiBuilderImpl.class);
 
   // function stored in PsiBuilderImpl' user data which called during reparse when merge algorithm is not sure what to merge
   public static final Key<TripleFunction<ASTNode, LighterASTNode, FlyweightCapableTreeStructure<LighterASTNode>, ThreeState>> CUSTOM_COMPARATOR =
@@ -97,7 +96,6 @@ public class PsiBuilderImpl extends UserDataHolderBase implements PsiBuilder {
   private final MyTreeStructure myParentLightTree;
   private final int myOffset;
 
-  private Map<Key, Object> myUserData;
   private IElementType myCachedTokenType;
 
   private final TIntObjectHashMap<LazyParseableToken> myChameleonCache = new TIntObjectHashMap<>();
@@ -1197,7 +1195,7 @@ public class PsiBuilderImpl extends UserDataHolderBase implements PsiBuilder {
     DiffLog diffLog = new DiffLog();
     DiffTreeChangeBuilder<ASTNode, LighterASTNode> builder = new ConvertFromTokensToASTBuilder(newRoot, diffLog);
     MyTreeStructure treeStructure = new MyTreeStructure(newRoot, null);
-    ShallowNodeComparator<ASTNode, LighterASTNode> comparator = new MyComparator(getUserDataUnprotected(CUSTOM_COMPARATOR), treeStructure);
+    ShallowNodeComparator<ASTNode, LighterASTNode> comparator = new MyComparator(getUserData(CUSTOM_COMPARATOR), treeStructure);
 
     ProgressIndicator indicator = ProgressIndicatorProvider.getGlobalProgressIndicator();
     BlockSupportImpl.diffTrees(oldRoot, builder, comparator, treeStructure, indicator == null ? new EmptyProgressIndicator() : indicator, lastCommittedText);
@@ -1874,6 +1872,22 @@ public class PsiBuilderImpl extends UserDataHolderBase implements PsiBuilder {
     return ASTFactory.leaf(type, myLanguageVersion, text);
   }
 
+  @Override
+  @SuppressWarnings("unchecked")
+  public <T> T getUserData(@Nonnull Key<T> key) {
+    return key == FileContextUtil.CONTAINING_FILE_KEY ? (T)myFile : super.getUserData(key);
+  }
+
+  @Override
+  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+    if (key == FileContextUtil.CONTAINING_FILE_KEY) {
+      myFile = (PsiFile)value;
+    }
+    else {
+      super.putUserData(key, value);
+    }
+  }
+
   private static class MyList extends ArrayList<ProductionMarker> {
     // make removeRange method available.
     @Override
@@ -1884,23 +1898,6 @@ public class PsiBuilderImpl extends UserDataHolderBase implements PsiBuilder {
     private MyList() {
       super(256);
     }
-  }
-
-  @SuppressWarnings("unchecked")
-  @Override
-  public <T> T getUserDataUnprotected(@Nonnull final Key<T> key) {
-    if (key == FileContextUtil.CONTAINING_FILE_KEY) return (T)myFile;
-    return myUserData != null ? (T)myUserData.get(key) : null;
-  }
-
-  @Override
-  public <T> void putUserDataUnprotected(@Nonnull final Key<T> key, @Nullable final T value) {
-    if (key == FileContextUtil.CONTAINING_FILE_KEY) {
-      myFile = (PsiFile)value;
-      return;
-    }
-    if (myUserData == null) myUserData = ContainerUtil.newHashMap();
-    myUserData.put(key, value);
   }
 
   private static class LazyParseableTokensCache {

@@ -17,12 +17,11 @@ package com.intellij.ide;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.LogUtil;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.io.FileAttributes;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -36,16 +35,15 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotations.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-
 import java.util.List;
 import java.util.Set;
 
 public class FileChangedNotificationProvider implements EditorNotificationProvider<EditorNotificationPanel>, DumbAware {
   private static final Logger LOG = Logger.getInstance(FileChangedNotificationProvider.class);
-  private static final Key<EditorNotificationPanel> KEY = Key.create("file.changed.notification.panel");
 
   private final Project myProject;
 
@@ -81,12 +79,6 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
         }
       }
     });
-  }
-
-  @Nonnull
-  @Override
-  public Key<EditorNotificationPanel> getKey() {
-    return KEY;
   }
 
   @RequiredReadAction

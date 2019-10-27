@@ -16,7 +16,6 @@
 
 package com.maddyhome.idea.copyright.actions;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
@@ -32,6 +31,7 @@ import com.maddyhome.idea.copyright.CopyrightProfile;
 import com.maddyhome.idea.copyright.CopyrightUpdaters;
 import com.maddyhome.idea.copyright.psi.UpdateCopyrightsProvider;
 import com.maddyhome.idea.copyright.psi.UpdatePsiFileCopyright;
+import consulo.logging.Logger;
 
 public class UpdateCopyrightProcessor extends AbstractFileProcessor {
   private static final Logger logger = Logger.getInstance(UpdateCopyrightProcessor.class.getName());

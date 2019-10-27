@@ -31,12 +31,12 @@ import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.LineCol;
 import com.intellij.diff.util.Side;
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.util.Key;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -118,7 +118,7 @@ public abstract class OnesideTextDiffViewer extends OnesideDiffViewer<TextEditor
 
   @RequiredUIAccess
   protected void installEditorListeners() {
-    new TextDiffViewerUtil.EditorActionsPopup(createEditorPopupActions()).install(getEditors());
+    new TextDiffViewerUtil.EditorActionsPopup(createEditorPopupActions()).install(getEditors(), myPanel);
   }
 
   @RequiredUIAccess

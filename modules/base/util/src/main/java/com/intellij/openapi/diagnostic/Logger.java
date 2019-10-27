@@ -16,57 +16,29 @@
 package com.intellij.openapi.diagnostic;
 
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.ExceptionUtil;
-import consulo.util.logging.LoggerFactory;
+import consulo.annotations.DeprecationInfo;
+import consulo.logging.attachment.Attachment;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class Logger {
-  private static class DefaultFactory implements LoggerFactory {
-    @Nonnull
-    @Override
-    public Logger getLoggerInstance(String category) {
-      return new DefaultLogger(category);
-    }
+@Deprecated
+@DeprecationInfo("Use consulo.logging.Logger")
+public final class Logger {
 
-    @Override
-    public int getPriority() {
-      return DEFAULT_PRIORITY;
-    }
-
-    @Override
-    public void shutdown() {
-
-    }
-  }
-
-  private static LoggerFactory ourFactory = new DefaultFactory();
-
-  public static void setFactory(LoggerFactory factory) {
-    if (isInitialized()) {
-      if (factory == ourFactory) {
-        return;
-      }
-
-      //noinspection UseOfSystemOutOrSystemErr
-      System.out.println("Changing log factory\n" + ExceptionUtil.getThrowableText(new Throwable()));
-    }
-
-    ourFactory = factory;
-  }
-
-  public static boolean isInitialized() {
-    return !(ourFactory instanceof DefaultFactory);
-  }
+  private final consulo.logging.Logger myDelegate;
 
   public static Logger getInstance(@NonNls String category) {
-    return ourFactory.getLoggerInstance(category);
+    return new Logger(consulo.logging.Logger.getInstance(category));
   }
 
   public static Logger getInstance(Class cl) {
     return getInstance(cl.getName());
+  }
+
+  private Logger(@Nonnull consulo.logging.Logger delegate) {
+    myDelegate = delegate;
   }
 
   public boolean isTraceEnabled() {
@@ -81,13 +53,25 @@ public abstract class Logger {
     debug(message);
   }
 
-  public abstract boolean isDebugEnabled();
+  public void trace(Throwable message) {
+    debug(message);
+  }
 
-  public abstract void debug(@NonNls String message);
+  public boolean isDebugEnabled() {
+    return myDelegate.isDebugEnabled();
+  }
 
-  public abstract void debug(@Nullable Throwable t);
+  public void debug(@NonNls String message) {
+    myDelegate.debug(message);
+  }
 
-  public abstract void debug(@NonNls String message, @Nullable Throwable t);
+  public void debug(@Nullable Throwable t) {
+    myDelegate.debug(t);
+  }
+
+  public void debug(@NonNls String message, @Nullable Throwable t) {
+    myDelegate.debug(message, t);
+  }
 
   public void debug(@Nonnull String message, Object... details) {
     if (isDebugEnabled()) {
@@ -104,9 +88,13 @@ public abstract class Logger {
     info(t.getMessage(), t);
   }
 
-  public abstract void info(@NonNls String message);
+  public void info(@NonNls String message) {
+    myDelegate.info(message);
+  }
 
-  public abstract void info(@NonNls String message, @Nullable Throwable t);
+  public void info(@NonNls String message, @Nullable Throwable t) {
+    myDelegate.info(message, t);
+  }
 
   public void warn(@NonNls String message) {
     warn(message, null);
@@ -116,16 +104,23 @@ public abstract class Logger {
     warn(t.getMessage(), t);
   }
 
-  public abstract void warn(@NonNls String message, @Nullable Throwable t);
+  public void warn(@NonNls String message, @Nullable Throwable t) {
+    myDelegate.warn(message, t);
+  }
 
   public void error(@NonNls String message) {
     error(message, new Throwable(), ArrayUtil.EMPTY_STRING_ARRAY);
   }
+
   public void error(Object message) {
     error(String.valueOf(message));
   }
 
   public void error(@NonNls String message, Attachment... attachments) {
+    error(message);
+  }
+  
+  public void error(@NonNls String message, Throwable throwable, Attachment... attachments) {
     error(message);
   }
 
@@ -141,7 +136,9 @@ public abstract class Logger {
     error(t.getMessage(), t, ArrayUtil.EMPTY_STRING_ARRAY);
   }
 
-  public abstract void error(@NonNls String message, @Nullable Throwable t, @NonNls @Nonnull String... details);
+  public void error(@NonNls String message, @Nullable Throwable t, @NonNls @Nonnull String... details) {
+    myDelegate.error(message, t, details);
+  }
 
   public boolean assertTrue(boolean value, @Nullable @NonNls Object message) {
     if (!value) {

@@ -16,7 +16,6 @@
 package com.intellij.openapi.application.impl;
 
 import com.intellij.CommonBundle;
-import com.intellij.concurrency.IdeaForkJoinWorkerThreadFactory;
 import com.intellij.diagnostic.LogEventException;
 import com.intellij.diagnostic.ThreadDumper;
 import com.intellij.ide.*;
@@ -24,7 +23,6 @@ import com.intellij.idea.StartupUtil;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.Attachment;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.progress.util.PotemkinProgress;
@@ -36,10 +34,7 @@ import com.intellij.openapi.project.impl.ProjectManagerImpl;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MessageDialogBuilder;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.ShutDownTracker;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
@@ -49,13 +44,17 @@ import com.intellij.util.Restarter;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.application.ApplicationProperties;
 import consulo.application.ex.ApplicationEx2;
 import consulo.application.impl.BaseApplication;
+import consulo.application.impl.WriteThread;
+import consulo.application.internal.ApplicationWithOwnWriteThread;
+import consulo.desktop.boot.main.windows.WindowsCommandLineProcessor;
 import consulo.injecting.InjectingContainerBuilder;
+import consulo.logging.Logger;
 import consulo.start.CommandLineArgs;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.desktop.internal.AWTUIAccessImpl;
 import org.jetbrains.annotations.NonNls;
@@ -72,7 +71,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
-public class DesktopApplicationImpl extends BaseApplication implements ApplicationEx2 {
+public class DesktopApplicationImpl extends BaseApplication implements ApplicationEx2, ApplicationWithOwnWriteThread {
   private static final Logger LOG = Logger.getInstance(DesktopApplicationImpl.class);
 
   private final ModalityInvokator myInvokator = new ModalityInvokatorImpl();
@@ -102,9 +101,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     }
   };
 
-  static {
-    IdeaForkJoinWorkerThreadFactory.setupForkJoinCommonPool();
-  }
+  private final WriteThread mySubWriteThread;
 
   public DesktopApplicationImpl(boolean isHeadless, @Nonnull Ref<? extends StartupProgress> splashRef) {
     super(splashRef);
@@ -128,10 +125,12 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
 
       StartupUtil.addExternalInstanceListener(commandLineArgs -> {
         LOG.info("ApplicationImpl.externalInstanceListener invocation");
-        final Project project = CommandLineProcessor.processExternalCommandLine(commandLineArgs, null);
-        final IdeFrame frame = WindowManager.getInstance().getIdeFrame(project);
 
-        if (frame != null) AppIcon.getInstance().requestFocus(frame);
+        CommandLineProcessor.processExternalCommandLine(commandLineArgs, null).doWhenDone(project -> {
+          final IdeFrame frame = WindowManager.getInstance().getIdeFrame(project);
+
+          if (frame != null) AppIcon.getInstance().requestFocus(frame);
+        });
       });
 
       WindowsCommandLineProcessor.LISTENER = (currentDirectory, commandLine) -> {
@@ -155,9 +154,36 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
       });
       return Thread.currentThread();
     });
-    myLock = new ReadMostlyRWLock(edt);
+
+    mySubWriteThread = new WriteThread(this);
+
+    myLock = new ReadMostlyRWLock(edt, mySubWriteThread);
 
     NoSwingUnderWriteAction.watchForEvents(this);
+  }
+
+  @Nonnull
+  @Override
+  public AccessToken acquireWriteActionLockInternal(Class<?> callerClass) {
+    return new WriteAccessToken(callerClass);
+  }
+
+  @Override
+  public boolean isWriteThread() {
+    return super.isWriteThread() || Thread.currentThread() == mySubWriteThread;
+  }
+
+  @Nonnull
+  @Override
+  public <T> AsyncResult<T> pushWriteAction(@Nonnull Class<?> caller, @Nonnull ThrowableComputable<T, Throwable> computable) {
+    AsyncResult<T> asyncResult = AsyncResult.undefined();
+    mySubWriteThread.push(computable, asyncResult, caller);
+    return asyncResult;
+  }
+
+  @Override
+  public boolean isWriteThreadEnabled() {
+    return mySubWriteThread != null;
   }
 
   private DesktopTransactionGuardImpl transactionGuard() {
@@ -567,13 +593,6 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     assertIsDispatchThread("Access is allowed from event dispatch thread only.");
   }
 
-  @Override
-  protected void assertWriteActionStart() {
-    if (!isWriteAccessAllowed()) {
-      assertIsDispatchThread("Write access is allowed from event dispatch thread only");
-    }
-  }
-
   private void assertIsDispatchThread(@Nonnull String message) {
     if (isDispatchThread()) return;
     final Attachment dump = new Attachment("threadDump.txt", ThreadDumper.dumpThreadsToString());
@@ -587,6 +606,29 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
                                          describe(Thread.currentThread()) +
                                          " SystemEventQueueThread: " +
                                          describe(getEventQueueThread()), dump);
+  }
+
+  @Override
+  protected void assertWriteActionStart() {
+    if (!isWriteAccessAllowed()) {
+      assertIsWriteOrDispatchThread("Write access is allowed from event write/dispatch thread only");
+    }
+  }
+
+  private void assertIsWriteOrDispatchThread(@Nonnull String message) {
+    if (isWriteThread()) return;
+    final Attachment dump = new Attachment("threadDump.txt", ThreadDumper.dumpThreadsToString());
+    throw new LogEventException(message, " EventQueue.isDispatchThread()=" +
+                                         EventQueue.isDispatchThread() +
+                                         " isDispatchThread()=" +
+                                         isDispatchThread() +
+                                         " Toolkit.getEventQueue()=" +
+                                         Toolkit.getDefaultToolkit().getSystemEventQueue() +
+                                         " Current thread: " +
+                                         describe(Thread.currentThread()) +
+                                         " SystemEventQueueThread: " +
+                                         describe(getEventQueueThread()) + "" +
+                                         " WriteThread: " + mySubWriteThread, dump);
   }
 
   @RequiredUIAccess
@@ -635,7 +677,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
 
   @Override
   public boolean isWriteAccessAllowed() {
-    return isDispatchThread() && myLock.isWriteLocked();
+    return isWriteThread() && myLock.isWriteLocked();
   }
 
   @Override

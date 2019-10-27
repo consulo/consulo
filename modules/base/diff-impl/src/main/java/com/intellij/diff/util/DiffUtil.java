@@ -53,7 +53,7 @@ import com.intellij.openapi.command.undo.DocumentReference;
 import com.intellij.openapi.command.undo.DocumentReferenceManager;
 import com.intellij.openapi.command.undo.UndoManager;
 import com.intellij.openapi.components.StoragePathMacros;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.diff.impl.GenericDataProvider;
 import com.intellij.openapi.diff.impl.external.DiffManagerImpl;

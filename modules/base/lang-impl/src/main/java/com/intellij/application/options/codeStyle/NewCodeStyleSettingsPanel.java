@@ -20,7 +20,7 @@ import com.intellij.application.options.CodeStyleAbstractConfigurable;
 import com.intellij.application.options.CodeStyleAbstractPanel;
 import com.intellij.application.options.OptionsContainingConfigurable;
 import com.intellij.application.options.TabbedLanguageCodeStylePanel;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import javax.annotation.Nonnull;

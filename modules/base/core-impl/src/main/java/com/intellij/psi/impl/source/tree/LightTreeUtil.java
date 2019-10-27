@@ -19,7 +19,7 @@ import com.intellij.lang.LighterAST;
 import com.intellij.lang.LighterASTNode;
 import com.intellij.lang.LighterASTTokenNode;
 import com.intellij.lang.LighterLazyParseableNode;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.SmartList;

@@ -15,17 +15,20 @@
  */
 package com.intellij.openapi.editor;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import com.intellij.openapi.editor.colors.EditorFontType;
 import com.intellij.openapi.editor.event.EditorMouseEventArea;
 import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.UserDataHolder;
 import consulo.ui.Component;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -354,6 +357,14 @@ public interface Editor extends UserDataHolder {
     return visualPositionToPoint2D(visualPosition);
   }
 
+  default int visualLineToY(int visualLine) {
+    return visualPositionToXY(new VisualPosition(visualLine, 0)).y;
+  }
+
+  default int yToVisualLine(int y) {
+    return xyToVisualPosition(new Point(0, y)).line;
+  }
+
   /**
    * Adds a listener for receiving notifications about mouse clicks in the editor and
    * the mouse entering/exiting the editor.
@@ -361,6 +372,19 @@ public interface Editor extends UserDataHolder {
    * @param listener the listener instance.
    */
   void addEditorMouseListener(@Nonnull EditorMouseListener listener);
+
+  /**
+   * Adds a listener for receiving notifications about mouse clicks in the editor and
+   * the mouse entering/exiting the editor.
+   * The listener is removed when the given parent disposable is disposed.
+   *
+   * @param listener         the listener instance.
+   * @param parentDisposable the parent Disposable instance.
+   */
+  default void addEditorMouseListener(@Nonnull EditorMouseListener listener, @Nonnull Disposable parentDisposable) {
+    addEditorMouseListener(listener);
+    Disposer.register(parentDisposable, () -> removeEditorMouseListener(listener));
+  }
 
   /**
    * Removes a listener for receiving notifications about mouse clicks in the editor and
@@ -469,4 +493,16 @@ public interface Editor extends UserDataHolder {
 
   @Nonnull
   InlayModel getInlayModel();
+
+  @Nonnull
+  EditorKind getEditorKind();
+
+  /**
+   * Vertical distance, in pixels, between the top of visual line (corresponding coordinate is returned by {@link #visualLineToY(int)},
+   * {@link #visualPositionToXY(VisualPosition)}, etc) and baseline of text in that visual line.
+   */
+  default int getAscent() {
+    // actual implementation in EditorImpl is a bit more complex, but this gives an idea how it's constructed
+    return (int)(getContentComponent().getFontMetrics(getColorsScheme().getFont(EditorFontType.PLAIN)).getAscent() * getColorsScheme().getLineSpacing());
+  }
 }

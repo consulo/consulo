@@ -31,6 +31,8 @@ import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginIds;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -40,7 +42,8 @@ import java.awt.*;
  * @author Konstantin Bulenkov
  */
 public class PluginHeaderPanel {
-  private IdeaPluginDescriptor myPlugin;
+  private PluginDescriptor myPlugin;
+
   @Nullable
   private final PluginManagerMain myManager;
   private final JTable myPluginTable;
@@ -57,7 +60,6 @@ public class PluginHeaderPanel {
   private JPanel myVersionInfoPanel;
 
   enum ACTION_ID {
-    UPDATE,
     INSTALL,
     UNINSTALL,
     RESTART
@@ -83,7 +85,7 @@ public class PluginHeaderPanel {
     myRoot.setVisible(false);
   }
 
-  public void setPlugin(IdeaPluginDescriptor plugin) {
+  public void setPlugin(PluginDescriptor plugin) {
     myPlugin = plugin;
     myRoot.setVisible(true);
     myCategory.setVisible(true);
@@ -104,7 +106,7 @@ public class PluginHeaderPanel {
       myUpdated.setText("Updated " + DateFormatUtil.formatDate(node.getDate()));
       switch (node.getStatus()) {
         case PluginNode.STATUS_INSTALLED:
-          myActionId = InstalledPluginsTableModel.hasNewerVersion(plugin.getPluginId()) ? ACTION_ID.UPDATE : ACTION_ID.UNINSTALL;
+          myActionId = ACTION_ID.UNINSTALL;
           break;
         case PluginNode.STATUS_DOWNLOADED:
           myActionId = ACTION_ID.RESTART;
@@ -121,12 +123,9 @@ public class PluginHeaderPanel {
       final String version = plugin.getVersion();
       myVersion.setText("Version: " + (version == null ? "N/A" : version));
       myUpdated.setVisible(false);
-      if (!plugin.isBundled()) {
+      if (!PluginIds.isPlatformPlugin(plugin.getPluginId())) {
         if (((IdeaPluginDescriptorImpl)plugin).isDeleted()) {
           myActionId = ACTION_ID.RESTART;
-        }
-        else if (InstalledPluginsTableModel.hasNewerVersion(plugin.getPluginId())) {
-          myActionId = ACTION_ID.UPDATE;
         }
         else {
           myActionId = ACTION_ID.UNINSTALL;
@@ -183,8 +182,6 @@ public class PluginHeaderPanel {
 
       private Color getButtonForeground() {
         switch (myActionId) {
-          case UPDATE:
-            return new JBColor(Gray._0, Gray._210);
           case INSTALL:
             return new JBColor(Gray._255, Gray._210);
           case UNINSTALL:
@@ -198,8 +195,6 @@ public class PluginHeaderPanel {
 
       private Paint getBackgroundPaint() {
         switch (myActionId) {
-          case UPDATE:
-            return new JBColor(new Color(209, 190, 114), new Color(49, 98, 49));
           case INSTALL:
             return new JBColor(new Color(0x4DA864), new Color(49, 98, 49));
           case UNINSTALL:
@@ -213,8 +208,6 @@ public class PluginHeaderPanel {
 
       private Paint getBackgroundBorderPaint() {
         switch (myActionId) {
-          case UPDATE:
-            return new JBColor(new Color(164, 145, 82), Gray._85);
           case INSTALL:
             return new JBColor(new Color(0x337043), Gray._80);
           case UNINSTALL:
@@ -228,8 +221,6 @@ public class PluginHeaderPanel {
       @Override
       public String getText() {
         switch (myActionId) {
-          case UPDATE:
-            return "Update plugin";
           case INSTALL:
             return "Install plugin";
           case UNINSTALL:
@@ -243,8 +234,6 @@ public class PluginHeaderPanel {
       @Override
       public Icon getIcon() {
         switch (myActionId) {
-          case UPDATE:
-            return AllIcons.General.DownloadPlugin;
           case INSTALL:
             return AllIcons.General.DownloadPlugin;
           case UNINSTALL:
@@ -258,7 +247,6 @@ public class PluginHeaderPanel {
     };
     myInstallButton.addActionListener(e -> {
       switch (myActionId) {
-        case UPDATE:
         case INSTALL:
           new InstallPluginAction(myManager.getAvailable(), myManager.getInstalled())
                   .install(null, () -> UIUtil.invokeLaterIfNeeded(() -> setPlugin(myPlugin)));

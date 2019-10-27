@@ -19,7 +19,6 @@ package com.intellij.ide.util;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.impl.ModuleGroup;
 import com.intellij.ide.projectView.impl.ModuleGroupUtil;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -36,6 +35,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.HashMap;
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

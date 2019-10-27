@@ -15,6 +15,8 @@
  */
 package consulo.injecting.pico;
 
+import consulo.logging.Logger;
+import com.intellij.openapi.util.Pair;
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.injecting.key.InjectingKey;
@@ -24,14 +26,20 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * @author VISTALL
  * @since 2018-08-23
  */
 class PicoInjectingContainer implements InjectingContainer {
+  private static final Logger LOG = Logger.getInstance(PicoInjectingContainer.class);
+
   private final DefaultPicoContainer myContainer;
   private final List<InjectingKey<?>> myKeys;
+
+  private final Set<Pair<Class, Class>> myGetInstanceWarningSet = new CopyOnWriteArraySet<>();
 
   public PicoInjectingContainer(@Nullable PicoInjectingContainer parent, int size) {
     myContainer = new DefaultPicoContainer(parent == null ? null : parent.myContainer);
@@ -53,6 +61,11 @@ class PicoInjectingContainer implements InjectingContainer {
   @Override
   @SuppressWarnings("unchecked")
   public <T> T getInstance(@Nonnull Class<T> clazz) {
+    Class<?> insideObjectCreation = GetInstanceValidator.insideObjectCreation();
+    if (insideObjectCreation != null && myGetInstanceWarningSet.add(Pair.create(clazz, insideObjectCreation))) {
+      LOG.warn("Calling #getInstance(" + clazz + ".class) inside object initialization. Use contructor injection instead. MainInjecting: " + insideObjectCreation);
+    }
+
     T instance = (T)myContainer.getComponentInstance(clazz);
     if (instance != null) {
       return instance;
@@ -81,6 +94,7 @@ class PicoInjectingContainer implements InjectingContainer {
   @Override
   public void dispose() {
     myKeys.clear();
+    myGetInstanceWarningSet.clear();
     myContainer.dispose();
   }
 }

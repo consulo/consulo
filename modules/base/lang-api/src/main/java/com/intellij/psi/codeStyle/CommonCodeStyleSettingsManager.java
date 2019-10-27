@@ -16,7 +16,7 @@
 package com.intellij.psi.codeStyle;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;

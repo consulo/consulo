@@ -19,7 +19,7 @@ package com.intellij.ide.actions;
 import com.intellij.ide.util.gotoByName.*;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;

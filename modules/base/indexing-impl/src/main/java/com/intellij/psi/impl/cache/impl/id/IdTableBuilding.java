@@ -31,8 +31,9 @@ import com.intellij.util.Processor;
 import com.intellij.util.indexing.FileContent;
 import com.intellij.util.indexing.IdDataConsumer;
 import com.intellij.util.text.CharArrayUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,7 +42,7 @@ public class IdTableBuilding {
   }
 
   public interface ScanWordProcessor {
-    void run(CharSequence chars, @javax.annotation.Nullable char[] charsArray, int start, int end);
+    void run(CharSequence chars, @Nullable char[] charsArray, int start, int end);
   }
 
   private static final HashMap<FileType, IdIndexer> ourIdIndexers = new HashMap<>();
@@ -55,8 +56,13 @@ public class IdTableBuilding {
     return ourIdIndexers.containsKey(fileType) || IdIndexers.INSTANCE.forFileType(fileType) != null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static IdIndexer getFileTypeIndexer(FileType fileType) {
+    return getFileTypeIndexer(CacheBuilderRegistry.getInstance(), fileType);
+  }
+
+  @Nullable
+  public static IdIndexer getFileTypeIndexer(CacheBuilderRegistry registry, FileType fileType) {
     final IdIndexer idIndexer = ourIdIndexers.get(fileType);
 
     if (idIndexer != null) {
@@ -68,7 +74,7 @@ public class IdTableBuilding {
       return extIndexer;
     }
 
-    final WordsScanner customWordsScanner = CacheBuilderRegistry.getInstance().getCacheBuilder(fileType);
+    final WordsScanner customWordsScanner = registry.getCacheBuilder(fileType);
     if (customWordsScanner != null) {
       return new WordsScannerFileTypeIdIndexerAdapter(customWordsScanner);
     }
@@ -91,10 +97,8 @@ public class IdTableBuilding {
   }
 
   private static WordsScanner createWordScanner(final CustomSyntaxTableFileType customSyntaxTableFileType) {
-    return new DefaultWordsScanner(new CustomFileTypeLexer(customSyntaxTableFileType.getSyntaxTable(), true),
-                                   TokenSet.create(CustomHighlighterTokenType.IDENTIFIER),
-                                   TokenSet.create(CustomHighlighterTokenType.LINE_COMMENT,
-                                                   CustomHighlighterTokenType.MULTI_LINE_COMMENT),
+    return new DefaultWordsScanner(new CustomFileTypeLexer(customSyntaxTableFileType.getSyntaxTable(), true), TokenSet.create(CustomHighlighterTokenType.IDENTIFIER),
+                                   TokenSet.create(CustomHighlighterTokenType.LINE_COMMENT, CustomHighlighterTokenType.MULTI_LINE_COMMENT),
                                    TokenSet.create(CustomHighlighterTokenType.STRING, CustomHighlighterTokenType.SINGLE_QUOTED_STRING));
 
   }
@@ -143,7 +147,7 @@ public class IdTableBuilding {
 
   public static void scanWords(final ScanWordProcessor processor,
                                final CharSequence chars,
-                               @javax.annotation.Nullable final char[] charArray,
+                               @Nullable final char[] charArray,
                                final int startOffset,
                                final int endOffset,
                                final boolean mayHaveEscapes) {
@@ -156,10 +160,7 @@ public class IdTableBuilding {
         if (index >= endOffset) break ScanWordsLoop;
         final char c = hasArray ? charArray[index] : chars.charAt(index);
 
-        if ((c >= 'a' && c <= 'z') ||
-            (c >= 'A' && c <= 'Z') ||
-            (c >= '0' && c <= '9') ||
-            (Character.isJavaIdentifierStart(c) && c != '$')) {
+        if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || (Character.isJavaIdentifierStart(c) && c != '$')) {
           break;
         }
         index++;

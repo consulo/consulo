@@ -20,6 +20,10 @@ import com.intellij.openapi.util.text.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author VISTALL
@@ -38,8 +42,15 @@ public abstract class PlatformBase implements Platform {
   private static final boolean isLinux = _OS_NAME.startsWith("linux");
   private static final boolean isUnix = !isWindows && !isOS2;
 
-  private static final boolean isFileSystemCaseSensitive = isUnix && !isMac || "true".equalsIgnoreCase(System.getProperty("idea.case.sensitive.fs"));
+  // version numbers from http://msdn.microsoft.com/en-us/library/windows/desktop/ms724832.aspx
+  private static final boolean isWin2kOrNewer = isWindows && isOsVersionAtLeast("5.0");
+  private static final boolean isWinXpOrNewer = isWindows && isOsVersionAtLeast("5.1");
   private static final boolean isWinVistaOrNewer = isWindows && isOsVersionAtLeast("6.0");
+  private static final boolean isWin7OrNewer = isWindows && isOsVersionAtLeast("6.1");
+  private static final boolean isWin8OrNewer = isWindows && isOsVersionAtLeast("6.2");
+  private static final boolean isWin10OrNewer = isWindows && isOsVersionAtLeast("10.0");
+
+  private static final boolean isFileSystemCaseSensitive = isUnix && !isMac || "true".equalsIgnoreCase(System.getProperty("idea.case.sensitive.fs"));
   private static final boolean areSymLinksSupported = isUnix || isWinVistaOrNewer;
 
   public static boolean isOsVersionAtLeast(@Nonnull String version) {
@@ -66,8 +77,101 @@ public abstract class PlatformBase implements Platform {
     }
 
     @Override
+    public boolean isWindowsVistaOrNewer() {
+      return isWinVistaOrNewer;
+    }
+
+    @Override
+    public boolean isWindows7OrNewer() {
+      return isWin7OrNewer;
+    }
+
+    @Override
+    public boolean isWindows8OrNewer() {
+      return isWin8OrNewer;
+    }
+
+    @Override
+    public boolean isWindows10OrNewer() {
+      return isWin10OrNewer;
+    }
+
+    @Override
     public boolean isMac() {
       return isMac;
+    }
+
+    @Override
+    public boolean isLinux() {
+      return isLinux;
+    }
+
+    @Nonnull
+    @Override
+    public String name() {
+      return OS_NAME;
+    }
+
+    @Nonnull
+    @Override
+    public String version() {
+      return OS_VERSION;
+    }
+
+    @Nullable
+    @Override
+    public String getEnvironmentVariable(@Nonnull String key) {
+      return System.getenv(key);
+    }
+
+    @Nonnull
+    @Override
+    public Map<String, String> getEnvironmentVariables() {
+      return Collections.unmodifiableMap(System.getenv());
+    }
+
+    @Nonnull
+    @Override
+    public String arch() {
+      return StringUtil.notNullize(System.getProperty("os.arch"));
+    }
+  }
+
+  protected static class JvmImpl implements Jvm {
+
+    @Nonnull
+    @Override
+    public String version() {
+      return System.getProperty("java.version");
+    }
+
+    @Nonnull
+    @Override
+    public String runtimeVersion() {
+      return StringUtil.notNullize(System.getProperty("java.runtime.version"), "n/a");
+    }
+
+    @Nonnull
+    @Override
+    public String vendor() {
+      return StringUtil.notNullize(System.getProperty("java.vendor"), "n/a");
+    }
+
+    @Nullable
+    @Override
+    public String getRuntimeProperty(@Nonnull String key) {
+      return System.getProperty(key);
+    }
+
+    @Nonnull
+    @Override
+    public Map<String, String> getRuntimeProperties() {
+      Properties properties = System.getProperties();
+      Map<String, String> map = new LinkedHashMap<>();
+      for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+        map.put(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
+      }
+      return map;
     }
   }
 
@@ -75,12 +179,14 @@ public abstract class PlatformBase implements Platform {
 
   private final FileSystem myFileSystem;
   private final OperatingSystem myOperatingSystem;
+  private final Jvm myJvm;
 
   protected PlatformBase(@Nonnull String pluginId) {
     myPluginId = PluginId.getId(pluginId);
 
     myFileSystem = createFS();
     myOperatingSystem = createOS();
+    myJvm = createJVM();
   }
 
   @Nonnull
@@ -88,8 +194,20 @@ public abstract class PlatformBase implements Platform {
     return new FileSystemImpl();
   }
 
+  @Nonnull
   protected OperatingSystem createOS() {
     return new OperatingSystemImpl();
+  }
+
+  @Nonnull
+  protected Jvm createJVM() {
+    return new JvmImpl();
+  }
+
+  @Nonnull
+  @Override
+  public Jvm jvm() {
+    return myJvm;
   }
 
   @Nonnull
@@ -102,18 +220,6 @@ public abstract class PlatformBase implements Platform {
   @Override
   public OperatingSystem os() {
     return myOperatingSystem;
-  }
-
-  @Nullable
-  @Override
-  public String getRuntimeProperty(@Nonnull String key) {
-    return System.getProperty(key);
-  }
-
-  @Nullable
-  @Override
-  public String getEnvironmentVariable(@Nonnull String key) {
-    return System.getenv(key);
   }
 
   @Nonnull

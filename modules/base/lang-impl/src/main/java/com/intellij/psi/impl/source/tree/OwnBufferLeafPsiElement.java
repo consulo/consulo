@@ -19,7 +19,6 @@ package com.intellij.psi.impl.source.tree;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import consulo.lang.LanguageVersion;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.CheckUtil;
@@ -32,6 +31,8 @@ import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {

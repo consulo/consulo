@@ -15,12 +15,12 @@
  */
 package com.intellij.ui.popup;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.logging.Logger;
 
 import javax.swing.*;
 import java.awt.*;

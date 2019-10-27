@@ -23,7 +23,8 @@ package com.intellij.compiler.impl;
 
 import com.intellij.openapi.compiler.ValidityState;
 import com.intellij.openapi.compiler.ValidityStateFactory;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
+
 import javax.annotation.Nullable;
 
 import java.io.*;

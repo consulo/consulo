@@ -1,24 +1,8 @@
-/*
- * Copyright 2000-2016 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.event.DocumentEvent;
-import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.EditReadOnlyListener;
 import com.intellij.openapi.editor.ex.LineIterator;
@@ -27,14 +11,9 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.Processor;
-import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.ImmutableCharSequence;
-import kava.beans.PropertyChangeListener;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author peter
@@ -42,22 +21,22 @@ import java.util.List;
 public class FrozenDocument implements DocumentEx {
   private final ImmutableCharSequence myText;
   @Nullable
-  private volatile LineSet myLineSet;
+  private volatile SoftReference<LineSet> myLineSet;
   private final long myStamp;
   private volatile SoftReference<String> myTextString;
 
   FrozenDocument(@Nonnull ImmutableCharSequence text, @Nullable LineSet lineSet, long stamp, @Nullable String textString) {
     myText = text;
-    myLineSet = lineSet;
+    myLineSet = lineSet == null ? null : new SoftReference<>(lineSet);
     myStamp = stamp;
-    myTextString = textString == null ? null : new SoftReference<String>(textString);
+    myTextString = textString == null ? null : new SoftReference<>(textString);
   }
 
   @Nonnull
   private LineSet getLineSet() {
-    LineSet lineSet = myLineSet;
+    LineSet lineSet = SoftReference.dereference(myLineSet);
     if (lineSet == null) {
-      myLineSet = lineSet = LineSet.createLineSet(myText);
+      myLineSet = new SoftReference<>(lineSet = LineSet.createLineSet(myText));
     }
     return lineSet;
   }
@@ -68,11 +47,6 @@ public class FrozenDocument implements DocumentEx {
     ImmutableCharSequence newText = myText.delete(offset, oldEnd).insert(offset, event.getNewFragment());
     LineSet newLineSet = getLineSet().update(myText, offset, oldEnd, event.getNewFragment(), event.isWholeTextReplaced());
     return new FrozenDocument(newText, newLineSet, newStamp, null);
-  }
-
-  @Override
-  public void setStripTrailingSpacesEnabled(boolean isEnabled) {
-    throw new UnsupportedOperationException();
   }
 
   @Nonnull
@@ -87,38 +61,8 @@ public class FrozenDocument implements DocumentEx {
   }
 
   @Override
-  public void addEditReadOnlyListener(@Nonnull EditReadOnlyListener listener) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void removeEditReadOnlyListener(@Nonnull EditReadOnlyListener listener) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   public void replaceText(@Nonnull CharSequence chars, long newModificationStamp) {
     throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void moveText(int srcStart, int srcEnd, int dstOffset) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void suppressGuardedExceptions() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void unSuppressGuardedExceptions() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public boolean isInEventsHandling() {
-    return false;
   }
 
   @Override
@@ -132,29 +76,8 @@ public class FrozenDocument implements DocumentEx {
   }
 
   @Override
-  public void registerRangeMarker(@Nonnull RangeMarkerEx rangeMarker,
-                                  int start,
-                                  int end,
-                                  boolean greedyToLeft,
-                                  boolean greedyToRight,
-                                  int layer) {
+  public void registerRangeMarker(@Nonnull RangeMarkerEx rangeMarker, int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer) {
     throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public boolean isInBulkUpdate() {
-    return false;
-  }
-
-  @Override
-  public void setInBulkUpdate(boolean value) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Nonnull
-  @Override
-  public List<RangeMarker> getGuardedBlocks() {
-    return Collections.emptyList();
   }
 
   @Override
@@ -172,7 +95,7 @@ public class FrozenDocument implements DocumentEx {
   public String getText() {
     String s = SoftReference.dereference(myTextString);
     if (s == null) {
-      myTextString = new SoftReference<String>(s = myText.toString());
+      myTextString = new SoftReference<>(s = myText.toString());
     }
     return s;
   }
@@ -193,17 +116,6 @@ public class FrozenDocument implements DocumentEx {
   @Override
   public CharSequence getImmutableCharSequence() {
     return myText;
-  }
-
-  @Nonnull
-  @Override
-  public char[] getChars() {
-    return CharArrayUtil.fromSequence(myText);
-  }
-
-  @Override
-  public int getTextLength() {
-    return myText.length();
   }
 
   @Override
@@ -255,45 +167,9 @@ public class FrozenDocument implements DocumentEx {
     return myStamp;
   }
 
-  @Override
-  public void fireReadOnlyModificationAttempt() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void addDocumentListener(@Nonnull DocumentListener listener) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void addDocumentListener(@Nonnull DocumentListener listener, @Nonnull Disposable parentDisposable) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void removeDocumentListener(@Nonnull DocumentListener listener) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Nonnull
-  @Override
-  public RangeMarker createRangeMarker(int startOffset, int endOffset) {
-    throw new UnsupportedOperationException();
-  }
-
   @Nonnull
   @Override
   public RangeMarker createRangeMarker(int startOffset, int endOffset, boolean surviveOnExternalChange) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
     throw new UnsupportedOperationException();
   }
 
@@ -336,18 +212,7 @@ public class FrozenDocument implements DocumentEx {
   }
 
   @Override
-  public void setCyclicBufferSize(int bufferSize) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   public void setText(@Nonnull CharSequence text) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Nonnull
-  @Override
-  public RangeMarker createRangeMarker(@Nonnull TextRange textRange) {
     throw new UnsupportedOperationException();
   }
 
@@ -368,7 +233,12 @@ public class FrozenDocument implements DocumentEx {
   }
 
   @Override
-  public int getModificationSequence() {
-    return 0;
+  public void setStripTrailingSpacesEnabled(boolean isEnabled) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void removeEditReadOnlyListener(@Nonnull EditReadOnlyListener listener) {
+    throw new UnsupportedOperationException();
   }
 }

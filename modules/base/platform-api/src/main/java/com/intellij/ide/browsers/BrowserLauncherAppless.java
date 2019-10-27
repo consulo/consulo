@@ -25,7 +25,6 @@ import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
@@ -47,10 +46,11 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.io.ZipUtil;
 import com.intellij.util.ui.OptionsDialog;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.Contract;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -59,10 +59,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -71,22 +69,16 @@ public class BrowserLauncherAppless extends BrowserLauncher {
   public static BrowserLauncherAppless INSTANCE = new BrowserLauncherAppless();
 
   private static boolean isDesktopActionSupported(Desktop.Action action) {
-    return !Patches.SUN_BUG_ID_6457572 && !Patches.SUN_BUG_ID_6486393 &&
-           Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(action);
+    return !Patches.SUN_BUG_ID_6457572 && !Patches.SUN_BUG_ID_6486393 && Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(action);
   }
 
-  public static boolean canStartDefaultBrowser() {
-    return isDesktopActionSupported(Desktop.Action.BROWSE) ||
-           SystemInfo.isMac || SystemInfo.isWindows ||
-           SystemInfo.isUnix && SystemInfo.hasXdgOpen();
+  public static boolean canUseSystemDefaultBrowserPolicy() {
+    return isDesktopActionSupported(Desktop.Action.BROWSE) || SystemInfo.isMac || SystemInfo.isWindows || SystemInfo.isUnix && SystemInfo.hasXdgOpen();
   }
 
   private static GeneralSettings getGeneralSettingsInstance() {
     if (ApplicationManager.getApplication() != null) {
-      GeneralSettings settings = GeneralSettings.getInstance();
-      if (settings != null) {
-        return settings;
-      }
+      return GeneralSettings.getInstance();
     }
 
     return new GeneralSettings();
@@ -190,6 +182,11 @@ public class BrowserLauncherAppless extends BrowserLauncher {
   }
 
   @Nullable
+  protected WebBrowser getEffectiveBrowser(@Nullable WebBrowser browser) {
+    return browser;
+  }
+
+  @Nullable
   private static String extractFiles(String url) {
     try {
       int sharpPos = url.indexOf('#');
@@ -237,10 +234,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
         try {
           GuiUtils.runOrInvokeAndWait(r);
         }
-        catch (InvocationTargetException ignored) {
-          extract.set(false);
-        }
-        catch (InterruptedException ignored) {
+        catch (InvocationTargetException | InterruptedException ignored) {
           extract.set(false);
         }
 
@@ -304,7 +298,8 @@ public class BrowserLauncherAppless extends BrowserLauncher {
                     zipFile.close();
                   }
                 }
-                catch (IOException ignore) { }
+                catch (IOException ignore) {
+                }
               }
             }.queue();
           }
@@ -380,12 +375,14 @@ public class BrowserLauncherAppless extends BrowserLauncher {
 
   @Override
   public void browse(@Nonnull String url, @Nullable WebBrowser browser, @Nullable Project project) {
-    if (browser == null) {
+    WebBrowser effectiveBrowser = getEffectiveBrowser(browser);
+
+    if (effectiveBrowser == null) {
       openOrBrowse(url, true);
     }
     else {
-      for (UrlOpener urlOpener : UrlOpener.EP_NAME.getExtensions()) {
-        if (urlOpener.openUrl(browser, url, project)) {
+      for (UrlOpener urlOpener : UrlOpener.EP_NAME.getExtensionList()) {
+        if (urlOpener.openUrl(effectiveBrowser, url, project)) {
           return;
         }
       }
@@ -429,8 +426,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
       return true;
     }
 
-    String message = browser != null ? browser.getBrowserNotFoundMessage() :
-                     IdeBundle.message("error.please.specify.path.to.web.browser", CommonBundle.settingsActionPath());
+    String message = browser != null ? browser.getBrowserNotFoundMessage() : IdeBundle.message("error.please.specify.path.to.web.browser", CommonBundle.settingsActionPath());
     doShowError(message, browser, project, IdeBundle.message("title.browser.not.found"), launchTask);
     return false;
   }
@@ -441,7 +437,6 @@ public class BrowserLauncherAppless extends BrowserLauncher {
                            @Nullable final Project project,
                            @Nonnull String[] additionalParameters,
                            @Nullable Runnable launchTask) {
-    GeneralCommandLine commandLine = new GeneralCommandLine(command);
 
     if (url != null && url.startsWith("jar:")) {
       String files = extractFiles(url);
@@ -451,10 +446,17 @@ public class BrowserLauncherAppless extends BrowserLauncher {
       url = files;
     }
 
+    List<String> commandWithUrl = new ArrayList<>(command);
     if (url != null) {
-      commandLine.addParameter(url);
+      if (browser != null) {
+        browser.addOpenUrlParameter(commandWithUrl, url);
+      }
+      else {
+        commandWithUrl.add(url);
+      }
     }
 
+    GeneralCommandLine commandLine = new GeneralCommandLine(commandWithUrl);
     addArgs(commandLine, browser == null ? null : browser.getSpecificSettings(), additionalParameters);
     try {
       Process process = commandLine.createProcess();
@@ -467,11 +469,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
     }
   }
 
-  protected void checkCreatedProcess(@Nullable WebBrowser browser,
-                                     @Nullable Project project,
-                                     @Nonnull GeneralCommandLine commandLine,
-                                     @Nonnull Process process,
-                                     @Nullable Runnable launchTask) {
+  protected void checkCreatedProcess(@Nullable WebBrowser browser, @Nullable Project project, @Nonnull GeneralCommandLine commandLine, @Nonnull Process process, @Nullable Runnable launchTask) {
   }
 
   protected void doShowError(@Nullable String error, @Nullable WebBrowser browser, @Nullable Project project, String title, @Nullable Runnable launchTask) {
@@ -487,8 +485,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
           command.addParameter("--args");
         }
         else {
-          LOG.warn("'open' command doesn't allow to pass command line arguments so they will be ignored: " +
-                   StringUtil.join(specific, ", ") + " " + Arrays.toString(additional));
+          LOG.warn("'open' command doesn't allow to pass command line arguments so they will be ignored: " + StringUtil.join(specific, ", ") + " " + Arrays.toString(additional));
           return;
         }
       }

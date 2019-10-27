@@ -487,11 +487,6 @@ public class PsiBuilderQuickTest extends MockApplicationTestCase {
       public PsiFile createFile(FileViewProvider viewProvider) {
         return null;
       }
-
-      @Override
-      public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
-        return null;
-      }
     };
     return new PsiBuilderImpl(null, null, parserDefinition, parserDefinition.createLexer(MockPsiFile.DUMMY_LANG_VERSION), MockPsiFile.DUMMY_LANG_VERSION, null, text, null, null);
   }
@@ -607,11 +602,6 @@ public class PsiBuilderQuickTest extends MockApplicationTestCase {
 
           @Override
           public PsiFile createFile(FileViewProvider viewProvider) {
-            return null;
-          }
-
-          @Override
-          public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
             return null;
           }
         };

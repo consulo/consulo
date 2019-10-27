@@ -15,9 +15,10 @@
  */
 package com.intellij.util;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.io.ZipUtil;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import javax.management.MBeanServer;

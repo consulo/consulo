@@ -16,13 +16,14 @@
 package com.intellij.openapi.diff.impl.incrementalMerge;
 
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.impl.DiffLineMarkerRenderer;
 import com.intellij.openapi.diff.impl.util.GutterActionRenderer;
 import com.intellij.openapi.diff.impl.util.TextDiffType;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.markup.*;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

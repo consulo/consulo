@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2014 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.intellij.psi.impl.cache.impl.id;
 
@@ -20,7 +6,12 @@ import com.intellij.lang.cacheBuilder.CacheBuilderRegistry;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
+import com.intellij.openapi.project.DumbService;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.UsageSearchContext;
+import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.indexing.*;
 import com.intellij.util.io.DataExternalizer;
@@ -37,10 +28,10 @@ import java.util.Map;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Jan 16, 2008
  */
-public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> {
-  @NonNls public static final ID<IdIndexEntry, Integer> NAME = ID.create("IdIndex");
+public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> implements DocumentChangeDependentIndex {
+  @NonNls
+  public static final ID<IdIndexEntry, Integer> NAME = ID.create("IdIndex");
 
   private final FileBasedIndex.InputFilter myInputFilter = (project, file) -> isIndexable(file.getFileType());
 
@@ -85,7 +76,7 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> {
 
   @Override
   public int getVersion() {
-    return 16 + (ourSnapshotMappingsEnabled ? 0xFF:0); // TODO: version should enumerate all word scanner versions and build version upon that set
+    return 16 + (ourSnapshotMappingsEnabled ? 0xFF : 0); // TODO: version should enumerate all word scanner versions and build version upon that set
   }
 
   @Override
@@ -95,7 +86,7 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> {
 
   @Nonnull
   @Override
-  public ID<IdIndexEntry,Integer> getName() {
+  public ID<IdIndexEntry, Integer> getName() {
     return NAME;
   }
 
@@ -133,5 +124,15 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> {
   @Override
   public boolean hasSnapshotMapping() {
     return true;
+  }
+
+  public static boolean hasIdentifierInFile(@Nonnull PsiFile file, @Nonnull String name) {
+    PsiUtilCore.ensureValid(file);
+    if (file.getVirtualFile() == null || DumbService.isDumb(file.getProject())) {
+      return StringUtil.contains(file.getViewProvider().getContents(), name);
+    }
+
+    GlobalSearchScope scope = GlobalSearchScope.fileScope(file);
+    return !FileBasedIndex.getInstance().getContainingFiles(NAME, new IdIndexEntry(name, true), scope).isEmpty();
   }
 }

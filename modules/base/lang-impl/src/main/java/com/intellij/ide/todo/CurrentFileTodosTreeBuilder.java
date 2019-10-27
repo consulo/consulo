@@ -17,48 +17,46 @@
 package com.intellij.ide.todo;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultTreeModel;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Vladimir Kondratyev
  */
-public class CurrentFileTodosTreeBuilder extends TodoTreeBuilder{
-  public CurrentFileTodosTreeBuilder(JTree tree,DefaultTreeModel treeModel,Project project){
-    super(tree,treeModel,project);
+public class CurrentFileTodosTreeBuilder extends TodoTreeBuilder {
+  public CurrentFileTodosTreeBuilder(JTree tree, Project project) {
+    super(tree, project);
   }
 
   @Override
   @Nonnull
-  protected TodoTreeStructure createTreeStructure(){
+  protected TodoTreeStructure createTreeStructure() {
     return new CurrentFileTodosTreeStructure(myProject);
   }
 
   @Override
-  void rebuildCache(){
-    myFileTree.clear();
-    myDirtyFileSet.clear();
-    myFile2Highlighter.clear();
-
-    CurrentFileTodosTreeStructure treeStructure=(CurrentFileTodosTreeStructure)getTreeStructure();
-    PsiFile psiFile=treeStructure.getFile();
-    if(treeStructure.accept(psiFile)){
-      myFileTree.add(psiFile.getVirtualFile());
+  void rebuildCache() {
+    Set<VirtualFile> files = new HashSet<>();
+    CurrentFileTodosTreeStructure treeStructure = (CurrentFileTodosTreeStructure)getTodoTreeStructure();
+    PsiFile psiFile = treeStructure.getFile();
+    if (treeStructure.accept(psiFile)) {
+      files.add(psiFile.getVirtualFile());
     }
-
-    treeStructure.validateCache();
+    super.rebuildCache(files);
   }
 
   /**
    * @see com.intellij.ide.todo.CurrentFileTodosTreeStructure#setFile
    */
-  public void setFile(PsiFile file){
-    CurrentFileTodosTreeStructure treeStructure=(CurrentFileTodosTreeStructure)getTreeStructure();
+  public void setFile(PsiFile file) {
+    CurrentFileTodosTreeStructure treeStructure = (CurrentFileTodosTreeStructure)getTodoTreeStructure();
     treeStructure.setFile(file);
     rebuildCache();
-    updateTree(false);
+    updateTree();
   }
 }

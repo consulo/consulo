@@ -17,7 +17,6 @@ package com.intellij.openapi.diff.impl.external;
 
 import com.intellij.ide.diff.DiffElement;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
 import com.intellij.openapi.fileTypes.UIBasedFileType;
@@ -25,6 +24,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

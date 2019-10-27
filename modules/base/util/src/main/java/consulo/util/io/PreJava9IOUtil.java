@@ -15,10 +15,11 @@
  */
 package consulo.util.io;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.Processor;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.lang.reflect.Method;

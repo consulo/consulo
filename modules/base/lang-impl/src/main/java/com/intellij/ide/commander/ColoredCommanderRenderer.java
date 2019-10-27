@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,26 +23,24 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.ui.ColoredListCellRenderer;
-import com.intellij.ui.GroupedElementsRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import java.awt.*;
 
 final class ColoredCommanderRenderer extends ColoredListCellRenderer {
   private final CommanderPanel myCommanderPanel;
 
-  public ColoredCommanderRenderer(@Nonnull final CommanderPanel commanderPanel) {
+  ColoredCommanderRenderer(@Nonnull final CommanderPanel commanderPanel) {
     myCommanderPanel = commanderPanel;
   }
 
   @Override
-  public Component getListCellRendererComponent(final JList list, final Object value, final int index, boolean selected, boolean hasFocus){
+  public Component getListCellRendererComponent(final JList list, final Object value, final int index, boolean selected, boolean hasFocus) {
     hasFocus = selected; // border around inactive items
 
     if (!myCommanderPanel.isActive()) {
@@ -53,12 +51,7 @@ final class ColoredCommanderRenderer extends ColoredListCellRenderer {
   }
 
   @Override
-  protected void customizeCellRenderer(final JList list, final Object value, final int index, final boolean selected, final boolean hasFocus) {
-    // Fix GTK background
-    if (UIUtil.isUnderGTKLookAndFeel()){
-      final Color background = selected ? UIUtil.getTreeSelectionBackground() : UIUtil.getTreeTextBackground();
-      UIUtil.changeBackGround(this, background);
-    }
+  protected void customizeCellRenderer(@Nonnull final JList list, final Object value, final int index, final boolean selected, final boolean hasFocus) {
     Color color = UIUtil.getListForeground();
     SimpleTextAttributes attributes = null;
     String locationString = null;
@@ -76,24 +69,24 @@ final class ColoredCommanderRenderer extends ColoredListCellRenderer {
 
       if (descriptor instanceof AbstractTreeNode) {
         final AbstractTreeNode treeNode = (AbstractTreeNode)descriptor;
-        final TextAttributesKey attributesKey = treeNode.getAttributesKey();
+        final TextAttributesKey attributesKey = treeNode.getPresentation().getTextAttributesKey();
 
         if (attributesKey != null) {
           final TextAttributes textAttributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(attributesKey);
 
-          if (textAttributes != null) attributes =  SimpleTextAttributes.fromTextAttributes(textAttributes);
+          if (textAttributes != null) attributes = SimpleTextAttributes.fromTextAttributes(textAttributes);
         }
-        locationString = treeNode.getLocationString();
+        locationString = treeNode.getPresentation().getLocationString();
 
         final PresentationData presentation = treeNode.getPresentation();
         if (presentation.hasSeparatorAbove() && !selected) {
-          setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, GroupedElementsRenderer.POPUP_SEPARATOR_FOREGROUND),
+          setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, JBUI.CurrentTheme.CustomFrameDecorations.separatorForeground()),
                                                        BorderFactory.createEmptyBorder(0, 0, 1, 0)));
         }
       }
     }
 
-    if(attributes == null) attributes = new SimpleTextAttributes(Font.PLAIN, color);
+    if (attributes == null) attributes = new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, color);
     final String text = value.toString();
 
     if (myCommanderPanel.isEnableSearchHighlighting()) {

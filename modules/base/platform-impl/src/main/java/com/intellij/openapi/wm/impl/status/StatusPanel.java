@@ -22,7 +22,6 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.JBMenuItem;
@@ -35,6 +34,8 @@ import com.intellij.ui.ClickListener;
 import com.intellij.ui.JBColor;
 import com.intellij.util.Alarm;
 import com.intellij.util.text.DateFormatUtil;
+import consulo.logging.Logger;
+
 import javax.annotation.Nullable;
 
 import javax.swing.*;

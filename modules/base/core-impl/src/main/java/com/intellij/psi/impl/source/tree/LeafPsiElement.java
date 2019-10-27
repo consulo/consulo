@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,9 @@ package com.intellij.psi.impl.source.tree;
 import com.intellij.ide.util.PsiNavigationSupport;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
-import consulo.lang.LanguageVersion;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectCoreUtil;
@@ -37,20 +36,16 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.CharTable;
 import com.intellij.util.IncorrectOperationException;
+import consulo.lang.LanguageVersion;
+import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 
 public class LeafPsiElement extends LeafElement implements PsiElement, NavigationItem {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.tree.LeafPsiElement");
 
-  public LeafPsiElement(IElementType type, CharSequence text) {
+  public LeafPsiElement(@Nonnull IElementType type, CharSequence text) {
     super(type, text);
-  }
-
-  @Deprecated
-  public LeafPsiElement(IElementType type, CharSequence buffer, int startOffset, int endOffset, CharTable table) {
-    super(type, table.intern(buffer, startOffset, endOffset));
   }
 
   @Override
@@ -92,10 +87,10 @@ public class LeafPsiElement extends LeafElement implements PsiElement, Navigatio
   public PsiFile getContainingFile() {
     final PsiFile file = SharedImplUtil.getContainingFile(this);
     if (file == null || !file.isValid()) invalid();
-    //noinspection ConstantConditions
     return file;
   }
 
+  @Contract("-> fail")
   private void invalid() {
     ProgressIndicatorProvider.checkCanceled();
 
@@ -173,14 +168,12 @@ public class LeafPsiElement extends LeafElement implements PsiElement, Navigatio
   }
 
   @Override
-  public PsiElement addRangeBefore(@Nonnull PsiElement first, @Nonnull PsiElement last, PsiElement anchor)
-    throws IncorrectOperationException {
+  public PsiElement addRangeBefore(@Nonnull PsiElement first, @Nonnull PsiElement last, PsiElement anchor) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
   @Override
-  public PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor)
-    throws IncorrectOperationException {
+  public PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
@@ -207,6 +200,7 @@ public class LeafPsiElement extends LeafElement implements PsiElement, Navigatio
     return SharedImplUtil.doReplace(this, this, newElement);
   }
 
+  @Override
   public String toString() {
     return "PsiElement" + "(" + getElementType().toString() + ")";
   }
@@ -217,10 +211,7 @@ public class LeafPsiElement extends LeafElement implements PsiElement, Navigatio
   }
 
   @Override
-  public boolean processDeclarations(@Nonnull PsiScopeProcessor processor,
-                                     @Nonnull ResolveState state,
-                                     PsiElement lastParent,
-                                     @Nonnull PsiElement place) {
+  public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent, @Nonnull PsiElement place) {
     return true;
   }
 

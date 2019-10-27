@@ -44,7 +44,11 @@ public abstract class CommandProcessor {
 
   public abstract void executeCommand(@Nullable Project project, @Nonnull Runnable runnable, @Nullable String name, @Nullable Object groupId, @Nullable Document document);
 
-  public abstract void executeCommand(@Nullable Project project, @Nonnull Runnable runnable, @Nullable String name, @Nullable Object groupId, @Nonnull UndoConfirmationPolicy confirmationPolicy);
+  public abstract void executeCommand(@Nullable Project project,
+                                      @Nonnull @RequiredUIAccess Runnable runnable,
+                                      @Nullable String name,
+                                      @Nullable Object groupId,
+                                      @Nonnull UndoConfirmationPolicy confirmationPolicy);
 
   public abstract void executeCommand(@Nullable Project project,
                                       @Nonnull Runnable command,

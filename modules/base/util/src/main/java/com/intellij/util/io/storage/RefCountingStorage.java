@@ -20,15 +20,15 @@
 package com.intellij.util.io.storage;
 
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
-import com.intellij.openapi.util.io.ByteSequence;
+import com.intellij.openapi.util.io.ByteArraySequence;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.PagePool;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.File;
@@ -133,12 +133,12 @@ public class RefCountingStorage extends AbstractStorage {
   }
 
   @Override
-  protected void appendBytes(int record, ByteSequence bytes) throws IOException {
+  protected void appendBytes(int record, ByteArraySequence bytes) throws IOException {
     throw new IncorrectOperationException("Appending is not supported");
   }
 
   @Override
-  public void writeBytes(final int record, final ByteSequence bytes, final boolean fixedSize) throws IOException {
+  public void writeBytes(final int record, final ByteArraySequence bytes, final boolean fixedSize) throws IOException {
 
     if (myDoNotZipCaches) {
       super.writeBytes(record, bytes, fixedSize);
@@ -163,7 +163,7 @@ public class RefCountingStorage extends AbstractStorage {
     }
   }
 
-  private void zipAndWrite(ByteSequence bytes, int record, boolean fixedSize) throws IOException {
+  private void zipAndWrite(ByteArraySequence bytes, int record, boolean fixedSize) throws IOException {
     BufferExposingByteArrayOutputStream s = new BufferExposingByteArrayOutputStream();
     DeflaterOutputStream out = new DeflaterOutputStream(s);
     try {
@@ -181,7 +181,7 @@ public class RefCountingStorage extends AbstractStorage {
   }
 
   private void doWrite(int record, boolean fixedSize, BufferExposingByteArrayOutputStream s) throws IOException {
-    super.writeBytes(record, new ByteSequence(s.getInternalBuffer(), 0, s.size()), fixedSize);
+    super.writeBytes(record, new ByteArraySequence(s.getInternalBuffer(), 0, s.size()), fixedSize);
   }
 
   @Override

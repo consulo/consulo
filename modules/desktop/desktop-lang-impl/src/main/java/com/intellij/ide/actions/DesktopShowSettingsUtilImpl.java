@@ -16,7 +16,7 @@
 package com.intellij.ide.actions;
 
 import com.intellij.CommonBundle;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.options.ShowSettingsUtil;
@@ -75,9 +75,11 @@ public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil {
 
     new Task.Backgroundable(actualProject, "Opening " + CommonBundle.settingsTitle() + "...") {
       private Configurable[] myConfigurables;
+      private long myStartTime;
 
       @Override
       public void run(@Nonnull ProgressIndicator indicator) {
+        myStartTime = System.currentTimeMillis();
         myConfigurables = buildConfigurables(actualProject);
       }
 
@@ -95,7 +97,9 @@ public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil {
             dialog = new DesktopSettingsDialog(actualProject, myConfigurables, toSelect);
           }
 
-          dialog.showAsync().doWhenDone(() -> myShown.set(false));
+          long time = System.currentTimeMillis() - myStartTime;
+          LOG.info("Settings dialog initialization took " + time + " ms.");
+          dialog.showAsync().doWhenProcessed(() -> myShown.set(false));
         }
         catch (Exception e) {
           LOG.error(e);

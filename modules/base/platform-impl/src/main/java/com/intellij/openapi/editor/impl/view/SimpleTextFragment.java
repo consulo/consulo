@@ -6,6 +6,7 @@ import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Arrays;
+import java.util.function.Consumer;
 
 /**
  * Fragment of text for which complex layout is not required. Rendering is the same as if each character would be rendered on its own.
@@ -38,16 +39,18 @@ class SimpleTextFragment extends TextFragment {
   }
 
   @Override
-  public void draw(Graphics2D g, float x, float y, int startColumn, int endColumn) {
-    g.setFont(myFont);
-    int xAsInt = (int)x;
-    int yAsInt = (int)y;
-    if (x == xAsInt && y == yAsInt) { // avoid creating garbage if possible
-      g.drawChars(myText, startColumn, endColumn - startColumn, xAsInt, yAsInt);
-    }
-    else {
-      g.drawString(new String(myText, startColumn, endColumn - startColumn), x, y);
-    }
+  public Consumer<Graphics2D> draw(float x, float y, int startColumn, int endColumn) {
+    return g -> {
+      g.setFont(myFont);
+      int xAsInt = (int)x;
+      int yAsInt = (int)y;
+      if (x == xAsInt && y == yAsInt) { // avoid creating garbage if possible
+        g.drawChars(myText, startColumn, endColumn - startColumn, xAsInt, yAsInt);
+      }
+      else {
+        g.drawString(new String(myText, startColumn, endColumn - startColumn), x, y);
+      }
+    };
   }
 
   @Override
@@ -72,11 +75,11 @@ class SimpleTextFragment extends TextFragment {
     for (int i = 0; i < myCharPositions.length; i++) {
       float newPos = myCharPositions[i];
       if (relX < (newPos + prevPos) / 2) {
-        return new int[] {i, relX <= prevPos ? 0 : 1};
+        return new int[]{i, relX <= prevPos ? 0 : 1};
       }
       prevPos = newPos;
     }
-    return new int[] {myCharPositions.length, relX <= myCharPositions[myCharPositions.length - 1] ? 0 : 1};
+    return new int[]{myCharPositions.length, relX <= myCharPositions[myCharPositions.length - 1] ? 0 : 1};
   }
 
   @Override

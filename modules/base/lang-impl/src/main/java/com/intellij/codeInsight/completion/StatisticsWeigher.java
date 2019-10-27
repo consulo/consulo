@@ -18,7 +18,7 @@ package com.intellij.codeInsight.completion;
 import com.intellij.codeInsight.lookup.Classifier;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.statistics.StatisticsInfo;

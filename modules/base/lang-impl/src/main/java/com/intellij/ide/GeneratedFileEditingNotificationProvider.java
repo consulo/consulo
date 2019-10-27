@@ -19,7 +19,6 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.GeneratedSourcesFilter;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
 import consulo.annotations.RequiredReadAction;
@@ -33,19 +32,11 @@ import javax.inject.Inject;
  * @author nik
  */
 public class GeneratedFileEditingNotificationProvider implements EditorNotificationProvider<EditorNotificationPanel>, DumbAware {
-  private static final Key<EditorNotificationPanel> KEY = Key.create("generated.source.file.editing.notification.panel");
-
   private final Project myProject;
 
   @Inject
   public GeneratedFileEditingNotificationProvider(Project project) {
     myProject = project;
-  }
-
-  @Nonnull
-  @Override
-  public Key<EditorNotificationPanel> getKey() {
-    return KEY;
   }
 
   @RequiredReadAction

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,90 +17,68 @@ package com.intellij.util.lang;
 
 import com.intellij.util.Consumer;
 import com.intellij.util.EmptyConsumer;
+import com.intellij.util.ExceptionUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author mike
  */
 public class CompoundRuntimeException extends RuntimeException {
-  private final List<Throwable> myExceptions;
+  private final List<? extends Throwable> myExceptions;
 
-  public CompoundRuntimeException(@Nonnull List<Throwable> throwables) {
+  public CompoundRuntimeException(@Nonnull List<? extends Throwable> throwables) {
     myExceptions = throwables;
   }
 
   @Override
+  public synchronized Throwable getCause() {
+    return ContainerUtil.getFirstItem(myExceptions);
+  }
+
+  public List<Throwable> getExceptions() {
+    return new ArrayList<>(myExceptions);
+  }
+
+  @Override
   public String getMessage() {
-    return processAll(new Function<Throwable, String>() {
-      @Override
-      public String fun(Throwable throwable) {
-        return throwable.getMessage();
-      }
-    }, EmptyConsumer.<String>getInstance());
+    return processAll(Throwable::getMessage, EmptyConsumer.getInstance());
   }
 
   @Override
   public String getLocalizedMessage() {
-    return processAll(new Function<Throwable, String>() {
-      @Override
-      public String fun(Throwable throwable) {
-        return throwable.getLocalizedMessage();
-      }
-    }, EmptyConsumer.<String>getInstance());
+    return processAll(Throwable::getLocalizedMessage, EmptyConsumer.getInstance());
   }
 
   @Override
   public String toString() {
-    return processAll(new Function<Throwable, String>() {
-      @Override
-      public String fun(Throwable throwable) {
-        return throwable.toString();
-      }
-    }, EmptyConsumer.<String>getInstance());
+    return processAll(Throwable::toString, EmptyConsumer.getInstance());
   }
 
   @Override
   public void printStackTrace(final PrintStream s) {
-    processAll(new Function<Throwable, String>() {
-                 @Override
-                 public String fun(Throwable throwable) {
-                   throwable.printStackTrace(s);
-                   return "";
-                 }
-               }, new Consumer<String>() {
-                 @Override
-                 public void consume(String str) {
-                   s.print(str);
-                 }
-               }
-    );
+    processAll(throwable -> {
+      throwable.printStackTrace(s);
+      return "";
+    }, s::print);
   }
 
   @Override
   public void printStackTrace(final PrintWriter s) {
-    processAll(new Function<Throwable, String>() {
-                 @Override
-                 public String fun(Throwable throwable) {
-                   throwable.printStackTrace(s);
-                   return "";
-                 }
-               }, new Consumer<String>() {
-                 @Override
-                 public void consume(String str) {
-                   s.print(str);
-                 }
-               }
-    );
+    processAll(throwable -> {
+      throwable.printStackTrace(s);
+      return "";
+    }, s::print);
   }
 
-  private String processAll(@Nonnull Function<Throwable, String> exceptionProcessor, @Nonnull Consumer<String> stringProcessor) {
+  private String processAll(@Nonnull Function<? super Throwable, String> exceptionProcessor, @Nonnull Consumer<? super String> stringProcessor) {
     if (myExceptions.size() == 1) {
       Throwable throwable = myExceptions.get(0);
       String s = exceptionProcessor.fun(throwable);
@@ -136,22 +114,13 @@ public class CompoundRuntimeException extends RuntimeException {
     return sb.toString();
   }
 
-  public static void throwIfNotEmpty(@Nullable List<Throwable> throwables) {
+  public static void throwIfNotEmpty(@Nullable List<? extends Throwable> throwables) {
     if (ContainerUtil.isEmpty(throwables)) {
       return;
     }
 
     if (throwables.size() == 1) {
-      Throwable throwable = throwables.get(0);
-      if (throwable instanceof Error) {
-        throw (Error)throwable;
-      }
-      else if (throwable instanceof RuntimeException) {
-        throw (RuntimeException)throwable;
-      }
-      else {
-        throw new RuntimeException(throwable);
-      }
+      ExceptionUtil.rethrow(throwables.get(0));
     }
     else {
       throw new CompoundRuntimeException(throwables);

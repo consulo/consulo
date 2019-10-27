@@ -2,7 +2,6 @@ package com.intellij.coverage;
 
 import com.intellij.execution.configurations.ModuleBasedConfiguration;
 import com.intellij.execution.configurations.RunConfigurationBase;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootModificationTracker;
@@ -17,6 +16,8 @@ import com.intellij.reference.SoftReference;
 import com.intellij.rt.coverage.data.ProjectData;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Function;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

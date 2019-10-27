@@ -29,6 +29,7 @@ import consulo.ui.SwingUIDecorator;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
+import javax.accessibility.Accessible;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -120,6 +121,11 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
 
     public HackyComboBoxUI(ComboBoxUI ui) {
       myDelegateUI = (BasicComboBoxUI)ui;
+    }
+
+    @Override
+    public Accessible getAccessibleChild(JComponent c, int i) {
+      return null;
     }
 
     @Override
@@ -295,7 +301,7 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
   }
 
   private JBPopup createPopup(Runnable onDispose) {
-    return myComboBoxAction.createPopup(getDataContext(), onDispose);
+    return myComboBoxAction.createPopup(this, getDataContext(), onDispose);
   }
 
   protected void updateSize() {

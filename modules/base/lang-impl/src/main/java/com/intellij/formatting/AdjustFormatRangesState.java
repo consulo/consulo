@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,30 +24,25 @@ import com.intellij.util.containers.Stack;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author VISTALL
- * @since 01-May-17
- * <p>
- * from kotlin platform\lang-impl\src\com\intellij\formatting\AdjustFormatRangesState.kt
- */
-public class AdjustFormatRangesState extends State {
-  private FormatTextRanges formatRanges;
+class AdjustFormatRangesState extends State {
+  private final static RangesAssert ASSERT = new RangesAssert();
 
+  private final FormatTextRanges myFormatRanges;
+  private final List<TextRange> myExtendedRanges;
+  private final List<TextRange> totalNewRanges = new ArrayList<>();
   private final Stack<Block> state;
-  private List<TextRange> totalNewRanges = new ArrayList<>();
-  private List<TextRange> extendedRanges;
+  private final FormattingDocumentModel myModel;
 
-  public AdjustFormatRangesState(Block currentBlock, FormatTextRanges formatRanges) {
-    this.formatRanges = formatRanges;
-    state = new Stack<>(currentBlock);
-
-    extendedRanges = formatRanges.getExtendedFormattingRanges();
-
-    setOnDone(() -> totalNewRanges.forEach(it -> this.formatRanges.add(it, false)));
+  AdjustFormatRangesState(Block currentRoot, FormatTextRanges formatRanges, FormattingDocumentModel model) {
+    myModel = model;
+    myFormatRanges = formatRanges;
+    myExtendedRanges = formatRanges.getExtendedRanges();
+    state = new Stack<>(currentRoot);
+    setOnDone(() -> totalNewRanges.forEach(range -> myFormatRanges.add(range, false)));
   }
 
   @Override
-  protected void doIteration() {
+  public void doIteration() {
     Block currentBlock = state.pop();
     processBlock(currentBlock);
     setDone(state.isEmpty());
@@ -56,20 +51,21 @@ public class AdjustFormatRangesState extends State {
   private void processBlock(Block currentBlock) {
     if (!isInsideExtendedFormattingRanges(currentBlock)) return;
 
-    ContainerUtil.reverse(currentBlock.getSubBlocks()).forEach(state::push);
+    ContainerUtil.reverse(currentBlock.getSubBlocks()).stream().filter(block -> ASSERT.checkChildRange(currentBlock.getTextRange(), block.getTextRange(), myModel)).forEach(state::push);
 
-    if (!formatRanges.isReadOnly(currentBlock.getTextRange())) {
+    if (!myFormatRanges.isReadOnly(currentBlock.getTextRange())) {
       extractRanges(currentBlock);
     }
   }
 
   private boolean isInsideExtendedFormattingRanges(Block currentBlock) {
-    return ContainerUtil.find(extendedRanges, it -> it.intersects(currentBlock.getTextRange())) != null;
+    TextRange blockRange = currentBlock.getTextRange();
+    return myExtendedRanges.stream().anyMatch(range -> range.intersects(blockRange));
   }
 
   private void extractRanges(Block block) {
     if (block instanceof ExtraRangesProvider) {
-      List<TextRange> newRanges = ((ExtraRangesProvider)block).getExtraRangesToFormat(formatRanges);
+      List<TextRange> newRanges = ((ExtraRangesProvider)block).getExtraRangesToFormat(myFormatRanges);
       if (newRanges != null) {
         totalNewRanges.addAll(newRanges);
       }

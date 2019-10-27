@@ -15,7 +15,9 @@
  */
 package com.intellij.util.indexing.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
+import com.intellij.util.IncorrectOperationException;
+import com.intellij.util.IntIntFunction;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.SLRUCache;
 import com.intellij.util.indexing.StorageException;
@@ -42,13 +44,16 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
   protected final Lock l = new ReentrantLock();
   private final DataExternalizer<Value> myDataExternalizer;
   private final boolean myKeyIsUniqueForIndexedFile;
+  private final boolean myReadOnly;
+  @Nonnull
+  private final IntIntFunction myInputRemapping;
 
-  public MapIndexStorage(@Nonnull File storageFile,
-                         @Nonnull KeyDescriptor<Key> keyDescriptor,
-                         @Nonnull DataExternalizer<Value> valueExternalizer,
-                         final int cacheSize,
-                         boolean keyIsUniqueForIndexedFile) throws IOException {
-    this(storageFile, keyDescriptor, valueExternalizer, cacheSize, keyIsUniqueForIndexedFile, true);
+  protected MapIndexStorage(@Nonnull File storageFile,
+                            @Nonnull KeyDescriptor<Key> keyDescriptor,
+                            @Nonnull DataExternalizer<Value> valueExternalizer,
+                            final int cacheSize,
+                            boolean keyIsUniqueForIndexedFile) throws IOException {
+    this(storageFile, keyDescriptor, valueExternalizer, cacheSize, keyIsUniqueForIndexedFile, true, false, null);
   }
 
   protected MapIndexStorage(@Nonnull File storageFile,
@@ -56,12 +61,22 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
                             @Nonnull DataExternalizer<Value> valueExternalizer,
                             final int cacheSize,
                             boolean keyIsUniqueForIndexedFile,
-                            boolean initialize) throws IOException {
+                            boolean initialize,
+                            boolean readOnly,
+                            @Nullable IntIntFunction inputRemapping) throws IOException {
     myBaseStorageFile = storageFile;
     myKeyDescriptor = keyDescriptor;
     myCacheSize = cacheSize;
     myDataExternalizer = valueExternalizer;
     myKeyIsUniqueForIndexedFile = keyIsUniqueForIndexedFile;
+    myReadOnly = readOnly;
+    if (inputRemapping != null) {
+      LOG.assertTrue(myReadOnly, "input remapping allowed only for read-only storage");
+    }
+    else {
+      inputRemapping = IntIntFunction.IDENTITY;
+    }
+    myInputRemapping = inputRemapping;
     if (initialize) initMapAndCache();
   }
 
@@ -74,32 +89,43 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
       }
     });
     PersistentHashMapValueStorage.CreationTimeOptions.COMPACT_CHUNKS_WITH_VALUE_DESERIALIZATION.set(Boolean.TRUE);
+    if (myKeyIsUniqueForIndexedFile) {
+      PersistentHashMapValueStorage.CreationTimeOptions.HAS_NO_CHUNKS.set(Boolean.TRUE);
+    }
     try {
-      map = new ValueContainerMap<Key, Value>(getStorageFile(), myKeyDescriptor, myDataExternalizer, myKeyIsUniqueForIndexedFile);
+      map = new ValueContainerMap<Key, Value>(getStorageFile(), myKeyDescriptor, myDataExternalizer, myKeyIsUniqueForIndexedFile, myInputRemapping) {
+        @Override
+        protected boolean isReadOnly() {
+          return myReadOnly;
+        }
+      };
     }
     finally {
       PersistentHashMapValueStorage.CreationTimeOptions.EXCEPTIONAL_IO_CANCELLATION.set(null);
       PersistentHashMapValueStorage.CreationTimeOptions.COMPACT_CHUNKS_WITH_VALUE_DESERIALIZATION.set(null);
+      if (myKeyIsUniqueForIndexedFile) {
+        PersistentHashMapValueStorage.CreationTimeOptions.HAS_NO_CHUNKS.set(Boolean.FALSE);
+      }
     }
-    myCache = new SLRUCache<Key, ChangeTrackingValueContainer<Value>>(myCacheSize, (int)(Math.ceil(myCacheSize * 0.25)) /* 25% from the main cache size*/) {
+    myCache = new SLRUCache<Key, ChangeTrackingValueContainer<Value>>(myCacheSize, (int)(Math.ceil(myCacheSize * 0.25)) /* 25% from the main cache size*/, myKeyDescriptor) {
       @Override
       @Nonnull
       public ChangeTrackingValueContainer<Value> createValue(final Key key) {
-        return new ChangeTrackingValueContainer<Value>(new ChangeTrackingValueContainer.Initializer<Value>() {
+        return new ChangeTrackingValueContainer<>(new ChangeTrackingValueContainer.Initializer<Value>() {
           @Nonnull
           @Override
           public Object getLock() {
             return map.getDataAccessLock();
           }
 
-          @Nullable
+          @Nonnull
           @Override
           public ValueContainer<Value> compute() {
             ValueContainer<Value> value;
             try {
               value = map.get(key);
               if (value == null) {
-                value = new ValueContainerImpl<Value>();
+                value = new ValueContainerImpl<>();
               }
             }
             catch (IOException e) {
@@ -112,7 +138,7 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
 
       @Override
       protected void onDropFromCache(final Key key, @Nonnull final ChangeTrackingValueContainer<Value> valueContainer) {
-        if (valueContainer.isDirty()) {
+        if (!myReadOnly && valueContainer.isDirty()) {
           try {
             map.put(key, valueContainer);
           }
@@ -130,7 +156,7 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
 
   @Nonnull
   private File getStorageFile() {
-    return new File(myBaseStorageFile.getPath() + ".storage");
+    return getIndexStorageFile(myBaseStorageFile);
   }
 
   @Override
@@ -166,11 +192,8 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
     try {
       myMap.close();
     }
-    catch (IOException e) {
-      LOG.error(e);
-    }
-    catch (RuntimeException e) {
-      LOG.error(e);
+    catch (IOException | RuntimeException e) {
+      LOG.info(e);
     }
     try {
       IOUtil.deleteAllFilesStartingWith(getStorageFile());
@@ -201,6 +224,9 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
 
   @Override
   public void addValue(final Key key, final int inputId, final Value value) throws StorageException {
+    if (myReadOnly) {
+      throw new IncorrectOperationException("Index storage is read-only");
+    }
     try {
       myMap.markDirty();
       if (!myKeyIsUniqueForIndexedFile) {
@@ -222,7 +248,7 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
         return;
       }
       // do not pollute the cache with keys unique to indexed file
-      ChangeTrackingValueContainer<Value> valueContainer = new ChangeTrackingValueContainer<Value>(null);
+      ChangeTrackingValueContainer<Value> valueContainer = new ChangeTrackingValueContainer<>(null);
       valueContainer.addValue(inputId, value);
       myMap.put(key, valueContainer);
     }
@@ -268,7 +294,7 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
   }
 
   @TestOnly
-  public boolean processKeys(@Nonnull Processor<Key> processor) throws StorageException {
+  public boolean processKeys(@Nonnull Processor<? super Key> processor) throws StorageException {
     l.lock();
     try {
       myCache.clear(); // this will ensure that all new keys are made into the map
@@ -284,5 +310,15 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
     finally {
       l.unlock();
     }
+  }
+
+  @TestOnly
+  public PersistentMap<Key, UpdatableValueContainer<Value>> getIndexMap() {
+    return myMap;
+  }
+
+  @Nonnull
+  public static File getIndexStorageFile(@Nonnull File baseFile) {
+    return new File(baseFile.getPath() + ".storage");
   }
 }

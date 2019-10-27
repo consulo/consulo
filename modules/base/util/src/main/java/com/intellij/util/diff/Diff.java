@@ -15,7 +15,7 @@
  */
 package com.intellij.util.diff;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.LineTokenizer;
@@ -108,8 +108,8 @@ public class Diff {
     }
     else {
       try {
-        IntLCS intLCS = new IntLCS(discarded[0], discarded[1]);
-        intLCS.execute();
+        MyersLCS intLCS = new MyersLCS(discarded[0], discarded[1]);
+        intLCS.executeWithThreshold();
         changes = intLCS.getChanges();
       }
       catch (FilesTooBigForDiffException e) {

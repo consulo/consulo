@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.extensions.impl;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.openapi.components.ComponentManager;
-import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.progress.ProgressManager;
+import consulo.logging.Logger;
 import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.LoadingOrder;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -26,6 +26,7 @@ import com.intellij.util.KeyedLazyInstanceEP;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.extensions.ExtensionExtender;
 
 import javax.annotation.Nonnull;
@@ -59,7 +60,8 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
   private final String myName;
   private final String myClassName;
   private final Kind myKind;
-  private final IdeaPluginDescriptor myDescriptor;
+  @Nonnull
+  private final PluginDescriptor myDescriptor;
 
   private Class<T> myExtensionClass;
 
@@ -69,7 +71,7 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
 
   private final AtomicNotNullLazyValue<Map<Class, Object>> myInstanceOfCacheValue = AtomicNotNullLazyValue.createValue(ConcurrentHashMap::new);
 
-  public ExtensionPointImpl(@Nonnull String name, @Nonnull String className, @Nonnull Kind kind, ComponentManager componentManager, @Nullable IdeaPluginDescriptor descriptor) {
+  public ExtensionPointImpl(@Nonnull String name, @Nonnull String className, @Nonnull Kind kind, @Nonnull ComponentManager componentManager, @Nonnull PluginDescriptor descriptor) {
     myName = name;
     myClassName = className;
     myKind = kind;
@@ -101,8 +103,8 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
     return myKind;
   }
 
-  @Nullable
-  public IdeaPluginDescriptor getDescriptor() {
+  @Nonnull
+  public PluginDescriptor getDescriptor() {
     return myDescriptor;
   }
 
@@ -145,7 +147,7 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
       return !extensionCache.isEmpty();
     }
 
-    // if we have extenderswe need build before
+    // if we have extenders we need build before
     if (!getExtenders().isEmpty()) {
       return !getExtensionList().isEmpty();
     }
@@ -202,6 +204,8 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
       return Collections.emptyList();
     }
 
+    ProgressManager.checkCanceled();
+
     List<T> extensions = new ArrayList<>(extensionAdapters.size());
     List<ExtensionComponentAdapter<T>> adapters = new ArrayList<>(extensionAdapters);
     LoadingOrder.sort(adapters);
@@ -209,6 +213,7 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
     Class<T> extensionClass = getExtensionClass();
     for (ExtensionComponentAdapter<T> adapter : adapters) {
       try {
+        ProgressManager.checkCanceled();
         T extension = adapter.getExtension(unbindedInstanceFunc);
         if (!extensionClass.isInstance(extension)) {
           LOG.error("Extension " + extension.getClass() + " does not implement " + extensionClass);
@@ -249,8 +254,8 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
     Class<T> extensionClass = myExtensionClass;
     if (extensionClass == null) {
       try {
-        ClassLoader pluginClassLoader = myDescriptor == null ? getClass().getClassLoader() : myDescriptor.getPluginClassLoader();
-        @SuppressWarnings("unchecked") Class<T> extClass = pluginClassLoader == null ? (Class<T>)Class.forName(myClassName) : (Class<T>)Class.forName(myClassName, true, pluginClassLoader);
+        ClassLoader pluginClassLoader = myDescriptor.getPluginClassLoader();
+        @SuppressWarnings("unchecked") Class<T> extClass = (Class<T>)Class.forName(myClassName, true, pluginClassLoader);
         myExtensionClass = extensionClass = extClass;
       }
       catch (ClassNotFoundException e) {

@@ -17,7 +17,6 @@ package com.intellij.ui.messages;
 
 import com.apple.eawt.FullScreenUtilities;
 import com.intellij.openapi.application.impl.LaterInvocator;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.Gray;
@@ -26,6 +25,7 @@ import com.intellij.ui.mac.MacMainFrameDecorator;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ui.Animator;
 import consulo.awt.TargetAWT;
+import consulo.logging.Logger;
 import consulo.ui.desktop.internal.window.JDialogAsUIWindow;
 
 import javax.annotation.Nonnull;

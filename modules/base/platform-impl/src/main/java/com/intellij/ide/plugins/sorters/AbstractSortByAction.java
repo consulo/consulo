@@ -15,11 +15,11 @@
  */
 package com.intellij.ide.plugins.sorters;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginTable;
 import com.intellij.ide.plugins.PluginTableModel;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
+import consulo.container.plugin.PluginDescriptor;
 
 /**
  * @author Konstantin Bulenkov
@@ -45,7 +45,7 @@ public abstract class AbstractSortByAction extends ToggleAction {
 
   @Override
   public final void setSelected(AnActionEvent e, boolean state) {
-    IdeaPluginDescriptor[] selected = myTable.getSelectedObjects();
+    PluginDescriptor[] selected = myTable.getSelectedObjects();
     setSelected(state);
     myModel.sort();
     if (selected != null) {

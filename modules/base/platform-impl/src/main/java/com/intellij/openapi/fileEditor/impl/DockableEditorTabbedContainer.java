@@ -18,6 +18,7 @@ package com.intellij.openapi.fileEditor.impl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
@@ -31,6 +32,7 @@ import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
 import consulo.awt.TargetAWT;
 import consulo.fileEditor.impl.EditorWindow;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
@@ -207,12 +209,15 @@ public class DockableEditorTabbedContainer implements DockContainer.Persistent {
     return mySplitters;
   }
 
+  @RequiredUIAccess
   public void close(VirtualFile file) {
     mySplitters.closeFile(file, false);
   }
 
   @Override
+  @RequiredUIAccess
   public void closeAll() {
+    assert mySplitters != null;
     VirtualFile[] files = mySplitters.getOpenFiles();
     for (VirtualFile each : files) {
       close(each);
@@ -222,12 +227,7 @@ public class DockableEditorTabbedContainer implements DockContainer.Persistent {
   @Override
   public void addListener(final Listener listener, Disposable parent) {
     myListeners.add(listener);
-    Disposer.register(parent, new Disposable() {
-      @Override
-      public void dispose() {
-        myListeners.remove(listener);
-      }
-    });
+    Disposer.register(parent, () -> myListeners.remove(listener));
   }
 
   @Override
@@ -237,7 +237,13 @@ public class DockableEditorTabbedContainer implements DockContainer.Persistent {
 
   @Override
   public void dispose() {
-    closeAll();
+    if(UIAccess.isUIThread()) {
+      closeAll();
+    }
+    else {
+      UIAccess uiAccess = Application.get().getLastUIAccess();
+      uiAccess.giveAndWait(this::closeAll);
+    }
   }
 
   @Override
@@ -249,7 +255,7 @@ public class DockableEditorTabbedContainer implements DockContainer.Persistent {
   public void showNotify() {
     if (!myWasEverShown) {
       myWasEverShown = true;
-      getSplitters().openFiles(UIAccess.get());
+      getSplitters().openFiles(UIAccess.current());
     }
   }
 

@@ -25,7 +25,7 @@ import com.intellij.codeInspection.ex.*;
 import com.intellij.codeInspection.reference.*;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.components.PathMacroManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;

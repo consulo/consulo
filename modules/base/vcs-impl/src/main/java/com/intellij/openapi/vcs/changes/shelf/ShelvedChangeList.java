@@ -22,7 +22,6 @@
  */
 package com.intellij.openapi.vcs.changes.shelf;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.impl.patch.FilePatch;
 import com.intellij.openapi.options.ExternalInfo;
 import com.intellij.openapi.options.ExternalizableScheme;
@@ -33,6 +32,7 @@ import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.FileStatus;
+import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

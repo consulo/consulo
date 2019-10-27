@@ -36,16 +36,15 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.MouseEventAdapter;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextDelegate;
-import consulo.ui.RequiredUIAccess;
 import consulo.application.ApplicationProperties;
 import consulo.awt.TargetAWT;
+import consulo.desktop.util.awt.MorphColor;
 import consulo.ide.welcomeScreen.BaseWelcomeScreenPanel;
 import consulo.ide.welcomeScreen.WelcomeScreenConstants;
 import consulo.spash.AnimatedLogoLabel;
-import consulo.desktop.util.awt.MorphColor;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.style.StyleManager;
 
-import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;
 import javax.annotation.Nonnull;
@@ -58,14 +57,14 @@ import java.util.function.Consumer;
 /**
  * @author Konstantin Bulenkov
  */
-public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
+public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
   private FlatWelcomeFrame myFlatWelcomeFrame;
   public Consumer<List<NotificationType>> myEventListener;
   public Computable<Point> myEventLocation;
 
   @RequiredUIAccess
   public FlatWelcomePanel(FlatWelcomeFrame flatWelcomeFrame) {
-    super(flatWelcomeFrame, null);
+    super(flatWelcomeFrame);
     myFlatWelcomeFrame = flatWelcomeFrame;
 
     final JList projectsList = UIUtil.findComponentOfType(myLeftComponent, JList.class);
@@ -89,14 +88,14 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
 
   @Nonnull
   @Override
-  protected JComponent createLeftComponent(@Nonnull Disposable parentDisposable, Void param) {
+  protected JComponent createLeftComponent(@Nonnull Disposable parentDisposable) {
     return new NewRecentProjectPanel(parentDisposable);
   }
 
   @RequiredUIAccess
   @Override
   @Nonnull
-  protected JComponent createRightComponent(Void param) {
+  protected JComponent createRightComponent() {
     JPanel panel = new JPanel(new BorderLayout());
     JPanel logoPanel = new JPanel(new BorderLayout());
     logoPanel.setBorder(JBUI.Borders.empty(53, 66, 45, 0));
@@ -232,11 +231,8 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
       }
 
       @Override
-      public Accessible getAccessibleParent() {
-        if (getParent() instanceof Accessible) {
-          return (Accessible)getParent();
-        }
-        return super.getAccessibleParent();
+      public Container getDelegateParent() {
+        return getParent();
       }
 
       @Override

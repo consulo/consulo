@@ -15,13 +15,13 @@
  */
 package com.intellij.profile;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.util.xmlb.SmartSerializer;
 import com.intellij.util.xmlb.annotations.OptionTag;
 import com.intellij.util.xmlb.annotations.Transient;
+import consulo.logging.Logger;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

@@ -17,7 +17,6 @@ package com.intellij.openapi.ui;
 
 import com.intellij.CommonBundle;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.MasterDetails;
@@ -39,6 +38,7 @@ import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;

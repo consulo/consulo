@@ -25,13 +25,13 @@ import com.intellij.internal.statistic.connect.StatisticsHttpClientSender;
 import com.intellij.internal.statistic.connect.StatisticsService;
 import com.intellij.internal.statistic.persistence.SentUsagesPersistence;
 import com.intellij.internal.statistic.persistence.UsageStatisticsPersistenceComponent;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

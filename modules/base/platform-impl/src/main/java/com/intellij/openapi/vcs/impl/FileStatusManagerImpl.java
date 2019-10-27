@@ -46,9 +46,9 @@ import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import javax.annotation.Nonnull;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;
@@ -283,15 +283,18 @@ public class FileStatusManagerImpl extends FileStatusManager implements ProjectC
   }
 
   @Override
-  public Color getNotChangedDirectoryColor(@Nonnull VirtualFile vf) {
-    final Color notChangedColor = FileStatus.NOT_CHANGED.getColor();
-    if (!vf.isDirectory()) {
-      return notChangedColor;
-    }
-    final Boolean exactMatch = myWhetherExactlyParentToChanged.get(vf);
-    return exactMatch == null
-           ? notChangedColor
-           : exactMatch ? FileStatus.NOT_CHANGED_IMMEDIATE.getColor() : FileStatus.NOT_CHANGED_RECURSIVE.getColor();
+  public Color getNotChangedDirectoryColor(@Nonnull VirtualFile file) {
+    return getRecursiveStatus(file).getColor();
+  }
+
+  @Nonnull
+  @Override
+  public FileStatus getRecursiveStatus(@Nonnull VirtualFile file) {
+    FileStatus status = super.getRecursiveStatus(file);
+    if (status != FileStatus.NOT_CHANGED || !file.isValid() || !file.isDirectory()) return status;
+    Boolean immediate = myWhetherExactlyParentToChanged.get(file);
+    if (immediate == null) return status;
+    return immediate ? FileStatus.NOT_CHANGED_IMMEDIATE : FileStatus.NOT_CHANGED_RECURSIVE;
   }
 
   public void refreshFileStatusFromDocument(final VirtualFile file, final Document doc) {

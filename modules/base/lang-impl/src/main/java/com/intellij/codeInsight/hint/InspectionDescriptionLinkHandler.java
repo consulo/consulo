@@ -19,7 +19,7 @@ import com.intellij.codeInsight.highlighting.TooltipLinkHandler;
 import com.intellij.codeInspection.InspectionProfile;
 import com.intellij.codeInspection.InspectionsBundle;
 import com.intellij.codeInspection.ex.InspectionToolWrapper;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.profile.codeInspection.InspectionProfileManager;

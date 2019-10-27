@@ -17,26 +17,27 @@ package com.intellij.ui.win;
 
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
+import consulo.logging.Logger;
 import com.intellij.util.loader.NativeLibraryLoader;
 
-import java.lang.ref.WeakReference;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class RecentTasks {
-  private static AtomicBoolean initialized = new AtomicBoolean(false);
-
-  private final static WeakReference<Thread> openerThread = new WeakReference<>(Thread.currentThread());
-
-  private final static String openerThreadName = Thread.currentThread().getName();
-
-  static {
-    NativeLibraryLoader.loadPlatformLibrary("jumpListBridge");
-  }
+  private static final Logger LOG = Logger.getInstance(RecentTasks.class);
+  private static final AtomicBoolean initialized = new AtomicBoolean(false);
+  private static boolean ourFailed;
 
   private synchronized static void init() {
-    if (initialized.get()) return;
-    initialize(ApplicationInfoEx.getInstanceEx().getVersionName() + "." + PathManager.getConfigPath().hashCode());
-    initialized.set(true);
+    if(initialized.compareAndSet(false, true)) {
+      try {
+        NativeLibraryLoader.loadPlatformLibrary("jumpListBridge");
+        initialize(ApplicationInfoEx.getInstanceEx().getVersionName() + "." + PathManager.getConfigPath().hashCode());
+      }
+      catch (Exception e) {
+        LOG.error(e);
+        ourFailed = true;
+      }
+    }
   }
 
   /**
@@ -54,8 +55,12 @@ public class RecentTasks {
   native private static void clearNative();
 
   public synchronized static void clear() {
+    if(ourFailed) {
+      return;
+    }
+
     init();
-    checkThread();
+
     clearNative();
   }
 
@@ -65,16 +70,10 @@ public class RecentTasks {
    * @param tasks
    */
   public synchronized static void addTasks(final Task[] tasks) {
-    if (tasks.length == 0) return;
-    init();
-    checkThread();
-    addTasksNativeForCategory("Recent", tasks);
-  }
+    if (tasks.length == 0 || ourFailed) return;
 
-  private static void checkThread() {
-    Thread t = openerThread.get();
-    if (t == null || !t.equals(Thread.currentThread())) {
-      throw new RuntimeException("Current thread is " + Thread.currentThread().getName() + "This class has to be used from " + openerThreadName + " thread");
-    }
+    init();
+
+    addTasksNativeForCategory("Recent", tasks);
   }
 }

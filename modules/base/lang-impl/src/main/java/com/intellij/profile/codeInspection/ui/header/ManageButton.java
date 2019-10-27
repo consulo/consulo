@@ -44,7 +44,7 @@ public class ManageButton extends ComboBoxAction implements DumbAware {
 
   @Nonnull
   @Override
-  public DefaultActionGroup createPopupActionGroup(DataContext context) {
+  public DefaultActionGroup createPopupActionGroup(JComponent component) {
     DefaultActionGroup group = new DefaultActionGroup();
 
     group.add(new ShareToTeamCheckBoxAction());

@@ -15,15 +15,13 @@
  */
 package com.intellij.ide.plugins;
 
-import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.extensions.PluginId;
+import consulo.container.plugin.PluginDescriptorStub;
 import consulo.ide.plugins.PluginJsonNode;
-import consulo.ide.plugins.SimpleExtension;
-import org.jdom.Element;
+import consulo.container.plugin.SimpleExtension;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -32,7 +30,7 @@ import java.util.List;
 /**
  * @author stathik
  */
-public class PluginNode implements IdeaPluginDescriptor {
+public class PluginNode extends PluginDescriptorStub {
   public static final int STATUS_UNKNOWN = 0;
   public static final int STATUS_INSTALLED = 1;
   public static final int STATUS_MISSING = 2;
@@ -95,15 +93,16 @@ public class PluginNode implements IdeaPluginDescriptor {
       addOptionalDependency(Arrays.stream(jsonPlugin.optionalDependencies).map(PluginId::getId).toArray(PluginId[]::new));
     }
 
-    PluginJsonNode.Extension[] extensions = jsonPlugin.extensions;
+    PluginJsonNode.Extension[] extensions = jsonPlugin.extensionsV2;
     if(extensions != null) {
-      mySimpleExtensions = new ArrayList<>();
+      mySimpleExtensions = new ArrayList<>(extensions.length);
       for (PluginJsonNode.Extension extension : extensions) {
         mySimpleExtensions.add(new SimpleExtension(extension.key, extension.values));
       }
     }
   }
 
+  @Override
   @Nonnull
   public List<SimpleExtension> getSimpleExtensions() {
     return mySimpleExtensions;
@@ -291,22 +290,12 @@ public class PluginNode implements IdeaPluginDescriptor {
   /**
    * Methods below implement PluginDescriptor and IdeaPluginDescriptor interface
    */
+  @Nonnull
   @Override
   public PluginId getPluginId() {
     return id;
   }
 
-  @Override
-  @Nullable
-  public ClassLoader getPluginClassLoader() {
-    return null;
-  }
-
-  @Override
-  @Nullable
-  public File getPath() {
-    return null;
-  }
 
   @Override
   @Nonnull
@@ -318,36 +307,6 @@ public class PluginNode implements IdeaPluginDescriptor {
   @Nonnull
   public PluginId[] getOptionalDependentPluginIds() {
     return myOptionalDependencies.isEmpty() ? PluginId.EMPTY_ARRAY : myOptionalDependencies.toArray(new PluginId[myOptionalDependencies.size()]);
-  }
-
-  @Override
-  @Nullable
-  public String getResourceBundleBaseName() {
-    return null;
-  }
-
-  @Override
-  @Nullable
-  public List<Element> getActionsDescriptionElements() {
-    return null;
-  }
-
-  @Nonnull
-  @Override
-  public ComponentConfig[] getAppComponents() {
-    return ComponentConfig.EMPTY_ARRAY;
-  }
-
-  @Nonnull
-  @Override
-  public ComponentConfig[] getProjectComponents() {
-    return ComponentConfig.EMPTY_ARRAY;
-  }
-
-  @Nonnull
-  @Override
-  public HelpSetPath[] getHelpSets() {
-    return HelpSetPath.EMPTY;
   }
 
   @Override

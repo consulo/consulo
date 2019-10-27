@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.plugins.pluginsAdvertisement;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.plugins.PluginManagerMain;
@@ -25,21 +25,20 @@ import com.intellij.openapi.fileTypes.FileTypeFactory;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.impl.AbstractFileType;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownExtension;
 import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.EditorNotifications;
 import consulo.annotations.RequiredReadAction;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.editor.notifications.EditorNotificationProvider;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -51,21 +50,14 @@ import java.util.stream.Collectors;
  * Date: 10/11/13
  */
 public class PluginAdvertiserEditorNotificationProvider implements EditorNotificationProvider<EditorNotificationPanel>, DumbAware {
-  private static final Key<EditorNotificationPanel> KEY = Key.create("file.type.associations.detected");
-  private final Project myProject;
   private final EditorNotifications myNotifications;
   private final Set<String> myEnabledExtensions = new HashSet<>();
+  private final UnknownFeaturesCollector myUnknownFeaturesCollector;
 
   @Inject
-  public PluginAdvertiserEditorNotificationProvider(Project project, final EditorNotifications notifications) {
-    myProject = project;
+  public PluginAdvertiserEditorNotificationProvider(UnknownFeaturesCollector unknownFeaturesCollector, final EditorNotifications notifications) {
+    myUnknownFeaturesCollector = unknownFeaturesCollector;
     myNotifications = notifications;
-  }
-
-  @Nonnull
-  @Override
-  public Key<EditorNotificationPanel> getKey() {
-    return KEY;
   }
 
   @RequiredReadAction
@@ -79,27 +71,27 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
       return null;
     }
 
-    if (myEnabledExtensions.contains(extension) || UnknownFeaturesCollector.getInstance(myProject).isIgnored(createFileFeatureForIgnoring(file))) return null;
+    if (myEnabledExtensions.contains(extension) || isIgnoredFile(file)) return null;
 
     UnknownExtension fileFeatureForChecking = new UnknownExtension(FileTypeFactory.FILE_TYPE_FACTORY_EP.getName(), file.getName());
 
-    List<IdeaPluginDescriptor> allPlugins = PluginsAdvertiserHolder.getLoadedPluginDescriptors();
+    List<PluginDescriptor> allPlugins = PluginsAdvertiserHolder.getLoadedPluginDescriptors();
 
-    Set<IdeaPluginDescriptor> byFeature = PluginsAdvertiser.findByFeature(allPlugins, fileFeatureForChecking);
+    Set<PluginDescriptor> byFeature = PluginsAdvertiser.findByFeature(allPlugins, fileFeatureForChecking);
     if (!byFeature.isEmpty()) {
-      return createPanel(file, byFeature, allPlugins);
+      return createPanel(file, byFeature);
 
     }
     return null;
   }
 
   @Nonnull
-  private EditorNotificationPanel createPanel(VirtualFile virtualFile, final Set<IdeaPluginDescriptor> plugins, List<IdeaPluginDescriptor> allPlugins) {
+  private EditorNotificationPanel createPanel(VirtualFile virtualFile, Set<PluginDescriptor> plugins) {
     String extension = virtualFile.getExtension();
 
     final EditorNotificationPanel panel = new EditorNotificationPanel();
-    panel.setText("Plugins supporting *." + extension + " are found");
-    final IdeaPluginDescriptor disabledPlugin = getDisabledPlugin(plugins.stream().map(x -> x.getPluginId().getIdString()).collect(Collectors.toSet()));
+    panel.setText(IdeBundle.message("plugin.advestiser.notification.text", plugins.size()));
+    final PluginDescriptor disabledPlugin = getDisabledPlugin(plugins.stream().map(x -> x.getPluginId().getIdString()).collect(Collectors.toSet()));
     if (disabledPlugin != null) {
       panel.createActionLabel("Enable " + disabledPlugin.getName() + " plugin", () -> {
         myEnabledExtensions.add(extension);
@@ -109,7 +101,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
       });
     }
     else {
-      panel.createActionLabel("Install plugins", () -> {
+      panel.createActionLabel(IdeBundle.message("plugin.advestiser.notification.install.link", plugins.size()), () -> {
         final PluginsAdvertiserDialog advertiserDialog = new PluginsAdvertiserDialog(null, new ArrayList<>(plugins));
         advertiserDialog.show();
         if (advertiserDialog.isUserInstalledPlugins()) {
@@ -119,26 +111,41 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
       });
     }
 
-    panel.createActionLabel("Ignore extension", () -> {
-      final UnknownFeaturesCollector collectorSuggester = UnknownFeaturesCollector.getInstance(myProject);
-      collectorSuggester.ignoreFeature(createFileFeatureForIgnoring(virtualFile));
+    panel.createActionLabel("Ignore by file name", () -> {
+      myUnknownFeaturesCollector.ignoreFeature(new UnknownExtension(FileTypeFactory.FILE_TYPE_FACTORY_EP, virtualFile.getName()));
       myNotifications.updateAllNotifications();
     });
+
+    panel.createActionLabel("Ignore by extension", () -> {
+      myUnknownFeaturesCollector.ignoreFeature(new UnknownExtension(FileTypeFactory.FILE_TYPE_FACTORY_EP, "*." + virtualFile.getExtension()));
+      myNotifications.updateAllNotifications();
+    });
+
     return panel;
   }
 
+  private boolean isIgnoredFile(@Nonnull VirtualFile virtualFile) {
+    UnknownExtension extension = new UnknownExtension(FileTypeFactory.FILE_TYPE_FACTORY_EP, "*." + virtualFile.getExtension());
+
+    if(myUnknownFeaturesCollector.isIgnored(extension)) {
+      return true;
+    }
+
+    extension = new UnknownExtension(FileTypeFactory.FILE_TYPE_FACTORY_EP, virtualFile.getName());
+    if(myUnknownFeaturesCollector.isIgnored(extension)) {
+      return true;
+    }
+
+    return false;
+  }
+
   @Nullable
-  private static IdeaPluginDescriptor getDisabledPlugin(Set<String> plugins) {
+  private static PluginDescriptor getDisabledPlugin(Set<String> plugins) {
     final List<String> disabledPlugins = new ArrayList<>(PluginManagerCore.getDisabledPlugins());
     disabledPlugins.retainAll(plugins);
     if (disabledPlugins.size() == 1) {
       return PluginManager.getPlugin(PluginId.getId(disabledPlugins.get(0)));
     }
     return null;
-  }
-
-  @Nonnull
-  private static UnknownExtension createFileFeatureForIgnoring(VirtualFile virtualFile) {
-    return new UnknownExtension(FileTypeFactory.FILE_TYPE_FACTORY_EP.getName(), "*." + virtualFile.getExtension());
   }
 }

@@ -27,44 +27,27 @@ import java.io.File;
  */
 @Singleton
 public class DummyConversionService extends ConversionService {
-
-  private static final ConversionResult CONVERSION_RESULT = new ConversionResult() {
-    @Override
-    public boolean conversionNotNeeded() {
-      return true;
-    }
-
-    @Override
-    public boolean openingIsCanceled() {
-      return false;
-    }
-
-    @Override
-    public void postStartupActivity(@Nonnull Project project) {
-    }
-  };
-
   @Nonnull
   @Override
   public ConversionResult convertSilently(@Nonnull String projectPath) {
-    return CONVERSION_RESULT;
+    return ConversionResult.DUMMY;
   }
 
   @Nonnull
   @Override
   public ConversionResult convertSilently(@Nonnull String projectPath, @Nonnull ConversionListener conversionListener) {
-    return CONVERSION_RESULT;
+    return ConversionResult.DUMMY;
   }
 
   @Nonnull
   @Override
   public ConversionResult convert(@Nonnull String projectPath) {
-    return CONVERSION_RESULT;
+    return ConversionResult.DUMMY;
   }
 
   @Nonnull
   @Override
   public ConversionResult convertModule(@Nonnull Project project, @Nonnull File moduleFile) {
-    return CONVERSION_RESULT;
+    return ConversionResult.DUMMY;
   }
 }

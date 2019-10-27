@@ -15,7 +15,8 @@
  */
 package com.intellij.openapi.application;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.io.IOException;

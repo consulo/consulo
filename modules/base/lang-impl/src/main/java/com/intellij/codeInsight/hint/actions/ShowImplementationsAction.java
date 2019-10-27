@@ -19,13 +19,12 @@ import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.codeInsight.hint.ImplementationViewComponent;
 import com.intellij.codeInsight.lookup.LookupManager;
-import com.intellij.codeInsight.navigation.BackgroundUpdaterTask;
+import com.intellij.codeInsight.navigation.BackgroundUpdaterTaskBase;
 import com.intellij.codeInsight.navigation.ImplementationSearcher;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -34,6 +33,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.GenericListComponentUpdater;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Computable;
@@ -50,21 +50,27 @@ import com.intellij.reference.SoftReference;
 import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.ui.popup.PopupPositionManager;
 import com.intellij.ui.popup.PopupUpdateProcessor;
+import com.intellij.usageView.UsageInfo;
+import com.intellij.usages.Usage;
+import com.intellij.usages.UsageInfo2UsageAdapter;
 import com.intellij.usages.UsageView;
 import consulo.application.AccessRule;
 import consulo.codeInsight.TargetElementUtil;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nullable;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.*;
 
 public class ShowImplementationsAction extends AnAction implements PopupAction {
-  @NonNls public static final String CODEASSISTS_QUICKDEFINITION_LOOKUP_FEATURE = "codeassists.quickdefinition.lookup";
-  @NonNls public static final String CODEASSISTS_QUICKDEFINITION_FEATURE = "codeassists.quickdefinition";
+  @NonNls
+  public static final String CODEASSISTS_QUICKDEFINITION_LOOKUP_FEATURE = "codeassists.quickdefinition.lookup";
+  @NonNls
+  public static final String CODEASSISTS_QUICKDEFINITION_FEATURE = "codeassists.quickdefinition";
 
   private static final Logger LOG = Logger.getInstance("#" + ShowImplementationsAction.class.getName());
 
@@ -172,8 +178,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
       PsiElement refElement = polyReference.getElement();
       TextRange rangeInElement = polyReference.getRangeInElement();
       String refElementText = refElement.getText();
-      LOG.assertTrue(rangeInElement.getEndOffset() <= refElementText.length(),
-                     "Ref:" + polyReference + "; refElement: " + refElement + "; refText:" + refElementText);
+      LOG.assertTrue(rangeInElement.getEndOffset() <= refElementText.length(), "Ref:" + polyReference + "; refElement: " + refElement + "; refText:" + refElementText);
       text = rangeInElement.substring(refElementText);
       final ResolveResult[] results = polyReference.multiResolve(false);
       final List<PsiElement> implsList = new ArrayList<>(results.length);
@@ -198,8 +203,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
   protected static PsiElement getElement(@Nonnull Project project, PsiFile file, Editor editor, PsiElement element) {
     if (element == null && editor != null) {
       element = TargetElementUtil.findTargetElement(editor, TargetElementUtil.getAllAccepted());
-      final PsiElement adjustedElement =
-              TargetElementUtil.adjustElement(editor, TargetElementUtil.getAllAccepted(), element, null);
+      final PsiElement adjustedElement = TargetElementUtil.adjustElement(editor, TargetElementUtil.getAllAccepted(), element, null);
       if (adjustedElement != null) {
         element = adjustedElement;
       }
@@ -279,7 +283,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
     final String title = CodeInsightBundle.message("implementation.view.title", text);
     JBPopup popup = SoftReference.dereference(myPopupRef);
     if (popup != null && popup.isVisible() && popup instanceof AbstractPopup) {
-      final ImplementationViewComponent component = (ImplementationViewComponent) ((AbstractPopup)popup).getComponent();
+      final ImplementationViewComponent component = (ImplementationViewComponent)((AbstractPopup)popup).getComponent();
       ((AbstractPopup)popup).setCaption(title);
       component.update(impls, index);
       updateInBackground(editor, element, component, title, (AbstractPopup)popup, usageView);
@@ -299,29 +303,20 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
         }
       };
 
-      popup = JBPopupFactory.getInstance().createComponentPopupBuilder(component, component.getPreferredFocusableComponent())
-              .setProject(project)
-              .addListener(updateProcessor)
-              .addUserData(updateProcessor)
-              .setDimensionServiceKey(project, DocumentationManager.JAVADOC_LOCATION_AND_SIZE, false)
-              .setResizable(true)
-              .setMovable(true)
-              .setRequestFocus(invokedFromEditor && LookupManager.getActiveLookup(editor) == null)
-              .setTitle(title)
-              .setCouldPin(popup1 -> {
+      popup = JBPopupFactory.getInstance().createComponentPopupBuilder(component, component.getPreferredFocusableComponent()).setProject(project).addListener(updateProcessor)
+              .addUserData(updateProcessor).setDimensionServiceKey(project, DocumentationManager.JAVADOC_LOCATION_AND_SIZE, false).setResizable(true).setMovable(true)
+              .setRequestFocus(invokedFromEditor && LookupManager.getActiveLookup(editor) == null).setTitle(title).setCouldPin(popup1 -> {
                 usageView.set(component.showInUsageView());
                 popup1.cancel();
                 myTaskRef = null;
                 return false;
-              })
-              .setCancelCallback(() -> {
+              }).setCancelCallback(() -> {
                 ImplementationsUpdaterTask task = SoftReference.dereference(myTaskRef);
                 if (task != null) {
                   task.cancelTask();
                 }
                 return Boolean.TRUE;
-              })
-              .createPopup();
+              }).createPopup();
 
       updateInBackground(editor, element, component, title, (AbstractPopup)popup, usageView);
 
@@ -344,8 +339,8 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
     }
 
     if (element == null) return; //already found
-    final ImplementationsUpdaterTask task = new ImplementationsUpdaterTask(element, editor, title, isIncludeAlwaysSelf());
-    task.init(popup, component, usageView);
+    final ImplementationsUpdaterTask task = new ImplementationsUpdaterTask(element, editor, title, isIncludeAlwaysSelf(), component);
+    task.init(popup, new ImplementationViewComponentUpdater(component, isIncludeAlwaysSelf() ? 1 : 0), usageView);
 
     myTaskRef = new WeakReference<>(task);
     ProgressManager.getInstance().runProcessWithProgressAsynchronously(task, new BackgroundableProcessIndicator(task));
@@ -356,21 +351,16 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
   }
 
   @Nonnull
-  private static PsiElement[] getSelfAndImplementations(Editor editor,
-                                                        @Nonnull PsiElement element,
-                                                        @Nonnull ImplementationSearcher handler) {
+  private static PsiElement[] getSelfAndImplementations(Editor editor, @Nonnull PsiElement element, @Nonnull ImplementationSearcher handler) {
     return getSelfAndImplementations(editor, element, handler, !(element instanceof PomTargetPsiElement));
   }
 
   @Nonnull
-  static PsiElement[] getSelfAndImplementations(Editor editor,
-                                                @Nonnull PsiElement element,
-                                                @Nonnull ImplementationSearcher handler,
-                                                final boolean includeSelfAlways) {
+  static PsiElement[] getSelfAndImplementations(Editor editor, @Nonnull PsiElement element, @Nonnull ImplementationSearcher handler, final boolean includeSelfAlways) {
     final PsiElement[] handlerImplementations = handler.searchImplementations(element, editor, includeSelfAlways, true);
     if (handlerImplementations.length > 0) return handlerImplementations;
 
-    ThrowableComputable<PsiElement[],RuntimeException> action = () -> {
+    ThrowableComputable<PsiElement[], RuntimeException> action = () -> {
       PsiElement psiElement = element;
       PsiFile psiFile = psiElement.getContainingFile();
       if (psiFile == null) {
@@ -421,7 +411,32 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
     return false;
   }
 
-  private class ImplementationsUpdaterTask extends BackgroundUpdaterTask<ImplementationViewComponent> {
+  private static class ImplementationViewComponentUpdater implements GenericListComponentUpdater<PsiElement> {
+    private final ImplementationViewComponent myComponent;
+    private final int myIncludeSelfIdx;
+
+    ImplementationViewComponentUpdater(ImplementationViewComponent component, int includeSelfIdx) {
+      myComponent = component;
+      myIncludeSelfIdx = includeSelfIdx;
+    }
+
+    @Override
+    public void paintBusy(boolean paintBusy) {
+      //todo notify busy
+    }
+
+    @Override
+    public void replaceModel(@Nonnull List<? extends PsiElement> data) {
+      final PsiElement[] elements = myComponent.getElements();
+      final int startIdx = elements.length - myIncludeSelfIdx;
+      List<PsiElement> result = new ArrayList<>();
+      Collections.addAll(result, elements);
+      result.addAll(data.subList(startIdx, data.size()));
+      myComponent.update(result.toArray(PsiElement.EMPTY_ARRAY), myComponent.getIndex());
+    }
+  }
+
+  private class ImplementationsUpdaterTask extends BackgroundUpdaterTaskBase<PsiElement> {
     private final String myCaption;
     private final Editor myEditor;
     @Nonnull
@@ -429,11 +444,14 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
     private final boolean myIncludeSelf;
     private PsiElement[] myElements;
 
-    private ImplementationsUpdaterTask(@Nonnull PsiElement element, final Editor editor, final String caption, boolean includeSelf) {
-      super(element.getProject(), ImplementationSearcher.SEARCHING_FOR_IMPLEMENTATIONS);
+    private final ImplementationViewComponent myComponent;
+
+    private ImplementationsUpdaterTask(@Nonnull PsiElement element, final Editor editor, final String caption, boolean includeSelf, ImplementationViewComponent component) {
+      super(element.getProject(), ImplementationSearcher.SEARCHING_FOR_IMPLEMENTATIONS, null);
       myCaption = caption;
       myEditor = editor;
       myElement = element;
+      myComponent = component;
       myIncludeSelf = includeSelf;
     }
 
@@ -447,40 +465,34 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
       //todo notify busy
     }
 
+    @Nullable
     @Override
-    protected void replaceModel(@Nonnull List<PsiElement> data) {
-      final PsiElement[] elements = myComponent.getElements();
-      final int includeSelfIdx = myElement instanceof PomTargetPsiElement ? 0 : 1;
-      final int startIdx = elements.length - includeSelfIdx;
-      final PsiElement[] result = new PsiElement[data.size() + includeSelfIdx];
-      System.arraycopy(elements, 0, result, 0, elements.length);
-      System.arraycopy(PsiUtilCore.toPsiElementArray(data), startIdx, result, elements.length, data.size() - startIdx);
-      myComponent.update(result, myComponent.getIndex());
+    protected Usage createUsage(PsiElement element) {
+      return new UsageInfo2UsageAdapter(new UsageInfo(element));
     }
 
     @Override
     public void run(@Nonnull final ProgressIndicator indicator) {
       super.run(indicator);
-      final ImplementationSearcher.BackgroundableImplementationSearcher implementationSearcher =
-              new ImplementationSearcher.BackgroundableImplementationSearcher() {
-                @Override
-                protected boolean isSearchDeep() {
-                  return ShowImplementationsAction.this.isSearchDeep();
-                }
+      final ImplementationSearcher.BackgroundableImplementationSearcher implementationSearcher = new ImplementationSearcher.BackgroundableImplementationSearcher() {
+        @Override
+        protected boolean isSearchDeep() {
+          return ShowImplementationsAction.this.isSearchDeep();
+        }
 
-                @Override
-                protected void processElement(PsiElement element) {
-                  if (!updateComponent(element, null)) {
-                    indicator.cancel();
-                  }
-                  indicator.checkCanceled();
-                }
+        @Override
+        protected void processElement(PsiElement element) {
+          if (!updateComponent(element, null)) {
+            indicator.cancel();
+          }
+          indicator.checkCanceled();
+        }
 
-                @Override
-                protected PsiElement[] filterElements(PsiElement element, PsiElement[] targetElements) {
-                  return ShowImplementationsAction.filterElements(targetElements);
-                }
-              };
+        @Override
+        protected PsiElement[] filterElements(PsiElement element, PsiElement[] targetElements) {
+          return ShowImplementationsAction.filterElements(targetElements);
+        }
+      };
       if (!myIncludeSelf) {
         myElements = getSelfAndImplementations(myEditor, myElement, implementationSearcher, false);
       }

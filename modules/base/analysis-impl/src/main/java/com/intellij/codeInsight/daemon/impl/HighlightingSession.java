@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
@@ -30,11 +29,10 @@ public interface HighlightingSession {
   @Nonnull
   PsiFile getPsiFile();
 
-  Editor getEditor();
-
   @Nonnull
   Document getDocument();
 
+  @Nonnull
   ProgressIndicator getProgressIndicator();
 
   EditorColorsScheme getColorsScheme();

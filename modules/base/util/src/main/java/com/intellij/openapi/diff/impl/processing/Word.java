@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.diff.impl.processing;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.diff.impl.string.DiffString;
 import com.intellij.openapi.util.TextRange;
 import javax.annotation.Nonnull;

@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
 
 /**
  * @author cdr
-*/
+ */
 public class ShowIntentionsPassFactory implements TextEditorHighlightingPassFactory {
   @Override
   public void register(@Nonnull Registrar registrar) {
@@ -43,6 +43,6 @@ public class ShowIntentionsPassFactory implements TextEditorHighlightingPassFact
   @Override
   @Nullable
   public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull final Editor editor) {
-    return new ShowIntentionsPass(file.getProject(), editor, -1);
+    return new ShowIntentionsPass(file.getProject(), editor, true);
   }
 }

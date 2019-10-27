@@ -20,7 +20,7 @@ import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.RequiredUIAccess;

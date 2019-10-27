@@ -17,6 +17,7 @@ package consulo.ide.welcomeScreen;
 
 import com.intellij.ide.DataManager;
 import com.intellij.internal.statistic.UsageTrigger;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
@@ -45,7 +46,7 @@ import java.util.List;
  * @author VISTALL
  * @since 14-Sep-16
  */
-public class FlatWelcomeScreen extends JPanel {
+public class FlatWelcomeScreen extends JPanel implements WelcomeScreenSlider {
   public static final String MAIN = "main";
 
   private final FlatWelcomePanel myMainWelcomePanel;
@@ -67,7 +68,7 @@ public class FlatWelcomeScreen extends JPanel {
     registerKeyboardAction(e -> {
       for (Component component : getComponents()) {
         if (component.isVisible() && component != myMainWelcomePanel) {
-          replacePanel((JComponent)component);
+          removeSlide((JComponent)component);
           break;
         }
       }
@@ -98,7 +99,7 @@ public class FlatWelcomeScreen extends JPanel {
           @RequiredUIAccess
           @Override
           public void actionPerformed(@Nonnull AnActionEvent e) {
-            JComponent panel = oldAction.createSlide(myWelcomeFrame, myWelcomeFrame::setTitle);
+            JComponent panel = oldAction.createSlide(myWelcomeFrame, FlatWelcomeScreen.this);
             JBCardLayout layout = (JBCardLayout)FlatWelcomeScreen.this.getLayout();
             String id = oldAction.getClass().getName();
 
@@ -148,15 +149,26 @@ public class FlatWelcomeScreen extends JPanel {
     }
   }
 
-  private static Runnable createUsageTracker(final AnAction action) {
-    return () -> UsageTrigger.trigger("welcome.screen." + ActionManager.getInstance().getId(action));
+  @Override
+  public void setTitle(@Nonnull String title) {
+    myWelcomeFrame.setTitle(title);
   }
 
-  public void replacePanel(JComponent oldCard) {
+
+  @Override
+  public void removeSlide(@Nonnull JComponent target) {
     JBCardLayout layout = (JBCardLayout)getLayout();
 
-    layout.swipe(this, MAIN, JBCardLayout.SwipeDirection.BACKWARD, () -> remove(oldCard));
+    layout.swipe(this, MAIN, JBCardLayout.SwipeDirection.BACKWARD, () -> remove(target));
+
+    if(target instanceof Disposable) {
+      ((Disposable)target).dispose();
+    }
 
     myWelcomeFrame.setDefaultTitle();
+  }
+
+  private static Runnable createUsageTracker(final AnAction action) {
+    return () -> UsageTrigger.trigger("welcome.screen." + ActionManager.getInstance().getId(action));
   }
 }

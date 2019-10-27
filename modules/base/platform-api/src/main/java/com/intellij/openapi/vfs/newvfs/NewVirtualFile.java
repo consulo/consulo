@@ -16,14 +16,14 @@
 package com.intellij.openapi.vfs.newvfs;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileWithId;
 import com.intellij.openapi.vfs.encoding.EncodingRegistry;
+import com.intellij.util.DeprecatedMethodException;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Collection;
 
@@ -77,16 +77,18 @@ public abstract class NewVirtualFile extends VirtualFile implements VirtualFileW
 
   @Nullable
   @Deprecated
-  public NewVirtualFile findChildById(int id) {return null;}
-
-  @Nullable @Deprecated
-  public NewVirtualFile findChildByIdIfCached(int id) {return null;}
+  //@ApiStatus.ScheduledForRemoval(inVersion = "2020.1")
+  public NewVirtualFile findChildById(int id) {
+    DeprecatedMethodException.report("deprecated method");
+    return null;
+  }
 
   @Override
   public void refresh(final boolean asynchronous, final boolean recursive, final Runnable postRunnable) {
     RefreshQueue.getInstance().refresh(asynchronous, recursive, postRunnable, this);
   }
 
+  @Override
   public abstract void setWritable(boolean writable) throws IOException;
 
   public abstract void markDirty();
@@ -116,20 +118,25 @@ public abstract class NewVirtualFile extends VirtualFile implements VirtualFileW
       throw new IOException("Destination already exists: " + newParent.getPath() + "/" + getName());
     }
 
-    EncodingRegistry.doActionAndRestoreEncoding(this, new ThrowableComputable<VirtualFile, IOException>() {
-      @Override
-      public VirtualFile compute() throws IOException {
-        getFileSystem().moveFile(requestor, NewVirtualFile.this, newParent);
-        return NewVirtualFile.this;
-      }
+    EncodingRegistry.doActionAndRestoreEncoding(this, () -> {
+      getFileSystem().moveFile(requestor, this, newParent);
+      return this;
     });
   }
 
   @Nonnull
   public abstract Collection<VirtualFile> getCachedChildren();
 
-  /** iterated children will NOT contain NullVirtualFile.INSTANCE */
+  /**
+   * iterated children will NOT contain NullVirtualFile.INSTANCE
+   */
   @Nonnull
   public abstract Iterable<VirtualFile> iterInDbChildren();
 
+  @Nonnull
+  @Deprecated
+  //@ApiStatus.Experimental
+  public Iterable<VirtualFile> iterInDbChildrenWithoutLoadingVfsFromOtherProjects() {
+    return iterInDbChildren();
+  }
 }

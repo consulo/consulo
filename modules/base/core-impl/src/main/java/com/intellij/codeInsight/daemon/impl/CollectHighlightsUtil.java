@@ -16,7 +16,6 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.util.Condition;
@@ -25,6 +24,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.containers.Stack;
+import consulo.logging.Logger;
 import gnu.trove.TIntStack;
 
 import javax.annotation.Nonnull;

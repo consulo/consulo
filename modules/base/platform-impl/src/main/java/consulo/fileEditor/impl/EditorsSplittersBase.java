@@ -16,7 +16,6 @@
 package consulo.fileEditor.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
@@ -24,6 +23,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.FrameTitleBuilder;
+import consulo.logging.Logger;
 
 import javax.annotation.Nullable;
 import java.io.File;

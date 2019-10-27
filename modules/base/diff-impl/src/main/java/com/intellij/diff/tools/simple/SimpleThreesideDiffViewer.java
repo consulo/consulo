@@ -32,7 +32,6 @@ import com.intellij.diff.tools.util.side.ThreesideTextDiffViewer;
 import com.intellij.diff.util.*;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnSeparator;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.DocumentEvent;
@@ -42,6 +41,8 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 import consulo.application.AccessRule;
 

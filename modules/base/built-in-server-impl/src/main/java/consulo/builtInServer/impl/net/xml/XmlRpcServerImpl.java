@@ -15,11 +15,11 @@
  */
 package consulo.builtInServer.impl.net.xml;
 
-import consulo.builtInServer.http.HttpRequestHandler;
-import consulo.builtInServer.xml.XmlRpcServer;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
+import consulo.builtInServer.http.HttpRequestHandler;
+import consulo.builtInServer.http.Responses;
+import consulo.builtInServer.xml.XmlRpcServer;
 import gnu.trove.THashMap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
@@ -29,24 +29,48 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.QueryStringDecoder;
-import org.apache.xmlrpc.*;
-import consulo.builtInServer.http.Responses;
+import org.apache.xmlrpc.XmlRpcException;
+import org.apache.xmlrpc.XmlRpcHandler;
+import org.apache.xmlrpc.XmlRpcRequest;
+import org.apache.xmlrpc.common.XmlRpcHttpRequestConfigImpl;
+import org.apache.xmlrpc.common.XmlRpcStreamRequestConfig;
+import org.apache.xmlrpc.server.XmlRpcStreamServer;
 import org.xml.sax.SAXParseException;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Singleton;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.Map;
-import java.util.Vector;
 
 @Singleton
 public class XmlRpcServerImpl implements XmlRpcServer {
+  private static class ApacheXmlRpcImpl extends XmlRpcStreamServer {
+    @Override
+    public XmlRpcRequest getRequest(XmlRpcStreamRequestConfig pConfig, InputStream pStream) throws XmlRpcException {
+      return super.getRequest(pConfig, pStream);
+    }
+
+    @Override
+    public void writeResponse(XmlRpcStreamRequestConfig pConfig, OutputStream pStream, Object pResult) throws XmlRpcException {
+      super.writeResponse(pConfig, pStream, pResult);
+    }
+  }
+
   private static final Logger LOG = Logger.getInstance(XmlRpcServerImpl.class);
 
   private final Map<String, Object> handlerMapping = new THashMap<>();
 
+  private final XmlRpcHttpRequestConfigImpl myXmlRpcConfig = new XmlRpcHttpRequestConfigImpl();
+
+  private final ApacheXmlRpcImpl myApacheXmlRpc = new ApacheXmlRpcImpl();
+
   public XmlRpcServerImpl() {
+    myXmlRpcConfig.setEncoding("UTF-8");
   }
 
   public static final class XmlRpcRequestHandler extends HttpRequestHandler {
@@ -77,7 +101,7 @@ public class XmlRpcServerImpl implements XmlRpcServer {
   }
 
   @Override
-  public boolean process(@Nonnull String path, @Nonnull FullHttpRequest request, @Nonnull ChannelHandlerContext context, @javax.annotation.Nullable Map<String, Object> handlers) {
+  public boolean process(@Nonnull String path, @Nonnull FullHttpRequest request, @Nonnull ChannelHandlerContext context, @Nullable Map<String, Object> handlers) {
     if (!(path.isEmpty() || (path.length() == 1 && path.charAt(0) == '/') || path.equalsIgnoreCase("/rpc2"))) {
       return false;
     }
@@ -94,14 +118,19 @@ public class XmlRpcServerImpl implements XmlRpcServer {
 
     ByteBuf result;
     try (ByteBufInputStream in = new ByteBufInputStream(content)) {
-      XmlRpcServerRequest xmlRpcServerRequest = new XmlRpcRequestProcessor().decodeRequest(in);
+      XmlRpcRequest xmlRpcServerRequest = myApacheXmlRpc.getRequest(myXmlRpcConfig, in);
       if (StringUtil.isEmpty(xmlRpcServerRequest.getMethodName())) {
         LOG.warn("method name empty");
         return false;
       }
 
       Object response = invokeHandler(getHandler(xmlRpcServerRequest.getMethodName(), handlers == null ? handlerMapping : handlers), xmlRpcServerRequest);
-      result = Unpooled.wrappedBuffer(new XmlRpcResponseProcessor().encodeResponse(response, CharsetToolkit.UTF8));
+
+      ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
+      myApacheXmlRpc.writeResponse(myXmlRpcConfig, stream, response);
+
+      result = Unpooled.wrappedBuffer(stream.toByteArray());
     }
     catch (SAXParseException e) {
       LOG.warn(e);
@@ -139,19 +168,29 @@ public class XmlRpcServerImpl implements XmlRpcServer {
     }
   }
 
-  private static Object invokeHandler(@Nonnull Object handler, XmlRpcServerRequest request) throws Throwable {
-    return handler instanceof XmlRpcHandler ? (XmlRpcHandler)handler : invoke(handler, request.getMethodName(), request.getParameters());
+  @Nullable
+  private static Object invokeHandler(@Nonnull Object handler, XmlRpcRequest request) throws Throwable {
+    if (handler instanceof XmlRpcHandler) {
+      return handler;
+    }
+    else {
+      Object[] params = new Object[request.getParameterCount()];
+      for (int i = 0; i < request.getParameterCount(); i++) {
+        params[i] = request.getParameter(i);
+      }
+      return invoke(handler, request.getMethodName(), params);
+    }
   }
 
-  private static Object invoke(Object target, String methodName, @SuppressWarnings("UseOfObsoleteCollectionType") Vector params) throws Throwable {
-    Class<?> targetClass = (target instanceof Class) ? (Class) target : target.getClass();
+  private static Object invoke(Object target, String methodName, Object[] params) throws Throwable {
+    Class<?> targetClass = (target instanceof Class) ? (Class)target : target.getClass();
     Class[] argClasses = null;
     Object[] argValues = null;
     if (params != null) {
-      argClasses = new Class[params.size()];
-      argValues = new Object[params.size()];
-      for (int i = 0; i < params.size(); i++) {
-        argValues[i] = params.elementAt(i);
+      argClasses = new Class[params.length];
+      argValues = new Object[params.length];
+      for (int i = 0; i < params.length; i++) {
+        argValues[i] = params[i];
         if (argValues[i] instanceof Integer) {
           argClasses[i] = Integer.TYPE;
         }

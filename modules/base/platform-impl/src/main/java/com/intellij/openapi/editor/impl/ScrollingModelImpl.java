@@ -27,7 +27,6 @@ package com.intellij.openapi.editor.impl;
 import com.intellij.ide.RemoteDesktopService;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.VisualPosition;
@@ -43,6 +42,7 @@ import com.intellij.ui.components.Interpolable;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.Animator;
+import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -16,12 +16,9 @@
 
 package com.intellij.openapi.fileEditor.impl.text;
 
-import com.intellij.openapi.util.Key;
-import consulo.codeInsight.TargetElementUtil;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.util.EditorHelper;
 import com.intellij.injected.editor.EditorWindow;
-import com.intellij.injected.editor.InjectedCaret;
 import com.intellij.lang.Language;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
@@ -29,14 +26,17 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.fileEditor.EditorDataProvider;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.*;
+import com.intellij.psi.impl.source.tree.injected.InjectedCaret;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.util.PsiUtilCore;
+import consulo.codeInsight.TargetElementUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.LinkedHashSet;
 
 import static com.intellij.openapi.actionSystem.AnActionEvent.injectedId;

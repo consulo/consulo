@@ -51,10 +51,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.FontUtil;
 import com.intellij.util.Function;
 import com.intellij.util.IconUtil;
-import com.intellij.util.ui.AbstractLayoutManager;
-import com.intellij.util.ui.JBInsets;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ui.*;
 import consulo.awt.TargetAWT;
 import consulo.platform.Platform;
 import consulo.start.WelcomeFrameManager;
@@ -365,7 +362,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
         }
       }
     };
-    text.setEditorKit(new UIUtil.JBHtmlEditorKit() {
+    text.setEditorKit(new JBHtmlEditorKit() {
       final HTMLFactory factory = new HTMLFactory() {
         @Override
         public View create(Element e) {

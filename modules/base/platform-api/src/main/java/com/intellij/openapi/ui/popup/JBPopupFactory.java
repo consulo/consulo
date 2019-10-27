@@ -1,21 +1,8 @@
-/*
- * Copyright 2000-2010 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.intellij.openapi.ui.popup;
 
+import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataContext;
@@ -35,9 +22,60 @@ import java.util.List;
 
 /**
  * Factory class for creating popup chooser windows (similar to the Code | Generate... popup) and various notifications/confirmations.
+ * <p/>
+ * <p>Types of popups in IntelliJ platform:</p>
+ *
+ * <h3>Lightweight</h3>
+ * <p>Lightweight Swing components, located in the contained window's layered pane. Cannot extend beyond window bounds.</p>
+ * <ul>
+ * <li>
+ * <p>{@link Balloon} interface (implemented in {@link com.intellij.ui.BalloonImpl BalloonImpl})</p>
+ * <p>Platform's lowest-level lightweight popup component. Supports title bar, shadow, callout pointer at specified side, animated
+ * showing/hiding, fade-out after delay, two layers for positioning, hiding on condition (mouse move, mouse click, key press),
+ * custom mouse click handler, custom action buttons, notification about showing/hiding.</p>
+ * <p>Usually created via {@link JBPopupFactory#createBalloonBuilder}.</p>
+ * </li>
+ * <li>
+ * <p>{@link com.intellij.ide.IdeTooltip IdeTooltip} and {@link com.intellij.ide.IdeTooltipManager IdeTooltipManager}</p>
+ * <p>Subsystem which replaces (by default) Swing's ToolTipManager. Allows to define a custom mouse hover tooltip for any UI
+ * component. Tooltip can also be explicitly requested to show in the given location.</p>
+ * <p>Uses balloons to show tooltips internally (but doesn't expose this logic).</p>
+ * </li>
+ * </ul>
+ *
+ * <h3>Heavyweight</h3>
+ * <p>Components using a separate (OS-recognized) window. Can have location and size not limited by the parent window.</p>
+ * <ul>
+ * <li>
+ * <p>{@link JBPopup} interface (implemented in {@link com.intellij.ui.popup.AbstractPopup AbstractPopup})</p>
+ * <p>Platform's lowest-level heavyweight popup component. Supports title and footer (ad) bar, resizing using mouse, fitting size to
+ * screen bounds, notification about showing/hiding/resizing/moving, hiding on condition (mouse exit, mouse click, key press,
+ * window deactivation), speed search, saving and restoring previously used location and size, custom keyboard actions for the
+ * content, custom settings/pin actions.</p>
+ * <p>Usually created via {@link JBPopupFactory#createComponentPopupBuilder}.</p>
+ * </li>
+ * </ul>
+ *
+ * <h3>Combined (lightweight/heavyweight)</h3>
+ * <ul>
+ * <li>
+ * <p>{@link com.intellij.ui.Hint Hint} interface (implemented in {@link com.intellij.ui.LightweightHint LightweightHint})</p>
+ * <p>By default, if content fits the layered pane, tries to use lightweight components to display it (either using
+ * {@link com.intellij.ide.IdeTooltipManager IdeTooltipManager}, or by directly adding content to the layered pane).
+ * If the content doesn't fit, uses heavyweight approach (via {@link JBPopup}).</p>
+ * <p>Usually created directly (via constructor).</p>
+ * </li>
+ * <li>
+ * <p>{@link HintManager}</p>
+ * <p>Mostly used for showing hints in editor (works via {@link com.intellij.ui.LightweightHint LightweightHint}), but also has a method to show a hint at arbitrary
+ * location (works via {@link JBPopup}). Supports hiding of hints on additional conditions (caret movement, scrolling in editor, document
+ * change, showing of another hint), update of hint position on scrolling in editor, hiding hint after delay. The class also has
+ * utility methods to calculate appropriate hint position for the given location in editor coordinates
+ * (offset/LogicalPosition/VisualPosition), and to show simple text hints.</p>
+ * </li>
+ * </ul>
  *
  * @author mike
- * @since 6.0
  */
 public abstract class JBPopupFactory {
   /**
@@ -49,6 +87,18 @@ public abstract class JBPopupFactory {
     return ServiceManager.getService(JBPopupFactory.class);
   }
 
+  @Nonnull
+  public abstract <T> IPopupChooserBuilder<T> createPopupChooserBuilder(@Nonnull List<? extends T> list);
+
+  @Nonnull
+  public PopupChooserBuilder createPopupChooserBuilder(@Nonnull JTable table) {
+    return new PopupChooserBuilder(table);
+  }
+
+  /**
+   * @deprecated Please use {@link #createPopupChooserBuilder(List)} instead
+   */
+  @Deprecated
   @Nonnull
   public PopupChooserBuilder createListPopupBuilder(@Nonnull JList list) {
     return new PopupChooserBuilder(list);
@@ -92,25 +142,49 @@ public abstract class JBPopupFactory {
   @Nonnull
   public abstract ListPopup createConfirmation(String title, String yesText, String noText, Runnable onYes, Runnable onNo, int defaultOptionIndex);
 
+  /**
+   * @deprecated use {@link #createActionsStep(ActionGroup, DataContext, String, boolean, boolean, String, Component, boolean, int, boolean)}
+   */
+  @Deprecated
   @Nonnull
-  public abstract ListPopupStep createActionsStep(@Nonnull ActionGroup actionGroup,
-                                                  @Nonnull DataContext dataContext,
-                                                  boolean showNumbers,
-                                                  boolean showDisabledActions,
-                                                  String title,
-                                                  Component component,
-                                                  boolean honorActionMnemonics);
+  public ListPopupStep createActionsStep(@Nonnull ActionGroup actionGroup,
+                                         @Nonnull DataContext dataContext,
+                                         boolean showNumbers,
+                                         boolean showDisabledActions,
+                                         String title,
+                                         Component component,
+                                         boolean honorActionMnemonics) {
+    return createActionsStep(actionGroup, dataContext, null, showNumbers, showDisabledActions, title, component, honorActionMnemonics, 0, false);
+  }
+
+  /**
+   * @deprecated use {@link #createActionsStep(ActionGroup, DataContext, String, boolean, boolean, String, Component, boolean, int, boolean)}
+   */
+  @Deprecated
+  @Nonnull
+  public ListPopupStep createActionsStep(@Nonnull ActionGroup actionGroup,
+                                         @Nonnull DataContext dataContext,
+                                         boolean showNumbers,
+                                         boolean showDisabledActions,
+                                         String title,
+                                         Component component,
+                                         boolean honorActionMnemonics,
+                                         int defaultOptionIndex,
+                                         boolean autoSelectionEnabled) {
+    return createActionsStep(actionGroup, dataContext, null, showNumbers, showDisabledActions, title, component, honorActionMnemonics, defaultOptionIndex, autoSelectionEnabled);
+  }
 
   @Nonnull
   public abstract ListPopupStep createActionsStep(@Nonnull ActionGroup actionGroup,
                                                   @Nonnull DataContext dataContext,
+                                                  @Nullable String actionPlace,
                                                   boolean showNumbers,
                                                   boolean showDisabledActions,
                                                   String title,
                                                   Component component,
                                                   boolean honorActionMnemonics,
                                                   int defaultOptionIndex,
-                                                  final boolean autoSelectionEnabled);
+                                                  boolean autoSelectionEnabled);
 
   @Nonnull
   public abstract RelativePoint guessBestPopupLocation(@Nonnull JComponent component);
@@ -124,6 +198,7 @@ public abstract class JBPopupFactory {
     List<JBPopup> popups = getChildPopups(parent);
     for (JBPopup each : popups) {
       if (each.isFocused()) return each;
+      if (each.isDisposed()) continue;
       JBPopup childFocusedPopup = getChildFocusedPopup(each.getContent());
       if (childFocusedPopup != null) {
         return childFocusedPopup;
@@ -155,8 +230,7 @@ public abstract class JBPopupFactory {
      * The actions in a popup can be selected by pressing the character from the action's text prefixed with
      * an &amp; character.
      */
-    MNEMONICS
-  }
+    MNEMONICS}
 
   /**
    * Creates a popup allowing to choose one of the actions from the specified action group.
@@ -169,11 +243,13 @@ public abstract class JBPopupFactory {
    * @return the popup instance.
    */
   @Nonnull
-  public abstract ListPopup createActionGroupPopup(@Nullable @Nls(capitalization = Nls.Capitalization.Title) String title,
-                                                   @Nonnull ActionGroup actionGroup,
-                                                   @Nonnull DataContext dataContext,
-                                                   ActionSelectionAid selectionAidMethod,
-                                                   boolean showDisabledActions);
+  public ListPopup createActionGroupPopup(@Nullable @Nls(capitalization = Nls.Capitalization.Title) String title,
+                                          @Nonnull ActionGroup actionGroup,
+                                          @Nonnull DataContext dataContext,
+                                          ActionSelectionAid selectionAidMethod,
+                                          boolean showDisabledActions) {
+    return createActionGroupPopup(title, actionGroup, dataContext, selectionAidMethod, showDisabledActions, null, -1, null, null);
+  }
 
   /**
    * Creates a popup allowing to choose one of the actions from the specified action group.
@@ -187,22 +263,13 @@ public abstract class JBPopupFactory {
    * @return the popup instance.
    */
   @Nonnull
-  public abstract ListPopup createActionGroupPopup(@Nls(capitalization = Nls.Capitalization.Title) String title,
-                                                   @Nonnull ActionGroup actionGroup,
-                                                   @Nonnull DataContext dataContext,
-                                                   ActionSelectionAid selectionAidMethod,
-                                                   boolean showDisabledActions,
-                                                   @Nullable String actionPlace);
-
-  @Nonnull
   public ListPopup createActionGroupPopup(@Nls(capitalization = Nls.Capitalization.Title) String title,
                                           @Nonnull ActionGroup actionGroup,
                                           @Nonnull DataContext dataContext,
+                                          ActionSelectionAid selectionAidMethod,
                                           boolean showDisabledActions,
-                                          @Nullable Runnable disposeCallback,
-                                          int maxRowCount) {
-    return createActionGroupPopup(title, actionGroup, dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, showDisabledActions, disposeCallback,
-                                  maxRowCount);
+                                          @Nullable String actionPlace) {
+    return createActionGroupPopup(title, actionGroup, dataContext, selectionAidMethod, showDisabledActions, null, -1, null, actionPlace);
   }
 
   /**
@@ -219,13 +286,25 @@ public abstract class JBPopupFactory {
    * @return the popup instance.
    */
   @Nonnull
-  public abstract ListPopup createActionGroupPopup(@Nls(capitalization = Nls.Capitalization.Title) String title,
-                                                   @Nonnull ActionGroup actionGroup,
-                                                   @Nonnull DataContext dataContext,
-                                                   ActionSelectionAid selectionAidMethod,
-                                                   boolean showDisabledActions,
-                                                   @Nullable Runnable disposeCallback,
-                                                   int maxRowCount);
+  public ListPopup createActionGroupPopup(@Nls(capitalization = Nls.Capitalization.Title) String title,
+                                          @Nonnull ActionGroup actionGroup,
+                                          @Nonnull DataContext dataContext,
+                                          ActionSelectionAid selectionAidMethod,
+                                          boolean showDisabledActions,
+                                          Runnable disposeCallback,
+                                          int maxRowCount) {
+    return createActionGroupPopup(title, actionGroup, dataContext, selectionAidMethod, showDisabledActions, disposeCallback, maxRowCount, null, null);
+  }
+
+  @Nonnull
+  public ListPopup createActionGroupPopup(@Nls(capitalization = Nls.Capitalization.Title) String title,
+                                          @Nonnull ActionGroup actionGroup,
+                                          @Nonnull DataContext dataContext,
+                                          boolean showDisabledActions,
+                                          @Nullable Runnable disposeCallback,
+                                          int maxRowCount) {
+    return createActionGroupPopup(title, actionGroup, dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, showDisabledActions, disposeCallback, maxRowCount);
+  }
 
   @Nonnull
   public abstract ListPopup createActionGroupPopup(@Nls(capitalization = Nls.Capitalization.Title) String title,
@@ -236,24 +315,18 @@ public abstract class JBPopupFactory {
                                                    boolean honorActionMnemonics,
                                                    @Nullable Runnable disposeCallback,
                                                    int maxRowCount,
-                                                   @Nullable Condition<AnAction> preselectActionCondition);
+                                                   @Nullable Condition<? super AnAction> preselectActionCondition);
 
   @Nonnull
   public abstract ListPopup createActionGroupPopup(@Nls(capitalization = Nls.Capitalization.Title) String title,
                                                    @Nonnull ActionGroup actionGroup,
                                                    @Nonnull DataContext dataContext,
-                                                   ActionSelectionAid selectionAidMethod,
+                                                   ActionSelectionAid aid,
                                                    boolean showDisabledActions,
                                                    @Nullable Runnable disposeCallback,
                                                    int maxRowCount,
-                                                   @Nullable Condition<AnAction> preselectActionCondition,
+                                                   @Nullable Condition<? super AnAction> preselectActionCondition,
                                                    @Nullable String actionPlace);
-
-  /**
-   * @deprecated use {@link #createListPopup(ListPopupStep)} instead (<code>step</code> must be a ListPopupStep in any case)
-   */
-  @Nonnull
-  public abstract ListPopup createWizardStep(@Nonnull PopupStep step);
 
   /**
    * Creates a custom list popup with the specified step.
@@ -271,7 +344,6 @@ public abstract class JBPopupFactory {
    * @param maxRowCount the number of visible rows to show in the popup (if the popup has more items,
    *                    a scrollbar will be displayed).
    * @return the popup instance.
-   * @since 14.1
    */
   @Nonnull
   public abstract ListPopup createListPopup(@Nonnull ListPopupStep step, int maxRowCount);
@@ -328,10 +400,12 @@ public abstract class JBPopupFactory {
   public abstract BalloonBuilder createDialogBalloonBuilder(@Nonnull JComponent content, String title);
 
   @Nonnull
-  public abstract BalloonBuilder createHtmlTextBalloonBuilder(@Nonnull String htmlContent,
-                                                              @Nullable Icon icon,
-                                                              Color fillColor,
-                                                              @Nullable HyperlinkListener listener);
+  public BalloonBuilder createHtmlTextBalloonBuilder(@Nonnull String htmlContent, @Nullable Icon icon, Color fillColor, @Nullable HyperlinkListener listener) {
+    return createHtmlTextBalloonBuilder(htmlContent, icon, null, fillColor, listener);
+  }
+
+  @Nonnull
+  public abstract BalloonBuilder createHtmlTextBalloonBuilder(@Nonnull String htmlContent, @Nullable Icon icon, Color textColor, Color fillColor, @Nullable HyperlinkListener listener);
 
   @Nonnull
   public abstract BalloonBuilder createHtmlTextBalloonBuilder(@Nonnull String htmlContent, MessageType messageType, @Nullable HyperlinkListener listener);
@@ -342,4 +416,9 @@ public abstract class JBPopupFactory {
   @Nullable
   public abstract Balloon getParentBalloonFor(@Nullable Component c);
 
+  protected abstract PopupChooserBuilder.PopupComponentAdapter createPopupComponentAdapter(PopupChooserBuilder builder, JList list);
+
+  protected abstract PopupChooserBuilder.PopupComponentAdapter createPopupComponentAdapter(PopupChooserBuilder builder, JTree tree);
+
+  protected abstract PopupChooserBuilder.PopupComponentAdapter createPopupComponentAdapter(PopupChooserBuilder builder, JTable table);
 }

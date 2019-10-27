@@ -1,0 +1,162 @@
+<!--
+  - Copyright 2013-2019 consulo.io
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  - http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+<component>
+  <!--FIXME [VISTALL] if you update this file - update _mac file too-->
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>Consulo/platform/buildSNAPSHOT/modules/consulo.platform.base/lib</outputDirectory>
+      <unpack>false</unpack>
+      <includes>
+        <include>consulo:consulo-platform-base-plugin</include>
+
+        <include>consulo:consulo-async-api</include>
+
+        <include>consulo:consulo-analysis-api</include>
+        <include>consulo:consulo-analysis-impl</include>
+        <include>consulo:consulo-annotations</include>
+        <include>consulo:consulo-built-in-server-api</include>
+        <include>consulo:consulo-built-in-server-impl</include>
+        <include>consulo:consulo-compiler-api</include>
+        <include>consulo:consulo-compiler-impl</include>
+        <include>consulo:consulo-core-api</include>
+        <include>consulo:consulo-core-impl</include>
+        <include>consulo:consulo-disposer-api</include>
+        <include>consulo:consulo-disposer-impl</include>
+        <include>consulo:consulo-diff-api</include>
+        <include>consulo:consulo-diff-impl</include>
+        <include>consulo:consulo-dvcs-api</include>
+        <include>consulo:consulo-dvcs-impl</include>
+        <include>consulo:consulo-editor-ui-api</include>
+        <include>consulo:consulo-editor-ui-ex</include>
+        <include>consulo:consulo-external-storage-impl</include>
+        <include>consulo:consulo-external-system-api</include>
+        <include>consulo:consulo-external-system-impl</include>
+        <include>consulo:consulo-graph-api</include>
+        <include>consulo:consulo-graph-impl</include>
+        <include>consulo:consulo-indexing-api</include>
+        <include>consulo:consulo-indexing-impl</include>
+        <include>consulo:consulo-injecting-api</include>
+        <include>consulo:consulo-injecting-pico-impl</include>
+        <include>consulo:consulo-lang-api</include>
+        <include>consulo:consulo-lang-impl</include>
+        <include>consulo:consulo-language-editor-api</include>
+        <include>consulo:consulo-localize-api</include>
+        <include>consulo:consulo-logging-api</include>
+        <include>consulo:consulo-logging-log4j2-impl</include>
+        <include>consulo:consulo-logging-slf4j-binding-impl</include>
+        <include>consulo:consulo-lvcs-api</include>
+        <include>consulo:consulo-lvcs-impl</include>
+        <include>consulo:consulo-platform-api</include>
+        <include>consulo:consulo-platform-impl</include>
+        <include>consulo:consulo-platform-resources</include>
+        <include>consulo:consulo-platform-resources-en</include>
+        <include>consulo:consulo-project-model-api</include>
+        <include>consulo:consulo-project-model-impl</include>
+        <include>consulo:consulo-remote-servers-agent-rt</include>
+        <include>consulo:consulo-remote-servers-api</include>
+        <include>consulo:consulo-remote-servers-impl</include>
+        <include>consulo:consulo-trash-can</include>
+        <include>consulo:consulo-ui-api</include>
+        <include>consulo:consulo-ui-api-shared</include>
+        <include>consulo:consulo-ui-impl</include>
+        <include>consulo:consulo-usage-view</include>
+        <include>consulo:consulo-util</include>
+        <include>consulo:consulo-util-rmi</include>
+        <!--<include>consulo:consulo-util-rt</include>-->
+        <include>consulo:consulo-vcs-api</include>
+        <include>consulo:consulo-vcs-api-core</include>
+        <include>consulo:consulo-vcs-impl</include>
+        <include>consulo:consulo-vcs-log-api</include>
+        <include>consulo:consulo-vcs-log-graph-api</include>
+        <include>consulo:consulo-vcs-log-graph-impl</include>
+        <include>consulo:consulo-vcs-log-impl</include>
+        <include>consulo:consulo-xcoverage-data</include>
+        <include>consulo:consulo-xcoverage-impl</include>
+        <include>consulo:consulo-xdebugger-api</include>
+        <include>consulo:consulo-xdebugger-impl</include>
+        <include>consulo:consulo-xtest-impl</include>
+        <include>consulo:consulo-xtest-sm-impl</include>
+
+        <!--TODO [VISTALL] those dependencies must be removed from base plugin-->
+        <include>consulo:consulo-desktop-util-awt</include>
+        <include>org.imgscalr:imgscalr-lib</include>
+        <include>com.miglayout:miglayout</include>
+
+        <!--Internal libraries-->
+        <include>consulo.internal:trove4j</include>
+        <include>consulo.internal:jdom</include>
+        <include>consulo.internal:forms_rt</include>
+        <include>consulo.internal:svg-salamander</include>
+        <include>consulo.internal:javasysmon</include>
+        <include>consulo.internal:pty4j</include>
+        <include>consulo.internal:build.serviceMessages</include>
+        <include>consulo.internal:purejavacomm</include>
+        <include>consulo:kava.beans</include>
+        <!--External libraries-->
+        <include>net.java.dev.jna:jna</include>
+        <include>net.java.dev.jna:jna-platform</include>
+        <include>io.netty:netty-common</include>
+        <include>io.netty:netty-buffer</include>
+        <include>io.netty:netty-transport</include>
+        <include>io.netty:netty-handler</include>
+        <include>io.netty:netty-codec</include>
+        <include>io.netty:netty-codec-http</include>
+        <include>args4j:args4j</include>
+        <include>org.apache.logging.log4j:log4j-api</include>
+        <include>org.apache.logging.log4j:log4j-core</include>
+        <include>org.slf4j:jcl-over-slf4j</include>
+        <include>org.slf4j:slf4j-api</include>
+        <include>picocontainer:picocontainer</include>
+        <include>javax.inject:javax.inject</include>
+        <include>com.google.guava:guava</include>
+        <include>org.apache.httpcomponents:httpcore</include>
+        <include>org.apache.httpcomponents:httpclient</include>
+        <include>org.apache.httpcomponents:httpmime</include>
+        <include>org.iq80.snappy:snappy</include>
+        <include>org.lz4:lz4-java</include>
+        <include>com.github.markusbernhardt:proxy-vole</include>
+        <include>org.apache.commons:commons-imaging</include>
+        <include>com.google.code.gson:gson</include>
+        <include>dk.brics.automaton:automaton</include>
+        <include>cglib:cglib-nodep</include>
+        <include>oro:oro</include>
+        <include>org.apache.commons:commons-compress</include>
+        <include>commons-codec:commons-codec</include>
+        <include>be.cyberelf.nanoxml:nanoxml</include>
+        <include>org.apache.velocity:velocity-engine-core</include>
+        <include>org.jvnet.winp:winp</include>
+        <include>org.apache.commons:commons-lang3</include>
+        <include>jaxen:jaxen</include>
+        <include>com.google.code.findbugs:jsr305</include>
+        <include>org.apache.thrift:libthrift</include>
+        <include>org.apache.xmlrpc:xmlrpc-common</include>
+        <include>org.apache.xmlrpc:xmlrpc-server</include>
+        <include>org.apache.xmlrpc:xmlrpc-client</include>
+        <include>org.apache.ws.commons:ws-commons-util</include>
+      </includes>
+    </dependencySet>
+    <dependencySet>
+      <outputDirectory>Consulo/platform/buildSNAPSHOT/modules/consulo.platform.base/lib_11</outputDirectory>
+      <unpack>false</unpack>
+      <includes>
+        <include>jakarta.xml.bind:jakarta.xml.bind-api</include>
+        <include>org.glassfish.jaxb:jaxb-runtime</include>
+        <include>com.sun.istack:istack-commons-runtime</include>
+        <include>jakarta.activation:jakarta.activation-api</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
+</component>

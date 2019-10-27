@@ -15,7 +15,7 @@
  */
 package com.intellij.util;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Factory;
 
 import java.lang.reflect.Constructor;

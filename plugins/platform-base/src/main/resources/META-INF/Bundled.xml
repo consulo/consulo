@@ -13,7 +13,7 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin>
+<consulo-plugin>
   <extensionPoints>
     <extensionPoint name="additionalTextAttributes" beanClass="com.intellij.openapi.editor.colors.impl.AdditionalTextAttributesEP"/>
     <extensionPoint name="bundledColorScheme" beanClass="com.intellij.openapi.editor.colors.impl.BundledColorSchemeEP"/>
@@ -51,4 +51,4 @@
     <bundledColorScheme path="/colorSchemes/Visual Studio Light.xml"/>
     <bundledColorScheme path="/colorSchemes/Visual Studio Dark.xml"/>
   </extensions>
-</idea-plugin>
+</consulo-plugin>

@@ -17,6 +17,8 @@
 package com.intellij.codeInsight.intention.impl.config;
 
 import com.intellij.codeInsight.daemon.HighlightDisplayKey;
+import com.intellij.codeInsight.daemon.impl.CleanupOnScopeIntention;
+import com.intellij.codeInsight.daemon.impl.EditCleanupProfileIntentionAction;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInsight.intention.IntentionActionBean;
 import com.intellij.codeInsight.intention.IntentionManager;
@@ -24,12 +26,12 @@ import com.intellij.codeInspection.GlobalInspectionTool;
 import com.intellij.codeInspection.GlobalSimpleInspectionTool;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
+import com.intellij.codeInspection.actions.CleanupAllIntention;
 import com.intellij.codeInspection.actions.CleanupInspectionIntention;
 import com.intellij.codeInspection.actions.RunInspectionIntention;
 import com.intellij.codeInspection.ex.*;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -37,9 +39,10 @@ import com.intellij.util.Alarm;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -258,6 +261,21 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
 
   public boolean hasActiveRequests() {
     return !myInitActionsAlarm.isEmpty();
+  }
+
+  @Nonnull
+  @Override
+  public IntentionAction createCleanupAllIntention() {
+    return CleanupAllIntention.INSTANCE;
+  }
+
+  @Nonnull
+  @Override
+  public List<IntentionAction> getCleanupIntentionOptions() {
+    ArrayList<IntentionAction> options = new ArrayList<>();
+    options.add(EditCleanupProfileIntentionAction.INSTANCE);
+    options.add(CleanupOnScopeIntention.INSTANCE);
+    return options;
   }
 
   @Override

@@ -15,13 +15,14 @@
  */
 package com.intellij.openapi.diff.impl.util;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.impl.EditingSides;
 import com.intellij.openapi.diff.impl.highlighting.FragmentSide;
 import com.intellij.openapi.diff.impl.splitter.DiffDividerPaint;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.VisibleAreaEvent;
 import com.intellij.openapi.editor.event.VisibleAreaListener;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

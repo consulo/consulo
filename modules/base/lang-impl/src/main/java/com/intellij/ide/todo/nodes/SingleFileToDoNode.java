@@ -21,27 +21,42 @@ import com.intellij.ide.todo.TodoTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.search.TodoItem;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-public class SingleFileToDoNode extends BaseToDoNode<PsiFile>{
-  private final TodoFileNode myFileNode = new TodoFileNode(getProject(), getValue(), myBuilder, true);
+public class SingleFileToDoNode extends BaseToDoNode<PsiFile> {
+  private final TodoFileNode myFileNode;
 
-  public SingleFileToDoNode(Project project, PsiFile value, TodoTreeBuilder builder) {
+  public SingleFileToDoNode(Project project, @Nonnull PsiFile value, TodoTreeBuilder builder) {
     super(project, value, builder);
+    myFileNode = new TodoFileNode(getProject(), value, myBuilder, true);
   }
 
   @Override
   @Nonnull
   public Collection<AbstractTreeNode> getChildren() {
-    return new ArrayList<AbstractTreeNode>(Collections.singleton(myFileNode));
+    return new ArrayList<>(Collections.singleton(myFileNode));
   }
 
   @Override
-  public void update(PresentationData presentation) {
+  public void update(@Nonnull PresentationData presentation) {
+  }
+
+  @Override
+  public boolean canRepresent(Object element) {
+    return false;
+  }
+
+  @Override
+  public boolean contains(Object element) {
+    if (element instanceof TodoItem) {
+      return super.canRepresent(((TodoItem)element).getFile());
+    }
+    return super.canRepresent(element);
   }
 
   public Object getFileNode() {

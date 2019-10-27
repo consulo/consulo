@@ -80,7 +80,8 @@ public abstract class LibraryRootsComponentDescriptor {
    * @return Array of root types supported by a library type associated with the roots
    *         component descriptor. All persistent root types are returned by default. 
    */
-  public OrderRootType[] getRootTypes() {
+  @Nonnull
+  public List<OrderRootType> getRootTypes() {
     return OrderRootType.getAllTypes();
   }
 

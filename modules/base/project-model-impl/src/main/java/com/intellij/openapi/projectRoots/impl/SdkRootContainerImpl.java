@@ -18,7 +18,6 @@ package com.intellij.openapi.projectRoots.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.projectRoots.ProjectRootListener;
 import com.intellij.openapi.projectRoots.ex.SdkRoot;
 import com.intellij.openapi.projectRoots.ex.SdkRootContainer;
@@ -30,6 +29,7 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
+import consulo.logging.Logger;
 import consulo.vfs.ArchiveFileSystem;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
@@ -200,7 +200,7 @@ public class SdkRootContainerImpl implements PersistentStateComponent<Element>, 
   @Override
   public Element getState() {
     Element element = new Element("state");
-    OrderRootType[] allTypes = OrderRootType.getSortedRootTypes();
+    List<OrderRootType> allTypes = OrderRootType.getSortedRootTypes();
     for (OrderRootType type : allTypes) {
       write(element, type);
     }

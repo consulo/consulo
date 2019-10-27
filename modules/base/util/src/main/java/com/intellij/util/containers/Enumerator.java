@@ -15,7 +15,7 @@
  */
 package com.intellij.util.containers;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.ArrayUtil;
 import gnu.trove.TObjectHashingStrategy;
 import gnu.trove.TObjectIntHashMap;

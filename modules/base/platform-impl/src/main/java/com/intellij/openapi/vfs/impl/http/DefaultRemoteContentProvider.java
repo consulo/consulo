@@ -17,7 +17,7 @@ package com.intellij.openapi.vfs.impl.http;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import com.intellij.openapi.util.text.StringUtil;

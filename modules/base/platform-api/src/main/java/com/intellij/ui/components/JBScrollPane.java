@@ -15,6 +15,7 @@
  */
 package com.intellij.ui.components;
 
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.wm.IdeGlassPane;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.util.ArrayUtil;
@@ -35,6 +36,19 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
 public class JBScrollPane extends JScrollPane {
+  /**
+   * Supposed to be used as a client property key for scrollbar and indicates if this scrollbar should be ignored
+   * when insets for {@code JScrollPane's} content are being calculated.
+   * <p>
+   * Without this key scrollbar's width is included to content insets when content is {@code JList}. As a result list items cannot intersect with
+   * scrollbar
+   * <p>
+   * Please use as a marker for scrollbars, that should be transparent and shown over content
+   *
+   * @see UIUtil#putClientProperty(JComponent, Key, Object)
+   */
+  public static final Key<Boolean> IGNORE_SCROLLBAR_IN_INSETS = Key.create("IGNORE_SCROLLBAR_IN_INSETS");
+
   /**
    * These client properties show a component position on a scroll pane.
    * It is set by internal layout manager of the scroll pane.

@@ -178,7 +178,7 @@ public class DesktopEditorErrorPanelUI extends ComponentUI {
     ErrorStripeRenderer errorStripeRenderer = myPanel.getMarkupModel().getErrorStripeRenderer();
 
     if (errorStripeRenderer != null) {
-      errorStripeRenderer.paint(c, g, new Point(JBUI.scale(1), 0));
+      errorStripeRenderer.paint(c, g, new Rectangle(JBUI.scale(1), 0));
     }
   }
 

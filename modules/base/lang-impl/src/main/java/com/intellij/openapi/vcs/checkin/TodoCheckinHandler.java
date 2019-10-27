@@ -52,7 +52,6 @@ import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
-import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 import java.util.Collection;
 
@@ -208,8 +207,8 @@ public class TodoCheckinHandler extends CheckinHandler {
     String title = "For commit (" + DateFormatUtil.formatDateTime(System.currentTimeMillis()) + ")";
     ServiceManager.getService(myProject, TodoView.class).addCustomTodoView(new TodoTreeBuilderFactory() {
       @Override
-      public TodoTreeBuilder createTreeBuilder(JTree tree, DefaultTreeModel treeModel, Project project) {
-        return new CustomChangelistTodosTreeBuilder(tree, treeModel, myProject, title, worker.inOneList());
+      public TodoTreeBuilder createTreeBuilder(JTree tree, Project project) {
+        return new CustomChangelistTodosTreeBuilder(tree, myProject, title, worker.inOneList());
       }
     }, title, new TodoPanelSettings(myConfiguration.myTodoPanelSettings));
 

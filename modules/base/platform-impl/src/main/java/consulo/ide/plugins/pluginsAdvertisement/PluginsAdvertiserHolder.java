@@ -15,12 +15,12 @@
  */
 package consulo.ide.plugins.pluginsAdvertisement;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.RepositoryHelper;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.ide.plugins.InstalledPluginsState;
 import consulo.ide.updateSettings.UpdateSettings;
 
@@ -35,21 +35,21 @@ import java.util.function.Consumer;
  * @since 05-May-17
  */
 public class PluginsAdvertiserHolder {
-  private static List<IdeaPluginDescriptor> ourLoadedPluginDescriptors;
+  private static List<PluginDescriptor> ourLoadedPluginDescriptors;
 
   @Nonnull
-  public static List<IdeaPluginDescriptor> getLoadedPluginDescriptors() {
+  public static List<PluginDescriptor> getLoadedPluginDescriptors() {
     return ourLoadedPluginDescriptors == null ? Collections.emptyList() : ourLoadedPluginDescriptors;
   }
 
-  public static void update(@Nullable List<IdeaPluginDescriptor> list) {
+  public static void update(@Nullable List<PluginDescriptor> list) {
     ourLoadedPluginDescriptors = ContainerUtil.isEmpty(list) ? null : list;
 
     if (list != null) {
       InstalledPluginsState pluginsState = InstalledPluginsState.getInstance();
 
-      for (IdeaPluginDescriptor newPluginDescriptor : list) {
-        final IdeaPluginDescriptor installed = PluginManager.getPlugin(newPluginDescriptor.getPluginId());
+      for (PluginDescriptor newPluginDescriptor : list) {
+        final PluginDescriptor installed = PluginManager.getPlugin(newPluginDescriptor.getPluginId());
         if (installed != null) {
           int state = StringUtil.compareVersionNumbers(newPluginDescriptor.getVersion(), installed.getVersion());
 
@@ -63,7 +63,7 @@ public class PluginsAdvertiserHolder {
     }
   }
 
-  public static void initialize(@Nonnull Consumer<List<IdeaPluginDescriptor>> consumer) {
+  public static void initialize(@Nonnull Consumer<List<PluginDescriptor>> consumer) {
     UpdateSettings updateSettings = UpdateSettings.getInstance();
     if (!updateSettings.isEnable()) {
       return;
@@ -75,7 +75,7 @@ public class PluginsAdvertiserHolder {
     }
 
     Application.get().executeOnPooledThread(() -> {
-      List<IdeaPluginDescriptor> pluginDescriptors = Collections.emptyList();
+      List<PluginDescriptor> pluginDescriptors = Collections.emptyList();
       try {
         pluginDescriptors = RepositoryHelper.loadPluginsFromRepository(null, updateSettings.getChannel());
       }

@@ -1,6 +1,6 @@
 package consulo.util.io2;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import javax.annotation.Nonnull;
 
 import java.io.IOException;

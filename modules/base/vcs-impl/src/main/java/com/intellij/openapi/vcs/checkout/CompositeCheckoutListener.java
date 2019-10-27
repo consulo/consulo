@@ -20,12 +20,17 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.CheckoutProvider;
 import com.intellij.openapi.vcs.VcsKey;
 import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
+import com.intellij.util.containers.ContainerUtil;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.List;
 
@@ -42,6 +47,7 @@ public class CompositeCheckoutListener implements CheckoutProvider.Listener {
     myProject = project;
   }
 
+  @Override
   public void directoryCheckedOut(final File directory, VcsKey vcs) {
     myVcsKey = vcs;
     if (!myFoundProject) {
@@ -101,5 +107,13 @@ public class CompositeCheckoutListener implements CheckoutProvider.Listener {
     if (!myFoundProject && myFirstDirectory != null) {
       notifyCheckoutListeners(myFirstDirectory, CheckoutListener.COMPLETED_EP_NAME);
     }
+  }
+
+  @Nullable
+  static Project findProjectByBaseDirLocation(@Nonnull final File directory) {
+    return ContainerUtil.find(ProjectManager.getInstance().getOpenProjects(), project -> {
+      VirtualFile baseDir = project.getBaseDir();
+      return baseDir != null && FileUtil.filesEqual(VfsUtilCore.virtualToIoFile(baseDir), directory);
+    });
   }
 }

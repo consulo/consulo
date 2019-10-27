@@ -26,7 +26,7 @@ import com.intellij.ide.plugins.PluginManagerConfigurable;
 import com.intellij.ide.plugins.PluginManagerUISettings;
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;

@@ -30,7 +30,7 @@ public class PooledAsyncResult {
   @Nonnull
   public static <V> AsyncResult<V> create(@Nonnull Supplier<AsyncResult<V>> callable) {
     AsyncResult<V> result = AsyncResult.undefined();
-    AppExecutorUtil.getAppExecutorService().execute(() -> result.notify(callable.get()));
+    AppExecutorUtil.getAppExecutorService().execute(() -> callable.get().notify(result));
     return result;
   }
 

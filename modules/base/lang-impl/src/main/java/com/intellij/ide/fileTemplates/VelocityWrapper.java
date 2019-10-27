@@ -16,7 +16,7 @@
 package com.intellij.ide.fileTemplates;
 
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import org.apache.velocity.Template;
 import org.apache.velocity.app.Velocity;

@@ -19,6 +19,8 @@
  */
 package com.intellij.util.messages;
 
+import com.intellij.mock.MockApplication;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.messages.impl.MessageBusFactory;
 import junit.framework.TestCase;
@@ -82,7 +84,7 @@ public class MessageBusTest extends TestCase {
   @Override
   protected void setUp() throws Exception {
     super.setUp();
-    myBus = MessageBusFactory.newMessageBus(this);
+    myBus = MessageBusFactory.newMessageBus(new MockApplication(Disposer.newDisposable()));
     myLog = new ArrayList<String>();
   }
 

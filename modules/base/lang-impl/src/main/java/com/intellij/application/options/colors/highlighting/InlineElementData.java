@@ -53,7 +53,7 @@ public class InlineElementData extends HighlightData {
   @Override
   public void addHighlToView(Editor view, EditorColorsScheme scheme, Map<TextAttributesKey, String> displayText) {
     int offset = getStartOffset();
-    ParameterHintsPresentationManager.getInstance().addHint(view, offset, myText, false);
+    ParameterHintsPresentationManager.getInstance().addHint(view, offset, null, myText, false);
     List<Inlay> inlays = view.getInlayModel().getInlineElementsInRange(offset, offset);
     for (Inlay inlay : inlays) {
       EditorCustomElementRenderer renderer = inlay.getRenderer();
@@ -80,15 +80,15 @@ public class InlineElementData extends HighlightData {
     }
 
     @Override
-    public int calcWidthInPixels(@Nonnull Editor editor) {
-      return myDelegate.calcWidthInPixels(editor);
+    public int calcWidthInPixels(@Nonnull Inlay inlay) {
+      return myDelegate.calcWidthInPixels(inlay);
     }
 
     @Override
-    public void paint(@Nonnull Editor editor, @Nonnull Graphics g, @Nonnull Rectangle r, @Nonnull TextAttributes textAttributes) {
-      myDelegate.paint(editor, g, r, textAttributes);
+    public void paint(@Nonnull Inlay inlay, @Nonnull Graphics g, @Nonnull Rectangle r, @Nonnull TextAttributes textAttributes) {
+      myDelegate.paint(inlay, g, r, textAttributes);
       if (drawBorder) {
-        TextAttributes attributes = editor.getColorsScheme().getAttributes(BLINKING_HIGHLIGHTS_ATTRIBUTES);
+        TextAttributes attributes = inlay.getEditor().getColorsScheme().getAttributes(BLINKING_HIGHLIGHTS_ATTRIBUTES);
         if (attributes != null && attributes.getEffectColor() != null) {
           g.setColor(attributes.getEffectColor());
           g.drawRect(r.x, r.y, r.width, r.height);

@@ -22,11 +22,11 @@ import com.intellij.psi.util.ParameterizedCachedValue;
 import com.intellij.psi.util.ParameterizedCachedValueProvider;
 import javax.annotation.Nonnull;
 
-public abstract class PsiParameterizedCachedValue<T,P> extends PsiCachedValue<T> implements ParameterizedCachedValue<T,P> {
-  private final ParameterizedCachedValueProvider<T,P> myProvider;
+public class PsiParameterizedCachedValue<T, P> extends PsiCachedValue<T> implements ParameterizedCachedValue<T, P> {
+  private final ParameterizedCachedValueProvider<T, P> myProvider;
 
-  public PsiParameterizedCachedValue(@Nonnull PsiManager manager, @Nonnull ParameterizedCachedValueProvider<T, P> provider) {
-    super(manager);
+  PsiParameterizedCachedValue(@Nonnull PsiManager manager, @Nonnull ParameterizedCachedValueProvider<T, P> provider, boolean trackValue) {
+    super(manager, trackValue);
     myProvider = provider;
   }
 
@@ -35,8 +35,9 @@ public abstract class PsiParameterizedCachedValue<T,P> extends PsiCachedValue<T>
     return getValueWithLock(param);
   }
 
+  @Nonnull
   @Override
-  public ParameterizedCachedValueProvider<T,P> getValueProvider() {
+  public ParameterizedCachedValueProvider<T, P> getValueProvider() {
     return myProvider;
   }
 

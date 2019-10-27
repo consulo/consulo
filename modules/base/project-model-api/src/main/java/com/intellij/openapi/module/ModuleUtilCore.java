@@ -73,7 +73,12 @@ public class ModuleUtilCore {
     return module == null ? !projectFileIndex.isInLibraryClasses(vFile) : module.isDisposed();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
+  public static Module findModuleForFile(@Nonnull PsiFile file) {
+    return findModuleForPsiElement(file);
+  }
+
+  @Nullable
   public static Module findModuleForFile(@Nonnull VirtualFile file, @Nonnull Project project) {
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     return fileIndex.getModuleForFile(file);
@@ -237,7 +242,7 @@ public class ModuleUtilCore {
     return contentFolders;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static <E extends ModuleExtension<E>> E getExtension(@Nonnull Module module, @Nonnull Class<E> extensionClass) {
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
     return moduleRootManager.getExtension(extensionClass);
@@ -268,7 +273,7 @@ public class ModuleUtilCore {
     return getExtension(moduleForFile, extensionClass);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static Sdk getSdk(@Nonnull Module module, @Nonnull Class<? extends ModuleExtensionWithSdk> extensionClass) {
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
 

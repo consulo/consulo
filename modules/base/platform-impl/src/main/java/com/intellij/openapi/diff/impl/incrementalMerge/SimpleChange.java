@@ -16,7 +16,7 @@
 package com.intellij.openapi.diff.impl.incrementalMerge;
 
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.diff.impl.highlighting.FragmentSide;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.util.TextRange;

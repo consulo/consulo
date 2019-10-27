@@ -17,8 +17,6 @@ package com.intellij.codeInsight.navigation.actions;
 
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.CodeInsightBundle;
-import consulo.codeInsight.TargetElementUtil;
-import consulo.codeInsight.TargetElementUtilEx;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.navigation.NavigationUtil;
@@ -31,7 +29,6 @@ import com.intellij.injected.editor.EditorWindow;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
@@ -51,11 +48,13 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
-
-import consulo.ui.RequiredUIAccess;
+import consulo.codeInsight.TargetElementUtil;
+import consulo.codeInsight.TargetElementUtilEx;
 import consulo.codeInsight.navigation.actions.GotoDeclarationHandlerEx;
+import consulo.logging.Logger;
+import consulo.ui.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -95,7 +94,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
 
       if (elements.length != 1) {
         if (elements.length == 0) {
-          PsiElement element = findElementToShowUsagesOf(editor, file, editor.getCaretModel().getOffset());
+          PsiElement element = findElementToShowUsagesOf(editor, editor.getCaretModel().getOffset());
           if (element != null) {
             ShowUsagesAction showUsages = (ShowUsagesAction)ActionManager.getInstance().getAction(ShowUsagesAction.ID);
             RelativePoint popupPosition = JBPopupFactory.getInstance().guessBestPopupLocation(editor);
@@ -130,7 +129,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     return null;
   }
 
-  public static PsiNameIdentifierOwner findElementToShowUsagesOf(@Nonnull Editor editor, @Nonnull PsiFile file, int offset) {
+  public static PsiNameIdentifierOwner findElementToShowUsagesOf(@Nonnull Editor editor, int offset) {
     PsiElement elementAt = TargetElementUtil.findTargetElement(editor, ContainerUtil.newHashSet(TargetElementUtilEx.ELEMENT_NAME_ACCEPTED), offset);
     if (elementAt instanceof PsiNameIdentifierOwner) {
       return (PsiNameIdentifierOwner)elementAt;

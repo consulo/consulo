@@ -17,6 +17,7 @@
 package com.intellij.openapi.vcs;
 
 import com.intellij.openapi.util.io.FileUtil;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -30,6 +31,11 @@ public class VcsDirectoryMapping {
   private String mySystemIdependentPath;
   private String myVcs;
   private VcsRootSettings myRootSettings;
+
+  @Nonnull
+  public static VcsDirectoryMapping createDefault(@Nonnull String vcs) {
+    return new VcsDirectoryMapping("", vcs);
+  }
 
   public VcsDirectoryMapping() {
   }

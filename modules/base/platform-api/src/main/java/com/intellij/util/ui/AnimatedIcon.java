@@ -18,12 +18,11 @@ package com.intellij.util.ui;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Disposer;
-import consulo.awt.TargetAWT;
-import consulo.ui.image.Image;
+import com.intellij.util.ui.update.Activatable;
+import com.intellij.util.ui.update.UiNotifyConnector;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
 
 /**
  * @author Kirill Kalishev
@@ -31,12 +30,11 @@ import java.util.Arrays;
  */
 public class AnimatedIcon extends JComponent implements Disposable {
   private final Icon[] myIcons;
-  private final Dimension myPrefSize = new Dimension();
+  private final Dimension myPrefSize;
 
-  //no need to make it volatile, all r/w operations are from EDT
   private int myCurrentIconIndex;
 
-  private final Icon myPassiveIcon;
+  protected final Icon myPassiveIcon;
   private final Icon myEmptyPassiveIcon;
 
   private boolean myPaintPassive = true;
@@ -46,24 +44,11 @@ public class AnimatedIcon extends JComponent implements Disposable {
 
   private final String myName;
 
-  //private boolean myPaintingBgNow;
-
-  public AnimatedIcon(final String name, Image[] icons, Image passiveIcon, int cycleLength) {
-    this(name, Arrays.stream(icons).map(TargetAWT::to).toArray(Icon[]::new), TargetAWT.to(passiveIcon), cycleLength);
-  }
-
   public AnimatedIcon(final String name, Icon[] icons, Icon passiveIcon, int cycleLength) {
     myName = name;
     myIcons = icons.length == 0 ? new Icon[]{passiveIcon} : icons;
     myPassiveIcon = passiveIcon;
-
-    for (Icon each : icons) {
-      myPrefSize.width = Math.max(each.getIconWidth(), myPrefSize.width);
-      myPrefSize.height = Math.max(each.getIconHeight(), myPrefSize.height);
-    }
-
-    myPrefSize.width = Math.max(passiveIcon.getIconWidth(), myPrefSize.width);
-    myPrefSize.height = Math.max(passiveIcon.getIconHeight(), myPrefSize.height);
+    myPrefSize = calcPreferredSize();
 
     myAnimator = new Animator(myName, icons.length, cycleLength, true) {
       @Override
@@ -82,6 +67,31 @@ public class AnimatedIcon extends JComponent implements Disposable {
     }
 
     setOpaque(false);
+
+    new UiNotifyConnector(this, new Activatable() {
+      @Override
+      public void showNotify() {
+        if (myRunning) {
+          ensureAnimation(true);
+        }
+      }
+
+      @Override
+      public void hideNotify() {
+        ensureAnimation(false);
+      }
+    });
+  }
+
+  protected Dimension calcPreferredSize() {
+    Dimension dimension = new Dimension();
+
+    for (Icon each : myIcons) {
+      dimension.width = Math.max(each.getIconWidth(), dimension.width);
+      dimension.height = Math.max(each.getIconHeight(), dimension.height);
+    }
+
+    return new Dimension(Math.max(myPassiveIcon.getIconWidth(), dimension.width), Math.max(myPassiveIcon.getIconHeight(), dimension.height));
   }
 
   public void setPaintPassiveIcon(boolean paintPassive) {
@@ -99,20 +109,6 @@ public class AnimatedIcon extends JComponent implements Disposable {
     }
 
     return changes;
-  }
-
-  @Override
-  public void addNotify() {
-    super.addNotify();
-    if (myRunning) {
-      ensureAnimation(true);
-    }
-  }
-
-  @Override
-  public void removeNotify() {
-    super.removeNotify();
-    ensureAnimation(false);
   }
 
   public void resume() {
@@ -156,7 +152,7 @@ public class AnimatedIcon extends JComponent implements Disposable {
       final Container parent = getParent();
       JComponent opaque = null;
       if (parent instanceof JComponent) {
-        opaque = (JComponent)UIUtil.findNearestOpaque((JComponent)parent);
+        opaque = (JComponent)UIUtil.findNearestOpaque(parent);
       }
       Color bg = opaque != null ? opaque.getBackground() : UIUtil.getPanelBackground();
       g.setColor(bg);
@@ -177,8 +173,6 @@ public class AnimatedIcon extends JComponent implements Disposable {
     int y = (size.height - icon.getIconHeight()) / 2;
 
     paintIcon(g, icon, x, y);
-
-    //boolean lastPaintWasRunning = myAnimator.isRunning();
   }
 
   protected void paintIcon(Graphics g, Icon icon, int x, int y) {

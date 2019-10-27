@@ -24,9 +24,9 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.SystemInfo;
-import consulo.ui.RequiredUIAccess;
+import consulo.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 
@@ -39,7 +39,7 @@ public class CheckForUpdateAction extends AnAction implements DumbAware {
       e.getPresentation().setEnabledAndVisible(true);
     }
     else {
-      e.getPresentation().setVisible(!SystemInfo.isMacSystemMenu || !ActionPlaces.MAIN_MENU.equals(place));
+      e.getPresentation().setVisible(!TopApplicationMenuUtil.isMacSystemMenu || !ActionPlaces.MAIN_MENU.equals(place));
     }
   }
 

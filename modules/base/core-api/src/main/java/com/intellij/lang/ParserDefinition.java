@@ -69,7 +69,9 @@ public interface ParserDefinition {
    * @param languageVersion version of language
    */
   @Nonnull
-  TokenSet getWhitespaceTokens(@Nonnull LanguageVersion languageVersion);
+  default TokenSet getWhitespaceTokens(@Nonnull LanguageVersion languageVersion) {
+    return TokenSet.WHITE_SPACE;
+  }
 
   /**
    * Returns the set of token types which are treated as comments by the PSI builder.
@@ -112,6 +114,7 @@ public interface ParserDefinition {
    * @param viewProvider virtual file.
    * @return the PSI file element.
    */
+  @Nonnull
   PsiFile createFile(@Nonnull FileViewProvider viewProvider);
 
   /**
@@ -122,15 +125,26 @@ public interface ParserDefinition {
    * @param left  the first token to check.
    * @param right the second token to check.
    * @return the spacing requirements.
-   * @since 6.0
    */
   @Nonnull
-  SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right);
+  default SpaceRequirements spaceExistenceTypeBetweenTokens(ASTNode left, ASTNode right) {
+    //noinspection deprecation
+    return spaceExistanceTypeBetweenTokens(left, right);
+  }
+
+  /**
+   * @deprecated Override {@link ParserDefinition#spaceExistenceTypeBetweenTokens(ASTNode, ASTNode)} instead
+   */
+  @Deprecated
+  @Nonnull
+  default SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
+    return SpaceRequirements.MAY;
+  }
 
   /**
    * Requirements for spacing between tokens.
    *
-   * @see ParserDefinition#spaceExistanceTypeBetweenTokens
+   * @see ParserDefinition#spaceExistenceTypeBetweenTokens
    */
   enum SpaceRequirements {
     /** Whitespace between tokens is optional. */

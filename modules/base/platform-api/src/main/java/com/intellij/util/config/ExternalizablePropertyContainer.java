@@ -15,7 +15,7 @@
  */
 package com.intellij.util.config;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.util.JDOMExternalizable;

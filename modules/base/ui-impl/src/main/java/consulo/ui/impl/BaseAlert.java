@@ -72,7 +72,7 @@ public abstract class BaseAlert<V> implements Alert<V> {
   }
 
   protected String myText;
-  protected String myTitle;
+  protected String myTitle = "Consulo";
   protected Type myType = Type.INFO;
   protected List<ButtonImpl> myButtons = new ArrayList<>();
   protected AlertValueRemember<V> myRemember;

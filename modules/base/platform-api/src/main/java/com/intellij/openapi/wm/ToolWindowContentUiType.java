@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.wm;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 
 public class ToolWindowContentUiType {
   private static final Logger LOG = Logger.getInstance(ToolWindowContentUiType.class);

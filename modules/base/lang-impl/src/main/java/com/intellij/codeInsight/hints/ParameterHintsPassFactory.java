@@ -32,6 +32,7 @@ import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.editor.ex.util.CaretVisualPositionKeeper;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.SyntaxTraverser;
@@ -61,7 +62,7 @@ public class ParameterHintsPassFactory implements TextEditorHighlightingPassFact
   }
 
   private static class ParameterHintsPass extends EditorBoundHighlightingPass {
-    private final Map<Integer, String> myAnnotations = new HashMap<>();
+    private final Map<Integer, Pair<String, InlayParameterHintsProvider>> myAnnotations = new HashMap<>();
 
     private ParameterHintsPass(@Nonnull PsiFile file, @Nonnull Editor editor) {
       super(editor, file, true);
@@ -116,7 +117,7 @@ public class ParameterHintsPassFactory implements TextEditorHighlightingPassFact
       if (hints.isEmpty()) return;
       MethodInfo info = provider.getMethodInfo(element);
       if (info == null || !isMatchedByAny(info, blackListMatchers)) {
-        hints.forEach((h) -> myAnnotations.put(h.getOffset(), h.getText()));
+        hints.forEach((h) -> myAnnotations.put(h.getOffset(), Pair.create(h.getText(), provider)));
       }
     }
 
@@ -134,7 +135,9 @@ public class ParameterHintsPassFactory implements TextEditorHighlightingPassFact
       for (Inlay inlay : myEditor.getInlayModel().getInlineElementsInRange(0, myDocument.getTextLength())) {
         if (!presentationManager.isParameterHint(inlay)) continue;
         int offset = inlay.getOffset();
-        String newText = myAnnotations.remove(offset);
+        Pair<String, InlayParameterHintsProvider> pair = myAnnotations.remove(offset);
+        String newText = pair == null ? null :pair.getFirst();
+        InlayParameterHintsProvider parameterHintsProvider = pair == null ? null : pair.getSecond();
         if (delayRemoval(inlay, caretMap)) continue;
         String oldText = presentationManager.getHintText(inlay);
         if (!Objects.equals(newText, oldText)) {
@@ -143,14 +146,16 @@ public class ParameterHintsPassFactory implements TextEditorHighlightingPassFact
             presentationManager.deleteHint(myEditor, inlay);
           }
           else {
-            presentationManager.replaceHint(myEditor, inlay, newText);
+            presentationManager.replaceHint(myEditor, inlay, parameterHintsProvider, newText);
           }
         }
       }
-      for (Map.Entry<Integer, String> e : myAnnotations.entrySet()) {
+      for (Map.Entry<Integer, Pair<String, InlayParameterHintsProvider>> e : myAnnotations.entrySet()) {
         int offset = e.getKey();
-        String text = e.getValue();
-        presentationManager.addHint(myEditor, offset, text, !firstTime && !removedHints.contains(text));
+        Pair<String, InlayParameterHintsProvider> value = e.getValue();
+        String text = value.getFirst();
+        InlayParameterHintsProvider provider = value.getSecond();
+        presentationManager.addHint(myEditor, offset, provider, text, !firstTime && !removedHints.contains(text));
       }
       keeper.restoreOriginalLocation();
       myEditor.putUserData(REPEATED_PASS, Boolean.TRUE);

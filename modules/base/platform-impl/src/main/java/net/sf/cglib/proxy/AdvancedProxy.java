@@ -1,9 +1,9 @@
 package net.sf.cglib.proxy;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.containers.ConcurrentWeakValueHashMap;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
 import net.sf.cglib.core.CodeGenerationException;
 
 import java.lang.reflect.Constructor;
@@ -36,7 +36,7 @@ public class AdvancedProxy {
   }
 
 
-  private static final Map<ProxyDescription, Factory> ourFactories = new ConcurrentWeakValueHashMap<ProxyDescription, Factory>();
+  private static final Map<ProxyDescription, Factory> ourFactories = ContainerUtil.createConcurrentWeakValueMap();
   private static final CallbackFilter NO_OBJECT_METHODS_FILTER = new CallbackFilter() {
     public int accept(Method method) {
       if (AdvancedProxy.FINALIZE_METHOD.equals(method)) {

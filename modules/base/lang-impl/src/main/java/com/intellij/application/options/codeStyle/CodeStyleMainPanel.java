@@ -212,7 +212,7 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
     return ensurePanel(myModel.getSelectedScheme());
   }
 
-  private NewCodeStyleSettingsPanel ensurePanel(final CodeStyleScheme scheme) {
+  private NewCodeStyleSettingsPanel ensurePanel(@Nonnull CodeStyleScheme scheme) {
     String name = scheme.getName();
     if (!mySettingsPanels.containsKey(name)) {
       NewCodeStyleSettingsPanel panel = myFactory.createPanel(scheme);

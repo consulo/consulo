@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 
-/*
- * Created by IntelliJ IDEA.
- * User: Alexey
- * Date: 18.12.2006
- * Time: 20:18:31
- */
 package com.intellij.util.containers;
 
 import gnu.trove.TObjectHashingStrategy;
@@ -27,77 +21,56 @@ import javax.annotation.Nonnull;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
-import java.util.Map;
 
 /**
  * Concurrent weak key:K -> strong value:V map.
  * Null keys are allowed
  * Null values are NOT allowed
- * @deprecated Use {@link ContainerUtil#createConcurrentWeakMap()} instead
  */
-public final class ConcurrentWeakHashMap<K, V> extends ConcurrentRefHashMap<K, V> {
-  private static class WeakKey<K, V> extends WeakReference<K> implements KeyReference<K, V> {
+final class ConcurrentWeakHashMap<K, V> extends ConcurrentRefHashMap<K, V> {
+  private static class WeakKey<K> extends WeakReference<K> implements KeyReference<K> {
     private final int myHash; /* Hashcode of key, stored here since the key may be tossed by the GC */
     @Nonnull
-    private final TObjectHashingStrategy<K> myStrategy;
-    private final V value;
+    private final TObjectHashingStrategy<? super K> myStrategy;
 
-    private WeakKey(@Nonnull K k, final int hash, @Nonnull TObjectHashingStrategy<K> strategy, V v, ReferenceQueue<K> q) {
+    private WeakKey(@Nonnull K k, final int hash, @Nonnull TObjectHashingStrategy<? super K> strategy, @Nonnull ReferenceQueue<K> q) {
       super(k, q);
       myStrategy = strategy;
-      value = v;
       myHash = hash;
     }
 
-    @Nonnull
     @Override
-    public V getValue() {
-      return value;
-    }
-
     public boolean equals(Object o) {
       if (this == o) return true;
       if (!(o instanceof KeyReference)) return false;
       K t = get();
-      K u = ((KeyReference<K,V>)o).get();
+      //noinspection unchecked
+      K u = ((KeyReference<K>)o).get();
       if (t == null || u == null) return false;
-      if (t == u) return true;
-      return myStrategy.equals(t, u);
+      return t == u || myStrategy.equals(t, u);
     }
 
+    @Override
     public int hashCode() {
       return myHash;
     }
   }
 
+  @Nonnull
   @Override
-  protected KeyReference<K, V> createKeyReference(@Nonnull K key, @Nonnull V value, @Nonnull TObjectHashingStrategy<K> hashingStrategy) {
-    return new WeakKey<K, V>(key, hashingStrategy.computeHashCode(key), hashingStrategy, value, myReferenceQueue);
+  protected KeyReference<K> createKeyReference(@Nonnull K key, @Nonnull TObjectHashingStrategy<? super K> hashingStrategy) {
+    return new WeakKey<>(key, hashingStrategy.computeHashCode(key), hashingStrategy, myReferenceQueue);
   }
 
-  public ConcurrentWeakHashMap(int initialCapacity, float loadFactor) {
-    super(initialCapacity, loadFactor);
+  ConcurrentWeakHashMap(float loadFactor) {
+    this(DEFAULT_CAPACITY, loadFactor, DEFAULT_CONCURRENCY_LEVEL, ContainerUtil.canonicalStrategy());
   }
 
-  public ConcurrentWeakHashMap(int initialCapacity) {
-    super(initialCapacity);
-  }
-
-  public ConcurrentWeakHashMap() {
-  }
-
-  public ConcurrentWeakHashMap(int initialCapacity,
-                               float loadFactor,
-                               int concurrencyLevel,
-                               @Nonnull TObjectHashingStrategy<K> hashingStrategy) {
+  ConcurrentWeakHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull TObjectHashingStrategy<? super K> hashingStrategy) {
     super(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
   }
 
-  public ConcurrentWeakHashMap(Map<? extends K, ? extends V> t) {
-    super(t);
-  }
-
-  public ConcurrentWeakHashMap(@Nonnull TObjectHashingStrategy<K> hashingStrategy) {
+  ConcurrentWeakHashMap(@Nonnull TObjectHashingStrategy<? super K> hashingStrategy) {
     super(hashingStrategy);
   }
 }

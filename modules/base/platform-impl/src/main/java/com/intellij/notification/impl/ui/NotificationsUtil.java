@@ -19,7 +19,6 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
@@ -27,6 +26,7 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.logging.Logger;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

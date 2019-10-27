@@ -17,7 +17,7 @@ package com.intellij.openapi.fileEditor.impl.text;
 
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
 import com.intellij.ide.structureView.StructureViewBuilder;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.fileEditor.*;
@@ -121,10 +121,10 @@ public class DesktopTextEditorProvider extends TextEditorProvider {
     else UiNotifyConnector.doWhenFirstShown(editor.getContentComponent(), scrollingRunnable);
   }
 
-  protected class EditorWrapper extends UserDataHolderBase implements TextEditor {
+  public class EditorWrapper extends UserDataHolderBase implements TextEditor {
     private final Editor myEditor;
 
-    EditorWrapper(@Nonnull Editor editor) {
+    public EditorWrapper(@Nonnull Editor editor) {
       myEditor = editor;
     }
 

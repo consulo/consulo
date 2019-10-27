@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.diff.impl.patch.formove;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
@@ -31,6 +30,8 @@ import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.MultiMap;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.util.*;

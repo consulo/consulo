@@ -16,8 +16,9 @@
 package com.intellij.openapi.vcs.ex;
 
 import com.intellij.diff.util.DiffUtil;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

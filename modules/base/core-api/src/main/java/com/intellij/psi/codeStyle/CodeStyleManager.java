@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2017 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.codeStyle;
 
 import com.intellij.formatting.FormattingMode;
@@ -23,21 +9,25 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.ThrowableRunnable;
-import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 /**
  * Service for reformatting code fragments, getting names for elements
  * according to the user's code style and working with import statements and full-qualified names.
+ *
+ * @see com.intellij.psi.impl.source.codeStyle.PreFormatProcessor
+ * @see com.intellij.psi.impl.source.codeStyle.PostFormatProcessor
  */
 public abstract class CodeStyleManager {
   /**
@@ -87,7 +77,7 @@ public abstract class CodeStyleManager {
    * and splits import statements according to the user's code style.
    *
    * @param element                  the element to reformat.
-   * @param canChangeWhiteSpacesOnly if true, only reformatting is performed; if false,
+   * @param canChangeWhiteSpacesOnly if {@code true}, only reformatting is performed; if {@code false},
    *                                 braces and import statements also can be modified if necessary.
    * @return the element in the PSI tree after the reformat operation corresponding to the
    * original element.
@@ -118,7 +108,7 @@ public abstract class CodeStyleManager {
    * @param element                  the element to reformat.
    * @param startOffset              the start offset in the document of the text range to reformat.
    * @param endOffset                the end offset in the document of the text range to reformat.
-   * @param canChangeWhiteSpacesOnly if true, only reformatting is performed; if false,
+   * @param canChangeWhiteSpacesOnly if {@code true}, only reformatting is performed; if {@code false},
    *                                 braces and import statements also can be modified if necessary.
    * @return the element in the PSI tree after the reformat operation corresponding to the
    * original element.
@@ -151,7 +141,7 @@ public abstract class CodeStyleManager {
   public abstract void reformatTextWithContext(@Nonnull PsiFile file, @Nonnull ChangedRangesInfo info) throws IncorrectOperationException;
 
   public void reformatTextWithContext(@Nonnull PsiFile file, @Nonnull Collection<TextRange> ranges) throws IncorrectOperationException {
-    List<TextRange> rangesList = ContainerUtil.newArrayList(ranges);
+    List<TextRange> rangesList = new ArrayList<>(ranges);
     reformatTextWithContext(file, new ChangedRangesInfo(rangesList, null));
   }
 
@@ -172,6 +162,7 @@ public abstract class CodeStyleManager {
    * @param file   the file to reformat.
    * @param offset the offset the line at which should be reformatted.
    * @throws IncorrectOperationException if the file is read-only.
+   * @see #scheduleIndentAdjustment(Document, int)
    */
   public abstract int adjustLineIndent(@Nonnull PsiFile file, int offset) throws IncorrectOperationException;
 
@@ -182,8 +173,26 @@ public abstract class CodeStyleManager {
    * @param document the document to reformat.
    * @param offset   the offset the line at which should be reformatted.
    * @throws IncorrectOperationException if the file is read-only.
+   * @see #scheduleIndentAdjustment(Document, int)
    */
   public abstract int adjustLineIndent(@Nonnull Document document, int offset);
+
+  /**
+   * Performs a delayed indent adjustment for large documents bigger than {@code FormatterBasedIndentAdjuster.MAX_SYNCHRONOUS_ADJUSTMENT_DOC_SIZE}
+   * by scheduling it to a time when the document is committed. Uses formatter to calculate the new indent on a
+   * background thread. Only the actual change is done on EDT: the old indent is replaced with a new indent string
+   * directly in the document. Doesn't commit the document, thus a subsequent {@link PsiDocumentManager#commitDocument(Document)}
+   * may be required.
+   * <p>
+   * <b>Note:</b> visually it may lead to a text jump which becomes more obvious, more time it takes to calculate the
+   * new indent using a formatting model. A better way to handle large documents is to implement {@link
+   * com.intellij.psi.codeStyle.lineIndent.LineIndentProvider} returning a non-null value when possible.
+   *
+   * @param document The document to be modified.
+   * @param offset   The offset in the line whose indent is to be adjusted.
+   */
+  public void scheduleIndentAdjustment(@Nonnull Document document, int offset) {
+  }
 
   /**
    * @deprecated this method is not intended to be used by plugins.
@@ -197,7 +206,7 @@ public abstract class CodeStyleManager {
    *
    * @param file   the file for which the indent should be calculated.
    * @param offset the offset for the line at which the indent should be calculated.
-   * @return the indent string (containing of tabs and/or whitespaces), or null if it
+   * @return the indent string (containing of tabs and/or whitespaces), or {@code null} if it
    * was not possible to calculate the indent.
    */
   @Nullable
@@ -211,7 +220,7 @@ public abstract class CodeStyleManager {
    * @param file   the file for which the indent should be calculated.
    * @param offset the offset for the line at which the indent should be calculated.
    * @param mode   the formatting mode {@link FormattingMode}
-   * @return the indent string (containing of tabs and/or whitespaces), or null if it
+   * @return the indent string (containing of tabs and/or whitespaces), or {@code null} if it
    * was not possible to calculate the indent.
    */
   @Nullable
@@ -224,26 +233,26 @@ public abstract class CodeStyleManager {
    * editor.
    *
    * @param document for which the indent should be calculated.
-   * @return the indent string (containing of tabs and/or whitespaces), or null if it
+   * @return the indent string (containing of tabs and/or whitespaces), or {@code null} if it
    * was not possible to calculate the indent.
    */
   @Nullable
   public abstract String getLineIndent(@Nonnull Document document, int offset);
 
   /**
-   * @deprecated
+   * @deprecated obsolete
    */
   @Deprecated
   public abstract Indent getIndent(String text, FileType fileType);
 
   /**
-   * @deprecated
+   * @deprecated obsolete
    */
   @Deprecated
   public abstract String fillIndent(Indent indent, FileType fileType);
 
   /**
-   * @deprecated
+   * @deprecated obsolete
    */
   @Deprecated
   public abstract Indent zeroIndent();
@@ -262,11 +271,11 @@ public abstract class CodeStyleManager {
    * Formatting may be executed sequentially, i.e. the whole (re)formatting task is split into a number of smaller sub-tasks
    * that are executed sequentially. That is done primarily for ability to show progress dialog during formatting (formatting
    * is always performed from EDT, hence, the GUI freezes if we perform formatting as a single big iteration).
-   * <p>
-   * However, there are situation when we don't want to use such an approach - for example, IntelliJ IDEA sometimes inserts dummy
+   * <p/>
+   * However, there are situation when we don't want to use such an approach - for example, the IDE sometimes inserts dummy
    * text into file in order to calculate formatting-specific data and removes it after that. We don't want to allow Swing events
    * dispatching during that in order to not show that dummy text to the end-user.
-   * <p>
+   * <p/>
    * It's possible to configure that (implementation details are insignificant here) and current method serves as a read-only
    * facade for obtaining information if 'sequential' processing is allowed at the moment.
    *

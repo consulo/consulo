@@ -54,7 +54,6 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 09-Jun-16
  */
-@Internal
 public class DesktopUIInternalImpl extends UIInternal {
   @Override
   public Image _Image_fromUrl(URL url) {

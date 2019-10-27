@@ -15,44 +15,18 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.ui.mac.MacDockDelegate;
-import com.intellij.ui.win.WinDockDelegate;
-import consulo.platform.Platform;
-import consulo.ui.taskbar.Java9DockDelegateImpl;
+import com.intellij.openapi.components.ServiceManager;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Fokin
  */
-public class SystemDock {
-
-  private static Delegate delegate;
-
-  static {
-    // FIXME [VISTALL] maybe use injector - as app service?
-    if (Platform.current().isWebService()) {
-      delegate = () -> {
-      };
-    }
-    else if (SystemInfo.isMac) {
-      if(SystemInfo.isJavaVersionAtLeast(9, 0, 0)) {
-        delegate = new Java9DockDelegateImpl();
-      }
-      else {
-        delegate = MacDockDelegate.getInstance();
-      }
-    }
-    else if (SystemInfo.isWin7OrNewer) {
-      delegate = WinDockDelegate.getInstance();
-    }
+public abstract class SystemDock {
+  @Nonnull
+  public static SystemDock getInstance() {
+    return ServiceManager.getService(SystemDock.class);
   }
 
-  public static void updateMenu() {
-    if (delegate == null) return;
-    delegate.updateRecentProjectsMenu();
-  }
-
-  public interface Delegate {
-    void updateRecentProjectsMenu();
-  }
+  public abstract void updateMenu();
 }

@@ -15,7 +15,7 @@
  */
 package consulo.builtInServer.impl.net.http;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;

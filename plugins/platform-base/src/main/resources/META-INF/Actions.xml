@@ -13,11 +13,13 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin>
+<consulo-plugin>
   <actions>
     <group id="Vcs.KeymapGroup" text="Version Control Systems"/>
     <!-- grouping for Settings -> Keymap -> Version Control Systems -->
     <group id="VcsGeneral.KeymapGroup"/>
+    <!-- grouping for Settings -> Keymap -> Others -->
+    <group id="Other.KeymapGroup"/>
 
     <action id="Login" class="consulo.auth.action.LoginAction" />
 
@@ -671,7 +673,6 @@
 
     <group id="MaintenanceGroup">
       <action id="UiDebugger" class="com.intellij.ui.debugger.ShowUiDebuggerAction"/>
-      <action id="ShowRegistry" class="com.intellij.openapi.util.registry.ShowRegistryAction"/>
     </group>
 
     <action id="Console.Open" class="com.intellij.openapi.actionSystem.EmptyAction"/>
@@ -993,7 +994,7 @@
 
     <group id="WelcomeScreen.QuickStart.IDEA">
       <action id="WelcomeScreen.CreateNewProject" class="consulo.ide.newProject.actions.NewProjectAction" icon="AllIcons.Welcome.CreateNewProject"/>
-      <action id="WelcomeScreen.OpenProject" class="com.intellij.ide.actions.OpenProjectAction" icon="AllIcons.Welcome.OpenProject"/>
+      <action id="WelcomeScreen.OpenProject" class="com.intellij.ide.actions.OpenFileAction" icon="AllIcons.Welcome.OpenProject"/>
       <add-to-group group-id="WelcomeScreen.QuickStart" anchor="first"/>
     </group>
 
@@ -2251,5 +2252,37 @@
     <group id="Internal" text="Internal Actions" internal="true" popup="true">
       <add-to-group group-id="ToolsMenu" anchor="last"/>
     </group>
+
+    <group id="TodoMainGroup" text="TODO">
+      <add-to-group group-id="Other.KeymapGroup"/>
+      <group id="TodoViewGroupByGroup" class="com.intellij.ide.todo.TodoPanel$GroupByActionGroup">
+        <separator text="Group By"/>
+        <action class="com.intellij.ide.todo.TodoPanel$MyShowModulesAction" id="TodoViewGroupByShowModules">
+          <keyboard-shortcut first-keystroke="control M" keymap="$default"/>
+        </action>
+
+        <action class="com.intellij.ide.todo.TodoPanel$MyShowPackagesAction" id="TodoViewGroupByShowPackages">
+          <keyboard-shortcut first-keystroke="control P" keymap="$default"/>
+        </action>
+
+        <action class="com.intellij.ide.todo.TodoPanel$MyFlattenPackagesAction" id="TodoViewGroupByFlattenPackage">
+          <keyboard-shortcut first-keystroke="control F" keymap="$default"/>
+        </action>
+      </group>
+    </group>
+
+    <group id="WelcomeScreenRecentProjectActionGroup">
+      <action id="WelcomeScreen.OpenSelected" class="com.intellij.openapi.wm.impl.welcomeScreen.OpenSelectedProjectsAction"
+              text="Open Selected"/>
+      <action id="WelcomeScreen.NewGroup" class="com.intellij.openapi.wm.impl.welcomeScreen.CreateNewProjectGroupAction"
+              text="New Project Group"/>
+      <action id="WelcomeScreen.EditGroup" class="com.intellij.openapi.wm.impl.welcomeScreen.EditProjectGroupAction" text="Edit..."/>
+      <group id="WelcomeScreen.MoveToGroup" class="com.intellij.openapi.wm.impl.welcomeScreen.MoveProjectToGroupActionGroup"
+             text="Move To Group" popup="true"/>
+      <separator/>
+      <action id="WelcomeScreen.RemoveSelected" class="com.intellij.openapi.wm.impl.welcomeScreen.RemoveSelectedProjectsAction"
+              text="Remove Selected from Welcome Screen"/>
+    </group>
+
   </actions>
-</idea-plugin>
+</consulo-plugin>

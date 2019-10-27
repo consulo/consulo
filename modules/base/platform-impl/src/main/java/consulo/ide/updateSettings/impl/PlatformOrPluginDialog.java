@@ -18,7 +18,6 @@ package consulo.ide.updateSettings.impl;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.*;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.Task;
@@ -36,7 +35,9 @@ import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.components.BorderLayoutPanel;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.ide.plugins.InstalledPluginsState;
+import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,8 +46,8 @@ import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -63,14 +64,14 @@ public class PlatformOrPluginDialog extends DialogWrapper {
     }
 
     @Override
-    public TableCellRenderer getRenderer(final IdeaPluginDescriptor pluginDescriptor) {
+    public TableCellRenderer getRenderer(final PluginDescriptor pluginDescriptor) {
       return new PluginsTableRenderer(pluginDescriptor, true) {
         @Override
-        protected void updatePresentation(boolean isSelected, @Nonnull IdeaPluginDescriptor pluginNode, TableModel model) {
+        protected void updatePresentation(boolean isSelected, @Nonnull PluginDescriptor pluginNode, TableModel model) {
           PlatformOrPluginNode node = ContainerUtil.find(myNodes, it -> it.getPluginId().equals(pluginDescriptor.getPluginId()));
           assert node != null;
 
-          IdeaPluginDescriptor currentDescriptor = node.getCurrentDescriptor();
+          PluginDescriptor currentDescriptor = node.getCurrentDescriptor();
           if (currentDescriptor != null) {
             myCategory.setText(currentDescriptor.getVersion() + " " + UIUtil.rightArrow() + " " + (node.getFutureDescriptor() == null ? "??" : pluginNode.getVersion()));
           }
@@ -95,7 +96,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
     }
 
     @Override
-    public Comparator<IdeaPluginDescriptor> getComparator() {
+    public Comparator<PluginDescriptor> getComparator() {
       return null;
     }
   }
@@ -108,7 +109,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
     }
 
     @Override
-    public void updatePluginsList(List<IdeaPluginDescriptor> list) {
+    public void updatePluginsList(List<PluginDescriptor> list) {
       view.clear();
       filtered.clear();
       view.addAll(list);
@@ -121,7 +122,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
     }
 
     @Override
-    public boolean isPluginDescriptorAccepted(IdeaPluginDescriptor descriptor) {
+    public boolean isPluginDescriptorAccepted(PluginDescriptor descriptor) {
       return true;
     }
   }
@@ -133,7 +134,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
   @Nullable
   private Project myProject;
   @Nullable
-  private Consumer<Collection<IdeaPluginDescriptor>> myAfterCallback;
+  private Consumer<Collection<PluginDescriptor>> myAfterCallback;
   @Nullable
   private String myPlatformVersion;
   @Nonnull
@@ -144,7 +145,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
   public PlatformOrPluginDialog(@Nullable Project project,
                                 @Nonnull PlatformOrPluginUpdateResult updateResult,
                                 @Nullable Predicate<PluginId> greenStrategy,
-                                @Nullable Consumer<Collection<IdeaPluginDescriptor>> afterCallback) {
+                                @Nullable Consumer<Collection<PluginDescriptor>> afterCallback) {
     super(project);
     myProject = project;
     myAfterCallback = afterCallback;
@@ -158,16 +159,16 @@ public class PlatformOrPluginDialog extends DialogWrapper {
     }
     else {
       myGreenStrategy = pluginId -> {
-        IdeaPluginDescriptor plugin = PluginManager.getPlugin(pluginId);
+        PluginDescriptor plugin = PluginManager.getPlugin(pluginId);
         boolean platform = PlatformOrPluginUpdateChecker.isPlatform(pluginId);
         return plugin == null && !platform;
       };
     }
 
     Set<PluginId> brokenPlugins = new HashSet<>();
-    List<IdeaPluginDescriptor> toShowPluginList = new ArrayList<>();
+    List<PluginDescriptor> toShowPluginList = new ArrayList<>();
     for (PlatformOrPluginNode node : myNodes) {
-      IdeaPluginDescriptor futureDescriptor = node.getFutureDescriptor();
+      PluginDescriptor futureDescriptor = node.getFutureDescriptor();
       if (futureDescriptor != null) {
         toShowPluginList.add(futureDescriptor);
       }
@@ -220,10 +221,10 @@ public class PlatformOrPluginDialog extends DialogWrapper {
     }
 
     Task.Backgroundable.queue(myProject, IdeBundle.message("progress.download.plugins"), true, PluginManagerUISettings.getInstance(), indicator -> {
-      List<IdeaPluginDescriptor> installed = new ArrayList<>(myNodes.size());
+      List<PluginDescriptor> installed = new ArrayList<>(myNodes.size());
 
       for (PlatformOrPluginNode platformOrPluginNode : myNodes) {
-        IdeaPluginDescriptor pluginDescriptor = platformOrPluginNode.getFutureDescriptor();
+        PluginDescriptor pluginDescriptor = platformOrPluginNode.getFutureDescriptor();
         // update list contains broken plugins
         if (pluginDescriptor == null) {
 

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.wm.impl.commands;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.FocusWatcher;
 import com.intellij.openapi.wm.IdeFocusManager;
@@ -103,10 +103,10 @@ public final class DesktopRequestFocusInToolWindowCmd extends FinalizableCommand
         if (c != null) {
           final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getPermanentFocusOwner();
           if (owner != c) {
-            myManager.getFocusManager().requestFocusInProject(c, myProject);
+            getManager().getFocusManager().requestFocusInProject(c, myProject);
             bringOwnerToFront();
           }
-          myManager.getFocusManager().doWhenFocusSettlesDown(() -> updateToolWindow(c));
+          getManager().getFocusManager().doWhenFocusSettlesDown(() -> updateToolWindow(c));
         }
         else {
           checkerAlarm.addRequest(this, 100);

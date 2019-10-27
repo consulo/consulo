@@ -15,8 +15,8 @@
  */
 package com.intellij.util.text;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.logging.Logger;
 import gnu.trove.TIntArrayList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -416,7 +416,12 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     final DefaultActionGroup group = new DefaultActionGroup();
 
     if (myAdditionalGearActions != null) {
-      addSorted(group, myAdditionalGearActions);
+      if (myAdditionalGearActions.isPopup() && !StringUtil.isEmpty(myAdditionalGearActions.getTemplatePresentation().getText())) {
+        group.add(myAdditionalGearActions);
+      }
+      else {
+        addSorted(group, myAdditionalGearActions);
+      }
       group.addSeparator();
     }
     group.addAction(myToggleToolbarGroup).setAsSecondary(true);

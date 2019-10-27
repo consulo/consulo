@@ -18,27 +18,26 @@ package com.intellij.openapi.project;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.util.Consumer;
 import consulo.annotations.DeprecationInfo;
-import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
-import java.util.function.Consumer;
 
 /**
  * @author nik
  */
 public abstract class DumbAwareAction extends AnAction implements DumbAware {
+
   @Nonnull
   public static DumbAwareAction create(@Nonnull Consumer<? super AnActionEvent> actionPerformed) {
     return new DumbAwareAction() {
-      @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
-        actionPerformed.accept(e);
+        actionPerformed.consume(e);
       }
     };
   }
@@ -46,10 +45,9 @@ public abstract class DumbAwareAction extends AnAction implements DumbAware {
   @Nonnull
   public static DumbAwareAction create(@Nullable String text, @Nonnull Consumer<? super AnActionEvent> actionPerformed) {
     return new DumbAwareAction(text) {
-      @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
-        actionPerformed.accept(e);
+        actionPerformed.consume(e);
       }
     };
   }

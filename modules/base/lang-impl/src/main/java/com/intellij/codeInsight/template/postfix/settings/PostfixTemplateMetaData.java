@@ -19,7 +19,7 @@ package com.intellij.codeInsight.template.postfix.settings;
 import com.intellij.codeInsight.intention.impl.config.BeforeAfterActionMetaData;
 import com.intellij.codeInsight.intention.impl.config.TextDescriptor;
 import com.intellij.codeInsight.template.postfix.templates.PostfixTemplate;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.lang.UrlClassLoader;

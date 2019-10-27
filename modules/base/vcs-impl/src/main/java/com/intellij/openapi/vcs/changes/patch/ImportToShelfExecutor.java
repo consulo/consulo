@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.vcs.changes.patch;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.impl.patch.FilePatch;
 import com.intellij.openapi.diff.impl.patch.PatchEP;
 import com.intellij.openapi.diff.impl.patch.PatchSyntaxException;
@@ -39,6 +38,8 @@ import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.vcsUtil.VcsCatchingRunnable;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

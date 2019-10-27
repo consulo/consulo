@@ -13,7 +13,7 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin>
+<consulo-plugin>
   <actions>
     <group id="RemoteServersViewToolbar">
       <action id="RemoteServers.RunServer" class="com.intellij.remoteServer.impl.runtime.ui.tree.actions.RunServerAction"/>
@@ -56,4 +56,4 @@
 
     <extensionExtender key="com.intellij.configurationType" implementationClass="com.intellij.remoteServer.impl.configuration.deployment.DeployToServerConfigurationTypesRegistrar" />
   </extensions>
-</idea-plugin>
+</consulo-plugin>

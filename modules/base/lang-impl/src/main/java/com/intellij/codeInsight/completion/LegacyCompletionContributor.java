@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.paths.PsiDynaReference;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.TextRange;

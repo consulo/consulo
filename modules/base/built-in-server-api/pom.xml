@@ -53,11 +53,6 @@
       <optional>true</optional>
     </dependency>
     <dependency>
-      <groupId>org.apache.ws.xmlrpc</groupId>
-      <artifactId>xmlrpc</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
       <groupId>io.netty</groupId>
       <artifactId>netty-common</artifactId>
       <optional>true</optional>

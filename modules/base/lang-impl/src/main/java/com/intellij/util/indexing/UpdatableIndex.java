@@ -19,18 +19,22 @@ package com.intellij.util.indexing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Processor;
+import com.intellij.util.indexing.impl.AbstractUpdateData;
+import org.jetbrains.annotations.TestOnly;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import java.util.Collection;
+import java.util.Map;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Dec 10, 2007
  */
-public interface UpdatableIndex<Key, Value, Input> extends InvertedIndex<Key,Value, Input> {
+public interface UpdatableIndex<Key, Value, Input> extends InvertedIndex<Key, Value, Input> {
 
-  boolean processAllKeys(@Nonnull Processor<Key> processor, @Nonnull GlobalSearchScope scope, @Nullable IdFilter idFilter) throws StorageException;
+  boolean processAllKeys(@Nonnull Processor<? super Key> processor, @Nonnull GlobalSearchScope scope, @Nullable IdFilter idFilter) throws StorageException;
 
   @Nonnull
   Lock getReadLock();
@@ -38,8 +42,33 @@ public interface UpdatableIndex<Key, Value, Input> extends InvertedIndex<Key,Val
   @Nonnull
   Lock getWriteLock();
 
+  @Nonnull
+  ReadWriteLock getLock();
+
+  @Nonnull
+  Map<Key, Value> getIndexedFileData(int fileId) throws StorageException;
+
   void setIndexedStateForFile(int fileId, @Nonnull VirtualFile file);
+
   void resetIndexedStateForFile(int fileId);
 
   boolean isIndexedStateForFile(int fileId, @Nonnull VirtualFile file);
+
+  long getModificationStamp();
+
+  void removeTransientDataForFile(int inputId);
+
+  void removeTransientDataForKeys(int inputId, @Nonnull Collection<? extends Key> keys);
+
+  @Nonnull
+  IndexExtension<Key, Value, Input> getExtension();
+
+  void updateWithMap(@Nonnull AbstractUpdateData<Key, Value> updateData) throws StorageException;
+
+  void setBufferingEnabled(boolean enabled);
+
+  void cleanupMemoryStorage();
+
+  @TestOnly
+  void cleanupForNextTest();
 }

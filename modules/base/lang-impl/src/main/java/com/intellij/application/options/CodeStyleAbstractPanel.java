@@ -22,7 +22,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
@@ -50,6 +49,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.LocalTimeCounter;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -130,7 +130,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
     return mySomethingChanged;
   }
 
-  public void setModel(final CodeStyleSchemesModel model) {
+  public void setModel(@Nonnull CodeStyleSchemesModel model) {
     myModel = model;
   }
 

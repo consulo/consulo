@@ -26,22 +26,18 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
-import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.WindowStateService;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.AppUIUtil;
-import com.intellij.ui.FocusTrackback;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ImageUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.SwingUIDecorator;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -62,7 +58,6 @@ public class FrameWrapper implements Disposable, DataProvider {
   private final Map<Key<?>, Object> myDataMap = ContainerUtil.newHashMap();
   private Project myProject;
   private final ProjectManagerListener myProjectListener = new MyProjectManagerListener();
-  private FocusTrackback myFocusTrackback;
   private FocusWatcher myFocusWatcher;
 
   private AsyncResult<Void> myFocusedCallback;
@@ -122,8 +117,6 @@ public class FrameWrapper implements Disposable, DataProvider {
       myStatusBar.install(ideFrame);
     }
 
-    myFocusTrackback = new FocusTrackback(this, IdeFocusManager.findInstance().getFocusOwner(), true);
-
     if (frame instanceof JFrame) {
       ((JFrame)frame).setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
@@ -171,16 +164,12 @@ public class FrameWrapper implements Disposable, DataProvider {
       AppUIUtil.updateWindowIcon(myFrame);
     }
 
+    WindowState state = myDimensionKey == null ? null : getWindowStateService(myProject).getState(myDimensionKey, frame);
     if (restoreBounds) {
-      loadFrameState();
+      loadFrameState(state);
     }
 
-    myFocusWatcher = new FocusWatcher() {
-      @Override
-      protected void focusLostImpl(final FocusEvent e) {
-        myFocusTrackback.consume();
-      }
-    };
+    myFocusWatcher = new FocusWatcher();
     myFocusWatcher.install(myComponent);
     myShown = true;
     frame.setVisible(true);
@@ -201,23 +190,15 @@ public class FrameWrapper implements Disposable, DataProvider {
     Window frame = myFrame;
     StatusBar statusBar = myStatusBar;
 
-    if (myShown && myDimensionKey != null) {
-      WindowStateService.getInstance().saveStateFor(myProject, myDimensionKey, frame);
-    }
-
     myFrame = null;
     myPreferredFocus = null;
     myProject = null;
     myDataMap.clear();
-    if (myFocusTrackback != null) {
-      myFocusTrackback.restoreFocus();
-    }
     if (myComponent != null && myFocusWatcher != null) {
       myFocusWatcher.deinstall(myComponent);
     }
     myFocusWatcher = null;
     myFocusedCallback = null;
-    myFocusTrackback = null;
     myComponent = null;
     myImages = null;
     myDisposed = true;
@@ -232,10 +213,6 @@ public class FrameWrapper implements Disposable, DataProvider {
       JRootPane rootPane = ((RootPaneContainer)frame).getRootPane();
       frame.removeAll();
       DialogWrapper.cleanupRootPane(rootPane);
-
-      if (frame instanceof JFrame) {
-        FocusTrackback.release((JFrame)frame);
-      }
 
       consulo.ui.Window uiWindow = TargetAWT.from(frame);
       IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
@@ -332,9 +309,12 @@ public class FrameWrapper implements Disposable, DataProvider {
     myImages = images;
   }
 
-  protected void loadFrameState() {
+  protected void loadFrameState(@Nullable WindowState state) {
     final Window frame = getFrame();
-    if (myDimensionKey != null && !WindowStateService.getInstance().loadStateFor(myProject, myDimensionKey, frame)) {
+    if(state != null) {
+      state.applyTo(frame);
+    }
+    else {
       final IdeFrame ideFrame = WindowManagerEx.getInstanceEx().getIdeFrame(myProject);
       if (ideFrame != null) {
         frame.setBounds(TargetAWT.to(ideFrame.suggestChildFrameBounds()));
@@ -364,6 +344,11 @@ public class FrameWrapper implements Disposable, DataProvider {
 
   public void setSize(Dimension size) {
     getFrame().setSize(size);
+  }
+
+  @Nonnull
+  private static WindowStateService getWindowStateService(@Nullable Project project) {
+    return project == null ? WindowStateService.getInstance() : WindowStateService.getInstance(project);
   }
 
   private class MyProjectManagerListener implements ProjectManagerListener {

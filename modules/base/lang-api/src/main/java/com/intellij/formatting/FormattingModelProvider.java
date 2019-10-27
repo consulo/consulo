@@ -15,7 +15,7 @@
  */
 package com.intellij.formatting;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import javax.annotation.Nonnull;

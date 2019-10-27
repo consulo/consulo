@@ -15,18 +15,13 @@
  */
 package com.intellij.openapi.vcs.ui;
 
-import com.intellij.openapi.editor.impl.ComplementaryFontsRegistry;
+import com.intellij.openapi.editor.impl.FontFallbackIterator;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 
 public class FontUtil {
-  @Nonnull
-  public static Font getFontAbleToDisplay(char c, int size, int style, @Nonnull String family) {
-    return ComplementaryFontsRegistry.getFontAbleToDisplay(c, size, style, family).getFont();
-  }
-
   @Nonnull
   public static String getHtmlWithFonts(@Nonnull String input) {
     Font font = UIUtil.getLabelFont();
@@ -38,26 +33,29 @@ public class FontUtil {
     int start = baseFont.canDisplayUpTo(input);
     if (start == -1) return input;
 
-    Font font = null;
     StringBuilder result = new StringBuilder();
-    for (int i = start; i < input.length(); i++) {
-      char c = input.charAt(i);
-      if (baseFont.canDisplay(c)) {
-        if (font != null) result.append("</font>");
-        result.append(c);
-        font = null;
+
+    FontFallbackIterator it = new FontFallbackIterator();
+    it.setPreferredFont(baseFont.getFamily(), baseFont.getSize());
+    it.setFontStyle(style);
+
+    it.start(input, 0, input.length());
+    while (!it.atEnd()) {
+      Font font = it.getFont();
+
+      boolean insideFallbackBlock = !font.getFamily().equals(baseFont.getFamily());
+      if (insideFallbackBlock) {
+        result.append("<font face=\"").append(font.getFamily()).append("\">");
       }
-      else if (font != null && font.canDisplay(c)) {
-        result.append(c);
+
+      result.append(input, it.getStart(), it.getEnd());
+
+      if (insideFallbackBlock) {
+        result.append("</font>");
       }
-      else {
-        if (font != null) result.append("</font>");
-        font = getFontAbleToDisplay(c, baseFont.getSize(), style, baseFont.getFamily());
-        if (font != baseFont) result.append("<font face=\"").append(font.getFamily()).append("\">");
-        result.append(c);
-      }
+
+      it.advance();
     }
-    if (font != null) result.append("</font>");
 
     return result.toString();
   }

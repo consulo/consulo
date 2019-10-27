@@ -40,11 +40,7 @@ public abstract class UniqueVFilePathBuilder {
   };
 
   public static UniqueVFilePathBuilder getInstance() {
-    final UniqueVFilePathBuilder service = ServiceManager.getService(UniqueVFilePathBuilder.class);
-    if (service == null) {
-      return DUMMY_BUILDER;
-    }
-    return service;
+    return ServiceManager.getService(UniqueVFilePathBuilder.class);
   }
 
   @Nonnull

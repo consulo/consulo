@@ -17,7 +17,6 @@ package com.intellij.refactoring.move.moveFilesOrDirectories;
 
 import com.intellij.ide.util.EditorHelper;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.paths.PsiDynaReference;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
@@ -41,6 +40,8 @@ import com.intellij.refactoring.util.NonCodeUsageInfo;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usageView.UsageViewDescriptor;
 import com.intellij.util.IncorrectOperationException;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

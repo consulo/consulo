@@ -1,45 +1,22 @@
-/*
- * Copyright 2000-2016 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.codeStyle;
 
-import com.intellij.openapi.util.TextRange;
-import com.intellij.util.containers.FList;
 import com.intellij.util.ui.KeyboardLayoutUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * @author Dmitry Avdeev
- *
  * @see NameUtil#buildMatcher(String)
  */
-public class FixingLayoutMatcher extends MinusculeMatcher {
+public class FixingLayoutMatcher extends MatcherWithFallback {
 
-  @Nullable
-  private final MinusculeMatcher myFixedMatcher;
-
-  FixingLayoutMatcher(@Nonnull String pattern, @Nonnull NameUtil.MatchingCaseSensitivity options, String hardSeparators) {
-    super(pattern, options, hardSeparators);
-    String s = fixPattern(pattern);
-    myFixedMatcher = s == null ? null : new MinusculeMatcher(s, options, hardSeparators);
+  public FixingLayoutMatcher(@Nonnull String pattern, @Nonnull NameUtil.MatchingCaseSensitivity options, String hardSeparators) {
+    super(new MinusculeMatcherImpl(pattern, options, hardSeparators), withFixedLayout(pattern, options, hardSeparators));
   }
 
   @Nullable
-  private static String fixPattern(String pattern) {
-
+  public static String fixLayout(String pattern) {
     boolean hasLetters = false;
     boolean onlyWrongLetters = true;
     for (int i = 0; i < pattern.length(); i++) {
@@ -66,16 +43,13 @@ public class FixingLayoutMatcher extends MinusculeMatcher {
     return null;
   }
 
-  @Override
-  public boolean matches(@Nonnull String name) {
-    return super.matches(name) || myFixedMatcher != null && myFixedMatcher.matches(name);
-  }
-
   @Nullable
-  @Override
-  public FList<TextRange> matchingFragments(@Nonnull String name) {
-    FList<TextRange> ranges = super.matchingFragments(name);
-    if (myFixedMatcher == null || ranges != null && !ranges.isEmpty()) return ranges;
-    return myFixedMatcher.matchingFragments(name);
+  private static MinusculeMatcher withFixedLayout(@Nonnull String pattern, @Nonnull NameUtil.MatchingCaseSensitivity options, String hardSeparators) {
+    String s = fixLayout(pattern);
+    if (s != null && !s.equals(pattern)) {
+      return new MinusculeMatcherImpl(s, options, hardSeparators);
+    }
+
+    return null;
   }
 }

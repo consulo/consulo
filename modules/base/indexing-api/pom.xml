@@ -50,7 +50,6 @@
     <dependency>
       <groupId>be.cyberelf.nanoxml</groupId>
       <artifactId>nanoxml</artifactId>
-      <version>2.2.3</version>
     </dependency>
   </dependencies>
 </project>

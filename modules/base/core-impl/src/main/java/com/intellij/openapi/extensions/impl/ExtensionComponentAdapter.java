@@ -21,6 +21,7 @@ import com.intellij.openapi.extensions.PluginAware;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.util.xmlb.XmlSerializer;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.injecting.InjectingProblemException;
 import org.jdom.Element;
 
@@ -38,10 +39,10 @@ public class ExtensionComponentAdapter<T> implements LoadingOrder.Orderable {
 
   private final String myImplementationClassName;
   private final Element myExtensionElement;
-  private final IdeaPluginDescriptor myPluginDescriptor;
+  private final PluginDescriptor myPluginDescriptor;
   private final boolean myDeserializeInstance;
 
-  public ExtensionComponentAdapter(@Nonnull String implementationClass, Element extensionElement, IdeaPluginDescriptor pluginDescriptor, boolean deserializeInstance) {
+  public ExtensionComponentAdapter(@Nonnull String implementationClass, Element extensionElement, PluginDescriptor pluginDescriptor, boolean deserializeInstance) {
     myImplementationClassName = implementationClass;
     myExtensionElement = extensionElement;
     myPluginDescriptor = pluginDescriptor;
@@ -84,7 +85,7 @@ public class ExtensionComponentAdapter<T> implements LoadingOrder.Orderable {
 
       if (myComponentInstance instanceof PluginAware) {
         PluginAware pluginAware = (PluginAware)myComponentInstance;
-        pluginAware.setPluginDescriptor(myPluginDescriptor);
+        pluginAware.setPluginDescriptor((IdeaPluginDescriptor)myPluginDescriptor);
       }
     }
 
@@ -105,7 +106,7 @@ public class ExtensionComponentAdapter<T> implements LoadingOrder.Orderable {
     return myExtensionElement.getAttributeValue("id");
   }
 
-  public IdeaPluginDescriptor getPluginDescriptor() {
+  public PluginDescriptor getPluginDescriptor() {
     return myPluginDescriptor;
   }
 

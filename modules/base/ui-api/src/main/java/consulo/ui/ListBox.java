@@ -19,6 +19,7 @@ import consulo.ui.model.ListModel;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * @author VISTALL
@@ -29,6 +30,11 @@ public interface ListBox<E> extends ValueComponent<E> {
   @Nonnull
   static <E> ListBox<E> create(@Nonnull E... elements) {
     return UIInternal.get()._Components_listBox(ListModel.create(Arrays.asList(elements)));
+  }
+
+  @Nonnull
+  static <E> ListBox<E> create(@Nonnull Collection<E> elements) {
+    return UIInternal.get()._Components_listBox(ListModel.create(elements));
   }
 
   @Nonnull

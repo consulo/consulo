@@ -19,6 +19,7 @@ import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.ServiceBean;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.annotations.DeprecationInfo;
 import consulo.util.pointers.Named;
 
 public abstract class SchemesManagerFactory {
@@ -27,6 +28,8 @@ public abstract class SchemesManagerFactory {
   public abstract <T extends Named, E extends ExternalizableScheme> SchemesManager<T,E> createSchemesManager(String fileSpec, SchemeProcessor<E> processor,
                                                                             RoamingType roamingType);
 
+  @Deprecated
+  @DeprecationInfo("Use constructor injection instead")
   public static SchemesManagerFactory getInstance(){
     return ServiceManager.getService(SchemesManagerFactory.class);
   }

@@ -19,10 +19,8 @@
  */
 package com.intellij.psi.impl.source.tree;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.LogUtil;
-import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.StaticGetter;
 import com.intellij.psi.impl.DebugUtil;
@@ -31,6 +29,8 @@ import com.intellij.psi.tree.ILazyParseableElementTypeBase;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.ImmutableCharSequence;
+import consulo.logging.Logger;
+import consulo.logging.attachment.AttachmentFactory;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,7 +41,8 @@ public class LazyParseableElement extends CompositeElement {
   private static final StaticGetter<CharSequence> NO_TEXT = new StaticGetter<>(null);
 
   private static class ChameleonLock {
-    private ChameleonLock() {}
+    private ChameleonLock() {
+    }
 
     @NonNls
     @Override
@@ -55,17 +56,17 @@ public class LazyParseableElement extends CompositeElement {
   private final ChameleonLock lock = new ChameleonLock();
   /**
    * Cached or non-parsed text of this element. Must be non-null if {@link #myParsed} is false.
-   * Guarded by {@link #lock}
-   * */
+   * Coordinated writes to (myParsed, myText) are guarded by {@link #lock}
+   */
   @Nonnull
-  private Getter<CharSequence> myText;
-  private boolean myParsed;
+  private volatile Getter<CharSequence> myText;
+  private volatile boolean myParsed;
 
   public LazyParseableElement(@Nonnull IElementType type, @Nullable CharSequence text) {
     super(type);
     synchronized (lock) {
-      myParsed = text == null;
       if (text == null) {
+        myParsed = true;
         myText = NO_TEXT;
       }
       else {
@@ -96,9 +97,7 @@ public class LazyParseableElement extends CompositeElement {
       return text.toString();
     }
     String s = super.getText();
-    synchronized (lock) {
-      myText = new SoftReference<>(s);
-    }
+    myText = new SoftReference<>(s);
     return s;
   }
 
@@ -106,7 +105,12 @@ public class LazyParseableElement extends CompositeElement {
   @Nonnull
   public CharSequence getChars() {
     CharSequence text = myText();
-    return text != null ? text : getText();
+    if (text == null) {
+      // use super.getText() instead of super.getChars() to avoid extra myText() call
+      text = super.getText();
+      myText = new SoftReference<>(text);
+    }
+    return text;
   }
 
   @Override
@@ -116,15 +120,6 @@ public class LazyParseableElement extends CompositeElement {
       return text.length();
     }
     return super.getTextLength();
-  }
-
-  @Override
-  public int getNotCachedLength() {
-    CharSequence text = myText();
-    if (text != null) {
-      return text.length();
-    }
-    return super.getNotCachedLength();
   }
 
   @Override
@@ -143,15 +138,11 @@ public class LazyParseableElement extends CompositeElement {
   }
 
   public boolean isParsed() {
-    synchronized (lock) {
-      return myParsed;
-    }
+    return myParsed;
   }
 
   private CharSequence myText() {
-    synchronized (lock) {
-      return myText.get();
-    }
+    return myText.get();
   }
 
   @Override
@@ -174,64 +165,69 @@ public class LazyParseableElement extends CompositeElement {
     if (!ourParsingAllowed) {
       LOG.error("Parsing not allowed!!!");
     }
+    if (myParsed) return;
+
     CharSequence text;
     synchronized (lock) {
       if (myParsed) return;
+
       text = myText.get();
       assert text != null;
-    }
 
-    if (TreeUtil.getFileElement(this) == null) {
-      LOG.error("Chameleons must not be parsed till they're in file tree: " + this);
-    }
-
-    ApplicationManager.getApplication().assertReadAccessAllowed();
-
-    DebugUtil.startPsiModification("lazy-parsing");
-    try {
-      ILazyParseableElementTypeBase type = (ILazyParseableElementTypeBase)getElementType();
-      ASTNode parsedNode = type.parseContents(this);
-
-      if (parsedNode == null && text.length() > 0) {
-        CharSequence diagText = ApplicationManager.getApplication().isInternal() ? text : "";
-        LOG.error("No parse for a non-empty string: " + diagText + "; type=" + LogUtil.objectAndClass(type));
+      FileElement fileElement = TreeUtil.getFileElement(this);
+      if (fileElement == null) {
+        LOG.error("Chameleons must not be parsed till they're in file tree: " + this);
+      }
+      else {
+        fileElement.assertReadAccessAllowed();
       }
 
-      synchronized (lock) {
-        if (myParsed) return;
-        if (rawFirstChild() != null) {
-          LOG.error("Reentrant parsing?");
+      if (rawFirstChild() != null) {
+        LOG.error("Reentrant parsing?");
+      }
+
+      DebugUtil.performPsiModification("lazy-parsing", () -> {
+        TreeElement parsedNode = (TreeElement)((ILazyParseableElementTypeBase)getElementType()).parseContents(this);
+        assertTextLengthIntact(text, parsedNode);
+
+        if (parsedNode != null) {
+          setChildren(parsedNode);
         }
 
         myParsed = true;
-
-        if (parsedNode != null) {
-          super.rawAddChildrenWithoutNotifications((TreeElement)parsedNode);
-        }
-
-        AstPath.cacheNodePaths(this);
-
-        assertTextLengthIntact(text.length());
         myText = new SoftReference<>(text);
-      }
-    }
-    finally {
-      DebugUtil.finishPsiModification();
+      });
     }
   }
 
-  private void assertTextLengthIntact(int expected) {
+  private void assertTextLengthIntact(CharSequence text, TreeElement child) {
     int length = 0;
-    for (ASTNode node : getChildren(null)) {
-      length += node.getTextLength();
+    while (child != null) {
+      length += child.getTextLength();
+      child = child.getTreeNext();
     }
-    assert length == expected : "Text mismatch in " + getElementType();
+    if (length != text.length()) {
+      LOG.error("Text mismatch in " + LogUtil.objectAndClass(getElementType()), AttachmentFactory.get().create("code.txt", text.toString()));
+    }
+  }
+
+  private void setChildren(@Nonnull TreeElement parsedNode) {
+    ProgressManager.getInstance().executeNonCancelableSection(() -> {
+      try {
+        TreeElement last = rawSetParents(parsedNode, this);
+        super.setFirstChildNode(parsedNode);
+        super.setLastChildNode(last);
+      }
+      catch (Throwable e) {
+        LOG.error("Chameleon expansion may not be interrupted by exceptions", e);
+      }
+    });
   }
 
   @Override
   public void rawAddChildrenWithoutNotifications(@Nonnull TreeElement first) {
     if (!isParsed()) {
-      LOG.error("Mutating collapsed chameleon");
+      LOG.error("Mutating collapsed chameleon " + this.getClass());
     }
     super.rawAddChildrenWithoutNotifications(first);
   }

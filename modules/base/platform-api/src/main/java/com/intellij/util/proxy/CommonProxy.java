@@ -17,13 +17,13 @@ package com.intellij.util.proxy;
 
 import com.intellij.CommonBundle;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.net.NetUtils;
+import consulo.logging.Logger;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import javax.annotation.Nonnull;

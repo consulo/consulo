@@ -27,7 +27,6 @@ import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.DumbAwareAction;
@@ -55,6 +54,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.ui.*;
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import org.intellij.lang.annotations.MagicConstant;
@@ -707,7 +707,28 @@ public abstract class DialogWrapper {
 
     }
     else {
-      button = new JButton(action);
+      button = new JButton(action) {
+        @Override
+        protected void configurePropertiesFromAction(Action a) {
+          super.configurePropertiesFromAction(a);
+
+          setVisibleFromAction(a);
+        }
+
+        @Override
+        protected void actionPropertyChanged(Action action, String propertyName) {
+          if (DialogWrapperAction.VISIBLE.equals(propertyName)) {
+            setVisibleFromAction(action);
+          }
+          else {
+            super.actionPropertyChanged(action, propertyName);
+          }
+        }
+
+        private void setVisibleFromAction(@Nullable Action a) {
+          setVisible(!(a instanceof DialogWrapperAction) || ((DialogWrapperAction)a).myVisible);
+        }
+      };
     }
 
     String text = button.getText();
@@ -1801,6 +1822,10 @@ public abstract class DialogWrapper {
    * one action for the dialog is running.
    */
   protected abstract class DialogWrapperAction extends AbstractAction {
+    public static final String VISIBLE = "actionVisible";
+
+    private boolean myVisible = true;
+
     /**
      * The constructor
      *
@@ -1808,6 +1833,16 @@ public abstract class DialogWrapper {
      */
     protected DialogWrapperAction(String name) {
       putValue(NAME, name);
+    }
+
+    public void setVisible(boolean visible) {
+      if (myVisible == visible) {
+        return;
+      }
+
+      myVisible = visible;
+
+      firePropertyChange(VISIBLE, !myVisible, myVisible);
     }
 
     /**

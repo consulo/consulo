@@ -16,7 +16,6 @@
 package com.intellij.openapi.diff.impl.mergeTool;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.*;
 import com.intellij.openapi.diff.impl.incrementalMerge.ChangeCounter;
 import com.intellij.openapi.diff.impl.incrementalMerge.ui.MergePanel2;
@@ -29,6 +28,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.Convertor;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

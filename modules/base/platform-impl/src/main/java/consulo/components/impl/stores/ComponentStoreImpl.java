@@ -18,7 +18,7 @@ package consulo.components.impl.stores;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StateStorage.SaveSession;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
@@ -26,7 +26,10 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.containers.SmartHashSet;
 import com.intellij.util.messages.MessageBus;
+import consulo.annotations.RequiredWriteAction;
+import consulo.component.PersistentStateComponentWithUIState;
 import consulo.components.impl.stores.storage.StateStorageManager.ExternalizationSession;
+import consulo.ui.UIAccess;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 
@@ -39,6 +42,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class ComponentStoreImpl implements IComponentStore {
   private static final Logger LOG = Logger.getInstance(ComponentStoreImpl.class);
+  private static ThreadLocal<Boolean> ourInsideSavingSessionLocal = ThreadLocal.withInitial(() -> Boolean.FALSE);
+
+  public static void assertIfInsideSavingSession() {
+    if (ourInsideSavingSessionLocal.get() == Boolean.TRUE) {
+      throw new IllegalStateException("Can't call another thread inside saving session. Thread: " + Thread.currentThread());
+    }
+  }
 
   private final Map<String, StateComponentInfo<?>> myComponents = Collections.synchronizedMap(new THashMap<>());
   private final List<SettingsSavingComponent> mySettingsSavingComponents = new CopyOnWriteArrayList<>();
@@ -81,7 +91,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
       for (String name : names) {
         StateComponentInfo<?> componentInfo = myComponents.get(name);
 
-        commitComponent(componentInfo, externalizationSession);
+        commitComponentInsideSingleUIWriteThread(componentInfo, externalizationSession);
       }
     }
 
@@ -97,8 +107,9 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     doSave(externalizationSession == null ? null : externalizationSession.createSaveSessions(), readonlyFiles);
   }
 
+  @RequiredWriteAction
   @Override
-  public final void saveAsync(@Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
+  public void saveAsync(@Nonnull UIAccess uiAccess, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
     ExternalizationSession externalizationSession = myComponents.isEmpty() ? null : getStateStorageManager().startExternalization();
     if (externalizationSession != null) {
       String[] names = ArrayUtilRt.toStringArray(myComponents.keySet());
@@ -106,7 +117,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
       for (String name : names) {
         StateComponentInfo<?> componentInfo = myComponents.get(name);
 
-        commitComponent(componentInfo, externalizationSession);
+        commitComponentInsideSingleUIWriteThread(componentInfo, externalizationSession);
       }
     }
 
@@ -119,7 +130,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
       }
     }
 
-    doSaveAsync(externalizationSession == null ? null : externalizationSession.createSaveSessions(), readonlyFiles);
+    doSave(externalizationSession == null ? null : externalizationSession.createSaveSessions(), readonlyFiles);
   }
 
   protected void doSave(@Nullable List<SaveSession> saveSessions, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
@@ -139,27 +150,18 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     }
   }
 
-  protected void doSaveAsync(@Nullable List<SaveSession> saveSessions, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
-    if (saveSessions != null) {
-      for (SaveSession session : saveSessions) {
-        executeSaveAsync(session, readonlyFiles);
-      }
-    }
-  }
-
-  protected static void executeSaveAsync(@Nonnull SaveSession session, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
-    try {
-      session.saveAsync();
-    }
-    catch (ReadOnlyModificationException e) {
-      readonlyFiles.add(Pair.create(session, e.getFile()));
-    }
-  }
-
-  private <T> void commitComponent(@Nonnull StateComponentInfo<T> componentInfo, @Nonnull ExternalizationSession session) {
+  @SuppressWarnings({"unchecked", "RequiredXAction"})
+  private <T> void commitComponentInsideSingleUIWriteThread(@Nonnull StateComponentInfo<T> componentInfo, @Nonnull ExternalizationSession session) {
     PersistentStateComponent<T> component = componentInfo.getComponent();
-
-    T state = component.getState();
+    T state;
+    if(component instanceof PersistentStateComponentWithUIState) {
+      PersistentStateComponentWithUIState<T, Object> uiComponent = (PersistentStateComponentWithUIState<T, Object>)component;
+      Object uiState = uiComponent.getStateFromUI();
+      state = uiComponent.getState(uiState);
+    }
+    else {
+      state = component.getState();
+    }
     if (state != null) {
       Storage[] storageSpecs = getComponentStorageSpecs(component, componentInfo.getState(), StateStorageOperation.WRITE);
       session.setState(storageSpecs, component, componentInfo.getName(), state);

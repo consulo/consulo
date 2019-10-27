@@ -22,6 +22,7 @@ import com.intellij.ide.projectView.impl.*;
 import com.intellij.ide.projectView.impl.nodes.LibraryGroupElement;
 import com.intellij.ide.projectView.impl.nodes.NamedLibraryElement;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.extensions.Extensions;
@@ -33,7 +34,6 @@ import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
-import consulo.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
@@ -47,13 +47,14 @@ import com.intellij.util.Function;
 import com.intellij.util.TreeItem;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
+import consulo.roots.types.BinariesOrderRootType;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.util.*;
 
 import static com.intellij.ide.favoritesTreeView.FavoritesListProvider.EP_NAME;
@@ -121,9 +122,21 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
     }
   }
 
+  @Deprecated
   public void addFavoritesListener(FavoritesListener listener) {
     myListeners.add(listener);
     listener.rootsChanged();
+  }
+
+  public void addFavoritesListener(final FavoritesListener listener, @Nonnull Disposable parent) {
+    myListeners.add(listener);
+    listener.rootsChanged();
+    Disposer.register(parent, new Disposable() {
+      @Override
+      public void dispose() {
+        myListeners.remove(listener);
+      }
+    });
   }
 
   public void removeFavoritesListener(FavoritesListener listener) {

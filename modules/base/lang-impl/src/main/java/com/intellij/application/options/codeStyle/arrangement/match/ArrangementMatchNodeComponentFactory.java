@@ -22,7 +22,7 @@ import com.intellij.application.options.codeStyle.arrangement.animation.Arrangem
 import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
 import com.intellij.application.options.codeStyle.arrangement.component.ArrangementAndMatchConditionComponent;
 import com.intellij.application.options.codeStyle.arrangement.component.ArrangementAtomMatchConditionComponent;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.codeStyle.arrangement.match.StdArrangementEntryMatcher;
 import com.intellij.psi.codeStyle.arrangement.match.StdArrangementMatchRule;

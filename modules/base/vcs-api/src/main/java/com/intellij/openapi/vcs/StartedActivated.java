@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.ThreeState;
 import com.intellij.util.ThrowableRunnable;

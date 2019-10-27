@@ -18,10 +18,10 @@ package com.intellij.psi.search.scope.packageSet;
 
 import com.intellij.analysis.AnalysisScopeBundle;
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.psi.search.scope.packageSet.lexer.ScopeTokenTypes;
 import com.intellij.psi.search.scope.packageSet.lexer.ScopesLexer;
+import consulo.logging.Logger;
 
 import javax.annotation.Nullable;
 import javax.inject.Singleton;

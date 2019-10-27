@@ -28,7 +28,6 @@ import com.intellij.diff.contents.FileDocumentContentImpl;
 import com.intellij.diff.tools.util.DiffNotifications;
 import com.intellij.diff.util.DiffUserDataKeysEx;
 import com.intellij.diff.util.DiffUtil;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -55,6 +54,8 @@ import com.intellij.util.LineSeparator;
 import com.intellij.util.PathUtil;
 import consulo.application.AccessRule;
 import consulo.fileTypes.ArchiveFileType;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;

@@ -1,34 +1,42 @@
-/*
- * Copyright 2000-2016 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.ex;
 
+import com.intellij.codeInsight.daemon.GutterMark;
 import com.intellij.openapi.actionSystem.ActionGroup;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorGutter;
 import com.intellij.openapi.editor.FoldRegion;
+import com.intellij.openapi.editor.TextAnnotationGutterProvider;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
+import com.intellij.openapi.util.Key;
 import gnu.trove.TIntFunction;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public abstract class EditorGutterComponentEx extends JComponent implements EditorGutter {
+  /**
+   * The key to retrieve a logical editor line position of a latest actionable click inside the gutter.
+   * Available to gutter popup actions (see {@link #setGutterPopupGroup(ActionGroup)},
+   * {@link GutterIconRenderer#getPopupMenuActions()}, {@link TextAnnotationGutterProvider#getPopupActions(int, Editor)})
+   */
+  public static final Key<Integer> LOGICAL_LINE_AT_CURSOR = Key.create("EditorGutter.LOGICAL_LINE_AT_CURSOR");
+
+  /**
+   * The key to retrieve a editor gutter icon center position of a latest actionable click inside the gutter.
+   * Available to gutter popup actions (see {@link #setGutterPopupGroup(ActionGroup)},
+   * {@link GutterIconRenderer#getPopupMenuActions()}, {@link TextAnnotationGutterProvider#getPopupActions(int, Editor)})
+   */
+  public static final Key<Point> ICON_CENTER_POSITION = Key.create("EditorGutter.ICON_CENTER_POSITION");
+
   @Nullable
   public abstract FoldRegion findFoldingAnchorAt(int x, int y);
+
+  @Nonnull
+  public abstract List<GutterMark> getGutterRenderers(int line);
 
   public abstract int getWhitespaceSeparatorOffset();
 
@@ -49,11 +57,16 @@ public abstract class EditorGutterComponentEx extends JComponent implements Edit
   @Nullable
   public abstract Point getCenterPoint(GutterIconRenderer renderer);
 
-  public abstract void setLineNumberConvertor(@Nonnull TIntFunction lineNumberConvertor);
+  public abstract void setLineNumberConvertor(@Nullable TIntFunction lineNumberConvertor);
 
-  public abstract void setLineNumberConvertor(@Nonnull TIntFunction lineNumberConvertor1, @Nullable TIntFunction lineNumberConvertor2);
+  public abstract void setLineNumberConvertor(@Nullable TIntFunction lineNumberConvertor1, @Nullable TIntFunction lineNumberConvertor2);
 
   public abstract void setShowDefaultGutterPopup(boolean show);
+
+  /**
+   * When set to false, makes {@link #closeAllAnnotations()} a no-op and hides the corresponding context menu action.
+   */
+  public abstract void setCanCloseAnnotations(boolean canCloseAnnotations);
 
   public abstract void setGutterPopupGroup(@Nullable ActionGroup group);
 
@@ -62,4 +75,11 @@ public abstract class EditorGutterComponentEx extends JComponent implements Edit
   public abstract void setForceShowLeftFreePaintersArea(boolean value);
 
   public abstract void setForceShowRightFreePaintersArea(boolean value);
+
+  public abstract void setInitialIconAreaWidth(int width);
+
+  @Nullable
+  public GutterMark getGutterRenderer(final Point p) {
+    return null;
+  }
 }

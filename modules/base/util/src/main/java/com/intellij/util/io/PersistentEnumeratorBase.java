@@ -16,7 +16,7 @@
 package com.intellij.util.io;
 
 import com.intellij.openapi.Forceable;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.IncorrectOperationException;
@@ -25,7 +25,6 @@ import com.intellij.util.containers.SLRUMap;
 import com.intellij.util.containers.ShareableKey;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.Closeable;
@@ -40,28 +39,27 @@ import java.util.List;
  * @author max
  * @author jeka
  */
-@SuppressWarnings("IOResourceOpenedButNotSafelyClosed")
-public abstract class PersistentEnumeratorBase<Data> implements Forceable, Closeable {
+public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx<Data>, Forceable, Closeable {
   protected static final Logger LOG = Logger.getInstance("#com.intellij.util.io.PersistentEnumerator");
   protected static final int NULL_ID = 0;
 
   private static final int META_DATA_OFFSET = 4;
-  protected static final int DATA_START = META_DATA_OFFSET + 16;
+  static final int DATA_START = META_DATA_OFFSET + 16;
   private static final CacheKey ourFlyweight = new FlyweightKey();
 
   protected final ResizeableMappedFile myStorage;
   private final boolean myAssumeDifferentSerializedBytesMeansObjectsInequality;
   private final AppendableStorageBackedByResizableMappedFile myKeyStorage;
-  protected final KeyDescriptor<Data> myDataDescriptor;
+  final KeyDescriptor<Data> myDataDescriptor;
   protected final File myFile;
   private final Version myVersion;
   private final boolean myDoCaching;
 
   private volatile boolean myDirtyStatusUpdateInProgress;
 
-  private boolean myClosed = false;
-  private boolean myDirty = false;
-  private boolean myCorrupted = false;
+  private boolean myClosed;
+  private boolean myDirty;
+  private boolean myCorrupted;
   private RecordBufferHandler<PersistentEnumeratorBase> myRecordHandler;
   private Flushable myMarkCleanCallback;
 
@@ -83,10 +81,12 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
     }
   }
 
-  public abstract static class RecordBufferHandler<T extends PersistentEnumeratorBase> {
+  abstract static class RecordBufferHandler<T extends PersistentEnumeratorBase> {
     abstract int recordWriteOffset(T enumerator, byte[] buf);
+
     @Nonnull
     abstract byte[] getRecordBuffer(T enumerator);
+
     abstract void setupRecord(T enumerator, int hashCode, final int dataOffset, final byte[] buf);
   }
 
@@ -104,6 +104,7 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
       return this;
     }
 
+    @Override
     public boolean equals(final Object o) {
       if (this == o) return true;
       if (!(o instanceof CacheKey)) return false;
@@ -116,6 +117,7 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
       return true;
     }
 
+    @Override
     public int hashCode() {
       return key.hashCode();
     }
@@ -128,12 +130,13 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
   }
 
   private static final int ENUMERATION_CACHE_SIZE;
+
   static {
     String property = System.getProperty("idea.enumerationCacheSize");
     ENUMERATION_CACHE_SIZE = property == null ? 8192 : Integer.valueOf(property);
   }
 
-  private static final SLRUMap<Object, Integer> ourEnumerationCache = new SLRUMap<Object, Integer>(ENUMERATION_CACHE_SIZE, ENUMERATION_CACHE_SIZE);
+  private static final SLRUMap<Object, Integer> ourEnumerationCache = new SLRUMap<>(ENUMERATION_CACHE_SIZE, ENUMERATION_CACHE_SIZE);
 
   @TestOnly
   public static void clearCacheForTests() {
@@ -141,7 +144,6 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
   }
 
   public static class CorruptedException extends IOException {
-    @SuppressWarnings({"HardCodedStringLiteral"})
     public CorruptedException(File file) {
       this("PersistentEnumerator storage corrupted " + file.getPath());
     }
@@ -152,8 +154,7 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
   }
 
   public static class VersionUpdatedException extends CorruptedException {
-    @SuppressWarnings({"HardCodedStringLiteral"})
-    public VersionUpdatedException(File file) {
+    VersionUpdatedException(@Nonnull File file) {
       super("PersistentEnumerator storage corrupted " + file.getPath());
     }
   }
@@ -172,7 +173,7 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
     myDoCaching = doCaching;
 
     if (!file.exists()) {
-      FileUtil.delete(keystreamFile());
+      FileUtil.delete(keyStreamFile());
       if (!FileUtil.createIfDoesntExist(file)) {
         throw new IOException("Cannot create empty file: " + file);
       }
@@ -213,7 +214,7 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
         try {
           sign = myStorage.getInt(0);
         }
-        catch(Exception e) {
+        catch (Exception e) {
           LOG.info(e);
           sign = myVersion.dirtyMagic;
         }
@@ -233,7 +234,7 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
     }
     else {
       try {
-        myKeyStorage = new AppendableStorageBackedByResizableMappedFile(keystreamFile(), initialSize, myStorage.getPagedFileStorage().getStorageLockContext(), PagedFileStorage.MB, false);
+        myKeyStorage = new AppendableStorageBackedByResizableMappedFile(keyStreamFile(), initialSize, myStorage.getPagedFileStorage().getStorageLockContext(), PagedFileStorage.MB, false);
       }
       catch (IOException e) {
         myStorage.close();
@@ -248,18 +249,18 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
     myAssumeDifferentSerializedBytesMeansObjectsInequality = myDataDescriptor instanceof DifferentSerializableBytesImplyNonEqualityPolicy;
   }
 
-  public void lockStorage() {
+  void lockStorage() {
     myStorage.getPagedFileStorage().lock();
   }
 
-  public void unlockStorage() {
+  void unlockStorage() {
     myStorage.getPagedFileStorage().unlock();
   }
 
   protected abstract void setupEmptyFile() throws IOException;
 
   @Nonnull
-  public final RecordBufferHandler<PersistentEnumeratorBase> getRecordHandler() {
+  final RecordBufferHandler<PersistentEnumeratorBase> getRecordHandler() {
     return myRecordHandler;
   }
 
@@ -267,7 +268,7 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
     myRecordHandler = recordHandler;
   }
 
-  public void setMarkCleanCallback(Flushable markCleanCallback) {
+  void setMarkCleanCallback(Flushable markCleanCallback) {
     myMarkCleanCallback = markCleanCallback;
   }
 
@@ -275,7 +276,8 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
     return valueOf(keyId);
   }
 
-  protected int tryEnumerate(Data value) throws IOException {
+  @Override
+  public int tryEnumerate(Data value) throws IOException {
     return doEnumerate(value, true, false);
   }
 
@@ -291,13 +293,14 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
     try {
       id = enumerateImpl(value, onlyCheckForExisting, saveNewValue);
     }
-    catch (IOException io) {
-      markCorrupted();
-      throw io;
-    }
     catch (Throwable e) {
-      markCorrupted();
-      LOG.info(e);
+      if (!isCorrupted()) {
+        markCorrupted();
+        LOG.info("Marking corrupted:" + myFile, e);
+      }
+
+      //noinspection InstanceofCatchParameter
+      if (e instanceof IOException) throw (IOException)e;
       throw new IOException(e);
     }
 
@@ -318,7 +321,7 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
     boolean accept(int id);
   }
 
-  protected void putMetaData(long data) throws IOException {
+  protected void putMetaData(long data) {
     lockStorage();
     try {
       if (myStorage.length() < META_DATA_OFFSET + 8 || getMetaData() != data) myStorage.putLong(META_DATA_OFFSET, data);
@@ -328,7 +331,7 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
     }
   }
 
-  protected long getMetaData() throws IOException {
+  protected long getMetaData() {
     lockStorage();
     try {
       return myStorage.getLong(META_DATA_OFFSET);
@@ -338,7 +341,7 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
     }
   }
 
-  protected void putMetaData2(long data) throws IOException {
+  void putMetaData2(long data) {
     lockStorage();
     try {
       if (myStorage.length() < META_DATA_OFFSET + 16 || getMetaData2() != data) myStorage.putLong(META_DATA_OFFSET + 8, data);
@@ -348,7 +351,7 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
     }
   }
 
-  protected long getMetaData2() throws IOException {
+  long getMetaData2() {
     lockStorage();
     try {
       return myStorage.getLong(META_DATA_OFFSET + 8);
@@ -358,7 +361,7 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
     }
   }
 
-  public boolean processAllDataObject(final Processor<Data> processor, @Nullable final DataFilter filter) throws IOException {
+  public boolean processAllDataObject(@Nonnull final Processor<? super Data> processor, @Nullable final DataFilter filter) throws IOException {
     return traverseAllRecords(new RecordsProcessor() {
       @Override
       public boolean process(final int record) throws IOException {
@@ -371,9 +374,10 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
 
   }
 
+  @Nonnull
   public Collection<Data> getAllDataObjects(@Nullable final DataFilter filter) throws IOException {
-    final List<Data> values = new ArrayList<Data>();
-    processAllDataObject(new CommonProcessors.CollectProcessor<Data>(values), filter);
+    final List<Data> values = new ArrayList<>();
+    processAllDataObject(new CommonProcessors.CollectProcessor<>(values), filter);
     return values;
   }
 
@@ -381,9 +385,11 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
     private int myKey;
 
     public abstract boolean process(int record) throws IOException;
+
     void setCurrentKey(int key) {
       myKey = key;
     }
+
     int getCurrentKey() {
       return myKey;
     }
@@ -441,7 +447,7 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
     return pos;
   }
 
-  public boolean iterateData(final Processor<Data> processor) throws IOException {
+  public boolean iterateData(@Nonnull Processor<? super Data> processor) throws IOException {
     if (myKeyStorage == null) {
       throw new UnsupportedOperationException("Iteration over InlineIntegerKeyDescriptors is not supported");
     }
@@ -457,7 +463,7 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
     return myKeyStorage.processAll(processor, myDataDescriptor);
   }
 
-  private File keystreamFile() {
+  private File keyStreamFile() {
     return new File(myFile.getPath() + ".keystream");
   }
 
@@ -486,7 +492,7 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
     }
   }
 
-  int reenumerate(Data key) throws IOException {
+  int reEnumerate(Data key) throws IOException {
     if (!canReEnumerate()) throw new IncorrectOperationException();
     return doEnumerate(key, false, true);
   }
@@ -616,7 +622,7 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
   }
 
   private static class FlyweightKey extends CacheKey {
-    public FlyweightKey() {
+    FlyweightKey() {
       super(null, null);
     }
 

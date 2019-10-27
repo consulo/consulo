@@ -15,8 +15,9 @@
  */
 package com.intellij.codeInspection.ex;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ArrayUtil;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.lang.reflect.Constructor;

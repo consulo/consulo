@@ -16,7 +16,7 @@
 package com.intellij.execution.testframework.sm.runner;
 
 import com.intellij.execution.testframework.sm.SMTestRunnerConnectionUtil;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import org.jetbrains.annotations.NonNls;

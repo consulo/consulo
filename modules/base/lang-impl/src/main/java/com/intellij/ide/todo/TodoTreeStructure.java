@@ -26,7 +26,6 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.PsiTodoSearchHelper;
 import com.intellij.psi.search.TodoPattern;
-import consulo.annotations.RequiredReadAction;
 import consulo.psi.PsiPackageSupportProviders;
 import javax.annotation.Nonnull;
 
@@ -49,11 +48,10 @@ public abstract class TodoTreeStructure extends AbstractTreeStructureBase implem
 
   protected final PsiTodoSearchHelper mySearchHelper;
   /**
-   * Current <code>TodoFilter</code>. If no filter is set then this field is <code>null</code>.
+   * Current {@code TodoFilter}. If no filter is set then this field is {@code null}.
    */
   protected TodoFilter myTodoFilter;
 
-  @RequiredReadAction
   public TodoTreeStructure(Project project) {
     super(project);
     myArePackagesShown = PsiPackageSupportProviders.isPackageSupported(project);
@@ -93,7 +91,7 @@ public abstract class TodoTreeStructure extends AbstractTreeStructureBase implem
   }
 
   /**
-   * Sets new <code>TodoFilter</code>. <code>null</code> is acceptable value. It means
+   * Sets new {@code TodoFilter}. {@code null} is acceptable value. It means
    * that there is no any filtration of <code>TodoItem>/code>s.
    */
   final void setTodoFilter(TodoFilter todoFilter) {
@@ -101,12 +99,12 @@ public abstract class TodoTreeStructure extends AbstractTreeStructureBase implem
   }
 
   /**
-   * @return first element that can be selected in the tree. The method can returns <code>null</code>.
+   * @return first element that can be selected in the tree. The method can returns {@code null}.
    */
   abstract Object getFirstSelectableElement();
 
   /**
-   * @return number of <code>TodoItem</code>s located in the file.
+   * @return number of {@code TodoItem}s located in the file.
    */
   public final int getTodoItemCount(PsiFile psiFile) {
     int count = 0;
@@ -126,7 +124,10 @@ public abstract class TodoTreeStructure extends AbstractTreeStructureBase implem
 
   boolean isAutoExpandNode(NodeDescriptor descriptor) {
     Object element = descriptor.getElement();
-    return element == getRootElement() || element == mySummaryElement;
+    if (element instanceof AbstractTreeNode) {
+      element = ((AbstractTreeNode)element).getValue();
+    }
+    return element == getRootElement() || element == mySummaryElement && (myAreModulesShown || myArePackagesShown);
   }
 
   @Override
@@ -145,6 +146,7 @@ public abstract class TodoTreeStructure extends AbstractTreeStructureBase implem
     return asyncCommitDocuments(myProject);
   }
 
+  @Nonnull
   @Override
   public final Object getRootElement() {
     return myRootElement;

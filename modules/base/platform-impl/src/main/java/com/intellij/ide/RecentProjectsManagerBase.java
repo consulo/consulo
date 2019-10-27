@@ -21,7 +21,6 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
-import consulo.components.impl.stores.ProjectStoreImpl;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -40,10 +39,10 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotations.RequiredReadAction;
+import consulo.components.impl.stores.ProjectStoreImpl;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionProviderEP;
 import consulo.module.extension.impl.ModuleExtensionProviders;
-import consulo.platform.Platform;
 import consulo.ui.UIAccess;
 import gnu.trove.THashSet;
 
@@ -224,7 +223,7 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
         public void run() {
           Set<String> names = ContainerUtil.newHashSet();
           final HashSet<String> duplicates = ContainerUtil.newHashSet();
-          for (String path : ContainerUtil.concat(openedPaths, recentPaths)) {
+          for (String path : ContainerUtil.union(openedPaths, recentPaths)) {
             if (!names.add(RecentProjectsManagerBase.this.getProjectName(path))) {
               duplicates.add(path);
             }
@@ -391,12 +390,12 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
 
   private class MyProjectListener extends ProjectManagerAdapter {
     @Override
-    public void projectOpened(final Project project) {
+    public void projectOpened(final Project project, UIAccess uiAccess) {
       String path = getProjectPath(project);
       if (path != null) {
         markPathRecent(path, project);
       }
-      SystemDock.updateMenu();
+      SystemDock.getInstance().updateMenu();
 
       project.getMessageBus().connect().subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
         @Override
@@ -414,7 +413,7 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
     }
 
     @Override
-    public void projectClosed(final Project project) {
+    public void projectClosed(final Project project, UIAccess uiAccess) {
       Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
       if (openProjects.length > 0) {
         String path = getProjectPath(openProjects[openProjects.length - 1]);
@@ -422,7 +421,7 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
           markPathRecent(path, null);
         }
       }
-      SystemDock.updateMenu();
+      SystemDock.getInstance().updateMenu();
     }
   }
 
@@ -461,9 +460,7 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
       }
       for (String openPath : openPaths) {
         if (isValidProjectPath(openPath)) {
-
-          final boolean finalForceNewFrame = forceNewFrame;
-          Platform.hacky(() -> ProjectUtil.open(openPath, null, finalForceNewFrame), () -> ProjectUtil.openAsync(openPath, null, finalForceNewFrame, UIAccess.get()));
+          ProjectUtil.openAsync(openPath, null, forceNewFrame, UIAccess.current());
           break;
         }
       }

@@ -22,7 +22,7 @@ import com.intellij.ide.passwordSafe.impl.providers.masterKey.MasterKeyPasswordS
 import com.intellij.ide.passwordSafe.impl.providers.masterKey.PasswordDatabase;
 import com.intellij.ide.passwordSafe.impl.providers.memory.MemoryPasswordSafe;
 import com.intellij.ide.passwordSafe.impl.providers.nil.NilProvider;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nullable;
 import javax.inject.Inject;

@@ -22,8 +22,6 @@ import com.intellij.util.ui.UIUtil;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
-
-import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -31,15 +29,13 @@ import java.awt.*;
  * @author VISTALL
  * @since 14-Sep-16
  */
-public abstract class BaseWelcomeScreenPanel<E> extends JPanel {
+public abstract class BaseWelcomeScreenPanel extends JPanel {
   protected final JComponent myLeftComponent;
-  protected final E myParam;
 
   @RequiredUIAccess
-  public BaseWelcomeScreenPanel(@Nonnull Disposable parentDisposable, @Nullable E param) {
+  public BaseWelcomeScreenPanel(@Nonnull Disposable parentDisposable) {
     super(new BorderLayout());
-    myParam = param;
-    myLeftComponent = createLeftComponent(parentDisposable, param);
+    myLeftComponent = createLeftComponent(parentDisposable);
 
     JPanel leftPanel = new JPanel(new BorderLayout());
     leftPanel.setBorder(new CustomLineBorder(UIUtil.getBorderColor(), JBUI.insetsRight(1)));
@@ -48,7 +44,7 @@ public abstract class BaseWelcomeScreenPanel<E> extends JPanel {
 
     add(leftPanel, BorderLayout.WEST);
 
-    JComponent rightComponent = createRightComponent(param);
+    JComponent rightComponent = createRightComponent();
 
     add(rightComponent, BorderLayout.CENTER);
   }
@@ -59,9 +55,9 @@ public abstract class BaseWelcomeScreenPanel<E> extends JPanel {
   }
 
   @Nonnull
-  protected abstract JComponent createLeftComponent(@Nonnull Disposable parentDisposable, @Nullable E param);
+  protected abstract JComponent createLeftComponent(@Nonnull Disposable parentDisposable);
 
   @Nonnull
   @RequiredUIAccess
-  protected abstract JComponent createRightComponent(@Nullable E param);
+  protected abstract JComponent createRightComponent();
 }

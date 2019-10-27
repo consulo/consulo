@@ -24,29 +24,43 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
+ * An informational object for debugging stub-mismatch related issues. Should be as small as possible since it's stored in files's attributes.
+ *
  * @author peter
  */
 class IndexingStampInfo {
   final long indexingFileStamp;
-  final long indexingContentLength;
+  final long indexingByteLength;
+  final int indexingCharLength;
 
-  IndexingStampInfo(long indexingFileStamp, long indexingContentLength) {
+  IndexingStampInfo(long indexingFileStamp, long indexingByteLength, int indexingCharLength) {
     this.indexingFileStamp = indexingFileStamp;
-    this.indexingContentLength = indexingContentLength;
+    this.indexingByteLength = indexingByteLength;
+    this.indexingCharLength = indexingCharLength;
   }
 
   @Override
   public String toString() {
-    return "indexed at " + indexingFileStamp + " with document size " + indexingContentLength;
+    return "indexed at " + indexingFileStamp + " with document " + dumpSize(indexingByteLength, indexingCharLength);
+  }
+
+  @Nonnull
+  static String dumpSize(long byteLength, int charLength) {
+    return " byte size = " + byteLength + ", char size = " + charLength;
   }
 
   public boolean isUpToDate(@Nullable Document document, @Nonnull VirtualFile file, @Nonnull PsiFile psi) {
-    if (document == null ||
-        FileDocumentManager.getInstance().isDocumentUnsaved(document) ||
-        !PsiDocumentManager.getInstance(psi.getProject()).isCommitted(document)) {
+    if (document == null || FileDocumentManager.getInstance().isDocumentUnsaved(document) || !PsiDocumentManager.getInstance(psi.getProject()).isCommitted(document)) {
       return false;
     }
 
-    return indexingFileStamp == file.getTimeStamp() && indexingContentLength == document.getTextLength();
+    return indexingFileStamp == file.getTimeStamp() && contentLengthMatches(file.getLength(), document.getTextLength());
+  }
+
+  public boolean contentLengthMatches(long byteContentLength, int charContentLength) {
+    if (this.indexingCharLength >= 0 && charContentLength >= 0) {
+      return this.indexingCharLength == charContentLength;
+    }
+    return this.indexingByteLength == byteContentLength;
   }
 }

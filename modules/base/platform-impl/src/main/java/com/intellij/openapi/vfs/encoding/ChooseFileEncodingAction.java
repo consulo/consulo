@@ -1,25 +1,5 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-/*
- * Created by IntelliJ IDEA.
- * User: cdr
- * Date: Jul 19, 2007
- * Time: 5:53:46 PM
- */
 package com.intellij.openapi.vfs.encoding;
 
 import com.intellij.icons.AllIcons;
@@ -27,13 +7,22 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
+import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
+import com.intellij.openapi.project.DumbAwareAction;
+import com.intellij.openapi.util.NotNullLazyValue;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.VolatileNotNullLazyValue;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.IconDeferrer;
+import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Function;
-import consulo.ui.RequiredUIAccess;
-
+import com.intellij.util.ui.EmptyIcon;
+import consulo.ui.image.Image;
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
@@ -45,54 +34,62 @@ import java.util.List;
 public abstract class ChooseFileEncodingAction extends ComboBoxAction {
   private final VirtualFile myVirtualFile;
 
-  public ChooseFileEncodingAction(VirtualFile virtualFile) {
+  protected ChooseFileEncodingAction(@Nullable VirtualFile virtualFile) {
     myVirtualFile = virtualFile;
   }
 
-  @RequiredUIAccess
   @Override
   public abstract void update(@Nonnull final AnActionEvent e);
 
   private void fillCharsetActions(@Nonnull DefaultActionGroup group,
-                                  @Nullable VirtualFile virtualFile,
-                                  @Nonnull List<Charset> charsets,
-                                  @Nonnull final Function<Charset, String> charsetFilter) {
-    for (final Charset slave : charsets) {
-      ChangeFileEncodingTo action = new ChangeFileEncodingTo(virtualFile, slave) {
-        {
-          String description = charsetFilter.fun(slave);
-          if (description == null) {
-            getTemplatePresentation().setIcon(AllIcons.General.Warning);
+                                  @Nullable final VirtualFile virtualFile,
+                                  @Nonnull List<? extends Charset> charsets,
+                                  @Nonnull final Function<? super Charset, String> charsetFilter) {
+    for (final Charset charset : charsets) {
+      AnAction action = new DumbAwareAction(charset.displayName(), null, EmptyIcon.ICON_16) {
+        @Override
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+          chosen(virtualFile, charset);
+        }
+
+        @Override
+        public void update(@Nonnull AnActionEvent e) {
+          super.update(e);
+          String description = charsetFilter.fun(charset);
+          Image defer;
+          if (virtualFile == null || virtualFile.isDirectory()) {
+            defer = null;
           }
           else {
-            getTemplatePresentation().setDescription(description);
+            NotNullLazyValue<CharSequence> myText = VolatileNotNullLazyValue.createValue(() -> LoadTextUtil.loadText(virtualFile));
+            NotNullLazyValue<byte[]> myBytes = VolatileNotNullLazyValue.createValue(() -> {
+              try {
+                return virtualFile.contentsToByteArray();
+              }
+              catch (IOException e1) {
+                return ArrayUtilRt.EMPTY_BYTE_ARRAY;
+              }
+            });
+            defer = IconDeferrer.getInstance().defer(null, Pair.create(virtualFile, charset), pair -> {
+              VirtualFile myFile = pair.getFirst();
+              Charset charset = pair.getSecond();
+              CharSequence text = myText.getValue();
+              byte[] bytes = myBytes.getValue();
+              EncodingUtil.Magic8 safeToReload = EncodingUtil.isSafeToReloadIn(myFile, text, bytes, charset);
+              EncodingUtil.Magic8 safeToConvert = EncodingUtil.Magic8.ABSOLUTELY;
+              if (safeToReload != EncodingUtil.Magic8.ABSOLUTELY) {
+                safeToConvert = EncodingUtil.isSafeToConvertTo(myFile, text, bytes, charset);
+              }
+              return safeToReload == EncodingUtil.Magic8.ABSOLUTELY || safeToConvert == EncodingUtil.Magic8.ABSOLUTELY
+                     ? null
+                     : safeToReload == EncodingUtil.Magic8.WELL_IF_YOU_INSIST || safeToConvert == EncodingUtil.Magic8.WELL_IF_YOU_INSIST ? AllIcons.General.Warning : AllIcons.General.Error;
+            });
           }
-        }
-
-        @Override
-        public void update(AnActionEvent e) {
-        }
-
-        @Override
-        protected void chosen(final VirtualFile file, @Nonnull final Charset charset) {
-          ChooseFileEncodingAction.this.chosen(file, charset);
+          e.getPresentation().setIcon(defer);
+          e.getPresentation().setDescription(description);
         }
       };
       group.add(action);
-    }
-  }
-
-  private class ClearThisFileEncodingAction extends AnAction {
-    private final VirtualFile myFile;
-
-    private ClearThisFileEncodingAction(@Nullable VirtualFile file, @Nonnull String clearItemText) {
-      super(clearItemText, "Clear " + (file == null ? "default" : "file '"+file.getName()+"'") + " encoding.", null);
-      myFile = file;
-    }
-
-    @Override
-    public void actionPerformed(final AnActionEvent e) {
-      chosen(myFile, NO_ENCODING);
     }
   }
 
@@ -112,27 +109,26 @@ public abstract class ChooseFileEncodingAction extends ComboBoxAction {
       return null;
     }
   };
+
   protected abstract void chosen(@Nullable VirtualFile virtualFile, @Nonnull Charset charset);
 
-  /**
-   * @param clearItemText null means do not show 'clear' text
-   * @param alreadySelected
-   * @param charsetFilter
-   * @return
-   */
   @Nonnull
-  protected DefaultActionGroup createCharsetsActionGroup(@Nullable String clearItemText,
-                                                      Charset alreadySelected,
-                                                      @Nonnull Function<Charset, String> charsetFilter) {
+  protected DefaultActionGroup createCharsetsActionGroup(@Nullable String clearItemText, @Nullable Charset alreadySelected, @Nonnull Function<? super Charset, String> charsetFilter) {
     DefaultActionGroup group = new DefaultActionGroup();
-    List<Charset> favorites = new ArrayList<Charset>(EncodingManager.getInstance().getFavorites());
+    List<Charset> favorites = new ArrayList<>(EncodingManager.getInstance().getFavorites());
     Collections.sort(favorites);
     Charset current = myVirtualFile == null ? null : myVirtualFile.getCharset();
     favorites.remove(current);
     favorites.remove(alreadySelected);
 
     if (clearItemText != null) {
-      group.add(new ClearThisFileEncodingAction(myVirtualFile, clearItemText));
+      String description = "Clear " + (myVirtualFile == null ? "default" : "file '" + myVirtualFile.getName() + "'") + " encoding.";
+      group.add(new DumbAwareAction(clearItemText, description, null) {
+        @Override
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+          chosen(myVirtualFile, NO_ENCODING);
+        }
+      });
     }
     if (favorites.isEmpty() && clearItemText == null) {
       fillCharsetActions(group, myVirtualFile, Arrays.asList(CharsetToolkit.getAvailableCharsets()), charsetFilter);

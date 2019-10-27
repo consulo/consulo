@@ -116,7 +116,7 @@ public class FilteringIterator<Dom, E extends Dom> implements PeekableIterator<E
     return Conditions.alwaysTrue();
   }
 
-  public static <T> InstanceOf<T> instanceOf(final Class<T> aClass) {
+  public static <T> InstanceOf<T> instanceOf(final Class<? extends T> aClass) {
     return new InstanceOf<T>(aClass);
   }
 
@@ -125,9 +125,9 @@ public class FilteringIterator<Dom, E extends Dom> implements PeekableIterator<E
   }
 
   public static class InstanceOf<T> implements Condition<Object> {
-    private final Class<T> myInstancesClass;
+    private final Class<? extends T> myInstancesClass;
 
-    public InstanceOf(Class<T> instancesClass) {
+    public InstanceOf(Class<? extends T> instancesClass) {
       myInstancesClass = instancesClass;
     }
 

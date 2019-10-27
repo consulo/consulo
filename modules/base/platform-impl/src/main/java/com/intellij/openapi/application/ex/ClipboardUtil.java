@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.application.ex;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.util.SystemInfo;
 import javax.annotation.Nonnull;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2017 JetBrains s.r.o.
+ * Copyright 2000-2019 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@ package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.openapi.util.Pair;
-
 import javax.annotation.Nonnull;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -28,26 +28,35 @@ import java.util.Map;
  * Supposed to be used ONLY by plugin allowing to sort completion using ml-ranking algorithm.
  * Needed to sort items from different sorters together.
  */
+//@ApiStatus.Internal
 public abstract class CompletionFinalSorter {
 
   @Nonnull
-  public abstract Iterable<LookupElement> sort(@Nonnull Iterable<LookupElement> initial, @Nonnull CompletionParameters parameters);
+  public abstract Iterable<? extends LookupElement> sort(@Nonnull Iterable<? extends LookupElement> initial, @Nonnull CompletionParameters parameters);
 
   /**
-   * For debugging purposes, provide weights by which completion will be sorted
+   * For debugging purposes, provide weights by which completion will be sorted.
    */
   @Nonnull
   public abstract Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(@Nonnull Iterable<LookupElement> elements);
+
+
+  //@ApiStatus.Internal
+  public interface Factory {
+    @Nonnull
+    CompletionFinalSorter newSorter();
+  }
 
   @Nonnull
   public static CompletionFinalSorter newSorter() {
     return EMPTY_SORTER;
   }
 
+
   private static final CompletionFinalSorter EMPTY_SORTER = new CompletionFinalSorter() {
     @Nonnull
     @Override
-    public Iterable<LookupElement> sort(@Nonnull Iterable<LookupElement> initial, @Nonnull CompletionParameters parameters) {
+    public Iterable<? extends LookupElement> sort(@Nonnull Iterable<? extends LookupElement> initial, @Nonnull CompletionParameters parameters) {
       return initial;
     }
 

@@ -16,14 +16,10 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.compiler.ModuleCompilerUtil;
-import com.intellij.ide.actions.ImportModuleAction;
-import com.intellij.ide.impl.util.NewProjectUtilPlatform;
-import com.intellij.ide.util.newProjectWizard.AddModuleWizard;
-import com.intellij.ide.util.projectWizard.ModuleBuilder;
+import com.intellij.ide.impl.util.NewOrImportModuleUtil;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.fileChooser.FileChooser;
+import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
@@ -41,26 +37,30 @@ import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ModuleProjectStructureElement;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.graph.GraphGenerator;
-import consulo.ide.newProject.NewProjectDialog;
+import consulo.ide.newProject.ui.NewProjectDialog;
+import consulo.ide.newProject.ui.NewProjectPanel;
+import consulo.logging.Logger;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
+import consulo.moduleImport.ui.ModuleImportProcessor;
 import consulo.roots.ContentFolderScopes;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.fileChooser.FileChooser;
+import org.jetbrains.concurrency.AsyncPromise;
+import org.jetbrains.concurrency.Promise;
+import org.jetbrains.concurrency.Promises;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.*;
-import java.util.List;
 import java.util.*;
 
 /**
@@ -314,30 +314,37 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     return doRemoveModule(moduleEditor);
   }
 
-  @Nullable
+  @Nonnull
   @RequiredUIAccess
   @SuppressWarnings("unchecked")
-  public List<Module> addModule(Component parent, boolean anImport) {
-    if (myProject.isDefault()) return null;
+  public Promise<List<Module>> addModule(boolean anImport) {
+    if (myProject.isDefault()) return Promises.rejectedPromise();
 
     if (anImport) {
-      Pair<ModuleImportProvider, ModuleImportContext> pair = runModuleWizard(parent, true);
-      if (pair != null) {
-        ModuleImportProvider importProvider = pair.getFirst();
-        ModuleImportContext importContext = pair.getSecond();
+      AsyncPromise<List<Module>> asyncPromise = new AsyncPromise<>();
+      AsyncResult listAsyncResult = ModuleImportProcessor.showFileChooser(myProject, null);
+
+      listAsyncResult.doWhenDone(o -> {
+        Pair<ModuleImportContext, ModuleImportProvider> pair = (Pair<ModuleImportContext, ModuleImportProvider>)o;
+        ModuleImportProvider<ModuleImportContext> importProvider = pair.getSecond();
+        ModuleImportContext importContext = pair.getFirst();
         assert importProvider != null;
         assert importContext != null;
 
-        final ModifiableArtifactModel artifactModel = ProjectStructureConfigurable.getInstance(myProject).getArtifactsStructureConfigurable().getModifiableArtifactModel();
-        List<Module> commitedModules = importProvider.commit(importContext, myProject, myModuleModel, this, artifactModel);
+        List<Module> modules = new ArrayList<>();
 
-        ApplicationManager.getApplication().runWriteAction(() -> {
-          for (Module module : commitedModules) {
+        importProvider.process(importContext, myProject, myModuleModel, modules::add);
+
+        WriteAction.runAndWait(() -> {
+          for (Module module : modules) {
             getOrCreateModuleEditor(module);
           }
         });
-        return commitedModules;
-      }
+
+        asyncPromise.setResult(modules);
+      });
+
+      listAsyncResult.doWhenRejected(() -> asyncPromise.setError("rejected"));
     }
     else {
       FileChooserDescriptor fileChooserDescriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
@@ -358,111 +365,39 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
       };
       fileChooserDescriptor.setTitle(ProjectBundle.message("choose.module.home"));
 
-      final VirtualFile moduleDir = FileChooser.chooseFile(fileChooserDescriptor, myProject, null);
+      AsyncPromise<List<Module>> promise = new AsyncPromise<>();
 
-      if (moduleDir == null) {
-        return null;
-      }
+      AsyncResult<VirtualFile> fileChooserAsync = FileChooser.chooseFile(fileChooserDescriptor, myProject, null);
+      fileChooserAsync.doWhenDone(moduleDir -> {
+        final NewProjectDialog dialog = new NewProjectDialog(myProject, moduleDir);
 
-      final NewProjectDialog dialog = new NewProjectDialog(myProject, moduleDir);
-      Module newModule;
+        AsyncResult<Void> dialogAsync = dialog.showAsync();
+        dialogAsync.doWhenDone(() -> {
+          NewProjectPanel panel = dialog.getProjectPanel();
 
-      if (dialog.showAndGet()) {
-        newModule = NewProjectUtilPlatform.doCreate(dialog.getProjectPanel(), myModuleModel, moduleDir, false);
-      }
-      else {
-        newModule = null;
-      }
+          Module newModule = NewOrImportModuleUtil.doCreate(panel, myModuleModel, moduleDir, false);
 
-      if (newModule == null) {
-        return null;
-      }
+          ApplicationManager.getApplication().runWriteAction(() -> {
+            getOrCreateModuleEditor(newModule);
 
-      ApplicationManager.getApplication().runWriteAction(() -> {
-        getOrCreateModuleEditor(newModule);
+            Collections.sort(myModuleEditors, myModuleEditorComparator);
+          });
+          processModuleCountChanged();
 
-        Collections.sort(myModuleEditors, myModuleEditorComparator);
+          promise.setResult(Collections.singletonList(newModule));
+        });
+        dialogAsync.doWhenRejected(() -> {
+          promise.setError("dialog canceled");
+        });
       });
-      processModuleCountChanged();
-
-      return Collections.singletonList(newModule);
-    }
-    return null;
-  }
-
-  @RequiredUIAccess
-  private Module createModule(final ModuleBuilder builder) {
-    final Exception[] ex = new Exception[]{null};
-    final Module module = ApplicationManager.getApplication().runWriteAction(new Computable<Module>() {
-      @Override
-      @SuppressWarnings({"ConstantConditions"})
-      public Module compute() {
-        try {
-          return builder.createModule(myModuleModel);
-        }
-        catch (Exception e) {
-          ex[0] = e;
-          return null;
-        }
-      }
-    });
-    if (ex[0] != null) {
-      Messages.showErrorDialog(ProjectBundle.message("module.add.error.message", ex[0].getMessage()), ProjectBundle.message("module.add.error.title"));
-    }
-    return module;
-  }
-
-  @Nullable
-  @RequiredUIAccess
-  public Module addModule(final ModuleBuilder moduleBuilder) {
-    final Module module = createModule(moduleBuilder);
-    if (module != null) {
-      ApplicationManager.getApplication().runWriteAction(new Runnable() {
-        @Override
-        public void run() {
-          getOrCreateModuleEditor(module);
-          Collections.sort(myModuleEditors, myModuleEditorComparator);
-        }
+      fileChooserAsync.doWhenRejected(() -> {
+        promise.setError("rejected from chooser");
       });
-      processModuleCountChanged();
+
+      return promise;
     }
-    return module;
+    return Promises.rejectedPromise();
   }
-
-  @Nullable
-  Pair<ModuleImportProvider, ModuleImportContext> runModuleWizard(Component dialogParent, boolean anImport) {
-    AddModuleWizard wizard;
-    if (anImport) {
-      wizard = ImportModuleAction.selectFileAndCreateWizard(myProject, dialogParent);
-      if (wizard == null) return null;
-      if (wizard.getStepCount() == 0) {
-        return Pair.create(wizard.getImportProvider(), wizard.getWizardContext().getModuleImportContext(wizard.getImportProvider()));
-      }
-    }
-    else {
-      wizard = new AddModuleWizard(dialogParent, myProject, this);
-    }
-    wizard.show();
-    if (wizard.isOK()) {
-      final ModuleImportProvider<?> builder = wizard.getImportProvider();
-      if (builder instanceof ModuleBuilder) {
-        final ModuleBuilder moduleBuilder = (ModuleBuilder)builder;
-        if (moduleBuilder.getName() == null) {
-          moduleBuilder.setName(wizard.getProjectName());
-        }
-        if (moduleBuilder.getModuleDirPath() == null) {
-          moduleBuilder.setModuleDirPath(wizard.getModuleDirPath());
-        }
-      }
-      if (!builder.validate(myProject, myProject)) {
-        return null;
-      }
-      return Pair.create(wizard.getImportProvider(), wizard.getWizardContext().getModuleImportContext(builder));
-    }
-
-    return null;
-  }
-
 
   private boolean doRemoveModule(@Nonnull ModuleEditor selectedEditor) {
 

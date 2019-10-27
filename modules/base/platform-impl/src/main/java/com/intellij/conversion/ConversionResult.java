@@ -16,12 +16,30 @@
 package com.intellij.conversion;
 
 import com.intellij.openapi.project.Project;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public interface ConversionResult {
+  ConversionResult DUMMY = new ConversionResult() {
+    @Override
+    public boolean conversionNotNeeded() {
+      return false;
+    }
+
+    @Override
+    public boolean openingIsCanceled() {
+      return false;
+    }
+
+    @Override
+    public void postStartupActivity(@Nonnull Project project) {
+
+    }
+  };
+
   boolean conversionNotNeeded();
 
   boolean openingIsCanceled();

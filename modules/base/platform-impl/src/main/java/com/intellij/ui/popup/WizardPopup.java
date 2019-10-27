@@ -1,40 +1,28 @@
-/*
- * Copyright 2000-2014 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.popup;
 
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.PopupBorder;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.ui.popup.async.AsyncPopupImpl;
+import com.intellij.ui.popup.async.AsyncPopupStep;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.ui.popup.tree.TreePopupImpl;
 import com.intellij.ui.popup.util.MnemonicsSearch;
 import com.intellij.ui.speedSearch.ElementFilter;
 import com.intellij.ui.speedSearch.SpeedSearch;
-import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ui.TimerUtil;
+import consulo.logging.Logger;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +32,6 @@ import java.util.Collections;
 public abstract class WizardPopup extends AbstractPopup implements ActionListener, ElementFilter {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ui.popup.WizardPopup");
 
-  private static final int AUTO_POPUP_DELAY = 750;
   private static final Dimension MAX_SIZE = new Dimension(Integer.MAX_VALUE, 600);
 
   protected static final int STEP_X_PADDING = 2;
@@ -54,7 +41,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
   protected final PopupStep<Object> myStep;
   protected WizardPopup myChild;
 
-  private final Timer myAutoSelectionTimer = UIUtil.createNamedTimer("Wizard autoselection",AUTO_POPUP_DELAY, this);
+  private final Timer myAutoSelectionTimer = TimerUtil.createNamedTimer("Wizard auto-selection", Registry.intValue("ide.popup.auto.delay", 500), this);
 
   private final MnemonicsSearch myMnemonicsSearch;
   private Object myParentValue;
@@ -66,19 +53,23 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
   private final ActionMap myActionMap = new ActionMap();
   private final InputMap myInputMap = new InputMap();
 
+  /**
+   * @deprecated use {@link #WizardPopup(Project, JBPopup, PopupStep)}
+   */
+  @Deprecated
   public WizardPopup(@Nonnull PopupStep<Object> aStep) {
-    this(null, aStep);
+    this(DataManager.getInstance().getDataContext().getData(CommonDataKeys.PROJECT), null, aStep);
   }
 
-  public WizardPopup(@Nullable JBPopup aParent, @Nonnull PopupStep<Object> aStep) {
-    myParent = (WizardPopup) aParent;
+  public WizardPopup(@Nullable Project project, @Nullable JBPopup aParent, @Nonnull PopupStep<Object> aStep) {
+    myParent = (WizardPopup)aParent;
     myStep = aStep;
 
     mySpeedSearch.setEnabled(myStep.isSpeedSearchEnabled());
 
     final JComponent content = createContent();
 
-    JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(content);
+    JScrollPane scrollPane = createScrollPane(content);
     scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
     scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
     scrollPane.getHorizontalScrollBar().setBorder(null);
@@ -88,11 +79,8 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
 
     scrollPane.setBorder(null);
 
-    final Project project = DataManager.getInstance().getDataContext().getData(CommonDataKeys.PROJECT);
-    init(project, scrollPane, getPreferredFocusableComponent(), true, true, true, null,
-         isResizable(), aStep.getTitle(), null, true, null, false, null, null, null, false, null, true, false, true, null, 0f,
-         null, true, false, new Component[0], null, SwingConstants.LEFT, true, Collections.<Pair<ActionListener, KeyStroke>>emptyList(),
-         null, null, false, true, true, true, null);
+    init(project, scrollPane, getPreferredFocusableComponent(), true, true, true, null, isResizable(), aStep.getTitle(), null, true, null, false, null, null, null, false, null, true, false, true, null, 0f,
+         null, true, false, new Component[0], null, SwingConstants.LEFT, true, Collections.emptyList(), null, null, false, true, true, null, true, null);
 
     registerAction("disposeAll", KeyEvent.VK_ESCAPE, InputEvent.SHIFT_MASK, new AbstractAction() {
       @Override
@@ -121,9 +109,11 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
         onSelectByMnemonic(value);
       }
     };
+  }
 
-
-
+  @Nonnull
+  protected JScrollPane createScrollPane(JComponent content) {
+    return ScrollPaneFactory.createScrollPane(content);
   }
 
   private void disposeAll() {
@@ -150,9 +140,9 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
 
   @Override
   public void dispose() {
-    super.dispose();
-
     myAutoSelectionTimer.stop();
+
+    super.dispose();
 
     PopupDispatcher.unsetShowing(this);
     PopupDispatcher.clearRootIfNeeded(this);
@@ -173,8 +163,8 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
   }
 
   @Override
-  public void show(final Component owner, final int aScreenX, final int aScreenY, final boolean considerForcedXY) {
-    LOG.assertTrue (!isDisposed());
+  public void show(@Nonnull final Component owner, final int aScreenX, final int aScreenY, final boolean considerForcedXY) {
+    LOG.assertTrue(!isDisposed());
 
     Rectangle targetBounds = new Rectangle(new Point(aScreenX, aScreenY), getContent().getPreferredSize());
 
@@ -182,13 +172,12 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
       final Rectangle parentBounds = getParent().getBounds();
       parentBounds.x += STEP_X_PADDING;
       parentBounds.width -= STEP_X_PADDING * 2;
-      ScreenUtil.moveToFit(targetBounds, ScreenUtil.getScreenRectangle(
-              parentBounds.x + parentBounds.width / 2,
-              parentBounds.y + parentBounds.height / 2), null);
+      ScreenUtil.moveToFit(targetBounds, ScreenUtil.getScreenRectangle(parentBounds.x + parentBounds.width / 2, parentBounds.y + parentBounds.height / 2), null);
       if (parentBounds.intersects(targetBounds)) {
         targetBounds.x = getParent().getBounds().x - targetBounds.width - STEP_X_PADDING;
       }
-    } else {
+    }
+    else {
       ScreenUtil.moveToFit(targetBounds, ScreenUtil.getScreenRectangle(aScreenX + 1, aScreenY + 1), null);
     }
 
@@ -199,7 +188,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
       PopupDispatcher.setShowing(this);
     }
 
-    LOG.assertTrue (!isDisposed(), "Disposed popup, parent="+getParent());
+    LOG.assertTrue(!isDisposed(), "Disposed popup, parent=" + getParent());
     super.show(owner, targetBounds.x, targetBounds.y, true);
   }
 
@@ -207,10 +196,6 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
   protected void afterShow() {
     super.afterShow();
     registerAutoMove();
-
-    if (!myFocusTrackback.isMustBeShown()) {
-      cancel();
-    }
   }
 
   private void registerAutoMove() {
@@ -257,19 +242,19 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
 
   protected void disposeAllParents(InputEvent e) {
     myDisposeEvent = e;
-    dispose();
+    Disposer.dispose(this);
     if (myParent != null) {
       myParent.disposeAllParents(null);
     }
   }
 
-  public final void registerAction(@NonNls String aActionName, int aKeyCode, @JdkConstants.InputEventMask  int aModifier, Action aAction) {
+  public final void registerAction(@NonNls String aActionName, int aKeyCode, @JdkConstants.InputEventMask int aModifier, Action aAction) {
     myInputMap.put(KeyStroke.getKeyStroke(aKeyCode, aModifier), aActionName);
     myActionMap.put(aActionName, aAction);
   }
 
   protected String getActionForKeyStroke(final KeyStroke keyStroke) {
-    return (String) myInputMap.get(keyStroke);
+    return (String)myInputMap.get(keyStroke);
   }
 
   public final void registerAction(@NonNls String aActionName, KeyStroke keyStroke, Action aAction) {
@@ -288,31 +273,32 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
   @Override
   @Nonnull
   protected MyContentPanel createContentPanel(final boolean resizable, final PopupBorder border, final boolean isToDrawMacCorner) {
-    return new MyContainer(resizable, border, isToDrawMacCorner);
+    return new MyContainer(border);
   }
 
   protected boolean isResizable() {
     return false;
   }
 
-  private class MyContainer extends MyContentPanel {
-    private MyContainer(final boolean resizable, final PopupBorder border, final boolean drawMacCorner) {
-      super(resizable, border, drawMacCorner);
+  private static class MyContainer extends MyContentPanel {
+    private MyContainer(PopupBorder border) {
+      super(border);
       setOpaque(true);
       setFocusCycleRoot(true);
     }
 
     @Override
     public Dimension getPreferredSize() {
+      if (isPreferredSizeSet()) {
+        return super.getPreferredSize();
+      }
       final Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
       Point p = null;
       if (focusOwner != null && focusOwner.isShowing()) {
         p = focusOwner.getLocationOnScreen();
       }
 
-      Dimension size = WizardPopup.this.getSize();
-      boolean isEmpty = size == null || size.height <= 1 && size.width <= 1;
-      return isEmpty ? computeNotBiggerDimension(super.getPreferredSize().getSize(), p) : size;
+      return computeNotBiggerDimension(super.getPreferredSize().getSize(), p);
     }
 
     private Dimension computeNotBiggerDimension(Dimension ofContent, final Point locationOnScreen) {
@@ -341,7 +327,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
   }
 
   public final boolean dispatch(KeyEvent event) {
-    if (event.getID() != KeyEvent.KEY_PRESSED && event.getID() != KeyEvent.KEY_RELEASED) {
+    if (event.getID() != KeyEvent.KEY_PRESSED && event.getID() != KeyEvent.KEY_RELEASED && event.getID() != KeyEvent.KEY_TYPED) {
       // do not dispatch these events to Swing
       event.consume();
       return true;
@@ -349,7 +335,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
 
     if (event.getID() == KeyEvent.KEY_PRESSED) {
       final KeyStroke stroke = KeyStroke.getKeyStroke(event.getKeyCode(), event.getModifiers(), false);
-      if (proceedKeyEvent(event, stroke)) return false;
+      if (proceedKeyEvent(event, stroke)) return true;
     }
 
     if (event.getID() == KeyEvent.KEY_RELEASED) {
@@ -357,8 +343,8 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
       return proceedKeyEvent(event, stroke);
     }
 
-    myMnemonicsSearch.process(event);
-    mySpeedSearch.process(event);
+    myMnemonicsSearch.processKeyEvent(event);
+    mySpeedSearch.processKeyEvent(event);
 
     if (event.isConsumed()) return true;
     process(event);
@@ -370,6 +356,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
       final Action action = myActionMap.get(myInputMap.get(stroke));
       if (action != null && action.isEnabled()) {
         action.actionPerformed(new ActionEvent(getContent(), event.getID(), "", event.getWhen(), event.getModifiers()));
+        event.consume();
         return true;
       }
     }
@@ -385,11 +372,14 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
   }
 
   protected WizardPopup createPopup(WizardPopup parent, PopupStep step, Object parentValue) {
+    if (step instanceof AsyncPopupStep) {
+      return new AsyncPopupImpl(getProject(), parent, (AsyncPopupStep)step, parentValue);
+    }
     if (step instanceof ListPopupStep) {
-      return new ListPopupImpl(parent, (ListPopupStep)step, parentValue);
+      return new ListPopupImpl(getProject(), parent, (ListPopupStep)step, parentValue);
     }
     else if (step instanceof TreePopupStep) {
-      return new TreePopupImpl(parent, (TreePopupStep)step, parentValue);
+      return new TreePopupImpl(getProject(), parent, (TreePopupStep)step, parentValue);
     }
     else {
       throw new IllegalArgumentException(step.getClass().toString());
@@ -425,7 +415,9 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
   public boolean shouldBeShowing(Object value) {
     if (!myStep.isSpeedSearchEnabled()) return true;
     SpeedSearchFilter<Object> filter = myStep.getSpeedSearchFilter();
+    if (filter == null) return true;
     if (!filter.canBeHidden(value)) return true;
+    if (!mySpeedSearch.isHoldingFilter()) return true;
     String text = filter.getIndexedString(value);
     return mySpeedSearch.shouldBeShowing(text);
   }
@@ -458,7 +450,8 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
   public final void setFinalRunnable(Runnable runnable) {
     if (getParent() == null) {
       super.setFinalRunnable(runnable);
-    } else {
+    }
+    else {
       getParent().setFinalRunnable(runnable);
     }
   }
@@ -467,7 +460,8 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
   public void setOk(boolean ok) {
     if (getParent() == null) {
       super.setOk(ok);
-    } else {
+    }
+    else {
       getParent().setOk(ok);
     }
   }

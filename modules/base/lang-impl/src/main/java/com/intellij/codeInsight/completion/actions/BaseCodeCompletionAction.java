@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2013 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.completion.actions;
 
 import com.intellij.codeInsight.completion.CodeCompletionHandlerBase;
@@ -42,33 +28,33 @@ public abstract class BaseCodeCompletionAction extends DumbAwareAction implement
   }
 
   protected void invokeCompletion(AnActionEvent e, CompletionType type, int time) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
     Editor editor = e.getData(CommonDataKeys.EDITOR);
-    assert project != null;
     assert editor != null;
+    Project project = editor.getProject();
+    assert project != null;
     InputEvent inputEvent = e.getInputEvent();
-    createHandler(type, true, false, true).invokeCompletion(project, editor, time, inputEvent != null && inputEvent.getModifiers() != 0, false);
+    createHandler(type, true, false, true).invokeCompletion(project, editor, time, inputEvent != null && inputEvent.getModifiers() != 0);
   }
 
   @Nonnull
   public CodeCompletionHandlerBase createHandler(@Nonnull CompletionType completionType, boolean invokedExplicitly, boolean autopopup, boolean synchronous) {
+
     return new CodeCompletionHandlerBase(completionType, invokedExplicitly, autopopup, synchronous);
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
     e.getPresentation().setEnabled(false);
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
-    if (project == null) return;
 
     Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     if (editor == null) return;
 
-    final PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(editor, project);
+    Project project = editor.getProject();
+    PsiFile psiFile = project == null ? null : PsiUtilBase.getPsiFileInEditor(editor, project);
     if (psiFile == null) return;
 
-    if (!ApplicationManager.getApplication().isUnitTestMode() && !editor.getContentComponent().isShowing()) return;
+    if (!ApplicationManager.getApplication().isHeadlessEnvironment() && !editor.getContentComponent().isShowing()) return;
     e.getPresentation().setEnabled(true);
   }
 }

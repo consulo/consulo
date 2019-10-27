@@ -40,26 +40,23 @@ import java.util.concurrent.ConcurrentMap;
 public class PsiReferenceRegistrarImpl extends PsiReferenceRegistrar {
   private final ConcurrentMap<Class, SimpleProviderBinding<PsiReferenceProvider>> myBindingsMap = new ConcurrentHashMap<Class, SimpleProviderBinding<PsiReferenceProvider>>();
   private final ConcurrentMap<Class, NamedObjectProviderBinding<PsiReferenceProvider>> myNamedBindingsMap = new ConcurrentHashMap<Class, NamedObjectProviderBinding<PsiReferenceProvider>>();
-  private final ConcurrentFactoryMap<Class, Class[]> myKnownSupers = new ConcurrentFactoryMap<Class, Class[]>() {
-    @Override
-    protected Class[] create(Class key) {
-      final Set<Class> result = new LinkedHashSet<Class>();
-      for (Class candidate : myBindingsMap.keySet()) {
-        if (candidate.isAssignableFrom(key)) {
-          result.add(candidate);
-        }
+  private final ConcurrentMap<Class, Class[]> myKnownSupers = ConcurrentFactoryMap.createMap(key -> {
+    final Set<Class> result = new LinkedHashSet<Class>();
+    for (Class candidate : myBindingsMap.keySet()) {
+      if (candidate.isAssignableFrom(key)) {
+        result.add(candidate);
       }
-      for (Class candidate : myNamedBindingsMap.keySet()) {
-        if (candidate.isAssignableFrom(key)) {
-          result.add(candidate);
-        }
-      }
-      if (result.isEmpty()) {
-        return ArrayUtil.EMPTY_CLASS_ARRAY;
-      }
-      return result.toArray(new Class[result.size()]);
     }
-  };
+    for (Class candidate : myNamedBindingsMap.keySet()) {
+      if (candidate.isAssignableFrom(key)) {
+        result.add(candidate);
+      }
+    }
+    if (result.isEmpty()) {
+      return ArrayUtil.EMPTY_CLASS_ARRAY;
+    }
+    return result.toArray(new Class[result.size()]);
+  });
 
   /**
    * @deprecated {@see com.intellij.psi.PsiReferenceContributor

@@ -41,17 +41,17 @@ public class CommandLineUtil {
 
   @Nonnull
   public static List<String> toCommandLine(@Nonnull String command, @Nonnull List<String> parameters) {
-    return toCommandLine(command, parameters, Platform.current());
+    return toCommandLine(command, parameters, FilePathSeparator.current());
   }
 
   // please keep an implementation in sync with [junit-rt] ProcessBuilder.createProcess()
   @Nonnull
-  public static List<String> toCommandLine(@Nonnull String command, @Nonnull List<String> parameters, @Nonnull Platform platform) {
+  public static List<String> toCommandLine(@Nonnull String command, @Nonnull List<String> parameters, @Nonnull FilePathSeparator filePathSeparator) {
     List<String> commandLine = ContainerUtil.newArrayListWithCapacity(parameters.size() + 1);
 
-    commandLine.add(FileUtilRt.toSystemDependentName(command, platform.fileSeparator));
+    commandLine.add(FileUtilRt.toSystemDependentName(command, filePathSeparator.fileSeparator));
 
-    boolean isWindows = platform == Platform.WINDOWS;
+    boolean isWindows = filePathSeparator == FilePathSeparator.WINDOWS;
     boolean winShell = isWindows && isWinShell(command);
 
     for (String parameter : parameters) {

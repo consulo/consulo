@@ -22,13 +22,14 @@ import com.intellij.notification.NotificationType;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SmartList;
 import consulo.application.ApplicationProperties;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -55,22 +56,19 @@ public final class StoreUtil {
         LOG.warn("Save settings failed", e);
       }
 
-      String messagePostfix = " Please restart " + ApplicationNamesInfo.getInstance().getFullProductName() + "</p>" +
-                              (Application.get().isInternal() ? "<p>" + StringUtil.getThrowableText(e) + "</p>" : "");
+      String messagePostfix =
+              " Please restart " + ApplicationNamesInfo.getInstance().getFullProductName() + "</p>" + (Application.get().isInternal() ? "<p>" + StringUtil.getThrowableText(e) + "</p>" : "");
 
       PluginId pluginId = IdeErrorsDialog.findPluginId(e);
       if (pluginId == null) {
-        new Notification("Settings Error", "Unable to save settings",
-                         "<p>Failed to save settings." + messagePostfix,
-                         NotificationType.ERROR).notify(project);
+        new Notification("Settings Error", "Unable to save settings", "<p>Failed to save settings." + messagePostfix, NotificationType.ERROR).notify(project);
       }
       else {
-        if(!ApplicationProperties.isInSandbox()) {
+        if (!ApplicationProperties.isInSandbox()) {
           PluginManagerCore.disablePlugin(pluginId.getIdString());
         }
 
-        new Notification("Settings Error", "Unable to save plugin settings",
-                         "<p>The plugin <i>" + pluginId + "</i> failed to save settings and has been disabled." + messagePostfix,
+        new Notification("Settings Error", "Unable to save plugin settings", "<p>The plugin <i>" + pluginId + "</i> failed to save settings and has been disabled." + messagePostfix,
                          NotificationType.ERROR).notify(project);
       }
     }
@@ -79,10 +77,10 @@ public final class StoreUtil {
     }
   }
 
-  public static void saveAsync(@Nonnull IComponentStore stateStore, @Nullable Project project) {
+  public static void saveAsync(@Nonnull IComponentStore stateStore, @Nonnull UIAccess uiAccess, @Nullable Project project) {
     ShutDownTracker.getInstance().registerStopperThread(Thread.currentThread());
     try {
-      stateStore.saveAsync(new SmartList<>());
+      stateStore.saveAsync(uiAccess, new SmartList<>());
     }
     catch (IComponentStore.SaveCancelledException e) {
       LOG.info(e);
@@ -95,24 +93,23 @@ public final class StoreUtil {
         LOG.warn("Save settings failed", e);
       }
 
-      String messagePostfix = " Please restart " + ApplicationNamesInfo.getInstance().getFullProductName() + "</p>" +
-                              (Application.get().isInternal() ? "<p>" + StringUtil.getThrowableText(e) + "</p>" : "");
+      uiAccess.give(() -> {
+        String messagePostfix =
+                " Please restart " + ApplicationNamesInfo.getInstance().getFullProductName() + "</p>" + (Application.get().isInternal() ? "<p>" + StringUtil.getThrowableText(e) + "</p>" : "");
 
-      PluginId pluginId = IdeErrorsDialog.findPluginId(e);
-      if (pluginId == null) {
-        new Notification("Settings Error", "Unable to save settings",
-                         "<p>Failed to save settings." + messagePostfix,
-                         NotificationType.ERROR).notify(project);
-      }
-      else {
-        if(!ApplicationProperties.isInSandbox()) {
-          PluginManagerCore.disablePlugin(pluginId.getIdString());
+        PluginId pluginId = IdeErrorsDialog.findPluginId(e);
+        if (pluginId == null) {
+          new Notification("Settings Error", "Unable to save settings", "<p>Failed to save settings." + messagePostfix, NotificationType.ERROR).notify(project);
         }
+        else {
+          if (!ApplicationProperties.isInSandbox()) {
+            PluginManagerCore.disablePlugin(pluginId.getIdString());
+          }
 
-        new Notification("Settings Error", "Unable to save plugin settings",
-                         "<p>The plugin <i>" + pluginId + "</i> failed to save settings and has been disabled." + messagePostfix,
-                         NotificationType.ERROR).notify(project);
-      }
+          new Notification("Settings Error", "Unable to save plugin settings", "<p>The plugin <i>" + pluginId + "</i> failed to save settings and has been disabled." + messagePostfix,
+                           NotificationType.ERROR).notify(project);
+        }
+      });
     }
     finally {
       ShutDownTracker.getInstance().unregisterStopperThread(Thread.currentThread());

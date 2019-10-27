@@ -1,32 +1,9 @@
-/*
- * Copyright 2000-2014 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Apr 19, 2002
- * Time: 1:51:41 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
@@ -34,8 +11,8 @@ import com.intellij.openapi.editor.event.SelectionEvent;
 import com.intellij.openapi.editor.event.SelectionListener;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -124,12 +101,25 @@ public class DesktopSelectionModelImpl implements SelectionModel {
     myEditor.getCaretModel().getCurrentCaret().setSelection(startPosition, startOffset, endPosition, endOffset);
   }
 
-  void fireSelectionChanged(int oldSelectionStart, int oldSelectionEnd, int startOffset, int endOffset) {
-    repaintBySelectionChange(oldSelectionStart, startOffset, oldSelectionEnd, endOffset);
-
-    SelectionEvent event = new SelectionEvent(myEditor,
-                                              oldSelectionStart, oldSelectionEnd,
-                                              startOffset, endOffset);
+  void fireSelectionChanged(SelectionEvent event) {
+    TextRange[] oldRanges = event.getOldRanges();
+    TextRange[] newRanges = event.getNewRanges();
+    int count = Math.min(oldRanges.length, newRanges.length);
+    for (int i = 0; i < count; i++) {
+      TextRange oldRange = oldRanges[i];
+      TextRange newRange = newRanges[i];
+      int oldSelectionStart = oldRange.getStartOffset();
+      int startOffset = newRange.getStartOffset();
+      int oldSelectionEnd = oldRange.getEndOffset();
+      int endOffset = newRange.getEndOffset();
+      myEditor.repaint(Math.min(oldSelectionStart, startOffset), Math.max(oldSelectionStart, startOffset), false);
+      myEditor.repaint(Math.min(oldSelectionEnd, endOffset), Math.max(oldSelectionEnd, endOffset), false);
+    }
+    TextRange[] remaining = oldRanges.length < newRanges.length ? newRanges : oldRanges;
+    for (int i = count; i < remaining.length; i++) {
+      TextRange range = remaining[i];
+      myEditor.repaint(range.getStartOffset(), range.getEndOffset(), false);
+    }
 
     broadcastSelectionEvent(event);
   }
@@ -143,11 +133,6 @@ public class DesktopSelectionModelImpl implements SelectionModel {
         LOG.error(e);
       }
     }
-  }
-
-  private void repaintBySelectionChange(int oldSelectionStart, int startOffset, int oldSelectionEnd, int endOffset) {
-    myEditor.repaint(Math.min(oldSelectionStart, startOffset), Math.max(oldSelectionStart, startOffset), false);
-    myEditor.repaint(Math.min(oldSelectionEnd, endOffset), Math.max(oldSelectionEnd, endOffset), false);
   }
 
   @Override
@@ -198,22 +183,12 @@ public class DesktopSelectionModelImpl implements SelectionModel {
   }
 
   @Override
-  public void addSelectionListener(SelectionListener listener) {
+  public void addSelectionListener(@Nonnull SelectionListener listener) {
     mySelectionListeners.add(listener);
-  }
-
-  public void addSelectionListener(final SelectionListener listener, Disposable parent) {
-    mySelectionListeners.add(listener);
-    Disposer.register(parent, new Disposable() {
-      @Override
-      public void dispose() {
-        mySelectionListeners.remove(listener);
-      }
-    });
   }
 
   @Override
-  public void removeSelectionListener(SelectionListener listener) {
+  public void removeSelectionListener(@Nonnull SelectionListener listener) {
     boolean success = mySelectionListeners.remove(listener);
     LOG.assertTrue(success);
   }
@@ -225,7 +200,7 @@ public class DesktopSelectionModelImpl implements SelectionModel {
 
   @Override
   public String getSelectedText(boolean allCarets) {
-    validateContext(false);
+    ApplicationManager.getApplication().assertReadAccessAllowed();
 
     if (myEditor.getCaretModel().supportsMultipleCarets() && allCarets) {
       final StringBuilder buf = new StringBuilder();
@@ -306,14 +281,5 @@ public class DesktopSelectionModelImpl implements SelectionModel {
 
   public void reinitSettings() {
     myTextAttributes = null;
-  }
-
-  private static void validateContext(boolean isWrite) {
-    if (isWrite) {
-      ApplicationManager.getApplication().assertIsDispatchThread();
-    }
-    else {
-      ApplicationManager.getApplication().assertReadAccessAllowed();
-    }
   }
 }

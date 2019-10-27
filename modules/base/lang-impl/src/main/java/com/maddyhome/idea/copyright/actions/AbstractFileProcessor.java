@@ -19,7 +19,6 @@ package com.maddyhome.idea.copyright.actions;
 import com.intellij.codeInsight.FileModificationService;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -38,6 +37,7 @@ import com.intellij.util.IncorrectOperationException;
 import com.maddyhome.idea.copyright.CopyrightManager;
 import com.maddyhome.idea.copyright.CopyrightProfile;
 import com.maddyhome.idea.copyright.CopyrightUpdaters;
+import consulo.logging.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;

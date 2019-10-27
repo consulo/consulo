@@ -412,11 +412,11 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
   /**
    * Sets window weight and adjust it to [0..1] range if necessary.
    */
-  void setWeight(float weight) {
+  public void setWeight(float weight) {
     myWeight = Math.max(0, Math.min(1, weight));
   }
 
-  void setSideWeight(float weight) {
+  public void setSideWeight(float weight) {
     mySideWeight = Math.max(0, Math.min(1, weight));
   }
 

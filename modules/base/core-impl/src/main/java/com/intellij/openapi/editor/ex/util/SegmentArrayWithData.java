@@ -15,37 +15,36 @@
  */
 package com.intellij.openapi.editor.ex.util;
 
+import com.intellij.psi.tree.IElementType;
+import com.intellij.util.ArrayUtil;
 import javax.annotation.Nonnull;
 
 /**
- * Expands {@link SegmentArray} contract in providing ability to attach additional <code>'short'</code> variable to target segment,
+ * Expands {@link SegmentArray} contract in providing ability to attach additional data to target segment,
  * i.e. holds mappings like {@code 'index <-> (data, (start; end))'}.
  * <p/>
  * Not thread-safe.
  */
 public class SegmentArrayWithData extends SegmentArray {
-  private short[] myData;
+  private DataStorage myStorage;
 
-  public SegmentArrayWithData() {
-    myData = new short[INITIAL_SIZE];
+  public SegmentArrayWithData(DataStorage storage) {
+    myStorage = storage;
+  }
+
+  public DataStorage createStorage() {
+    return myStorage.createStorage();
   }
 
   public void setElementAt(int i, int startOffset, int endOffset, int data) {
-    dataRangeCheck(data);
     setElementAt(i, startOffset, endOffset);
-    myData = reallocateArray(myData, i+1);
-    myData[i] = (short)data;
+    myStorage.setData(i, data);
   }
 
-  private static void dataRangeCheck(int data) {
-    if (data < Short.MIN_VALUE || data > Short.MAX_VALUE) {
-      throw new IndexOutOfBoundsException("data out of short range: " + data);
-    }
-  }
 
   @Override
   public void remove(int startIndex, int endIndex) {
-    myData = remove(myData, startIndex, endIndex);
+    myStorage.remove(startIndex, endIndex, mySegmentCount);
     super.remove(startIndex, endIndex);
   }
 
@@ -58,7 +57,7 @@ public class SegmentArrayWithData extends SegmentArray {
       remove(endIndex + delta, endIndex);
     }
     else if (delta > 0) {
-      SegmentArrayWithData deltaData = new SegmentArrayWithData();
+      SegmentArrayWithData deltaData = new SegmentArrayWithData(myStorage.createStorage());
       for (int i = oldLen; i < newLen; i++) {
         deltaData.setElementAt(i - oldLen, newData.getSegmentStart(i), newData.getSegmentEnd(i), newData.getSegmentData(i));
       }
@@ -71,54 +70,74 @@ public class SegmentArrayWithData extends SegmentArray {
 
 
   protected void replace(int startOffset, @Nonnull SegmentArrayWithData data, int len) {
-    System.arraycopy(data.myData, 0, myData, startOffset, len);
+    myStorage.replace(data.myStorage, startOffset, len);
     super.replace(startOffset, data, len);
   }
 
   public void insert(@Nonnull SegmentArrayWithData segmentArray, int startIndex) {
-    myData = insert(myData, segmentArray.myData, startIndex, segmentArray.getSegmentCount());
+    myStorage.insert(segmentArray.myStorage, startIndex, segmentArray.getSegmentCount(), mySegmentCount);
     super.insert(segmentArray, startIndex);
   }
 
-  @Nonnull
-  private short[] insert(@Nonnull short[] array, @Nonnull short[] insertArray, int startIndex, int insertLength) {
-    short[] newArray = reallocateArray(array, mySegmentCount + insertLength);
-    if (startIndex < mySegmentCount) {
-      System.arraycopy(newArray, startIndex, newArray, startIndex + insertLength, mySegmentCount - startIndex);
-    }
-    System.arraycopy(insertArray, 0, newArray, startIndex, insertLength);
-    return newArray;
-  }
-
-  @Nonnull
-  private short[] remove(@Nonnull short[] array, int startIndex, int endIndex) {
-    if (endIndex < mySegmentCount) {
-      System.arraycopy(array, endIndex, array, startIndex, mySegmentCount - endIndex);
-    }
-    return array;
-  }
-
-  public short getSegmentData(int index) {
-    if(index < 0 || index >= mySegmentCount) {
+  public int getSegmentData(int index) {
+    if (index < 0 || index >= mySegmentCount) {
       throw new IndexOutOfBoundsException("Wrong index: " + index);
     }
-    return myData[index];
+    return myStorage.getData(index);
   }
 
   public void setSegmentData(int index, int data) {
-    if(index < 0 || index >= mySegmentCount) throw new IndexOutOfBoundsException("Wrong index: " + index);
-    dataRangeCheck(data);
-    myData[index] = (short)data;
+    if (index < 0 || index >= mySegmentCount) throw new IndexOutOfBoundsException("Wrong index: " + index);
   }
 
   @Nonnull
-  private static short[] reallocateArray(@Nonnull short[] array, int index) {
+  protected static int[] reallocateArray(@Nonnull int[] array, int index) {
     if (index < array.length) return array;
-
-    short[] newArray = new short[calcCapacity(array.length, index)];
-    System.arraycopy(array, 0, newArray, 0, array.length);
-    return newArray;
+    return ArrayUtil.realloc(array, calcCapacity(array.length, index));
   }
 
+  public SegmentArrayWithData copy() {
+    final SegmentArrayWithData sa = new SegmentArrayWithData(createStorage());
+    sa.mySegmentCount = mySegmentCount;
+    sa.myStarts = myStarts.clone();
+    sa.myEnds = myEnds.clone();
+    sa.myStorage = myStorage.copy();
+    return sa;
+  }
+
+  /**
+   * Unpacks state from segment data returned by
+   *
+   * @param data see {@link SegmentArrayWithData#getSegmentData(int)}
+   * @return lexer state stored in data
+   */
+  public int unpackStateFromData(int data) {
+    return myStorage.unpackStateFromData(data);
+  }
+
+  /**
+   * Unpacks token type from segment data returned by
+   * {@link SegmentArrayWithData#getSegmentData(int)}
+   *
+   * @param data to unpack
+   * @return element type stored in data
+   * @throws IndexOutOfBoundsException if encoded IElementType can not be found in IElementType registry
+   */
+  @Nonnull
+  public IElementType unpackTokenFromData(int data) {
+    return myStorage.unpackTokenFromData(data);
+  }
+
+  /**
+   * Packs tokenType and lexer state in data
+   *
+   * @param tokenType          lexer current token type
+   * @param state              lexer current state
+   * @param isRestartableState true if state is restartable
+   * @return packed lexer state and tokenType in data
+   */
+  public int packData(IElementType tokenType, int state, boolean isRestartableState) {
+    return myStorage.packData(tokenType, state, isRestartableState);
+  }
 }
 

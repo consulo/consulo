@@ -22,10 +22,12 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 /**
  * @author peter
@@ -70,7 +72,8 @@ public class OffsetMap implements Disposable {
   /**
    * Register key-offset binding. Offset will change together with {@link Document} editing operations
    * unless an operation replaces completely the offset vicinity.
-   * @param key offset key
+   *
+   * @param key    offset key
    * @param offset offset in the document
    */
   public void addOffset(OffsetKey key, int offset) {
@@ -93,7 +96,7 @@ public class OffsetMap implements Disposable {
     RangeMarker old = myMap.get(key);
     if (old != null) old.dispose();
     final RangeMarker marker = myDocument.createRangeMarker(offset, offset);
-    marker.setGreedyToRight(key.isMoveableToRight());
+    marker.setGreedyToRight(key.isMovableToRight());
     myMap.put(key, marker);
   }
 
@@ -142,5 +145,25 @@ public class OffsetMap implements Disposable {
         rangeMarker.dispose();
       }
     }
+  }
+
+  @Nonnull
+  Document getDocument() {
+    return myDocument;
+  }
+
+  @Nonnull
+  OffsetMap copyOffsets(@Nonnull Document anotherDocument) {
+    assert anotherDocument.getTextLength() == myDocument.getTextLength();
+    return mapOffsets(anotherDocument, Function.identity());
+  }
+
+  @Nonnull
+  OffsetMap mapOffsets(@Nonnull Document anotherDocument, @Nonnull Function<Integer, Integer> mapping) {
+    OffsetMap result = new OffsetMap(anotherDocument);
+    for (OffsetKey key : getAllOffsets()) {
+      result.addOffset(key, mapping.apply(getOffset(key)));
+    }
+    return result;
   }
 }

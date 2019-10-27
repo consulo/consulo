@@ -21,11 +21,11 @@ import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.lang.LanguageExtensionPoint;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 

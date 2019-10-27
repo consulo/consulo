@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.options.binding;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Pair;
 
 import javax.swing.*;

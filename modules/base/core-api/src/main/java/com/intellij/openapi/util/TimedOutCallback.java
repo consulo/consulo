@@ -16,7 +16,7 @@
 package com.intellij.openapi.util;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 
 import javax.swing.*;
 

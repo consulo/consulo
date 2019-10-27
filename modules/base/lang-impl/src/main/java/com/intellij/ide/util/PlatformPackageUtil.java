@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.util;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.vfs.VirtualFile;

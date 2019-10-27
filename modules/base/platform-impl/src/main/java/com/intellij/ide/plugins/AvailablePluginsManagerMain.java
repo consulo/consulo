@@ -23,9 +23,10 @@ import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.ui.RequiredUIAccess;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.List;
 import java.util.TreeSet;
@@ -129,7 +130,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
   }
 
   @Override
-  protected void propagateUpdates(List<IdeaPluginDescriptor> list) {
+  protected void propagateUpdates(List<PluginDescriptor> list) {
     installed.modifyPluginsList(list);
   }
 
@@ -147,7 +148,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
 
     @Nonnull
     @Override
-    public DefaultActionGroup createPopupActionGroup(DataContext context) {
+    public DefaultActionGroup createPopupActionGroup(JComponent component) {
       final TreeSet<String> availableCategories = ((AvailablePluginsTableModel)myPluginsModel).getAvailableCategories();
       final DefaultActionGroup gr = new DefaultActionGroup();
       gr.add(createFilterByCategoryAction(AvailablePluginsTableModel.ALL));

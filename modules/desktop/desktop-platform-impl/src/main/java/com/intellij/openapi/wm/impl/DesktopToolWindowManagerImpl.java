@@ -19,16 +19,13 @@ import com.intellij.ide.FrameStateManager;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.ui.LafManager;
 import com.intellij.ide.ui.LafManagerListener;
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.KeyboardShortcut;
-import com.intellij.openapi.actionSystem.Shortcut;
+import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
@@ -37,7 +34,6 @@ import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
-import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.popup.Balloon;
@@ -46,12 +42,10 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.*;
-import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.commands.DesktopRequestFocusInToolWindowCmd;
 import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
-import com.intellij.openapi.wm.impl.commands.RequestFocusInEditorComponentCmd;
 import com.intellij.openapi.wm.impl.commands.UpdateRootPaneCmd;
 import com.intellij.ui.BalloonImpl;
 import com.intellij.ui.ColorUtil;
@@ -64,9 +58,13 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.PositionTracker;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.annotations.RequiredWriteAction;
 import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
+import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
@@ -200,25 +198,28 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
       return;
     }
 
-    actionManager.addAnActionListener((action, dataContext, event) -> {
-      if (myCurrentState != KeyState.hold) {
-        resetHoldState();
+    actionManager.addAnActionListener(new AnActionListener() {
+      @Override
+      public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
+        if (myCurrentState != KeyState.hold) {
+          resetHoldState();
+        }
       }
     }, project);
 
     MessageBusConnection busConnection = project.getMessageBus().connect();
     busConnection.subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
       @Override
-      public void projectOpened(Project project, UIAccess uiAccess) {
+      public void projectOpened(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
         if (project == myProject) {
-          DesktopToolWindowManagerImpl.this.projectOpened();
+          uiAccess.giveAndWaitIfNeed(DesktopToolWindowManagerImpl.this::projectOpened);
         }
       }
 
       @Override
-      public void projectClosed(Project project) {
+      public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
         if (project == myProject) {
-          DesktopToolWindowManagerImpl.this.projectClosed();
+          uiAccess.giveAndWaitIfNeed(DesktopToolWindowManagerImpl.this::projectClosed);
         }
       }
     });
@@ -493,9 +494,6 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     editorComponent.setFocusable(false);
 
     appendSetEditorComponentCmd(editorComponent, commandsList);
-    if (myEditorWasActive && AWTComponentProviderUtil.getMark(editorComponent) instanceof EditorsSplitters) {
-      activateEditorComponentImpl(commandsList, true);
-    }
   }
 
   @Override
@@ -560,109 +558,23 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
   @Override
   public void activateEditorComponent() {
-    activateEditorComponent(true);
+    focusDefaultElementInSelectedEditor();
   }
 
-  private void activateEditorComponent(final boolean forced) {
-    activateEditorComponent(forced, false); //TODO[kirillk]: runnable in activateEditorComponent(boolean, boolean) never runs
-  }
-
-  private void activateEditorComponent(final boolean forced, boolean now) {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("enter: activateEditorComponent()");
-    }
-    ApplicationManager.getApplication().assertIsDispatchThread();
-
-    final ExpirableRunnable runnable = new ExpirableRunnable.ForProject(myProject) {
-      @Override
-      public void run() {
-        final ArrayList<FinalizableCommand> commandList = new ArrayList<>();
-        activateEditorComponentImpl(commandList, forced);
-        execute(commandList);
-      }
-    };
-    if (now) {
-      if (!runnable.isExpired()) {
-        runnable.run();
-      }
-    }
-    else {
-      final FocusRequestor requestor = getFocusManager().getFurtherRequestor();
-      getFocusManager().doWhenFocusSettlesDown(new ExpirableRunnable.ForProject(myProject) {
-        @Override
-        public void run() {
-          requestor.requestFocus(new FocusCommand() {
-            @Nonnull
-            @Override
-            public AsyncResult<Void> run() {
-              runnable.run();
-              return AsyncResult.resolved();
-            }
-          }.setExpirable(runnable), forced);
-        }
-      });
-    }
-  }
-
-  @Override
-  protected void activateEditorComponentImpl(List<FinalizableCommand> commandList, final boolean forced) {
-    final String active = getActiveToolWindowId();
-    // Now we have to request focus into most recent focused editor
-    appendRequestFocusInEditorComponentCmd(commandList, forced).doWhenDone(() -> {
-      final ArrayList<FinalizableCommand> postExecute = new ArrayList<>();
-
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("editor activated");
-      }
-      deactivateWindows(postExecute, null);
-      myActiveStack.clear();
-
-      execute(postExecute);
-    }).doWhenRejected(() -> {
-      if (forced) {
-        getFocusManagerImpl(myProject).requestFocus(new FocusCommand() {
-          @Nonnull
-          @Override
-          public AsyncResult<Void> run() {
-            final ArrayList<FinalizableCommand> cmds = new ArrayList<>();
-
-            final WindowInfoImpl toReactivate = getInfo(active);
-            final boolean reactivateLastActive = toReactivate != null && !isToHide(toReactivate);
-            deactivateWindows(cmds, reactivateLastActive ? active : null);
-            execute(cmds);
-
-            if (reactivateLastActive) {
-              activateToolWindow(active, false, true);
-            }
-            else {
-              if (active != null) {
-                myActiveStack.remove(active, false);
-              }
-
-              if (!myActiveStack.isEmpty()) {
-                activateToolWindow(myActiveStack.peek(), false, true);
-              }
-            }
-            return AsyncResult.resolved();
+  private void focusDefaultElementInSelectedEditor() {
+    EditorsSplitters splittersToFocus = getSplittersToFocus();
+    if (splittersToFocus != null) {
+      final EditorWindow window = splittersToFocus.getCurrentWindow();
+      if (window != null) {
+        final EditorWithProviderComposite editor = window.getSelectedEditor();
+        if (editor != null) {
+          JComponent defaultFocusedComponentInEditor = editor.getPreferredFocusedComponent();
+          if (defaultFocusedComponentInEditor != null) {
+            defaultFocusedComponentInEditor.requestFocus();
           }
-        }, false);
+        }
       }
-    });
-  }
-
-  private void deactivateWindows(final ArrayList<FinalizableCommand> postExecute, @Nullable String idToIgnore) {
-    final WindowInfoImpl[] infos = myLayout.getInfos();
-    for (final WindowInfoImpl info : infos) {
-      final boolean shouldHide = isToHide(info);
-      if (idToIgnore != null && idToIgnore.equals(info.getId())) {
-        continue;
-      }
-      deactivateToolWindowImpl(info.getId(), shouldHide, postExecute);
     }
-  }
-
-  private boolean isToHide(final WindowInfoImpl info) {
-    return (info.isAutoHide() || info.isSliding()) && !(info.isFloating() && hasModalChild(info)) && !info.isWindowed();
   }
 
   /**
@@ -685,7 +597,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
    * @return internal decorator for the tool window with specified <code>ID</code>.
    */
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   protected DesktopInternalDecorator getInternalDecorator(final String id) {
     return (DesktopInternalDecorator)super.getInternalDecorator(id);
   }
@@ -694,7 +606,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
    * @return tool button for the window with specified <code>ID</code>.
    */
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   protected DesktopStripeButton getStripeButton(final String id) {
     return (DesktopStripeButton)super.getStripeButton(id);
   }
@@ -863,15 +775,6 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     commandList.add(new AddWindowedDecoratorCmd((DesktopInternalDecorator)decorator, toBeShownInfo));
   }
 
-  private ActionCallback appendRequestFocusInEditorComponentCmd(List<FinalizableCommand> commandList, boolean forced) {
-    if (myProject.isDisposed()) return new ActionCallback.Done();
-    EditorsSplitters splitters = getSplittersToFocus();
-    CommandProcessorBase commandProcessor = myCommandProcessor;
-    RequestFocusInEditorComponentCmd command = new RequestFocusInEditorComponentCmd(splitters, getFocusManager(), commandProcessor, forced);
-    commandList.add(command);
-    return command.getDoneCallback();
-  }
-
   @Override
   public void appendRequestFocusInToolWindowCmd(final String id, List<FinalizableCommand> commandList, boolean forced) {
     final DesktopToolWindowImpl toolWindow = (DesktopToolWindowImpl)getToolWindow(id);
@@ -937,7 +840,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
   @RequiredUIAccess
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public String getLastActiveToolWindowId(@Nullable Condition<JComponent> condition) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     String lastActiveToolWindowId = null;
@@ -956,7 +859,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   @Override
-  public Element getState() {
+  public Element getStateFromUI() {
     if (myFrame == null) {
       // do nothing if the project was not opened
       return null;
@@ -1003,6 +906,13 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
       element.addContent(layoutToRestoreElement);
     }
 
+    return element;
+  }
+
+  @RequiredWriteAction
+  @Nullable
+  @Override
+  public Element getState(Element element) {
     return element;
   }
 
@@ -1164,7 +1074,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     @Override
-    @javax.annotation.Nullable
+    @Nullable
     public Condition getExpireCondition() {
       return ApplicationManager.getApplication().getDisposed();
     }
@@ -1239,82 +1149,6 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     }
   }
 
-  @Nonnull
-  public AsyncResult<Void> requestDefaultFocus(final boolean forced) {
-    return getFocusManagerImpl(myProject).requestFocus(new FocusCommand() {
-      @Nonnull
-      @Override
-      public AsyncResult<Void> run() {
-        return processDefaultFocusRequest(forced);
-      }
-    }, forced);
-  }
-
-
-  private void focusToolWindowByDefault(@javax.annotation.Nullable String idToIgnore) {
-    String toFocus = null;
-
-    for (String each : myActiveStack.getStack()) {
-      if (idToIgnore != null && idToIgnore.equalsIgnoreCase(each)) continue;
-
-      if (getInfo(each).isVisible()) {
-        toFocus = each;
-        break;
-      }
-    }
-
-    if (toFocus == null) {
-      for (String each : myActiveStack.getPersistentStack()) {
-        if (idToIgnore != null && idToIgnore.equalsIgnoreCase(each)) continue;
-
-        if (getInfo(each).isVisible()) {
-          toFocus = each;
-          break;
-        }
-      }
-    }
-
-    if (toFocus != null && !ApplicationManager.getApplication().isDisposeInProgress() && !ApplicationManager.getApplication().isDisposed()) {
-      activateToolWindow(toFocus, false, true);
-    }
-  }
-
-  private AsyncResult<Void> processDefaultFocusRequest(boolean forced) {
-    if (ModalityState.NON_MODAL.equals(ModalityState.current())) {
-      final String activeId = getActiveToolWindowId();
-      if (isEditorComponentActive() || activeId == null || getToolWindow(activeId) == null) {
-        activateEditorComponent(forced, true);
-      }
-      else {
-        activateToolWindow(activeId, forced, true);
-      }
-
-      return AsyncResult.resolved();
-    }
-    Window activeWindow = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
-    if (activeWindow != null) {
-      JRootPane root = null;
-      if (activeWindow instanceof JDialog) {
-        root = ((JDialog)activeWindow).getRootPane();
-      }
-      else if (activeWindow instanceof JFrame) {
-        root = ((JFrame)activeWindow).getRootPane();
-      }
-
-      if (root != null) {
-        JComponent toFocus = IdeFocusTraversalPolicy.getPreferredFocusedComponent(root);
-        if (toFocus != null) {
-          if (DialogWrapper.findInstance(toFocus) != null) {
-            return AsyncResult.resolved(); //IDEA-80929
-          }
-          return IdeFocusManager.findInstanceByComponent(toFocus).requestFocus(toFocus, forced);
-        }
-      }
-    }
-    return AsyncResult.rejected();
-  }
-
-
   /**
    * Delegate method for compatibility with older versions of IDEA
    */
@@ -1323,21 +1157,8 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     return IdeFocusManager.getInstance(myProject).requestFocus(c, forced);
   }
 
-  @Nonnull
-  public AsyncResult<Void> requestFocus(@Nonnull FocusCommand command, boolean forced) {
-    return IdeFocusManager.getInstance(myProject).requestFocus(command, forced);
-  }
-
   public void doWhenFocusSettlesDown(@Nonnull Runnable runnable) {
     IdeFocusManager.getInstance(myProject).doWhenFocusSettlesDown(runnable);
-  }
-
-  public boolean dispatch(@Nonnull KeyEvent e) {
-    return IdeFocusManager.getInstance(myProject).dispatch(e);
-  }
-
-  public Expirable getTimestamp(boolean trackOnlyForcedCommands) {
-    return IdeFocusManager.getInstance(myProject).getTimestamp(trackOnlyForcedCommands);
   }
 
   @Nonnull

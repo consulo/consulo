@@ -66,11 +66,6 @@ public class ForeignLeafPsiElement extends LeafPsiElement {
   }
 
   @Override
-  public int getNotCachedLength() {
-    return 0;
-  }
-
-  @Override
   public int getStartOffset() {
     return 0;
   }

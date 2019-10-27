@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.ArrayFactory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -140,6 +140,12 @@ public class TextRange implements Segment, Serializable {
   public TextRange shiftRight(int delta) {
     if (delta == 0) return this;
     return new TextRange(myStartOffset + delta, myEndOffset + delta);
+  }
+
+  @Nonnull
+  public TextRange shiftLeft(int delta) {
+    if (delta == 0) return this;
+    return new TextRange(myStartOffset - delta, myEndOffset - delta);
   }
 
   @Nonnull

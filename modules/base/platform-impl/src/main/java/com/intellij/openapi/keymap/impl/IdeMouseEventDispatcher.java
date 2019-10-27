@@ -37,6 +37,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.RequiredUIAccess;
 import org.intellij.lang.annotations.JdkConstants;
+import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -71,25 +72,18 @@ public final class IdeMouseEventDispatcher {
 
   private static boolean myForceTouchIsAllowed = true;
 
-  public static void forbidForceTouch () {
+  public static void forbidForceTouch() {
     myForceTouchIsAllowed = false;
   }
 
-  public static boolean isForceTouchAllowed () {
+  public static boolean isForceTouchAllowed() {
     return myForceTouchIsAllowed;
   }
 
   // Don't compare MouseEvent ids. Swing has wrong sequence of events: first is mouse_clicked(500)
   // then mouse_pressed(501), mouse_released(502) etc. Here, mouse events sorted so we can compare
   // theirs ids to properly use method blockNextEvents(MouseEvent)
-  private static final List<Integer> SWING_EVENTS_PRIORITY = Arrays.asList(MOUSE_PRESSED,
-                                                                           MOUSE_ENTERED,
-                                                                           MOUSE_EXITED,
-                                                                           MOUSE_MOVED,
-                                                                           MOUSE_DRAGGED,
-                                                                           MOUSE_WHEEL,
-                                                                           MOUSE_RELEASED,
-                                                                           MOUSE_CLICKED);
+  private static final List<Integer> SWING_EVENTS_PRIORITY = Arrays.asList(MOUSE_PRESSED, MOUSE_ENTERED, MOUSE_EXITED, MOUSE_MOVED, MOUSE_DRAGGED, MOUSE_WHEEL, MOUSE_RELEASED, MOUSE_CLICKED);
 
   public IdeMouseEventDispatcher() {
   }
@@ -139,9 +133,9 @@ public final class IdeMouseEventDispatcher {
 
   /**
    * @return <code>true</code> if and only if the passed event is already dispatched by the
-   *         <code>IdeMouseEventDispatcher</code> and there is no need for any other processing of the event.
-   *         If the method returns <code>false</code> then it means that the event should be delivered
-   *         to normal event dispatching.
+   * <code>IdeMouseEventDispatcher</code> and there is no need for any other processing of the event.
+   * If the method returns <code>false</code> then it means that the event should be delivered
+   * to normal event dispatching.
    */
   @RequiredUIAccess
   public boolean dispatchMouseEvent(MouseEvent e) {
@@ -149,13 +143,13 @@ public final class IdeMouseEventDispatcher {
 
     //frame activation by mouse click
     if (e.getID() == MOUSE_PRESSED && !c.hasFocus()) {
-      if(c instanceof Window)  {
+      if (c instanceof Window) {
         Window awtWindow = (Window)c;
 
         consulo.ui.Window uiWindow = TargetAWT.from(awtWindow);
 
         IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
-        if(ideFrame != null) {
+        if (ideFrame != null) {
           IdeFocusManager focusManager = IdeFocusManager.getGlobalInstance();
           if (focusManager instanceof FocusManagerImpl) {
             Component at = SwingUtilities.getDeepestComponentAt(c, e.getX(), e.getY());
@@ -173,10 +167,7 @@ public final class IdeMouseEventDispatcher {
     }
 
     boolean ignore = false;
-    if (!(e.getID() == MouseEvent.MOUSE_PRESSED ||
-          e.getID() == MouseEvent.MOUSE_RELEASED ||
-          e.getID() == MOUSE_WHEEL && 0 < e.getModifiersEx() ||
-          e.getID() == MOUSE_CLICKED)) {
+    if (!(e.getID() == MouseEvent.MOUSE_PRESSED || e.getID() == MouseEvent.MOUSE_RELEASED || e.getID() == MOUSE_WHEEL && 0 < e.getModifiersEx() || e.getID() == MOUSE_CLICKED)) {
       ignore = true;
     }
 
@@ -188,18 +179,16 @@ public final class IdeMouseEventDispatcher {
       clickCount = 1;
     }
 
-    if (e.isConsumed()
-        || e.isPopupTrigger()
-        || (button > 3 ? e.getID() != MOUSE_PRESSED && e.getID() != MOUSE_WHEEL : e.getID() != MOUSE_RELEASED)
-        || clickCount < 1
-        || button == NOBUTTON) { // See #16995. It did happen
+    if (e.isConsumed() ||
+        e.isPopupTrigger() ||
+        (button > 3 ? e.getID() != MOUSE_PRESSED && e.getID() != MOUSE_WHEEL : e.getID() != MOUSE_RELEASED) ||
+        clickCount < 1 ||
+        button == NOBUTTON) { // See #16995. It did happen
       ignore = true;
     }
 
-    @JdkConstants.InputEventMask
-    int modifiers = e.getModifiers();
-    @JdkConstants.InputEventMask
-    int modifiersEx = e.getModifiersEx();
+    @JdkConstants.InputEventMask int modifiers = e.getModifiers();
+    @JdkConstants.InputEventMask int modifiersEx = e.getModifiersEx();
     if (e.getID() == MOUSE_PRESSED) {
       myPressedModifiersStored = true;
       myModifiers = modifiers;
@@ -226,7 +215,8 @@ public final class IdeMouseEventDispatcher {
           else {
             ignore = true;
           }
-        } else {
+        }
+        else {
           myRootPane2BlockedId.remove(root);
         }
       }
@@ -269,9 +259,7 @@ public final class IdeMouseEventDispatcher {
       for (AnAction action : actions) {
         DataContext dataContext = DataManager.getInstance().getDataContext(c);
         Presentation presentation = myPresentationFactory.getPresentation(action);
-        AnActionEvent actionEvent = new AnActionEvent(e, dataContext, ActionPlaces.MAIN_MENU, presentation,
-                                                      ActionManager.getInstance(),
-                                                      modifiers);
+        AnActionEvent actionEvent = new AnActionEvent(e, dataContext, ActionPlaces.MAIN_MENU, presentation, ActionManager.getInstance(), modifiers);
         action.beforeActionPerformedUpdate(actionEvent);
 
         if (ActionUtil.lastUpdateAndCheckDumb(action, actionEvent, false)) {
@@ -297,7 +285,7 @@ public final class IdeMouseEventDispatcher {
    * This method patches event if it concerns side buttons like 4 (Backward) or 5 (Forward)
    * AND it's not single-click event. We won't support double-click for side buttons.
    * Also some JDK bugs produce zero-click events for side buttons.
-
+   *
    * @return true if event was patched
    */
   public static boolean patchClickCount(final MouseEvent e) {
@@ -328,19 +316,15 @@ public final class IdeMouseEventDispatcher {
   private static int getScrollAmount(Component c, MouseWheelEvent me, JScrollBar scrollBar) {
     final int scrollBarWidth = scrollBar.getWidth();
     final int ratio = Registry.is("ide.smart.horizontal.scrolling") && scrollBarWidth > 0
-                      ? Math.max((int)Math.pow(c.getWidth() / scrollBarWidth, 2), 10) : 10; // do annoying scrolling faster if smart scrolling is on
+                      ? Math.max((int)Math.pow(c.getWidth() / scrollBarWidth, 2), 10)
+                      : 10; // do annoying scrolling faster if smart scrolling is on
     return me.getUnitsToScroll() * scrollBar.getUnitIncrement() * ratio;
   }
 
   private static boolean isHorizontalScrolling(Component c, MouseEvent e) {
-    if ( c != null
-         && e instanceof MouseWheelEvent
-         && (!SystemInfo.isMac || isDiagramViewComponent(c.getParent()))) {
+    if (c != null && e instanceof MouseWheelEvent && (!SystemInfo.isMac || isDiagramViewComponent(c.getParent()))) {
       final MouseWheelEvent mwe = (MouseWheelEvent)e;
-      return mwe.isShiftDown()
-             && mwe.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL
-             && isScrollEvent(mwe)
-             && findHorizontalScrollBar(c) != null;
+      return mwe.isShiftDown() && mwe.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL && isScrollEvent(mwe) && findHorizontalScrollBar(c) != null;
     }
     return false;
   }
@@ -367,7 +351,7 @@ public final class IdeMouseEventDispatcher {
     return findHorizontalScrollBar(c.getParent());
   }
 
-  private static boolean isDiagramViewComponent(Component c) {
+  public static boolean isDiagramViewComponent(Component c) {
     return c != null && "y.view.Graph2DView".equals(c.getClass().getName());
   }
 
@@ -394,6 +378,39 @@ public final class IdeMouseEventDispatcher {
     }
 
     return root;
+  }
+
+  public static void requestFocusInNonFocusedWindow(@Nonnull MouseEvent event) {
+    if (event.getID() == MOUSE_PRESSED) {
+      // request focus by mouse pressed before focus settles down
+      requestFocusInNonFocusedWindow(event.getComponent());
+    }
+  }
+
+  private static void requestFocusInNonFocusedWindow(@Nullable Component component) {
+    Window window = UIUtil.getWindow(component);
+    if (window != null && !UIUtil.isFocusAncestor(window)) {
+      Component focusable = UIUtil.isFocusable(component) ? component : findDefaultFocusableComponent(component);
+      if (focusable != null) focusable.requestFocus();
+    }
+  }
+
+  @Nullable
+  private static Component findDefaultFocusableComponent(@Nullable Component component) {
+    Container provider = findFocusTraversalPolicyProvider(component);
+    return provider == null ? null : provider.getFocusTraversalPolicy().getDefaultComponent(provider);
+  }
+
+  @Nullable
+  private static Container findFocusTraversalPolicyProvider(@Nullable Component component) {
+    Container container = component == null || component instanceof Container ? (Container)component : component.getParent();
+    while (container != null) {
+      // ensure that container is focus cycle root and provides focus traversal policy
+      // it means that Container.getFocusTraversalPolicy() returns non-null object
+      if (container.isFocusCycleRoot() && container.isFocusTraversalPolicyProvider()) return container;
+      container = container.getParent();
+    }
+    return null;
   }
 
   private static class BlockState {

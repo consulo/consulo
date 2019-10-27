@@ -19,7 +19,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.ElementsChooser;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.ui.DialogWrapper;

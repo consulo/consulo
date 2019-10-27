@@ -16,15 +16,14 @@
 
 package com.intellij.ide.todo;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.psi.search.*;
-import com.intellij.util.EventDispatcher;
 import com.intellij.util.messages.MessageBus;
+import com.intellij.util.messages.Topic;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
@@ -44,22 +43,27 @@ import java.util.List;
 @Singleton
 @State(name = "TodoConfiguration", storages = @Storage("editor.xml"))
 public class TodoConfiguration implements PersistentStateComponent<Element> {
+  public static final Topic<PropertyChangeListener> PROPERTY_CHANGE = new Topic<>("TodoConfiguration changes", PropertyChangeListener.class);
+
   private TodoPattern[] myTodoPatterns;
   private TodoFilter[] myTodoFilters;
   private IndexPattern[] myIndexPatterns;
 
-  private final EventDispatcher<PropertyChangeListener> myPropertyChangeMulticaster = EventDispatcher.create(PropertyChangeListener.class);
-
+  @NonNls
+  public static final String PROP_MULTILINE = "multiLine";
   @NonNls public static final String PROP_TODO_PATTERNS = "todoPatterns";
   @NonNls public static final String PROP_TODO_FILTERS = "todoFilters";
   @NonNls private static final String ELEMENT_PATTERN = "pattern";
   @NonNls private static final String ELEMENT_FILTER = "filter";
   private final MessageBus myMessageBus;
 
+  private final PropertyChangeListener myTopic;
+
   @Inject
   public TodoConfiguration(@Nonnull Application application) {
     myMessageBus = application.getMessageBus();
     resetToDefaultTodoPatterns();
+    myTopic = myMessageBus.syncPublisher(PROPERTY_CHANGE);
   }
 
   public void resetToDefaultTodoPatterns() {
@@ -113,8 +117,7 @@ public class TodoConfiguration implements PersistentStateComponent<Element> {
 
     // only trigger gui and code daemon refresh when either the index patterns or presentation attributes have changed
     if (!Arrays.deepEquals(myTodoPatterns, oldTodoPatterns)) {
-      final PropertyChangeListener multicaster = myPropertyChangeMulticaster.getMulticaster();
-      multicaster.propertyChange(new PropertyChangeEvent(this, PROP_TODO_PATTERNS, oldTodoPatterns, todoPatterns));
+      myTopic.propertyChange(new PropertyChangeEvent(this, PROP_TODO_PATTERNS, oldTodoPatterns, todoPatterns));
     }
   }
 
@@ -142,17 +145,7 @@ public class TodoConfiguration implements PersistentStateComponent<Element> {
   public void setTodoFilters(@Nonnull TodoFilter[] filters) {
     TodoFilter[] oldFilters = myTodoFilters;
     myTodoFilters = filters;
-    myPropertyChangeMulticaster.getMulticaster().propertyChange(new PropertyChangeEvent(this, PROP_TODO_FILTERS, oldFilters, filters));
-  }
-
-  public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
-    myPropertyChangeMulticaster.addListener(listener);
-  }
-  public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener, @Nonnull Disposable parentDisposable) {
-    myPropertyChangeMulticaster.addListener(listener,parentDisposable);
-  }
-  public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
-    myPropertyChangeMulticaster.removeListener(listener);
+    myTopic.propertyChange(new PropertyChangeEvent(this, PROP_TODO_FILTERS, oldFilters, filters));
   }
 
   @Override

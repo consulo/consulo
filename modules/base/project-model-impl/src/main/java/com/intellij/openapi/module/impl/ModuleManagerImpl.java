@@ -25,7 +25,7 @@ import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.components.StateStorageException;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.module.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -382,7 +382,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
       modulesElement.addContent(moduleElement);
     }
 
-    for (ModuleLoadItem failedModulePath : myFailedModulePaths) {
+    for (ModuleLoadItem failedModulePath : new ArrayList<>(myFailedModulePaths)) {
       final Element clone = failedModulePath.getElement().clone();
       modulesElement.addContent(clone);
     }

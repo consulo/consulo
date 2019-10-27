@@ -15,7 +15,7 @@
  */
 package consulo.bundle.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.projectRoots.SdkType;
@@ -31,11 +31,11 @@ import java.util.Collection;
  * @since 10.02.15
  */
 public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider {
-  private static final Logger LOGGER = Logger.getInstance(DefaultPredefinedBundlesProvider.class);
+  private static final Logger LOG = Logger.getInstance(DefaultPredefinedBundlesProvider.class);
 
   @Override
   public void createBundles(@Nonnull Context context) {
-    for (SdkType sdkType : SdkType.EP_NAME.getExtensions()) {
+    for (SdkType sdkType : SdkType.EP_NAME.getExtensionList()) {
       try {
         if (sdkType.canCreatePredefinedSdks()) {
           Collection<String> paths = sdkType.suggestHomePaths();
@@ -62,8 +62,8 @@ public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider 
           }
         }
       }
-      catch (Exception e) {
-        LOGGER.error(e);
+      catch (Error e) {
+        LOG.error(e);
       }
     }
   }

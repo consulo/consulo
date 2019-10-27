@@ -16,7 +16,7 @@
 package com.intellij.execution.process;
 
 import com.intellij.execution.TaskExecutor;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
 import javax.annotation.Nonnull;

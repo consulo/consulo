@@ -15,11 +15,11 @@
  */
 package com.intellij.util.ui;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.OrderedSet;
+import consulo.logging.Logger;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectObjectProcedure;
 import javax.annotation.Nonnull;

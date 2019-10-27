@@ -15,7 +15,7 @@
  */
 package com.intellij.notification;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;

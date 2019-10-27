@@ -18,7 +18,10 @@ package com.intellij.psi;
 import com.intellij.lang.FileASTNode;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.tree.IFileElementType;
+import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ArrayFactory;
+import com.intellij.util.ObjectUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -63,7 +66,8 @@ public interface PsiFile extends PsiFileSystemItem {
   PsiDirectory getContainingDirectory();
 
   @Override
-  @Nullable PsiDirectory getParent();
+  @Nullable
+  PsiDirectory getParent();
 
   /**
    * Gets the modification stamp value. Modification stamp is a value changed by any modification
@@ -108,4 +112,29 @@ public interface PsiFile extends PsiFileSystemItem {
 
   @Override
   FileASTNode getNode();
+
+
+  /**
+   * Called by the PSI framework when the contents of the file changes.
+   * If you override this method, you <b>must</b> call the base class implementation.
+   * While this method can be used to invalidate file-level caches, it is more much safe to invalidate them in {@link #clearCaches()}
+   * since file contents can be reloaded completely (without any specific subtree change) without this method being called.
+   */
+  default void subtreeChanged() {
+  }
+
+  /**
+   * Invalidate any file-specific cache in this method. It is called on file content change.
+   * If you override this method, you <b>must</b> call the base class implementation.
+   */
+  default void clearCaches() {
+  }
+
+  /**
+   * @return the element type of the file node, but possibly in an efficient node that doesn't instantiate the node.
+   */
+  @Nullable
+  default IFileElementType getFileElementType() {
+    return ObjectUtil.tryCast(PsiUtilCore.getElementType(getNode()), IFileElementType.class);
+  }
 }

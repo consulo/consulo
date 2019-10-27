@@ -22,20 +22,21 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.SingleRootFileViewProvider;
 import com.intellij.psi.impl.file.impl.FileManager;
-import com.intellij.util.containers.ConcurrentWeakValueHashMap;
-import javax.annotation.Nonnull;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author max
  */
 class EmptyFileManager implements FileManager {
   private final PsiManagerImpl myManager;
-  private final ConcurrentWeakValueHashMap<VirtualFile, FileViewProvider> myVFileToViewProviderMap = new ConcurrentWeakValueHashMap<VirtualFile, FileViewProvider>();
+  private final Map<VirtualFile, FileViewProvider> myVFileToViewProviderMap = ContainerUtil.createConcurrentWeakValueMap();
 
   EmptyFileManager(final PsiManagerImpl manager) {
     myManager = manager;

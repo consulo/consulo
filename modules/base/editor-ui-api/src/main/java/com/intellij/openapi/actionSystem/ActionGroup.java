@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.actionSystem;
 
+import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
@@ -26,13 +27,67 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
  * Represents a group of actions.
  */
 public abstract class ActionGroup extends AnAction {
+  public abstract static class Builder {
+    protected final List<AnAction> myActions = new ArrayList<>();
+
+    protected Builder() {
+    }
+
+    @Nonnull
+    public Builder add(@Nonnull AnAction anAction) {
+      myActions.add(anAction);
+      return this;
+    }
+
+    @Nonnull
+    public Builder addSeparator() {
+      return add(AnSeparator.create());
+    }
+
+
+    @Nonnull
+    public abstract ActionGroup build();
+  }
+
+  private static class ImmutableActionGroup extends ActionGroup {
+    private AnAction[] myChildren;
+
+    private ImmutableActionGroup(AnAction[] chilren) {
+      myChildren = chilren;
+    }
+
+    @Nonnull
+    @Override
+    public AnAction[] getChildren(@Nullable AnActionEvent e) {
+      return myChildren;
+    }
+  }
+
+  private static class ImmutableBuilder extends Builder {
+    private ImmutableBuilder() {
+    }
+
+    @Nonnull
+    @Override
+    public ActionGroup build() {
+      return new ImmutableActionGroup(ContainerUtil.toArray(myActions, ARRAY_FACTORY));
+    }
+  }
+
+  @Nonnull
+  public static Builder newImmutableBuilder() {
+    return new ImmutableBuilder();
+  }
+
   private boolean myPopup;
   private final PropertyChangeSupport myChangeSupport = new PropertyChangeSupport(this);
   public static final ActionGroup EMPTY_GROUP = new ActionGroup() {

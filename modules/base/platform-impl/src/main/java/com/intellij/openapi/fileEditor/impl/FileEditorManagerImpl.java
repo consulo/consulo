@@ -18,7 +18,7 @@ package com.intellij.openapi.fileEditor.impl;
 import com.intellij.ProjectTopics;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.ide.plugins.PluginManagerCore;
+import com.intellij.ide.plugins.cl.PluginLoadStatistics;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.injected.editor.VirtualFileWindow;
@@ -28,14 +28,11 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
-import com.intellij.openapi.editor.impl.EditorComponentImpl;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
@@ -58,35 +55,33 @@ import com.intellij.openapi.vcs.FileStatusListener;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.reference.SoftReference;
-import com.intellij.ui.FocusTrackback;
 import com.intellij.ui.docking.DockContainer;
 import com.intellij.ui.docking.DockManager;
 import com.intellij.ui.docking.impl.DockManagerImpl;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.messages.impl.MessageListenerList;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
 import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
 import consulo.application.AccessRule;
-import consulo.awt.TargetAWT;
+import consulo.component.PersistentStateComponentWithUIState;
 import consulo.fileEditor.impl.EditorComposite;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
-import consulo.wm.util.IdeFrameUtil;
 import gnu.trove.THashSet;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
@@ -110,7 +105,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Vladimir Kondratyev
  */
 @State(name = "FileEditorManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
-public abstract class FileEditorManagerImpl extends FileEditorManagerEx implements PersistentStateComponent<Element> {
+public abstract class FileEditorManagerImpl extends FileEditorManagerEx implements PersistentStateComponentWithUIState<Element, Element> {
   private static final Logger LOG = Logger.getInstance(FileEditorManagerImpl.class);
 
   private static final Key<Boolean> DUMB_AWARE = Key.create("DUMB_AWARE");
@@ -155,7 +150,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         @Override
         public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
           EditorsSplitters splitters = getSplitters();
-          openAssociatedFile(UIAccess.get(), event.getNewFile(), splitters.getCurrentWindow(), splitters);
+          openAssociatedFile(UIAccess.current(), event.getNewFile(), splitters.getCurrentWindow(), splitters);
         }
       });
     }
@@ -164,10 +159,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
     final MessageBusConnection connection = project.getMessageBus().connect();
     connection.subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
-      @Override
-      public void enteredDumbMode() {
-      }
-
       @Override
       public void exitDumbMode() {
         // can happen under write action, so postpone to avoid deadlock on FileEditorProviderManager.getProviders()
@@ -178,18 +169,18 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     });
     connection.subscribe(ProjectManager.TOPIC, new ProjectManagerAdapter() {
       @Override
-      public void projectOpened(Project project) {
+      public void projectOpened(Project project, UIAccess uiAccess) {
         if (project == myProject) {
           FileEditorManagerImpl.this.projectOpened(connection);
         }
       }
 
       @Override
-      public void projectClosed(Project project) {
+      public void projectClosed(Project project, UIAccess uiAccess) {
         if (project == myProject) {
           // Dispose created editors. We do not use use closeEditor method because
           // it fires event and changes history.
-          closeAllFiles();
+          uiAccess.giveAndWaitIfNeed(() -> closeAllFiles());
         }
       }
     });
@@ -341,6 +332,13 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
   @Nonnull
   public String getFileTooltipText(@Nonnull VirtualFile file) {
+    List<EditorTabTitleProvider> availableProviders = DumbService.getDumbAwareExtensions(myProject, EditorTabTitleProvider.EP_NAME);
+    for (EditorTabTitleProvider provider : availableProviders) {
+      String text = provider.getEditorTabTooltipText(myProject, file);
+      if (text != null) {
+        return text;
+      }
+    }
     return FileUtil.getLocationRelativeToUserHome(file.getPresentableUrl());
   }
 
@@ -786,8 +784,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       if (myProject.isDisposed() || !file.isValid()) {
         return;
       }
-
-      HeavyProcessLatch.INSTANCE.prioritizeUiActivity();
 
       compositeRef.set(window.findFileComposite(file));
       boolean newEditor = compositeRef.isNull();
@@ -1396,7 +1392,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
               Long startTime = myProject.getUserData(ProjectImpl.CREATION_TIME);
               if (startTime != null) {
                 LOG.info("Project opening took " + (currentTime - startTime.longValue()) / 1000000 + " ms");
-                PluginManagerCore.dumpPluginClassStatistics();
+                PluginLoadStatistics.get().dumpPluginClassStatistics(LOG::info);
               }
             }, myProject.getDisposed());
             // group 1
@@ -1406,9 +1402,10 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     });
   }
 
+  @RequiredUIAccess
   @Nullable
   @Override
-  public Element getState() {
+  public Element getStateFromUI() {
     if (mySplitters == null) {
       // do not save if not initialized yet
       return null;
@@ -1417,6 +1414,13 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     Element state = new Element("state");
     getMainSplitters().writeExternal(state);
     return state;
+  }
+
+  @RequiredWriteAction
+  @Nullable
+  @Override
+  public Element getState(Element element) {
+    return element;
   }
 
   @Override
@@ -1584,13 +1588,11 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     public void beforeFileDeletion(@Nonnull VirtualFileEvent e) {
       assertDispatchThread();
 
-      boolean moveFocus = moveFocusOnDelete();
-
       final VirtualFile file = e.getFile();
       final VirtualFile[] openFiles = getOpenFiles();
       for (int i = openFiles.length - 1; i >= 0; i--) {
         if (VfsUtilCore.isAncestor(file, openFiles[i], false)) {
-          closeFile(openFiles[i], moveFocus, true);
+          closeFile(openFiles[i], true, true);
         }
       }
     }
@@ -1636,24 +1638,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         }
       }
     }
-  }
-
-  private static boolean moveFocusOnDelete() {
-    final Window awtWindow = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
-    if (awtWindow != null) {
-      final Component component = FocusTrackback.getFocusFor(awtWindow);
-      if (component != null) {
-        return component instanceof EditorComponentImpl;
-      }
-
-      consulo.ui.Window uiWindow = TargetAWT.from(awtWindow);
-
-      IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
-      if (ideFrame != null) {
-        return IdeFrameUtil.isRootFrame(ideFrame);
-      }
-    }
-    return true;
   }
 
   @Override

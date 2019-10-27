@@ -37,6 +37,7 @@ import com.intellij.ui.plaf.gtk.GtkMenuItemUI;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.actionSystem.ex.TopApplicationMenuUtil;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;
@@ -254,7 +255,7 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
     if (isToggleable() && (myPresentation.getIcon() == null || myInsideCheckedGroup)) {
       action.update(myEvent);
       myToggled = Boolean.TRUE.equals(myEvent.getPresentation().getClientProperty(Toggleable.SELECTED_PROPERTY));
-      if (ActionPlaces.MAIN_MENU.equals(myPlace) && SystemInfo.isMacSystemMenu ||
+      if (ActionPlaces.MAIN_MENU.equals(myPlace) && TopApplicationMenuUtil.isMacSystemMenu ||
           UIUtil.isUnderNimbusLookAndFeel() ||
           UIUtil.isUnderWindowsLookAndFeel() && SystemInfo.isWin7OrNewer) {
         setState(myToggled);
@@ -325,7 +326,7 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
       try {
         if (Presentation.PROP_VISIBLE.equals(name)) {
           final boolean visible = myPresentation.isVisible();
-          if (!visible && SystemInfo.isMacSystemMenu && myPlace.equals(ActionPlaces.MAIN_MENU)) {
+          if (!visible && TopApplicationMenuUtil.isMacSystemMenu && myPlace.equals(ActionPlaces.MAIN_MENU)) {
             setEnabled(false);
           }
           else {

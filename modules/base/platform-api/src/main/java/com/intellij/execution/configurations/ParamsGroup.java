@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.configurations;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

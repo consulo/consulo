@@ -156,13 +156,6 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
   }
 
   @Override
-  public VirtualFile getVirtualFile() {
-    PsiDirectory directory = getValue();
-    if (directory == null) return null;
-    return directory.getVirtualFile();
-  }
-
-  @Override
   public boolean canRepresent(final Object element) {
     if (super.canRepresent(element)) return true;
     PsiDirectory directory = getValue();

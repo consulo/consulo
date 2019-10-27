@@ -16,6 +16,7 @@
 
 package com.intellij.openapi.module.impl;
 
+import com.intellij.ide.plugins.PluginListenerDescriptor;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.impl.ModulePathMacroManager;
@@ -31,11 +32,13 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.psi.search.GlobalSearchScope;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.injecting.InjectingContainerBuilder;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author max
@@ -74,6 +77,12 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
   @Override
   protected ExtensionPointName<ServiceDescriptor> getServiceExtensionPointName() {
     return MODULE_SERVICES;
+  }
+
+  @Nonnull
+  @Override
+  protected List<PluginListenerDescriptor> getPluginListenerDescriptors(PluginDescriptor pluginDescriptor) {
+    return pluginDescriptor.getModuleListeners();
   }
 
   @Override
@@ -185,6 +194,6 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
 
   @Override
   public String toString() {
-    return "Module: '" + getName() + "'";
+    return "Module: '" + myName + "'";
   }
 }

@@ -23,7 +23,7 @@ import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.ChooseByNameContributorEx;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.application.ReadActionProcessor;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;

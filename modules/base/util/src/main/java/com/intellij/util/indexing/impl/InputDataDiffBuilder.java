@@ -23,15 +23,21 @@ import java.util.Map;
 /**
  * A class intended to make a diff between existing forward index data and new one.
  */
+//@ApiStatus.Experimental
 public abstract class InputDataDiffBuilder<Key, Value> {
   protected final int myInputId;
 
-  protected InputDataDiffBuilder(int id) {myInputId = id;}
+  protected InputDataDiffBuilder(int id) {
+    myInputId = id;
+  }
+
   /**
    * produce a diff between existing data and newData and consume result to addProcessor, updateProcessor and removeProcessor.
+   *
+   * @return false if there is no difference and true otherwise
    */
-  public abstract void differentiate(@Nonnull Map<Key, Value> newData,
-                                     @Nonnull KeyValueUpdateProcessor<Key, Value> addProcessor,
-                                     @Nonnull KeyValueUpdateProcessor<Key, Value> updateProcessor,
-                                     @Nonnull RemovedKeyProcessor<Key> removeProcessor) throws StorageException;
+  public abstract boolean differentiate(@Nonnull Map<Key, Value> newData,
+                                        @Nonnull KeyValueUpdateProcessor<? super Key, ? super Value> addProcessor,
+                                        @Nonnull KeyValueUpdateProcessor<? super Key, ? super Value> updateProcessor,
+                                        @Nonnull RemovedKeyProcessor<? super Key> removeProcessor) throws StorageException;
 }

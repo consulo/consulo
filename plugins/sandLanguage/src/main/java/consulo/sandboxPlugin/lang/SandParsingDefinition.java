@@ -50,10 +50,4 @@ public class SandParsingDefinition extends LanguageVersionableParserDefinition {
   public PsiFile createFile(FileViewProvider viewProvider) {
     return new SandFile(viewProvider);
   }
-
-  @Nonnull
-  @Override
-  public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
-    return SpaceRequirements.MAY;
-  }
 }

@@ -1,27 +1,25 @@
-/*
- * Copyright 2000-2017 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.Patches;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.impl.view.FontLayoutService;
-import com.intellij.openapi.util.registry.Registry;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
 import gnu.trove.TIntHashSet;
 import org.intellij.lang.annotations.JdkConstants;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import sun.font.CompositeGlyphMapper;
 import sun.font.FontDesignMetrics;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextAttribute;
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author max
@@ -29,13 +27,13 @@ import java.util.List;
 public class FontInfo {
   private static final Logger LOG = Logger.getInstance(FontInfo.class);
 
-  private static final boolean USE_ALTERNATIVE_CAN_DISPLAY_PROCEDURE = Registry.is("ide.mac.fix.font.fallback");
   private static final FontRenderContext DEFAULT_CONTEXT = new FontRenderContext(null, false, false);
   private static final Font DUMMY_FONT = new Font(null);
 
   private final Font myFont;
   private final int mySize;
-  @JdkConstants.FontStyle private final int myStyle;
+  @JdkConstants.FontStyle
+  private final int myStyle;
   private final boolean myUseLigatures;
   private final TIntHashSet mySafeCharacters = new TIntHashSet();
   private final FontRenderContext myContext;
@@ -44,6 +42,7 @@ public class FontInfo {
   /**
    * @deprecated Use {@link #FontInfo(String, int, int, boolean, FontRenderContext)} instead.
    */
+  @Deprecated
   public FontInfo(final String familyName, final int size, @JdkConstants.FontStyle int style) {
     this(familyName, size, style, style, false, null);
   }
@@ -51,6 +50,7 @@ public class FontInfo {
   /**
    * @deprecated Use {@link #FontInfo(String, int, int, boolean, FontRenderContext)} instead.
    */
+  @Deprecated
   public FontInfo(final String familyName, final int size, @JdkConstants.FontStyle int style, boolean useLigatures) {
     this(familyName, size, style, useLigatures, null);
   }
@@ -58,13 +58,11 @@ public class FontInfo {
   /**
    * To get valid font metrics from this {@link FontInfo} instance, pass valid {@link FontRenderContext} here as a parameter.
    */
-  public FontInfo(final String familyName, final int size, @JdkConstants.FontStyle int style, boolean useLigatures,
-                  FontRenderContext fontRenderContext) {
+  public FontInfo(final String familyName, final int size, @JdkConstants.FontStyle int style, boolean useLigatures, FontRenderContext fontRenderContext) {
     this(familyName, size, style, style, useLigatures, fontRenderContext);
   }
 
-  FontInfo(final String familyName, final int size,
-           @JdkConstants.FontStyle int style, @JdkConstants.FontStyle int realStyle, boolean useLigatures, FontRenderContext context) {
+  FontInfo(final String familyName, final int size, @JdkConstants.FontStyle int style, @JdkConstants.FontStyle int realStyle, boolean useLigatures, FontRenderContext context) {
     mySize = size;
     myStyle = style;
     myUseLigatures = useLigatures;
@@ -110,9 +108,7 @@ public class FontInfo {
     final String normalizedFamilyName = familyName.toLowerCase(Locale.getDefault()).replace(" ", "");
     FilenameFilter filter = (file, name) -> {
       String normalizedName = name.toLowerCase(Locale.getDefault());
-      return normalizedName.startsWith(normalizedFamilyName) &&
-             (normalizedName.endsWith(".otf") || normalizedName.endsWith(".ttf")) &&
-             (style == -1 || style == getFontStyle(normalizedName));
+      return normalizedName.startsWith(normalizedFamilyName) && (normalizedName.endsWith(".otf") || normalizedName.endsWith(".ttf")) && (style == -1 || style == getFontStyle(normalizedName));
     };
     List<File> files = new ArrayList<>();
 
@@ -144,7 +140,7 @@ public class FontInfo {
     try {
       if (codePoint < 128) return true;
       if (mySafeCharacters.contains(codePoint)) return true;
-      if (canDisplayImpl(codePoint)) {
+      if (canDisplay(myFont, codePoint, false)) {
         mySafeCharacters.add(codePoint);
         return true;
       }
@@ -156,13 +152,14 @@ public class FontInfo {
     }
   }
 
-  private boolean canDisplayImpl(int codePoint) {
+  public static boolean canDisplay(@Nonnull Font font, int codePoint, boolean disableFontFallback) {
     if (!Character.isValidCodePoint(codePoint)) return false;
-    if (USE_ALTERNATIVE_CAN_DISPLAY_PROCEDURE) {
-      return myFont.createGlyphVector(DEFAULT_CONTEXT, new String(new int[]{codePoint}, 0, 1)).getGlyphCode(0) > 0;
+    if (disableFontFallback && SystemInfo.isMac) {
+      int glyphCode = font.createGlyphVector(DEFAULT_CONTEXT, new String(new int[]{codePoint}, 0, 1)).getGlyphCode(0);
+      return (glyphCode & CompositeGlyphMapper.GLYPHMASK) != 0 && (glyphCode & CompositeGlyphMapper.SLOTMASK) == 0;
     }
     else {
-      return myFont.canDisplay(codePoint);
+      return font.canDisplay(codePoint);
     }
   }
 

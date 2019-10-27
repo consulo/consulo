@@ -17,14 +17,14 @@ package com.intellij.diagnostic;
 
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SystemProperties;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -35,7 +35,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class VMOptions {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.diagnostic.VMOptions");
+  private static final Logger LOG = Logger.getInstance(VMOptions.class);
 
   public enum MemoryKind {
     HEAP("Xmx", ""), PERM_GEN("XX:MaxPermSize", "="), METASPACE("XX:MaxMetaspaceSize", "="), CODE_CACHE("XX:ReservedCodeCacheSize", "=");

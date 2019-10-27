@@ -1,111 +1,50 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 /*
  * @author max
  */
 package com.intellij.util;
 
-import com.intellij.concurrency.*;
+import com.intellij.concurrency.AsyncFuture;
+import com.intellij.concurrency.AsyncFutureFactory;
+import com.intellij.concurrency.AsyncFutureResult;
+import com.intellij.concurrency.DefaultResultConsumer;
+import com.intellij.util.concurrency.SameThreadExecutor;
 import javax.annotation.Nonnull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
-public class MergeQuery<T> implements Query<T>{
+public class MergeQuery<T> extends AbstractQuery<T> {
   private final Query<? extends T> myQuery1;
   private final Query<? extends T> myQuery2;
 
-  public MergeQuery(final Query<? extends T> query1, final Query<? extends T> query2) {
+  public MergeQuery(@Nonnull Query<? extends T> query1, @Nonnull Query<? extends T> query2) {
     myQuery1 = query1;
     myQuery2 = query2;
   }
 
   @Override
-  @Nonnull
-  public Collection<T> findAll() {
-    List<T> results = new ArrayList<T>();
-    forEach(new CommonProcessors.CollectProcessor<T>(results));
-    return results;
-  }
-
-  @Override
-  public T findFirst() {
-    final CommonProcessors.FindFirstProcessor<T> processor = new CommonProcessors.FindFirstProcessor<T>();
-    forEach(processor);
-    return processor.getFoundValue();
-  }
-
-  @Override
-  public boolean forEach(@Nonnull final Processor<T> consumer) {
-    return processSubQuery(consumer, myQuery1) && processSubQuery(consumer, myQuery2);
+  protected boolean processResults(@Nonnull Processor<? super T> consumer) {
+    return delegateProcessResults(myQuery1, consumer) && delegateProcessResults(myQuery2, consumer);
   }
 
   @Nonnull
   @Override
-  public AsyncFuture<Boolean> forEachAsync(@Nonnull final Processor<T> consumer) {
+  public AsyncFuture<Boolean> forEachAsync(@Nonnull final Processor<? super T> consumer) {
     final AsyncFutureResult<Boolean> result = AsyncFutureFactory.getInstance().createAsyncFutureResult();
 
-    final AsyncFuture<Boolean> fq = processSubQueryAsync(consumer, myQuery1);
+    AsyncFuture<Boolean> fq = myQuery1.forEachAsync(consumer);
 
     fq.addConsumer(SameThreadExecutor.INSTANCE, new DefaultResultConsumer<Boolean>(result) {
       @Override
       public void onSuccess(Boolean value) {
-        if (!value.booleanValue()) {
-          result.set(false);
+        if (value.booleanValue()) {
+          AsyncFuture<Boolean> fq2 = myQuery2.forEachAsync(consumer);
+          fq2.addConsumer(SameThreadExecutor.INSTANCE, new DefaultResultConsumer<>(result));
         }
         else {
-          final AsyncFuture<Boolean> fq2 = processSubQueryAsync(consumer, myQuery2);
-          fq2.addConsumer(SameThreadExecutor.INSTANCE, new DefaultResultConsumer<Boolean>(result));
+          result.set(false);
         }
       }
     });
     return result;
-  }
-
-
-  private <V extends T> boolean processSubQuery(final Processor<T> consumer, Query<V> query1) {
-    return query1.forEach(new Processor<V>() {
-      @Override
-      public boolean process(final V t) {
-        return consumer.process(t);
-      }
-    });
-  }
-
-  private <V extends T> AsyncFuture<Boolean> processSubQueryAsync(final Processor<T> consumer, Query<V> query1) {
-    return query1.forEachAsync(new Processor<V>() {
-      @Override
-      public boolean process(final V t) {
-        return consumer.process(t);
-      }
-    });
-  }
-
-  @Nonnull
-  @Override
-  public T[] toArray(@Nonnull final T[] a) {
-    final Collection<T> results = findAll();
-    return results.toArray(a);
-  }
-
-  @Override
-  public Iterator<T> iterator() {
-    return findAll().iterator();
   }
 }

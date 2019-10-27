@@ -21,7 +21,7 @@ import com.intellij.diff.requests.DiffRequest;
 import com.intellij.diff.tools.holders.BinaryEditorHolder;
 import com.intellij.diff.tools.util.DiffNotifications;
 import com.intellij.diff.tools.util.side.OnesideDiffViewer;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.progress.ProgressIndicator;
 import javax.annotation.Nonnull;

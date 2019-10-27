@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.vcs.changes;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.vcs.FilePath;
+import consulo.logging.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;

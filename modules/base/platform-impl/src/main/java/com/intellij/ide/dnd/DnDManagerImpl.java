@@ -18,7 +18,7 @@ package com.intellij.ide.dnd;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.reference.SoftReference;
@@ -536,6 +536,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
   }
 
   private class MyDragGestureListener implements DragGestureListener {
+    @Override
     public void dragGestureRecognized(DragGestureEvent dge) {
       try {
         final DnDSource source = getSource(dge.getComponent());
@@ -553,11 +554,11 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
 
             LOG.debug("Starting dragging for " + action);
             hideCurrentHighlighter();
-            final DnDDragStartBean dnDDragStartBean = source.startDragging(action, dge.getDragOrigin());
-            myCurrentEvent = new DnDEventImpl(DnDManagerImpl.this, action, dnDDragStartBean.getAttachedObject(), dnDDragStartBean.getPoint());
+            DnDDragStartBean bean = source.startDragging(action, dge.getDragOrigin());
+            myCurrentEvent = new DnDEventImpl(DnDManagerImpl.this, action, bean.getAttachedObject(), bean.getPoint());
             myCurrentEvent.setOrgPoint(dge.getDragOrigin());
 
-            Pair<Image, Point> pair = dnDDragStartBean.isEmpty() ? null : source.createDraggedImage(action, dge.getDragOrigin());
+            Pair<Image, Point> pair = bean.isEmpty() ? null : source.createDraggedImage(action, dge.getDragOrigin(), bean);
             if (pair == null) {
               pair = Pair.create(EMPTY_IMAGE, new Point(0, 0));
             }

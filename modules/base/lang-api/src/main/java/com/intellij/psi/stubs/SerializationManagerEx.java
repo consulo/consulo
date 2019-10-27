@@ -17,6 +17,7 @@ package com.intellij.psi.stubs;
 
 import javax.annotation.Nonnull;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -26,13 +27,16 @@ import java.io.OutputStream;
 public abstract class SerializationManagerEx extends SerializationManager {
 
   public static SerializationManagerEx getInstanceEx() {
-    return (SerializationManagerEx) SerializationManager.getInstance();
+    return (SerializationManagerEx)SerializationManager.getInstance();
   }
 
   public abstract void serialize(@Nonnull Stub rootStub, @Nonnull OutputStream stream);
 
   @Nonnull
   public abstract Stub deserialize(@Nonnull InputStream stream) throws SerializerNotFoundException;
+
+  //@ApiStatus.Experimental
+  public abstract void reSerialize(@Nonnull InputStream inStub, @Nonnull OutputStream outStub, @Nonnull SerializationManager newSerializationManager) throws IOException;
 
   public abstract boolean isNameStorageCorrupted();
 

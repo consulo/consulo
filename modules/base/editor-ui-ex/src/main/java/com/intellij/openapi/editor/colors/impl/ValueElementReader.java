@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.colors.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jdom.Element;

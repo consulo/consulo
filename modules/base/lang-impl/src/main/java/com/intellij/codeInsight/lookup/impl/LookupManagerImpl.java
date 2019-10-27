@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2017 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.intellij.codeInsight.lookup.impl;
 
@@ -26,26 +12,24 @@ import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.lookup.*;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.editor.event.EditorFactoryAdapter;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
+import com.intellij.openapi.editor.event.EditorFactoryListener;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
+import com.intellij.openapi.util.Key;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.Alarm;
 import com.intellij.util.BitUtil;
-import com.intellij.util.messages.MessageBus;
+import consulo.logging.Logger;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -57,30 +41,31 @@ public class LookupManagerImpl extends LookupManager {
   private Editor myActiveLookupEditor = null;
   private final PropertyChangeSupport myPropertyChangeSupport = new PropertyChangeSupport(this);
 
+  public static final Key<Boolean> SUPPRESS_AUTOPOPUP_JAVADOC = Key.create("LookupManagerImpl.suppressAutopopupJavadoc");
+
   @Inject
   public LookupManagerImpl(Project project) {
     myProject = project;
 
-    MessageBus bus = project.getMessageBus();
-    bus.connect().subscribe(EditorHintListener.TOPIC, new EditorHintListener() {
+    project.getMessageBus().connect().subscribe(EditorHintListener.TOPIC, new EditorHintListener() {
       @Override
-      public void hintShown(final Project project, final LightweightHint hint, final int flags) {
+      public void hintShown(final Project project, @Nonnull final LightweightHint hint, final int flags) {
         if (project == myProject) {
           Lookup lookup = getActiveLookup();
           if (lookup != null && BitUtil.isSet(flags, HintManager.HIDE_BY_LOOKUP_ITEM_CHANGE)) {
-            lookup.addLookupListener(new LookupAdapter() {
+            lookup.addLookupListener(new LookupListener() {
               @Override
-              public void currentItemChanged(LookupEvent event) {
+              public void currentItemChanged(@Nonnull LookupEvent event) {
                 hint.hide();
               }
 
               @Override
-              public void itemSelected(LookupEvent event) {
+              public void itemSelected(@Nonnull LookupEvent event) {
                 hint.hide();
               }
 
               @Override
-              public void lookupCanceled(LookupEvent event) {
+              public void lookupCanceled(@Nonnull LookupEvent event) {
                 hint.hide();
               }
             });
@@ -89,7 +74,7 @@ public class LookupManagerImpl extends LookupManager {
       }
     });
 
-    bus.connect().subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
+    project.getMessageBus().connect().subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
       @Override
       public void enteredDumbMode() {
         hideActiveLookup();
@@ -102,22 +87,18 @@ public class LookupManagerImpl extends LookupManager {
     });
 
 
-    final EditorFactoryAdapter myEditorFactoryListener = new EditorFactoryAdapter() {
+    EditorFactory.getInstance().addEditorFactoryListener(new EditorFactoryListener() {
       @Override
       public void editorReleased(@Nonnull EditorFactoryEvent event) {
         if (event.getEditor() == myActiveLookupEditor) {
           hideActiveLookup();
         }
       }
-    };
-    EditorFactory.getInstance().addEditorFactoryListener(myEditorFactoryListener, myProject);
+    }, myProject);
   }
 
   @Override
-  public LookupEx showLookup(@Nonnull final Editor editor,
-                             @Nonnull LookupElement[] items,
-                             @Nonnull final String prefix,
-                             @Nonnull final LookupArranger arranger) {
+  public LookupEx showLookup(@Nonnull final Editor editor, @Nonnull LookupElement[] items, @Nonnull final String prefix, @Nonnull final LookupArranger arranger) {
     for (LookupElement item : items) {
       assert item != null;
     }
@@ -128,58 +109,34 @@ public class LookupManagerImpl extends LookupManager {
 
   @Nonnull
   @Override
-  public LookupImpl createLookup(@Nonnull final Editor editor,
-                                 @Nonnull LookupElement[] items,
-                                 @Nonnull final String prefix,
-                                 @Nonnull final LookupArranger arranger) {
+  public LookupImpl createLookup(@Nonnull final Editor editor, @Nonnull LookupElement[] items, @Nonnull final String prefix, @Nonnull final LookupArranger arranger) {
     hideActiveLookup();
-
-    final CodeInsightSettings settings = CodeInsightSettings.getInstance();
-
-    final PsiFile psiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
 
     final LookupImpl lookup = createLookup(editor, arranger, myProject);
 
     final Alarm alarm = new Alarm();
-    final Runnable request = () -> {
-      if (myActiveLookup != lookup) return;
-
-      LookupElement currentItem = lookup.getCurrentItem();
-      if (currentItem != null && currentItem.isValid() && isAutoPopupJavadocSupportedBy(currentItem)) {
-        final CompletionProcess completion = CompletionService.getCompletionService().getCurrentCompletion();
-        if (completion != null && !completion.isAutopopupCompletion()) {
-          try {
-            DocumentationManager.getInstance(myProject).showJavaDocInfo(editor, psiFile, false);
-          }
-          catch (IndexNotReadyException ignored) {
-          }
-        }
-      }
-    };
-    if (settings.AUTO_POPUP_JAVADOC_INFO) {
-      alarm.addRequest(request, settings.JAVADOC_INFO_DELAY);
-    }
 
     ApplicationManager.getApplication().assertIsDispatchThread();
 
     myActiveLookup = lookup;
     myActiveLookupEditor = editor;
-    myActiveLookup.addLookupListener(new LookupAdapter() {
+    myActiveLookup.addLookupListener(new LookupListener() {
       @Override
-      public void itemSelected(LookupEvent event) {
+      public void itemSelected(@Nonnull LookupEvent event) {
         lookupClosed();
       }
 
       @Override
-      public void lookupCanceled(LookupEvent event) {
+      public void lookupCanceled(@Nonnull LookupEvent event) {
         lookupClosed();
       }
 
       @Override
-      public void currentItemChanged(LookupEvent event) {
+      public void currentItemChanged(@Nonnull LookupEvent event) {
         alarm.cancelAllRequests();
+        CodeInsightSettings settings = CodeInsightSettings.getInstance();
         if (settings.AUTO_POPUP_JAVADOC_INFO && DocumentationManager.getInstance(myProject).getDocInfoHint() == null) {
-          alarm.addRequest(request, settings.JAVADOC_INFO_DELAY);
+          alarm.addRequest(() -> showJavadoc(lookup), settings.JAVADOC_INFO_DELAY);
         }
       }
 
@@ -198,9 +155,9 @@ public class LookupManagerImpl extends LookupManager {
       }
     });
 
-    CamelHumpMatcher matcher = new CamelHumpMatcher(prefix);
     if (items.length > 0) {
-      for (final LookupElement item : items) {
+      CamelHumpMatcher matcher = new CamelHumpMatcher(prefix);
+      for (LookupElement item : items) {
         myActiveLookup.addItem(item, matcher);
       }
       myActiveLookup.refreshUi(true, true);
@@ -213,8 +170,30 @@ public class LookupManagerImpl extends LookupManager {
     return lookup;
   }
 
-  protected boolean isAutoPopupJavadocSupportedBy(LookupElement lookupItem) {
-    return true;
+  private void showJavadoc(LookupImpl lookup) {
+    if (myActiveLookup != lookup) return;
+
+    DocumentationManager docManager = DocumentationManager.getInstance(myProject);
+    if (docManager.getDocInfoHint() != null) return; // will auto-update
+
+    LookupElement currentItem = lookup.getCurrentItem();
+    CompletionProcess completion = CompletionService.getCompletionService().getCurrentCompletion();
+    if (currentItem != null && currentItem.isValid() && isAutoPopupJavadocSupportedBy(currentItem) && completion != null) {
+      try {
+        boolean hideLookupWithDoc = completion.isAutopopupCompletion() || CodeInsightSettings.getInstance().JAVADOC_INFO_DELAY == 0;
+        docManager.showJavaDocInfo(lookup.getEditor(), lookup.getPsiFile(), false, () -> {
+          if (hideLookupWithDoc && completion == CompletionService.getCompletionService().getCurrentCompletion()) {
+            hideActiveLookup();
+          }
+        });
+      }
+      catch (IndexNotReadyException ignored) {
+      }
+    }
+  }
+
+  protected boolean isAutoPopupJavadocSupportedBy(@SuppressWarnings("unused") LookupElement lookupItem) {
+    return lookupItem.getUserData(SUPPRESS_AUTOPOPUP_JAVADOC) == null;
   }
 
   @Nonnull
@@ -266,15 +245,15 @@ public class LookupManagerImpl extends LookupManager {
 
 
   @TestOnly
-  public void forceSelection(char completion, int index){
-    if(myActiveLookup == null) throw new RuntimeException("There are no items in this lookup");
+  public void forceSelection(char completion, int index) {
+    if (myActiveLookup == null) throw new RuntimeException("There are no items in this lookup");
     final LookupElement lookupItem = myActiveLookup.getItems().get(index);
     myActiveLookup.setCurrentItem(lookupItem);
     myActiveLookup.finishLookup(completion);
   }
 
   @TestOnly
-  public void forceSelection(char completion, LookupElement item){
+  public void forceSelection(char completion, LookupElement item) {
     myActiveLookup.setCurrentItem(item);
     myActiveLookup.finishLookup(completion);
   }

@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.merge;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

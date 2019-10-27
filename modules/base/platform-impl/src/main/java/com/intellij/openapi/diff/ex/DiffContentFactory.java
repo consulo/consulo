@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.diff.ex;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.diff.DiffContent;
 import com.intellij.openapi.diff.SimpleDiffRequest;
 import com.intellij.openapi.project.Project;

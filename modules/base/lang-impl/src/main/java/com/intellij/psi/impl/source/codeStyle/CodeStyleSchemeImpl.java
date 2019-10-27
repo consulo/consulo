@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.impl.source.codeStyle;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.options.ExternalInfo;
 import com.intellij.openapi.options.ExternalizableScheme;
 import com.intellij.openapi.util.InvalidDataException;

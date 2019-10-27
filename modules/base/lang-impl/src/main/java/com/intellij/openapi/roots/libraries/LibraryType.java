@@ -23,6 +23,8 @@ import com.intellij.openapi.roots.libraries.ui.LibraryEditorComponent;
 import com.intellij.openapi.roots.libraries.ui.LibraryPropertiesEditor;
 import com.intellij.openapi.roots.libraries.ui.LibraryRootsComponentDescriptor;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.roots.types.BinariesOrderRootType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -41,8 +43,10 @@ import java.util.List;
 public abstract class LibraryType<P extends LibraryProperties> extends LibraryPresentationProvider<P> {
   public static final ExtensionPointName<LibraryType<?>> EP_NAME = ExtensionPointName.create("com.intellij.library.type");
 
-  // TODO [VISTALL] currently we cant replace it by BinariesOrderRootType.getInstance() due it recursive call it throw NPE
-  public final static OrderRootType[] DEFAULT_EXTERNAL_ROOT_TYPES = {OrderRootType.CLASSES};
+  @Nonnull
+  public static OrderRootType[] getDefaultExternalRootTypes() {
+    return new OrderRootType[]{BinariesOrderRootType.getInstance()};
+  }
 
   protected LibraryType(@Nonnull PersistentLibraryKind<P> libraryKind) {
     super(libraryKind);
@@ -96,11 +100,11 @@ public abstract class LibraryType<P extends LibraryProperties> extends LibraryPr
    *         indicate that the library is external.
    */
   public OrderRootType[] getExternalRootTypes() {
-    return DEFAULT_EXTERNAL_ROOT_TYPES;
+    return getDefaultExternalRootTypes();
   }
 
   public static LibraryType findByKind(LibraryKind kind) {
-    for (LibraryType type : EP_NAME.getExtensions()) {
+    for (LibraryType type : EP_NAME.getExtensionList()) {
       if (type.getKind() == kind) {
         return type;
       }

@@ -19,8 +19,9 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import consulo.util.ApplicationWindowStateService;
 import consulo.util.ProjectWindowStateService;
-
 import javax.annotation.Nonnull;
+
+import javax.annotation.Nullable;
 import java.awt.*;
 
 /**
@@ -43,49 +44,27 @@ public interface WindowStateService {
   }
 
   /**
-   * Loads a state of the specified component by the specified key.
+   * Returns a window state by the specified key.
+   * Also it adds a listener to save a modified state automatically.
    *
-   * @param key       an unique string key
-   * @param component a component which state should be changed
-   * @return {@code true} if a state is loaded successfully, {@code false} otherwise
+   * @param key    an unique string key
+   * @param window a window state which should be watched for
+   * @return a corresponding window state
    */
-  default boolean loadState(@Nonnull String key, @Nonnull Component component) {
-    return loadStateFor(null, key, component);
+  default WindowState getState(@Nonnull String key, @Nonnull Window window) {
+    return getStateFor(getProject(), key, window);
   }
 
   /**
-   * Loads a state of the specified component by the given screen and the specified key.
-   * A screen can be specified by {@link Project}, {@link Window}, or {@link GraphicsDevice}.
+   * Returns a window state by the given project and the specified key.
+   * Also it adds a listener to save a modified state automatically.
    *
-   * @param object    an object that specifies a screen to which a component state belongs
-   * @param key       an unique string key
-   * @param component a component which state should be changed
-   * @return {@code true} if a state is loaded successfully, {@code false} otherwise
+   * @param project an project that specifies a main screen
+   * @param key     an unique string key
+   * @param window  a window state which should be watched for
+   * @return a corresponding window state
    */
-  public abstract boolean loadStateFor(Object object, @Nonnull String key, @Nonnull Component component);
-
-  /**
-   * Stores the specified location that corresponds to the specified key.
-   * If it is {@code null} the stored location will be removed.
-   *
-   * @param key       an unique string key
-   * @param component a component which state should be saved
-   */
-  default void saveState(@Nonnull String key, @Nonnull Component component) {
-    saveStateFor(null, key, component);
-  }
-
-  /**
-   * Stores the specified location that corresponds to the given screen and the specified key.
-   * If it is {@code null} the stored location will be removed.
-   * A screen can be specified by {@link Project}, {@link Window}, or {@link GraphicsDevice}.
-   * Do not use a screen which is calculated from the specified component.
-   *
-   * @param object    an object that specifies a screen to which a component state belongs
-   * @param key       an unique string key
-   * @param component a component which state should be saved
-   */
-  public abstract void saveStateFor(Object object, @Nonnull String key, @Nonnull Component component);
+  public abstract WindowState getStateFor(@Nullable Project project, @Nonnull String key, @Nonnull Window window);
 
   /**
    * Returns a location that corresponds to the specified key or {@code null}
@@ -95,7 +74,7 @@ public interface WindowStateService {
    * @return a corresponding location
    */
   default Point getLocation(@Nonnull String key) {
-    return getLocationFor(null, key);
+    return getLocationFor(getProject(), key);
   }
 
   /**
@@ -116,7 +95,7 @@ public interface WindowStateService {
    * @param key an unique string key
    */
   default void putLocation(@Nonnull String key, Point location) {
-    putLocationFor(null, key, location);
+    putLocationFor(getProject(), key, location);
   }
 
   /**
@@ -138,7 +117,7 @@ public interface WindowStateService {
    * @return a corresponding size
    */
   default Dimension getSize(@Nonnull String key) {
-    return getSizeFor(null, key);
+    return getSizeFor(getProject(), key);
   }
 
   /**
@@ -159,7 +138,7 @@ public interface WindowStateService {
    * @param key an unique string key
    */
   default void putSize(@Nonnull String key, Dimension size) {
-    putSizeFor(null, key, size);
+    putSizeFor(getProject(), key, size);
   }
 
   /**
@@ -181,7 +160,7 @@ public interface WindowStateService {
    * @return a corresponding bounds
    */
   default Rectangle getBounds(@Nonnull String key) {
-    return getBoundsFor(null, key);
+    return getBoundsFor(getProject(), key);
   }
 
   /**
@@ -202,7 +181,7 @@ public interface WindowStateService {
    * @param key an unique string key
    */
   default void putBounds(@Nonnull String key, Rectangle bounds) {
-    putBoundsFor(null, key, bounds);
+    putBoundsFor(getProject(), key, bounds);
   }
 
   /**
@@ -215,4 +194,9 @@ public interface WindowStateService {
    * @param key    an unique string key
    */
   public abstract void putBoundsFor(Object object, @Nonnull String key, Rectangle bounds);
+
+  @Nullable
+  default Project getProject() {
+    return null;
+  }
 }

@@ -22,9 +22,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.wm.FocusCommand;
-import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentUI;
@@ -105,34 +102,8 @@ public class DesktopContentManagerImpl extends ContentManagerBase {
     final Content toSelect = content == null ? getSelectedContent() : content;
     if (toSelect == null) return AsyncResult.rejected();
     assert myContents.contains(toSelect);
-
-    return getFocusManager().requestFocus(new FocusCommand(content, toSelect.getPreferredFocusableComponent()) {
-      @Nonnull
-      @Override
-      public AsyncResult<Void> run() {
-        return doRequestFocus(toSelect);
-      }
-    }, forced);
-  }
-
-  private static AsyncResult<Void> doRequestFocus(final Content toSelect) {
-    JComponent toFocus = computeWillFocusComponent(toSelect);
-
-    if (toFocus != null) {
-      IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(toFocus);
-    }
-
-    return AsyncResult.done(null);
-  }
-
-  private static JComponent computeWillFocusComponent(Content toSelect) {
-    JComponent toFocus = toSelect.getPreferredFocusableComponent();
-    if (toFocus != null) {
-      toFocus = IdeFocusTraversalPolicy.getPreferredFocusedComponent(toFocus);
-    }
-
-    if (toFocus == null) toFocus = toSelect.getPreferredFocusableComponent();
-    return toFocus;
+    JComponent preferredFocusableComponent = toSelect.getPreferredFocusableComponent();
+    return preferredFocusableComponent != null ? getFocusManager().requestFocusInProject(preferredFocusableComponent, myProject) : AsyncResult.rejected();
   }
 
   private class MyNonOpaquePanel extends NonOpaquePanel implements DataProvider {

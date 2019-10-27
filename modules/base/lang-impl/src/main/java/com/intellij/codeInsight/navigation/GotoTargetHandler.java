@@ -25,7 +25,6 @@ import com.intellij.ide.util.PsiElementListCellRenderer;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.extensions.Extensions;
@@ -49,6 +48,7 @@ import com.intellij.usages.UsageView;
 import com.intellij.util.Alarm;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.HashSet;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -165,7 +165,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
       }
     };
 
-    final PopupChooserBuilder builder = new PopupChooserBuilder(list);
+    final PopupChooserBuilder<?> builder = new PopupChooserBuilder(list);
     builder.setFilteringEnabled(o -> {
       if (o instanceof AdditionalAction) {
         return ((AdditionalAction)o).getText();

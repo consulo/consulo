@@ -36,6 +36,7 @@ import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -55,9 +56,8 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.util.ui.update.Update;
-import consulo.ui.RequiredUIAccess;
-import consulo.awt.TargetAWT;
 import consulo.fileTypes.impl.VfsIconUtil;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -493,13 +493,13 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
       }
     });
     JTree tree = myFileSystemTree.getTree();
-    tree.setCellRenderer(new NodeRenderer());
+    if (!Registry.is("file.chooser.async.tree.model")) tree.setCellRenderer(new NodeRenderer());
     tree.getSelectionModel().addTreeSelectionListener(new FileTreeSelectionListener());
     tree.addTreeExpansionListener(new FileTreeExpansionListener());
     setOKActionEnabled(false);
 
     myFileSystemTree.addListener(new FileSystemTree.Listener() {
-      public void selectionChanged(final List<VirtualFile> selection) {
+      public void selectionChanged(final List<? extends VirtualFile> selection) {
         updatePathFromTree(selection, false);
       }
     }, myDisposable);
@@ -565,7 +565,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
   private final class FileTreeExpansionListener implements TreeExpansionListener {
     public void treeExpanded(TreeExpansionEvent event) {
       final Object[] path = event.getPath().getPath();
-      if (path.length == 2) {
+      if (path.length == 2 && path[1] instanceof DefaultMutableTreeNode) {
         // top node has been expanded => watch disk recursively
         final DefaultMutableTreeNode node = (DefaultMutableTreeNode)path[1];
         Object userObject = node.getUserObject();
@@ -592,18 +592,10 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
 
       boolean enabled = true;
       for (TreePath treePath : paths) {
-        if (!e.isAddedPath(treePath)) {
-          continue;
+        if (e.isAddedPath(treePath)) {
+          VirtualFile file = FileSystemTreeImpl.getVirtualFile(treePath);
+          if (file == null || !myChooserDescriptor.isFileSelectable(file)) enabled = false;
         }
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode)treePath.getLastPathComponent();
-        Object userObject = node.getUserObject();
-        if (!(userObject instanceof FileNodeDescriptor)) {
-          enabled = false;
-          break;
-        }
-        FileElement descriptor = ((FileNodeDescriptor)userObject).getElement();
-        VirtualFile file = descriptor.getFile();
-        enabled = file != null && myChooserDescriptor.isFileSelectable(file);
       }
       setOKActionEnabled(enabled);
     }
@@ -656,7 +648,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
   }
 
 
-  private void updatePathFromTree(final List<VirtualFile> selection, boolean now) {
+  private void updatePathFromTree(final List<? extends VirtualFile> selection, boolean now) {
     if (!isToShowTextField() || myTreeIsUpdating) return;
 
     String text = "";

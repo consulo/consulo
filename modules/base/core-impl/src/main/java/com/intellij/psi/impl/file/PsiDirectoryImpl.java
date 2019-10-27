@@ -21,7 +21,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.ItemPresentationProviders;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
@@ -52,9 +51,10 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
+import consulo.logging.Logger;
 import consulo.psi.PsiDirectoryMethodProxy;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -83,7 +83,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
 
   @Override
   public boolean isValid() {
-    return myFile.isValid();
+    return myFile.isValid() && !getProject().isDisposed();
   }
 
   @Override
@@ -221,8 +221,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
 
     for (VirtualFile vFile : myFile.getChildren()) {
       boolean isDir = vFile.isDirectory();
-      if (processor instanceof PsiFileSystemItemProcessor &&
-          !((PsiFileSystemItemProcessor)processor).acceptItem(vFile.getName(), isDir)) {
+      if (processor instanceof PsiFileSystemItemProcessor && !((PsiFileSystemItemProcessor)processor).acceptItem(vFile.getName(), isDir)) {
         continue;
       }
       if (isDir) {
@@ -443,7 +442,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
     }
 
     for (PsiDirectoryMethodProxy proxy : PsiDirectoryMethodProxy.EP_NAME.getExtensionList()) {
-      if(!proxy.checkCreateFile(this, name)) {
+      if (!proxy.checkCreateFile(this, name)) {
         return;
       }
     }
@@ -508,7 +507,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
     else {
       for (PsiDirectoryMethodProxy proxy : PsiDirectoryMethodProxy.EP_NAME.getExtensionList()) {
         PsiElement add = proxy.add(this, element);
-        if(add != null) {
+        if (add != null) {
           return add;
         }
       }
@@ -541,7 +540,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
     }
     else {
       for (PsiDirectoryMethodProxy proxy : PsiDirectoryMethodProxy.EP_NAME.getExtensionList()) {
-        if(proxy.checkAdd(this, element)) {
+        if (proxy.checkAdd(this, element)) {
           return;
         }
       }
@@ -634,5 +633,25 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
   @Override
   public void putInfo(@Nonnull Map<String, String> info) {
     info.put("fileName", getName());
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    PsiDirectoryImpl directory = (PsiDirectoryImpl)o;
+
+    if (!myManager.equals(directory.myManager)) return false;
+    if (!myFile.equals(directory.myFile)) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = myManager.hashCode();
+    result = 31 * result + myFile.hashCode();
+    return result;
   }
 }

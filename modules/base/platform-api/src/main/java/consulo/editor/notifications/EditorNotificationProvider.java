@@ -19,6 +19,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredReadAction;
 
 import javax.annotation.Nonnull;
@@ -33,7 +34,11 @@ public interface EditorNotificationProvider<T extends JComponent> {
   ExtensionPointName<EditorNotificationProvider<?>> EP_NAME = ExtensionPointName.create("com.intellij.editorNotificationProvider");
 
   @Nonnull
-  Key<T> getKey();
+  @Deprecated
+  @DeprecationInfo("Don't implement this method")
+  default Key<T> getKey() {
+    return EditorNotificationProviderKeyCache.getOrCreate(getClass());
+  }
 
   @Nullable
   @RequiredReadAction

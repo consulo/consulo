@@ -22,7 +22,6 @@ package com.intellij.ide.actions;
 import com.intellij.AbstractBundle;
 import com.intellij.CommonBundle;
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.plugins.cl.IdeaPluginClassLoader;
@@ -35,7 +34,6 @@ import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
-import consulo.components.impl.stores.storage.StateStorageManager;
 import com.intellij.openapi.options.OptionsBundle;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.ui.Messages;
@@ -44,9 +42,12 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.ZipUtil;
-import consulo.ui.RequiredUIAccess;
 import consulo.application.ex.ApplicationEx2;
+import consulo.components.impl.stores.storage.StateStorageManager;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginIds;
 import consulo.injecting.key.InjectingKey;
+import consulo.ui.RequiredUIAccess;
 import gnu.trove.THashSet;
 
 import javax.annotation.Nonnull;
@@ -118,8 +119,8 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
 
   private static void exportInstalledPlugins(File saveFile, ZipOutputStream output, HashSet<String> writtenItemRelativePaths) throws IOException {
     final List<String> oldPlugins = new ArrayList<>();
-    for (IdeaPluginDescriptor descriptor : PluginManagerCore.getPlugins()) {
-      if (!descriptor.isBundled() && descriptor.isEnabled()) {
+    for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
+      if (!PluginIds.isPlatformPlugin(descriptor.getPluginId()) && descriptor.isEnabled()) {
         oldPlugins.add(descriptor.getPluginId().getIdString());
       }
     }
@@ -197,7 +198,7 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
     String defaultName = state.name();
     String resourceBundleName;
 
-    IdeaPluginDescriptor pluginDescriptor = null;
+    PluginDescriptor pluginDescriptor = null;
     ClassLoader classLoader = aClass.getClassLoader();
 
     if(classLoader instanceof IdeaPluginClassLoader) {

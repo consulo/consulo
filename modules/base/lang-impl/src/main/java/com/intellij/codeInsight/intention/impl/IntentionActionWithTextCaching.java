@@ -21,7 +21,6 @@ import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInsight.intention.IntentionActionDelegate;
 import com.intellij.openapi.actionSystem.ShortcutProvider;
 import com.intellij.openapi.actionSystem.ShortcutSet;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.PossiblyDumbAware;
@@ -30,6 +29,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
+import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 
@@ -71,7 +71,7 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
   }
 
   @Nonnull
-  String getText() {
+  public String getText() {
     return myText;
   }
 

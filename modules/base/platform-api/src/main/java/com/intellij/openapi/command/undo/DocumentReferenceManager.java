@@ -21,6 +21,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
 
 public abstract class DocumentReferenceManager {
+  @Nonnull
   public static DocumentReferenceManager getInstance() {
     return ApplicationManager.getApplication().getComponent(DocumentReferenceManager.class);
   }

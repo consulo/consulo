@@ -28,8 +28,9 @@ import com.intellij.ui.JBColor;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
+import consulo.container.plugin.PluginDescriptor;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
@@ -52,9 +53,9 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
   private JPanel myRightPanel;
   private JPanel myBottomPanel;
   private JPanel myInfoPanel;
-  private final IdeaPluginDescriptor myPluginDescriptor;
+  private final PluginDescriptor myPluginDescriptor;
 
-  public PluginsTableRenderer(IdeaPluginDescriptor pluginDescriptor, boolean availableRender) {
+  public PluginsTableRenderer(PluginDescriptor pluginDescriptor, boolean availableRender) {
     myPluginDescriptor = pluginDescriptor;
 
     final Font smallFont;
@@ -122,8 +123,8 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
     return myPanel;
   }
 
-  protected void updatePresentation(boolean isSelected, @Nonnull IdeaPluginDescriptor pluginNode, TableModel model) {
-    final IdeaPluginDescriptor installed = PluginManager.getPlugin(myPluginDescriptor.getPluginId());
+  protected void updatePresentation(boolean isSelected, @Nonnull PluginDescriptor pluginNode, TableModel model) {
+    final PluginDescriptor installed = PluginManager.getPlugin(myPluginDescriptor.getPluginId());
     if (PluginManagerColumnInfo.isDownloaded(pluginNode) || installed != null && InstalledPluginsTableModel.wasUpdated(installed.getPluginId())) {
       if (!isSelected) {
         myName.setForeground(FileStatus.ADDED.getColor());
@@ -148,12 +149,12 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
     }
   }
 
-  private static boolean isIncompatible(IdeaPluginDescriptor descriptor, TableModel model) {
+  private static boolean isIncompatible(PluginDescriptor descriptor, TableModel model) {
     return PluginManagerCore.isIncompatible(descriptor) ||
            model instanceof InstalledPluginsTableModel && ((InstalledPluginsTableModel)model).hasProblematicDependencies(descriptor.getPluginId());
   }
 
-  private static String whyIncompatible(IdeaPluginDescriptor descriptor, TableModel model) {
+  private static String whyIncompatible(PluginDescriptor descriptor, TableModel model) {
     if (model instanceof InstalledPluginsTableModel) {
       InstalledPluginsTableModel installedModel = (InstalledPluginsTableModel)model;
       Set<PluginId> required = installedModel.getRequiredPlugins(descriptor.getPluginId());
@@ -166,7 +167,7 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
         }
 
         String deps = StringUtil.join(required, id -> {
-          IdeaPluginDescriptor plugin = PluginManager.getPlugin(id);
+          PluginDescriptor plugin = PluginManager.getPlugin(id);
           return plugin != null ? plugin.getName() : id.getIdString();
         }, ", ");
         sb.append(IdeBundle.message("plugin.manager.incompatible.deps.tooltip", required.size(), deps));

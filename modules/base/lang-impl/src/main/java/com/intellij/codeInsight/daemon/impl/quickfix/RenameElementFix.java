@@ -20,7 +20,7 @@ import com.intellij.codeInsight.FileModificationService;
 import com.intellij.codeInspection.LocalQuickFixAndIntentionActionOnPsiElement;
 import com.intellij.lang.LanguageNamesValidation;
 import com.intellij.lang.refactoring.NamesValidator;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;

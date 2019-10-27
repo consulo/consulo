@@ -21,8 +21,8 @@ import com.intellij.ide.ReopenProjectAction;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.wm.impl.SystemDock;
+import consulo.logging.Logger;
+import consulo.wm.impl.SystemDockImpl;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -33,18 +33,17 @@ import java.lang.reflect.Method;
 /**
  * @author Denis Fokin
  */
-public class MacDockDelegate implements SystemDock.Delegate {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ui.mac.MacDockDelegate");
+public class MacDockDelegate implements SystemDockImpl.Delegate {
+  private static final Logger LOG = Logger.getInstance(MacDockDelegate.class);
 
-  private static boolean initialized = false;
-  private static final SystemDock.Delegate instance = new MacDockDelegate();
+  private final PopupMenu dockMenu = new PopupMenu("DockMenu");
+  private final Menu recentProjectsMenu = new Menu("Recent projects");
 
-  private static final PopupMenu dockMenu = new PopupMenu("DockMenu");
-  private static final Menu recentProjectsMenu = new Menu("Recent projects");
+  public MacDockDelegate() {
+    initDockMenu();
+  }
 
-  private MacDockDelegate() {}
-
-  private static void initDockMenu() {
+  private void initDockMenu() {
     dockMenu.add(recentProjectsMenu);
 
     try {
@@ -56,7 +55,7 @@ public class MacDockDelegate implements SystemDock.Delegate {
   }
 
   @Override
-  public void updateRecentProjectsMenu () {
+  public void updateRecentProjectsMenu() {
     RecentProjectsManager projectsManager = RecentProjectsManager.getInstance();
     if (projectsManager == null) return;
     final AnAction[] recentProjectActions = projectsManager.getRecentProjectsActions(false);
@@ -84,13 +83,5 @@ public class MacDockDelegate implements SystemDock.Delegate {
 
   private static Class<?> getAppClass() throws ClassNotFoundException {
     return Class.forName("com.apple.eawt.Application");
-  }
-
-  synchronized public static SystemDock.Delegate getInstance() {
-    if (!initialized) {
-      initDockMenu();
-      initialized = true;
-    }
-    return instance;
   }
 }

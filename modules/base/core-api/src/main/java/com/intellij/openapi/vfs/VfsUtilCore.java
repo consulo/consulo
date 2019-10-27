@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.vfs;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.BufferExposingByteArrayInputStream;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.PathUtil;
@@ -31,8 +31,9 @@ import com.intellij.util.containers.DistinctRootsCollection;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.lang.UrlClassLoader;
 import com.intellij.util.text.StringFactory;
-
+import consulo.logging.Logger;
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.io.*;
 import java.net.MalformedURLException;
@@ -360,6 +361,11 @@ public class VfsUtilCore {
     finally {
       reader.close();
     }
+  }
+
+  @Nonnull
+  public static byte[] loadBytes(@Nonnull VirtualFile file) throws IOException {
+    return FileUtilRt.isTooLarge(file.getLength()) ? FileUtil.loadFirstAndClose(file.getInputStream(), FileUtilRt.LARGE_FILE_PREVIEW_SIZE) : file.contentsToByteArray();
   }
 
   @Nonnull

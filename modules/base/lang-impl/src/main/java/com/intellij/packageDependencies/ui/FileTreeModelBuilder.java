@@ -20,7 +20,6 @@ import com.intellij.analysis.AnalysisScopeBundle;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.ide.projectView.impl.ModuleGroup;
 import com.intellij.ide.scopeView.nodes.BasePsiNode;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -43,6 +42,8 @@ import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.tree.TreeUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;

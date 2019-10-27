@@ -54,12 +54,12 @@ public class VFileCopyEvent extends VFileEvent {
   @Override
   @NonNls
   public String toString() {
-    return "VfsEvent[copy " + myFile +" to " + myNewParent + " as " + myNewChildName +"]";
+    return "VfsEvent[copy " + myFile + " to " + myNewParent + " as " + myNewChildName + "]";
   }
 
   @Nonnull
   @Override
-  public String getPath() {
+  protected String computePath() {
     return myNewParent.getPath() + "/" + myNewChildName;
   }
 

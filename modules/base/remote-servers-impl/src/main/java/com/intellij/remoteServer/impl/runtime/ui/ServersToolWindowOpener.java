@@ -25,6 +25,6 @@ public class ServersToolWindowOpener implements ProjectComponent {
 
   @Override
   public void projectOpened() {
-    Platform.onlyAtDesktop(() -> StartupManager.getInstance(myProject).registerPostStartupActivity(() -> ToolWindowManager.getInstance(myProject).invokeLater(() -> new ServersToolWindow(myProject))));
+    Platform.runIfDesktopPlatform(() -> StartupManager.getInstance(myProject).registerPostStartupActivity(() -> ToolWindowManager.getInstance(myProject).invokeLater(() -> new ServersToolWindow(myProject))));
   }
 }

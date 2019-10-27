@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.intention.impl.config;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.util.ArrayUtil;

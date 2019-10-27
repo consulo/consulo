@@ -20,6 +20,7 @@ import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.lang.ImportOptimizer;
 import com.intellij.lang.LanguageImportStatements;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.psi.PsiDirectory;
@@ -34,50 +35,55 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.FutureTask;
 
-import static com.intellij.codeInsight.actions.OptimizeImportsProcessor.NotificationInfo.*;
+import static com.intellij.codeInsight.actions.OptimizeImportsProcessor.NotificationInfo.NOTHING_CHANGED_NOTIFICATION;
+import static com.intellij.codeInsight.actions.OptimizeImportsProcessor.NotificationInfo.SOMETHING_CHANGED_WITHOUT_MESSAGE_NOTIFICATION;
 
 public class OptimizeImportsProcessor extends AbstractLayoutCodeProcessor {
   private static final String PROGRESS_TEXT = CodeInsightBundle.message("progress.text.optimizing.imports");
   public static final String COMMAND_NAME = CodeInsightBundle.message("process.optimize.imports");
-  private List<NotificationInfo> myOptimizerNotifications = ContainerUtil.newSmartList();
+  private final List<NotificationInfo> myOptimizerNotifications = ContainerUtil.newSmartList();
 
-  public OptimizeImportsProcessor(Project project) {
+  public OptimizeImportsProcessor(@javax.annotation.Nonnull Project project) {
     super(project, COMMAND_NAME, PROGRESS_TEXT, false);
   }
 
-  public OptimizeImportsProcessor(Project project, Module module) {
+  public OptimizeImportsProcessor(@Nonnull Project project, Module module) {
     super(project, module, COMMAND_NAME, PROGRESS_TEXT, false);
   }
 
-  public OptimizeImportsProcessor(Project project, PsiDirectory directory, boolean includeSubdirs) {
+  public OptimizeImportsProcessor(@Nonnull Project project, PsiDirectory directory, boolean includeSubdirs) {
     super(project, directory, includeSubdirs, PROGRESS_TEXT, COMMAND_NAME, false);
   }
 
-  public OptimizeImportsProcessor(Project project, PsiDirectory directory, boolean includeSubdirs, boolean processOnlyVcsChangedFiles) {
+  public OptimizeImportsProcessor(@Nonnull Project project, PsiDirectory directory, boolean includeSubdirs, boolean processOnlyVcsChangedFiles) {
     super(project, directory, includeSubdirs, PROGRESS_TEXT, COMMAND_NAME, processOnlyVcsChangedFiles);
   }
 
-  public OptimizeImportsProcessor(Project project, PsiFile file) {
+  public OptimizeImportsProcessor(@Nonnull Project project, PsiFile file) {
     super(project, file, PROGRESS_TEXT, COMMAND_NAME, false);
   }
 
-  public OptimizeImportsProcessor(Project project, PsiFile[] files, Runnable postRunnable) {
+  public OptimizeImportsProcessor(@Nonnull Project project, PsiFile[] files, Runnable postRunnable) {
     this(project, files, COMMAND_NAME, postRunnable);
   }
 
-  public OptimizeImportsProcessor(Project project, PsiFile[] files, String commandName, Runnable postRunnable) {
+  public OptimizeImportsProcessor(@Nonnull Project project, PsiFile[] files, String commandName, Runnable postRunnable) {
     super(project, files, PROGRESS_TEXT, commandName, postRunnable, false);
   }
 
-  public OptimizeImportsProcessor(AbstractLayoutCodeProcessor processor) {
+  public OptimizeImportsProcessor(@Nonnull AbstractLayoutCodeProcessor processor) {
     super(processor, COMMAND_NAME, PROGRESS_TEXT);
   }
 
   @Override
   @Nonnull
   protected FutureTask<Boolean> prepareTask(@Nonnull PsiFile file, boolean processChangedTextOnly) {
+    if (DumbService.isDumb(file.getProject())) {
+      return new FutureTask<>(EmptyRunnable.INSTANCE, true);
+    }
+
     final Set<ImportOptimizer> optimizers = LanguageImportStatements.INSTANCE.forFile(file);
-    final List<Runnable> runnables = new ArrayList<Runnable>();
+    final List<Runnable> runnables = new ArrayList<>();
     List<PsiFile> files = file.getViewProvider().getAllFiles();
     for (ImportOptimizer optimizer : optimizers) {
       for (PsiFile psiFile : files) {
@@ -87,23 +93,21 @@ public class OptimizeImportsProcessor extends AbstractLayoutCodeProcessor {
       }
     }
 
-    Runnable runnable = !runnables.isEmpty() ? new Runnable() {
-      @Override
-      public void run() {
-        CodeStyleManagerImpl.setSequentialProcessingAllowed(false);
-        try {
-          for (Runnable runnable : runnables) {
-            runnable.run();
-            retrieveAndStoreNotificationInfo(runnable);
-          }
-          putNotificationInfoIntoCollector();
+    Runnable runnable = !runnables.isEmpty() ? () -> {
+      CodeStyleManagerImpl.setSequentialProcessingAllowed(false);
+      try {
+        for (Runnable runnable1 : runnables) {
+          runnable1.run();
+          retrieveAndStoreNotificationInfo(runnable1);
         }
-        finally {
-          CodeStyleManagerImpl.setSequentialProcessingAllowed(true);
-        }
+        putNotificationInfoIntoCollector();
+      }
+      finally {
+        CodeStyleManagerImpl.setSequentialProcessingAllowed(true);
       }
     } : EmptyRunnable.getInstance();
-    return new FutureTask<Boolean>(runnable, true);
+
+    return new FutureTask<>(runnable, true);
   }
 
   private void retrieveAndStoreNotificationInfo(@Nonnull Runnable runnable) {

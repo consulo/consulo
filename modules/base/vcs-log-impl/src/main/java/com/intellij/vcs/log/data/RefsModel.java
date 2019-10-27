@@ -1,7 +1,7 @@
 package com.intellij.vcs.log.data;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcs.log.*;
 import gnu.trove.TIntObjectHashMap;

@@ -16,10 +16,13 @@
 package com.intellij.ui.debugger.extensions;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
-import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.application.Application;
+import consulo.logging.Logger;
 import com.intellij.openapi.keymap.KeymapManager;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.debugger.UiDebuggerExtension;
 
@@ -42,6 +45,8 @@ public class ActionTracer implements UiDebuggerExtension, AnActionListener {
   private JTextArea myText;
   private JPanel myComponent;
 
+  private Disposable myListenerDisposable;
+
   @Override
   public JComponent getComponent() {
     if (myComponent == null) {
@@ -59,7 +64,8 @@ public class ActionTracer implements UiDebuggerExtension, AnActionListener {
       myComponent.add(ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true).getComponent(), BorderLayout.NORTH);
       myComponent.add(log);
 
-      ActionManager.getInstance().addAnActionListener(this);
+      myListenerDisposable = Disposer.newDisposable();
+      Application.get().getMessageBus().connect(myListenerDisposable).subscribe(AnActionListener.TOPIC, this);
     }
 
     return myComponent;
@@ -68,10 +74,6 @@ public class ActionTracer implements UiDebuggerExtension, AnActionListener {
   @Override
   public String getName() {
     return "Actions";
-  }
-
-  @Override
-  public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
   }
 
   @Override
@@ -109,12 +111,8 @@ public class ActionTracer implements UiDebuggerExtension, AnActionListener {
   }
 
   @Override
-  public void beforeEditorTyping(char c, DataContext dataContext) {
-  }
-
-  @Override
   public void disposeUiResources() {
-    ActionManager.getInstance().removeAnActionListener(this);
+    Disposer.dispose(myListenerDisposable);
     myComponent = null;
     myText = null;
     

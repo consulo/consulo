@@ -30,7 +30,7 @@ import com.intellij.openapi.MnemonicHelper;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
@@ -138,7 +138,6 @@ public abstract class ChooseByNameBase {
   private final ListUpdater myListUpdater = new ListUpdater();
 
   private boolean myDisposedFlag = false;
-  private AsyncResult<Void> myPostponedOkAction;
 
   private final String[][] myNames = new String[2][];
   private volatile CalcElementsThread myCalcElementsThread;
@@ -162,14 +161,9 @@ public abstract class ChooseByNameBase {
   private ShortcutSet myCheckBoxShortcut;
   protected boolean myInitIsDone;
   static final boolean ourLoadNamesEachTime = FileBasedIndex.ourEnableTracingOfKeyHashToVirtualFileMapping;
-  private boolean myFixLostTyping = true;
   private boolean myAlwaysHasMore = false;
 
   public boolean checkDisposed() {
-    if (myDisposedFlag && myPostponedOkAction != null && !myPostponedOkAction.isProcessed()) {
-      myPostponedOkAction.setRejected();
-    }
-
     return myDisposedFlag;
   }
 
@@ -562,7 +556,6 @@ public abstract class ChooseByNameBase {
     myTextField.getDocument().addDocumentListener(new DocumentAdapter() {
       @Override
       protected void textChanged(DocumentEvent e) {
-        clearPostponedOkAction(false);
         rebuildList(false);
       }
     });
@@ -775,12 +768,10 @@ public abstract class ChooseByNameBase {
     if (checkDisposed()) return;
 
     if (closeForbidden(ok)) return;
-    if (postponeCloseWhenListReady(ok)) return;
 
     cancelListUpdater();
     close(ok);
 
-    clearPostponedOkAction(ok);
     myListModel.clear();
   }
 
@@ -795,35 +786,14 @@ public abstract class ChooseByNameBase {
     final CalcElementsThread calcElementsThread = myCalcElementsThread;
     if (calcElementsThread != null) {
       calcElementsThread.cancel();
-      backgroundCalculationFinished(Collections.emptyList(), 0);
+      myCalcElementsThread = null;
     }
     myListUpdater.cancelAll();
-  }
-
-  private boolean postponeCloseWhenListReady(boolean ok) {
-    if (!isToFixLostTyping()) return false;
-
-    final String text = getTrimmedText();
-    if (ok && myCalcElementsThread != null && !text.isEmpty()) {
-      myPostponedOkAction = new AsyncResult<Void>();
-      IdeFocusManager.getInstance(myProject).typeAheadUntil(myPostponedOkAction);
-      return true;
-    }
-
-    return false;
   }
 
   @Nonnull
   public String getTrimmedText() {
     return StringUtil.trimLeading(StringUtil.notNullize(myTextField.getText()));
-  }
-
-  public void setFixLostTyping(boolean fixLostTyping) {
-    myFixLostTyping = fixLostTyping;
-  }
-
-  protected boolean isToFixLostTyping() {
-    return myFixLostTyping && Registry.is("actionSystem.fixLostTyping");
   }
 
   @Nonnull
@@ -1050,7 +1020,6 @@ public abstract class ChooseByNameBase {
       myTextField.setForeground(JBColor.red);
       myListUpdater.cancelAll();
       hideList();
-      clearPostponedOkAction(false);
       return;
     }
 
@@ -1058,7 +1027,6 @@ public abstract class ChooseByNameBase {
     Object[] newElements = elements.toArray();
     List<ModelDiff.Cmd> commands = ModelDiff.createDiffCmds(myListModel, oldElements, newElements);
     if (commands == null) {
-      myListUpdater.doPostponedOkIfNeeded();
       return; // Nothing changed
     }
 
@@ -1175,9 +1143,7 @@ public abstract class ChooseByNameBase {
           if (!myCommands.isEmpty()) {
             myAlarm.addRequest(this, DELAY);
           }
-          else {
-            doPostponedOkIfNeeded();
-          }
+
           if (!checkDisposed()) {
             showList();
             myTextFieldPanel.repositionHint();
@@ -1191,31 +1157,6 @@ public abstract class ChooseByNameBase {
       }, DELAY);
     }
 
-    private void doPostponedOkIfNeeded() {
-      if (myPostponedOkAction != null) {
-        if (getChosenElement() != null) {
-          doClose(true);
-        }
-        clearPostponedOkAction(checkDisposed());
-      }
-    }
-  }
-
-  private void clearPostponedOkAction(boolean success) {
-    if (myPostponedOkAction != null) {
-      if (success) {
-        myPostponedOkAction.setDone();
-      }
-      else {
-        myPostponedOkAction.setRejected();
-      }
-    }
-
-    myPostponedOkAction = null;
-  }
-
-  public boolean hasPostponedAction() {
-    return myPostponedOkAction != null;
   }
 
   protected abstract void showList();

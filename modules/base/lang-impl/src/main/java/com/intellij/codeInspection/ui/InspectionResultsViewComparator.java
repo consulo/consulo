@@ -32,7 +32,6 @@ import com.intellij.codeInspection.offlineViewer.OfflineProblemDescriptorNode;
 import com.intellij.codeInspection.offlineViewer.OfflineRefElementNode;
 import com.intellij.codeInspection.reference.RefElement;
 import com.intellij.codeInspection.reference.RefEntity;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
@@ -42,6 +41,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiQualifiedNamedElement;
 import com.intellij.psi.util.PsiUtilCore;
+import consulo.logging.Logger;
 
 import java.util.Comparator;
 

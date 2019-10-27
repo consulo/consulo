@@ -21,7 +21,7 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializationException;
@@ -124,6 +124,12 @@ public class CodeInsightSettings implements PersistentStateComponent<Element>, C
           elementTag = "EXCLUDED_PACKAGE",
           elementValueAttribute = "NAME")
   public String[] EXCLUDED_PACKAGES = ArrayUtil.EMPTY_STRING_ARRAY;
+
+  public boolean TAB_EXITS_BRACKETS_AND_QUOTES = true;
+
+  public boolean isSelectAutopopupSuggestionsByChars() {
+    return SELECT_AUTOPOPUP_SUGGESTIONS_BY_CHARS;
+  }
 
   @Transient
   @Nonnull

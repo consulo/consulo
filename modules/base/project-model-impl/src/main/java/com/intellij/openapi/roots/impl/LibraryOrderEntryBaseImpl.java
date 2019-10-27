@@ -16,7 +16,6 @@
 
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
@@ -24,12 +23,14 @@ import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
+import consulo.logging.Logger;
 import consulo.roots.OrderEntryWithTracking;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.roots.orderEntry.OrderEntryType;
 import javax.annotation.Nonnull;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author dsl
@@ -100,7 +101,7 @@ public abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl imple
         return false;
       }
     }
-    final OrderRootType[] allTypes = OrderRootType.getAllTypes();
+    final List<OrderRootType> allTypes = OrderRootType.getAllTypes();
     for (OrderRootType type : allTypes) {
       final String[] orderedRootUrls1 = getUrls(type);
       final String[] orderedRootUrls2 = other.getUrls(type);

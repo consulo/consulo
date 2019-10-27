@@ -73,6 +73,11 @@ public abstract class EditorColorsManager {
     ApplicationManager.getApplication().getMessageBus().connect(disposable).subscribe(TOPIC, listener);
   }
 
+  @Nonnull
+  public EditorColorsScheme getSchemeForCurrentUITheme() {
+    return getGlobalScheme();
+  }
+
   public abstract boolean isUseOnlyMonospacedFonts();
   public abstract void setUseOnlyMonospacedFonts(boolean b);
 }

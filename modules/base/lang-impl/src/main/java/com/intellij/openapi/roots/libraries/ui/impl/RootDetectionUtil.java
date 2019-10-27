@@ -17,7 +17,7 @@ package com.intellij.openapi.roots.libraries.ui.impl;
 
 import com.intellij.ide.util.ChooseElementsDialog;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
@@ -60,9 +60,9 @@ public class RootDetectionUtil {
   @Nonnull
   public static List<OrderRoot> detectRoots(@Nonnull final Collection<VirtualFile> rootCandidates, @Nullable Component parentComponent,
                                             @Nullable Project project, @Nonnull final LibraryRootsDetector detector,
-                                            @Nonnull OrderRootType[] rootTypesAllowedToBeSelectedByUserIfNothingIsDetected) {
-    final List<OrderRoot> result = new ArrayList<OrderRoot>();
-    final List<SuggestedChildRootInfo> suggestedRoots = new ArrayList<SuggestedChildRootInfo>();
+                                            @Nonnull List<OrderRootType> rootTypesAllowedToBeSelectedByUserIfNothingIsDetected) {
+    final List<OrderRoot> result = new ArrayList<>();
+    final List<SuggestedChildRootInfo> suggestedRoots = new ArrayList<>();
     new Task.Modal(project, "Scanning for Roots", true) {
       @Override
       public void run(@Nonnull ProgressIndicator indicator) {
@@ -77,7 +77,7 @@ public class RootDetectionUtil {
             }
             else {
               for (DetectedLibraryRoot root : roots) {
-                final HashMap<LibraryRootType, String> names = new HashMap<LibraryRootType, String>();
+                final HashMap<LibraryRootType, String> names = new HashMap<>();
                 for (LibraryRootType type : root.getTypes()) {
                   final String typeName = detector.getRootTypeName(type);
                   LOG.assertTrue(typeName != null, "Unexpected root type " + type.getType().getName() + (type.isJarDirectory() ? " (jar directory)" : "") + ", " +
@@ -109,8 +109,8 @@ public class RootDetectionUtil {
       }
     }
 
-    if (result.isEmpty() && rootTypesAllowedToBeSelectedByUserIfNothingIsDetected.length > 0) {
-      Map<String, Pair<OrderRootType, Boolean>> types = new HashMap<String, Pair<OrderRootType, Boolean>>();
+    if (result.isEmpty() && !rootTypesAllowedToBeSelectedByUserIfNothingIsDetected.isEmpty()) {
+      Map<String, Pair<OrderRootType, Boolean>> types = new HashMap<>();
       for (OrderRootType type : rootTypesAllowedToBeSelectedByUserIfNothingIsDetected) {
         for (boolean isJarDirectory : new boolean[]{false, true}) {
           final String typeName = detector.getRootTypeName(new LibraryRootType(type, isJarDirectory));
@@ -122,7 +122,7 @@ public class RootDetectionUtil {
       if(types.isEmpty()) {
         return Collections.emptyList();
       }
-      List<String> names = new ArrayList<String>(types.keySet());
+      List<String> names = new ArrayList<>(types.keySet());
       String title = "Choose Categories of Selected Files";
       String description = XmlStringUtil.wrapInHtml(
               ApplicationNamesInfo.getInstance().getProductName() + " cannot determine what kind of files the chosen items contain.<br>" +

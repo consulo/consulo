@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package com.intellij.util.containers;
 
-import gnu.trove.TObjectHashingStrategy;
+import com.intellij.util.DeprecatedMethodException;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;
@@ -24,17 +24,20 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 
-public class ConcurrentHashSet<K> implements Set<K> {
+/**
+ * @deprecated use {@link ContainerUtil#newConcurrentSet()} instead
+ */
+@Deprecated
+public final class ConcurrentHashSet<K> implements Set<K> {
   private final ConcurrentMap<K, Boolean> map;
 
-  public ConcurrentHashSet(int initialCapacity) {
-    map = new ConcurrentHashMap<K, Boolean>(initialCapacity);
-  }
+  /**
+   * @deprecated use {@link ContainerUtil#newConcurrentSet()} instead
+   */
+  @Deprecated
   public ConcurrentHashSet() {
-    map = new ConcurrentHashMap<K, Boolean>();
-  }
-  public ConcurrentHashSet(TObjectHashingStrategy<K> hashingStrategy) {
-    map = new ConcurrentHashMap<K, Boolean>(hashingStrategy);
+    map = ContainerUtil.newConcurrentMap();
+    DeprecatedMethodException.report("Use com.intellij.util.containers.ContainerUtil.newConcurrentSet() instead");
   }
 
   @Override
@@ -66,27 +69,27 @@ public class ConcurrentHashSet<K> implements Set<K> {
 
   @Nonnull
   @Override
-  public <T> T[] toArray(T[] a) {
+  public <T> T[] toArray(@Nonnull T[] a) {
     return map.keySet().toArray(a);
   }
 
   @Override
-  public boolean add(K o) {
+  public boolean add(@Nonnull K o) {
     return map.putIfAbsent(o, Boolean.TRUE) == null;
   }
 
   @Override
-  public boolean remove(Object o) {
-    return map.keySet().remove(o);
+  public boolean remove(@Nonnull Object o) {
+    return map.remove(o) != null;
   }
 
   @Override
-  public boolean containsAll(Collection<?> c) {
+  public boolean containsAll(@Nonnull Collection<?> c) {
     return map.keySet().containsAll(c);
   }
 
   @Override
-  public boolean addAll(Collection<? extends K> c) {
+  public boolean addAll(@Nonnull Collection<? extends K> c) {
     boolean ret = false;
     for (K o : c) {
       ret |= add(o);
@@ -96,12 +99,12 @@ public class ConcurrentHashSet<K> implements Set<K> {
   }
 
   @Override
-  public boolean retainAll(Collection<?> c) {
+  public boolean retainAll(@Nonnull Collection<?> c) {
     return map.keySet().retainAll(c);
   }
 
   @Override
-  public boolean removeAll(Collection<?> c) {
+  public boolean removeAll(@Nonnull Collection<?> c) {
     return map.keySet().removeAll(c);
   }
 
@@ -113,6 +116,38 @@ public class ConcurrentHashSet<K> implements Set<K> {
   @Override
   public String toString() {
     return map.keySet().toString();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+
+    if (obj instanceof ConcurrentHashSet) {
+      return map.equals(((ConcurrentHashSet)obj).map);
+    }
+
+    if (!(obj instanceof Set)) {
+      return false;
+    }
+
+    Set<?> c = (Set<?>)obj;
+    if (c.size() != size()) {
+      return false;
+    }
+
+    try {
+      return containsAll(c);
+    }
+    catch (ClassCastException | NullPointerException ignored) {
+      return false;
+    }
+  }
+
+  @Override
+  public int hashCode() {
+    return map.hashCode();
   }
 }
 

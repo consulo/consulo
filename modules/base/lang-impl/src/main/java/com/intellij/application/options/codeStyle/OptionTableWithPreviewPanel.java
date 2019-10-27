@@ -16,7 +16,6 @@
 package com.intellij.application.options.codeStyle;
 
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.codeStyle.CustomCodeStyleSettings;
@@ -36,6 +35,7 @@ import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.logging.Logger;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import javax.annotation.Nonnull;

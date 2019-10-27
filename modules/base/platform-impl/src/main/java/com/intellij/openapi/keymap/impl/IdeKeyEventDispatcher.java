@@ -506,6 +506,10 @@ public final class IdeKeyEventDispatcher implements Disposable {
     return secondKeyStrokes;
   }
 
+  public static boolean hasMnemonicInWindow(Component focusOwner, KeyEvent event) {
+    return KeyEvent.KEY_TYPED == event.getID() && hasMnemonicInWindow(focusOwner, event.getKeyChar()) || KeyEvent.KEY_PRESSED == event.getID() && hasMnemonicInWindow(focusOwner, event.getKeyCode());
+  }
+
   private static boolean hasMnemonicInWindow(Component focusOwner, int keyCode) {
     if (keyCode == KeyEvent.VK_ALT || keyCode == 0) return false; // Optimization
     final Container container = getContainer(focusOwner);

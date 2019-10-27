@@ -20,12 +20,12 @@ import javax.annotation.Nonnull;
 import java.lang.ref.ReferenceQueue;
 import java.util.*;
 
-abstract class RefKeyRefValueHashMap<K,V> implements Map<K,V>{
-  private final RefHashMap<K, ValueReference<K,V>> myWeakKeyMap;
-  private final ReferenceQueue<V> myQueue = new ReferenceQueue<V>();
+abstract class RefKeyRefValueHashMap<K, V> implements Map<K, V> {
+  private final RefHashMap<K, ValueReference<K, V>> myMap;
+  private final ReferenceQueue<V> myQueue = new ReferenceQueue<>();
 
-  public RefKeyRefValueHashMap(@Nonnull RefHashMap<K, ValueReference<K, V>> weakKeyMap) {
-    myWeakKeyMap = weakKeyMap;
+  RefKeyRefValueHashMap(@Nonnull RefHashMap<K, ValueReference<K, V>> weakKeyMap) {
+    myMap = weakKeyMap;
   }
 
   protected interface ValueReference<K, V> {
@@ -34,20 +34,22 @@ abstract class RefKeyRefValueHashMap<K,V> implements Map<K,V>{
 
     V get();
   }
-  protected V dereference(ValueReference<K, V> reference) {
+
+  protected V dereference(ValueReference<K, ? extends V> reference) {
     return reference == null ? null : reference.get();
   }
 
-  protected abstract ValueReference<K,V> createValueReference(@Nonnull RefHashMap.Key<K> key, V referent, ReferenceQueue<? super V> q);
+  @Nonnull
+  protected abstract ValueReference<K, V> createValueReference(@Nonnull RefHashMap.Key<K> key, V referent, ReferenceQueue<? super V> q);
 
   // returns true if some refs were tossed
   boolean processQueue() {
-    boolean processed = myWeakKeyMap.processQueue();
-    while(true) {
-      ValueReference<K,V> ref = (ValueReference<K, V>)myQueue.poll();
+    boolean processed = myMap.processQueue();
+    while (true) {
+      ValueReference<K, V> ref = (ValueReference<K, V>)myQueue.poll();
       if (ref == null) break;
       RefHashMap.Key<K> weakKey = ref.getKey();
-      myWeakKeyMap.removeKey(weakKey);
+      myMap.removeKey(weakKey);
       processed = true;
     }
     return processed;
@@ -55,68 +57,68 @@ abstract class RefKeyRefValueHashMap<K,V> implements Map<K,V>{
 
   @Override
   public V get(Object key) {
-    ValueReference<K,V> ref = myWeakKeyMap.get(key);
+    ValueReference<K, V> ref = myMap.get(key);
     return dereference(ref);
   }
 
   @Override
   public V put(K key, V value) {
     processQueue();
-    RefHashMap.Key<K> weakKey = myWeakKeyMap.createKey(key);
+    RefHashMap.Key<K> weakKey = myMap.createKey(key);
     ValueReference<K, V> reference = createValueReference(weakKey, value, myQueue);
-    ValueReference<K,V> oldRef = myWeakKeyMap.putKey(weakKey, reference);
+    ValueReference<K, V> oldRef = myMap.putKey(weakKey, reference);
     return dereference(oldRef);
   }
 
   @Override
   public V remove(Object key) {
     processQueue();
-    ValueReference<K,V> ref = myWeakKeyMap.remove(key);
+    ValueReference<K, V> ref = myMap.remove(key);
     return dereference(ref);
   }
 
   @Override
   public void putAll(@Nonnull Map<? extends K, ? extends V> t) {
-    throw new RuntimeException("method not implemented");
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public void clear() {
-    myWeakKeyMap.clear();
+    myMap.clear();
     processQueue();
   }
 
   @Override
   public int size() {
-    return myWeakKeyMap.size(); //?
+    return myMap.size(); //?
   }
 
   @Override
   public boolean isEmpty() {
-    return myWeakKeyMap.isEmpty(); //?
+    return myMap.isEmpty();
   }
 
   @Override
   public boolean containsKey(Object key) {
-    return get(key) != null;
+    throw RefValueHashMap.pointlessContainsKey();
   }
 
   @Override
   public boolean containsValue(Object value) {
-    throw new RuntimeException("method not implemented");
+    throw RefValueHashMap.pointlessContainsValue();
   }
 
   @Nonnull
   @Override
   public Set<K> keySet() {
-    return myWeakKeyMap.keySet();
+    return myMap.keySet();
   }
 
   @Nonnull
   @Override
   public Collection<V> values() {
-    List<V> result = new ArrayList<V>();
-    final Collection<ValueReference<K, V>> refs = myWeakKeyMap.values();
+    List<V> result = new ArrayList<>();
+    final Collection<ValueReference<K, V>> refs = myMap.values();
     for (ValueReference<K, V> ref : refs) {
       final V value = ref.get();
       if (value != null) {
@@ -129,6 +131,6 @@ abstract class RefKeyRefValueHashMap<K,V> implements Map<K,V>{
   @Nonnull
   @Override
   public Set<Entry<K, V>> entrySet() {
-    throw new RuntimeException("method not implemented");
+    throw new UnsupportedOperationException();
   }
 }

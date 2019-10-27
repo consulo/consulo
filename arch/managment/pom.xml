@@ -32,8 +32,7 @@
     <jna.version>4.4.0</jna.version>
     <jdom.version>2.1</jdom.version>
     <trove4j.version>2.0</trove4j.version>
-    <log4j.version>1.2.17</log4j.version>
-    <log4j2.version>2.11.1</log4j2.version>
+    <log4j2.version>2.12.1</log4j2.version>
     <picocontainer.version>1.2</picocontainer.version>
     <guava.version>23.0</guava.version>
     <!--please exclude common logging library from dependency-->
@@ -47,6 +46,7 @@
     <servlet.version>3.1.0</servlet.version>
     <websocket.version>1.1</websocket.version>
     <vaadin.version>8.1-SNAPSHOT</vaadin.version>
+    <jaxb.version>2.3.2</jaxb.version>
 
     <build.number>SNAPSHOT</build.number>
     <dev.mode>true</dev.mode>
@@ -151,6 +151,11 @@
         <version>0.3</version>
       </dependency>
       <dependency>
+        <groupId>org.lz4</groupId>
+        <artifactId>lz4-java</artifactId>
+        <version>1.6.0</version>
+      </dependency>
+      <dependency>
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-api</artifactId>
         <version>${log4j2.version}</version>
@@ -159,11 +164,6 @@
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-core</artifactId>
         <version>${log4j2.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>log4j</groupId>
-        <artifactId>log4j</artifactId>
-        <version>${log4j.version}</version>
       </dependency>
       <dependency>
         <groupId>oro</groupId>
@@ -184,6 +184,12 @@
         <groupId>consulo.internal</groupId>
         <artifactId>jdom</artifactId>
         <version>${jdom.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>jaxen</groupId>
+            <artifactId>jaxen</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>consulo.internal</groupId>
@@ -203,6 +209,11 @@
             <artifactId>slf4j-api</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>jaxen</groupId>
+        <artifactId>jaxen</artifactId>
+        <version>1.2.0</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
@@ -312,29 +323,6 @@
         <version>3.7.4</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.ws.xmlrpc</groupId>
-        <artifactId>xmlrpc</artifactId>
-        <version>2.0.1</version>
-        <exclusions>
-          <exclusion>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
         <groupId>picocontainer</groupId>
         <artifactId>picocontainer</artifactId>
         <version>${picocontainer.version}</version>
@@ -362,6 +350,26 @@
         <groupId>io.netty</groupId>
         <artifactId>netty-common</artifactId>
         <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.xmlrpc</groupId>
+        <artifactId>xmlrpc-common</artifactId>
+        <version>3.1.3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.xmlrpc</groupId>
+        <artifactId>xmlrpc-server</artifactId>
+        <version>3.1.3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.xmlrpc</groupId>
+        <artifactId>xmlrpc-client</artifactId>
+        <version>3.1.3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.ws.commons</groupId>
+        <artifactId>ws-commons-util</artifactId>
+        <version>1.0.1</version>
       </dependency>
       <dependency>
         <groupId>io.netty</groupId>
@@ -453,6 +461,31 @@
         <artifactId>javax.websocket-api</artifactId>
         <version>${websocket.version}</version>
         <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>${jaxb.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>be.cyberelf.nanoxml</groupId>
+        <artifactId>nanoxml</artifactId>
+        <version>2.2.3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.glassfish.jaxb</groupId>
+        <artifactId>jaxb-runtime</artifactId>
+        <version>${jaxb.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.istack</groupId>
+        <artifactId>istack-commons-runtime</artifactId>
+        <version>3.0.8</version>
+      </dependency>
+      <dependency>
+        <groupId>jakarta.activation</groupId>
+        <artifactId>jakarta.activation-api</artifactId>
+        <version>1.2.1</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -562,10 +595,10 @@
           </execution>
         </executions>
       </plugin>
-      <!--<plugin>
+      <plugin>
         <groupId>consulo.maven</groupId>
         <artifactId>notnull-maven-plugin</artifactId>
-        <version>2.0-SNAPSHOT</version>
+        <version>2.1-SNAPSHOT</version>
         <executions>
           <execution>
             <id>production</id>
@@ -574,15 +607,15 @@
               <goal>instrument</goal>
             </goals>
           </execution>
-          <execution>
+          <!--<execution>
             <id>test</id>
             <phase>process-test-classes</phase>
             <goals>
               <goal>test-instrument</goal>
             </goals>
-          </execution>
+          </execution> -->
         </executions>
-      </plugin>-->
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>

@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.editor.ex.util;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
@@ -26,6 +25,7 @@ import com.intellij.openapi.editor.highlighter.HighlighterClient;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.psi.tree.IElementType;
+import consulo.logging.Logger;
 
 public class EmptyEditorHighlighter implements EditorHighlighter, PrioritizedDocumentListener {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.ex.util.EmptyEditorHighlighter");

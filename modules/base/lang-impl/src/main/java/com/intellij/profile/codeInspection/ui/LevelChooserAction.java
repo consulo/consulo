@@ -31,6 +31,7 @@ import com.intellij.profile.codeInspection.ui.table.SeverityRenderer;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
+import javax.swing.*;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -52,7 +53,7 @@ public abstract class LevelChooserAction extends ComboBoxAction implements DumbA
 
   @Nonnull
   @Override
-  public DefaultActionGroup createPopupActionGroup(DataContext context) {
+  public DefaultActionGroup createPopupActionGroup(JComponent component) {
     final DefaultActionGroup group = new DefaultActionGroup();
     for (final HighlightSeverity severity : getSeverities(mySeverityRegistrar)) {
       final HighlightSeverityAction action = new HighlightSeverityAction(severity);
@@ -66,7 +67,7 @@ public abstract class LevelChooserAction extends ComboBoxAction implements DumbA
       @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull final AnActionEvent e) {
-        final SeverityEditorDialog dlg = new SeverityEditorDialog(context.getData(CommonDataKeys.PROJECT), myChosen, mySeverityRegistrar);
+        final SeverityEditorDialog dlg = new SeverityEditorDialog(e.getProject(), myChosen, mySeverityRegistrar);
         if (dlg.showAndGet()) {
           final HighlightInfoType type = dlg.getSelectedType();
           if (type != null) {

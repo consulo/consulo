@@ -13,7 +13,7 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin>
+<consulo-plugin>
   <project-components>
     <component>
       <interface-class>com.intellij.xdebugger.XDebuggerManager</interface-class>
@@ -36,6 +36,8 @@
       <with attribute="implementationClass" implements="consulo.xdebugger.breakpoints.XLineBreakpointTypeResolver"/>
     </extensionPoint>
     <extensionPoint name="xdebugger.localAttachDebuggerProvider" interface="com.intellij.xdebugger.attach.XLocalAttachDebuggerProvider"/>
+    <extensionPoint name="xdebugger.attachDebuggerProvider" interface="com.intellij.xdebugger.attach.XAttachDebuggerProvider"/>
+    <extensionPoint name="xdebugger.attachHostProvider" interface="com.intellij.xdebugger.attach.XAttachHostProvider" />
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
@@ -68,4 +70,4 @@
 
     <copyPastePreProcessor implementation="com.intellij.xdebugger.impl.ui.DebuggerCopyPastePreprocessor"/>
   </extensions>
-</idea-plugin>
+</consulo-plugin>

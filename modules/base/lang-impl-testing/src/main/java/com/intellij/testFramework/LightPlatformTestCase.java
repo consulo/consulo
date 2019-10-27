@@ -40,7 +40,6 @@ import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.command.impl.UndoManagerImpl;
 import com.intellij.openapi.command.undo.UndoManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -70,10 +69,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.openapi.vfs.encoding.EncodingManagerImpl;
-import com.intellij.openapi.vfs.impl.VirtualFilePointerManagerImpl;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFSImpl;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.psi.*;
@@ -95,6 +92,7 @@ import com.intellij.util.indexing.IndexableFileSet;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredWriteAction;
+import consulo.logging.Logger;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
@@ -314,8 +312,6 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
         startupManager.startCacheUpdate();
       }
     }.execute().throwException();
-    // project creation may make a lot of pointers, do not regard them as leak
-    ((VirtualFilePointerManagerImpl)VirtualFilePointerManager.getInstance()).storePointers();
   }
 
   @RequiredUIAccess
@@ -349,8 +345,6 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     myThreadTracker = new ThreadTracker();
     ApplicationInfoImpl.setInPerformanceTest(isPerformanceTest());
     ModuleRootManager.getInstance(ourModule).orderEntries().getAllLibrariesAndSdkClassesRoots();
-    VirtualFilePointerManagerImpl filePointerManager = (VirtualFilePointerManagerImpl)VirtualFilePointerManager.getInstance();
-    filePointerManager.storePointers();
   }
 
   @Nonnull
@@ -518,7 +512,6 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     Project project = getProject();
     CodeStyleSettingsManager.getInstance(project).dropTemporarySettings();
     checkForSettingsDamage();
-    VirtualFilePointerManagerImpl filePointerManager = (VirtualFilePointerManagerImpl)VirtualFilePointerManager.getInstance();
     doTearDown(project, ourApplication, true);
 
     try {
@@ -526,8 +519,6 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     }
     finally {
       myThreadTracker.checkLeak();
-      InjectedLanguageManagerImpl.checkInjectorsAreDisposed(project);
-      filePointerManager.assertPointersAreDisposed();
     }
   }
 

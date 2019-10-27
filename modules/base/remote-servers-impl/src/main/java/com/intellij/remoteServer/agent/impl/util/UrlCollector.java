@@ -1,6 +1,6 @@
 package com.intellij.remoteServer.agent.impl.util;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 
 import java.io.File;
 import java.net.MalformedURLException;

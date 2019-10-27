@@ -23,7 +23,7 @@ import com.intellij.codeInspection.ex.ScopeToolState;
 import com.intellij.ide.DataManager;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
@@ -432,7 +432,7 @@ public class ScopesAndSeveritiesTable extends JBTable {
       };
       DataContext dataContext = DataManager.getInstance().getDataContext(myTable);
       final ListPopup popup = JBPopupFactory.getInstance()
-              .createActionGroupPopup(ScopesChooser.TITLE, scopesChooser.createPopupActionGroup(dataContext), dataContext,
+              .createActionGroupPopup(ScopesChooser.TITLE, scopesChooser.createPopupActionGroup(myTable), dataContext,
                                       JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
       final RelativePoint point = new RelativePoint(myTable, new Point(myTable.getWidth() - popup.getContent().getPreferredSize().width, 0));
       popup.show(point);

@@ -546,15 +546,17 @@ public abstract class VirtualFilePointerTest extends PlatformLangTestCase {
     final VirtualFile temp = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(ioTempDir);
     for (int i=0; i<100000; i++) {
       myVirtualFilePointerManager.create(VfsUtilCore.pathToUrl("/a/b/c/d/" + i), disposable, listener);
-      events.add(new VFileCreateEvent(this, temp, "xxx" + i, false, true));
+      String name = "xxx" + (i % 20);
+      events.add(new VFileCreateEvent(this, temp, name, true, null, null, true, null));
     }
     PlatformTestUtil.startPerformanceTest("vfp update", 10000, new ThrowableRunnable() {
       @Override
       public void run() throws Throwable {
         for (int i=0; i<100; i++) {
           // simulate VFS refresh events since launching the actual refresh is too slow
-          myVirtualFilePointerManager.before(events);
-          myVirtualFilePointerManager.after(events);
+          AsyncFileListener.ChangeApplier applier = myVirtualFilePointerManager.prepareChange(events);
+          applier.beforeVfsChange();
+          applier.afterVfsChange();
         }
       }
     }).assertTiming();

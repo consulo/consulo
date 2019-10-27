@@ -78,9 +78,8 @@ public class ActionCommand extends TypeCommand {
         IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(new Runnable() {
           @Override
           public void run() {
-            final Ref<AnActionListener> listener = new Ref<AnActionListener>();
-            listener.set(new AnActionListener.Adapter() {
-
+            final Ref<AnActionListener> listener = new Ref<>();
+            listener.set(new AnActionListener() {
               @Override
               public void beforeActionPerformed(final AnAction action, DataContext dataContext, AnActionEvent event) {
                 SwingUtilities.invokeLater(new Runnable() {

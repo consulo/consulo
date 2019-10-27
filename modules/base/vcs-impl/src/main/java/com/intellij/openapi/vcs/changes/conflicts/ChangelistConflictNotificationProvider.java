@@ -17,14 +17,12 @@ package com.intellij.openapi.vcs.changes.conflicts;
 
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.ChangeListManagerImpl;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -32,18 +30,11 @@ import javax.inject.Inject;
  */
 public class ChangelistConflictNotificationProvider implements EditorNotificationProvider<ChangelistConflictNotificationPanel>, DumbAware {
 
-  private static final Key<ChangelistConflictNotificationPanel> KEY = Key.create("changelistConflicts");
-
   private final ChangelistConflictTracker myConflictTracker;
 
   @Inject
   public ChangelistConflictNotificationProvider(ChangeListManager changeListManager) {
     myConflictTracker = ((ChangeListManagerImpl)changeListManager).getConflictTracker();
-  }
-
-  @Nonnull
-  public Key<ChangelistConflictNotificationPanel> getKey() {
-    return KEY;
   }
 
   @RequiredReadAction

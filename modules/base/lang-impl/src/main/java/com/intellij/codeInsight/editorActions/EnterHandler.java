@@ -17,10 +17,8 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DataContextWrapper;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
@@ -33,18 +31,16 @@ import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.lineIndent.LineIndentProvider;
 import com.intellij.psi.formatter.FormatterUtil;
 import com.intellij.psi.impl.source.PostprocessReformattingAspect;
-import com.intellij.psi.impl.source.codeStyle.lineIndent.FormatterBasedIndentAdjuster;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.text.CharArrayUtil;
-import consulo.annotations.RequiredWriteAction;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.inject.Inject;
 
 public class EnterHandler extends BaseEnterHandler {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.editorActions.EnterHandler");
@@ -52,7 +48,6 @@ public class EnterHandler extends BaseEnterHandler {
   private final EditorActionHandler myOriginalHandler;
   private final static Key<Language> CONTEXT_LANGUAGE = Key.create("EnterHandler.Language");
 
-  @Inject
   public EnterHandler(EditorActionHandler originalHandler) {
     super(true);
     myOriginalHandler = originalHandler;
@@ -63,7 +58,6 @@ public class EnterHandler extends BaseEnterHandler {
     return myOriginalHandler.isEnabled(editor, caret, dataContext);
   }
 
-  @RequiredWriteAction
   @Override
   public void executeWriteAction(final Editor editor, final Caret caret, final DataContext dataContext) {
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);
@@ -113,8 +107,7 @@ public class EnterHandler extends BaseEnterHandler {
     Ref<Integer> caretOffsetRef = new Ref<>(caretOffset);
     Ref<Integer> caretAdvanceRef = new Ref<>(0);
 
-    final EnterHandlerDelegate[] delegates = Extensions.getExtensions(EnterHandlerDelegate.EP_NAME);
-    for (EnterHandlerDelegate delegate : delegates) {
+    for (EnterHandlerDelegate delegate : EnterHandlerDelegate.EP_NAME.getExtensionList()) {
       EnterHandlerDelegate.Result result = delegate.preprocessEnter(file, editor, caretOffsetRef, caretAdvanceRef, dataContext, myOriginalHandler);
       if (caretOffsetRef.get() > document.getTextLength()) {
         throw new AssertionError("Wrong caret offset change by " + delegate);
@@ -156,14 +149,14 @@ public class EnterHandler extends BaseEnterHandler {
     final DoEnterAction action = new DoEnterAction(file, editor, document, dataContext, caretOffset, !insertSpace, caretAdvanceRef.get(), project);
     action.setForceIndent(forceIndent);
     action.run();
-    for (EnterHandlerDelegate delegate : delegates) {
+    for (EnterHandlerDelegate delegate : EnterHandlerDelegate.EP_NAME.getExtensionList()) {
       if (delegate.postProcessEnter(file, editor, dataContext) == EnterHandlerDelegate.Result.Stop) {
         break;
       }
     }
 
     if (settings.SMART_INDENT_ON_ENTER && action.isIndentAdjustmentNeeded()) {
-      FormatterBasedIndentAdjuster.scheduleIndentAdjustment(project, document, editor.getCaretModel().getOffset());
+      CodeStyleManager.getInstance(project).scheduleIndentAdjustment(document, editor.getCaretModel().getOffset());
     }
   }
 
@@ -175,7 +168,7 @@ public class EnterHandler extends BaseEnterHandler {
   }
 
   public static boolean isCommentComplete(PsiComment comment, CodeDocumentationAwareCommenter commenter, Editor editor) {
-    for (CommentCompleteHandler handler : Extensions.getExtensions(CommentCompleteHandler.EP_NAME)) {
+    for (CommentCompleteHandler handler : CommentCompleteHandler.EP_NAME.getExtensionList()) {
       if (handler.isApplicable(comment, commenter)) {
         return handler.isCommentComplete(comment, commenter, editor);
       }
@@ -324,7 +317,7 @@ public class EnterHandler extends BaseEnterHandler {
 
     private boolean myIsIndentAdjustmentNeeded = true;
 
-    public DoEnterAction(PsiFile file, Editor view, Document document, DataContext dataContext, int offset, boolean insertSpace, int caretAdvance, Project project) {
+    DoEnterAction(PsiFile file, Editor view, Document document, DataContext dataContext, int offset, boolean insertSpace, int caretAdvance, Project project) {
       myEditor = view;
       myFile = file;
       myDataContext = dataContext;
@@ -350,7 +343,7 @@ public class EnterHandler extends BaseEnterHandler {
         int lineStart = CharArrayUtil.shiftForward(chars, i, " \t");
         Language language = myDataContext instanceof UserDataHolder ? CONTEXT_LANGUAGE.get((UserDataHolder)myDataContext) : null;
         Commenter langCommenter = language != null ? LanguageCommenters.INSTANCE.forLanguage(language) : null;
-        CodeDocumentationUtil.CommentContext commentContext = CodeDocumentationUtil.tryParseCommentContext(langCommenter, chars, myOffset, lineStart);
+        CodeDocumentationUtil.CommentContext commentContext = CodeDocumentationUtil.tryParseCommentContext(langCommenter, chars, lineStart);
 
         PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(getProject());
         if (commentContext.docStart) {
@@ -371,12 +364,11 @@ public class EnterHandler extends BaseEnterHandler {
               if (isCommentComplete(comment, commentContext.commenter, myEditor)) {
                 if (myOffset >= commentEnd) {
                   commentContext.docAsterisk = false;
-                  commentContext.docStart = false;
                 }
                 else {
                   commentContext.docAsterisk = CodeStyleManager.getInstance(getProject()).getDocCommentSettings(myFile).isLeadingAsteriskEnabled();
-                  commentContext.docStart = false;
                 }
+                commentContext.docStart = false;
               }
               else {
                 generateJavadoc(commentContext.commenter);
@@ -387,37 +379,12 @@ public class EnterHandler extends BaseEnterHandler {
             commentContext.docStart = false;
           }
         }
-        else if (commentContext.cStyleStart) {
+        else if (commentContext.docAsterisk) {
           psiDocumentManager.commitDocument(myDocument);
           PsiElement element = myFile.findElementAt(commentContext.lineStart);
-          if (element instanceof PsiComment && commentContext.commenter.getBlockCommentTokenType() == ((PsiComment)element).getTokenType()) {
-            final PsiComment comment = (PsiComment)element;
-            int commentEnd = comment.getTextRange().getEndOffset();
-            if (myOffset >= commentEnd && myOffset < myFile.getTextRange().getEndOffset()) {
-              commentContext.docStart = false;
-            }
-            else {
-              if (isCommentComplete(comment, commentContext.commenter, myEditor)) {
-                if (myOffset >= commentEnd) {
-                  commentContext.docAsterisk = false;
-                  commentContext.docStart = false;
-                }
-                else {
-                  commentContext.docAsterisk = true;
-                  commentContext.docStart = false;
-                }
-              }
-              else {
-                final int currentEndOfLine = CharArrayUtil.shiftForwardUntil(chars, myOffset, "\n");
-                myDocument.insertString(currentEndOfLine, " " + commentContext.commenter.getBlockCommentSuffix());
-                int lstart = CharArrayUtil.shiftBackwardUntil(chars, myOffset, "\n");
-                myDocument.insertString(currentEndOfLine, chars.subSequence(lstart, myOffset));
-                psiDocumentManager.commitDocument(myDocument);
-              }
-            }
-          }
-          else {
-            commentContext.docStart = false;
+          PsiComment comment = PsiTreeUtil.getParentOfType(element, PsiComment.class, false);
+          if (comment == null || !isDocComment(comment, commentContext.commenter)) {
+            commentContext.docAsterisk = false; // don't process block comments
           }
         }
 
@@ -435,7 +402,7 @@ public class EnterHandler extends BaseEnterHandler {
 
         boolean docIndentApplied = false;
         CodeInsightSettings codeInsightSettings = CodeInsightSettings.getInstance();
-        if (codeInsightSettings.SMART_INDENT_ON_ENTER || myForceIndent || commentContext.docStart || commentContext.docAsterisk || commentContext.slashSlash) {
+        if (codeInsightSettings.SMART_INDENT_ON_ENTER || myForceIndent || commentContext.docStart || commentContext.docAsterisk) {
           final int offset = adjustLineIndentNoCommit(getLanguage(myDataContext), myDocument, myEditor, myOffset);
           if (offset >= 0) {
             myOffset = offset;
@@ -455,7 +422,7 @@ public class EnterHandler extends BaseEnterHandler {
           }
         }
 
-        if ((commentContext.docAsterisk || commentContext.docStart || commentContext.slashSlash) && !docIndentApplied) {
+        if ((commentContext.docAsterisk || commentContext.docStart) && !docIndentApplied) {
           if (myInsertSpace) {
             if (myOffset == myDocument.getTextLength()) {
               myDocument.insertString(myOffset, " ");
@@ -469,8 +436,8 @@ public class EnterHandler extends BaseEnterHandler {
           }
         }
 
-        if ((commentContext.docAsterisk || commentContext.slashSlash) && !commentContext.docStart) {
-          myCaretAdvance += commentContext.slashSlash ? commentContext.commenter.getLineCommentPrefix().trim().length() : 1;
+        if (commentContext.docAsterisk && !commentContext.docStart) {
+          myCaretAdvance += 1;
         }
       }
       catch (IncorrectOperationException e) {
@@ -693,25 +660,6 @@ public class EnterHandler extends BaseEnterHandler {
         else {
           docAsterisk = false;
         }
-      }
-      else if (linePrefix != null && atLineStart instanceof PsiComment && ((PsiComment)atLineStart).getTokenType() == commenter.getBlockCommentTokenType()) {
-        // Check if C-Style comment already uses asterisks.
-        boolean usesAstersk = false;
-        int commentLine = myDocument.getLineNumber(textRange.getStartOffset());
-        if (commentLine < myDocument.getLineCount() - 1 && textRange.getEndOffset() >= myOffset) {
-          int nextLineOffset = myDocument.getLineStartOffset(commentLine + 1);
-          if (nextLineOffset < textRange.getEndOffset()) {
-            final CharSequence chars = myDocument.getCharsSequence();
-            nextLineOffset = CharArrayUtil.shiftForward(chars, nextLineOffset, " \t");
-            usesAstersk = CharArrayUtil.regionMatches(chars, nextLineOffset, linePrefix);
-          }
-        }
-        if (usesAstersk) {
-          removeTrailingSpaces(myDocument, myOffset);
-          myDocument.insertString(myOffset, linePrefix + " ");
-          PsiDocumentManager.getInstance(getProject()).commitAllDocuments();
-        }
-        docAsterisk = usesAstersk;
       }
       else {
         docAsterisk = false;

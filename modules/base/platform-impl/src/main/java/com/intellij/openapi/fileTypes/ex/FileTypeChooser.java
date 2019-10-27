@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.fileTypes.ex;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.pluginsAdvertisement.PluginsAdvertiser;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileTypes.*;
@@ -34,13 +33,13 @@ import com.intellij.ui.ScrollingUtil;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.FunctionUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -59,7 +58,7 @@ public class FileTypeChooser extends DialogWrapper {
   private JRadioButton myInstallPluginFromRepository;
   private final String myFileName;
 
-  private final Set<IdeaPluginDescriptor> myFeaturePlugins;
+  private final Set<PluginDescriptor> myFeaturePlugins;
 
   private FileTypeChooser(@Nonnull List<String> patterns, @Nonnull String fileName) {
     super(true);
@@ -86,7 +85,7 @@ public class FileTypeChooser extends DialogWrapper {
     myPattern.setModel(new CollectionComboBoxModel<>(ContainerUtil.map(patterns, FunctionUtil.<String>id()), patterns.get(0)));
 
     UnknownExtension fileFeatureForChecking = new UnknownExtension(FileTypeFactory.FILE_TYPE_FACTORY_EP.getName(), fileName);
-    List<IdeaPluginDescriptor> allPlugins = PluginsAdvertiserHolder.getLoadedPluginDescriptors();
+    List<PluginDescriptor> allPlugins = PluginsAdvertiserHolder.getLoadedPluginDescriptors();
     myFeaturePlugins = PluginsAdvertiser.findByFeature(allPlugins, fileFeatureForChecking);
 
     if (!myFeaturePlugins.isEmpty()) {

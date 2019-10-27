@@ -1,6 +1,6 @@
 package com.intellij.remoteServer.agent.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.remoteServer.agent.annotation.AsyncCall;
 import com.intellij.remoteServer.agent.annotation.ChildCall;
 import com.intellij.remoteServer.agent.annotation.FinalCall;

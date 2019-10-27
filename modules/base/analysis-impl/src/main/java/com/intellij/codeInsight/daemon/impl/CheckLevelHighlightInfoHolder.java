@@ -23,16 +23,16 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
-import java.util.Collections;
 
 public class CheckLevelHighlightInfoHolder extends HighlightInfoHolder {
   private final HighlightInfoHolder myHolder;
   private PsiElement myLevel;
 
-  public CheckLevelHighlightInfoHolder(PsiFile file, HighlightInfoHolder holder) {
-    super(file, Collections.emptyList());
+  public CheckLevelHighlightInfoHolder(@Nonnull PsiFile file, @Nonnull HighlightInfoHolder holder) {
+    super(file);
     myHolder = holder;
   }
 
@@ -60,10 +60,10 @@ public class CheckLevelHighlightInfoHolder extends HighlightInfoHolder {
   }
 
   @Override
-  public boolean add(@javax.annotation.Nullable HighlightInfo info) {
+  public boolean add(@Nullable HighlightInfo info) {
     if (info == null) return false;
     PsiElement psiElement = info.psiElement;
-    if (psiElement != null && !PsiTreeUtil.isAncestor(myLevel, psiElement,false)) {
+    if (psiElement != null && !PsiTreeUtil.isAncestor(myLevel, psiElement, false)) {
       throw new RuntimeException("Info: '" + info + "' reported for the element '" + psiElement + "'; but it was at the level " + myLevel);
     }
     return myHolder.add(info);
@@ -75,7 +75,7 @@ public class CheckLevelHighlightInfoHolder extends HighlightInfoHolder {
   }
 
   @Override
-  public boolean addAll(Collection<? extends HighlightInfo> highlightInfos) {
+  public boolean addAll(@Nonnull Collection<? extends HighlightInfo> highlightInfos) {
     return myHolder.addAll(highlightInfos);
   }
 
@@ -84,6 +84,7 @@ public class CheckLevelHighlightInfoHolder extends HighlightInfoHolder {
     return myHolder.size();
   }
 
+  @Nonnull
   @Override
   public HighlightInfo get(int i) {
     return myHolder.get(i);

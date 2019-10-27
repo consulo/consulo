@@ -15,7 +15,6 @@
  */
 package com.intellij.ide.customize;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -23,10 +22,11 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.JBCardLayout;
 import com.intellij.util.containers.MultiMap;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.ide.customize.CustomizeDownloadAndStartStepPanel;
 import consulo.ide.customize.CustomizeSelectTemplateStepPanel;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -43,7 +43,7 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
 
   private final JBCardLayout myCardLayout = new JBCardLayout();
   protected final List<AbstractCustomizeWizardStep> mySteps = new ArrayList<AbstractCustomizeWizardStep>();
-  private final MultiMap<String, IdeaPluginDescriptor> myPluginDescriptors;
+  private final MultiMap<String, PluginDescriptor> myPluginDescriptors;
   private final MultiMap<String, String> myPredefinedTemplateSets;
   private int myIndex = 0;
   private final JLabel myNavigationLabel = new JLabel();
@@ -53,7 +53,7 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
   private final JPanel myButtonWrapper = new JPanel(myButtonWrapperLayout);
   private JPanel myContentPanel;
 
-  public CustomizeIDEWizardDialog(MultiMap<String, IdeaPluginDescriptor> pluginDescriptors, MultiMap<String, String> predefinedTemplateSets) {
+  public CustomizeIDEWizardDialog(MultiMap<String, PluginDescriptor> pluginDescriptors, MultiMap<String, String> predefinedTemplateSets) {
     super(null);
     myPluginDescriptors = pluginDescriptors;
     myPredefinedTemplateSets = predefinedTemplateSets;

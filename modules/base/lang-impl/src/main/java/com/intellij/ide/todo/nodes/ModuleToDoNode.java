@@ -19,47 +19,40 @@ package com.intellij.ide.todo.nodes;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.projectView.PresentationData;
-import com.intellij.ide.todo.HighlightedRegionProvider;
 import com.intellij.ide.todo.TodoTreeBuilder;
 import com.intellij.ide.todo.TodoTreeStructure;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.ide.CopyPasteManager;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.ui.HighlightedRegion;
-import com.intellij.usageView.UsageTreeColors;
-import com.intellij.usageView.UsageTreeColorsScheme;
-import consulo.annotations.RequiredReadAction;
+import com.intellij.psi.search.TodoItem;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-public class ModuleToDoNode extends BaseToDoNode<Module> implements HighlightedRegionProvider {
-  private final ArrayList<HighlightedRegion> myHighlightedRegions;
+public class ModuleToDoNode extends BaseToDoNode<Module> {
 
-  public ModuleToDoNode(Project project, Module value, TodoTreeBuilder builder) {
+  public ModuleToDoNode(Project project, @Nonnull Module value, TodoTreeBuilder builder) {
     super(project, value, builder);
-    myHighlightedRegions = new ArrayList<HighlightedRegion>(2);
   }
 
   @Override
   @Nonnull
   public Collection<AbstractTreeNode> getChildren() {
-    ArrayList<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
+    ArrayList<AbstractTreeNode> children = new ArrayList<>();
     if (myToDoSettings.getIsPackagesShown()) {
-      TodoTreeHelper.addPackagesToChildren(getProject(), children, getValue(), myBuilder);
+      TodoTreeHelper.addPackagesToChildren(children, getProject(), getValue(), myBuilder);
     }
     else {
-      for (Iterator i = myBuilder.getAllFiles(); i.hasNext();) {
+      for (Iterator i = myBuilder.getAllFiles(); i.hasNext(); ) {
         final PsiFile psiFile = (PsiFile)i.next();
         if (psiFile == null) { // skip invalid PSI files
           continue;
@@ -77,29 +70,30 @@ public class ModuleToDoNode extends BaseToDoNode<Module> implements HighlightedR
 
   }
 
+  @Override
+  public boolean contains(Object element) {
+    if (element instanceof TodoItem) {
+      Module module = ModuleUtilCore.findModuleForFile(((TodoItem)element).getFile());
+      return super.canRepresent(module);
+    }
+
+    if (element instanceof PsiElement) {
+      Module module = ModuleUtilCore.findModuleForPsiElement((PsiElement)element);
+      return super.canRepresent(module);
+    }
+    return super.canRepresent(element);
+  }
+
   private TodoTreeStructure getStructure() {
     return myBuilder.getTodoTreeStructure();
   }
 
   @Override
-  public void update(PresentationData presentation) {
+  public void update(@Nonnull PresentationData presentation) {
+    if (DumbService.getInstance(getProject()).isDumb()) return;
     String newName = getValue().getName();
-    int nameEndOffset = newName.length();
     int todoItemCount = getTodoItemCount(getValue());
-    int fileCount = getFileCount(getValue());
-    newName = IdeBundle.message("node.todo.group", newName, todoItemCount, fileCount);
-    myHighlightedRegions.clear();
-
-    TextAttributes textAttributes = new TextAttributes();
-
-    if (CopyPasteManager.getInstance().isCutElement(getValue())) {
-      textAttributes.setForegroundColor(CopyPasteManager.CUT_COLOR);
-    }
-    myHighlightedRegions.add(new HighlightedRegion(0, nameEndOffset, textAttributes));
-
-    EditorColorsScheme colorsScheme = UsageTreeColorsScheme.getInstance().getScheme();
-    myHighlightedRegions.add(
-      new HighlightedRegion(nameEndOffset, newName.length(), colorsScheme.getAttributes(UsageTreeColors.NUMBER_OF_USAGES)));
+    presentation.setLocationString(IdeBundle.message("node.todo.group", todoItemCount));
     presentation.setIcon(AllIcons.Nodes.Module);
     presentation.setPresentableText(newName);
   }
@@ -110,15 +104,11 @@ public class ModuleToDoNode extends BaseToDoNode<Module> implements HighlightedR
   }
 
   @Override
-  public ArrayList<HighlightedRegion> getHighlightedRegions() {
-    return myHighlightedRegions;
-  }
-
-  @Override
-  @RequiredReadAction
   public int getFileCount(Module module) {
+    Iterator<PsiFile> iterator = myBuilder.getFiles(module);
     int count = 0;
-    for(PsiFile psiFile : myBuilder.getFiles(module)) {
+    while (iterator.hasNext()) {
+      PsiFile psiFile = iterator.next();
       if (getStructure().accept(psiFile)) {
         count++;
       }
@@ -127,11 +117,12 @@ public class ModuleToDoNode extends BaseToDoNode<Module> implements HighlightedR
   }
 
   @Override
-  @RequiredReadAction
-  public int getTodoItemCount(final Module module) {
+  public int getTodoItemCount(final Module val) {
+    Iterator<PsiFile> iterator = myBuilder.getFiles(val);
     int count = 0;
-    for(PsiFile psiFile : myBuilder.getFiles(module)) {
-      count += ApplicationManager.getApplication().runReadAction((Computable<Integer>)() -> getTreeStructure().getTodoItemCount(psiFile));
+    while (iterator.hasNext()) {
+      final PsiFile psiFile = iterator.next();
+      count += ReadAction.compute(() -> getTreeStructure().getTodoItemCount(psiFile));
     }
     return count;
   }

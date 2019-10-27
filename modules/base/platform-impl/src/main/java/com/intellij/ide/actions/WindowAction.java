@@ -17,13 +17,12 @@ package com.intellij.ide.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFrame;
 import consulo.awt.TargetAWT;
-import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -31,45 +30,49 @@ import java.awt.*;
 
 public abstract class WindowAction extends AnAction implements DumbAware {
 
+  public static void setEnabledFor(Window window, boolean enabled) {
+    JRootPane root = getRootPane(window);
+    if (root != null) root.putClientProperty(NO_WINDOW_ACTIONS, !enabled);
+  }
+
+  private static boolean isEnabledFor(Window window) {
+    if (window == null) return false;
+    consulo.ui.Window uiWindow = TargetAWT.from(window);
+    if(uiWindow != null && uiWindow.getUserData(IdeFrame.KEY) != null) return false;
+    if (window instanceof Dialog && !((Dialog)window).isResizable()) return false;
+    JRootPane root = getRootPane(window);
+    if (root == null) return true;
+    Object property = root.getClientProperty(NO_WINDOW_ACTIONS);
+    return property == null || !property.toString().equals("true");
+  }
+
+  private static JRootPane getRootPane(Window window) {
+    if (window instanceof RootPaneContainer) {
+      RootPaneContainer container = (RootPaneContainer)window;
+      return container.getRootPane();
+    }
+    return null;
+  }
+
   public static final String NO_WINDOW_ACTIONS = "no.window.actions";
 
   protected Window myWindow;
   private static JLabel mySizeHelper = null;
 
-  WindowAction() {
+  {
     setEnabledInModalContext(true);
   }
 
-  @RequiredUIAccess
   @Override
-  public final void update(@Nonnull AnActionEvent e) {
-    consulo.ui.Window focusedWindow = consulo.ui.Window.getFocusedWindow();
-    e.getPresentation().setEnabled(focusedWindow != null && focusedWindow.getUserData(IdeFrame.KEY) == null);
-
-    Window awtWindow = TargetAWT.to(focusedWindow);
-    Object noActions = null;
-    if (awtWindow instanceof JDialog) {
-      noActions = ((JDialog)awtWindow).getRootPane().getClientProperty(NO_WINDOW_ACTIONS);
+  public final void update(@Nonnull AnActionEvent event) {
+    Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
+    boolean enabled = isEnabledFor(window);
+    if (enabled && Registry.is("no.window.actions.in.editor")) {
+      Editor editor = event.getData(CommonDataKeys.EDITOR);
+      enabled = editor == null || !editor.getContentComponent().hasFocus();
     }
-    else if (awtWindow instanceof JFrame) {
-      noActions = ((JFrame)awtWindow).getRootPane().getClientProperty(NO_WINDOW_ACTIONS);
-    }
-
-    if (noActions != null && "true".equalsIgnoreCase(noActions.toString())) {
-      e.getPresentation().setEnabled(false);
-    }
-
-    final Editor editor = e.getData(PlatformDataKeys.EDITOR);
-    if (editor != null && editor.getContentComponent().hasFocus()) {
-      e.getPresentation().setEnabled(false);
-    }
-
-    if (e.getPresentation().isEnabled()) {
-      myWindow = awtWindow;
-    }
-    else {
-      myWindow = null;
-    }
+    event.getPresentation().setEnabled(enabled);
+    myWindow = enabled ? window : null;
   }
 
   public abstract static class BaseSizeAction extends WindowAction {
@@ -82,7 +85,6 @@ public abstract class WindowAction extends AnAction implements DumbAware {
       myPositive = positive;
     }
 
-    @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
       if (mySizeHelper == null) {
@@ -91,7 +93,7 @@ public abstract class WindowAction extends AnAction implements DumbAware {
 
       int baseValue = myHorizontal ? mySizeHelper.getPreferredSize().width : mySizeHelper.getPreferredSize().height;
 
-      int inc = baseValue * (myHorizontal ? Registry.intValue("ide.windowSystem.hScrollChars") : Registry.intValue("ide.windowSystem.vScrollChars"));
+      int inc = baseValue * Registry.intValue(myHorizontal ? "ide.windowSystem.hScrollChars" : "ide.windowSystem.vScrollChars");
       if (!myPositive) {
         inc = -inc;
       }

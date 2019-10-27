@@ -23,11 +23,14 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.util.DimensionService;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.WindowStateService;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
-import com.intellij.ui.*;
+import com.intellij.ui.AppUIUtil;
+import com.intellij.ui.BalloonLayout;
+import com.intellij.ui.DesktopBalloonLayoutImpl;
+import com.intellij.ui.ScreenUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
 import consulo.application.impl.FrameTitleUtil;
@@ -71,7 +74,7 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
     SwingUIDecorator.apply(SwingUIDecorator::decorateWindowTitle, rootPane);
     setSize(TargetAWT.to(WelcomeFrameManager.getDefaultWindowSize()));
     setResizable(false);
-    Point location = DimensionService.getInstance().getLocationNoRealKey(WelcomeFrameManager.DIMENSION_KEY);
+    Point location = WindowStateService.getInstance().getLocation(WelcomeFrameManager.DIMENSION_KEY);
     Rectangle screenBounds = ScreenUtil.getScreenRectangle(location != null ? location : new Point(0, 0));
     setLocation(new Point(screenBounds.x + (screenBounds.width - getWidth()) / 2, screenBounds.y + (screenBounds.height - getHeight()) / 3));
 
@@ -100,7 +103,7 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
 
   public static void saveLocation(Rectangle location) {
     Point middle = new Point(location.x + location.width / 2, location.y = location.height / 2);
-    DimensionService.getInstance().setLocationNoRealKey(WelcomeFrameManager.DIMENSION_KEY, middle);
+    WindowStateService.getInstance().putLocation(WelcomeFrameManager.DIMENSION_KEY, middle);
   }
 
   public void setDefaultTitle() {
@@ -133,9 +136,6 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
       ((DesktopBalloonLayoutImpl)myBalloonLayout).dispose();
       myBalloonLayout = null;
     }
-
-    // open project from welcome screen show progress dialog and call FocusTrackback.register()
-    FocusTrackback.release(this);
 
     myClearInstance.run();
   }

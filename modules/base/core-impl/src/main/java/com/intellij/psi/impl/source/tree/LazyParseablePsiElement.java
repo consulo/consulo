@@ -24,7 +24,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectCoreUtil;
 import com.intellij.psi.*;
@@ -38,13 +37,14 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.util.PsiTreeUtil;import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import consulo.lang.LanguageVersion;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.logging.Logger;
 
-import java.lang.reflect.Array;
+import javax.annotation.Nonnull;
+
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,7 +84,7 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
     for (PsiElement cur = getFirstChild(); cur != null; cur = cur.getNextSibling()) {
       if (aClass.isInstance(cur)) result.add((T)cur);
     }
-    return result.toArray((T[])Array.newInstance(aClass, result.size()));
+    return result.toArray(ArrayUtil.newArray(aClass, result.size()));
   }
 
   @Override
@@ -203,14 +203,12 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  public final PsiElement addRangeBefore(@Nonnull PsiElement first, @Nonnull PsiElement last, PsiElement anchor)
-          throws IncorrectOperationException {
+  public final PsiElement addRangeBefore(@Nonnull PsiElement first, @Nonnull PsiElement last, PsiElement anchor) throws IncorrectOperationException {
     return SharedImplUtil.addRange(this, first, last, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.TRUE);
   }
 
   @Override
-  public final PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor)
-          throws IncorrectOperationException {
+  public final PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor) throws IncorrectOperationException {
     return SharedImplUtil.addRange(this, first, last, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.FALSE);
   }
 
@@ -248,13 +246,11 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  public boolean processDeclarations(@Nonnull PsiScopeProcessor processor,
-                                     @Nonnull ResolveState state,
-                                     PsiElement lastParent,
-                                     @Nonnull PsiElement place) {
+  public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent, @Nonnull PsiElement place) {
     return true;
   }
 
+  @Override
   public String toString() {
     return "PsiElement" + "(" + getElementType().toString() + ")";
   }

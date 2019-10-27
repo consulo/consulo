@@ -235,6 +235,6 @@ public class ExistingLibraryEditor extends LibraryEditorBase implements Disposab
 
   @Override
   public Collection<OrderRootType> getOrderRootTypes() {
-    return Arrays.asList(OrderRootType.getAllTypes());
+    return OrderRootType.getAllTypes();
   }
 }

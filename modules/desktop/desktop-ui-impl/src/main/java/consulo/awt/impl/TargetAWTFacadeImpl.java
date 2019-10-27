@@ -15,12 +15,13 @@
  */
 package consulo.awt.impl;
 
-import com.intellij.idea.Main;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.BitUtil;
 import com.intellij.util.ui.JBUI;
 import consulo.awt.TargetAWT;
 import consulo.awt.TargetAWTFacade;
+import consulo.container.StartupError;
+import consulo.logging.Logger;
 import consulo.ui.Component;
 import consulo.ui.Window;
 import consulo.ui.*;
@@ -43,6 +44,10 @@ import java.awt.*;
  * @since 2019-02-16
  */
 public class TargetAWTFacadeImpl implements TargetAWTFacade {
+  static class LoggerHolder {
+    static final Logger LOG = Logger.getInstance(TargetAWTFacadeImpl.class);
+  }
+
   private final static String heavyWeightWindow = "javax.swing.Popup$HeavyWeightWindow";
 
   static class StubWindow extends WindowOverAWTWindow {
@@ -143,7 +148,7 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
   @Override
   @Contract("null -> null")
   public Window from(@Nullable java.awt.Window window) {
-    if (Main.hasStartUpError()) {
+    if (StartupError.hasStartupError) {
       return null;
     }
 
@@ -192,7 +197,9 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
     builder.append(", window.toString(): ");
     builder.append(window.toString());
     builder.append(" is not FromSwingWindowWrapper");
-    throw new IllegalArgumentException(builder.toString());
+
+    LoggerHolder.LOG.warn(new IllegalArgumentException(builder.toString()));
+    return null;
   }
 
   @Override

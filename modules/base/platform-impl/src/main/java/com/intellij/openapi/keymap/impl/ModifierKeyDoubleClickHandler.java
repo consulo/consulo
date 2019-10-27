@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Clock;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Disposer;
@@ -108,7 +108,7 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
                              boolean skipIfActionHasShortcut) {
     final MyDispatcher dispatcher = new MyDispatcher(actionId, modifierKeyCode, actionKeyCode, skipIfActionHasShortcut);
     MyDispatcher oldDispatcher = myDispatchers.put(actionId, dispatcher);
-    Platform.onlyAtDesktop(() -> IdeEventQueue.getInstance().addDispatcher(dispatcher, dispatcher));
+    Platform.runIfDesktopPlatform(() -> IdeEventQueue.getInstance().addDispatcher(dispatcher, dispatcher));
     myActionManager.addAnActionListener(dispatcher, dispatcher);
     if (oldDispatcher != null) {
       Disposer.dispose(oldDispatcher);

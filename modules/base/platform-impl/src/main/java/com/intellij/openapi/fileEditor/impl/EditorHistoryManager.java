@@ -19,8 +19,10 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.*;
-import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.components.StoragePathMacros;
+import consulo.logging.Logger;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -37,12 +39,15 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.annotations.RequiredWriteAction;
+import consulo.component.PersistentStateComponentWithUIState;
+import consulo.ui.RequiredUIAccess;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -50,7 +55,7 @@ import java.util.List;
 
 @State(name = "EditorHistoryManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 @Singleton
-public final class EditorHistoryManager implements PersistentStateComponent<Element>, Disposable {
+public final class EditorHistoryManager implements PersistentStateComponentWithUIState<Element, HistoryEntry[]>, Disposable {
   private static final Logger LOG = Logger.getInstance(EditorHistoryManager.class);
 
   private final Project myProject;
@@ -322,10 +327,9 @@ public final class EditorHistoryManager implements PersistentStateComponent<Elem
     });
   }
 
+  @RequiredUIAccess
   @Override
-  public synchronized Element getState() {
-    Element element = new Element("state");
-    // update history before saving
+  public HistoryEntry[] getStateFromUI() {
     final VirtualFile[] openFiles = FileEditorManager.getInstance(myProject).getOpenFiles();
     for (int i = openFiles.length - 1; i >= 0; i--) {
       final VirtualFile file = openFiles[i];
@@ -334,8 +338,26 @@ public final class EditorHistoryManager implements PersistentStateComponent<Elem
         updateHistoryEntry(file, false);
       }
     }
+    return myEntriesList.toArray(new HistoryEntry[myEntriesList.size()]);
+  }
 
-    for (final HistoryEntry entry : myEntriesList) {
+  @RequiredWriteAction
+  @Override
+  public Element getState(HistoryEntry[] entries) {
+    /* update history before saving
+    moved to getStateFromUI
+
+    final VirtualFile[] openFiles = FileEditorManager.getInstance(myProject).getOpenFiles();
+    for (int i = openFiles.length - 1; i >= 0; i--) {
+      final VirtualFile file = openFiles[i];
+      // we have to update only files that are in history
+      if (getEntry(file) != null) {
+        updateHistoryEntry(file, false);
+      }
+    }*/
+
+    Element element = new Element("state");
+    for (final HistoryEntry entry : entries) {
       entry.writeExternal(element, myProject);
     }
     return element;

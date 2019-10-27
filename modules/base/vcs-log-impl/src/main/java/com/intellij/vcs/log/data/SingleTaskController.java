@@ -15,9 +15,10 @@
  */
 package com.intellij.vcs.log.data;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

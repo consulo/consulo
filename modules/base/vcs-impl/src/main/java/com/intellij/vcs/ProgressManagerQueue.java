@@ -16,9 +16,10 @@
 package com.intellij.vcs;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.project.Project;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.util.ArrayDeque;

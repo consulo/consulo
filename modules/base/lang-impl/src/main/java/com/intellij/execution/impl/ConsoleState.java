@@ -22,7 +22,9 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 
 public abstract class ConsoleState {
-  public abstract ConsoleState attachTo(ConsoleViewImpl console, ProcessHandler processHandler);
+  @Nonnull
+  public abstract ConsoleState attachTo(@Nonnull ConsoleViewImpl console, ProcessHandler processHandler);
+
   @Nonnull
   public abstract ConsoleState dispose();
 
@@ -34,7 +36,15 @@ public abstract class ConsoleState {
     return false;
   }
 
-  public void sendUserInput(final String input) throws IOException {}
+  /**
+   * @return whether the given line should be folded as a command line if it's first in the console
+   */
+  public boolean isCommandLine(@Nonnull String line) {
+    return false;
+  }
+
+  public void sendUserInput(@Nonnull String input) throws IOException {
+  }
 
   public abstract static class NotStartedStated extends ConsoleState {
     @Nonnull

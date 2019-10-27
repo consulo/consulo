@@ -15,7 +15,6 @@
  */
 package consulo.ui.migration.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.reference.SoftReference;
@@ -32,6 +31,7 @@ import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.JBImageIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.logging.Logger;
 import consulo.ui.desktop.internal.image.DesktopLazyImageImpl;
 import consulo.desktop.util.awt.UIModificationTracker;
 import consulo.ui.migration.IconLoaderFacade;
@@ -72,7 +72,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
   /**
    * This cache contains mapping between icons and disabled icons.
    */
-  private final Map<Icon, Icon> myIcon2DisabledIcon = new WeakHashMap<>(200);
+  private final Map<Icon, Icon> myIcon2DisabledIcon = ContainerUtil.createWeakMap(200);
 
   private static final ImageIcon EMPTY_ICON = new ImageIcon(UIUtil.createImage(1, 1, BufferedImage.TYPE_3BYTE_BGR)) {
     @NonNls

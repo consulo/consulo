@@ -32,7 +32,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
@@ -679,7 +679,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
     @Override
     @Nonnull
-    public final DefaultActionGroup createPopupActionGroup(DataContext context) {
+    public final DefaultActionGroup createPopupActionGroup(JComponent component) {
       final DefaultActionGroup group = new DefaultActionGroup();
 
       for (String name : getValidScopeNames()) {

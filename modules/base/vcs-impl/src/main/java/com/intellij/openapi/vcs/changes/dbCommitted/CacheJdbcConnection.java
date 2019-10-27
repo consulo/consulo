@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.dbCommitted;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.util.ThrowableConsumer;
 import com.intellij.util.ThrowableConvertor;

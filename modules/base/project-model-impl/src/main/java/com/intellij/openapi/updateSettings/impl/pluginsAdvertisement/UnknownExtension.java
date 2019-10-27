@@ -15,12 +15,18 @@
  */
 package com.intellij.openapi.updateSettings.impl.pluginsAdvertisement;
 
+import com.intellij.openapi.extensions.ExtensionPointName;
+
 /**
  * User: anna
  */
 public class UnknownExtension {
   private final String myExtensionKey;
   private final String myValue;
+
+  public UnknownExtension(ExtensionPointName<?> pointName, String value) {
+    this(pointName.getName(), value);
+  }
 
   public UnknownExtension(String extensionKey, String value) {
     myExtensionKey = extensionKey;

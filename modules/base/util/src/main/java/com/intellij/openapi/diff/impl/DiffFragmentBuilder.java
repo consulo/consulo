@@ -20,11 +20,12 @@
  */
 package com.intellij.openapi.diff.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.impl.string.DiffString;
 import com.intellij.openapi.diff.ex.DiffFragment;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.diff.Diff;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

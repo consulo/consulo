@@ -42,7 +42,7 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileEditor;
@@ -80,6 +80,7 @@ import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.ContentManagerAdapter;
 import com.intellij.ui.content.ContentManagerEvent;
 import com.intellij.ui.switcher.QuickActionProvider;
+import com.intellij.ui.tree.TreeVisitor;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.containers.ContainerUtil;
@@ -87,17 +88,17 @@ import com.intellij.util.io.URLUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import consulo.ui.RequiredUIAccess;
 import consulo.ide.projectView.ProjectViewEx;
 import consulo.psi.PsiPackageSupportProviders;
+import consulo.ui.RequiredUIAccess;
 import consulo.wm.impl.ToolWindowContentUI;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -106,8 +107,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
 
 @Singleton
@@ -380,7 +381,6 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     String idToRemove = pane.getId();
 
     if (!myId2Pane.containsKey(idToRemove)) return;
-    pane.removeTreeChangeListener();
     for (int i = getContentManager().getContentCount() - 1; i >= 0; i--) {
       Content content = getContentManager().getContent(i);
       String id = content != null ? content.getUserData(ID_KEY) : null;
@@ -1702,6 +1702,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   }
 
   private static class SelectionInfo {
+    @Nonnull
     private final Object[] myElements;
 
     private SelectionInfo(@Nonnull Object[] elements) {
@@ -1714,20 +1715,31 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       }
       AbstractTreeBuilder treeBuilder = viewPane.getTreeBuilder();
       JTree tree = viewPane.myTree;
-      DefaultTreeModel treeModel = (DefaultTreeModel)tree.getModel();
-      List<TreePath> paths = new ArrayList<>(myElements.length);
-      for (final Object element : myElements) {
-        DefaultMutableTreeNode node = treeBuilder.getNodeForElement(element);
-        if (node == null) {
-          treeBuilder.buildNodeForElement(element);
-          node = treeBuilder.getNodeForElement(element);
+      if (treeBuilder != null) {
+        DefaultTreeModel treeModel = (DefaultTreeModel)tree.getModel();
+        List<TreePath> paths = new ArrayList<>(myElements.length);
+        for (final Object element : myElements) {
+          DefaultMutableTreeNode node = treeBuilder.getNodeForElement(element);
+          if (node == null) {
+            treeBuilder.buildNodeForElement(element);
+            node = treeBuilder.getNodeForElement(element);
+          }
+          if (node != null) {
+            paths.add(new TreePath(treeModel.getPathToRoot(node)));
+          }
         }
-        if (node != null) {
-          paths.add(new TreePath(treeModel.getPathToRoot(node)));
+        if (!paths.isEmpty()) {
+          tree.setSelectionPaths(paths.toArray(new TreePath[0]));
         }
       }
-      if (!paths.isEmpty()) {
-        tree.setSelectionPaths(paths.toArray(new TreePath[paths.size()]));
+      else {
+        List<TreeVisitor> visitors = AbstractProjectViewPane.createVisitors(myElements);
+        if (1 == visitors.size()) {
+          TreeUtil.promiseSelect(tree, visitors.get(0));
+        }
+        else if (!visitors.isEmpty()) {
+          TreeUtil.promiseSelect(tree, visitors.stream());
+        }
       }
     }
 
@@ -1739,11 +1751,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         if (selectionPaths != null) {
           selectedElements = new ArrayList<>();
           for (TreePath path : selectionPaths) {
-            final DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
-            final Object userObject = node.getUserObject();
-            if (userObject instanceof NodeDescriptor) {
-              selectedElements.add(((NodeDescriptor)userObject).getElement());
-            }
+            NodeDescriptor descriptor = TreeUtil.getLastUserObject(NodeDescriptor.class, path);
+            if (descriptor != null) selectedElements.add(descriptor.getElement());
           }
         }
       }

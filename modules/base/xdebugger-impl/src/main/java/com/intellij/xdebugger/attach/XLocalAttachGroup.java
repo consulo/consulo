@@ -18,38 +18,29 @@ package com.intellij.xdebugger.attach;
 import com.intellij.execution.process.ProcessInfo;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolder;
-import consulo.ui.image.Image;
-
 import javax.annotation.Nonnull;
 
-public interface XLocalAttachGroup {
-  int getOrder();
-
-  @Nonnull
-  String getGroupName();
-
+/**
+ * @deprecated Use {@link XAttachProcessPresentationGroup} (will be removed in 2020.1)
+ */
+//@ApiStatus.ScheduledForRemoval(inVersion = "2020.1")
+@Deprecated
+public interface XLocalAttachGroup extends XAttachProcessPresentationGroup {
   /**
-   * @param dataHolder you may put your specific data into the holder at previous step in method @{@link XLocalAttachDebuggerProvider#getAvailableDebuggers(Project, ProcessInfo, UserDataHolder)}
-   * and use it for presentation
-   * @return an icon to be shown in popup menu for your debugger item
+   * @deprecated will be removed in 2020.1
    */
+  //@ApiStatus.ScheduledForRemoval(inVersion = "2020.1")
+  @Deprecated
   @Nonnull
-  Image getProcessIcon(@Nonnull Project project, @Nonnull ProcessInfo info, @Nonnull UserDataHolder dataHolder);
-
-  /**
-   * @param dataHolder you may put your specific data into the holder at previous step in method @{@link XLocalAttachDebuggerProvider#getAvailableDebuggers(Project, ProcessInfo, UserDataHolder)}
-   * and use it for presentation
-   * @return a text to be shown on your debugger item
-   */
-  @Nonnull
-  String getProcessDisplayText(@Nonnull Project project, @Nonnull ProcessInfo info, @Nonnull UserDataHolder dataHolder);
-
-  /**
-   * Specifies process order in your group
-   * @param dataHolder you may put your specific data into the holder at previous step in method @{@link XLocalAttachDebuggerProvider#getAvailableDebuggers(Project, ProcessInfo, UserDataHolder)}
-   * and use it for comparison
-   */
-  int compare(@Nonnull Project project, @Nonnull ProcessInfo a, @Nonnull ProcessInfo b, @Nonnull UserDataHolder dataHolder);
-
   XLocalAttachGroup DEFAULT = new XDefaultLocalAttachGroup();
+
+  /**
+   * @deprecated use {@link #compare(ProcessInfo, ProcessInfo)} (will be removed in 2020.1)
+   */
+  //@ApiStatus.ScheduledForRemoval(inVersion = "2020.1")
+  @Override
+  @Deprecated
+  default int compare(@Nonnull Project project, @Nonnull ProcessInfo a, @Nonnull ProcessInfo b, @Nonnull UserDataHolder dataHolder) {
+    return compare(a, b);
+  }
 }

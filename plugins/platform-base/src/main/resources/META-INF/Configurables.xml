@@ -13,7 +13,7 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin>
+<consulo-plugin>
   <extensions defaultExtensionNs="com.intellij">
     <applicationConfigurable id="execution"
                              displayName="Execution"
@@ -194,6 +194,12 @@
     <applicationConfigurable parentId="editor" instance="com.intellij.openapi.fileTypes.impl.FileTypeConfigurable" id="preferences.fileTypes"
                              key="filetype.settings.title" bundle="messages.FileTypesBundle"/>
 
+    <applicationConfigurable instance="com.intellij.ide.browsers.BrowserSettings"
+                             id="reference.settings.ide.settings.web.browsers"
+                             parentId="general"
+                             key="browsers.settings"
+                             bundle="messages.IdeBundle"/>
+
     <projectConfigurable instance="com.intellij.openapi.vcs.configurable.VcsManagerConfigurable"
                          bundle="messages.VcsBundle"
                          key="version.control.main.configurable.name"
@@ -209,4 +215,4 @@
                     instance="com.intellij.diff.settings.ExternalDiffSettingsConfigurable"/>
     </projectConfigurable>
   </extensions>
-</idea-plugin>
+</consulo-plugin>

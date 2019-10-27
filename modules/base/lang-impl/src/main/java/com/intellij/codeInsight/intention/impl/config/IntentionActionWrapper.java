@@ -21,7 +21,7 @@ import com.intellij.codeInsight.intention.IntentionActionBean;
 import com.intellij.codeInsight.intention.IntentionActionDelegate;
 import com.intellij.openapi.actionSystem.ShortcutProvider;
 import com.intellij.openapi.actionSystem.ShortcutSet;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;

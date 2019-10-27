@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2012 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.vfs;
 
 import com.intellij.util.containers.Stack;
@@ -22,11 +8,11 @@ import javax.annotation.Nullable;
 
 /**
  * @author Dmitry Avdeev
- * @since 31.10.2011
  */
 public abstract class VirtualFileVisitor<T> {
   public static class Option {
-    private Option() { }
+    private Option() {
+    }
 
     private static class LimitOption extends Option {
       private final int limit;
@@ -41,6 +27,7 @@ public abstract class VirtualFileVisitor<T> {
   public static final Option SKIP_ROOT = new Option();
   public static final Option ONE_LEVEL_DEEP = limit(1);
 
+  @Nonnull
   public static Option limit(int maxDepth) {
     return new Option.LimitOption(maxDepth);
   }
@@ -71,19 +58,19 @@ public abstract class VirtualFileVisitor<T> {
 
 
   protected static class VisitorException extends RuntimeException {
-    public VisitorException(Throwable cause) {
+    public VisitorException(@Nonnull Throwable cause) {
       super(cause);
     }
   }
 
 
   private boolean myFollowSymLinks = true;
-  private boolean mySkipRoot = false;
+  private boolean mySkipRoot;
   private int myDepthLimit = -1;
 
-  private int myLevel = 0;
-  private Stack<T> myValueStack = null;
-  private T myValue = null;
+  private int myLevel;
+  private Stack<T> myValueStack;
+  private T myValue;
 
   protected VirtualFileVisitor(@Nonnull Option... options) {
     for (Option option : options) {
@@ -116,8 +103,8 @@ public abstract class VirtualFileVisitor<T> {
    *
    * @param file a file to visit.
    * @return {@linkplain #CONTINUE} to proceed to file's children,<br/>
-   *         {@linkplain #SKIP_CHILDREN} to skip to file's next sibling,<br/>
-   *         result of {@linkplain #skipTo(VirtualFile)} to skip to given file's next sibling.
+   * {@linkplain #SKIP_CHILDREN} to skip to file's next sibling,<br/>
+   * result of {@linkplain #skipTo(VirtualFile)} to skip to given file's next sibling.
    */
   @Nonnull
   public Result visitFileEx(@Nonnull VirtualFile file) {
@@ -130,14 +117,15 @@ public abstract class VirtualFileVisitor<T> {
    *
    * @param file a file whose children were successfully visited.
    */
-  public void afterChildrenVisited(@Nonnull VirtualFile file) { }
+  public void afterChildrenVisited(@Nonnull VirtualFile file) {
+  }
 
   /**
-   * By default, visitor uses ({@linkplain com.intellij.openapi.vfs.VirtualFile#getChildren()}) to iterate over file's children.
+   * By default, visitor uses ({@linkplain VirtualFile#getChildren()}) to iterate over file's children.
    * You can override this method to implement another mechanism.
    *
    * @param file a virtual file to get children from.
-   * @return children iterable, or null to use {@linkplain com.intellij.openapi.vfs.VirtualFile#getChildren()}.
+   * @return children iterable, or null to use {@linkplain VirtualFile#getChildren()}.
    */
   @Nullable
   public Iterable<VirtualFile> getChildrenIterable(@Nonnull VirtualFile file) {
@@ -149,12 +137,12 @@ public abstract class VirtualFileVisitor<T> {
    * The visitor maintains the stack of stored values. I.e:
    * This value is held here only during the visiting the current file and all its children. As soon as the visitor finished with
    * the current file and all its subtree and returns to the level up, the value is cleared
-   * and the {@link #getCurrentValue()} returns the previous value which was stored here before the {@link #setValueForChildren} call.
+   * and the {@link #getCurrentValue()} returns the previous value, which was stored here before this method call.
    */
   public final void setValueForChildren(@Nullable T value) {
     myValue = value;
     if (myValueStack == null) {
-      myValueStack = new Stack<T>();
+      myValueStack = new Stack<>();
     }
   }
 
@@ -168,7 +156,16 @@ public abstract class VirtualFileVisitor<T> {
   }
 
   final boolean allowVisitChildren(@Nonnull VirtualFile file) {
-    return !file.is(VFileProperty.SYMLINK) || myFollowSymLinks && !VfsUtilCore.isInvalidLink(file);
+    if (!file.is(VFileProperty.SYMLINK)) {
+      return true;
+    }
+
+    if (!myFollowSymLinks) {
+      return false;
+    }
+
+    // ignore invalid or recursive link or the link with circular path (e.g. "/.../link1/.../link1") - to avoid visiting files twice
+    return !file.isRecursiveOrCircularSymLink();
   }
 
   final boolean depthLimitReached() {

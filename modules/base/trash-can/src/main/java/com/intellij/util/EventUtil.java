@@ -15,7 +15,7 @@
  */
 package com.intellij.util;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationHandler;

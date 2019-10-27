@@ -17,8 +17,8 @@ package com.intellij.openapi.util.text;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -29,9 +29,195 @@ import javax.annotation.Nullable;
  */
 @SuppressWarnings({"UtilityClassWithoutPrivateConstructor"})
 public class StringUtilRt {
+  @Contract("null,!null,_ -> false; !null,null,_ -> false; null,null,_ -> true")
+  public static boolean equal(@Nullable CharSequence s1, @Nullable CharSequence s2, boolean caseSensitive) {
+    if (s1 == s2) return true;
+    if (s1 == null || s2 == null) return false;
+
+    if (s1.length() != s2.length()) return false;
+
+    if (caseSensitive) {
+      for (int i = 0; i < s1.length(); i++) {
+        if (s1.charAt(i) != s2.charAt(i)) {
+          return false;
+        }
+      }
+    }
+    else {
+      for (int i = 0; i < s1.length(); i++) {
+        if (!charsEqualIgnoreCase(s1.charAt(i), s2.charAt(i))) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  @Contract(pure = true)
+  public static long parseLong(@Nullable String string, long defaultValue) {
+    if (string != null) {
+      try {
+        return Long.parseLong(string);
+      }
+      catch (NumberFormatException ignored) {
+      }
+    }
+    return defaultValue;
+  }
+
   @Contract(pure = true)
   public static boolean charsEqualIgnoreCase(char a, char b) {
     return a == b || toUpperCase(a) == toUpperCase(b) || toLowerCase(a) == toLowerCase(b);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String replace(@NonNls @Nonnull String text, @NonNls @Nonnull String oldS, @NonNls @Nonnull String newS) {
+    return replace(text, oldS, newS, false);
+  }
+
+  @Contract(value = "null -> true", pure = true)
+  public static boolean isEmpty(@Nullable String s) {
+    return s == null || s.isEmpty();
+  }
+
+  @Contract(value = "null -> true", pure = true)
+  public static boolean isEmpty(@Nullable CharSequence cs) {
+    return cs == null || cs.length() == 0;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String notNullize(@Nullable final String s) {
+    return notNullize(s, "");
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String notNullize(@Nullable final String s, @Nonnull String defaultValue) {
+    return s == null ? defaultValue : s;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String notNullizeIfEmpty(@Nullable final String s, @Nonnull String defaultValue) {
+    return isEmpty(s) ? defaultValue : s;
+  }
+
+  @Nullable
+  @Contract(pure = true)
+  public static String nullize(@Nullable final String s) {
+    return nullize(s, false);
+  }
+
+  @Nullable
+  @Contract(pure = true)
+  public static String nullize(@Nullable final String s, boolean nullizeSpaces) {
+    if (nullizeSpaces) {
+      if (isEmptyOrSpaces(s)) return null;
+    }
+    else {
+      if (isEmpty(s)) return null;
+    }
+    return s;
+  }
+
+  @Contract(value = "null -> true", pure = true)
+  // we need to keep this method to preserve backward compatibility
+  public static boolean isEmptyOrSpaces(@Nullable String s) {
+    return isEmptyOrSpaces(((CharSequence)s));
+  }
+
+  @Contract(value = "null -> true", pure = true)
+  public static boolean isEmptyOrSpaces(@Nullable CharSequence s) {
+    if (isEmpty(s)) {
+      return true;
+    }
+    for (int i = 0; i < s.length(); i++) {
+      if (s.charAt(i) > ' ') {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  @Contract(pure = true)
+  public static String replace(@NonNls @Nonnull final String text, @NonNls @Nonnull final String oldS, @NonNls @Nonnull final String newS, final boolean ignoreCase) {
+    if (text.length() < oldS.length()) return text;
+
+    StringBuilder newText = null;
+    int i = 0;
+
+    while (i < text.length()) {
+      final int index = ignoreCase ? indexOfIgnoreCase(text, oldS, i) : text.indexOf(oldS, i);
+      if (index < 0) {
+        if (i == 0) {
+          return text;
+        }
+
+        newText.append(text, i, text.length());
+        break;
+      }
+      else {
+        if (newText == null) {
+          if (text.length() == oldS.length()) {
+            return newS;
+          }
+          newText = new StringBuilder(text.length() - i);
+        }
+
+        newText.append(text, i, index);
+        newText.append(newS);
+        i = index + oldS.length();
+      }
+    }
+    return newText != null ? newText.toString() : "";
+  }
+
+  /**
+   * Implementation copied from {@link String#indexOf(String, int)} except character comparisons made case insensitive
+   */
+  @Contract(pure = true)
+  public static int indexOfIgnoreCase(@Nonnull String where, @Nonnull String what, int fromIndex) {
+    int targetCount = what.length();
+    int sourceCount = where.length();
+
+    if (fromIndex >= sourceCount) {
+      return targetCount == 0 ? sourceCount : -1;
+    }
+
+    if (fromIndex < 0) {
+      fromIndex = 0;
+    }
+
+    if (targetCount == 0) {
+      return fromIndex;
+    }
+
+    char first = what.charAt(0);
+    int max = sourceCount - targetCount;
+
+    for (int i = fromIndex; i <= max; i++) {
+      /* Look for first character. */
+      if (!charsEqualIgnoreCase(where.charAt(i), first)) {
+        while (++i <= max && !charsEqualIgnoreCase(where.charAt(i), first)) ;
+      }
+
+      /* Found first character, now look at the rest of v2 */
+      if (i <= max) {
+        int j = i + 1;
+        int end = j + targetCount - 1;
+        for (int k = 1; j < end && charsEqualIgnoreCase(where.charAt(j), what.charAt(k)); j++, k++) ;
+
+        if (j == end) {
+          /* Found whole string. */
+          return i;
+        }
+      }
+    }
+
+    return -1;
   }
 
   @Nonnull
@@ -112,10 +298,7 @@ public class StringUtilRt {
   }
 
   @Nonnull
-  public static String convertLineSeparators(@Nonnull String text,
-                                             @Nonnull String newSeparator,
-                                             @Nullable int[] offsetsToKeep,
-                                             boolean keepCarriageReturn) {
+  public static String convertLineSeparators(@Nonnull String text, @Nonnull String newSeparator, @Nullable int[] offsetsToKeep, boolean keepCarriageReturn) {
     return unifyLineSeparators(text, newSeparator, offsetsToKeep, keepCarriageReturn).toString();
   }
 
@@ -126,10 +309,7 @@ public class StringUtilRt {
   }
 
   @Nonnull
-  public static CharSequence unifyLineSeparators(@Nonnull CharSequence text,
-                                                 @Nonnull String newSeparator,
-                                                 @Nullable int[] offsetsToKeep,
-                                                 boolean keepCarriageReturn) {
+  public static CharSequence unifyLineSeparators(@Nonnull CharSequence text, @Nonnull String newSeparator, @Nullable int[] offsetsToKeep, boolean keepCarriageReturn) {
     StringBuilder buffer = null;
     int intactLength = 0;
     final boolean newSeparatorIsSlashN = "\n".equals(newSeparator);

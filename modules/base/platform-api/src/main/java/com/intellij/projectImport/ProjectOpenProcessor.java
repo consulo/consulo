@@ -22,8 +22,6 @@ package com.intellij.projectImport;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.annotations.DeprecationInfo;
-import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import org.intellij.lang.annotations.Language;
@@ -31,6 +29,7 @@ import org.intellij.lang.annotations.Language;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
+import java.util.function.Consumer;
 
 public abstract class ProjectOpenProcessor {
   @Nonnull
@@ -39,36 +38,15 @@ public abstract class ProjectOpenProcessor {
     return "";
   }
 
-  @Nonnull
-  public abstract Image getIcon();
+  public void collectFileSamples(@Nonnull Consumer<String> fileSamples) {
+    fileSamples.accept(getFileSample());
+  }
 
   @Nullable
-  public Image getIcon(final VirtualFile file) {
-    return getIcon();
-  }
+  public abstract Image getIcon(@Nonnull VirtualFile file);
 
   public abstract boolean canOpenProject(@Nonnull File file);
 
-  @Nullable
-  @RequiredUIAccess
-  @Deprecated
-  @DeprecationInfo("Use #doOpenProjectAsync()")
-  public abstract Project doOpenProject(@Nonnull VirtualFile virtualFile, @Nullable Project projectToClose, boolean forceOpenInNewFrame);
-
-  public void doOpenProjectAsync(@Nonnull AsyncResult<Project> asyncResult,
-                                 @Nonnull VirtualFile virtualFile,
-                                 @Nullable Project projectToClose,
-                                 boolean forceOpenInNewFrame,
-                                 @Nonnull UIAccess uiAccess) {
-    Project project = doOpenProject(virtualFile, projectToClose, forceOpenInNewFrame);
-    if (project != null) {
-      asyncResult.setDone(project);
-    }
-    else {
-      asyncResult.reject("project not loaded");
-    }
-  }
-
-  public void refreshProjectFiles(File basedir) {
-  }
+  @Nonnull
+  public abstract AsyncResult<Project> doOpenProjectAsync(@Nonnull VirtualFile virtualFile, @Nonnull UIAccess uiAccess);
 }

@@ -26,7 +26,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.command.undo.UndoConstants;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actions.ContentChooser;
 import com.intellij.openapi.editor.ex.EditorEx;
@@ -55,6 +54,7 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FactoryMap;
+import consulo.logging.Logger;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -76,21 +76,7 @@ public class ConsoleHistoryController {
 
   private static final Logger LOG = Logger.getInstance("com.intellij.execution.console.ConsoleHistoryController");
 
-  /**
-   * @noinspection MismatchedQueryAndUpdateOfCollection
-   */
-  private final static FactoryMap<String, ConsoleHistoryModel> ourModels = new FactoryMap<String, ConsoleHistoryModel>() {
-    @Override
-    protected Map<String, ConsoleHistoryModel> createMap() {
-      return ContainerUtil.createConcurrentWeakValueMap();
-    }
-
-    @Nullable
-    @Override
-    protected ConsoleHistoryModel create(String key) {
-      return new ConsoleHistoryModel(null);
-    }
-  };
+  private final static Map<String, ConsoleHistoryModel> ourModels = FactoryMap.createMap(k -> new ConsoleHistoryModel(null), ContainerUtil::createConcurrentWeakValueMap);
 
   private final LanguageConsoleView myConsole;
   private final AnAction myHistoryNext = new MyAction(true, getKeystrokesUpDown(true));

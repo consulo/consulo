@@ -19,7 +19,6 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -119,6 +118,5 @@ public interface ApplicationEx extends Application {
    */
   boolean tryRunReadAction(@Nonnull Runnable action);
 
-  @Nonnull
-  UIAccess getLastUIAccess();
+  boolean isInImpatientReader();
 }

@@ -13,15 +13,10 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin>
+<consulo-plugin>
   <project-components>
     <component>
       <implementation-class>com.intellij.notification.EventLog$ProjectTracker</implementation-class>
-      <skipForDefaultProject/>
-    </component>
-
-    <component>
-      <implementation-class>consulo.roots.ContentEntryFileListener</implementation-class>
       <skipForDefaultProject/>
     </component>
 
@@ -303,4 +298,4 @@
       <implementation-class>consulo.roots.ExtensionListenerByLayerListenerInvoker</implementation-class>
     </component>
   </project-components>
-</idea-plugin>
+</consulo-plugin>

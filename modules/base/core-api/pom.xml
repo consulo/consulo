@@ -41,6 +41,12 @@
       <artifactId>consulo-annotations</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-container-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
     <!--TODO [VISTALL] desktop dependency in platform, we need remove it -->
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -51,6 +57,12 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-util</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-platform-resources</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>

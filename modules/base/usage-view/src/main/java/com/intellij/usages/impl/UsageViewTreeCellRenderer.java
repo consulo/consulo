@@ -17,7 +17,7 @@ package com.intellij.usages.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;

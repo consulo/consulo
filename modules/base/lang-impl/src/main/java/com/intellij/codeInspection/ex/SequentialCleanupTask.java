@@ -16,7 +16,6 @@
 package com.intellij.codeInspection.ex;
 
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
@@ -25,6 +24,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.SequentialModalProgressTask;
 import com.intellij.util.SequentialTask;
+import consulo.logging.Logger;
 
 import java.util.Collections;
 import java.util.Iterator;

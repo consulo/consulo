@@ -28,7 +28,7 @@ import com.intellij.execution.testframework.stacktrace.DiffHyperlink;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.ide.util.EditSourceUtil;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;

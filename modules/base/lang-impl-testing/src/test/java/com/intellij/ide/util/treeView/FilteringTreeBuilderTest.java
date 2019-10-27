@@ -1,6 +1,5 @@
 package com.intellij.ide.util.treeView;
 
-import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Ref;
 import com.intellij.ui.TreeUIHelper;
@@ -8,6 +7,7 @@ import com.intellij.ui.speedSearch.ElementFilter;
 import com.intellij.ui.treeStructure.*;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeBuilder;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeStructure;
+import org.jetbrains.concurrency.Promise;
 
 import java.util.LinkedHashMap;
 
@@ -238,7 +238,7 @@ public abstract class FilteringTreeBuilderTest extends BaseTreeTestCase  {
       return value.toString().startsWith(myPattern);
     }
 
-    public ActionCallback update(final String pattern, Object selection) {
+    public Promise update(final String pattern, Object selection) {
       myPattern = pattern;
       return fireUpdate(selection, true, false);
     }

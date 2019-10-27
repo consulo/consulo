@@ -21,6 +21,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.DeprecationInfo;
 import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.desktop.util.awt.migration.AWTComponentProvider;
 import org.jdom.Element;
@@ -70,6 +71,7 @@ public interface EditorsSplitters extends AWTComponentProvider {
 
   boolean isInsideChange();
 
+  @RequiredUIAccess
   void closeFile(VirtualFile file, boolean moveFocus);
 
   @Nonnull
@@ -89,6 +91,8 @@ public interface EditorsSplitters extends AWTComponentProvider {
 
   @Nullable
   VirtualFile getCurrentFile();
+
+  boolean isShowing();
 
   @Nonnull
   default Component getUIComponent() {

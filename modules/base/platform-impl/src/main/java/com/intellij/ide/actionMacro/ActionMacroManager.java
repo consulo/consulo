@@ -22,10 +22,11 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
@@ -74,7 +75,7 @@ import java.util.Set;
  */
 @State(name = "ActionMacroManager", storages = @Storage("macros.xml"))
 @Singleton
-public class ActionMacroManager implements JDOMExternalizable {
+public class ActionMacroManager implements JDOMExternalizable, Disposable {
   public static ActionMacroManager getInstance() {
     return ApplicationManager.getApplication().getComponent(ActionMacroManager.class);
   }
@@ -101,9 +102,9 @@ public class ActionMacroManager implements JDOMExternalizable {
   private String myLastTyping = "";
 
   @Inject
-  public ActionMacroManager(ActionManager actionManagerEx) {
-    myActionManager = actionManagerEx;
-    myActionManager.addAnActionListener(new AnActionListener() {
+  public ActionMacroManager(Application application, ActionManager actionManager) {
+    myActionManager = actionManager;
+    application.getMessageBus().connect(this).subscribe(AnActionListener.TOPIC, new AnActionListener() {
       @Override
       public void beforeActionPerformed(AnAction action, DataContext dataContext, final AnActionEvent event) {
         String id = myActionManager.getId(action);
@@ -126,7 +127,7 @@ public class ActionMacroManager implements JDOMExternalizable {
 
     myKeyProcessor = new MyKeyPostpocessor();
 
-    Platform.onlyAtDesktop(() -> IdeEventQueue.getInstance().addPostprocessor(myKeyProcessor, null));
+    Platform.runIfDesktopPlatform(() -> IdeEventQueue.getInstance().addPostprocessor(myKeyProcessor, null));
   }
 
   @Override
@@ -160,6 +161,10 @@ public class ActionMacroManager implements JDOMExternalizable {
     final StatusBar statusBar = WindowManager.getInstance().getIdeFrame(null).getStatusBar();
     myWidget = new Widget(statusBar);
     statusBar.addWidget(myWidget);
+  }
+
+  @Override
+  public void dispose() {
   }
 
   private class Widget implements CustomStatusBarWidget, Consumer<MouseEvent> {

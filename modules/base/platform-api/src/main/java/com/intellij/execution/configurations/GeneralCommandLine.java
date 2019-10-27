@@ -17,10 +17,10 @@ package com.intellij.execution.configurations;
 
 import com.intellij.execution.CommandLineUtil;
 import com.intellij.execution.ExecutionException;
-import com.intellij.execution.Platform;
+import com.intellij.execution.FilePathSeparator;
 import com.intellij.execution.process.ProcessNotCreatedException;
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.UserDataHolder;
@@ -314,13 +314,13 @@ public class GeneralCommandLine implements UserDataHolder {
    * Prepares command (quotes and escapes all arguments) and returns it as a newline-separated list
    * (suitable e.g. for passing in an environment variable).
    *
-   * @param platform a target platform
+   * @param filePathSeparator a target platform
    * @return command as a newline-separated list.
    */
   @Nonnull
-  public String getPreparedCommandLine(@Nonnull Platform platform) {
+  public String getPreparedCommandLine(@Nonnull FilePathSeparator filePathSeparator) {
     String exePath = myExePath != null ? myExePath : "";
-    return StringUtil.join(CommandLineUtil.toCommandLine(exePath, myProgramParams.getList(), platform), "\n");
+    return StringUtil.join(CommandLineUtil.toCommandLine(exePath, myProgramParams.getList(), filePathSeparator), "\n");
   }
 
   @Nonnull

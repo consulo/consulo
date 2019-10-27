@@ -27,7 +27,7 @@ import com.intellij.diff.requests.DiffRequest;
 import com.intellij.execution.ExecutionException;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;

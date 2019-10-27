@@ -16,6 +16,7 @@
 package com.intellij.icons;
 
 import com.intellij.openapi.util.IconLoader;
+import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
 
 import javax.swing.*;
@@ -102,6 +103,7 @@ public class AllIcons {
     public static final SwingImageRef Menu_saveall = IconLoader.getIcon("/actions/menu-saveall.png"); // 16x16
     public static final SwingImageRef Minimize = IconLoader.getIcon("/actions/minimize.png"); // 16x16
     public static final SwingImageRef Module = IconLoader.getIcon("/actions/module.png"); // 16x16
+    public static final SwingImageRef More = IconLoader.getIcon("/actions/more.svg");
     public static final SwingImageRef Move_to_button_top = IconLoader.getIcon("/actions/move-to-button-top.png"); // 11x12
     public static final SwingImageRef Move_to_button = IconLoader.getIcon("/actions/move-to-button.png"); // 11x10
     public static final SwingImageRef MoveDown = IconLoader.getIcon("/actions/moveDown.png"); // 14x14
@@ -366,6 +368,8 @@ public class AllIcons {
     public static final SwingImageRef BalloonInformation = IconLoader.getIcon("/general/balloonInformation.png"); // 16x16
     public static final SwingImageRef BalloonWarning = IconLoader.getIcon("/general/balloonWarning.png"); // 16x16
     public static final SwingImageRef Bullet = IconLoader.getIcon("/general/bullet.png"); // 16x16
+    public static final SwingImageRef CollapseComponent = IconLoader.getIcon("/general/collapseComponent.svg");
+    public static final SwingImageRef CollapseComponentHover = IconLoader.getIcon("/general/collapseComponentHover.svg");
     public static final SwingImageRef CollapseAll = IconLoader.getIcon("/general/collapseAll.png"); // 11x16
     public static final SwingImageRef CollapseAllHover = IconLoader.getIcon("/general/collapseAllHover.png"); // 11x16
     public static final SwingImageRef Combo = IconLoader.getIcon("/general/combo.png"); // 16x16
@@ -381,6 +385,7 @@ public class AllIcons {
     public static final SwingImageRef ComboUpPassive = IconLoader.getIcon("/general/comboUpPassive.png"); // 16x16
     public static final SwingImageRef ConfigurableDefault = IconLoader.getIcon("/general/configurableDefault.png"); // 32x32
     public static final SwingImageRef Configure = IconLoader.getIcon("/general/Configure.png"); // 32x32
+    public static final SwingImageRef ContextHelp = IconLoader.getIcon("/general/contextHelp.svg");
     public static final SwingImageRef CreateNewProject = IconLoader.getIcon("/general/createNewProject.png"); // 32x32
     public static final SwingImageRef CreateNewProjectfromExistingFiles = IconLoader.getIcon("/general/CreateNewProjectfromExistingFiles.png"); // 32x32
     public static final SwingImageRef CollapseComponent = IconLoader.getIcon("/general/collapseComponent.svg");
@@ -846,6 +851,7 @@ public class AllIcons {
     public static final SwingImageRef WebFolder = IconLoader.getIcon("/nodes/webFolder.png"); // 16x16
     public static final SwingImageRef Weblistener = IconLoader.getIcon("/nodes/weblistener.png"); // 16x16
     public static final SwingImageRef Write_access = IconLoader.getIcon("/nodes/write-access.png"); // 13x9
+    public static final SwingImageRef CustomRegion = IconLoader.getIcon("/nodes/customRegion.svg");
 
   }
   
@@ -1135,11 +1141,46 @@ public class AllIcons {
   public static class Xml {
     
     public static class Browsers {
-      public static final SwingImageRef Chrome16 = IconLoader.getIcon("/xml/browsers/chrome16.png"); // 16x16
-      public static final SwingImageRef Explorer16 = IconLoader.getIcon("/xml/browsers/explorer16.png"); // 16x16
-      public static final SwingImageRef Firefox16 = IconLoader.getIcon("/xml/browsers/firefox16.png"); // 16x16
-      public static final SwingImageRef Opera16 = IconLoader.getIcon("/xml/browsers/opera16.png"); // 16x16
-      public static final SwingImageRef Safari16 = IconLoader.getIcon("/xml/browsers/safari16.png"); // 16x16
+      /**
+       * 16x16
+       */
+      public static final Image Canary16 = IconLoader.getIcon("/xml/browsers/canary16.svg");
+      /**
+       * 16x16
+       */
+      public static final Image Chrome16 = IconLoader.getIcon("/xml/browsers/chrome16.svg");
+      /**
+       * 16x16
+       */
+      public static final Image Chromium16 = IconLoader.getIcon("/xml/browsers/chromium16.svg");
+      /**
+       * 16x16
+       */
+      public static final Image Edge16 = IconLoader.getIcon("/xml/browsers/edge16.svg");
+      /**
+       * 16x16
+       */
+      public static final Image Explorer16 = IconLoader.getIcon("/xml/browsers/explorer16.svg");
+      /**
+       * 16x16
+       */
+      public static final Image Firefox16 = IconLoader.getIcon("/xml/browsers/firefox16.svg");
+      /**
+       * 16x16
+       */
+      public static final Image Nwjs16 = IconLoader.getIcon("/xml/browsers/nwjs16.svg");
+      /**
+       * 16x16
+       */
+      public static final Image Opera16 = IconLoader.getIcon("/xml/browsers/opera16.svg");
+      /**
+       * 16x16
+       */
+      public static final Image Safari16 = IconLoader.getIcon("/xml/browsers/safari16.svg");
+      /**
+       * 16x16
+       */
+      public static final Image Yandex16 = IconLoader.getIcon("/xml/browsers/yandex16.svg");
 
     }
     public static final SwingImageRef Html5 = IconLoader.getIcon("/xml/html5.png"); // 16x16

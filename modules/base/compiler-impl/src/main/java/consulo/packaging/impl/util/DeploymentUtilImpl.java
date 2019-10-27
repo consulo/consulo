@@ -19,7 +19,7 @@ import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.deployment.DeploymentUtil;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.ExceptionUtil;

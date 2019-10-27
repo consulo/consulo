@@ -23,7 +23,7 @@ import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditor;
@@ -61,6 +61,7 @@ import consulo.application.AccessRule;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 import gnu.trove.THashSet;
@@ -342,6 +343,11 @@ public class DesktopEditorsSplitters implements Disposable, EditorsSplitters {
   }
 
   @Override
+  public boolean isShowing() {
+    return myComponent.isShowing();
+  }
+
+  @Override
   @Nonnull
   public VirtualFile[] getOpenFiles() {
     final Set<VirtualFile> files = new ArrayListSet<>();
@@ -587,6 +593,7 @@ public class DesktopEditorsSplitters implements Disposable, EditorsSplitters {
     return null;
   }
 
+  @RequiredUIAccess
   @Override
   public void closeFile(VirtualFile file, boolean moveFocus) {
     final List<DesktopEditorWindow> windows = findWindows(file);

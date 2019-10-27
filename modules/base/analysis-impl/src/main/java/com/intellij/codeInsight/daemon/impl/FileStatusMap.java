@@ -1,19 +1,4 @@
-/*
- * Copyright 2000-2016 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeHighlighting.DirtyScopeTrackingHighlightingPassFactory;
@@ -21,7 +6,7 @@ import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassManager;
 import com.intellij.codeInsight.daemon.ProblemHighlightFilter;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.RangeMarker;
@@ -32,7 +17,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.ConcurrencyUtil;
-import com.intellij.util.containers.WeakHashMap;
+import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.TIntObjectHashMap;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
@@ -41,15 +26,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public class FileStatusMap implements Disposable {
+public final class FileStatusMap implements Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.daemon.impl.FileStatusMap");
-  public static final String CHANGES_NOT_ALLOWED_DURING_HIGHLIGHTING =
-          "PSI/document/model changes are not allowed during highlighting";
+  public static final String CHANGES_NOT_ALLOWED_DURING_HIGHLIGHTING = "PSI/document/model changes are not allowed during highlighting";
   private final Project myProject;
-  private final Map<Document,FileStatus> myDocumentToStatusMap = new WeakHashMap<>(); // all dirty if absent
+  private final Map<Document, FileStatus> myDocumentToStatusMap = ContainerUtil.createWeakMap(); // all dirty if absent
   private volatile boolean myAllowDirt = true;
 
   // Don't reduce visibility rules here because this class is used in Upsource as well.
@@ -64,10 +47,9 @@ public class FileStatusMap implements Disposable {
   }
 
   /**
-   * null means the file is clean
    * @param editor
    * @param passId
-   * @return
+   * @return null means the file is clean
    */
   @Nullable
   // used in scala
@@ -83,9 +65,9 @@ public class FileStatusMap implements Disposable {
 
   public void setErrorFoundFlag(@Nonnull Project project, @Nonnull Document document, boolean errorFound) {
     //GHP has found error. Flag is used by ExternalToolPass to decide whether to run or not
-    synchronized(myDocumentToStatusMap) {
+    synchronized (myDocumentToStatusMap) {
       FileStatus status = myDocumentToStatusMap.get(document);
-      if (status == null){
+      if (status == null) {
         if (!errorFound) return;
         status = new FileStatus(project);
         myDocumentToStatusMap.put(document, status);
@@ -95,7 +77,7 @@ public class FileStatusMap implements Disposable {
   }
 
   boolean wasErrorFound(@Nonnull Document document) {
-    synchronized(myDocumentToStatusMap) {
+    synchronized (myDocumentToStatusMap) {
       FileStatus status = myDocumentToStatusMap.get(document);
       return status != null && status.errorFound;
     }
@@ -186,9 +168,9 @@ public class FileStatusMap implements Disposable {
   }
 
   public void markFileUpToDate(@Nonnull Document document, int passId) {
-    synchronized(myDocumentToStatusMap){
+    synchronized (myDocumentToStatusMap) {
       FileStatus status = myDocumentToStatusMap.computeIfAbsent(document, __ -> new FileStatus(myProject));
-      status.defensivelyMarked=false;
+      status.defensivelyMarked = false;
       if (passId == Pass.WOLF) {
         status.wolfPassFinished = true;
       }
@@ -203,11 +185,11 @@ public class FileStatusMap implements Disposable {
    */
   @Nullable
   public TextRange getFileDirtyScope(@Nonnull Document document, int passId) {
-    synchronized(myDocumentToStatusMap){
+    synchronized (myDocumentToStatusMap) {
       PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
       if (!ProblemHighlightFilter.shouldHighlightFile(file)) return null;
       FileStatus status = myDocumentToStatusMap.get(document);
-      if (status == null){
+      if (status == null) {
         return file == null ? null : file.getTextRange();
       }
       if (status.defensivelyMarked) {
@@ -222,10 +204,10 @@ public class FileStatusMap implements Disposable {
 
   void markFileScopeDirtyDefensively(@Nonnull PsiFile file, @Nonnull @NonNls Object reason) {
     assertAllowModifications();
-    log("Mark dirty file defensively: ",file.getName(),reason);
+    log("Mark dirty file defensively: ", file.getName(), reason);
     // mark whole file dirty in case no subsequent PSI events will come, but file requires rehighlighting nevertheless
     // e.g. in the case of quick typing/backspacing char
-    synchronized(myDocumentToStatusMap){
+    synchronized (myDocumentToStatusMap) {
       Document document = PsiDocumentManager.getInstance(myProject).getCachedDocument(file);
       if (document == null) return;
       FileStatus status = myDocumentToStatusMap.get(document);
@@ -236,8 +218,8 @@ public class FileStatusMap implements Disposable {
 
   void markFileScopeDirty(@Nonnull Document document, @Nonnull TextRange scope, int fileLength, @Nonnull @NonNls Object reason) {
     assertAllowModifications();
-    log("Mark scope dirty: ",scope,reason);
-    synchronized(myDocumentToStatusMap) {
+    log("Mark scope dirty: ", scope, reason);
+    synchronized (myDocumentToStatusMap) {
       FileStatus status = myDocumentToStatusMap.get(document);
       if (status == null) return; // all dirty already
       if (status.defensivelyMarked) {
@@ -289,7 +271,7 @@ public class FileStatusMap implements Disposable {
     myAllowDirt = allow;
   }
 
-  private static final RangeMarker WHOLE_FILE_DIRTY_MARKER = new RangeMarker(){
+  private static final RangeMarker WHOLE_FILE_DIRTY_MARKER = new RangeMarker() {
     @Nonnull
     @Override
     public Document getDocument() {
@@ -353,10 +335,12 @@ public class FileStatusMap implements Disposable {
   };
 
   // logging
-  private static final ConcurrentMap<Thread, Integer> threads = new ConcurrentHashMap<>();
+  private static final ConcurrentMap<Thread, Integer> threads = ContainerUtil.createConcurrentWeakMap();
+
   private static int getThreadNum() {
     return ConcurrencyUtil.cacheOrGet(threads, Thread.currentThread(), threads.size());
   }
+
   public static void log(@NonNls @Nonnull Object... info) {
     if (LOG.isDebugEnabled()) {
       String s = StringUtil.repeatSymbol(' ', getThreadNum() * 4) + Arrays.asList(info) + "\n";

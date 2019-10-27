@@ -1,5 +1,7 @@
 package com.intellij.ide.plugins;
 
+import consulo.container.impl.ContainerLogger;
+import consulo.container.impl.PluginLoader;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -9,7 +11,7 @@ import java.nio.file.Paths;
 
 /**
  * @author Dmitry Avdeev
- *         Date: 7/14/11
+ * Date: 7/14/11
  */
 public class PluginDescriptorTest extends Assert {
   @Test
@@ -18,7 +20,25 @@ public class PluginDescriptorTest extends Assert {
     assertNotNull(url);
 
     File jarFile = Paths.get(url.toURI()).toFile();
-    IdeaPluginDescriptorImpl descriptor = PluginManagerCore.loadDescriptorFromJar(jarFile, jarFile, PluginManagerCore.PLUGIN_XML, true, false);
+    IdeaPluginDescriptorImpl descriptor = PluginLoader.loadDescriptorFromJar(jarFile, jarFile, PluginLoader.PLUGIN_XML, true, false, new ContainerLogger() {
+
+      @Override
+      public void info(String message) {
+        System.out.println(message);
+      }
+
+      @Override
+      public void info(String message, Throwable t) {
+        System.out.println(message);
+        t.printStackTrace(System.out);
+      }
+
+      @Override
+      public void error(String message, Throwable t) {
+        System.err.println(message);
+        t.printStackTrace(System.err);
+      }
+    });
     assertNotNull(descriptor);
   }
 }

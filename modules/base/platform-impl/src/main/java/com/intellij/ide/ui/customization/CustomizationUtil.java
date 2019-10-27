@@ -17,7 +17,7 @@ package com.intellij.ide.ui.customization;
 
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.keymap.impl.ui.Group;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.PopupHandler;

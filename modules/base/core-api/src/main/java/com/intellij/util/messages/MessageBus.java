@@ -1,19 +1,4 @@
-/*
- * Copyright 2000-2012 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.messages;
 
 import com.intellij.openapi.Disposable;
@@ -33,9 +18,9 @@ import javax.annotation.Nullable;
  * <p/>
  * Use {@code 'com.intellij.openapi.components.ComponentManager#getMessageBus()'} to obtain one.
  * <p/>
- * Please see <a href="Wiki">http://confluence.jetbrains.net/display/IDEADEV/IntelliJ+IDEA+Messaging+infrastructure</a>.
+ * Please see <a href="docs">https://www.jetbrains.org/intellij/sdk/docs/reference_guide/messaging_infrastructure.html</a>.
  */
-public interface MessageBus {
+public interface MessageBus extends Disposable {
 
   /**
    * Messages buses can be organised into hierarchies. That allows facilities {@link Topic#getBroadcastDirection() broadcasting}.
@@ -129,17 +114,16 @@ public interface MessageBus {
   <L> L syncPublisher(@Nonnull Topic<L> topic);
 
   /**
-   * @deprecated use {@link #syncPublisher(Topic)} instead
-   */
-  @Nonnull
-  @Deprecated
-  <L> L asyncPublisher(@Nonnull Topic<L> topic);
-
-  /**
    * Disposes current bus, i.e. drops all queued but not delivered messages (if any) and disallows further
    * {@link #connect(Disposable) connections}.
    */
+  @Override
   void dispose();
+
+  /**
+   * Returns true if this bus is disposed.
+   */
+  boolean isDisposed();
 
   /**
    * @return true when events in the given topic are being dispatched in the current thread,

@@ -35,7 +35,7 @@ public class TipOfTheDayManager implements StartupActivity, DumbAware {
 
     myVeryFirstProjectOpening = false;
 
-    Platform.onlyAtDesktop(() -> {
+    Platform.runIfDesktopPlatform(() -> {
       ToolWindowManager.getInstance(project).invokeLater(() -> {
         if (project.isDisposed()) return;
         ToolWindowManager.getInstance(project).invokeLater(() -> {

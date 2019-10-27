@@ -3,7 +3,7 @@ package com.intellij.coverage.actions;
 import com.intellij.coverage.*;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.Project;
@@ -376,7 +376,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
   private class SwitchEngineAction extends ComboBoxAction {
     @Nonnull
     @Override
-    public DefaultActionGroup createPopupActionGroup(DataContext context) {
+    public DefaultActionGroup createPopupActionGroup(JComponent component) {
       final DefaultActionGroup engChooser = new DefaultActionGroup();
       for (final CoverageEngine engine : collectEngines()) {
         engChooser.add(new AnAction(engine.getPresentableText()) {

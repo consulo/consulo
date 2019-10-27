@@ -27,13 +27,18 @@ package com.intellij.openapi.actionSystem.ex;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.util.messages.Topic;
+import consulo.annotations.DeprecationInfo;
 
 /**
  * @author Kirill Kalishev
  * @author Konstantin Bulenkov
  */
 public interface AnActionListener {
-  void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event);
+  Topic<AnActionListener> TOPIC = Topic.create("action changes", AnActionListener.class);
+
+  default void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
+  }
 
   /**
    * Note that using <code>dataContext</code> in implementing methods is unsafe - it could have been invalidated by the performed action.
@@ -44,14 +49,19 @@ public interface AnActionListener {
   default void beforeEditorTyping(char c, DataContext dataContext) {
   }
 
+  @Deprecated
+  @DeprecationInfo("Use AnActionListener")
   abstract class Adapter implements AnActionListener {
     @Override
-    public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {}
+    public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
+    }
 
     @Override
-    public void afterActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {}
+    public void afterActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
+    }
 
     @Override
-    public void beforeEditorTyping(char c, DataContext dataContext) {}
+    public void beforeEditorTyping(char c, DataContext dataContext) {
+    }
   }
 }

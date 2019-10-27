@@ -18,7 +18,7 @@ package consulo.auth;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.io.HttpRequests;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.xmlb.XmlSerializerUtil;

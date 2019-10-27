@@ -18,9 +18,10 @@ package com.intellij.application.options.editor;
 import com.intellij.codeInsight.daemon.*;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.lang.LanguageExtensionPoint;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
@@ -29,15 +30,17 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.CheckBoxList;
 import com.intellij.ui.ListSpeedSearch;
+import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SeparatorWithText;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.speedSearch.SpeedSearchSupply;
 import com.intellij.util.NullableFunction;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.containers.hash.HashSet;
+import com.intellij.util.ui.DialogUtil;
 import com.intellij.util.ui.EmptyIcon;
 import consulo.awt.TargetAWT;
 import consulo.ui.RequiredUIAccess;
@@ -58,11 +61,10 @@ import java.util.*;
 public class GutterIconsConfigurable implements SearchableConfigurable, Configurable.NoScroll {
   public static final String DISPLAY_NAME = "Gutter Icons";
   public static final String ID = "editor.preferences.gutterIcons";
-  private JPanel myPanel;
+
   private CheckBoxList<GutterIconDescriptor> myList;
   private JBCheckBox myShowGutterIconsJBCheckBox;
   private List<GutterIconDescriptor> myDescriptors;
-  private Map<GutterIconDescriptor, IdeaPluginDescriptor> myFirstDescriptors = new HashMap<>();
 
   @Nls
   @Override
@@ -80,15 +82,65 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
   @Nullable
   @Override
   public JComponent createComponent() {
-    ExtensionPoint<LineMarkerProvider> point = Extensions.getRootArea().getExtensionPoint(LineMarkerProviders.EP_NAME);
-    @SuppressWarnings("unchecked")
-    LanguageExtensionPoint<LineMarkerProvider>[] extensions = (LanguageExtensionPoint<LineMarkerProvider>[])point.getExtensions();
-    NullableFunction<LanguageExtensionPoint<LineMarkerProvider>, IdeaPluginDescriptor> function =
-            point1 -> {
-              LineMarkerProvider instance = point1.getInstance();
-              return instance instanceof LineMarkerProviderDescriptor && ((LineMarkerProviderDescriptor)instance).getName() != null ? point1.getPluginDescriptor() : null;
-            };
-    MultiMap<IdeaPluginDescriptor, LanguageExtensionPoint<LineMarkerProvider>> map = ContainerUtil.groupBy(Arrays.asList(extensions), function);
+    myShowGutterIconsJBCheckBox = new JBCheckBox(ApplicationBundle.message("checkbox.show.gutter.icons"));
+    DialogUtil.registerMnemonic(myShowGutterIconsJBCheckBox, '&');
+
+    JPanel panel = new JPanel(new BorderLayout());
+
+    panel.add(myShowGutterIconsJBCheckBox, BorderLayout.NORTH);
+
+    Map<GutterIconDescriptor, IdeaPluginDescriptor> firstDescriptors = new HashMap<>();
+
+    myList = new CheckBoxList<GutterIconDescriptor>() {
+      @Override
+      protected JComponent adjustRendering(JComponent rootComponent, JCheckBox checkBox, int index, boolean selected, boolean hasFocus) {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBorder(BorderFactory.createEmptyBorder());
+        GutterIconDescriptor descriptor = myList.getItemAt(index);
+        Icon icon = descriptor == null ? null : TargetAWT.to(descriptor.getIcon());
+        JLabel label = new JLabel(icon == null ? EmptyIcon.ICON_16 : icon);
+        label.setOpaque(true);
+        label.setPreferredSize(new Dimension(25, -1));
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        panel.add(label, BorderLayout.WEST);
+        panel.add(checkBox, BorderLayout.CENTER);
+        panel.setBackground(getBackground(false));
+        label.setBackground(getBackground(selected));
+        if (!checkBox.isOpaque()) {
+          checkBox.setOpaque(true);
+        }
+        checkBox.setBorder(null);
+
+        IdeaPluginDescriptor pluginDescriptor = firstDescriptors.get(descriptor);
+        if(pluginDescriptor != null) {
+          SeparatorWithText separator = new SeparatorWithText();
+          String name = pluginDescriptor.getName();
+          separator.setCaption(name);
+          panel.add(separator, BorderLayout.NORTH);
+        }
+
+        return panel;
+      }
+
+      @Nullable
+      @Override
+      protected Point findPointRelativeToCheckBox(int x, int y, @Nonnull JCheckBox checkBox, int index) {
+        return super.findPointRelativeToCheckBoxWithAdjustedRendering(x, y, checkBox, index);
+      }
+    };
+    myList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+    myList.setBorder(BorderFactory.createEmptyBorder());
+    new ListSpeedSearch(myList, (Convertor<Object, String>)o -> o instanceof JCheckBox ? ((JCheckBox)o).getText() : null);
+    panel.add(ScrollPaneFactory.createScrollPane(myList), BorderLayout.CENTER);
+
+    ExtensionPoint<LanguageExtensionPoint<LineMarkerProvider>> point = Application.get().getExtensionsArea().getExtensionPoint(LineMarkerProviders.EP_NAME);
+    List<LanguageExtensionPoint<LineMarkerProvider>> extensions = point.getExtensionList();
+    NullableFunction<LanguageExtensionPoint<LineMarkerProvider>, IdeaPluginDescriptor> function = point1 -> {
+      LineMarkerProvider instance = point1.getInstance();
+      return instance instanceof LineMarkerProviderDescriptor && ((LineMarkerProviderDescriptor)instance).getName() != null ? point1.getPluginDescriptor() : null;
+    };
+
+    MultiMap<IdeaPluginDescriptor, LanguageExtensionPoint<LineMarkerProvider>> map = ContainerUtil.groupBy(extensions, function);
     Map<GutterIconDescriptor, IdeaPluginDescriptor> pluginDescriptorMap = ContainerUtil.newHashMap();
     Set<String> ids = new HashSet<>();
     myDescriptors = new ArrayList<>();
@@ -131,14 +183,14 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
     for (GutterIconDescriptor descriptor : myDescriptors) {
       IdeaPluginDescriptor pluginDescriptor = pluginDescriptorMap.get(descriptor);
       if (pluginDescriptor != current) {
-        myFirstDescriptors.put(descriptor, pluginDescriptor);
+        firstDescriptors.put(descriptor, pluginDescriptor);
         current = pluginDescriptor;
       }
     }
 
     myList.setItems(myDescriptors, GutterIconDescriptor::getName);
     myShowGutterIconsJBCheckBox.addChangeListener(e -> myList.setEnabled(myShowGutterIconsJBCheckBox.isSelected()));
-    return myPanel;
+    return panel;
   }
 
   @RequiredUIAccess
@@ -179,55 +231,6 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
     myList.setEnabled(gutterIconsShown);
   }
 
-  @RequiredUIAccess
-  @Override
-  public void disposeUIResources() {
-    for (ChangeListener listener : myShowGutterIconsJBCheckBox.getChangeListeners()) {
-      myShowGutterIconsJBCheckBox.removeChangeListener(listener);
-    }
-  }
-
-  private void createUIComponents() {
-    myList = new CheckBoxList<GutterIconDescriptor>() {
-      @Override
-      protected JComponent adjustRendering(JComponent rootComponent, JCheckBox checkBox, int index, boolean selected, boolean hasFocus) {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(BorderFactory.createEmptyBorder());
-        GutterIconDescriptor descriptor = myList.getItemAt(index);
-        Icon icon = descriptor == null ? null : TargetAWT.to(descriptor.getIcon());
-        JLabel label = new JLabel(icon == null ? EmptyIcon.ICON_16 : icon);
-        label.setOpaque(true);
-        label.setPreferredSize(new Dimension(25, -1));
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-        panel.add(label, BorderLayout.WEST);
-        panel.add(checkBox, BorderLayout.CENTER);
-        panel.setBackground(getBackground(false));
-        label.setBackground(getBackground(selected));
-        if (!checkBox.isOpaque()) {
-          checkBox.setOpaque(true);
-        }
-        checkBox.setBorder(null);
-
-        IdeaPluginDescriptor pluginDescriptor = myFirstDescriptors.get(descriptor);
-        SeparatorWithText separator = new SeparatorWithText();
-        String name = pluginDescriptor.getName();
-        separator.setCaption("IDEA CORE".equals(name) ? "Common" : name);
-        panel.add(separator, BorderLayout.NORTH);
-
-        return panel;
-      }
-
-      @Nullable
-      @Override
-      protected Point findPointRelativeToCheckBox(int x, int y, @Nonnull JCheckBox checkBox, int index) {
-        return super.findPointRelativeToCheckBoxWithAdjustedRendering(x, y, checkBox, index);
-      }
-    };
-    myList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-    myList.setBorder(BorderFactory.createEmptyBorder());
-    new ListSpeedSearch(myList, (Convertor<Object, String>)o -> o instanceof JCheckBox ? ((JCheckBox)o).getText() : null);
-  }
-
   @Nonnull
   @Override
   public String getId() {
@@ -237,9 +240,11 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
   @Nullable
   @Override
   public Runnable enableSearch(String option) {
-    return () -> ObjectUtils.assertNotNull(SpeedSearchSupply.getSupply(myList, true)).findAndSelectElement(option);
+    return () -> ObjectUtil.assertNotNull(SpeedSearchSupply.getSupply(myList, true)).findAndSelectElement(option);
   }
 
   @TestOnly
-  public List<GutterIconDescriptor> getDescriptors() { return myDescriptors; }
+  public List<GutterIconDescriptor> getDescriptors() {
+    return myDescriptors;
+  }
 }

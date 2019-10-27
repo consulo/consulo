@@ -2,7 +2,6 @@ package com.intellij.remoteServer.impl.runtime;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.remoteServer.configuration.RemoteServer;
 import com.intellij.remoteServer.configuration.deployment.DeploymentConfiguration;
 import com.intellij.remoteServer.configuration.deployment.DeploymentSource;
@@ -20,6 +19,8 @@ import com.intellij.remoteServer.runtime.deployment.debug.DebugConnectionDataNot
 import com.intellij.remoteServer.runtime.deployment.debug.DebugConnector;
 import com.intellij.util.ParameterizedRunnable;
 import com.intellij.util.containers.ConcurrentHashMap;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

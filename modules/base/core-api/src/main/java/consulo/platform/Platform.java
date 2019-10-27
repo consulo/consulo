@@ -16,13 +16,16 @@
 package consulo.platform;
 
 import com.intellij.openapi.extensions.PluginId;
+import com.intellij.util.LineSeparator;
 import com.intellij.util.ObjectUtil;
 import consulo.annotations.DeprecationInfo;
+import consulo.platform.internal.PlatformInternal;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -31,37 +34,12 @@ import java.io.File;
 public interface Platform {
   //region Migration staff
   @Deprecated
-  static boolean ourUnifiedVariantAnyway = Boolean.getBoolean("consulo.code.unify.enabled");
-
-  @Deprecated
-  @DeprecationInfo("This is marker for future unify. In most case unified variant works good, but need more tests")
+  @DeprecationInfo("This is marker for running tasks if desktop platform, in ideal future, must be removed")
   @SuppressWarnings("deprecation")
-  static void hacky(@Nonnull Runnable desktopVariant, @Nonnull Runnable unifiedVariant) {
-    if (ourUnifiedVariantAnyway) {
-      unifiedVariant.run();
-      return;
-    }
-
-    if (Platform.current().isDesktop()) {
-      desktopVariant.run();
-    }
-    else {
-      unifiedVariant.run();
-    }
-  }
-
-  @Deprecated
-  @DeprecationInfo("This is marker for future unify. In most case unified variant works good, but need more tests")
-  @SuppressWarnings("deprecation")
-  static void onlyAtDesktop(@Nonnull Runnable runnable) {
+  static void runIfDesktopPlatform(@Nonnull Runnable runnable) {
     if (current().isDesktop()) {
       runnable.run();
     }
-  }
-
-  @Deprecated
-  static boolean isUnifiedVariant() {
-    return ourUnifiedVariantAnyway;
   }
   //endregion
 
@@ -74,7 +52,7 @@ public interface Platform {
      * @return image filemanager image for file. If return null it will use default icon from IDE
      */
     @Nullable
-    default Image getImage(File file) {
+    default Image getImage(@Nonnull File file) {
       return null;
     }
   }
@@ -82,7 +60,75 @@ public interface Platform {
   interface OperatingSystem {
     boolean isWindows();
 
+    boolean isWindowsVistaOrNewer();
+
+    boolean isWindows7OrNewer();
+
+    boolean isWindows8OrNewer();
+
+    boolean isWindows10OrNewer();
+
     boolean isMac();
+
+    boolean isLinux();
+
+    default boolean isUnix() {
+      return !isWindows();
+    }
+
+    default boolean isXWindow() {
+      return isUnix() && !isMac();
+    }
+
+    @Nonnull
+    default LineSeparator getLineSeparator() {
+      if(isWindows()) {
+        return LineSeparator.CRLF;
+      }
+      return LineSeparator.LF;
+    }
+
+    @Nonnull
+    String name();
+
+    @Nonnull
+    String version();
+
+    @Nonnull
+    String arch();
+
+    @Nonnull
+    Map<String, String> getEnvironmentVariables();
+
+    @Nullable
+    String getEnvironmentVariable(@Nonnull String key);
+
+    @Nullable
+    default String getEnvironmentVariable(@Nonnull String key, @Nonnull String defaultValue) {
+      return ObjectUtil.notNull(getEnvironmentVariable(key), defaultValue);
+    }
+  }
+
+  interface Jvm {
+    @Nonnull
+    String version();
+
+    @Nonnull
+    String runtimeVersion();
+
+    @Nonnull
+    String vendor();
+
+    @Nullable
+    String getRuntimeProperty(@Nonnull String key);
+
+    @Nullable
+    default String getRuntimeProperty(@Nonnull String key, @Nonnull String defaultValue) {
+      return ObjectUtil.notNull(getRuntimeProperty(key), defaultValue);
+    }
+
+    @Nonnull
+    Map<String, String> getRuntimeProperties();
   }
 
   @Nonnull
@@ -97,6 +143,9 @@ public interface Platform {
   OperatingSystem os();
 
   @Nonnull
+  Jvm jvm();
+
+  @Nonnull
   PluginId getPluginId();
 
   boolean isDesktop();
@@ -109,17 +158,45 @@ public interface Platform {
   boolean isUnderRoot();
 
   @Nullable
-  String getRuntimeProperty(@Nonnull String key);
+  @Deprecated
+  @DeprecationInfo("Use jvm().getRuntimeProperty()")
+  default String getRuntimeProperty(@Nonnull String key) {
+    return jvm().getRuntimeProperty(key);
+  }
 
   @Nullable
+  @Deprecated
+  @DeprecationInfo("Use jvm().getRuntimeProperty()")
+  @SuppressWarnings("deprecation")
   default String getRuntimeProperty(@Nonnull String key, @Nonnull String defaultValue) {
     return ObjectUtil.notNull(getRuntimeProperty(key), defaultValue);
   }
 
-  @Nullable
-  String getEnvironmentVariable(@Nonnull String key);
+  @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use jvm().getRuntimeProperty()")
+  default Map<String, String> getRuntimeProperties() {
+    return jvm().getRuntimeProperties();
+  }
+
+  @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use os().getEnvironmentVariables()")
+  default Map<String, String> getEnvironmentVariables() {
+    return os().getEnvironmentVariables();
+  }
 
   @Nullable
+  @Deprecated
+  @DeprecationInfo("Use os().getEnvironmentVariables()")
+  default String getEnvironmentVariable(@Nonnull String key) {
+    return os().getEnvironmentVariable(key);
+  }
+
+  @Nullable
+  @Deprecated
+  @DeprecationInfo("Use os().getEnvironmentVariables()")
+  @SuppressWarnings("deprecation")
   default String getEnvironmentVariable(@Nonnull String key, @Nonnull String defaultValue) {
     return ObjectUtil.notNull(getEnvironmentVariable(key), defaultValue);
   }

@@ -15,7 +15,7 @@
  */
 package consulo.injecting.pico;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.ExceptionUtil;
 import consulo.injecting.PostInjectListener;
 import consulo.injecting.key.InjectingKey;
@@ -90,6 +90,7 @@ class BaseComponentAdapter<T> implements ComponentAdapter {
     }
 
     boolean isSingleton, isAnnotationSingleton;
+    Class<? extends T> targetClass = myImplementationKey.getTargetClass();
     synchronized (myLock) {
       // double check
       instance = myInstanceIfSingleton;
@@ -97,14 +98,14 @@ class BaseComponentAdapter<T> implements ComponentAdapter {
         return instance;
       }
 
-      isAnnotationSingleton = myImplementationKey.getTargetClass().isAnnotationPresent(Singleton.class);
+      isAnnotationSingleton = targetClass.isAnnotationPresent(Singleton.class);
 
       isSingleton = myForceSingleton || isAnnotationSingleton;
 
       String creationTrace = myCreationTrace;
       if (creationTrace != null) {
         String currentTrace = exceptionText("current trace");
-        LOGGER.error("Cycle initialization: " + myImplementationKey.getTargetClass().getName() + "\n" + currentTrace + ",\n\n" + creationTrace);
+        LOGGER.error("Cycle initialization: " + targetClass.getName() + "\n" + currentTrace + ",\n\n" + creationTrace);
       }
 
       if (isSingleton) {
@@ -115,17 +116,17 @@ class BaseComponentAdapter<T> implements ComponentAdapter {
 
       try {
         ConstructorInjectionComponentAdapter delegate = new ConstructorInjectionComponentAdapter(getComponentKey(), getComponentImplementation());
-        instance = myRemap.apply(() -> (T)delegate.getComponentInstance(container));
+        instance = myRemap.apply(() -> GetInstanceValidator.createObject(targetClass, () -> (T)delegate.getComponentInstance(container)));
 
         try {
           myAfterInjectionListener.afterInject(l, instance);
         }
         catch (Throwable t) {
-          LOGGER.error("Problem with after inject: " + myImplementationKey.getTargetClass().getName(), t);
+          LOGGER.error("Problem with after inject: " + targetClass.getName(), t);
         }
       }
       catch (Throwable t) {
-        LOGGER.error("Problem with initializing: " + myImplementationKey.getTargetClass().getName(), t);
+        LOGGER.error("Problem with initializing: " + targetClass.getName(), t);
       }
       finally {
         if (isSingleton) {
@@ -136,7 +137,7 @@ class BaseComponentAdapter<T> implements ComponentAdapter {
     }
 
     if (isSingleton && !isAnnotationSingleton) {
-      LOGGER.warn("Class " + myImplementationKey.getTargetClass().getName() + " is not annotated by @Singleton");
+      LOGGER.warn("Class " + targetClass.getName() + " is not annotated by @Singleton");
     }
 
     return instance;

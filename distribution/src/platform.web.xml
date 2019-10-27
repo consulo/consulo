@@ -1,0 +1,45 @@
+<!--
+  - Copyright 2013-2019 consulo.io
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  - http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+<component>
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>Consulo/platform/buildSNAPSHOT/modules/consulo.platform.web/lib</outputDirectory>
+      <unpack>false</unpack>
+      <includes>
+        <include>consulo:consulo-platform-web-plugin</include>
+        <include>consulo:consulo-web-lang-impl</include>
+        <include>consulo:consulo-web-platform-api</include>
+        <include>consulo:consulo-web-platform-impl</include>
+        <include>consulo:consulo-web-ui-impl-server</include>
+        <include>consulo:consulo-web-ui-impl-shared</include>
+
+        <include>com.vaadin:vaadin-server</include>
+        <include>com.vaadin:vaadin-push</include>
+        <include>com.vaadin:vaadin-shared</include>
+        <include>com.vaadin:vaadin-themes</include>
+        <include>com.vaadin:vaadin-sass-compiler</include>
+        <include>com.vaadin.external.flute:flute</include>
+        <include>com.vaadin.external.atmosphere:atmosphere-runtime</include>
+        <include>com.vaadin.external.slf4j:vaadin-slf4j-jdk14</include>
+        <include>org.jsoup:jsoup</include>
+        <include>org.w3c.css:sac</include>
+        <include>ar.com.hjg:pngj</include>
+
+        <include>consulo:consulo-web-ui-impl-client</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
+</component>

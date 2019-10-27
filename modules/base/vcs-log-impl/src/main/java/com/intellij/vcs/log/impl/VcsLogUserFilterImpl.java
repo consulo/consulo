@@ -15,7 +15,6 @@
  */
 package com.intellij.vcs.log.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
@@ -24,6 +23,8 @@ import com.intellij.vcs.log.VcsCommitMetadata;
 import com.intellij.vcs.log.VcsLogUserFilter;
 import com.intellij.vcs.log.VcsUser;
 import com.intellij.vcs.log.util.VcsUserUtil;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

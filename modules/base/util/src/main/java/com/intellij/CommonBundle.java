@@ -18,10 +18,10 @@ package com.intellij;
 
 import com.intellij.openapi.util.SystemInfo;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.PropertyKey;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.util.ResourceBundle;
@@ -92,6 +92,10 @@ public class CommonBundle extends BundleBase {
 
   public static String getOkButtonText(){
     return message("button.ok");
+  }
+
+  public static String getNextButtonText() {
+    return message("button.next");
   }
 
   public static String getYesButtonText(){

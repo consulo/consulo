@@ -18,17 +18,13 @@ package com.intellij.openapi.wm.impl;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.util.ExpirableRunnable;
-import com.intellij.openapi.wm.FocusCommand;
-import com.intellij.openapi.wm.FocusRequestor;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 
 public class IdeFocusManagerHeadless implements IdeFocusManager {
 
@@ -43,12 +39,6 @@ public class IdeFocusManagerHeadless implements IdeFocusManager {
   @Nonnull
   @Override
   public AsyncResult<Void> requestFocus(@Nonnull consulo.ui.Component c, boolean forced) {
-    return AsyncResult.resolved();
-  }
-
-  @Override
-  @Nonnull
-  public AsyncResult<Void> requestFocus(@Nonnull final FocusCommand command, final boolean forced) {
     return AsyncResult.resolved();
   }
 
@@ -80,20 +70,6 @@ public class IdeFocusManagerHeadless implements IdeFocusManager {
   }
 
   @Override
-  public boolean dispatch(@Nonnull KeyEvent e) {
-    return false;
-  }
-
-  @Override
-  public void typeAheadUntil(AsyncResult<Void> done) {
-  }
-
-  @Override
-  public boolean isFocusBeingTransferred() {
-    return false;
-  }
-
-  @Override
   @Nonnull
   public AsyncResult<Void> requestDefaultFocus(boolean forced) {
     return AsyncResult.resolved();
@@ -102,27 +78,6 @@ public class IdeFocusManagerHeadless implements IdeFocusManager {
   @Override
   public boolean isFocusTransferEnabled() {
     return true;
-  }
-
-  @Nonnull
-  @Override
-  public Expirable getTimestamp(boolean trackOnlyForcedCommands) {
-    return new Expirable() {
-      @Override
-      public boolean isExpired() {
-        return false;
-      }
-    };
-  }
-
-  @Nonnull
-  @Override
-  public FocusRequestor getFurtherRequestor() {
-    return this;
-  }
-
-  @Override
-  public void revalidateFocus(@Nonnull ExpirableRunnable runnable) {
   }
 
   @Override

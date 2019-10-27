@@ -19,6 +19,7 @@ import com.intellij.ide.ui.search.SearchableOptionsRegistrar;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.SortableColumnModel;
+import consulo.container.plugin.PluginDescriptor;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -34,9 +35,9 @@ import java.util.Set;
 public abstract class PluginTableModel extends AbstractTableModel implements SortableColumnModel {
   protected static final String NAME = "Name";
   protected ColumnInfo[] columns;
-  protected List<IdeaPluginDescriptor> view;
+  protected List<PluginDescriptor> view;
   private RowSorter.SortKey myDefaultSortKey;
-  protected final List<IdeaPluginDescriptor> filtered = new ArrayList<>();
+  protected final List<PluginDescriptor> filtered = new ArrayList<>();
   private boolean mySortByStatus;
   private boolean mySortByRating;
   private boolean mySortByDownloads;
@@ -53,27 +54,32 @@ public abstract class PluginTableModel extends AbstractTableModel implements Sor
     myDefaultSortKey = sortKey;
   }
 
+  @Override
   public int getColumnCount() {
     return columns.length;
   }
 
+  @Override
   public ColumnInfo[] getColumnInfos() {
     return columns;
   }
 
+  @Override
   public boolean isSortable() {
     return true;
   }
 
+  @Override
   public void setSortable(boolean aBoolean) {
     // do nothing cause it's always sortable
   }
 
+  @Override
   public String getColumnName(int column) {
     return columns[column].getName();
   }
 
-  public IdeaPluginDescriptor getObjectAt (int row) {
+  public PluginDescriptor getObjectAt (int row) {
     return view.get(row);
   }
 
@@ -87,18 +93,22 @@ public abstract class PluginTableModel extends AbstractTableModel implements Sor
     return myDefaultSortKey;
   }
 
+  @Override
   public int getRowCount() {
     return view.size();
   }
 
+  @Override
   public Object getValueAt(int rowIndex, int columnIndex) {
     return columns[columnIndex].valueOf(getObjectAt(rowIndex));
   }
 
+  @Override
   public boolean isCellEditable(final int rowIndex, final int columnIndex) {
     return columns[columnIndex].isCellEditable(getObjectAt(rowIndex));
   }
 
+  @Override
   public void setValueAt(final Object aValue, final int rowIndex, final int columnIndex) {
     columns[columnIndex].setValue(getObjectAt(rowIndex), aValue);
     fireTableCellUpdated(rowIndex, columnIndex);
@@ -106,7 +116,7 @@ public abstract class PluginTableModel extends AbstractTableModel implements Sor
 
   public ArrayList<IdeaPluginDescriptorImpl> dependent(IdeaPluginDescriptorImpl plugin) {
     ArrayList<IdeaPluginDescriptorImpl> list = new ArrayList<>();
-    for (IdeaPluginDescriptor any : getAllPlugins()) {
+    for (PluginDescriptor any : getAllPlugins()) {
       if (any instanceof IdeaPluginDescriptorImpl) {
         PluginId[] dep = any.getDependentPluginIds();
         for (PluginId id : dep) {
@@ -120,9 +130,9 @@ public abstract class PluginTableModel extends AbstractTableModel implements Sor
     return list;
   }
 
-  public abstract void updatePluginsList(List<IdeaPluginDescriptor> list);
+  public abstract void updatePluginsList(List<PluginDescriptor> list);
 
-  public void filter(List<IdeaPluginDescriptor> filtered){
+  public void filter(List<PluginDescriptor> filtered){
     fireTableDataChanged();
   }
 
@@ -130,16 +140,16 @@ public abstract class PluginTableModel extends AbstractTableModel implements Sor
     final SearchableOptionsRegistrar optionsRegistrar = SearchableOptionsRegistrar.getInstance();
     final Set<String> search = optionsRegistrar.getProcessedWords(filter);
 
-    final ArrayList<IdeaPluginDescriptor> desc = new ArrayList<>();
+    final ArrayList<PluginDescriptor> desc = new ArrayList<>();
 
-    final List<IdeaPluginDescriptor> toProcess = toProcess();
-    for (IdeaPluginDescriptor descriptor : filtered) {
+    final List<PluginDescriptor> toProcess = toProcess();
+    for (PluginDescriptor descriptor : filtered) {
       if (!toProcess.contains(descriptor)) {
         toProcess.add(descriptor);
       }
     }
     filtered.clear();
-    for (IdeaPluginDescriptor descriptor : toProcess) {
+    for (PluginDescriptor descriptor : toProcess) {
       if (isPluginDescriptorAccepted(descriptor) &&
           PluginManagerMain.isAccepted(filter, search, descriptor)) {
         desc.add(descriptor);
@@ -151,13 +161,13 @@ public abstract class PluginTableModel extends AbstractTableModel implements Sor
     filter(desc);
   }
 
-  protected ArrayList<IdeaPluginDescriptor> toProcess() {
+  protected ArrayList<PluginDescriptor> toProcess() {
     return new ArrayList<>(view);
   }
 
   public abstract int getNameColumn();
 
-  public abstract boolean isPluginDescriptorAccepted(IdeaPluginDescriptor descriptor);
+  public abstract boolean isPluginDescriptorAccepted(PluginDescriptor descriptor);
 
   public void sort() {
     Collections.sort(view, columns[getNameColumn()].getComparator());
@@ -196,8 +206,8 @@ public abstract class PluginTableModel extends AbstractTableModel implements Sor
     mySortByUpdated = sortByUpdated;
   }
 
-  public List<IdeaPluginDescriptor> getAllPlugins() {
-    final ArrayList<IdeaPluginDescriptor> list = new ArrayList<>();
+  public List<PluginDescriptor> getAllPlugins() {
+    final ArrayList<PluginDescriptor> list = new ArrayList<>();
     list.addAll(view);
     list.addAll(filtered);
     return list;

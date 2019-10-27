@@ -17,7 +17,7 @@
 package com.intellij.refactoring.classMembers;
 
 import com.intellij.psi.PsiElement;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 
 /**
  * @author Dennis.Ushakov

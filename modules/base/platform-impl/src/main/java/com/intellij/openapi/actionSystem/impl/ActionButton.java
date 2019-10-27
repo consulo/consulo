@@ -23,6 +23,7 @@ import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.util.IconLoader;
+import com.intellij.openapi.util.Key;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBDimension;
 import com.intellij.util.ui.JBUI;
@@ -42,6 +43,13 @@ import static java.awt.event.KeyEvent.VK_SPACE;
 
 public class ActionButton extends JComponent implements ActionButtonComponent, AnActionHolder, Accessible {
   private static final String uiClassID = "ActionButtonUI";
+  /**
+   * By default button representing popup action group displays 'dropdown' icon.
+   * This key allows to avoid 'dropdown' icon painting, just put it in ActionButton's presentation or template presentation of ActionGroup like this:
+   * <code>presentation.putClientProperty(ActionButton.HIDE_DROPDOWN_ICON, Boolean.TRUE)</code>
+   */
+
+  public static final Key<Boolean> HIDE_DROPDOWN_ICON = Key.create("HIDE_DROPDOWN_ICON");
 
   private JBDimension myMinimumButtonSize;
   private PropertyChangeListener myPresentationListener;
@@ -95,6 +103,13 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
     putClientProperty(UIUtil.CENTER_TOOLTIP_DEFAULT, Boolean.TRUE);
 
     updateUI();
+  }
+
+  public boolean shallPaintDownArrow() {
+    if (!(myAction instanceof ActionGroup && ((ActionGroup)myAction).isPopup())) return false;
+    if (Boolean.TRUE == myAction.getTemplatePresentation().getClientProperty(HIDE_DROPDOWN_ICON)) return false;
+    if (Boolean.TRUE == myPresentation.getClientProperty(HIDE_DROPDOWN_ICON)) return false;
+    return true;
   }
 
   public void setMinimalMode(boolean minimalMode) {
@@ -182,10 +197,7 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
   }
 
   private void actionPerformed(final AnActionEvent event) {
-    if (myAction instanceof ActionGroup &&
-        !(myAction instanceof CustomComponentAction) &&
-        ((ActionGroup)myAction).isPopup() &&
-        !((ActionGroup)myAction).canBePerformed(event.getDataContext())) {
+    if (myAction instanceof ActionGroup && !(myAction instanceof CustomComponentAction) && ((ActionGroup)myAction).isPopup() && !((ActionGroup)myAction).canBePerformed(event.getDataContext())) {
       final ActionManagerImpl am = (ActionManagerImpl)ActionManager.getInstance();
       ActionPopupMenuImpl popupMenu = (ActionPopupMenuImpl)am.createActionPopupMenu(event.getPlace(), (ActionGroup)myAction, new MenuItemPresentationFactory() {
         @Override

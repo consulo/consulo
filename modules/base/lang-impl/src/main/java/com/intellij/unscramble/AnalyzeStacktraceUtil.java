@@ -23,11 +23,11 @@ import com.intellij.execution.filters.Filter;
 import com.intellij.execution.filters.TextConsoleBuilder;
 import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.impl.ConsoleViewImpl;
+import com.intellij.execution.impl.ConsoleViewUtil;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.execution.ui.ExecutionConsole;
 import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.execution.ui.actions.CloseAction;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
@@ -37,7 +37,6 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.EditorSettings;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
@@ -80,7 +79,7 @@ public class AnalyzeStacktraceUtil {
 
   public static RunContentDescriptor addConsole(Project project, @Nullable ConsoleFactory consoleFactory, final String tabTitle, String text, @Nullable consulo.ui.image.Image icon) {
     final TextConsoleBuilder builder = TextConsoleBuilderFactory.getInstance().createBuilder(project);
-    builder.filters(Extensions.getExtensions(EP_NAME, project));
+    builder.filters(EP_NAME.getExtensions(project));
     final ConsoleView consoleView = builder.getConsole();
 
     final DefaultActionGroup toolbarActions = new DefaultActionGroup();
@@ -96,8 +95,10 @@ public class AnalyzeStacktraceUtil {
     for (AnAction action : consoleView.createConsoleActions()) {
       toolbarActions.add(action);
     }
-    toolbarActions.add(new AnnotateStackTraceAction((ConsoleViewImpl)consoleView));
-    toolbarActions.add(new CloseAction(executor, descriptor, project));
+    final ConsoleViewImpl console = (ConsoleViewImpl)consoleView;
+    ConsoleViewUtil.enableReplaceActionForConsoleViewEditor(console.getEditor());
+    console.getEditor().getSettings().setCaretRowShown(true);
+    toolbarActions.add(new AnnotateStackTraceAction(console.getEditor(), console.getHyperlinks()));
     ExecutionManager.getInstance(project).getContentManager().showRunContent(executor, descriptor);
     consoleView.allowHeavyFilters();
     if (consoleFactory == null) {

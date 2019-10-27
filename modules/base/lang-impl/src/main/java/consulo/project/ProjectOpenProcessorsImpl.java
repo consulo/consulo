@@ -16,14 +16,13 @@
 package consulo.project;
 
 import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.platform.PlatformProjectOpenProcessor;
+import com.intellij.platform.DefaultProjectOpenProcessor;
 import com.intellij.projectImport.ProjectOpenProcessor;
-import consulo.moduleImport.ModuleImportBasedProjectOpenProcessor;
-import consulo.moduleImport.ModuleImportProvider;
-import consulo.moduleImport.ModuleImportProviders;
-import javax.annotation.Nonnull;
-import javax.inject.Singleton;
+import consulo.moduleImport.ImportProjectOpenProcessor;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,16 +32,18 @@ import java.util.List;
  */
 @Singleton
 public class ProjectOpenProcessorsImpl implements ProjectOpenProcessors {
-  @SuppressWarnings("unchecked")
-  private NotNullLazyValue<ProjectOpenProcessor[]> myCacheValue = NotNullLazyValue.createValue(() -> {
-    List<ProjectOpenProcessor> processors = new ArrayList<>();
-    processors.add(PlatformProjectOpenProcessor.getInstance());
+  private final NotNullLazyValue<ProjectOpenProcessor[]> myCacheValue;
 
-    for (ModuleImportProvider<?> provider : ModuleImportProviders.getExtensions(false)) {
-      processors.add(new ModuleImportBasedProjectOpenProcessor(provider));
-    }
-    return processors.toArray(new ProjectOpenProcessor[processors.size()]);
-  });
+  @Inject
+  @SuppressWarnings("unchecked")
+  public ProjectOpenProcessorsImpl() {
+    myCacheValue = NotNullLazyValue.createValue(() -> {
+      List<ProjectOpenProcessor> processors = new ArrayList<>();
+      processors.add(DefaultProjectOpenProcessor.getInstance());
+      processors.add(new ImportProjectOpenProcessor());
+      return processors.toArray(new ProjectOpenProcessor[processors.size()]);
+    });
+  }
 
   @Nonnull
   @Override

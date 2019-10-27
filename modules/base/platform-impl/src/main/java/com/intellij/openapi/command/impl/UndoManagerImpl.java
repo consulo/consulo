@@ -27,7 +27,7 @@ import com.intellij.openapi.command.CommandListener;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.command.undo.*;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -43,11 +43,12 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.psi.ExternalChangeAction;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.HashSet;
+import consulo.annotations.RequiredWriteAction;
 import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.psi.impl.ExternalChangeMarker;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.TestOnly;
 
@@ -88,8 +89,9 @@ public class UndoManagerImpl implements UndoManager, Disposable {
 
   private DocumentReference myOriginatorReference;
 
+  @RequiredWriteAction
   public static boolean isRefresh() {
-    return ApplicationManager.getApplication().hasWriteAction(ExternalChangeAction.class);
+    return ExternalChangeMarker.isMarked(ExternalChangeMarker.ExternalChangeAction);
   }
 
   public static int getGlobalUndoLimit() {
@@ -160,8 +162,6 @@ public class UndoManagerImpl implements UndoManager, Disposable {
         }
       }
     }, this);
-
-    Disposer.register(this, new DocumentUndoProvider(myProject));
 
     myUndoProviders = myProject == null
                       ? UndoProvider.EP_NAME.getExtensionList()

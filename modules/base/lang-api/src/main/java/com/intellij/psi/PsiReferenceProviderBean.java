@@ -18,7 +18,7 @@ package com.intellij.psi;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.patterns.ElementPattern;

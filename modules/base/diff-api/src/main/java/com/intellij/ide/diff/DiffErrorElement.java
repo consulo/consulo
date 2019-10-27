@@ -21,9 +21,9 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.io.IOException;
 
 /**
@@ -83,7 +83,7 @@ public class DiffErrorElement extends DiffElement {
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Nodes.ErrorIntroduction;
   }
 

@@ -66,7 +66,7 @@ public class LogicalRootsManagerImpl extends LogicalRootsManager {
     connection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
       @Override
       public void rootsChanged(ModuleRootEvent event) {
-        project.getMessageBus().asyncPublisher(LOGICAL_ROOTS).logicalRootsChanged();
+        project.getMessageBus().syncPublisher(LOGICAL_ROOTS).logicalRootsChanged();
       }
     });
     registerLogicalRootProvider(LogicalRootType.SOURCE_ROOT, new NotNullFunction<Module, List<VirtualFileLogicalRoot>>() {

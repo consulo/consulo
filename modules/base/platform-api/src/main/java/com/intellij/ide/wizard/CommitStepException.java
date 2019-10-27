@@ -18,7 +18,7 @@ package com.intellij.ide.wizard;
 /**
  * @author Vladimir Kondratyev
  */
-public class CommitStepException extends Exception{
+public class CommitStepException extends Exception {
   public CommitStepException(final String message) {
     super(message);
   }

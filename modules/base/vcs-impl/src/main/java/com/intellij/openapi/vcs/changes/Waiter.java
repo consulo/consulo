@@ -15,12 +15,13 @@
  */
 package com.intellij.openapi.vcs.changes;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.util.concurrency.Semaphore;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.util.concurrent.atomic.AtomicBoolean;

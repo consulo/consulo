@@ -19,47 +19,19 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.impl.ProjectFrameBounds;
 import consulo.util.ProjectWindowStateService;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.awt.*;
 
 /**
  * @author Sergey.Malenkov
  */
 @Singleton
-@State(name = "WindowStateProjectService", storages = {@Storage(StoragePathMacros.WORKSPACE_FILE)})
+@State(name = "WindowStateProjectService", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 final class WindowStateProjectService extends WindowStateServiceImpl implements ProjectWindowStateService {
-  private final Project myProject;
-
   @Inject
   WindowStateProjectService(Project project) {
-    myProject = project;
-  }
-
-  @Override
-  Point getDefaultLocationFor(Object object, @Nonnull String key) {
-    Rectangle bounds = getDefaultBoundsFor(object, key);
-    return bounds == null ? null : bounds.getLocation();
-  }
-
-  @Override
-  Dimension getDefaultSizeFor(Object object, @Nonnull String key) {
-    Rectangle bounds = getDefaultBoundsFor(object, key);
-    return bounds == null ? null : bounds.getSize();
-  }
-
-  @Override
-  Rectangle getDefaultBoundsFor(Object object, @Nonnull String key) {
-    //  backward compatibility when this service is used instead of ProjectFrameBounds
-    return !key.equals("ProjectFrameBounds") ? null : ProjectFrameBounds.getInstance(myProject).getBounds();
-  }
-
-  @Override
-  boolean getDefaultMaximizedFor(Object object, @Nonnull String key) {
-    return false;
+    super(project);
   }
 }

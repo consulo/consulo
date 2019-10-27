@@ -83,6 +83,8 @@ public class CompilerTask extends Task.Backgroundable {
   public void run(@Nonnull final ProgressIndicator indicator) {
     myIndicator = indicator;
 
+    indicator.setIndeterminate(false);
+
     final Semaphore semaphore = ((CompilerManagerImpl)CompilerManager.getInstance(myProject)).getCompilationSemaphore();
     boolean acquired = false;
     try {

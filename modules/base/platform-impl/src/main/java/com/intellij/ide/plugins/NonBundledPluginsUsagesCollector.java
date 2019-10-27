@@ -22,6 +22,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.container.plugin.PluginIds;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -44,7 +46,7 @@ public class NonBundledPluginsUsagesCollector extends UsagesCollector {
     final List<IdeaPluginDescriptor> nonBundledEnabledPlugins = ContainerUtil.filter(plugins, new Condition<IdeaPluginDescriptor>() {
       @Override
       public boolean value(final IdeaPluginDescriptor d) {
-        return d.isEnabled() && !d.isBundled() && d.getPluginId() != null;
+        return d.isEnabled() && !PluginIds.isPlatformPlugin(d.getPluginId()) && d.getPluginId() != null;
       }
     });
 

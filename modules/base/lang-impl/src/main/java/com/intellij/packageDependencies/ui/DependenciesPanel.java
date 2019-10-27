@@ -29,7 +29,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.components.PathMacroManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.ShowSettingsUtil;
@@ -1032,7 +1032,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
   private final class ChooseScopeTypeAction extends ComboBoxAction {
     @Override
     @Nonnull
-    public DefaultActionGroup createPopupActionGroup(DataContext context) {
+    public DefaultActionGroup createPopupActionGroup(JComponent component) {
       final DefaultActionGroup group = new DefaultActionGroup();
       for (final PatternDialectProvider provider : Extensions.getExtensions(PatternDialectProvider.EP_NAME)) {
         group.add(new AnAction(provider.getDisplayName()) {

@@ -18,10 +18,7 @@ package consulo.web.wm.impl;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.util.ExpirableRunnable;
-import com.intellij.openapi.wm.FocusCommand;
-import com.intellij.openapi.wm.FocusRequestor;
 import com.intellij.openapi.wm.IdeFrame;
 import consulo.wm.ApplicationIdeFocusManager;
 
@@ -29,7 +26,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 
 /**
  * @author VISTALL
@@ -46,13 +42,6 @@ public class WebApplicationIdeFocusManagerImpl implements ApplicationIdeFocusMan
   @Nonnull
   @Override
   public AsyncResult<Void> requestFocus(@Nonnull consulo.ui.Component c, boolean forced) {
-    return AsyncResult.resolved();
-  }
-
-  @Override
-  @Nonnull
-  public AsyncResult<Void> requestFocus(@Nonnull final FocusCommand command, final boolean forced) {
-    command.run();
     return AsyncResult.resolved();
   }
 
@@ -84,40 +73,14 @@ public class WebApplicationIdeFocusManagerImpl implements ApplicationIdeFocusMan
   }
 
   @Override
-  public boolean dispatch(@Nonnull KeyEvent e) {
-    return false;
-  }
-
-  @Override
-  public boolean isFocusBeingTransferred() {
-    return false;
-  }
-
-  @Override
   @Nonnull
   public AsyncResult<Void> requestDefaultFocus(boolean forced) {
-    return AsyncResult.done(null);
+    return AsyncResult.resolved();
   }
 
   @Override
   public boolean isFocusTransferEnabled() {
     return true;
-  }
-
-  @Nonnull
-  @Override
-  public Expirable getTimestamp(boolean trackOnlyForcedCommands) {
-    return () -> false;
-  }
-
-  @Nonnull
-  @Override
-  public FocusRequestor getFurtherRequestor() {
-    return this;
-  }
-
-  @Override
-  public void revalidateFocus(@Nonnull ExpirableRunnable runnable) {
   }
 
   @Override

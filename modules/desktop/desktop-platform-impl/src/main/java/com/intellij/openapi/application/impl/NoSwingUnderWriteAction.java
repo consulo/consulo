@@ -17,8 +17,8 @@ package com.intellij.openapi.application.impl;
 
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationAdapter;
-import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.application.ApplicationListener;
+import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -38,7 +38,7 @@ class NoSwingUnderWriteAction {
       return true;
     }, application);
 
-    application.addApplicationListener(new ApplicationAdapter() {
+    application.addApplicationListener(new ApplicationListener() {
       @Override
       public void afterWriteActionFinished(@Nonnull Object action) {
         reported.set(false);

@@ -18,12 +18,10 @@ package consulo.ide.customize;
 import com.intellij.ide.customize.AbstractCustomizeWizardStep;
 import com.intellij.ide.customize.CustomizeIDEWizardDialog;
 import com.intellij.ide.customize.CustomizePluginsStepPanel;
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.mock.MockProgressIndicator;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.VerticalFlowLayout;
@@ -31,9 +29,11 @@ import com.intellij.openapi.updateSettings.impl.PluginDownloader;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.Restarter;
 import com.intellij.util.ui.UIUtil;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -112,7 +112,7 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
 
   @Override
   public boolean beforeShown(boolean forward) {
-    final Set<IdeaPluginDescriptor> pluginsForDownload = myPluginsStepPanel == null ? Collections.<IdeaPluginDescriptor>emptySet() : myPluginsStepPanel.getPluginsForDownload();
+    final Set<PluginDescriptor> pluginsForDownload = myPluginsStepPanel == null ? Collections.<PluginDescriptor>emptySet() : myPluginsStepPanel.getPluginsForDownload();
     if (pluginsForDownload.isEmpty()) {
       add(createStartButton());
     }
@@ -128,7 +128,7 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
       ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
         @Override
         public void run() {
-          for (IdeaPluginDescriptor ideaPluginDescriptor : pluginsForDownload) {
+          for (PluginDescriptor ideaPluginDescriptor : pluginsForDownload) {
             try {
               PluginDownloader downloader = PluginDownloader.createDownloader(ideaPluginDescriptor, false);
               downloader.prepareToInstall(indicator);
@@ -161,8 +161,8 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
 
   @Override
   protected String getHTMLHeader() {
-    Set<IdeaPluginDescriptor> pluginsForDownload =
-            myPluginsStepPanel == null ? Collections.<IdeaPluginDescriptor>emptySet() : myPluginsStepPanel.getPluginsForDownload();
+    Set<PluginDescriptor> pluginsForDownload =
+            myPluginsStepPanel == null ? Collections.<PluginDescriptor>emptySet() : myPluginsStepPanel.getPluginsForDownload();
     return pluginsForDownload.isEmpty() || myDone ? "" : "<html><body><h2>Downloading plugins</h2></body></html>";
   }
 

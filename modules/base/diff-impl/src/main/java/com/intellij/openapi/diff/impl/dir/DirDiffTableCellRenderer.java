@@ -19,6 +19,7 @@ import com.intellij.ide.diff.DirDiffOperation;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -87,7 +88,7 @@ public class DirDiffTableCellRenderer extends DefaultTableCellRenderer {
         final String text = label.getText();
         label.setText("  " + text);
         if (text != null && text.trim().length() > 0) {
-          label.setIcon(modelColumn == 0 ? element.getSourceIcon() : element.getTargetIcon());
+          label.setIcon(TargetAWT.to(modelColumn == 0 ? element.getSourceIcon() : element.getTargetIcon()));
         }
       }
     }

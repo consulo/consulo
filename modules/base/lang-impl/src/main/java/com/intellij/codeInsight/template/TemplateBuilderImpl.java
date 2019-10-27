@@ -19,7 +19,6 @@ package com.intellij.codeInsight.template;
 import com.intellij.codeInsight.template.impl.ConstantNode;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.RangeMarker;
@@ -33,6 +32,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.Function;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
 import java.util.HashMap;

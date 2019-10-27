@@ -16,9 +16,9 @@
 package com.intellij.diagnostic;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.packaging.artifacts.ArtifactManager;
+import consulo.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA.

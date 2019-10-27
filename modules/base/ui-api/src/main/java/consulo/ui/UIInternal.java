@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import consulo.annotations.Internal;
+import consulo.container.plugin.util.PlatformServiceLocator;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.layout.*;
@@ -24,7 +25,6 @@ import consulo.ui.model.MutableListModel;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
-import consulo.util.ServiceLoaderUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,7 +41,7 @@ import java.util.function.Supplier;
  */
 @Internal
 public abstract class UIInternal {
-  private static UIInternal ourInstance = ServiceLoaderUtil.loadSingleOrError(UIInternal.class);
+  private static UIInternal ourInstance = PlatformServiceLocator.findImplementation(UIInternal.class);
 
   @Nonnull
   public static UIInternal get() {

@@ -1,6 +1,6 @@
 package com.intellij.refactoring.move.moveClassesOrPackages;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.vfs.VirtualFile;

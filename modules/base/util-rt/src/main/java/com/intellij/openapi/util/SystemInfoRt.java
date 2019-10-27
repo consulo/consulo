@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.util;
 
+import com.intellij.util.lang.JavaVersion;
+
 /**
  * Stripped-down version of {@code com.intellij.openapi.util.SystemInfo}.
  * Intended to use by external (out-of-IDE-process) runners and helpers so it should not contain any library dependencies.
@@ -25,6 +27,8 @@ package com.intellij.openapi.util;
 public class SystemInfoRt {
   public static final String OS_NAME = System.getProperty("os.name");
   public static final String OS_VERSION = System.getProperty("os.version").toLowerCase();
+  public static final String JAVA_RUNTIME_VERSION = System.getProperty("java.runtime.version");
+  public static final String ARCH_DATA_MODEL = System.getProperty("sun.arch.data.model");
 
   protected static final String _OS_NAME = OS_NAME.toLowerCase();
   public static final boolean isWindows = _OS_NAME.startsWith("windows");
@@ -33,6 +37,25 @@ public class SystemInfoRt {
   public static final boolean isLinux = _OS_NAME.startsWith("linux");
   public static final boolean isUnix = !isWindows && !isOS2;
 
-  public static final boolean isFileSystemCaseSensitive = isUnix && !isMac ||
-                                                          "true".equalsIgnoreCase(System.getProperty("idea.case.sensitive.fs"));
+  public static final boolean isFileSystemCaseSensitive = isUnix && !isMac || "true".equalsIgnoreCase(System.getProperty("idea.case.sensitive.fs"));
+
+  public static final boolean IS_AT_LEAST_JAVA9 = isModularJava();
+
+  public static final boolean is32Bit = ARCH_DATA_MODEL == null || ARCH_DATA_MODEL.equals("32");
+  public static final boolean is64Bit = !is32Bit;
+
+  @SuppressWarnings("JavaReflectionMemberAccess")
+  private static boolean isModularJava() {
+    try {
+      Class.class.getMethod("getModule");
+      return true;
+    }
+    catch (Throwable t) {
+      return false;
+    }
+  }
+
+  public static boolean isJavaVersionAtLeast(int major, int minor, int update) {
+    return JavaVersion.current().compareTo(JavaVersion.compose(major, minor, update, 0, false)) >= 0;
+  }
 }

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.util.io;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.util.io.UnsyncByteArrayOutputStream;
 import com.intellij.util.text.StringFactory;
 import javax.annotation.Nonnull;

@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2017 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.wm.impl.status;
 
 import com.intellij.icons.AllIcons;
@@ -40,7 +26,6 @@ import com.intellij.util.ui.TimedDeadzone;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
-
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -63,6 +48,7 @@ class ToolWindowsWidget extends JLabel implements CustomStatusBarWidget, StatusB
   private boolean wasExited = false;
 
   ToolWindowsWidget(@Nonnull Disposable parent) {
+    setBorder(JBUI.Borders.empty());
     new BaseButtonBehavior(this, TimedDeadzone.NULL) {
       @Override
       protected void execute(MouseEvent e) {
@@ -141,13 +127,12 @@ class ToolWindowsWidget extends JLabel implements CustomStatusBarWidget, StatusB
         }
         Collections.sort(toolWindows, (o1, o2) -> StringUtil.naturalCompare(o1.getStripeTitle(), o2.getStripeTitle()));
 
-        final JBList list = new JBList(toolWindows);
-        list.setCellRenderer(new ListCellRenderer() {
+        final JBList<ToolWindow> list = new JBList(toolWindows);
+        list.setCellRenderer(new ListCellRenderer<ToolWindow>() {
           final JBLabel label = new JBLabel();
 
           @Override
-          public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            final ToolWindow toolWindow = (ToolWindow)value;
+          public Component getListCellRendererComponent(JList<? extends ToolWindow> list, ToolWindow toolWindow, int index, boolean isSelected, boolean cellHasFocus) {
             label.setText(toolWindow.getStripeTitle());
             label.setIcon(TargetAWT.to(toolWindow.getIcon()));
             label.setBorder(JBUI.Borders.empty(4, 10));
@@ -170,13 +155,10 @@ class ToolWindowsWidget extends JLabel implements CustomStatusBarWidget, StatusB
         }
 
         list.setSelectedIndex(list.getItemsCount() - 1);
-        PopupChooserBuilder builder = JBPopupFactory.getInstance().createListPopupBuilder(list);
-        popup = builder.setAutoselectOnMouseMove(true).setRequestFocus(false).setItemChoosenCallback(() -> {
+        PopupChooserBuilder<ToolWindow> builder = JBPopupFactory.getInstance().createListPopupBuilder(list);
+        popup = builder.setAutoselectOnMouseMove(true).setRequestFocus(false).setItemChosenCallback((selectedValue) -> {
           if (popup != null) popup.closeOk(null);
-          final Object value = list.getSelectedValue();
-          if (value instanceof ToolWindow) {
-            ((ToolWindow)value).activate(null, true, true);
-          }
+          selectedValue.activate(null, true, true);
         }).createPopup();
 
         list.setVisibleRowCount(30); // override default of 15 set when createPopup() is called
@@ -184,23 +166,6 @@ class ToolWindowsWidget extends JLabel implements CustomStatusBarWidget, StatusB
         popup.show(point);
       }, 300);
     }
-  }
-
-  @Override
-  public void addNotify() {
-    super.addNotify();
-    //final String key = "toolwindow.stripes.buttons.info.shown";
-    //if (UISettings.getInstance().HIDE_TOOL_STRIPES && !PropertiesComponent.getInstance().isTrueValue(key)) {
-    //  PropertiesComponent.getInstance().setValue(key, String.valueOf(true));
-    //  final Alarm alarm = new Alarm();
-    //  alarm.addRequest(() -> {
-    //    GotItMessage.createMessage(UIBundle.message("tool.window.quick.access.title"), UIBundle.message(
-    //      "tool.window.quick.access.message"))
-    //      .setDisposable(this)
-    //      .show(new RelativePoint(this, new Point(10, 0)), Balloon.Position.above);
-    //    Disposer.dispose(alarm);
-    //  }, 20000);
-    //}
   }
 
   @Override
@@ -260,10 +225,7 @@ class ToolWindowsWidget extends JLabel implements CustomStatusBarWidget, StatusB
   }
 
   private boolean isActive() {
-    return myStatusBar != null &&
-           myStatusBar.getFrame() != null &&
-           myStatusBar.getFrame().getProject() != null &&
-           Registry.is("ide.windowSystem.showTooWindowButtonsSwitcher");
+    return myStatusBar != null && myStatusBar.getProject() != null && Registry.is("ide.windowSystem.showTooWindowButtonsSwitcher");
   }
 
   @Override

@@ -16,13 +16,13 @@
 
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.util.Comparing;
+import consulo.logging.Logger;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.roots.orderEntry.LibraryOrderEntryType;
 import javax.annotation.Nonnull;

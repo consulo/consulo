@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.graph.impl.facade.bek;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Pair;
 import com.intellij.vcs.log.graph.api.LinearGraph;
 import javax.annotation.Nonnull;

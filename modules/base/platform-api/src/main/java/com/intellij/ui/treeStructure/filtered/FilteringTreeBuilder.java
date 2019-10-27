@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.treeStructure.filtered;
 
 import com.intellij.ide.util.treeView.AbstractTreeBuilder;
@@ -28,7 +14,11 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.jetbrains.concurrency.AsyncPromise;
+import org.jetbrains.concurrency.Promise;
+import org.jetbrains.concurrency.Promises;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -45,17 +35,17 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
 
   private MergingUpdateQueue myRefilterQueue;
 
-  public FilteringTreeBuilder(Tree tree, ElementFilter filter, AbstractTreeStructure structure, @Nullable Comparator<NodeDescriptor> comparator) {
-    super(tree, (DefaultTreeModel)tree.getModel(), structure instanceof FilteringTreeStructure ? structure : new FilteringTreeStructure(filter, structure),
-          comparator);
+  public FilteringTreeBuilder(Tree tree, ElementFilter filter, AbstractTreeStructure structure, @Nullable Comparator<? super NodeDescriptor> comparator) {
+    super(tree, (DefaultTreeModel)tree.getModel(), structure instanceof FilteringTreeStructure ? structure : new FilteringTreeStructure(filter, structure), comparator);
 
     myTree = tree;
     initRootNode();
 
     if (filter instanceof ElementFilter.Active) {
       ((ElementFilter.Active)filter).addListener(new ElementFilter.Listener() {
+        @Nonnull
         @Override
-        public ActionCallback update(final Object preferredSelection, final boolean adjustSelection, final boolean now) {
+        public Promise<?> update(final Object preferredSelection, final boolean adjustSelection, final boolean now) {
           return refilter(preferredSelection, adjustSelection, now);
         }
       }, this);
@@ -110,37 +100,49 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
     return true;
   }
 
+  @Nonnull
+  @Deprecated
   public ActionCallback refilter() {
+    //noinspection unchecked
+    return Promises.toActionCallback((Promise<Object>)refilter(null, true, false));
+  }
+
+  @SuppressWarnings("UnusedReturnValue")
+  @Nonnull
+  public Promise<?> refilterAsync() {
     return refilter(null, true, false);
   }
 
-  public ActionCallback refilter(@Nullable final Object preferredSelection, final boolean adjustSelection, final boolean now) {
+  @Nonnull
+  public Promise<?> refilter(@Nullable final Object preferredSelection, final boolean adjustSelection, final boolean now) {
     if (myRefilterQueue != null) {
       myRefilterQueue.cancelAllUpdates();
     }
-    final ActionCallback callback = new ActionCallback();
+
+    AsyncPromise<?> result = new AsyncPromise<>();
     final Runnable afterCancelUpdate = new Runnable() {
       @Override
       public void run() {
         if (myRefilterQueue == null || now) {
-          refilterNow(preferredSelection, adjustSelection).doWhenDone(callback.createSetDoneRunnable());
+          refilterNow(preferredSelection, adjustSelection).onSuccess(o -> result.setResult(null));
         }
         else {
           myRefilterQueue.queue(new Update(this) {
             @Override
             public void run() {
-              refilterNow(preferredSelection, adjustSelection).notifyWhenDone(callback);
+              refilterNow(preferredSelection, adjustSelection);
             }
 
             @Override
             public void setRejected() {
               super.setRejected();
-              callback.setDone();
+              result.setResult(null);
             }
           });
         }
       }
     };
+
     if (!isDisposed()) {
       if (!ApplicationManager.getApplication().isUnitTestMode()) {
         getUi().cancelUpdate().doWhenProcessed(afterCancelUpdate);
@@ -150,11 +152,12 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
       }
     }
 
-    return callback;
+    return result;
   }
 
 
-  protected ActionCallback refilterNow(final Object preferredSelection, final boolean adjustSelection) {
+  @Nonnull
+  protected Promise<?> refilterNow(Object preferredSelection, boolean adjustSelection) {
     final ActionCallback selectionDone = new ActionCallback();
 
     getFilteredStructure().refilter();
@@ -191,8 +194,7 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
       selectionRunnable.run();
     }
 
-    final ActionCallback result = new ActionCallback();
-
+    AsyncPromise<?> result = new AsyncPromise<>();
     selectionDone.doWhenDone(new Runnable() {
       @Override
       public void run() {
@@ -200,16 +202,15 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
           scrollSelectionToVisible(new Runnable() {
             @Override
             public void run() {
-              getReady(this).notify(result);
+              getReady(this).doWhenDone(() -> result.setResult(null)).doWhenRejected(s -> result.setError(s));
             }
           }, false);
         }
         else {
-          result.setDone();
+          result.setResult(null);
         }
       }
-    }).notifyWhenRejected(result);
-
+    }).doWhenRejected(() -> result.cancel(true));
     return result;
   }
 
@@ -218,10 +219,7 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
   }
 
   public static void revalidateTree(Tree tree) {
-    tree.invalidate();
-    tree.setRowHeight(tree.getRowHeight() == -1 ? -2 : -1);
-    tree.revalidate();
-    tree.repaint();
+    TreeUtil.invalidateCacheAndRepaint(tree.getUI());
   }
 
 
