@@ -24,9 +24,16 @@ import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
 import com.intellij.util.io.storage.HeavyProcessLatch;
+import consulo.container.util.StatCollector;
 import consulo.logging.Logger;
+import org.jetbrains.concurrency.AsyncPromise;
+import org.jetbrains.concurrency.Promises;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
 
 /**
@@ -35,7 +42,7 @@ import java.util.concurrent.Executor;
 @Singleton
 public class Preloader implements Disposable {
   private static final Logger LOG = Logger.getInstance(Preloader.class);
-  private final Executor myExecutor = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("com.intellij.openapi.application.Preloader pool");
+  private final Executor myExecutor = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("Preloader pool");
   private final ProgressIndicator myIndicator = new ProgressIndicatorBase();
   private final ProgressIndicator myWrappingIndicator = new AbstractProgressIndicatorBase() {
     @Override
@@ -56,35 +63,45 @@ public class Preloader implements Disposable {
     }
   }
 
-  public Preloader() {
-    if (ApplicationManager.getApplication().isUnitTestMode() || ApplicationManager.getApplication().isHeadlessEnvironment()) {
+  @Inject
+  public Preloader(@Nonnull Application application, @Nonnull ProgressManager progressManager) {
+    if (application.isUnitTestMode() || application.isHeadlessEnvironment()) {
       return;
     }
 
-    final ProgressManager progressManager = ProgressManager.getInstance();
-    for (final PreloadingActivity activity : PreloadingActivity.EP_NAME.getExtensions()) {
-      myExecutor.execute(new Runnable() {
-        @Override
-        public void run() {
-          if (myIndicator.isCanceled()) return;
+    StatCollector collector = new StatCollector();
 
-          checkHeavyProcessRunning();
-          if (myIndicator.isCanceled()) return;
+    List<AsyncPromise<Void>> result = new ArrayList<>();
+    for (final PreloadingActivity activity : PreloadingActivity.EP_NAME.getExtensionList()) {
+      AsyncPromise<Void> promise = new AsyncPromise<>();
+      result.add(promise);
 
-          progressManager.runProcess(new Runnable() {
-            @Override
-            public void run() {
-              try {
-                activity.preload(myWrappingIndicator);
-              }
-              catch (ProcessCanceledException ignore) {
-              }
-              LOG.info("Finished preloading " + activity);
-            }
-          }, myIndicator);
-        }
+      myExecutor.execute(() -> {
+        if (myIndicator.isCanceled()) return;
+
+        checkHeavyProcessRunning();
+        if (myIndicator.isCanceled()) return;
+
+        progressManager.runProcess(() -> {
+          Runnable mark = collector.mark(activity.getClass().getName());
+          try {
+            activity.preload(myWrappingIndicator);
+          }
+          catch (ProcessCanceledException ignore) {
+          }
+          catch (Throwable e) {
+            LOG.error(e);
+          }
+          finally {
+            mark.run();
+            promise.setResult(null);
+          }
+          LOG.info("Finished preloading " + activity);
+        }, myIndicator);
       });
     }
+
+    Promises.all(result).onSuccess(o -> collector.dump("Preload statistics", LOG::info));
   }
 
   @Override

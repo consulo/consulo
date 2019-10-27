@@ -1472,6 +1472,8 @@
     <postStartupActivity implementation="com.intellij.ui.breadcrumbs.BreadcrumbsInitializingActivity" order="before OpenFilesActivity"/>
 
     <preloadingActivity implementation="com.intellij.openapi.actionSystem.impl.ActionPreloader"/>
+    <preloadingActivity implementation="consulo.bundle.impl.PredefinedBundlesLoader"/>
+    <preloadingActivity implementation="com.intellij.ide.SystemHealthMonitor"/>
 
     <patch.extension implementation="com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP"/>
     <patch.extension implementation="com.intellij.openapi.diff.impl.patch.CharsetEP"/>
@@ -2654,6 +2656,9 @@
     <vfs.asyncListener implementation="consulo.compiler.impl.TranslationCompilerFilesMonitorVfsListener"/>
 
     <applicationService serviceInterface="consulo.compiler.impl.TranslatingCompilerFilesMonitor" serviceImplementation="com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl"/>
+
+    <applicationService serviceInterface="com.intellij.openapi.project.ProjectManager" serviceImplementation="com.intellij.openapi.project.impl.ProjectManagerImpl" />
+    <applicationService serviceInterface="com.intellij.openapi.vfs.pointers.VirtualFilePointerManager" serviceImplementation="com.intellij.openapi.vfs.impl.VirtualFilePointerManagerImpl"/>
   </extensions>
 
   <applicationListeners>

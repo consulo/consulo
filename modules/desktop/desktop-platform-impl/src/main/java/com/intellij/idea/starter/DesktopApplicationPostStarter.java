@@ -43,7 +43,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
-import java.util.Map;
 
 public class DesktopApplicationPostStarter extends ApplicationPostStarter {
   private static final Logger LOG = Logger.getInstance(DesktopApplicationPostStarter.class);
@@ -101,10 +100,8 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
 
     appInitializeMark.run();
 
-    LOG.info("Startup statistics:");
-    for (Map.Entry<String, Long> entry : stat.data()) {
-      LOG.info(" - " + entry.getKey() + " - " + entry.getValue() + " ms");
-    }
+    stat.dump("Startup statistics", LOG::info);
+
     PluginLoadStatistics.get().dumpPluginClassStatistics(LOG::info);
 
     app.invokeAndWait(() -> {

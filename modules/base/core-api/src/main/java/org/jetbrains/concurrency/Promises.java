@@ -160,7 +160,7 @@ public class Promises {
   }
 
   @Nonnull
-  public static Promise<?> all(Collection<Promise<?>> promises) {
+  public static Promise<?> all(Collection<? extends Promise<?>> promises) {
     if (promises.size() == 1) {
       return ContainerUtil.getFirstItem(promises);
     }
@@ -170,12 +170,12 @@ public class Promises {
   }
 
   @Nonnull
-  public static <T> Promise<T> all(Collection<Promise<?>> promises, T totalResult) {
+  public static <T> Promise<T> all(Collection<? extends Promise<?>> promises, T totalResult) {
     return all(promises, totalResult, false);
   }
 
   @Nonnull
-  public static <T> Promise<T> all(Collection<Promise<?>> promises, T totalResult, boolean ignoreErrors) {
+  public static <T> Promise<T> all(Collection<? extends Promise<?>> promises, T totalResult, boolean ignoreErrors) {
     if (promises.isEmpty()) {
       return resolvedPromise();
     }

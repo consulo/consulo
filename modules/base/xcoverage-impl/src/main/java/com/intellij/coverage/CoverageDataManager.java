@@ -21,19 +21,17 @@ import com.intellij.execution.configurations.RunnerSettings;
 import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.JDOMExternalizable;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 /**
  * @author ven
  */
-public abstract class CoverageDataManager implements ProjectComponent, JDOMExternalizable {
+public abstract class CoverageDataManager {
 
   public static CoverageDataManager getInstance(Project project) {
     return project.getComponent(CoverageDataManager.class);

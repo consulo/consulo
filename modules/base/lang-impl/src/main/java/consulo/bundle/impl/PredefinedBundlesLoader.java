@@ -15,6 +15,8 @@
  */
 package consulo.bundle.impl;
 
+import com.intellij.openapi.application.PreloadingActivity;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.SdkType;
@@ -28,7 +30,7 @@ import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Singleton;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,9 +38,13 @@ import java.util.List;
  * @author VISTALL
  * @since 15:05/22.11.13
  */
-@Singleton
-public class PredefinedBundlesLoader {
+public class PredefinedBundlesLoader extends PreloadingActivity {
   private static final Logger LOG = Logger.getInstance(PredefinedBundlesLoader.class);
+
+  @Inject
+  public PredefinedBundlesLoader(Provider<SdkTable> sdkTable) {
+    mySdkTable = sdkTable;
+  }
 
   private static class ContextImpl implements PredefinedBundlesProvider.Context {
     private final List<Sdk> myBundles = new ArrayList<>();
@@ -65,11 +71,15 @@ public class PredefinedBundlesLoader {
     }
   }
 
-  @Inject
-  public PredefinedBundlesLoader(SdkTable sdkTable) {
+  private final Provider<SdkTable> mySdkTable;
+
+  @Override
+  public void preload(@Nonnull ProgressIndicator indicator) {
     if (SystemProperties.is("consulo.disable.predefined.bundles")) {
       return;
     }
+
+    SdkTable sdkTable = mySdkTable.get();
 
     ContextImpl context = new ContextImpl(sdkTable);
     for (PredefinedBundlesProvider provider : PredefinedBundlesProvider.EP_NAME.getExtensionList()) {

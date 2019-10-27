@@ -21,11 +21,8 @@ import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.util.ExecUtil;
 import com.intellij.jna.JnaLoader;
 import com.intellij.notification.*;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.PathManager;
-import consulo.logging.Logger;
+import com.intellij.openapi.application.*;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.Balloon;
@@ -45,13 +42,13 @@ import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import consulo.application.AccessRule;
+import consulo.logging.Logger;
 import consulo.start.CommandLineArgs;
 import consulo.util.ApplicationPropertiesComponent;
 import org.jetbrains.annotations.PropertyKey;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
@@ -62,8 +59,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Singleton
-public class SystemHealthMonitor {
+public class SystemHealthMonitor extends PreloadingActivity {
   private static final Logger LOG = Logger.getInstance(SystemHealthMonitor.class);
 
   private static final NotificationGroup GROUP = new NotificationGroup("System Health", NotificationDisplayType.STICKY_BALLOON, false);
@@ -74,7 +70,10 @@ public class SystemHealthMonitor {
   @Inject
   public SystemHealthMonitor(@Nonnull ApplicationPropertiesComponent properties) {
     myProperties = properties;
+  }
 
+  @Override
+  public void preload(@Nonnull ProgressIndicator indicator) {
     checkRuntime();
     checkReservedCodeCacheSize();
     checkIBus();
@@ -157,23 +156,16 @@ public class SystemHealthMonitor {
           JComponent component = WindowManager.getInstance().findVisibleFrame().getRootPane();
           if (component != null) {
             Rectangle rect = component.getVisibleRect();
-            JBPopupFactory.getInstance()
-                    .createHtmlTextBalloonBuilder(message, MessageType.WARNING, adapter)
-                    .setFadeoutTime(-1)
-                    .setHideOnFrameResize(false)
-                    .setHideOnLinkClick(true)
-                    .setDisposable(app)
-                    .createBalloon()
-                    .show(new RelativePoint(component, new Point(rect.x + 30, rect.y + rect.height - 10)), Balloon.Position.above);
+            JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(message, MessageType.WARNING, adapter).setFadeoutTime(-1).setHideOnFrameResize(false).setHideOnLinkClick(true).setDisposable(app)
+                    .createBalloon().show(new RelativePoint(component, new Point(rect.x + 30, rect.y + rect.height - 10)), Balloon.Position.above);
           }
 
-          Notification notification = LOG_GROUP.createNotification("", message, NotificationType.WARNING,
-                                                                   new NotificationListener.Adapter() {
-                                                                     @Override
-                                                                     protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e) {
-                                                                       adapter.hyperlinkActivated(e);
-                                                                     }
-                                                                   });
+          Notification notification = LOG_GROUP.createNotification("", message, NotificationType.WARNING, new NotificationListener.Adapter() {
+            @Override
+            protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e) {
+              adapter.hyperlinkActivated(e);
+            }
+          });
           notification.setImportant(true);
           Notifications.Bus.notify(notification);
         });
@@ -222,7 +214,7 @@ public class SystemHealthMonitor {
             ourFreeSpaceCalculation.set(null);
 
             if (fileUsableSpace < LOW_DISK_SPACE_THRESHOLD) {
-              ThrowableComputable<NotificationsConfiguration,RuntimeException> action = () -> NotificationsConfiguration.getNotificationsConfiguration();
+              ThrowableComputable<NotificationsConfiguration, RuntimeException> action = () -> NotificationsConfiguration.getNotificationsConfiguration();
               if (AccessRule.read(action) == null) {
                 ourFreeSpaceCalculation.set(future);
                 restart(1);
@@ -268,6 +260,7 @@ public class SystemHealthMonitor {
   private interface LibC extends Library {
     int SIGINT = 2;
     long SIG_IGN = 1L;
+
     int sigaction(int signum, Pointer act, Pointer oldact);
   }
 

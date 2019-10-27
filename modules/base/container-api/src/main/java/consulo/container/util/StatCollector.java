@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -41,6 +42,13 @@ public class StatCollector {
         myTimes.put(id, l);
       }
     };
+  }
+
+  public void dump(String title, Consumer<String> logInfo) {
+    logInfo.accept(title + ":");
+    for (Map.Entry<String, Long> entry : data()) {
+      logInfo.accept(" - " + entry.getKey() + " - " + entry.getValue() + " ms");
+    }
   }
 
   @Nonnull
