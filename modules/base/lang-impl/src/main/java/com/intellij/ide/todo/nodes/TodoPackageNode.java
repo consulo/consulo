@@ -17,9 +17,7 @@ package com.intellij.ide.todo.nodes;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.projectView.PresentationData;
-import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ViewSettings;
-import consulo.ide.projectView.impl.nodes.PackageElement;
 import com.intellij.ide.projectView.impl.nodes.PackageElementNode;
 import com.intellij.ide.todo.HighlightedRegionProvider;
 import com.intellij.ide.todo.TodoFileDirAndModuleComparator;
@@ -41,15 +39,19 @@ import com.intellij.ui.HighlightedRegion;
 import com.intellij.usageView.UsageTreeColors;
 import com.intellij.usageView.UsageTreeColorsScheme;
 import com.intellij.util.ArrayUtil;
+import consulo.ide.projectView.impl.nodes.PackageElement;
+import consulo.logging.Logger;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.util.*;
 
 public final class TodoPackageNode extends PackageElementNode implements HighlightedRegionProvider {
+  private static final Logger LOG = Logger.getInstance(TodoPackageNode.class);
+
   private final ArrayList<HighlightedRegion> myHighlightedRegions;
   private final TodoTreeBuilder myBuilder;
   @Nullable private final String myPresentationName;
@@ -130,7 +132,7 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
       data.setPresentableText(newName);
     }
     catch (IndexNotReadyException e) {
-      ProjectViewNode.LOG.info(e);
+      LOG.info(e);
       data.setPresentableText("N/A");
     }
   }
