@@ -113,5 +113,6 @@ public class WriteThread extends Thread implements Disposable {
   @Override
   public void dispose() {
     myStop = true;
+    LockSupport.unpark(this);
   }
 }
