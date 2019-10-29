@@ -39,10 +39,14 @@ public class KeyedExtensionCollector<T, KeyT> {
 
   private final ConcurrentMap<String, List<T>> myCache = ContainerUtil.newConcurrentMap();
 
-  private final ExtensionPointName<KeyedLazyInstance<T>> myEPName;
+  private final ExtensionPointName<? extends KeyedLazyInstance<T>> myEPName;
 
   public KeyedExtensionCollector(@NonNls @Nonnull String epName) {
     myEPName = ExtensionPointName.create(epName);
+  }
+
+  public KeyedExtensionCollector(@Nonnull ExtensionPointName<? extends KeyedLazyInstance<T>> epName) {
+    myEPName = epName;
   }
 
   @Nonnull
@@ -100,7 +104,7 @@ public class KeyedExtensionCollector<T, KeyT> {
 
   @Nonnull
   public List<T> getExtensions() {
-    List<KeyedLazyInstance<T>> extensionList = myEPName.getExtensionList();
+    List<? extends KeyedLazyInstance<T>> extensionList = myEPName.getExtensionList();
 
     List<T> result = new ArrayList<>();
     for (KeyedLazyInstance<T> bean : extensionList) {
@@ -119,7 +123,7 @@ public class KeyedExtensionCollector<T, KeyT> {
   }
 
   @Nonnull
-  public final ExtensionPointName<KeyedLazyInstance<T>> getExtensionPointName() {
+  public final ExtensionPointName<? extends KeyedLazyInstance<T>> getExtensionPointName() {
     return myEPName;
   }
 }

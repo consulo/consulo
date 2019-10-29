@@ -1,21 +1,8 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.editorActions;
 
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.fileTypes.FileType;
@@ -24,6 +11,12 @@ import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
 
 /**
+ * Handler, extending IDE behaviour on typing in editor.
+ * <p>
+ * Note that {@code PsiFile} passed to handler's methods isn't guaranteed to be in sync with the document at the time of invocation
+ * (due to performance considerations). {@link com.intellij.psi.PsiDocumentManager#commitDocument(Document)} should be invoked explicitly,
+ * if an up-to-date PSI is required.
+ *
  * @author yole
  */
 public abstract class TypedHandlerDelegate {
@@ -31,42 +24,40 @@ public abstract class TypedHandlerDelegate {
 
   /**
    * If the specified character triggers auto-popup, schedules the auto-popup appearance. This method is called even
-   * in overwrite mode, when the rest of typed handler delegate methods are not called.
-   *
-   * @param charTyped
-   * @param project
-   * @param editor
-   * @param file
+   * in overwrite mode, when the rest of typed handler delegate methods are not called. It is invoked only for the primary caret.
    */
-  public Result checkAutoPopup(char charTyped, final Project project, final Editor editor, final PsiFile file) {
+  @Nonnull
+  public Result checkAutoPopup(char charTyped, @Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    return Result.CONTINUE;
+  }
+
+  /**
+   * Called before selected text is deleted.
+   * This method is supposed to be overridden by handlers having custom behaviour with respect to selection.
+   */
+  @Nonnull
+  public Result beforeSelectionRemoved(char c, @Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     return Result.CONTINUE;
   }
 
   /**
    * Called before the specified character typed by the user is inserted in the editor.
-   *
-   * @param c
-   * @param project
-   * @param editor
-   * @param file
-   * @param fileType
-   * @return true if the typing has been processed - in this case, no further delegates are called and the character is not inserted.
-   *         false otherwise.
    */
-  public Result beforeCharTyped(char c, final Project project, final Editor editor, final PsiFile file, final FileType fileType) {
+  @Nonnull
+  public Result beforeCharTyped(char c, @Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull FileType fileType) {
     return Result.CONTINUE;
   }
 
   /**
    * Called after the specified character typed by the user has been inserted in the editor.
-   *  
-   * @param c
-   * @param project
-   * @param editor
-   * @param file
    */
-  public Result charTyped(char c, final Project project, final Editor editor, @Nonnull final PsiFile file) {
+  @Nonnull
+  public Result charTyped(char c, @Nonnull Project project, @Nonnull final Editor editor, @Nonnull final PsiFile file) {
     return Result.CONTINUE;
+  }
+
+  public boolean isImmediatePaintingEnabled(@Nonnull Editor editor, char c, @Nonnull DataContext context) {
+    return true;
   }
 
   public enum Result {

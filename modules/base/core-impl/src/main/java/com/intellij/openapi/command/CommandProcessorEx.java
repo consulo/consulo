@@ -30,8 +30,8 @@ public abstract class CommandProcessorEx extends CommandProcessor {
   public abstract void leaveModal();
 
   @Nullable
-  public abstract Object startCommand(@Nonnull Project project, @Nls String name, Object groupId, @Nonnull UndoConfirmationPolicy undoConfirmationPolicy);
+  public abstract CommandToken startCommand(@Nonnull Project project, @Nls String name, Object groupId, @Nonnull UndoConfirmationPolicy undoConfirmationPolicy);
 
   @RequiredUIAccess
-  public abstract void finishCommand(Project project, final Object command, Throwable throwable);
+  public abstract void finishCommand(@Nonnull CommandToken command, Throwable throwable);
 }

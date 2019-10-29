@@ -17,10 +17,7 @@ package com.intellij.openapi.command.impl;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.command.CommandEvent;
-import com.intellij.openapi.command.CommandListener;
-import com.intellij.openapi.command.CommandProcessorEx;
-import com.intellij.openapi.command.UndoConfirmationPolicy;
+import com.intellij.openapi.command.*;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
@@ -41,7 +38,7 @@ import java.util.Stack;
 import java.util.function.Supplier;
 
 public class CoreCommandProcessor extends CommandProcessorEx {
-  private static class CommandDescriptor {
+  private static class CommandDescriptor implements CommandToken {
     @Nonnull
     public final Supplier<AsyncResult<Void>> myCommand;
     public final Project myProject;
@@ -66,6 +63,12 @@ public class CoreCommandProcessor extends CommandProcessorEx {
       myUndoConfirmationPolicy = undoConfirmationPolicy;
       myShouldRecordActionForActiveDocument = shouldRecordActionForActiveDocument;
       myDocument = document;
+    }
+
+    @Nullable
+    @Override
+    public Project getProject() {
+      return myProject;
     }
 
     @Override
@@ -278,13 +281,13 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
       AsyncResult<Void> result = command.get();
 
-      result.doWhenDone(() -> call(uiAccess, () -> finishCommand(project, descriptor, null)));
+      result.doWhenDone(() -> call(uiAccess, () -> finishCommand(descriptor, null)));
 
-      result.doWhenRejectedWithThrowable((t) -> call(uiAccess, () -> finishCommand(project, descriptor, t)));
+      result.doWhenRejectedWithThrowable((t) -> call(uiAccess, () -> finishCommand(descriptor, t)));
     }
     catch (Throwable th) {
       // in case error not from async result - finish action
-      finishCommand(project, myCurrentCommand, th);
+      finishCommand(myCurrentCommand, th);
     }
   }
 
@@ -299,7 +302,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
   @Override
   @Nullable
   @RequiredUIAccess
-  public Object startCommand(@Nonnull final Project project, @Nls final String name, final Object groupId, @Nonnull final UndoConfirmationPolicy undoConfirmationPolicy) {
+  public CommandToken startCommand(@Nonnull final Project project, @Nls final String name, final Object groupId, @Nonnull final UndoConfirmationPolicy undoConfirmationPolicy) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (project.isDisposed()) return null;
 
@@ -319,7 +322,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
   @Override
   @RequiredUIAccess
-  public void finishCommand(final Project project, final Object command, final Throwable throwable) {
+  public void finishCommand(CommandToken command, final Throwable throwable) {
     UIAccess.assertIsUIThread();
 
     CommandLog.LOG.assertTrue(myCurrentCommand != null, "no current command in progress");

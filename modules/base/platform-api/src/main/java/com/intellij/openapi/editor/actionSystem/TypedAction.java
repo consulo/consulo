@@ -1,47 +1,30 @@
-/*
- * Copyright 2000-2014 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.actionSystem;
 
-import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.command.UndoConfirmationPolicy;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.reporting.FreezeLogger;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * Provides services for registering actions which are activated by typing in the editor.
- *
- * @see EditorActionManager#getTypedAction()
  */
-public class TypedAction {
-  @Nonnull
+public abstract class TypedAction {
+  public static TypedAction getInstance() {
+    return ServiceManager.getService(TypedAction.class);
+  }
+
   private TypedActionHandler myRawHandler;
   private TypedActionHandler myHandler;
   private boolean myHandlersLoaded;
 
   public TypedAction() {
     myHandler = new Handler();
-    myRawHandler = new DefaultRawHandler();
   }
 
   private void ensureHandlersLoaded() {
@@ -50,6 +33,12 @@ public class TypedAction {
       for (EditorTypedHandlerBean handlerBean : EditorTypedHandlerBean.EP_NAME.getExtensionList()) {
         myHandler = handlerBean.getHandler(myHandler);
       }
+    }
+  }
+
+  private void loadRawHandlers() {
+    for (EditorTypedHandlerBean handlerBean : EditorTypedHandlerBean.RAW_EP_NAME.getExtensionList()) {
+      myRawHandler = handlerBean.getHandler(myRawHandler);
     }
   }
 
@@ -122,10 +111,12 @@ public class TypedAction {
    * @see #getHandler()
    * @see #setupHandler(TypedActionHandler)
    */
-  @Nonnull
   public TypedActionHandler setupRawHandler(@Nonnull TypedActionHandler handler) {
     TypedActionHandler tmp = myRawHandler;
     myRawHandler = handler;
+    if (tmp == null) {
+      loadRawHandlers();
+    }
     return tmp;
   }
 
@@ -139,44 +130,5 @@ public class TypedAction {
     if (editor == null) return;
     Project project = dataContext.getData(CommonDataKeys.PROJECT);
     FreezeLogger.getInstance().runUnderPerformanceMonitor(project, () -> myRawHandler.execute(editor, charTyped, dataContext));
-  }
-
-  private class DefaultRawHandler implements TypedActionHandlerEx {
-    @Override
-    public void beforeExecute(@Nonnull Editor editor, char c, @Nonnull DataContext context, @Nonnull ActionPlan plan) {
-      if (editor.isViewer() || !editor.getDocument().isWritable()) return;
-
-      TypedActionHandler handler = getHandler();
-
-      if (handler instanceof TypedActionHandlerEx) {
-        ((TypedActionHandlerEx)handler).beforeExecute(editor, c, context, plan);
-      }
-    }
-
-    @Override
-    public void execute(@Nonnull final Editor editor, final char charTyped, @Nonnull final DataContext dataContext) {
-      CommandProcessor.getInstance().executeCommand(dataContext.getData(CommonDataKeys.PROJECT), () -> {
-        if (!EditorModificationUtil.requestWriting(editor)) {
-          HintManager.getInstance().showInformationHint(editor, "File is not writable");
-          return;
-        }
-        ApplicationManager.getApplication().runWriteAction(new DocumentRunnable(editor.getDocument(), editor.getProject()) {
-          @Override
-          public void run() {
-            Document doc = editor.getDocument();
-            doc.startGuardedBlockChecking();
-            try {
-              getHandler().execute(editor, charTyped, dataContext);
-            }
-            catch (ReadOnlyFragmentModificationException e) {
-              EditorActionManager.getInstance().getReadonlyFragmentModificationHandler(doc).handle(e);
-            }
-            finally {
-              doc.stopGuardedBlockChecking();
-            }
-          }
-        });
-      }, "", editor.getDocument(), UndoConfirmationPolicy.DEFAULT, editor.getDocument());
-    }
   }
 }

@@ -1,21 +1,10 @@
-/*
- * Copyright 2000-2012 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.editorActions;
 
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
+import com.intellij.psi.PsiFile;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -23,9 +12,27 @@ import javax.annotation.Nullable;
  */
 public interface MultiCharQuoteHandler extends QuoteHandler {
   /**
-   * returns closing quote by opening quote which is placed immediately before offset. If there is no quote or the quote is equivalent
-   * to opening quote the method should return null
+   * Returns a closing quote for an opening quote placed immediately before offset, or {@code null} when there is no matching quote.
    */
   @Nullable
-  CharSequence getClosingQuote(HighlighterIterator iterator, int offset);
+  CharSequence getClosingQuote(@Nonnull HighlighterIterator iterator, int offset);
+
+  /**
+   * Should insert the {@code closingQuote} returned from {@link #getClosingQuote(HighlighterIterator, int)} into the document.
+   * Override this method for languages with multi-root PSI.
+   */
+  default void insertClosingQuote(@Nonnull Editor editor, int offset, @Nonnull PsiFile file, @Nonnull CharSequence closingQuote) {
+    insertClosingQuote(editor, offset, closingQuote);
+  }
+
+  /**
+   * Should insert the {@code closingQuote} returned from {@link #getClosingQuote(HighlighterIterator, int)} into the document.
+   * Override this method for languages with single-root PSI.
+   */
+  default void insertClosingQuote(@Nonnull Editor editor, int offset, @Nonnull CharSequence closingQuote) {
+    editor.getDocument().insertString(offset, closingQuote);
+    if (closingQuote.length() == 1) {
+      TabOutScopesTracker.getInstance().registerEmptyScope(editor, offset);
+    }
+  }
 }

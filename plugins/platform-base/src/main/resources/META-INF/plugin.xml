@@ -178,6 +178,10 @@
       <with attribute="implementationClass" implements="com.intellij.openapi.editor.actionSystem.TypedActionHandler"/>
     </extensionPoint>
 
+    <extensionPoint name="rawEditorTypedHandler" beanClass="com.intellij.openapi.editor.actionSystem.EditorTypedHandlerBean">
+      <with attribute="implementationClass" implements="com.intellij.openapi.editor.actionSystem.TypedActionHandler"/>
+    </extensionPoint>
+
     <extensionPoint name="customFileDropHandler" area="PROJECT" interface="com.intellij.openapi.editor.CustomFileDropHandler"/>
 
     <extensionPoint name="toolWindow" beanClass="com.intellij.openapi.wm.ToolWindowEP">
@@ -2660,6 +2664,8 @@
 
     <applicationService serviceInterface="com.intellij.openapi.project.ProjectManager" serviceImplementation="com.intellij.openapi.project.impl.ProjectManagerImpl" />
     <applicationService serviceInterface="com.intellij.openapi.vfs.pointers.VirtualFilePointerManager" serviceImplementation="com.intellij.openapi.vfs.impl.VirtualFilePointerManagerImpl"/>
+
+    <applicationService serviceInterface="com.intellij.openapi.editor.actionSystem.TypedAction" serviceImplementation="com.intellij.openapi.editor.impl.TypedActionImpl" />
   </extensions>
 
   <applicationListeners>

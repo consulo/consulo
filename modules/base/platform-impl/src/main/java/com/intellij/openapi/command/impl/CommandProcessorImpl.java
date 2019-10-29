@@ -17,6 +17,7 @@ package com.intellij.openapi.command.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.AbnormalCommandTerminationException;
+import com.intellij.openapi.command.CommandToken;
 import com.intellij.openapi.command.undo.UndoManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileEditor;
@@ -32,7 +33,7 @@ import javax.inject.Singleton;
 public class CommandProcessorImpl extends CoreCommandProcessor {
   @RequiredUIAccess
   @Override
-  public void finishCommand(final Project project, final Object command, final Throwable throwable) {
+  public void finishCommand(CommandToken command, final Throwable throwable) {
     if (myCurrentCommand != command) return;
     final boolean failed;
     try {
@@ -56,8 +57,9 @@ public class CommandProcessorImpl extends CoreCommandProcessor {
       }
     }
     finally {
-      super.finishCommand(project, command, throwable);
+      super.finishCommand(command, throwable);
     }
+    Project project = command.getProject();
     if (failed) {
       if (project != null) {
         FileEditor editor = new FocusBasedCurrentEditorProvider().getCurrentEditor();
