@@ -17,6 +17,7 @@
 package com.intellij.mock;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Key;
@@ -30,9 +31,9 @@ import com.intellij.psi.impl.file.impl.FileManager;
 import com.intellij.psi.util.PsiModificationTracker;
 import consulo.ui.RequiredUIAccess;
 import gnu.trove.THashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Map;
 
 public class MockPsiManager extends PsiManagerEx {
@@ -97,7 +98,7 @@ public class MockPsiManager extends PsiManagerEx {
   @Nonnull
   public PsiModificationTracker getModificationTracker() {
     if (myPsiModificationTracker == null) {
-      myPsiModificationTracker = new PsiModificationTrackerImpl(myProject);
+      myPsiModificationTracker = new PsiModificationTrackerImpl(Application.get(), myProject);
     }
     return myPsiModificationTracker;
   }
