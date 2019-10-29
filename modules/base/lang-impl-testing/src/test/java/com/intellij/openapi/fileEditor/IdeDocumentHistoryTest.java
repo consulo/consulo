@@ -8,12 +8,13 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.testFramework.PlatformLangTestCase;
+
 import javax.annotation.Nonnull;
 
 public abstract class IdeDocumentHistoryTest extends PlatformLangTestCase {
   private IdeDocumentHistoryImpl myHistory;
 
-  private Mock.MyFileEditor  mySelectedEditor;
+  private Mock.MyFileEditor mySelectedEditor;
   private Mock.MyVirtualFile mySelectedFile;
   private FileEditorState myEditorState;
   private FileEditorProvider myProvider;
@@ -25,20 +26,21 @@ public abstract class IdeDocumentHistoryTest extends PlatformLangTestCase {
   @Override
   protected void setUp() throws Exception {
     super.setUp();
-    myHistory = new IdeDocumentHistoryImpl(getProject(), EditorFactory.getInstance(), new EditorManager(), VirtualFileManager.getInstance(), CommandProcessor.getInstance(), new Mock.MyToolWindowManager()) {
-      @Override
-      protected Pair<FileEditor,FileEditorProvider> getSelectedEditor() {
-        return Pair.create ((FileEditor)mySelectedEditor, myProvider);
-      }
+    myHistory =
+            new IdeDocumentHistoryImpl(getProject(), EditorFactory.getInstance(), EditorManager::new, VirtualFileManager.getInstance(), CommandProcessor.getInstance(), Mock.MyToolWindowManager::new) {
+              @Override
+              protected Pair<FileEditor, FileEditorProvider> getSelectedEditor() {
+                return Pair.create((FileEditor)mySelectedEditor, myProvider);
+              }
 
-      @Override
-      protected void executeCommand(Runnable runnable, String name, Object groupId) {
-        myHistory.onCommandStarted();
-        runnable.run();
-        myHistory.onSelectionChanged();
-        myHistory.onCommandFinished(groupId);
-      }
-    };
+              @Override
+              protected void executeCommand(Runnable runnable, String name, Object groupId) {
+                myHistory.onCommandStarted();
+                runnable.run();
+                myHistory.onSelectionChanged();
+                myHistory.onCommandFinished(groupId);
+              }
+            };
 
     mySelectedEditor = new Mock.MyFileEditor() {
       @Override
@@ -62,6 +64,7 @@ public abstract class IdeDocumentHistoryTest extends PlatformLangTestCase {
       }
     };
   }
+
   public void testNoHistoryRecording() throws Throwable {
     myHistory.onCommandStarted();
     myHistory.onCommandFinished(null);
@@ -175,10 +178,8 @@ public abstract class IdeDocumentHistoryTest extends PlatformLangTestCase {
 
     @Override
     @Nonnull
-    public Pair<FileEditor[],FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file,
-                                                                         boolean focusEditor,
-                                                                         boolean searchForSplitter) {
-      return Pair.create (new FileEditor[] {mySelectedEditor}, new FileEditorProvider[] {myProvider});
+    public Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file, boolean focusEditor, boolean searchForSplitter) {
+      return Pair.create(new FileEditor[]{mySelectedEditor}, new FileEditorProvider[]{myProvider});
     }
 
     @Override
