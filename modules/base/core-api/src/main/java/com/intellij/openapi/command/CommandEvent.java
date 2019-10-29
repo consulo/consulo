@@ -1,31 +1,15 @@
-/*
- * Copyright 2000-2012 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.command;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.AsyncResult;
-
 import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import java.util.EventObject;
-import java.util.function.Supplier;
 
 public class CommandEvent extends EventObject {
-  private final Supplier<AsyncResult<Void>> myCommand;
+  private final Runnable myCommand;
   private final Project myProject;
   private final String myCommandName;
   private final Object myCommandGroupId;
@@ -33,20 +17,21 @@ public class CommandEvent extends EventObject {
   private final boolean myShouldRecordActionForActiveDocument;
   private final Document myDocument;
 
-  public CommandEvent(@Nonnull CommandProcessor processor, @Nonnull Supplier<AsyncResult<Void>> command, Project project, @Nonnull UndoConfirmationPolicy undoConfirmationPolicy) {
+  public CommandEvent(@Nonnull CommandProcessor processor, @Nonnull Runnable command, Project project, @Nonnull UndoConfirmationPolicy undoConfirmationPolicy) {
     this(processor, command, null, null, project, undoConfirmationPolicy);
   }
 
   public CommandEvent(@Nonnull CommandProcessor processor,
-                      @Nonnull Supplier<AsyncResult<Void>> command,
+                      @Nonnull Runnable command,
                       String commandName,
                       Object commandGroupId,
                       Project project,
                       @Nonnull UndoConfirmationPolicy undoConfirmationPolicy) {
     this(processor, command, commandName, commandGroupId, project, undoConfirmationPolicy, true, null);
   }
+
   public CommandEvent(@Nonnull CommandProcessor processor,
-                      @Nonnull Supplier<AsyncResult<Void>> command,
+                      @Nonnull Runnable command,
                       String commandName,
                       Object commandGroupId,
                       Project project,
@@ -69,7 +54,7 @@ public class CommandEvent extends EventObject {
   }
 
   @Nonnull
-  public Supplier<AsyncResult<Void>> getCommand() {
+  public Runnable getCommand() {
     return myCommand;
   }
 
@@ -94,6 +79,7 @@ public class CommandEvent extends EventObject {
     return myShouldRecordActionForActiveDocument;
   }
 
+  @Nullable
   public Document getDocument() {
     return myDocument;
   }

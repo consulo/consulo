@@ -1,46 +1,27 @@
-/*
- * Copyright 2000-2016 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.command.impl;
 
-import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.*;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.UIAccess;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
+
 import java.util.List;
 import java.util.Stack;
-import java.util.function.Supplier;
 
 public class CoreCommandProcessor extends CommandProcessorEx {
   private static class CommandDescriptor implements CommandToken {
     @Nonnull
-    public final Supplier<AsyncResult<Void>> myCommand;
+    public final Runnable myCommand;
     public final Project myProject;
     public String myName;
     public Object myGroupId;
@@ -49,7 +30,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     public final UndoConfirmationPolicy myUndoConfirmationPolicy;
     public final boolean myShouldRecordActionForActiveDocument;
 
-    CommandDescriptor(@Nonnull Supplier<AsyncResult<Void>> command,
+    CommandDescriptor(@Nonnull Runnable command,
                       Project project,
                       String name,
                       Object groupId,
@@ -65,7 +46,6 @@ public class CoreCommandProcessor extends CommandProcessorEx {
       myDocument = document;
     }
 
-    @Nullable
     @Override
     public Project getProject() {
       return myProject;
@@ -79,7 +59,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
   protected CommandDescriptor myCurrentCommand;
   private final Stack<CommandDescriptor> myInterruptedCommands = new Stack<>();
-  private final List<CommandListener> myNewListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<CommandListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   private int myUndoTransparentCount;
 
   private final CommandListener eventPublisher;
@@ -89,7 +69,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     messageBus.connect().subscribe(CommandListener.TOPIC, new CommandListener() {
       @Override
       public void commandStarted(@Nonnull CommandEvent event) {
-        for (CommandListener listener : myNewListeners) {
+        for (CommandListener listener : myListeners) {
           try {
             listener.commandStarted(event);
           }
@@ -101,7 +81,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
       @Override
       public void beforeCommandFinished(@Nonnull CommandEvent event) {
-        for (CommandListener listener : myNewListeners) {
+        for (CommandListener listener : myListeners) {
           try {
             listener.beforeCommandFinished(event);
           }
@@ -113,7 +93,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
       @Override
       public void commandFinished(@Nonnull CommandEvent event) {
-        for (CommandListener listener : myNewListeners) {
+        for (CommandListener listener : myListeners) {
           try {
             listener.commandFinished(event);
           }
@@ -125,7 +105,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
       @Override
       public void undoTransparentActionStarted() {
-        for (CommandListener listener : myNewListeners) {
+        for (CommandListener listener : myListeners) {
           try {
             listener.undoTransparentActionStarted();
           }
@@ -137,7 +117,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
       @Override
       public void beforeUndoTransparentActionFinished() {
-        for (CommandListener listener : myNewListeners) {
+        for (CommandListener listener : myListeners) {
           try {
             listener.beforeUndoTransparentActionFinished();
           }
@@ -149,7 +129,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
       @Override
       public void undoTransparentActionFinished() {
-        for (CommandListener listener : myNewListeners) {
+        for (CommandListener listener : myListeners) {
           try {
             listener.undoTransparentActionFinished();
           }
@@ -186,7 +166,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
   @Override
   public void executeCommand(Project project, @Nonnull final Runnable command, final String name, final Object groupId, @Nonnull UndoConfirmationPolicy confirmationPolicy, Document document) {
-    executeCommandAsync(project, wrap(command), name, groupId, confirmationPolicy, true, document);
+    executeCommand(project, command, name, groupId, confirmationPolicy, true, document);
   }
 
   @Override
@@ -196,115 +176,52 @@ public class CoreCommandProcessor extends CommandProcessorEx {
                              @Nullable Object groupId,
                              @Nonnull UndoConfirmationPolicy confirmationPolicy,
                              boolean shouldRecordCommandForActiveDocument) {
-    executeCommandAsync(project, wrap(command), name, groupId, confirmationPolicy, shouldRecordCommandForActiveDocument, null);
+    executeCommand(project, command, name, groupId, confirmationPolicy, shouldRecordCommandForActiveDocument, null);
   }
 
-  private static Supplier<AsyncResult<Void>> wrap(Runnable runnable) {
-    return () -> {
-      runnable.run();
-      return AsyncResult.resolved();
-    };
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void executeCommandAsync(Project project, @Nonnull Supplier<AsyncResult<Void>> runnable, String name, Object groupId) {
-    executeCommandAsync(project, runnable, name, groupId, UndoConfirmationPolicy.DEFAULT);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void executeCommandAsync(Project project, @Nonnull Supplier<AsyncResult<Void>> runnable, String name, Object groupId, Document document) {
-    executeCommandAsync(project, runnable, name, groupId, UndoConfirmationPolicy.DEFAULT, document);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void executeCommandAsync(Project project, @Nonnull final Supplier<AsyncResult<Void>> command, final String name, final Object groupId, @Nonnull UndoConfirmationPolicy confirmationPolicy) {
-    executeCommandAsync(project, command, name, groupId, confirmationPolicy, null);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void executeCommandAsync(Project project,
-                                  @Nonnull final Supplier<AsyncResult<Void>> command,
-                                  @Nullable String name,
-                                  final Object groupId,
-                                  @Nonnull UndoConfirmationPolicy confirmationPolicy,
-                                  Document document) {
-    executeCommandAsync(project, command, name, groupId, confirmationPolicy, true, document);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void executeCommandAsync(@Nullable Project project,
-                                  @Nonnull Supplier<AsyncResult<Void>> command,
-                                  @Nullable String name,
-                                  @Nullable Object groupId,
-                                  @Nonnull UndoConfirmationPolicy confirmationPolicy,
-                                  boolean shouldRecordCommandForActiveDocument) {
-    executeCommandAsync(project, command, name, groupId, confirmationPolicy, shouldRecordCommandForActiveDocument, null);
-  }
-
-  @RequiredUIAccess
-  private void executeCommandAsync(@Nullable Project project,
-                                   @Nonnull Supplier<AsyncResult<Void>> command,
-                                   @Nullable String name,
-                                   @Nullable Object groupId,
-                                   @Nonnull UndoConfirmationPolicy confirmationPolicy,
-                                   boolean shouldRecordCommandForActiveDocument,
-                                   @Nullable Document document) {
-    UIAccess.assertIsUIThread();
-
+  private void executeCommand(@Nullable Project project,
+                              @Nonnull Runnable command,
+                              @Nullable String name,
+                              @Nullable Object groupId,
+                              @Nonnull UndoConfirmationPolicy confirmationPolicy,
+                              boolean shouldRecordCommandForActiveDocument,
+                              @Nullable Document document) {
+    Application application = ApplicationManager.getApplication();
+    application.assertIsDispatchThread();
     if (project != null && project.isDisposed()) {
       CommandLog.LOG.error("Project " + project + " already disposed");
       return;
     }
 
     if (CommandLog.LOG.isDebugEnabled()) {
-      CommandLog.LOG.debug("executeCommand: " + command + ", name = " + name + ", groupId = " + groupId);
+      CommandLog.LOG.debug("executeCommand: " + command + ", name = " + name + ", groupId = " + groupId +
+                           ", in command = " + (myCurrentCommand != null) +
+                           ", in transparent action = " + isUndoTransparentActionInProgress());
     }
 
     if (myCurrentCommand != null) {
-      command.get();
+      command.run();
       return;
     }
-
+    Throwable throwable = null;
     try {
-      UIAccess uiAccess = UIAccess.get();
-
-      CommandDescriptor descriptor = new CommandDescriptor(command, project, name, groupId, confirmationPolicy, shouldRecordCommandForActiveDocument, document);
-      
-      myCurrentCommand = descriptor;
-
+      myCurrentCommand = new CommandDescriptor(command, project, name, groupId, confirmationPolicy, shouldRecordCommandForActiveDocument, document);
       fireCommandStarted();
-
-      AsyncResult<Void> result = command.get();
-
-      result.doWhenDone(() -> call(uiAccess, () -> finishCommand(descriptor, null)));
-
-      result.doWhenRejectedWithThrowable((t) -> call(uiAccess, () -> finishCommand(descriptor, t)));
+      command.run();
     }
     catch (Throwable th) {
-      // in case error not from async result - finish action
-      finishCommand(myCurrentCommand, th);
+      throwable = th;
     }
-  }
-
-  private static void call(UIAccess uiAccess, @RequiredUIAccess Runnable runnable) {
-    if(UIAccess.isUIThread()) {
-      runnable.run();
-    } else {
-      uiAccess.giveAndWait(runnable);
+    finally {
+      finishCommand(myCurrentCommand, throwable);
     }
   }
 
   @Override
   @Nullable
-  @RequiredUIAccess
-  public CommandToken startCommand(@Nonnull final Project project, @Nls final String name, final Object groupId, @Nonnull final UndoConfirmationPolicy undoConfirmationPolicy) {
+  public CommandToken startCommand(@Nullable final Project project, @Nls final String name, @Nullable final Object groupId, @Nonnull final UndoConfirmationPolicy undoConfirmationPolicy) {
     ApplicationManager.getApplication().assertIsDispatchThread();
-    if (project.isDisposed()) return null;
+    if (project != null && project.isDisposed()) return null;
 
     if (CommandLog.LOG.isDebugEnabled()) {
       CommandLog.LOG.debug("startCommand: name = " + name + ", groupId = " + groupId);
@@ -314,39 +231,35 @@ public class CoreCommandProcessor extends CommandProcessorEx {
       return null;
     }
 
-    Document document = groupId instanceof Ref && ((Ref)groupId).get() instanceof Document ? (Document)((Ref)groupId).get() : null;
-    myCurrentCommand = new CommandDescriptor(wrap(EmptyRunnable.INSTANCE), project, name, groupId, undoConfirmationPolicy, true, document);
+    Document document = groupId instanceof Document ? (Document)groupId : (groupId instanceof Ref && ((Ref)groupId).get() instanceof Document ? (Document)((Ref)groupId).get() : null);
+    myCurrentCommand = new CommandDescriptor(EmptyRunnable.INSTANCE, project, name, groupId, undoConfirmationPolicy, true, document);
     fireCommandStarted();
     return myCurrentCommand;
   }
 
   @Override
-  @RequiredUIAccess
-  public void finishCommand(CommandToken command, final Throwable throwable) {
-    UIAccess.assertIsUIThread();
-
+  public void finishCommand(@Nonnull final CommandToken command, @Nullable Throwable throwable) {
+    ApplicationManager.getApplication().assertIsDispatchThread();
     CommandLog.LOG.assertTrue(myCurrentCommand != null, "no current command in progress");
     fireCommandFinished();
   }
 
-  @RequiredUIAccess
   protected void fireCommandFinished() {
-    UIAccess.assertIsUIThread();
-
+    ApplicationManager.getApplication().assertIsDispatchThread();
     CommandDescriptor currentCommand = myCurrentCommand;
     CommandEvent event = new CommandEvent(this, currentCommand.myCommand, currentCommand.myName, currentCommand.myGroupId, currentCommand.myProject, currentCommand.myUndoConfirmationPolicy,
                                           currentCommand.myShouldRecordActionForActiveDocument, currentCommand.myDocument);
+    CommandListener publisher = eventPublisher;
     try {
-      eventPublisher.beforeCommandFinished(event);
+      publisher.beforeCommandFinished(event);
     }
     finally {
       myCurrentCommand = null;
-      eventPublisher.commandFinished(event);
+      publisher.commandFinished(event);
     }
   }
 
   @Override
-  @RequiredUIAccess
   public void enterModal() {
     ApplicationManager.getApplication().assertIsDispatchThread();
     CommandDescriptor currentCommand = myCurrentCommand;
@@ -357,7 +270,6 @@ public class CoreCommandProcessor extends CommandProcessorEx {
   }
 
   @Override
-  @RequiredUIAccess
   public void leaveModal() {
     ApplicationManager.getApplication().assertIsDispatchThread();
     CommandLog.LOG.assertTrue(myCurrentCommand == null, "Command must not run: " + myCurrentCommand);
@@ -369,7 +281,6 @@ public class CoreCommandProcessor extends CommandProcessorEx {
   }
 
   @Override
-  @RequiredUIAccess
   public void setCurrentCommandName(String name) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     CommandDescriptor currentCommand = myCurrentCommand;
@@ -378,7 +289,6 @@ public class CoreCommandProcessor extends CommandProcessorEx {
   }
 
   @Override
-  @RequiredUIAccess
   public void setCurrentCommandGroupId(Object groupId) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     CommandDescriptor currentCommand = myCurrentCommand;
@@ -388,8 +298,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
   @Override
   public boolean hasCurrentCommand() {
-    CommandDescriptor currentCommand = myCurrentCommand;
-    return currentCommand != null;
+    return myCurrentCommand != null;
   }
 
   @Override
@@ -425,28 +334,26 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
   @Override
   public void addCommandListener(@Nonnull CommandListener listener) {
-    myNewListeners.add(listener);
-  }
-
-  @Override
-  public void addCommandListener(@Nonnull final CommandListener listener, @Nonnull Disposable parentDisposable) {
-    addCommandListener(listener);
-    Disposer.register(parentDisposable, () -> removeCommandListener(listener));
+    myListeners.add(listener);
   }
 
   @Override
   public void removeCommandListener(@Nonnull CommandListener listener) {
-    myNewListeners.remove(listener);
+    myListeners.remove(listener);
   }
 
   @Override
   public void runUndoTransparentAction(@Nonnull Runnable action) {
-    if (myUndoTransparentCount++ == 0) fireUndoTransparentStarted();
+    if (CommandLog.LOG.isDebugEnabled()) {
+      CommandLog.LOG.debug("runUndoTransparentAction: " + action + ", in command = " + (myCurrentCommand != null) + ", in transparent action = " + isUndoTransparentActionInProgress());
+    }
+    if (myUndoTransparentCount++ == 0) eventPublisher.undoTransparentActionStarted();
     try {
       action.run();
     }
     finally {
-      if (--myUndoTransparentCount == 0) fireUndoTransparentFinished();
+      if (myUndoTransparentCount == 1) eventPublisher.beforeUndoTransparentActionFinished();
+      if (--myUndoTransparentCount == 0) eventPublisher.undoTransparentActionFinished();
     }
   }
 
@@ -456,32 +363,22 @@ public class CoreCommandProcessor extends CommandProcessorEx {
   }
 
   @Override
-  public void markCurrentCommandAsGlobal(Project project) {
-  }
-
-
-  @Override
-  public void addAffectedDocuments(Project project, @Nonnull Document... docs) {
+  public void markCurrentCommandAsGlobal(@Nullable Project project) {
   }
 
   @Override
-  public void addAffectedFiles(Project project, @Nonnull VirtualFile... files) {
+  public void addAffectedDocuments(@Nullable Project project, @Nonnull Document... docs) {
   }
 
-  @RequiredUIAccess
+  @Override
+  public void addAffectedFiles(@Nullable Project project, @Nonnull VirtualFile... files) {
+  }
+
   private void fireCommandStarted() {
     ApplicationManager.getApplication().assertIsDispatchThread();
     CommandDescriptor currentCommand = myCurrentCommand;
     CommandEvent event = new CommandEvent(this, currentCommand.myCommand, currentCommand.myName, currentCommand.myGroupId, currentCommand.myProject, currentCommand.myUndoConfirmationPolicy,
                                           currentCommand.myShouldRecordActionForActiveDocument, currentCommand.myDocument);
     eventPublisher.commandStarted(event);
-  }
-
-  private void fireUndoTransparentStarted() {
-    eventPublisher.undoTransparentActionStarted();
-  }
-
-  private void fireUndoTransparentFinished() {
-    eventPublisher.undoTransparentActionFinished();
   }
 }
