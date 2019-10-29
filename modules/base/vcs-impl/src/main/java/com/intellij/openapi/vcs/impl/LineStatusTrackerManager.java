@@ -58,6 +58,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import java.nio.charset.Charset;
@@ -80,7 +81,7 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
   @Nonnull
   private final Application myApplication;
   @Nonnull
-  private final FileEditorManager myFileEditorManager;
+  private final Provider<FileEditorManager> myFileEditorManager;
   @Nonnull
   private final Disposable myDisposable;
 
@@ -99,7 +100,7 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
   public LineStatusTrackerManager(@Nonnull final Project project,
                                   @Nonnull final VcsBaseContentProvider statusProvider,
                                   @Nonnull final Application application,
-                                  @Nonnull final FileEditorManager fileEditorManager,
+                                  @Nonnull final Provider<FileEditorManager> fileEditorManager,
                                   @SuppressWarnings("UnusedParameters") DirectoryIndex makeSureIndexIsInitializedFirst) {
     myLoadCounter = 0;
     myProject = project;
@@ -203,7 +204,7 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
         resetTracker(tracker.getDocument(), tracker.getVirtualFile(), tracker);
       }
 
-      final VirtualFile[] openFiles = myFileEditorManager.getOpenFiles();
+      final VirtualFile[] openFiles = myFileEditorManager.get().getOpenFiles();
       for (final VirtualFile openFile : openFiles) {
         resetTracker(openFile, true);
       }
@@ -231,7 +232,7 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
   }
 
   private void resetTracker(@Nonnull Document document, @Nonnull VirtualFile virtualFile, @javax.annotation.Nullable LineStatusTracker tracker) {
-    final boolean editorOpened = myFileEditorManager.isFileOpen(virtualFile);
+    final boolean editorOpened = myFileEditorManager.get().isFileOpen(virtualFile);
     final boolean shouldBeInstalled = editorOpened && shouldBeInstalled(virtualFile);
 
     log("resetTracker: shouldBeInstalled - " + shouldBeInstalled + ", tracker - " + (tracker == null ? "null" : "found"), virtualFile);

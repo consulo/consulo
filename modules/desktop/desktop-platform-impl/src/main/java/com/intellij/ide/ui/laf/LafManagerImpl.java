@@ -180,7 +180,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     if (myCurrentLaf != null) {
       final UIManager.LookAndFeelInfo laf = findLaf(myCurrentLaf.getClassName());
       if (laf != null) {
-        setCurrentLookAndFeel(laf); // setup default LAF or one specified by readExternal.
+        setCurrentLookAndFeel(laf, false);
       }
     }
 
@@ -300,6 +300,10 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
 
   @Override
   public void setCurrentLookAndFeel(UIManager.LookAndFeelInfo lookAndFeelInfo) {
+    setCurrentLookAndFeel(lookAndFeelInfo, true);
+  }
+
+  private void setCurrentLookAndFeel(UIManager.LookAndFeelInfo lookAndFeelInfo, boolean fire) {
     if (findLaf(lookAndFeelInfo.getClassName()) == null) {
       LOG.error("unknown LookAndFeel : " + lookAndFeelInfo);
       return;
@@ -320,13 +324,15 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
         UIManager.setLookAndFeel(lookAndFeelInfo.getClassName());
       }
 
-      if(targetClassLoader != null) {
+      if (targetClassLoader != null) {
         final UIDefaults uiDefaults = UIManager.getLookAndFeelDefaults();
 
         uiDefaults.put("ClassLoader", targetClassLoader);
       }
 
-      fireUpdate();
+      if (fire) {
+        fireUpdate();
+      }
     }
     catch (Exception e) {
       LOG.error(e);

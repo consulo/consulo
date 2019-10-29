@@ -2658,14 +2658,22 @@
     <editorFactoryDocumentListener implementation="com.intellij.openapi.command.impl.DocumentUndoProvider"/>
 
     <vfs.asyncListener implementation="consulo.compiler.impl.TranslationCompilerFilesMonitorVfsListener"/>
-    <vfs.asyncListener implementation="consulo.roots.impl.ContentEntryFileListener" />
+    <vfs.asyncListener implementation="consulo.roots.impl.ContentEntryFileListener"/>
 
     <applicationService serviceInterface="consulo.compiler.impl.TranslatingCompilerFilesMonitor" serviceImplementation="com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.project.ProjectManager" serviceImplementation="com.intellij.openapi.project.impl.ProjectManagerImpl" />
+    <applicationService serviceInterface="com.intellij.openapi.project.ProjectManager" serviceImplementation="com.intellij.openapi.project.impl.ProjectManagerImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.vfs.pointers.VirtualFilePointerManager" serviceImplementation="com.intellij.openapi.vfs.impl.VirtualFilePointerManagerImpl"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.editor.actionSystem.TypedAction" serviceImplementation="com.intellij.openapi.editor.impl.TypedActionImpl" />
+    <applicationService serviceInterface="com.intellij.openapi.editor.actionSystem.TypedAction" serviceImplementation="com.intellij.openapi.editor.impl.TypedActionImpl"/>
+
+    <projectService serviceImplementation="com.intellij.codeInsight.daemon.impl.EditorTracker"/>
+
+    <editorFactoryListener implementation="com.intellij.codeInsight.daemon.impl.EditorTracker$MyAppLevelEditorFactoryListener"/>
+
+    <projectService serviceImplementation="com.intellij.openapi.vcs.changes.committed.OutdatedVersionNotifier" lazy="false"/>
+    <projectService serviceImplementation="com.intellij.openapi.vcs.changes.committed.IncomingChangesIndicator" lazy="false"/>
+    <projectService serviceImplementation="com.intellij.psi.impl.file.impl.PsiVFSListener" lazy="false"/>
   </extensions>
 
   <applicationListeners>

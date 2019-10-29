@@ -61,7 +61,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
   private Provider<FileEditorManager> myEditorManager;
   private final VirtualFileManager myVfManager;
   private final CommandProcessor myCmdProcessor;
-  private final ToolWindowManager myToolWindowManager;
+  private final Provider<ToolWindowManager> myToolWindowManager;
 
   private final LinkedList<PlaceInfo> myBackPlaces = new LinkedList<PlaceInfo>(); // LinkedList of PlaceInfo's
   private final LinkedList<PlaceInfo> myForwardPlaces = new LinkedList<PlaceInfo>(); // LinkedList of PlaceInfo's
@@ -101,7 +101,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
                                 @Nonnull Provider<FileEditorManager> editorManager,
                                 @Nonnull VirtualFileManager vfManager,
                                 @Nonnull CommandProcessor cmdProcessor,
-                                @Nonnull ToolWindowManager toolWindowManager) {
+                                @Nonnull Provider<ToolWindowManager> toolWindowManager) {
     myProject = project;
     myEditorFactory = editorFactory;
     myEditorManager = editorManager;
@@ -452,7 +452,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
   private void gotoPlaceInfo(@Nonnull PlaceInfo info) { // TODO: Msk
     FileEditorManagerEx editorManager = (FileEditorManagerEx)myEditorManager.get();
 
-    final boolean wasActive = myToolWindowManager.isEditorComponentActive();
+    final boolean wasActive = myToolWindowManager.get().isEditorComponentActive();
     EditorWindow wnd = info.getWindow();
     final Pair<FileEditor[], FileEditorProvider[]> editorsWithProviders;
     if (wnd != null && wnd.isValid()) {

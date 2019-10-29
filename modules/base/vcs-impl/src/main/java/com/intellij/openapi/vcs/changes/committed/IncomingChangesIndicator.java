@@ -19,7 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;
@@ -44,39 +44,29 @@ import java.util.List;
  */
 @Singleton
 public class IncomingChangesIndicator {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.committed.IncomingChangesIndicator");
+  private static final Logger LOG = Logger.getInstance(IncomingChangesIndicator.class);
 
   private final Project myProject;
   private final CommittedChangesCache myCache;
   private IndicatorComponent myIndicatorComponent;
 
   @Inject
-  public IncomingChangesIndicator(Project project, CommittedChangesCache cache) {
+  public IncomingChangesIndicator(Application application, Project project, CommittedChangesCache cache) {
     myProject = project;
     myCache = cache;
+
+    if(project.isDefault()) {
+      return;
+    }
+
     final MessageBusConnection connection = project.getMessageBus().connect();
     connection.subscribe(CommittedChangesCache.COMMITTED_TOPIC, new CommittedChangesAdapter() {
       @Override
       public void incomingChangesUpdated(@Nullable final List<CommittedChangeList> receivedChanges) {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            refreshIndicator();
-          }
-        });
+        application.invokeLater(() -> refreshIndicator());
       }
     });
-    final VcsListener listener = new VcsListener() {
-      @Override
-      public void directoryMappingChanged() {
-        UIUtil.invokeLaterIfNeeded(new Runnable() {
-          @Override
-          public void run() {
-            updateIndicatorVisibility();
-          }
-        });
-      }
-    };
+    final VcsListener listener = () -> UIUtil.invokeLaterIfNeeded(this::updateIndicatorVisibility);
     connection.subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, listener);
     connection.subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED_IN_PLUGIN, listener);
   }

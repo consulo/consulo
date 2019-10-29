@@ -37,6 +37,7 @@ import consulo.psi.impl.ExternalChangeMarker;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,7 @@ public class PsiVFSListener implements BulkFileListener {
   private static final Logger LOG = Logger.getInstance(PsiVFSListener.class);
 
   private final FileTypeManager myFileTypeManager;
-  private final ProjectFileIndex myFileIndex;
+  private final Provider<ProjectFileIndex> myFileIndex;
   private final PsiManagerImpl myManager;
   private final FileManagerImpl myFileManager;
   private final Project myProject;
@@ -58,12 +59,12 @@ public class PsiVFSListener implements BulkFileListener {
   private static final AtomicBoolean ourGlobalListenerInstalled = new AtomicBoolean(false);
 
   @Inject
-  public PsiVFSListener(@Nonnull Project project) {
+  public PsiVFSListener(@Nonnull Project project, Provider<ProjectFileIndex> fileIndex) {
     installGlobalListener();
 
     myProject = project;
     myFileTypeManager = FileTypeManager.getInstance();
-    myFileIndex = ProjectFileIndex.getInstance(project);
+    myFileIndex = fileIndex;
     myManager = (PsiManagerImpl)PsiManager.getInstance(project);
     myFileManager = (FileManagerImpl)myManager.getFileManager();
 
@@ -295,7 +296,7 @@ public class PsiVFSListener implements BulkFileListener {
     VirtualFile parent = file.getParent();
     if (parent == null) return false;
 
-    Module module = myFileIndex.getModuleForFile(parent);
+    Module module = myFileIndex.get().getModuleForFile(parent);
     if (module == null) return false;
     VirtualFile[] excludeRoots = ModuleRootManager.getInstance(module).getExcludeRoots();
     for (VirtualFile root : excludeRoots) {
@@ -433,7 +434,7 @@ public class PsiVFSListener implements BulkFileListener {
     runExternalAction(() -> {
       PsiTreeChangeEventImpl treeEvent = new PsiTreeChangeEventImpl(myManager);
 
-      boolean isExcluded = vFile.isDirectory() && Registry.is("ide.hide.excluded.files") && myFileIndex.isExcluded(vFile);
+      boolean isExcluded = vFile.isDirectory() && Registry.is("ide.hide.excluded.files") && myFileIndex.get().isExcluded(vFile);
       if (oldParentDir != null && !isExcluded) {
         PsiElement eventChild = vFile.isDirectory() ? myFileManager.findDirectory(vFile) : myFileManager.findFile(vFile);
         treeEvent.setChild(eventChild);

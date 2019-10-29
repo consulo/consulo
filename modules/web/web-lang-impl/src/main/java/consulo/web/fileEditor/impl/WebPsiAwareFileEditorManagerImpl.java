@@ -29,6 +29,7 @@ import consulo.ui.Component;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 /**
@@ -38,7 +39,7 @@ import javax.inject.Singleton;
 @Singleton
 public class WebPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorManagerImpl {
   @Inject
-  public WebPsiAwareFileEditorManagerImpl(Project project, PsiManager psiManager, WolfTheProblemSolver problemSolver, DockManager dockManager) {
+  public WebPsiAwareFileEditorManagerImpl(Project project, PsiManager psiManager, Provider<WolfTheProblemSolver> problemSolver, DockManager dockManager) {
     super(project, psiManager, problemSolver, dockManager);
   }
 

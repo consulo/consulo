@@ -40,6 +40,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 
 import javax.annotation.Nonnull;
+import javax.inject.Provider;
 
 /**
  * @author yole
@@ -48,7 +49,7 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
   private static final Logger LOG = Logger.getInstance(PsiAwareFileEditorManagerImpl.class);
 
   private final PsiManager myPsiManager;
-  private final WolfTheProblemSolver myProblemSolver;
+  private final Provider<WolfTheProblemSolver> myProblemSolver;
 
   /**
    * Updates icons for open files when project roots change
@@ -56,9 +57,9 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
   private final MyPsiTreeChangeListener myPsiTreeChangeListener;
   private final ProblemListener myProblemListener;
 
-  public PsiAwareFileEditorManagerImpl(final Project project,
-                                       final PsiManager psiManager,
-                                       final WolfTheProblemSolver problemSolver,
+  public PsiAwareFileEditorManagerImpl(Project project,
+                                       PsiManager psiManager,
+                                       Provider<WolfTheProblemSolver> problemSolver,
                                        DockManager dockManager) {
     super(project, dockManager);
 
@@ -92,7 +93,7 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
 
   @Override
   public boolean isProblem(@Nonnull final VirtualFile file) {
-    return myProblemSolver.isProblemFile(file);
+    return myProblemSolver.get().isProblemFile(file);
   }
 
   @Nonnull
