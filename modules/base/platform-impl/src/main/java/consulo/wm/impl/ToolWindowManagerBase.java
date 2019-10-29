@@ -35,7 +35,6 @@ import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.*;
 import com.intellij.openapi.wm.impl.commands.ApplyWindowInfoCmd;
 import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
@@ -60,6 +59,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Provider;
 import java.util.*;
 
 /**
@@ -228,7 +228,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   protected final ToolWindowActiveStack myActiveStack = new ToolWindowActiveStack();
 
   protected final Project myProject;
-  protected final WindowManagerEx myWindowManager;
+  protected final Provider<WindowManager> myWindowManager;
   protected final EventDispatcher<ToolWindowManagerListener> myDispatcher = EventDispatcher.create(ToolWindowManagerListener.class);
   protected final ToolWindowLayout myLayout = new ToolWindowLayout();
   protected ToolWindowLayout myLayoutToRestoreLater = null;
@@ -239,9 +239,9 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   protected final InternalDecoratorListener myInternalDecoratorListener;
   protected final CommandProcessorBase myCommandProcessor;
 
-  protected ToolWindowManagerBase(Project project, WindowManager windowManager) {
+  protected ToolWindowManagerBase(Project project, Provider<WindowManager> windowManager) {
     myProject = project;
-    myWindowManager = (WindowManagerEx)windowManager;
+    myWindowManager = windowManager;
 
     myCommandProcessor = createCommandProcessor();
     myInternalDecoratorListener = createInternalDecoratorListener();

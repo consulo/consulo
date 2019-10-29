@@ -23,11 +23,13 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.logging.Logger;
 import gnu.trove.THashMap;
 
 import javax.annotation.Nonnull;
@@ -35,27 +37,29 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public abstract class AbstractProjectNode extends ProjectViewNode<Project> {
+  private static final Logger LOG = Logger.getInstance(AbstractProjectNode.class);
+
   protected AbstractProjectNode(Project project, Project value, ViewSettings viewSettings) {
     super(project, value, viewSettings);
   }
 
   protected Collection<AbstractTreeNode> modulesAndGroups(Module[] modules) {
-    Map<String, List<Module>> groups = new THashMap<String, List<Module>>();
-    List<Module> nonGroupedModules = new ArrayList<Module>(Arrays.asList(modules));
+    Map<String, List<Module>> groups = new THashMap<>();
+    List<Module> nonGroupedModules = new ArrayList<>(Arrays.asList(modules));
     for (final Module module : modules) {
       final String[] path = ModuleManager.getInstance(getProject()).getModuleGroupPath(module);
       if (path != null) {
         final String topLevelGroupName = path[0];
         List<Module> moduleList = groups.get(topLevelGroupName);
         if (moduleList == null) {
-          moduleList = new ArrayList<Module>();
+          moduleList = new ArrayList<>();
           groups.put(topLevelGroupName, moduleList);
         }
         moduleList.add(module);
         nonGroupedModules.remove(module);
       }
     }
-    List<AbstractTreeNode> result = new ArrayList<AbstractTreeNode>();
+    List<AbstractTreeNode> result = new ArrayList<>();
     try {
       for (String groupPath : groups.keySet()) {
         result.add(createModuleGroupNode(new ModuleGroup(new String[]{groupPath})));
@@ -64,9 +68,12 @@ public abstract class AbstractProjectNode extends ProjectViewNode<Project> {
         result.add(createModuleGroup(module));
       }
     }
+    catch (ProcessCanceledException e) {
+      throw e;
+    }
     catch (Exception e) {
       LOG.error(e);
-      return new ArrayList<AbstractTreeNode>();
+      return new ArrayList<>();
     }
     return result;
   }

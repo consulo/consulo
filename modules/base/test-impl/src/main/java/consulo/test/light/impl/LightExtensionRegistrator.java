@@ -61,7 +61,7 @@ public abstract class LightExtensionRegistrator {
     point.registerExtensionAdapter(new SimpleInstanceComponentAdapter<>(value));
   }
 
-  protected void registerExtensionPoint(ExtensionsAreaImpl area, ExtensionPointName name, Class aClass) {
+  protected void registerExtensionPoint(ExtensionsAreaImpl area, ExtensionPointName<?> name, Class aClass) {
     ExtensionPoint.Kind kind = aClass.isInterface() || (aClass.getModifiers() & Modifier.ABSTRACT) != 0 ? ExtensionPoint.Kind.INTERFACE : ExtensionPoint.Kind.BEAN_CLASS;
     area.registerExtensionPoint(name.getName(), aClass.getName(), myDescriptor, kind);
   }

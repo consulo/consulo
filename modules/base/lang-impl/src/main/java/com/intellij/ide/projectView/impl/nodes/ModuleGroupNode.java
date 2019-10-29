@@ -27,33 +27,40 @@ import com.intellij.ide.projectView.impl.ModuleGroup;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFileSystemItem;
-import javax.annotation.Nonnull;
+import consulo.annotations.RequiredReadAction;
+import consulo.logging.Logger;
 
+import javax.annotation.Nonnull;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public abstract class ModuleGroupNode extends ProjectViewNode<ModuleGroup> implements DropTargetNode {
+  private static final Logger LOG = Logger.getInstance(ModuleGroupNode.class);
+
   public ModuleGroupNode(final Project project, final ModuleGroup value, final ViewSettings viewSettings) {
     super(project, value, viewSettings);
   }
-   public ModuleGroupNode(final Project project, final Object value, final ViewSettings viewSettings) {
+
+  public ModuleGroupNode(final Project project, final Object value, final ViewSettings viewSettings) {
     this(project, (ModuleGroup)value, viewSettings);
   }
 
-  protected abstract AbstractTreeNode createModuleNode(Module module) throws
-                                                                      InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException;
+  protected abstract AbstractTreeNode createModuleNode(Module module) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException;
+
   protected abstract ModuleGroupNode createModuleGroupNode(ModuleGroup moduleGroup);
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public Collection<AbstractTreeNode> getChildren() {
     final Collection<ModuleGroup> childGroups = getValue().childGroups(getProject());
-    final List<AbstractTreeNode> result = new ArrayList<AbstractTreeNode>();
+    final List<AbstractTreeNode> result = new ArrayList<>();
     for (final ModuleGroup childGroup : childGroups) {
       result.add(createModuleGroupNode(childGroup));
     }
@@ -62,6 +69,9 @@ public abstract class ModuleGroupNode extends ProjectViewNode<ModuleGroup> imple
       for (Module module : modules) {
         result.add(createModuleNode(module));
       }
+    }
+    catch (ProcessCanceledException e) {
+      throw e;
     }
     catch (Exception e) {
       LOG.error(e);
@@ -73,7 +83,7 @@ public abstract class ModuleGroupNode extends ProjectViewNode<ModuleGroup> imple
   @Override
   public Collection<VirtualFile> getRoots() {
     Collection<AbstractTreeNode> children = getChildren();
-    Set<VirtualFile> result = new HashSet<VirtualFile>();
+    Set<VirtualFile> result = new HashSet<>();
     for (AbstractTreeNode each : children) {
       if (each instanceof ProjectViewNode) {
         result.addAll(((ProjectViewNode)each).getRoots());
@@ -91,7 +101,7 @@ public abstract class ModuleGroupNode extends ProjectViewNode<ModuleGroup> imple
   @Override
   public void update(PresentationData presentation) {
     final String[] groupPath = getValue().getGroupPath();
-    presentation.setPresentableText(groupPath[groupPath.length-1]);
+    presentation.setPresentableText(groupPath[groupPath.length - 1]);
     presentation.setIcon(AllIcons.Nodes.ModuleGroup);
   }
 

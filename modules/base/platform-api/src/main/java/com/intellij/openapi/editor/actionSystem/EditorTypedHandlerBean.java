@@ -30,6 +30,7 @@ public class EditorTypedHandlerBean extends AbstractExtensionPointBean {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.actionSystem.EditorActionHandlerBean");
 
   public static final ExtensionPointName<EditorTypedHandlerBean> EP_NAME = ExtensionPointName.create("com.intellij.editorTypedHandler");
+  public static final ExtensionPointName<EditorTypedHandlerBean> RAW_EP_NAME = ExtensionPointName.create("com.intellij.rawEditorTypedHandler");
 
   // these must be public for scrambling compatibility
   @Attribute("implementationClass")

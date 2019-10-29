@@ -27,15 +27,13 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.psi.PsiManager;
 import com.intellij.ui.docking.DockManager;
-import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 
 /**
@@ -44,35 +42,11 @@ import java.awt.*;
  */
 @Singleton
 public class DesktopPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorManagerImpl {
-  private static class MyBorder implements Border {
-    @Override
-    public void paintBorder(@Nonnull Component c, @Nonnull Graphics g, int x, int y, int width, int height) {
-      if (UIUtil.isUnderAquaLookAndFeel()) {
-        g.setColor(JBTabsImpl.MAC_AQUA_BG_COLOR);
-        final Insets insets = getBorderInsets(c);
-        if (insets.top > 0) {
-          g.fillRect(x, y, width, height + insets.top);
-        }
-      }
-    }
-
-    @Nonnull
-    @Override
-    public Insets getBorderInsets(Component c) {
-      return JBUI.emptyInsets();
-    }
-
-    @Override
-    public boolean isBorderOpaque() {
-      return false;
-    }
-  }
-
   private volatile JPanel myPanels;
   private final Object myInitLock = new Object();
 
   @Inject
-  public DesktopPsiAwareFileEditorManagerImpl(Project project, PsiManager psiManager, WolfTheProblemSolver problemSolver, DockManager dockManager) {
+  public DesktopPsiAwareFileEditorManagerImpl(Project project, PsiManager psiManager, Provider<WolfTheProblemSolver> problemSolver, DockManager dockManager) {
     super(project, psiManager, problemSolver, dockManager);
   }
 
@@ -104,7 +78,7 @@ public class DesktopPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
         if (myPanels == null) {
           final JPanel panel = new JPanel(new BorderLayout());
           panel.setOpaque(false);
-          panel.setBorder(new MyBorder());
+          panel.setBorder(JBUI.Borders.empty());
           DesktopEditorsSplitters splitters = new DesktopEditorsSplitters(this, myDockManager, true);
           mySplitters = splitters;
           Disposer.register(myProject, splitters);

@@ -1,18 +1,15 @@
 package com.intellij.mock;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.command.CommandListener;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.function.Supplier;
 
 @Deprecated
 public class MockCommandProcessor extends CommandProcessor {
@@ -40,50 +37,6 @@ public class MockCommandProcessor extends CommandProcessor {
                              @Nullable Object groupId,
                              @Nonnull UndoConfirmationPolicy confirmationPolicy,
                              boolean shouldRecordCommandForActiveDocument) {
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void executeCommandAsync(@Nullable Project project, @Nonnull Supplier<AsyncResult<Void>> runnable, @Nullable String name, @Nullable Object groupId) {
-
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void executeCommandAsync(@Nullable Project project, @Nonnull Supplier<AsyncResult<Void>> runnable, @Nullable String name, @Nullable Object groupId, @Nullable Document document) {
-
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void executeCommandAsync(@Nullable Project project,
-                                  @Nonnull Supplier<AsyncResult<Void>> runnable,
-                                  @Nullable String name,
-                                  @Nullable Object groupId,
-                                  @Nonnull UndoConfirmationPolicy confirmationPolicy) {
-
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void executeCommandAsync(@Nullable Project project,
-                                  @Nonnull Supplier<AsyncResult<Void>> command,
-                                  @Nullable String name,
-                                  @Nullable Object groupId,
-                                  @Nonnull UndoConfirmationPolicy confirmationPolicy,
-                                  @Nullable Document document) {
-
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void executeCommandAsync(@Nullable Project project,
-                                  @Nonnull Supplier<AsyncResult<Void>> command,
-                                  @Nullable String name,
-                                  @Nullable Object groupId,
-                                  @Nonnull UndoConfirmationPolicy confirmationPolicy,
-                                  boolean shouldRecordCommandForActiveDocument) {
-
   }
 
   @Override
@@ -117,10 +70,6 @@ public class MockCommandProcessor extends CommandProcessor {
 
   @Override
   public void addCommandListener(@Nonnull CommandListener listener) {
-  }
-
-  @Override
-  public void addCommandListener(@Nonnull CommandListener listener, @Nonnull Disposable parentDisposable) {
   }
 
   @Override

@@ -50,10 +50,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
@@ -150,7 +147,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   private ComponentsRegistry myComponentsRegistry = new ComponentsRegistry();
   private final Condition myDisposedCondition = o -> isDisposed();
 
-  private boolean myComponentsCreated = false;
+  private boolean myNotLazyStepFinished = false;
 
   private ExtensionsAreaImpl myExtensionsArea;
   @Nonnull
@@ -161,6 +158,8 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   private List<Class> myNotLazyServices = new ArrayList<>();
 
   private Map<Class<?>, Object> myChecker = new ConcurrentHashMap<>();
+
+  private Class<?> myCurrentNotLazyServiceClass;
 
   protected ComponentManagerImpl(@Nullable ComponentManager parent, @Nonnull String name, @Nullable ExtensionAreaId extensionAreaId, boolean buildInjectionContainer) {
     myParent = parent;
@@ -290,6 +289,11 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   protected <T> T runServiceInitialize(@Nonnull ServiceDescriptor descriptor, @Nonnull Supplier<T> runnable) {
+    if (!myNotLazyStepFinished && !descriptor.isLazy() && myCurrentNotLazyServiceClass != null) {
+      if (!Objects.equals(descriptor.getInterface(), myCurrentNotLazyServiceClass.getName())) {
+        LOG.warn(new IllegalAccessException("Initializing not lazy service [" + descriptor.getInterface() + "] from another service [" + myCurrentNotLazyServiceClass.getName() + "]"));
+      }
+    }
     return runnable.get();
   }
 
@@ -317,22 +321,25 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   @Override
   public void initNotLazyServices() {
     try {
-      if (myComponentsCreated) {
+      if (myNotLazyStepFinished) {
         throw new IllegalArgumentException("Injector already build");
       }
 
-      for (Class<?> componentInterface : myNotLazyServices) {
+      for (Class<?> serviceClass : myNotLazyServices) {
+        myCurrentNotLazyServiceClass = serviceClass;
+
         ProgressIndicator indicator = ProgressManager.getGlobalProgressIndicator();
         if (indicator != null) {
           indicator.checkCanceled();
         }
 
-        Object component = getComponent(componentInterface);
+        Object component = getComponent(serviceClass);
         assert component != null;
       }
     }
     finally {
-      myComponentsCreated = true;
+      myCurrentNotLazyServiceClass = null;
+      myNotLazyStepFinished = true;
     }
   }
 
@@ -353,7 +360,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   public boolean isComponentsCreated() {
-    return myComponentsCreated;
+    return myNotLazyStepFinished;
   }
 
   @Override
@@ -431,7 +438,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     myInjectingContainer = null;
 
     myComponentsRegistry = null;
-    myComponentsCreated = false;
+    myNotLazyStepFinished = false;
     myNotLazyServices.clear();
     myDisposed = true;
   }

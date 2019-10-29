@@ -17,17 +17,17 @@ package consulo.application.impl;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.AccessToken;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ExceptionUtil;
-import com.intellij.util.TimeoutUtil;
 import consulo.application.internal.ApplicationWithOwnWriteThread;
+import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.locks.LockSupport;
 
 /**
  * @author VISTALL
@@ -66,20 +66,19 @@ public class WriteThread extends Thread implements Disposable {
 
   public <T> void push(ThrowableComputable<T, Throwable> computable, AsyncResult<T> result, Class caller) {
     myQueue.addLast(new CallInfo(computable, result, caller));
+
+    LockSupport.unpark(this);
   }
 
   @Override
   public void run() {
     while (!myStop) {
-      try {
-        CallInfo first = myQueue.pollFirst();
-        if (first != null) {
-          runImpl(first.myCallClass, first.myComputable, first.myResult, first.myCreateTrace);
-        }
+      CallInfo task;
+      while ((task = myQueue.pollFirst()) != null) {
+        runImpl(task.myCallClass, task.myComputable, task.myResult, task.myCreateTrace);
       }
-      finally {
-        TimeoutUtil.sleep(100);
-      }
+
+      LockSupport.park();
     }
   }
 
@@ -114,5 +113,6 @@ public class WriteThread extends Thread implements Disposable {
   @Override
   public void dispose() {
     myStop = true;
+    LockSupport.unpark(this);
   }
 }

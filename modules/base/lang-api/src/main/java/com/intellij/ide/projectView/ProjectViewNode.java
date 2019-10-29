@@ -43,8 +43,7 @@ import java.util.*;
  */
 
 public abstract class ProjectViewNode <Value> extends AbstractTreeNode<Value> implements RootsProvider {
-
-  protected static final Logger LOG = Logger.getInstance("#com.intellij.ide.projectView.ProjectViewNode");
+  private static final Logger LOG = Logger.getInstance(ProjectViewNode.class);
 
   private final ViewSettings mySettings;
   private boolean myValidating;

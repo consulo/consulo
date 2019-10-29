@@ -30,7 +30,6 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -46,7 +45,6 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.openapi.wm.impl.status.BasicStatusBarUI;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.content.Content;
@@ -57,20 +55,18 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.desktop.ui.laf.LookAndFeelInfoWithClassLoader;
+import consulo.desktop.util.awt.UIModificationTracker;
+import consulo.desktop.util.awt.laf.GTKPlusUIUtil;
 import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.ide.ui.laf.GTKPlusEAPDescriptor;
 import consulo.ide.ui.laf.MacDefaultLookAndFeelInfo;
-import consulo.ide.ui.laf.darcula.DarculaEditorTabsUI;
-import consulo.ide.ui.laf.intellij.ActionButtonUI;
-import consulo.ide.ui.laf.intellij.IntelliJEditorTabsUI;
 import consulo.ide.ui.laf.mac.MacButtonlessScrollbarUI;
 import consulo.ide.ui.laf.mac.MacEditorTabsUI;
 import consulo.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.ModernWhiteLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.NativeModernWhiteLookAndFeelInfo;
-import consulo.desktop.util.awt.laf.GTKPlusUIUtil;
-import consulo.desktop.util.awt.UIModificationTracker;
-import consulo.ui.style.StyleManager;
+import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
@@ -113,12 +109,11 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
 
   @NonNls
   private static final String[] ourFileChooserTextKeys =
-          {"FileChooser.viewMenuLabelText", "FileChooser.newFolderActionLabelText", "FileChooser.listViewActionLabelText",
-                  "FileChooser.detailsViewActionLabelText", "FileChooser.refreshActionLabelText"};
+          {"FileChooser.viewMenuLabelText", "FileChooser.newFolderActionLabelText", "FileChooser.listViewActionLabelText", "FileChooser.detailsViewActionLabelText",
+                  "FileChooser.refreshActionLabelText"};
 
   @NonNls
-  private static final String[] ourOptionPaneIconKeys =
-          {"OptionPane.errorIcon", "OptionPane.informationIcon", "OptionPane.warningIcon", "OptionPane.questionIcon"};
+  private static final String[] ourOptionPaneIconKeys = {"OptionPane.errorIcon", "OptionPane.informationIcon", "OptionPane.warningIcon", "OptionPane.questionIcon"};
 
   private final EventListenerList myListenerList;
   private final UIManager.LookAndFeelInfo[] myLaFs;
@@ -185,7 +180,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     if (myCurrentLaf != null) {
       final UIManager.LookAndFeelInfo laf = findLaf(myCurrentLaf.getClassName());
       if (laf != null) {
-        setCurrentLookAndFeel(laf); // setup default LAF or one specified by readExternal.
+        setCurrentLookAndFeel(laf, false);
       }
     }
 
@@ -305,6 +300,10 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
 
   @Override
   public void setCurrentLookAndFeel(UIManager.LookAndFeelInfo lookAndFeelInfo) {
+    setCurrentLookAndFeel(lookAndFeelInfo, true);
+  }
+
+  private void setCurrentLookAndFeel(UIManager.LookAndFeelInfo lookAndFeelInfo, boolean fire) {
     if (findLaf(lookAndFeelInfo.getClassName()) == null) {
       LOG.error("unknown LookAndFeel : " + lookAndFeelInfo);
       return;
@@ -316,17 +315,40 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
 
       UIModificationTracker.getInstance().incModificationCount();
 
-      UIManager.setLookAndFeel(lookAndFeelInfo.getClassName());
+      ClassLoader targetClassLoader = null;
+      if (lookAndFeelInfo instanceof LookAndFeelInfoWithClassLoader) {
+        targetClassLoader = ((LookAndFeelInfoWithClassLoader)lookAndFeelInfo).getClassLoader();
+        UIManager.setLookAndFeel(newInstance((LookAndFeelInfoWithClassLoader)lookAndFeelInfo));
+      }
+      else {
+        UIManager.setLookAndFeel(lookAndFeelInfo.getClassName());
+      }
 
-      fireUpdate();
+      if (targetClassLoader != null) {
+        final UIDefaults uiDefaults = UIManager.getLookAndFeelDefaults();
+
+        uiDefaults.put("ClassLoader", targetClassLoader);
+      }
+
+      if (fire) {
+        fireUpdate();
+      }
     }
     catch (Exception e) {
+      LOG.error(e);
       Messages.showMessageDialog(IdeBundle.message("error.cannot.set.look.and.feel", lookAndFeelInfo.getName(), e.getMessage()), CommonBundle.getErrorTitle(), Messages.getErrorIcon());
       return;
     }
     myCurrentLaf = lookAndFeelInfo;
+  }
 
-    checkLookAndFeel(lookAndFeelInfo, false);
+  @Nonnull
+  private LookAndFeel newInstance(LookAndFeelInfoWithClassLoader lookAndFeel) throws Exception {
+    ClassLoader classLoader = lookAndFeel.getClassLoader();
+
+    Class<?> clazz = Class.forName(lookAndFeel.getClassName(), true, classLoader);
+
+    return (LookAndFeel)ReflectionUtil.newInstance(clazz);
   }
 
   private static void fireUpdate() {
@@ -345,15 +367,6 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
       }
     }
     ActionToolbarImpl.updateAllToolbarsImmediately();
-  }
-
-  @Override
-  public boolean checkLookAndFeel(UIManager.LookAndFeelInfo lookAndFeelInfo) {
-    return checkLookAndFeel(lookAndFeelInfo, true);
-  }
-
-  private boolean checkLookAndFeel(final UIManager.LookAndFeelInfo lafInfo, final boolean confirm) {
-    return true;
   }
 
   /**
@@ -396,25 +409,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
 
     fixSeparatorColor(uiDefaults);
 
-    if (uiDefaults.get("ActionButtonUI") == null) {
-      uiDefaults.put("ActionButtonUI", ActionButtonUI.class.getName());
-    }
-
-    if (uiDefaults.get("JBEditorTabsUI") == null) {
-      uiDefaults.put("JBEditorTabsUI", StyleManager.get().getCurrentStyle().isDark() ? DarculaEditorTabsUI.class.getName() : IntelliJEditorTabsUI.class.getName());
-    }
-
-    if (uiDefaults.get("IdeStatusBarUI") == null) {
-      uiDefaults.put("IdeStatusBarUI", BasicStatusBarUI.class.getName());
-    }
-
-    if (uiDefaults.get("ActionButtonUI") == null) {
-      uiDefaults.put("ActionButtonUI", ActionButtonUI.class.getName());
-    }
-
-    if(uiDefaults.get("EditorTextFieldUI") == null) {
-      uiDefaults.put("EditorTextFieldUI", BasicEditorTextFieldUI.class.getName());
-    }
+    LafManagerImplUtil.insertCustomComponentUI(uiDefaults);
 
     updateToolWindows();
     for (Frame frame : Frame.getFrames()) {
@@ -495,7 +490,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     if (!UIUtil.isUnderGTKLookAndFeel()) return;
 
     // it must be instance of com.sun.java.swing.plaf.gtk.GTKStyleFactory, but class package-local
-    if(SystemInfo.isJavaVersionAtLeast(10, 0, 0)) {
+    if (SystemInfo.isJavaVersionAtLeast(10, 0, 0)) {
       return;
     }
 

@@ -28,6 +28,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.text.CharArrayCharSequence;
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 
 public class MockEditorFactory extends EditorFactory {
@@ -51,7 +52,17 @@ public class MockEditorFactory extends EditorFactory {
   }
 
   @Override
+  public Editor createEditor(@Nonnull Document document, @Nullable Project project, @Nonnull EditorKind kind) {
+    return null;
+  }
+
+  @Override
   public Editor createEditor(@Nonnull Document document, Project project, @Nonnull VirtualFile file, boolean isViewer) {
+    return null;
+  }
+
+  @Override
+  public Editor createEditor(@Nonnull Document document, Project project, @Nonnull VirtualFile file, boolean isViewer, @Nonnull EditorKind kind) {
     return null;
   }
 

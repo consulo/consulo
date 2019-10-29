@@ -55,7 +55,7 @@ public class CoreProjectEnvironment {
     myFileIndexFacade = createFileIndexFacade();
     myMessageBus = (MessageBusImpl)myProject.getMessageBus();
 
-    PsiModificationTrackerImpl modificationTracker = new PsiModificationTrackerImpl(myProject);
+    PsiModificationTrackerImpl modificationTracker = new PsiModificationTrackerImpl(applicationEnvironment.getApplication(), myProject);
     myProject.registerService(PsiModificationTracker.class, modificationTracker);
     myProject.registerService(FileIndexFacade.class, myFileIndexFacade);
     myProject.registerService(ResolveCache.class, new ResolveCache(myProject));

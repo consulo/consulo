@@ -176,6 +176,10 @@ public interface ProjectFileIndex extends FileIndex {
    */
   boolean isInLibrarySource(@Nonnull VirtualFile fileOrDir);
 
+  default boolean isInLibrary(@Nonnull VirtualFile fileOrDir) {
+    return isInLibrarySource(fileOrDir) || isInLibraryClasses(fileOrDir);
+  }
+
   /**
    * @deprecated name of this method may be confusing. If you want to check if the file is excluded or ignored use {@link #isExcluded(com.intellij.openapi.vfs.VirtualFile)}.
    * If you want to check if the file is ignored use {@link com.intellij.openapi.fileTypes.FileTypeRegistry#isFileIgnored(com.intellij.openapi.vfs.VirtualFile)}.

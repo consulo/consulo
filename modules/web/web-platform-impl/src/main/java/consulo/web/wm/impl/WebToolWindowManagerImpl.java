@@ -29,6 +29,7 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
+import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.CommandProcessorBase;
 import com.intellij.openapi.wm.impl.InternalDecoratorListener;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
@@ -52,6 +53,7 @@ import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.List;
 
@@ -65,7 +67,7 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
   private IdeFrameEx myFrame;
 
   @Inject
-  public WebToolWindowManagerImpl(Project project, WindowManager windowManager) {
+  public WebToolWindowManagerImpl(Project project, Provider<WindowManager> windowManager) {
     super(project, windowManager);
 
     if (project.isDefault()) {
@@ -92,7 +94,9 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
 
   @RequiredUIAccess
   private void projectOpened() {
-    myFrame = myWindowManager.allocateFrame(myProject);
+    WindowManagerEx windowManager = (WindowManagerEx)myWindowManager.get();
+
+    myFrame = windowManager.allocateFrame(myProject);
 
     WebToolWindowPanelImpl toolWindowPanel = new WebToolWindowPanelImpl();
 
@@ -106,7 +110,9 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   private void projectClosed() {
-    myWindowManager.releaseFrame(myFrame);
+    WindowManagerEx windowManager = (WindowManagerEx)myWindowManager.get();
+
+    windowManager.releaseFrame(myFrame);
 
     myFrame = null;
   }

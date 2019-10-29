@@ -28,13 +28,14 @@ import consulo.ui.Window;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 public class AboutAction extends AnAction implements DumbAware {
-  private final AboutManager myAboutManager;
-  private final WindowManager myWindowManager;
+  private final Provider<AboutManager> myAboutManager;
+  private final Provider<WindowManager> myWindowManager;
 
   @Inject
-  public AboutAction(AboutManager aboutManager, WindowManager windowManager) {
+  public AboutAction(Provider<AboutManager> aboutManager, Provider<WindowManager> windowManager) {
     myAboutManager = aboutManager;
     myWindowManager = windowManager;
   }
@@ -49,8 +50,8 @@ public class AboutAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Window window = myWindowManager.suggestParentWindow(e.getData(CommonDataKeys.PROJECT));
+    Window window = myWindowManager.get().suggestParentWindow(e.getData(CommonDataKeys.PROJECT));
 
-    myAboutManager.showAbout(window);
+    myAboutManager.get().showAbout(window);
   }
 }

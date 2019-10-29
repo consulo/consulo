@@ -80,6 +80,7 @@ import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -191,23 +192,22 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   @Inject
-  public DesktopToolWindowManagerImpl(final Project project, final WindowManager windowManager, final ActionManager actionManager) {
+  public DesktopToolWindowManagerImpl(Project project, Provider<WindowManager> windowManager) {
     super(project, windowManager);
 
     if (project.isDefault()) {
       return;
     }
 
-    actionManager.addAnActionListener(new AnActionListener() {
+    MessageBusConnection busConnection = project.getMessageBus().connect();
+    busConnection.subscribe(AnActionListener.TOPIC, new AnActionListener() {
       @Override
       public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
         if (myCurrentState != KeyState.hold) {
           resetHoldState();
         }
       }
-    }, project);
-
-    MessageBusConnection busConnection = project.getMessageBus().connect();
+    });
     busConnection.subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
       @Override
       public void projectOpened(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
@@ -224,7 +224,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
       }
     });
 
-    myLayout.copyFrom(((WindowManagerEx)windowManager).getLayout());
+    myLayout.copyFrom(((WindowManagerEx)windowManager.get()).getLayout());
 
     busConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
       @Override
@@ -465,8 +465,10 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
       UIManager.removePropertyChangeListener(uiManagerPropertyListener);
       LafManager.getInstance().removeLafManagerListener(lafManagerListener);
     });
-    myFrame = (DesktopIdeFrameImpl)myWindowManager.allocateFrame(myProject);
-    LOG.assertTrue(myFrame != null);
+
+    WindowManagerEx windowManager = (WindowManagerEx)myWindowManager.get();
+
+    myFrame = (DesktopIdeFrameImpl)windowManager.allocateFrame(myProject);
 
     myToolWindowPanel = new DesktopToolWindowPanelImpl(myFrame, this);
     Disposer.register(myProject, getToolWindowPanel());
@@ -535,10 +537,12 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     }
     final String[] ids = getToolWindowIds();
 
+    WindowManagerEx windowManager = (WindowManagerEx)myWindowManager.get();
+
     // Remove ToolWindowsPane
     JFrame window = (JFrame)TargetAWT.to(myFrame.getWindow());
     ((IdeRootPane)window.getRootPane()).setToolWindowsPane(null);
-    myWindowManager.releaseFrame(myFrame);
+    windowManager.releaseFrame(myFrame);
     List<FinalizableCommand> commandsList = new ArrayList<>();
     appendUpdateToolWindowsPaneCmd(commandsList);
 
@@ -792,7 +796,9 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   private EditorsSplitters getSplittersToFocus() {
-    Window activeWindow = TargetAWT.to(myWindowManager.getMostRecentFocusedWindow());
+    WindowManagerEx windowManager = (WindowManagerEx)myWindowManager.get();
+
+    Window activeWindow = TargetAWT.to(windowManager.getMostRecentFocusedWindow());
 
     if (activeWindow instanceof DesktopFloatingDecorator) {
       IdeFocusManager ideFocusManager = IdeFocusManager.findInstanceByComponent(activeWindow);
@@ -968,7 +974,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
       myFloatingDecorator = new DesktopFloatingDecorator(myFrame, info.copy(), decorator);
       myId2FloatingDecorator.put(info.getId(), myFloatingDecorator);
       final Rectangle2D bounds = info.getFloatingBounds();
-      if (bounds != null && bounds.getWidth() > 0 && bounds.getHeight() > 0 && myWindowManager.isInsideScreenBounds(bounds.getX(), bounds.getY(), bounds.getWidth())) {
+      if (bounds != null && bounds.getWidth() > 0 && bounds.getHeight() > 0 && myWindowManager.get().isInsideScreenBounds(bounds.getX(), bounds.getY(), bounds.getWidth())) {
         myFloatingDecorator.setBounds(TargetAWT.to(bounds));
       }
       else { // place new frame at the center of main frame if there are no floating bounds
@@ -1006,7 +1012,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
       myWindowedDecorator = new DesktopWindowedDecorator(myProject, info.copy(), decorator);
       Window window = myWindowedDecorator.getFrame();
       final Rectangle2D bounds = info.getFloatingBounds();
-      if (bounds != null && bounds.getWidth() > 0 && bounds.getHeight() > 0 && myWindowManager.isInsideScreenBounds(bounds.getX(), bounds.getY(), bounds.getWidth())) {
+      if (bounds != null && bounds.getWidth() > 0 && bounds.getHeight() > 0 && myWindowManager.get().isInsideScreenBounds(bounds.getX(), bounds.getY(), bounds.getWidth())) {
         window.setBounds(TargetAWT.to(bounds));
       }
       else { // place new frame at the center of main frame if there are no floating bounds
