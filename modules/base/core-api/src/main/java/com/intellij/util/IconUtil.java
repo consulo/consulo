@@ -23,12 +23,11 @@ import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.RowIcon;
 import com.intellij.util.ui.*;
 import consulo.ui.migration.SwingImageRef;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 import static com.intellij.util.ui.JBUI.ScaleType.USR_SCALE;
@@ -251,32 +250,7 @@ public class IconUtil {
   @Deprecated
   @Nonnull
   public static Icon scale(@Nonnull final Icon source, double _scale) {
-    final double scale = Math.min(32, Math.max(.1, _scale));
-    return new Icon() {
-      @Override
-      public void paintIcon(Component c, Graphics g, int x, int y) {
-        Graphics2D g2d = (Graphics2D)g.create();
-        try {
-          AffineTransform transform = AffineTransform.getScaleInstance(scale, scale);
-          transform.preConcatenate(g2d.getTransform());
-          g2d.setTransform(transform);
-          source.paintIcon(c, g2d, x, y);
-        }
-        finally {
-          g2d.dispose();
-        }
-      }
-
-      @Override
-      public int getIconWidth() {
-        return (int)(source.getIconWidth() * scale);
-      }
-
-      @Override
-      public int getIconHeight() {
-        return (int)(source.getIconHeight() * scale);
-      }
-    };
+    return IconUtil2.scale(source, _scale);
   }
 
   /**
@@ -330,13 +304,7 @@ public class IconUtil {
    */
   @Nonnull
   public static Icon scale(@Nonnull Icon icon, @Nullable Component ancestor, float scale) {
-    if (icon instanceof ScalableIcon) {
-      if (icon instanceof JBUI.ScaleContextAware) {
-        ((JBUI.ScaleContextAware)icon).updateScaleContext(ancestor != null ? JBUI.ScaleContext.create(ancestor) : null);
-      }
-      return ((ScalableIcon)icon).scale(scale);
-    }
-    return scale(icon, scale);
+    return IconUtil2.scale(icon, ancestor, scale);
   }
 
   @Nonnull

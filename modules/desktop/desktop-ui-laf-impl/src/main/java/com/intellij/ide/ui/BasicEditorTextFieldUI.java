@@ -15,7 +15,9 @@
  */
 package com.intellij.ide.ui;
 
+import com.intellij.openapi.editor.Editor;
 import com.intellij.ui.EditorTextField;
+import com.intellij.util.ui.JBInsets;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -30,6 +32,10 @@ public class BasicEditorTextFieldUI extends BasicPanelUI {
 
   @Override
   public void installUI(JComponent c) {
+    setBorder(c);
+  }
+
+  protected void setBorder(JComponent c) {
     Border border = c.getBorder();
     if (border == null || border instanceof UIResource) {
       c.setBorder(UIManager.getBorder("TextField.border"));
@@ -51,5 +57,20 @@ public class BasicEditorTextFieldUI extends BasicPanelUI {
   protected void paintBackground(Graphics g, EditorTextField field) {
     g.setColor(field.getBackground());
     g.fillRect(0, 0, field.getWidth(), field.getHeight());
+  }
+
+  @Override
+  public Dimension getMinimumSize(JComponent c) {
+    EditorTextField editorTextField = (EditorTextField)c;
+    Editor editor = editorTextField.getEditor();
+    Dimension size = new Dimension(1, 20);
+    if (editor != null) {
+      size.height = editor.getLineHeight();
+
+      JBInsets.addTo(size, editorTextField.getInsets());
+      JBInsets.addTo(size, editor.getInsets());
+    }
+
+    return size;
   }
 }

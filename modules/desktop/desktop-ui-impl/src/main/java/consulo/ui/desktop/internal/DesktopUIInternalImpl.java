@@ -15,7 +15,6 @@
  */
 package consulo.ui.desktop.internal;
 
-import consulo.annotations.Internal;
 import consulo.awt.TargetAWT;
 import consulo.ui.Button;
 import consulo.ui.Component;
@@ -26,7 +25,7 @@ import consulo.ui.MenuItem;
 import consulo.ui.Window;
 import consulo.ui.*;
 import consulo.ui.desktop.internal.image.*;
-import consulo.ui.desktop.internal.laf.textBoxWithExpandAction.DesktopTextBoxWithExpandAction;
+import consulo.ui.desktop.laf.extend.textBox.DesktopTextBoxWithExpandAction;
 import consulo.ui.desktop.internal.layout.*;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;

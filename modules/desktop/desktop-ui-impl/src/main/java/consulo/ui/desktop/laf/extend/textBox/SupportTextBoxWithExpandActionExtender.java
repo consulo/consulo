@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.desktop.internal.laf.textBoxWithExpandAction;
+package consulo.ui.desktop.laf.extend.textBox;
 
 import com.intellij.ui.components.fields.ExpandableSupport;
 import com.intellij.util.Function;
@@ -25,9 +25,10 @@ import javax.swing.text.JTextComponent;
  * @author VISTALL
  * @since 2019-04-26
  */
-public interface SupportTextBoxWithExpandActionLaf {
+public class SupportTextBoxWithExpandActionExtender {
+  public static final SupportTextBoxWithExpandActionExtender INSTANCE = new SupportTextBoxWithExpandActionExtender();
   @Nonnull
-  default <T extends JTextComponent> ExpandableSupport<T> createExpandableSupport(@Nonnull T component, Function<? super String, String> onShow, Function<? super String, String> onHide) {
+  public <T extends JTextComponent> ExpandableSupport<T> createExpandableSupport(@Nonnull T component, Function<? super String, String> onShow, Function<? super String, String> onHide) {
     return new ConsuloExpandableSupport<>(component, onShow, onHide);
   }
 }

@@ -685,22 +685,22 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     return size;
   }
 
-  @Override
-  public Dimension getMinimumSize() {
-    if (isMinimumSizeSet()) {
-      return super.getMinimumSize();
-    }
-
-    Dimension size = new Dimension(1, 20);
-    if (myEditor != null) {
-      size.height = myEditor.getLineHeight();
-
-      JBInsets.addTo(size, getInsets());
-      JBInsets.addTo(size, myEditor.getInsets());
-    }
-
-    return size;
-  }
+  //@Override
+  //public Dimension getMinimumSize() {
+  //  if (isMinimumSizeSet()) {
+  //    return super.getMinimumSize();
+  //  }
+  //
+  //  Dimension size = new Dimension(1, 20);
+  //  if (myEditor != null) {
+  //    size.height = myEditor.getLineHeight();
+  //
+  //    JBInsets.addTo(size, getInsets());
+  //    JBInsets.addTo(size, myEditor.getInsets());
+  //  }
+  //
+  //  return size;
+  //}
 
   public void setPreferredWidth(int preferredWidth) {
     myPreferredWidth = preferredWidth;

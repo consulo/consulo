@@ -27,6 +27,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.desktop.util.awt.laf.BuildInLookAndFeel;
 import consulo.ide.ui.laf.BaseLookAndFeel;
+import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExpandActionExtender;
 import sun.awt.AppContext;
 
 import javax.annotation.Nonnull;
@@ -109,18 +110,16 @@ public class ModernDarkLaf extends BaseLookAndFeel implements BuildInLookAndFeel
       }
 
       LafManagerImplUtil.initInputMapDefaults(defaults);
-      LafManagerImplUtil.insertCustomComponentUI(defaults);
-      defaults.put("ClassLoader", getClass().getClassLoader());
+      defaults.put(SupportTextBoxWithExpandActionExtender.class, SupportTextBoxWithExpandActionExtender.INSTANCE);
 
       initIdeaDefaults(defaults);
       patchStyledEditorKit(defaults);
       patchComboBox(metalDefaults, defaults);
       defaults.remove("Spinner.arrowButtonBorder");
       defaults.put("Spinner.arrowButtonSize", new Dimension(16, 5));
+
       MetalLookAndFeel.setCurrentTheme(createMetalTheme());
-      if (SystemInfo.isWindows) {
-        //JFrame.setDefaultLookAndFeelDecorated(true);
-      }
+
       defaults.put("EditorPane.font", defaults.getFont("TextField.font"));
       return defaults;
     }

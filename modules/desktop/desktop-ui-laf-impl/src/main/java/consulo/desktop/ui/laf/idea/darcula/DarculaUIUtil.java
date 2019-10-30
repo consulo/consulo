@@ -1,9 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.ide.ui.laf.darcula;
+package consulo.desktop.ui.laf.idea.darcula;
 
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.ide.ui.JBUI_New;
-import com.intellij.ide.ui.laf.darcula.ui.DarculaButtonUI;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.JBUI;
@@ -35,19 +33,19 @@ import static javax.swing.SwingConstants.WEST;
  * @author Konstantin Bulenkov
  */
 @SuppressWarnings("UnregisteredNamedColor")
-public class DarculaUIUtil_New {
+public class DarculaUIUtil {
   public enum Outline {
     error {
       @Override
       public void setGraphicsColor(Graphics2D g, boolean focused) {
-        g.setColor(JBUI_New.CurrentTheme.Focus.errorColor(focused));
+        g.setColor(JBUI.CurrentTheme.Focus.errorColor(focused));
       }
     },
 
     warning {
       @Override
       public void setGraphicsColor(Graphics2D g, boolean focused) {
-        g.setColor(JBUI_New.CurrentTheme.Focus.warningColor(focused));
+        g.setColor(JBUI.CurrentTheme.Focus.warningColor(focused));
       }
     },
 
@@ -55,7 +53,7 @@ public class DarculaUIUtil_New {
       @Override
       public void setGraphicsColor(Graphics2D g, boolean focused) {
         if (focused) {
-          g.setColor(JBUI_New.CurrentTheme.Focus.defaultButtonColor());
+          g.setColor(JBUI.CurrentTheme.Focus.defaultButtonColor());
         }
       }
     },
@@ -64,7 +62,7 @@ public class DarculaUIUtil_New {
       @Override
       public void setGraphicsColor(Graphics2D g, boolean focused) {
         if (focused) {
-          g.setColor(JBUI_New.CurrentTheme.Focus.focusColor());
+          g.setColor(JBUI.CurrentTheme.Focus.focusColor());
         }
       }
     };
@@ -292,12 +290,12 @@ public class DarculaUIUtil_New {
 
   @Deprecated
   public static Color getArrowButtonBackgroundColor(boolean enabled, boolean editable) {
-    return JBUI_New.CurrentTheme.Arrow.backgroundColor(enabled, editable);
+    return JBUI.CurrentTheme.Arrow.backgroundColor(enabled, editable);
   }
 
   @Deprecated
   public static Color getArrowButtonForegroundColor(boolean enabled) {
-    return JBUI_New.CurrentTheme.Arrow.foregroundColor(enabled);
+    return JBUI.CurrentTheme.Arrow.foregroundColor(enabled);
   }
 
   public static Dimension maximize(@Nullable Dimension s1, @Nonnull Dimension s2) {

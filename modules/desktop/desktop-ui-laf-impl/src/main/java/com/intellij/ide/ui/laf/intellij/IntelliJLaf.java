@@ -18,7 +18,6 @@ package com.intellij.ide.ui.laf.intellij;
 import com.intellij.ide.ui.laf.darcula.DarculaLaf;
 import com.intellij.ide.ui.laf.ideaOld.IdeaBlueMetalTheme;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.desktop.internal.laf.textBoxWithExpandAction.SupportTextBoxWithExpandActionLaf;
 
 import javax.swing.plaf.metal.DefaultMetalTheme;
 

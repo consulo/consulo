@@ -17,7 +17,6 @@ package consulo.ide.ui.laf.modernWhite;
 
 import com.intellij.ide.ui.laf.ideaOld.IdeaBlueMetalTheme;
 import consulo.ide.ui.laf.modernDark.ModernDarkLaf;
-import consulo.ui.desktop.internal.laf.textBoxWithExpandAction.SupportTextBoxWithExpandActionLaf;
 
 import javax.swing.plaf.metal.DefaultMetalTheme;
 
@@ -25,7 +24,7 @@ import javax.swing.plaf.metal.DefaultMetalTheme;
  * @author VISTALL
  * @since 02.03.14
  */
-public class ModernWhiteLaf extends ModernDarkLaf implements SupportTextBoxWithExpandActionLaf {
+public class ModernWhiteLaf extends ModernDarkLaf {
   @Override
   public String getName() {
     return "Modern Light";

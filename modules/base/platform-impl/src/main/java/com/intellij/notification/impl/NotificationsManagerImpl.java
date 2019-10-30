@@ -362,7 +362,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
         }
       }
     };
-    text.setEditorKit(new JBHtmlEditorKit() {
+    JBHtmlEditorKit kit = new JBHtmlEditorKit() {
       final HTMLFactory factory = new HTMLFactory() {
         @Override
         public View create(Element e) {
@@ -391,7 +391,9 @@ public class NotificationsManagerImpl extends NotificationsManager {
       public ViewFactory getViewFactory() {
         return factory;
       }
-    });
+    };
+    kit.getStyleSheet().addRule("a {color: " + ColorUtil.toHtmlColor(JBUI.CurrentTheme.Link.linkColor()) + "}");
+    text.setEditorKit(kit);
     text.setForeground(foreground);
 
     final HyperlinkListener listener = NotificationsUtil.wrapListener(notification);

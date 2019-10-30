@@ -388,8 +388,6 @@ public class AllIcons {
     public static final SwingImageRef ContextHelp = IconLoader.getIcon("/general/contextHelp.svg");
     public static final SwingImageRef CreateNewProject = IconLoader.getIcon("/general/createNewProject.png"); // 32x32
     public static final SwingImageRef CreateNewProjectfromExistingFiles = IconLoader.getIcon("/general/CreateNewProjectfromExistingFiles.png"); // 32x32
-    public static final SwingImageRef CollapseComponent = IconLoader.getIcon("/general/collapseComponent.svg");
-    public static final SwingImageRef CollapseComponentHover = IconLoader.getIcon("/general/collapseComponentHover.svg");
     public static final SwingImageRef Debug = IconLoader.getIcon("/general/debug.png"); // 16x16
     public static final SwingImageRef DefaultKeymap = IconLoader.getIcon("/general/defaultKeymap.png"); // 32x32
     public static final SwingImageRef Divider = IconLoader.getIcon("/general/divider.png"); // 2x19

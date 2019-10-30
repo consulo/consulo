@@ -16,8 +16,7 @@
 package consulo.ide.ui.laf.darcula;
 
 import com.intellij.ide.ui.BasicEditorTextFieldUI;
-import com.intellij.ide.ui.laf.darcula.DarculaUIUtil_New;
-import com.intellij.ide.ui.laf.darcula.ui.DarculaTextFieldUI;
+import consulo.desktop.ui.laf.idea.darcula.DarculaUIUtil;
 import com.intellij.ui.EditorTextField;
 
 import javax.swing.*;
@@ -34,11 +33,11 @@ public class DarculaEditorTextFieldUI extends BasicEditorTextFieldUI {
 
   @Override
   protected void paintBackground(Graphics g, EditorTextField field) {
-    if (DarculaUIUtil_New.isComboBoxEditor(field)) {
+    if (DarculaUIUtil.isComboBoxEditor(field)) {
       super.paintBackground(g, field);
       return;
     }
 
-    DarculaTextFieldUI.paintBackground(g, field);
+   // DarculaTextFieldUI.paintBackground(g, field);
   }
 }

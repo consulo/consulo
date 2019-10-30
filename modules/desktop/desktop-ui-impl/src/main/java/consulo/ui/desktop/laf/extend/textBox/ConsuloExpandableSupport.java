@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.desktop.internal.laf.textBoxWithExpandAction;
+package consulo.ui.desktop.laf.extend.textBox;
 
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.ui.Expandable;

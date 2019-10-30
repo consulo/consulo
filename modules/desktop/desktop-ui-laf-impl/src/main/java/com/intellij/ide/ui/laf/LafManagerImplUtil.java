@@ -15,6 +15,7 @@
  */
 package com.intellij.ide.ui.laf;
 
+import com.intellij.ide.ui.BasicEditorTextFieldUI;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.impl.status.BasicStatusBarUI;
 import consulo.ide.ui.laf.darcula.DarculaEditorTabsUI;
@@ -83,6 +84,10 @@ public class LafManagerImplUtil {
 
     if (uiDefaults.get("ActionButtonUI") == null) {
       uiDefaults.put("ActionButtonUI", ActionButtonUI.class.getName());
+    }
+
+    if (uiDefaults.get("EditorTextFieldUI") == null) {
+      uiDefaults.put("EditorTextFieldUI", BasicEditorTextFieldUI.class.getName());
     }
   }
 

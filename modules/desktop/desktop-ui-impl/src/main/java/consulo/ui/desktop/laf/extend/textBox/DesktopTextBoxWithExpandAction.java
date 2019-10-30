@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.desktop.internal.laf.textBoxWithExpandAction;
+package consulo.ui.desktop.laf.extend.textBox;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.ui.ComponentWithBrowseButton;
@@ -26,6 +26,7 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.TextBoxWithExpandAction;
 import consulo.ui.desktop.internal.DesktopTextBoxImpl;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
+import consulo.ui.desktop.laf.extend.LafExtendUtil;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -42,17 +43,17 @@ import java.util.function.Function;
  */
 public class DesktopTextBoxWithExpandAction {
   public static TextBoxWithExpandAction create(@Nullable Image editButtonImage, String dialogTitle, Function<String, List<String>> parser, Function<List<String>, String> joiner) {
-    LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
 
-    if (lookAndFeel instanceof SupportTextBoxWithExpandActionLaf) {
-      return new SupportedTextBoxWithExpandAction(parser, joiner, (SupportTextBoxWithExpandActionLaf)lookAndFeel);
+    SupportTextBoxWithExpandActionExtender extender = LafExtendUtil.getExtender(SupportTextBoxWithExpandActionExtender.class);
+    if (extender != null) {
+      return new SupportedTextBoxWithExpandAction(parser, joiner, extender);
     }
 
     return new FallbackTextBoxWithExpandAction(editButtonImage, dialogTitle, parser, joiner);
   }
 
   private static class SupportedTextBoxWithExpandAction extends SwingComponentDelegate<ExpandableTextField> implements TextBoxWithExpandAction {
-    private SupportedTextBoxWithExpandAction(Function<String, List<String>> parser, Function<List<String>, String> joiner, SupportTextBoxWithExpandActionLaf lookAndFeel) {
+    private SupportedTextBoxWithExpandAction(Function<String, List<String>> parser, Function<List<String>, String> joiner, SupportTextBoxWithExpandActionExtender lookAndFeel) {
       myComponent = new ExpandableTextField(parser::apply, joiner::apply, lookAndFeel);
       myComponent.getDocument().addDocumentListener(new DocumentAdapter() {
         @Override

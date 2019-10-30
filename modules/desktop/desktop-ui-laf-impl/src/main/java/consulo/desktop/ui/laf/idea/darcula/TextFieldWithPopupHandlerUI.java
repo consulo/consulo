@@ -1,8 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.ide.ui.laf.darcula.ui;
+package consulo.desktop.ui.laf.idea.darcula;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.ui.laf.darcula.DarculaUIUtil_New;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.registry.Registry;
@@ -36,7 +35,7 @@ import static com.intellij.util.ui.JBUI.scale;
  * @author Konstantin Bulenkov
  * @author Sergey Malenkov
  */
-public abstract class TextFieldWithPopupHandlerUI_New extends BasicTextFieldUI implements Condition {
+public abstract class TextFieldWithPopupHandlerUI extends BasicTextFieldUI implements Condition {
   private static final String DOCUMENT = "document";
   private static final String MONOSPACED = "monospaced";
   private static final String VARIANT = "JTextField.variant";
@@ -50,7 +49,7 @@ public abstract class TextFieldWithPopupHandlerUI_New extends BasicTextFieldUI i
   private Object variant;
   private int cursor;
 
-  public TextFieldWithPopupHandlerUI_New() {
+  public TextFieldWithPopupHandlerUI() {
   }
 
   /**
@@ -180,7 +179,7 @@ public abstract class TextFieldWithPopupHandlerUI_New extends BasicTextFieldUI i
 
   @Override
   public int getNextVisualPositionFrom(JTextComponent t, int pos, Position.Bias b, int direction, Position.Bias[] biasRet) throws BadLocationException {
-    int position = DarculaUIUtil_New.getPatchedNextVisualPositionFrom(t, pos, direction);
+    int position = DarculaUIUtil.getPatchedNextVisualPositionFrom(t, pos, direction);
     return position != -1 ? position : super.getNextVisualPositionFrom(t, pos, b, direction, biasRet);
   }
 
@@ -393,7 +392,7 @@ public abstract class TextFieldWithPopupHandlerUI_New extends BasicTextFieldUI i
     if (!isUnderComboBox(c)) {
       JBInsets.addTo(size, ((JTextComponent)c).getMargin());
       size.height = Math.max(size.height, getMinimumHeight(size.height));
-      size.width = Math.max(size.width, DarculaUIUtil_New.MINIMUM_WIDTH.get());
+      size.width = Math.max(size.width, DarculaUIUtil.MINIMUM_WIDTH.get());
     }
   }
 

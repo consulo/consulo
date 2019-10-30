@@ -15,7 +15,7 @@
  */
 package consulo.ide.ui.laf.modern;
 
-import com.intellij.ide.ui.laf.darcula.ui.TextFieldWithPopupHandlerUI_New;
+import consulo.desktop.ui.laf.idea.darcula.TextFieldWithPopupHandlerUI;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -28,7 +28,7 @@ import java.awt.event.FocusListener;
  * @author VISTALL
  * @since 2019-04-26
  */
-public class ModernTextFieldUI extends TextFieldWithPopupHandlerUI_New implements ModernTextBorder.ModernTextUI {
+public class ModernTextFieldUI extends TextFieldWithPopupHandlerUI implements ModernTextBorder.ModernTextUI {
   public static ComponentUI createUI(JComponent c) {
     return new ModernTextFieldUI((JTextField)c);
   }

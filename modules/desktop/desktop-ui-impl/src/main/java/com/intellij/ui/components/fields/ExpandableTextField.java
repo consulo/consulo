@@ -5,7 +5,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.Expandable;
 import com.intellij.util.Function;
 import com.intellij.util.execution.ParametersListUtil;
-import consulo.ui.desktop.internal.laf.textBoxWithExpandAction.SupportTextBoxWithExpandActionLaf;
+import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExpandActionExtender;
 
 import javax.annotation.Nonnull;
 import javax.swing.text.JTextComponent;
@@ -42,7 +42,7 @@ public class ExpandableTextField extends ExtendableTextField implements Expandab
     setExtensions(createExtensions());
   }
 
-  public ExpandableTextField(@Nonnull Function<? super String, ? extends List<String>> parser, @Nonnull Function<? super List<String>, String> joiner, SupportTextBoxWithExpandActionLaf lookAndFeel) {
+  public ExpandableTextField(@Nonnull Function<? super String, ? extends List<String>> parser, @Nonnull Function<? super List<String>, String> joiner, SupportTextBoxWithExpandActionExtender lookAndFeel) {
     Function<? super String, String> onShow = text -> StringUtil.join(parser.fun(text), "\n");
     Function<? super String, String> onHide = text -> joiner.fun(asList(StringUtil.splitByLines(text)));
 
