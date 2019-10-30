@@ -16,6 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.Function;
@@ -71,8 +72,9 @@ public class RawCommandLineEditor extends Wrapper implements TextAccessor {
   //  return myTextField.getTextField().getDocument();
   //}
 
-  public void addValueListener(@Nonnull ValueComponent.ValueListener<String> valueComponent) {
-    myTextBoxWithExpandAction.addValueListener(valueComponent);
+  @Nonnull
+  public Disposable addValueListener(@Nonnull ValueComponent.ValueListener<String> valueComponent) {
+    return myTextBoxWithExpandAction.addValueListener(valueComponent);
   }
 
   public void attachLabel(JLabel label) {
