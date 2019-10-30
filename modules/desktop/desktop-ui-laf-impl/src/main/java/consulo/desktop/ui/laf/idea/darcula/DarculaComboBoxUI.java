@@ -15,9 +15,9 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
@@ -184,7 +184,7 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border, ErrorB
     return JBUI.CurrentTheme.Arrow.backgroundColor(comboBox.isEnabled(), comboBox.isEditable());
   }
 
-  @NotNull
+  @Nonnull
   static Dimension getArrowButtonPreferredSize(@Nullable JComboBox comboBox) {
     Insets i = comboBox != null ? comboBox.getInsets() : getDefaultComboBoxInsets();
     int height = (isCompact(comboBox) ? COMPACT_HEIGHT.get() : MINIMUM_HEIGHT.get()) + i.top + i.bottom;
@@ -209,7 +209,7 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border, ErrorB
     return path;
   }
 
-  @NotNull
+  @Nonnull
   private static JBInsets getDefaultComboBoxInsets() {
     return JBUI.insets(3);
   }
@@ -377,7 +377,7 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border, ErrorB
     return comboBoxEditor;
   }
 
-  protected void installEditorKeyListener(@NotNull ComboBoxEditor cbe) {
+  protected void installEditorKeyListener(@Nonnull ComboBoxEditor cbe) {
     Component ec = cbe.getEditorComponent();
     if (ec != null) {
       editorKeyListener = new KeyAdapter() {

@@ -18,7 +18,7 @@ package consulo.desktop.ui.laf.idea.darcula;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -27,15 +27,15 @@ import javax.swing.*;
  * from kotlin
  */
 public class LafIconLookup {
-  public static Icon getIcon(@NotNull String name, boolean selected, boolean focused, boolean enabled) {
+  public static Icon getIcon(@Nonnull String name, boolean selected, boolean focused, boolean enabled) {
     return getIcon(name, selected, focused, enabled, false, false);
   }
 
-  public static Icon getIcon(@NotNull String name, boolean selected, boolean focused, boolean enabled, boolean editable) {
+  public static Icon getIcon(@Nonnull String name, boolean selected, boolean focused, boolean enabled, boolean editable) {
     return getIcon(name, selected, focused, enabled, editable, false);
   }
 
-  public static Icon getIcon(@NotNull String name, boolean selected, boolean focused, boolean enabled, boolean editable, boolean pressed) {
+  public static Icon getIcon(@Nonnull String name, boolean selected, boolean focused, boolean enabled, boolean editable, boolean pressed) {
     Icon icon = findIcon(name, selected, focused, enabled, editable, pressed, true);
     if (icon == null) {
       icon = EmptyIcon.ICON_16;
@@ -45,7 +45,7 @@ public class LafIconLookup {
   }
 
   @Nullable
-  public static Icon findIcon(@NotNull String name, boolean selected, boolean focused, boolean enabled, boolean editable, boolean pressed, boolean isThrowErrorIfNotFound) {
+  public static Icon findIcon(@Nonnull String name, boolean selected, boolean focused, boolean enabled, boolean editable, boolean pressed, boolean isThrowErrorIfNotFound) {
     String key = name;
     if (editable) {
       key = name + "Editable";
@@ -88,7 +88,7 @@ public class LafIconLookup {
   }
 
   @Nullable
-  public static Icon findLafIcon(@NotNull String key, @NotNull Class aClass, boolean strict) {
+  public static Icon findLafIcon(@Nonnull String key, @Nonnull Class aClass, boolean strict) {
     return IconLoader.findIcon("/icons/" + key + ".png", aClass, true, strict);
   }
 

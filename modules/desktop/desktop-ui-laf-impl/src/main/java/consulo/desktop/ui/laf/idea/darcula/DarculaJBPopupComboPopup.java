@@ -14,8 +14,8 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -41,7 +41,7 @@ public class DarculaJBPopupComboPopup<T> implements ComboPopup, ItemListener, Mo
   private ListPopupImpl myPopup;
   private boolean myJustClosedViaClick;
 
-  public DarculaJBPopupComboPopup(@NotNull JComboBox<T> comboBox) {
+  public DarculaJBPopupComboPopup(@Nonnull JComboBox<T> comboBox) {
     myComboBox = comboBox;
     myProxyList.setModel(comboBox.getModel());
     myComboBox.addPropertyChangeListener(this);
@@ -80,7 +80,7 @@ public class DarculaJBPopupComboPopup<T> implements ComboPopup, ItemListener, Mo
         return true;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public String getTextFor(T value) {
         Component component = myComboBox.getRenderer().getListCellRendererComponent(myProxyList, value, -1, false, false);
@@ -116,12 +116,12 @@ public class DarculaJBPopupComboPopup<T> implements ComboPopup, ItemListener, Mo
     myPopup.setRequestFocus(false);
     myPopup.addListener(new JBPopupListener() {
       @Override
-      public void beforeShown(@NotNull LightweightWindowEvent event) {
+      public void beforeShown(@Nonnull LightweightWindowEvent event) {
         myComboBox.firePopupMenuWillBecomeVisible();
       }
 
       @Override
-      public void onClosed(@NotNull LightweightWindowEvent event) {
+      public void onClosed(@Nonnull LightweightWindowEvent event) {
         myComboBox.firePopupMenuWillBecomeInvisible();
         myPopup = null;
         myProxyList.setCellRenderer(new DefaultListCellRenderer());
@@ -142,7 +142,7 @@ public class DarculaJBPopupComboPopup<T> implements ComboPopup, ItemListener, Mo
     myPopup.showUnderneathOf(myComboBox);
   }
 
-  protected void configureList(@NotNull JList<T> list) {
+  protected void configureList(@Nonnull JList<T> list) {
     list.setFont(myComboBox.getFont());
     list.setForeground(myComboBox.getForeground());
     list.setBackground(myComboBox.getBackground());

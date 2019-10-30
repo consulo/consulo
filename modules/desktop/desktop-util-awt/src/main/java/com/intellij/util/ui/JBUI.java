@@ -21,9 +21,8 @@ import consulo.logging.Logger;
 import gnu.trove.TDoubleObjectHashMap;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -73,7 +72,7 @@ public class JBUI {
     }
 
     public static class Arrow {
-      @NotNull
+      @Nonnull
       public static Color foregroundColor(boolean enabled) {
         return enabled
                ? JBColor.namedColor("ComboBox.ArrowButton.iconColor", JBColor.namedColor("ComboBox.darcula.arrowButtonForeground", Gray.x66))
@@ -81,7 +80,7 @@ public class JBUI {
 
       }
 
-      @NotNull
+      @Nonnull
       public static Color backgroundColor(boolean enabled, boolean editable) {
         return enabled ? editable
                          ? JBColor.namedColor("ComboBox.ArrowButton.background", JBColor.namedColor("ComboBox.darcula.editable.arrowButtonBackground", Gray.xFC))
@@ -92,24 +91,24 @@ public class JBUI {
     public static class Focus {
       private static final Color GRAPHITE_COLOR = new JBColor(new Color(0x8099979d, true), new Color(0x676869));
 
-      @NotNull
+      @Nonnull
       public static Color focusColor() {
         return UIUtil.isGraphite() ? GRAPHITE_COLOR : JBColor.namedColor("Component.focusColor", JBColor.namedColor("Focus.borderColor", 0x8ab2eb));
       }
 
-      @NotNull
+      @Nonnull
       public static Color defaultButtonColor() {
         return UIUtil.isUnderDarcula() ? JBColor.namedColor("Button.default.focusColor", JBColor.namedColor("Focus.defaultButtonBorderColor", 0x97c3f3)) : focusColor();
       }
 
-      @NotNull
+      @Nonnull
       public static Color errorColor(boolean active) {
         return active
                ? JBColor.namedColor("Component.errorFocusColor", JBColor.namedColor("Focus.activeErrorBorderColor", 0xe53e4d))
                : JBColor.namedColor("Component.inactiveErrorFocusColor", JBColor.namedColor("Focus.inactiveErrorBorderColor", 0xebbcbc));
       }
 
-      @NotNull
+      @Nonnull
       public static Color warningColor(boolean active) {
         return active
                ? JBColor.namedColor("Component.warningFocusColor", JBColor.namedColor("Focus.activeWarningBorderColor", 0xe2a53a))

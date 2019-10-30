@@ -11,9 +11,9 @@ import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Path2D;
@@ -33,12 +33,12 @@ public class DarculaEditorTextFieldBorder extends DarculaTextBorder implements V
     if (editorTextField != null && editor != null) {
       editor.addFocusListener(new FocusChangeListener() {
         @Override
-        public void focusGained(@NotNull Editor editor) {
+        public void focusGained(@Nonnull Editor editor) {
           editorTextField.repaint();
         }
 
         @Override
-        public void focusLost(@NotNull Editor editor) {
+        public void focusLost(@Nonnull Editor editor) {
           editorTextField.repaint();
         }
       });
@@ -122,7 +122,7 @@ public class DarculaEditorTextFieldBorder extends DarculaTextBorder implements V
 
   @Nullable
   @Override
-  public Insets getVisualPaddings(@NotNull Component component) {
+  public Insets getVisualPaddings(@Nonnull Component component) {
     return JBUI.insets(3);
   }
 }

@@ -5,7 +5,7 @@ package com.intellij.ui;
 import com.intellij.util.IconUtil2;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,17 +35,17 @@ public final class OffsetIcon extends JBUI.CachingScalableJBIcon<OffsetIcon> {
     return icon instanceof OffsetIcon ? ((OffsetIcon)icon).myIcon : icon;
   }
 
-  public OffsetIcon(@NotNull Icon icon) {
+  public OffsetIcon(@Nonnull Icon icon) {
     this(REGULAR_OFFSET, icon);
   }
 
-  public OffsetIcon(int offset, @NotNull Icon icon) {
+  public OffsetIcon(int offset, @Nonnull Icon icon) {
     myOffset = offset;
     myIcon = icon;
     updateSize();
   }
 
-  private OffsetIcon(@NotNull OffsetIcon icon) {
+  private OffsetIcon(@Nonnull OffsetIcon icon) {
     super(icon);
     myWidth = icon.myWidth;
     myHeight = icon.myHeight;
@@ -55,13 +55,13 @@ public final class OffsetIcon extends JBUI.CachingScalableJBIcon<OffsetIcon> {
     myScaledOffset = icon.myScaledOffset;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public OffsetIcon copy() {
     return new OffsetIcon(this);
   }
 
-  @NotNull
+  @Nonnull
   public Icon getIcon() {
     return myIcon;
   }
