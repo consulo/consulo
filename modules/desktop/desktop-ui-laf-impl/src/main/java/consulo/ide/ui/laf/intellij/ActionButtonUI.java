@@ -115,15 +115,10 @@ public class ActionButtonUI extends ComponentUI {
     return -1;
   }
   private void paintDefaultButton(Graphics g, ActionButton c) {
-    AnAction action = c.getAction();
-
     int state = c.getPopState();
 
-    if (state != ActionButtonComponent.NORMAL) {
-      paintBackground(c, g, c.getSize(), state);
-      paintBorder(c, g, c.getSize(), state);
-    }
-
+    paintBackground(c, g, c.getSize(), state);
+    paintBorder(c, g, c.getSize(), state);
     paintIcon(g, c, c.getIcon());
 
     if (c.shallPaintDownArrow()) {
@@ -141,6 +136,8 @@ public class ActionButtonUI extends ComponentUI {
   }
 
   protected void paintBorder(ActionButton button, Graphics g, Dimension size, int state) {
+    if (state == ActionButtonComponent.NORMAL && !button.isBackgroundSet()) return;
+
     if (UIUtil.isUnderAquaLookAndFeel()) {
       if (state == ActionButtonComponent.POPPED) {
         g.setColor(ALPHA_30);
@@ -158,6 +155,8 @@ public class ActionButtonUI extends ComponentUI {
   }
 
   protected void paintBackground(ActionButton button, Graphics g, Dimension size, int state) {
+    if (state == ActionButtonComponent.NORMAL && !button.isBackgroundSet()) return;
+
     if (UIUtil.isUnderAquaLookAndFeel()) {
       if (state == ActionButtonComponent.PUSHED) {
         ((Graphics2D)g).setPaint(UIUtil.getGradientPaint(0, 0, ALPHA_40, size.width, size.height, ALPHA_20));

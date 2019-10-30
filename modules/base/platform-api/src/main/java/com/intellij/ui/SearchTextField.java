@@ -135,7 +135,7 @@ public class SearchTextField extends JPanel {
       }
     }
     else {
-      myToggleHistoryLabel = new JLabel(AllIcons.Actions.Search);
+      myToggleHistoryLabel = new JLabel(AllIcons.Actions.SearchWithHistory);
       myToggleHistoryLabel.setOpaque(true);
       myToggleHistoryLabel.addMouseListener(new MouseAdapter() {
         @Override

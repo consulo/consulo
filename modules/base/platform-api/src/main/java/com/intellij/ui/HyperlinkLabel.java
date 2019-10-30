@@ -20,6 +20,7 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.logging.Logger;
 
@@ -32,6 +33,7 @@ import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.parser.ParserDelegator;
 import java.awt.*;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.StringReader;
@@ -51,6 +53,9 @@ public class HyperlinkLabel extends HighlightableComponent {
   private final TextAttributes myAnchorAttributes;
   private HyperlinkListener myHyperlinkListener = null;
 
+  private boolean myMouseHover;
+  private boolean myMousePressed;
+
   public HyperlinkLabel() {
     this("");
   }
@@ -67,8 +72,7 @@ public class HyperlinkLabel extends HighlightableComponent {
   }
 
   public HyperlinkLabel(String text, final Color textForegroundColor, final Color textBackgroundColor, final Color textEffectColor) {
-    myAnchorAttributes =
-      new TextAttributes(textForegroundColor, textBackgroundColor, textEffectColor, EffectType.LINE_UNDERSCORE, Font.PLAIN);
+    myAnchorAttributes = new CustomTextAttributes(textBackgroundColor);
     enforceBackgroundOutsideText(textBackgroundColor);
     setHyperlinkText(text);
     enableEvents(AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
@@ -103,11 +107,26 @@ public class HyperlinkLabel extends HighlightableComponent {
 
   @Override
   protected void processMouseEvent(MouseEvent e) {
-    if (e.getID() == MouseEvent.MOUSE_EXITED) {
-      setCursor(Cursor.getDefaultCursor());
+    if (e.getID() == MouseEvent.MOUSE_ENTERED && isOnLink(e.getX())) {
+      myMouseHover = true;
+      repaint();
+    }
+    else if (e.getID() == MouseEvent.MOUSE_EXITED) {
+      setCursor(null);
+      myMouseHover = false;
+      myMousePressed = false;
+      repaint();
     }
     else if (UIUtil.isActionClick(e, MouseEvent.MOUSE_PRESSED) && isOnLink(e.getX())) {
-      fireHyperlinkEvent();
+      myMousePressed = true;
+      repaint();
+    }
+    else if (e.getID() == MouseEvent.MOUSE_RELEASED) {
+      if (myMousePressed && isOnLink(e.getX())) {
+        fireHyperlinkEvent(e);
+      }
+      myMousePressed = false;
+      repaint();
     }
     super.processMouseEvent(e);
   }
@@ -171,7 +190,7 @@ public class HyperlinkLabel extends HighlightableComponent {
     return myHighlightedText.getText();
   }
 
-  protected void fireHyperlinkEvent() {
+  protected void fireHyperlinkEvent(@Nullable InputEvent inputEvent) {
     HyperlinkEvent e = new HyperlinkEvent(this, HyperlinkEvent.EventType.ACTIVATED, null, null);
     for (HyperlinkListener listener : myListeners) {
       listener.hyperlinkUpdate(e);
@@ -179,7 +198,7 @@ public class HyperlinkLabel extends HighlightableComponent {
   }
 
   public void doClick() {
-    fireHyperlinkEvent();
+    fireHyperlinkEvent(null);
   }
 
   public void setHtmlText(String text) {
@@ -225,4 +244,39 @@ public class HyperlinkLabel extends HighlightableComponent {
     }
   }
 
+  private class CustomTextAttributes extends TextAttributes {
+    private CustomTextAttributes(Color textBackgroundColor) {
+      super(null, textBackgroundColor, null, null, Font.PLAIN);
+    }
+
+    @Override
+    public Color getForegroundColor() {
+      return !isEnabled() ? UIManager.getColor("Label.disabledForeground") : myMousePressed ? JBUI.CurrentTheme.Link.linkPressedColor() : myMouseHover ? JBUI.CurrentTheme.Link.linkHoverColor() : JBUI.CurrentTheme.Link.linkColor();
+    }
+
+    @Override
+    public Color getEffectColor() {
+      return getForegroundColor();
+    }
+
+    @Override
+    public EffectType getEffectType() {
+      return !isEnabled() || myMouseHover || myMousePressed ? EffectType.LINE_UNDERSCORE : null;
+    }
+
+    @Override
+    public void setForegroundColor(Color color) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void setEffectColor(Color color) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void setEffectType(EffectType effectType) {
+      throw new UnsupportedOperationException();
+    }
+  }
 }

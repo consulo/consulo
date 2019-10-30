@@ -15,6 +15,7 @@
  */
 package com.intellij.ide.ui.laf;
 
+import com.intellij.ide.ui.BasicEditorTextFieldUI;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.impl.status.BasicStatusBarUI;
 import consulo.ide.ui.laf.darcula.DarculaEditorTabsUI;
@@ -23,6 +24,7 @@ import consulo.ide.ui.laf.intellij.IntelliJEditorTabsUI;
 import consulo.ui.style.StyleManager;
 import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.text.DefaultEditorKit;
@@ -84,13 +86,17 @@ public class LafManagerImplUtil {
     if (uiDefaults.get("ActionButtonUI") == null) {
       uiDefaults.put("ActionButtonUI", ActionButtonUI.class.getName());
     }
+
+    if (uiDefaults.get("EditorTextFieldUI") == null) {
+      uiDefaults.put("EditorTextFieldUI", BasicEditorTextFieldUI.class.getName());
+    }
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
-  public static void initFontDefaults(UIDefaults defaults, int fontSize, FontUIResource uiFont) {
+  public static void initFontDefaults(@Nonnull UIDefaults defaults, @Nonnull FontUIResource uiFont) {
     defaults.put("Tree.ancestorInputMap", null);
-    FontUIResource textFont = new FontUIResource("Serif", Font.PLAIN, fontSize);
-    FontUIResource monoFont = new FontUIResource("Monospaced", Font.PLAIN, fontSize);
+    FontUIResource textFont = new FontUIResource(uiFont);
+    FontUIResource monoFont = new FontUIResource("Monospaced", Font.PLAIN, uiFont.getSize());
 
     for (String fontResource : ourPatchableFontResources) {
       defaults.put(fontResource, uiFont);

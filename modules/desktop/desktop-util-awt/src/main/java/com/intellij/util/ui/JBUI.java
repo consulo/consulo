@@ -21,8 +21,9 @@ import consulo.logging.Logger;
 import gnu.trove.TDoubleObjectHashMap;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -68,6 +69,51 @@ public class JBUI {
       @Nonnull
       public static Color borderColor() {
         return JBColor.namedColor("Popup.Advertiser.borderColor", Gray._135);
+      }
+    }
+
+    public static class Arrow {
+      @NotNull
+      public static Color foregroundColor(boolean enabled) {
+        return enabled
+               ? JBColor.namedColor("ComboBox.ArrowButton.iconColor", JBColor.namedColor("ComboBox.darcula.arrowButtonForeground", Gray.x66))
+               : JBColor.namedColor("ComboBox.ArrowButton.disabledIconColor", JBColor.namedColor("ComboBox.darcula.arrowButtonDisabledForeground", Gray.xAB));
+
+      }
+
+      @NotNull
+      public static Color backgroundColor(boolean enabled, boolean editable) {
+        return enabled ? editable
+                         ? JBColor.namedColor("ComboBox.ArrowButton.background", JBColor.namedColor("ComboBox.darcula.editable.arrowButtonBackground", Gray.xFC))
+                         : JBColor.namedColor("ComboBox.ArrowButton.nonEditableBackground", JBColor.namedColor("ComboBox.darcula.arrowButtonBackground", Gray.xFC)) : UIUtil.getPanelBackground();
+      }
+    }
+
+    public static class Focus {
+      private static final Color GRAPHITE_COLOR = new JBColor(new Color(0x8099979d, true), new Color(0x676869));
+
+      @NotNull
+      public static Color focusColor() {
+        return UIUtil.isGraphite() ? GRAPHITE_COLOR : JBColor.namedColor("Component.focusColor", JBColor.namedColor("Focus.borderColor", 0x8ab2eb));
+      }
+
+      @NotNull
+      public static Color defaultButtonColor() {
+        return UIUtil.isUnderDarcula() ? JBColor.namedColor("Button.default.focusColor", JBColor.namedColor("Focus.defaultButtonBorderColor", 0x97c3f3)) : focusColor();
+      }
+
+      @NotNull
+      public static Color errorColor(boolean active) {
+        return active
+               ? JBColor.namedColor("Component.errorFocusColor", JBColor.namedColor("Focus.activeErrorBorderColor", 0xe53e4d))
+               : JBColor.namedColor("Component.inactiveErrorFocusColor", JBColor.namedColor("Focus.inactiveErrorBorderColor", 0xebbcbc));
+      }
+
+      @NotNull
+      public static Color warningColor(boolean active) {
+        return active
+               ? JBColor.namedColor("Component.warningFocusColor", JBColor.namedColor("Focus.activeWarningBorderColor", 0xe2a53a))
+               : JBColor.namedColor("Component.inactiveWarningFocusColor", JBColor.namedColor("Focus.inactiveWarningBorderColor", 0xffd385));
       }
     }
 
@@ -1744,8 +1790,14 @@ public class JBUI {
   }
 
   @Nonnull
-  private static Icon getIcon(@Nonnull String propertyName, @Nonnull Icon defaultIcon) {
+  public static Icon getIcon(@Nonnull String propertyName, @Nonnull Icon defaultIcon) {
     Icon icon = UIManager.getIcon(propertyName);
     return icon == null ? defaultIcon : icon;
+  }
+
+  @Nonnull
+  public static Border getBorder(@Nonnull String propertyName, @Nonnull Border defaultBorder) {
+    Border border = UIManager.getBorder(propertyName);
+    return border == null ? defaultBorder : border;
   }
 }

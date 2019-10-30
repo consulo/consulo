@@ -34,6 +34,7 @@ import com.intellij.ui.TextAccessor;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.PathUtil;
 import com.intellij.util.ui.UIUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -82,8 +83,7 @@ public class CommonProgramParametersPanel extends JPanel implements PanelWithAnc
   }
 
   protected void initComponents() {
-    myProgramParametersComponent = LabeledComponent.create(new RawCommandLineEditor(),
-                                                           ExecutionBundle.message("run.configuration.program.parameters"));
+    myProgramParametersComponent = LabeledComponent.create(new RawCommandLineEditor(), ExecutionBundle.message("run.configuration.program.parameters"));
 
     FileChooserDescriptor fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
     //noinspection DialogTitleCapitalization

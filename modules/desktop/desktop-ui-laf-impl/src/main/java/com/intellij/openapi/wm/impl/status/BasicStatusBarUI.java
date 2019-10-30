@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.wm.impl.status;
 
-import com.intellij.ui.Gray;
+import com.intellij.ui.JBColor;
 import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.JBValue;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 
@@ -32,30 +32,33 @@ public class BasicStatusBarUI extends ComponentUI {
     return new BasicStatusBarUI();
   }
 
-  private static final Dimension MAX_SIZE = new Dimension(Integer.MAX_VALUE, 23);
-  private static final Dimension MIN_SIZE = new Dimension(100, 23);
+  private static final Color BORDER_TOP_COLOR = JBColor.namedColor("StatusBar.borderColor", new JBColor(0x919191, 0x919191));
+  private static final JBValue BW = new JBValue.Float(1);
 
   @Override
   public void paint(final Graphics g, final JComponent c) {
-    final Rectangle bounds = c.getBounds();
-    final Color background = UIUtil.getPanelBackground();
+    Graphics2D g2d = (Graphics2D)g.create();
+    Rectangle r = new Rectangle(c.getSize());
+    try {
+      g2d.setColor(UIUtil.getPanelBackground());
+      g2d.fill(r);
 
-    if(c.isOpaque()) {
-      g.setColor(background);
-      g.fillRect(0, 0, bounds.width, bounds.height);
+      g2d.setColor(BORDER_TOP_COLOR);
+      g2d.fill(new Rectangle(r.x, r.y, r.width, BW.get()));
     }
-
-    g.setColor(UIUtil.getBorderColor());
-    g.drawLine(0, 0, bounds.width, 0);
+    finally {
+      g2d.dispose();
+    }
   }
 
   @Override
   public Dimension getMinimumSize(JComponent c) {
-    return MIN_SIZE;
+    return JBUI.size(100, 23);
   }
 
   @Override
   public Dimension getMaximumSize(JComponent c) {
-    return MAX_SIZE;
+    return JBUI.size(Integer.MAX_VALUE, 23);
   }
 }
+

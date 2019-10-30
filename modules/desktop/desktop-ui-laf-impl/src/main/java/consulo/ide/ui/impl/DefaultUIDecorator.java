@@ -16,6 +16,7 @@
 package consulo.ide.ui.impl;
 
 import com.intellij.ide.ui.laf.darcula.DarculaUIUtil;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.ColorUtil;
 import com.intellij.util.ui.JBUI;
 import consulo.ui.SwingUIDecorator;
@@ -71,6 +72,11 @@ public class DefaultUIDecorator implements SwingUIDecorator {
   public boolean decorateSidebarTree(@Nonnull JTree tree) {
     decorateTree0(tree, getSidebarColor());
     return true;
+  }
+
+  @Override
+  public boolean decorateHelpButton() {
+    return SystemInfo.isMac;
   }
 
   public static void decorateTree0(JTree tree, Color color) {

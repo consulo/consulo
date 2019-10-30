@@ -35,7 +35,8 @@ import java.awt.*;
 /**
  * @author Konstantin Bulenkov
  */
-public class DarculaButtonUI extends BasicButtonUI {
+public class
+DarculaButtonUI extends BasicButtonUI {
   @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
   public static ComponentUI createUI(JComponent c) {
     return new DarculaButtonUI();
@@ -43,6 +44,10 @@ public class DarculaButtonUI extends BasicButtonUI {
 
   public static boolean isSquare(Component c) {
     return c instanceof JButton && "square".equals(((JButton)c).getClientProperty("JButton.buttonType"));
+  }
+
+  public static boolean isDefaultButton(JComponent c) {
+    return c instanceof JButton && ((JButton)c).isDefaultButton();
   }
 
   @Override

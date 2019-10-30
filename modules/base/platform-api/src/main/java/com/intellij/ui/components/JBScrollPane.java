@@ -94,8 +94,7 @@ public class JBScrollPane extends JScrollPane {
         }
       }
       return null;
-    }
-  }
+    }}
 
   /**
    * Indicates whether the specified event is not consumed and does not have unexpected modifiers.
@@ -189,7 +188,8 @@ public class JBScrollPane extends JScrollPane {
   private void updateViewportBorder() {
     if (getViewportBorder() instanceof ViewportBorder) {
       setViewportBorder(new ViewportBorder(myViewportBorderWidth >= 0 ? myViewportBorderWidth : 1));
-    }  }
+    }
+  }
 
   public static ViewportBorder createIndentBorder() {
     return new ViewportBorder(JBUI.scale(2));

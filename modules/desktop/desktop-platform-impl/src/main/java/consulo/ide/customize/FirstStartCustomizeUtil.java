@@ -17,12 +17,11 @@ package consulo.ide.customize;
 
 import com.intellij.ide.customize.CustomizeIDEWizardDialog;
 import com.intellij.ide.plugins.RepositoryHelper;
+import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.PathManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.util.containers.MultiMap;
@@ -30,6 +29,7 @@ import com.intellij.util.io.DownloadUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.ide.updateSettings.UpdateSettings;
+import consulo.logging.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -160,15 +160,8 @@ public class FirstStartCustomizeUtil {
   }
 
   private static void initLaf() {
-    String className;
-    if (SystemInfo.isMac) {
-      className = "com.apple.laf.AquaLookAndFeel";
-    }
-    else {
-      className = "com.intellij.ide.ui.laf.intellij.IntelliJLaf";
-    }
     try {
-      UIManager.setLookAndFeel(className);
+      UIManager.setLookAndFeel(new IntelliJLaf());
     }
     catch (Exception e) {
       e.printStackTrace();

@@ -27,6 +27,7 @@ import com.intellij.util.containers.hash.HashMap;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.ide.ui.laf.BaseLookAndFeel;
+import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExpandActionExtender;
 import sun.awt.AppContext;
 
 import javax.annotation.Nonnull;
@@ -105,6 +106,8 @@ public class DarculaLaf extends BaseLookAndFeel {
       }
 
       LafManagerImplUtil.initInputMapDefaults(defaults);
+      defaults.put(SupportTextBoxWithExpandActionExtender.class, SupportTextBoxWithExpandActionExtender.INSTANCE);
+
       initIdeaDefaults(defaults);
       patchStyledEditorKit(defaults);
       patchComboBox(metalDefaults, defaults);
@@ -239,8 +242,10 @@ public class DarculaLaf extends BaseLookAndFeel {
       stream.close();
 
       stream = getClass().getResourceAsStream(getPrefix() + "_" + osSuffix + ".properties");
-      properties.load(stream);
-      stream.close();
+      if(stream != null) {
+        properties.load(stream);
+        stream.close();
+      }
 
       HashMap<String, Object> darculaGlobalSettings = new HashMap<String, Object>();
       final String prefix = getPrefix() + ".";
@@ -269,7 +274,7 @@ public class DarculaLaf extends BaseLookAndFeel {
   }
 
   protected Object parseValue(String key, @Nonnull String value) {
-    if (key.endsWith("Insets")) {
+    if (key.endsWith("Insets") || key.endsWith("padding")) {
       final List<String> numbers = StringUtil.split(value, ",");
       return new InsetsUIResource(Integer.parseInt(numbers.get(0)),
                                   Integer.parseInt(numbers.get(1)),
@@ -284,7 +289,7 @@ public class DarculaLaf extends BaseLookAndFeel {
       final Integer invVal = getInteger(value);
       final Boolean boolVal = "true".equals(value) ? Boolean.TRUE : "false".equals(value) ? Boolean.FALSE : null;
       Icon icon = value.startsWith("AllIcons.") ? IconLoader.getIcon(value) : null;
-      if (icon == null && value.endsWith(".png")) {
+      if (icon == null && (value.endsWith(".png") || value.endsWith(".svg"))) {
         icon = IconLoader.findIcon(value, getClass(), true);
       }
       if (color != null) {
@@ -322,6 +327,10 @@ public class DarculaLaf extends BaseLookAndFeel {
     catch (NumberFormatException e) {
       return null;
     }
+  }
+
+  public static boolean isAltPressed() {
+    return false;
   }
 
   @Override

@@ -25,8 +25,8 @@ import com.intellij.util.ui.UIUtil;
 import consulo.actionSystem.ex.ComboBoxButton;
 import consulo.actionSystem.ex.ComboBoxButtonImpl;
 import consulo.ui.RequiredUIAccess;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -82,6 +82,10 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
 
   public String getPopupTitle() {
     return myPopupTitle;
+  }
+
+  public boolean isSmallVariant() {
+    return false;
   }
 
   @RequiredUIAccess

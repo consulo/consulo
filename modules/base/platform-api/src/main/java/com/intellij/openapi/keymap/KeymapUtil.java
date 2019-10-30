@@ -29,8 +29,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -404,6 +404,12 @@ public class KeymapUtil {
       return null;
     }
     return shortcut.getFirstKeyStroke();
+  }
+
+  @Nonnull
+  public static String createTooltipText(@Nonnull String name, @Nonnull String actionId) {
+    String text = getFirstKeyboardShortcutText(actionId);
+    return text.isEmpty() ? name : name + " (" + text + ")";
   }
 
   @Nonnull

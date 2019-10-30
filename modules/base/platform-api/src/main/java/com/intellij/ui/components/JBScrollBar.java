@@ -18,8 +18,17 @@ package com.intellij.ui.components;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class JBScrollBar extends JScrollBar{
+  /**
+   * This constraint should be used to add a component that will be shown before the scrollbar's track.
+   * Note that the previously added leading component will be removed.
+   *
+   * @see #addImpl(Component, Object, int)
+   */
+  public static final String LEADING = "JB_SCROLL_BAR_LEADING_COMPONENT";
+
   public JBScrollBar() {
     init();
   }
@@ -37,4 +46,15 @@ public class JBScrollBar extends JScrollBar{
   private void init() {
     putClientProperty("JScrollBar.fastWheelScrolling", Boolean.TRUE); // fast scrolling for JDK 6
   }
+
+  //@Override
+  //protected void addImpl(Component component, Object name, int index) {
+  //  Key<Component> key = LEADING.equals(name) ? DefaultScrollBarUI.LEADING : TRAILING.equals(name) ? DefaultScrollBarUI.TRAILING : null;
+  //  if (key != null) {
+  //    Component old = UIUtil.getClientProperty(this, key);
+  //    UIUtil.putClientProperty(this, key, component);
+  //    if (old != null) remove(old);
+  //  }
+  //  super.addImpl(component, name, index);
+  //}
 }

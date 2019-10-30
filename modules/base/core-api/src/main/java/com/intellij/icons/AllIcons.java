@@ -142,7 +142,8 @@ public class AllIcons {
     public static final SwingImageRef Rollback = IconLoader.getIcon("/actions/rollback.svg"); // 16x16
     public static final SwingImageRef RunToCursor = IconLoader.getIcon("/actions/runToCursor.png"); // 16x16
     public static final SwingImageRef Scratch = IconLoader.getIcon("/actions/scratch.png"); // 16x16
-    public static final SwingImageRef Search = IconLoader.getIcon("/actions/search.png"); // 16x16
+    public static final SwingImageRef Search = Find; // 16x16
+    public static final SwingImageRef SearchWithHistory = IconLoader.getIcon("/actions/search.png"); // 16x16
     public static final SwingImageRef SearchNewLine = IconLoader.getIcon("/actions/searchNewLine.png"); // 16x16
     public static final SwingImageRef SearchNewLineHover = IconLoader.getIcon("/actions/searchNewLineHover.png"); // 16x16
     public static final SwingImageRef Selectall = IconLoader.getIcon("/actions/selectall.png"); // 16x16
@@ -399,6 +400,8 @@ public class AllIcons {
     public static final SwingImageRef ErrorDialog = IconLoader.getIcon("/general/errorDialog.png"); // 32x32
     public static final SwingImageRef ErrorsInProgress = IconLoader.getIcon("/general/errorsInProgress.png"); // 12x12
     public static final SwingImageRef ExclMark = IconLoader.getIcon("/general/exclMark.png"); // 16x16
+    public static final SwingImageRef ExpandComponent = IconLoader.getIcon("/general/expandComponent.svg");
+    public static final SwingImageRef ExpandComponentHover = IconLoader.getIcon("/general/expandComponentHover.svg");
     public static final SwingImageRef ExpandAll = IconLoader.getIcon("/general/expandAll.png"); // 11x16
     public static final SwingImageRef ExpandAllHover = IconLoader.getIcon("/general/expandAllHover.png"); // 11x16
     public static final SwingImageRef ExportSettings = IconLoader.getIcon("/general/ExportSettings.png"); // 32x32

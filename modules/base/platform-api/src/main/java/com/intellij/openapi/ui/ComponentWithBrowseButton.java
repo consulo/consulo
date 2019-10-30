@@ -20,8 +20,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
 import com.intellij.openapi.actionSystem.ShortcutSet;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
-import com.intellij.openapi.fileChooser.FileChooser;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.DumbAwareAction;
@@ -37,6 +36,8 @@ import com.intellij.ui.GuiUtils;
 import com.intellij.ui.UIBundle;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.fileChooser.FileChooser;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -249,6 +250,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(ActionEvent e) {
       FileChooserDescriptor fileChooserDescriptor = myFileChooserDescriptor;
       if (myTitle != null || myDescription != null) {
@@ -261,7 +263,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
         }
       }
 
-      FileChooser.chooseFile(fileChooserDescriptor, getProject(), myTextComponent, getInitialFile(), this::onFileChosen);
+      FileChooser.chooseFile(fileChooserDescriptor, getProject(), myTextComponent, getInitialFile()).doWhenDone(this::onFileChosen);
     }
 
     @Nullable

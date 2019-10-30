@@ -26,8 +26,8 @@ import consulo.logging.Logger;
 import consulo.ui.migration.IconLoaderFacade;
 import consulo.ui.migration.SwingImageRef;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -126,6 +126,11 @@ public final class IconLoader {
     if (isReflectivePath(path)) return getReflectiveIcon(path, aClass.getClassLoader());
 
     URL myURL = aClass.getResource(path);
+    if (myURL == null && path.endsWith(".png")) {
+      path = path.replace(".png", ".svg");
+      myURL = aClass.getResource(path);
+    }
+
     if (myURL == null) {
       if (strict) throw new RuntimeException("Can't find icon in '" + path + "' near " + aClass);
       return null;

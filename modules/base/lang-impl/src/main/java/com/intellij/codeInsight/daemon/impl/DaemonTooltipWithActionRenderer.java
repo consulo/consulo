@@ -315,6 +315,7 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
         return 0;
       }
     };
+    label.setOpaque(false);
     label.setBorder(JBUI.Borders.empty());
     label.addHyperlinkListener(e -> action.accept(e.getInputEvent()));
 

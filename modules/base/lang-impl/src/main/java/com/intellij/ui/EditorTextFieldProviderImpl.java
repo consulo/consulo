@@ -113,7 +113,7 @@ public class EditorTextFieldProviderImpl implements EditorTextFieldProvider {
     }
 
     @Override
-    protected boolean isOneLineMode() {
+    public boolean isOneLineMode() {
       return false;
     }
 

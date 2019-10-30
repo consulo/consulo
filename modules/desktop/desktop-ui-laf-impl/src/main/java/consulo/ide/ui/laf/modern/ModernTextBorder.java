@@ -15,10 +15,11 @@
  */
 package consulo.ide.ui.laf.modern;
 
+import consulo.desktop.ui.laf.idea.darcula.DarculaUIUtil;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.util.ui.JBUI;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
@@ -28,7 +29,7 @@ import java.awt.*;
 /**
  * @author VISTALL
  * @since 05.08.14
- *
+ * <p>
  * Based on {@link com.intellij.ide.ui.laf.darcula.ui.DarculaTextBorder}
  */
 public class ModernTextBorder implements Border, UIResource {
@@ -41,16 +42,12 @@ public class ModernTextBorder implements Border, UIResource {
 
   @Override
   public Insets getBorderInsets(Component c) {
-    int vOffset = c instanceof JPasswordField ? 3  : c instanceof JSpinner ? 6 : 4;
-    if (ModernTextFieldUI.isSearchFieldWithHistoryPopup(c)) {
-      return JBUI.insets(vOffset, 7 + 16 + 3, vOffset, 7 + 16).asUIResource();
+    if(DarculaUIUtil.isTableCellEditor(c)) {
+      return JBUI.insets(2, 7, 2, 7).asUIResource();
     }
-    else if (ModernTextFieldUI.isSearchField(c)) {
-      return JBUI.insets(vOffset, 4 + 16 + 3, vOffset, 7 + 16).asUIResource();
-    }
-    else {
-      return JBUI.insets(vOffset, 7, vOffset, 7).asUIResource();
-    }
+
+    int vOffset = c instanceof JPasswordField ? 3 : c instanceof JSpinner ? 6 : 4;
+    return JBUI.insets(vOffset, 7, vOffset, 7).asUIResource();
   }
 
   @Override
@@ -60,14 +57,20 @@ public class ModernTextBorder implements Border, UIResource {
 
   @Override
   public void paintBorder(Component c, Graphics g2, int x, int y, int width, int height) {
-    if (ModernTextFieldUI.isSearchField(c)) return;
+    if(DarculaUIUtil.isTableCellEditor(c)) {
+      return;
+    }
+
+    if (c.getParent() instanceof JComboBox) {
+      return;
+    }
+
     Graphics2D g = ((Graphics2D)g2);
     final GraphicsConfig config = new GraphicsConfig(g);
     g.translate(x, y);
 
     ComponentUI componentUI = ModernUIUtil.getUI(c);
-    // TODO [VISTALL] find way for handle component of EditorTextField
-    if(componentUI instanceof ModernTextUI) {
+    if (componentUI instanceof ModernTextUI) {
       if (((ModernTextUI)componentUI).isFocused()) {
         g.setColor(ModernUIUtil.getSelectionBackground());
       }
@@ -81,7 +84,8 @@ public class ModernTextBorder implements Border, UIResource {
     else {
       g.setColor(ModernUIUtil.getActiveBorderColor());
     }
-    g.drawRect(1, 1, width - JBUI.scale(2), height - JBUI.scale(2));
+    g.drawRect(0, 0, width, height);
+    g.drawRect(1, 1, width - 2, height - 2);
     g.translate(-x, -y);
     config.restore();
   }

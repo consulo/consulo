@@ -16,7 +16,6 @@
 package com.intellij.find;
 
 import com.intellij.ide.ui.laf.darcula.DarculaUIUtil;
-import com.intellij.ide.ui.laf.darcula.ui.DarculaTextFieldUI;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.Gray;
 import com.intellij.ui.paint.RectanglePainter;
@@ -69,7 +68,7 @@ public class DefaultSearchTextAreaLafHelper extends SearchTextAreaLafHelper {
   public Icon getShowHistoryIcon() {
     Icon searchIcon = UIManager.getIcon("TextField.darcula.searchWithHistory.icon");
     if (searchIcon == null) {
-      searchIcon = IconLoader.findIcon("/com/intellij/ide/ui/laf/icons/searchWithHistory.png", DarculaTextFieldUI.class, true);
+      searchIcon = IconLoader.findIcon("/com/intellij/ide/ui/laf/icons/searchWithHistory.png", DefaultSearchTextAreaLafHelper.class, true);
     }
     return searchIcon;
   }
@@ -78,7 +77,7 @@ public class DefaultSearchTextAreaLafHelper extends SearchTextAreaLafHelper {
   public Icon getClearIcon() {
     Icon clearIcon = UIManager.getIcon("TextField.darcula.clear.icon");
     if (clearIcon == null) {
-      clearIcon = IconLoader.findIcon("/com/intellij/ide/ui/laf/icons/clear.png", DarculaTextFieldUI.class, true);
+      clearIcon = IconLoader.findIcon("/com/intellij/ide/ui/laf/icons/clear.png", DefaultSearchTextAreaLafHelper.class, true);
     }
     return clearIcon;
   }

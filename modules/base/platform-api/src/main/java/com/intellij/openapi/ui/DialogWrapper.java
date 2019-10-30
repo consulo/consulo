@@ -56,6 +56,7 @@ import com.intellij.util.TimeoutUtil;
 import com.intellij.util.ui.*;
 import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.SwingUIDecorator;
 import consulo.ui.UIAccess;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
@@ -465,7 +466,7 @@ public abstract class DialogWrapper {
     Map<Action, JButton> buttonMap = new LinkedHashMap<>();
 
     boolean hasHelpToMoveToLeftSide = false;
-    if (UIUtil.isUnderAquaLookAndFeel() && Arrays.asList(actions).contains(getHelpAction())) {
+    if (SwingUIDecorator.get(SwingUIDecorator::decorateHelpButton) == Boolean.TRUE && Arrays.asList(actions).contains(getHelpAction())) {
       hasHelpToMoveToLeftSide = true;
       actions = ArrayUtil.remove(actions, getHelpAction());
     }

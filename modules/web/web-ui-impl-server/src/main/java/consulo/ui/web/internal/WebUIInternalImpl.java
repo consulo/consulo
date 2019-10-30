@@ -35,7 +35,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.net.URL;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -314,5 +316,10 @@ public class WebUIInternalImpl extends UIInternal {
   @Override
   public boolean _UIAccess_isUIThread() {
     return UI.getCurrent() != null;
+  }
+
+  @Override
+  public TextBoxWithExpandAction _Components_textBoxWithExpandAction(Image editButtonImage, String dialogTitle, Function<String, List<String>> parser, Function<List<String>, String> joiner) {
+    throw new UnsupportedOperationException();
   }
 }

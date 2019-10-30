@@ -26,6 +26,7 @@ import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
+import com.intellij.ui.LightColors;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.GraphicsUtil;
@@ -198,8 +199,7 @@ public class PluginHeaderPanel {
           case INSTALL:
             return new JBColor(new Color(0x4DA864), new Color(49, 98, 49));
           case UNINSTALL:
-            return UIUtil.isUnderDarcula() ? new GradientPaint(0, 0, UIManager.getColor("Button.darcula.color1"), 0, getHeight(),
-                                                               UIManager.getColor("Button.darcula.color2")) : Gray._240;
+            return LightColors.RED;
           case RESTART:
             break;
         }

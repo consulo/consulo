@@ -39,6 +39,7 @@ import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ToolWindow;
@@ -60,13 +61,13 @@ import consulo.desktop.util.awt.UIModificationTracker;
 import consulo.desktop.util.awt.laf.GTKPlusUIUtil;
 import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.ide.ui.laf.GTKPlusEAPDescriptor;
-import consulo.ide.ui.laf.MacDefaultLookAndFeelInfo;
 import consulo.ide.ui.laf.mac.MacButtonlessScrollbarUI;
 import consulo.ide.ui.laf.mac.MacEditorTabsUI;
 import consulo.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.ModernWhiteLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.NativeModernWhiteLookAndFeelInfo;
 import consulo.logging.Logger;
+import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
@@ -86,10 +87,8 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Eugene Belyaev
@@ -127,12 +126,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
 
     List<UIManager.LookAndFeelInfo> lafList = ContainerUtil.newArrayList();
 
-    if (SystemInfo.isMac) {
-      lafList.add(new MacDefaultLookAndFeelInfo("Default", UIManager.getSystemLookAndFeelClassName()));
-    }
-    else {
-      lafList.add(new IntelliJLookAndFeelInfo());
-    }
+    lafList.add(new IntelliJLookAndFeelInfo());
 
     if (!SystemInfo.isMac) {
       if (SystemInfo.isWin8OrNewer) {
@@ -267,12 +261,6 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
    * RubyMine uses Native L&F for linux as well
    */
   private UIManager.LookAndFeelInfo getDefaultLaf() {
-    final String systemLafClassName = UIManager.getSystemLookAndFeelClassName();
-    if (SystemInfo.isMac) {
-      UIManager.LookAndFeelInfo laf = findLaf(systemLafClassName);
-      LOG.assertTrue(laf != null);
-      return laf;
-    }
     // Default
     UIManager.LookAndFeelInfo ideaLaf = findLaf(IntelliJLaf.class.getName());
     if (ideaLaf != null) {
@@ -330,6 +318,10 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
         uiDefaults.put("ClassLoader", targetClassLoader);
       }
 
+      if (SystemInfo.isMacOSYosemite) {
+        installMacOSXFonts(UIManager.getLookAndFeelDefaults());
+      }
+
       if (fire) {
         fireUpdate();
       }
@@ -340,6 +332,49 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
       return;
     }
     myCurrentLaf = lookAndFeelInfo;
+  }
+
+  public static void installMacOSXFonts(UIDefaults defaults) {
+    final String face = "Helvetica Neue";
+    final FontUIResource uiFont = getFont(face, 13, Font.PLAIN);
+    initFontDefaults(defaults, uiFont);
+    for (Object key : new HashSet<>(defaults.keySet())) {
+      if (!(key instanceof String)) continue;
+      if (!StringUtil.endsWithIgnoreCase(((String)key), "font")) continue;
+      Object value = defaults.get(key);
+      if (value instanceof FontUIResource) {
+        FontUIResource font = (FontUIResource)value;
+        if (font.getFamily().equals("Lucida Grande") || font.getFamily().equals("Serif")) {
+          if (!key.toString().contains("Menu")) {
+            defaults.put(key, getFont(face, font.getSize(), font.getStyle()));
+          }
+        }
+      }
+    }
+
+    FontUIResource uiFont11 = getFont(face, 11, Font.PLAIN);
+    defaults.put("TableHeader.font", uiFont11);
+
+    FontUIResource buttonFont = getFont("Helvetica Neue", 13, Font.PLAIN);
+    defaults.put("Button.font", buttonFont);
+    Font menuFont = getFont("Lucida Grande", 14, Font.PLAIN);
+    defaults.put("Menu.font", menuFont);
+    defaults.put("MenuItem.font", menuFont);
+    defaults.put("MenuItem.acceleratorFont", menuFont);
+    defaults.put("PasswordField.font", defaults.getFont("TextField.font"));
+  }
+
+  @Nonnull
+  private static FontUIResource getFont(String yosemite, int size, @JdkConstants.FontStyle int style) {
+    if (SystemInfo.isMacOSElCapitan) {
+      // Text family should be used for relatively small sizes (<20pt), don't change to Display
+      // see more about SF https://medium.com/@mach/the-secret-of-san-francisco-fonts-4b5295d9a745#.2ndr50z2v
+      Font font = new Font(SystemInfo.isMacOSCatalina ? ".AppleSystemUIFont" : ".SF NS Text", style, size);
+      if (!UIUtil.isDialogFont(font)) {
+        return new FontUIResource(font);
+      }
+    }
+    return new FontUIResource(yosemite, style, size);
   }
 
   @Nonnull
@@ -591,7 +626,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     if (uiSettings.OVERRIDE_NONIDEA_LAF_FONTS) {
       storeOriginalFontDefaults(uiDefaults);
       JBUI.setUserScaleFactor(uiSettings.FONT_SIZE / UIUtil.DEF_SYSTEM_FONT_SIZE);
-      initFontDefaults(uiDefaults, uiSettings.FONT_SIZE, new FontUIResource(uiSettings.FONT_FACE, Font.PLAIN, uiSettings.FONT_SIZE));
+      initFontDefaults(uiDefaults, UIUtil.getFontWithFallback(uiSettings.FONT_FACE, Font.PLAIN, uiSettings.getFontSize()));
     }
     else {
       restoreOriginalFontDefaults(uiDefaults);
@@ -658,9 +693,8 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     LafManagerImplUtil.initInputMapDefaults(defaults);
   }
 
-  @SuppressWarnings({"HardCodedStringLiteral"})
-  public static void initFontDefaults(UIDefaults defaults, int fontSize, FontUIResource uiFont) {
-    LafManagerImplUtil.initFontDefaults(defaults, fontSize, uiFont);
+  public static void initFontDefaults(@Nonnull UIDefaults defaults, @Nonnull FontUIResource uiFont) {
+    LafManagerImplUtil.initFontDefaults(defaults, uiFont);
   }
 
   private static class OurPopupFactory extends PopupFactory {

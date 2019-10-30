@@ -37,6 +37,8 @@ public class ModernActionButtonUI extends ActionButtonUI {
 
   @Override
   protected void paintBorder(ActionButton button, Graphics g, Dimension size, int state) {
+    if (state == ActionButtonComponent.NORMAL && !button.isBackgroundSet()) return;
+
     final GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
     g.setColor(state == ActionButtonComponent.POPPED || state == ActionButtonComponent.PUSHED
                ? ModernUIUtil.getSelectionBackground()
