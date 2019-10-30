@@ -130,9 +130,8 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     if (SystemInfo.isMac) {
       lafList.add(new MacDefaultLookAndFeelInfo("Default", UIManager.getSystemLookAndFeelClassName()));
     }
-    else {
-      lafList.add(new IntelliJLookAndFeelInfo());
-    }
+
+    lafList.add(new IntelliJLookAndFeelInfo());
 
     if (!SystemInfo.isMac) {
       if (SystemInfo.isWin8OrNewer) {
