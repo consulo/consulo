@@ -182,16 +182,7 @@ public class PluginHeaderPanel {
       }
 
       private Color getButtonForeground() {
-        switch (myActionId) {
-          case INSTALL:
-            return new JBColor(Gray._255, Gray._210);
-          case UNINSTALL:
-            return new JBColor(Gray._0, Gray._140);
-          case RESTART:
-            break;
-        }
-
-        return new JBColor(Gray._80, Gray._60);
+        return UIUtil.getLabelForeground();
       }
 
       private Paint getBackgroundPaint() {
@@ -207,14 +198,7 @@ public class PluginHeaderPanel {
       }
 
       private Paint getBackgroundBorderPaint() {
-        switch (myActionId) {
-          case INSTALL:
-            return new JBColor(new Color(0x337043), Gray._80);
-          case UNINSTALL:
-            return new JBColor(Gray._220, Gray._100.withAlpha(180));
-          case RESTART:
-        }
-        return Gray._208;
+        return UIUtil.getBorderColor();
       }
 
 
