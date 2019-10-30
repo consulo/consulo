@@ -242,8 +242,10 @@ public class DarculaLaf extends BaseLookAndFeel {
       stream.close();
 
       stream = getClass().getResourceAsStream(getPrefix() + "_" + osSuffix + ".properties");
-      properties.load(stream);
-      stream.close();
+      if(stream != null) {
+        properties.load(stream);
+        stream.close();
+      }
 
       HashMap<String, Object> darculaGlobalSettings = new HashMap<String, Object>();
       final String prefix = getPrefix() + ".";

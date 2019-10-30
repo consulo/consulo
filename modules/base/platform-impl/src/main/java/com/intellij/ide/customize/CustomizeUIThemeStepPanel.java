@@ -34,7 +34,6 @@ import java.util.Map;
 
 public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
 
-  private static final String DEFAULT = "Default";
   private static final String DARCULA = "Darcula";
   private static final String INTELLIJ = "IntelliJ";
   private boolean myInitial = true;
@@ -47,7 +46,7 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
     IconLoader.activate();
 
     if (SystemInfo.isMac) {
-      myLafNames.put(DEFAULT, IconLoader.getIcon("/lafs/OSXAqua.png"));
+      myLafNames.put(INTELLIJ, IconLoader.getIcon("/lafs/OSXAqua.png"));
       myLafNames.put(DARCULA, IconLoader.getIcon("/lafs/OSXDarcula.png"));
     }
     else if (SystemInfo.isWindows) {
@@ -155,16 +154,7 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
         myPreviewLabel.setBorder(BorderFactory.createLineBorder(UIManager.getColor("Label.foreground")));
       }
     }
-    catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    }
-    catch (InstantiationException e) {
-      e.printStackTrace();
-    }
-    catch (IllegalAccessException e) {
-      e.printStackTrace();
-    }
-    catch (UnsupportedLookAndFeelException e) {
+    catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
       e.printStackTrace();
     }
   }

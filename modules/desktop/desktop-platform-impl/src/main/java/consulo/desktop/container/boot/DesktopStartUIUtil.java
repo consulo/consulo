@@ -50,3 +50,4 @@ public class DesktopStartUIUtil {
     return Logger.getInstance(DesktopStartUIUtil.class);
   }
 }
+

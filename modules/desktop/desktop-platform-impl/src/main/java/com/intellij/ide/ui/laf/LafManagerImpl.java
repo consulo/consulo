@@ -60,7 +60,6 @@ import consulo.desktop.util.awt.UIModificationTracker;
 import consulo.desktop.util.awt.laf.GTKPlusUIUtil;
 import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.ide.ui.laf.GTKPlusEAPDescriptor;
-import consulo.ide.ui.laf.MacDefaultLookAndFeelInfo;
 import consulo.ide.ui.laf.mac.MacButtonlessScrollbarUI;
 import consulo.ide.ui.laf.mac.MacEditorTabsUI;
 import consulo.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
@@ -126,10 +125,6 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     myListenerList = new EventListenerList();
 
     List<UIManager.LookAndFeelInfo> lafList = ContainerUtil.newArrayList();
-
-    if (SystemInfo.isMac) {
-      lafList.add(new MacDefaultLookAndFeelInfo("Default", UIManager.getSystemLookAndFeelClassName()));
-    }
 
     lafList.add(new IntelliJLookAndFeelInfo());
 
@@ -266,12 +261,6 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
    * RubyMine uses Native L&F for linux as well
    */
   private UIManager.LookAndFeelInfo getDefaultLaf() {
-    final String systemLafClassName = UIManager.getSystemLookAndFeelClassName();
-    if (SystemInfo.isMac) {
-      UIManager.LookAndFeelInfo laf = findLaf(systemLafClassName);
-      LOG.assertTrue(laf != null);
-      return laf;
-    }
     // Default
     UIManager.LookAndFeelInfo ideaLaf = findLaf(IntelliJLaf.class.getName());
     if (ideaLaf != null) {

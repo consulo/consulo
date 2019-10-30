@@ -59,4 +59,8 @@ public interface SwingUIDecorator extends UIDecorator {
   default boolean decorateSidebarTree(@Nonnull JTree tree) {
     return false;
   }
+
+  default boolean decorateHelpButton() {
+    return false;
+  }
 }
