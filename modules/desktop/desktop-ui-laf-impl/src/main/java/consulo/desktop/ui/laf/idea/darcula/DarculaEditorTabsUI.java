@@ -58,7 +58,7 @@ public class DarculaEditorTabsUI extends IntelliJEditorTabsUI {
     final int x = rectangle.x;
     final int y = rectangle.y;
     final int h = rectangle.height;
-    g.setPaint(Gray._78);
+    g.setPaint(Gray._78.withAlpha(120));
     final int w = rectangle.width;
     g.fillRect(x, rectangle.y, w, h + (vertical ? 1 : 0));
 
