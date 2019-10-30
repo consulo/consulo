@@ -44,10 +44,10 @@ public final class IntelliJMetalLookAndFeel extends MetalLookAndFeel {
 
     Pair<String, Integer> systemFont = UIUtil.getSystemFontData();
     if (systemFont != null) {
-      LafManagerImplUtil.initFontDefaults(defaults, systemFont.second, new FontUIResource(systemFont.first, Font.PLAIN, systemFont.second));
+      LafManagerImplUtil.initFontDefaults(defaults, new FontUIResource(systemFont.first, Font.PLAIN, systemFont.second));
     }
     else {
-      LafManagerImplUtil.initFontDefaults(defaults, 11, new FontUIResource("Tahoma", Font.PLAIN, 11));
+      LafManagerImplUtil.initFontDefaults(defaults, new FontUIResource("Tahoma", Font.PLAIN, 11));
     }
   }
 

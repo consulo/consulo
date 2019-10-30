@@ -459,7 +459,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     RIGHT_HORIZONTAL_SPLIT = value;
   }
 
-  public float getFontSize() {
+  public int getFontSize() {
     return FONT_SIZE;
   }
 

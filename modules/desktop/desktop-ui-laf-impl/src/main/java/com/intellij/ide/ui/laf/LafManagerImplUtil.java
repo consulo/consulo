@@ -24,6 +24,7 @@ import consulo.ide.ui.laf.intellij.IntelliJEditorTabsUI;
 import consulo.ui.style.StyleManager;
 import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.text.DefaultEditorKit;
@@ -92,10 +93,10 @@ public class LafManagerImplUtil {
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
-  public static void initFontDefaults(UIDefaults defaults, int fontSize, FontUIResource uiFont) {
+  public static void initFontDefaults(@Nonnull UIDefaults defaults, @Nonnull FontUIResource uiFont) {
     defaults.put("Tree.ancestorInputMap", null);
-    FontUIResource textFont = new FontUIResource("Serif", Font.PLAIN, fontSize);
-    FontUIResource monoFont = new FontUIResource("Monospaced", Font.PLAIN, fontSize);
+    FontUIResource textFont = new FontUIResource(uiFont);
+    FontUIResource monoFont = new FontUIResource("Monospaced", Font.PLAIN, uiFont.getSize());
 
     for (String fontResource : ourPatchableFontResources) {
       defaults.put(fontResource, uiFont);
