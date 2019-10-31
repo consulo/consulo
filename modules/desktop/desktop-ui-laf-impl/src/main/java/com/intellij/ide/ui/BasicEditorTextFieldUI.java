@@ -16,6 +16,7 @@
 package com.intellij.ide.ui;
 
 import com.intellij.openapi.editor.Editor;
+import com.intellij.ui.ComponentUtil;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.JBInsets;
 
@@ -40,6 +41,10 @@ public class BasicEditorTextFieldUI extends BasicPanelUI {
     if (border == null || border instanceof UIResource) {
       c.setBorder(UIManager.getBorder("TextField.border"));
     }
+  }
+
+  public static boolean isComboBoxEditor(Component c) {
+    return ComponentUtil.getParentOfType((Class<? extends JComboBox>)JComboBox.class, c) != null;
   }
 
   @Override

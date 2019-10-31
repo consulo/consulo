@@ -15,6 +15,7 @@
  */
 package consulo.ide.ui.laf.modern;
 
+import com.intellij.ide.ui.BasicEditorTextFieldUI;
 import consulo.desktop.ui.laf.idea.darcula.DarculaUIUtil;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.util.ui.JBUI;
@@ -42,7 +43,7 @@ public class ModernTextBorder implements Border, UIResource {
 
   @Override
   public Insets getBorderInsets(Component c) {
-    if(DarculaUIUtil.isTableCellEditor(c)) {
+    if(DarculaUIUtil.isTableCellEditor(c) || BasicEditorTextFieldUI.isComboBoxEditor(c)) {
       return JBUI.insets(2, 7, 2, 7).asUIResource();
     }
 
@@ -61,7 +62,7 @@ public class ModernTextBorder implements Border, UIResource {
       return;
     }
 
-    if (c.getParent() instanceof JComboBox) {
+    if (BasicEditorTextFieldUI.isComboBoxEditor(c)) {
       return;
     }
 
