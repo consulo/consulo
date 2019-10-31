@@ -15,17 +15,16 @@
  */
 package com.intellij.util;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.logging.Logger;
 import org.imgscalr.Scalr;
 import org.jetbrains.annotations.NonNls;
 
@@ -53,7 +52,7 @@ import static com.intellij.util.ui.JBUI.ScaleType.PIX_SCALE;
 public class ImageLoader implements Serializable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.util.ImageLoader");
 
-  public static final long CACHED_IMAGE_MAX_SIZE = (long)(Registry.doubleValue("ide.cached.image.max.size") * 1024 * 1024);
+  public static final long CACHED_IMAGE_MAX_SIZE = (long)(SystemProperties.getFloatProperty("ide.cached.image.max.size", 1.5f) * 1024 * 1024);
   private static final ConcurrentMap<String, Image> ourCache = ContainerUtil.createConcurrentSoftValueMap();
 
   @SuppressWarnings({"UnusedDeclaration"}) // set from com.intellij.internal.IconsLoadTime
@@ -232,7 +231,7 @@ public class ImageLoader implements Serializable {
       boolean retina = JBUI.isHiDPI(ctx.getScale(PIX_SCALE));
 
       Builder list =
-              new Builder(FileUtil.getNameWithoutExtension(path), FileUtilRt.getExtension(path), cls, Registry.is("ide.svg.icon"), adjustScaleFactor(allowFloatScaling, ctx.getScale(PIX_SCALE)));
+              new Builder(FileUtil.getNameWithoutExtension(path), FileUtilRt.getExtension(path), cls, true, adjustScaleFactor(allowFloatScaling, ctx.getScale(PIX_SCALE)));
 
       if (path.contains("://") && !path.startsWith("file:")) {
         list.add(StringUtil.endsWithIgnoreCase(path, ".svg") ? SVG : IMG);

@@ -25,6 +25,7 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SimpleModificationTracker;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.ComponentTreeEventDispatcher;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.GraphicsUtil;
@@ -219,7 +220,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   }
 
   public static Pair<String, Integer> getSystemFontFaceAndSize() {
-    final Pair<String, Integer> fontData = UIUtil.getSystemFontData();
+    final Pair<String, Integer> fontData = JBUIScale.getSystemFontData();
     if (fontData != null) {
       return fontData;
     }

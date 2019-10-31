@@ -26,7 +26,6 @@ import com.intellij.idea.starter.DesktopApplicationPostStarter;
 import com.intellij.idea.starter.DesktopApplicationStarter;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.ui.AppUIUtil;
-import com.intellij.util.ui.UIUtil;
 import consulo.container.boot.ContainerStartup;
 import consulo.container.util.StatCollector;
 import consulo.logging.Logger;
@@ -55,7 +54,8 @@ public class DesktopContainerStartup implements ContainerStartup {
 
     Runnable hackAwt = stat.mark("boot.hack.awt");
     DesktopStartUIUtil.hackAWT();
-    UIUtil.initDefaultLAF();
+    DesktopStartUIUtil.initDefaultLAF();
+    DesktopStartUIUtil.initSystemFontData();
     hackAwt.run();
 
     ThreadGroup threadGroup = new ThreadGroup("Consulo Thread Group") {

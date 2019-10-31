@@ -24,7 +24,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.JBColor;
-import com.intellij.util.ui.UIUtil;
+import com.intellij.ui.scale.JBUIScale;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
@@ -133,7 +133,7 @@ public class NotificationsUtil {
     if (uiSettings.OVERRIDE_NONIDEA_LAF_FONTS) {
       return Pair.create(uiSettings.FONT_FACE, uiSettings.FONT_SIZE);
     }
-    Pair<String, Integer> systemFontData = UIUtil.getSystemFontData();
+    Pair<String, Integer> systemFontData = JBUIScale.getSystemFontData();
     return systemFontData == null ? null : systemFontData;
   }
 

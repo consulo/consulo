@@ -4,7 +4,6 @@ package com.intellij.util.ui;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
@@ -21,8 +20,8 @@ import consulo.logging.Logger;
 import gnu.trove.TDoubleObjectHashMap;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -362,8 +361,6 @@ public class JBUI {
 
   private static final PropertyChangeSupport PCS = new PropertyChangeSupport(new JBUI());
 
-  private static final float DISCRETE_SCALE_RESOLUTION = 0.25f;
-
   public static final boolean SCALE_VERBOSE = Boolean.getBoolean("ide.ui.scale.verbose");
 
   /**
@@ -544,8 +541,7 @@ public class JBUI {
         }
         return 1f;
       }
-      UIUtil.initSystemFontData();
-      Pair<String, Integer> fdata = UIUtil.getSystemFontData();
+      Pair<String, Integer> fdata = JBUIScale.getSystemFontData();
 
       int size = fdata == null ? Fonts.label().getSize() : fdata.getSecond();
       return getFontScale(size);
@@ -573,8 +569,8 @@ public class JBUI {
           LOG.error("ide.ui.scale system property is not a float value: " + prop);
         }
       }
-      else if (Registry.is("ide.ui.scale.override")) {
-        return Float.valueOf((float)Registry.get("ide.ui.scale").asDouble());
+      else if (Boolean.valueOf("ide.ui.scale.override")) {
+        return 1f;
       }
       return null;
     }
@@ -747,7 +743,7 @@ public class JBUI {
       return 1f;
     }
 
-    scale = discreteScale(scale);
+    scale = JBUIScale.discreteScale(scale);
 
     // Downgrading user scale below 1.0 may be uncomfortable (tiny icons),
     // whereas some users prefer font size slightly below normal which is ok.
@@ -760,10 +756,6 @@ public class JBUI {
     }
     setUserScaleFactorProperty(scale);
     return scale;
-  }
-
-  static float discreteScale(float scale) {
-    return Math.round(scale / DISCRETE_SCALE_RESOLUTION) * DISCRETE_SCALE_RESOLUTION;
   }
 
   /**

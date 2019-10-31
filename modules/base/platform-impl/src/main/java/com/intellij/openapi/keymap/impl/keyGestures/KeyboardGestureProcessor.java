@@ -20,9 +20,10 @@ import com.intellij.openapi.keymap.impl.ActionProcessor;
 import com.intellij.openapi.keymap.impl.IdeKeyEventDispatcher;
 import com.intellij.openapi.keymap.impl.KeyState;
 import com.intellij.openapi.util.registry.Registry;
+import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,7 +50,7 @@ public class KeyboardGestureProcessor {
     }
   });
 
-  final Timer myDblClickTimer = UIUtil.createNamedTimer("Double click",Registry.intValue("actionSystem.keyGestureDblClickTime"), new ActionListener() {
+  final Timer myDblClickTimer = UIUtil.createNamedTimer("Double click", SystemProperties.getIntProperty("actionSystem.keyGestureDblClickTime", 650), new ActionListener() {
     public void actionPerformed(final ActionEvent e) {
       myState.processDblClickTimer();
     }

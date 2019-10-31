@@ -20,7 +20,7 @@ import com.intellij.ide.ui.laf.LafManagerImplUtil;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.ColoredSideBorder;
 import com.intellij.ui.plaf.beg.*;
-import com.intellij.util.ui.UIUtil;
+import com.intellij.ui.scale.JBUIScale;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -42,13 +42,8 @@ public final class IntelliJMetalLookAndFeel extends MetalLookAndFeel {
     LafManagerImplUtil.initInputMapDefaults(defaults);
     initIdeaDefaults(defaults);
 
-    Pair<String, Integer> systemFont = UIUtil.getSystemFontData();
-    if (systemFont != null) {
-      LafManagerImplUtil.initFontDefaults(defaults, new FontUIResource(systemFont.first, Font.PLAIN, systemFont.second));
-    }
-    else {
-      LafManagerImplUtil.initFontDefaults(defaults, new FontUIResource("Tahoma", Font.PLAIN, 11));
-    }
+    Pair<String, Integer> systemFont = JBUIScale.getSystemFontData();
+    LafManagerImplUtil.initFontDefaults(defaults, new FontUIResource(systemFont.first, Font.PLAIN, systemFont.second));
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})

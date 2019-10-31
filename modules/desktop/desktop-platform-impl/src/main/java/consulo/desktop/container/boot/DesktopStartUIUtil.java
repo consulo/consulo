@@ -16,10 +16,13 @@
 package consulo.desktop.container.boot;
 
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.registry.Registry;
+import com.intellij.ui.scale.JBUIScale;
+import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import consulo.logging.Logger;
+
+import javax.swing.*;
 
 /**
  * @author VISTALL
@@ -32,12 +35,24 @@ public class DesktopStartUIUtil {
     UIUtil.configureHtmlKitStylesheet();
   }
 
+  public static void initSystemFontData() {
+    JBUIScale.getSystemFontData();
+  }
+
+  public static void initDefaultLAF() {
+    try {
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    }
+    catch (Exception ignored) {
+    }
+  }
+
   private static void blockATKWrapper() {
     /*
      * The method should be called before java.awt.Toolkit.initAssistiveTechnologies()
      * which is called from Toolkit.getDefaultToolkit().
      */
-    if (!(SystemInfo.isLinux && Registry.is("linux.jdk.accessibility.atkwrapper.block"))) return;
+    if (!SystemInfo.isLinux || !SystemProperties.getBooleanProperty("linux.jdk.accessibility.atkwrapper.block", true)) return;
 
     if (ScreenReader.isEnabled(ScreenReader.ATK_WRAPPER)) {
       // Replace AtkWrapper with a dummy Object. It'll be instantiated & GC'ed right away, a NOP.
