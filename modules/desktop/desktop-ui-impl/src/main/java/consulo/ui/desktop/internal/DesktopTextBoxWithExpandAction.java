@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.desktop.laf.extend.textBox;
+package consulo.ui.desktop.internal;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.ui.ComponentWithBrowseButton;
@@ -23,10 +23,11 @@ import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.components.fields.ExpandableTextField;
 import consulo.awt.TargetAWT;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.TextBox;
 import consulo.ui.TextBoxWithExpandAction;
-import consulo.ui.desktop.internal.DesktopTextBoxImpl;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.desktop.laf.extend.LafExtendUtil;
+import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExpandActionExtender;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -82,6 +83,20 @@ public class DesktopTextBoxWithExpandAction {
     public TextBoxWithExpandAction setDialogTitle(@Nonnull String text) {
       return this;
     }
+
+    @Nonnull
+    @Override
+    public TextBox setPlaceholder(@Nullable String text) {
+      myComponent.getEmptyText().setText(text);
+      return this;
+    }
+
+    @Nonnull
+    @Override
+    public TextBox setVisibleLength(int columns) {
+      myComponent.setColumns(columns);
+      return this;
+    }
   }
 
   private static class FallbackTextBoxWithExpandAction extends SwingComponentDelegate<ComponentWithBrowseButton<JComponent>> implements TextBoxWithExpandAction {
@@ -129,6 +144,20 @@ public class DesktopTextBoxWithExpandAction {
     @Override
     public TextBoxWithExpandAction setDialogTitle(@Nonnull String text) {
       myDialogTitle = text;
+      return this;
+    }
+
+    @Nonnull
+    @Override
+    public TextBox setPlaceholder(@Nullable String text) {
+      myTextBox.setPlaceholder(text);
+      return this;
+    }
+
+    @Nonnull
+    @Override
+    public TextBox setVisibleLength(int columns) {
+      myTextBox.setVisibleLength(columns);
       return this;
     }
   }

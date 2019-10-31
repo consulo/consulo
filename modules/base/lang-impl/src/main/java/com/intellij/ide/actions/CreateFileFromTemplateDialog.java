@@ -17,20 +17,33 @@
 package com.intellij.ide.actions;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.actions.newclass.CreateWithTemplatesDialogPanel;
+import com.intellij.ide.ui.newItemPopup.NewItemPopupUtil;
 import com.intellij.lang.LangBundle;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.InputValidatorEx;
 import com.intellij.openapi.ui.ValidationInfo;
+import com.intellij.openapi.ui.popup.JBPopup;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.Trinity;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
+import consulo.awt.TargetAWT;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.image.Image;
+import consulo.ui.migration.SwingImageRef;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * @author peter
@@ -126,8 +139,9 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
   }
 
   public static Builder createDialog(@Nonnull final Project project) {
-    final CreateFileFromTemplateDialog dialog = new CreateFileFromTemplateDialog(project);
-    return new BuilderImpl(dialog, project);
+    //final CreateFileFromTemplateDialog dialog = new CreateFileFromTemplateDialog(project);
+    //return new BuilderImpl(dialog, project);
+    return new NonBlockingPopupBuilderImpl(project);
   }
 
   private static class BuilderImpl implements Builder {
@@ -146,8 +160,8 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
     }
 
     @Override
-    public Builder addKind(@Nonnull String name, @Nullable Icon icon, @Nonnull String templateName) {
-      myDialog.getKindCombo().addItem(name, icon, templateName);
+    public Builder addKind(@Nonnull String kind, @Nullable Image icon, @Nonnull String templateName) {
+      myDialog.getKindCombo().addItem(kind, icon, templateName);
       if (myDialog.getKindCombo().getComboBox().getItemCount() > 1) {
         myDialog.setTemplateKindComponentsVisible(true);
       }
@@ -161,8 +175,7 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
     }
 
     @Override
-    public <T extends PsiElement> T show(@Nonnull String errorTitle, @Nullable String selectedTemplateName,
-                                         @Nonnull final FileCreator<T> creator) {
+    public <T extends PsiElement> void show(@Nonnull String errorTitle, @Nullable String selectedTemplateName, @Nonnull final FileCreator<T> creator, @Nonnull Consumer<T> consumer) {
       final Ref<T> created = Ref.create(null);
       myDialog.getKindCombo().setSelectedName(selectedTemplateName);
       myDialog.myCreator = new ElementCreator(myProject, errorTitle) {
@@ -183,28 +196,123 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
         }
       };
 
-      myDialog.show();
-      if (myDialog.getExitCode() == OK_EXIT_CODE) {
-        return created.get();
-      }
-      return null;
+      myDialog.showAsync().doWhenDone(() -> consumer.accept(created.get()));
     }
 
     @Nullable
     @Override
-    public Map<String,String> getCustomProperties() {
+    public Map<String, String> getCustomProperties() {
       return null;
     }
   }
 
+  private static class NonBlockingPopupBuilderImpl implements Builder {
+    @Nonnull
+    private final Project myProject;
+
+    private String myTitle = "Title";
+    private final List<Trinity<String, Image, String>> myTemplatesList = new ArrayList<>();
+    private InputValidator myInputValidator;
+
+    private NonBlockingPopupBuilderImpl(@Nonnull Project project) {
+      myProject = project;
+    }
+
+    @Override
+    public Builder setTitle(String title) {
+      myTitle = title;
+      return this;
+    }
+
+    @Override
+    public Builder addKind(@Nonnull String kind, @Nullable Image icon, @Nonnull String templateName) {
+      myTemplatesList.add(Trinity.create(kind, icon, templateName));
+      return this;
+    }
+
+    @Override
+    public Builder setValidator(InputValidator validator) {
+      myInputValidator = validator;
+      return this;
+    }
+
+
+    @Override
+    public <T extends PsiElement> void show(@Nonnull String errorTitle, @Nullable String selectedItem, @Nonnull FileCreator<T> fileCreator, Consumer<T> elementConsumer) {
+      CreateWithTemplatesDialogPanel contentPanel = new CreateWithTemplatesDialogPanel(myTemplatesList, selectedItem);
+      ElementCreator elementCreator = new ElementCreator(myProject, errorTitle) {
+
+        @Override
+        protected PsiElement[] create(@Nonnull String newName) {
+          T element = fileCreator.createFile(contentPanel.getEnteredName(), contentPanel.getSelectedTemplate());
+          return element != null ? new PsiElement[]{element} : PsiElement.EMPTY_ARRAY;
+        }
+
+        @Override
+        protected String getActionName(String newName) {
+          return fileCreator.getActionName(newName, contentPanel.getSelectedTemplate());
+        }
+      };
+
+      JBPopup popup = NewItemPopupUtil.createNewItemPopup(myTitle, contentPanel, (JComponent)TargetAWT.to(contentPanel.getNameField()));
+      contentPanel.setApplyAction(e -> {
+        String newElementName = contentPanel.getEnteredName();
+        if (StringUtil.isEmptyOrSpaces(newElementName)) return;
+
+        boolean isValid = myInputValidator == null || myInputValidator.canClose(newElementName);
+        if (isValid) {
+          popup.closeOk(e);
+          T createdElement = (T)createElement(newElementName, elementCreator);
+          if (createdElement != null) {
+            elementConsumer.accept(createdElement);
+          }
+        }
+        else {
+          String errorMessage =
+                  Optional.ofNullable(myInputValidator).filter(validator -> validator instanceof InputValidatorEx).map(validator -> ((InputValidatorEx)validator).getErrorText(newElementName))
+                          .orElse(LangBundle.message("incorrect.name"));
+          contentPanel.setError(errorMessage);
+        }
+      });
+
+      Disposer.register(popup, contentPanel);
+      popup.showCenteredInCurrentWindow(myProject);
+    }
+
+    @Nullable
+    @Override
+    public Map<String, String> getCustomProperties() {
+      return null;
+    }
+
+    @Nullable
+    private static PsiElement createElement(String newElementName, ElementCreator creator) {
+      PsiElement[] elements = creator.tryCreate(newElementName);
+      return elements.length > 0 ? elements[0] : null;
+    }
+  }
+
+
   public interface Builder {
     Builder setTitle(String title);
+
     Builder setValidator(InputValidator validator);
-    Builder addKind(@Nonnull String kind, @Nullable Icon icon, @Nonnull String templateName);
+
+    default Builder addKind(@Nonnull String kind, @Nullable Icon icon, @Nonnull String templateName) {
+      return addKind(kind, TargetAWT.from(icon), templateName);
+    }
+
+    default Builder addKind(@Nonnull String kind, @Nullable SwingImageRef icon, @Nonnull String templateName) {
+      return addKind(kind, (Image)icon, templateName);
+    }
+
+    Builder addKind(@Nonnull String kind, @Nullable Image icon, @Nonnull String templateName);
+
     @Nullable
-    <T extends PsiElement> T show(@Nonnull String errorTitle, @Nullable String selectedItem, @Nonnull FileCreator<T> creator);
+    <T extends PsiElement> void show(@Nonnull String errorTitle, @Nullable String selectedItem, @Nonnull FileCreator<T> creator, @RequiredUIAccess @Nonnull Consumer<T> consumer);
+
     @Nullable
-    Map<String,String> getCustomProperties();
+    Map<String, String> getCustomProperties();
   }
 
   public interface FileCreator<T> {

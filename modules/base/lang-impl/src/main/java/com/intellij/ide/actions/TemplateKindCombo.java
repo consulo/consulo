@@ -19,27 +19,26 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.Trinity;
+import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.ComboboxSpeedSearch;
 import com.intellij.ui.ComboboxWithBrowseButton;
-import com.intellij.ui.ListCellRendererWrapper;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 public class TemplateKindCombo extends ComboboxWithBrowseButton {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.actions.TemplateKindCombo");
-
   public TemplateKindCombo() {
-    getComboBox().setRenderer(new ListCellRendererWrapper() {
+    getComboBox().setRenderer(new ColoredListCellRenderer() {
       @Override
-      public void customize(final JList list, final Object value, final int index, final boolean selected, final boolean cellHasFocus) {
+      protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
         if (value instanceof Trinity) {
-          setText((String)((Trinity)value).first);
-          setIcon ((Icon)((Trinity)value).second);
+          append((String)((Trinity)value).first);
+          setIcon((Image)((Trinity)value).second);
         }
       }
     });
@@ -56,13 +55,13 @@ public class TemplateKindCombo extends ComboboxWithBrowseButton {
     setButtonListener(null);
   }
 
-  public void addItem(String presentableName, Icon icon, String templateName) {
-    getComboBox().addItem(new Trinity<String, Icon, String>(presentableName, icon, templateName));
+  public void addItem(String presentableName, Image icon, String templateName) {
+    getComboBox().addItem(new Trinity<>(presentableName, icon, templateName));
   }
 
   public String getSelectedName() {
     //noinspection unchecked
-    final Trinity<String, Icon, String> trinity = (Trinity<String, Icon, String>)getComboBox().getSelectedItem();
+    final Trinity<String, Image, String> trinity = (Trinity<String, Image, String>)getComboBox().getSelectedItem();
     if (trinity == null) {
       // design time
       return null;
@@ -74,7 +73,7 @@ public class TemplateKindCombo extends ComboboxWithBrowseButton {
     if (name == null) return;
     ComboBoxModel model = getComboBox().getModel();
     for (int i = 0, n = model.getSize(); i < n; i++) {
-      Trinity<String, Icon, String> trinity = (Trinity<String, Icon, String>)model.getElementAt(i);
+      Trinity<String, Image, String> trinity = (Trinity<String, Image, String>)model.getElementAt(i);
       if (name.equals(trinity.third)) {
         getComboBox().setSelectedItem(trinity);
         return;

@@ -75,7 +75,7 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
     buildDialog(project, dir, builder);
 
     final Ref<String> selectedTemplateName = Ref.create(null);
-    final T createdElement = builder.show(getErrorTitle(), getDefaultTemplateName(dir), new CreateFileFromTemplateDialog.FileCreator<T>() {
+    builder.show(getErrorTitle(), getDefaultTemplateName(dir), new CreateFileFromTemplateDialog.FileCreator<T>() {
       @Override
       public T createFile(@Nonnull String name, @Nonnull String templateName) {
         selectedTemplateName.set(templateName);
@@ -87,12 +87,10 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
       public String getActionName(@Nonnull String name, @Nonnull String templateName) {
         return CreateFromTemplateAction.this.getActionName(dir, name, templateName);
       }
-    });
-
-    if (createdElement != null) {
+    }, createdElement -> {
       view.selectElement(createdElement);
       postProcess(createdElement, selectedTemplateName.get(), builder.getCustomProperties());
-    }
+    });
   }
 
   @RequiredUIAccess

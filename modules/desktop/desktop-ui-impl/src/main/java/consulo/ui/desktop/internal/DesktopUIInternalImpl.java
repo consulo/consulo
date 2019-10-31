@@ -25,7 +25,6 @@ import consulo.ui.MenuItem;
 import consulo.ui.Window;
 import consulo.ui.*;
 import consulo.ui.desktop.internal.image.*;
-import consulo.ui.desktop.laf.extend.textBox.DesktopTextBoxWithExpandAction;
 import consulo.ui.desktop.internal.layout.*;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
@@ -303,5 +302,10 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Override
   public TextBoxWithExpandAction _Components_textBoxWithExpandAction(Image editButtonImage, String dialogTitle, Function<String, List<String>> parser, Function<List<String>, String> joiner) {
     return DesktopTextBoxWithExpandAction.create(editButtonImage, dialogTitle, parser, joiner);
+  }
+
+  @Override
+  public TextBoxWithExtensions _Components_textBoxWithExtensions(String text) {
+    return DesktopTextBoxWithExtensions.create(text);
   }
 }

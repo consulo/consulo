@@ -28,6 +28,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.desktop.util.awt.laf.BuildInLookAndFeel;
 import consulo.ide.ui.laf.BaseLookAndFeel;
 import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExpandActionExtender;
+import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExtensionsExtender;
 import sun.awt.AppContext;
 
 import javax.annotation.Nonnull;
@@ -111,6 +112,7 @@ public class ModernDarkLaf extends BaseLookAndFeel implements BuildInLookAndFeel
 
       LafManagerImplUtil.initInputMapDefaults(defaults);
       defaults.put(SupportTextBoxWithExpandActionExtender.class, SupportTextBoxWithExpandActionExtender.INSTANCE);
+      defaults.put(SupportTextBoxWithExtensionsExtender.class, SupportTextBoxWithExtensionsExtender.INSTANCE);
 
       initIdeaDefaults(defaults);
       patchStyledEditorKit(defaults);

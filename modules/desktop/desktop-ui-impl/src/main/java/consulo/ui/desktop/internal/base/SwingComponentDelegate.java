@@ -32,7 +32,6 @@ import consulo.ui.style.ColorKey;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.util.Collection;
 import java.util.EventListener;
 import java.util.LinkedHashMap;
@@ -134,7 +133,7 @@ public class SwingComponentDelegate<T extends java.awt.Component> implements Com
   private void bordersChanged() {
     JComponent component = (JComponent)toAWTComponent();
 
-    component.setBorder(null);
+    component.setBorder(JBUI.Borders.empty());
 
     Collection<BorderInfo> borders = dataObject().getBorders();
 
@@ -146,7 +145,7 @@ public class SwingComponentDelegate<T extends java.awt.Component> implements Com
     }
 
     if (!emptyBorders.isEmpty()) {
-      component.setBorder(new EmptyBorder(getBorderSize(emptyBorders, BorderPosition.TOP), getBorderSize(emptyBorders, BorderPosition.LEFT), getBorderSize(emptyBorders, BorderPosition.BOTTOM),
+      component.setBorder(JBUI.Borders.empty(getBorderSize(emptyBorders, BorderPosition.TOP), getBorderSize(emptyBorders, BorderPosition.LEFT), getBorderSize(emptyBorders, BorderPosition.BOTTOM),
                                           getBorderSize(emptyBorders, BorderPosition.RIGHT)));
 
       return;

@@ -26,6 +26,7 @@ import consulo.ui.TextBox;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.event.DocumentEvent;
 
 /**
@@ -59,6 +60,20 @@ public class DesktopTextBoxImpl extends SwingComponentDelegate<JBTextField> impl
     myComponent = new MyJBTextField();
     myComponent.getDocument().addDocumentListener(new Listener(this));
     setValue(text);
+  }
+
+  @Nonnull
+  @Override
+  public TextBox setPlaceholder(@Nullable String text) {
+    myComponent.getEmptyText().setText(text);
+    return this;
+  }
+
+  @Nonnull
+  @Override
+  public TextBox setVisibleLength(int columns) {
+    myComponent.setColumns(columns);
+    return this;
   }
 
   @SuppressWarnings("unchecked")

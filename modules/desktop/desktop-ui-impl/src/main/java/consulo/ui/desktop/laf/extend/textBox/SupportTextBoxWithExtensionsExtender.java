@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,29 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+package consulo.ui.desktop.laf.extend.textBox;
 
 /**
  * @author VISTALL
- * @since 19-Nov-16.
+ * @since 2019-10-31
  */
-public interface TextBox extends ValueComponent<String> {
-  @Nonnull
-  static TextBox create() {
-    return create(null);
-  }
-
-  @Nonnull
-  static TextBox create(@Nullable String text) {
-    return UIInternal.get()._Components_textBox(text);
-  }
-
-  @Nonnull
-  TextBox setPlaceholder(@Nullable String text);
-
-  @Nonnull
-  TextBox setVisibleLength(int columns);
+public class SupportTextBoxWithExtensionsExtender {
+  public static final SupportTextBoxWithExtensionsExtender INSTANCE = new SupportTextBoxWithExtensionsExtender();
 }

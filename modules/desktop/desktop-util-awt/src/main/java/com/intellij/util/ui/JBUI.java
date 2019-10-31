@@ -88,6 +88,49 @@ public class JBUI {
       }
     }
 
+    public static class Validator {
+      @Nonnull
+      public static Color errorBorderColor() {
+        return JBColor.namedColor("ValidationTooltip.errorBorderColor", 0xE0A8A9);
+      }
+
+      @Nonnull
+      public static Color errorBackgroundColor() {
+        return JBColor.namedColor("ValidationTooltip.errorBackground", JBColor.namedColor("ValidationTooltip.errorBackgroundColor", 0xF5E6E7));
+      }
+
+      @Nonnull
+      public static Color warningBorderColor() {
+        return JBColor.namedColor("ValidationTooltip.warningBorderColor", 0xE0CEA8);
+      }
+
+      @Nonnull
+      public static Color warningBackgroundColor() {
+        return JBColor.namedColor("ValidationTooltip.warningBackground", JBColor.namedColor("ValidationTooltip.warningBackgroundColor", 0xF5F0E6));
+      }
+    }
+
+    public static class NewClassDialog {
+      @Nonnull
+      public static Color searchFieldBackground() {
+        return JBColor.namedColor("NewClass.SearchField.background", 0xffffff);
+      }
+
+      @Nonnull
+      public static Color panelBackground() {
+        return JBColor.namedColor("NewClass.Panel.background", 0xf2f2f2);
+      }
+
+      @Nonnull
+      public static Color bordersColor() {
+        return JBColor.namedColor("TextField.borderColor", JBColor.namedColor("Component.borderColor", new JBColor(0xbdbdbd, 0x646464)));
+      }
+
+      public static int fieldsSeparatorWidth() {
+        return getInt("NewClass.separatorWidth", JBUIScale.scale(10));
+      }
+    }
+
     public static class Focus {
       private static final Color GRAPHITE_COLOR = new JBColor(new Color(0x8099979d, true), new Color(0x676869));
 

@@ -28,6 +28,18 @@ import javax.annotation.Nullable;
  * @since 2019-02-18
  */
 public class WebTextBoxImpl extends UIComponentWithVaadinComponent<WebTextBoxImpl.Vaadin> implements TextBox {
+  @Nullable
+  @Override
+  public TextBox setPlaceholder(@Nullable String text) {
+    return null;
+  }
+
+  @Nonnull
+  @Override
+  public TextBox setVisibleLength(int columns) {
+    return null;
+  }
+
   public static class Vaadin extends VaadinComponent {
   }
 

@@ -30,7 +30,12 @@ import javax.swing.*;
 public final class ValidationInfo {
   @Nonnull
   public final String message;
+
+  @Nullable
   public final JComponent component;
+
+  public boolean okEnabled;
+  public boolean warning;
 
   /**
    * Creates a validation error message associated with a specific component. The component will have an error icon drawn next to it,
@@ -53,12 +58,29 @@ public final class ValidationInfo {
     this(message, null);
   }
 
-  @Override public boolean equals(Object o) {
+  public ValidationInfo withOKEnabled() {
+    okEnabled = true;
+    return this;
+  }
+
+  public ValidationInfo asWarning() {
+    warning = true;
+    return this;
+  }
+
+  public ValidationInfo forComponent(@Nullable JComponent component) {
+    ValidationInfo result = new ValidationInfo(message, component);
+    result.warning = warning;
+    result.okEnabled = okEnabled;
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof ValidationInfo)) return false;
 
     ValidationInfo that = (ValidationInfo)o;
-    return StringUtil.equals(this.message, that.message) &&
-           this.component == that.component;
+    return StringUtil.equals(this.message, that.message) && this.component == that.component && this.okEnabled == that.okEnabled && this.warning == that.warning;
   }
 }

@@ -16,7 +16,6 @@
 package consulo.ui.web.internal;
 
 import com.vaadin.ui.UI;
-import consulo.annotations.Internal;
 import consulo.ui.*;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
@@ -320,6 +319,11 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public TextBoxWithExpandAction _Components_textBoxWithExpandAction(Image editButtonImage, String dialogTitle, Function<String, List<String>> parser, Function<List<String>, String> joiner) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public TextBoxWithExtensions _Components_textBoxWithExtensions(String text) {
     throw new UnsupportedOperationException();
   }
 }
