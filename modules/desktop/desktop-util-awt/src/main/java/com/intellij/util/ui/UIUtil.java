@@ -41,7 +41,6 @@ import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
-import sun.java2d.SunGraphicsEnvironment;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -366,123 +365,6 @@ public class UIUtil {
   private UIUtil() {
   }
 
-  /**
-   * Utility class for retina routine
-   */
-  public final static class DetectRetinaKit {
-
-    private final static WeakHashMap<GraphicsDevice, Boolean> devicesToRetinaSupportCacheMap = new WeakHashMap<GraphicsDevice, Boolean>();
-
-    /**
-     * The best way to understand whether we are on a retina device is [NSScreen backingScaleFactor]
-     * But we should not invoke it from any thread. We do not have access to the AppKit thread
-     * on the other hand. So let's use a dedicated method. It is rather safe because it caches a
-     * value that has been got on AppKit previously.
-     */
-    public static boolean isOracleMacRetinaDevice(GraphicsDevice device) {
-
-      if (SystemInfo.isAppleJvm) return false;
-
-      Boolean isRetina = devicesToRetinaSupportCacheMap.get(device);
-
-      if (isRetina != null) {
-        return isRetina;
-      }
-
-      Method getScaleFactorMethod = null;
-      try {
-        getScaleFactorMethod = Class.forName("sun.awt.CGraphicsDevice").getMethod("getScaleFactor");
-      }
-      catch (ClassNotFoundException e) {
-        // not an Oracle Mac JDK or API has been changed
-        getLogger().debug("CGraphicsDevice.getScaleFactor(): not an Oracle Mac JDK or API has been changed");
-      }
-      catch (NoSuchMethodException e) {
-        getLogger().debug("CGraphicsDevice.getScaleFactor(): not an Oracle Mac JDK or API has been changed");
-      }
-
-      try {
-        isRetina = getScaleFactorMethod == null || (Integer)getScaleFactorMethod.invoke(device) != 1;
-      }
-      catch (IllegalAccessException e) {
-        getLogger().debug("CGraphicsDevice.getScaleFactor(): Access issue");
-        isRetina = false;
-      }
-      catch (InvocationTargetException e) {
-        getLogger().debug("CGraphicsDevice.getScaleFactor(): Invocation issue");
-        isRetina = false;
-      }
-      catch (IllegalArgumentException e) {
-        getLogger().debug("object is not an instance of declaring class: " + device.getClass().getName());
-        isRetina = false;
-      }
-
-      devicesToRetinaSupportCacheMap.put(device, isRetina);
-
-      return isRetina;
-    }
-
-    /*
-      Could be quite easily implemented with [NSScreen backingScaleFactor]
-      and JNA
-     */
-    //private static boolean isAppleRetina (Graphics2D g2d) {
-    //  return false;
-    //}
-
-    /**
-     * For JDK6 we have a dedicated property which does not allow to understand anything
-     * per device but could be useful for image creation. We will get true in case
-     * if at least one retina device is present.
-     */
-    private static boolean hasAppleRetinaDevice() {
-      return (Float)Toolkit.getDefaultToolkit().getDesktopProperty("apple.awt.contentScaleFactor") != 1.0f;
-    }
-
-    /**
-     * This method perfectly detects retina Graphics2D for jdk7+
-     * For Apple JDK6 it returns false.
-     *
-     * @param g graphics to be tested
-     * @return false if the device of the Graphics2D is not a retina device,
-     * jdk is an Apple JDK or Oracle API has been changed.
-     */
-    private static boolean isMacRetina(Graphics2D g) {
-      GraphicsDevice device = g.getDeviceConfiguration().getDevice();
-      return isOracleMacRetinaDevice(device);
-    }
-
-    /**
-     * Checks that at least one retina device is present.
-     * Do not use this method if your are going to make decision for a particular screen.
-     * isRetina(Graphics2D) is more preferable
-     *
-     * @return true if at least one device is a retina device
-     */
-    private static boolean isRetina() {
-      if (SystemInfo.isAppleJvm) {
-        return hasAppleRetinaDevice();
-      }
-
-      // Oracle JDK
-
-      if (SystemInfo.isMac) {
-        GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
-
-        GraphicsDevice[] devices = e.getScreenDevices();
-
-        //now get the configurations for each device
-        for (GraphicsDevice device : devices) {
-          if (isOracleMacRetinaDevice(device)) {
-            return true;
-          }
-        }
-      }
-
-      return false;
-    }
-  }
-
   public static void configureHtmlKitStylesheet() {
     if (ourDefaultHtmlKitCss != null) {
       return;
@@ -541,63 +423,15 @@ public class UIUtil {
     return isJreHiDPIEnabled() && JBUI.isHiDPI(JBUI.sysScale(ctx));
   }
 
-  private static Boolean jreHiDPI;
-  private static boolean jreHiDPI_earlierVersion;
-
   /**
    * Returns whether the JRE-managed HiDPI mode is enabled.
    * (True for macOS JDK >= 7.10 versions)
    *
    * @see JBUI.ScaleType
    */
+  @Deprecated
   public static boolean isJreHiDPIEnabled() {
-    if (jreHiDPI != null) {
-      return jreHiDPI;
-    }
-    jreHiDPI = false;
-    jreHiDPI_earlierVersion = true;
-
-    if (!SystemProperties.getBooleanProperty("consulo.enable.jre.hidpi", true)) {
-      jreHiDPI = false;
-      jreHiDPI_earlierVersion = false;
-    }
-    else {
-      try {
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        if (ge instanceof SunGraphicsEnvironment) {
-          // jetbrains method
-          Method m = ReflectionUtil.getDeclaredMethod(SunGraphicsEnvironment.class, "isUIScaleOn");
-          if (m != null) {
-            jreHiDPI = (Boolean)m.invoke(ge);
-            jreHiDPI_earlierVersion = false;
-          }
-
-          // openjdk method
-          m = ReflectionUtil.getDeclaredMethod(SunGraphicsEnvironment.class, "isUIScaleEnabled");
-          if (m != null) {
-            jreHiDPI = (Boolean)m.invoke(ge);
-            jreHiDPI_earlierVersion = false;
-          }
-        }
-      }
-      catch (Throwable ignore) {
-      }
-    }
-
-    if (SystemInfo.isMac) {
-      return jreHiDPI = (!SystemInfo.isAppleJvm);
-    }
-    return jreHiDPI;
-  }
-
-  /**
-   * Indicates earlier JBSDK version, not containing HiDPI changes.
-   * On macOS such JBSDK supports jreHiDPI, but it's not capable to provide device scale
-   * via GraphicsDevice transform matrix (the scale should be retrieved via DetectRetinaKit).
-   */
-  public static boolean isJreHiDPI_earlierVersion() {
-    isJreHiDPIEnabled();
-    return jreHiDPI_earlierVersion;
+    return JreHiDpiUtil.isJreHiDPIEnabled();
   }
 
   public static boolean isRetina(Graphics2D graphics) {
@@ -612,7 +446,7 @@ public class UIUtil {
       return true;
     }
 
-    if (Registry.is("new.retina.detection")) {
+    if (Registry.is("new.retina.detection", false)) {
       return DetectRetinaKit.isRetina();
     }
     else {
@@ -629,9 +463,7 @@ public class UIUtil {
               return true;
             }
           }
-          catch (AWTError ignore) {
-          }
-          catch (Exception ignore) {
+          catch (AWTError | Exception ignore) {
           }
           ourRetina.set(false);
         }

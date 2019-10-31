@@ -1,65 +1,55 @@
-// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util;
 
-import consulo.logging.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Supplier;
 
 /**
  * Thread-safe lazy initializer.
  *
  * @author tav
  */
-public class LazyInitializer {
+public final class LazyInitializer {
+  private static final Object UNINITIALIZED_VALUE = new Object();
+
   public abstract static class NullableValue<T> {
-    private class Initializer {
-      private final ReentrantLock lock = new ReentrantLock();
-
-      T init() {
-        try {
-          return initialize();
-        }
-        catch (Exception e) {
-          Logger.getInstance(LazyInitializer.class).error(e);
-        }
-        return null;
-      }
-    }
-
-    protected volatile T value;
-    private volatile Initializer initializer = new Initializer(); // dropped when initialized
+    @SuppressWarnings("unchecked")
+    private volatile T value = (T)UNINITIALIZED_VALUE;
 
     @Nullable
     public abstract T initialize();
 
     /**
      * Initializes the value if necessary and returns it.
-     *
-     * @return the initialized value
      */
     @Nullable
     public T get() {
-      Initializer init = initializer;
-      if (init != null) {
-        init.lock.lock();
-        try {
-          if (init.lock.getHoldCount() > 1) {
-            return null;
-          }
-          if (initializer != null) {
-            value = initializer.init();
-            initializer = null;
-          }
-        }
-        finally {
-          init.lock.unlock();
-        }
-        onInitialized(value);
+      T v = value;
+      if (v != UNINITIALIZED_VALUE) {
+        return value;
       }
+
+      //noinspection SynchronizeOnThis
+      synchronized (this) {
+        v = value;
+        if (v != UNINITIALIZED_VALUE) {
+          return value;
+        }
+
+        v = initialize();
+        value = v;
+      }
+      onInitialized(value);
       return value;
+    }
+
+    protected void set(T value) {
+      //noinspection SynchronizeOnThis
+      synchronized (this) {
+        this.value = value;
+      }
     }
 
     /**
@@ -86,45 +76,41 @@ public class LazyInitializer {
   }
 
   public static abstract class NotNullValue<T> extends NullableValue<T> {
-    @Nonnull
+    @NotNull
     @Override
     public T get() {
       //noinspection ConstantConditions
       return super.get();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public abstract T initialize();
   }
 
-  public static abstract class MutableNullableValue<T> extends NullableValue<T> {
-    /**
-     * Sets the value. If it hasn't been initialized - forces initialization.
-     *
-     * @param value the value to set
-     */
-    public void set(T value) {
-      get(); // force init in case it has a side effect
-      this.value = value;
-    }
-  }
+  public static final class MutableNotNullValue<T> extends NullableValue<T> {
+    private final Supplier<? extends T> supplier;
 
-  public static abstract class MutableNotNullValue<T> extends MutableNullableValue<T> {
+    public MutableNotNullValue(@NotNull Supplier<? extends T> supplier) {
+      this.supplier = supplier;
+    }
+
+    @NotNull
     @Override
-    public void set(@Nonnull T value) {
+    public T get() {
+      //noinspection ConstantConditions
+      return super.get();
+    }
+
+    @Override
+    public void set(@NotNull T value) {
       super.set(value);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public T get() {
-      //noinspection ConstantConditions
-      return super.get();
+    public final T initialize() {
+      return supplier.get();
     }
-
-    @Nonnull
-    @Override
-    public abstract T initialize();
   }
 }
