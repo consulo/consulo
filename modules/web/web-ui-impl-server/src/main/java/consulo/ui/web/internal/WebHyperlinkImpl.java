@@ -36,7 +36,7 @@ public class WebHyperlinkImpl extends UIComponentWithVaadinComponent<WebHyperlin
     private final ButtonRpc myRpc = new ButtonRpc() {
       @Override
       public void onClick() {
-        toUIComponent().getListenerDispatcher(ClickHandler.class).onClick();
+        toUIComponent().getListenerDispatcher(ClickListener.class).onClick();
       }
     };
 

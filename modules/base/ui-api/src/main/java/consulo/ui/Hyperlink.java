@@ -31,9 +31,9 @@ public interface Hyperlink extends Clickable {
   }
 
   @Nonnull
-  static Hyperlink create(@Nonnull String text, @Nonnull @RequiredUIAccess Hyperlink.ClickHandler clickHandler) {
+  static Hyperlink create(@Nonnull String text, @Nonnull @RequiredUIAccess ClickListener clickListener) {
     Hyperlink button = UIInternal.get()._Components_hyperlink(text);
-    button.addListener(ClickHandler.class, clickHandler);
+    button.addListener(ClickListener.class, clickListener);
     return button;
   }
 

@@ -18,10 +18,12 @@ package consulo.ui.desktop.internal.base;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.ui.JBUI;
+import consulo.annotations.DeprecationInfo;
 import consulo.awt.TargetAWT;
 import consulo.awt.impl.ToSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.event.KeyListener;
 import consulo.ui.impl.BorderInfo;
 import consulo.ui.impl.UIDataObject;
 import consulo.ui.shared.Size;
@@ -32,6 +34,8 @@ import consulo.ui.style.ColorKey;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.EventListener;
 import java.util.LinkedHashMap;
@@ -42,12 +46,26 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 27-Oct-17
  */
+@SuppressWarnings("deprecation")
 public class SwingComponentDelegate<T extends java.awt.Component> implements Component, ToSwingComponentWrapper {
+  @Deprecated
+  @DeprecationInfo("Use #initialize() method")
   protected T myComponent;
+
+  protected void initialize(T component) {
+    myComponent = component;
+
+    myComponent.addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyPressed(KeyEvent e) {
+        getListenerDispatcher(KeyListener.class).keyPressed(new consulo.ui.event.KeyEvent(SwingComponentDelegate.this, e.getKeyCode()));
+      }
+    });
+  }
 
   @Nonnull
   @Override
-  public java.awt.Component toAWTComponent() {
+  public T toAWTComponent() {
     return myComponent;
   }
 
@@ -146,7 +164,7 @@ public class SwingComponentDelegate<T extends java.awt.Component> implements Com
 
     if (!emptyBorders.isEmpty()) {
       component.setBorder(JBUI.Borders.empty(getBorderSize(emptyBorders, BorderPosition.TOP), getBorderSize(emptyBorders, BorderPosition.LEFT), getBorderSize(emptyBorders, BorderPosition.BOTTOM),
-                                          getBorderSize(emptyBorders, BorderPosition.RIGHT)));
+                                             getBorderSize(emptyBorders, BorderPosition.RIGHT)));
 
       return;
     }

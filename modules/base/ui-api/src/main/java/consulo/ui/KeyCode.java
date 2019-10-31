@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2018-05-14
  */
+@Deprecated
 public enum KeyCode {
   A,
   B,

@@ -32,7 +32,7 @@ public class WebButtonImpl extends UIComponentWithVaadinComponent<WebButtonImpl.
     private final ButtonRpc myRpc = new ButtonRpc() {
       @Override
       public void onClick() {
-        toUIComponent().getListenerDispatcher(ClickHandler.class).onClick();
+        toUIComponent().getListenerDispatcher(ClickListener.class).onClick();
       }
     };
 

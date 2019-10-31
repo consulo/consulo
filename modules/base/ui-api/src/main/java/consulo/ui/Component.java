@@ -18,6 +18,7 @@ package consulo.ui;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
+import consulo.ui.event.KeyListener;
 import consulo.ui.shared.Size;
 import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.shared.border.BorderStyle;
@@ -36,6 +37,7 @@ import java.util.function.Supplier;
  * @since 09-Jun-16
  */
 public interface Component extends Disposable, UserDataHolder {
+
   @RequiredUIAccess
   default void addBorder(@Nonnull BorderPosition borderPosition) {
     addBorder(borderPosition, BorderStyle.LINE, ComponentColors.BORDER, 1);
@@ -110,6 +112,10 @@ public interface Component extends Disposable, UserDataHolder {
 
   @Nonnull
   <T extends EventListener> T getListenerDispatcher(@Nonnull Class<T> eventClass);
+
+  default Disposable addKeyListener(@Nonnull KeyListener keyListener) {
+    return addListener(KeyListener.class, keyListener);
+  }
 
   @Override
   default void dispose() {

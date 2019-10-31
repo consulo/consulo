@@ -25,13 +25,13 @@ import java.util.EventListener;
  * @since 2018-05-11
  */
 public interface Clickable extends Component {
-  interface ClickHandler extends EventListener {
+  interface ClickListener extends EventListener {
     @RequiredUIAccess
     void onClick();
   }
 
   @Nonnull
-  default Disposable addClickListener(@RequiredUIAccess ClickHandler listener) {
-    return addListener(ClickHandler.class, listener);
+  default Disposable addClickListener(@RequiredUIAccess ClickListener listener) {
+    return addListener(ClickListener.class, listener);
   }
 }

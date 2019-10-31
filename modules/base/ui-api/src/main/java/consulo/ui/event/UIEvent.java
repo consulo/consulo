@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,30 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.event;
+
+import consulo.ui.Component;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 13-Sep-17
+ * @since 2019-10-31
  */
-public interface Button extends Clickable {
-  @Nonnull
-  static Button create(@Nonnull String text) {
-    return UIInternal.get()._Components_button(text);
+public class UIEvent<T extends Component> {
+  private final T myComponent;
+
+  public UIEvent(@Nonnull T component) {
+    myComponent = component;
   }
 
   @Nonnull
-  static Button create(@Nonnull String text, @Nonnull @RequiredUIAccess ClickListener clickListener) {
-    Button button = UIInternal.get()._Components_button(text);
-    button.addListener(ClickListener.class, clickListener);
-    return button;
+  public T getComponent() {
+    return myComponent;
   }
-
-  @Nonnull
-  String getText();
-
-  @RequiredUIAccess
-  void setText(@Nonnull String text);
 }

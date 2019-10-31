@@ -15,6 +15,7 @@
  */
 package consulo.ui.desktop.internal;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.ui.components.fields.ExtendableTextComponent;
@@ -28,12 +29,15 @@ import consulo.ui.TextBox;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExtensionsExtender;
+import consulo.ui.event.KeyListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,8 +48,9 @@ import java.util.List;
 public class DesktopTextBoxWithExtensions {
   private static class Supported extends SwingComponentDelegate<ExtendableTextField> implements TextBoxWithExtensions {
     public Supported(String text) {
-      myComponent = new ExtendableTextField(text);
-      myComponent.getDocument().addDocumentListener(new DocumentAdapter() {
+      initialize(new ExtendableTextField(text));
+
+      toAWTComponent().getDocument().addDocumentListener(new DocumentAdapter() {
         @Override
         @SuppressWarnings("unchecked")
         @RequiredUIAccess
@@ -58,13 +63,13 @@ public class DesktopTextBoxWithExtensions {
     @Nullable
     @Override
     public String getValue() {
-      return myComponent.getText();
+      return toAWTComponent().getText();
     }
 
     @RequiredUIAccess
     @Override
     public void setValue(String value, boolean fireEvents) {
-      myComponent.setText(value);
+      toAWTComponent().setText(value);
     }
 
     @Nonnull
@@ -87,22 +92,22 @@ public class DesktopTextBoxWithExtensions {
 
         awtExtensions.add(ex);
       }
-      myComponent.setExtensions(awtExtensions);
-      myComponent.repaint();
+      toAWTComponent().setExtensions(awtExtensions);
+      toAWTComponent().repaint();
       return this;
     }
 
     @Nonnull
     @Override
     public TextBox setPlaceholder(@Nullable String text) {
-      myComponent.getEmptyText().setText(text);
+      toAWTComponent().getEmptyText().setText(text);
       return this;
     }
 
     @Nonnull
     @Override
     public TextBox setVisibleLength(int columns) {
-      myComponent.setColumns(columns);
+      toAWTComponent().setColumns(columns);
       return this;
     }
   }
@@ -111,7 +116,7 @@ public class DesktopTextBoxWithExtensions {
     private JBTextField myTextField;
 
     private Unsupported(String text) {
-      myComponent = new JPanel(new BorderLayout()) {
+      initialize(new JPanel(new BorderLayout()) {
         @Override
         public void requestFocus() {
           myTextField.requestFocus();
@@ -121,7 +126,7 @@ public class DesktopTextBoxWithExtensions {
         public boolean requestFocusInWindow() {
           return myTextField.requestFocusInWindow();
         }
-      };
+      });
 
       myTextField = new JBTextField(text);
       myTextField.getDocument().addDocumentListener(new DocumentAdapter() {
@@ -133,40 +138,56 @@ public class DesktopTextBoxWithExtensions {
         }
       });
 
-      myComponent.setBackground(myTextField.getBackground());
-      myComponent.add(myTextField, BorderLayout.CENTER);
+      JPanel panel = toAWTComponent();
+
+      panel.setBackground(myTextField.getBackground());
+      panel.add(myTextField, BorderLayout.CENTER);
 
       myTextField.setBorder(JBUI.Borders.empty(0, 4));
-      myComponent.setBorder(JBUI.Borders.customLine(UIUtil.getBorderColor(), 1));
+      panel.setBorder(JBUI.Borders.customLine(UIUtil.getBorderColor(), 1));
     }
 
     @Nonnull
     @Override
     public TextBoxWithExtensions setExtensions(@Nonnull Extension... extensions) {
+      JPanel panel = toAWTComponent();
+
       List<Component> toRemove = new ArrayList<>();
-      for (int i = 0; i < myComponent.getComponentCount(); i++) {
-        Component component = myComponent.getComponent(i);
+      for (int i = 0; i < panel.getComponentCount(); i++) {
+        Component component = panel.getComponent(i);
         if (component != myTextField) toRemove.add(component);
       }
 
       for (Component component : toRemove) {
-        myComponent.remove(component);
+        panel.remove(component);
       }
 
       for (Extension extension : extensions) {
         ScalableIconComponent icon = new ScalableIconComponent(TargetAWT.to(extension.getIcon()));
 
         if (extension.isLeft()) {
-          myComponent.add(icon, BorderLayout.WEST);
+          panel.add(icon, BorderLayout.WEST);
         }
         else {
-          myComponent.add(icon, BorderLayout.EAST);
+          panel.add(icon, BorderLayout.EAST);
         }
 
         icon.revalidate();
       }
 
       return this;
+    }
+
+    @Override
+    public Disposable addKeyListener(@Nonnull KeyListener keyListener) {
+      KeyAdapter l = new KeyAdapter() {
+        @Override
+        public void keyPressed(KeyEvent e) {
+          keyListener.keyPressed(new consulo.ui.event.KeyEvent(Unsupported.this, e.getKeyCode()));
+        }
+      };
+      myTextField.addKeyListener(l);
+      return () -> myTextField.removeKeyListener(l);
     }
 
     @Nonnull
@@ -193,13 +214,12 @@ public class DesktopTextBoxWithExtensions {
     @Override
     public void setValue(String value, boolean fireEvents) {
       myTextField.setText(value);
-
     }
   }
 
   public static TextBoxWithExtensions create(String text) {
     Object o = UIManager.get(SupportTextBoxWithExtensionsExtender.class);
-    if(o instanceof SupportTextBoxWithExtensionsExtender) {
+    if (o instanceof SupportTextBoxWithExtensionsExtender) {
       return new Supported(text);
     }
     return new Unsupported(text);

@@ -18,6 +18,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.actions.newclass.CreateWithTemplatesDialogPanel;
+import consulo.ide.ui.newItemPopup.NewFilePopupEarlyAccessProgramDescriptor;
 import com.intellij.ide.ui.newItemPopup.NewItemPopupUtil;
 import com.intellij.lang.LangBundle;
 import com.intellij.openapi.project.Project;
@@ -32,11 +33,12 @@ import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import consulo.awt.TargetAWT;
+import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
@@ -139,9 +141,13 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
   }
 
   public static Builder createDialog(@Nonnull final Project project) {
-    //final CreateFileFromTemplateDialog dialog = new CreateFileFromTemplateDialog(project);
-    //return new BuilderImpl(dialog, project);
-    return new NonBlockingPopupBuilderImpl(project);
+    if (EarlyAccessProgramManager.is(NewFilePopupEarlyAccessProgramDescriptor.class)) {
+      return new NonBlockingPopupBuilderImpl(project);
+    }
+    else {
+      final CreateFileFromTemplateDialog dialog = new CreateFileFromTemplateDialog(project);
+      return new BuilderImpl(dialog, project);
+    }
   }
 
   private static class BuilderImpl implements Builder {
@@ -298,6 +304,7 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
 
     Builder setValidator(InputValidator validator);
 
+    @Deprecated
     default Builder addKind(@Nonnull String kind, @Nullable Icon icon, @Nonnull String templateName) {
       return addKind(kind, TargetAWT.from(icon), templateName);
     }

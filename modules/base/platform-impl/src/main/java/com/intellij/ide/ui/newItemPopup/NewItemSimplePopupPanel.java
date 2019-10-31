@@ -10,9 +10,11 @@ import com.intellij.ui.components.JBPanel;
 import com.intellij.util.Consumer;
 import consulo.awt.TargetAWT;
 import consulo.ui.TextBoxWithExtensions;
+import consulo.ui.event.KeyEvent;
+import consulo.ui.event.KeyListener;
 import consulo.ui.shared.border.BorderStyle;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.awt.event.InputEvent;
 
@@ -77,14 +79,14 @@ public class NewItemSimplePopupPanel extends JBPanel implements Disposable {
 
     //res.putClientProperty("StatusVisibleFunction", (BooleanFunction<JBTextField>)field -> field.getText().isEmpty());
     res.setPlaceholder(IdeBundle.message("action.create.new.class.name.field"));
-    //res.addKeyListener(new KeyAdapter() {
-    //  @Override
-    //  public void keyPressed(KeyEvent e) {
-    //    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-    //      if (myApplyAction != null) myApplyAction.consume(e);
-    //    }
-    //  }
-    //});
+    res.addKeyListener(new KeyListener() {
+      @Override
+      public void keyPressed(@Nonnull KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.K_ENTER) {
+          if (myApplyAction != null) myApplyAction.consume(null); // todo null ??
+        }
+      }
+    });
 
     res.addValueListener(event -> {
       setError(null);

@@ -18,7 +18,11 @@ package com.intellij.ide.actions;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
+import consulo.ide.ui.newItemPopup.NewFilePopupEarlyAccessProgramDescriptor;
+import com.intellij.ide.ui.newItemPopup.NewItemPopupUtil;
+import com.intellij.ide.ui.newItemPopup.NewItemSimplePopupPanel;
 import com.intellij.internal.statistic.UsageTrigger;
+import com.intellij.lang.LangBundle;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -27,6 +31,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.InputValidatorEx;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
@@ -35,18 +40,21 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
-import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
+import consulo.awt.TargetAWT;
+import consulo.ide.eap.EarlyAccessProgramManager;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.TextBox;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.io.File;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.function.Consumer;
 
 public class CreateFileAction extends CreateElementActionBase implements DumbAware {
 
@@ -74,20 +82,44 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
 
   @Override
   @Nonnull
-  protected PsiElement[] invokeDialog(final Project project, PsiDirectory directory) {
+  protected void invokeDialog(final Project project, PsiDirectory directory, @Nonnull Consumer<PsiElement[]> elementsConsumer) {
     MyInputValidator validator = new MyValidator(project, directory);
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       try {
-        return validator.create("test");
+        elementsConsumer.accept(validator.create("test"));
       }
       catch (Exception e) {
         throw new RuntimeException(e);
       }
     }
     else {
-      Messages.showInputDialog(project, IdeBundle.message("prompt.enter.new.file.name"), IdeBundle.message("title.new.file"), null, null, validator);
-      return validator.getCreatedElements();
+      if(EarlyAccessProgramManager.is(NewFilePopupEarlyAccessProgramDescriptor.class)) {
+        createLightWeightPopup(validator, elementsConsumer).showCenteredInCurrentWindow(project);
+      }
+      else {
+        Messages.showInputDialog(project, IdeBundle.message("prompt.enter.new.file.name"), IdeBundle.message("title.new.file"), null, null, validator);
+        elementsConsumer.accept(validator.getCreatedElements());
+      }
     }
+  }
+
+  private JBPopup createLightWeightPopup(MyInputValidator validator, Consumer<PsiElement[]> consumer) {
+    NewItemSimplePopupPanel contentPanel = new NewItemSimplePopupPanel();
+    TextBox nameField = contentPanel.getTextField();
+    JBPopup popup = NewItemPopupUtil.createNewItemPopup(IdeBundle.message("title.new.file"), contentPanel, (JComponent)TargetAWT.to(nameField));
+    contentPanel.setApplyAction(event -> {
+      String name = nameField.getValue();
+      if (validator.checkInput(name) && validator.canClose(name)) {
+        popup.closeOk(event);
+        consumer.accept(validator.getCreatedElements());
+      }
+      else {
+        String errorMessage = validator instanceof InputValidatorEx ? ((InputValidatorEx)validator).getErrorText(name) : LangBundle.message("incorrect.name");
+        contentPanel.setError(errorMessage);
+      }
+    });
+
+    return popup;
   }
 
   @RequiredUIAccess

@@ -32,6 +32,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.util.function.Consumer;
 
 /**
  * The base class for actions which create new file elements.
@@ -56,11 +57,7 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
     super(text, description, icon);
   }
 
-  /**
-   * @return created elements. Never null.
-   */
-  @Nonnull
-  protected abstract PsiElement[] invokeDialog(Project project, PsiDirectory directory);
+  protected abstract void invokeDialog(Project project, PsiDirectory directory, @Nonnull Consumer<PsiElement[]> elementsConsumer);
 
   /**
    * @return created elements. Never null.
@@ -87,11 +84,13 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
 
     final PsiDirectory dir = view.getOrChooseDirectory();
     if (dir == null) return;
-    final PsiElement[] createdElements = invokeDialog(project, dir);
 
-    for (PsiElement createdElement : createdElements) {
-      view.selectElement(createdElement);
-    }
+    invokeDialog(project, dir, elements -> {
+
+      for (PsiElement createdElement : elements) {
+        view.selectElement(createdElement);
+      }
+    });
   }
 
   public static String filterMessage(String message) {
