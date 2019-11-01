@@ -1,8 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.function.Supplier;
 
@@ -76,14 +76,14 @@ public final class LazyInitializer {
   }
 
   public static abstract class NotNullValue<T> extends NullableValue<T> {
-    @NotNull
+    @Nonnull
     @Override
     public T get() {
       //noinspection ConstantConditions
       return super.get();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public abstract T initialize();
   }
@@ -91,11 +91,11 @@ public final class LazyInitializer {
   public static final class MutableNotNullValue<T> extends NullableValue<T> {
     private final Supplier<? extends T> supplier;
 
-    public MutableNotNullValue(@NotNull Supplier<? extends T> supplier) {
+    public MutableNotNullValue(@Nonnull Supplier<? extends T> supplier) {
       this.supplier = supplier;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public T get() {
       //noinspection ConstantConditions
@@ -103,11 +103,11 @@ public final class LazyInitializer {
     }
 
     @Override
-    public void set(@NotNull T value) {
+    public void set(@Nonnull T value) {
       super.set(value);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public final T initialize() {
       return supplier.get();

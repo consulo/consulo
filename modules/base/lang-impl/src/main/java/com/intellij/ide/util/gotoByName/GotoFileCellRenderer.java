@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,6 @@ package com.intellij.ide.util.gotoByName;
 import com.intellij.ide.util.PsiElementListCellRenderer;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
@@ -33,9 +31,11 @@ import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
+import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.FilePathSplittingPolicy;
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -53,21 +53,6 @@ public class GotoFileCellRenderer extends PsiElementListCellRenderer<PsiFileSyst
   }
 
   @Override
-  public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-    if (value == ChooseByNameBase.NON_PREFIX_SEPARATOR) {
-      Object previousElement = index > 0 ? list.getModel().getElementAt(index - 1) : null;
-      return ChooseByNameBase.renderNonPrefixSeparatorComponent(getBackgroundColor(previousElement));
-    }
-    else {
-      Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-      EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
-      Font editorFont = new Font(scheme.getEditorFontName(), Font.PLAIN, scheme.getEditorFontSize());
-      setFont(editorFont);
-      return component;
-    }
-  }
-
-  @Override
   protected String getContainerText(PsiFileSystemItem element, String name) {
     PsiFileSystemItem parent = element.getParent();
     final PsiDirectory psiDirectory = parent instanceof PsiDirectory ? (PsiDirectory)parent : null;
@@ -75,25 +60,23 @@ public class GotoFileCellRenderer extends PsiElementListCellRenderer<PsiFileSyst
     final VirtualFile virtualFile = psiDirectory.getVirtualFile();
     final String relativePath = getRelativePath(virtualFile, element.getProject());
     if (relativePath == null) return "( " + File.separator + " )";
-    String path =
-            FilePathSplittingPolicy.SPLIT_BY_SEPARATOR.getOptimalTextForComponent(name + "          ", new File(relativePath), this, myMaxWidth);
+    String path = FilePathSplittingPolicy.SPLIT_BY_SEPARATOR.getOptimalTextForComponent(name + "          ", new File(relativePath), this, myMaxWidth);
     return "(" + path + ")";
   }
 
   @Nullable
-  static String getRelativePath(final VirtualFile virtualFile, final Project project) {
-    String url = virtualFile.getPresentableUrl();
+  public static String getRelativePath(final VirtualFile virtualFile, final Project project) {
     if (project == null) {
-      return url;
+      return virtualFile.getPresentableUrl();
     }
-    VirtualFile root = ProjectFileIndex.SERVICE.getInstance(project).getContentRootForFile(virtualFile);
+    VirtualFile root = getAnyRoot(virtualFile, project);
     if (root != null) {
-      return root.getName() + File.separatorChar + VfsUtilCore.getRelativePath(virtualFile, root, File.separatorChar);
+      return getRelativePathFromRoot(virtualFile, root);
     }
 
+    String url = virtualFile.getPresentableUrl();
     final VirtualFile baseDir = project.getBaseDir();
     if (baseDir != null) {
-      //noinspection ConstantConditions
       final String projectHomeUrl = baseDir.getPresentableUrl();
       if (url.startsWith(projectHomeUrl)) {
         final String cont = url.substring(projectHomeUrl.length());
@@ -104,32 +87,42 @@ public class GotoFileCellRenderer extends PsiElementListCellRenderer<PsiFileSyst
     return url;
   }
 
+  @Nullable
+  public static VirtualFile getAnyRoot(@Nonnull VirtualFile virtualFile, @Nonnull Project project) {
+    ProjectFileIndex index = ProjectFileIndex.SERVICE.getInstance(project);
+    VirtualFile root = index.getContentRootForFile(virtualFile);
+    if (root == null) root = index.getClassRootForFile(virtualFile);
+    if (root == null) root = index.getSourceRootForFile(virtualFile);
+    return root;
+  }
+
+  @Nonnull
+  static String getRelativePathFromRoot(@Nonnull VirtualFile file, @Nonnull VirtualFile root) {
+    return root.getName() + File.separatorChar + VfsUtilCore.getRelativePath(file, root, File.separatorChar);
+  }
+
   @Override
-  protected boolean customizeNonPsiElementLeftRenderer(ColoredListCellRenderer renderer,
-                                                       JList list,
-                                                       Object value,
-                                                       int index,
-                                                       boolean selected,
-                                                       boolean hasFocus) {
+  protected boolean customizeNonPsiElementLeftRenderer(ColoredListCellRenderer renderer, JList list, Object value, int index, boolean selected, boolean hasFocus) {
+    return doCustomizeNonPsiElementLeftRenderer(renderer, list, value, getNavigationItemAttributes(value));
+  }
+
+  public static boolean doCustomizeNonPsiElementLeftRenderer(ColoredListCellRenderer renderer, JList list, Object value, TextAttributes attributes) {
     if (!(value instanceof NavigationItem)) return false;
 
     NavigationItem item = (NavigationItem)value;
 
-    TextAttributes attributes = getNavigationItemAttributes(item);
-
     SimpleTextAttributes nameAttributes = attributes != null ? SimpleTextAttributes.fromTextAttributes(attributes) : null;
 
     Color color = list.getForeground();
-    if (nameAttributes == null) nameAttributes = new SimpleTextAttributes(Font.PLAIN, color);
+    if (nameAttributes == null) nameAttributes = new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, color);
 
-    renderer.append(item + " ", nameAttributes);
-    ItemPresentation itemPresentation = item.getPresentation();
-    assert itemPresentation != null;
-    renderer.setIcon(itemPresentation.getIcon());
+    ItemPresentation presentation = ObjectUtils.notNull(item.getPresentation());
+    renderer.append(presentation.getPresentableText() + " ", nameAttributes);
+    renderer.setIcon(presentation.getIcon(true));
 
-    String locationString = itemPresentation.getLocationString();
+    String locationString = presentation.getLocationString();
     if (!StringUtil.isEmpty(locationString)) {
-      renderer.append(locationString, new SimpleTextAttributes(Font.PLAIN, JBColor.GRAY));
+      renderer.append(locationString, new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, JBColor.GRAY));
     }
     return true;
   }

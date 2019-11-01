@@ -18,9 +18,10 @@ package com.intellij.ide.util.gotoByName;
 import com.intellij.util.diff.Diff;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ModelDiff {
@@ -38,19 +39,18 @@ public class ModelDiff {
       return null;
     }
 
-    List<Cmd> commands = new ArrayList<Cmd>();
+    List<Cmd> commands = new ArrayList<>();
     int inserted = 0;
     int deleted = 0;
     while (change != null) {
       if (change.deleted > 0) {
         final int start = change.line0 + inserted - deleted;
-        commands.add(new RemoveCmd<Object>(listModel, start, start + change.deleted - 1));
+        commands.add(new RemoveCmd<>(listModel, start, start + change.deleted - 1));
       }
 
       if (change.inserted > 0) {
-        for (int i = 0; i < change.inserted; i++) {
-          commands.add(new InsertCmd<Object>(listModel, change.line0 + i + inserted - deleted, newElements[change.line1 + i]));
-        }
+        List<Object> elements = new ArrayList<>(Arrays.asList(newElements).subList(change.line1, change.line1 + change.inserted));
+        commands.add(new InsertCmd<>(listModel, change.line0 + inserted - deleted, elements));
       }
 
       deleted += change.deleted;
@@ -62,11 +62,19 @@ public class ModelDiff {
 
   public interface Cmd {
     void apply();
+
     int translateSelection(int row);
   }
 
   public interface Model<T> {
     void addToModel(int index, T element);
+
+    default void addAllToModel(int index, List<? extends T> elements) {
+      for (int i = 0; i < elements.size(); i++) {
+        addToModel(index + i, elements.get(i));
+      }
+    }
+
     void removeRangeFromModel(int start, int end);
   }
 
@@ -89,40 +97,41 @@ public class ModelDiff {
     @Override
     public int translateSelection(int row) {
       if (row < start) return row;
-      if (row >= end) return row - (end-start);
-      return start-1;
+      if (row >= end) return row - (end - start);
+      return start - 1;
     }
 
     @Override
     public String toString() {
-      return "-["+start+", "+end+"]";
+      return "-[" + start + ", " + end + "]";
     }
   }
 
   private static class InsertCmd<T> implements Cmd {
     private final Model<T> myListModel;
     private final int idx;
-    private final T element;
+    private final List<? extends T> elements;
 
-    private InsertCmd(@Nonnull Model<T> model, final int idx, @Nonnull T element) {
+    private InsertCmd(@Nonnull Model<T> model, final int idx, @Nonnull List<? extends T> elements) {
       myListModel = model;
       this.idx = idx;
-      this.element = element;
+      this.elements = elements;
     }
 
     @Override
     public void apply() {
       //System.out.println("Adding: "+this+"-> "+element);
-      myListModel.addToModel(idx, element);
+      myListModel.addAllToModel(idx, elements);
     }
 
     @Override
     public int translateSelection(int row) {
-      return idx > row ? row : row + 1;
+      return idx > row ? row : row + elements.size();
     }
+
     @Override
     public String toString() {
-      return "+["+idx+"]";
+      return "+[" + idx + "]";
     }
   }
 }

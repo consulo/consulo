@@ -43,6 +43,7 @@ import com.intellij.usages.rules.PsiElementUsage;
 import com.intellij.usages.rules.UsageInFile;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -104,7 +105,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
                                        final boolean showPanelIfOnlyOneUsage,
                                        final boolean showNotFoundMessage,
                                        @Nonnull final UsageViewPresentation presentation,
-                                       @javax.annotation.Nullable final UsageViewStateListener listener) {
+                                       @Nullable final UsageViewStateListener listener) {
     final FindUsagesProcessPresentation processPresentation = new FindUsagesProcessPresentation(presentation);
     processPresentation.setShowNotFoundMessage(showNotFoundMessage);
     processPresentation.setShowPanelIfOnlyOneUsage(showPanelIfOnlyOneUsage);
@@ -116,7 +117,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
                                     @Nonnull final Factory<UsageSearcher> searcherFactory,
                                     @Nonnull final UsageViewPresentation presentation,
                                     @Nonnull final FindUsagesProcessPresentation processPresentation,
-                                    @javax.annotation.Nullable final UsageViewStateListener listener) {
+                                    @Nullable final UsageViewStateListener listener) {
     final SearchScope searchScopeToWarnOfFallingOutOf = getMaxSearchScopeToWarnOfFallingOutOf(searchFor);
     final AtomicReference<UsageViewImpl> usageViewRef = new AtomicReference<>();
     long start = System.currentTimeMillis();
@@ -162,7 +163,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
                                   @Nonnull Factory<UsageSearcher> searcherFactory,
                                   @Nonnull FindUsagesProcessPresentation processPresentation,
                                   @Nonnull UsageViewPresentation presentation,
-                                  @javax.annotation.Nullable UsageViewStateListener listener) {
+                                  @Nullable UsageViewStateListener listener) {
     doSearchAndShow(searchFor, searcherFactory, presentation, processPresentation, listener);
   }
 
@@ -200,12 +201,12 @@ public class UsageViewManagerImpl extends UsageViewManager {
   }
 
 
-  public static void showTooManyUsagesWarning(@Nonnull final Project project,
-                                              @Nonnull final TooManyUsagesStatus tooManyUsagesStatus,
-                                              @Nonnull final ProgressIndicator indicator,
-                                              @Nonnull final UsageViewPresentation presentation,
-                                              final int usageCount,
-                                              @javax.annotation.Nullable final UsageViewImpl usageView) {
+  public static void showTooManyUsagesWarningLater(@Nonnull final Project project,
+                                                   @Nonnull final TooManyUsagesStatus tooManyUsagesStatus,
+                                                   @Nonnull final ProgressIndicator indicator,
+                                                   @Nonnull final UsageViewPresentation presentation,
+                                                   final int usageCount,
+                                                   @Nullable final UsageViewImpl usageView) {
     UIUtil.invokeLaterIfNeeded(() -> {
       if (usageView != null && usageView.searchHasBeenCancelled() || indicator.isCanceled()) return;
       int shownUsageCount = usageView == null ? usageCount : usageView.getRoot().getRecursiveUsageCount();

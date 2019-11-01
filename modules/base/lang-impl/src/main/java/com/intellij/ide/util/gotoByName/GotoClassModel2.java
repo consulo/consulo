@@ -120,7 +120,7 @@ public class GotoClassModel2 extends FilteringGotoByModel<Language> {
   @Nonnull
   public String[] getSeparators() {
     if (mySeparators == null) {
-      mySeparators = getSeparatorsFromContributors(getContributors());
+      mySeparators = getSeparatorsFromContributors(getContributorList());
     }
     return mySeparators;
   }

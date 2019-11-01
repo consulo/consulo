@@ -713,6 +713,10 @@ public final class EditorUtil {
     return new Font(scheme.getEditorFontName(), Font.PLAIN, size);
   }
 
+  public static int getDefaultCaretWidth() {
+    return Registry.intValue("editor.caret.width", 2);
+  }
+
   /**
    * Number of virtual soft wrap introduced lines on a current logical line before the visual position that corresponds
    * to the current logical position.

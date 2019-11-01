@@ -21,8 +21,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -441,6 +441,10 @@ public class NameUtil {
   @Nonnull
   public static MinusculeMatcher buildMatcher(@Nonnull String pattern, @Nonnull MatchingCaseSensitivity options) {
     return buildMatcher(pattern).withCaseSensitivity(options).build();
+  }
+
+  public static MinusculeMatcher buildMatcherWithFallback(@Nonnull String pattern, @Nonnull String fallbackPattern, @Nonnull MatchingCaseSensitivity options) {
+    return pattern.equals(fallbackPattern) ? buildMatcher(pattern, options) : new MatcherWithFallback(buildMatcher(pattern, options), buildMatcher(fallbackPattern, options));
   }
 
   @Nonnull

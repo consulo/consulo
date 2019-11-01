@@ -13,28 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.container.plugin.internal;
+package consulo.util;
 
+import com.intellij.diagnostic.PluginException;
 import consulo.container.plugin.PluginDescriptor;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.File;
-import java.util.List;
+import consulo.container.plugin.PluginManager;
+import consulo.logging.Logger;
 
 /**
  * @author VISTALL
- * @since 2019-07-25
+ * @since 2019-11-01
  */
-public interface PluginManagerInternal {
-  @Nonnull
-  List<PluginDescriptor> getPlugins();
+public class PluginExceptionUtil {
+  public static void logPluginError(Logger log, String message, Throwable t, Class<?> aClass) {
+    PluginDescriptor plugin = PluginManager.getPlugin(aClass);
 
-  boolean isInitialized();
-
-  @Nullable
-  File getPluginPath(@Nonnull Class<?> pluginClass);
-
-  @Nullable
-  PluginDescriptor getPlugin(@Nonnull Class<?> pluginClass);
+    if(plugin == null) {
+      log.error(message, t);
+    }
+    else {
+      log.error(new PluginException(message, t, plugin.getPluginId()));
+    }
+  }
 }

@@ -52,6 +52,11 @@ public final class PluginManager {
   }
 
   @Nullable
+  public static PluginDescriptor getPlugin(@Nonnull Class<?> pluginClass) {
+    return ourInternal.getPlugin(pluginClass);
+  }
+
+  @Nullable
   public static File getPluginPath(@Nonnull Class<?> pluginClass) {
     return ourInternal.getPluginPath(pluginClass);
   }

@@ -40,9 +40,9 @@ import consulo.ui.style.StyleManager;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.Timer;
 import javax.swing.*;
@@ -3525,6 +3525,34 @@ public class UIUtil {
 
   public static boolean isDialogFont(@Nonnull Font font) {
     return Font.DIALOG.equals(font.getFamily(Locale.US));
+  }
+
+  public static boolean haveCommonOwner(Component c1, Component c2) {
+    if (c1 == null || c2 == null) return false;
+    Window c1Ancestor = findWindowAncestor(c1);
+    Window c2Ancestor = findWindowAncestor(c2);
+
+    Set<Window> ownerSet = new HashSet<>();
+
+    Window owner = c1Ancestor;
+
+    while (owner != null && !(owner instanceof JDialog || owner instanceof JFrame)) {
+      ownerSet.add(owner);
+      owner = owner.getOwner();
+    }
+
+    owner = c2Ancestor;
+
+    while (owner != null && !(owner instanceof JDialog || owner instanceof JFrame)) {
+      if (ownerSet.contains(owner)) return true;
+      owner = owner.getOwner();
+    }
+
+    return false;
+  }
+
+  private static Window findWindowAncestor(@Nonnull Component c) {
+    return c instanceof Window ? (Window)c : SwingUtilities.getWindowAncestor(c);
   }
 
   @Nonnull

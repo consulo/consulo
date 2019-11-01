@@ -536,6 +536,10 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     return SHOW_DIRECTORY_FOR_NON_UNIQUE_FILENAMES;
   }
 
+  public boolean getHideNavigationOnFocusLoss() {
+    return HIDE_NAVIGATION_ON_FOCUS_LOSS;
+  }
+
   /**
    * @see #setupComponentAntialiasing(JComponent)
    */

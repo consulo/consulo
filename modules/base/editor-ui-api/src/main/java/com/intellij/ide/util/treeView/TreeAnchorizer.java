@@ -16,7 +16,12 @@
 package com.intellij.ide.util.treeView;
 
 import com.intellij.openapi.components.ServiceManager;
+import com.intellij.util.containers.ContainerUtil;
+import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Used by UI trees to get a more memory-efficient representation of their user objects.
@@ -39,5 +44,16 @@ public class TreeAnchorizer {
     return anchor;
   }
 
-  public void freeAnchor(Object element) { }
+  public void freeAnchor(Object element) {
+  }
+
+  @Nonnull
+  public static List<Object> anchorizeList(@Nonnull Collection<Object> elements) {
+    return ContainerUtil.map(elements, getService()::createAnchor);
+  }
+
+  @Nonnull
+  public static List<Object> retrieveList(Collection<Object> anchors) {
+    return ContainerUtil.mapNotNull(anchors, getService()::retrieveElement);
+  }
 }

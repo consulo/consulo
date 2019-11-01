@@ -13,28 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.container.plugin.internal;
-
-import consulo.container.plugin.PluginDescriptor;
+package com.intellij.ide.util.gotoByName;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.File;
 import java.util.List;
 
 /**
- * @author VISTALL
- * @since 2019-07-25
+ * from kotlin
  */
-public interface PluginManagerInternal {
+public interface SelectionPolicy {
   @Nonnull
-  List<PluginDescriptor> getPlugins();
-
-  boolean isInitialized();
-
-  @Nullable
-  File getPluginPath(@Nonnull Class<?> pluginClass);
-
-  @Nullable
-  PluginDescriptor getPlugin(@Nonnull Class<?> pluginClass);
+  List<Integer> performSelection(ChooseByNameBase popup, SmartPointerListModel<?> model);
 }

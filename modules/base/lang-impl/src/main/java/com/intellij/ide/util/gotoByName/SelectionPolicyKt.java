@@ -13,28 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.container.plugin.internal;
-
-import consulo.container.plugin.PluginDescriptor;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.File;
-import java.util.List;
+package com.intellij.ide.util.gotoByName;
 
 /**
- * @author VISTALL
- * @since 2019-07-25
+ * from kotlin
+ *
+ * internal fun fromIndex(index: Int) = if (index <= 0) SelectMostRelevant else SelectIndex(index)
+
  */
-public interface PluginManagerInternal {
-  @Nonnull
-  List<PluginDescriptor> getPlugins();
-
-  boolean isInitialized();
-
-  @Nullable
-  File getPluginPath(@Nonnull Class<?> pluginClass);
-
-  @Nullable
-  PluginDescriptor getPlugin(@Nonnull Class<?> pluginClass);
+public class SelectionPolicyKt {
+  public static SelectionPolicy fromIndex(int index) {
+    return index <= 0 ? SelectMostRelevant.INSTANCE : new SelectIndex(index);
+  }
 }

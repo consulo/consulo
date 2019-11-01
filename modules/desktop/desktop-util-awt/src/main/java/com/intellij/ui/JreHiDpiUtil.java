@@ -6,11 +6,12 @@ import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.TestOnly;
 import sun.java2d.SunGraphicsEnvironment;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicReference;
@@ -86,7 +87,7 @@ public final class JreHiDpiUtil {
   }
 
   @TestOnly
-  @NotNull
+  @Nonnull
   public static AtomicReference<Boolean> test_jreHiDPI() {
     isJreHiDPIEnabled(); // force init
     return jreHiDPI;

@@ -53,4 +53,14 @@ public class PluginManagerInternalImpl implements PluginManagerInternal {
     assert plugin != null : "plugin is not found";
     return plugin.getPath();
   }
+
+  @Nullable
+  @Override
+  public PluginDescriptor getPlugin(@Nonnull Class<?> pluginClass) {
+    ClassLoader temp = pluginClass.getClassLoader();
+    if(!(temp instanceof IdeaPluginClassLoader)) {
+      return null;
+    }
+    return PluginManager.findPlugin(((IdeaPluginClassLoader)temp).getPluginId());
+  }
 }

@@ -113,7 +113,7 @@ public class GotoSymbolModel2 extends FilteringGotoByModel<Language> {
   @Nonnull
   public String[] getSeparators() {
     if (mySeparators == null) {
-      mySeparators = GotoClassModel2.getSeparatorsFromContributors(getContributors());
+      mySeparators = GotoClassModel2.getSeparatorsFromContributors(getContributorList());
     }
     return mySeparators;
   }
