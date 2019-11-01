@@ -97,6 +97,11 @@ public class DesktopTextBoxWithExpandAction {
       myComponent.setColumns(columns);
       return this;
     }
+
+    @Override
+    public void selectAll() {
+      toAWTComponent().selectAll();
+    }
   }
 
   private static class FallbackTextBoxWithExpandAction extends SwingComponentDelegate<ComponentWithBrowseButton<JComponent>> implements TextBoxWithExpandAction {
@@ -159,6 +164,11 @@ public class DesktopTextBoxWithExpandAction {
     public TextBox setVisibleLength(int columns) {
       myTextBox.setVisibleLength(columns);
       return this;
+    }
+
+    @Override
+    public void selectAll() {
+      myTextBox.selectAll();
     }
   }
 }

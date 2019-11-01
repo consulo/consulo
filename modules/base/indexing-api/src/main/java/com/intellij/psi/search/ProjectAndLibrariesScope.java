@@ -17,33 +17,38 @@
 package com.intellij.psi.search;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.UnloadedModuleDescription;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiBundle;
 import javax.annotation.Nonnull;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class ProjectAndLibrariesScope extends GlobalSearchScope {
   protected final ProjectFileIndex myProjectFileIndex;
-  protected final boolean mySearchOutsideRootModel;
+  private String myDisplayName = PsiBundle.message("psi.search.scope.project.and.libraries");
 
-  public ProjectAndLibrariesScope(Project project) {
-    this(project, false);
-  }
-
-  public ProjectAndLibrariesScope(Project project, boolean searchOutsideRootModel) {
+  public ProjectAndLibrariesScope(@Nonnull Project project) {
     super(project);
     myProjectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
-    mySearchOutsideRootModel = searchOutsideRootModel;
+  }
+
+  /**
+   * @deprecated use {@link #ProjectAndLibrariesScope(Project)}
+   */
+  @Deprecated
+  public ProjectAndLibrariesScope(Project project, boolean searchOutsideRootModel) {
+    this(project);
   }
 
   @Override
   public boolean contains(@Nonnull VirtualFile file) {
-    return myProjectFileIndex.isInContent(file) ||
-           myProjectFileIndex.isInLibraryClasses(file) ||
-           myProjectFileIndex.isInLibrarySource(file);
+    return myProjectFileIndex.isInContent(file) || myProjectFileIndex.isInLibrary(file);
   }
 
   @Override
@@ -76,11 +81,6 @@ public class ProjectAndLibrariesScope extends GlobalSearchScope {
   }
 
   @Override
-  public boolean isSearchOutsideRootModel() {
-    return mySearchOutsideRootModel;
-  }
-
-  @Override
   public boolean isSearchInModuleContent(@Nonnull Module aModule) {
     return true;
   }
@@ -90,31 +90,21 @@ public class ProjectAndLibrariesScope extends GlobalSearchScope {
     return true;
   }
 
+  @Nonnull
+  @Override
+  public Collection<UnloadedModuleDescription> getUnloadedModulesBelongingToScope() {
+    Project project = getProject();
+    return project != null ? ModuleManager.getInstance(project).getUnloadedModuleDescriptions() : Collections.emptySet();
+  }
+
   @Override
   @Nonnull
   public String getDisplayName() {
-    return PsiBundle.message("psi.search.scope.project.and.libraries");
+    return myDisplayName;
   }
 
-  @Override
-  @Nonnull
-  public GlobalSearchScope intersectWith(@Nonnull final GlobalSearchScope scope) {
-    if (scope.isSearchOutsideRootModel()) {
-      return super.intersectWith(scope);
-    }
-
-
-    return scope;
-  }
-
-  @Override
-  @Nonnull
-  public GlobalSearchScope uniteWith(@Nonnull final GlobalSearchScope scope) {
-    if (scope.isSearchOutsideRootModel()) {
-      return super.uniteWith(scope);
-    }
-
-    return this;
+  public void setDisplayName(@Nonnull String displayName) {
+    myDisplayName = displayName;
   }
 
   @Override

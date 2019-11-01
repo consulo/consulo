@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2017 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.util;
 
 import com.intellij.ide.ui.UISettings;
@@ -20,11 +6,9 @@ import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.navigation.NavigationItemFileStatus;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataProvider;
+import com.intellij.navigation.PsiElementNavigationItem;
 import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.fileEditor.impl.EditorTabbedContainer;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -42,12 +26,13 @@ import com.intellij.util.text.Matcher;
 import com.intellij.util.text.MatcherHolder;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class NavigationItemListCellRenderer extends OpaquePanel implements ListCellRenderer {
+import static com.intellij.openapi.vfs.newvfs.VfsPresentationUtil.getFileBackgroundColor;
+
+public class NavigationItemListCellRenderer extends OpaquePanel implements ListCellRenderer<Object> {
 
   public NavigationItemListCellRenderer() {
     super(new BorderLayout());
@@ -64,7 +49,7 @@ public class NavigationItemListCellRenderer extends OpaquePanel implements ListC
     final Color listBg = leftCellRendererComponent.getBackground();
     add(leftCellRendererComponent, BorderLayout.WEST);
 
-    setBackground(isSelected ? UIUtil.getListSelectionBackground() : listBg);
+    setBackground(isSelected ? UIUtil.getListSelectionBackground(true) : listBg);
 
     if (hasRightRenderer) {
       final DefaultListCellRenderer moduleRenderer = new PsiElementModuleRenderer();
@@ -77,32 +62,21 @@ public class NavigationItemListCellRenderer extends OpaquePanel implements ListC
 
       final Dimension size = rightCellRendererComponent.getSize();
       spacer.setSize(new Dimension((int)(size.width * 0.015 + leftCellRendererComponent.getSize().width * 0.015), size.height));
-      spacer.setBackground(isSelected ? UIUtil.getListSelectionBackground() : listBg);
+      spacer.setBackground(isSelected ? UIUtil.getListSelectionBackground(true) : listBg);
       add(spacer, BorderLayout.CENTER);
     }
     return this;
   }
 
-  protected static Color getBackgroundColor(@Nullable Object value) {
-    if (value instanceof PsiElement || value instanceof DataProvider) {
-      final PsiElement psiElement = value instanceof PsiElement ? (PsiElement)value : ((DataProvider)value).getDataUnchecked(CommonDataKeys.PSI_ELEMENT);
-      if (psiElement != null && psiElement.isValid()) {
-        VirtualFile virtualFile = PsiUtilCore.getVirtualFile(psiElement);
-        Color fileColor = virtualFile == null ? null : EditorTabbedContainer.calcTabColor(psiElement.getProject(), virtualFile);
-        if (fileColor != null) {
-          return fileColor;
-        }
-      }
-    }
-
-    return UIUtil.getListBackground();
+  static PsiElement getPsiElement(Object o) {
+    return o instanceof PsiElement ? (PsiElement)o : o instanceof PsiElementNavigationItem ? ((PsiElementNavigationItem)o).getTargetElement() : null;
   }
 
   private static class LeftRenderer extends ColoredListCellRenderer {
     public final boolean myRenderLocation;
     private final Matcher myMatcher;
 
-    public LeftRenderer(boolean renderLocation, Matcher matcher) {
+    LeftRenderer(boolean renderLocation, Matcher matcher) {
       myRenderLocation = renderLocation;
       myMatcher = matcher;
     }
@@ -116,39 +90,32 @@ public class NavigationItemListCellRenderer extends OpaquePanel implements ListC
         append("Invalid", SimpleTextAttributes.ERROR_ATTRIBUTES);
       }
       else if (value instanceof NavigationItem) {
-        NavigationItem element = (NavigationItem)value;
-        ItemPresentation presentation = element.getPresentation();
-        assert presentation != null : "PSI elements displayed in choose by name lists must return a non-null value from getPresentation(): element " +
-                                      element.toString() +
-                                      ", class " +
-                                      element.getClass().getName();
+        NavigationItem item = (NavigationItem)value;
+        ItemPresentation presentation = item.getPresentation();
+        assert presentation != null : "PSI elements displayed in choose by name lists must return a non-null value from getPresentation(): element " + item.toString() + ", class " + item.getClass().getName();
         String name = presentation.getPresentableText();
-        assert name !=
-               null : "PSI elements displayed in choose by name lists must return a non-null value from getPresentation().getPresentableName: element " +
-                      element.toString() +
-                      ", class " +
-                      element.getClass().getName();
+        assert name != null : "PSI elements displayed in choose by name lists must return a non-null value from getPresentation().getPresentableName: element " +
+                              item.toString() +
+                              ", class " +
+                              item.getClass().getName();
         Color color = list.getForeground();
-        boolean isProblemFile = element instanceof PsiElement &&
-                                WolfTheProblemSolver.getInstance(((PsiElement)element).getProject())
-                                        .isProblemFile(PsiUtilCore.getVirtualFile((PsiElement)element));
+        boolean isProblemFile = item instanceof PsiElement && WolfTheProblemSolver.getInstance(((PsiElement)item).getProject()).isProblemFile(PsiUtilCore.getVirtualFile((PsiElement)item));
 
-        if (element instanceof PsiElement || element instanceof DataProvider) {
-          final PsiElement psiElement = element instanceof PsiElement ? (PsiElement)element : ((DataProvider)element).getDataUnchecked(CommonDataKeys.PSI_ELEMENT);
-          if (psiElement != null) {
-            final Project project = psiElement.getProject();
+        PsiElement psiElement = getPsiElement(item);
 
-            final VirtualFile virtualFile = PsiUtilCore.getVirtualFile(psiElement);
-            isProblemFile = WolfTheProblemSolver.getInstance(project).isProblemFile(virtualFile);
+        if (psiElement != null && psiElement.isValid()) {
+          Project project = psiElement.getProject();
 
-            Color fileColor = virtualFile == null ? null : EditorTabbedContainer.calcTabColor(project, virtualFile);
-            if (fileColor != null) {
-              bgColor = fileColor;
-            }
+          VirtualFile virtualFile = PsiUtilCore.getVirtualFile(psiElement);
+          isProblemFile = WolfTheProblemSolver.getInstance(project).isProblemFile(virtualFile);
+
+          Color fileColor = virtualFile == null ? null : getFileBackgroundColor(project, virtualFile);
+          if (fileColor != null) {
+            bgColor = fileColor;
           }
         }
 
-        FileStatus status = NavigationItemFileStatus.get(element);
+        FileStatus status = NavigationItemFileStatus.get(item);
         if (status != FileStatus.NOT_CHANGED) {
           color = status.getColor();
         }
@@ -161,7 +128,7 @@ public class NavigationItemListCellRenderer extends OpaquePanel implements ListC
         textAttributes.setForegroundColor(color);
         SimpleTextAttributes nameAttributes = SimpleTextAttributes.fromTextAttributes(textAttributes);
         SpeedSearchUtil.appendColoredFragmentForMatcher(name, this, nameAttributes, myMatcher, bgColor, selected);
-        setIcon(presentation.getIcon());
+        setIcon(presentation.getIcon(false));
 
         if (myRenderLocation) {
           String containerText = presentation.getLocationString();
@@ -176,7 +143,7 @@ public class NavigationItemListCellRenderer extends OpaquePanel implements ListC
         append(value == null ? "" : value.toString(), new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, list.getForeground()));
       }
       setPaintFocusBorder(false);
-      setBackground(selected ? UIUtil.getListSelectionBackground() : bgColor);
+      setBackground(selected ? UIUtil.getListSelectionBackground(true) : bgColor);
     }
   }
 }

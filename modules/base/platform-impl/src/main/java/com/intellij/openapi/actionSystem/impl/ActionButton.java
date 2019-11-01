@@ -16,6 +16,7 @@
 package com.intellij.openapi.actionSystem.impl;
 
 import com.intellij.ide.DataManager;
+import com.intellij.ide.HelpTooltip;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
@@ -24,6 +25,8 @@ import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.registry.Registry;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBDimension;
 import com.intellij.util.ui.JBUI;
@@ -38,6 +41,8 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Collections;
+import java.util.Set;
 
 import static java.awt.event.KeyEvent.VK_SPACE;
 
@@ -50,6 +55,8 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
    */
 
   public static final Key<Boolean> HIDE_DROPDOWN_ICON = Key.create("HIDE_DROPDOWN_ICON");
+  // Contains actions IDs which descriptions are permitted for displaying in the ActionButton tooltip
+  private static final Set<String> WHITE_LIST = Collections.emptySet();
 
   private JBDimension myMinimumButtonSize;
   private PropertyChangeListener myPresentationListener;
@@ -249,6 +256,31 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
     super.setToolTipText(tooltipText.length() > 0 ? tooltipText : null);
   }
 
+  protected void updateToolTipText() {
+    String text = myPresentation.getText();
+    String description = myPresentation.getDescription();
+    if (Registry.is("ide.helptooltip.enabled")) {
+      HelpTooltip.dispose(this);
+      if (StringUtil.isNotEmpty(text) || StringUtil.isNotEmpty(description)) {
+        HelpTooltip ht = new HelpTooltip().setTitle(text).setShortcut(getShortcutText());
+
+        String id = ActionManager.getInstance().getId(myAction);
+        if (!StringUtil.equals(text, description) && WHITE_LIST.contains(id)) {
+          ht.setDescription(description);
+        }
+        ht.installOn(this);
+      }
+    }
+    else {
+      setToolTipText(text == null ? description : text);
+    }
+  }
+
+  @Nullable
+  protected String getShortcutText() {
+    return KeymapUtil.getFirstKeyboardShortcutText(myAction);
+  }
+
   @Override
   public Dimension getPreferredSize() {
     Icon icon = getIcon();
@@ -293,11 +325,6 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
 
   private void setDisabledIcon(Icon icon) {
     myDisabledIcon = icon;
-  }
-
-  void updateToolTipText() {
-    String text = myPresentation.getText();
-    setToolTipText(text == null ? myPresentation.getDescription() : text);
   }
 
   @Override

@@ -1,49 +1,54 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.intellij.ide.util.gotoByName;
 
 import com.intellij.ide.IdeBundle;
+import com.intellij.ide.actions.GotoFileItemProvider;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.PsiElementListCellRenderer;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileSystemItem;
-import com.intellij.util.indexing.FileBasedIndex;
-
+import com.intellij.psi.codeStyle.MinusculeMatcher;
+import com.intellij.psi.codeStyle.NameUtil;
+import com.intellij.ui.IdeUICustomization;
+import com.intellij.util.containers.JBIterable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import javax.swing.*;
 import java.util.Collection;
+import java.util.Comparator;
 
 /**
  * Model for "Go to | File" action
  */
-public class GotoFileModel extends FilteringGotoByModel<FileType> {
+public class GotoFileModel extends FilteringGotoByModel<FileType> implements DumbAware, Comparator<Object> {
   private final int myMaxSize;
 
   public GotoFileModel(@Nonnull Project project) {
     super(project, ChooseByNameContributor.FILE_EP_NAME.getExtensionList());
-    myMaxSize = ApplicationManager.getApplication().isUnitTestMode() ? Integer.MAX_VALUE : WindowManagerEx.getInstance().getFrame(project).getSize().width;
+    myMaxSize = ApplicationManager.getApplication().isUnitTestMode() ? Integer.MAX_VALUE : WindowManagerEx.getInstanceEx().getFrame(project).getSize().width;
+  }
+
+  public boolean isSlashlessMatchingEnabled() {
+    return true;
+  }
+
+  @Nonnull
+  @Override
+  public ChooseByNameItemProvider getItemProvider(@Nullable PsiElement context) {
+    return new GotoFileItemProvider(myProject, context, this);
   }
 
   @Override
@@ -56,8 +61,7 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> {
       if (types != null) {
         if (types.contains(file.getFileType())) return true;
         VirtualFile vFile = file.getVirtualFile();
-        if (vFile != null && types.contains(vFile.getFileType())) return true;
-        return false;
+        return vFile != null && types.contains(vFile.getFileType());
       }
       return true;
     }
@@ -69,7 +73,7 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> {
   @Nullable
   @Override
   protected FileType filterValueFor(NavigationItem item) {
-    return item instanceof PsiFile ? ((PsiFile) item).getFileType() : null;
+    return item instanceof PsiFile ? ((PsiFile)item).getFileType() : null;
   }
 
   @Override
@@ -79,19 +83,17 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> {
 
   @Override
   public String getCheckBoxName() {
-    return IdeBundle.message("checkbox.include.non.project.files");
+    return IdeBundle.message("checkbox.include.non.project.files", IdeUICustomization.getInstance().getProjectConceptName());
   }
 
-  @Override
-  public char getCheckBoxMnemonic() {
-    return SystemInfo.isMac?'P':'n';
-  }
 
+  @Nonnull
   @Override
   public String getNotInMessage() {
-    return IdeBundle.message("label.no.non.java.files.found");
+    return "";
   }
 
+  @Nonnull
   @Override
   public String getNotFoundMessage() {
     return IdeBundle.message("label.no.files.found");
@@ -100,8 +102,7 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> {
   @Override
   public boolean loadInitialCheckBoxState() {
     PropertiesComponent propertiesComponent = PropertiesComponent.getInstance(myProject);
-    return propertiesComponent.isTrueValue("GoToClass.toSaveIncludeLibraries") &&
-           propertiesComponent.isTrueValue("GoToFile.includeJavaFiles");
+    return propertiesComponent.isTrueValue("GoToClass.toSaveIncludeLibraries") && propertiesComponent.isTrueValue("GoToFile.includeJavaFiles");
   }
 
   @Override
@@ -112,31 +113,52 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> {
     }
   }
 
+  @Nonnull
   @Override
   public PsiElementListCellRenderer getListCellRenderer() {
-    return new GotoFileCellRenderer(myMaxSize);
+    return new GotoFileCellRenderer(myMaxSize) {
+      @Nonnull
+      @Override
+      protected ItemMatchers getItemMatchers(@Nonnull JList list, @Nonnull Object value) {
+        ItemMatchers defaultMatchers = super.getItemMatchers(list, value);
+        if (!(value instanceof PsiFileSystemItem)) return defaultMatchers;
+
+        return convertToFileItemMatchers(defaultMatchers, (PsiFileSystemItem)value, GotoFileModel.this);
+      }
+    };
   }
 
   @Override
   public boolean sameNamesForProjectAndLibraries() {
-    return !FileBasedIndex.ourEnableTracingOfKeyHashToVirtualFileMapping;
+    return false;
   }
 
   @Override
   @Nullable
-  public String getFullName(final Object element) {
-    if (element instanceof PsiFileSystemItem) {
-      final VirtualFile virtualFile = ((PsiFileSystemItem)element).getVirtualFile();
-      return virtualFile != null ? GotoFileCellRenderer.getRelativePath(virtualFile, myProject) : null;
-    }
+  public String getFullName(@Nonnull final Object element) {
+    return element instanceof PsiFileSystemItem ? getFullName(((PsiFileSystemItem)element).getVirtualFile()) : getElementName(element);
+  }
 
-    return getElementName(element);
+  @Nullable
+  public String getFullName(@Nonnull VirtualFile file) {
+    VirtualFile root = getTopLevelRoot(file);
+    return root != null ? GotoFileCellRenderer.getRelativePathFromRoot(file, root) : GotoFileCellRenderer.getRelativePath(file, myProject);
+  }
+
+  @Nullable
+  public VirtualFile getTopLevelRoot(@Nonnull VirtualFile file) {
+    VirtualFile root = getContentRoot(file);
+    return root == null ? null : JBIterable.generate(root, r -> getContentRoot(r.getParent())).last();
+  }
+
+  private VirtualFile getContentRoot(@Nullable VirtualFile file) {
+    return file == null ? null : GotoFileCellRenderer.getAnyRoot(file, myProject);
   }
 
   @Override
   @Nonnull
   public String[] getSeparators() {
-    return new String[] {"/", "\\"};
+    return new String[]{"/", "\\"};
   }
 
   @Override
@@ -152,9 +174,37 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> {
   @Nonnull
   @Override
   public String removeModelSpecificMarkup(@Nonnull String pattern) {
-    if ((pattern.endsWith("/") || pattern.endsWith("\\"))) {
+    if (pattern.endsWith("/") || pattern.endsWith("\\")) {
       return pattern.substring(0, pattern.length() - 1);
     }
     return pattern;
+  }
+
+  /**
+   * Just to remove smartness from {@link ChooseByNameBase#calcSelectedIndex}
+   */
+  @Override
+  public int compare(Object o1, Object o2) {
+    return 0;
+  }
+
+  @Nonnull
+  public static PsiElementListCellRenderer.ItemMatchers convertToFileItemMatchers(@Nonnull PsiElementListCellRenderer.ItemMatchers defaultMatchers,
+                                                                                  @Nonnull PsiFileSystemItem value,
+                                                                                  @Nonnull GotoFileModel model) {
+    String shortName = model.getElementName(value);
+    String fullName = model.getFullName(value);
+    if (shortName != null && fullName != null && defaultMatchers.nameMatcher instanceof MinusculeMatcher) {
+      String sanitized = GotoFileItemProvider.getSanitizedPattern(((MinusculeMatcher)defaultMatchers.nameMatcher).getPattern(), model);
+      for (int i = sanitized.lastIndexOf('/') + 1; i < sanitized.length() - 1; i++) {
+        MinusculeMatcher nameMatcher = NameUtil.buildMatcher("*" + sanitized.substring(i), NameUtil.MatchingCaseSensitivity.NONE);
+        if (nameMatcher.matches(shortName)) {
+          String locationPattern = FileUtil.toSystemDependentName(StringUtil.trimEnd(sanitized.substring(0, i), "/"));
+          return new PsiElementListCellRenderer.ItemMatchers(nameMatcher, GotoFileItemProvider.getQualifiedNameMatcher(locationPattern));
+        }
+      }
+    }
+
+    return defaultMatchers;
   }
 }

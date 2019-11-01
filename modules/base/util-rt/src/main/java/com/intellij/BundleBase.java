@@ -17,6 +17,7 @@ package com.intellij;
 
 import com.intellij.openapi.util.SystemInfoRt;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.text.MessageFormat;
 import java.util.MissingResourceException;
@@ -27,12 +28,13 @@ import java.util.ResourceBundle;
  */
 public abstract class BundleBase {
   public static final char MNEMONIC = 0x1B;
+  public static final String MNEMONIC_STRING = Character.toString(MNEMONIC);
 
   public static boolean assertKeyIsFound = false;
 
-  public static String messageOrDefault(@javax.annotation.Nullable final ResourceBundle bundle,
+  public static String messageOrDefault(@Nullable final ResourceBundle bundle,
                                         @Nonnull String key,
-                                        @javax.annotation.Nullable final String defaultValue,
+                                        @Nullable final String defaultValue,
                                         @Nonnull Object... params) {
     if (bundle == null) return defaultValue;
 
@@ -71,7 +73,7 @@ public abstract class BundleBase {
     return messageOrDefault(bundle, key, null, params);
   }
 
-  public static String replaceMnemonicAmpersand(@javax.annotation.Nullable final String value) {
+  public static String replaceMnemonicAmpersand(@Nullable final String value) {
     if (value == null) {
       //noinspection ConstantConditions
       return null;

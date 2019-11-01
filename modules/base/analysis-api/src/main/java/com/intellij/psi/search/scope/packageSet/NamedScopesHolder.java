@@ -15,8 +15,10 @@
  */
 package com.intellij.psi.search.scope.packageSet;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.util.containers.ContainerUtil;
@@ -65,10 +67,21 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
 
   private final List<ScopeListener> myScopeListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
+
+  /**
+   * @deprecated use {@link #addScopeListener(ScopeListener, Disposable)} instead
+   */
+  @Deprecated
   public void addScopeListener(@Nonnull ScopeListener scopeListener) {
     myScopeListeners.add(scopeListener);
   }
 
+  public void addScopeListener(@Nonnull ScopeListener scopeListener, @Nonnull Disposable parentDisposable) {
+    myScopeListeners.add(scopeListener);
+    Disposer.register(parentDisposable, () -> myScopeListeners.remove(scopeListener));
+  }
+
+  @Deprecated
   public void removeScopeListener(@Nonnull ScopeListener scopeListener) {
     myScopeListeners.remove(scopeListener);
   }

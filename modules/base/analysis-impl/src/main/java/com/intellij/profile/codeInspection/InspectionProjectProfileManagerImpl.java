@@ -18,7 +18,6 @@ package com.intellij.profile.codeInspection;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
 import com.intellij.codeInspection.InspectionProfile;
 import com.intellij.codeInspection.ex.InspectionProfileWrapper;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.State;
@@ -27,7 +26,6 @@ import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.packageDependencies.DependencyValidationManager;
@@ -37,10 +35,10 @@ import com.intellij.psi.search.scope.packageSet.NamedScopeManager;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.util.ui.UIUtil;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -145,15 +143,8 @@ public class InspectionProjectProfileManagerImpl extends InspectionProjectProfil
             }
           }
         };
-        myHolder.addScopeListener(myScopeListener);
-        myLocalScopesHolder.addScopeListener(myScopeListener);
-        Disposer.register(myProject, new Disposable() {
-          @Override
-          public void dispose() {
-            myHolder.removeScopeListener(myScopeListener);
-            myLocalScopesHolder.removeScopeListener(myScopeListener);
-          }
-        });
+        myHolder.addScopeListener(myScopeListener, myProject);
+        myLocalScopesHolder.addScopeListener(myScopeListener, myProject);
       }
     });
   }

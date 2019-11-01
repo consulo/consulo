@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+/*
+ * User: anna
+ * Date: 12-Nov-2007
+ */
 package com.intellij.ide.navigationToolbar;
 
 import com.intellij.ide.navigationToolbar.ui.NavBarUIManager;
@@ -33,10 +37,9 @@ import com.intellij.util.ui.JBSwingUtilities;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
-import consulo.ui.Window;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nullable;
+
 import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
@@ -58,8 +61,7 @@ public class NavBarRootPaneExtension extends IdeRootPaneNorthExtension {
   public NavBarRootPaneExtension(Project project) {
     myProject = project;
 
-    myProject.getMessageBus().connect()
-            .subscribe(UISettingsListener.TOPIC, uiSettings -> toggleRunPanel(!uiSettings.getShowMainToolbar() && uiSettings.getShowNavigationBar() && !uiSettings.getPresentationMode()));
+    myProject.getMessageBus().connect().subscribe(UISettingsListener.TOPIC, uiSettings -> toggleRunPanel(!uiSettings.getShowMainToolbar() && uiSettings.getShowNavigationBar() && !uiSettings.getPresentationMode()));
 
     myNavToolbarGroupExist = runToolbarExists();
 
@@ -142,7 +144,6 @@ public class NavBarRootPaneExtension extends IdeRootPaneNorthExtension {
         final boolean needGap = isNeedGap(toolbarRunGroup);
         final ActionToolbar actionToolbar = manager.createActionToolbar(ActionPlaces.NAVIGATION_BAR_TOOLBAR, (ActionGroup)toolbarRunGroup, true);
         final JComponent component = actionToolbar.getComponent();
-        component.setOpaque(false);
         myRunPanel = new JPanel(new BorderLayout()) {
           @Override
           public void doLayout() {
@@ -162,7 +163,7 @@ public class NavBarRootPaneExtension extends IdeRootPaneNorthExtension {
   }
 
   private boolean isUndocked() {
-    Window uiWindow = TargetAWT.from(SwingUtilities.getWindowAncestor(myWrapperPanel));
+    consulo.ui.Window uiWindow = TargetAWT.from(SwingUtilities.getWindowAncestor(myWrapperPanel));
     return (uiWindow != null && !(uiWindow.getUserData(IdeFrame.KEY) instanceof IdeFrameEx)) || !UISettings.getInstance().getShowMainToolbar() || !UISettings.getInstance().getPresentationMode();
   }
 

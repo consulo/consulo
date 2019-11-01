@@ -16,10 +16,12 @@
 
 package com.intellij.ide.actions;
 
+import com.intellij.featureStatistics.FeatureUsageTracker;
+import com.intellij.ide.IdeEventQueue;
+import com.intellij.ide.actions.searcheverywhere.SearchEverywhereManager;
 import com.intellij.ide.util.gotoByName.*;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ModalityState;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -36,9 +38,10 @@ import com.intellij.psi.PsiFile;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.speedSearch.SpeedSearchSupply;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
@@ -80,7 +83,7 @@ public abstract class GotoActionBase extends AnAction {
     final Presentation presentation = event.getPresentation();
     final DataContext dataContext = event.getDataContext();
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);
-    presentation.setEnabled(!getClass().equals (myInAction) && (!requiresProject() || project != null) && hasContributors(dataContext));
+    presentation.setEnabled(!getClass().equals(myInAction) && (!requiresProject() || project != null) && hasContributors(dataContext));
     presentation.setVisible(hasContributors(dataContext));
   }
 
@@ -156,22 +159,25 @@ public abstract class GotoActionBase extends AnAction {
     return Pair.create("", 0);
   }
 
+  @Nullable
+  public static String getInitialTextForNavigation(@Nonnull AnActionEvent e) {
+    Editor editor = e.getData(CommonDataKeys.EDITOR);
+    String selectedText = editor != null ? editor.getSelectionModel().getSelectedText() : null;
+    if (selectedText == null) {
+      //selectedText = e.getData(JBTerminalWidget.SELECTED_TEXT_DATA_KEY);
+    }
+    return selectedText != null && !selectedText.contains("\n") ? selectedText : null;
+  }
+
   protected <T> void showNavigationPopup(AnActionEvent e, ChooseByNameModel model, final GotoActionCallback<T> callback) {
     showNavigationPopup(e, model, callback, true);
   }
 
-  protected <T> void showNavigationPopup(AnActionEvent e,
-                                         ChooseByNameModel model,
-                                         final GotoActionCallback<T> callback,
-                                         final boolean allowMultipleSelection) {
+  protected <T> void showNavigationPopup(AnActionEvent e, ChooseByNameModel model, final GotoActionCallback<T> callback, final boolean allowMultipleSelection) {
     showNavigationPopup(e, model, callback, null, true, allowMultipleSelection);
   }
 
-  protected <T> void showNavigationPopup(AnActionEvent e,
-                                         ChooseByNameModel model,
-                                         final GotoActionCallback<T> callback,
-                                         @Nullable final String findUsagesTitle,
-                                         boolean useSelectionFromEditor) {
+  protected <T> void showNavigationPopup(AnActionEvent e, ChooseByNameModel model, final GotoActionCallback<T> callback, @Nullable final String findUsagesTitle, boolean useSelectionFromEditor) {
     showNavigationPopup(e, model, callback, findUsagesTitle, useSelectionFromEditor, true);
   }
 
@@ -181,8 +187,7 @@ public abstract class GotoActionBase extends AnAction {
                                          @Nullable final String findUsagesTitle,
                                          boolean useSelectionFromEditor,
                                          final boolean allowMultipleSelection) {
-    showNavigationPopup(e, model, callback, findUsagesTitle, useSelectionFromEditor, allowMultipleSelection,
-                        new DefaultChooseByNameItemProvider(getPsiContext(e)));
+    showNavigationPopup(e, model, callback, findUsagesTitle, useSelectionFromEditor, allowMultipleSelection, new DefaultChooseByNameItemProvider(getPsiContext(e)));
   }
 
   protected <T> void showNavigationPopup(AnActionEvent e,
@@ -195,22 +200,14 @@ public abstract class GotoActionBase extends AnAction {
     final Project project = e.getData(CommonDataKeys.PROJECT);
     boolean mayRequestOpenInCurrentWindow = model.willOpenEditor() && FileEditorManagerEx.getInstanceEx(project).hasSplitOrUndockedWindows();
     Pair<String, Integer> start = getInitialText(useSelectionFromEditor, e);
-    showNavigationPopup(callback, findUsagesTitle,
-                        ChooseByNamePopup.createPopup(project, model, itemProvider, start.first,
-                                                      mayRequestOpenInCurrentWindow,
-                                                      start.second), allowMultipleSelection);
+    showNavigationPopup(callback, findUsagesTitle, ChooseByNamePopup.createPopup(project, model, itemProvider, start.first, mayRequestOpenInCurrentWindow, start.second), allowMultipleSelection);
   }
 
-  protected <T> void showNavigationPopup(final GotoActionCallback<T> callback,
-                                         @Nullable final String findUsagesTitle,
-                                         final ChooseByNamePopup popup) {
+  protected <T> void showNavigationPopup(final GotoActionCallback<T> callback, @Nullable final String findUsagesTitle, final ChooseByNamePopup popup) {
     showNavigationPopup(callback, findUsagesTitle, popup, true);
   }
 
-  protected <T> void showNavigationPopup(final GotoActionCallback<T> callback,
-                                         @Nullable final String findUsagesTitle,
-                                         final ChooseByNamePopup popup,
-                                         final boolean allowMultipleSelection) {
+  protected <T> void showNavigationPopup(final GotoActionCallback<T> callback, @Nullable final String findUsagesTitle, final ChooseByNamePopup popup, final boolean allowMultipleSelection) {
 
     final Class startedAction = myInAction;
     LOG.assertTrue(startedAction != null);
@@ -221,7 +218,8 @@ public abstract class GotoActionBase extends AnAction {
 
     if (historyEnabled() && popup.getAdText() == null) {
       popup.setAdText("Press " +
-                      KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(KeyEvent.VK_UP, InputEvent.CTRL_MASK)) + " or " +
+                      KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(KeyEvent.VK_UP, InputEvent.CTRL_MASK)) +
+                      " or " +
                       KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, InputEvent.CTRL_MASK)) +
                       " to navigate through the history");
     }
@@ -302,6 +300,39 @@ public abstract class GotoActionBase extends AnAction {
         myHistoryIndex = myHistoryIndex <= 0 ? strings.size() - 1 : myHistoryIndex - 1;
       }
     }.registerCustomShortcutSet(CustomShortcutSet.fromString("ctrl DOWN"), editor);
+  }
+
+  protected void showInSearchEverywherePopup(String searchProviderID, AnActionEvent event, boolean useEditorSelection) {
+    showInSearchEverywherePopup(searchProviderID, event, useEditorSelection, false);
+  }
+
+  protected void showInSearchEverywherePopup(@Nonnull String searchProviderID, @Nonnull AnActionEvent event, boolean useEditorSelection, boolean sendStatistics) {
+    Project project = event.getProject();
+    if (project == null) return;
+    SearchEverywhereManager seManager = SearchEverywhereManager.getInstance(project);
+    FeatureUsageTracker.getInstance().triggerFeatureUsed(IdeActions.ACTION_SEARCH_EVERYWHERE);
+
+    if (seManager.isShown()) {
+      if (searchProviderID.equals(seManager.getSelectedContributorID())) {
+        seManager.toggleEverywhereFilter();
+      }
+      else {
+        seManager.setSelectedContributor(searchProviderID);
+        //if (sendStatistics) {
+        //  FeatureUsageData data = SearchEverywhereUsageTriggerCollector.createData(searchProviderID).addInputEvent(event);
+        //  SearchEverywhereUsageTriggerCollector.trigger(project, SearchEverywhereUsageTriggerCollector.TAB_SWITCHED, data);
+        //}
+      }
+      return;
+    }
+
+    //if (sendStatistics) {
+    //  FeatureUsageData data = SearchEverywhereUsageTriggerCollector.createData(searchProviderID);
+    //  SearchEverywhereUsageTriggerCollector.trigger(project, SearchEverywhereUsageTriggerCollector.DIALOG_OPEN, data);
+    //}
+    IdeEventQueue.getInstance().getPopupManager().closeAllPopups(false);
+    String searchText = StringUtil.nullize(getInitialText(useEditorSelection, event).first);
+    seManager.show(searchProviderID, searchText, event);
   }
 
   private static boolean historyEnabled() {

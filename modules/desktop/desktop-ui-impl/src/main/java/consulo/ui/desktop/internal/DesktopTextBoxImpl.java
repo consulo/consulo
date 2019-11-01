@@ -76,6 +76,11 @@ public class DesktopTextBoxImpl extends SwingComponentDelegate<JBTextField> impl
     return this;
   }
 
+  @Override
+  public void selectAll() {
+    toAWTComponent().selectAll();
+  }
+
   @SuppressWarnings("unchecked")
   @RequiredUIAccess
   private void valueChanged() {

@@ -110,6 +110,11 @@ public class DesktopTextBoxWithExtensions {
       toAWTComponent().setColumns(columns);
       return this;
     }
+
+    @Override
+    public void selectAll() {
+      toAWTComponent().selectAll();
+    }
   }
 
   private static class Unsupported extends SwingComponentDelegate<JPanel> implements TextBoxWithExtensions {
@@ -202,6 +207,11 @@ public class DesktopTextBoxWithExtensions {
     public TextBox setVisibleLength(int columns) {
       myTextField.setColumns(columns);
       return this;
+    }
+
+    @Override
+    public void selectAll() {
+      myTextField.selectAll();
     }
 
     @Nullable

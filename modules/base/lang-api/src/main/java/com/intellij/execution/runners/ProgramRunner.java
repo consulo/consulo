@@ -24,17 +24,18 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.options.SettingsEditor;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 
 /**
  * A ProgramRunner is responsible for the execution workflow of certain types of run configurations with a certain executor. For example,
  * one ProgramRunner can be responsible for debugging all Java-based run configurations (applications, JUnit tests, etc.); the run
  * configuration takes care of building a command line and the program runner takes care of how exactly it needs to be executed.
- *
+ * <p>
  * A newly created program runner should be registered in a corresponding plugin.xml:
- *
+ * <p>
  * &lt;extensions defaultExtensionNs="com.intellij"&gt;
- *   &lt;programRunner implementation="RunnerClassFQN"/&gt;
+ * &lt;programRunner implementation="RunnerClassFQN"/&gt;
  * &lt;/extensions&gt;
  *
  * @param <Settings>
@@ -45,6 +46,26 @@ public interface ProgramRunner<Settings extends RunnerSettings> {
 
   interface Callback {
     void processStarted(RunContentDescriptor descriptor);
+  }
+
+  @Nullable
+  static ProgramRunner findRunnerById(@Nonnull String id) {
+    for (ProgramRunner registeredRunner : PROGRAM_RUNNER_EP.getExtensionList()) {
+      if (id.equals(registeredRunner.getRunnerId())) {
+        return registeredRunner;
+      }
+    }
+    return null;
+  }
+
+  @Nullable
+  static ProgramRunner<RunnerSettings> getRunner(@Nonnull String executorId, @Nonnull RunProfile settings) {
+    for (ProgramRunner<RunnerSettings> runner : PROGRAM_RUNNER_EP.getExtensionList()) {
+      if (runner.canRun(executorId, settings)) {
+        return runner;
+      }
+    }
+    return null;
   }
 
   /**
@@ -60,7 +81,7 @@ public interface ProgramRunner<Settings extends RunnerSettings> {
    * Checks if the program runner is capable of running the specified configuration with the specified executor.
    *
    * @param executorId ID of the {@link Executor} with which the user is trying to run the configuration.
-   * @param profile the configuration being run.
+   * @param profile    the configuration being run.
    * @return true if the runner can handle it, false otherwise.
    */
   boolean canRun(@Nonnull final String executorId, @Nonnull final RunProfile profile);
@@ -74,8 +95,7 @@ public interface ProgramRunner<Settings extends RunnerSettings> {
   @Nullable
   Settings createConfigurationData(ConfigurationInfoProvider settingsProvider);
 
-  void checkConfiguration(RunnerSettings settings, @Nullable ConfigurationPerRunnerSettings configurationPerRunnerSettings)
-    throws RuntimeConfigurationException;
+  void checkConfiguration(RunnerSettings settings, @Nullable ConfigurationPerRunnerSettings configurationPerRunnerSettings) throws RuntimeConfigurationException;
 
   void onProcessStarted(RunnerSettings settings, ExecutionResult executionResult);
 
@@ -83,5 +103,6 @@ public interface ProgramRunner<Settings extends RunnerSettings> {
   SettingsEditor<Settings> getSettingsEditor(Executor executor, RunConfiguration configuration);
 
   void execute(@Nonnull ExecutionEnvironment environment) throws ExecutionException;
+
   void execute(@Nonnull ExecutionEnvironment environment, @javax.annotation.Nullable Callback callback) throws ExecutionException;
 }

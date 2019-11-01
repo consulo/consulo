@@ -31,6 +31,7 @@ import java.util.LinkedHashSet;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.BiPredicate;
 import java.util.function.IntFunction;
 
 @SuppressWarnings({"UtilityClassWithoutPrivateConstructor", "MethodOverridesStaticMethodOfSuperclass"})
@@ -2089,7 +2090,7 @@ public class ContainerUtil extends ContainerUtilRt {
   }
 
   @Contract(pure = true)
-  public static <T> boolean exists(@Nonnull Iterable<T> iterable, @Nonnull Condition<? super T> condition) {
+  public static <T> boolean exists(@Nonnull Iterable<? extends T> iterable, @Nonnull Condition<? super T> condition) {
     return or(iterable, condition);
   }
 
@@ -2099,7 +2100,7 @@ public class ContainerUtil extends ContainerUtilRt {
   }
 
   @Contract(pure = true)
-  public static <T> boolean or(@Nonnull Iterable<T> iterable, @Nonnull Condition<? super T> condition) {
+  public static <T> boolean or(@Nonnull Iterable<? extends T> iterable, @Nonnull Condition<? super T> condition) {
     for (final T t : iterable) {
       if (condition.value(t)) return true;
     }
@@ -2420,7 +2421,7 @@ public class ContainerUtil extends ContainerUtilRt {
   }
 
   @Contract(pure = true)
-  public static <T> int indexOf(@Nonnull List<T> list, @Nonnull Condition<? super T> condition) {
+  public static <T> int indexOf(@Nonnull List<? extends T> list, @Nonnull Condition<? super T> condition) {
     for (int i = 0, listSize = list.size(); i < listSize; i++) {
       T t = list.get(i);
       if (condition.value(t)) {
@@ -2465,7 +2466,7 @@ public class ContainerUtil extends ContainerUtilRt {
   }
 
   @Contract(pure = true)
-  public static <T> int indexOf(@Nonnull List<T> list, @Nonnull final T object) {
+  public static <T> int indexOf(@Nonnull List<? extends T> list, @Nonnull final T object) {
     return indexOf(list, new Condition<T>() {
       @Override
       public boolean value(T t) {
@@ -3141,6 +3142,56 @@ public class ContainerUtil extends ContainerUtilRt {
   @Contract(pure = true)
   public static <T> T getOnlyItem(@Nullable final Collection<? extends T> items, @Nullable final T defaultResult) {
     return items == null || items.size() != 1 ? defaultResult : items.iterator().next();
+  }
+
+  public static <T> void groupAndRuns(List<? extends T> values, BiPredicate<T, T> func, java.util.function.Consumer<List<? extends T>> consumer) {
+    if (values.isEmpty()) {
+      return;
+    }
+
+    if (values.size() == 1) {
+      consumer.accept(values);
+      return;
+    }
+
+    T prev = values.get(0);
+    int startIndex = -1;
+
+    for (int i = 1; i < values.size(); i++) {
+      T event = values.get(i);
+
+      try {
+        if (func.test(prev, event)) {
+          if (startIndex == -1) {
+            // start from prev if not group index
+            startIndex = i - 1;
+          }
+          else {
+            // nothing group already started
+          }
+        }
+        else if (startIndex == -1) {
+          // if group not started - start fake group
+          // it will eat by groupper, or return as prev
+          startIndex = i;
+        }
+        else {
+          // finish group and start fake
+          List<? extends T> subList = values.subList(startIndex, i);
+          consumer.accept(subList);
+
+          startIndex = i;
+        }
+      }
+      finally {
+        prev = event;
+      }
+    }
+
+    if (startIndex != -1) {
+      List<? extends T> list = values.subList(startIndex, values.size());
+      consumer.accept(list);
+    }
   }
 }
 

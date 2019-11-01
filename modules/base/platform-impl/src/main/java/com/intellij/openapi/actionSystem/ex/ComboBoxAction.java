@@ -39,7 +39,7 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    ComboBoxButton button = (ComboBoxButton)e.getPresentation().getClientProperty(CUSTOM_COMPONENT_PROPERTY);
+    ComboBoxButton button = (ComboBoxButton)e.getPresentation().getClientProperty(COMPONENT_KEY);
     if (button == null) {
       Component contextComponent = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
       JRootPane rootPane = UIUtil.getParentOfType(JRootPane.class, contextComponent);

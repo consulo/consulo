@@ -15,9 +15,9 @@
  */
 package com.intellij.psi.search;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.UnloadedModuleDescription;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.util.Comparing;
@@ -31,11 +31,12 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 public abstract class GlobalSearchScope extends SearchScope implements ProjectAwareFileFilter {
@@ -81,6 +82,15 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
 
   public boolean isForceSearchingInLibrarySources() {
     return false;
+  }
+
+  /**
+   * Returns descriptions of unloaded modules content of whose might be included into this scope if they had been loaded. Actually search in
+   * unloaded modules isn't performed, so this method is used to determine whether a warning about possible missing results should be shown.
+   */
+  @Nonnull
+  public Collection<UnloadedModuleDescription> getUnloadedModulesBelongingToScope() {
+    return Collections.emptySet();
   }
 
   public boolean isSearchOutsideRootModel() {
@@ -183,6 +193,12 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
   @Nonnull
   public static GlobalSearchScope allScope(@Nonnull Project project) {
     return ProjectScope.getAllScope(project);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static GlobalSearchScope everythingScope(@Nonnull Project project) {
+    return ProjectScope.getEverythingScope(project);
   }
 
   @Nonnull
@@ -790,9 +806,7 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
       Boolean result = myHasFilesOutOfProjectRoots;
       if (result == null) {
         Project project = getProject();
-        myHasFilesOutOfProjectRoots = result = project != null &&
-                                               !project.isDefault() &&
-                                               myFiles.stream().anyMatch(file -> FileIndexFacade.getInstance(project).getModuleForFile(file) == null);
+        myHasFilesOutOfProjectRoots = result = project != null && !project.isDefault() && myFiles.stream().anyMatch(file -> FileIndexFacade.getInstance(project).getModuleForFile(file) == null);
       }
       return result;
     }

@@ -38,4 +38,6 @@ public interface TextBox extends ValueComponent<String> {
 
   @Nonnull
   TextBox setVisibleLength(int columns);
+
+  void selectAll();
 }

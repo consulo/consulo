@@ -40,6 +40,11 @@ public class WebTextBoxImpl extends UIComponentWithVaadinComponent<WebTextBoxImp
     return null;
   }
 
+  @Override
+  public void selectAll() {
+
+  }
+
   public static class Vaadin extends VaadinComponent {
   }
 

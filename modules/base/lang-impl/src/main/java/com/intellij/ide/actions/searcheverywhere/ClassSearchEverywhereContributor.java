@@ -1,40 +1,65 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.actions.searcheverywhere;
 
-import javax.annotation.Nullable;
+import com.intellij.codeInsight.navigation.NavigationUtil;
+import com.intellij.ide.IdeBundle;
+import com.intellij.ide.actions.GotoActionBase;
+import com.intellij.ide.actions.GotoClassAction;
+import com.intellij.ide.actions.GotoClassPresentationUpdater;
+import com.intellij.ide.util.gotoByName.FilteringGotoByModel;
+import com.intellij.ide.util.gotoByName.GotoClassModel2;
+import com.intellij.ide.util.gotoByName.GotoClassSymbolConfiguration;
+import com.intellij.lang.DependentLanguage;
+import com.intellij.lang.Language;
+import com.intellij.lang.LanguageUtil;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.pom.Navigatable;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiUtilCore;
+import com.intellij.ui.IdeUICustomization;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * @author Konstantin Bulenkov
  */
-public class ClassSearchEverywhereContributor /*extends AbstractGotoSEContributor*/ {
+public class ClassSearchEverywhereContributor extends AbstractGotoSEContributor {
 
   private static final Pattern ourPatternToDetectAnonymousClasses = Pattern.compile("([.\\w]+)((\\$[\\d]+)*(\\$)?)");
   private static final Pattern ourPatternToDetectMembers = Pattern.compile("(.+)(#)(.*)");
 
-/*  private final PersistentSearchEverywhereContributorFilter<Language> myFilter;
+  private final PersistentSearchEverywhereContributorFilter<Language> myFilter;
 
   public ClassSearchEverywhereContributor(@Nullable Project project, @Nullable PsiElement context) {
     super(project, context);
     myFilter = project == null ? null : createLanguageFilter(project);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getGroupName() {
     return GotoClassPresentationUpdater.getTabTitle(true);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getFullGroupName() {
     String[] split = GotoClassPresentationUpdater.getActionTitle().split("/");
     return Arrays.stream(split).map(StringUtil::pluralize).collect(Collectors.joining("/"));
   }
 
-  @NotNull
+  @Nonnull
   public String includeNonProjectItemsText() {
     return IdeBundle.message("checkbox.include.non.project.classes", IdeUICustomization.getInstance().getProjectConceptName());
   }
@@ -44,9 +69,9 @@ public class ClassSearchEverywhereContributor /*extends AbstractGotoSEContributo
     return 100;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected FilteringGotoByModel<Language> createModel(@NotNull Project project) {
+  protected FilteringGotoByModel<Language> createModel(@Nonnull Project project) {
     GotoClassModel2 model = new GotoClassModel2(project);
     if (myFilter != null) {
       model.setFilterItems(myFilter.getSelectedElements());
@@ -54,15 +79,15 @@ public class ClassSearchEverywhereContributor /*extends AbstractGotoSEContributo
     return model;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<AnAction> getActions(@NotNull Runnable onChanged) {
+  public List<AnAction> getActions(@Nonnull Runnable onChanged) {
     return doGetActions(includeNonProjectItemsText(), myFilter, onChanged);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public String filterControlSymbols(@NotNull String pattern) {
+  public String filterControlSymbols(@Nonnull String pattern) {
     if (pattern.indexOf('#') != -1) {
       pattern = applyPatternFilter(pattern, ourPatternToDetectMembers);
     }
@@ -75,7 +100,7 @@ public class ClassSearchEverywhereContributor /*extends AbstractGotoSEContributo
   }
 
   @Override
-  public int getElementPriority(@NotNull Object element, @NotNull String searchPattern) {
+  public int getElementPriority(@Nonnull Object element, @Nonnull String searchPattern) {
     return super.getElementPriority(element, searchPattern) + 5;
   }
 
@@ -123,7 +148,7 @@ public class ClassSearchEverywhereContributor /*extends AbstractGotoSEContributo
     }
 
     return null;
-  }  */
+  }
 
   private static String pathToAnonymousClass(String searchedText) {
     return pathToAnonymousClass(ourPatternToDetectAnonymousClasses.matcher(searchedText));
@@ -144,7 +169,7 @@ public class ClassSearchEverywhereContributor /*extends AbstractGotoSEContributo
 
     return null;
   }
-  /*
+
   private static String getMemberName(String searchedText) {
     final int index = searchedText.lastIndexOf('#');
     if (index == -1) {
@@ -157,15 +182,15 @@ public class ClassSearchEverywhereContributor /*extends AbstractGotoSEContributo
 
   public static class Factory implements SearchEverywhereContributorFactory<Object> {
 
-    @NotNull
+    @Nonnull
     @Override
-    public SearchEverywhereContributor<Object> createContributor(@NotNull AnActionEvent initEvent) {
+    public SearchEverywhereContributor<Object> createContributor(@Nonnull AnActionEvent initEvent) {
       return new ClassSearchEverywhereContributor(initEvent.getProject(), GotoActionBase.getPsiContext(initEvent));
     }
   }
 
-  @NotNull
-  static PersistentSearchEverywhereContributorFilter<Language> createLanguageFilter(@NotNull Project project) {
+  @Nonnull
+  static PersistentSearchEverywhereContributorFilter<Language> createLanguageFilter(@Nonnull Project project) {
     List<Language> items = Language.getRegisteredLanguages().stream().filter(lang -> lang != Language.ANY && !(lang instanceof DependentLanguage)).sorted(LanguageUtil.LANGUAGE_COMPARATOR)
             .collect(Collectors.toList());
     GotoClassSymbolConfiguration persistentConfig = GotoClassSymbolConfiguration.getInstance(project);
@@ -173,5 +198,5 @@ public class ClassSearchEverywhereContributor /*extends AbstractGotoSEContributo
       final LanguageFileType fileType = language.getAssociatedFileType();
       return fileType != null ? fileType.getIcon() : null;
     });
-  }    */
+  }
 }

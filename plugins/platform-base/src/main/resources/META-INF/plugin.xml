@@ -1161,6 +1161,12 @@
     <extensionPoint name="fileSaveDialogProvider" interface="consulo.ui.fileOperateDialog.FileSaveDialogProvider"/>
 
     <extensionPoint name="textEditorHighlightingPassFactory" area="PROJECT" interface="com.intellij.codeHighlighting.TextEditorHighlightingPassFactory"/>
+
+    <extensionPoint name="searchEverywhereContributor" interface="com.intellij.ide.actions.searcheverywhere.SearchEverywhereContributorFactory"/>
+    <extensionPoint name="searchEverywhereClassifier" interface="com.intellij.ide.actions.SearchEverywhereClassifier"/>
+    <extensionPoint name="searchEverywhereResultsEqualityProvider" interface="com.intellij.ide.actions.searcheverywhere.SEResultsEqualityProvider"/>
+
+    <extensionPoint name="searchScopesProvider" interface="com.intellij.psi.search.SearchScopeProvider"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
@@ -2674,6 +2680,17 @@
     <projectService serviceImplementation="com.intellij.openapi.vcs.changes.committed.OutdatedVersionNotifier" lazy="false"/>
     <projectService serviceImplementation="com.intellij.openapi.vcs.changes.committed.IncomingChangesIndicator" lazy="false"/>
     <projectService serviceImplementation="com.intellij.psi.impl.file.impl.PsiVFSListener" lazy="false"/>
+
+    <searchEverywhereContributor implementation="com.intellij.ide.actions.searcheverywhere.ClassSearchEverywhereContributor$Factory"/>
+    <searchEverywhereContributor implementation="com.intellij.ide.actions.searcheverywhere.FileSearchEverywhereContributor$Factory"/>
+    <searchEverywhereContributor implementation="com.intellij.ide.actions.searcheverywhere.SymbolSearchEverywhereContributor$Factory"/>
+    <searchEverywhereContributor implementation="com.intellij.ide.actions.searcheverywhere.ActionSearchEverywhereContributor$Factory"/>
+
+    <searchEverywhereResultsEqualityProvider implementation="com.intellij.ide.actions.searcheverywhere.PsiElementsEqualityProvider" />
+    <searchEverywhereResultsEqualityProvider implementation="com.intellij.ide.actions.searcheverywhere.TrivialElementsEqualityProvider"/>
+
+    <projectService serviceImplementation="com.intellij.ide.util.gotoByName.SearchEverywhereConfiguration"/>
+    <projectService serviceInterface="com.intellij.ide.actions.searcheverywhere.SearchEverywhereManager" serviceImplementation="com.intellij.ide.actions.searcheverywhere.SearchEverywhereManagerImpl"/>
   </extensions>
 
   <applicationListeners>

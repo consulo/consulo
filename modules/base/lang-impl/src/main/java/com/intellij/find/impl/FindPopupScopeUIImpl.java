@@ -102,7 +102,16 @@ public class FindPopupScopeUIImpl implements FindPopupScopeUI {
 
       @Override
       public boolean value(ScopeDescriptor descriptor) {
-        final String display = descriptor.getDisplay();
+        String display = descriptor.getDisplayName();
+        if(display == null) {
+          if(descriptor.getClass() != ScopeDescriptor.class) {
+            display = descriptor.getClass().getSimpleName();
+          }
+          else {
+            SearchScope scope = descriptor.getScope();
+            display = scope == null ? "?" : scope.getClass().getSimpleName();
+          }
+        }
         return /*!projectFilesScopeName.equals(display) &&*/ !display.startsWith(moduleFilesScopeName);
       }
     });

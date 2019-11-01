@@ -95,8 +95,8 @@ public class ScopeViewPane extends AbstractProjectViewPane {
         }, 10);
       }
     };
-    myDependencyValidationManager.addScopeListener(myScopeListener);
-    myNamedScopeManager.addScopeListener(myScopeListener);
+    myDependencyValidationManager.addScopeListener(myScopeListener, this);
+    myNamedScopeManager.addScopeListener(myScopeListener, this);
   }
 
   @Override
@@ -131,8 +131,6 @@ public class ScopeViewPane extends AbstractProjectViewPane {
   @Override
   public void dispose() {
     myViewPanel = null;
-    myDependencyValidationManager.removeScopeListener(myScopeListener);
-    myNamedScopeManager.removeScopeListener(myScopeListener);
     super.dispose();
   }
 

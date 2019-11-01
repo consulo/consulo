@@ -21,17 +21,28 @@ package com.intellij.psi.search;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
+import javax.annotation.Nonnull;
 
 public abstract class ProjectScopeBuilder {
   public static ProjectScopeBuilder getInstance(Project project) {
     return ServiceManager.getService(project, ProjectScopeBuilder.class);
   }
 
+  @Nonnull
+  public abstract GlobalSearchScope buildEverythingScope();
+
+  @Nonnull
   public abstract GlobalSearchScope buildLibrariesScope();
 
+  /**
+   * @return Scope for all things inside the project: files in the project content plus files in libraries/libraries sources
+   */
+  @Nonnull
   public abstract GlobalSearchScope buildAllScope();
 
+  @Nonnull
   public abstract GlobalSearchScope buildProjectScope();
 
+  @Nonnull
   public abstract GlobalSearchScope buildContentScope();
 }

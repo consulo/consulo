@@ -15,25 +15,38 @@
  */
 package com.intellij.openapi.actionSystem.ex;
 
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.util.Key;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
 public interface CustomComponentAction {
-
-  String CUSTOM_COMPONENT_PROPERTY = "customComponent";
+  Key<JComponent> COMPONENT_KEY = Key.create("customComponent");
+  Key<AnAction> ACTION_KEY = Key.create("customComponentAction");
 
   /**
    * @return custom JComponent that represents action in UI.
-   * You (as a client/implementor) or this interface do not allow to invoke
+   * You (as a client/implementor) or this interface are not allowed to invoke
    * this method directly. Only action system can invoke it!
    * <br/>
    * <br/>
    * The component should not be stored in the action instance because it may
-   * be shown on several toolbars simultaneously. CustomComponentAction.CUSTOM_COMPONENT_PROPERTY
-   * can be used to retrieve current component from a Presentation in AnAction#update() method.
+   * be shown on several toolbars simultaneously. Use {@link CustomComponentAction#COMPONENT_KEY}
+   * to retrieve current component from a Presentation instance in {@link AnAction#update(AnActionEvent)} method.
    */
   @Nonnull
-  JComponent createCustomComponent(Presentation presentation);
+  default JComponent createCustomComponent(@Nonnull Presentation presentation, @Nonnull String place) {
+    return createCustomComponent(presentation);
+  }
+
+  /**
+   * @deprecated Use {@link CustomComponentAction#createCustomComponent(Presentation, String)}
+   */
+  @Deprecated
+  @Nonnull
+  default JComponent createCustomComponent(@Nonnull Presentation presentation) {
+    throw new AssertionError();
+  }
 }

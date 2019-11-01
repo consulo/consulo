@@ -17,12 +17,14 @@ package com.intellij.openapi.module;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.util.graph.Graph;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
+import org.jetbrains.annotations.NonNls;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -77,7 +79,7 @@ public abstract class ModuleManager {
    * @param name the name of the module to find.
    * @return the module instance, or null if no module with such name exists.
    */
-  @javax.annotation.Nullable
+  @Nullable
   @RequiredReadAction
   public abstract Module findModuleByName(@NonNls @Nonnull String name);
 
@@ -167,9 +169,14 @@ public abstract class ModuleManager {
   @RequiredReadAction
   public abstract String[] getModuleGroupPath(@Nonnull Module module);
 
-  @javax.annotation.Nullable
+  @Nullable
   public UnloadedModuleDescription getUnloadedModuleDescription(@Nonnull String name) {
     // we not support module unloading
     return null;
+  }
+
+  @Nonnull
+  public Collection<UnloadedModuleDescription> getUnloadedModuleDescriptions() {
+    return Collections.emptyList();
   }
 }

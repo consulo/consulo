@@ -41,6 +41,11 @@ public abstract class RootType {
 
   public static final ExtensionPointName<RootType> ROOT_EP = ExtensionPointName.create("com.intellij.scratch.rootType");
 
+  @Nullable
+  public static RootType forFile(@Nullable VirtualFile file) {
+    return ScratchFileService.getInstance().getRootType(file);
+  }
+
   @Nonnull
   public static RootType[] getAllRootIds() {
     return Extensions.getExtensions(ROOT_EP);

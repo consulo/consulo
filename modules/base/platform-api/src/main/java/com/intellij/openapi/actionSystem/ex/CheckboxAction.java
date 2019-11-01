@@ -19,6 +19,7 @@ package com.intellij.openapi.actionSystem.ex;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.util.ui.UIUtil;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -39,8 +40,9 @@ public abstract class CheckboxAction extends ToggleAction implements CustomCompo
     super(text, description, icon);
   }
 
+  @Nonnull
   @Override
-  public JComponent createCustomComponent(Presentation presentation) {
+  public JComponent createCustomComponent(Presentation presentation, @Nonnull String place) {
     // this component cannot be stored right here because of action system architecture:
     // one action can be shown on multiple toolbars simultaneously
     JCheckBox checkBox = new JCheckBox(presentation.getText());
@@ -68,7 +70,7 @@ public abstract class CheckboxAction extends ToggleAction implements CustomCompo
   @Override
   public void update(final AnActionEvent e) {
     super.update(e);
-    Object property = e.getPresentation().getClientProperty(CUSTOM_COMPONENT_PROPERTY);
+    JComponent property = e.getPresentation().getClientProperty(COMPONENT_KEY);
     if (property instanceof JCheckBox) {
       JCheckBox checkBox = (JCheckBox)property;
 

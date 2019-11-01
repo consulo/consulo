@@ -24,13 +24,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.MinusculeMatcher;
 import com.intellij.psi.codeStyle.NameUtil;
-import com.intellij.util.Consumer;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author Konstantin Bulenkov
@@ -53,7 +53,7 @@ public abstract class OptionsTopHitProvider implements SearchTopHitProvider {
       final MinusculeMatcher matcher = NameUtil.buildMatcher("*" + pattern, NameUtil.MatchingCaseSensitivity.NONE);
       for (BooleanOptionDescription option : getOptions(project)) {
         if (matcher.matches(option.getOption())) {
-          collector.consume(option);
+          collector.accept(option);
         }
       }
     }
@@ -82,6 +82,6 @@ public abstract class OptionsTopHitProvider implements SearchTopHitProvider {
    * E.g. UiSettings.SHOW_STATUS_BAR is backed by View > Status Bar action.
    */
   @Deprecated
-  public interface CoveredByToggleActions { // for search everywhere only
+  public static interface CoveredByToggleActions { // for search everywhere only
   }
 }

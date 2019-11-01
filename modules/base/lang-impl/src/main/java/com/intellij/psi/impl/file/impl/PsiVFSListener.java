@@ -16,7 +16,10 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.ModuleRootEvent;
+import com.intellij.openapi.roots.ModuleRootListener;
+import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.impl.PushedFilePropertiesUpdater;
 import com.intellij.openapi.roots.impl.PushedFilePropertiesUpdaterImpl;
 import com.intellij.openapi.startup.StartupManager;
@@ -31,6 +34,7 @@ import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.PsiManagerImpl;
 import com.intellij.psi.impl.PsiTreeChangeEventImpl;
 import com.intellij.util.FileContentUtilCore;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.psi.impl.ExternalChangeMarker;
 
@@ -43,7 +47,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 
 @Singleton
 public class PsiVFSListener implements BulkFileListener {
@@ -659,57 +662,7 @@ public class PsiVFSListener implements BulkFileListener {
     BiPredicate<VFileEvent, VFileEvent> check =
             (event1, event2) -> event1 instanceof VFileDeleteEvent && event2 instanceof VFileDeleteEvent || event1 instanceof VFileMoveEvent && event2 instanceof VFileMoveEvent;
 
-    groupAndRun(events, check, it -> fireForGrouped(it));
-  }
-
-  private static <T> void groupAndRun(List<? extends T> values, BiPredicate<T, T> func, Consumer<List<? extends T>> consumer) {
-    if (values.isEmpty()) {
-      return;
-    }
-
-    if (values.size() == 1) {
-      consumer.accept(values);
-      return;
-    }
-
-    T prev = values.get(0);
-    int startIndex = -1;
-
-    for (int i = 1; i < values.size(); i++) {
-      T event = values.get(i);
-
-      try {
-        if (func.test(prev, event)) {
-          if (startIndex == -1) {
-            // start from prev if not group index
-            startIndex = i - 1;
-          }
-          else {
-            // nothing group already started
-          }
-        }
-        else if (startIndex == -1) {
-          // if group not started - start fake group
-          // it will eat by groupper, or return as prev
-          startIndex = i;
-        }
-        else {
-          // finish group and start fake
-          List<? extends T> subList = values.subList(startIndex, i);
-          consumer.accept(subList);
-
-          startIndex = i;
-        }
-      }
-      finally {
-        prev = event;
-      }
-    }
-
-    if (startIndex != -1) {
-      List<? extends T> list = values.subList(startIndex, values.size());
-      consumer.accept(list);
-    }
+    ContainerUtil.groupAndRuns(events, check, it -> fireForGrouped(it));
   }
 
   private void fireForGrouped(@Nonnull List<? extends VFileEvent> subList) {

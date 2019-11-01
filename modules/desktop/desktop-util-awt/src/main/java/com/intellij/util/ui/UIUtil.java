@@ -843,26 +843,24 @@ public class UIUtil {
     });
   }
 
-  public static Color getTreeSelectionBackground() {
-    if (isUnderNimbusLookAndFeel()) {
-      Color color = UIManager.getColor("Tree.selectionBackground");
-      if (color != null) return color;
-      color = UIManager.getColor("nimbusSelectionBackground");
-      if (color != null) return color;
-    }
-    return UIManager.getColor("Tree.selectionBackground");
-  }
-
   public static Color getTreeTextBackground() {
     return UIManager.getColor("Tree.textBackground");
   }
 
+  /**
+   * @deprecated use {@link #getListSelectionForeground(boolean)}
+   */
+  @Nonnull
+  @Deprecated
   public static Color getListSelectionForeground() {
-    final Color color = UIManager.getColor("List.selectionForeground");
-    if (color == null) {
-      return UIManager.getColor("List[Selected].textForeground");  // Nimbus
-    }
-    return color;
+    return getListSelectionForeground(true);
+  }
+
+  @Nonnull
+  public static Color getListSelectionForeground(boolean focused) {
+    Color foreground = UIManager.getColor(focused ? "List.selectionForeground" : "List.selectionInactiveForeground");
+    if (focused && foreground == null) foreground = UIManager.getColor("List[Selected].textForeground");  // Nimbus
+    return foreground != null ? foreground : getListForeground();
   }
 
   public static Color getFieldForegroundColor() {
@@ -1036,6 +1034,11 @@ public class UIUtil {
     return isSelected ? getListSelectionForeground() : getListForeground();
   }
 
+  @Nonnull
+  public static Color getListForeground(boolean selected, boolean focused) {
+    return !selected ? getListForeground() : getListSelectionForeground(focused);
+  }
+
   public static Color getPanelBackground() {
     return UIManager.getColor("Panel.background");
   }
@@ -1056,28 +1059,75 @@ public class UIUtil {
     return UIManager.getColor(TABLE_FOCUS_CELL_BACKGROUND_PROPERTY);
   }
 
+  private static final class UnfocusedSelection {
+    private static final Color BACKGROUND = new JBColor(0xD4D4D4, 0x0D293E);
+    private static final Color LIST_BACKGROUND = JBColor.namedColor("List.selectionInactiveBackground", BACKGROUND);
+    private static final Color TREE_BACKGROUND = JBColor.namedColor("Tree.selectionInactiveBackground", BACKGROUND);
+    private static final Color TABLE_BACKGROUND = JBColor.namedColor("Table.selectionInactiveBackground", BACKGROUND);
+  }
+
+  private static final class FocusedSelection {
+    private static final Color BACKGROUND = new JBColor(0x3875D6, 0x2F65CA);
+    private static final Color LIST_BACKGROUND = JBColor.namedColor("List.selectionBackground", BACKGROUND);
+    private static final Color TREE_BACKGROUND = JBColor.namedColor("Tree.selectionBackground", BACKGROUND);
+    private static final Color TABLE_BACKGROUND = JBColor.namedColor("Table.selectionBackground", BACKGROUND);
+  }
+
+  private static final JBValue SELECTED_ITEM_ALPHA = new JBValue.UIInteger("List.selectedItemAlpha", 75);
+
+  @Nonnull
+  public static Color getListSelectionBackground(boolean focused) {
+    if (!focused) return UnfocusedSelection.LIST_BACKGROUND;
+    Color color = UIManager.getColor("List.selectionBackground");
+    double alpha = SELECTED_ITEM_ALPHA.getFloat() / 100.0;
+    //noinspection UseJBColor
+    return isUnderDefaultMacTheme() && alpha >= 0 && alpha <= 1.0 ? ColorUtil.mix(Color.WHITE, color, alpha) : color;
+  }
+
+  @Nonnull
+  public static Color getListBackground(boolean selected, boolean focused) {
+    return !selected ? getListBackground() : getListSelectionBackground(focused);
+  }
+
+  /**
+   * @deprecated use {@link #getListSelectionBackground(boolean)}
+   */
+  @Nonnull
+  @Deprecated
   public static Color getListSelectionBackground() {
-    if (isUnderNimbusLookAndFeel()) {
-      return UIManager.getColor("List[Selected].textBackground");  // Nimbus
-    }
-    return UIManager.getColor("List.selectionBackground");
+    return getListSelectionBackground(true);
   }
 
+  /**
+   * @deprecated use {@link #getListSelectionBackground(boolean)}
+   */
+  @Nonnull
+  @Deprecated
   public static Color getListUnfocusedSelectionBackground() {
-    Color color = UIManager.getColor("Color.SelectionBackground");
-    if (color != null) {
-      return color;
-    }
-    return isUnderDarkBuildInLaf() ? Gray._52 : UNFOCUSED_SELECTION_COLOR;
+    return getListSelectionBackground(false);
   }
 
+  /**
+   * @deprecated use {@link #getTreeSelectionBackground(boolean)}
+   */
+  @Nonnull
+  @Deprecated
+  public static Color getTreeSelectionBackground() {
+    return getTreeSelectionBackground(true);
+  }
+
+  @Nonnull
   public static Color getTreeSelectionBackground(boolean focused) {
-    return focused ? getTreeSelectionBackground() : getTreeUnfocusedSelectionBackground();
+    return focused ? FocusedSelection.TREE_BACKGROUND : UnfocusedSelection.TREE_BACKGROUND;
   }
 
+  /**
+   * @deprecated use {@link #getTreeSelectionBackground(boolean)}
+   */
+  @Nonnull
+  @Deprecated
   public static Color getTreeUnfocusedSelectionBackground() {
-    Color background = getTreeTextBackground();
-    return ColorUtil.isDark(background) ? new JBColor(Gray._30, new Color(13, 41, 62)) : UNFOCUSED_SELECTION_COLOR;
+    return getTreeSelectionBackground(false);
   }
 
   public static Color getTextFieldForeground() {

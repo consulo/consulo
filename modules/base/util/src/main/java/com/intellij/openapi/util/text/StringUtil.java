@@ -3324,4 +3324,24 @@ public class StringUtil extends StringUtilRt {
   public static boolean startsWithConcatenationOf(@Nonnull String string, @Nonnull String firstPrefix, @Nonnull String secondPrefix) {
     return startsWithConcatenation(string, firstPrefix, secondPrefix);
   }
+
+  @Contract(pure = true)
+  public static int lastIndexOfIgnoreCase(@Nonnull String where, char what, int fromIndex) {
+    for (int i = Math.min(fromIndex, where.length() - 1); i >= 0; i--) {
+      if (charsEqualIgnoreCase(where.charAt(i), what)) {
+        return i;
+      }
+    }
+
+    return -1;
+  }
+
+  /**
+   * @return {@code text} with some standard XML entities replaced with corresponding characters, e.g. '{@code &lt;}' replaced with '<'
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static String unescapeXmlEntities(@Nonnull String text) {
+    return replace(text, REPLACES_REFS, REPLACES_DISP);
+  }
 }

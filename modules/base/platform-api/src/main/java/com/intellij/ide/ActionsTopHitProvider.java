@@ -18,7 +18,8 @@ package com.intellij.ide;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.Consumer;
+
+import java.util.function.Consumer;
 
 /**
  * @author Konstantin Bulenkov
@@ -30,7 +31,7 @@ public abstract class ActionsTopHitProvider implements SearchTopHitProvider {
     for (String[] strings : getActionsMatrix()) {
       if (StringUtil.isBetween(pattern, strings[0], strings[1])) {
         for (int i = 2; i < strings.length; i++) {
-          collector.consume(actionManager.getAction(strings[i]));
+          collector.accept(actionManager.getAction(strings[i]));
         }
       }
     }

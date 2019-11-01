@@ -19,6 +19,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiBundle;
 import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
+import javax.swing.*;
+
 public abstract class SearchScope {
   private static int hashCodeCounter = 0;
 
@@ -34,8 +37,14 @@ public abstract class SearchScope {
     return myHashCode;
   }
 
+  @Nonnull
   public String getDisplayName() {
     return PsiBundle.message("search.scope.unknown");
+  }
+
+  @Nullable
+  public Icon getIcon() {
+    return null;
   }
 
   @Nonnull

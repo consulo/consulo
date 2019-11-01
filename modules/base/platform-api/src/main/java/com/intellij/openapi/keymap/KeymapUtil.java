@@ -29,8 +29,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -231,6 +231,19 @@ public class KeymapUtil {
     Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(actionId);
     KeyboardShortcut shortcut = ContainerUtil.findInstance(shortcuts, KeyboardShortcut.class);
     return shortcut == null ? "" : getShortcutText(shortcut);
+  }
+
+  @Nonnull
+  public static String getFirstKeyboardShortcutText(@Nonnull ShortcutSet set) {
+    Shortcut[] shortcuts = set.getShortcuts();
+    KeyboardShortcut shortcut = ContainerUtil.findInstance(shortcuts, KeyboardShortcut.class);
+    return shortcut == null ? "" : getShortcutText(shortcut);
+  }
+
+  @Nonnull
+  public static String getPreferredShortcutText(@Nonnull Shortcut[] shortcuts) {
+    KeyboardShortcut shortcut = ContainerUtil.findInstance(shortcuts, KeyboardShortcut.class);
+    return shortcut != null ? getShortcutText(shortcut) : shortcuts.length > 0 ? getShortcutText(shortcuts[0]) : "";
   }
 
   @Nonnull

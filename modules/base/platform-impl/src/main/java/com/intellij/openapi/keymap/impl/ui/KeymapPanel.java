@@ -27,10 +27,7 @@ import com.intellij.openapi.actionSystem.ex.QuickListsManager;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import com.intellij.openapi.keymap.*;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
-import com.intellij.openapi.keymap.impl.ActionShortcutRestrictions;
-import com.intellij.openapi.keymap.impl.KeymapImpl;
-import com.intellij.openapi.keymap.impl.KeymapManagerImpl;
-import com.intellij.openapi.keymap.impl.ShortcutRestrictions;
+import com.intellij.openapi.keymap.impl.*;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
@@ -61,6 +58,7 @@ import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
@@ -480,6 +478,60 @@ public class KeymapPanel extends JPanel implements SearchableConfigurable, Confi
     createFilteringPanel();
     myFilterComponent.setFilter(option);
     myActionsTree.filter(option, getCurrentQuickListIds());
+  }
+
+  public static void addKeyboardShortcut(@Nonnull String actionId,
+                                         @Nonnull ShortcutRestrictions restrictions,
+                                         @Nonnull Keymap keymapSelected,
+                                         @Nonnull Component parent,
+                                         @Nonnull QuickList... quickLists) {
+    addKeyboardShortcut(actionId, restrictions, keymapSelected, parent, null, null, quickLists);
+  }
+
+  public static void addKeyboardShortcut(@Nonnull String actionId,
+                                         @Nonnull ShortcutRestrictions restrictions,
+                                         @Nonnull Keymap keymapSelected,
+                                         @Nonnull Component parent,
+                                         @Nullable KeyboardShortcut selectedShortcut,
+                                         @Nullable SystemShortcuts systemShortcuts,
+                                         @Nonnull QuickList... quickLists) {
+    if (!restrictions.allowKeyboardShortcut) return;
+    //KeyboardShortcutDialog dialog = new KeyboardShortcutDialog(parent, restrictions.allowKeyboardSecondStroke, systemShortcuts == null ? null : systemShortcuts.createKeystroke2SysShortcutMap());
+    //KeyboardShortcut keyboardShortcut = dialog.showAndGet(actionId, keymapSelected, selectedShortcut, quickLists);
+    //if (keyboardShortcut == null) return;
+    //
+    //SafeKeymapAccessor accessor = new SafeKeymapAccessor(parent, keymapSelected);
+    //if (dialog.hasConflicts()) {
+    //  int result = showConfirmationDialog(parent);
+    //  if (result == Messages.YES) {
+    //    Keymap keymap = accessor.keymap();
+    //    Map<String, List<KeyboardShortcut>> conflicts = keymap.getConflicts(actionId, keyboardShortcut);
+    //    for (String id : conflicts.keySet()) {
+    //      for (KeyboardShortcut s : conflicts.get(id)) {
+    //        keymap.removeShortcut(id, s);
+    //      }
+    //    }
+    //  }
+    //  else if (result != Messages.NO) {
+    //    return;
+    //  }
+    //}
+    //if (systemShortcuts != null) { // check conflicts with system shortcuts
+    //  final Keymap keymap = accessor.keymap();
+    //  final Map<KeyboardShortcut, String> kscs = systemShortcuts.calculateConflicts(keymap, actionId);
+    //  if (kscs != null && !kscs.isEmpty()) {
+    //    for (KeyboardShortcut ksc : kscs.keySet()) {
+    //      final int result = Messages.showYesNoCancelDialog(parent, "Action shortcut " + ksc + " is already assigned to system action '" + kscs.get(ksc) + "' . Do you want to remove this shortcut?",
+    //                                                        KeyMapBundle.message("conflict.shortcut.dialog.title"), KeyMapBundle.message("conflict.shortcut.dialog.remove.button"), KeyMapBundle.message("conflict.shortcut.dialog.leave.button"),
+    //                                                        KeyMapBundle.message("conflict.shortcut.dialog.cancel.button"), Messages.getWarningIcon());
+    //      if (result == Messages.YES) {
+    //        keymap.removeShortcut(actionId, ksc);
+    //      }
+    //    }
+    //  }
+    //}
+    //accessor.add(actionId, keyboardShortcut);
+    //if (systemShortcuts != null) systemShortcuts.updateKeymapConflicts(accessor.keymap());
   }
 
   private void addKeyboardShortcut(Shortcut shortcut) {
@@ -902,7 +954,7 @@ public class KeymapPanel extends JPanel implements SearchableConfigurable, Confi
     final Shortcut[] shortcuts = mySelectedKeymap.getShortcuts(actionId);
     final Set<String> abbreviations = AbbreviationManager.getInstance().getAbbreviations(actionId);
 
-    final ShortcutRestrictions restrictions = ActionShortcutRestrictions.getForActionId(actionId);
+    final ShortcutRestrictions restrictions = ActionShortcutRestrictions.getInstance().getForActionId(actionId);
 
     if (restrictions.allowKeyboardShortcut) {
       group.add(new DumbAwareAction("Add Keyboard Shortcut") {

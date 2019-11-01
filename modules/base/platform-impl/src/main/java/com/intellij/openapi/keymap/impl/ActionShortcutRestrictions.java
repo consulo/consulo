@@ -16,11 +16,18 @@
 package com.intellij.openapi.keymap.impl;
 
 import com.intellij.openapi.actionSystem.IdeActions;
+
 import javax.annotation.Nonnull;
 
 public class ActionShortcutRestrictions {
+  private static final ActionShortcutRestrictions ourInstance = new ActionShortcutRestrictions();
+
+  public static ActionShortcutRestrictions getInstance() {
+    return ourInstance;
+  }
+
   @Nonnull
-  public static ShortcutRestrictions getForActionId(String actionId) {
+  public ShortcutRestrictions getForActionId(String actionId) {
     if (IdeActions.ACTION_EDITOR_ADD_OR_REMOVE_CARET.equals(actionId)) {
       return new ShortcutRestrictions(true, false, false, false);
     }

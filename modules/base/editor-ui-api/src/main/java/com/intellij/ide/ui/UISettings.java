@@ -540,6 +540,14 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     return HIDE_NAVIGATION_ON_FOCUS_LOSS;
   }
 
+  public boolean getShowIconsInMenus() {
+    return SHOW_ICONS_IN_MENUS;
+  }
+
+  public boolean getShowInplaceCommentsInternal() {
+    return false;
+  }
+
   /**
    * @see #setupComponentAntialiasing(JComponent)
    */

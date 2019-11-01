@@ -22,7 +22,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
-import consulo.logging.Logger;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -41,10 +40,11 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotations.RequiredWriteAction;
 import consulo.component.PersistentStateComponentWithUIState;
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 import org.jdom.Element;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -238,6 +238,21 @@ public final class EditorHistoryManager implements PersistentStateComponentWithU
       // if the file occurs several times in the history, only its last occurrence counts
       result.remove(file);
       result.add(file);
+    }
+    return result;
+  }
+
+  /**
+   * @return a set of valid files that are in the history, oldest first.
+   */
+  @Nonnull
+  public synchronized List<VirtualFile> getFileList() {
+    List<VirtualFile> result = new ArrayList<>();
+    for (HistoryEntry entry : myEntriesList) {
+      VirtualFile file = entry.getFile();
+      if (file != null) {
+        result.add(file);
+      }
     }
     return result;
   }

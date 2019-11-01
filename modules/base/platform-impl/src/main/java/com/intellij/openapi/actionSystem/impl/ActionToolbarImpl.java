@@ -37,7 +37,6 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.ui.switcher.QuickActionProvider;
-import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
@@ -272,24 +271,15 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
     mySecondaryButtonPopupStateModifier = popupStateModifier;
   }
 
-  private void fillToolBar(final List<AnAction> actions, boolean layoutSecondaries) {
+  private void fillToolBar(@Nonnull final List<? extends AnAction> actions, boolean layoutSecondaries) {
+    boolean isLastElementSeparator = false;
     final List<AnAction> rightAligned = new ArrayList<>();
-    if (myAddSeparatorFirst) {
-      add(new MySeparator());
-    }
     for (int i = 0; i < actions.size(); i++) {
       final AnAction action = actions.get(i);
       if (action instanceof RightAlignedToolbarAction) {
         rightAligned.add(action);
         continue;
       }
-//      if (action instanceof Separator && isNavBar()) {
-//        continue;
-//      }
-
-      //if (action instanceof ComboBoxAction) {
-      //  ((ComboBoxAction)action).setSmallVariant(true);
-      //}
 
       if (layoutSecondaries) {
         if (!myActionGroup.isPrimary(action)) {
@@ -299,8 +289,11 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
       }
 
       if (action instanceof AnSeparator) {
+        if (isLastElementSeparator) continue;
         if (i > 0 && i < actions.size() - 1) {
           add(new MySeparator());
+          isLastElementSeparator = true;
+          continue;
         }
       }
       else if (action instanceof CustomComponentAction) {
@@ -309,47 +302,37 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
       else {
         add(createToolbarButton(action));
       }
+      isLastElementSeparator = false;
     }
 
     if (mySecondaryActions.getChildrenCount() > 0) {
-      mySecondaryActionsButton =
-              new ActionButton(mySecondaryActions, myPresentationFactory.getPresentation(mySecondaryActions), myPlace, getMinimumButtonSize()) {
-                @Override
-                @ButtonState
-                public int getPopState() {
-                  return mySecondaryButtonPopupStateModifier != null && mySecondaryButtonPopupStateModifier.willModify() ? mySecondaryButtonPopupStateModifier
-                          .getModifiedPopupState() : super.getPopState();
-                }
-              };
+      mySecondaryActionsButton = new ActionButton(mySecondaryActions, myPresentationFactory.getPresentation(mySecondaryActions), myPlace, getMinimumButtonSize()) {
+        @Override
+        @ButtonState
+        public int getPopState() {
+          return mySecondaryButtonPopupStateModifier != null && mySecondaryButtonPopupStateModifier.willModify() ? mySecondaryButtonPopupStateModifier.getModifiedPopupState() : super.getPopState();
+        }
+      };
       mySecondaryActionsButton.setNoIconsInPopup(true);
       add(mySecondaryActionsButton);
     }
 
     for (AnAction action : rightAligned) {
       JComponent button = action instanceof CustomComponentAction ? getCustomComponent(action) : createToolbarButton(action);
-      button.putClientProperty(RIGHT_ALIGN_KEY, Boolean.TRUE);
+      if (!isInsideNavBar()) {
+        button.putClientProperty(RIGHT_ALIGN_KEY, Boolean.TRUE);
+      }
       add(button);
     }
-    //if ((ActionPlaces.MAIN_TOOLBAR.equals(myPlace) || ActionPlaces.NAVIGATION_BAR_TOOLBAR.equals(myPlace))) {
-    //  final AnAction searchEverywhereAction = ActionManager.getInstance().getAction("SearchEverywhere");
-    //  if (searchEverywhereAction != null) {
-    //    try {
-    //      final CustomComponentAction searchEveryWhereAction = (CustomComponentAction)searchEverywhereAction;
-    //      final JComponent searchEverywhere = searchEveryWhereAction.createCustomComponent(searchEverywhereAction.getTemplatePresentation());
-    //      searchEverywhere.putClientProperty("SEARCH_EVERYWHERE", Boolean.TRUE);
-    //      add(searchEverywhere);
-    //    }
-    //    catch (Exception ignore) {}
-    //  }
-    //}
   }
 
   private JComponent getCustomComponent(AnAction action) {
     Presentation presentation = myPresentationFactory.getPresentation(action);
-    JComponent customComponent = ObjectUtils.tryCast(presentation.getClientProperty(CustomComponentAction.CUSTOM_COMPONENT_PROPERTY), JComponent.class);
+    JComponent customComponent = presentation.getClientProperty(CustomComponentAction.COMPONENT_KEY);
     if (customComponent == null) {
-      customComponent = ((CustomComponentAction)action).createCustomComponent(presentation);
-      presentation.putClientProperty(CustomComponentAction.CUSTOM_COMPONENT_PROPERTY, customComponent);
+      customComponent = ((CustomComponentAction)action).createCustomComponent(presentation, myPlace);
+      presentation.putClientProperty(CustomComponentAction.COMPONENT_KEY, customComponent);
+      UIUtil.putClientProperty(customComponent, CustomComponentAction.ACTION_KEY, action);
     }
     if (customComponent instanceof JCheckBox) {
       customComponent.setBorder(JBUI.Borders.empty(0, 9, 0, 0));
@@ -743,7 +726,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
   /**
    * Calculates bounds of all the components in the toolbar
    */
-  private void calculateBounds(Dimension size2Fit, List<Rectangle> bounds) {
+  private void calculateBounds(@Nonnull Dimension size2Fit, @Nonnull List<Rectangle> bounds) {
     bounds.clear();
     for (int i = 0; i < getComponentCount(); i++) {
       bounds.add(new Rectangle());
@@ -769,20 +752,36 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
         maxHeight = Math.max(maxHeight, bounds.get(i).height);
       }
 
+      int rightOffset = 0;
+      Insets insets = getInsets();
       for (int i = getComponentCount() - 1, j = 1; i > 0; i--, j++) {
         final Component component = getComponent(i);
         if (component instanceof JComponent && ((JComponent)component).getClientProperty(RIGHT_ALIGN_KEY) == Boolean.TRUE) {
-          bounds.set(bounds.size() - j, new Rectangle(size2Fit.width - j * JBUI.scale(25), 0, JBUI.scale(25), maxHeight));
+          rightOffset += bounds.get(i).width;
+          Rectangle r = bounds.get(bounds.size() - j);
+          r.x = size2Fit.width - rightOffset;
+          r.y = insets.top + (getHeight() - insets.top - insets.bottom - bounds.get(i).height) / 2;
         }
       }
     }
   }
 
   @Override
+  @Nonnull
   public Dimension getPreferredSize() {
     final ArrayList<Rectangle> bounds = new ArrayList<>();
-    calculateBounds(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE), bounds);
+    calculateBounds(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE), bounds);//it doesn't take into account wrapping
     if (bounds.isEmpty()) return JBUI.emptySize();
+    int forcedHeight = 0;
+    if (getWidth() > 0 && getLayoutPolicy() == ActionToolbar.WRAP_LAYOUT_POLICY && myOrientation == SwingConstants.HORIZONTAL) {
+      final ArrayList<Rectangle> limitedBounds = new ArrayList<>();
+      calculateBounds(new Dimension(getWidth(), Integer.MAX_VALUE), limitedBounds);
+      Rectangle union = null;
+      for (Rectangle bound : limitedBounds) {
+        union = union == null ? bound : union.union(bound);
+      }
+      forcedHeight = union != null ? union.height : 0;
+    }
     int xLeft = Integer.MAX_VALUE;
     int yTop = Integer.MAX_VALUE;
     int xRight = Integer.MIN_VALUE;
@@ -795,9 +794,9 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
       xRight = Math.max(xRight, each.x + each.width);
       yBottom = Math.max(yBottom, each.y + each.height);
     }
-    final Dimension dimension = new Dimension(xRight - xLeft, yBottom - yTop);
+    final Dimension dimension = new Dimension(xRight - xLeft, Math.max(yBottom - yTop, forcedHeight));
 
-    if (myLayoutPolicy == AUTO_LAYOUT_POLICY && myReservePlaceAutoPopupIcon) {
+    if (myLayoutPolicy == AUTO_LAYOUT_POLICY && myReservePlaceAutoPopupIcon && !isInsideNavBar()) {
       if (myOrientation == SwingConstants.HORIZONTAL) {
         dimension.width += AllIcons.Ide.Link.getIconWidth();
       }

@@ -20,8 +20,8 @@
 package com.intellij.psi.search;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
 
 public class EverythingGlobalScope extends GlobalSearchScope {
@@ -30,6 +30,12 @@ public class EverythingGlobalScope extends GlobalSearchScope {
   }
 
   public EverythingGlobalScope() {
+  }
+
+  @Nonnull
+  @Override
+  public String getDisplayName() {
+    return "All Places";
   }
 
   @Override

@@ -40,6 +40,12 @@ public class CoreProjectScopeBuilder extends ProjectScopeBuilder {
     myLibrariesScope = new CoreLibrariesScope();
   }
 
+  @Nonnull
+  @Override
+  public GlobalSearchScope buildEverythingScope() {
+    return new EverythingGlobalScope(myProject);
+  }
+
   @Override
   public GlobalSearchScope buildLibrariesScope() {
     return myLibrariesScope;

@@ -19,7 +19,8 @@ import com.intellij.ide.SearchTopHitProvider;
 import com.intellij.ide.ui.search.OptionDescription;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.Consumer;
+
+import java.util.function.Consumer;
 
 /**
  * @author Konstantin Bulenkov
@@ -45,26 +46,26 @@ public class UISimpleSettingsProvider implements SearchTopHitProvider, OptionsTo
   public void consumeTopHits(String pattern, Consumer<Object> collector, Project project) {
     pattern = pattern.trim().toLowerCase();
     if (StringUtil.isBetween(pattern, "cyc", "cyclic ") || StringUtil.isBetween(pattern, "scr", "scroll ")) {
-      collector.consume(CYCLING_SCROLLING);
+      collector.accept(CYCLING_SCROLLING);
     } else if (patternContains(pattern, "memo")) {
-      collector.consume(MEMORY_INDICATOR);
+      collector.accept(MEMORY_INDICATOR);
     } else if (StringUtil.isBetween(pattern, "nav", "navigation bar ") || StringUtil.isBetween(pattern, "navb", "navbar ")) {
-      collector.consume(SHOW_NAVIGATION_BAR);
+      collector.accept(SHOW_NAVIGATION_BAR);
     } else if (StringUtil.isBetween(pattern, "tool", "toolbar ")) {
-      collector.consume(SHOW_MAIN_TOOLBAR);
+      collector.accept(SHOW_MAIN_TOOLBAR);
     } else if (StringUtil.isBetween(pattern, "tool w", "tool window bars") || StringUtil.isBetween(pattern, "toolw", "toolwindow ")) {
-      collector.consume(HIDE_TOOL_STRIPES);
+      collector.accept(HIDE_TOOL_STRIPES);
     } else if (StringUtil.isBetween(pattern, "stat", "status bar ")) {
-      collector.consume(SHOW_STATUS_BAR);
+      collector.accept(SHOW_STATUS_BAR);
     } else if (StringUtil.isBetween(pattern, "curs", "cursor ") || StringUtil.isBetween(pattern, "block ", "block cursor ")
                || StringUtil.isBetween(pattern, "caret", "caret ") || StringUtil.isBetween(pattern, "block ", "block caret ")) {
-      collector.consume(IS_BLOCK_CURSOR);
+      collector.accept(IS_BLOCK_CURSOR);
     } else if (StringUtil.isBetween(pattern, "whites", "whitespaces ") || StringUtil.isBetween(pattern, "show whi", "show whitespaces ")) {
-      collector.consume(IS_WHITESPACES_SHOWN);
+      collector.accept(IS_WHITESPACES_SHOWN);
     } else if (StringUtil.isBetween(pattern, "line ", "line numbers ") || StringUtil.isBetween(pattern, "show li", "show line numbers ")) {
-      collector.consume(ARE_LINE_NUMBERS_SHOWN);
+      collector.accept(ARE_LINE_NUMBERS_SHOWN);
     } else if (StringUtil.isBetween(pattern, "separa ", "separators ") || StringUtil.isBetween(pattern, "method s", "method separators ")) {
-      collector.consume(SHOW_METHOD_SEPARATORS);
+      collector.accept(SHOW_METHOD_SEPARATORS);
     }
   }
 

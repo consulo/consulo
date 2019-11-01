@@ -1301,6 +1301,24 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   }
 
   @Nonnull
+  public Map<ConfigurationType, Map<String, List<RunnerAndConfigurationSettings>>> getConfigurationsGroupedByTypeAndFolder(boolean isIncludeUnknown) {
+    Map<ConfigurationType, Map<String, List<RunnerAndConfigurationSettings>>> result = new LinkedHashMap<>();
+
+    for (RunnerAndConfigurationSettings settings : getAllSettings()) {
+      ConfigurationType type = settings.getType();
+
+      if (!isIncludeUnknown && type == UnknownConfigurationType.INSTANCE) {
+        continue;
+      }
+
+      Map<String, List<RunnerAndConfigurationSettings>> groupAndSettings = result.computeIfAbsent(type, configurationType -> new LinkedHashMap<>());
+
+      groupAndSettings.computeIfAbsent(settings.getFolderName(), s -> new SmartList<>()).add(settings);
+    }
+    return result;
+  }
+
+  @Nonnull
   private synchronized Key<? extends BeforeRunTask> getProviderKey(String keyString) {
     if (myProviderKeysMap == null) {
       initProviderMaps();
