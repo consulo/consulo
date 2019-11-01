@@ -39,7 +39,6 @@ import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.*;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
@@ -53,6 +52,7 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Alarm;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ObjectUtil;
+import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.PositionTracker;
@@ -442,7 +442,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
   private void restartWaitingForSecondPressAlarm() {
     myWaiterForSecondPress.cancelAllRequests();
-    myWaiterForSecondPress.addRequest(mySecondPressRunnable, Registry.intValue("actionSystem.keyGestureDblClickTime"));
+    myWaiterForSecondPress.addRequest(mySecondPressRunnable, SystemProperties.getIntProperty("actionSystem.keyGestureDblClickTime", 650));
   }
 
   @Nonnull
