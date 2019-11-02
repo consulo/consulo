@@ -23,6 +23,7 @@ package com.intellij.ide.todo;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.scopeChooser.ScopeChooserCombo;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.content.Content;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.JBUI;
@@ -57,6 +58,7 @@ public class ScopeBasedTodosPanel extends TodoPanel {
     panel.add(component, BorderLayout.CENTER);
     String preselect = PropertiesComponent.getInstance(myProject).getValue(SELECTED_SCOPE);
     myScopes = new ScopeChooserCombo(myProject, false, true, preselect);
+    Disposer.register(this, myScopes);
     myScopes.setCurrentSelection(false);
     myScopes.setUsageView(false);
 
