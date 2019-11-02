@@ -15,10 +15,11 @@
  */
 package consulo.injecting.pico;
 
-import consulo.logging.Logger;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.util.ExceptionUtil;
 import consulo.injecting.PostInjectListener;
 import consulo.injecting.key.InjectingKey;
+import consulo.logging.Logger;
 import org.picocontainer.*;
 
 import javax.annotation.Nonnull;
@@ -31,7 +32,7 @@ import java.util.function.Function;
  * @since 2018-08-23
  */
 class BaseComponentAdapter<T> implements ComponentAdapter {
-  private static final Logger LOGGER = Logger.getInstance(BaseComponentAdapter.class);
+  private static final Logger LOG = Logger.getInstance(BaseComponentAdapter.class);
 
   private final InjectingKey<T> myInterfaceKey;
 
@@ -40,7 +41,8 @@ class BaseComponentAdapter<T> implements ComponentAdapter {
   private InjectingKey<? extends T> myImplementationKey;
 
   @Nonnull
-  private PostInjectListener<T> myAfterInjectionListener = (time, object) -> {};
+  private PostInjectListener<T> myAfterInjectionListener = (time, object) -> {
+  };
 
   private Function<Provider<T>, T> myRemap = Provider::get;
 
@@ -105,7 +107,7 @@ class BaseComponentAdapter<T> implements ComponentAdapter {
       String creationTrace = myCreationTrace;
       if (creationTrace != null) {
         String currentTrace = exceptionText("current trace");
-        LOGGER.error("Cycle initialization: " + targetClass.getName() + "\n" + currentTrace + ",\n\n" + creationTrace);
+        LOG.error("Cycle initialization: " + targetClass.getName() + "\n" + currentTrace + ",\n\n" + creationTrace);
       }
 
       if (isSingleton) {
@@ -121,12 +123,18 @@ class BaseComponentAdapter<T> implements ComponentAdapter {
         try {
           myAfterInjectionListener.afterInject(l, instance);
         }
+        catch (ProcessCanceledException e) {
+          throw e;
+        }
         catch (Throwable t) {
-          LOGGER.error("Problem with after inject: " + targetClass.getName(), t);
+          LOG.error("Problem with after inject: " + targetClass.getName(), t);
         }
       }
+      catch (ProcessCanceledException e) {
+        throw e;
+      }
       catch (Throwable t) {
-        LOGGER.error("Problem with initializing: " + targetClass.getName(), t);
+        LOG.error("Problem with initializing: " + targetClass.getName(), t);
       }
       finally {
         if (isSingleton) {
@@ -137,7 +145,7 @@ class BaseComponentAdapter<T> implements ComponentAdapter {
     }
 
     if (isSingleton && !isAnnotationSingleton) {
-      LOGGER.warn("Class " + targetClass.getName() + " is not annotated by @Singleton");
+      LOG.warn("Class " + targetClass.getName() + " is not annotated by @Singleton");
     }
 
     return instance;
