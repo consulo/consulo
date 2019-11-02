@@ -166,7 +166,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
     final String pattern;
 
     public MatchedValue(@Nonnull Object value, @Nonnull String pattern) {
-      assert value instanceof OptionDescription || value instanceof ActionWrapper;
+      assert value instanceof OptionDescription || value instanceof ActionWrapper : "unknown value: " + value.getClass();
       this.value = value;
       this.pattern = pattern;
     }
