@@ -58,7 +58,9 @@ public abstract class Executor {
   public abstract String getStartActionText();
 
   @NonNls
-  public abstract String getContextActionId();
+  public String getContextActionId() {
+    return "Context" + getId();
+  }
 
   @NonNls
   public abstract String getHelpId();

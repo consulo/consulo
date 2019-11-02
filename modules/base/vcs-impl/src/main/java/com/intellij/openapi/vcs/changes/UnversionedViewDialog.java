@@ -23,9 +23,8 @@ import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.changes.ui.ChangesListView;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.List;
 
@@ -76,10 +75,7 @@ public class UnversionedViewDialog extends SpecificFilesViewDialog {
 
   @Nonnull
   public static List<AnAction> registerUnversionedActionsShortcuts(@Nonnull DataContext dataContext, @Nonnull JComponent component) {
-    ActionManager manager = ActionManager.getInstance();
-    List<AnAction> actions = ContainerUtil.newArrayList();
-
-    Utils.expandActionGroup(LaterInvocator.isInModalContext(), getUnversionedActionGroup(), actions, new PresentationFactory(), dataContext, "", manager);
+    List<AnAction> actions = Utils.expandActionGroup(LaterInvocator.isInModalContext(), getUnversionedActionGroup(), new PresentationFactory(), dataContext, "");
     for (AnAction action : actions) {
       action.registerCustomShortcutSet(action.getShortcutSet(), component);
     }

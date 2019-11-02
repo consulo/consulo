@@ -17,8 +17,8 @@ package com.intellij.openapi.actionSystem;
 
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -193,6 +193,12 @@ public final class EmptyAction extends AnAction {
     @Override
     public boolean disableIfNoVisibleChildren() {
       return myDelegate.disableIfNoVisibleChildren();
+    }
+  }
+
+  public static class DelegatingCompactActionGroup extends MyDelegatingActionGroup implements CompactActionGroup {
+    public DelegatingCompactActionGroup(@Nonnull ActionGroup action) {
+      super(action);
     }
   }
 }

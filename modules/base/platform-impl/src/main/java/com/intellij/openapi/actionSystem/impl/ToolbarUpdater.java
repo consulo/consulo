@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2014 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.actionSystem.impl;
 
 import com.intellij.openapi.actionSystem.TimerListener;
@@ -49,14 +35,14 @@ public abstract class ToolbarUpdater implements Activatable {
   private boolean myListenersArmed;
 
   public ToolbarUpdater(@Nonnull JComponent component) {
-    this(ActionManagerEx.getInstanceEx(), KeymapManagerEx.getInstanceEx(), component);
+    this(KeymapManagerEx.getInstanceEx(), component);
   }
 
-  public ToolbarUpdater(@Nonnull ActionManagerEx actionManager, @Nonnull KeymapManagerEx keymapManager, @Nonnull JComponent component) {
-    myActionManager = actionManager;
+  public ToolbarUpdater(@Nonnull KeymapManagerEx keymapManager, @Nonnull JComponent component) {
+    myActionManager = ActionManagerEx.getInstanceEx();
     myKeymapManager = keymapManager;
     myComponent = component;
-    myWeakTimerListener = new WeakTimerListener(actionManager, myTimerListener);
+    myWeakTimerListener = new WeakTimerListener(myTimerListener);
     new UiNotifyConnector(component, this);
   }
 
@@ -97,23 +83,18 @@ public abstract class ToolbarUpdater implements Activatable {
     final Runnable updateRunnable = new MyUpdateRunnable(this, transparentOnly, forced);
     final Application app = ApplicationManager.getApplication();
 
-    if (now || app.isUnitTestMode()) {
+    if (now || (app.isUnitTestMode() && app.isDispatchThread())) {
       updateRunnable.run();
     }
     else {
       final IdeFocusManager fm = IdeFocusManager.getInstance(null);
 
       if (!app.isHeadlessEnvironment()) {
-        if (app.isDispatchThread()) {
+        if (app.isDispatchThread() && myComponent.isShowing()) {
           fm.doWhenFocusSettlesDown(updateRunnable);
         }
         else {
-          UiNotifyConnector.doWhenFirstShown(myComponent, new Runnable() {
-            @Override
-            public void run() {
-              fm.doWhenFocusSettlesDown(updateRunnable);
-            }
-          });
+          UiNotifyConnector.doWhenFirstShown(myComponent, () -> fm.doWhenFocusSettlesDown(updateRunnable));
         }
       }
     }
@@ -122,7 +103,7 @@ public abstract class ToolbarUpdater implements Activatable {
   protected abstract void updateActionsImpl(boolean transparentOnly, boolean forced);
 
   protected void updateActionTooltips() {
-    for (ActionButton actionButton : UIUtil.uiTraverser().withRoot(myComponent).preOrderDfsTraversal().filter(ActionButton.class)) {
+    for (ActionButton actionButton : UIUtil.uiTraverser(myComponent).preOrderDfsTraversal().filter(ActionButton.class)) {
       actionButton.updateToolTipText();
     }
   }
@@ -172,12 +153,12 @@ public abstract class ToolbarUpdater implements Activatable {
     private final WeakReference<ToolbarUpdater> myUpdaterRef;
     private final int myHash;
 
-    public MyUpdateRunnable(@Nonnull ToolbarUpdater updater, boolean transparentOnly, boolean forced) {
+    MyUpdateRunnable(@Nonnull ToolbarUpdater updater, boolean transparentOnly, boolean forced) {
       myTransparentOnly = transparentOnly;
       myForced = forced;
       myHash = updater.hashCode();
 
-      myUpdaterRef = new WeakReference<ToolbarUpdater>(updater);
+      myUpdaterRef = new WeakReference<>(updater);
     }
 
     @Override
@@ -185,7 +166,7 @@ public abstract class ToolbarUpdater implements Activatable {
       ToolbarUpdater updater = myUpdaterRef.get();
       if (updater == null) return;
 
-      if (!updater.myComponent.isVisible()) {
+      if (!updater.myComponent.isVisible() && !ApplicationManager.getApplication().isUnitTestMode()) {
         return;
       }
 

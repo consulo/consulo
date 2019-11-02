@@ -15,6 +15,7 @@
  */
 package com.intellij.ide;
 
+import com.intellij.openapi.actionSystem.AsyncDataContext;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.Application;
@@ -38,6 +39,9 @@ public abstract class DataManager {
    */
   @Nonnull
   public abstract DataContext getDataContext();
+
+  @Nonnull
+  public abstract AsyncDataContext createAsyncDataContext(@Nonnull DataContext dataContext);
 
   /**
    * @return {@link DataContext} constructed by the currently focused component.

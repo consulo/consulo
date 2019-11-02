@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.actionSystem.impl;
 
 import com.intellij.ide.DataManager;
@@ -21,43 +7,34 @@ import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.application.ModalityState;
 import consulo.ide.base.BaseDataManager;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-/**
- * extended by fabrique
- */
-public class ButtonToolbarImpl extends JPanel {
-
+class ButtonToolbarImpl extends JPanel {
   private final DataManager myDataManager;
   private final String myPlace;
   private final PresentationFactory myPresentationFactory;
-  private final ArrayList<ActionJButton> myActions = new ArrayList<ActionJButton>();
+  private final ArrayList<ActionJButton> myActions = new ArrayList<>();
 
-  public ButtonToolbarImpl(final String place,
-                           final ActionGroup actionGroup,
-                           DataManager dataManager,
-                           ActionManagerEx actionManager) {
+  ButtonToolbarImpl(@Nonnull String place, @Nonnull ActionGroup actionGroup) {
     super(new GridBagLayout());
     myPlace = place;
     myPresentationFactory = new PresentationFactory();
-    myDataManager = dataManager;
+    myDataManager = DataManager.getInstance();
 
     initButtons(actionGroup);
 
     updateActions();
-    //
-    actionManager.addTimerListener(500, new WeakTimerListener(actionManager, new MyTimerListener()));
-    enableEvents(MouseEvent.MOUSE_MOTION_EVENT_MASK | MouseEvent.MOUSE_EVENT_MASK);
-
+    ActionManagerEx.getInstanceEx().addTimerListener(500, new WeakTimerListener(new MyTimerListener()));
+    enableEvents(AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_EVENT_MASK);
   }
 
-  private void initButtons(final ActionGroup actionGroup) {
+  private void initButtons(@Nonnull ActionGroup actionGroup) {
     final AnAction[] actions = actionGroup.getChildren(null);
 
     if (actions.length > 0) {
@@ -65,18 +42,11 @@ public class ButtonToolbarImpl extends JPanel {
 
 
       add(// left strut
-                Box.createHorizontalGlue(),
-                new GridBagConstraints(gridx++, 0, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-                                       new Insets(8, 0, 0, 0), 0, 0));
-      if (actions.length > 0) {
-        JPanel buttonsPanel = createButtons(actions);
-        //noinspection UnusedAssignment
-        add(buttonsPanel,
-                  new GridBagConstraints(gridx++, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-                                         new Insets(8, 0, 0, 0), 0, 0));
-      }
+          Box.createHorizontalGlue(), new GridBagConstraints(gridx++, 0, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(8, 0, 0, 0), 0, 0));
+      JPanel buttonsPanel = createButtons(actions);
+      //noinspection UnusedAssignment
+      add(buttonsPanel, new GridBagConstraints(gridx++, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(8, 0, 0, 0), 0, 0));
     }
-
   }
 
   private JPanel createButtons(AnAction[] actions) {
@@ -96,22 +66,17 @@ public class ButtonToolbarImpl extends JPanel {
   private class ActionJButton extends JButton {
     private final AnAction myAction;
 
-    public ActionJButton(final AnAction action) {
+    ActionJButton(final AnAction action) {
       super(action.getTemplatePresentation().getText());
       myAction = action;
       setMnemonic(action.getTemplatePresentation().getMnemonic());
       setDisplayedMnemonicIndex(action.getTemplatePresentation().getDisplayedMnemonicIndex());
 
       addActionListener(new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
-          AnActionEvent event = new AnActionEvent(
-            null,
-            ((BaseDataManager)myDataManager).getDataContextTest(ButtonToolbarImpl.this),
-            myPlace,
-            myPresentationFactory.getPresentation(action),
-            ActionManager.getInstance(),
-            e.getModifiers()
-          );
+          AnActionEvent event = new AnActionEvent(null, ((BaseDataManager)DataManager.getInstance()).getDataContextTest(ButtonToolbarImpl.this), myPlace, myPresentationFactory.getPresentation(action),
+                                                  ActionManager.getInstance(), e.getModifiers());
           if (ActionUtil.lastUpdateAndCheckDumb(action, event, false)) {
             ActionUtil.performActionDumbAware(action, event);
           }
@@ -121,14 +86,7 @@ public class ButtonToolbarImpl extends JPanel {
     }
 
     public void updateAction(final DataContext dataContext) {
-      AnActionEvent event = new AnActionEvent(
-        null,
-        dataContext,
-        myPlace,
-        myPresentationFactory.getPresentation(myAction),
-        ActionManager.getInstance(),
-        0
-      );
+      AnActionEvent event = new AnActionEvent(null, dataContext, myPlace, myPresentationFactory.getPresentation(myAction), ActionManager.getInstance(), 0);
       event.setInjectedContext(myAction.isInInjectedContext());
       myAction.update(event);
       setVisible(event.getPresentation().isVisible());
@@ -137,10 +95,12 @@ public class ButtonToolbarImpl extends JPanel {
   }
 
   private final class MyTimerListener implements TimerListener {
+    @Override
     public ModalityState getModalityState() {
       return ModalityState.stateForComponent(ButtonToolbarImpl.this);
     }
 
+    @Override
     public void run() {
       if (!isShowing()) {
         return;
@@ -170,9 +130,8 @@ public class ButtonToolbarImpl extends JPanel {
     }
   }
 
-  public void updateActions() {
+  private void updateActions() {
     final DataContext dataContext = ((BaseDataManager)myDataManager).getDataContextTest(this);
-
     for (ActionJButton action : myActions) {
       action.updateAction(dataContext);
     }

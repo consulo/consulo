@@ -132,4 +132,10 @@ public interface ActionToolbar {
 
   default void setSecondaryActionsIcon(Image icon, boolean hideDropdownIcon) {
   }
+
+  /**
+   * Enables showing titles of separators as labels in the toolbar (off by default).
+   */
+  default void setShowSeparatorTitles(boolean showSeparatorTitles) {
+  }
 }

@@ -15,8 +15,8 @@ import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.desktop.util.awt.component.VerticalLayoutPanel;
 import gnu.trove.TDoubleObjectHashMap;
 import kava.beans.PropertyChangeListener;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -826,6 +826,11 @@ public class JBUI {
     @Nonnull
     public static JBFont create(String fontFamily, int size) {
       return JBFont.create(new Font(fontFamily, Font.PLAIN, size));
+    }
+
+    @Nonnull
+    public static JBFont toolbarSmallComboBoxFont() {
+      return label(11);
     }
 
     @Nonnull

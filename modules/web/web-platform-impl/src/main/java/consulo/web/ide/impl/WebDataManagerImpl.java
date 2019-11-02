@@ -15,6 +15,7 @@
  */
 package consulo.web.ide.impl;
 
+import com.intellij.openapi.actionSystem.AsyncDataContext;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.wm.WindowManager;
 import consulo.ide.base.BaseDataManager;
@@ -40,6 +41,12 @@ public class WebDataManagerImpl extends BaseDataManager {
   @Override
   public DataContext getDataContext() {
     return new MyUIDataContext(this, null);
+  }
+
+  @Nonnull
+  @Override
+  public AsyncDataContext createAsyncDataContext(@Nonnull DataContext dataContext) {
+    throw new UnsupportedOperationException();
   }
 
   @Override

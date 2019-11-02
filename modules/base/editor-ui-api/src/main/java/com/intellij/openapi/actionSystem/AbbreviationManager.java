@@ -16,6 +16,7 @@
 package com.intellij.openapi.actionSystem;
 
 import com.intellij.openapi.components.ServiceManager;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Set;
@@ -28,9 +29,16 @@ public abstract class AbbreviationManager {
   public static AbbreviationManager getInstance() {
     return ServiceManager.getService(AbbreviationManager.class);
   }
+
   public abstract Set<String> getAbbreviations();
+
   public abstract Set<String> getAbbreviations(String actionId);
+
   public abstract List<String> findActions(String abbreviation);
+
   public abstract void register(String abbreviation, String actionId);
+
   public abstract void remove(String abbreviation, String actionId);
+
+  public abstract void removeAllAbbreviations(@Nonnull String actionId);
 }

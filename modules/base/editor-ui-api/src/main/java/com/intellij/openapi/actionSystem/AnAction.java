@@ -31,8 +31,8 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
 import org.intellij.lang.annotations.JdkConstants;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
@@ -78,7 +78,7 @@ public abstract class AnAction implements PossiblyDumbAware {
   public static final Key<List<AnAction>> ACTIONS_KEY = Key.create("AnAction.shortcutSet");
 
   private Presentation myTemplatePresentation;
-  private ShortcutSet myShortcutSet;
+  private ShortcutSet myShortcutSet = CustomShortcutSet.EMPTY;
   private boolean myEnabledInModalContext;
   private boolean myIsDefaultIcon = true;
   private boolean myWorksInInjected;
@@ -90,7 +90,7 @@ public abstract class AnAction implements PossiblyDumbAware {
    * Creates a new action with its text, description and icon set to <code>null</code>.
    */
   public AnAction() {
-    this(null, null, null);
+    // avoid eagerly creating template presentation
   }
 
   public AnAction(SwingImageRef icon) {
@@ -143,8 +143,6 @@ public abstract class AnAction implements PossiblyDumbAware {
   @Deprecated
   @DeprecationInfo("Use contructor with ui image")
   public AnAction(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
-    myShortcutSet = CustomShortcutSet.EMPTY;
-    myEnabledInModalContext = false;
     Presentation presentation = getTemplatePresentation();
     presentation.setText(text);
     presentation.setDescription(description);
@@ -286,9 +284,14 @@ public abstract class AnAction implements PossiblyDumbAware {
   public final Presentation getTemplatePresentation() {
     Presentation presentation = myTemplatePresentation;
     if (presentation == null) {
-      myTemplatePresentation = presentation = new Presentation();
+      myTemplatePresentation = presentation = createTemplatePresentation();
     }
     return presentation;
+  }
+
+  @Nonnull
+  Presentation createTemplatePresentation() {
+    return new Presentation();
   }
 
   /**

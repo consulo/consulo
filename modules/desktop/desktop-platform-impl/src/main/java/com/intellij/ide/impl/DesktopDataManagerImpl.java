@@ -15,7 +15,6 @@
  */
 package com.intellij.ide.impl;
 
-import com.intellij.ide.DataManager;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.ProhibitAWTEvents;
 import com.intellij.openapi.actionSystem.*;
@@ -25,14 +24,10 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.keymap.impl.IdeKeyEventDispatcher;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.reference.SoftReference;
-import com.intellij.util.ObjectUtil;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.awt.TargetAWT;
 import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.awt.impl.FromSwingWindowWrapper;
@@ -40,41 +35,31 @@ import consulo.ide.base.BaseDataManager;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.ex.ToolWindowFloatingDecorator;
-import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
-import java.lang.ref.Reference;
-import java.lang.ref.WeakReference;
-import java.util.Map;
 
 @Singleton
 public class DesktopDataManagerImpl extends BaseDataManager {
   private static final Logger LOG = Logger.getInstance(DesktopDataManagerImpl.class);
 
-  public static class MyDataContext implements DataContextWithEventCount, UserDataHolder {
+  public static class MyDataContext extends BaseDataContext<DesktopDataManagerImpl, Component> implements DataContextWithEventCount {
     private int myEventCount;
-    // To prevent memory leak we have to wrap passed component into
-    // the weak reference. For example, Swing often remembers menu items
-    // that have DataContext as a field.
-    private final Reference<Component> myRef;
-    private Map<Key, Object> myUserData;
-    private final Map<Key, Object> myCachedData = ContainerUtil.createWeakValueMap();
 
-    public MyDataContext(final Component component) {
+    public MyDataContext(DesktopDataManagerImpl dataManager, Component component) {
+      super(dataManager, component);
       myEventCount = -1;
-      myRef = component == null ? null : new WeakReference<>(component);
     }
 
     @Override
     public void setEventCount(int eventCount, Object caller) {
       assert caller instanceof IdeKeyEventDispatcher : "This method might be accessible from " + IdeKeyEventDispatcher.class.getName() + " only";
-      myCachedData.clear();
+      clearCacheData();
       myEventCount = eventCount;
     }
 
@@ -87,23 +72,14 @@ public class DesktopDataManagerImpl extends BaseDataManager {
         return doGetData(dataId);
       }
 
-      if (ourSafeKeys.contains(dataId)) {
-        Object answer = myCachedData.get(dataId);
-        if (answer == null) {
-          answer = doGetData(dataId);
-          myCachedData.put(dataId, answer == null ? ObjectUtil.NULL : answer);
-        }
-        return answer != ObjectUtil.NULL ? (T)answer : null;
-      }
-      else {
-        return doGetData(dataId);
-      }
+      return super.getData(dataId);
     }
 
+    @Override
     @Nullable
     @SuppressWarnings("unchecked")
-    private <T> T doGetData(@Nonnull Key<T> dataId) {
-      Component component = SoftReference.dereference(myRef);
+    protected  <T> T doGetData(@Nonnull Key<T> dataId) {
+      Component component = getComponent();
       if (PlatformDataKeys.IS_MODAL_CONTEXT == dataId) {
         if (component == null) {
           return null;
@@ -116,36 +92,16 @@ public class DesktopDataManagerImpl extends BaseDataManager {
       if (PlatformDataKeys.MODALITY_STATE == dataId) {
         return (T)(component != null ? ModalityState.stateForComponent(component) : ModalityState.NON_MODAL);
       }
+
+      Object data = calcData(dataId, component);
       if (CommonDataKeys.EDITOR == dataId || CommonDataKeys.HOST_EDITOR == dataId) {
-        Editor editor = (Editor)((DesktopDataManagerImpl)DataManager.getInstance()).getData(dataId, component);
-        return (T)validateEditor(editor);
+        return (T)validateEditor((Editor)data);
       }
-      return ((DesktopDataManagerImpl)DataManager.getInstance()).getData(dataId, component);
+      return (T)data;
     }
 
-    @NonNls
-    public String toString() {
-      return "component=" + SoftReference.dereference(myRef);
-    }
-
-    @Override
-    public <T> T getUserData(@Nonnull Key<T> key) {
-      //noinspection unchecked
-      return (T)getOrCreateMap().get(key);
-    }
-
-    @Override
-    public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
-      getOrCreateMap().put(key, value);
-    }
-
-    @Nonnull
-    private Map<Key, Object> getOrCreateMap() {
-      Map<Key, Object> userData = myUserData;
-      if (userData == null) {
-        myUserData = userData = ContainerUtil.createWeakValueMap();
-      }
-      return userData;
+    protected Object calcData(@Nonnull Key<?> dataId, Component component) {
+      return getDataManager().getData(dataId, component);
     }
   }
 
@@ -199,9 +155,15 @@ public class DesktopDataManagerImpl extends BaseDataManager {
     return dataProvider;
   }
 
+  @Nonnull
+  @Override
+  public AsyncDataContext createAsyncDataContext(@Nonnull DataContext dataContext) {
+    return new DesktopAsyncDataContext(this, dataContext);
+  }
+
   @Override
   public DataContext getDataContext(@Nullable Component component) {
-    return new MyDataContext(component);
+    return new MyDataContext(this, component);
   }
 
   @Override

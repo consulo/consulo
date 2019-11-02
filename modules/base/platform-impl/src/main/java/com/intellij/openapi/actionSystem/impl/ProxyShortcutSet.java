@@ -29,16 +29,13 @@ import javax.annotation.Nonnull;
  */ 
 final class ProxyShortcutSet implements ShortcutSet {
   private final String myActionId;
-  private final KeymapManager myKeymapManager;
 
-  public ProxyShortcutSet(String actionId, KeymapManager keymapManager) {
+  public ProxyShortcutSet(String actionId) {
     myActionId = actionId;
-    myKeymapManager = keymapManager;
   }
 
   @Nonnull
   public Shortcut[] getShortcuts() {
-    Keymap keymap=myKeymapManager.getActiveKeymap();
-    return keymap.getShortcuts(myActionId);
+    return KeymapManager.getInstance().getActiveKeymap().getShortcuts(myActionId);
   }
 }

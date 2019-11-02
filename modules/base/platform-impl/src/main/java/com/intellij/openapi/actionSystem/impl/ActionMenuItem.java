@@ -73,7 +73,8 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
                         @Nonnull DataContext context,
                         final boolean enableMnemonics,
                         final boolean prepareNow,
-                        final boolean insideCheckedGroup) {
+                        final boolean insideCheckedGroup,
+                        boolean useDarkIcons) {
     myAction = ActionRef.fromAction(action);
     myPresentation = presentation;
     myPlace = place;

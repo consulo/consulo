@@ -27,14 +27,15 @@ import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.wm.IdeFrame;
+import com.intellij.ui.ComponentUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
-
+import consulo.ui.ex.ToolWindowInternalDecorator;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
@@ -54,6 +55,7 @@ public final class ActionPopupMenuImpl implements ApplicationActivationListener,
   private IdeFrame myFrame;
   @Nullable
   private Getter<DataContext> myDataContextProvider;
+  private boolean myIsToolWindowContextMenu;
 
   public ActionPopupMenuImpl(String place, @Nonnull ActionGroup group, ActionManagerImpl actionManager, @Nullable PresentationFactory factory) {
     myManager = actionManager;
@@ -64,6 +66,28 @@ public final class ActionPopupMenuImpl implements ApplicationActivationListener,
   @Override
   public JPopupMenu getComponent() {
     return myMenu;
+  }
+
+  @Override
+  @Nonnull
+  public String getPlace() {
+    return myMenu.myPlace;
+  }
+
+  @Nonnull
+  @Override
+  public ActionGroup getActionGroup() {
+    return myMenu.myGroup;
+  }
+
+  @Override
+  public void setTargetComponent(@Nonnull JComponent component) {
+    myDataContextProvider = () -> DataManager.getInstance().getDataContext(component);
+    myIsToolWindowContextMenu = ComponentUtil.getParentOfType(ToolWindowInternalDecorator.class, (Component)component) != null;
+  }
+
+  boolean isToolWindowContextMenu() {
+    return myIsToolWindowContextMenu;
   }
 
   public void setDataContextProvider(@Nullable Getter<DataContext> dataContextProvider) {

@@ -15,14 +15,12 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.extensions.PluginId;
-import com.intellij.openapi.util.NullableLazyValue;
-import com.intellij.util.ReflectionUtil;
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
-
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+
+import java.util.function.Supplier;
 
 /**
  * The main (and single) purpose of this class is provide lazy initialization
@@ -30,55 +28,56 @@ import javax.annotation.Nullable;
  *
  * @author Vladimir Kondratyev
  */
-public class ActionStub extends AnAction {
+public class ActionStub extends AnAction implements ActionStubBase {
   private static final Logger LOG = Logger.getInstance(ActionStub.class);
 
   private final String myClassName;
   private final String myId;
-  private final String myText;
   private final ClassLoader myLoader;
   private final PluginId myPluginId;
   private final String myIconPath;
+  private final Supplier<Presentation> myTemplatePresentation;
 
-  private NullableLazyValue<Class> myClassValue;
-
-  public ActionStub(@Nonnull String actionClass, @Nonnull String id, @Nonnull String text, ClassLoader loader, PluginId pluginId, String iconPath) {
+  public ActionStub(@Nonnull String actionClass,
+                    @Nonnull String id,
+                    ClassLoader loader,
+                    PluginId pluginId,
+                    String iconPath,
+                    @Nonnull Supplier<Presentation> templatePresentation) {
     myLoader = loader;
     myClassName = actionClass;
     LOG.assertTrue(id.length() > 0);
     myId = id;
-    myText = text;
     myPluginId = pluginId;
     myIconPath = iconPath;
-
-    myClassValue = NullableLazyValue.of(() -> ReflectionUtil.findClassOrNull(actionClass, loader));
+    myTemplatePresentation = templatePresentation;
   }
 
-  @Nullable
-  public Class resolveClass() {
-    return myClassValue.getValue();
+  @Nonnull
+  @Override
+  Presentation createTemplatePresentation() {
+    return myTemplatePresentation.get();
   }
 
   public String getClassName() {
     return myClassName;
   }
 
+  @Override
   public String getId() {
     return myId;
-  }
-
-  public String getText() {
-    return myText;
   }
 
   public ClassLoader getLoader() {
     return myLoader;
   }
 
+  @Override
   public PluginId getPluginId() {
     return myPluginId;
   }
 
+  @Override
   public String getIconPath() {
     return myIconPath;
   }
@@ -89,14 +88,20 @@ public class ActionStub extends AnAction {
     throw new UnsupportedOperationException();
   }
 
+  public final void initAction(@Nonnull AnAction targetAction) {
+    copyTemplatePresentation(getTemplatePresentation(), targetAction.getTemplatePresentation());
+
+    targetAction.setShortcutSet(getShortcutSet());
+    targetAction.setCanUseProjectAsDefault(isCanUseProjectAsDefault());
+    targetAction.setModuleExtensionIds(getModuleExtensionIds());
+  }
+
   /**
    * Copies template presentation and shortcuts set to <code>targetAction</code>.
    *
    * @param targetAction cannot be <code>null</code>
    */
-  public final void initAction(@Nonnull AnAction targetAction) {
-    Presentation sourcePresentation = getTemplatePresentation();
-    Presentation targetPresentation = targetAction.getTemplatePresentation();
+  public static void copyTemplatePresentation(@Nonnull Presentation sourcePresentation, @Nonnull Presentation targetPresentation) {
     if (targetPresentation.getIcon() == null && sourcePresentation.getIcon() != null) {
       targetPresentation.setIcon(sourcePresentation.getIcon());
     }
@@ -106,9 +111,5 @@ public class ActionStub extends AnAction {
     if (targetPresentation.getDescription() == null && sourcePresentation.getDescription() != null) {
       targetPresentation.setDescription(sourcePresentation.getDescription());
     }
-    targetAction.setShortcutSet(getShortcutSet());
-    targetAction.setCanUseProjectAsDefault(isCanUseProjectAsDefault());
-    targetAction.setModuleExtensionIds(getModuleExtensionIds());
   }
-
 }

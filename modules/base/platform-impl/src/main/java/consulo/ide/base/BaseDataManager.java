@@ -33,10 +33,10 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.ide.impl.DataValidators;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.jetbrains.concurrency.AsyncPromise;
 import org.jetbrains.concurrency.Promise;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -57,15 +57,24 @@ public abstract class BaseDataManager extends DataManager {
     void setEventCount(int eventCount, Object caller);
   }
 
-  public static class MyUIDataContext implements DataContext, UserDataHolder {
-    private final BaseDataManager myDataManager;
-    private final Reference<consulo.ui.Component> myRef;
+  public static abstract class BaseDataContext<M extends BaseDataManager, C> implements DataContext, UserDataHolder {
+    private final M myDataManager;
+    private final Reference<C> myRef;
     private Map<Key, Object> myUserData;
     private final Map<Key, Object> myCachedData = ContainerUtil.createWeakValueMap();
 
-    public MyUIDataContext(BaseDataManager dataManager, consulo.ui.Component component) {
-      myDataManager = dataManager;
+    public BaseDataContext(M manager, C component) {
+      myDataManager = manager;
       myRef = component == null ? null : new WeakReference<>(component);
+    }
+
+    protected void clearCacheData() {
+      myCachedData.clear();
+    }
+
+    @Nonnull
+    protected M getDataManager() {
+      return myDataManager;
     }
 
     @Override
@@ -85,29 +94,11 @@ public abstract class BaseDataManager extends DataManager {
     }
 
     @Nullable
-    @SuppressWarnings("unchecked")
-    private <T> T doGetData(@Nonnull Key<T> dataId) {
-      consulo.ui.Component component = SoftReference.dereference(myRef);
-      if (PlatformDataKeys.IS_MODAL_CONTEXT == dataId) {
-        if (component == null) {
-          return null;
-        }
-        return (T)(Boolean)false; //FIXME [VISTALL] stub
-      }
-      if (PlatformDataKeys.CONTEXT_UI_COMPONENT == dataId) {
-        return (T)component;
-      }
-      if (PlatformDataKeys.MODALITY_STATE == dataId) {
-        return (T)ModalityState.NON_MODAL; //FIXME [VISTALL] stub
-      }
-      if (CommonDataKeys.EDITOR == dataId || CommonDataKeys.HOST_EDITOR == dataId) {
-        Editor editor = (Editor)myDataManager.getData(dataId, component);
-        //return (T)validateEditor(editor);   //FIXME [VISTALL] stub
-        return (T)editor;
-      }
-      return myDataManager.getData(dataId, component);
+    protected C getComponent() {
+      return SoftReference.dereference(myRef);
     }
 
+    protected abstract <T> T doGetData(Key<T> key);
 
     @NonNls
     public String toString() {
@@ -132,6 +123,37 @@ public abstract class BaseDataManager extends DataManager {
         myUserData = userData = ContainerUtil.createWeakValueMap();
       }
       return userData;
+    }
+  }
+
+  public static class MyUIDataContext extends BaseDataContext<BaseDataManager, consulo.ui.Component> {
+    public MyUIDataContext(BaseDataManager dataManager, consulo.ui.Component component) {
+      super(dataManager, component);
+    }
+
+    @Override
+    @Nullable
+    @SuppressWarnings("unchecked")
+    protected  <T> T doGetData(@Nonnull Key<T> dataId) {
+      consulo.ui.Component component = getComponent();
+      if (PlatformDataKeys.IS_MODAL_CONTEXT == dataId) {
+        if (component == null) {
+          return null;
+        }
+        return (T)(Boolean)false; //FIXME [VISTALL] stub
+      }
+      if (PlatformDataKeys.CONTEXT_UI_COMPONENT == dataId) {
+        return (T)component;
+      }
+      if (PlatformDataKeys.MODALITY_STATE == dataId) {
+        return (T)ModalityState.NON_MODAL; //FIXME [VISTALL] stub
+      }
+      if (CommonDataKeys.EDITOR == dataId || CommonDataKeys.HOST_EDITOR == dataId) {
+        Editor editor = (Editor)getDataManager().getData(dataId, component);
+        //return (T)validateEditor(editor);   //FIXME [VISTALL] stub
+        return (T)editor;
+      }
+      return getDataManager().getData(dataId, component);
     }
   }
 
@@ -221,7 +243,7 @@ public abstract class BaseDataManager extends DataManager {
   }
 
   @Nullable
-  protected <T> T getDataFromProvider(@Nonnull final DataProvider provider, @Nonnull Key<T> dataId, @Nullable Set<Key> alreadyComputedIds) {
+  public  <T> T getDataFromProvider(@Nonnull final DataProvider provider, @Nonnull Key<T> dataId, @Nullable Set<Key> alreadyComputedIds) {
     if (alreadyComputedIds != null && alreadyComputedIds.contains(dataId)) {
       return null;
     }

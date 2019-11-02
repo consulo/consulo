@@ -79,11 +79,6 @@ public class SandExecutor extends Executor {
   }
 
   @Override
-  public String getContextActionId() {
-    return "SandExecutor";
-  }
-
-  @Override
   public String getHelpId() {
     return null;
   }

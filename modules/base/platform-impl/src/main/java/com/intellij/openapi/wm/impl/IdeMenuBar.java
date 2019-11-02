@@ -277,7 +277,7 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
     updateMenuActions();
 
     // Add updater for menus
-    myActionManager.addTimerListener(1000, new WeakTimerListener(myActionManager, myTimerListener));
+    myActionManager.addTimerListener(1000, new WeakTimerListener(myTimerListener));
     UISettingsListener UISettingsListener = new UISettingsListener() {
       @Override
       public void uiSettingsChanged(final UISettings source) {

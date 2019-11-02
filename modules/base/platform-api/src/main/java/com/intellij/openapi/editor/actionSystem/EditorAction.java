@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
-public abstract class EditorAction extends AnAction implements DumbAware {
+public abstract class EditorAction extends AnAction implements DumbAware, UpdateInBackground {
   private EditorActionHandler myHandler;
   private boolean myHandlersLoaded;
 

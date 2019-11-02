@@ -193,7 +193,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable
     myActionManager = null;
   }
 
-  private class ExecutorAction extends AnAction implements DumbAware {
+  private class ExecutorAction extends AnAction implements DumbAware, UpdateInBackground {
     private final Executor myExecutor;
 
     private ExecutorAction(@Nonnull final Executor executor) {

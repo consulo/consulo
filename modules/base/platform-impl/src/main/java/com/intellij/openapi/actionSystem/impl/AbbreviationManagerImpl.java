@@ -22,9 +22,10 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import gnu.trove.THashMap;
 import org.jdom.Element;
+import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
-
 import java.util.*;
 
 /**
@@ -170,5 +171,14 @@ public class AbbreviationManagerImpl extends AbbreviationManager implements Pers
         myActionId2Abbreviations.put(actionId, customValues);
       }
     }
+  }
+
+  @Override
+  public void removeAllAbbreviations(@Nonnull String actionId) {
+    Set<String> abbreviations = getAbbreviations(actionId);
+    for (String abbreviation : abbreviations) {
+      myAbbreviation2ActionId.get(abbreviation).remove(actionId);
+    }
+    myActionId2Abbreviations.remove(actionId);
   }
 }

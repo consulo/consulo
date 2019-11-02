@@ -17,6 +17,7 @@ package com.intellij.openapi.vcs.actions;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.actionSystem.UpdateInBackground;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.AbstractVcs;
@@ -37,7 +38,7 @@ import static com.intellij.util.ObjectUtils.assertNotNull;
 import static com.intellij.vcsUtil.VcsUtil.getIfSingle;
 
 
-public class TabbedShowHistoryAction extends AbstractVcsAction {
+public class TabbedShowHistoryAction extends AbstractVcsAction implements UpdateInBackground {
   @Override
   protected void update(@Nonnull VcsContext context, @Nonnull Presentation presentation) {
     Project project = context.getProject();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,36 @@
  */
 package com.intellij.openapi.actionSystem;
 
+import javax.annotation.Nonnull;
+
 import javax.swing.*;
 
 /**
  * Represents a popup menu with a visual presentation.
  *
- * @see ActionManager#createActionPopupMenu(String, ActionGroup) 
+ * @see ActionManager#createActionPopupMenu(String, ActionGroup)
  */
 public interface ActionPopupMenu {
   /**
    * Returns the visual presentation of the popup menu.
-   *
-   * @return visual presentation of the popup menu
    */
+  @Nonnull
   JPopupMenu getComponent();
+
+  /**
+   * Returns the place where the action group is displayed (the first parameter of {@link ActionManager#createActionPopupMenu(String, ActionGroup)}.
+   */
+  @Nonnull
+  String getPlace();
+
+  /**
+   * Returns the action group from which the menu was created.
+   */
+  @Nonnull
+  ActionGroup getActionGroup();
+
+  /**
+   * Will be used for data-context retrieval.
+   */
+  void setTargetComponent(@Nonnull JComponent component);
 }

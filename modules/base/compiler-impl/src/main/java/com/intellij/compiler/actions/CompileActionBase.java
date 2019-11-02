@@ -23,10 +23,11 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import javax.annotation.Nonnull;
 import consulo.ui.RequiredUIAccess;
 
-public abstract class CompileActionBase extends AnAction implements DumbAware {
+import javax.annotation.Nonnull;
+
+public abstract class CompileActionBase extends AnAction implements DumbAware, UpdateInBackground {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {

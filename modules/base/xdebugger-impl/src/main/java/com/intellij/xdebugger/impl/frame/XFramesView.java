@@ -197,7 +197,6 @@ public class XFramesView extends XDebugView {
     final ActionToolbarImpl toolbar =
             (ActionToolbarImpl)ActionManager.getInstance().createActionToolbar(ActionPlaces.DEBUGGER_TOOLBAR, framesGroup, true);
     toolbar.setReservePlaceAutoPopupIcon(false);
-    toolbar.setAddSeparatorFirst(true);
     toolbar.getComponent().setBorder(new EmptyBorder(1, 0, 0, 0));
     return toolbar;
   }
@@ -266,7 +265,6 @@ public class XFramesView extends XDebugView {
       if (!invisible) {
         myThreadsPanel.add(myThreadComboBox, BorderLayout.CENTER);
       }
-      myToolbar.setAddSeparatorFirst(!invisible);
       updateFrames(activeExecutionStack, session, event == SessionEvent.FRAME_CHANGED ? currentStackFrame : null);
     });
   }

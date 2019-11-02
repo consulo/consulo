@@ -131,6 +131,8 @@ public abstract class ActionPlaces {
   public static final String CHANGES_LOCAL_DIFF_SETTINGS = "CHANGES_LOCAL_DIFF_SETTINGS";
   public static final String INTENTION_MENU = "IntentionMenu";
 
+  public static final String TOUCHBAR_GENERAL = "TouchBarGeneral";
+
   private static final String[] ourToolbarPlaces =
           {EDITOR_TOOLBAR, PROJECT_VIEW_TOOLBAR, TOOLBAR, TESTTREE_VIEW_TOOLBAR, MAIN_TOOLBAR, ANT_EXPLORER_TOOLBAR, ANT_MESSAGES_TOOLBAR,
                   COMPILER_MESSAGES_TOOLBAR, TODO_VIEW_TOOLBAR, STRUCTURE_VIEW_TOOLBAR, USAGE_VIEW_TOOLBAR, DEBUGGER_TOOLBAR, CALL_HIERARCHY_VIEW_TOOLBAR,

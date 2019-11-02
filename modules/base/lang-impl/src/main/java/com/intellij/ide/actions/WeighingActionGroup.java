@@ -18,64 +18,44 @@ package com.intellij.ide.actions;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.PresentationFactory;
 import com.intellij.openapi.actionSystem.impl.Utils;
-import consulo.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
  * @author peter
  */
-public abstract class WeighingActionGroup extends ActionGroup {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.actions.WeighingActionGroup");
+abstract class WeighingActionGroup extends ActionGroup {
   private final PresentationFactory myPresentationFactory = new PresentationFactory();
 
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     getDelegate().update(e);
   }
 
   protected abstract ActionGroup getDelegate();
 
-  private static void getAllChildren(@Nullable AnActionEvent e, ActionGroup group, List<AnAction> result) {
-    for (final AnAction action : group.getChildren(e)) {
-      if (action == null) {
-        LOG.error("Null child for " + group + " of class " + group.getClass());
-        continue;
-      }
-      if (action instanceof ActionGroup && !((ActionGroup)action).isPopup()) {
-        getAllChildren(e, (ActionGroup)action, result);
-      }
-      else {
-        result.add(action);
-      }
-    }
-  }
-
   @Override
   @Nonnull
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
-    final AnAction[] children = getDelegate().getChildren(e);
+    ActionGroup delegate = getDelegate();
+    AnAction[] children = delegate.getChildren(e);
     if (e == null) {
       return children;
     }
 
-    final ArrayList<AnAction> all = new ArrayList<AnAction>();
-    getAllChildren(e, getDelegate(), all);
+    List<AnAction> visibleActions = Utils.expandActionGroup(false, delegate, myPresentationFactory, e.getDataContext(), e.getPlace());
 
     LinkedHashSet<AnAction> heaviest = null;
     double maxWeight = Presentation.DEFAULT_WEIGHT;
-    for (final AnAction action : all) {
-      final Presentation presentation = myPresentationFactory.getPresentation(action);
-      presentation.setWeight(Presentation.DEFAULT_WEIGHT);
-      Utils.updateGroupChild(e.getDataContext(), e.getPlace(), action, presentation);
+    for (AnAction action : visibleActions) {
+      Presentation presentation = myPresentationFactory.getPresentation(action);
       if (presentation.isEnabled() && presentation.isVisible()) {
         if (presentation.getWeight() > maxWeight) {
           maxWeight = presentation.getWeight();
-          heaviest = new LinkedHashSet<AnAction>();
+          heaviest = new LinkedHashSet<>();
         }
         if (presentation.getWeight() == maxWeight && heaviest != null) {
           heaviest.add(action);
@@ -89,7 +69,7 @@ public abstract class WeighingActionGroup extends ActionGroup {
 
     final DefaultActionGroup chosen = new DefaultActionGroup();
     boolean prevSeparator = true;
-    for (final AnAction action : all) {
+    for (AnAction action : visibleActions) {
       final boolean separator = action instanceof AnSeparator;
       if (separator && !prevSeparator) {
         chosen.add(action);
@@ -105,7 +85,7 @@ public abstract class WeighingActionGroup extends ActionGroup {
       }
     }
 
-    final ActionGroup other = new ExcludingActionGroup(getDelegate(), heaviest);
+    ActionGroup other = new ExcludingActionGroup(delegate, heaviest);
     other.setPopup(true);
     other.getTemplatePresentation().setText("Other...");
     return new AnAction[]{chosen, new AnSeparator(), other};
