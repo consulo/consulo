@@ -13,33 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.ui.laf;
+package consulo.desktop.impl.ui;
+
+import com.intellij.openapi.extensions.ExtensionPointName;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 2019-07-27
+ * @since 2019-11-03
  */
-public abstract class LookAndFeelInfoWithClassLoader extends UIManager.LookAndFeelInfo {
-  @Nonnull
-  public static LookAndFeelInfoWithClassLoader simple(String name, Class<?> lafClass) {
-    return new LookAndFeelInfoWithClassLoader(name, lafClass.getName()) {
-      @Nonnull
-      @Override
-      public ClassLoader getClassLoader() {
-        return lafClass.getClassLoader();
-      }
-    };
-  }
+public interface LookAndFeelProvider {
+  ExtensionPointName<LookAndFeelProvider> EP_NAME = ExtensionPointName.create("consulo.platform.desktop.lookAndFeelProvider");
 
-  public LookAndFeelInfoWithClassLoader(String name, String className) {
-    super(name, className);
-  }
-
-  @Nonnull
-  public ClassLoader getClassLoader() {
-    return getClass().getClassLoader();
-  }
+  void register(@Nonnull Consumer<UIManager.LookAndFeelInfo> consumer);
 }

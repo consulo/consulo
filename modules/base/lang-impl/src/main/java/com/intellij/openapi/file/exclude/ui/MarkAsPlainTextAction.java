@@ -62,7 +62,7 @@ public class MarkAsPlainTextAction extends AnAction {
       }
     }
     presentation.setVisible(true);
-    presentation.setIcon(EnforcedPlainTextFileTypeFactory.ENFORCED_PLAIN_TEXT_ICON);
+    presentation.setIcon(EnforcedPlainTextFileTypeFactory.getIcon());
   }
     
 }

@@ -90,7 +90,9 @@ public class JBHtmlEditorKit extends HTMLEditorKit {
 
   public static StyleSheet createStyleSheet() {
     StyleSheet style = new StyleSheet();
-    style.addStyleSheet(UIUtil.isUnderDarcula() ? (StyleSheet)UIManager.getDefaults().get("StyledEditorKit.JBDefaultStyle") : UIUtil.getDefaultHtmlKitCss());
+    // FIXME [VISTALL] this code runs before app initialze, that mean before LafManagerImpl initiaze, that mean - it will be always alwya
+    style.addStyleSheet(UIUtil.getDefaultHtmlKitCss());
+    //style.addStyleSheet(UIUtil.isUnderDarcula() ? (StyleSheet)UIManager.getDefaults().get("StyledEditorKit.JBDefaultStyle") : UIUtil.getDefaultHtmlKitCss());
     style.addRule("code { font-size: 100%; }"); // small by Swing's default
     style.addRule("small { font-size: small; }"); // x-small by Swing's default
     style.addRule("a { text-decoration: none;}");

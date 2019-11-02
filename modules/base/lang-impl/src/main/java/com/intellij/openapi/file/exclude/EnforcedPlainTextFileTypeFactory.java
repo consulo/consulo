@@ -31,13 +31,6 @@ import javax.annotation.Nonnull;
  * @author Rustam Vishnyakov
  */
 public class EnforcedPlainTextFileTypeFactory extends FileTypeFactory {
-
-  public static final Image ENFORCED_PLAIN_TEXT_ICON;
-
-  static {
-    ENFORCED_PLAIN_TEXT_ICON = ImageEffects.layered(AllIcons.FileTypes.Text, AllIcons.Nodes.ExcludedFromCompile);
-  }
-
   private final FileTypeIdentifiableByVirtualFile myFileType;
 
   public EnforcedPlainTextFileTypeFactory() {
@@ -71,7 +64,7 @@ public class EnforcedPlainTextFileTypeFactory extends FileTypeFactory {
 
       @Override
       public Image getIcon() {
-        return ENFORCED_PLAIN_TEXT_ICON;
+        return EnforcedPlainTextFileTypeFactory.getIcon();
       }
     };
   }
@@ -79,6 +72,11 @@ public class EnforcedPlainTextFileTypeFactory extends FileTypeFactory {
   @Override
   public void createFileTypes(final @Nonnull FileTypeConsumer consumer) {
     consumer.consume(myFileType, "");
+  }
+
+  @Nonnull
+  public static Image getIcon() {
+    return ImageEffects.layered(AllIcons.FileTypes.Text, AllIcons.Nodes.ExcludedFromCompile);
   }
 
   private static boolean isMarkedAsPlainText(VirtualFile file) {

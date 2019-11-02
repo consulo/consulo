@@ -144,6 +144,10 @@
     </component>
   </project-components>
 
+  <extensionPoints>
+    <extensionPoint name="lookAndFeelProvider" interface="consulo.desktop.impl.ui.LookAndFeelProvider"/>
+  </extensionPoints>
+
   <extensions defaultExtensionNs="com.intellij">
     <eapDescriptor implementation="consulo.ide.ui.laf.GTKPlusEAPDescriptor"/>
 
@@ -205,5 +209,8 @@
     <projectService serviceInterface="com.intellij.openapi.fileEditor.FileEditorManager" serviceImplementation="consulo.fileEditor.impl.DesktopPsiAwareFileEditorManagerImpl" lazy="false"/>
     <projectService serviceInterface="com.intellij.openapi.wm.ToolWindowManager" serviceImplementation="com.intellij.openapi.wm.impl.DesktopToolWindowManagerImpl" lazy="false"/>
     <projectService serviceInterface="consulo.wm.ProjectIdeFocusManager" serviceImplementation="com.intellij.openapi.wm.impl.DesktopIdeFocusManagerImpl" lazy="false"/>
+
+    <uiDecorator implementation="consulo.ide.ui.impl.mac.MacAquaUIDecorator"/>
+    <uiDecorator implementation="consulo.ide.ui.impl.DefaultUIDecorator" order="last"/>
   </extensions>
 </consulo-plugin>

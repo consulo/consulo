@@ -3,6 +3,8 @@
   <name>Sand Language</name>
   <platformVersion>SNAPSHOT</platformVersion>
 
+  <depends config-file="consulo.platform.desktop.xml" optional="true">consulo.platform.desktop</depends>
+
   <extensions defaultExtensionNs="com.intellij">
     <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand1EapDescriptor" />
     <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand2EapDescriptor" />

@@ -75,6 +75,10 @@
       <scope>runtime</scope>
       <includes>
         <include>consulo:consulo-sand-language-plugin</include>
+        <include>com.formdev:flatlaf</include>
+        <include>org.pushing-pixels:radiance-substance</include>
+        <include>org.pushing-pixels:radiance-trident</include>
+        <include>org.pushing-pixels:radiance-neon</include>
       </includes>
     </dependencySet>
   </dependencySets>

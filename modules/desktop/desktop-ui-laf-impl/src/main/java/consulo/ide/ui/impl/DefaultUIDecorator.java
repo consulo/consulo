@@ -42,11 +42,6 @@ public class DefaultUIDecorator implements SwingUIDecorator {
     return true;
   }
 
-  @Override
-  public int getWeight() {
-    return -1;
-  }
-
   @Nullable
   @Override
   public Color getSidebarColor() {

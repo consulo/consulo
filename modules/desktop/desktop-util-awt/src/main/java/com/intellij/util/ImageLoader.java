@@ -230,8 +230,7 @@ public class ImageLoader implements Serializable {
       // retina images provides a better result than up-scaling non-retina images.
       boolean retina = JBUI.isHiDPI(ctx.getScale(PIX_SCALE));
 
-      Builder list =
-              new Builder(FileUtil.getNameWithoutExtension(path), FileUtilRt.getExtension(path), cls, true, adjustScaleFactor(allowFloatScaling, ctx.getScale(PIX_SCALE)));
+      Builder list = new Builder(FileUtil.getNameWithoutExtension(path), FileUtilRt.getExtension(path), cls, true, adjustScaleFactor(allowFloatScaling, ctx.getScale(PIX_SCALE)));
 
       if (path.contains("://") && !path.startsWith("file:")) {
         list.add(StringUtil.endsWithIgnoreCase(path, ".svg") ? SVG : IMG);
@@ -407,16 +406,25 @@ public class ImageLoader implements Serializable {
 
   @Nullable
   public static Image loadFromResource(@NonNls @Nonnull String s) {
+    return loadFromResource(s, UIUtil.isUnderDarcula());
+  }
+
+  @Nullable
+  public static Image loadFromResource(@NonNls @Nonnull String s, boolean forceDarcula) {
     Class callerClass = ReflectionUtil.getGrandCallerClass();
     if (callerClass == null) return null;
-    return loadFromResource(s, callerClass);
+    return loadFromResource(s, callerClass, forceDarcula);
   }
 
   @Nullable
   public static Image loadFromResource(@NonNls @Nonnull String path, @Nonnull Class aClass) {
+    return loadFromResource(path, aClass, UIUtil.isUnderDarcula());
+  }
+
+  @Nullable
+  public static Image loadFromResource(@NonNls @Nonnull String path, @Nonnull Class aClass, boolean darculaState) {
     JBUI.ScaleContext ctx = JBUI.ScaleContext.create();
-    return ImageDescList.create(path, aClass, UIUtil.isUnderDarcula(), true, ctx).
-            load(ImageConverterChain.create().withHiDPI(ctx));
+    return ImageDescList.create(path, aClass, darculaState, true, ctx).load(ImageConverterChain.create().withHiDPI(ctx));
   }
 
   public static Image loadFromStream(@Nonnull final InputStream inputStream) {

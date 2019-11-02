@@ -134,7 +134,7 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Nonnull
   @Override
   public StyleManager _StyleManager_get() {
-    return new DesktopStyleManagerImpl();
+    return DesktopStyleManagerImpl.ourInstance;
   }
 
   @Nonnull

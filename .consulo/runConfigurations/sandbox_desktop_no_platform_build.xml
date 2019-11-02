@@ -2,7 +2,7 @@
   <configuration default="false" name="sandbox-desktop no-platform-build" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Consulo In Sandbox" singleton="true">
     <option name="VM_PARAMETERS" value="-Dconsulo.maven.console.log=true -Dsun.java2d.uiScale.enabled=true -Dconsulo.log4j2.enabled=true -Dconsulo.synchronize.api=http://localhost:8080/api/storage/" />
     <option name="PROGRAM_PARAMETERS" value="" />
-    <option name="PLUGINS_HOME_PATH" />
+    <option name="PLUGINS_HOME_PATH" value="$PROJECT_DIR$/sandbox/desktop/target/consulo-sandbox-desktop-2-SNAPSHOT-main/Consulo/platform/buildSNAPSHOT/plugins" />
     <option name="USE_ALT_CONSULO_SDK" value="true" />
     <option name="ALT_CONSULO_SDK_PATH" value="$PROJECT_DIR$/sandbox/desktop/target/consulo-sandbox-desktop-2-SNAPSHOT-main/Consulo" />
     <java-sdk name="14" />

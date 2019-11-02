@@ -28,4 +28,25 @@
   <artifactId>consulo-sand-language-plugin</artifactId>
   <version>2-SNAPSHOT</version>
   <packaging>jar</packaging>
+
+  <dependencies>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>consulo-desktop-platform-impl</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.formdev</groupId>
+      <artifactId>flatlaf</artifactId>
+      <version>0.17</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.pushing-pixels</groupId>
+      <artifactId>radiance-substance</artifactId>
+      <version>2.5.1</version>
+    </dependency>
+  </dependencies>
 </project>

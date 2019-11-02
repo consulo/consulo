@@ -102,7 +102,7 @@ public class DesktopContainerStartup implements ContainerStartup {
     // InternalLoggerFactory.setDefaultFactory(ApplicationInternalLoggerFactory.INSTANCE);
 
     StartupUtil.prepareAndStart(args, DesktopImportantFolderLocker::new, (newConfigFolder, commandLineArgs) -> {
-      AppUIUtil.updateWindowIcon(JOptionPane.getRootFrame());
+      AppUIUtil.updateWindowIcon(JOptionPane.getRootFrame(), false);
       AppUIUtil.registerBundledFonts();
 
       ApplicationStarter app = new DesktopApplicationStarter(DesktopApplicationPostStarter.class, commandLineArgs);

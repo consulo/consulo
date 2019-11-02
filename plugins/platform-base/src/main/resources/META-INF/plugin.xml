@@ -1167,6 +1167,8 @@
     <extensionPoint name="searchEverywhereResultsEqualityProvider" interface="com.intellij.ide.actions.searcheverywhere.SEResultsEqualityProvider"/>
 
     <extensionPoint name="searchScopesProvider" interface="com.intellij.psi.search.SearchScopeProvider"/>
+
+    <extensionPoint name="uiDecorator" interface="consulo.ui.UIDecorator" />
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">

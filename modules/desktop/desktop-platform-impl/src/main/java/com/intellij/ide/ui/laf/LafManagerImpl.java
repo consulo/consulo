@@ -56,6 +56,7 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.desktop.impl.ui.LookAndFeelProvider;
 import consulo.desktop.ui.laf.LookAndFeelInfoWithClassLoader;
 import consulo.desktop.util.awt.UIModificationTracker;
 import consulo.desktop.util.awt.laf.GTKPlusUIUtil;
@@ -139,6 +140,10 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
 
     if (SystemInfo.isLinux && EarlyAccessProgramManager.is(GTKPlusEAPDescriptor.class)) {
       lafList.add(new UIManager.LookAndFeelInfo("GTK+", "com.sun.java.swing.plaf.gtk.GTKLookAndFeel"));
+    }
+
+    for (LookAndFeelProvider provder : LookAndFeelProvider.EP_NAME.getExtensionList()) {
+      provder.register(lafList::add);
     }
 
     myLaFs = lafList.toArray(new UIManager.LookAndFeelInfo[lafList.size()]);

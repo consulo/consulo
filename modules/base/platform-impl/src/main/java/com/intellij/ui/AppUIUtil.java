@@ -20,7 +20,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.util.Condition;
@@ -29,10 +28,12 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.ImageLoader;
 import com.intellij.util.JBHiDPIScaledImage;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
+import consulo.ui.style.StyleManager;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import sun.awt.AWTAccessor;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -47,13 +48,17 @@ import java.util.List;
  * @author yole
  */
 public class AppUIUtil {
-  @SuppressWarnings("deprecation")
   public static void updateWindowIcon(@Nonnull Window window) {
+    updateWindowIcon(window, StyleManager.get().getCurrentStyle().isDark());
+  }
+
+  @SuppressWarnings("deprecation")
+  public static void updateWindowIcon(@Nonnull Window window, boolean isDark) {
     ApplicationInfoEx appInfo = ApplicationInfoImpl.getShadowInstance();
     List<Image> images = ContainerUtil.newArrayListWithCapacity(2);
 
-    images.add(ImageLoader.loadFromResource(appInfo.getIconUrl()));
-    images.add(ImageLoader.loadFromResource(appInfo.getSmallIconUrl()));
+    images.add(ImageLoader.loadFromResource(appInfo.getIconUrl(), isDark));
+    images.add(ImageLoader.loadFromResource(appInfo.getSmallIconUrl(), isDark));
 
     for (int i = 0; i < images.size(); i++) {
       Image image = images.get(i);
