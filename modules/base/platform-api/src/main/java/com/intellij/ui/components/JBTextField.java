@@ -77,6 +77,7 @@ public class JBTextField extends JTextField implements ComponentWithEmptyText {
 
       Rectangle rect = new Rectangle(getSize());
       JBInsets.removeFrom(rect, getInsets());
+      JBInsets.removeFrom(rect, getMargin());
       ((Graphics2D)g).fill(rect);
 
       g.setColor(getForeground());
