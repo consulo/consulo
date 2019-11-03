@@ -67,7 +67,6 @@ public class OneFileAtProjectTestCase extends UsefulTestCase {
   protected void runStartupActivities() {
     final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(myProject);
     startupManager.runStartupActivities(UIAccess.get());
-    startupManager.startCacheUpdate();
     startupManager.runPostStartupActivities(UIAccess.get());
   }
 

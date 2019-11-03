@@ -309,7 +309,6 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
 
         final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(ourProject);
         startupManager.runStartupActivities(UIAccess.get());
-        startupManager.startCacheUpdate();
       }
     }.execute().throwException();
   }

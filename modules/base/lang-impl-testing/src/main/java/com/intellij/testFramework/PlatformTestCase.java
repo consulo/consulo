@@ -232,7 +232,6 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
   protected void runStartupActivities() {
     final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(myProject);
     startupManager.runStartupActivities(UIAccess.get());
-    startupManager.startCacheUpdate();
     startupManager.runPostStartupActivities(UIAccess.get());
   }
 
@@ -502,7 +501,6 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
 
     mm.projectOpened();
     sm.runStartupActivities(UIAccess.get());
-    sm.startCacheUpdate();
     // extra init for libraries
     sm.runPostStartupActivities(UIAccess.get());
   }
