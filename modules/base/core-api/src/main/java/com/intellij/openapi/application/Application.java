@@ -117,6 +117,13 @@ public interface Application extends ComponentManager {
   <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E;
 
   /**
+   * Returns {@code true} if there is currently executing write action of the specified class.
+   *
+   * @param actionClass the class of the write action to return.
+   * @return {@code true} if the action is running, or {@code false} if no action of the specified class is currently executing.
+   */
+  boolean hasWriteAction(@Nonnull Class<?> actionClass);
+  /**
    * Asserts whether the read access is allowed.
    */
   @RequiredReadAction

@@ -313,6 +313,11 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
   }
 
   @Override
+  public boolean hasWriteAction(@Nonnull Class<?> actionClass) {
+    return false;
+  }
+
+  @Override
   public <T, E extends Throwable> T runReadAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
     throw new UnsupportedOperationException();
   }

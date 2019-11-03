@@ -38,7 +38,6 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
 import consulo.logging.Logger;
-import consulo.psi.impl.ExternalChangeMarker;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
@@ -878,7 +877,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
 
     boolean commitNecessary = files.stream().noneMatch(file -> PsiToDocumentSynchronizer.isInsideAtomicChange(file) || !(file instanceof PsiFileImpl));
 
-    boolean forceCommit = ExternalChangeMarker.isMarked(ExternalChangeMarker.ExternalChangeAction) &&
+    boolean forceCommit = ApplicationManager.getApplication().hasWriteAction(ExternalChangeAction.class) &&
                           (SystemProperties.getBooleanProperty("idea.force.commit.on.external.change", false) ||
                            ApplicationManager.getApplication().isHeadlessEnvironment() && !ApplicationManager.getApplication().isUnitTestMode());
 
@@ -955,10 +954,10 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
       FileViewProvider viewProvider = fileManager.findCachedViewProvider(virtualFile);
       if (viewProvider != null) {
         // we can end up outside write action here if the document has forUseInNonAWTThread=true
-        ApplicationManager.getApplication().runWriteAction(() -> ExternalChangeMarker.mark(() -> ((AbstractFileViewProvider)viewProvider).onContentReload(), ExternalChangeMarker.ExternalChangeAction));
+        ApplicationManager.getApplication().runWriteAction((ExternalChangeAction)() -> ((AbstractFileViewProvider)viewProvider).onContentReload());
       }
       else if (FileIndexFacade.getInstance(myProject).isInContent(virtualFile)) {
-        ApplicationManager.getApplication().runWriteAction(() -> ExternalChangeMarker.mark(() -> ((FileManagerImpl)fileManager).firePropertyChangedForUnloadedPsi(), ExternalChangeMarker.ExternalChangeAction));
+        ApplicationManager.getApplication().runWriteAction((ExternalChangeAction)() -> ((FileManagerImpl)fileManager).firePropertyChangedForUnloadedPsi());
       }
     }
 

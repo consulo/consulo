@@ -36,7 +36,7 @@ import com.intellij.psi.impl.PsiTreeChangeEventImpl;
 import com.intellij.util.FileContentUtilCore;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
-import consulo.psi.impl.ExternalChangeMarker;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -629,8 +629,9 @@ public class PsiVFSListener implements BulkFileListener {
     return index.isInContent(file) || index.isInLibrary(file);
   }
 
-  private static void runExternalAction(Runnable runnable) {
-    Application.get().runWriteAction(() -> ExternalChangeMarker.mark(runnable, ExternalChangeMarker.ExternalChangeAction));
+  @RequiredUIAccess
+  private static void runExternalAction(ExternalChangeAction runnable) {
+    Application.get().runWriteAction(runnable);
   }
 
   @Override

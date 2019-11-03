@@ -52,6 +52,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.PausesStat;
+import com.intellij.util.ReflectionUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.containers.Stack;
@@ -69,6 +70,7 @@ import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
@@ -691,6 +693,19 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     finally {
       endWrite(clazz);
     }
+  }
+
+  @Override
+  public boolean hasWriteAction(@NotNull Class<?> actionClass) {
+    assertReadAccessAllowed();
+
+    for (int i = myWriteActionsStack.size() - 1; i >= 0; i--) {
+      Class<?> action = myWriteActionsStack.get(i);
+      if (actionClass == action || ReflectionUtil.isAssignable(actionClass, action)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @RequiredUIAccess

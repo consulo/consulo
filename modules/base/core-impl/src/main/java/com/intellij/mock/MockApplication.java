@@ -172,6 +172,11 @@ public class MockApplication extends MockComponentManager implements Application
     return computation.compute();
   }
 
+  @Override
+  public boolean hasWriteAction(@Nonnull Class<?> actionClass) {
+    return false;
+  }
+
   @Nonnull
   @Override
   public AccessToken acquireReadActionLock() {

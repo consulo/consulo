@@ -11,9 +11,7 @@ import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.DocumentRunnable;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.DocumentEx;
@@ -50,6 +48,7 @@ import com.intellij.openapi.vfs.newvfs.events.VFilePropertyChangeEvent;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.pom.core.impl.PomModelImpl;
 import com.intellij.psi.AbstractFileViewProvider;
+import com.intellij.psi.ExternalChangeAction;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.PsiFileImpl;
@@ -61,11 +60,11 @@ import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import consulo.application.TransactionGuardEx;
-import consulo.psi.impl.ExternalChangeMarker;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
@@ -109,7 +108,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Safe
     @Override
     public void documentChanged(@Nonnull DocumentEvent e) {
       final Document document = e.getDocument();
-      if (!ExternalChangeMarker.isMarked(ExternalChangeMarker.ExternalDocumentChange)) {
+      if (!ApplicationManager.getApplication().hasWriteAction(ExternalChangeAction.ExternalDocumentChange.class)) {
         myUnsavedDocuments.add(document);
       }
       final Runnable currentCommand = CommandProcessor.getInstance().getCurrentCommand();
@@ -587,7 +586,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Safe
     if (VirtualFile.PROP_WRITABLE.equals(event.getPropertyName())) {
       final Document document = getCachedDocument(file);
       if (document != null) {
-        ApplicationManager.getApplication().runWriteAction(() -> ExternalChangeMarker.mark(() -> document.setReadOnly(!file.isWritable()), ExternalChangeMarker.ExternalChangeAction));
+        ApplicationManager.getApplication().runWriteAction((ExternalChangeAction)() -> document.setReadOnly(!file.isWritable()));
       }
     }
     else if (VirtualFile.PROP_NAME.equals(event.getPropertyName())) {
@@ -715,7 +714,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Safe
     final Project project = ProjectLocator.getInstance().guessProjectForFile(file);
     boolean[] isReloadable = {isReloadable(file, document, project)};
     if (isReloadable[0]) {
-      CommandProcessor.getInstance().executeCommand(project, () -> ApplicationManager.getApplication().runWriteAction(() -> ExternalChangeMarker.mark(new DocumentRunnable(document, project) {
+      CommandProcessor.getInstance().executeCommand(project, () -> ApplicationManager.getApplication().runWriteAction(new ExternalChangeAction.ExternalDocumentChange(document, project) {
         @Override
         public void run() {
           if (!isBinaryWithoutDecompiler(file)) {
@@ -734,7 +733,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Safe
             document.setReadOnly(!wasWritable);
           }
         }
-      }, ExternalChangeMarker.ExternalDocumentChange)), UIBundle.message("file.cache.conflict.action"), null, UndoConfirmationPolicy.REQUEST_CONFIRMATION);
+      }), UIBundle.message("file.cache.conflict.action"), null, UndoConfirmationPolicy.REQUEST_CONFIRMATION);
     }
     if (isReloadable[0]) {
       myMultiCaster.fileContentReloaded(file, document);

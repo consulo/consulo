@@ -18,7 +18,6 @@ package com.intellij.psi.impl;
 
 import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.project.Project;
@@ -26,10 +25,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiTreeChangeAdapter;
-import com.intellij.psi.PsiTreeChangeEvent;
+import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.ForeignLeafPsiElement;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ExceptionUtil;
@@ -37,11 +33,11 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.ImmutableCharSequence;
-import consulo.psi.impl.ExternalChangeMarker;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
@@ -193,7 +189,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
   }
 
   public boolean toProcessPsiEvent() {
-    return !myIgnorePsiEvents && !myPsiDocumentManager.isCommitInProgress() && !ExternalChangeMarker.isMarked(ExternalChangeMarker.IgnorePsiEventsMarker);
+    return !myIgnorePsiEvents && !myPsiDocumentManager.isCommitInProgress() && !ApplicationManager.getApplication().hasWriteAction(IgnorePsiEventsMarker.class);
   }
 
   @TestOnly
