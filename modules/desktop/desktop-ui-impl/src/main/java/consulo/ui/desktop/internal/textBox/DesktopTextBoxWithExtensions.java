@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.desktop.internal;
+package consulo.ui.desktop.internal.textBox;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.ui.DocumentAdapter;
@@ -27,7 +27,7 @@ import consulo.awt.TargetAWT;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.TextBox;
 import consulo.ui.TextBoxWithExtensions;
-import consulo.ui.desktop.internal.base.SwingComponentDelegate;
+import consulo.ui.desktop.internal.validableComponent.DocumentSwingValidator;
 import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExtensionsExtender;
 import consulo.ui.event.KeyListener;
 
@@ -46,9 +46,10 @@ import java.util.List;
  * @since 2019-10-31
  */
 public class DesktopTextBoxWithExtensions {
-  private static class Supported extends SwingComponentDelegate<ExtendableTextField> implements TextBoxWithExtensions {
+  private static class Supported extends DocumentSwingValidator<ExtendableTextField> implements TextBoxWithExtensions {
     public Supported(String text) {
       initialize(new ExtendableTextField(text));
+      addDocumentListenerForValidator(toAWTComponent().getDocument());
 
       toAWTComponent().getDocument().addDocumentListener(new DocumentAdapter() {
         @Override
@@ -117,7 +118,7 @@ public class DesktopTextBoxWithExtensions {
     }
   }
 
-  private static class Unsupported extends SwingComponentDelegate<JPanel> implements TextBoxWithExtensions {
+  private static class Unsupported extends DocumentSwingValidator<JPanel> implements TextBoxWithExtensions {
     private JBTextField myTextField;
 
     private Unsupported(String text) {
@@ -142,6 +143,8 @@ public class DesktopTextBoxWithExtensions {
           getListenerDispatcher(ValueListener.class).valueChanged(new ValueEvent(Unsupported.this, getValue()));
         }
       });
+
+      addDocumentListenerForValidator(myTextField.getDocument());
 
       JPanel panel = toAWTComponent();
 

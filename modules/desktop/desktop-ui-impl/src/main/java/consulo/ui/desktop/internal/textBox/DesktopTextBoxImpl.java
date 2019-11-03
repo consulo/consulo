@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.desktop.internal;
+package consulo.ui.desktop.internal.textBox;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.text.StringUtil;
@@ -23,7 +23,7 @@ import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.TextBox;
-import consulo.ui.desktop.internal.base.SwingComponentDelegate;
+import consulo.ui.desktop.internal.validableComponent.DocumentSwingValidator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,7 +33,7 @@ import javax.swing.event.DocumentEvent;
  * @author VISTALL
  * @since 19-Nov-16.
  */
-public class DesktopTextBoxImpl extends SwingComponentDelegate<JBTextField> implements TextBox {
+public class DesktopTextBoxImpl extends DocumentSwingValidator<JBTextField> implements TextBox {
   private static class Listener extends DocumentAdapter {
     private DesktopTextBoxImpl myTextField;
 
@@ -57,22 +57,25 @@ public class DesktopTextBoxImpl extends SwingComponentDelegate<JBTextField> impl
   }
 
   public DesktopTextBoxImpl(String text) {
-    myComponent = new MyJBTextField();
-    myComponent.getDocument().addDocumentListener(new Listener(this));
+    MyJBTextField field = new MyJBTextField();
+    initialize(field);
+    addDocumentListenerForValidator(field.getDocument());
+
+    field.getDocument().addDocumentListener(new Listener(this));
     setValue(text);
   }
 
   @Nonnull
   @Override
   public TextBox setPlaceholder(@Nullable String text) {
-    myComponent.getEmptyText().setText(text);
+    toAWTComponent().getEmptyText().setText(text);
     return this;
   }
 
   @Nonnull
   @Override
   public TextBox setVisibleLength(int columns) {
-    myComponent.setColumns(columns);
+    toAWTComponent().setColumns(columns);
     return this;
   }
 
@@ -95,12 +98,12 @@ public class DesktopTextBoxImpl extends SwingComponentDelegate<JBTextField> impl
 
   @Override
   public String getValue() {
-    return StringUtil.nullize(myComponent.getText());
+    return StringUtil.nullize(toAWTComponent().getText());
   }
 
   @RequiredUIAccess
   @Override
   public void setValue(String value, boolean fireEvents) {
-    myComponent.setText(value);
+    toAWTComponent().setText(value);
   }
 }

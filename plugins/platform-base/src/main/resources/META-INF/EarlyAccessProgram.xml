@@ -22,7 +22,6 @@
     <eapDescriptor implementation="consulo.diagram.actions.ShowDiagramAction$DiagramSupport" />
     <eapDescriptor implementation="consulo.auth.ServiceAuthEarlyAccessProgramDescriptor" />
     <eapDescriptor implementation="consulo.ui.impl.ModalityPerProjectEAPDescriptor" />
-    <eapDescriptor implementation="consulo.ide.ui.newItemPopup.NewFilePopupEarlyAccessProgramDescriptor" />
 
     <applicationConfigurable parentId="preferences.pluginManager"
                              bundle="messages.IdeBundle"

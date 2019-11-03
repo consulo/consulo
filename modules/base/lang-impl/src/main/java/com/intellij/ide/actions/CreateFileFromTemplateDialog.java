@@ -18,7 +18,6 @@ package com.intellij.ide.actions;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.actions.newclass.CreateWithTemplatesDialogPanel;
-import consulo.ide.ui.newItemPopup.NewFilePopupEarlyAccessProgramDescriptor;
 import com.intellij.ide.ui.newItemPopup.NewItemPopupUtil;
 import com.intellij.lang.LangBundle;
 import com.intellij.openapi.project.Project;
@@ -33,8 +32,8 @@ import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import consulo.awt.TargetAWT;
-import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.ValidableComponent;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
 
@@ -44,7 +43,6 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -141,13 +139,7 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
   }
 
   public static Builder createDialog(@Nonnull final Project project) {
-    if (EarlyAccessProgramManager.is(NewFilePopupEarlyAccessProgramDescriptor.class)) {
-      return new NonBlockingPopupBuilderImpl(project);
-    }
-    else {
-      final CreateFileFromTemplateDialog dialog = new CreateFileFromTemplateDialog(project);
-      return new BuilderImpl(dialog, project);
-    }
+    return new NonBlockingPopupBuilderImpl(project);
   }
 
   private static class BuilderImpl implements Builder {
@@ -261,23 +253,22 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
       };
 
       JBPopup popup = NewItemPopupUtil.createNewItemPopup(myTitle, contentPanel, (JComponent)TargetAWT.to(contentPanel.getNameField()));
+      contentPanel.addValidator(value -> {
+        if (!myInputValidator.canClose(value)) {
+          String message = InputValidatorEx.getErrorText(myInputValidator, value, LangBundle.message("incorrect.name"));
+          return new ValidableComponent.ValidationInfo(message);
+        }
+        return null;
+      });
+
       contentPanel.setApplyAction(e -> {
         String newElementName = contentPanel.getEnteredName();
         if (StringUtil.isEmptyOrSpaces(newElementName)) return;
 
-        boolean isValid = myInputValidator == null || myInputValidator.canClose(newElementName);
-        if (isValid) {
-          popup.closeOk(e);
-          T createdElement = (T)createElement(newElementName, elementCreator);
-          if (createdElement != null) {
-            elementConsumer.accept(createdElement);
-          }
-        }
-        else {
-          String errorMessage =
-                  Optional.ofNullable(myInputValidator).filter(validator -> validator instanceof InputValidatorEx).map(validator -> ((InputValidatorEx)validator).getErrorText(newElementName))
-                          .orElse(LangBundle.message("incorrect.name"));
-          contentPanel.setError(errorMessage);
+        popup.closeOk(e);
+        T createdElement = (T)createElement(newElementName, elementCreator);
+        if (createdElement != null) {
+          elementConsumer.accept(createdElement);
         }
       });
 

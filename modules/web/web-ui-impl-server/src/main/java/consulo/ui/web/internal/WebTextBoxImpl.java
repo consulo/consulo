@@ -15,6 +15,7 @@
  */
 package consulo.ui.web.internal;
 
+import com.intellij.openapi.Disposable;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.TextBox;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
@@ -43,6 +44,18 @@ public class WebTextBoxImpl extends UIComponentWithVaadinComponent<WebTextBoxImp
   @Override
   public void selectAll() {
 
+  }
+
+  @Nonnull
+  @Override
+  public Disposable addValidator(@Nonnull Validator<String> validator) {
+    return () -> {};
+  }
+
+  @RequiredUIAccess
+  @Override
+  public boolean validate() {
+    return true;
   }
 
   public static class Vaadin extends VaadinComponent {

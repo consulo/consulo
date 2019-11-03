@@ -189,7 +189,7 @@ class DesktopAlertImpl<V> extends BaseAlert<V> {
     switch (myType) {
       case INFO:
         return UIUtil.getInformationIcon();
-      case WARN:
+      case WARNING:
         return UIUtil.getWarningIcon();
       case ERROR:
         return UIUtil.getErrorIcon();

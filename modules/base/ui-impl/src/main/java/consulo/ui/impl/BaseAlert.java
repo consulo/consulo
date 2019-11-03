@@ -19,6 +19,7 @@ import com.intellij.CommonBundle;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.Alert;
 import consulo.ui.AlertValueRemember;
+import consulo.ui.NotificationType;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -30,13 +31,6 @@ import java.util.function.Supplier;
  * @since 2019-01-13
  */
 public abstract class BaseAlert<V> implements Alert<V> {
-  protected enum Type {
-    INFO,
-    WARN,
-    ERROR,
-    QUESTION
-  }
-
   protected class ButtonImpl {
     public int myButtonId;
     public String myText;
@@ -73,7 +67,7 @@ public abstract class BaseAlert<V> implements Alert<V> {
 
   protected String myText;
   protected String myTitle = "Consulo";
-  protected Type myType = Type.INFO;
+  protected NotificationType myType = NotificationType.INFO;
   protected List<ButtonImpl> myButtons = new ArrayList<>();
   protected AlertValueRemember<V> myRemember;
 
@@ -89,21 +83,21 @@ public abstract class BaseAlert<V> implements Alert<V> {
   @Nonnull
   @Override
   public Alert<V> asWarning() {
-    myType = Type.WARN;
+    myType = NotificationType.WARNING;
     return this;
   }
 
   @Nonnull
   @Override
   public Alert<V> asQuestion() {
-    myType = Type.QUESTION;
+    myType = NotificationType.QUESTION;
     return this;
   }
 
   @Nonnull
   @Override
   public Alert<V> asError() {
-    myType = Type.ERROR;
+    myType = NotificationType.ERROR;
     return this;
   }
 

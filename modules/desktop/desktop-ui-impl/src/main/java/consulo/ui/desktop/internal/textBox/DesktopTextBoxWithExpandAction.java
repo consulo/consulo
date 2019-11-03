@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.desktop.internal;
+package consulo.ui.desktop.internal.textBox;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.ui.ComponentWithBrowseButton;
@@ -25,7 +25,7 @@ import consulo.awt.TargetAWT;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.TextBox;
 import consulo.ui.TextBoxWithExpandAction;
-import consulo.ui.desktop.internal.base.SwingComponentDelegate;
+import consulo.ui.desktop.internal.validableComponent.DocumentSwingValidator;
 import consulo.ui.desktop.laf.extend.LafExtendUtil;
 import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExpandActionExtender;
 import consulo.ui.image.Image;
@@ -53,10 +53,13 @@ public class DesktopTextBoxWithExpandAction {
     return new FallbackTextBoxWithExpandAction(editButtonImage, dialogTitle, parser, joiner);
   }
 
-  private static class SupportedTextBoxWithExpandAction extends SwingComponentDelegate<ExpandableTextField> implements TextBoxWithExpandAction {
+  private static class SupportedTextBoxWithExpandAction extends DocumentSwingValidator<ExpandableTextField> implements TextBoxWithExpandAction {
     private SupportedTextBoxWithExpandAction(Function<String, List<String>> parser, Function<List<String>, String> joiner, SupportTextBoxWithExpandActionExtender lookAndFeel) {
-      myComponent = new ExpandableTextField(parser::apply, joiner::apply, lookAndFeel);
-      myComponent.getDocument().addDocumentListener(new DocumentAdapter() {
+      ExpandableTextField field = new ExpandableTextField(parser::apply, joiner::apply, lookAndFeel);
+      initialize(field);
+      addDocumentListenerForValidator(field.getDocument());
+
+      field.getDocument().addDocumentListener(new DocumentAdapter() {
         @Override
         @SuppressWarnings("unchecked")
         @RequiredUIAccess
@@ -69,13 +72,13 @@ public class DesktopTextBoxWithExpandAction {
     @Nullable
     @Override
     public String getValue() {
-      return myComponent.getText();
+      return toAWTComponent().getText();
     }
 
     @RequiredUIAccess
     @Override
     public void setValue(String value, boolean fireEvents) {
-      myComponent.setText(value);
+      toAWTComponent().setText(value);
     }
 
     @Nonnull
@@ -87,14 +90,14 @@ public class DesktopTextBoxWithExpandAction {
     @Nonnull
     @Override
     public TextBox setPlaceholder(@Nullable String text) {
-      myComponent.getEmptyText().setText(text);
+      toAWTComponent().getEmptyText().setText(text);
       return this;
     }
 
     @Nonnull
     @Override
     public TextBox setVisibleLength(int columns) {
-      myComponent.setColumns(columns);
+      toAWTComponent().setColumns(columns);
       return this;
     }
 
@@ -104,7 +107,7 @@ public class DesktopTextBoxWithExpandAction {
     }
   }
 
-  private static class FallbackTextBoxWithExpandAction extends SwingComponentDelegate<ComponentWithBrowseButton<JComponent>> implements TextBoxWithExpandAction {
+  private static class FallbackTextBoxWithExpandAction extends DocumentSwingValidator<ComponentWithBrowseButton<JComponent>> implements TextBoxWithExpandAction {
     private DesktopTextBoxImpl myTextBox;
 
     private String myDialogTitle;
@@ -113,11 +116,14 @@ public class DesktopTextBoxWithExpandAction {
       myTextBox = new DesktopTextBoxImpl("");
       myDialogTitle = StringUtil.notNullize(dialogTitle);
 
-      JTextField awtTextField = (JTextField)myTextBox.toAWTComponent();
-      myComponent = new ComponentWithBrowseButton<>(awtTextField, e -> Messages.showTextAreaDialog(awtTextField, myDialogTitle, myDialogTitle, parser::apply, joiner::apply));
+      JTextField awtTextField = myTextBox.toAWTComponent();
+
+      initialize(new ComponentWithBrowseButton<>(awtTextField, e -> Messages.showTextAreaDialog(awtTextField, myDialogTitle, myDialogTitle, parser::apply, joiner::apply)));
+
+      addDocumentListenerForValidator(awtTextField.getDocument());
 
       if (editButtonImage != null) {
-        myComponent.setButtonIcon(TargetAWT.to(editButtonImage));
+        toAWTComponent().setButtonIcon(TargetAWT.to(editButtonImage));
       }
     }
 

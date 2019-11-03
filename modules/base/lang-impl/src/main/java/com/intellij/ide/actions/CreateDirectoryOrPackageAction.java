@@ -22,6 +22,7 @@ import com.intellij.ide.IdeView;
 import com.intellij.ide.ui.newItemPopup.NewItemPopupUtil;
 import com.intellij.ide.ui.newItemPopup.NewItemSimplePopupPanel;
 import com.intellij.ide.util.DirectoryChooserUtil;
+import com.intellij.lang.LangBundle;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -29,24 +30,23 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.ui.InputValidatorEx;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFileSystemItem;
 import consulo.awt.TargetAWT;
-import consulo.ide.eap.EarlyAccessProgramManager;
-import consulo.ide.ui.newItemPopup.NewFilePopupEarlyAccessProgramDescriptor;
 import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackageSupportProvider;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.TextBox;
+import consulo.ui.ValidableComponent;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class CreateDirectoryOrPackageAction extends AnAction implements DumbAware {
@@ -105,40 +105,34 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
 
     CreateDirectoryOrPackageHandler validator = new CreateDirectoryOrPackageHandler(project, directory, isDirectory, info.getThird().getSeparator());
 
-    if (EarlyAccessProgramManager.is(NewFilePopupEarlyAccessProgramDescriptor.class)) {
-      String title = isDirectory ? IdeBundle.message("title.new.directory") : IdeBundle.message("title.new.package");
+    String title = isDirectory ? IdeBundle.message("title.new.directory") : IdeBundle.message("title.new.package");
 
-      createLightWeightPopup(validator, title, element -> {
-        if (element != null) {
-          view.selectElement(element);
-        }
-      }).showCenteredInCurrentWindow(project);
-    }
-    else {
-      Messages.showInputDialog(project, IdeBundle.message("prompt.enter.new.name"), info.getThird().getName(), Messages.getQuestionIcon(), "", validator);
-
-      PsiFileSystemItem result = validator.getCreatedElement();
-      if (result != null) {
-        view.selectElement(result);
+    createLightWeightPopup(validator, title, element -> {
+      if (element != null) {
+        view.selectElement(element);
       }
-    }
+    }).showCenteredInCurrentWindow(project);
   }
 
   private JBPopup createLightWeightPopup(CreateDirectoryOrPackageHandler validator, String title, Consumer<PsiElement> consumer) {
     NewItemSimplePopupPanel contentPanel = new NewItemSimplePopupPanel();
     TextBox nameField = contentPanel.getTextField();
     JBPopup popup = NewItemPopupUtil.createNewItemPopup(title, contentPanel, (JComponent)TargetAWT.to(nameField));
+    contentPanel.addValidator(value -> {
+      if (!validator.checkInput(value)) {
+        String message = InputValidatorEx.getErrorText(validator, value, LangBundle.message("incorrect.name"));
+        return new ValidableComponent.ValidationInfo(message);
+      }
+
+      return null;
+    });
+
     contentPanel.setApplyAction(event -> {
       String name = nameField.getValue();
+      validator.canClose(name);
 
-      if (validator.checkInput(name) && validator.canClose(name)) {
-        popup.closeOk(event);
-        consumer.accept(validator.getCreatedElement());
-      }
-      else {
-        String errorMessage = validator.getErrorText(name);
-        contentPanel.setError(errorMessage);
-      }
+      popup.closeOk(event);
+      consumer.accept(validator.getCreatedElement());
     });
 
     return popup;
@@ -205,7 +199,7 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
     if (moduleForPsiElement != null) {
       boolean isPackageSupported = false;
       ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(moduleForPsiElement);
-      PsiPackageSupportProvider[] extensions = PsiPackageSupportProvider.EP_NAME.getExtensions();
+      List<PsiPackageSupportProvider> extensions = PsiPackageSupportProvider.EP_NAME.getExtensionList();
       for (ModuleExtension moduleExtension : moduleRootManager.getExtensions()) {
         for (PsiPackageSupportProvider supportProvider : extensions) {
           if (supportProvider.isSupported(moduleExtension)) {

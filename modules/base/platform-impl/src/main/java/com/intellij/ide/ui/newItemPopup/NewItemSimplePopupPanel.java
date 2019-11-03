@@ -10,6 +10,7 @@ import com.intellij.ui.components.JBPanel;
 import com.intellij.util.Consumer;
 import consulo.awt.TargetAWT;
 import consulo.ui.TextBoxWithExtensions;
+import consulo.ui.ValidableComponent;
 import consulo.ui.event.KeyEvent;
 import consulo.ui.event.KeyListener;
 import consulo.ui.shared.border.BorderStyle;
@@ -35,10 +36,15 @@ public class NewItemSimplePopupPanel extends JBPanel implements Disposable {
     //myErrorShowPoint = new RelativePoint(myTextField, new Point(0, myTextField.getHeight()));
   }
 
+  public void addValidator(@Nonnull ValidableComponent.Validator<String> validator) {
+    myTextField.addValidator(validator);
+  }
+
   public void setApplyAction(@Nonnull Consumer<? super InputEvent> applyAction) {
     myApplyAction = applyAction;
   }
 
+  @Deprecated
   public void setError(String error) {
     ///myTextField.putClientProperty("JComponent.outline", error != null ? "error" : null);
 
@@ -83,14 +89,18 @@ public class NewItemSimplePopupPanel extends JBPanel implements Disposable {
       @Override
       public void keyPressed(@Nonnull KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.K_ENTER) {
+          if (!myTextField.validate()) {
+            return;
+          }
+
           if (myApplyAction != null) myApplyAction.consume(null); // todo null ??
         }
       }
     });
 
-    res.addValueListener(event -> {
-      setError(null);
-    });
+    //res.addValueListener(event -> {
+    //  setError(null);
+    //});
     return res;
   }
 

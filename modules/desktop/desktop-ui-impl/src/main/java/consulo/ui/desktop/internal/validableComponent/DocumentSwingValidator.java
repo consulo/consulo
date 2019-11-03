@@ -13,20 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.ui.newItemPopup;
+package consulo.ui.desktop.internal.validableComponent;
 
-import consulo.ide.eap.EarlyAccessProgramDescriptor;
+import com.intellij.ui.DocumentAdapter;
 
-import javax.annotation.Nonnull;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.text.Document;
 
 /**
  * @author VISTALL
- * @since 2019-10-31
+ * @since 2019-11-04
  */
-public class NewFilePopupEarlyAccessProgramDescriptor extends EarlyAccessProgramDescriptor {
-  @Nonnull
-  @Override
-  public String getName() {
-    return "Popup window for file/class/directory creating";
+public abstract class DocumentSwingValidator<C extends JComponent> extends SwingValidableComponent<String, C> {
+  protected void addDocumentListenerForValidator(Document document) {
+    document.addDocumentListener(new DocumentAdapter() {
+      @Override
+      protected void textChanged(DocumentEvent e) {
+        myValidator.validateValue(toAWTComponent(), getValue(), true);
+      }
+    });
   }
 }
