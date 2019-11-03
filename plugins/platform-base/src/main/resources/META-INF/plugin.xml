@@ -1169,6 +1169,8 @@
     <extensionPoint name="searchScopesProvider" interface="com.intellij.psi.search.SearchScopeProvider"/>
 
     <extensionPoint name="uiDecorator" interface="consulo.ui.UIDecorator" />
+
+    <extensionPoint name="statusBarWidgetProvider" interface="com.intellij.openapi.wm.StatusBarWidgetProvider" />
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
@@ -2693,6 +2695,8 @@
 
     <projectService serviceImplementation="com.intellij.ide.util.gotoByName.SearchEverywhereConfiguration"/>
     <projectService serviceInterface="com.intellij.ide.actions.searcheverywhere.SearchEverywhereManager" serviceImplementation="com.intellij.ide.actions.searcheverywhere.SearchEverywhereManagerImpl"/>
+
+    <statusBarWidgetProvider implementation="com.intellij.openapi.wm.impl.status.TogglePopupHintsPanelProvider" />
   </extensions>
 
   <applicationListeners>

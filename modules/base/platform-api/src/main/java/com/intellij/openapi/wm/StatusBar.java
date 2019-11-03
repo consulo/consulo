@@ -21,9 +21,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -61,6 +61,26 @@ public interface StatusBar extends StatusBarInfo, Disposable {
     }
   }
 
+
+  final class Anchors {
+    public static final String DEFAULT_ANCHOR = after(StandardWidgets.COLUMN_SELECTION_MODE_PANEL);
+
+    public static String before(String widgetId) {
+      return "before " + widgetId;
+    }
+
+    public static String after(String widgetId) {
+      return "after " + widgetId;
+    }
+  }
+
+  final class StandardWidgets {
+    public static final String ENCODING_PANEL = "Encoding";
+    public static final String COLUMN_SELECTION_MODE_PANEL = "InsertOverwrite"; // Keep the old ID for backwards compatibility
+    public static final String READONLY_ATTRIBUTE_PANEL = "ReadOnlyAttribute";
+    public static final String POSITION_PANEL = "Position";
+  }
+
   void addWidget(@Nonnull StatusBarWidget widget);
 
   void addWidget(@Nonnull StatusBarWidget widget, @Nonnull String anchor);
@@ -73,13 +93,17 @@ public interface StatusBar extends StatusBarInfo, Disposable {
    * @deprecated use addWidget instead
    */
   @Deprecated
-  void addCustomIndicationComponent(@Nonnull JComponent c);
+  default void addCustomIndicationComponent(@Nonnull JComponent c) {
+    throw new UnsupportedOperationException("deprecated");
+  }
 
   /**
    * @deprecated use removeWidget instead
    */
   @Deprecated
-  void removeCustomIndicationComponent(@Nonnull JComponent c);
+  default void removeCustomIndicationComponent(@Nonnull JComponent c) {
+    throw new UnsupportedOperationException("deprecated");
+  }
 
   void removeWidget(@Nonnull String id);
 
@@ -102,11 +126,4 @@ public interface StatusBar extends StatusBarInfo, Disposable {
 
   @Nullable
   Project getProject();
-
-  final class StandardWidgets {
-    public static final String ENCODING_PANEL = "Encoding";
-    public static final String COLUMN_SELECTION_MODE_PANEL = "InsertOverwrite"; // Keep the old ID for backwards compatibility
-    public static final String READONLY_ATTRIBUTE_PANEL = "ReadOnlyAttribute";
-    public static final String POSITION_PANEL = "Position";
-  }
 }

@@ -140,14 +140,6 @@ public final class TestWindowManager extends WindowManagerEx {
     }
 
     @Override
-    public void addCustomIndicationComponent(@Nonnull JComponent c) {
-    }
-
-    @Override
-    public void removeCustomIndicationComponent(@Nonnull JComponent c) {
-    }
-
-    @Override
     public void addProgress(@Nonnull ProgressIndicatorEx indicator, @Nonnull TaskInfo info) {
     }
 
@@ -224,10 +216,6 @@ public final class TestWindowManager extends WindowManagerEx {
 
     @Override
     public void setProcessWindowOpen(final boolean open) {
-    }
-
-    @Override
-    public void removeCustomIndicationComponents() {
     }
 
     @Override

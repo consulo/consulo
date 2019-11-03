@@ -30,11 +30,13 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.SingleRootFileViewProvider;
 import com.intellij.psi.search.ProjectScope;
 import com.intellij.psi.util.PsiUtilBase;
+import com.intellij.util.messages.MessageBus;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
 @Singleton
@@ -49,6 +51,13 @@ public class HighlightingSettingsPerFile extends HighlightingLevelManager implem
   }
 
   private final Map<VirtualFile, FileHighlightingSetting[]> myHighlightSettings = new HashMap<VirtualFile, FileHighlightingSetting[]>();
+
+  private final MessageBus myBus;
+
+  @Inject
+  public HighlightingSettingsPerFile(@Nonnull Project project) {
+    myBus = project.getMessageBus();
+  }
 
   @Nonnull
   public FileHighlightingSetting getHighlightingSettingForRoot(@Nonnull PsiElement root){
@@ -108,6 +117,8 @@ public class HighlightingSettingsPerFile extends HighlightingLevelManager implem
     else {
       myHighlightSettings.put(virtualFile, defaults);
     }
+
+    myBus.syncPublisher(FileHighlightingSettingListener.SETTING_CHANGE).settingChanged(root, setting);
   }
 
   @Override

@@ -4,6 +4,7 @@ package com.intellij.openapi.wm.impl.status;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.impl.HectorComponent;
+import com.intellij.codeInsight.daemon.impl.analysis.FileHighlightingSettingListener;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import com.intellij.icons.AllIcons;
@@ -25,8 +26,8 @@ import com.intellij.util.Consumer;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -83,24 +84,24 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
   public void install(@Nonnull StatusBar statusBar) {
     super.install(statusBar);
     myConnection.subscribe(PowerSaveMode.TOPIC, this::updateStatus);
-    InspectionProjectProfileManager.getInstance(myProject).addProfileChangeListener(new ProfileChangeAdapter() {
+    myConnection.subscribe(ProfileChangeAdapter.TOPIC, new ProfileChangeAdapter() {
       @Override
       public void profilesInitialized() {
         updateStatus();
       }
 
       @Override
-      public void profileActivated(@javax.annotation.Nullable Profile oldProfile, @javax.annotation.Nullable Profile profile) {
+      public void profileActivated(@Nullable Profile oldProfile, @Nullable Profile profile) {
         updateStatus();
       }
 
       @Override
-      public void profileChanged(@javax.annotation.Nullable Profile profile) {
+      public void profileChanged(@Nullable Profile profile) {
         updateStatus();
       }
-    }, this);
+    });
 
-    //myConnection.subscribe(FileHighlightingSettingListener.SETTING_CHANGE, (__, ___) -> updateStatus());
+    myConnection.subscribe(FileHighlightingSettingListener.SETTING_CHANGE, (r, s) -> updateStatus());
   }
 
   @Override

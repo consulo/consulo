@@ -29,18 +29,13 @@ import com.intellij.openapi.actionSystem.impl.MouseGestureManager;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.wm.IdeFrame;
-import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
-import com.intellij.openapi.wm.StatusBar;
-import com.intellij.openapi.wm.WindowManager;
+import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
-import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.openapi.wm.impl.status.*;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.ui.*;
@@ -51,6 +46,7 @@ import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
 import consulo.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.application.impl.FrameTitleUtil;
 import consulo.awt.TargetAWT;
+import consulo.logging.Logger;
 import consulo.ui.desktop.internal.window.JFrameAsUIWindow;
 import consulo.ui.shared.Rectangle2D;
 import consulo.wm.impl.status.ModuleLayerWidget;
@@ -483,6 +479,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
 
   private void installDefaultProjectStatusBarWidgets(@Nonnull final Project project) {
     final StatusBar statusBar = getStatusBar();
+    assert statusBar != null;
 
     final PositionPanel positionPanel = new PositionPanel(project);
     statusBar.addWidget(positionPanel, "before " + IdeMessagePanel.FATAL_ERROR);
@@ -505,6 +502,14 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
     final ModuleLayerWidget moduleLayerWidget = new ModuleLayerWidget(project);
     statusBar.addWidget(moduleLayerWidget, "after " + insertOverwritePanel.ID());
 
+    for (StatusBarWidgetProvider provider : StatusBarWidgetProvider.EP_NAME.getExtensionList()) {
+      StatusBarWidget widget = provider.getWidget(project);
+      if(widget == null) {
+        continue;
+      }
+      statusBar.addWidget(widget, provider.getAnchor());
+    }
+
     Disposer.register(project, () -> {
       statusBar.removeWidget(encodingPanel.ID());
       statusBar.removeWidget(moduleLayerWidget.ID());
@@ -513,8 +518,6 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
       statusBar.removeWidget(notificationArea.ID());
       statusBar.removeWidget(readOnlyAttributePanel.ID());
       statusBar.removeWidget(insertOverwritePanel.ID());
-
-      ((StatusBarEx)statusBar).removeCustomIndicationComponents();
     });
   }
 

@@ -27,13 +27,14 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class DiffPsiFileSupport {
   public static final Key<Boolean> KEY = Key.create("Diff.DiffPsiFileSupport");
 
   public static class HighlightFilter implements HighlightInfoFilter {
     @Override
-    public boolean accept(@Nonnull HighlightInfo info, @javax.annotation.Nullable PsiFile file) {
+    public boolean accept(@Nonnull HighlightInfo info, @Nullable PsiFile file) {
       if (!isDiffFile(file)) return true;
       if (info.getSeverity() == HighlightSeverity.ERROR) return false;
       return true;
@@ -42,13 +43,13 @@ public class DiffPsiFileSupport {
 
   public static class IntentionFilter implements IntentionActionFilter {
     @Override
-    public boolean accept(@Nonnull IntentionAction intentionAction, @javax.annotation.Nullable PsiFile file) {
+    public boolean accept(@Nonnull IntentionAction intentionAction, @Nullable PsiFile file) {
       return !isDiffFile(file);
     }
   }
 
   public static class HighlightingSettingProvider extends DefaultHighlightingSettingProvider {
-    @javax.annotation.Nullable
+    @Nullable
     @Override
     public FileHighlightingSetting getDefaultSetting(@Nonnull Project project, @Nonnull VirtualFile file) {
       if (!isDiffFile(file)) return null;
@@ -57,11 +58,11 @@ public class DiffPsiFileSupport {
   }
 
 
-  public static boolean isDiffFile(@javax.annotation.Nullable PsiFile file) {
+  public static boolean isDiffFile(@Nullable PsiFile file) {
     return file != null && isDiffFile(file.getVirtualFile());
   }
 
-  public static boolean isDiffFile(@javax.annotation.Nullable VirtualFile file) {
+  public static boolean isDiffFile(@Nullable VirtualFile file) {
     return file != null && file.getUserData(KEY) == Boolean.TRUE;
   }
 }

@@ -82,16 +82,6 @@ public class WebStatusBarImpl implements StatusBarEx {
   }
 
   @Override
-  public void addCustomIndicationComponent(@Nonnull JComponent c) {
-
-  }
-
-  @Override
-  public void removeCustomIndicationComponent(@Nonnull JComponent c) {
-
-  }
-
-  @Override
   public void removeWidget(@Nonnull String id) {
 
   }
@@ -190,12 +180,6 @@ public class WebStatusBarImpl implements StatusBarEx {
 
   @Override
   public void setProcessWindowOpen(boolean open) {
-
-  }
-
-  @Override
-  public void removeCustomIndicationComponents() {
-
   }
 
   @Override

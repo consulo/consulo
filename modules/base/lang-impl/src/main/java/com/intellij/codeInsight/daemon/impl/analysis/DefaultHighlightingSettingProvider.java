@@ -23,11 +23,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * @author ksafonov
- */
-
-
-/**
  * Implementation can provide default level of highlighting (one of "none", "syntax checks", "inspections") for a file.
  * This level can be overridden by user for a file via Hector-the-inspector component.
  * If implementation returns <code>null</code>, next one is checked. If nobody returns anything, "Inspections" level will be used

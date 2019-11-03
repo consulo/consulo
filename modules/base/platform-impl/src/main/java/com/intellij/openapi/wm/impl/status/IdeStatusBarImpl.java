@@ -35,14 +35,14 @@ import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.popup.NotificationPopup;
-import com.intellij.util.ArrayUtil;
+import com.intellij.util.Consumer;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.JBFont;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
@@ -78,8 +78,6 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx, IdeEven
 
   private String myInfo;
   private String myRequestor;
-
-  private final List<String> myCustomComponentIds = new ArrayList<>();
 
   private final Set<IdeStatusBarImpl> myChildren = new HashSet<>();
 
@@ -139,12 +137,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx, IdeEven
   public StatusBar createChild() {
     final IdeStatusBarImpl bar = new IdeStatusBarImpl(this);
     myChildren.add(bar);
-    Disposer.register(bar, new Disposable() {
-      @Override
-      public void dispose() {
-        myChildren.remove(bar);
-      }
-    });
+    Disposer.register(bar, () -> myChildren.remove(bar));
 
     for (String eachId : myOrderedWidgets) {
       WidgetBean eachBean = myWidgetMap.get(eachId);
@@ -198,131 +191,28 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx, IdeEven
 
   @Override
   public void addWidget(@Nonnull final StatusBarWidget widget) {
-    UIUtil.invokeLaterIfNeeded(new Runnable() {
-      @Override
-      public void run() {
-        addWidget(widget, Position.RIGHT, "__AUTODETECT__");
-      }
-    });
+    UIUtil.invokeLaterIfNeeded(() -> addWidget(widget, Position.RIGHT, "__AUTODETECT__"));
   }
 
   @Override
   public void addWidget(@Nonnull final StatusBarWidget widget, @Nonnull final String anchor) {
-    UIUtil.invokeLaterIfNeeded(new Runnable() {
-      @Override
-      public void run() {
-        addWidget(widget, Position.RIGHT, anchor);
-      }
-    });
+    UIUtil.invokeLaterIfNeeded(() -> addWidget(widget, Position.RIGHT, anchor));
   }
 
   private void addWidget(@Nonnull final StatusBarWidget widget, @Nonnull final Position pos) {
-    UIUtil.invokeLaterIfNeeded(new Runnable() {
-      @Override
-      public void run() {
-        addWidget(widget, pos, "__IGNORED__");
-      }
-    });
+    UIUtil.invokeLaterIfNeeded(() -> addWidget(widget, pos, "__IGNORED__"));
   }
 
   @Override
   public void addWidget(@Nonnull final StatusBarWidget widget, @Nonnull final Disposable parentDisposable) {
     addWidget(widget);
-    Disposer.register(parentDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        removeWidget(widget.ID());
-      }
-    });
+    Disposer.register(parentDisposable, () -> removeWidget(widget.ID()));
   }
 
   @Override
   public void addWidget(@Nonnull final StatusBarWidget widget, @Nonnull String anchor, @Nonnull final Disposable parentDisposable) {
     addWidget(widget, anchor);
-    Disposer.register(parentDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        removeWidget(widget.ID());
-      }
-    });
-  }
-
-  @Override
-  public void removeCustomIndicationComponents() {
-    for (final String id : myCustomComponentIds) {
-      removeWidget(id);
-    }
-
-    myCustomComponentIds.clear();
-  }
-
-  @Override
-  public void addCustomIndicationComponent(@Nonnull final JComponent c) {
-    final String customId = c.getClass().getName() + new Random().nextLong();
-    addWidget(new CustomStatusBarWidget() {
-      @Override
-      @Nonnull
-      public String ID() {
-        return customId;
-      }
-
-      @Override
-      @Nullable
-      public WidgetPresentation getPresentation() {
-        return null;
-      }
-
-      @Override
-      public void install(@Nonnull StatusBar statusBar) {
-      }
-
-      @Override
-      public void dispose() {
-      }
-
-      @Override
-      public JComponent getComponent() {
-        return c;
-      }
-    });
-
-    myCustomComponentIds.add(customId);
-  }
-
-  //@Override
-  //protected void processMouseMotionEvent(MouseEvent e) {
-  //  final Point point = e.getPoint();
-  //  if (myToolWindowWidget != null) {
-  //    if(point.x < 42 && 0 <= point.y && point.y <= getHeight()) {
-  //      myToolWindowWidget.mouseEntered();
-  //    } else {
-  //      myToolWindowWidget.mouseExited();
-  //    }
-  //  }
-  //  super.processMouseMotionEvent(e);
-  //}
-
-  //@Override
-  //protected void processMouseEvent(MouseEvent e) {
-  //  if (e.getID() == MouseEvent.MOUSE_EXITED && myToolWindowWidget != null) {
-  //    if (!new Rectangle(0,0,22, getHeight()).contains(e.getPoint())) {
-  //      myToolWindowWidget.mouseExited();
-  //    }
-  //  }
-  //  super.processMouseEvent(e);
-  //}
-
-  @Override
-  public void removeCustomIndicationComponent(@Nonnull final JComponent c) {
-    final Set<String> keySet = myWidgetMap.keySet();
-    final String[] keys = ArrayUtil.toStringArray(keySet);
-    for (final String key : keys) {
-      final WidgetBean value = myWidgetMap.get(key);
-      if (value.widget instanceof CustomStatusBarWidget && value.component == c) {
-        removeWidget(key);
-        myCustomComponentIds.remove(key);
-      }
-    }
+    Disposer.register(parentDisposable, () -> removeWidget(widget.ID()));
   }
 
   @Override
@@ -455,14 +345,11 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx, IdeEven
 
   @Override
   public void setInfo(@Nullable final String s, @Nullable final String requestor) {
-    UIUtil.invokeLaterIfNeeded(new Runnable() {
-      @Override
-      public void run() {
-        if (myInfoAndProgressPanel != null) {
-          Couple<String> pair = myInfoAndProgressPanel.setText(s, requestor);
-          myInfo = pair.first;
-          myRequestor = pair.second;
-        }
+    UIUtil.invokeLaterIfNeeded(() -> {
+      if (myInfoAndProgressPanel != null) {
+        Couple<String> pair = myInfoAndProgressPanel.setText(s, requestor);
+        myInfo = pair.first;
+        myRequestor = pair.second;
       }
     });
   }
@@ -502,24 +389,14 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx, IdeEven
     myInfoAndProgressPanel.setRefreshToolTipText(tooltipText);
     myInfoAndProgressPanel.setRefreshVisible(true);
 
-    updateChildren(new ChildAction() {
-      @Override
-      public void update(IdeStatusBarImpl child) {
-        child.startRefreshIndication(tooltipText);
-      }
-    });
+    updateChildren(child -> child.startRefreshIndication(tooltipText));
   }
 
   @Override
   public void stopRefreshIndication() {
     myInfoAndProgressPanel.setRefreshVisible(false);
 
-    updateChildren(new ChildAction() {
-      @Override
-      public void update(IdeStatusBarImpl child) {
-        child.stopRefreshIndication();
-      }
-    });
+    updateChildren(IdeStatusBarImpl::stopRefreshIndication);
   }
 
   @Override
@@ -651,35 +528,22 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx, IdeEven
       updateWidget(s);
     }
 
-    updateChildren(new ChildAction() {
-      @Override
-      public void update(IdeStatusBarImpl child) {
-        child.updateWidgets();
-      }
-    });
+    updateChildren(IdeStatusBarImpl::updateWidgets);
   }
 
   @Override
   public void updateWidget(@Nonnull final String id) {
-    UIUtil.invokeLaterIfNeeded(new Runnable() {
-      @Override
-      public void run() {
-        final WidgetBean bean = myWidgetMap.get(id);
-        if (bean != null) {
-          if (bean.component instanceof StatusBarWrapper) {
-            ((StatusBarWrapper)bean.component).beforeUpdate();
-          }
-
-          bean.component.repaint();
+    UIUtil.invokeLaterIfNeeded(() -> {
+      final WidgetBean bean = myWidgetMap.get(id);
+      if (bean != null) {
+        if (bean.component instanceof StatusBarWrapper) {
+          ((StatusBarWrapper)bean.component).beforeUpdate();
         }
 
-        updateChildren(new ChildAction() {
-          @Override
-          public void update(IdeStatusBarImpl child) {
-            child.updateWidget(id);
-          }
-        });
+        bean.component.repaint();
       }
+
+      updateChildren(child -> child.updateWidget(id));
     });
   }
 
@@ -730,7 +594,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx, IdeEven
 
   private static final class TextPresentationWrapper extends TextPanel implements StatusBarWrapper {
     private final StatusBarWidget.TextPresentation myPresentation;
-    private final com.intellij.util.Consumer<MouseEvent> myClickConsumer;
+    private final Consumer<MouseEvent> myClickConsumer;
 
     private TextPresentationWrapper(@Nonnull final StatusBarWidget.TextPresentation presentation) {
       myPresentation = presentation;
@@ -758,7 +622,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx, IdeEven
 
   private static final class IconPresentationWrapper extends TextPanel.WithIconAndArrows implements StatusBarWrapper {
     private final StatusBarWidget.IconPresentation myPresentation;
-    private final com.intellij.util.Consumer<MouseEvent> myClickConsumer;
+    private final Consumer<MouseEvent> myClickConsumer;
 
     private IconPresentationWrapper(@Nonnull final StatusBarWidget.IconPresentation presentation) {
       myPresentation = presentation;
