@@ -17,22 +17,12 @@ package com.intellij.ide.startup;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
-import consulo.ui.UIAccess;
-
-import javax.annotation.Nonnull;
-import java.util.function.Consumer;
 
 /**
  * @author mike
  */
 public abstract class StartupManagerEx extends StartupManager {
-  public abstract boolean startupActivityRunning();
   public abstract boolean startupActivityPassed();
-
-  public abstract boolean postStartupActivityPassed();
-
-  @Override
-  public abstract void registerPreStartupActivity(@Nonnull Consumer<UIAccess> consumer); // should be used only to register to FileSystemSynchronizer!
 
   public static StartupManagerEx getInstanceEx(Project project) {
     return (StartupManagerEx)getInstance(project);

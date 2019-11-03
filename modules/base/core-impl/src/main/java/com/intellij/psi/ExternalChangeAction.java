@@ -18,7 +18,7 @@ package com.intellij.psi;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.DocumentRunnable;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public interface ExternalChangeAction extends Runnable, IgnorePsiEventsMarker {
   abstract class ExternalDocumentChange extends DocumentRunnable implements ExternalChangeAction {

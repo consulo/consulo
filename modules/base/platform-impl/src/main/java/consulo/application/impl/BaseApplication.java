@@ -70,10 +70,9 @@ import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.ide.PooledThreadExecutor;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
@@ -696,7 +695,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   }
 
   @Override
-  public boolean hasWriteAction(@NotNull Class<?> actionClass) {
+  public boolean hasWriteAction(@Nonnull Class<?> actionClass) {
     assertReadAccessAllowed();
 
     for (int i = myWriteActionsStack.size() - 1; i >= 0; i--) {

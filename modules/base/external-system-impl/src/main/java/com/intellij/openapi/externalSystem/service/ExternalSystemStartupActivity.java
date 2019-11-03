@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.service;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.externalSystem.ExternalSystemManager;
 import com.intellij.openapi.externalSystem.model.ExternalSystemDataKeys;
@@ -26,22 +27,23 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
-import com.intellij.openapi.startup.StartupManager;
 import consulo.ui.UIAccess;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
  * @since 5/2/13 9:23 PM
  */
-public class ExternalSystemStartupActivity implements StartupActivity {
+public class ExternalSystemStartupActivity implements StartupActivity.Background {
 
   @Override
   public void runActivity(@Nonnull UIAccess uiAccess, @Nonnull final Project project) {
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       return;
     }
-    Runnable task = () -> {
+
+    Application.get().invokeLater(() -> {
       for (ExternalSystemManager<?, ?, ?, ?, ?> manager : ExternalSystemApiUtil.getAllManagers()) {
         if (manager instanceof StartupActivity) {
           ((StartupActivity)manager).runActivity(uiAccess, project);
@@ -56,13 +58,6 @@ public class ExternalSystemStartupActivity implements StartupActivity {
       ExternalToolWindowManager.handle(project);
       ExternalSystemVcsRegistrar.handle(project);
       ProjectRenameAware.beAware(project);
-    };
-
-    if (project.isInitialized()) {
-      task.run();
-    }
-    else {
-      StartupManager.getInstance(project).registerPostStartupActivity(task);
-    }
+    }, project.getDisposed());
   }
 }

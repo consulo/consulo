@@ -16,11 +16,13 @@
 package com.intellij.openapi.extensions;
 
 import consulo.annotations.DeprecationInfo;
+import consulo.container.plugin.PluginDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 /**
  * @author AKireyev
@@ -61,4 +63,6 @@ public interface ExtensionPoint<T> {
 
   @Nullable
   <K extends T> K findExtension(Class<K> extensionClass);
+
+  void processWithPluginDescriptor(@Nonnull BiConsumer<? super T, ? super PluginDescriptor> consumer);
 }

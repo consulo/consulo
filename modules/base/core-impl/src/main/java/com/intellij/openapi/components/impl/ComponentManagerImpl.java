@@ -28,10 +28,7 @@ import com.intellij.openapi.extensions.impl.ExtensionPointImpl;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.UserDataHolderBase;
+import com.intellij.openapi.util.*;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.impl.MessageBusFactory;
@@ -245,7 +242,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     if (ep != null) {
       ExtensionPointImpl<ServiceDescriptor> extensionPoint = (ExtensionPointImpl<ServiceDescriptor>)myExtensionsArea.getExtensionPoint(ep);
       // there no injector at that level - build it via hardcode
-      List<ServiceDescriptor> descriptorList = extensionPoint.buildUnsafe(aClass -> new ServiceDescriptor());
+      List<Pair<ServiceDescriptor, PluginDescriptor>> descriptorList = extensionPoint.buildUnsafe(aClass -> new ServiceDescriptor());
       // and cache it
       extensionPoint.setExtensionCache(descriptorList);
 

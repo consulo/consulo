@@ -72,8 +72,8 @@
     <extensionPoint name="generatedSourcesFilter" interface="com.intellij.openapi.roots.GeneratedSourcesFilter"/>
     <extensionPoint name="defaultLibraryRootDetector" interface="com.intellij.openapi.roots.libraries.ui.RootDetector"/>
 
-    <extensionPoint name="postStartupActivity"
-                    interface="com.intellij.openapi.startup.StartupActivity"/>
+    <extensionPoint name="postStartupActivity" interface="com.intellij.openapi.startup.StartupActivity"/>
+    <extensionPoint name="backgroundPostStartupActivity" interface="com.intellij.openapi.startup.StartupActivity$Background"/>
 
     <extensionPoint name="projectConfigurable"
                     beanClass="consulo.options.ProjectConfigurableEP"
@@ -2491,7 +2491,7 @@
                     serviceImplementation="com.intellij.codeInsight.daemon.impl.analysis.HighlightingSettingsPerFile"/>
 
     <projectService serviceImplementation="com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector"/>
-    <postStartupActivity implementation="com.intellij.ide.plugins.pluginsAdvertisement.PluginsAdvertiser"/>
+    <backgroundPostStartupActivity implementation="com.intellij.ide.plugins.pluginsAdvertisement.PluginsAdvertiser"/>
 
     <moduleService serviceInterface="consulo.compiler.ModuleCompilerPathsManager"
                    serviceImplementation="consulo.compiler.impl.ModuleCompilerPathsManagerImpl"/>

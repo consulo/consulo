@@ -38,6 +38,9 @@ public interface ProjectLifecycleListener {
   default void afterProjectClosed(@Nonnull Project project) {
   }
 
+  default void postStartupActivitiesPassed(@Nonnull Project project) {
+  }
+
   /**
    * @deprecated Use {@link ProjectLifecycleListener}
    */

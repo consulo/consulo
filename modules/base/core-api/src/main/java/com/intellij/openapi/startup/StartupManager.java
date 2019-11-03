@@ -79,4 +79,6 @@ public abstract class StartupManager {
    * @param runnable the activity to execute.
    */
   public abstract void runWhenProjectIsInitialized(@Nonnull Runnable runnable);
+
+  public abstract boolean postStartupActivityPassed();
 }

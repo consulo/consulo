@@ -17,6 +17,8 @@ package com.intellij.openapi.project.impl;
 
 import com.intellij.conversion.ConversionResult;
 import com.intellij.conversion.ConversionService;
+import com.intellij.diagnostic.LoadingState;
+import com.intellij.diagnostic.StartUpMeasurer;
 import com.intellij.ide.AppLifecycleListener;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.ide.startup.StartupManagerEx;
@@ -348,12 +350,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
 
       final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(project);
       startupManager.runStartupActivities(uiAccess);
-
-      // Startup activities (e.g. the one in FileBasedIndexProjectHandler) have scheduled dumb mode to begin "later"
-      // Now we schedule-and-wait to the same event queue to guarantee that the dumb mode really begins now:
-      // Post-startup activities should not ever see unindexed and at the same time non-dumb state
-      TransactionGuard.getInstance().submitTransactionAndWait(startupManager::startCacheUpdate);
-
       startupManager.runPostStartupActivitiesFromExtensions(uiAccess);
 
       GuiUtils.invokeLaterIfNeeded(() -> {
@@ -950,12 +946,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
 
     final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(project);
     startupManager.runStartupActivities(uiAccess);
-
-    // Startup activities (e.g. the one in FileBasedIndexProjectHandler) have scheduled dumb mode to begin "later"
-    // Now we schedule-and-wait to the same event queue to guarantee that the dumb mode really begins now:
-    // Post-startup activities should not ever see unindexed and at the same time non-dumb state
-    startupManager.startCacheUpdate();
-
     startupManager.runPostStartupActivitiesFromExtensions(uiAccess);
 
     if (!project.isDisposed()) {
@@ -975,6 +965,12 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
           uiAccess.giveAndWaitIfNeed(() -> IdeFocusManager.getInstance(project).requestFocus(projectFrame, true));
         }
       }
+
+      application.invokeLater(() -> {
+        if (!project.isDisposedOrDisposeInProgress()) {
+          startupManager.scheduleBackgroundPostStartupActivities(uiAccess);
+        }
+      }, ModalityState.NON_MODAL, o -> project.isDisposedOrDisposeInProgress());
     }
   }
 

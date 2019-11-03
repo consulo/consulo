@@ -19,11 +19,13 @@ package com.intellij.openapi.extensions;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.ComponentManager;
 import consulo.annotations.DeprecationInfo;
+import consulo.container.plugin.PluginDescriptor;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -109,5 +111,9 @@ public class ExtensionPointName<T> {
     for (T value : getExtensionList()) {
       consumer.accept(value);
     }
+  }
+
+  public void processWithPluginDescriptor(@Nonnull BiConsumer<? super T, ? super PluginDescriptor> consumer) {
+    Application.get().getExtensionsArea().getExtensionPoint(this).processWithPluginDescriptor(consumer);
   }
 }

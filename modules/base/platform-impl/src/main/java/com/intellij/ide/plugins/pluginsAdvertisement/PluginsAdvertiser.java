@@ -42,7 +42,7 @@ import javax.annotation.Nullable;
 import javax.swing.event.HyperlinkEvent;
 import java.util.*;
 
-public class PluginsAdvertiser implements StartupActivity, DumbAware {
+public class PluginsAdvertiser implements StartupActivity.Background, DumbAware {
   private static NotificationGroup ourGroup = new NotificationGroup("Plugins Suggestion", NotificationDisplayType.STICKY_BALLOON, true);
 
   @Override

@@ -61,7 +61,7 @@
 
   <extensions defaultExtensionNs="com.intellij">
 
-    <postStartupActivity implementation="com.intellij.openapi.externalSystem.service.ExternalSystemStartupActivity"/>
+    <backgroundPostStartupActivity implementation="com.intellij.openapi.externalSystem.service.ExternalSystemStartupActivity"/>
 
     <!--Generic services-->
     <applicationService serviceImplementation="com.intellij.openapi.externalSystem.service.ExternalSystemFacadeManager"/>
