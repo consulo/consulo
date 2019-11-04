@@ -24,6 +24,7 @@ import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.util.FieldAccessor;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.ReflectionUtil;
 import consulo.ui.SwingUIDecorator;
 import kava.beans.PropertyChangeEvent;
@@ -51,10 +52,27 @@ import java.lang.reflect.Field;
  * 2. Adding items dont supported. There only one item, which used for rendering
  */
 public final class ComboBoxButtonImpl extends JComboBox<Object> implements ComboBoxButton {
-  private class HackComboBoxPopup implements ComboPopup {
-    private JList<?> myDummyList = new JList<>();
+  public static interface ComboBoxUIFactory {
+    @Nonnull
+    HackyComboBoxUI create(@Nonnull ComboBoxUI delegate, @Nonnull ComboBoxButtonImpl comboBoxButton);
+  }
 
-    HackComboBoxPopup() {
+  private static class DefaultComboBoxUIFactory implements ComboBoxUIFactory {
+    private static final DefaultComboBoxUIFactory INSTANCE = new DefaultComboBoxUIFactory();
+
+    @Nonnull
+    @Override
+    public HackyComboBoxUI create(@Nonnull ComboBoxUI delegate, @Nonnull ComboBoxButtonImpl comboBoxButton) {
+      return new HackyComboBoxUI(delegate, comboBoxButton);
+    }
+  }
+
+  public static class HackComboBoxPopup implements ComboPopup {
+    private final JList<?> myDummyList = new JList<>();
+    private final ComboBoxButtonImpl myButton;
+
+    HackComboBoxPopup(ComboBoxButtonImpl button) {
+      myButton = button;
       // some ui register listeners to JList of popup
       // just return dummy instance
       // also override default UI since, some ui like Aqua can just skip list if is not aqua list ui
@@ -63,17 +81,17 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
 
     @Override
     public void show() {
-      showPopup0();
+      myButton.showPopup0();
     }
 
     @Override
     public void hide() {
-      hidePopup0();
+      myButton.hidePopup0();
     }
 
     @Override
     public boolean isVisible() {
-      return myCurrentPopupCanceler != null;
+      return myButton.myCurrentPopupCanceler != null;
     }
 
     @Override
@@ -113,13 +131,15 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
   private static Field popupKeyListener = ReflectionUtil.getDeclaredField(BasicComboBoxUI.class, "popupKeyListener");
   private static FieldAccessor<BasicComboBoxUI, JButton> arrowButton = new FieldAccessor<>(BasicComboBoxUI.class, "arrowButton");
 
-  private class HackyComboBoxUI extends ComboBoxUI {
+  public static class HackyComboBoxUI extends ComboBoxUI {
 
-    private BasicComboBoxUI myDelegateUI;
+    protected final ComboBoxButtonImpl myButton;
+    protected final BasicComboBoxUI myDelegateUI;
 
     private MouseListener myMouseListener;
 
-    public HackyComboBoxUI(ComboBoxUI ui) {
+    public HackyComboBoxUI(ComboBoxUI ui, ComboBoxButtonImpl button) {
+      myButton = button;
       myDelegateUI = (BasicComboBoxUI)ui;
     }
 
@@ -165,12 +185,12 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
           }
         }
 
-        ourPopupField.set(myDelegateUI, new HackComboBoxPopup());
+        ourPopupField.set(myDelegateUI, new HackComboBoxPopup(myButton));
 
         myMouseListener = new MouseAdapter() {
           @Override
           public void mouseClicked(MouseEvent e) {
-            showPopup0();
+            myButton.showPopup0();
           }
         };
 
@@ -217,16 +237,16 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
     @Override
     public void setPopupVisible(JComboBox c, boolean v) {
       if (v) {
-        showPopup0();
+        myButton.showPopup0();
       }
       else {
-        hidePopup0();
+        myButton.hidePopup0();
       }
     }
 
     @Override
     public boolean isPopupVisible(JComboBox c) {
-      return myCurrentPopupCanceler != null;
+      return myButton.myCurrentPopupCanceler != null;
     }
 
     @Override
@@ -364,9 +384,11 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
 
   @Override
   public void updateUI() {
-    ComboBoxUI comboBoxUI = (ComboBoxUI)UIManager.getUI(this);
+    ComboBoxUIFactory factory = ObjectUtil.notNull((ComboBoxUIFactory)UIManager.get(ComboBoxUIFactory.class), DefaultComboBoxUIFactory.INSTANCE);
 
-    setUI(new HackyComboBoxUI(comboBoxUI));
+    ComboBoxUI delegate = (ComboBoxUI)UIManager.getUI(this);
+
+    setUI(factory.create(delegate, this));
 
     // refresh state
     setLikeButton(myOnClickListener);

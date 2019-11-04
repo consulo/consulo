@@ -17,7 +17,6 @@ package consulo.sandboxPlugin.desktop.laf;
 
 import consulo.desktop.impl.ui.LookAndFeelProvider;
 import consulo.desktop.ui.laf.LookAndFeelInfoWithClassLoader;
-import org.pushingpixels.substance.api.skin.SubstanceGeminiLookAndFeel;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -33,6 +32,6 @@ public class SubstanceLafProvider implements LookAndFeelProvider {
     // FIXME [VISTALL] issue with resource inside library and classloading
     UIManager.put("ClassLoader", getClass().getClassLoader());
 
-    consumer.accept(LookAndFeelInfoWithClassLoader.simple("Substance - Gemini", SubstanceGeminiLookAndFeel.class));
+    consumer.accept(LookAndFeelInfoWithClassLoader.simple("Substance - Gemini", SubstanceGeminiLookAndFeel2.class));
   }
 }

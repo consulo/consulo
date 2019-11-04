@@ -16,6 +16,6 @@
 <consulo-plugin>
   <extensions defaultExtensionNs="consulo.platform.desktop">
     <lookAndFeelProvider implementation="consulo.sandboxPlugin.desktop.laf.FlatLafProvider" />
-    <!--<lookAndFeelProvider implementation="consulo.sandboxPlugin.desktop.laf.SubstanceLafProvider" /> -->
+    <lookAndFeelProvider implementation="consulo.sandboxPlugin.desktop.laf.SubstanceLafProvider" />
   </extensions>
 </consulo-plugin>
