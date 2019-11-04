@@ -146,7 +146,7 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
   protected CheckCanceledHook createCheckCanceledHook() {
     if (myHooks.isEmpty()) return null;
 
-    CheckCanceledHook[] activeHooks = myHooks.toArray(new CheckCanceledHook[0]);
+    CheckCanceledHook[] activeHooks = myHooks.toArray(CheckCanceledHook.EMPTY_ARRAY);
     return activeHooks.length == 1 ? activeHooks[0] : indicator -> {
       boolean result = false;
       for (CheckCanceledHook hook : activeHooks) {

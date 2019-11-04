@@ -911,6 +911,8 @@ public class CoreProgressManager extends ProgressManager implements Disposable {
 
   @FunctionalInterface
   interface CheckCanceledHook {
+    CheckCanceledHook[] EMPTY_ARRAY = new CheckCanceledHook[0];
+
     /**
      * @param indicator the indicator whose {@link ProgressIndicator#checkCanceled()} was called, or null if a non-progressive thread performed {@link ProgressManager#checkCanceled()}
      * @return true if the hook has done anything that might take some time.
