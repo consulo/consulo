@@ -61,6 +61,8 @@ import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Anton Katilin
@@ -502,11 +504,13 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
     final ModuleLayerWidget moduleLayerWidget = new ModuleLayerWidget(project);
     statusBar.addWidget(moduleLayerWidget, "after " + insertOverwritePanel.ID());
 
+    List<StatusBarWidget> toRemove = new ArrayList<>();
     for (StatusBarWidgetProvider provider : StatusBarWidgetProvider.EP_NAME.getExtensionList()) {
       StatusBarWidget widget = provider.getWidget(project);
       if(widget == null) {
         continue;
       }
+      toRemove.add(widget);
       statusBar.addWidget(widget, provider.getAnchor());
     }
 
@@ -518,6 +522,9 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
       statusBar.removeWidget(notificationArea.ID());
       statusBar.removeWidget(readOnlyAttributePanel.ID());
       statusBar.removeWidget(insertOverwritePanel.ID());
+      for (StatusBarWidget widget : toRemove) {
+        statusBar.removeWidget(widget.ID());
+      }
     });
   }
 
