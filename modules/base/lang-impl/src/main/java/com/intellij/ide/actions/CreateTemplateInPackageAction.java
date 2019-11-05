@@ -45,6 +45,7 @@ import javax.swing.*;
 public abstract class CreateTemplateInPackageAction<T extends PsiElement> extends CreateFromTemplateAction<T> {
   private final boolean myInSourceOnly;
 
+  @Deprecated
   protected CreateTemplateInPackageAction(String text, String description, Icon icon, boolean inSourceOnly) {
     super(text, description, icon);
     myInSourceOnly = inSourceOnly;
@@ -55,6 +56,7 @@ public abstract class CreateTemplateInPackageAction<T extends PsiElement> extend
     myInSourceOnly = inSourceOnly;
   }
 
+  @SuppressWarnings("deprecation")
   protected CreateTemplateInPackageAction(String text, String description, SwingImageRef icon, boolean inSourceOnly) {
     super(text, description, icon);
     myInSourceOnly = inSourceOnly;

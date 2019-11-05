@@ -57,6 +57,7 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
   private JLabel myNameLabel;
 
   private ElementCreator myCreator;
+  @Nullable
   private InputValidator myInputValidator;
 
   protected CreateFileFromTemplateDialog(@Nonnull Project project) {
@@ -167,7 +168,7 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
     }
 
     @Override
-    public Builder setValidator(InputValidator validator) {
+    public Builder setValidator(@Nonnull InputValidator validator) {
       myDialog.myInputValidator = validator;
       return this;
     }
@@ -254,7 +255,7 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
 
       JBPopup popup = NewItemPopupUtil.createNewItemPopup(myTitle, contentPanel, (JComponent)TargetAWT.to(contentPanel.getNameField()));
       contentPanel.addValidator(value -> {
-        if (!myInputValidator.canClose(value)) {
+        if (myInputValidator != null && !myInputValidator.canClose(value)) {
           String message = InputValidatorEx.getErrorText(myInputValidator, value, LangBundle.message("incorrect.name"));
           return new ValidableComponent.ValidationInfo(message);
         }

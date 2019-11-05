@@ -46,6 +46,7 @@ import java.util.Map;
 public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnAction {
   protected static final Logger LOG = Logger.getInstance(CreateFromTemplateAction.class);
 
+  @Deprecated
   public CreateFromTemplateAction(String text, String description, Icon icon) {
     super(text, description, icon);
   }
@@ -54,6 +55,7 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
     super(text, description, icon);
   }
 
+  @SuppressWarnings("deprecation")
   public CreateFromTemplateAction(String text, String description, SwingImageRef icon) {
     super(text, description, icon);
   }

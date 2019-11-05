@@ -55,6 +55,7 @@ public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAct
     Module resolveModule(@Nonnull PsiDirectory directory, @Nonnull FileType fileType);
   }
 
+  @Deprecated
   public CreateFileFromTemplateAction(String text, String description, Icon icon) {
     super(text, description, icon);
   }
