@@ -15,7 +15,6 @@
  */
 package com.intellij.lang;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.fileTypes.LanguageFileType;
@@ -27,6 +26,7 @@ import consulo.annotations.Exported;
 import consulo.annotations.Immutable;
 import consulo.lang.LanguageVersion;
 import consulo.lang.LanguageVersionDefines;
+import consulo.logging.Logger;
 import consulo.util.pointers.Named;
 import org.jetbrains.annotations.NonNls;
 

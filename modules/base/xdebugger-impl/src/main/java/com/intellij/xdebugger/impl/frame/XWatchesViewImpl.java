@@ -110,7 +110,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
             ActionPlaces.DEBUGGER_TOOLBAR,
             DebuggerSessionTabBase.getCustomizedActionGroup(XDebuggerActions.WATCHES_TREE_TOOLBAR_GROUP),
             !myWatchesInVariables);
-    toolbar.setBorder(new CustomLineBorder(CaptionPanel.CNT_ACTIVE_BORDER_COLOR, 0, 0,
+    toolbar.setBorder(new CustomLineBorder(UIUtil.getBorderColor(), 0, 0,
                                            myWatchesInVariables ? 0 : 1,
                                            myWatchesInVariables ? 1 : 0));
     toolbar.setTargetComponent(tree);

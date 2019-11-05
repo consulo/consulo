@@ -328,6 +328,10 @@ public class JBUI {
     }
 
     public static class Popup {
+      public static Color headerBackground(boolean active) {
+        return active ? JBColor.namedColor("Popup.Header.activeBackground", 0xe6e6e6) : JBColor.namedColor("Popup.Header.inactiveBackground", 0xededed);
+      }
+
       public static Color separatorColor() {
         return JBColor.namedColor("Popup.separatorColor", new JBColor(Color.gray.brighter(), Gray.x51));
       }

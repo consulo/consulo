@@ -16,10 +16,8 @@
 
 package com.intellij.ui;
 
-import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -29,18 +27,7 @@ import java.awt.event.MouseEvent;
  * @author max
  */
 public class CaptionPanel extends JPanel {
-  private static final Color CNT_COLOR = new JBColor(Gray._240, Gray._90);
-  private static final Color BND_COLOR = new JBColor(Gray._240, Gray._90);
-
-  public static final Color CNT_ACTIVE_COLOR = new JBColor(Gray._202, Gray._55);
-  public static final Color CNT_ACTIVE_BORDER_COLOR = UIUtil.isUnderDarcula() ? UIUtil.getBorderColor() : CNT_ACTIVE_COLOR;
-  public static final Color BND_ACTIVE_COLOR = new JBColor(Gray._239, Gray._90);
-
-  private static final JBColor TOP_FLICK_ACTIVE = new JBColor(Color.white, Gray._110);
-  private static final JBColor TOP_FLICK_PASSIVE = new JBColor(Color.white, BND_COLOR);
-
-  private static final JBColor BOTTOM_FLICK_ACTIVE = new JBColor(Color.gray, Gray._35);
-  private static final JBColor BOTTOM_FLICK_PASSIVE = new JBColor(Color.lightGray, Gray._75);
+  private static final String uiClassUD = "CaptionPanelUI";
 
   private boolean myActive = false;
   private ActiveComponent myButtonComponent;
@@ -51,52 +38,12 @@ public class CaptionPanel extends JPanel {
   }
 
   @Override
-  protected void paintComponent(Graphics g) {
-    super.paintComponent(g);
-    final Graphics2D g2d = (Graphics2D) g;
-
-    /*
-    if (UIUtil.isUnderDarcula() && UIUtil.findComponentsOfType(this, JCheckBox.class).isEmpty()) {
-      paintUnderDarcula(g2d);
-      return;
-    }
-    */
-
-    if (myActive) {
-      g.setColor(TOP_FLICK_ACTIVE);
-      g.drawLine(0, 0, getWidth(), 0);
-      g.setColor(BOTTOM_FLICK_ACTIVE);
-      g.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
-      g2d.setPaint(UIUtil.getGradientPaint(0, 0, BND_ACTIVE_COLOR, 0, getHeight(), CNT_ACTIVE_COLOR));
-    }
-    else {
-      g.setColor(TOP_FLICK_PASSIVE);
-      g.drawLine(0, 0, getWidth(), 0);
-      g.setColor(BOTTOM_FLICK_PASSIVE);
-      g.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
-      g2d.setPaint(UIUtil.getGradientPaint(0, 0, BND_COLOR, 0, getHeight(), CNT_COLOR));
-    }
-
-    g2d.fillRect(0, 1, getWidth(), getHeight() - 2);
+  public String getUIClassID() {
+    return uiClassUD;
   }
 
-  private void paintUnderDarcula(Graphics2D g) {
-    if (myActive) {
-      g.setColor(Gray._100);
-      g.drawLine(0, 0, getWidth(), 0);
-      g.setColor(Gray._50);
-      g.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
-      g.setPaint(UIUtil.getGradientPaint(0, 0, Gray._100, 0, getHeight(), Gray._85));
-    }
-    else {
-      g.setColor(Gray._100);
-      g.drawLine(0, 0, getWidth(), 0);
-      g.setColor(Gray._50);
-      g.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
-      g.setPaint(UIUtil.getGradientPaint(0, 0, Gray._120, 0, getHeight(), Gray._105));
-    }
-
-    g.fillRect(0, 1, getWidth(), getHeight() - 2);
+  public boolean isActive() {
+    return myActive;
   }
 
   public void setActive(final boolean active) {

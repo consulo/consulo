@@ -16,7 +16,6 @@
 package consulo.ide.ui.laf.intellij;
 
 import com.intellij.openapi.ui.GraphicsConfig;
-import com.intellij.ui.CaptionPanel;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
@@ -30,8 +29,8 @@ import com.intellij.util.Function;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.ide.ui.laf.JBEditorTabsUI;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -230,7 +229,7 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
       JBTabsImpl.Toolbar toolbarComp = tabs.myInfo2Toolbar.get(tabs.getSelectedInfoInternal());
       if (toolbarComp != null && !toolbarComp.isEmpty()) {
         Rectangle toolBounds = toolbarComp.getBounds();
-        g2d.setColor(CaptionPanel.CNT_ACTIVE_BORDER_COLOR);
+        g2d.setColor(UIUtil.getBorderColor());
         g2d.drawLine((int)toolBounds.getMaxX(), toolBounds.y, (int)toolBounds.getMaxX(), (int)toolBounds.getMaxY() - 1);
       }
     }
@@ -238,7 +237,7 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
       JBTabsImpl.Toolbar toolbarComp = tabs.myInfo2Toolbar.get(tabs.getSelectedInfoInternal());
       if (toolbarComp != null && !toolbarComp.isEmpty()) {
         Rectangle toolBounds = toolbarComp.getBounds();
-        g2d.setColor(CaptionPanel.CNT_ACTIVE_BORDER_COLOR);
+        g2d.setColor(UIUtil.getBorderColor());
         g2d.drawLine(toolBounds.x, (int)toolBounds.getMaxY(), (int)toolBounds.getMaxX() - 1, (int)toolBounds.getMaxY());
       }
     }
