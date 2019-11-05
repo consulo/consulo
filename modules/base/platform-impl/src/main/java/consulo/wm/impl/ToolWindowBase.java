@@ -152,7 +152,7 @@ public abstract class ToolWindowBase implements ToolWindowEx {
 
   @Override
   public final boolean isVisible() {
-    return myToolWindowManager.isToolWindowVisible(myId);
+    return myToolWindowManager.isToolWindowRegistered(myId) && myToolWindowManager.isToolWindowVisible(myId);
   }
 
   @Override

@@ -52,8 +52,7 @@ public interface ToolWindow extends BusyObject {
   void activate(@Nullable Runnable runnable, boolean autoFocusContents, boolean forced);
 
   /**
-   * @return whether the tool window is visible or not.
-   * @throws IllegalStateException if tool window isn't installed.
+   * @return whether the tool window is visible or not. if not registered return false
    */
   boolean isVisible();
 
