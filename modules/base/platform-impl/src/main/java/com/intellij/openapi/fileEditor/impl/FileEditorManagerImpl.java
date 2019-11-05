@@ -726,10 +726,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     return openFileImpl4(uiAccess, window, file, entry, current, focusEditor, null, -1);
   }
 
-  /**
-   * This method can be invoked from background thread. Of course, UI for returned editors should be accessed from EDT in any case.
-   */
-  @Nonnull
+  @Deprecated
   Pair<FileEditor[], FileEditorProvider[]> openFileImpl4(@Nonnull UIAccess uiAccess,
                                                          @Nonnull final EditorWindow window,
                                                          @Nonnull final VirtualFile file,
@@ -738,11 +735,29 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
                                                          final boolean focusEditor,
                                                          final Boolean pin,
                                                          final int index) {
+    return openFileImpl4(uiAccess, window, file, entry, new FileEditorOpenOptions().withCurrentTab(current).withFocusEditor(focusEditor).withPin(pin).withIndex(index));
+  }
+
+  /**
+   * This method can be invoked from background thread. Of course, UI for returned editors should be accessed from EDT in any case.
+   */
+  @Nonnull
+  Pair<FileEditor[], FileEditorProvider[]> openFileImpl4(@Nonnull UIAccess uiAccess,
+                                                         @Nonnull final EditorWindow window,
+                                                         @Nonnull final VirtualFile file,
+                                                         @Nullable final HistoryEntry entry,
+                                                         FileEditorOpenOptions options) {
     assert UIAccess.isUIThread() || !ApplicationManager.getApplication().isReadAccessAllowed() : "must not open files under read action since we are doing a lot of invokeAndWaits here";
 
-    final Ref<EditorWithProviderComposite> compositeRef = new Ref<>();
+    int index = options.getIndex();
+    boolean current = options.isCurrentTab();
+    boolean focusEditor = options.isFocusEditor();
+    Boolean pin = options.getPin();
 
-    uiAccess.giveAndWaitIfNeed(() -> compositeRef.set(window.findFileComposite(file)));
+    final Ref<EditorWithProviderComposite> compositeRef = new Ref<>();
+    if (!options.isReopeningEditorsOnStartup()) {
+      uiAccess.giveAndWaitIfNeed(() -> compositeRef.set(window.findFileComposite(file)));
+    }
 
     final FileEditorProvider[] newProviders;
     final AsyncFileEditorProvider.Builder[] builders;

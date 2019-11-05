@@ -43,7 +43,7 @@ import java.util.Map;
  */
 public final class HistoryEntry {
   @NonNls static final String TAG = "entry";
-  private static final String FILE_ATTR = "file";
+  public static final String FILE_ATTR = "file";
   @NonNls private static final String PROVIDER_ELEMENT = "provider";
   @NonNls private static final String EDITOR_TYPE_ID_ATTR = "editor-type-id";
   @NonNls private static final String SELECTED_ATTR_VALUE = "selected";

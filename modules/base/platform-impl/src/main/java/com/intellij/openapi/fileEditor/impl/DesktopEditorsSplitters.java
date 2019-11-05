@@ -15,15 +15,14 @@
  */
 package com.intellij.openapi.fileEditor.impl;
 
+import com.intellij.diagnostic.Activity;
+import com.intellij.diagnostic.ActivityCategory;
+import com.intellij.diagnostic.StartUpMeasurer;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.AccessToken;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
-import consulo.logging.Logger;
+import com.intellij.openapi.application.*;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditor;
@@ -39,8 +38,7 @@ import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.wm.FocusWatcher;
-import com.intellij.openapi.wm.IdeFrame;
+import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.FrameTitleBuilder;
@@ -53,17 +51,18 @@ import com.intellij.ui.docking.DockManager;
 import com.intellij.ui.tabs.JBTabs;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.util.Alarm;
+import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ArrayListSet;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.DeprecationInfo;
-import consulo.application.AccessRule;
+import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
-import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 
@@ -75,8 +74,8 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ContainerEvent;
 import java.io.File;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 @Deprecated
@@ -283,24 +282,26 @@ public class DesktopEditorsSplitters implements Disposable, EditorsSplitters {
 
   @Override
   public void openFiles(@Nonnull UIAccess uiAccess) {
-    if (mySplittersElement != null) {
-      final JPanel comp = myUIBuilder.process(mySplittersElement, getTopPanel(), uiAccess);
-      uiAccess.giveAndWaitIfNeed(() -> {
-        if (comp != null) {
-          myComponent.removeAll();
-          myComponent.add(comp, BorderLayout.CENTER);
-          mySplittersElement = null;
-        }
-        // clear empty splitters
-        for (DesktopEditorWindow window : getWindows()) {
-          if (window.getEditors().length == 0) {
-            for (DesktopEditorWindow sibling : window.findSiblings()) {
-              sibling.unsplit(false);
-            }
+    if (mySplittersElement == null) {
+      return;
+    }
+
+    final JPanel comp = myUIBuilder.process(mySplittersElement, getTopPanel(), uiAccess);
+    uiAccess.giveAndWaitIfNeed(() -> {
+      if (comp != null) {
+        myComponent.removeAll();
+        myComponent.add(comp, BorderLayout.CENTER);
+        mySplittersElement = null;
+      }
+      // clear empty splitters
+      for (DesktopEditorWindow window : getWindows()) {
+        if (window.getEditors().length == 0) {
+          for (DesktopEditorWindow sibling : window.findSiblings()) {
+            sibling.unsplit(false);
           }
         }
-      });
-    }
+      }
+    });
   }
 
   public int getEditorsCount() {
@@ -323,7 +324,7 @@ public class DesktopEditorsSplitters implements Disposable, EditorsSplitters {
   private static int countFiles(Element element, UIAccess uiAccess) {
     Integer value = new ConfigTreeReader<Integer>() {
       @Override
-      protected Integer processFiles(@Nonnull List<Element> fileElements, @Nullable Integer context, UIAccess uiAccess) {
+      protected Integer processFiles(@Nonnull List<Element> fileElements, @Nullable Integer context, Element parent, UIAccess uiAccess) {
         return fileElements.size();
       }
 
@@ -896,11 +897,11 @@ public class DesktopEditorsSplitters implements Disposable, EditorsSplitters {
         }
       }
 
-      return processFiles(children, context, uiAccess);
+      return processFiles(children, context, leaf, uiAccess);
     }
 
     @Nullable
-    protected abstract T processFiles(@Nonnull List<Element> fileElements, @Nullable T context, UIAccess uiAccess);
+    protected abstract T processFiles(@Nonnull List<Element> fileElements, @Nullable T context, Element parent, UIAccess uiAccess);
 
     @Nullable
     protected abstract T processSplitter(@Nonnull Element element, @Nullable Element firstChild, @Nullable Element secondChild, @Nullable T context, @Nonnull UIAccess uiAccess);
@@ -909,39 +910,40 @@ public class DesktopEditorsSplitters implements Disposable, EditorsSplitters {
   private class UIBuilder extends ConfigTreeReader<JPanel> {
 
     @Override
-    protected JPanel processFiles(@Nonnull List<Element> fileElements, final JPanel context, UIAccess uiAccess) {
+    protected JPanel processFiles(@Nonnull List<Element> fileElements, final JPanel context, Element parent, UIAccess uiAccess) {
       final Ref<DesktopEditorWindow> windowRef = new Ref<>();
-      uiAccess.giveAndWaitIfNeed(() -> windowRef.set(context == null ? createEditorWindow() : findWindowWith(context)));
+      UIUtil.invokeAndWaitIfNeeded((Runnable)() -> {
+        DesktopEditorWindow editorWindow = context == null ? createEditorWindow() : findWindowWith(context);
+        windowRef.set(editorWindow);
+        if (editorWindow != null) {
+          updateTabSizeLimit(editorWindow, parent.getAttributeValue(JBTabsImpl.SIDE_TABS_SIZE_LIMIT_KEY.toString()));
+        }
+      });
+
       final DesktopEditorWindow window = windowRef.get();
       LOG.assertTrue(window != null);
       VirtualFile focusedFile = null;
 
       for (int i = 0; i < fileElements.size(); i++) {
         final Element file = fileElements.get(i);
-        if (i == 0) {
-          EditorTabbedContainer tabbedPane = window.getTabbedPane();
-          if (tabbedPane != null) {
-            try {
-              int limit = Integer.parseInt(file.getParentElement().getAttributeValue(JBTabsImpl.SIDE_TABS_SIZE_LIMIT_KEY.toString(), String.valueOf(JBTabsImpl.DEFAULT_MAX_TAB_WIDTH)));
-              UIUtil.putClientProperty(tabbedPane.getComponent(), JBTabsImpl.SIDE_TABS_SIZE_LIMIT_KEY, limit);
-            }
-            catch (NumberFormatException e) {
-              //ignore
-            }
-          }
-        }
+        Element historyElement = file.getChild(HistoryEntry.TAG);
+        String fileName = historyElement.getAttributeValue(HistoryEntry.FILE_ATTR);
+        Activity activity = StartUpMeasurer.startActivity(PathUtil.getFileName(fileName), ActivityCategory.REOPENING_EDITOR);
+        VirtualFile virtualFile = null;
         try {
           final FileEditorManagerImpl fileEditorManager = getManager();
-          Element historyElement = file.getChild(HistoryEntry.TAG);
           final HistoryEntry entry = HistoryEntry.createLight(fileEditorManager.getProject(), historyElement);
-          final VirtualFile virtualFile = entry.getFile();
+          virtualFile = entry.getFile();
           if (virtualFile == null) throw new InvalidDataException("No file exists: " + entry.getFilePointer().getUrl());
-          ThrowableComputable<Document, RuntimeException> action = () -> virtualFile.isValid() ? FileDocumentManager.getInstance().getDocument(virtualFile) : null;
-          Document document = AccessRule.read(action);
-          final boolean isCurrentInTab = Boolean.valueOf(file.getAttributeValue(CURRENT_IN_TAB)).booleanValue();
-          Boolean pin = Boolean.valueOf(file.getAttributeValue(PINNED));
-          fileEditorManager.openFileImpl4(uiAccess, window, virtualFile, entry, false, false, pin, i);
-          if (isCurrentInTab) {
+          virtualFile.putUserData(OPENED_IN_BULK, Boolean.TRUE);
+          VirtualFile finalVirtualFile = virtualFile;
+          Document document = ReadAction.compute(() -> finalVirtualFile.isValid() ? FileDocumentManager.getInstance().getDocument(finalVirtualFile) : null);
+
+          boolean isCurrentTab = Boolean.valueOf(file.getAttributeValue(CURRENT_IN_TAB)).booleanValue();
+          FileEditorOpenOptions openOptions = new FileEditorOpenOptions().withPin(Boolean.valueOf(file.getAttributeValue(PINNED))).withIndex(i).withReopeningEditorsOnStartup();
+
+          fileEditorManager.openFileImpl4(uiAccess, window, virtualFile, entry, openOptions);
+          if (isCurrentTab) {
             focusedFile = virtualFile;
           }
           if (document != null) {
@@ -957,15 +959,27 @@ public class DesktopEditorsSplitters implements Disposable, EditorsSplitters {
             LOG.error(e);
           }
         }
+        finally {
+          if (virtualFile != null) virtualFile.putUserData(OPENED_IN_BULK, null);
+        }
+        activity.end();
       }
       if (focusedFile != null) {
         getManager().addSelectionRecord(focusedFile, window);
         VirtualFile finalFocusedFile = focusedFile;
-
-        uiAccess.giveIfNeed(() -> {
-          DesktopEditorWithProviderComposite editor = window.findFileComposite(finalFocusedFile);
+        uiAccess.giveAndWaitIfNeed(() -> {
+          EditorWithProviderComposite editor = window.findFileComposite(finalFocusedFile);
           if (editor != null) {
             window.setEditor(editor, true, true);
+          }
+        });
+      }
+      else {
+        ToolWindowManager manager = ToolWindowManager.getInstance(getManager().getProject());
+        manager.invokeLater(() -> {
+          if (null == manager.getActiveToolWindowId()) {
+            ToolWindow toolWindow = manager.getToolWindow(ToolWindowId.PROJECT_VIEW);
+            if (toolWindow != null) toolWindow.activate(null);
           }
         });
       }
@@ -1007,6 +1021,20 @@ public class DesktopEditorsSplitters implements Disposable, EditorsSplitters {
       process(firstChild, firstComponent.get(), uiAccess);
       process(secondChild, secondComponent.get(), uiAccess);
       return context;
+    }
+  }
+
+  private static void updateTabSizeLimit(DesktopEditorWindow editorWindow, String tabSizeLimit) {
+    EditorTabbedContainer tabbedPane = editorWindow.getTabbedPane();
+    if (tabbedPane != null) {
+      if (tabSizeLimit != null) {
+        try {
+          int limit = Integer.parseInt(tabSizeLimit);
+          UIUtil.invokeAndWaitIfNeeded((Runnable)() -> UIUtil.putClientProperty(tabbedPane.getComponent(), JBTabsImpl.SIDE_TABS_SIZE_LIMIT_KEY, limit));
+        }
+        catch (NumberFormatException ignored) {
+        }
+      }
     }
   }
 }

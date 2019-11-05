@@ -20,10 +20,10 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.DeprecationInfo;
+import consulo.desktop.util.awt.migration.AWTComponentProvider;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
-import consulo.desktop.util.awt.migration.AWTComponentProvider;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -36,6 +36,11 @@ import java.util.List;
  */
 public interface EditorsSplitters extends AWTComponentProvider {
   Key<EditorsSplitters> KEY = Key.create("EditorsSplitters");
+  Key<Boolean> OPENED_IN_BULK = Key.create("EditorSplitters.opened.in.bulk");
+
+  static boolean isOpenedInBulk(@Nonnull VirtualFile file) {
+    return file.getUserData(OPENED_IN_BULK) != null;
+  }
 
   void readExternal(Element element);
 

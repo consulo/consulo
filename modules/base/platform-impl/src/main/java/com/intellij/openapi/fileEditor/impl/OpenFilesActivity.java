@@ -16,7 +16,8 @@
 package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
 import consulo.ui.UIAccess;
@@ -25,17 +26,23 @@ import javax.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
- *         Date: 4/11/12
+ * Date: 4/11/12
  */
-public class OpenFilesActivity implements StartupActivity, DumbAware {
-
+public class OpenFilesActivity implements StartupActivity.DumbAware {
   @Override
   public void runActivity(@Nonnull UIAccess uiAccess, @Nonnull Project project) {
     final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
-    if (fileEditorManager instanceof FileEditorManagerImpl) {
-      final FileEditorManagerImpl manager = (FileEditorManagerImpl)fileEditorManager;
-      manager.getMainSplitters().openFiles(uiAccess);
-      manager.initDockableContentFactory();
+    if (!(fileEditorManager instanceof FileEditorManagerImpl)) {
+      return;
     }
+
+    ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
+    if (indicator != null) {
+      indicator.setText("Reopening files...");
+    }
+
+    final FileEditorManagerImpl manager = (FileEditorManagerImpl)fileEditorManager;
+    manager.getMainSplitters().openFiles(uiAccess);
+    manager.initDockableContentFactory();
   }
 }

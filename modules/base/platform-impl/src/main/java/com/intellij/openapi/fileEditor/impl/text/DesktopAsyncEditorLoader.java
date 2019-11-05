@@ -32,9 +32,10 @@ import com.intellij.ui.EditorNotifications;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.Semaphore;
 import consulo.annotations.DeprecationInfo;
+import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.logging.Logger;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -145,7 +146,7 @@ public class DesktopAsyncEditorLoader {
 
   private boolean worthWaiting() {
     // cannot perform commitAndRunReadAction in parallel to EDT waiting
-    return !PsiDocumentManager.getInstance(myProject).hasUncommitedDocuments() && !ApplicationManager.getApplication().isWriteAccessAllowed() /*&& !EditorsSplitters.isOpenedInBulk(myTextEditor.myFile)*/;
+    return !PsiDocumentManager.getInstance(myProject).hasUncommitedDocuments() && !ApplicationManager.getApplication().isWriteAccessAllowed() && !EditorsSplitters.isOpenedInBulk(myTextEditor.myFile);
   }
 
   private static <T> T resultInTimeOrNull(@Nonnull Future<T> future) {
