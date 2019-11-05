@@ -15,6 +15,7 @@
  */
 package consulo.sandboxPlugin.desktop.laf;
 
+import com.intellij.openapi.util.SystemInfo;
 import consulo.desktop.impl.ui.LookAndFeelProvider;
 import consulo.desktop.ui.laf.LookAndFeelInfoWithClassLoader;
 
@@ -29,6 +30,12 @@ import java.util.function.Consumer;
 public class SubstanceLafProvider implements LookAndFeelProvider {
   @Override
   public void register(@Nonnull Consumer<UIManager.LookAndFeelInfo> consumer) {
+    if (SystemInfo.isJavaVersionAtLeast(9)) {
+      addSubstanceLookAndFeel(consumer);
+    }
+  }
+
+  private void addSubstanceLookAndFeel(@Nonnull Consumer<UIManager.LookAndFeelInfo> consumer) {
     // FIXME [VISTALL] issue with resource inside library and classloading
     UIManager.put("ClassLoader", getClass().getClassLoader());
 
