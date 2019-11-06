@@ -46,6 +46,7 @@ import java.awt.event.InputEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class ActionUtil {
   private static final Logger LOG = Logger.getInstance(ActionUtil.class);
@@ -54,6 +55,23 @@ public class ActionUtil {
   @NonNls private static final String WOULD_BE_VISIBLE_IF_NOT_DUMB_MODE = "WOULD_BE_VISIBLE_IF_NOT_DUMB_MODE";
 
   private ActionUtil() {
+  }
+
+  public static boolean recursiveContainsAction(@Nonnull ActionGroup group, @Nonnull AnAction action) {
+    return anyActionFromGroupMatches(group, true, Predicate.isEqual(action));
+  }
+
+  public static boolean anyActionFromGroupMatches(@Nonnull ActionGroup group, boolean processPopupSubGroups, @Nonnull Predicate<? super AnAction> condition) {
+    for (AnAction child : group.getChildren(null)) {
+      if (condition.test(child)) return true;
+      if (child instanceof ActionGroup) {
+        ActionGroup childGroup = (ActionGroup)child;
+        if ((processPopupSubGroups || !childGroup.isPopup()) && anyActionFromGroupMatches(childGroup, processPopupSubGroups, condition)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   public static void recursiveRegisterShortcutSet(@Nonnull ActionGroup group, @Nonnull JComponent component, @Nullable Disposable parentDisposable) {

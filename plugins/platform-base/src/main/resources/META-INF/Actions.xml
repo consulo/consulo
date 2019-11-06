@@ -21,11 +21,12 @@
     <!-- grouping for Settings -> Keymap -> Others -->
     <group id="Other.KeymapGroup"/>
 
-    <action id="Login" class="consulo.auth.action.LoginAction" />
+    <action id="Login" class="consulo.auth.action.LoginAction"/>
 
     <!-- grouping for Settings -> Keymap -> Version Control Systems -->
     <group id="Diff.KeymapGroup" text="Diff \&amp;\&amp; Merge">
-      <action id="Diff.ShowDiff" class="com.intellij.openapi.actionSystem.EmptyAction" icon="AllIcons.Actions.Diff"/> <!-- CommonShortcuts.getDiff() -->
+      <action id="Diff.ShowDiff" class="com.intellij.openapi.actionSystem.EmptyAction" icon="AllIcons.Actions.Diff"/>
+      <!-- CommonShortcuts.getDiff() -->
       <action id="CompareTwoFiles" class="com.intellij.diff.actions.CompareFilesAction" icon="AllIcons.Actions.Diff"/>
       <action id="CompareFileWithEditor" class="com.intellij.diff.actions.CompareFileWithEditorAction"/>
       <action id="CompareClipboardWithSelection" class="com.intellij.diff.actions.CompareClipboardWithSelectionAction"/>
@@ -555,7 +556,7 @@
       </group>
       <separator/>
       <reference ref="SearchEverywhere"/>
-      <reference ref="Login" />
+      <reference ref="Login"/>
     </group>
 
     <group id="NavBarVcsGroup"/>
@@ -1375,7 +1376,7 @@
       <reference ref="ShowProjectStructureSettings"/>
       <separator/>
       <reference ref="SearchEverywhere"/>
-      <reference ref="Login" />
+      <reference ref="Login"/>
     </group>
 
     <group id="Bookmarks">
@@ -1918,15 +1919,19 @@
 
     <!-- File -->
     <group id="OpenProjectGroup">
-      <action id="NewProject" class="consulo.ide.newProject.actions.NewProjectAction"/>
-      <action id="NewModule" class="com.intellij.openapi.roots.ui.configuration.actions.NewModuleAction"/>
-      <action id="ImportModule" class="com.intellij.ide.actions.ImportModuleAction" text="Import Module..."/>
+      <group id="NewElementInMenuGroup" text="New" popup="true">
+        <action id="NewProject" class="consulo.ide.newProject.actions.NewProjectAction"/>
+        <separator/>
+        <action id="NewModule" class="com.intellij.openapi.roots.ui.configuration.actions.NewModuleAction"/>
+        <action id="ImportModule" class="com.intellij.ide.actions.ImportModuleAction" text="Import Module..."/>
+        <separator/>
+        <group class="com.intellij.ide.actions.NewActionGroup" text="New" popup="false"/>
+      </group>
 
       <add-to-group group-id="FileOpenGroup" anchor="first"/>
     </group>
-    <action id="NewElement" class="com.intellij.ide.actions.NewElementAction">
-      <add-to-group group-id="OpenProjectGroup" anchor="before" relative-to-action="OpenFile"/>
-    </action>
+
+    <action id="NewElement" class="com.intellij.ide.actions.NewElementAction"/>
 
     <group>
       <add-to-group group-id="ExportImportGroup" anchor="first"/>
