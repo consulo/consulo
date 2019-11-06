@@ -256,7 +256,9 @@
       <group id="FileMenu" popup="true">
         <group id="FileOpenGroup">
           <action id="OpenFile" class="com.intellij.ide.actions.OpenFileAction" icon="AllIcons.Actions.Menu_open"/>
-          <group id="RecentProjectsGroup" class="com.intellij.ide.actions.RecentProjectsGroup" popup="true"/>
+          <group id="$LRU" popup="true">
+            <group id="RecentProjectListGroup" class="com.intellij.ide.actions.RecentProjectsGroup" popup="false"/>
+          </group>
           <action id="CloseProject" class="com.intellij.ide.actions.CloseProjectAction"/>
         </group>
         <separator/>

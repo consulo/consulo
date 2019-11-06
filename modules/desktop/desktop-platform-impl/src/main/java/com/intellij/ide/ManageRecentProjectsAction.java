@@ -15,6 +15,7 @@
  */
 package com.intellij.ide;
 
+import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -35,6 +36,10 @@ import javax.swing.*;
  * @author Konstantin Bulenkov
  */
 public class ManageRecentProjectsAction extends DumbAwareAction {
+  public ManageRecentProjectsAction() {
+    super(ActionsBundle.actionText("ManageRecentProjects"));
+  }
+
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {

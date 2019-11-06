@@ -119,6 +119,12 @@
     <action internal="true" id="ShowStartupManagerAction" class="consulo.internal.actions.ShowStartupManagerAction" text="Show Startup Manager">
       <add-to-group group-id="Internal" anchor="after" relative-to-action="RestartInfo"/>
     </action>
+
+    <group popup="false">
+      <separator/>
+      <action class="com.intellij.ide.ManageRecentProjectsAction" id="ManageRecentProjects"/>
+      <add-to-group group-id="$LRU"/>
+    </group>
   </actions>
 
   <application-components>
