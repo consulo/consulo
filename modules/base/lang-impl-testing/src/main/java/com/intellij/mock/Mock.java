@@ -290,7 +290,7 @@ public class Mock {
     }
 
     @Override
-    public Pair<FileEditor, FileEditorProvider> getSelectedEditorWithProvider(@Nonnull VirtualFile file) {
+    public com.intellij.openapi.fileEditor.ex.FileEditorWithProvider getSelectedEditorWithProvider(@Nonnull VirtualFile file) {
       return null;
     }
 

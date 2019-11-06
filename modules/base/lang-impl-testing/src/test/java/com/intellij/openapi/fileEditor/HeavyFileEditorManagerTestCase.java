@@ -15,9 +15,7 @@
  */
 package com.intellij.openapi.fileEditor;
 
-import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
-import com.intellij.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.PlatformTestUtil;
@@ -42,7 +40,7 @@ public abstract class HeavyFileEditorManagerTestCase extends CodeInsightFixtureT
   public void setUp() throws Exception {
     super.setUp();
     myManager = new FileEditorManagerImpl(getProject(), DockManager.getInstance(getProject())) {};
-    ((IdeDocumentHistoryImpl)IdeDocumentHistory.getInstance(getProject())).projectOpened();
+    //((IdeDocumentHistoryImpl)IdeDocumentHistory.getInstance(getProject())).projectOpened();
   }
 
   @Override
