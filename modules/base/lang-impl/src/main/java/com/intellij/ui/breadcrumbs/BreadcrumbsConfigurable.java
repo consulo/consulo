@@ -1,55 +1,54 @@
-/*
- * Copyright 2000-2017 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.breadcrumbs;
 
-import com.intellij.application.options.colors.ColorAndFontOptions;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.lang.Language;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
-import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.options.CompositeConfigurable;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.options.OptionalConfigurable;
+import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.options.colors.pages.GeneralColorsPage;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.ui.components.panels.HorizontalLayout;
 import com.intellij.ui.components.panels.VerticalLayout;
+import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.ui.JBUI;
-import consulo.ui.RequiredUIAccess;
+import com.intellij.util.ui.UIUtil;
+import org.jetbrains.annotations.Nls;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
-import java.util.TreeMap;
 
+import static com.intellij.application.options.colors.ColorAndFontOptions.selectOrEditColor;
 import static com.intellij.openapi.application.ApplicationBundle.message;
+import static com.intellij.openapi.util.text.StringUtil.naturalCompare;
+import static com.intellij.util.containers.ContainerUtil.newSmartList;
 import static javax.swing.SwingConstants.LEFT;
 
 /**
  * @author Sergey.Malenkov
  */
-public final class BreadcrumbsConfigurable implements Configurable, OptionalConfigurable {
-  private final TreeMap<String, JCheckBox> map = new TreeMap<>();
+final class BreadcrumbsConfigurable extends CompositeConfigurable<BreadcrumbsConfigurable.BreadcrumbsProviderConfigurable> implements SearchableConfigurable {
+  private final HashMap<String, JCheckBox> map = new HashMap<>();
   private JComponent component;
   private JCheckBox show;
   private JRadioButton above;
   private JRadioButton below;
   private JLabel placement;
   private JLabel languages;
+
+  @Nonnull
+  @Override
+  public String getId() {
+    return "editor.breadcrumbs";
+  }
 
   @Override
   public String getDisplayName() {
@@ -61,19 +60,17 @@ public final class BreadcrumbsConfigurable implements Configurable, OptionalConf
     return "reference.settings.editor.general.breadcrumbs";
   }
 
-  @RequiredUIAccess
   @Override
   public JComponent createComponent() {
     if (component == null) {
-      for (BreadcrumbsProvider provider : BreadcrumbsProvider.EP_NAME.getExtensions()) {
-        Language language = provider.getLanguage();
-        String id = language.getID();
+      for (final BreadcrumbsProviderConfigurable configurable : getConfigurables()) {
+        final String id = configurable.getId();
         if (!map.containsKey(id)) {
-          map.put(id, new JCheckBox(language.getDisplayName()));
+          map.put(id, configurable.createComponent());
         }
       }
-      JPanel boxes = new JPanel(new GridLayout(0, 3));
-      for (JCheckBox box : map.values()) boxes.add(box);
+      JPanel boxes = new JPanel(new GridLayout(0, 3, UIUtil.isUnderDarcula() ? JBUIScale.scale(10) : 0, 0));
+      map.values().stream().sorted((box1, box2) -> naturalCompare(box1.getText(), box2.getText())).forEach(box -> boxes.add(box));
 
       show = new JCheckBox(message("checkbox.show.breadcrumbs"));
       show.addItemListener(event -> updateEnabled());
@@ -86,9 +83,8 @@ public final class BreadcrumbsConfigurable implements Configurable, OptionalConf
       group.add(below);
 
       placement = new JLabel(message("label.breadcrumbs.placement"));
-      placement.setBorder(JBUI.Borders.emptyRight(12));
 
-      JPanel placementPanel = new JPanel(new HorizontalLayout(0));
+      JPanel placementPanel = new JPanel(new HorizontalLayout(JBUIScale.scale(UIUtil.DEFAULT_HGAP)));
       placementPanel.setBorder(JBUI.Borders.emptyLeft(24));
       placementPanel.add(placement);
       placementPanel.add(above);
@@ -96,24 +92,23 @@ public final class BreadcrumbsConfigurable implements Configurable, OptionalConf
 
       languages = new JLabel(message("label.breadcrumbs.languages"));
 
-      JPanel languagesPanel = new JPanel(new VerticalLayout(JBUI.scale(6)));
+      JPanel languagesPanel = new JPanel(new VerticalLayout(JBUIScale.scale(6)));
       languagesPanel.setBorder(JBUI.Borders.empty(0, 24, 12, 0));
       languagesPanel.add(languages);
       languagesPanel.add(boxes);
 
-      component = new JPanel(new VerticalLayout(JBUI.scale(12), LEFT));
+      component = new JPanel(new VerticalLayout(JBUIScale.scale(12), LEFT));
       component.add(show);
       component.add(placementPanel);
       component.add(languagesPanel);
       component.add(LinkLabel.create(message("configure.breadcrumbs.colors"), () -> {
         DataContext context = DataManager.getInstance().getDataContext(component);
-        ColorAndFontOptions.selectOrEditColor(context, "Breadcrumbs//Current", GeneralColorsPage.class);
+        selectOrEditColor(context, "Breadcrumbs//Current", GeneralColorsPage.class);
       }));
     }
     return component;
   }
 
-  @RequiredUIAccess
   @Override
   public void reset() {
     EditorSettingsExternalizable settings = EditorSettingsExternalizable.getInstance();
@@ -125,7 +120,6 @@ public final class BreadcrumbsConfigurable implements Configurable, OptionalConf
     updateEnabled();
   }
 
-  @RequiredUIAccess
   @Override
   public boolean isModified() {
     EditorSettingsExternalizable settings = EditorSettingsExternalizable.getInstance();
@@ -137,9 +131,20 @@ public final class BreadcrumbsConfigurable implements Configurable, OptionalConf
     return false;
   }
 
-  @RequiredUIAccess
+  @Nonnull
   @Override
-  public void apply() throws ConfigurationException {
+  protected List<BreadcrumbsProviderConfigurable> createConfigurables() {
+    final List<BreadcrumbsProviderConfigurable> configurables = newSmartList();
+    for (final BreadcrumbsProvider provider : BreadcrumbsProvider.EP_NAME.getExtensionList()) {
+      for (final Language language : provider.getLanguages()) {
+        configurables.add(new BreadcrumbsProviderConfigurable(provider, language));
+      }
+    }
+    return configurables;
+  }
+
+  @Override
+  public void apply() {
     boolean modified = false;
     EditorSettingsExternalizable settings = EditorSettingsExternalizable.getInstance();
     if (settings.setBreadcrumbsAbove(isBreadcrumbsAbove())) modified = true;
@@ -176,8 +181,47 @@ public final class BreadcrumbsConfigurable implements Configurable, OptionalConf
     for (JCheckBox box : map.values()) box.setEnabled(enabled);
   }
 
-  @Override
-  public boolean needDisplay() {
-    return BreadcrumbsProvider.EP_NAME.getExtensions().length > 0;
+  static class BreadcrumbsProviderConfigurable implements SearchableConfigurable {
+
+    private final BreadcrumbsProvider myProvider;
+    private final Language myLanguage;
+
+    private BreadcrumbsProviderConfigurable(@Nonnull final BreadcrumbsProvider provider, @Nonnull final Language language) {
+      myProvider = provider;
+      myLanguage = language;
+    }
+
+    @Nullable
+    @Override
+    public JCheckBox createComponent() {
+      return new JCheckBox(myLanguage.getDisplayName());
+    }
+
+    @Override
+    public boolean isModified() {
+      return false;
+    }
+
+    @Override
+    public void apply() throws ConfigurationException {
+    }
+
+    @Nonnull
+    @Override
+    public String getId() {
+      return myLanguage.getID();
+    }
+
+    @Nls(capitalization = Nls.Capitalization.Title)
+    @Override
+    public String getDisplayName() {
+      return myLanguage.getDisplayName();
+    }
+
+    @Nonnull
+    @Override
+    public Class<?> getOriginalClass() {
+      return myProvider.getClass();
+    }
   }
 }

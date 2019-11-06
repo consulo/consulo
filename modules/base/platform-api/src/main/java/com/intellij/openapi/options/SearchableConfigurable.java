@@ -19,25 +19,43 @@ package com.intellij.openapi.options;
 import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
- * SearchableConfigurable instances would be instantiated on buildSearchableOptions step during Installer's build to index of all available options. 
+ * SearchableConfigurable instances would be instantiated on buildSearchableOptions step during Installer's build to index of all available options.
  * {@link #com.intellij.ide.ui.search.TraverseUIStarter}
  */
 public interface SearchableConfigurable extends Configurable {
   @Nonnull
-  @NonNls String getId();
+  @NonNls
+  String getId();
 
   @Nullable
   default Runnable enableSearch(String option) {
     return null;
   }
 
+  /**
+   * When building an index of searchable options, it's important to know a class which caused the creation of a configurable.
+   * It often happens that the configurable is created based on a provider from an arbitrary extension point.
+   * In such a case, the provider's class should be returned from this method.
+   * <br/>
+   * When the configurable is based on several providers consider extending {@link com.intellij.openapi.options.CompositeConfigurable}.
+   * <br/>
+   * Keep in mind that this method can be expensive as it can load previously unloaded class.
+   *
+   * @return a class which is a cause of the creation of this configurable
+   */
+  @Nonnull
+  default Class<?> getOriginalClass() {
+    return this.getClass();
+  }
+
   interface Parent extends SearchableConfigurable, Composite {
     boolean hasOwnContent();
+
     boolean isVisible();
 
 
@@ -55,7 +73,7 @@ public interface SearchableConfigurable extends Configurable {
         return false;
       }
 
-      
+
       @RequiredUIAccess
       @Override
       public boolean isModified() {

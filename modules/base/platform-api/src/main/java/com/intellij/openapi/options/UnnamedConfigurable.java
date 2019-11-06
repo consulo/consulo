@@ -15,18 +15,17 @@
  */
 package com.intellij.openapi.options;
 
-import consulo.ui.RequiredUIAccess;
 import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 
 /**
  * Component which provides a configuration user interface.
  *
- * @see consulo.options.SimpleConfigurable
  * @author lesya
+ * @see consulo.options.SimpleConfigurable
  */
 public interface UnnamedConfigurable {
   /**
@@ -65,7 +64,8 @@ public interface UnnamedConfigurable {
    * Load settings from other components to configurable.
    */
   @RequiredUIAccess
-  void reset();
+  default void reset() {
+  }
 
   /**
    * Disposes the Swing components used for displaying the configuration.

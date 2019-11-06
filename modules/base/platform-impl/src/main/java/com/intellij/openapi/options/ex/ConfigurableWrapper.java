@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.options.ex;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
@@ -24,9 +23,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.logging.Logger;
 import consulo.options.ProjectConfigurableEP;
 import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 
@@ -36,7 +36,7 @@ import java.util.List;
 
 /**
  * @author Dmitry Avdeev
- *         Date: 9/17/12
+ * Date: 9/17/12
  */
 public class ConfigurableWrapper implements SearchableConfigurable {
 
@@ -96,7 +96,7 @@ public class ConfigurableWrapper implements SearchableConfigurable {
     }
     if (configurable instanceof ConfigurableWrapper) {
       ConfigurableEP ep = ((ConfigurableWrapper)configurable).myEp;
-      if(ep instanceof ProjectConfigurableEP && ((ProjectConfigurableEP)ep).nonDefaultProject) {
+      if (ep instanceof ProjectConfigurableEP && ((ProjectConfigurableEP)ep).nonDefaultProject) {
         return true;
       }
     }
@@ -186,6 +186,13 @@ public class ConfigurableWrapper implements SearchableConfigurable {
     return new CompositeWrapper(myEp, configurable);
   }
 
+  @Nonnull
+  @Override
+  public Class<?> getOriginalClass() {
+    final UnnamedConfigurable configurable = getConfigurable();
+    return configurable instanceof SearchableConfigurable ? ((SearchableConfigurable)configurable).getOriginalClass() : configurable.getClass();
+  }
+
   @Override
   public String toString() {
     return getDisplayName();
@@ -226,7 +233,7 @@ public class ConfigurableWrapper implements SearchableConfigurable {
     }
 
     private Project getProject(ConfigurableEP<?> ep) {
-      if(ep instanceof ProjectConfigurableEP) {
+      if (ep instanceof ProjectConfigurableEP) {
         return ((ProjectConfigurableEP)ep).getProject();
       }
       return null;

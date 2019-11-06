@@ -18,6 +18,7 @@ package com.intellij.openapi.fileEditor.impl;
 import com.intellij.ide.highlighter.HighlighterFactory;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.command.CommandProcessor;
+import com.intellij.openapi.fileEditor.ex.FileEditorWithProvider;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -209,7 +210,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
   }
 
   @Override
-  public Pair<FileEditor, FileEditorProvider> getSelectedEditorWithProvider(@Nonnull VirtualFile file) {
+  public FileEditorWithProvider getSelectedEditorWithProvider(@Nonnull VirtualFile file) {
     return null;
   }
 

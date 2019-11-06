@@ -131,7 +131,7 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
     if (!(composite instanceof EditorWithProviderComposite)) return;
     FileEditorProvider[] providers = ((EditorWithProviderComposite)composite).getProviders();
     if (providers.length < 2) return;
-    mySelectedProviders.put(computeKey(providers), composite.getSelectedEditorWithProvider().getSecond().getEditorTypeId());
+    mySelectedProviders.put(computeKey(providers), composite.getSelectedEditorWithProvider().getProvider().getEditorTypeId());
   }
 
   private static String computeKey(FileEditorProvider[] providers) {

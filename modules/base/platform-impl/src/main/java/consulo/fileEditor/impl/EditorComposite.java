@@ -17,8 +17,7 @@ package consulo.fileEditor.impl;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorProvider;
-import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.fileEditor.ex.FileEditorWithProvider;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.ui.Component;
 
@@ -31,7 +30,8 @@ import java.util.List;
  * @since 2018-05-09
  */
 public interface EditorComposite extends Disposable {
-  Pair<FileEditor, FileEditorProvider> getSelectedEditorWithProvider();
+  @Nonnull
+  FileEditorWithProvider getSelectedEditorWithProvider();
 
   VirtualFile getFile();
 

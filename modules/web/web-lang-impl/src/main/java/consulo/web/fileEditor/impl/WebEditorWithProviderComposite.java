@@ -18,8 +18,8 @@ package consulo.web.fileEditor.impl;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
+import com.intellij.openapi.fileEditor.ex.FileEditorWithProvider;
 import com.intellij.openapi.fileEditor.impl.HistoryEntry;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.ui.Component;
@@ -78,8 +78,8 @@ public class WebEditorWithProviderComposite implements EditorWithProviderComposi
   }
 
   @Override
-  public Pair<FileEditor, FileEditorProvider> getSelectedEditorWithProvider() {
-    return Pair.create(myEditors[0], myProviders[0]);
+  public FileEditorWithProvider getSelectedEditorWithProvider() {
+    return new FileEditorWithProvider(myEditors[0], myProviders[0]);
   }
 
   @Override

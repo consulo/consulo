@@ -22,9 +22,11 @@ package com.intellij.ide.actions;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.project.DumbAwareAction;
-import javax.annotation.Nonnull;
 import consulo.ui.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -34,7 +36,7 @@ public class ShowRecentFilesAction extends DumbAwareAction {
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.recent.files");
-    Switcher.createAndShowSwitcher(e, IdeBundle.message("title.popup.recent.files"), true, null);
+    Switcher.createAndShowSwitcher(e, IdeBundle.message("title.popup.recent.files"), IdeActions.ACTION_RECENT_FILES, false, true);
   }
 
   @RequiredUIAccess

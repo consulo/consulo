@@ -181,8 +181,10 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   public boolean SHOW_TABS_TOOLTIPS = true;
   public boolean SHOW_DIRECTORY_FOR_NON_UNIQUE_FILENAMES = true;
   public boolean NAVIGATE_TO_PREVIEW = false;
-  public boolean SMOOTH_SCROLLING = SystemInfo.isMac && (SystemInfo.isJetbrainsJvm || SystemInfo.IS_AT_LEAST_JAVA9);
+  public boolean SMOOTH_SCROLLING = SystemInfo.isMac && (SystemInfo.isJetBrainsJvm || SystemInfo.IS_AT_LEAST_JAVA9);
   public boolean PIN_FIND_IN_PATH_POPUP = false;
+
+  public int RECENT_LOCATIONS_LIMIT = 25;
 
   private final ComponentTreeEventDispatcher<UISettingsListener> myDispatcher = ComponentTreeEventDispatcher.create(UISettingsListener.class);
 
@@ -372,6 +374,10 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     return REUSE_NOT_MODIFIED_TABS;
   }
 
+  public void setReuseNotModifiedTabs(boolean reuseNotModifiedTabs) {
+    REUSE_NOT_MODIFIED_TABS = reuseNotModifiedTabs;
+  }
+
   public boolean getScrollTabLayoutInEditor() {
     return SCROLL_TAB_LAYOUT_IN_EDITOR;
   }
@@ -546,6 +552,18 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
   public boolean getShowInplaceCommentsInternal() {
     return false;
+  }
+
+  public boolean getShowInplaceComments() {
+    return false;
+  }
+
+  public int getRecentFilesLimit() {
+    return RECENT_FILES_LIMIT;
+  }
+
+  public int getRecentLocationsLimit() {
+    return RECENT_LOCATIONS_LIMIT;
   }
 
   /**

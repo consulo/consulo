@@ -15,17 +15,17 @@
  */
 package com.intellij.openapi.fileEditor.impl;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.FileEditorState;
 import com.intellij.openapi.fileEditor.FileEditorStateLevel;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.fileEditor.ex.FileEditorWithProvider;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import consulo.annotations.DeprecationInfo;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
+import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 
@@ -62,11 +62,11 @@ public class DesktopEditorWithProviderComposite extends DesktopEditorComposite i
 
   @Override
   @Nonnull
-  public Pair<FileEditor, FileEditorProvider> getSelectedEditorWithProvider() {
+  public FileEditorWithProvider getSelectedEditorWithProvider() {
     LOG.assertTrue(myEditors.length > 0, myEditors.length);
     if (myEditors.length == 1) {
       LOG.assertTrue(myTabbedPaneWrapper == null);
-      return Pair.create(myEditors[0], myProviders[0]);
+      return new FileEditorWithProvider(myEditors[0], myProviders[0]);
     }
     else { // we have to get myEditor from tabbed pane
       LOG.assertTrue(myTabbedPaneWrapper != null);
@@ -76,7 +76,7 @@ public class DesktopEditorWithProviderComposite extends DesktopEditorComposite i
       }
       LOG.assertTrue(index >= 0, index);
       LOG.assertTrue(index < myEditors.length, index);
-      return Pair.create(myEditors[index], myProviders[index]);
+      return new FileEditorWithProvider(myEditors[index], myProviders[index]);
     }
   }
 

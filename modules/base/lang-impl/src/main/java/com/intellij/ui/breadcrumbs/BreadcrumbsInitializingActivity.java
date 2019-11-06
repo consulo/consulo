@@ -1,20 +1,7 @@
-/*
- * Copyright 2000-2017 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.breadcrumbs;
 
+import com.intellij.codeInsight.breadcrumbs.FileBreadcrumbsCollector;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
@@ -26,7 +13,6 @@ import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileTypes.FileTypeEvent;
 import com.intellij.openapi.fileTypes.FileTypeListener;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.util.Disposer;
@@ -36,12 +22,12 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFilePropertyEvent;
 import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
 import com.intellij.util.messages.MessageBusConnection;
-import consulo.ui.UIAccess;
+import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
 
-public class BreadcrumbsInitializingActivity implements StartupActivity, DumbAware {
+final class BreadcrumbsInitializingActivity implements StartupActivity.DumbAware {
   @Override
-  public void runActivity(@Nonnull UIAccess uiAccess, @Nonnull Project project) {
+  public void runActivity(@Nonnull Project project) {
     if (project.isDefault() || ApplicationManager.getApplication().isUnitTestMode() || project.isDisposed()) {
       return;
     }
@@ -57,9 +43,11 @@ public class BreadcrumbsInitializingActivity implements StartupActivity, DumbAwa
 
     VirtualFileManager.getInstance().addVirtualFileListener(new MyVirtualFileListener(project), project);
     connection.subscribe(UISettingsListener.TOPIC, uiSettings -> reinitBreadcrumbsInAllEditors(project));
+
+    UIUtil.invokeLaterIfNeeded(() -> reinitBreadcrumbsInAllEditors(project));
   }
 
-  private static class MyFileEditorManagerListener implements FileEditorManagerListener {
+  private static final class MyFileEditorManagerListener implements FileEditorManagerListener {
     @Override
     public void fileOpened(@Nonnull final FileEditorManager source, @Nonnull final VirtualFile file) {
       reinitBreadcrumbsComponent(source, file);
@@ -69,7 +57,7 @@ public class BreadcrumbsInitializingActivity implements StartupActivity, DumbAwa
   private static class MyVirtualFileListener implements VirtualFileListener {
     private final Project myProject;
 
-    public MyVirtualFileListener(@Nonnull Project project) {
+    MyVirtualFileListener(@Nonnull Project project) {
       myProject = project;
     }
 
@@ -121,11 +109,16 @@ public class BreadcrumbsInitializingActivity implements StartupActivity, DumbAwa
   }
 
   private static boolean isSuitable(@Nonnull TextEditor editor, @Nonnull VirtualFile file) {
-    if (file instanceof HttpVirtualFile) {
+    if (file instanceof HttpVirtualFile || !editor.isValid()) {
       return false;
     }
 
-    return editor.isValid() && BreadcrumbsWrapper.findInfoProvider(editor.getEditor(), file) != null;
+    for (FileBreadcrumbsCollector collector : FileBreadcrumbsCollector.EP_NAME.getExtensionList(editor.getEditor().getProject())) {
+      if (collector.handlesFile(file) && collector.isShownForFile(editor.getEditor(), file)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private static void add(@Nonnull FileEditorManager manager, @Nonnull FileEditor editor, @Nonnull BreadcrumbsWrapper wrapper) {
@@ -146,16 +139,12 @@ public class BreadcrumbsInitializingActivity implements StartupActivity, DumbAwa
     }
   }
 
-  private static void registerWrapper(@Nonnull FileEditorManager fileEditorManager,
-                                      @Nonnull FileEditor fileEditor,
-                                      @Nonnull BreadcrumbsWrapper wrapper) {
+  private static void registerWrapper(@Nonnull FileEditorManager fileEditorManager, @Nonnull FileEditor fileEditor, @Nonnull BreadcrumbsWrapper wrapper) {
     add(fileEditorManager, fileEditor, wrapper);
     Disposer.register(fileEditor, () -> disposeWrapper(fileEditorManager, fileEditor, wrapper));
   }
 
-  private static void disposeWrapper(@Nonnull FileEditorManager fileEditorManager,
-                                     @Nonnull FileEditor fileEditor,
-                                     @Nonnull BreadcrumbsWrapper wrapper) {
+  private static void disposeWrapper(@Nonnull FileEditorManager fileEditorManager, @Nonnull FileEditor fileEditor, @Nonnull BreadcrumbsWrapper wrapper) {
     remove(fileEditorManager, fileEditor, wrapper);
     Disposer.dispose(wrapper);
   }

@@ -24,6 +24,7 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
+import com.intellij.openapi.fileEditor.ex.FileEditorWithProvider;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
@@ -205,10 +206,10 @@ public final class EditorHistoryManager implements PersistentStateComponentWithU
         }
       }
     }
-    final Pair<FileEditor, FileEditorProvider> selectedEditorWithProvider = editorManager.getSelectedEditorWithProvider(file);
+    final FileEditorWithProvider selectedEditorWithProvider = editorManager.getSelectedEditorWithProvider(file);
     if (selectedEditorWithProvider != null) {
       //LOG.assertTrue(selectedEditorWithProvider != null);
-      entry.setSelectedProvider(selectedEditorWithProvider.getSecond());
+      entry.setSelectedProvider(selectedEditorWithProvider.getProvider());
       LOG.assertTrue(entry.getSelectedProvider() != null);
 
       if (changeEntryOrderOnly) {

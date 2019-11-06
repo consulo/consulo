@@ -35,10 +35,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Singleton
-@State(
-        name = "EditorSettings",
-        storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/editor.xml")}
-)
+@State(name = "EditorSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/editor.xml")})
 public class EditorSettingsExternalizable implements PersistentStateComponent<EditorSettingsExternalizable.OptionSet> {
   public static final UINumericRange BLINKING_RANGE = new UINumericRange(500, 10, 1500);
   public static final UINumericRange TOOLTIPS_DELAY_RANGE = new UINumericRange(500, 1, 5000);
@@ -51,7 +48,8 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     public int CUSTOM_SOFT_WRAP_INDENT = 0;
     public boolean IS_VIRTUAL_SPACE = false;
     public boolean IS_CARET_INSIDE_TABS;
-    @NonNls public String STRIP_TRAILING_SPACES = STRIP_TRAILING_SPACES_CHANGED;
+    @NonNls
+    public String STRIP_TRAILING_SPACES = STRIP_TRAILING_SPACES_CHANGED;
     public boolean IS_ENSURE_NEWLINE_AT_EOF = false;
     public boolean SHOW_QUICK_DOC_ON_MOUSE_OVER_ELEMENT = false;
     public int TOOLTIPS_DELAY_MS = TOOLTIPS_DELAY_RANGE.initial;
@@ -133,14 +131,19 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
   private int myAdditionalColumnsCount = 20;
   private boolean myLineMarkerAreaShown = true;
 
-  @NonNls public static final String STRIP_TRAILING_SPACES_NONE = "None";
-  @NonNls public static final String STRIP_TRAILING_SPACES_CHANGED = "Changed";
-  @NonNls public static final String STRIP_TRAILING_SPACES_WHOLE = "Whole";
+  @NonNls
+  public static final String STRIP_TRAILING_SPACES_NONE = "None";
+  @NonNls
+  public static final String STRIP_TRAILING_SPACES_CHANGED = "Changed";
+  @NonNls
+  public static final String STRIP_TRAILING_SPACES_WHOLE = "Whole";
 
   @MagicConstant(stringValues = {STRIP_TRAILING_SPACES_NONE, STRIP_TRAILING_SPACES_CHANGED, STRIP_TRAILING_SPACES_WHOLE})
-  public @interface StripTrailingSpaces {}
+  public @interface StripTrailingSpaces {
+  }
 
-  @NonNls public static final String DEFAULT_FONT_NAME = "Courier";
+  @NonNls
+  public static final String DEFAULT_FONT_NAME = "Courier";
 
   public static EditorSettingsExternalizable getInstance() {
     if (ApplicationManager.getApplication().isDisposed()) {
@@ -151,11 +154,11 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     }
   }
 
-  public void addPropertyChangeListener(PropertyChangeListener listener){
+  public void addPropertyChangeListener(PropertyChangeListener listener) {
     myPropertyChangeSupport.addPropertyChangeListener(listener);
   }
 
-  public void removePropertyChangeListener(PropertyChangeListener listener){
+  public void removePropertyChangeListener(PropertyChangeListener listener) {
     myPropertyChangeSupport.removePropertyChangeListener(listener);
   }
 
@@ -262,6 +265,63 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
 
   public void setFoldingOutlineShown(boolean val) {
     myOptions.IS_FOLDING_OUTLINE_SHOWN = val;
+  }
+
+  /**
+   * @return {@code true} if breadcrumbs should be shown above the editor, {@code false} otherwise
+   */
+  public boolean isBreadcrumbsAbove() {
+    return myOptions.SHOW_BREADCRUMBS_ABOVE;
+  }
+
+  /**
+   * @param value {@code true} if breadcrumbs should be shown above the editor, {@code false} otherwise
+   * @return {@code true} if an option was modified, {@code false} otherwise
+   */
+  public boolean setBreadcrumbsAbove(boolean value) {
+    if (myOptions.SHOW_BREADCRUMBS_ABOVE == value) return false;
+    myOptions.SHOW_BREADCRUMBS_ABOVE = value;
+    return true;
+  }
+
+  /**
+   * @return {@code true} if breadcrumbs should be shown, {@code false} otherwise
+   */
+  public boolean isBreadcrumbsShown() {
+    return myOptions.SHOW_BREADCRUMBS;
+  }
+
+  /**
+   * @param value {@code true} if breadcrumbs should be shown, {@code false} otherwise
+   * @return {@code true} if an option was modified, {@code false} otherwise
+   */
+  public boolean setBreadcrumbsShown(boolean value) {
+    if (myOptions.SHOW_BREADCRUMBS == value) return false;
+    myOptions.SHOW_BREADCRUMBS = value;
+    return true;
+  }
+
+  /**
+   * @param languageID the language identifier to configure
+   * @return {@code true} if breadcrumbs should be shown for the specified language, {@code false} otherwise
+   */
+  public boolean isBreadcrumbsShownFor(String languageID) {
+    Boolean visible = myOptions.mapLanguageBreadcrumbs.get(languageID);
+    return visible == null || visible;
+  }
+
+  public boolean hasBreadcrumbSettings(String languageID) {
+    return myOptions.mapLanguageBreadcrumbs.containsKey(languageID);
+  }
+
+  /**
+   * @param languageID the language identifier to configure
+   * @param value      {@code true} if breadcrumbs should be shown for the specified language, {@code false} otherwise
+   * @return {@code true} if an option was modified, {@code false} otherwise
+   */
+  public boolean setBreadcrumbsShownFor(String languageID, boolean value) {
+    Boolean visible = myOptions.mapLanguageBreadcrumbs.put(languageID, value);
+    return (visible == null || visible) != value;
   }
 
   public boolean isBlockCursor() {
@@ -482,7 +542,7 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     return myOptions.IS_ANIMATED_SCROLLING;
   }
 
-  public void setSmoothScrolling(boolean val){
+  public void setSmoothScrolling(boolean val) {
     myOptions.IS_ANIMATED_SCROLLING = val;
   }
 
@@ -596,58 +656,5 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
 
   public void setKeepTrailingSpacesOnCaretLine(boolean keep) {
     myOptions.KEEP_TRAILING_SPACE_ON_CARET_LINE = keep;
-  }
-
-  /**
-   * @return {@code true} if breadcrumbs should be shown above the editor, {@code false} otherwise
-   */
-  public boolean isBreadcrumbsAbove() {
-    return myOptions.SHOW_BREADCRUMBS_ABOVE;
-  }
-
-  /**
-   * @param value {@code true} if breadcrumbs should be shown above the editor, {@code false} otherwise
-   * @return {@code true} if an option was modified, {@code false} otherwise
-   */
-  public boolean setBreadcrumbsAbove(boolean value) {
-    if (myOptions.SHOW_BREADCRUMBS_ABOVE == value) return false;
-    myOptions.SHOW_BREADCRUMBS_ABOVE = value;
-    return true;
-  }
-
-  /**
-   * @return {@code true} if breadcrumbs should be shown, {@code false} otherwise
-   */
-  public boolean isBreadcrumbsShown() {
-    return myOptions.SHOW_BREADCRUMBS;
-  }
-
-  /**
-   * @param value {@code true} if breadcrumbs should be shown, {@code false} otherwise
-   * @return {@code true} if an option was modified, {@code false} otherwise
-   */
-  public boolean setBreadcrumbsShown(boolean value) {
-    if (myOptions.SHOW_BREADCRUMBS == value) return false;
-    myOptions.SHOW_BREADCRUMBS = value;
-    return true;
-  }
-
-  /**
-   * @param languageID the language identifier to configure
-   * @return {@code true} if breadcrumbs should be shown for the specified language, {@code false} otherwise
-   */
-  public boolean isBreadcrumbsShownFor(String languageID) {
-    Boolean visible = myOptions.mapLanguageBreadcrumbs.get(languageID);
-    return visible == null || visible;
-  }
-
-  /**
-   * @param languageID the language identifier to configure
-   * @param value      {@code true} if breadcrumbs should be shown for the specified language, {@code false} otherwise
-   * @return {@code true} if an option was modified, {@code false} otherwise
-   */
-  public boolean setBreadcrumbsShownFor(String languageID, boolean value) {
-    Boolean visible = myOptions.mapLanguageBreadcrumbs.put(languageID, value);
-    return (visible == null || visible) != value;
   }
 }

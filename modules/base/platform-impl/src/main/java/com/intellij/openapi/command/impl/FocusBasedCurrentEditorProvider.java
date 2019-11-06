@@ -25,7 +25,7 @@ import java.awt.*;
 /**
  * @author max
  */
-class FocusBasedCurrentEditorProvider implements CurrentEditorProvider {
+public class FocusBasedCurrentEditorProvider implements CurrentEditorProvider {
   public FileEditor getCurrentEditor() {
     if(Platform.current().isWebService()) {
       return null;

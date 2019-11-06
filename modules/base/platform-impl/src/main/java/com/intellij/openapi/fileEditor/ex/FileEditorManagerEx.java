@@ -128,7 +128,7 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
   public abstract VirtualFile getCurrentFile();
 
   @Nullable
-  public abstract Pair<FileEditor, FileEditorProvider> getSelectedEditorWithProvider(@Nonnull VirtualFile file);
+  public abstract FileEditorWithProvider getSelectedEditorWithProvider(@Nonnull VirtualFile file);
 
   /**
    * Closes all files IN ACTIVE SPLITTER (window).

@@ -36,6 +36,7 @@ import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
+import com.intellij.openapi.fileEditor.ex.FileEditorWithProvider;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.fileTypes.FileTypeEvent;
 import com.intellij.openapi.fileTypes.FileTypeListener;
@@ -998,7 +999,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     final FileEditorProvider[] editorProviders = composite.getProviders();
-    final FileEditorProvider selectedProvider = composite.getSelectedEditorWithProvider().getSecond();
+    final FileEditorProvider selectedProvider = composite.getSelectedEditorWithProvider().getProvider();
 
     for (int i = 0; i < editorProviders.length; i++) {
       if (editorProviders[i].getEditorTypeId().equals(fileEditorProviderId) && !selectedProvider.equals(editorProviders[i])) {
@@ -1207,14 +1208,14 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   @Override
   @Nullable
   public FileEditor getSelectedEditor(@Nonnull final VirtualFile file) {
-    final Pair<FileEditor, FileEditorProvider> selectedEditorWithProvider = getSelectedEditorWithProvider(file);
-    return selectedEditorWithProvider == null ? null : selectedEditorWithProvider.getFirst();
+    final FileEditorWithProvider selectedEditorWithProvider = getSelectedEditorWithProvider(file);
+    return selectedEditorWithProvider == null ? null : selectedEditorWithProvider.getFileEditor();
   }
 
 
   @Override
   @Nullable
-  public Pair<FileEditor, FileEditorProvider> getSelectedEditorWithProvider(@Nonnull VirtualFile file) {
+  public FileEditorWithProvider getSelectedEditorWithProvider(@Nonnull VirtualFile file) {
     if (file instanceof VirtualFileWindow) file = ((VirtualFileWindow)file).getDelegate();
     final EditorWithProviderComposite composite = getCurrentEditorWithProviderComposite(file);
     if (composite != null) {
@@ -1517,9 +1518,9 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
     else {
       file = composite.getFile();
-      final Pair<FileEditor, FileEditorProvider> pair = composite.getSelectedEditorWithProvider();
-      editor = pair.first;
-      provider = pair.second;
+      final FileEditorWithProvider pair = composite.getSelectedEditorWithProvider();
+      editor = pair.getFileEditor();
+      provider = pair.getProvider();
     }
     return new Trinity<>(file, editor, provider);
   }

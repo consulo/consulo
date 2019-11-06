@@ -20,11 +20,11 @@
 package com.intellij.ide.actions;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
-import javax.annotation.Nonnull;
 import consulo.ui.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
 
 public class ShowRecentlyEditedFilesAction extends DumbAwareAction {
   @RequiredUIAccess
@@ -32,7 +32,7 @@ public class ShowRecentlyEditedFilesAction extends DumbAwareAction {
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = e.getProject();
     if (project != null) {
-      Switcher.createAndShowSwitcher(e, "Recently Edited Files", true, IdeDocumentHistory.getInstance(project).getChangedFiles());
+      Switcher.createAndShowSwitcher(e, "Recently Edited Files", "RecentChangedFiles", true, true);
     }
   }
 

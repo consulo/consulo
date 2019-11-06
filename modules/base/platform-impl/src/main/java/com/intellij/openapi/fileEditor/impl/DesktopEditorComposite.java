@@ -23,9 +23,13 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.fileEditor.*;
+import com.intellij.openapi.fileEditor.FileEditor;
+import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
+import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
+import com.intellij.openapi.fileEditor.ex.FileEditorWithProvider;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.*;
@@ -46,9 +50,9 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.DeprecationInfo;
+import consulo.fileEditor.impl.EditorComposite;
 import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
-import consulo.fileEditor.impl.EditorComposite;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -57,8 +61,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * This class hides internal structure of UI component which represent
@@ -364,7 +368,7 @@ public abstract class DesktopEditorComposite implements EditorComposite {
    */
   @Nonnull
   public FileEditor getSelectedEditor() {
-    return getSelectedEditorWithProvider().getFirst();
+    return getSelectedEditorWithProvider().getFileEditor();
   }
 
   public boolean isDisposed() {
@@ -376,7 +380,7 @@ public abstract class DesktopEditorComposite implements EditorComposite {
    */
   @Override
   @Nonnull
-  public abstract Pair<FileEditor, FileEditorProvider> getSelectedEditorWithProvider();
+  public abstract FileEditorWithProvider getSelectedEditorWithProvider();
 
   @Override
   public void setSelectedEditor(final int index) {

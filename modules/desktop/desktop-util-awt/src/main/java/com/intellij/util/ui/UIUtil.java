@@ -3601,6 +3601,31 @@ public class UIUtil {
     return false;
   }
 
+  public static void layoutRecursively(@Nonnull Component component) {
+    if (component instanceof JComponent) {
+      component.doLayout();
+      for (Component child : ((JComponent)component).getComponents()) {
+        layoutRecursively(child);
+      }
+    }
+  }
+
+  //x and y should be from {0, 0} to {parent.getWidth(), parent.getHeight()}
+  @Nullable
+  public static Component getDeepestComponentAt(@Nonnull Component parent, int x, int y) {
+    Component component = SwingUtilities.getDeepestComponentAt(parent, x, y);
+    if (component != null && component.getParent() instanceof JRootPane) {//GlassPane case
+      JRootPane rootPane = (JRootPane)component.getParent();
+      Point point = SwingUtilities.convertPoint(parent, new Point(x, y), rootPane.getLayeredPane());
+      component = SwingUtilities.getDeepestComponentAt(rootPane.getLayeredPane(), point.x, point.y);
+      if (component == null) {
+        point = SwingUtilities.convertPoint(parent, new Point(x, y), rootPane.getContentPane());
+        component = SwingUtilities.getDeepestComponentAt(rootPane.getContentPane(), point.x, point.y);
+      }
+    }
+    return component;
+  }
+
   private static Window findWindowAncestor(@Nonnull Component c) {
     return c instanceof Window ? (Window)c : SwingUtilities.getWindowAncestor(c);
   }

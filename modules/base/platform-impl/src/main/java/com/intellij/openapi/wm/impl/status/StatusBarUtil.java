@@ -54,7 +54,7 @@ public class StatusBarUtil {
     if (splitters != null && splitters.getCurrentWindow() != null) {
       EditorWithProviderComposite editor = splitters.getCurrentWindow().getSelectedEditor();
       if (editor != null) {
-        return editor.getSelectedEditorWithProvider().getFirst();
+        return editor.getSelectedEditorWithProvider().getFileEditor();
       }
     }
     return null;

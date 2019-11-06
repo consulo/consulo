@@ -544,7 +544,7 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
         public void focusGained(FocusEvent e) {
           ApplicationManager.getApplication().invokeLater(() -> {
             if (!hasFocus()) return;
-            final JComponent focus = myEditor.getSelectedEditorWithProvider().getFirst().getPreferredFocusedComponent();
+            final JComponent focus = myEditor.getSelectedEditorWithProvider().getFileEditor().getPreferredFocusedComponent();
             if (focus != null && !focus.hasFocus()) {
               IdeFocusManager.getGlobalInstance().requestFocus(focus, true);
             }

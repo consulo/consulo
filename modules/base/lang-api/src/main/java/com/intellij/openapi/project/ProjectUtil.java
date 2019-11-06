@@ -34,9 +34,9 @@ import com.intellij.util.ObjectUtil;
 import com.intellij.util.PathUtilRt;
 import com.intellij.util.io.PathKt;
 import consulo.vfs.ArchiveFileSystem;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.nio.file.Path;
 import java.util.Locale;
@@ -46,6 +46,10 @@ import java.util.Locale;
  */
 public class ProjectUtil {
   private ProjectUtil() {
+  }
+
+  public static Path getProjectCachePath(Project project, String cacheName) {
+    return getProjectCachePath(project, cacheName, false);
   }
 
   public static Path getProjectCachePath(Project project, String cacheName, boolean forceNameUse) {
