@@ -45,6 +45,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.extensions.ListOfElementsEP;
 import consulo.platform.impl.action.LastActionTracker;
 import consulo.ui.image.Image;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
@@ -100,6 +101,9 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   private static final String USE_SHORTCUT_OF_ATTR_NAME = "use-shortcut-of";
   private static final String OVERRIDES_ATTR_NAME = "overrides";
   private static final String KEEP_CONTENT_ATTR_NAME = "keep-content";
+  private static final String REQUIRE_MODULE_EXTENSIONS = "require-module-extensions";
+  private static final String CAN_USE_PROJECT_AS_DEFAULT = "can-use-project-as-default";
+
   @Deprecated
   private static final String PROJECT_TYPE = "project-type";
   private static final String UNREGISTER_ELEMENT_NAME = "unregister";
@@ -220,6 +224,16 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
       bundle = AbstractBundle.getResourceBundle(resBundleName, loader);
     }
     return bundle;
+  }
+
+  private static void processModuleExtensionOptions(SimpleXmlElement element, AnAction action) {
+    String canUseProjectAsDefaultText = element.getAttributeValue(CAN_USE_PROJECT_AS_DEFAULT);
+    boolean canUseProjectAsDefault = !StringUtil.isEmpty(canUseProjectAsDefaultText) && Boolean.parseBoolean(canUseProjectAsDefaultText);
+
+    action.setCanUseProjectAsDefault(canUseProjectAsDefault);
+
+    String requestModuleExtensionsValue = element.getAttributeValue(REQUIRE_MODULE_EXTENSIONS);
+    action.setModuleExtensionIds(ListOfElementsEP.getValuesOfVariableIfFound(requestModuleExtensionsValue));
   }
 
   private static boolean isSecondary(SimpleXmlElement element) {
@@ -587,6 +601,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
       return presentation;
     });
 
+    processModuleExtensionOptions(element, stub);
+
     KeymapManagerEx keymapManager = KeymapManagerEx.getInstanceEx();
     // process all links and key bindings if any
     for (SimpleXmlElement e : element.getChildren()) {
@@ -701,6 +717,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
       registerOrReplaceActionInner(element, id, group, pluginId);
       Presentation presentation = group.getTemplatePresentation();
+
+      processModuleExtensionOptions(element, group);
 
       // text
       String text = computeActionText(bundle, id, GROUP_ELEMENT_NAME, element.getAttributeValue(TEXT_ATTR_NAME));

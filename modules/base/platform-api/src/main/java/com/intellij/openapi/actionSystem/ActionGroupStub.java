@@ -74,6 +74,8 @@ public class ActionGroupStub extends DefaultActionGroup implements ActionStubBas
 
   public void initGroup(ActionGroup target, ActionManager actionManager) {
     ActionStub.copyTemplatePresentation(getTemplatePresentation(), target.getTemplatePresentation());
+    target.setCanUseProjectAsDefault(isCanUseProjectAsDefault());
+    target.setModuleExtensionIds(getModuleExtensionIds());
 
     target.setShortcutSet(getShortcutSet());
 
