@@ -20,6 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
 import com.intellij.psi.meta.PsiMetaData;
 import com.intellij.psi.meta.PsiMetaOwner;
 import com.intellij.psi.meta.PsiPresentableMetaData;
@@ -71,6 +72,11 @@ public abstract class RenameableFakePsiElement extends FakePsiElement implements
   @Nonnull
   public Project getProject() {
     return myParent.getProject();
+  }
+
+  @Override
+  public PsiManager getManager() {
+    return PsiManager.getInstance(getProject());
   }
 
   @Override
