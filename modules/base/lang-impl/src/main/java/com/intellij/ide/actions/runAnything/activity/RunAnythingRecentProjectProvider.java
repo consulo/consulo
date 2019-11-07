@@ -11,11 +11,10 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -32,7 +31,7 @@ public class RunAnythingRecentProjectProvider extends RunAnythingAnActionProvide
   @Override
   public RunAnythingItem getMainListItem(@Nonnull DataContext dataContext, @Nonnull AnAction value) {
     if (value instanceof ReopenProjectAction) {
-      return new RecentProjectElement(((ReopenProjectAction)value), getCommand(value), TargetAWT.from(value.getTemplatePresentation().getIcon()));
+      return new RecentProjectElement(((ReopenProjectAction)value), getCommand(value), ((ReopenProjectAction)value).getExtensionIcon());
     }
     return super.getMainListItem(dataContext, value);
   }

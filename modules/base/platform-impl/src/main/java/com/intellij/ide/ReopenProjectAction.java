@@ -22,8 +22,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.BitUtil;
+import consulo.module.extension.ModuleExtensionProviderEP;
+import consulo.module.extension.impl.ModuleExtensionProviders;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import java.awt.event.InputEvent;
@@ -72,6 +75,22 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
     }
 
     ProjectUtil.openAsync(myProjectPath, project, forceOpenInNewFrame, UIAccess.current());
+  }
+
+  @Nonnull
+  public Image getExtensionIcon() {
+    List<String> extensions = getExtensions();
+    Image moduleMainIcon = Image.empty(16);
+    if (!extensions.isEmpty()) {
+      for (String extensionId : extensions) {
+        ModuleExtensionProviderEP provider = ModuleExtensionProviders.findProvider(extensionId);
+        if (provider != null) {
+          moduleMainIcon = provider.getIcon();
+          break;
+        }
+      }
+    }
+    return moduleMainIcon;
   }
 
   @Nonnull

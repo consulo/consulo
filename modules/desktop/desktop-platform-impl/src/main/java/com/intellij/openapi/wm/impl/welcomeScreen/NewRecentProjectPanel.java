@@ -36,8 +36,6 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import consulo.awt.TargetAWT;
-import consulo.module.extension.ModuleExtensionProviderEP;
-import consulo.module.extension.impl.ModuleExtensionProviders;
 import consulo.ui.image.Image;
 
 import javax.swing.*;
@@ -256,17 +254,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
               p.add(name, BorderLayout.NORTH);
               p.add(path, BorderLayout.SOUTH);
 
-              List<String> extensions = ((ReopenProjectAction)value).getExtensions();
-              Image moduleMainIcon = Image.empty(16);
-              if (!extensions.isEmpty()) {
-                for (String extensionId : extensions) {
-                  ModuleExtensionProviderEP provider = ModuleExtensionProviders.findProvider(extensionId);
-                  if (provider != null) {
-                    moduleMainIcon = provider.getIcon();
-                    break;
-                  }
-                }
-              }
+              Image moduleMainIcon = ((ReopenProjectAction)value).getExtensionIcon();
               final JLabel projectIcon = new JLabel("", TargetAWT.to(moduleMainIcon), SwingConstants.LEFT) {
                 @Override
                 protected void paintComponent(Graphics g) {
