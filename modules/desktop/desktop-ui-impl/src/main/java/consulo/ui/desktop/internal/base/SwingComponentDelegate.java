@@ -23,6 +23,7 @@ import consulo.awt.TargetAWT;
 import consulo.awt.impl.ToSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.desktop.internal.util.AWTKeyAdapterAsKeyListener;
 import consulo.ui.event.KeyListener;
 import consulo.ui.impl.BorderInfo;
 import consulo.ui.impl.UIDataObject;
@@ -34,8 +35,6 @@ import consulo.ui.style.ColorKey;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.EventListener;
 import java.util.LinkedHashMap;
@@ -55,12 +54,7 @@ public class SwingComponentDelegate<T extends java.awt.Component> implements Com
   protected void initialize(T component) {
     myComponent = component;
 
-    myComponent.addKeyListener(new KeyAdapter() {
-      @Override
-      public void keyPressed(KeyEvent e) {
-        getListenerDispatcher(KeyListener.class).keyPressed(new consulo.ui.event.KeyEvent(SwingComponentDelegate.this, e.getKeyCode()));
-      }
-    });
+    myComponent.addKeyListener(new AWTKeyAdapterAsKeyListener(this, getListenerDispatcher(KeyListener.class)));
   }
 
   @Nonnull

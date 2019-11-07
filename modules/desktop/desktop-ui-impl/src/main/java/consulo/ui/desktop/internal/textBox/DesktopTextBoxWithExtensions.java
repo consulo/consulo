@@ -27,6 +27,7 @@ import consulo.awt.TargetAWT;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.TextBox;
 import consulo.ui.TextBoxWithExtensions;
+import consulo.ui.desktop.internal.util.AWTKeyAdapterAsKeyListener;
 import consulo.ui.desktop.internal.validableComponent.DocumentSwingValidator;
 import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExtensionsExtender;
 import consulo.ui.event.KeyListener;
@@ -36,8 +37,6 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +48,8 @@ public class DesktopTextBoxWithExtensions {
   private static class Supported extends DocumentSwingValidator<ExtendableTextField> implements TextBoxWithExtensions {
     public Supported(String text) {
       initialize(new ExtendableTextField(text));
+      TextFieldPlaceholderFunction.install(toAWTComponent());
+
       addDocumentListenerForValidator(toAWTComponent().getDocument());
 
       toAWTComponent().getDocument().addDocumentListener(new DocumentAdapter() {
@@ -135,6 +136,8 @@ public class DesktopTextBoxWithExtensions {
       });
 
       myTextField = new JBTextField(text);
+      TextFieldPlaceholderFunction.install(myTextField);
+
       myTextField.getDocument().addDocumentListener(new DocumentAdapter() {
         @Override
         @SuppressWarnings("unchecked")
@@ -188,14 +191,9 @@ public class DesktopTextBoxWithExtensions {
 
     @Override
     public Disposable addKeyListener(@Nonnull KeyListener keyListener) {
-      KeyAdapter l = new KeyAdapter() {
-        @Override
-        public void keyPressed(KeyEvent e) {
-          keyListener.keyPressed(new consulo.ui.event.KeyEvent(Unsupported.this, e.getKeyCode()));
-        }
-      };
-      myTextField.addKeyListener(l);
-      return () -> myTextField.removeKeyListener(l);
+      AWTKeyAdapterAsKeyListener adapter = new AWTKeyAdapterAsKeyListener(this, keyListener);
+      myTextField.addKeyListener(adapter);
+      return () -> myTextField.removeKeyListener(adapter);
     }
 
     @Nonnull

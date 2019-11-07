@@ -56,6 +56,7 @@ public class DesktopTextBoxWithExpandAction {
   private static class SupportedTextBoxWithExpandAction extends DocumentSwingValidator<ExpandableTextField> implements TextBoxWithExpandAction {
     private SupportedTextBoxWithExpandAction(Function<String, List<String>> parser, Function<List<String>, String> joiner, SupportTextBoxWithExpandActionExtender lookAndFeel) {
       ExpandableTextField field = new ExpandableTextField(parser::apply, joiner::apply, lookAndFeel);
+      TextFieldPlaceholderFunction.install(field);
       initialize(field);
       addDocumentListenerForValidator(field.getDocument());
 

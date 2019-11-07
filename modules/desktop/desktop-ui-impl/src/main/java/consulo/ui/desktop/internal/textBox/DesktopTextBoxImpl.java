@@ -58,6 +58,7 @@ public class DesktopTextBoxImpl extends DocumentSwingValidator<JBTextField> impl
 
   public DesktopTextBoxImpl(String text) {
     MyJBTextField field = new MyJBTextField();
+    TextFieldPlaceholderFunction.install(field);
     initialize(field);
     addDocumentListenerForValidator(field.getDocument());
 
