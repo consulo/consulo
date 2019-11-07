@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.ui;
 
+import com.intellij.util.ObjectUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -29,7 +31,7 @@ public interface InputValidatorEx extends InputValidator {
   @Nonnull
   static String getErrorText(@Nonnull InputValidator validator, @Nonnull String inputString, @Nonnull String defaultError) {
     if (validator instanceof InputValidatorEx) {
-      return ((InputValidatorEx)validator).getErrorText(inputString);
+      return ObjectUtil.notNull(((InputValidatorEx)validator).getErrorText(inputString), defaultError);
     }
     return defaultError;
   }
