@@ -1092,6 +1092,14 @@ public class StringUtil extends StringUtilRt {
     return string.substring(0, index + 1);
   }
 
+  @Nonnull
+  @Contract(pure = true)
+  public static CharSequence trimTrailing(@Nonnull CharSequence string, char symbol) {
+    int index = string.length() - 1;
+    while (index >= 0 && string.charAt(index) == symbol) index--;
+    return string.subSequence(0, index + 1);
+  }
+
   @Contract(pure = true)
   public static boolean startsWithChar(@Nullable CharSequence s, char prefix) {
     return StringUtilRt.startsWithChar(s, prefix);

@@ -25,4 +25,7 @@ import java.util.EventListener;
 public interface KeyListener extends EventListener {
   default void keyPressed(@Nonnull KeyEvent event) {
   }
+
+  default void keyReleased(@Nonnull KeyEvent event) {
+  }
 }

@@ -210,6 +210,15 @@ public abstract class RunManager {
    * Adds the specified run configuration to the list of run configurations stored in the project.
    *
    * @param settings the run configuration settings.
+   */
+  public void addConfiguration(final RunnerAndConfigurationSettings settings) {
+    addConfiguration(settings, false);
+  }
+
+  /**
+   * Adds the specified run configuration to the list of run configurations stored in the project.
+   *
+   * @param settings the run configuration settings.
    * @param isShared true if the configuration is marked as shared (stored in the versioned part of the project files), false if it's local
    *                 (stored in the workspace file).
    */

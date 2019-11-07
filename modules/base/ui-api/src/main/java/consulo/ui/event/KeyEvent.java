@@ -15,6 +15,7 @@
  */
 package consulo.ui.event;
 
+import com.intellij.util.BitUtil;
 import consulo.ui.Component;
 
 import javax.annotation.Nonnull;
@@ -26,14 +27,36 @@ import javax.annotation.Nonnull;
 public final class KeyEvent extends UIEvent<Component> {
   public static final int K_ENTER = '\n';
 
-  private final int myKeyCode;
+  public static final int M_SHIFT = 1 << 1;
+  public static final int M_CTRL = 1 << 2;
+  public static final int M_ALT = 1 << 3;
 
-  public KeyEvent(@Nonnull Component component, int keyCode) {
+  private final int myKeyCode;
+  private final int myModifiers;
+
+  public KeyEvent(@Nonnull Component component, int keyCode, int modifiers) {
     super(component);
     myKeyCode = keyCode;
+    myModifiers = modifiers;
+  }
+
+  public int getModifiers() {
+    return myModifiers;
   }
 
   public int getKeyCode() {
     return myKeyCode;
+  }
+
+  public boolean withShift() {
+    return BitUtil.isSet(myModifiers, M_SHIFT);
+  }
+
+  public boolean withCtrl() {
+    return BitUtil.isSet(myModifiers, M_CTRL);
+  }
+
+  public boolean withAlt() {
+    return BitUtil.isSet(myModifiers, M_ALT);
   }
 }

@@ -23,6 +23,7 @@ import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.UIBundle;
+import consulo.annotations.DeprecationInfo;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.fileOperateDialog.FileOperateDialogProvider;
 import consulo.fileTypes.ArchiveFileType;
@@ -337,6 +338,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
   }
 
   @Deprecated
+  @DeprecationInfo("Use #setUseApplicationDialog()")
   public void setForcedToUseIdeaFileChooser(boolean forcedToUseIdeaFileChooser) {
     setForceOperateDialogProviderId(forcedToUseIdeaFileChooser ? FileOperateDialogProvider.APPLICATION_ID : null);
   }

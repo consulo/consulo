@@ -141,6 +141,7 @@ public class AllIcons {
     public static final SwingImageRef Right = IconLoader.getIcon("/actions/right.png"); // 16x16
     public static final SwingImageRef Rollback = IconLoader.getIcon("/actions/rollback.svg"); // 16x16
     public static final SwingImageRef RunToCursor = IconLoader.getIcon("/actions/runToCursor.png"); // 16x16
+    public static final SwingImageRef Run_anything = IconLoader.getIcon("/actions/run_anything.svg");
     public static final SwingImageRef Scratch = IconLoader.getIcon("/actions/scratch.png"); // 16x16
     public static final SwingImageRef Search = Find; // 16x16
     public static final SwingImageRef SearchWithHistory = IconLoader.getIcon("/actions/search.png"); // 16x16

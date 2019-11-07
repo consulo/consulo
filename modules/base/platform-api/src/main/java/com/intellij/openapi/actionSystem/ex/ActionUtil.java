@@ -36,8 +36,8 @@ import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredReadAction;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -430,6 +430,11 @@ public class ActionUtil {
       }
       invokeAction(action, component, place, null, null);
     };
+  }
+
+  @Nonnull
+  public static AnActionEvent createEmptyEvent() {
+    return AnActionEvent.createFromDataContext(ActionPlaces.UNKNOWN, null, DataContext.EMPTY_CONTEXT);
   }
 
   @Nonnull

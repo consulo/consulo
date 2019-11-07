@@ -1167,6 +1167,10 @@
     <extensionPoint name="searchEverywhereClassifier" interface="com.intellij.ide.actions.SearchEverywhereClassifier"/>
     <extensionPoint name="searchEverywhereResultsEqualityProvider" interface="com.intellij.ide.actions.searcheverywhere.SEResultsEqualityProvider"/>
 
+    <extensionPoint name="runAnything.executionProvider" interface="com.intellij.ide.actions.runAnything.activity.RunAnythingProvider" />
+    <extensionPoint name="runAnything.commandHandler" interface="com.intellij.ide.actions.runAnything.handlers.RunAnythingCommandHandler" />
+    <extensionPoint name="runAnything.commandCustomizer" interface="com.intellij.ide.actions.runAnything.commands.RunAnythingCommandCustomizer" />
+
     <extensionPoint name="searchScopesProvider" interface="com.intellij.psi.search.SearchScopeProvider"/>
 
     <extensionPoint name="uiDecorator" interface="consulo.ui.UIDecorator" />
@@ -2700,6 +2704,18 @@
     <statusBarWidgetProvider implementation="com.intellij.openapi.wm.impl.status.TogglePopupHintsPanelProvider" />
 
     <fileBreadcrumbsCollector implementation="com.intellij.ui.breadcrumbs.PsiFileBreadcrumbsCollector" />
+
+    <projectService serviceImplementation="com.intellij.ide.actions.runAnything.RunAnythingManager" />
+    <projectService serviceImplementation="com.intellij.ide.actions.runAnything.RunAnythingContextRecentDirectoryCache" />
+    <projectService serviceImplementation="com.intellij.ide.actions.runAnything.RunAnythingCache" />
+
+    <runAnything.executionProvider id="RunAnythingRunConfigurationProvider"
+                                   implementation="com.intellij.ide.actions.runAnything.RunAnythingRunConfigurationProvider"/>
+    <runAnything.executionProvider implementation="com.intellij.ide.actions.runAnything.activity.RunAnythingRecentProjectProvider"/>
+    <runAnything.executionProvider id="recentCommandProvider" implementation="com.intellij.ide.actions.runAnything.activity.RunAnythingRecentCommandProvider"
+                                   order="last"/>
+    <runAnything.executionProvider implementation="com.intellij.ide.actions.runAnything.activity.RunAnythingCommandExecutionProvider"
+                                   order="last"/>
   </extensions>
 
   <applicationListeners>

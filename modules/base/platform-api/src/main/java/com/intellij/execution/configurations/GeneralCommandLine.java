@@ -20,7 +20,6 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.FilePathSeparator;
 import com.intellij.execution.process.ProcessNotCreatedException;
 import com.intellij.ide.IdeBundle;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.UserDataHolder;
@@ -31,10 +30,12 @@ import com.intellij.util.EnvironmentUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CaseInsensitiveStringHashingStrategy;
 import consulo.annotations.DeprecationInfo;
+import consulo.logging.Logger;
 import gnu.trove.THashMap;
+import org.jetbrains.annotations.NotNull;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -89,6 +90,19 @@ public class GeneralCommandLine implements UserDataHolder {
         addParameters(command.subList(1, size));
       }
     }
+  }
+
+  protected GeneralCommandLine(@NotNull GeneralCommandLine original) {
+    myExePath = original.myExePath;
+    myWorkDirectory = original.myWorkDirectory;
+    myEnvParams.putAll(original.myEnvParams);
+    myParentEnvironmentType = original.myParentEnvironmentType;
+    original.myProgramParams.copyTo(myProgramParams);
+    myCharset = original.myCharset;
+    myRedirectErrorStream = original.myRedirectErrorStream;
+    //myInputFile = original.myInputFile;
+    // this is intentional memory waste, to avoid warning suppression. We should not copy UserData, but can't suppress a warning for a single field
+    myUserData = new HashMap<>();
   }
 
   public String getExePath() {

@@ -23,9 +23,9 @@ import com.intellij.util.ArrayUtil;
 import com.pty4j.PtyProcess;
 import consulo.application.ApplicationProperties;
 import consulo.logging.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -52,6 +52,24 @@ public class PtyCommandLine extends GeneralCommandLine {
   private boolean myConsoleMode = true;
 
   public PtyCommandLine() {
+  }
+
+  public PtyCommandLine(@Nonnull String... command) {
+    super(command);
+  }
+
+  public PtyCommandLine(@Nonnull List<String> command) {
+    super(command);
+  }
+
+  public PtyCommandLine(@NotNull GeneralCommandLine original) {
+    super(original);
+    if (original instanceof PtyCommandLine) {
+      myUseCygwinLaunch = ((PtyCommandLine)original).myUseCygwinLaunch;
+      myConsoleMode = ((PtyCommandLine)original).myConsoleMode;
+      //myInitialColumns = ((PtyCommandLine)original).myInitialColumns;
+      //myInitialRows = ((PtyCommandLine)original).myInitialRows;
+    }
   }
 
   @Nonnull

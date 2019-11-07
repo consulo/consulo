@@ -18,16 +18,17 @@ package com.intellij.execution.configurations;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathMacros;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.EnvironmentUtil;
 import com.intellij.util.execution.ParametersListUtil;
+import consulo.logging.Logger;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -236,19 +237,16 @@ public class ParametersList implements Cloneable {
 
   @Override
   public ParametersList clone() {
-    try {
-      final ParametersList clone = (ParametersList)super.clone();
-      clone.myParameters = new ArrayList<String>(myParameters);
-      clone.myGroups = new ArrayList<ParamsGroup>(myGroups.size() + 1);
-      for (ParamsGroup group : myGroups) {
-        clone.myGroups.add(group.clone());
-      }
-      return clone;
+    return copyTo(new ParametersList());
+  }
+
+  @NotNull
+  ParametersList copyTo(@NotNull ParametersList target) {
+    target.myParameters.addAll(myParameters);
+    for (ParamsGroup group : myGroups) {
+      target.myGroups.add(group.clone());
     }
-    catch (CloneNotSupportedException e) {
-      LOG.error(e);
-      return null;
-    }
+    return target;
   }
 
   /**

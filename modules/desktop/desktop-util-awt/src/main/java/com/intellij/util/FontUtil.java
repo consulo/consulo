@@ -37,12 +37,17 @@ public class FontUtil {
   }
 
   @Nonnull
-  public static String spaceAndThinSpace() {
-    return " " + canDisplay(UIUtil.getLabelFont(), '\u2009', " ");
+  public static Font minusOne(@Nonnull Font font) {
+    return font.deriveFont(font.getSize() - 1f);
   }
 
   @Nonnull
-  public static Font minusOne(@Nonnull Font font) {
-    return font.deriveFont(font.getSize() - 1f);
+  public static String spaceAndThinSpace() {
+    return " " + thinSpace();
+  }
+
+  @Nonnull
+  public static String thinSpace() {
+    return canDisplay(UIUtil.getLabelFont(), '\u2009', " ");
   }
 }

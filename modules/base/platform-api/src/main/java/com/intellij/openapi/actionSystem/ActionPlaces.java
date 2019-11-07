@@ -15,8 +15,12 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import com.intellij.util.ArrayUtil;
+import com.intellij.util.containers.ContainerUtil;
+import org.jetbrains.annotations.NotNull;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Set;
 
 /**
  * Possible places in the IDEA user interface where an action can appear.
@@ -26,6 +30,7 @@ import javax.annotation.Nonnull;
 public abstract class ActionPlaces {
   public static final String UNKNOWN = "unknown";
   public static final String TOOLBAR = "toolbar";
+  public static final String POPUP = "popup";
 
   /**
    * consider to use {@link #isMainMenuOrActionSearch(String)} instead
@@ -133,31 +138,36 @@ public abstract class ActionPlaces {
 
   public static final String TOUCHBAR_GENERAL = "TouchBarGeneral";
 
-  private static final String[] ourToolbarPlaces =
-          {EDITOR_TOOLBAR, PROJECT_VIEW_TOOLBAR, TOOLBAR, TESTTREE_VIEW_TOOLBAR, MAIN_TOOLBAR, ANT_EXPLORER_TOOLBAR, ANT_MESSAGES_TOOLBAR,
-                  COMPILER_MESSAGES_TOOLBAR, TODO_VIEW_TOOLBAR, STRUCTURE_VIEW_TOOLBAR, USAGE_VIEW_TOOLBAR, DEBUGGER_TOOLBAR, CALL_HIERARCHY_VIEW_TOOLBAR,
-                  METHOD_HIERARCHY_VIEW_TOOLBAR, TYPE_HIERARCHY_VIEW_TOOLBAR, JAVADOC_TOOLBAR, FILE_HISTORY_TOOLBAR, FILEHISTORY_VIEW_TOOLBAR,
-                  LVCS_DIRECTORY_HISTORY_TOOLBAR, CHANGES_VIEW_TOOLBAR, PHING_EXPLORER_TOOLBAR, PHING_MESSAGES_TOOLBAR};
+  private static final Set<String> ourToolbarPlaces = ContainerUtil
+          .newHashSet(EDITOR_TOOLBAR, PROJECT_VIEW_TOOLBAR, TOOLBAR, TESTTREE_VIEW_TOOLBAR, MAIN_TOOLBAR, ANT_EXPLORER_TOOLBAR, ANT_MESSAGES_TOOLBAR, COMPILER_MESSAGES_TOOLBAR, TODO_VIEW_TOOLBAR,
+                      STRUCTURE_VIEW_TOOLBAR, USAGE_VIEW_TOOLBAR, DEBUGGER_TOOLBAR, CALL_HIERARCHY_VIEW_TOOLBAR, METHOD_HIERARCHY_VIEW_TOOLBAR, TYPE_HIERARCHY_VIEW_TOOLBAR, JAVADOC_TOOLBAR,
+                      FILE_HISTORY_TOOLBAR, FILEHISTORY_VIEW_TOOLBAR, LVCS_DIRECTORY_HISTORY_TOOLBAR, CHANGES_VIEW_TOOLBAR, PHING_EXPLORER_TOOLBAR, PHING_MESSAGES_TOOLBAR);
 
   public static final String RUN_DASHBOARD_POPUP = "RunDashboardPopup";
+  private static final String POPUP_PREFIX = "popup@";
+
 
   public static boolean isToolbarPlace(@Nonnull String place) {
-    return ArrayUtil.find(ourToolbarPlaces, place) != -1;
+    return ourToolbarPlaces.contains(place);
   }
 
   public static boolean isMainMenuOrActionSearch(String place) {
     return MAIN_MENU.equals(place) || ACTION_SEARCH.equals(place) || KEYBOARD_SHORTCUT.equals(place) || MOUSE_SHORTCUT.equals(place) || FORCE_TOUCH.equals(place);
   }
 
-  private static final String[] ourPopupPlaces =
-          {EDITOR_POPUP, EDITOR_TAB_POPUP, COMMANDER_POPUP, PROJECT_VIEW_POPUP, FAVORITES_VIEW_POPUP, SCOPE_VIEW_POPUP, TESTTREE_VIEW_POPUP,
-                  TESTSTATISTICS_VIEW_POPUP, TYPE_HIERARCHY_VIEW_POPUP, METHOD_HIERARCHY_VIEW_POPUP, CALL_HIERARCHY_VIEW_POPUP, J2EE_ATTRIBUTES_VIEW_POPUP,
-                  J2EE_VIEW_POPUP, USAGE_VIEW_POPUP, STRUCTURE_VIEW_POPUP, TODO_VIEW_POPUP, COMPILER_MESSAGES_POPUP, ANT_MESSAGES_POPUP, ANT_EXPLORER_POPUP,
-                  UPDATE_POPUP, FILEVIEW_POPUP, CHECKOUT_POPUP, LVCS_DIRECTORY_HISTORY_POPUP, GUI_DESIGNER_EDITOR_POPUP, GUI_DESIGNER_COMPONENT_TREE_POPUP,
-                  GUI_DESIGNER_PROPERTY_INSPECTOR_POPUP, CREATE_EJB_POPUP, CHANGES_VIEW_POPUP, REMOTE_HOST_VIEW_POPUP, REMOTE_HOST_DIALOG_POPUP, TFS_TREE_POPUP,
-                  ACTION_PLACE_VCS_QUICK_LIST_POPUP_ACTION, PHING_EXPLORER_POPUP, NAVIGATION_BAR_POPUP, GULP_VIEW_POPUP, RUN_DASHBOARD_POPUP};
+  private static final Set<String> ourPopupPlaces = ContainerUtil
+          .newHashSet(POPUP, EDITOR_POPUP, EDITOR_TAB_POPUP, COMMANDER_POPUP, PROJECT_VIEW_POPUP, FAVORITES_VIEW_POPUP, SCOPE_VIEW_POPUP, TESTTREE_VIEW_POPUP, TESTSTATISTICS_VIEW_POPUP,
+                      TYPE_HIERARCHY_VIEW_POPUP, METHOD_HIERARCHY_VIEW_POPUP, CALL_HIERARCHY_VIEW_POPUP, J2EE_ATTRIBUTES_VIEW_POPUP, J2EE_VIEW_POPUP, USAGE_VIEW_POPUP, STRUCTURE_VIEW_POPUP,
+                      TODO_VIEW_POPUP, COMPILER_MESSAGES_POPUP, ANT_MESSAGES_POPUP, ANT_EXPLORER_POPUP, UPDATE_POPUP, FILEVIEW_POPUP, CHECKOUT_POPUP, LVCS_DIRECTORY_HISTORY_POPUP,
+                      GUI_DESIGNER_EDITOR_POPUP, GUI_DESIGNER_COMPONENT_TREE_POPUP, GUI_DESIGNER_PROPERTY_INSPECTOR_POPUP, CREATE_EJB_POPUP, CHANGES_VIEW_POPUP, REMOTE_HOST_VIEW_POPUP,
+                      REMOTE_HOST_DIALOG_POPUP, TFS_TREE_POPUP, ACTION_PLACE_VCS_QUICK_LIST_POPUP_ACTION, PHING_EXPLORER_POPUP, NAVIGATION_BAR_POPUP, GULP_VIEW_POPUP, RUN_DASHBOARD_POPUP);
+
+  @NotNull
+  public static String getActionGroupPopupPlace(@Nullable String actionId) {
+    return actionId == null ? POPUP : POPUP_PREFIX + actionId;
+  }
 
   public static boolean isPopupPlace(@Nonnull String place) {
-    return ArrayUtil.find(ourPopupPlaces, place) != -1;
+    return ourPopupPlaces.contains(place) || place.startsWith(POPUP_PREFIX);
   }
 }

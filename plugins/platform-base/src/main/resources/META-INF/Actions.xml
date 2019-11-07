@@ -134,6 +134,7 @@
     <action id="QuickDocCopy" class="com.intellij.codeInsight.documentation.actions.CopyQuickDocAction" use-shortcut-of="$Copy"/>
     <action id="EditSourceInNewWindow" class="com.intellij.ide.actions.EditSourceInNewWindowAction"/>
     <action id="SearchEverywhere" class="com.intellij.ide.actions.SearchEverywhereAction" icon="AllIcons.Actions.FindPlain"/>
+    <action id="RunAnything" icon="AllIcons.Actions.Run_anything" class="com.intellij.ide.actions.runAnything.RunAnythingAction" text="Run anything" description="Allows to execute any command"/>
 
     <group id="TemplateParametersNavigation">
       <action id="NextTemplateParameter" class="com.intellij.codeInsight.completion.NextPrevParameterAction$Next" text="Next Parameter">
@@ -555,6 +556,7 @@
         <reference ref="ShowSettings"/>
       </group>
       <separator/>
+      <reference ref="RunAnything"/>
       <reference ref="SearchEverywhere"/>
       <reference ref="Login"/>
     </group>
@@ -1375,6 +1377,7 @@
       <separator/>
       <reference ref="ShowProjectStructureSettings"/>
       <separator/>
+      <reference ref="RunAnything"/>
       <reference ref="SearchEverywhere"/>
       <reference ref="Login"/>
     </group>
