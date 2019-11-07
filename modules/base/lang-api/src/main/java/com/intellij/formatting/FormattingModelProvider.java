@@ -15,9 +15,9 @@
  */
 package com.intellij.formatting;
 
-import consulo.logging.Logger;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -26,14 +26,7 @@ import javax.annotation.Nonnull;
  * @see FormattingModelBuilder#createModel(com.intellij.psi.PsiElement, com.intellij.psi.codeStyle.CodeStyleSettings)
  */
 
-public class FormattingModelProvider {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.formatting.FormattingModelProvider");
-  private static FormattingModelFactory myFactory;
-
-  static void setFactory(FormattingModelFactory factory) {
-    myFactory = factory;
-  }
-
+public final class FormattingModelProvider {
   /**
    * Creates an instance of the standard formatting model implementation for the specified file.
    *
@@ -46,7 +39,6 @@ public class FormattingModelProvider {
   public static FormattingModel createFormattingModelForPsiFile(PsiFile file,
                                                                 @Nonnull Block rootBlock,
                                                                 CodeStyleSettings settings){
-    return myFactory.createFormattingModelForPsiFile(file, rootBlock, settings);
+    return Formatter.getInstance().createFormattingModelForPsiFile(file, rootBlock, settings);
   }
-
 }
