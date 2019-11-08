@@ -96,7 +96,7 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
   private boolean processTopHits(String pattern, Processor<? super MatchedValue> consumer, DataContext dataContext) {
     Project project = dataContext.getData(CommonDataKeys.PROJECT);
     final CollectConsumer<Object> collector = new CollectConsumer<Object>();
-    for (SearchTopHitProvider provider : SearchTopHitProvider.EP_NAME.getExtensions()) {
+    for (SearchTopHitProvider provider : SearchTopHitProvider.EP_NAME.getExtensionList()) {
       if (provider instanceof com.intellij.ide.ui.OptionsTopHitProvider.CoveredByToggleActions) continue;
       if (provider instanceof com.intellij.ide.ui.OptionsTopHitProvider && !((com.intellij.ide.ui.OptionsTopHitProvider)provider).isEnabled(project)) continue;
       if (provider instanceof com.intellij.ide.ui.OptionsTopHitProvider && !StringUtil.startsWith(pattern, "#")) {
@@ -112,7 +112,7 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
         c.add((Comparable)o);
       }
     }
-    return processItems(pattern, JBIterable.of(c), consumer);
+    return processItems(pattern, JBIterable.from(c), consumer);
   }
 
   private boolean processOptions(String pattern, Processor<? super MatchedValue> consumer, DataContext dataContext) {
