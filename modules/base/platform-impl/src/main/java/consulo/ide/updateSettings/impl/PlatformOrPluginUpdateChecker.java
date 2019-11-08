@@ -17,9 +17,11 @@ package consulo.ide.updateSettings.impl;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.*;
+import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.notification.*;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
@@ -72,9 +74,12 @@ public class PlatformOrPluginUpdateChecker {
 
   private static final PluginId[] ourPlatformIds = {ourWinNoJre, ourWin, ourWin64, ourLinuxNoJre, ourLinux, ourLinux64, ourMacNoJre, ourMac64, ourWinNoJreZip, ourWinZip, ourWin64Zip};
 
+  private static final String ourForceJREBuild = "force.jre.build.on.update";
+  private static final String ourForceJREBuildVersion = "force.jre.build.on.update.version";
+
   @Nonnull
   public static PluginId getPlatformPluginId() {
-    boolean isJreBuild = new File(PathManager.getHomePath(), "jre").exists();
+    boolean isJreBuild = isJreBuild();
     boolean is64Bit = SystemInfo.is64Bit;
     if (SystemInfo.isWindows) {
       return isJreBuild ? (is64Bit ? ourWin64 : ourWin) : ourWinNoJre;
@@ -84,6 +89,33 @@ public class PlatformOrPluginUpdateChecker {
     }
     else {
       return isJreBuild ? (is64Bit ? ourLinux64 : ourLinux) : ourLinuxNoJre;
+    }
+  }
+
+  public static boolean isJreBuild() {
+    return new File(PathManager.getHomePath(), "jre").exists() || isForceBundledJreAtUpdate();
+  }
+
+  public static boolean isForceBundledJreAtUpdate() {
+    validateForceBundledJreVersion();
+    return PropertiesComponent.getInstance().getBoolean(ourForceJREBuild);
+  }
+
+  public static void setForceBundledJreAtUpdate() {
+    PropertiesComponent.getInstance().setValue(ourForceJREBuildVersion, ApplicationInfo.getInstance().getBuild().toString());
+    PropertiesComponent.getInstance().setValue(ourForceJREBuild, true);
+  }
+
+  /**
+   * Validate force bundle jre flag. If flag set version changed - it will be dropped
+   */
+  private static void validateForceBundledJreVersion() {
+    String oldVer = PropertiesComponent.getInstance().getValue(ourForceJREBuildVersion);
+
+    String curVer = ApplicationInfo.getInstance().getBuild().toString();
+
+    if (!Objects.equals(oldVer, curVer)) {
+      PropertiesComponent.getInstance().unsetValue(ourForceJREBuild);
     }
   }
 

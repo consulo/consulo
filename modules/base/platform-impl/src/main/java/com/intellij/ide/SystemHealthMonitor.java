@@ -35,6 +35,7 @@ import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import consulo.application.AccessRule;
+import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
 import consulo.logging.Logger;
 import consulo.util.ApplicationPropertiesComponent;
 import org.jetbrains.annotations.PropertyKey;
@@ -55,6 +56,8 @@ public class SystemHealthMonitor extends PreloadingActivity {
 
   private final ApplicationPropertiesComponent myProperties;
 
+  private static String checkJavaLower11RuntimeIgnoreKey = "java.lower.11.runtime";
+
   @Inject
   public SystemHealthMonitor(@Nonnull ApplicationPropertiesComponent properties) {
     myProperties = properties;
@@ -62,14 +65,50 @@ public class SystemHealthMonitor extends PreloadingActivity {
 
   @Override
   public void preload(@Nonnull ProgressIndicator indicator) {
-    checkRuntime();
+    checkEARuntime();
+    checkJavaLower11Runtime();
     checkReservedCodeCacheSize();
     checkSignalBlocking();
     checkHiDPIMode();
     startDiskSpaceMonitoring();
   }
 
-  private void checkRuntime() {
+  private void checkJavaLower11Runtime() {
+    // if jre is bundled - skip, we will update it with platform
+    if (PlatformOrPluginUpdateChecker.isJreBuild()) {
+      return;
+    }
+
+    // already at 11
+    if (SystemInfo.isJavaVersionAtLeast(11)) {
+      return;
+    }
+
+    if (myProperties.getBoolean(checkJavaLower11RuntimeIgnoreKey)) {
+      return;
+    }
+
+    Application app = Application.get();
+    app.invokeLater(() -> {
+      Notification notification = GROUP.createNotification("", IdeBundle.message("lower.jre.versions.11.message"), NotificationType.WARNING, new NotificationListener.Adapter() {
+        @Override
+        protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e) {
+          notification.expire();
+
+          if ("ignore".equals(e.getDescription())) {
+            myProperties.setValue(checkJavaLower11RuntimeIgnoreKey, true);
+          }
+          else if ("jre".equals(e.getDescription())) {
+            PlatformOrPluginUpdateChecker.setForceBundledJreAtUpdate();
+          }
+        }
+      });
+      notification.setImportant(true);
+      Notifications.Bus.notify(notification);
+    });
+  }
+
+  private void checkEARuntime() {
     if (StringUtil.endsWithIgnoreCase(System.getProperty("java.version", ""), "-ea")) {
       showNotification(new KeyHyperlinkAdapter("unsupported.jvm.ea.message"));
     }
