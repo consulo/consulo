@@ -163,10 +163,6 @@ public final class FocusManagerImpl implements IdeFocusManager, Disposable {
     }
   }
 
-  public static IdeFocusManager getInstance() {
-    return ApplicationManager.getApplication().getComponent(IdeFocusManager.class);
-  }
-
   @Override
   public void dispose() {
     myForcedFocusRequestsAlarm.cancelAllRequests();

@@ -23,8 +23,8 @@ import com.intellij.openapi.ui.popup.LightweightWindowEvent;
 import com.intellij.openapi.util.DimensionService;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.openapi.wm.impl.FocusManagerImpl;
 import com.intellij.ui.CaptionPanel;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.ScrollingUtil;
@@ -184,7 +184,7 @@ public class RecentLocationsAction extends DumbAwareAction {
     updateModel(listWithFilter, data, state);
     updateTitleText(title, state);
 
-    FocusManagerImpl.getInstance().requestFocus(listWithFilter, false);
+    IdeFocusManager.getGlobalInstance().requestFocus(listWithFilter, false);
 
     popup.pack(false, false);
   }
