@@ -69,6 +69,19 @@ public class DefaultUIDecorator implements SwingUIDecorator {
     return true;
   }
 
+  /**
+   * Enable & disable macOS dark title decoration. Works only on JetBrains JRE
+   * <p/>
+   * https://github.com/JetBrains/jdk8u_jdk/commit/83e6b1c2e67a192558f8882f663718d4bea0c8b0
+   */
+  @Override
+  public boolean decorateWindowTitle(@Nonnull JRootPane rootPane) {
+    if(SystemInfo.isMac) {
+      rootPane.putClientProperty("jetbrains.awt.windowDarkAppearance", StyleManager.get().getCurrentStyle().isDark());
+    }
+    return true;
+  }
+
   @Override
   public boolean decorateHelpButton() {
     return SystemInfo.isMac;
