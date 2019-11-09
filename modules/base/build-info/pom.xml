@@ -53,6 +53,18 @@
       </plugin>
 
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Consulo-Build-Number>${build.number}</Consulo-Build-Number>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+
+      <plugin>
         <groupId>com.google.code.maven-replacer-plugin</groupId>
         <artifactId>maven-replacer-plugin</artifactId>
         <version>1.4.0</version>
