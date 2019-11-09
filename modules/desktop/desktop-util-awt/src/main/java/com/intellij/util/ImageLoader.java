@@ -114,7 +114,7 @@ public class ImageLoader implements Serializable {
         URLConnection connection = url.openConnection();
         if (connection instanceof HttpURLConnection) {
           if (!original) return null;
-          connection.addRequestProperty("User-Agent", "IntelliJ");
+          connection.addRequestProperty("User-Agent", "Consulo");
         }
         stream = connection.getInputStream();
       }
