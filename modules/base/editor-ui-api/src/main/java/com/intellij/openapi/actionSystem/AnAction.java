@@ -31,11 +31,12 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
 import org.intellij.lang.annotations.JdkConstants;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Represents an entity that has a state, a presentation and can be performed.
@@ -71,6 +72,17 @@ import java.util.List;
  * @see ActionPlaces
  */
 public abstract class AnAction implements PossiblyDumbAware {
+  @Nonnull
+  public static AnAction create(@Nonnull String text, @Nullable String description, @Nullable Image image, @RequiredUIAccess @Nonnull Consumer<AnActionEvent> actionPerformed) {
+    return new AnAction() {
+      @RequiredUIAccess
+      @Override
+      public void actionPerformed(@Nonnull AnActionEvent e) {
+        actionPerformed.accept(e);
+      }
+    };
+  }
+
   public static final AnAction[] EMPTY_ARRAY = new AnAction[0];
 
   public static ArrayFactory<AnAction> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new AnAction[count];

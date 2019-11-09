@@ -19,8 +19,10 @@ import com.intellij.CommonBundle;
 import com.intellij.analysis.AnalysisScope;
 import com.intellij.find.FindBundle;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.impl.scopes.LibraryScope;
+import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -33,7 +35,6 @@ import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
 import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelProvider;
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
-import com.intellij.openapi.roots.ui.configuration.dependencyAnalysis.AnalyzeDependenciesDialog;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.FindUsagesInProjectStructureActionBase;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
@@ -41,6 +42,7 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.LibraryPro
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ModuleProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.ComboBoxTableRenderer;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
@@ -57,13 +59,12 @@ import com.intellij.util.IconUtil;
 import com.intellij.util.ui.JBUI;
 import consulo.logging.Logger;
 import consulo.roots.ui.configuration.classpath.AddModuleDependencyDialog;
-import javax.annotation.Nonnull;
+import consulo.ui.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
@@ -76,12 +77,11 @@ import java.util.List;
 import java.util.Set;
 
 public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanelImpl");
+  private static final Logger LOG = Logger.getInstance(ClasspathPanelImpl.class);
   private final JBTable myEntryTable;
   private final ClasspathTableModel myModel;
-  private AnActionButton myEditButton;
+  private AnAction myEditButton;
   private final ModuleConfigurationState myState;
-  private AnActionButton myRemoveButton;
 
   public ClasspathPanelImpl(ModuleConfigurationState state) {
     super(new BorderLayout());
@@ -96,7 +96,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     myEntryTable.setDefaultRenderer(ClasspathTableItem.class, new TableItemRenderer(getStructureConfigurableContext()));
     myEntryTable.setDefaultRenderer(Boolean.class, new ExportFlagRenderer(myEntryTable.getDefaultRenderer(Boolean.class)));
 
-    JComboBox scopeEditor = new JComboBox(new EnumComboBoxModel<DependencyScope>(DependencyScope.class));
+    JComboBox<DependencyScope> scopeEditor = new ComboBox<>(new EnumComboBoxModel<>(DependencyScope.class));
     myEntryTable.setDefaultEditor(DependencyScope.class, new DefaultCellEditor(scopeEditor));
     myEntryTable.setDefaultRenderer(DependencyScope.class, new ComboBoxTableRenderer<DependencyScope>(DependencyScope.values()) {
       @Override
@@ -169,15 +169,19 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
       }
     }, KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), WHEN_FOCUSED);
 
-    myEditButton = new AnActionButton(ProjectBundle.message("module.classpath.button.edit"), null, IconUtil.getEditIcon()) {
+    myEditButton = new DumbAwareAction(ProjectBundle.message("module.classpath.button.edit"), null, IconUtil.getEditIcon()) {
+      @RequiredUIAccess
       @Override
-      public void actionPerformed(AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         doEdit();
       }
 
+      @RequiredUIAccess
       @Override
-      public boolean isDumbAware() {
-        return true;
+      public void update(@Nonnull AnActionEvent e) {
+        final int[] selectedRows = myEntryTable.getSelectedRows();
+        ClasspathTableItem<?> selectedItem = selectedRows.length == 1 ? myModel.getItemAt(selectedRows[0]) : null;
+        e.getPresentation().setEnabled(selectedItem != null && selectedItem.isEditable());
       }
     };
     add(createTableWithButtons(), BorderLayout.CENTER);
@@ -194,7 +198,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
       }
     }.installOn(myEntryTable);
 
-    DefaultActionGroup actionGroup = new DefaultActionGroup();
+    ActionGroup.Builder actionGroup = ActionGroup.newImmutableBuilder();
     final AnAction navigateAction = new AnAction(ProjectBundle.message("classpath.panel.navigate.action.text")) {
       @Override
       public void actionPerformed(AnActionEvent e) {
@@ -215,14 +219,25 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     };
     navigateAction.registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_EDIT_SOURCE).getShortcutSet(), myEntryTable);
     actionGroup.add(myEditButton);
-    actionGroup.add(myRemoveButton);
+    actionGroup.add(new DumbAwareAction(CommonBundle.message("button.remove"), null,IconUtil.getRemoveIcon()) {
+      @RequiredUIAccess
+      @Override
+      public void actionPerformed(@Nonnull AnActionEvent e) {
+        removeSelectedItems(TableUtil.removeSelectedItems(myEntryTable));
+      }
+
+      @RequiredUIAccess
+      @Override
+      public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(isRemoveActionEnabled());
+      }
+    });
     actionGroup.add(navigateAction);
     actionGroup.add(new MyFindUsagesAction());
     actionGroup.add(new AnalyzeDependencyAction());
 
-    PopupHandler.installPopupHandler(myEntryTable, actionGroup, ActionPlaces.UNKNOWN, ActionManager.getInstance());
+    PopupHandler.installPopupHandler(myEntryTable, actionGroup.build(), ActionPlaces.UNKNOWN, ActionManager.getInstance());
   }
-
 
   @Override
   @Nullable
@@ -252,7 +267,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
         rootConfigurable.select((LibraryOrderEntry)entry, true);
       }
       else {
-        myEditButton.actionPerformed(null);
+        myEditButton.actionPerformed(ActionUtil.createEmptyEvent());
       }
     }
     else if (entry instanceof ModuleExtensionWithSdkOrderEntry) {
@@ -263,33 +278,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     }
   }
 
-
   private JComponent createTableWithButtons() {
-    final boolean isAnalyzeShown = false;
-
-    final AnActionButton analyzeButton = new AnActionButton(ProjectBundle.message("classpath.panel.analyze"), null, IconUtil.getAnalyzeIcon()) {
-      @Override
-      public void actionPerformed(AnActionEvent e) {
-        AnalyzeDependenciesDialog.show(getRootModel().getModule());
-      }
-    };
-
-    //addButton.setShortcut(CustomShortcutSet.fromString("alt A", "INSERT"));
-    //removeButton.setShortcut(CustomShortcutSet.fromString("alt DELETE"));
-    //upButton.setShortcut(CustomShortcutSet.fromString("alt UP"));
-    //downButton.setShortcut(CustomShortcutSet.fromString("alt DOWN"));
-
-    // we need to register our listener before ToolbarDecorator registers its own. Otherwise
-    myEntryTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-      @Override
-      public void valueChanged(ListSelectionEvent e) {
-        if (e.getValueIsAdjusting()) {
-          return;
-        }
-        updateButtons();
-      }
-    });
-
     final ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myEntryTable);
     decorator.setPanelBorder(JBUI.Borders.empty());
     decorator.setAddAction(new AnActionButtonRunnable() {
@@ -302,6 +291,8 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
       public void run(AnActionButton button) {
         removeSelectedItems(TableUtil.removeSelectedItems(myEntryTable));
       }
+    }).setRemoveActionUpdater(e -> {
+      return isRemoveActionEnabled();
     }).setMoveUpAction(new AnActionButtonRunnable() {
       @Override
       public void run(AnActionButton button) {
@@ -313,32 +304,11 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
         moveSelectedRows(+1);
       }
     }).addExtraAction(myEditButton);
-    if (isAnalyzeShown) {
-      decorator.addExtraAction(analyzeButton);
-    }
 
-    final JPanel panel = decorator.createPanel();
-    myRemoveButton = ToolbarDecorator.findRemoveButton(panel);
-    return panel;
+    return decorator.createPanel();
   }
 
-  private void doEdit() {
-    if (myEntryTable.getSelectedRowCount() != 1) {
-      return;
-    }
-    ClasspathTableItem<?> itemAt = myModel.getItemAt(myEntryTable.getSelectedRow());
-    itemAt.doEdit(this);
-    myEntryTable.repaint();
-    ModuleStructureConfigurable.getInstance(myState.getProject()).getTree().repaint();
-  }
-
-  @Override
-  public void addNotify() {
-    super.addNotify();
-    updateButtons();
-  }
-
-  private void updateButtons() {
+  private boolean isRemoveActionEnabled() {
     final int[] selectedRows = myEntryTable.getSelectedRows();
     boolean removeButtonEnabled = true;
     int minRow = myEntryTable.getRowCount() + 1;
@@ -351,11 +321,17 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
         removeButtonEnabled = false;
       }
     }
-    if (myRemoveButton != null) {
-      myRemoveButton.setEnabled(removeButtonEnabled && selectedRows.length > 0);
+    return removeButtonEnabled && selectedRows.length > 0;
+  }
+
+  private void doEdit() {
+    if (myEntryTable.getSelectedRowCount() != 1) {
+      return;
     }
-    ClasspathTableItem<?> selectedItem = selectedRows.length == 1 ? myModel.getItemAt(selectedRows[0]) : null;
-    myEditButton.setEnabled(selectedItem != null && selectedItem.isEditable());
+    ClasspathTableItem<?> itemAt = myModel.getItemAt(myEntryTable.getSelectedRow());
+    itemAt.doEdit(this);
+    myEntryTable.repaint();
+    ModuleStructureConfigurable.getInstance(myState.getProject()).getTree().repaint();
   }
 
   private void removeSelectedItems(final List removedRows) {

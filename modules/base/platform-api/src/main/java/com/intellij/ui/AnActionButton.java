@@ -18,6 +18,7 @@ package com.intellij.ui;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.DeprecationInfo;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
 
@@ -31,6 +32,8 @@ import java.util.Set;
 /**
  * @author Konstantin Bulenkov
  */
+@Deprecated
+@DeprecationInfo("Be carefull while using this class. In most cases AnAction will be enought")
 public abstract class AnActionButton extends AnAction implements ShortcutProvider {
   private boolean myEnabled = true;
   private boolean myVisible = true;

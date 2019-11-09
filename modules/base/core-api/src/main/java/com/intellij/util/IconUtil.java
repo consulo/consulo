@@ -15,6 +15,7 @@
  */
 package com.intellij.util;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.openapi.util.SystemInfo;
@@ -22,6 +23,7 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.RowIcon;
 import com.intellij.util.ui.*;
+import consulo.annotations.DeprecationInfo;
 import consulo.ui.migration.SwingImageRef;
 
 import javax.annotation.Nonnull;
@@ -36,6 +38,7 @@ import static com.intellij.util.ui.JBUI.ScaleType.USR_SCALE;
  * @author max
  * @author Konstantin Bulenkov
  */
+@SuppressWarnings("deprecation")
 public class IconUtil {
 
   @Nonnull
@@ -119,73 +122,70 @@ public class IconUtil {
   }
 
   public static SwingImageRef getAddIcon() {
-    return getToolbarDecoratorIcon("add.png");
+    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.Add : AllIcons.ToolbarDecorator.Add;
   }
 
   public static SwingImageRef getRemoveIcon() {
-    return getToolbarDecoratorIcon("remove.png");
+    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.Remove : AllIcons.ToolbarDecorator.Remove;
   }
 
   public static SwingImageRef getMoveUpIcon() {
-    return getToolbarDecoratorIcon("moveUp.png");
+    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.MoveUp : AllIcons.ToolbarDecorator.MoveUp;
   }
 
   public static SwingImageRef getMoveDownIcon() {
-    return getToolbarDecoratorIcon("moveDown.png");
+    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.MoveDown : AllIcons.ToolbarDecorator.MoveDown;
   }
 
   public static SwingImageRef getEditIcon() {
-    return getToolbarDecoratorIcon("edit.png");
+    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.Edit : AllIcons.ToolbarDecorator.Edit;
   }
 
   public static SwingImageRef getAddClassIcon() {
-    return getToolbarDecoratorIcon("addClass.png");
+    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.AddClass : AllIcons.ToolbarDecorator.AddClass;
   }
 
   public static SwingImageRef getAddPatternIcon() {
-    return getToolbarDecoratorIcon("addPattern.png");
+    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.AddPattern : AllIcons.ToolbarDecorator.AddPattern;
   }
 
+  @Deprecated
+  @DeprecationInfo("Use task icons")
   public static SwingImageRef getAddJiraPatternIcon() {
-    return getToolbarDecoratorIcon("addJira.png");
+    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.AddJira : AllIcons.ToolbarDecorator.AddJira;
   }
 
+  @Deprecated
+  @DeprecationInfo("Use task icons")
   public static SwingImageRef getAddYouTrackPatternIcon() {
-    return getToolbarDecoratorIcon("addYouTrack.png");
+    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.AddYouTrack : AllIcons.ToolbarDecorator.AddYouTrack;
   }
 
   public static SwingImageRef getAddBlankLineIcon() {
-    return getToolbarDecoratorIcon("addBlankLine.png");
+    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.AddBlankLine : AllIcons.ToolbarDecorator.AddBlankLine;
   }
 
   public static SwingImageRef getAddPackageIcon() {
-    return getToolbarDecoratorIcon("addPackage.png");
+    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.AddPackage : AllIcons.ToolbarDecorator.AddPackage;
   }
 
   public static SwingImageRef getAddLinkIcon() {
-    return getToolbarDecoratorIcon("addLink.png");
+    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.AddLink : AllIcons.ToolbarDecorator.AddLink;
   }
 
   public static SwingImageRef getAddFolderIcon() {
-    return getToolbarDecoratorIcon("addFolder.png");
+    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.AddFolder : AllIcons.ToolbarDecorator.AddFolder;
   }
 
-  public static SwingImageRef getAnalyzeIcon() {
-    return getToolbarDecoratorIcon("analyze.png");
+  @Nonnull
+  public static consulo.ui.image.Image getAnalyzeIcon() {
+    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.Analyze : AllIcons.ToolbarDecorator.Analyze;
   }
 
   public static void paintInCenterOf(@Nonnull Component c, Graphics g, Icon icon) {
     final int x = (c.getWidth() - icon.getIconWidth()) / 2;
     final int y = (c.getHeight() - icon.getIconHeight()) / 2;
     icon.paintIcon(c, g, x, y);
-  }
-
-  public static SwingImageRef getToolbarDecoratorIcon(String name) {
-    return IconLoader.getIcon(getToolbarDecoratorIconsFolder() + name);
-  }
-
-  private static String getToolbarDecoratorIconsFolder() {
-    return "/toolbarDecorator/" + (SystemInfo.isMac ? "mac/" : "");
   }
 
   /**
