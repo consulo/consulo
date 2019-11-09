@@ -16,6 +16,8 @@
 package com.intellij.ide.actions;
 
 import com.intellij.CommonBundle;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ModalityState;
 import consulo.logging.Logger;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
@@ -86,7 +88,7 @@ public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil {
       @RequiredUIAccess
       @Override
       public void onFinished() {
-        try {
+        Application.get().invokeLater(() -> {
           myShown.set(true);
 
           DesktopSettingsDialog dialog;
@@ -100,10 +102,7 @@ public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil {
           long time = System.currentTimeMillis() - myStartTime;
           LOG.info("Settings dialog initialization took " + time + " ms.");
           dialog.showAsync().doWhenProcessed(() -> myShown.set(false));
-        }
-        catch (Exception e) {
-          LOG.error(e);
-        }
+        }, ModalityState.NON_MODAL);
       }
     }.queue();
   }
@@ -231,14 +230,16 @@ public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil {
       @RequiredUIAccess
       @Override
       public void onFinished() {
-        DesktopProjectStructureDialog dialog = new DesktopProjectStructureDialog(project, myConfigurable, ShowSettingsUtil.DIMENSION_KEY, myConfigurable);
-        new UiNotifyConnector.Once(dialog.getContentPane(), new Activatable() {
-          @Override
-          public void showNotify() {
-            consumer.accept(myConfigurable);
-          }
-        });
-        dialog.showAsync();
+        Application.get().invokeLater(() -> {
+          DesktopProjectStructureDialog dialog = new DesktopProjectStructureDialog(project, myConfigurable, ShowSettingsUtil.DIMENSION_KEY, myConfigurable);
+          new UiNotifyConnector.Once(dialog.getContentPane(), new Activatable() {
+            @Override
+            public void showNotify() {
+              consumer.accept(myConfigurable);
+            }
+          });
+          dialog.showAsync();
+        }, ModalityState.NON_MODAL);
       }
     }.queue();
   }
