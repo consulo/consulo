@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,31 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.event;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import java.util.EventListener;
 
 /**
  * @author VISTALL
- * @since 19-Nov-16.
+ * @since 2019-11-09
  */
-public interface TextBox extends ValueComponent<String>, ValidableComponent<String>, FocusableComponent {
-  @Nonnull
-  static TextBox create() {
-    return create(null);
+public interface FocusListener extends EventListener {
+  default void focusGained(FocusEvent e) {
   }
 
-  @Nonnull
-  static TextBox create(@Nullable String text) {
-    return UIInternal.get()._Components_textBox(text);
+  default void focusLost(FocusEvent e) {
   }
-
-  @Nonnull
-  TextBox setPlaceholder(@Nullable String text);
-
-  @Nonnull
-  TextBox setVisibleLength(int columns);
-
-  void selectAll();
 }

@@ -27,9 +27,11 @@ import consulo.awt.TargetAWT;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.TextBox;
 import consulo.ui.TextBoxWithExtensions;
+import consulo.ui.desktop.internal.util.AWTFocusAdapterAsFocusListener;
 import consulo.ui.desktop.internal.util.AWTKeyAdapterAsKeyListener;
 import consulo.ui.desktop.internal.validableComponent.DocumentSwingValidator;
 import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExtensionsExtender;
+import consulo.ui.event.FocusListener;
 import consulo.ui.event.KeyListener;
 
 import javax.annotation.Nonnull;
@@ -190,10 +192,23 @@ public class DesktopTextBoxWithExtensions {
     }
 
     @Override
-    public Disposable addKeyListener(@Nonnull KeyListener keyListener) {
-      AWTKeyAdapterAsKeyListener adapter = new AWTKeyAdapterAsKeyListener(this, keyListener);
+    public Disposable addKeyListener(@Nonnull KeyListener listener) {
+      AWTKeyAdapterAsKeyListener adapter = new AWTKeyAdapterAsKeyListener(this, listener);
       myTextField.addKeyListener(adapter);
       return () -> myTextField.removeKeyListener(adapter);
+    }
+
+    @Nonnull
+    @Override
+    public Disposable addFocusListener(@Nonnull FocusListener listener) {
+      AWTFocusAdapterAsFocusListener adapter = new AWTFocusAdapterAsFocusListener(this, listener);
+      myTextField.addFocusListener(adapter);
+      return () -> myTextField.removeFocusListener(adapter);
+    }
+
+    @Override
+    public boolean hasFocus() {
+      return myTextField.hasFocus();
     }
 
     @Nonnull

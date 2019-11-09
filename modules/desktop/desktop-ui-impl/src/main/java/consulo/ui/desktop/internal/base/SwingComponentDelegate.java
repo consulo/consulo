@@ -22,8 +22,11 @@ import consulo.annotations.DeprecationInfo;
 import consulo.awt.TargetAWT;
 import consulo.awt.impl.ToSwingComponentWrapper;
 import consulo.ui.Component;
+import consulo.ui.FocusableComponent;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.desktop.internal.util.AWTFocusAdapterAsFocusListener;
 import consulo.ui.desktop.internal.util.AWTKeyAdapterAsKeyListener;
+import consulo.ui.event.FocusListener;
 import consulo.ui.event.KeyListener;
 import consulo.ui.impl.BorderInfo;
 import consulo.ui.impl.UIDataObject;
@@ -55,6 +58,14 @@ public class SwingComponentDelegate<T extends java.awt.Component> implements Com
     myComponent = component;
 
     myComponent.addKeyListener(new AWTKeyAdapterAsKeyListener(this, getListenerDispatcher(KeyListener.class)));
+
+    if (this instanceof FocusableComponent) {
+      myComponent.addFocusListener(new AWTFocusAdapterAsFocusListener((FocusableComponent)this, getListenerDispatcher(FocusListener.class)));
+    }
+  }
+
+  public boolean hasFocus() {
+    return toAWTComponent().hasFocus();
   }
 
   @Nonnull

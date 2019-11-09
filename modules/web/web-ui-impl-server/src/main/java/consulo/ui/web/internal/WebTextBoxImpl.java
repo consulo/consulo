@@ -58,6 +58,11 @@ public class WebTextBoxImpl extends UIComponentWithVaadinComponent<WebTextBoxImp
     return true;
   }
 
+  @Override
+  public boolean hasFocus() {
+    return true;
+  }
+
   public static class Vaadin extends VaadinComponent {
   }
 

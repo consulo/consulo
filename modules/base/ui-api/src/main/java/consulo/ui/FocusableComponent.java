@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,29 +15,20 @@
  */
 package consulo.ui;
 
+import com.intellij.openapi.Disposable;
+import consulo.ui.event.FocusListener;
+
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 19-Nov-16.
+ * @since 2019-11-09
  */
-public interface TextBox extends ValueComponent<String>, ValidableComponent<String>, FocusableComponent {
+public interface FocusableComponent extends Component {
+  boolean hasFocus();
+
   @Nonnull
-  static TextBox create() {
-    return create(null);
+  default Disposable addFocusListener(@Nonnull FocusListener listener) {
+    return addListener(FocusListener.class, listener);
   }
-
-  @Nonnull
-  static TextBox create(@Nullable String text) {
-    return UIInternal.get()._Components_textBox(text);
-  }
-
-  @Nonnull
-  TextBox setPlaceholder(@Nullable String text);
-
-  @Nonnull
-  TextBox setVisibleLength(int columns);
-
-  void selectAll();
 }

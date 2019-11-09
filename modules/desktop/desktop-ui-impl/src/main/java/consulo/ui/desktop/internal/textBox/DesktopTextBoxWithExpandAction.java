@@ -140,6 +140,11 @@ public class DesktopTextBoxWithExpandAction {
       return myTextBox.getListenerDispatcher(eventClass);
     }
 
+    @Override
+    public boolean hasFocus() {
+      return myTextBox.hasFocus();
+    }
+
     @Nullable
     @Override
     public String getValue() {

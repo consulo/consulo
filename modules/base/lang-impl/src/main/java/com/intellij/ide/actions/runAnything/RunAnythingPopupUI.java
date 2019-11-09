@@ -20,6 +20,7 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.util.ElementsChooser;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
+import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.diagnostic.Logger;
@@ -48,10 +49,11 @@ import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.awt.TargetAWT;
 import consulo.ui.TextBox;
 import consulo.ui.TextBoxWithExtensions;
+import consulo.ui.event.FocusEvent;
+import consulo.ui.event.FocusListener;
 import consulo.ui.event.KeyListener;
 import consulo.ui.image.Image;
 
@@ -130,73 +132,63 @@ public class RunAnythingPopupUI extends BigPopupUI {
       myIsUsedTrigger = true;
 
       final String pattern = mySearchField.getValueOrError();
-      //if (mySearchField.hasFocus()) {
-      Application.get().invokeLater(() -> myIsItemSelected = false);
+      if (mySearchField.hasFocus()) {
+        Application.get().invokeLater(() -> myIsItemSelected = false);
 
-      if (!myIsItemSelected) {
-        myLastInputText = null;
-        clearSelection();
+        if (!myIsItemSelected) {
+          myLastInputText = null;
+          clearSelection();
 
+          rebuildList();
+        }
+
+        if (!isHelpMode(pattern)) {
+          updateContextCombobox();
+          adjustMainListEmptyText(mySearchField);
+          return;
+        }
+
+        adjustEmptyText(mySearchField, field -> true, "", IdeBundle.message("run.anything.help.list.empty.secondary.text"));
+      }
+    });
+
+    mySearchField.addFocusListener(new FocusListener() {
+      @Override
+      public void focusGained(FocusEvent e) {
+        if (mySkipFocusGain) {
+          mySkipFocusGain = false;
+          return;
+        }
+        //mySearchField.setForeground(UIUtil.getLabelForeground());
+        mySearchField.setVisibleLength(SEARCH_FIELD_COLUMNS);
+        Application.get().invokeLater(() -> {
+          final JComponent parent = (JComponent)TargetAWT.to(mySearchField).getParent();
+          parent.revalidate();
+          parent.repaint();
+        });
         rebuildList();
       }
 
-      if (!isHelpMode(pattern)) {
-        updateContextCombobox();
-        adjustMainListEmptyText(mySearchField);
-        return;
+      @Override
+      public void focusLost(FocusEvent e) {
+        final ActionCallback result = new ActionCallback();
+        UIUtil.invokeLaterIfNeeded(() -> {
+          try {
+            if (myCalcThread != null) {
+              myCalcThread.cancel();
+            }
+            myAlarm.cancelAllRequests();
+
+            Application.get().invokeLater(() -> ActionToolbarImpl.updateAllToolbarsImmediately());
+
+            searchFinishedHandler.run();
+          }
+          finally {
+            result.setDone();
+          }
+        });
       }
-
-      adjustEmptyText(mySearchField, field -> true, "", IdeBundle.message("run.anything.help.list.empty.secondary.text"));
-      //}
     });
-
-    UiNotifyConnector.doWhenFirstShown(TargetAWT.to(mySearchField), () -> {
-      mySearchField.setVisibleLength(SEARCH_FIELD_COLUMNS);
-      Application.get().invokeLater(() -> {
-        final JComponent parent = (JComponent)TargetAWT.to(mySearchField).getParent();
-        parent.revalidate();
-        parent.repaint();
-      });
-      rebuildList();
-    });
-
-    //mySearchField.addFocusListener(new FocusAdapter() {
-    //  @Override
-    //  public void focusGained(FocusEvent e) {
-    //    if (mySkipFocusGain) {
-    //      mySkipFocusGain = false;
-    //      return;
-    //    }
-    //    mySearchField.setForeground(UIUtil.getLabelForeground());
-    //    mySearchField.setColumns(SEARCH_FIELD_COLUMNS);
-    //    Application.get().invokeLater(() -> {
-    //      final JComponent parent = (JComponent)mySearchField.getParent();
-    //      parent.revalidate();
-    //      parent.repaint();
-    //    });
-    //    rebuildList();
-    //  }
-    //
-    //  @Override
-    //  public void focusLost(FocusEvent e) {
-    //    final ActionCallback result = new ActionCallback();
-    //    UIUtil.invokeLaterIfNeeded(() -> {
-    //      try {
-    //        if (myCalcThread != null) {
-    //          myCalcThread.cancel();
-    //        }
-    //        myAlarm.cancelAllRequests();
-    //
-    //        Application.get().invokeLater(() -> ActionToolbarImpl.updateAllToolbarsImmediately());
-    //
-    //        searchFinishedHandler.run();
-    //      }
-    //      finally {
-    //        result.setDone();
-    //      }
-    //    });
-    //  }
-    //});
   }
 
   private static void adjustMainListEmptyText(@Nonnull TextBoxWithExtensions editor) {
