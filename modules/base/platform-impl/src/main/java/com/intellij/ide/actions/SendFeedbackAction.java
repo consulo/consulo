@@ -25,9 +25,10 @@ package com.intellij.ide.actions;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
+import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.project.DumbAware;
 import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 public class SendFeedbackAction extends AnAction implements DumbAware {
@@ -38,7 +39,7 @@ public class SendFeedbackAction extends AnAction implements DumbAware {
   }
 
   public static void launchBrowser() {
-    final ApplicationInfoEx appInfo = ApplicationInfoEx.getInstanceEx();
+    final ApplicationInfo appInfo = ApplicationInfo.getInstance();
     String urlTemplate = appInfo.getReleaseFeedbackUrl();
     urlTemplate = urlTemplate
       .replace("$BUILD", appInfo.getBuild().asString())

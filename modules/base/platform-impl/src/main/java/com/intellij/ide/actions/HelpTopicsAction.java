@@ -20,17 +20,32 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.project.DumbAware;
+import consulo.ui.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 public class HelpTopicsAction extends AnAction implements DumbAware {
-  public void actionPerformed(AnActionEvent e) {
+  private final Provider<ApplicationInfo> myInfoProvider;
+
+  @Inject
+  public HelpTopicsAction(Provider<ApplicationInfo> infoProvider) {
+    myInfoProvider = infoProvider;
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     HelpManager.getInstance().invokeHelp("top");
   }
 
+  @RequiredUIAccess
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     
-    boolean enabled = ApplicationInfo.helpAvailable();
+    boolean enabled = myInfoProvider.get().hasHelp();
     e.getPresentation().setEnabled(enabled);
     e.getPresentation().setVisible(enabled);
   }

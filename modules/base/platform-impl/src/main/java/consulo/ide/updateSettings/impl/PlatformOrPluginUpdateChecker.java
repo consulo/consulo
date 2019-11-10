@@ -23,8 +23,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
-import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -205,7 +203,7 @@ public class PlatformOrPluginUpdateChecker {
   private static PlatformOrPluginUpdateResult checkForUpdates(final boolean showResults, @Nullable ProgressIndicator indicator) {
     PluginId platformPluginId = getPlatformPluginId();
 
-    ApplicationInfoEx appInfo = ApplicationInfoImpl.getShadowInstance();
+    ApplicationInfo appInfo = ApplicationInfo.getInstance();
     String currentBuildNumber = appInfo.getBuild().asString();
 
     List<PluginDescriptor> remotePlugins = Collections.emptyList();

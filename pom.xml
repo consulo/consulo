@@ -53,7 +53,6 @@
     <module>modules/base/analysis-api</module>
     <module>modules/base/analysis-impl</module>
     <module>modules/base/bootstrap</module>
-    <module>modules/base/build-info</module>
     <module>modules/base/built-in-server-api</module>
     <module>modules/base/built-in-server-impl</module>
     <module>modules/base/core-api</module>

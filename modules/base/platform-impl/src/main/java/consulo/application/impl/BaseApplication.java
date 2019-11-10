@@ -22,15 +22,10 @@ import com.intellij.ide.ActivityTracker;
 import com.intellij.ide.ApplicationLoadListener;
 import com.intellij.ide.StartupProgress;
 import com.intellij.ide.plugins.PluginListenerDescriptor;
-import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.AccessToken;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationListener;
-import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationUtil;
-import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.application.impl.ReadMostlyRWLock;
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.components.ServiceDescriptor;
@@ -70,9 +65,9 @@ import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.jetbrains.ide.PooledThreadExecutor;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
@@ -194,8 +189,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     super(null, "Application", ExtensionAreaId.APPLICATION);
     mySplashRef = splashRef;
     myStartTime = System.currentTimeMillis();
-
-    PluginManagerCore.BUILD_NUMBER = ApplicationInfoImpl.getShadowInstance().getBuild().asString();
   }
 
   @Override
@@ -205,6 +198,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     builder.bind(Application.class).to(this);
     builder.bind(ApplicationEx.class).to(this);
     builder.bind(ApplicationEx2.class).to(this);
+    builder.bind(ApplicationInfo.class).to(() -> ApplicationInfo.getInstance());
 
     builder.bind(IApplicationStore.class).to(ApplicationStoreImpl.class).forceSingleton();
     builder.bind(ApplicationPathMacroManager.class).to(ApplicationPathMacroManager.class).forceSingleton();

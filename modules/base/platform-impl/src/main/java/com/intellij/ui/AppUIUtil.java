@@ -16,9 +16,9 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
@@ -54,7 +54,7 @@ public class AppUIUtil {
 
   @SuppressWarnings("deprecation")
   public static void updateWindowIcon(@Nonnull Window window, boolean isDark) {
-    ApplicationInfoEx appInfo = ApplicationInfoImpl.getShadowInstance();
+    ApplicationInfo appInfo = ApplicationInfoImpl.getInstance();
     List<Image> images = ContainerUtil.newArrayListWithCapacity(2);
 
     images.add(ImageLoader.loadFromResource(appInfo.getIconUrl(), isDark));

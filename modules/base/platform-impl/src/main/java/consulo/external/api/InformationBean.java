@@ -16,8 +16,6 @@
 package consulo.external.api;
 
 import com.intellij.openapi.application.ApplicationInfo;
-import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.util.SystemProperties;
 import consulo.ide.updateSettings.UpdateChannel;
 import consulo.ide.updateSettings.UpdateSettings;
@@ -36,7 +34,7 @@ public abstract class InformationBean {
   private final String javaVmVendor = SystemProperties.getJavaVmVendor();
   private final String locale = Locale.getDefault().toString();
 
-  private final String appName = ApplicationNamesInfo.getInstance().getFullProductName();
+  private final String appName;
   private final UpdateChannel appUpdateChannel;
   private final String appBuild;
   private final String appVersionMajor;
@@ -46,7 +44,8 @@ public abstract class InformationBean {
   public InformationBean() {
     appUpdateChannel = UpdateSettings.getInstance().getChannel();
 
-    ApplicationInfoEx appInfo = (ApplicationInfoEx)ApplicationInfo.getInstance();
+    ApplicationInfo appInfo = ApplicationInfo.getInstance();
+    appName = appInfo.getName();
     appBuild = appInfo.getBuild().asString();
     appVersionMajor = appInfo.getMajorVersion();
     appVersionMinor = appInfo.getMinorVersion();

@@ -20,7 +20,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
+import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.diff.DiffColors;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.ColorKey;
@@ -48,9 +48,9 @@ import com.intellij.util.ui.JBSwingUtilities;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.DeprecationInfo;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -132,7 +132,7 @@ public class IdeBackgroundUtil {
     PaintersHelper painters = glassPane.getNamedPainters(FRAME_PROP);
     PaintersHelper.initWallpaperPainter(FRAME_PROP, painters);
 
-    ApplicationInfoEx appInfo = ApplicationInfoEx.getInstanceEx();
+    ApplicationInfo appInfo = ApplicationInfo.getInstance();
     String path = /*UIUtil.isUnderDarcula()? appInfo.getEditorBackgroundImageUrl() : */null;
     URL url = path == null ? null : appInfo.getClass().getResource(path);
     Image centerImage = url == null ? null : ImageLoader.loadFromUrl(url);

@@ -15,9 +15,8 @@
  */
 package consulo.logging.impl.log4j2;
 
+import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
-import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -138,7 +137,7 @@ public class Log4J2Logger implements Logger {
 
   private static Supplier<String> getIdeaInfoProvider() {
     return () -> {
-      final ApplicationInfoEx info = ApplicationInfoImpl.getShadowInstance();
+      final ApplicationInfo info = ApplicationInfo.getInstance();
       return info.getFullApplicationName() + "  " + "Build #" + info.getBuild().asString();
     };
   }

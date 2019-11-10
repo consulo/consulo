@@ -16,7 +16,6 @@
 package consulo.application.impl;
 
 import com.intellij.openapi.application.ApplicationInfo;
-import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.util.BuildNumber;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ide.updateSettings.UpdateChannel;
@@ -29,11 +28,17 @@ import consulo.platform.Platform;
  */
 public class FrameTitleUtil {
   public static String buildTitle() {
-    StringBuilder builder = new StringBuilder(ApplicationNamesInfo.getInstance().getFullProductName());
+    ApplicationInfo applicationInfo = ApplicationInfo.getInstance();
+
+    StringBuilder builder = new StringBuilder(applicationInfo.getName());
+    builder.append(' ');
+    builder.append(applicationInfo.getMajorVersion());
+    builder.append('.');
+    builder.append(applicationInfo.getMinorVersion());
 
     UpdateChannel channel = UpdateSettings.getInstance().getChannel();
     if (channel != UpdateChannel.release) {
-      BuildNumber buildNumber = ApplicationInfo.getInstance().getBuild();
+      BuildNumber buildNumber = applicationInfo.getBuild();
 
       builder.append(" #");
       builder.append(buildNumber);
@@ -41,7 +46,7 @@ public class FrameTitleUtil {
       builder.append(StringUtil.capitalize(channel.name()));
     }
 
-    if(Platform.current().isUnderRoot()) {
+    if (Platform.current().isUnderRoot()) {
       builder.append(" (Administrator)");
     }
     return builder.toString();

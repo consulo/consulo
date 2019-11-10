@@ -20,10 +20,9 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.StartupProgress;
 import com.intellij.ide.plugins.cl.IdeaPluginClassLoader;
 import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import consulo.logging.Logger;
 import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
@@ -47,6 +46,7 @@ import consulo.container.impl.parser.ExtensionInfo;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
+import consulo.logging.Logger;
 import consulo.util.nodep.map.SimpleMultiMap;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 import gnu.trove.THashMap;
@@ -100,7 +100,6 @@ public class PluginManagerCore {
   static List<String> ourPluginErrors = null;
   static List<String> myPlugins2Disable = null;
   static LinkedHashSet<String> myPlugins2Enable = null;
-  public static String BUILD_NUMBER;
 
   @Nonnull
   @Deprecated
@@ -597,7 +596,7 @@ public class PluginManagerCore {
     }
 
     try {
-      BuildNumber buildNumber = ApplicationInfoImpl.getShadowInstance().getBuild();
+      BuildNumber buildNumber = ApplicationInfo.getInstance().getBuild();
       BuildNumber pluginBuildNumber = BuildNumber.fromString(platformVersion);
       return !buildNumber.isSnapshot() && !pluginBuildNumber.isSnapshot() && !buildNumber.equals(pluginBuildNumber);
     }

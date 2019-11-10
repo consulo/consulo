@@ -1179,9 +1179,6 @@
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
-    <applicationService serviceInterface="com.intellij.openapi.application.ApplicationInfo"
-                        serviceImplementation="com.intellij.openapi.application.impl.ApplicationInfoImpl"/>
-
     <applicationService serviceInterface="consulo.project.ProjectOpenProcessors"
                         serviceImplementation="consulo.project.ProjectOpenProcessorsImpl"/>
 

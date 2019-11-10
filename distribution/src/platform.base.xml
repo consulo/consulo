@@ -29,7 +29,6 @@
         <include>consulo:consulo-annotations</include>
         <include>consulo:consulo-built-in-server-api</include>
         <include>consulo:consulo-built-in-server-impl</include>
-        <include>consulo:consulo-build-info</include>
         <include>consulo:consulo-compiler-api</include>
         <include>consulo:consulo-compiler-impl</include>
         <include>consulo:consulo-core-api</include>

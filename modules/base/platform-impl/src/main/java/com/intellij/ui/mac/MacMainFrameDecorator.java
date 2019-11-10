@@ -18,10 +18,8 @@ package com.intellij.ui.mac;
 import com.apple.eawt.*;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
+import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
-import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.BuildNumber;
 import com.intellij.openapi.util.SystemInfo;
@@ -35,6 +33,7 @@ import com.intellij.util.EventDispatcher;
 import com.intellij.util.Function;
 import com.sun.jna.Callback;
 import com.sun.jna.Pointer;
+import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -307,7 +306,7 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
       // install uri handler
       final ID mainBundle = invoke("NSBundle", "mainBundle");
       final ID urlTypes = invoke(mainBundle, "objectForInfoDictionaryKey:", Foundation.nsString("CFBundleURLTypes"));
-      final ApplicationInfoEx info = ApplicationInfoImpl.getShadowInstance();
+      final ApplicationInfo info = ApplicationInfo.getInstance();
       final BuildNumber build = info != null ? info.getBuild() : null;
       if (urlTypes.equals(ID.NIL) && build != null && !build.isSnapshot()) {
         LOG.warn("no url bundle present. \n" +

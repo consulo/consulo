@@ -6,11 +6,11 @@ import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.webService.WebServiceApi;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Map;
 
 public class RemotelyConfigurableStatisticsService implements StatisticsService {
@@ -29,11 +29,8 @@ public class RemotelyConfigurableStatisticsService implements StatisticsService 
 
   @Override
   public StatisticsResult send() {
-    final String serviceUrl = ApplicationInfoEx.getInstanceEx().getStatisticsUrl();
+    final String serviceUrl = WebServiceApi.STATISTICS_API.buildUrl("push");
 
-    if (serviceUrl == null) {
-      return new StatisticsResult(StatisticsResult.ResultCode.ERROR_IN_CONFIG, "ERROR");
-    }
 
     if (!myConnectionService.isTransmissionPermitted()) {
       return new StatisticsResult(StatisticsResult.ResultCode.NOT_PERMITTED_SERVER, "NOT_PERMITTED");

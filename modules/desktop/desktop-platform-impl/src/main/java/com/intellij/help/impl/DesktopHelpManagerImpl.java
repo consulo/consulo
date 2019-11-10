@@ -21,11 +21,10 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.HelpSetPath;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.application.ApplicationInfo;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
-import consulo.logging.Logger;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.ui.Messages;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
@@ -55,7 +54,7 @@ public class DesktopHelpManagerImpl extends HelpManager {
     }
 
     if (myHelpSet == null) {
-      BrowserUtil.browse(ApplicationInfoEx.getInstanceEx().getWebHelpUrl() + id);
+      BrowserUtil.browse(ApplicationInfo.getInstance().getWebHelpUrl() + id);
       return;
     }
 

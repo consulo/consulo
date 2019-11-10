@@ -98,11 +98,6 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-build-info</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-platform-base-plugin</artifactId>
       <version>${project.version}</version>
     </dependency>

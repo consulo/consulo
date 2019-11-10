@@ -19,8 +19,7 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
+import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.project.DumbAware;
 
 /**
@@ -28,18 +27,19 @@ import com.intellij.openapi.project.DumbAware;
  */
 public class WhatsNewAction extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent e) {
-    BrowserUtil.launchBrowser(ApplicationInfoEx.getInstanceEx().getWhatsNewUrl());
+    BrowserUtil.launchBrowser(ApplicationInfo.getInstance().getWhatsNewUrl());
   }
 
   @Override
   public void update(AnActionEvent e) {
-    boolean visible = ApplicationInfoEx.getInstanceEx().getWhatsNewUrl() != null;
+    ApplicationInfo info = ApplicationInfo.getInstance();
+    boolean visible = info.getWhatsNewUrl() != null;
     e.getPresentation().setVisible(visible);
     if (visible) {
       e.getPresentation()
-        .setText(IdeBundle.message("whatsnew.action.custom.text", ApplicationNamesInfo.getInstance().getFullProductName()));
+        .setText(IdeBundle.message("whatsnew.action.custom.text", info.getFullApplicationName()));
       e.getPresentation().setDescription(
-        IdeBundle.message("whatsnew.action.custom.description", ApplicationNamesInfo.getInstance().getFullProductName()));
+        IdeBundle.message("whatsnew.action.custom.description", info.getFullApplicationName()));
     }
   }
 }

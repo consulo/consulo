@@ -15,50 +15,207 @@
  */
 package com.intellij.openapi.application;
 
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.BuildNumber;
+import com.intellij.openapi.util.NotNullLazyValue;
+import com.intellij.openapi.util.text.StringUtil;
+import consulo.annotations.DeprecationInfo;
+import consulo.application.ApplicationProperties;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
+import java.io.File;
+import java.io.InputStream;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 
-public abstract class ApplicationInfo {
-  @NonNls
-  public static final String APPLICATION_INFO_XML = "idea/ConsuloApplicationInfo.xml";
-  @NonNls
-  public static final String ABSOLUTE_APPLICATION_INFO_XML = "/" + APPLICATION_INFO_XML;
+/**
+ * I don't think changed random thread name is good idea.
+ * 
+ * Thread currentThread = Thread.currentThread();
+ * currentThread.setName(getFullApplicationName());
+ */
+public class ApplicationInfo {
+  private static final NotNullLazyValue<ApplicationInfo> ourValue = NotNullLazyValue.createValue(ApplicationInfo::new);
 
-  public abstract Calendar getBuildDate();
+  @Nonnull
+  public static ApplicationInfo getInstance() {
+    return ourValue.getValue();
+  }
 
-  @Deprecated()
-  /**
-   * Use {@link #getBuild()} instead
-   */ public String getBuildNumber() {
+  private BuildNumber myBuild;
+  private Calendar myBuildDate;
+
+  private ApplicationInfo() {
+    try (InputStream stream = Application.class.getClassLoader().getResourceAsStream(JarFile.MANIFEST_NAME)) {
+      Manifest manifest = new Manifest(stream);
+
+      Attributes attributes = manifest.getMainAttributes();
+
+      String buildNumber = attributes.getValue("Consulo-Build-Number");
+      if (buildNumber != null) {
+        myBuild = BuildNumber.fromString(buildNumber);
+      }
+
+      // yyyyMMddHHmm
+      String buildDate = attributes.getValue("Consulo-Build-Date");
+      if (buildDate != null) {
+        myBuildDate = parseDate(buildDate);
+      }
+    }
+    catch (Throwable e) {
+      Logger.getInstance(ApplicationInfo.class).error(e);
+    }
+
+    if (myBuild == null) {
+      myBuild = BuildNumber.fallback();
+    }
+
+    if (myBuildDate == null) {
+      myBuildDate = Calendar.getInstance();
+    }
+  }
+
+  private static GregorianCalendar parseDate(final String dateString) {
+    int year = 0, month = 0, day = 0, hour = 0, minute = 0;
+    try {
+      year = Integer.parseInt(dateString.substring(0, 4));
+      month = Integer.parseInt(dateString.substring(4, 6));
+      day = Integer.parseInt(dateString.substring(6, 8));
+      if (dateString.length() > 8) {
+        hour = Integer.parseInt(dateString.substring(8, 10));
+        minute = Integer.parseInt(dateString.substring(10, 12));
+      }
+    }
+    catch (Exception ignore) {
+    }
+    if (month > 0) month--;
+    return new GregorianCalendar(year, month, day, hour, minute);
+  }
+
+  @Nonnull
+  public Calendar getBuildDate() {
+    return myBuildDate;
+  }
+
+  @Deprecated
+  @DeprecationInfo("Use #getBuild()")
+  public String getBuildNumber() {
     return getBuild().asString();
   }
 
-  public abstract BuildNumber getBuild();
+  @Nonnull
+  public BuildNumber getBuild() {
+    return myBuild;
+  }
 
-  public abstract String getMajorVersion();
+  @Nonnull
+  public final String getMajorVersion() {
+    return String.valueOf(myBuildDate.get(Calendar.YEAR));
+  }
 
-  public abstract String getMinorVersion();
+  @Nonnull
+  public final String getMinorVersion() {
+    return String.valueOf(myBuildDate.get(Calendar.MONTH) + 1);
+  }
 
-  public abstract String getVersionName();
+  @Deprecated
+  @DeprecationInfo("Use #getName()")
+  public String getVersionName() {
+    return getName();
+  }
 
-  public abstract String getHelpURL();
+  @NonNls
+  public String getHelpURL() {
+    return "jar:file:///" + getHelpJarPath() + "!/" + "idea";
+  }
 
-  public abstract String getCompanyName();
+  @NonNls
+  private String getHelpJarPath() {
+    return PathManager.getHomePath() + File.separator + "help" + File.separator + "ideahelp.jar";
+  }
 
-  public abstract String getCompanyURL();
+  @Nonnull
+  public final String getFullApplicationName() {
+    StringBuilder buffer = new StringBuilder();
+    buffer.append(getName());
+    buffer.append(" ");
+    buffer.append(getMajorVersion());
 
-  public abstract boolean hasHelp();
+    String minorVersion = getMinorVersion();
+    if (!StringUtil.isEmpty(minorVersion)) {
+      buffer.append(".");
+      buffer.append(getMinorVersion());
+    }
 
-  public abstract boolean hasContextHelp();
+    return buffer.toString();
+  }
+
+  @Nonnull
+  public final String getWebHelpUrl() {
+    return "https://github.com/consulo/consulo/wiki";
+  }
+
+  @Nonnull
+  public final String getWhatsNewUrl() {
+    // TODO [VISTALL] change log url?
+    return "https://github.com/consulo/consulo";
+  }
+
+  @Nonnull
+  public final String getName() {
+    return "Consulo";
+  }
+
+  @Nonnull
+  public final String getCompanyName() {
+    return "consulo.io";
+  }
+
+  @Nonnull
+  public final String getKeymapUrl() {
+    return "https://github.com/consulo/consulo/wiki/Default-Keymap";
+  }
+
+  @Nonnull
+  public final String getCompanyURL() {
+    return "https://consulo.io";
+  }
+
+  @Nonnull
+  public final String getDocumentationUrl() {
+    return "https://github.com/consulo/consulo/wiki";
+  }
+
+  // FIXME [VISTALL] we need this?
+  @Nonnull
+  public final String getReleaseFeedbackUrl() {
+    return getSupportUrl();
+  }
+
+  @Nonnull
+  public final String getSupportUrl() {
+    return "https://discuss.consulo.io";
+  }
+
+  public final boolean hasHelp() {
+    // TODO [VISTALL] impl it?
+    return true;
+  }
+
+  public final boolean hasContextHelp() {
+    // TODO [VISTALL] impl it?
+    return true;
+  }
 
   public String getFullVersion() {
     final String majorVersion = getMajorVersion();
-    if (majorVersion != null && majorVersion.trim().length() > 0) {
+    if (majorVersion.trim().length() > 0) {
       final String minorVersion = getMinorVersion();
-      if (minorVersion != null && minorVersion.trim().length() > 0) {
+      if (minorVersion.trim().length() > 0) {
         return majorVersion + "." + minorVersion;
       }
       else {
@@ -66,20 +223,27 @@ public abstract class ApplicationInfo {
       }
     }
     else {
-      return getVersionName();
+      return getName();
     }
   }
 
-  public static ApplicationInfo getInstance() {
-    return ServiceManager.getService(ApplicationInfo.class);
+  @Deprecated
+  @DeprecationInfo("Do not use this method. Use SandboxUtil.getAppIcon()")
+  public String getIconUrl() {
+    return getUrl("/icon32");
   }
 
+  @Deprecated
+  @DeprecationInfo("Do not use this method. Use SandboxUtil.getAppIcon()")
+  public String getSmallIconUrl() {
+    return getUrl("/icon16");
+  }
 
-  public static boolean helpAvailable() {
-    return ApplicationManager.getApplication() != null && getInstance() != null && getInstance().hasHelp();
+  private static String getUrl(String prefix) {
+    return (ApplicationProperties.isInSandbox() ? prefix + "-sandbox" : prefix) + ".png";
   }
 
   public static boolean contextHelpAvailable() {
-    return ApplicationManager.getApplication() != null && getInstance() != null && getInstance().hasContextHelp();
+    return ApplicationManager.getApplication() != null && getInstance().hasContextHelp();
   }
 }

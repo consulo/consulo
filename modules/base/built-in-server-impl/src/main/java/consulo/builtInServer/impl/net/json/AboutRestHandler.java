@@ -15,11 +15,11 @@
  */
 package consulo.builtInServer.impl.net.json;
 
-import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
+import com.intellij.openapi.application.ApplicationInfo;
 import consulo.builtInServer.json.JsonGetRequestHandler;
 import consulo.ide.updateSettings.UpdateChannel;
 import consulo.ide.updateSettings.UpdateSettings;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -40,10 +40,10 @@ public class AboutRestHandler extends JsonGetRequestHandler {
   @Nonnull
   @Override
   public JsonResponse handle() {
-    ApplicationInfoEx applicationInfoEx = ApplicationInfoEx.getInstanceEx();
+    ApplicationInfo info = ApplicationInfo.getInstance();
     AboutInfo data = new AboutInfo();
-    data.name = ApplicationNamesInfo.getInstance().getFullProductName();
-    data.build = applicationInfoEx.getBuild().getBuildNumber();
+    data.name = info.getName();
+    data.build = info.getBuild().getBuildNumber();
     data.channel = UpdateSettings.getInstance().getChannel();
     return JsonResponse.asSuccess(data);
   }

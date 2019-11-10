@@ -19,7 +19,6 @@ import com.intellij.jna.JnaLoader;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.SystemInfo;
@@ -84,7 +83,7 @@ public class StartupUtil {
     }
 
     if (commandLineArgs.isShowVersion()) {
-      ApplicationInfoEx infoEx = ApplicationInfoImpl.getShadowInstance();
+      ApplicationInfo infoEx = ApplicationInfo.getInstance();
       System.out.println(infoEx.getFullApplicationName());
       System.exit(ExitCodes.VERSION_INFO);
     }

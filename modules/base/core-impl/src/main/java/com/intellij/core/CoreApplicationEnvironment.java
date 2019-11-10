@@ -25,9 +25,7 @@ import com.intellij.mock.MockApplicationEx;
 import com.intellij.mock.MockFileDocumentManagerImpl;
 import com.intellij.mock.MockReferenceProvidersRegistry;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.impl.CoreCommandProcessor;
 import com.intellij.openapi.editor.impl.DocumentImpl;
@@ -67,8 +65,8 @@ import consulo.psi.tree.ASTLeafFactory;
 import consulo.psi.tree.impl.DefaultASTCompositeFactory;
 import consulo.psi.tree.impl.DefaultASTLazyFactory;
 import consulo.psi.tree.impl.DefaultASTLeafFactory;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -124,7 +122,6 @@ public class CoreApplicationEnvironment {
     registerApplicationService(JobLauncher.class, createJobLauncher());
     registerApplicationService(CodeFoldingSettings.class, new CodeFoldingSettings());
     registerApplicationService(CommandProcessor.class, new CoreCommandProcessor());
-    myApplication.registerService(ApplicationInfo.class, ApplicationInfoImpl.class);
   }
 
   public <T> void registerApplicationService(@Nonnull Class<T> serviceInterface, @Nonnull T serviceImplementation) {

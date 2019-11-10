@@ -17,8 +17,8 @@ package com.intellij.ide.actions;
 
 import com.intellij.CommonBundle;
 import com.intellij.concurrency.JobScheduler;
+import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.Couple;
@@ -117,7 +117,7 @@ public class AboutNewDialog extends WholeWestDialogWrapper {
   @Nonnull
   private String buildAboutInfo() {
 
-    ApplicationInfoEx info = ApplicationInfoEx.getInstanceEx();
+    ApplicationInfo info = ApplicationInfo.getInstance();
 
     ApplicationNamesInfo namesInfo = ApplicationNamesInfo.getInstance();
 

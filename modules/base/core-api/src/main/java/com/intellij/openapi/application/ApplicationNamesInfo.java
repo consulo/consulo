@@ -15,80 +15,29 @@
  */
 package com.intellij.openapi.application;
 
-import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
+import consulo.annotations.DeprecationInfo;
 
 /**
  * @author nik
  */
+@Deprecated
+@DeprecationInfo("Use ApplicationInfo")
 public class ApplicationNamesInfo {
-  @NonNls private static final String ELEMENT_NAMES = "names";
-  @NonNls private static final String ATTRIBUTE_PRODUCT = "product";
-  @NonNls private static final String ATTRIBUTE_FULL_NAME = "fullname";
-  @NonNls private static final String ATTRIBUTE_SCRIPT = "script";
-
-  private String myProductName;
-  private String myFullProductName;
-  private String myLowercaseProductName;
-  private String myScriptName;
-
-  private static class ApplicationNamesInfoHolder {
-    private static final ApplicationNamesInfo ourInstance = new ApplicationNamesInfo();
-    private ApplicationNamesInfoHolder() { }
-  }
+  public static final ApplicationNamesInfo INSTANCE = new ApplicationNamesInfo();
 
   public static ApplicationNamesInfo getInstance() {
-    return ApplicationNamesInfoHolder.ourInstance;
+    return INSTANCE;
   }
 
-  private ApplicationNamesInfo() {
-    try {
-      //noinspection HardCodedStringLiteral
-      final Document doc = JDOMUtil.loadDocument(ApplicationNamesInfo.class.getResourceAsStream(ApplicationInfo.ABSOLUTE_APPLICATION_INFO_XML));
-      readInfo(doc.getRootElement());
-    }
-    catch (Exception e) {
-      //noinspection CallToPrintStackTrace
-      e.printStackTrace();
-    }
-  }
-
-  private void readInfo(final Element rootElement) {
-    final Element names = rootElement.getChild(ELEMENT_NAMES);
-    myProductName = names.getAttributeValue(ATTRIBUTE_PRODUCT);
-    myFullProductName = names.getAttributeValue(ATTRIBUTE_FULL_NAME);
-    myLowercaseProductName = StringUtil.capitalize(myProductName.toLowerCase());
-    myScriptName = names.getAttributeValue(ATTRIBUTE_SCRIPT);
-  }
-
-  /**
-   * @return "IDEA"
-   */
   public String getProductName() {
-    return myProductName;
+    return "Consulo";
   }
 
-  /**
-   * @return "IntelliJ IDEA"
-   */
   public String getFullProductName() {
-    return myFullProductName;
+    return "Consulo";
   }
 
-  /**
-   * @return "Idea"
-   */
-  public String getLowercaseProductName() {
-    return myLowercaseProductName;
-  }
-
-  /**
-   * @return "idea"
-   */
   public String getScriptName() {
-    return myScriptName;
+    return "consulo";
   }
 }

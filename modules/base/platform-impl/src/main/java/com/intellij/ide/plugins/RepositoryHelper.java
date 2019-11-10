@@ -17,7 +17,7 @@ package com.intellij.ide.plugins;
 
 import com.google.gson.Gson;
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
+import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.util.SystemProperties;
@@ -110,7 +110,7 @@ public class RepositoryHelper {
                                                                      @Nonnull UpdateChannel channel,
                                                                      @Nullable String buildNumber) throws Exception {
     if (buildNumber == null) {
-      ApplicationInfoEx appInfo = ApplicationInfoImpl.getShadowInstance();
+      ApplicationInfo appInfo = ApplicationInfo.getInstance();
       buildNumber = appInfo.getBuild().asString();
     }
 
