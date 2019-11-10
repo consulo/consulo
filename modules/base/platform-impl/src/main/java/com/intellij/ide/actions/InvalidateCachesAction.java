@@ -45,7 +45,7 @@ public class InvalidateCachesAction extends AnAction implements DumbAware {
 
     if (invalidateCachesInvalidatesVfs) descriptions.add("Local History");
 
-    for (CachesInvalidator invalidater : CachesInvalidator.EP_NAME.getExtensions()) {
+    for (CachesInvalidator invalidater : CachesInvalidator.EP_NAME.getExtensionList()) {
       ContainerUtil.addIfNotNull(descriptions, invalidater.getDescription());
     }
     Collections.sort(descriptions);

@@ -17,6 +17,7 @@ package com.intellij.compiler.impl;
 
 import com.intellij.ProjectTopics;
 import com.intellij.compiler.CompilerIOUtil;
+import com.intellij.ide.caches.CachesInvalidator;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -214,6 +215,22 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     @Nonnull
     TranslatingCompilerFilesMonitorImpl getMonitor() {
       return (TranslatingCompilerFilesMonitorImpl)myMonitorProvider.get();
+    }
+  }
+
+  static class MonitorCachesInvalidator extends CachesInvalidator {
+    private final Provider<TranslatingCompilerFilesMonitor> myTranslatingCompilerFilesMonitorProvider;
+
+    @Inject
+    MonitorCachesInvalidator(Provider<TranslatingCompilerFilesMonitor> translatingCompilerFilesMonitorProvider) {
+      myTranslatingCompilerFilesMonitorProvider = translatingCompilerFilesMonitorProvider;
+    }
+
+    @Override
+    public void invalidateCaches() {
+      TranslatingCompilerFilesMonitorImpl monitor = (TranslatingCompilerFilesMonitorImpl)myTranslatingCompilerFilesMonitorProvider.get();
+
+      monitor.invalidate();
     }
   }
 
@@ -667,6 +684,10 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     return new File(CompilerPaths.getCompilerSystemDirectory(), "file_paths.dat");
   }
 
+  private static File getInvalidateMarkerFile() {
+    return new File(CompilerPaths.getCompilerSystemDirectory(), "invalidate.marker");
+  }
+
   private static Map<String, SourceUrlClassNamePair> loadPathsToDelete(@Nullable final File file) {
     final Map<String, SourceUrlClassNamePair> map = new HashMap<>();
     try {
@@ -693,6 +714,20 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   private void ensureOutputStorageInitialized() {
     if (myInitialized) {
       throw new IllegalArgumentException();
+    }
+
+    File invalidateMarkerFile = getInvalidateMarkerFile();
+    if (invalidateMarkerFile.exists()) {
+      try {
+        invalidateMarkerFile.delete();
+
+        LOG.info("invalidate marker found");
+
+        FileUtil.delete(CompilerPaths.getCompilerSystemDirectory());
+      }
+      catch (Exception e) {
+        LOG.error(e);
+      }
     }
 
     int i = readVersion();
@@ -816,6 +851,21 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     });
 
     myInitialized = true;
+  }
+
+  private void invalidate() {
+    File marker = getInvalidateMarkerFile();
+
+    if(marker.exists()) {
+      return;
+    }
+
+    try {
+      FileUtil.writeToFile(marker, String.valueOf(new Date()));
+    }
+    catch (IOException e) {
+      LOG.error(e);
+    }
   }
 
   @Override
@@ -1041,6 +1091,8 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     StartupManager.getInstance(project).registerPostStartupActivity((ui) -> new Task.Backgroundable(project, CompilerBundle.message("compiler.initial.scanning.progress.text"), false) {
       @Override
       public void run(@Nonnull final ProgressIndicator indicator) {
+        indicator.setIndeterminate(false);
+
         final ProjectRef projRef = new ProjectRef(project);
         if (LOG.isDebugEnabled()) {
           LOG.debug("Initial sources scan for project hash=" + projectId + "; url=" + projRef.get().getPresentableUrl());
