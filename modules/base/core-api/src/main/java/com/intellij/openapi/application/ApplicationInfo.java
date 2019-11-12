@@ -18,6 +18,7 @@ package com.intellij.openapi.application;
 import com.intellij.openapi.util.BuildNumber;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.PathUtil;
 import consulo.annotations.DeprecationInfo;
 import consulo.application.ApplicationProperties;
 import consulo.logging.Logger;
@@ -25,7 +26,6 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.io.InputStream;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.jar.Attributes;
@@ -50,8 +50,10 @@ public class ApplicationInfo {
   private Calendar myBuildDate;
 
   private ApplicationInfo() {
-    try (InputStream stream = Application.class.getClassLoader().getResourceAsStream(JarFile.MANIFEST_NAME)) {
-      Manifest manifest = new Manifest(stream);
+    String jarPathForClass = PathUtil.getJarPathForClass(Application.class);
+
+    try (JarFile jarFile = new JarFile(jarPathForClass)) {
+      Manifest manifest = jarFile.getManifest();
 
       Attributes attributes = manifest.getMainAttributes();
 
