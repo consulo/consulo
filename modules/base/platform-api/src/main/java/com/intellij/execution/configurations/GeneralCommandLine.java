@@ -32,9 +32,8 @@ import com.intellij.util.text.CaseInsensitiveStringHashingStrategy;
 import consulo.annotations.DeprecationInfo;
 import consulo.logging.Logger;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
@@ -92,7 +91,7 @@ public class GeneralCommandLine implements UserDataHolder {
     }
   }
 
-  protected GeneralCommandLine(@NotNull GeneralCommandLine original) {
+  protected GeneralCommandLine(@Nonnull GeneralCommandLine original) {
     myExePath = original.myExePath;
     myWorkDirectory = original.myWorkDirectory;
     myEnvParams.putAll(original.myEnvParams);

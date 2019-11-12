@@ -25,9 +25,8 @@ import com.intellij.util.execution.ParametersListUtil;
 import consulo.logging.Logger;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -240,8 +239,8 @@ public class ParametersList implements Cloneable {
     return copyTo(new ParametersList());
   }
 
-  @NotNull
-  ParametersList copyTo(@NotNull ParametersList target) {
+  @Nonnull
+  ParametersList copyTo(@Nonnull ParametersList target) {
     target.myParameters.addAll(myParameters);
     for (ParamsGroup group : myGroups) {
       target.myGroups.add(group.clone());

@@ -32,7 +32,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
@@ -51,11 +50,12 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.Alarm;
 import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.NullableFunction;
+import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -63,8 +63,8 @@ import javax.swing.tree.TreeNode;
 import java.awt.*;
 import java.io.File;
 import java.text.MessageFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implements OccurenceNavigator {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.hierarchy.HierarchyBrowserBaseEx");
@@ -331,7 +331,11 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     }, 100);
   }
 
-  public final void changeView(@Nonnull final String typeName) {
+  public void changeView(@Nonnull final String typeName) {
+    changeView(typeName, true);
+  }
+
+  public final void changeView(@Nonnull final String typeName, boolean requestFocus) {
     myCurrentViewType = typeName;
 
     final PsiElement element = mySmartPsiElementPointer.getElement();
@@ -386,7 +390,9 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
       }
     }
 
-    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(getCurrentTree());
+    if (requestFocus) {
+      IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(getCurrentTree(), true));
+    }
   }
 
   @Nullable

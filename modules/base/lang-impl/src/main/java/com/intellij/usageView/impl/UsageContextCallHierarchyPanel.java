@@ -57,13 +57,13 @@ public class UsageContextCallHierarchyPanel extends UsageContextPanelBase {
       if (element == null || !element.isValid()) return false;
 
       Project project = element.getProject();
-      DataContext context = SimpleDataContext.getSimpleContext(CommonDataKeys.PSI_ELEMENT, element,
-                                                               SimpleDataContext.getProjectContext(project));
+      DataContext context = SimpleDataContext.getSimpleContext(CommonDataKeys.PSI_ELEMENT, element, SimpleDataContext.getProjectContext(project));
       HierarchyProvider provider = BrowseHierarchyActionBase.findBestHierarchyProvider(LanguageCallHierarchy.INSTANCE, element, context);
       if (provider == null) return false;
       PsiElement providerTarget = provider.getTarget(context);
       return providerTarget != null;
     }
+
     @Nonnull
     @Override
     public String getTabTitle() {
@@ -82,7 +82,7 @@ public class UsageContextCallHierarchyPanel extends UsageContextPanelBase {
   }
 
   @Override
-  public void updateLayoutLater(@Nullable final List<UsageInfo> infos) {
+  public void updateLayoutLater(@Nullable final List<? extends UsageInfo> infos) {
     PsiElement element = infos == null ? null : getElementToSliceOn(infos);
     if (myBrowser instanceof Disposable) {
       Disposer.dispose((Disposable)myBrowser);
@@ -99,7 +99,6 @@ public class UsageContextCallHierarchyPanel extends UsageContextPanelBase {
     if (element == null) {
       JComponent titleComp = new JLabel(UsageViewBundle.message("select.the.usage.to.preview", myPresentation.getUsagesWord()), SwingConstants.CENTER);
       add(titleComp, BorderLayout.CENTER);
-      revalidate();
     }
     else {
       if (myBrowser instanceof Disposable) {
@@ -107,8 +106,8 @@ public class UsageContextCallHierarchyPanel extends UsageContextPanelBase {
       }
       JComponent panel = myBrowser.getComponent();
       add(panel, BorderLayout.CENTER);
-      revalidate();
     }
+    revalidate();
   }
 
   @Nullable
@@ -122,12 +121,13 @@ public class UsageContextCallHierarchyPanel extends UsageContextPanelBase {
     HierarchyBrowser browser = provider.createHierarchyBrowser(providerTarget);
     if (browser instanceof HierarchyBrowserBaseEx) {
       HierarchyBrowserBaseEx browserEx = (HierarchyBrowserBaseEx)browser;
-      browserEx.changeView(CallHierarchyBrowserBase.CALLER_TYPE);
+      // do not steal focus when scrolling through nodes
+      browserEx.changeView(CallHierarchyBrowserBase.CALLER_TYPE, false);
     }
     return browser;
   }
 
-  private static PsiElement getElementToSliceOn(@Nonnull List<UsageInfo> infos) {
+  private static PsiElement getElementToSliceOn(@Nonnull List<? extends UsageInfo> infos) {
     UsageInfo info = infos.get(0);
     return info.getElement();
   }

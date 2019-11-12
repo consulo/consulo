@@ -16,9 +16,8 @@
 package com.intellij.openapi.actionSystem;
 
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.util.Set;
 
@@ -162,7 +161,7 @@ public abstract class ActionPlaces {
                       GUI_DESIGNER_EDITOR_POPUP, GUI_DESIGNER_COMPONENT_TREE_POPUP, GUI_DESIGNER_PROPERTY_INSPECTOR_POPUP, CREATE_EJB_POPUP, CHANGES_VIEW_POPUP, REMOTE_HOST_VIEW_POPUP,
                       REMOTE_HOST_DIALOG_POPUP, TFS_TREE_POPUP, ACTION_PLACE_VCS_QUICK_LIST_POPUP_ACTION, PHING_EXPLORER_POPUP, NAVIGATION_BAR_POPUP, GULP_VIEW_POPUP, RUN_DASHBOARD_POPUP);
 
-  @NotNull
+  @Nonnull
   public static String getActionGroupPopupPlace(@Nullable String actionId) {
     return actionId == null ? POPUP : POPUP_PREFIX + actionId;
   }
