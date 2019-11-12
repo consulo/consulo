@@ -3,18 +3,21 @@ package com.intellij.pom;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiTarget;
+import com.intellij.psi.search.searches.DefinitionsScopedSearch;
 import com.intellij.util.Processor;
 import com.intellij.util.QueryExecutor;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author Gregory.Shrago
  */
-public class PomDefinitionSearch implements QueryExecutor<PsiElement, PsiElement> {
+public class PomDefinitionSearch implements QueryExecutor<PsiElement, DefinitionsScopedSearch.SearchParameters> {
   @Override
-  public boolean execute(@Nonnull PsiElement queryParameters, @Nonnull Processor<? super PsiElement> consumer) {
-    if (queryParameters instanceof PomTargetPsiElement) {
-      final PomTarget target = ((PomTargetPsiElement)queryParameters).getTarget();
+  public boolean execute(@Nonnull DefinitionsScopedSearch.SearchParameters queryParameters, @Nonnull Processor<? super PsiElement> consumer) {
+    PsiElement queryParametersElement = queryParameters.getElement();
+    if (queryParametersElement instanceof PomTargetPsiElement) {
+      final PomTarget target = ((PomTargetPsiElement)queryParametersElement).getTarget();
       if (target instanceof PsiTarget) {
         if (!consumer.process(((PsiTarget)target).getNavigationElement())) return false;
       }
