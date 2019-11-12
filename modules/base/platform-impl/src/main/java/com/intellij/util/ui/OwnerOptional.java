@@ -1,29 +1,13 @@
-/*
- * Copyright 2000-2016 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.ui;
 
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.IdePopupManager;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.Consumer;
-import consulo.awt.TargetAWT;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -31,39 +15,38 @@ import java.awt.*;
  * @author Denis Fokin
  */
 public class OwnerOptional {
-
-  @Nonnull
-  private static Window findOwnerByComponent(@Nullable Component component) {
+  private static Window findOwnerByComponent(Component component) {
     if (component == null) component = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+    if (component == null) {
+      component = Window.getWindows()[0];
+    }
     return (component instanceof Window) ? (Window)component : SwingUtilities.getWindowAncestor(component);
   }
 
   private Window myPermanentOwner;
 
-  private OwnerOptional(@Nullable Window permanentOwner) {
+  private OwnerOptional(Window permanentOwner) {
     this.myPermanentOwner = permanentOwner;
   }
 
   public static OwnerOptional fromComponent(Component parentComponent) {
-
     Window owner = findOwnerByComponent(parentComponent);
 
     IdePopupManager manager = IdeEventQueue.getInstance().getPopupManager();
 
     if (manager.isPopupWindow(owner)) {
-
-      manager.closeAllPopups();
-
-      owner = owner.getOwner();
-
-      while (owner != null && !(owner instanceof Dialog) && !(owner instanceof Frame)) {
+      if (!owner.isFocused() || !SystemInfo.isJetBrainsJvm) {
         owner = owner.getOwner();
+
+        while (owner != null && !(owner instanceof Dialog) && !(owner instanceof Frame)) {
+          owner = owner.getOwner();
+        }
       }
     }
 
     if (owner instanceof Dialog) {
       Dialog ownerDialog = (Dialog)owner;
-      if (ownerDialog.isModal()) {
+      if (ownerDialog.isModal() || UIUtil.isPossibleOwner(ownerDialog)) {
         owner = ownerDialog;
       }
       else {
@@ -77,47 +60,43 @@ public class OwnerOptional {
       owner = owner.getOwner();
     }
 
+    // Window cannot be parent of JDialog ()
+    if (owner != null && !(owner instanceof Frame || owner instanceof Dialog)) {
+      owner = null;
+    }
+
     return new OwnerOptional(owner);
   }
 
-  public OwnerOptional ifDialog(Consumer<Dialog> consumer) {
+  public OwnerOptional ifDialog(Consumer<? super Dialog> consumer) {
     if (myPermanentOwner instanceof Dialog) {
       consumer.consume((Dialog)myPermanentOwner);
     }
     return this;
   }
 
-  public OwnerOptional ifNull(Consumer<Frame> consumer) {
+  public OwnerOptional ifNull(Consumer<? super Frame> consumer) {
     if (myPermanentOwner == null) {
       consumer.consume(null);
     }
     return this;
   }
 
-  public OwnerOptional ifWindow(Consumer<Window> consumer) {
+  public OwnerOptional ifWindow(Consumer<? super Window> consumer) {
     if (myPermanentOwner != null) {
       consumer.consume(myPermanentOwner);
     }
     return this;
   }
 
-  public OwnerOptional ifFrame(Consumer<Frame> consumer) {
-    if (myPermanentOwner == null) {
-      return this;
+  public OwnerOptional ifFrame(Consumer<? super Frame> consumer) {
+    if (myPermanentOwner instanceof Frame) {
+      if (myPermanentOwner instanceof IdeFrame.Child) {
+        IdeFrame.Child ideFrameChild = (IdeFrame.Child)myPermanentOwner;
+        myPermanentOwner = WindowManager.getInstance().getFrame(ideFrameChild.getProject());
+      }
+      consumer.consume((Frame)this.myPermanentOwner);
     }
-
-    if (!(myPermanentOwner instanceof Frame)) {
-      return this;
-    }
-
-    consulo.ui.Window uiWindow = TargetAWT.from(myPermanentOwner);
-
-    IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
-    if (ideFrame instanceof IdeFrame.Child) {
-      IdeFrame.Child ideFrameChild = (IdeFrame.Child)ideFrame;
-      myPermanentOwner = TargetAWT.to(WindowManager.getInstance().getWindow(ideFrameChild.getProject()));
-    }
-    consumer.consume((Frame)this.myPermanentOwner);
     return this;
   }
 

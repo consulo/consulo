@@ -38,11 +38,7 @@ class UsageNodeTreeBuilder {
   private UsageGroupingRule[] myGroupingRules;
   private UsageFilteringRule[] myFilteringRules;
 
-  UsageNodeTreeBuilder(@Nonnull UsageTarget[] targets,
-                       @Nonnull UsageGroupingRule[] groupingRules,
-                       @Nonnull UsageFilteringRule[] filteringRules,
-                       @Nonnull GroupNode root,
-                       @Nonnull Project project) {
+  UsageNodeTreeBuilder(@Nonnull UsageTarget[] targets, @Nonnull UsageGroupingRule[] groupingRules, @Nonnull UsageFilteringRule[] filteringRules, @Nonnull GroupNode root, @Nonnull Project project) {
     myTargets = targets;
     myGroupingRules = groupingRules;
     myFilteringRules = filteringRules;
@@ -62,7 +58,7 @@ class UsageNodeTreeBuilder {
     return Arrays.stream(myFilteringRules).allMatch(rule -> rule.isVisible(usage, myTargets));
   }
 
-  UsageNode appendUsage(@Nonnull Usage usage, @Nonnull Consumer<Node> edtInsertedUnderQueue, boolean filterDuplicateLines) {
+  UsageNode appendOrGet(@Nonnull Usage usage, boolean filterDuplicateLines, @Nonnull Consumer<? super Node> edtInsertedUnderQueue) {
     if (!isVisible(usage)) return null;
 
     final boolean dumb = DumbService.isDumb(myProject);
@@ -78,6 +74,6 @@ class UsageNodeTreeBuilder {
       }
     }
 
-    return groupNode.addUsage(usage, edtInsertedUnderQueue, filterDuplicateLines);
+    return groupNode.addOrGetUsage(usage, filterDuplicateLines, edtInsertedUnderQueue);
   }
 }

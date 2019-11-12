@@ -27,6 +27,7 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -36,8 +37,8 @@ import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredReadAction;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -437,6 +438,32 @@ public class ActionUtil {
     return AnActionEvent.createFromDataContext(ActionPlaces.UNKNOWN, null, DataContext.EMPTY_CONTEXT);
   }
 
+  public static void sortAlphabetically(@Nonnull List<? extends AnAction> list) {
+    list.sort((o1, o2) -> Comparing.compare(o1.getTemplateText(), o2.getTemplateText()));
+  }
+
+  /**
+   * Tries to find an 'action' and 'target action' by text and put the 'action' just before of after the 'target action'
+   */
+  public static void moveActionTo(@Nonnull List<AnAction> list, @Nonnull String actionText, @Nonnull String targetActionText, boolean before) {
+    if (Comparing.equal(actionText, targetActionText)) {
+      return;
+    }
+
+    int actionIndex = -1;
+    int targetIndex = -1;
+    for (int i = 0; i < list.size(); i++) {
+      AnAction action = list.get(i);
+      if (actionIndex == -1 && Comparing.equal(actionText, action.getTemplateText())) actionIndex = i;
+      if (targetIndex == -1 && Comparing.equal(targetActionText, action.getTemplateText())) targetIndex = i;
+      if (actionIndex != -1 && targetIndex != -1) {
+        if (actionIndex < targetIndex) targetIndex--;
+        AnAction anAction = list.remove(actionIndex);
+        list.add(before ? Math.max(0, targetIndex) : targetIndex + 1, anAction);
+        return;
+      }
+    }
+  }
   @Nonnull
   public static ActionListener createActionListener(@Nonnull AnAction action, @Nonnull Component component, @Nonnull String place) {
     return e -> invokeAction(action, component, place, null, null);

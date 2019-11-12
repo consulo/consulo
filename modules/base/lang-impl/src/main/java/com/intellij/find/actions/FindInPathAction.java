@@ -27,12 +27,13 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.psi.PsiDirectoryContainer;
 import com.intellij.psi.PsiElement;
+import javax.annotation.Nonnull;
 
 public class FindInPathAction extends AnAction implements DumbAware {
   public static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.toolWindowGroup("Find in Path", ToolWindowId.FIND, false);
 
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
     Project project = e.getData(CommonDataKeys.PROJECT);
 
@@ -42,7 +43,7 @@ public class FindInPathAction extends AnAction implements DumbAware {
       return;
     }
 
-    findManager.findInProject(dataContext);
+    findManager.findInProject(dataContext, null);
   }
 
   static void showNotAvailableMessage(AnActionEvent e, Project project) {
@@ -51,11 +52,11 @@ public class FindInPathAction extends AnAction implements DumbAware {
   }
 
   @Override
-  public void update(AnActionEvent e){
+  public void update(@Nonnull AnActionEvent e) {
     doUpdate(e);
   }
 
-  static void doUpdate(AnActionEvent e) {
+  static void doUpdate(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     Project project = e.getData(CommonDataKeys.PROJECT);
     presentation.setEnabled(project != null);
@@ -64,7 +65,7 @@ public class FindInPathAction extends AnAction implements DumbAware {
     }
   }
 
-  private static boolean isValidSearchScope(AnActionEvent e) {
+  private static boolean isValidSearchScope(@Nonnull AnActionEvent e) {
     final PsiElement[] elements = e.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
     if (elements != null && elements.length == 1 && elements[0] instanceof PsiDirectoryContainer) {
       return true;

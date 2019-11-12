@@ -2313,5 +2313,9 @@
 
       <add-to-group group-id="Other.KeymapGroup"/>
     </group>
+
+    <action id="ShowFilterPopup" class="com.intellij.find.editorHeaderActions.ShowMoreOptions" text="Show Filter Popup"/>
+    <action id="ShowSearchHistory" class="com.intellij.find.actions.ShowSearchHistoryAction" text="Show Search History"/>
+
   </actions>
 </consulo-plugin>

@@ -16,15 +16,11 @@
 package consulo.application.ex;
 
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.application.ex.ApplicationUtil;
-import consulo.components.impl.stores.IApplicationStore;
-import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
+import consulo.components.impl.stores.IApplicationStore;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
-import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -38,13 +34,6 @@ public interface ApplicationEx2 extends ApplicationEx {
 
   void executeSuspendingWriteAction(@Nullable Project project, @Nonnull String title, @Nonnull Runnable runnable);
 
-  void executeByImpatientReader(@Nonnull Runnable runnable) throws ApplicationUtil.CannotRunReadActionException;
-
-  boolean runWriteActionWithProgressInDispatchThread(@Nonnull String title,
-                                                     @Nullable Project project,
-                                                     @Nullable JComponent parentComponent,
-                                                     @Nullable String cancelText,
-                                                     @Nonnull Consumer<ProgressIndicator> action);
 
   default void editorPaintStart() {
   }

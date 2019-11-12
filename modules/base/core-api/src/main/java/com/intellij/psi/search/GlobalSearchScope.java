@@ -59,11 +59,15 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
   }
 
   /**
-   * @return a positive integer (+1), if file1 is located in the classpath before file2,
-   * a negative integer (-1), if file1 is located in the classpath after file2
-   * zero - otherwise or when the files are not comparable.
+   * @return <ul>
+   * <li>a positive integer (e.g. +1), if file1 is located in the classpath before file2</li>
+   * <li>a negative integer (e.e -1), if file1 is located in the classpath after file2</li>
+   * <li>zero - otherwise or when the files are not comparable</li>
+   * </ul>
    */
-  public abstract int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2);
+  public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+    return 0;
+  }
 
   // optimization methods:
 

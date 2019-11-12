@@ -57,12 +57,13 @@ import consulo.start.CommandLineArgs;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.desktop.internal.AWTUIAccessImpl;
+import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 import sun.awt.AWTAccessor;
 import sun.awt.AWTAutoShutdown;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -539,17 +540,37 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
   }
 
   @Override
-  public boolean runWriteActionWithProgressInDispatchThread(@Nonnull String title,
-                                                            @Nullable Project project,
-                                                            @Nullable JComponent parentComponent,
-                                                            @Nullable String cancelText,
-                                                            @Nonnull Consumer<ProgressIndicator> action) {
-    Class<?> clazz = action.getClass();
-    startWrite(clazz);
-    try {
+  public boolean runWriteActionWithNonCancellableProgressInDispatchThread(@Nonnull String title,
+                                                                          @Nullable Project project,
+                                                                          @Nullable JComponent parentComponent,
+                                                                          @Nonnull Consumer<? super ProgressIndicator> action) {
+    return runEdtProgressWriteAction(title, project, parentComponent, null, action);
+  }
+
+  @Override
+  public boolean runWriteActionWithCancellableProgressInDispatchThread(@Nonnull String title,
+                                                                       @Nullable Project project,
+                                                                       @Nullable JComponent parentComponent,
+                                                                       @Nonnull Consumer<? super ProgressIndicator> action) {
+    return runEdtProgressWriteAction(title, project, parentComponent, IdeBundle.message("action.stop"), action);
+  }
+
+  private boolean runEdtProgressWriteAction(@Nonnull String title,
+                                            @Nullable Project project,
+                                            @Nullable JComponent parentComponent,
+                                            @Nullable @Nls(capitalization = Nls.Capitalization.Title) String cancelText,
+                                            @Nonnull Consumer<? super ProgressIndicator> action) {
+    return runWriteActionWithClass(action.getClass(), () -> {
       PotemkinProgress indicator = new PotemkinProgress(title, project, parentComponent, cancelText);
       indicator.runInSwingThread(() -> action.accept(indicator));
       return !indicator.isCanceled();
+    });
+  }
+
+  private <T, E extends Throwable> T runWriteActionWithClass(@Nonnull Class<?> clazz, @Nonnull ThrowableComputable<T, E> computable) throws E {
+    startWrite(clazz);
+    try {
+      return computable.compute();
     }
     finally {
       endWrite(clazz);

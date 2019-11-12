@@ -282,13 +282,4 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
   public void executeSuspendingWriteAction(@Nullable Project project, @Nonnull String title, @Nonnull Runnable runnable) {
 
   }
-
-  @Override
-  public boolean runWriteActionWithProgressInDispatchThread(@Nonnull String title,
-                                                            @Nullable Project project,
-                                                            @Nullable JComponent parentComponent,
-                                                            @Nullable String cancelText,
-                                                            @Nonnull Consumer<ProgressIndicator> action) {
-    return true;
-  }
 }

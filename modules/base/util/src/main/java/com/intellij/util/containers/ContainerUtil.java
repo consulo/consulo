@@ -1824,13 +1824,13 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @Nonnull
   @Contract(pure = true)
-  public static <T> List<T> sorted(@Nonnull Collection<T> list, @Nonnull Comparator<? super T> comparator) {
-    return sorted((Iterable<T>)list, comparator);
+  public static <T> List<T> sorted(@Nonnull Collection<? extends T> list, @Nonnull Comparator<? super T> comparator) {
+    return sorted((Iterable<? extends T>)list, comparator);
   }
 
   @Nonnull
   @Contract(pure = true)
-  public static <T> List<T> sorted(@Nonnull Iterable<T> list, @Nonnull Comparator<? super T> comparator) {
+  public static <T> List<T> sorted(@Nonnull Iterable<? extends T> list, @Nonnull Comparator<? super T> comparator) {
     List<T> sorted = newArrayList(list);
     sort(sorted, comparator);
     return sorted;
@@ -1838,13 +1838,8 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @Nonnull
   @Contract(pure = true)
-  public static <T extends Comparable<? super T>> List<T> sorted(@Nonnull Collection<T> list) {
-    return sorted(list, new Comparator<T>() {
-      @Override
-      public int compare(T o1, T o2) {
-        return o1.compareTo(o2);
-      }
-    });
+  public static <T extends Comparable<? super T>> List<T> sorted(@Nonnull Collection<? extends T> list) {
+    return sorted(list, Comparator.naturalOrder());
   }
 
   public static <T> void sort(@Nonnull T[] a, @Nonnull Comparator<T> comparator) {

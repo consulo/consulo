@@ -1,62 +1,52 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.actionSystem;
 
-import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
-
+import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
  * An action which has a selected state, and which toggles its selected state when performed.
  * Can be used to represent a menu item with a checkbox, or a toolbar button which keeps its pressed state.
  */
+@SuppressWarnings("StaticInheritance")
 public abstract class ToggleAction extends AnAction implements Toggleable {
-
   public ToggleAction() {
   }
 
-  public ToggleAction(@Nullable final String text) {
+  public ToggleAction(@Nullable @Nls(capitalization = Nls.Capitalization.Title) final String text) {
     super(text);
   }
 
+  public ToggleAction(@Nullable @Nls(capitalization = Nls.Capitalization.Title) final String text,
+                      @Nullable @Nls(capitalization = Nls.Capitalization.Sentence) final String description,
+                      @Nullable final Icon icon) {
+    super(text, description, icon);
+  }
+
   @Deprecated
-  public ToggleAction(@Nullable final String text, @Nullable final String description, @Nullable final Icon icon) {
+  public ToggleAction(@Nullable @Nls(capitalization = Nls.Capitalization.Title) final String text,
+                      @Nullable @Nls(capitalization = Nls.Capitalization.Sentence) final String description,
+                      @Nullable final SwingImageRef icon) {
     super(text, description, icon);
   }
 
-  public ToggleAction(@Nullable final String text, @Nullable final String description, @Nullable final SwingImageRef icon) {
+  public ToggleAction(@Nullable @Nls(capitalization = Nls.Capitalization.Title) final String text,
+                      @Nullable @Nls(capitalization = Nls.Capitalization.Sentence) final String description,
+                      @Nullable final Image icon) {
     super(text, description, icon);
   }
 
-  public ToggleAction(@Nullable final String text, @Nullable final String description, @Nullable final Image icon) {
-    super(text, description, icon);
-  }
-
-  @RequiredUIAccess
   @Override
   public final void actionPerformed(@Nonnull final AnActionEvent e) {
     final boolean state = !isSelected(e);
     setSelected(e, state);
-    final Boolean selected = state ? Boolean.TRUE : Boolean.FALSE;
     final Presentation presentation = e.getPresentation();
-    presentation.putClientProperty(SELECTED_PROPERTY, selected);
+    Toggleable.setSelected(presentation, state);
   }
 
   /**
@@ -65,7 +55,7 @@ public abstract class ToggleAction extends AnAction implements Toggleable {
    * @param e the action event representing the place and context in which the selected state is queried.
    * @return true if the action is selected, false otherwise
    */
-  public abstract boolean isSelected(AnActionEvent e);
+  public abstract boolean isSelected(@Nonnull AnActionEvent e);
 
   /**
    * Sets the selected state of the action to the specified value.
@@ -73,13 +63,16 @@ public abstract class ToggleAction extends AnAction implements Toggleable {
    * @param e     the action event which caused the state change.
    * @param state the new selected state of the action.
    */
-  public abstract void setSelected(AnActionEvent e, boolean state);
+  public abstract void setSelected(@Nonnull AnActionEvent e, boolean state);
 
   @Override
-  @RequiredUIAccess
   public void update(@Nonnull final AnActionEvent e) {
-    final Boolean selected = isSelected(e) ? Boolean.TRUE : Boolean.FALSE;
+    boolean selected = isSelected(e);
     final Presentation presentation = e.getPresentation();
-    presentation.putClientProperty(SELECTED_PROPERTY, selected);
+    Toggleable.setSelected(presentation, selected);
+    if (e.isFromContextMenu()) {
+      //force to show check marks instead of toggled icons in context menu
+      presentation.setIcon(null);
+    }
   }
 }

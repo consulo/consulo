@@ -129,7 +129,7 @@ public class ReadMostlyRWLock {
   private void throwIfImpatient(Reader status) {
     // when client explicitly runs in non-cancelable block do not throw from within nested read actions
     if (status.impatientReads && writeRequested && !ProgressManager.getInstance().isInNonCancelableSection()) {
-      throw new ApplicationUtil.CannotRunReadActionException();
+      throw ApplicationUtil.CannotRunReadActionException.create();
     }
   }
 

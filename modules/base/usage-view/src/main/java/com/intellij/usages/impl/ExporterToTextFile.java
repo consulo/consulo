@@ -1,17 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2000-2017 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
  */
 package com.intellij.usages.impl;
 
@@ -20,36 +8,25 @@ import com.intellij.usages.TextChunk;
 import com.intellij.usages.UsageGroup;
 import com.intellij.usages.UsageViewSettings;
 import com.intellij.util.SystemProperties;
+import javax.annotation.Nonnull;
 
-import javax.swing.*;
-import javax.swing.event.ChangeListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.Enumeration;
-import java.util.TooManyListenersException;
 
 /**
  * @author max
  */
-class ExporterToTextFile implements com.intellij.ide.ExporterToTextFile {
+public class ExporterToTextFile implements com.intellij.ide.ExporterToTextFile {
   private final UsageViewImpl myUsageView;
+  @Nonnull
+  private final UsageViewSettings myUsageViewSettings;
 
-  public ExporterToTextFile(UsageViewImpl usageView) {
+  public ExporterToTextFile(@Nonnull UsageViewImpl usageView, @Nonnull UsageViewSettings usageViewSettings) {
     myUsageView = usageView;
+    myUsageViewSettings = usageViewSettings;
   }
 
-  @Override
-  public JComponent getSettingsEditor() {
-    return null;
-  }
-
-  @Override
-  public void addSettingsChangedListener(ChangeListener listener) throws TooManyListenersException {
-  }
-
-  @Override
-  public void removeSettingsChangedListener(ChangeListener listener) {
-  }
-
+  @Nonnull
   @Override
   public String getReportText() {
     StringBuilder buf = new StringBuilder();
@@ -81,10 +58,7 @@ class ExporterToTextFile implements com.intellij.ide.ExporterToTextFile {
     }
 
     if (node instanceof UsageNode) {
-      TextChunk[] chunks = ((UsageNode)node).getUsage().getPresentation().getText();
-      for (TextChunk chunk : chunks) {
-        buf.append(chunk.getText());
-      }
+      appendUsageNodeText(buf, (UsageNode)node);
     }
     else if (node instanceof GroupNode) {
       UsageGroup group = ((GroupNode)node).getGroup();
@@ -102,14 +76,25 @@ class ExporterToTextFile implements com.intellij.ide.ExporterToTextFile {
     buf.append(lineSeparator);
   }
 
+  protected void appendUsageNodeText(StringBuilder buf, UsageNode node) {
+    TextChunk[] chunks = node.getUsage().getPresentation().getText();
+    int chunkCount = 0;
+    for (TextChunk chunk : chunks) {
+      if (chunkCount == 1) buf.append(" "); // add space after line number
+      buf.append(chunk.getText());
+      ++chunkCount;
+    }
+  }
+
+  @Nonnull
   @Override
   public String getDefaultFilePath() {
-    return UsageViewSettings.getInstance().EXPORT_FILE_NAME;
+    return myUsageViewSettings.getExportFileName();
   }
 
   @Override
-  public void exportedTo(String filePath) {
-    UsageViewSettings.getInstance().EXPORT_FILE_NAME = filePath;
+  public void exportedTo(@Nonnull String filePath) {
+    myUsageViewSettings.setExportFileName(filePath);
   }
 
   @Override

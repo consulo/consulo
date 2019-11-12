@@ -146,9 +146,7 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
   @Override
   public int getPopState() {
     if (myAction instanceof Toggleable) {
-      Boolean selected = (Boolean)myPresentation.getClientProperty(Toggleable.SELECTED_PROPERTY);
-      boolean flag1 = selected != null && selected.booleanValue();
-      return getPopState(flag1);
+      return getPopState(Toggleable.isSelected(myPresentation));
     }
     else {
       return getPopState(false);

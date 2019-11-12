@@ -60,9 +60,9 @@ import consulo.ui.SwingUIDecorator;
 import consulo.ui.UIAccess;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
+import javax.annotation.Nonnull;
 import sun.swing.SwingUtilities2;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -155,6 +155,7 @@ public abstract class DialogWrapper {
    * Defines horizontal alignment of buttons.
    */
   private int myButtonAlignment = SwingConstants.RIGHT;
+  private final boolean myCreateSouthSection;
   private boolean myCrossClosesWindow = true;
   private Insets myButtonMargins = new Insets(2, 16, 2, 16);
 
@@ -212,21 +213,30 @@ public abstract class DialogWrapper {
   private static final Color BALLOON_BACKGROUND = new JBColor(new Color(0xf5e6e7), new Color(0x593d41));
 
   /**
-   * Creates modal <code>DialogWrapper</code>. The currently active window will be the dialog's parent.
+   * Creates modal {@code DialogWrapper}. The currently active window will be the dialog's parent.
    *
    * @param project     parent window for the dialog will be calculated based on focused window for the
-   *                    specified <code>project</code>. This parameter can be <code>null</code>. In this case parent window
+   *                    specified {@code project}. This parameter can be {@code null}. In this case parent window
    *                    will be suggested based on current focused window.
    * @param canBeParent specifies whether the dialog can be parent for other windows. This parameter is used
-   *                    by <code>WindowManager</code>.
+   *                    by {@code WindowManager}.
    * @throws IllegalStateException if the dialog is invoked not on the event dispatch thread
    */
   protected DialogWrapper(@Nullable Project project, boolean canBeParent) {
     this(project, canBeParent, IdeModalityType.IDE);
   }
 
-  protected DialogWrapper(@Nullable Project project, boolean canBeParent, IdeModalityType ideModalityType) {
-    myPeer = createPeer(project, canBeParent, ideModalityType);
+  protected DialogWrapper(@Nullable Project project, boolean canBeParent, @Nonnull IdeModalityType ideModalityType) {
+    this(project, null, canBeParent, ideModalityType);
+  }
+
+  protected DialogWrapper(@Nullable Project project, @Nullable Component parentComponent, boolean canBeParent, @Nonnull IdeModalityType ideModalityType) {
+    this(project, parentComponent, canBeParent, ideModalityType, true);
+  }
+
+  protected DialogWrapper(@Nullable Project project, @Nullable Component parentComponent, boolean canBeParent, @Nonnull IdeModalityType ideModalityType, boolean createSouth) {
+    myPeer = parentComponent == null ? createPeer(project, canBeParent, project == null ? IdeModalityType.IDE : ideModalityType) : createPeer(parentComponent, canBeParent);
+    myCreateSouthSection = createSouth;
     final Window window = myPeer.getWindow();
     if (window != null) {
       myResizeListener = new ComponentAdapter() {
@@ -235,7 +245,7 @@ public abstract class DialogWrapper {
           if (!myResizeInProgress) {
             myActualSize = myPeer.getSize();
             if (myErrorText != null && myErrorText.isVisible()) {
-              myActualSize.height -= myErrorText.myLabel.getHeight();
+              myActualSize.height -= myErrorText.getMinimumSize().height;
             }
           }
         }
@@ -246,24 +256,24 @@ public abstract class DialogWrapper {
   }
 
   /**
-   * Creates modal <code>DialogWrapper</code> that can be parent for other windows.
+   * Creates modal {@code DialogWrapper} that can be parent for other windows.
    * The currently active window will be the dialog's parent.
    *
    * @param project parent window for the dialog will be calculated based on focused window for the
-   *                specified <code>project</code>. This parameter can be <code>null</code>. In this case parent window
+   *                specified {@code project}. This parameter can be {@code null}. In this case parent window
    *                will be suggested based on current focused window.
    * @throws IllegalStateException if the dialog is invoked not on the event dispatch thread
-   * @see com.intellij.openapi.ui.DialogWrapper#DialogWrapper(com.intellij.openapi.project.Project, boolean)
+   * @see DialogWrapper#DialogWrapper(Project, boolean)
    */
   protected DialogWrapper(@Nullable Project project) {
     this(project, true);
   }
 
   /**
-   * Creates modal <code>DialogWrapper</code>. The currently active window will be the dialog's parent.
+   * Creates modal {@code DialogWrapper}. The currently active window will be the dialog's parent.
    *
    * @param canBeParent specifies whether the dialog can be parent for other windows. This parameter is used
-   *                    by <code>WindowManager</code>.
+   *                    by {@code WindowManager}.
    * @throws IllegalStateException if the dialog is invoked not on the event dispatch thread
    */
   protected DialogWrapper(boolean canBeParent) {
@@ -271,37 +281,39 @@ public abstract class DialogWrapper {
   }
 
   /**
-   * Typically, we should set a parent explicitly. Use WindowManager#suggestParentWindow
+   * Typically, we should set a parent explicitly. Use {@link WindowManager#suggestParentWindow}
    * method to find out the best parent for your dialog. Exceptions are cases
    * when we do not have a project to figure out which window
    * is more suitable as an owner for the dialog.
-   * <p>
-   * Instead, use {@link DialogWrapper#DialogWrapper(com.intellij.openapi.project.Project, boolean, boolean)}
+   * <p/>
+   *
+   * @deprecated use {@link DialogWrapper#DialogWrapper(Project, boolean, boolean)}
    */
   @Deprecated
   protected DialogWrapper(boolean canBeParent, boolean applicationModalIfPossible) {
     this(null, canBeParent, applicationModalIfPossible);
   }
 
-  protected DialogWrapper(@Nullable Project project, boolean canBeParent, boolean applicationModalIfPossible) {
+  protected DialogWrapper(Project project, boolean canBeParent, boolean applicationModalIfPossible) {
     ensureEventDispatchThread();
+    consulo.ui.Window owner = null;
     if (ApplicationManager.getApplication() != null) {
-      myPeer = createPeer(project != null ? WindowManager.getInstance().suggestParentWindow(project) : WindowManager.getInstance().findVisibleWindow(), canBeParent, applicationModalIfPossible);
+      owner = project != null ? WindowManager.getInstance().suggestParentWindow(project) : WindowManager.getInstance().findVisibleWindow();
     }
-    else {
-      myPeer = createPeer(null, canBeParent, applicationModalIfPossible);
-    }
+    myPeer = createPeer(owner, canBeParent, applicationModalIfPossible);
+    myCreateSouthSection = true;
     createDefaultActions();
   }
 
   /**
    * @param parent      parent component which is used to calculate heavy weight window ancestor.
-   *                    <code>parent</code> cannot be <code>null</code> and must be showing.
+   *                    {@code parent} cannot be {@code null} and must be showing.
    * @param canBeParent can be parent
    * @throws IllegalStateException if the dialog is invoked not on the event dispatch thread
    */
   protected DialogWrapper(@Nonnull Component parent, boolean canBeParent) {
     ensureEventDispatchThread();
+    myCreateSouthSection = true;
     myPeer = createPeer(parent, canBeParent);
     createDefaultActions();
   }
@@ -950,7 +962,7 @@ public abstract class DialogWrapper {
     SwingUtilities.invokeLater(() -> {
       for (WindowListener listener : window.getWindowListeners()) {
         if (listener.getClass().getName().startsWith("com.intellij.")) {
-          LOGGER.warn("Stale listener: " + listener);
+          //LOGGER.warn("Stale listener: " + listener);
           window.removeWindowListener(listener);
         }
       }
@@ -1306,13 +1318,15 @@ public abstract class DialogWrapper {
       myErrorPane = c;
     }
 
-    final JPanel southSection = new JPanel(new BorderLayout());
-    root.add(southSection, BorderLayout.SOUTH);
+    if(myCreateSouthSection) {
+      final JPanel southSection = new JPanel(new BorderLayout());
+      root.add(southSection, BorderLayout.SOUTH);
 
-    southSection.add(myErrorText, BorderLayout.CENTER);
-    final JComponent south = createSouthPanel();
-    if (south != null) {
-      southSection.add(south, BorderLayout.SOUTH);
+      southSection.add(myErrorText, BorderLayout.CENTER);
+      final JComponent south = createSouthPanel();
+      if (south != null) {
+        southSection.add(south, BorderLayout.SOUTH);
+      }
     }
 
     myErrorTextAlarm.setActivationComponent(root);

@@ -16,6 +16,7 @@
 package com.intellij.openapi.application.ex;
 
 import com.intellij.openapi.application.Application;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import consulo.ui.RequiredUIAccess;
@@ -24,6 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.io.IOException;
+import java.util.function.Consumer;
 
 /**
  * @author max
@@ -60,11 +62,13 @@ public interface ApplicationEx extends Application {
   boolean isWriteActionPending();
 
   void doNotSave();
+
   void doNotSave(boolean value);
+
   boolean isDoNotSave();
 
   /**
-   * @param force if true, no additional confirmations will be shown. The application is guaranteed to exit
+   * @param force         if true, no additional confirmations will be shown. The application is guaranteed to exit
    * @param exitConfirmed if true, suppresses any shutdown confirmation. However, if there are any background processes or tasks running,
    *                      a corresponding confirmation will be shown with the possibility to cancel the operation
    */
@@ -80,20 +84,13 @@ public interface ApplicationEx extends Application {
    * Runs modal process. For internal use only, see {@link Task}
    */
   @RequiredUIAccess
-  boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
-                                              @Nonnull String progressTitle,
-                                              boolean canBeCanceled,
-                                              Project project);
+  boolean runProcessWithProgressSynchronously(@Nonnull Runnable process, @Nonnull String progressTitle, boolean canBeCanceled, Project project);
 
   /**
    * Runs modal process. For internal use only, see {@link Task}
    */
   @RequiredUIAccess
-  boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
-                                              @Nonnull String progressTitle,
-                                              boolean canBeCanceled,
-                                              @Nullable Project project,
-                                              JComponent parentComponent);
+  boolean runProcessWithProgressSynchronously(@Nonnull Runnable process, @Nonnull String progressTitle, boolean canBeCanceled, @Nullable Project project, JComponent parentComponent);
 
   /**
    * Runs modal process. For internal use only, see {@link Task}
@@ -119,4 +116,22 @@ public interface ApplicationEx extends Application {
   boolean tryRunReadAction(@Nonnull Runnable action);
 
   boolean isInImpatientReader();
+
+  default void executeByImpatientReader(@Nonnull Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
+    throw new UnsupportedOperationException();
+  }
+
+  default boolean runWriteActionWithCancellableProgressInDispatchThread(@Nonnull String title,
+                                                                        @Nullable Project project,
+                                                                        @Nullable JComponent parentComponent,
+                                                                        @Nonnull Consumer<? super ProgressIndicator> action) {
+    throw new UnsupportedOperationException();
+  }
+
+  default boolean runWriteActionWithNonCancellableProgressInDispatchThread(@Nonnull String title,
+                                                                           @Nullable Project project,
+                                                                           @Nullable JComponent parentComponent,
+                                                                           @Nonnull Consumer<? super ProgressIndicator> action) {
+    throw new UnsupportedOperationException();
+  }
 }

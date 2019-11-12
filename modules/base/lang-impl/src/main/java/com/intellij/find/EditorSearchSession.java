@@ -95,7 +95,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
                                      new SelectAllAction(), new AnSeparator())
             .addSecondarySearchActions(new ToggleInCommentsAction(), new ToggleInLiteralsOnlyAction(), new ToggleExceptCommentsAction(), new ToggleExceptLiteralsAction(),
                                        new ToggleExceptCommentsAndLiteralsAction())
-            .addExtraSearchActions(new ToggleMatchCase(), new ToggleRegex(), new ToggleWholeWordsOnlyAction(), new StatusTextAction(), new DefaultCustomComponentAction(myClickToHighlightLabel))
+            .addExtraSearchActions(new ToggleMatchCase(), new ToggleRegex(), new ToggleWholeWordsOnlyAction(), new StatusTextAction(), new DefaultCustomComponentAction(() -> myClickToHighlightLabel))
             .addSearchFieldActions(new RestorePreviousSettingsAction()).addPrimaryReplaceActions(new ReplaceAction(), new ReplaceAllAction(), new ExcludeAction())
             .addExtraReplaceAction(new TogglePreserveCaseAction(), new ToggleSelectionOnlyAction()).addReplaceFieldActions(new PrevOccurrenceAction(false), new NextOccurrenceAction(false))
             .withDataProvider(this).withCloseAction(() -> close()).withReplaceAction(() -> replaceCurrent())

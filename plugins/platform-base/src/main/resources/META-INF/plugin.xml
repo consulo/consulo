@@ -2281,8 +2281,11 @@
                     serviceImplementation="com.intellij.ide.structureView.impl.StructureViewFactoryImpl"/>
     <projectService serviceInterface="com.intellij.codeInspection.InspectionManager"
                     serviceImplementation="com.intellij.codeInspection.ex.InspectionManagerEx"/>
-    <projectService serviceInterface="com.intellij.usageView.UsageViewManager"
-                    serviceImplementation="com.intellij.usageView.impl.UsageViewManagerImpl"/>
+
+    <projectService serviceImplementation="com.intellij.usageView.UsageViewManager" />
+
+    <projectService serviceInterface="com.intellij.usageView.UsageViewContentManager" serviceImplementation="com.intellij.usageView.impl.UsageViewContentManagerImpl" />
+
     <applicationService serviceInterface="com.intellij.ide.projectView.impl.ProjectViewSharedSettings"
                         serviceImplementation="com.intellij.ide.projectView.impl.ProjectViewSharedSettings"/>
     <projectService serviceInterface="com.intellij.execution.ui.RunnerLayoutUi$Factory"

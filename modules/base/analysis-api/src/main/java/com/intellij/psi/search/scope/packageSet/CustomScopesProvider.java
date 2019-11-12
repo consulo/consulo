@@ -21,6 +21,7 @@
 package com.intellij.psi.search.scope.packageSet;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 
 import java.util.List;
@@ -30,4 +31,16 @@ public interface CustomScopesProvider {
 
   @Nonnull
   List<NamedScope> getCustomScopes();
+
+
+  @Nonnull
+  default List<NamedScope> getFilteredScopes() {
+    CustomScopesFilter[] filters = CustomScopesFilter.EP_NAME.getExtensions();
+    return ContainerUtil.filter(getCustomScopes(), scope -> {
+      for (CustomScopesFilter filter : filters) {
+        if (filter.excludeScope(scope)) return false;
+      }
+      return true;
+    });
+  }
 }

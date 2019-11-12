@@ -23,8 +23,9 @@ import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -38,6 +39,8 @@ public class JBTabbedPane extends JTabbedPane implements HierarchyListener {
   @NonNls
   public static final String LABEL_FROM_TABBED_PANE = "JBTabbedPane.labelFromTabbedPane";
   private int previousSelectedIndex = -1;
+
+  private Insets myTabComponentInsets = UIUtil.PANEL_SMALL_INSETS;
 
   public JBTabbedPane() {
   }
@@ -114,9 +117,22 @@ public class JBTabbedPane extends JTabbedPane implements HierarchyListener {
     }
   }
 
+  /**
+   * @deprecated Use {@link JBTabbedPane#setTabComponentInsets(Insets)} instead of overriding
+   */
+  @Deprecated
   @Nonnull
   protected Insets getInsetsForTabComponent() {
-    return UIUtil.PANEL_SMALL_INSETS;
+    return myTabComponentInsets;
+  }
+
+  @Nullable
+  public Insets getTabComponentInsets() {
+    return myTabComponentInsets;
+  }
+
+  public void setTabComponentInsets(@Nullable Insets tabInsets) {
+    myTabComponentInsets = tabInsets;
   }
 
   @Override

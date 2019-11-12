@@ -13,22 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.find.impl;
 
-import com.intellij.openapi.Disposable;
+package com.intellij.psi.search.scope.packageSet;
+
+import com.intellij.openapi.extensions.ExtensionPointName;
 import javax.annotation.Nonnull;
 
-public interface FindUI {
-  void showUI();
+@FunctionalInterface
+public interface CustomScopesFilter {
+  ExtensionPointName<CustomScopesFilter> EP_NAME = ExtensionPointName.create("com.intellij.customScopesFilter");
 
-  String getStringToFind();
-
-  String getFileTypeMask();
-
-  void initByModel();
-
-  @Nonnull
-  Disposable getDisposable();
-
-  void saveSettings();
+  boolean excludeScope(@Nonnull NamedScope scope);
 }

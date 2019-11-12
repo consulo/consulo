@@ -15,7 +15,10 @@
  */
 package com.intellij.usages;
 
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.Transient;
 import org.jetbrains.annotations.NonNls;
@@ -26,7 +29,8 @@ import java.io.File;
 @Singleton
 @State(name = "UsageViewSettings", storages = @Storage("other.xml"))
 public class UsageViewSettings implements PersistentStateComponent<UsageViewSettings> {
-  @NonNls public String EXPORT_FILE_NAME = "report.txt";
+  @NonNls
+  public String EXPORT_FILE_NAME = "report.txt";
   public boolean IS_EXPANDED = false;
   public boolean IS_SHOW_PACKAGES = true;
   public boolean IS_SHOW_METHODS = false;
@@ -35,6 +39,7 @@ public class UsageViewSettings implements PersistentStateComponent<UsageViewSett
   public boolean IS_SHOW_MODULES = false;
   public boolean IS_PREVIEW_USAGES = false;
   public boolean IS_SORT_MEMBERS_ALPHABETICALLY = true;
+  public boolean IS_REPLACE_PREVIEW_USAGES = true;
   public float PREVIEW_USAGES_SPLITTER_PROPORTIONS = 0.5f;
 
   public boolean GROUP_BY_USAGE_TYPE = true;
@@ -45,6 +50,30 @@ public class UsageViewSettings implements PersistentStateComponent<UsageViewSett
 
   public static UsageViewSettings getInstance() {
     return ServiceManager.getService(UsageViewSettings.class);
+  }
+
+  public boolean isReplacePreviewUsages() {
+    return IS_REPLACE_PREVIEW_USAGES;
+  }
+
+  public void setReplacePreviewUsages(boolean val) {
+    IS_REPLACE_PREVIEW_USAGES = val;
+  }
+
+  public boolean isPreviewUsages() {
+    return IS_PREVIEW_USAGES;
+  }
+
+  public void setPreviewUsages(boolean val) {
+    IS_PREVIEW_USAGES = val;
+  }
+
+  public float getPreviewUsagesSplitterProportion() {
+    return PREVIEW_USAGES_SPLITTER_PROPORTIONS;
+  }
+
+  public void setPreviewUsagesSplitterProportion(float val) {
+    PREVIEW_USAGES_SPLITTER_PROPORTIONS = val;
   }
 
   public boolean isExpanded() {
@@ -87,13 +116,29 @@ public class UsageViewSettings implements PersistentStateComponent<UsageViewSett
     IS_FILTER_DUPLICATED_LINE = val;
   }
 
+  public void setAutoScrollToSource(boolean val) {
+    IS_AUTOSCROLL_TO_SOURCE = val;
+  }
+
+  public boolean isAutoScrollToSource() {
+    return IS_AUTOSCROLL_TO_SOURCE;
+  }
+
+  public boolean isSortAlphabetically() {
+    return IS_SORT_MEMBERS_ALPHABETICALLY;
+  }
+
+  public void setSortAlphabetically(boolean val) {
+    IS_SORT_MEMBERS_ALPHABETICALLY = val;
+  }
+
   @Transient
   public String getExportFileName() {
     return EXPORT_FILE_NAME != null ? EXPORT_FILE_NAME.replace('/', File.separatorChar) : null;
   }
 
   public void setExportFileName(String s) {
-    if (s != null){
+    if (s != null) {
       s = s.replace(File.separatorChar, '/');
     }
     EXPORT_FILE_NAME = s;

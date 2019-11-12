@@ -3626,6 +3626,38 @@ public class UIUtil {
     return component;
   }
 
+  public static boolean isWindowClientPropertyTrue(Window window, @Nonnull Object key) {
+    return Boolean.TRUE.equals(getWindowClientProperty(window, key));
+  }
+
+  public static Object getWindowClientProperty(Window window, @Nonnull Object key) {
+    if (window instanceof RootPaneContainer) {
+      JRootPane pane = ((RootPaneContainer)window).getRootPane();
+      if (pane != null) {
+        return pane.getClientProperty(key);
+      }
+    }
+    return null;
+  }
+
+  public static void putWindowClientProperty(Window window, @Nonnull Object key, Object value) {
+    if (window instanceof RootPaneContainer) {
+      JRootPane pane = ((RootPaneContainer)window).getRootPane();
+      if (pane != null) {
+        pane.putClientProperty(key, value);
+      }
+    }
+  }
+
+  // Here we setup dialog to be suggested in OwnerOptional as owner even if the dialog is not modal
+  public static void markAsPossibleOwner(Dialog dialog) {
+    putWindowClientProperty(dialog, "PossibleOwner", Boolean.TRUE);
+  }
+
+  public static boolean isPossibleOwner(@Nonnull Dialog dialog) {
+    return isWindowClientPropertyTrue(dialog, "PossibleOwner");
+  }
+
   private static Window findWindowAncestor(@Nonnull Component c) {
     return c instanceof Window ? (Window)c : SwingUtilities.getWindowAncestor(c);
   }

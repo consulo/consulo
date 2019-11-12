@@ -94,7 +94,8 @@ public class UsageViewPresentation {
     myUsagesString = usagesString;
   }
 
-  @Nullable("null means the targets node must not be visible")
+  // null means the targets node must not be visible
+  @Nullable()
   public String getTargetsNodeText() {
     return myTargetsNodeText;
   }

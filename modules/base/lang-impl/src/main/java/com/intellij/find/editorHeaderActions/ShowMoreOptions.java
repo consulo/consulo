@@ -1,3 +1,4 @@
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.find.editorHeaderActions;
 
 import com.intellij.openapi.actionSystem.*;
@@ -5,35 +6,43 @@ import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import com.intellij.openapi.project.DumbAware;
 import javax.annotation.Nonnull;
-import consulo.ui.RequiredUIAccess;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
-/**
- * Created by IntelliJ IDEA.
- * User: zajac
- * Date: 25.05.11
- * Time: 22:24
- * To change this template use File | Settings | File Templates.
- */
 public class ShowMoreOptions extends AnAction implements DumbAware {
-  public static final Shortcut SHORT_CUT = new KeyboardShortcut(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, InputEvent.ALT_DOWN_MASK), null);
+  /**
+   * @deprecated unused, use configurable shortcut {@code ShowFilterPopup}
+   */
+  @Deprecated
+  public static final Shortcut SHORT_CUT = new KeyboardShortcut(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK), null);
 
   private final ActionToolbarImpl myToolbarComponent;
 
-  public ShowMoreOptions(ActionToolbarImpl toolbarComponent, JComponent shortcutHolder) {
-    this.myToolbarComponent = toolbarComponent;
-    registerCustomShortcutSet(new CustomShortcutSet(SHORT_CUT), shortcutHolder);
+  //placeholder for keymap
+  public ShowMoreOptions() {
+    myToolbarComponent = null;
   }
 
-  @RequiredUIAccess
+  public ShowMoreOptions(ActionToolbarImpl toolbarComponent, JComponent shortcutHolder) {
+    this.myToolbarComponent = toolbarComponent;
+    KeyboardShortcut keyboardShortcut = ActionManager.getInstance().getKeyboardShortcut("ShowFilterPopup");
+    if (keyboardShortcut != null) {
+      registerCustomShortcutSet(new CustomShortcutSet(keyboardShortcut), shortcutHolder);
+    }
+  }
+
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final ActionButton secondaryActions = myToolbarComponent.getSecondaryActionsButton();
     if (secondaryActions != null) {
       secondaryActions.click();
     }
+  }
+
+  @Override
+  public void update(@Nonnull AnActionEvent e) {
+    e.getPresentation().setEnabled(myToolbarComponent != null && myToolbarComponent.getSecondaryActionsButton() != null);
   }
 }

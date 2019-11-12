@@ -1234,6 +1234,14 @@ public class IdeEventQueue extends EventQueue {
     ACTIONS
   }
 
+  public void flushDelayedKeyEvents() {
+    //long startedAt = System.currentTimeMillis();
+    //if (!isActionPopupShown() && delayKeyEvents.compareAndSet(true, false)) {
+    //  postDelayedKeyEvents();
+    //}
+    //TransactionGuardImpl.logTimeMillis(startedAt, "IdeEventQueue#flushDelayedKeyEvents");
+  }
+
   /**
    * An absolutely guru API, please avoid using it at all cost.
    */
