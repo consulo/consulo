@@ -48,8 +48,8 @@ public abstract class AbstractToolBeforeRunTaskProvider<T extends AbstractToolBe
 
     AsyncResult<Void> result = AsyncResult.undefined();
 
-    AsyncResult<Void> subResult = dialog.showAsync();
-    subResult.doWhenDone(() -> {
+    AsyncResult<Void> showAsync = dialog.showAsync();
+    showAsync.doWhenDone(() -> {
       boolean isModified = dialog.isModified();
       Tool selectedTool = dialog.getSelectedTool();
       LOG.assertTrue(selectedTool != null);
@@ -57,17 +57,17 @@ public abstract class AbstractToolBeforeRunTaskProvider<T extends AbstractToolBe
       String oldToolId = task.getToolActionId();
       if (oldToolId != null && oldToolId.equals(selectedToolId)) {
         if (isModified) {
-          subResult.setDone();
+          result.setDone();
         }
         else {
-          subResult.setRejected();
+          result.setRejected();
         }
         return;
       }
       task.setToolActionId(selectedToolId);
-      subResult.setDone();
+      result.setDone();
     });
-    subResult.doWhenRejected((Runnable)result::setRejected);
+    showAsync.doWhenRejected((Runnable)result::setRejected);
     return result;
   }
 

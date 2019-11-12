@@ -476,9 +476,10 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
         saveScheme(scheme, nameGenerator);
       }
       catch (final Exception e) {
+        LOG.error("Cannot write scheme " + scheme.getName() + " in '" + myFileSpec + "': " + e.getLocalizedMessage(), e);
+
         Application app = ApplicationManager.getApplication();
         if (app.isUnitTestMode() || app.isCommandLine()) {
-          LOG.error("Cannot write scheme " + scheme.getName() + " in '" + myFileSpec + "': " + e.getLocalizedMessage(), e);
         }
         else {
           app.invokeLater(new Runnable() {

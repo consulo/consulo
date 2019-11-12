@@ -57,7 +57,7 @@ public abstract class AbstractSchemesManager<T extends Named, E extends External
   }
 
   protected void checkCurrentScheme(@Nonnull Named scheme) {
-    if (myCurrentScheme == null && scheme.getName().equals(myCurrentSchemeName)) {
+    if (myCurrentScheme == null && Objects.equals(scheme.getName(), myCurrentSchemeName)) {
       //noinspection unchecked
       myCurrentScheme = (T)scheme;
     }

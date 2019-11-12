@@ -40,6 +40,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
@@ -47,10 +48,11 @@ import java.util.Arrays;
 
 public class Tool implements SchemeElement {
   @NonNls public final static String ACTION_ID_PREFIX = "Tool_";
+  public static final String DEFAULT_GROUP_NAME = "External Tools";
 
   private String myName;
   private String myDescription;
-  private String myGroup;
+  private String myGroup = DEFAULT_GROUP_NAME;
   private boolean myShownInMainMenu;
   private boolean myShownInEditor;
   private boolean myShownInProjectViews;
@@ -79,6 +81,7 @@ public class Tool implements SchemeElement {
     return myDescription;
   }
 
+  @Nonnull
   public String getGroup() {
     return myGroup;
   }
@@ -131,8 +134,8 @@ public class Tool implements SchemeElement {
     myDescription = description;
   }
 
-  void setGroup(String group) {
-    myGroup = group;
+  void setGroup(@Nullable String group) {
+    myGroup = StringUtil.notNullize(group, DEFAULT_GROUP_NAME);
   }
 
   void setShownInMainMenu(boolean shownInMainMenu) {
@@ -317,7 +320,7 @@ public class Tool implements SchemeElement {
   @Nullable
   public GeneralCommandLine createCommandLine(DataContext dataContext) {
     if (StringUtil.isEmpty(getWorkingDirectory())) {
-      setWorkingDirectory("$PROJECT_DIR$");
+      setWorkingDirectory(dataContext.getData(CommonDataKeys.PROJECT).getBasePath());
     }
 
     GeneralCommandLine commandLine = new GeneralCommandLine();
