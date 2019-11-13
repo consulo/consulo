@@ -15,10 +15,13 @@
  */
 package com.intellij.openapi.roots;
 
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.RequiredReadAction;
+import org.jetbrains.annotations.NotNull;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -30,13 +33,13 @@ public abstract class GeneratedSourcesFilter {
   @RequiredReadAction
   public abstract boolean isGeneratedSource(@Nonnull VirtualFile file, @Nonnull Project project);
 
+  public static boolean isGeneratedSourceByAnyFilter(@NotNull VirtualFile file, @NotNull Project project) {
+    return ReadAction.compute(() -> !project.isDisposed() && file.isValid() && EP_NAME.getExtensionList().stream().anyMatch(filter -> filter.isGeneratedSource(file, project)));
+  }
+
   @RequiredReadAction
+  @Deprecated
   public static boolean isGenerated(@Nonnull Project project, @Nonnull VirtualFile file) {
-    for (GeneratedSourcesFilter filter : GeneratedSourcesFilter.EP_NAME.getExtensionList()) {
-      if (filter.isGeneratedSource(file, project)) {
-        return true;
-      }
-    }
-    return false;
+    return isGeneratedSourceByAnyFilter(file, project);
   }
 }
