@@ -56,7 +56,7 @@
     <maven.compile.plugin>3.8.1</maven.compile.plugin>
     <maven.surefire.plugin>3.0.0-M3</maven.surefire.plugin>
     <maven.vaadin.plugin>8.1.3</maven.vaadin.plugin>
-    <maven.source.plugin>3.2.0</maven.source.plugin>
+    <maven.source.plugin>2.22.2</maven.source.plugin>
   </properties>
 
   <dependencyManagement>
