@@ -80,14 +80,6 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
     }
 
     Arrays.sort(templates, (template1, template2) -> {
-      // java first
-      if (template1.isTemplateOfType(InternalStdFileTypes.JAVA) && !template2.isTemplateOfType(InternalStdFileTypes.JAVA)) {
-        return -1;
-      }
-      if (template2.isTemplateOfType(InternalStdFileTypes.JAVA) && !template1.isTemplateOfType(InternalStdFileTypes.JAVA)) {
-        return 1;
-      }
-
       // group by type
       int i = template1.getExtension().compareTo(template2.getExtension());
       if (i != 0) {
