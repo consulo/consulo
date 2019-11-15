@@ -25,7 +25,6 @@ import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
 import com.intellij.ide.fileTemplates.ui.SelectTemplateDialog;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
@@ -35,7 +34,6 @@ import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -124,9 +122,7 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
   }
 
   private static AnAction replaceAction(final FileTemplate template) {
-    final CreateFromTemplateActionReplacer[] actionFactories =
-            ApplicationManager.getApplication().getExtensions(CreateFromTemplateActionReplacer.CREATE_FROM_TEMPLATE_REPLACER);
-    for (CreateFromTemplateActionReplacer actionFactory : actionFactories) {
+    for (CreateFromTemplateActionReplacer actionFactory : CreateFromTemplateActionReplacer.CREATE_FROM_TEMPLATE_REPLACER.getExtensionList()) {
       AnAction action = actionFactory.replaceCreateFromFileTemplateAction(template);
       if (action != null) {
         return action;
