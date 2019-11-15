@@ -25,11 +25,9 @@ import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
 import com.intellij.ide.fileTemplates.ui.SelectTemplateDialog;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
-import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -43,14 +41,15 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent event) {
-    super.update(event);
-    Project project = event.getRequiredData(CommonDataKeys.PROJECT);
+    Project project = event.getData(CommonDataKeys.PROJECT);
     Presentation presentation = event.getPresentation();
-    FileTemplate[] allTemplates = FileTemplateManager.getInstance(project).getAllTemplates();
-    for (FileTemplate template : allTemplates) {
-      if (canCreateFromTemplate(event, template)) {
-        presentation.setEnabled(true);
-        return;
+    if(project != null && !project.isDisposed()) {
+      FileTemplate[] allTemplates = FileTemplateManager.getInstance(project).getAllTemplates();
+      for (FileTemplate template : allTemplates) {
+        if (canCreateFromTemplate(event, template)) {
+          presentation.setEnabled(true);
+          return;
+        }
       }
     }
     presentation.setEnabled(false);
