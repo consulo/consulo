@@ -40,8 +40,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.fileTemplates.actions.CreateFromTemplateGroup");
-
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent event) {
