@@ -19,6 +19,8 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.awt.TargetAWT;
 import consulo.ui.TextBoxWithExtensions;
+import consulo.ui.shared.border.BorderStyle;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -127,6 +129,7 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
     JPanel topLeftPanel = createTopLeftPanel();
     JPanel settingsPanel = createSettingsPanel();
     mySearchField = createSearchField();
+    mySearchField.addBorders(BorderStyle.EMPTY, null, 4);
     (TargetAWT.to(mySearchField)).setFocusTraversalKeysEnabled(false);
     suggestionsPanel = createSuggestionsPanel();
 

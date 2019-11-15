@@ -15,11 +15,16 @@
  */
 package consulo.ide.ui.laf.modern;
 
+import com.intellij.ui.ComponentUtil;
+import com.intellij.util.ui.JBInsets;
+import consulo.desktop.ui.laf.idea.darcula.DarculaEditorTextFieldBorder;
+import consulo.desktop.ui.laf.idea.darcula.DarculaUIUtil;
 import consulo.desktop.ui.laf.idea.darcula.TextFieldWithPopupHandlerUI;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
+import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -39,6 +44,21 @@ public class ModernTextFieldUI extends TextFieldWithPopupHandlerUI implements Mo
 
   public ModernTextFieldUI(JTextField c) {
     myMouseEnterHandler = new MouseEnterHandler(c);
+  }
+
+  @Override
+  protected Insets getDefaultMargins() {
+    Component c = getComponent();
+    return DarculaUIUtil.isCompact(c) || DarculaUIUtil.isTableCellEditor(c) ? JBInsets.create(0, 3) : JBInsets.create(2, 6);
+  }
+
+
+  @Override
+  protected int getMinimumHeight(int textHeight) {
+    Insets i = getComponent().getInsets();
+    JComponent c = getComponent();
+    int minHeight = (DarculaUIUtil.isCompact(c) ? DarculaUIUtil.COMPACT_HEIGHT.get() : DarculaUIUtil.MINIMUM_HEIGHT.get()) + i.top + i.bottom;
+    return DarculaEditorTextFieldBorder.isComboBoxEditor(c) || ComponentUtil.getParentOfType((Class<? extends JSpinner>)JSpinner.class, (Component)c) != null ? textHeight : minHeight;
   }
 
   @Override

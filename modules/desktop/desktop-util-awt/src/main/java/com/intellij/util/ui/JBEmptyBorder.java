@@ -54,4 +54,9 @@ public class JBEmptyBorder extends EmptyBorder {
       right = border.right;
     }
   }
+
+  @Override
+  public String toString() {
+    return "JBEmptyBorder {top " + top + ", bottom: " + bottom + ", left: " + left + ", right: " + right +"}";
+  }
 }
