@@ -197,12 +197,6 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
 
       myDialog.showAsync().doWhenDone(() -> consumer.accept(created.get()));
     }
-
-    @Nullable
-    @Override
-    public Map<String, String> getCustomProperties() {
-      return null;
-    }
   }
 
   private static class NonBlockingPopupBuilderImpl implements Builder {
@@ -278,12 +272,6 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
     }
 
     @Nullable
-    @Override
-    public Map<String, String> getCustomProperties() {
-      return null;
-    }
-
-    @Nullable
     private static PsiElement createElement(String newElementName, ElementCreator creator) {
       PsiElement[] elements = creator.tryCreate(newElementName);
       return elements.length > 0 ? elements[0] : null;
@@ -311,7 +299,9 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
     <T extends PsiElement> void show(@Nonnull String errorTitle, @Nullable String selectedItem, @Nonnull FileCreator<T> creator, @RequiredUIAccess @Nonnull Consumer<T> consumer);
 
     @Nullable
-    Map<String, String> getCustomProperties();
+    default Map<String, String> getCustomProperties() {
+      return null;
+    }
   }
 
   public interface FileCreator<T> {
