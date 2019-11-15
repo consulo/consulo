@@ -174,6 +174,29 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
     }
 
     @Override
+    public Builder setValidator(@Nonnull ValidableComponent.Validator<String> validator) {
+      if (myDialog.myInputValidator != null) {
+        throw new IllegalArgumentException("already set");
+      }
+      myDialog.myInputValidator = new InputValidatorEx() {
+        @Nullable
+        @Override
+        public String getErrorText(String inputString) {
+          ValidableComponent.ValidationInfo validationInfo = validator.validateValue(inputString);
+          return validationInfo == null ? null : validationInfo.getMessage();
+        }
+
+        @RequiredUIAccess
+        @Override
+        public boolean checkInput(String inputString) {
+          return getErrorText(inputString) == null;
+        }
+      };
+      return this;
+    }
+
+    @RequiredUIAccess
+    @Override
     public <T extends PsiElement> void show(@Nonnull String errorTitle, @Nullable String selectedTemplateName, @Nonnull final FileCreator<T> creator, @Nonnull Consumer<T> consumer) {
       final Ref<T> created = Ref.create(null);
       myDialog.getKindCombo().setSelectedName(selectedTemplateName);
@@ -206,6 +229,7 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
     private String myTitle = "Title";
     private final List<Trinity<String, Image, String>> myTemplatesList = new ArrayList<>();
     private InputValidator myInputValidator;
+    private ValidableComponent.Validator<String> myValidator;
 
     private NonBlockingPopupBuilderImpl(@Nonnull Project project) {
       myProject = project;
@@ -224,12 +248,18 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
     }
 
     @Override
+    public Builder setValidator(@Nonnull ValidableComponent.Validator<String> validator) {
+      myValidator = validator;
+      return this;
+    }
+
+    @Override
     public Builder setValidator(InputValidator validator) {
       myInputValidator = validator;
       return this;
     }
 
-
+    @RequiredUIAccess
     @Override
     public <T extends PsiElement> void show(@Nonnull String errorTitle, @Nullable String selectedItem, @Nonnull FileCreator<T> fileCreator, Consumer<T> elementConsumer) {
       CreateWithTemplatesDialogPanel contentPanel = new CreateWithTemplatesDialogPanel(myTemplatesList, selectedItem);
@@ -248,6 +278,10 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
       };
 
       JBPopup popup = NewItemPopupUtil.createNewItemPopup(myTitle, contentPanel, (JComponent)TargetAWT.to(contentPanel.getNameField()));
+      if (myValidator != null) {
+        contentPanel.addValidator(myValidator);
+      }
+
       contentPanel.addValidator(value -> {
         if (myInputValidator != null && !myInputValidator.canClose(value)) {
           String message = InputValidatorEx.getErrorText(myInputValidator, value, LangBundle.message("incorrect.name"));
@@ -284,6 +318,8 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
 
     Builder setValidator(InputValidator validator);
 
+    Builder setValidator(@Nonnull ValidableComponent.Validator<String> validator);
+
     @Deprecated
     default Builder addKind(@Nonnull String kind, @Nullable Icon icon, @Nonnull String templateName) {
       return addKind(kind, TargetAWT.from(icon), templateName);
@@ -295,7 +331,7 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
 
     Builder addKind(@Nonnull String kind, @Nullable Image icon, @Nonnull String templateName);
 
-    @Nullable
+    @RequiredUIAccess
     <T extends PsiElement> void show(@Nonnull String errorTitle, @Nullable String selectedItem, @Nonnull FileCreator<T> creator, @RequiredUIAccess @Nonnull Consumer<T> consumer);
 
     @Nullable

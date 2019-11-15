@@ -44,5 +44,7 @@ public interface InputValidator {
    * @return true if the dialog could be closed, false otherwhise.
    */
   @RequiredUIAccess
-  boolean canClose(String inputString);
+  default boolean canClose(String inputString) {
+    return true;
+  }
 }
