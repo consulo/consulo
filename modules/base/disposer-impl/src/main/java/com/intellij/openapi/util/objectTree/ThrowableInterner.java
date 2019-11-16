@@ -71,7 +71,7 @@ public class ThrowableInterner {
     if (BACKTRACE_FIELD != null) {
       BACKTRACE_FIELD_OFFSET = LUCKILY_NOT_NEEDED;
     }
-    else if ((SystemInfo.isOracleJvm || SystemInfo.isJetbrainsJvm) && SystemInfo.isJavaVersionAtLeast(7, 0, 0)) {
+    else if ((SystemInfo.isOracleJvm || SystemInfo.isJetBrainsJvm) && SystemInfo.isJavaVersionAtLeast(7)) {
       Field firstField = Throwable.class.getDeclaredFields()[1];
       long firstFieldOffset = AtomicFieldUpdater.getUnsafe().objectFieldOffset(firstField);
       BACKTRACE_FIELD_OFFSET = firstFieldOffset == 12 ? 8 : firstFieldOffset == 16 ? 12 : firstFieldOffset == 24 ? 16 : UNKNOWN;

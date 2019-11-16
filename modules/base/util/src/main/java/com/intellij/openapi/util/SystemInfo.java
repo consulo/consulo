@@ -20,7 +20,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.lang.JavaVersion;
-import consulo.annotations.DeprecationInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -49,10 +48,7 @@ public class SystemInfo extends SystemInfoRt {
 
   public static final boolean isAppleJvm = isAppleJvm();
   public static final boolean isOracleJvm = isOracleJvm();
-  public static final boolean isJetBrainsJvm = isJetbrainsJvm();
-  @Deprecated
-  @DeprecationInfo("Use SystemInfo#isJetBrainsJvm")
-  public static final boolean isJetbrainsJvm = isJetbrainsJvm();
+  public static final boolean isJetBrainsJvm = isJetbrainsJvm() || isConsuloJvm();
   public static final boolean isSunJvm = isSunJvm();
   public static final boolean isIbmJvm = isIbmJvm();
 
@@ -253,5 +249,10 @@ public class SystemInfo extends SystemInfoRt {
   private static boolean isJetbrainsJvm() {
     final String vendor = SystemProperties.getJavaVendor();
     return vendor != null && StringUtil.containsIgnoreCase(vendor, "jetbrains");
+  }
+
+  private static boolean isConsuloJvm() {
+    final String vendor = SystemProperties.getJavaVendor();
+    return vendor != null && StringUtil.containsIgnoreCase(vendor, "consulo");
   }
 }
