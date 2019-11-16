@@ -30,8 +30,8 @@ class DefaultPicoContainer {
   }
 
   @Nullable
-  public final ComponentAdapter getComponentAdapter(Object componentKey) {
-    ComponentAdapter adapter = findByKey(componentKey);
+  public final <T> ComponentAdapter<T> getComponentAdapter(Object componentKey) {
+    ComponentAdapter<T> adapter = findLocalAdapter(componentKey);
     if (adapter == null && myParent != null) {
       return myParent.getComponentAdapter(componentKey);
     }
@@ -39,13 +39,14 @@ class DefaultPicoContainer {
   }
 
   @Nullable
-  private ComponentAdapter findByKey(final Object componentKey) {
-    return myClassNameToComponentAdapters.get(toMapKey(componentKey));
+  @SuppressWarnings("unchecked")
+  private <T> ComponentAdapter<T> findLocalAdapter(final Object componentKey) {
+    return (ComponentAdapter<T>) myClassNameToComponentAdapters.get(toMapKey(componentKey));
   }
 
   @Nullable
-  public Object getComponentInstance(Object componentKey) {
-    ComponentAdapter adapter = findByKey(componentKey);
+  public <T> T getComponentInstance(Object componentKey) {
+    ComponentAdapter<T> adapter = findLocalAdapter(componentKey);
     if (adapter != null) {
       return getLocalInstance(adapter);
     }
@@ -84,7 +85,7 @@ class DefaultPicoContainer {
     throw new UnsupportedOperationException("Unknown key type " + value);
   }
 
-  private Object getLocalInstance(@Nonnull ComponentAdapter componentAdapter) {
+  private <T> T getLocalInstance(@Nonnull ComponentAdapter<T> componentAdapter) {
     PicoException firstLevelException;
     try {
       return componentAdapter.getComponentInstance(this);
@@ -94,7 +95,7 @@ class DefaultPicoContainer {
     }
 
     if (myParent != null) {
-      Object instance = myParent.getComponentInstance(componentAdapter.getComponentKey());
+      T instance = myParent.getComponentInstance(componentAdapter.getComponentKey());
       if (instance != null) {
         return instance;
       }

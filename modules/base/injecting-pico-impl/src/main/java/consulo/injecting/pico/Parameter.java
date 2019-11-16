@@ -25,7 +25,7 @@ package consulo.injecting.pico;
  * that will be used for resolving the parameter.
  * @since 1.0
  */
-interface Parameter {
+interface Parameter<T> {
   /**
    * Retrieve the object from the Parameter that statisfies the expected type.
    *
@@ -36,7 +36,7 @@ interface Parameter {
    * @throws PicoInitializationException if a referenced component could not be instantiated.
    * @since 1.1
    */
-  Object resolveInstance(DefaultPicoContainer container, ComponentAdapter adapter, Class expectedType);
+  T resolveInstance(DefaultPicoContainer container, ComponentAdapter<T> adapter, Class<? super T> expectedType);
 
   /**
    * Check if the Parameter can statisfy the expected type using the container.
@@ -47,5 +47,5 @@ interface Parameter {
    * @return <code>true</code> if the component parameter can be resolved.
    * @since 1.1
    */
-  boolean isResolvable(DefaultPicoContainer container, ComponentAdapter adapter, Class expectedType);
+  boolean isResolvable(DefaultPicoContainer container, ComponentAdapter<T> adapter, Class<? super T> expectedType);
 }

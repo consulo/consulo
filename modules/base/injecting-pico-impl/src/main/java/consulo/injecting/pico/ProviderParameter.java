@@ -21,46 +21,47 @@ import javax.inject.Provider;
  * @author VISTALL
  * @since 2018-08-26
  */
-class ProviderParameter implements Parameter {
-  private static class ProviderImpl implements Provider {
+class ProviderParameter<T> implements Parameter<Provider<T>> {
+  private static class ProviderImpl<T> implements Provider<T> {
     private DefaultPicoContainer myContainer;
-    private Class myClass;
+    private Class<? super T> myClass;
 
-    private volatile Object myValue;
+    private volatile T myValue;
 
-    private ProviderImpl(DefaultPicoContainer container, Class aClass) {
+    private ProviderImpl(DefaultPicoContainer container, Class<? super T> aClass) {
       myContainer = container;
       myClass = aClass;
     }
 
     @Override
-    public Object get() {
-      Object value = myValue;
+    @SuppressWarnings("unchecked")
+    public T get() {
+      T value = myValue;
       if (value != null) {
         myContainer = null;
         myClass = null;
         return value;
       }
 
-      value = myContainer.getComponentInstance(myClass);
+      value = (T)myContainer.getComponentInstance(myClass);
       myValue = value;
       return value;
     }
   }
 
-  private final Class<?> myType;
+  private final Class<T> myType;
 
-  ProviderParameter(Class<?> type) {
+  ProviderParameter(Class<T> type) {
     myType = type;
   }
 
   @Override
-  public Object resolveInstance(DefaultPicoContainer picoContainer, ComponentAdapter componentAdapter, Class aClass) {
-    return new ProviderImpl(picoContainer, myType);
+  public Provider<T> resolveInstance(DefaultPicoContainer picoContainer, ComponentAdapter<Provider<T>> componentAdapter, Class<? super Provider<T>> aClass) {
+    return new ProviderImpl<>(picoContainer, myType);
   }
 
   @Override
-  public boolean isResolvable(DefaultPicoContainer picoContainer, ComponentAdapter componentAdapter, Class aClass) {
+  public boolean isResolvable(DefaultPicoContainer picoContainer, ComponentAdapter<Provider<T>> componentAdapter, Class<? super Provider<T>> aClass) {
     return picoContainer.getComponentAdapter(myType) != null;
   }
 }

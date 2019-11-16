@@ -115,7 +115,7 @@ class BaseComponentAdapter<T> implements ComponentAdapter<T> {
       long l = System.nanoTime();
 
       try {
-        ConstructorInjectionComponentAdapter<T> delegate = new ConstructorInjectionComponentAdapter<>(getComponentKey(), getComponentImplementation());
+        ConstructorInjectionComponentAdapter<T> delegate = new ConstructorInjectionComponentAdapter<T>(getComponentKey(), getComponentImplementation());
         instance = myRemap.apply(() -> GetInstanceValidator.createObject(targetClass, () -> (T)delegate.getComponentInstance(container)));
 
         try {

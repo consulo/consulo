@@ -19,16 +19,16 @@ package consulo.injecting.pico;
  * @author VISTALL
  * @since 2019-11-16
  */
-class PicoComponentParameter implements Parameter {
+class PicoComponentParameter<T> implements Parameter<T> {
   public static final Parameter DEFAULT = new PicoComponentParameter();
 
   @Override
-  public Object resolveInstance(DefaultPicoContainer container, ComponentAdapter adapter, Class expectedType) {
+  public T resolveInstance(DefaultPicoContainer container, ComponentAdapter<T> adapter, Class<? super T> expectedType) {
     return container.getComponentInstance(expectedType);
   }
 
   @Override
-  public boolean isResolvable(DefaultPicoContainer container, ComponentAdapter adapter, Class expectedType) {
+  public boolean isResolvable(DefaultPicoContainer container, ComponentAdapter<T> adapter, Class<? super T> expectedType) {
     return container.getComponentAdapter(expectedType) != null;
   }
 }

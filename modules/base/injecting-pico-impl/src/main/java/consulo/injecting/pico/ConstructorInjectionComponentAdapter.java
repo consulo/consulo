@@ -127,6 +127,7 @@ class ConstructorInjectionComponentAdapter<T> implements ComponentAdapter<T> {
     return result;
   }
 
+  @SuppressWarnings("unchecked")
   private Parameter[] createParameters(Constructor constructor) {
     Type[] genericParameterTypes = constructor.getGenericParameterTypes();
 
