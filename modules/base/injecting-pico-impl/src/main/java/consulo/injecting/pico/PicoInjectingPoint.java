@@ -18,7 +18,6 @@ package consulo.injecting.pico;
 import consulo.injecting.InjectingPoint;
 import consulo.injecting.PostInjectListener;
 import consulo.injecting.key.InjectingKey;
-import org.picocontainer.ComponentAdapter;
 
 import javax.annotation.Nonnull;
 import javax.inject.Provider;

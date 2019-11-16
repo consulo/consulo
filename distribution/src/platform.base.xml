@@ -119,7 +119,6 @@
         <include>org.apache.logging.log4j:log4j-core</include>
         <include>org.slf4j:jcl-over-slf4j</include>
         <include>org.slf4j:slf4j-api</include>
-        <include>picocontainer:picocontainer</include>
         <include>javax.inject:javax.inject</include>
         <include>com.google.guava:guava</include>
         <include>org.apache.httpcomponents:httpcore</include>

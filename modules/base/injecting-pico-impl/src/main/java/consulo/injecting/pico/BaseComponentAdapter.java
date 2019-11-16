@@ -20,7 +20,6 @@ import com.intellij.util.ExceptionUtil;
 import consulo.injecting.PostInjectListener;
 import consulo.injecting.key.InjectingKey;
 import consulo.logging.Logger;
-import org.picocontainer.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Provider;
@@ -31,7 +30,7 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2018-08-23
  */
-class BaseComponentAdapter<T> implements ComponentAdapter {
+class BaseComponentAdapter<T> implements ComponentAdapter<T> {
   private static final Logger LOG = Logger.getInstance(BaseComponentAdapter.class);
 
   private final InjectingKey<T> myInterfaceKey;
@@ -84,8 +83,7 @@ class BaseComponentAdapter<T> implements ComponentAdapter {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
-  public Object getComponentInstance(@Nonnull PicoContainer container) throws PicoInitializationException, PicoIntrospectionException {
+  public T getComponentInstance(@Nonnull DefaultPicoContainer container) throws PicoInitializationException, PicoIntrospectionException {
     T instance = myInstanceIfSingleton;
     if (instance != null) {
       return instance;
@@ -117,7 +115,7 @@ class BaseComponentAdapter<T> implements ComponentAdapter {
       long l = System.nanoTime();
 
       try {
-        ConstructorInjectionComponentAdapter delegate = new ConstructorInjectionComponentAdapter(getComponentKey(), getComponentImplementation());
+        ConstructorInjectionComponentAdapter<T> delegate = new ConstructorInjectionComponentAdapter<>(getComponentKey(), getComponentImplementation());
         instance = myRemap.apply(() -> GetInstanceValidator.createObject(targetClass, () -> (T)delegate.getComponentInstance(container)));
 
         try {
@@ -154,16 +152,6 @@ class BaseComponentAdapter<T> implements ComponentAdapter {
   private static String exceptionText(String id) {
     Thread thread = Thread.currentThread();
     return ExceptionUtil.getThrowableText(new Exception(id + ". Thread: " + thread));
-  }
-
-  @Override
-  public void verify(final PicoContainer container) throws PicoIntrospectionException {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void accept(final PicoVisitor visitor) {
-    visitor.visitComponentAdapter(this);
   }
 
   @Override

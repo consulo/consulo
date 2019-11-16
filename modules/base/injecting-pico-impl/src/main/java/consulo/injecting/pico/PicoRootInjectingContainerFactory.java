@@ -21,7 +21,6 @@ import consulo.injecting.RootInjectingContainerFactory;
 import consulo.injecting.key.InjectingKey;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 

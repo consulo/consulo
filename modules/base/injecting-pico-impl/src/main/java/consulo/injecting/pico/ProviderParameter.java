@@ -15,11 +15,6 @@
  */
 package consulo.injecting.pico;
 
-import org.picocontainer.ComponentAdapter;
-import org.picocontainer.Parameter;
-import org.picocontainer.PicoContainer;
-import org.picocontainer.PicoVisitor;
-
 import javax.inject.Provider;
 
 /**
@@ -28,12 +23,12 @@ import javax.inject.Provider;
  */
 class ProviderParameter implements Parameter {
   private static class ProviderImpl implements Provider {
-    private PicoContainer myContainer;
+    private DefaultPicoContainer myContainer;
     private Class myClass;
 
     private volatile Object myValue;
 
-    private ProviderImpl(PicoContainer container, Class aClass) {
+    private ProviderImpl(DefaultPicoContainer container, Class aClass) {
       myContainer = container;
       myClass = aClass;
     }
@@ -60,22 +55,12 @@ class ProviderParameter implements Parameter {
   }
 
   @Override
-  public Object resolveInstance(PicoContainer picoContainer, ComponentAdapter componentAdapter, Class aClass) {
+  public Object resolveInstance(DefaultPicoContainer picoContainer, ComponentAdapter componentAdapter, Class aClass) {
     return new ProviderImpl(picoContainer, myType);
   }
 
   @Override
-  public boolean isResolvable(PicoContainer picoContainer, ComponentAdapter componentAdapter, Class aClass) {
+  public boolean isResolvable(DefaultPicoContainer picoContainer, ComponentAdapter componentAdapter, Class aClass) {
     return picoContainer.getComponentAdapter(myType) != null;
-  }
-
-  @Override
-  public void verify(PicoContainer picoContainer, ComponentAdapter componentAdapter, Class aClass) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void accept(PicoVisitor picoVisitor) {
-    throw new UnsupportedOperationException();
   }
 }

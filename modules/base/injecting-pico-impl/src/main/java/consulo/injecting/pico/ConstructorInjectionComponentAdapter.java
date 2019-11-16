@@ -19,37 +19,52 @@ import com.intellij.util.ExceptionUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
-import org.picocontainer.*;
-import org.picocontainer.Parameter;
-import org.picocontainer.defaults.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.lang.reflect.*;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A drop-in replacement of {@link org.picocontainer.defaults.ConstructorInjectionComponentAdapter}
  * The same code (generified and cleaned up) but without constructor caching (hence taking up less memory).
  */
-class ConstructorInjectionComponentAdapter extends InstantiatingComponentAdapter {
-  private static final Logger LOGGER = Logger.getInstance(ConstructorInjectionComponentAdapter.class);
+class ConstructorInjectionComponentAdapter<T> implements ComponentAdapter<T> {
+  private static final Logger LOG = Logger.getInstance(ConstructorInjectionComponentAdapter.class);
 
   private static final ThreadLocal<Set<ConstructorInjectionComponentAdapter>> ourGuard = new ThreadLocal<>();
+  @Nonnull
+  private final Object myComponentKey;
+  @Nonnull
+  private final Class<T> myComponentImplementation;
 
-  public ConstructorInjectionComponentAdapter(@Nonnull Object componentKey, @Nonnull Class componentImplementation) throws AssignabilityRegistrationException, NotConcreteRegistrationException {
-    super(componentKey, componentImplementation, null, true);
+  public ConstructorInjectionComponentAdapter(@Nonnull Object componentKey, @Nonnull Class<T> componentImplementation) {
+    myComponentKey = componentKey;
+    myComponentImplementation = componentImplementation;
   }
 
   @Override
-  public Object getComponentInstance(PicoContainer container) throws PicoInitializationException, PicoIntrospectionException, AssignabilityRegistrationException, NotConcreteRegistrationException {
+  @Nonnull
+  public Object getComponentKey() {
+    return myComponentKey;
+  }
+
+  @Override
+  @Nonnull
+  public Class<T> getComponentImplementation() {
+    return myComponentImplementation;
+  }
+
+  @Override
+  public T getComponentInstance(DefaultPicoContainer container) throws PicoInitializationException, PicoIntrospectionException {
     return instantiateGuarded(container, getComponentImplementation());
   }
 
-  private Object instantiateGuarded(PicoContainer container, Class stackFrame) {
+  private T instantiateGuarded(DefaultPicoContainer container, Class stackFrame) {
     Set<ConstructorInjectionComponentAdapter> currentStack = ourGuard.get();
     if (currentStack == null) {
       ourGuard.set(currentStack = ContainerUtil.newIdentityTroveSet());
@@ -72,44 +87,36 @@ class ConstructorInjectionComponentAdapter extends InstantiatingComponentAdapter
     }
   }
 
-  private Object doGetComponentInstance(PicoContainer guardedContainer) {
-    final Constructor constructor;
-    try {
-      constructor = getGreediestSatisfiableConstructor(guardedContainer);
+  @Nonnull
+  private T doGetComponentInstance(DefaultPicoContainer guardedContainer) {
+    Constructor<T> constructor = getGreediestSatisfiableConstructor(guardedContainer);
 
-      if (!isDefaultConstructor(constructor) && !constructor.isAnnotationPresent(Inject.class)) {
-        LOGGER.warn("Missing @Inject at constructor " + constructor);
-      }
+    if (!isDefaultConstructor(constructor) && !constructor.isAnnotationPresent(Inject.class)) {
+      LOG.warn("Missing @Inject at constructor " + constructor);
     }
-    catch (AmbiguousComponentResolutionException e) {
-      e.setComponent(getComponentImplementation());
-      throw e;
-    }
-    ComponentMonitor componentMonitor = currentMonitor();
     try {
       Object[] parameters = getConstructorArguments(guardedContainer, constructor);
-      componentMonitor.instantiating(constructor);
-      long startTime = System.currentTimeMillis();
-      Object inst = newInstance(constructor, parameters);
-      componentMonitor.instantiated(constructor, System.currentTimeMillis() - startTime);
-      return inst;
+      return newInstance(constructor, parameters);
     }
     catch (InvocationTargetException e) {
-      componentMonitor.instantiationFailed(constructor, e);
       ExceptionUtil.rethrowUnchecked(e.getTargetException());
       throw new PicoInvocationTargetInitializationException(e.getTargetException());
     }
     catch (InstantiationException e) {
-      componentMonitor.instantiationFailed(constructor, e);
       throw new PicoInitializationException("Should never get here");
     }
     catch (IllegalAccessException e) {
-      componentMonitor.instantiationFailed(constructor, e);
       throw new PicoInitializationException(e);
     }
   }
 
-  private Object[] getConstructorArguments(PicoContainer container, Constructor ctor) {
+  @Nonnull
+  private T newInstance(Constructor<T> constructor, Object[] parameters) throws InstantiationException, IllegalAccessException, InvocationTargetException {
+    constructor.setAccessible(true);
+    return constructor.newInstance(parameters);
+  }
+
+  private Object[] getConstructorArguments(DefaultPicoContainer container, Constructor ctor) {
     Class[] parameterTypes = ctor.getParameterTypes();
     Object[] result = new Object[parameterTypes.length];
     Parameter[] currentParameters = createParameters(ctor);
@@ -140,11 +147,11 @@ class ConstructorInjectionComponentAdapter extends InstantiatingComponentAdapter
           parameters[i] = new ProviderParameter((Class<?>)type);
         }
         else {
-          parameters[i] = ComponentParameter.DEFAULT;
+          parameters[i] = PicoComponentParameter.DEFAULT;
         }
       }
       else {
-        parameters[i] = ComponentParameter.DEFAULT;
+        parameters[i] = PicoComponentParameter.DEFAULT;
       }
     }
 
@@ -155,21 +162,21 @@ class ConstructorInjectionComponentAdapter extends InstantiatingComponentAdapter
     return Modifier.isPublic(constructor.getModifiers()) && constructor.getParameterCount() == 0 && constructor.getExceptionTypes().length == 0;
   }
 
-  @Override
-  protected Constructor getGreediestSatisfiableConstructor(PicoContainer container) throws PicoIntrospectionException, AssignabilityRegistrationException, NotConcreteRegistrationException {
-    List<Constructor> sortedMatchingConstructors = getSortedMatchingConstructors();
+  @SuppressWarnings("unchecked")
+  private Constructor<T> getGreediestSatisfiableConstructor(DefaultPicoContainer container) throws PicoIntrospectionException {
+    Constructor<T>[] constructors = getConstructors();
     // special check for default constructors, return it without any check
-    if (sortedMatchingConstructors.size() == 1) {
-      Constructor constructor = sortedMatchingConstructors.get(0);
+    if (constructors.length == 1) {
+      Constructor constructor = constructors[0];
       if (isDefaultConstructor(constructor)) {
         return constructor;
       }
     }
 
     // if we have constructor with Inject annotation - return it, without any dependency check
-    for (Constructor sortedMatchingConstructor : sortedMatchingConstructors) {
+    for (Constructor sortedMatchingConstructor : constructors) {
       if (sortedMatchingConstructor.isAnnotationPresent(Inject.class)) {
-        sortedMatchingConstructors = Collections.singletonList(sortedMatchingConstructor);
+        constructors = new Constructor[]{sortedMatchingConstructor};
         break;
       }
     }
@@ -179,7 +186,7 @@ class ConstructorInjectionComponentAdapter extends InstantiatingComponentAdapter
     Constructor greediestConstructor = null;
     int lastSatisfiableConstructorSize = -1;
     Class unsatisfiedDependencyType = null;
-    for (Constructor constructor : sortedMatchingConstructors) {
+    for (Constructor constructor : constructors) {
       boolean failedDependency = false;
       Class[] parameterTypes = constructor.getParameterTypes();
       Parameter[] currentParameters = createParameters(constructor);
@@ -234,27 +241,8 @@ class ConstructorInjectionComponentAdapter extends InstantiatingComponentAdapter
     return greediestConstructor;
   }
 
-  private List<Constructor> getSortedMatchingConstructors() {
-    List<Constructor> matchingConstructors = new ArrayList<>();
-    // filter out all constructors that will definitely not match
-    for (Constructor constructor : getConstructors()) {
-      if ((parameters == null || constructor.getParameterTypes().length == parameters.length) && (allowNonPublicClasses || (constructor.getModifiers() & Modifier.PUBLIC) != 0)) {
-        matchingConstructors.add(constructor);
-      }
-    }
-    // optimize list of constructors moving the longest at the beginning
-    if (parameters == null) {
-      Collections.sort(matchingConstructors, new Comparator<Constructor>() {
-        @Override
-        public int compare(Constructor arg0, Constructor arg1) {
-          return arg1.getParameterTypes().length - arg0.getParameterTypes().length;
-        }
-      });
-    }
-    return matchingConstructors;
-  }
-
+  @Nonnull
   private Constructor[] getConstructors() {
-    return (Constructor[])AccessController.doPrivileged((PrivilegedAction)() -> getComponentImplementation().getDeclaredConstructors());
+    return getComponentImplementation().getDeclaredConstructors();
   }
 }

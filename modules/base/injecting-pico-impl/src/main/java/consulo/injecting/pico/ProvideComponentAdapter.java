@@ -16,7 +16,6 @@
 package consulo.injecting.pico;
 
 import consulo.injecting.key.InjectingKey;
-import org.picocontainer.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Provider;
@@ -25,7 +24,7 @@ import javax.inject.Provider;
  * @author VISTALL
  * @since 2018-08-24
  */
-class ProvideComponentAdapter<T> implements ComponentAdapter {
+class ProvideComponentAdapter<T> implements ComponentAdapter<T> {
   private final InjectingKey<T> myInterfaceKey;
   private final Provider<T> myValue;
 
@@ -40,24 +39,14 @@ class ProvideComponentAdapter<T> implements ComponentAdapter {
   }
 
   @Override
-  public Class getComponentImplementation() {
-    return myValue.get().getClass();
-  }
-
-  @Override
   @SuppressWarnings("unchecked")
-  public Object getComponentInstance(@Nonnull PicoContainer container) throws PicoInitializationException, PicoIntrospectionException {
+  public Class<T> getComponentImplementation() {
+    return (Class<T>)myValue.get().getClass();
+  }
+
+  @Override
+  public T getComponentInstance(@Nonnull DefaultPicoContainer container) throws PicoInitializationException, PicoIntrospectionException {
     return myValue.get();
-  }
-
-  @Override
-  public void verify(final PicoContainer container) throws PicoIntrospectionException {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void accept(final PicoVisitor visitor) {
-    visitor.visitComponentAdapter(this);
   }
 
   @Override

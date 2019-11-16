@@ -15,36 +15,20 @@
  */
 package consulo.injecting.pico;
 
-import com.intellij.util.ReflectionUtil;
-import com.intellij.util.SmartList;
-import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashMap;
-import org.picocontainer.*;
-import org.picocontainer.defaults.AmbiguousComponentResolutionException;
-import org.picocontainer.defaults.DuplicateComponentKeyRegistrationException;
-import org.picocontainer.defaults.VerifyingVisitor;
+import gnu.trove.TIntObjectHashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
 
-class DefaultPicoContainer implements PicoContainer {
-  private final PicoContainer myParent;
+class DefaultPicoContainer {
+  private final DefaultPicoContainer myParent;
 
-  private final Map<String, ComponentAdapter> myInterfaceClassToAdapter = new THashMap<>();
+  private final TIntObjectHashMap<ComponentAdapter> myClassNameToComponentAdapters = new TIntObjectHashMap<>();
 
-  private final List<ComponentAdapter> myComponentAdapters = new ArrayList<>();
-
-  DefaultPicoContainer(@Nullable PicoContainer parent) {
+  DefaultPicoContainer(@Nullable DefaultPicoContainer parent) {
     myParent = parent;
   }
 
-  @Override
-  public Collection<ComponentAdapter> getComponentAdapters() {
-    return myComponentAdapters;
-  }
-
-  @Override
   @Nullable
   public final ComponentAdapter getComponentAdapter(Object componentKey) {
     ComponentAdapter adapter = findByKey(componentKey);
@@ -56,109 +40,9 @@ class DefaultPicoContainer implements PicoContainer {
 
   @Nullable
   private ComponentAdapter findByKey(final Object componentKey) {
-    if (componentKey instanceof String) {
-      ComponentAdapter adapter = myInterfaceClassToAdapter.get(componentKey);
-      if (adapter != null) {
-        return adapter;
-      }
-    }
-
-    if (componentKey instanceof Class) {
-      return myInterfaceClassToAdapter.get(((Class)componentKey).getName());
-    }
-
-    return null;
+    return myClassNameToComponentAdapters.get(toMapKey(componentKey));
   }
 
-  @Override
-  @Nullable
-  public ComponentAdapter getComponentAdapterOfType(@Nonnull Class componentType) {
-    ComponentAdapter adapterByKey = getComponentAdapter(componentType);
-    if (adapterByKey != null) {
-      return adapterByKey;
-    }
-
-    List<ComponentAdapter> found = getComponentAdaptersOfType(componentType);
-    if (found.size() == 1) {
-      return found.get(0);
-    }
-    if (found.isEmpty()) {
-      return myParent == null ? null : myParent.getComponentAdapterOfType(componentType);
-    }
-
-    Class[] foundClasses = new Class[found.size()];
-    for (int i = 0; i < foundClasses.length; i++) {
-      foundClasses[i] = found.get(i).getComponentImplementation();
-    }
-    throw new AmbiguousComponentResolutionException(componentType, foundClasses);
-  }
-
-  @Override
-  public List<ComponentAdapter> getComponentAdaptersOfType(final Class componentType) {
-    if (componentType == null || componentType == String.class) {
-      return Collections.emptyList();
-    }
-
-    List<ComponentAdapter> result = new SmartList<>();
-
-    final ComponentAdapter cacheHit = myInterfaceClassToAdapter.get(componentType.getName());
-    if (cacheHit != null) {
-      result.add(cacheHit);
-    }
-
-    return result;
-  }
-
-  private boolean contains(String key) {
-    return myInterfaceClassToAdapter.containsKey(key) || myParent instanceof DefaultPicoContainer && ((DefaultPicoContainer)myParent).contains(key);
-  }
-
-  public ComponentAdapter registerComponent(@Nonnull ComponentAdapter componentAdapter) {
-    String componentKey = toKey(componentAdapter.getComponentKey());
-
-    if (contains(componentKey)) {
-      throw new DuplicateComponentKeyRegistrationException(componentKey);
-    }
-
-    myInterfaceClassToAdapter.put(componentKey, componentAdapter);
-    myComponentAdapters.add(componentAdapter);
-    return componentAdapter;
-  }
-
-  private String toKey(Object value) {
-    if (value instanceof String) {
-      return (String)value;
-    }
-
-    if (value instanceof Class) {
-      return ((Class)value).getName();
-    }
-
-    throw new UnsupportedOperationException("Unknown key type " + value);
-  }
-
-  @Override
-  public List getComponentInstances() {
-    return getComponentInstancesOfType(Object.class);
-  }
-
-  @Override
-  public List<Object> getComponentInstancesOfType(@Nullable Class componentType) {
-    if (componentType == null) {
-      return Collections.emptyList();
-    }
-
-    List<Object> result = new ArrayList<>();
-    for (ComponentAdapter componentAdapter : getComponentAdapters()) {
-      if (ReflectionUtil.isAssignable(componentType, componentAdapter.getComponentImplementation())) {
-        // may be null in the case of the "implicit" adapter representing "this".
-        ContainerUtil.addIfNotNull(result, getInstance(componentAdapter));
-      }
-    }
-    return result;
-  }
-
-  @Override
   @Nullable
   public Object getComponentInstance(Object componentKey) {
     ComponentAdapter adapter = findByKey(componentKey);
@@ -174,23 +58,30 @@ class DefaultPicoContainer implements PicoContainer {
     return null;
   }
 
-  @Override
-  @Nullable
-  public Object getComponentInstanceOfType(Class componentType) {
-    final ComponentAdapter componentAdapter = getComponentAdapterOfType(componentType);
-    return componentAdapter == null ? null : getInstance(componentAdapter);
+  private boolean contains(int key) {
+    return myClassNameToComponentAdapters.containsKey(key) || myParent != null && myParent.contains(key);
   }
 
-  @Nullable
-  private Object getInstance(@Nonnull ComponentAdapter componentAdapter) {
-    if (getComponentAdapters().contains(componentAdapter)) {
-      return getLocalInstance(componentAdapter);
-    }
-    if (myParent != null) {
-      return myParent.getComponentInstance(componentAdapter.getComponentKey());
+  public void registerComponent(@Nonnull ComponentAdapter componentAdapter) {
+    int componentKey = toMapKey(componentAdapter.getComponentKey());
+
+    if (contains(componentKey)) {
+      throw new DuplicateComponentKeyRegistrationException(componentKey);
     }
 
-    return null;
+    myClassNameToComponentAdapters.put(componentKey, componentAdapter);
+  }
+
+  private int toMapKey(Object value) {
+    if (value instanceof String) {
+      return value.hashCode();
+    }
+
+    if (value instanceof Class) {
+      return ((Class)value).getName().hashCode();
+    }
+
+    throw new UnsupportedOperationException("Unknown key type " + value);
   }
 
   private Object getLocalInstance(@Nonnull ComponentAdapter componentAdapter) {
@@ -212,38 +103,11 @@ class DefaultPicoContainer implements PicoContainer {
     throw firstLevelException;
   }
 
-  @Override
-  public void verify() {
-    new VerifyingVisitor().traverse(this);
-  }
-
-  @Override
-  public void start() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void stop() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   public void dispose() {
-    myInterfaceClassToAdapter.clear();
-    myComponentAdapters.clear();
+    myClassNameToComponentAdapters.clear();
   }
 
-  @Override
-  public void accept(PicoVisitor visitor) {
-    visitor.visitContainer(this);
-
-    for (ComponentAdapter adapter : getComponentAdapters()) {
-      adapter.accept(visitor);
-    }
-  }
-
-  @Override
-  public PicoContainer getParent() {
+  public DefaultPicoContainer getParent() {
     return myParent;
   }
 }

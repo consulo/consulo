@@ -33,7 +33,6 @@
     <jdom.version>2.1</jdom.version>
     <trove4j.version>2.0</trove4j.version>
     <log4j2.version>2.12.1</log4j2.version>
-    <picocontainer.version>1.2</picocontainer.version>
     <guava.version>23.0</guava.version>
     <!--please exclude common logging library from dependency-->
     <httpclient.version>4.5.3</httpclient.version>
@@ -323,25 +322,6 @@
         <groupId>com.miglayout</groupId>
         <artifactId>miglayout</artifactId>
         <version>3.7.4</version>
-      </dependency>
-      <dependency>
-        <groupId>picocontainer</groupId>
-        <artifactId>picocontainer</artifactId>
-        <version>${picocontainer.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>xml-apis</groupId>
-            <artifactId>xml-apis</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>xstream</groupId>
-            <artifactId>xstream</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>xpp3</groupId>
-            <artifactId>xpp3_min</artifactId>
-          </exclusion>
-        </exclusions>
       </dependency>
       <dependency>
         <groupId>commons-codec</groupId>
