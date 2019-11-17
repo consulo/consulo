@@ -1109,10 +1109,15 @@ public class FindPopupPanel extends JBPanel implements FindUI {
       @Override
       //Inserts search results in sorted order
       public void addRow(Object[] rowData) {
-        final Vector v = convertToVector(rowData);
+        final Vector uncheckedRow = convertToVector(rowData);
+        final Vector uncheckedData = dataVector;
+
+        final Vector<UsageInfo2UsageAdapter> v = (Vector<UsageInfo2UsageAdapter>)uncheckedRow;
+        final Vector<Vector<UsageInfo2UsageAdapter>> dataVector = (Vector<Vector<UsageInfo2UsageAdapter>>)uncheckedData;
+
         if (dataVector.isEmpty()) {
           dataVector.add(v);
-          firstResultPath = ((UsageInfo2UsageAdapter)v.get(0)).getFile().getPath();
+          firstResultPath = v.get(0).getFile().getPath();
         }
         else {
           final int p = Collections.binarySearch(dataVector, v, COMPARATOR);
