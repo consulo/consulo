@@ -44,13 +44,7 @@ public class AWTUtilitiesWrapper {
       mSetWindowOpacity = awtUtilitiesClass.getMethod("setWindowOpacity", Window.class, float.class);
       mSetWindowOpaque = awtUtilitiesClass.getMethod("setWindowOpaque", Window.class, boolean.class);
     }
-    catch (NoSuchMethodException ex) {
-      // ignore
-    }
-    catch (SecurityException ex) {
-      // ignore
-    }
-    catch (ClassNotFoundException ex) {
+    catch (NoSuchMethodException | SecurityException | ClassNotFoundException ex) {
       // ignore
     }
   }
@@ -66,16 +60,10 @@ public class AWTUtilitiesWrapper {
     try {
       Object ret = method.invoke(null, kind);
       if (ret instanceof Boolean) {
-        return ((Boolean)ret).booleanValue();
+        return (Boolean)ret;
       }
     }
-    catch (IllegalAccessException ex) {
-      // ignore
-    }
-    catch (IllegalArgumentException ex) {
-      // ignore
-    }
-    catch (InvocationTargetException ex) {
+    catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException ex) {
       // ignore
     }
     return false;
@@ -101,13 +89,7 @@ public class AWTUtilitiesWrapper {
     try {
       method.invoke(null, window, value);
     }
-    catch (IllegalAccessException ex) {
-      // ignore
-    }
-    catch (IllegalArgumentException ex) {
-      // ignore
-    }
-    catch (InvocationTargetException ex) {
+    catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
       // ignore
     }
   }
@@ -117,10 +99,10 @@ public class AWTUtilitiesWrapper {
   }
 
   public static void setWindowOpacity(Window window, float opacity) {
-    set(mSetWindowOpacity, window, Float.valueOf(opacity));
+    set(mSetWindowOpacity, window, opacity);
   }
 
   public static void setWindowOpaque(Window window, boolean opaque) {
-    set(mSetWindowOpaque, window, Boolean.valueOf(opaque));
+    set(mSetWindowOpaque, window, opaque);
   }
 }

@@ -258,8 +258,9 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
   }
 
   private static boolean calcAlphaModelSupported() {
-    if (AWTUtilitiesWrapper.isTranslucencyAPISupported()) {
-      return AWTUtilitiesWrapper.isTranslucencySupported(AWTUtilitiesWrapper.TRANSLUCENT);
+    GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+    if (device.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT)) {
+      return true;
     }
     try {
       return WindowUtils.isWindowAlphaSupported();
@@ -267,6 +268,16 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     catch (Throwable e) {
       return false;
     }
+  }
+
+  static boolean isTranslucencySupported() {
+    GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+    return device.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT);
+  }
+
+  static boolean isPerPixelTransparencySupported() {
+    GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+    return device.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.PERPIXEL_TRANSPARENT);
   }
 
   @Override
@@ -297,8 +308,8 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
           ((JFrame)window).getRootPane().putClientProperty("Window.alpha", 1.0f - ratio);
         }
       }
-      else if (AWTUtilitiesWrapper.isTranslucencySupported(AWTUtilitiesWrapper.TRANSLUCENT)) {
-        AWTUtilitiesWrapper.setWindowOpacity(window, 1.0f - ratio);
+      else if (isTranslucencySupported()) {
+        window.setOpacity(1.0f - ratio);
       }
       else {
         WindowUtils.setWindowAlpha(window, 1.0f - ratio);
@@ -312,8 +323,8 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
   @Override
   public void setWindowMask(final Window window, @Nullable final Shape mask) {
     try {
-      if (AWTUtilitiesWrapper.isTranslucencySupported(AWTUtilitiesWrapper.PERPIXEL_TRANSPARENT)) {
-        AWTUtilitiesWrapper.setWindowShape(window, mask);
+      if (isPerPixelTransparencySupported()) {
+        window.setShape(mask);
       }
       else {
         WindowUtils.setWindowMask(window, mask);
