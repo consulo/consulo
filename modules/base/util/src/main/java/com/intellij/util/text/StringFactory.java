@@ -16,10 +16,13 @@
 package com.intellij.util.text;
 
 import com.intellij.openapi.util.SystemInfo;
+import consulo.annotations.ReviewAfterMigrationToJRE;
+
 import javax.annotation.Nonnull;
 
 import java.lang.reflect.Constructor;
 
+@ReviewAfterMigrationToJRE(9)
 public class StringFactory {
   // String(char[], boolean). Works since JDK1.7, earlier JDKs have too slow reflection anyway
   private static final Constructor<String> ourConstructor;
