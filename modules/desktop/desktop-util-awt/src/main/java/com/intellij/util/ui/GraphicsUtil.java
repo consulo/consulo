@@ -134,7 +134,12 @@ public class GraphicsUtil {
       list.putClientProperty(RenderingHints.KEY_TEXT_LCD_CONTRAST, UIUtil.getLcdContrastValue());
     }
     else {
-      list.putClientProperty(PreJava9UIUtil.AA_TEXT_PROPERTY_KEY(), type.getTextInfo());
+      if(type.isEnabled()) {
+        list.putClientProperty(PreJava9UIUtil.AA_TEXT_PROPERTY_KEY(), PreJava9UIUtil.newAATextInfo(type.getHint(), UIUtil.getLcdContrastValue()));
+      }
+      else {
+        list.putClientProperty(PreJava9UIUtil.AA_TEXT_PROPERTY_KEY(), null);
+      }
     }
   }
 }

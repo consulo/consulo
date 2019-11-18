@@ -15,10 +15,6 @@
  */
 package consulo.desktop.util.awt;
 
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.util.ui.UIUtil;
-import consulo.desktop.util.awt.laf.PreJava9UIUtil;
-
 import java.awt.*;
 
 /**
@@ -44,14 +40,12 @@ public enum AntialiasingType {
     return myHint;
   }
 
-  public Object getTextInfo() {
-    if(SystemInfo.IS_AT_LEAST_JAVA9) {
-      throw new IllegalArgumentException("must be never called at java 9+");
-    }
-    return isEnabled ? PreJava9UIUtil.newAATextInfo(myHint, UIUtil.getLcdContrastValue()) : null;
+  public boolean isEnabled() {
+    return isEnabled;
   }
 
   @Override
   public String toString() {
     return myName;
-  }}
+  }
+}
