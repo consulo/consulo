@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2017 JetBrains s.r.o.
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,34 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.ui;
+package consulo.desktop.util.awt;
 
-import com.intellij.util.ui.GraphicsUtil;
+import com.intellij.openapi.util.SystemInfo;
+import com.intellij.util.ui.UIUtil;
+import consulo.desktop.util.awt.laf.PreJava9UIUtil;
 
 import java.awt.*;
 
+/**
+ * @author VISTALL
+ * @since 2019-11-19
+ */
 public enum AntialiasingType {
   SUBPIXEL("Subpixel", RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB, true),
   GREYSCALE("Greyscale", RenderingHints.VALUE_TEXT_ANTIALIAS_ON, true),
   OFF("No antialiasing", RenderingHints.VALUE_TEXT_ANTIALIAS_OFF, false);
-
-  public static Object getAAHintForSwingComponent() {
-    UISettings uiSettings = UISettings.getInstanceOrNull();
-    if (uiSettings != null) {
-      AntialiasingType type = uiSettings.IDE_AA_TYPE;
-      if (type != null) return type.getTextInfo();
-    }
-    return GREYSCALE.getTextInfo();
-  }
-
-  public static Object getKeyForCurrentScope(boolean inEditor) {
-    UISettings uiSettings = UISettings.getInstanceOrNull();
-    if (uiSettings != null) {
-      AntialiasingType type = inEditor ? uiSettings.EDITOR_AA_TYPE : uiSettings.IDE_AA_TYPE;
-      if (type != null) return type.myHint;
-    }
-    return RenderingHints.VALUE_TEXT_ANTIALIAS_ON;
-  }
 
   private final String myName;
   private final Object myHint;
@@ -52,12 +40,18 @@ public enum AntialiasingType {
     isEnabled = enabled;
   }
 
+  public Object getHint() {
+    return myHint;
+  }
+
   public Object getTextInfo() {
-    return isEnabled ? GraphicsUtil.createAATextInfo(myHint) : null;
+    if(SystemInfo.IS_AT_LEAST_JAVA9) {
+      throw new IllegalArgumentException("must be never called at java 9+");
+    }
+    return isEnabled ? PreJava9UIUtil.newAATextInfo(myHint, UIUtil.getLcdContrastValue()) : null;
   }
 
   @Override
   public String toString() {
     return myName;
-  }
-}
+  }}

@@ -18,7 +18,7 @@ package com.intellij.openapi.ui.impl;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.impl.TypeSafeDataProviderAdapter;
-import com.intellij.ide.ui.AntialiasingType;
+import com.intellij.ide.ui.AntialiasingTypeUtil;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.Application;
@@ -886,7 +886,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
           myOpened = true;
           final DialogWrapper activeWrapper = getActiveWrapper();
           for (JComponent c : UIUtil.uiTraverser(e.getWindow()).filter(JComponent.class)) {
-            GraphicsUtil.setAntialiasingType(c, AntialiasingType.getAAHintForSwingComponent());
+            GraphicsUtil.setAntialiasingType(c, AntialiasingTypeUtil.getAntialiasingTypeForSwingComponent());
           }
           if (activeWrapper == null) {
             myFocusedCallback.setRejected();
@@ -913,7 +913,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
           setupSelectionOnPreferredComponent(toFocus);
 
           if (toFocus != null) {
-            if (isShowing() && (ApplicationManagerEx.getApplicationEx() == null || ApplicationManagerEx.getApplicationEx().isActive())) {
+            if (isShowing() && (ApplicationManager.getApplication() == null || ApplicationManager.getApplication().isActive())) {
               toFocus.requestFocus();
             }
             else {

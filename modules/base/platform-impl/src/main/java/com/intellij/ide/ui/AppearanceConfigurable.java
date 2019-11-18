@@ -24,16 +24,16 @@ import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.ui.ListCellRendererWrapper;
+import com.intellij.ui.SimpleListCellRenderer;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.desktop.util.awt.AntialiasingType;
 import consulo.ide.ui.laf.LafWithColorScheme;
+import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -155,7 +155,7 @@ public class AppearanceConfigurable implements SearchableConfigurable {
       settings.IDE_AA_TYPE = (AntialiasingType)myComponent.myAntialiasingInIDE.getSelectedItem();
       for (Window w : Window.getWindows()) {
         for (JComponent c : UIUtil.uiTraverser(w).filter(JComponent.class)) {
-          GraphicsUtil.setAntialiasingType(c, AntialiasingType.getAAHintForSwingComponent());
+          GraphicsUtil.setAntialiasingType(c, AntialiasingTypeUtil.getAntialiasingTypeForSwingComponent());
         }
       }
       shouldUpdateUI = true;
@@ -477,30 +477,18 @@ public class AppearanceConfigurable implements SearchableConfigurable {
     return null;
   }
 
-  private static class AAListCellRenderer extends ListCellRendererWrapper<AntialiasingType> {
-    private static final Object SUBPIXEL_HINT = GraphicsUtil.createAATextInfo(RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
-    private static final Object GREYSCALE_HINT = GraphicsUtil.createAATextInfo(RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-
-    private final boolean useEditorAASettings;
+  private static class AAListCellRenderer extends SimpleListCellRenderer<AntialiasingType> {
+    private final boolean myUseEditorAASettings;
 
     public AAListCellRenderer(boolean useEditorAASettings) {
-      super();
-      this.useEditorAASettings = useEditorAASettings;
+      myUseEditorAASettings = useEditorAASettings;
     }
 
     @Override
-    public void customize(JList list, AntialiasingType value, int index, boolean selected, boolean hasFocus) {
-      if (value == AntialiasingType.SUBPIXEL) {
-        GraphicsUtil.generatePropertiesForAntialiasing(SUBPIXEL_HINT, this::setClientProperty);
-      }
-      else if (value == AntialiasingType.GREYSCALE) {
-        GraphicsUtil.generatePropertiesForAntialiasing(GREYSCALE_HINT, this::setClientProperty);
-      }
-      else if (value == AntialiasingType.OFF) {
-        GraphicsUtil.generatePropertiesForAntialiasing(null, this::setClientProperty);
-      }
+    public void customize(@Nonnull JList<? extends AntialiasingType> list, AntialiasingType value, int index, boolean selected, boolean hasFocus) {
+      GraphicsUtil.setAntialiasingType(this, value);
 
-      if (useEditorAASettings) {
+      if (myUseEditorAASettings) {
         EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
         setFont(new Font(scheme.getEditorFontName(), Font.PLAIN, scheme.getEditorFontSize()));
       }

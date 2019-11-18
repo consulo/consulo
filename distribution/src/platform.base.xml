@@ -92,6 +92,7 @@
 
         <!--TODO [VISTALL] those dependencies must be removed from base plugin-->
         <include>consulo:consulo-desktop-util-awt</include>
+        <include>consulo:consulo-desktop-awt-hacking</include>
         <include>org.imgscalr:imgscalr-lib</include>
         <include>com.miglayout:miglayout</include>
 

@@ -18,10 +18,11 @@ package com.intellij.util.ui;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.MethodInvocator;
-import com.intellij.util.PairConsumer;
+import consulo.annotations.ReviewAfterMigrationToJRE;
+import consulo.desktop.util.awt.AntialiasingType;
 import consulo.desktop.util.awt.laf.PreJava9UIUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -126,23 +127,14 @@ public class GraphicsUtil {
     return ourSafelyGetGraphicsMethod.isAvailable() ? (Graphics)ourSafelyGetGraphicsMethod.invoke(null, c) : c.getGraphics();
   }
 
-  public static Object getAntialiasingType(@Nonnull JComponent list) {
-    return SystemInfo.IS_AT_LEAST_JAVA9 ? null : list.getClientProperty(PreJava9UIUtil.AA_TEXT_PROPERTY_KEY());
-  }
-
-  public static void setAntialiasingType(@Nonnull JComponent list, Object type) {
-    if (!SystemInfo.IS_AT_LEAST_JAVA9) {
-      list.putClientProperty(PreJava9UIUtil.AA_TEXT_PROPERTY_KEY(), type);
+  @ReviewAfterMigrationToJRE(9)
+  public static void setAntialiasingType(@Nonnull JComponent list, AntialiasingType type) {
+    if(SystemInfo.IS_AT_LEAST_JAVA9) {
+      list.putClientProperty(RenderingHints.KEY_TEXT_ANTIALIASING, type.getHint());
+      list.putClientProperty(RenderingHints.KEY_TEXT_LCD_CONTRAST, UIUtil.getLcdContrastValue());
     }
-  }
-
-  public static void generatePropertiesForAntialiasing(Object type, @Nonnull PairConsumer<Object, Object> propertySetter) {
-    if (!SystemInfo.IS_AT_LEAST_JAVA9) {
-      propertySetter.consume(PreJava9UIUtil.AA_TEXT_PROPERTY_KEY(), type);
+    else {
+      list.putClientProperty(PreJava9UIUtil.AA_TEXT_PROPERTY_KEY(), type.getTextInfo());
     }
-  }
-
-  public static Object createAATextInfo(@Nonnull Object hint) {
-    return SystemInfo.IS_AT_LEAST_JAVA9 ? null : PreJava9UIUtil.newAATextInfo(hint, UIUtil.getLcdContrastValue());
   }
 }

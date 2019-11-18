@@ -37,6 +37,7 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Transient;
 import consulo.annotations.DeprecationInfo;
+import consulo.desktop.util.awt.AntialiasingType;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -325,7 +326,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     UISettings uiSettings = getInstanceOrNull();
 
     if (uiSettings != null) {
-      g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, AntialiasingType.getKeyForCurrentScope(false));
+      g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, AntialiasingTypeUtil.getKeyForCurrentScope(false));
     }
     else {
       g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
@@ -570,13 +571,13 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
    * @see #setupComponentAntialiasing(JComponent)
    */
   public static void setupComponentAntialiasing(JComponent component) {
-    GraphicsUtil.setAntialiasingType(component, AntialiasingType.getAAHintForSwingComponent());
+    GraphicsUtil.setAntialiasingType(component, AntialiasingTypeUtil.getAntialiasingTypeForSwingComponent());
   }
 
   public static void setupEditorAntialiasing(JComponent component) {
     UISettings settings = getInstanceOrNull();
     if (settings != null) {
-      GraphicsUtil.setAntialiasingType(component, settings.EDITOR_AA_TYPE.getTextInfo());
+      GraphicsUtil.setAntialiasingType(component, settings.EDITOR_AA_TYPE);
     }
   }
 }
