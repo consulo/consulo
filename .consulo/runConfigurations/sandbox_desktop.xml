@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="sandbox-desktop" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Consulo In Sandbox" singleton="true">
-    <option name="VM_PARAMETERS" value="-Dconsulo.maven.console.log=true -Dconsulo.log4j2.enabled=true -Dconsulo.synchronize.api=http://localhost:8080/api/storage/ -Didea.io.use.nio2=true" />
+    <option name="VM_PARAMETERS" value="-Dconsulo.maven.console.log=true -Dconsulo.log4j2.enabled=true -Dconsulo.synchronize.api=http://localhost:8080/api/storage/ -Didea.io.use.nio2=true --illegal-access=warn" />
     <option name="PROGRAM_PARAMETERS" value="" />
     <option name="PLUGINS_HOME_PATH" value="$PROJECT_DIR$/sandbox/desktop/target/consulo-sandbox-desktop-2-SNAPSHOT-main/Consulo/platform/buildSNAPSHOT/plugins" />
     <option name="USE_ALT_CONSULO_SDK" value="true" />

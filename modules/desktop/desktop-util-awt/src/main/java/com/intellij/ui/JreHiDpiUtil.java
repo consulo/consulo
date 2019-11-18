@@ -3,17 +3,14 @@ package com.intellij.ui;
 
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.scale.JBUIScale;
-import com.intellij.util.ReflectionUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
-
+import consulo.awt.hacking.GraphicsEnvironmentHacking;
 import org.jetbrains.annotations.TestOnly;
-import sun.java2d.SunGraphicsEnvironment;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicReference;
 
 public final class JreHiDpiUtil {
@@ -51,13 +48,13 @@ public final class JreHiDpiUtil {
           value = false;
           if (SystemProperties.getBooleanProperty("hidpi", true)) {
             jreHiDPI_earlierVersion = true;
-            // fix,e [vistall] always allow hidpi on other jdks
+            // fixme [vistall] always allow hidpi on other jdks
             if (Boolean.TRUE) {
               try {
                 GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-                if (ge instanceof SunGraphicsEnvironment) {
-                  Method m = ReflectionUtil.getDeclaredMethod(SunGraphicsEnvironment.class, "isUIScaleEnabled");
-                  value = m != null && (Boolean)m.invoke(ge);
+                Boolean uiScaleEnabled = GraphicsEnvironmentHacking.isUIScaleEnabled(ge);
+                if (uiScaleEnabled != null) {
+                  value = uiScaleEnabled;
                   jreHiDPI_earlierVersion = false;
                 }
               }
