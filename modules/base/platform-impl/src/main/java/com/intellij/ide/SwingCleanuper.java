@@ -15,7 +15,6 @@
  */
 package com.intellij.ide;
 
-import com.intellij.Patches;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
@@ -236,7 +235,6 @@ public final class SwingCleanuper {
     ReflectionUtil.resetStaticField(KeyboardFocusManager.class, "permanentFocusOwner");
     ReflectionUtil.resetStaticField(KeyboardFocusManager.class, "currentFocusCycleRoot");
 
-    assert Patches.USE_REFLECTION_TO_ACCESS_JDK8; // not anymore in JDK 9
     LinkedList heavyweightRequests = ReflectionUtil.getField(KeyboardFocusManager.class, null, LinkedList.class, "heavyweightRequests");
     if (heavyweightRequests != null) {
       synchronized (heavyweightRequests) {

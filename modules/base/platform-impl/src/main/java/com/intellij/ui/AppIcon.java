@@ -15,7 +15,6 @@
  */
 package com.intellij.ui;
 
-import com.intellij.Patches;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationActivationListener;
@@ -27,6 +26,7 @@ import com.intellij.openapi.wm.AppIconScheme;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.ReviewAfterMigrationToJRE;
 import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
 import consulo.ui.taskbar.TaskbarWrapper;
@@ -54,9 +54,8 @@ public abstract class AppIcon {
   private static AppIcon ourIcon;
 
   @Nonnull
+  @ReviewAfterMigrationToJRE(9)
   public static AppIcon getInstance() {
-    assert Patches.USE_REFLECTION_TO_ACCESS_JDK9;
-
     if (ourIcon == null) {
       if (SystemInfo.isMac) {
         ourIcon = new MacAppIcon();

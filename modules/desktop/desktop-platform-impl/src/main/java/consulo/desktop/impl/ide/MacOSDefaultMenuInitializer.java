@@ -18,7 +18,6 @@ package consulo.desktop.impl.ide;
 import com.apple.eawt.Application;
 import com.apple.eawt.ApplicationAdapter;
 import com.apple.eawt.ApplicationEvent;
-import com.intellij.Patches;
 import com.intellij.ide.CommandLineProcessor;
 import com.intellij.ide.DataManager;
 import com.intellij.idea.ApplicationStarter;
@@ -34,6 +33,7 @@ import com.intellij.ui.mac.foundation.Foundation;
 import com.intellij.ui.mac.foundation.ID;
 import com.intellij.util.ThrowableRunnable;
 import com.sun.jna.Callback;
+import consulo.annotations.ReviewAfterMigrationToJRE;
 import consulo.ide.actions.AboutManager;
 import consulo.logging.Logger;
 import consulo.start.CommandLineArgs;
@@ -217,15 +217,14 @@ public class MacOSDefaultMenuInitializer {
   private final WindowManager myWindowManager;
 
   @Inject
+  @ReviewAfterMigrationToJRE(9)
   public MacOSDefaultMenuInitializer(AboutManager aboutManager, DataManager dataManager, WindowManager windowManager) {
     myAboutManager = aboutManager;
     myDataManager = dataManager;
     myWindowManager = windowManager;
     if (SystemInfo.isMac) {
       try {
-        assert Patches.USE_REFLECTION_TO_ACCESS_JDK9;
-
-        ThrowableRunnable<Throwable> task = SystemInfo.isJavaVersionAtLeast(9, 0, 0) ? new Java9Worker(this::showAbout) : new PreJava9Worker(this::showAbout);
+        ThrowableRunnable<Throwable> task = SystemInfo.isJavaVersionAtLeast(9) ? new Java9Worker(this::showAbout) : new PreJava9Worker(this::showAbout);
 
         task.run();
 

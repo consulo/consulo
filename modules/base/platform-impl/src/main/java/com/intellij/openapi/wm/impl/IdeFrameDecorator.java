@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import com.intellij.Patches;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.SystemInfo;
@@ -23,6 +22,7 @@ import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.mac.MacMainFrameDecorator;
+import consulo.annotations.ReviewAfterMigrationToJRE;
 import consulo.awt.TargetAWT;
 import consulo.ui.Window;
 
@@ -35,11 +35,10 @@ import java.awt.event.ComponentEvent;
 
 public abstract class IdeFrameDecorator implements Disposable {
   @Nullable
+  @ReviewAfterMigrationToJRE(9)
   public static IdeFrameDecorator decorate(@Nonnull IdeFrameEx frame) {
-    assert Patches.USE_REFLECTION_TO_ACCESS_JDK9;
-
     // we can't use internal api for fullscreen
-    if (SystemInfo.isJavaVersionAtLeast(9, 0, 0)) {
+    if (SystemInfo.isJavaVersionAtLeast(9)) {
       return new AWTFrameDecorator(frame);
     }
 

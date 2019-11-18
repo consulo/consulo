@@ -18,8 +18,9 @@ package consulo.desktop.util.awt.laf;
 import com.intellij.openapi.util.NotNullFactory;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.SystemInfo;
-import javax.annotation.Nonnull;
+import consulo.annotations.ReviewAfterMigrationToJRE;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 
@@ -27,7 +28,7 @@ import java.lang.reflect.Field;
  * @author VISTALL
  * @since 09-Sep-17
  */
-@Deprecated
+@ReviewAfterMigrationToJRE(9)
 public class PreJava9UIUtil {
   private static NotNullLazyValue<Constructor> ourAATextInfoConstructor = NotNullLazyValue.createValue(new NotNullFactory<Constructor>() {
     @Nonnull

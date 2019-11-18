@@ -16,6 +16,7 @@
 package com.intellij;
 
 import com.intellij.openapi.util.SystemInfo;
+import consulo.annotations.DeprecationInfo;
 
 import java.awt.*;
 
@@ -102,10 +103,16 @@ public class Patches {
    * Marker field to find all usages of the reflective access to JDK 7-specific methods
    * which need to be changed when migrated to JDK 8
    */
+  @Deprecated
+  @DeprecationInfo("Use @ReviewAfterMigrationToJRE(8)")
   public static final boolean USE_REFLECTION_TO_ACCESS_JDK8 = true;
 
+  @Deprecated
+  @DeprecationInfo("Use @ReviewAfterMigrationToJRE(9)")
   public static final boolean USE_REFLECTION_TO_ACCESS_JDK9 = true;
 
+  @Deprecated
+  @DeprecationInfo("Use @ReviewAfterMigrationToJRE(11)")
   public static final boolean USE_REFLECTION_TO_ACCESS_JDK11 = true;
 
   /**
