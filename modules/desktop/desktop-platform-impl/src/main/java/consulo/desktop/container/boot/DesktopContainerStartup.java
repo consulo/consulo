@@ -16,7 +16,6 @@
 package consulo.desktop.container.boot;
 
 import com.intellij.concurrency.IdeaForkJoinWorkerThreadFactory;
-import com.intellij.ide.ClassUtilCore;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.idea.ApplicationStarter;
@@ -67,8 +66,6 @@ public class DesktopContainerStartup implements ContainerStartup {
 
     Runnable runnable = () -> {
       try {
-        ClassUtilCore.clearJarURLCache();
-
         start(stat, appInitializeMark, args);
       }
       catch (Throwable t) {

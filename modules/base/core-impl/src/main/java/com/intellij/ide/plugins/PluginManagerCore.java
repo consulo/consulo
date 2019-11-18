@@ -15,7 +15,6 @@
  */
 package com.intellij.ide.plugins;
 
-import com.intellij.ide.ClassUtilCore;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.StartupProgress;
 import com.intellij.ide.plugins.cl.IdeaPluginClassLoader;
@@ -814,7 +813,6 @@ public class PluginManagerCore {
     int pluginsCount = PluginManager.getPluginsCount();
     getLogger().info(pluginsCount + " plugins initialized in " + (System.currentTimeMillis() - start) + " ms");
     logPlugins();
-    ClassUtilCore.clearJarURLCache();
   }
 
   public static boolean isSystemPlugin(@Nonnull PluginId pluginId) {
