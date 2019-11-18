@@ -47,9 +47,9 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
 import consulo.awt.TargetAWT;
+import consulo.awt.hacking.PostEventQueueHacking;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
-import sun.awt.AppContext;
 import sun.awt.SunToolkit;
 
 import javax.annotation.Nonnull;
@@ -58,7 +58,6 @@ import javax.swing.*;
 import javax.swing.plaf.basic.ComboPopup;
 import java.awt.*;
 import java.awt.event.*;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -188,7 +187,7 @@ public class IdeEventQueue extends EventQueue {
 
   private IdeEventQueue() {
     if (Platform.current().isWebService()) {
-      throw new UnsupportedOperationException("we should init event awt event queue");
+      throw new UnsupportedOperationException("This constructor must be never called inside WebService");
     }
 
     EventQueue systemEventQueue = Toolkit.getDefaultToolkit().getSystemEventQueue();
@@ -222,16 +221,7 @@ public class IdeEventQueue extends EventQueue {
     //  - replace "PostEventQueue" value in AppContext with this new PostEventQueue
     // since that the control flow goes like this:
     //    PostEventQueue.flush() -> IdeEventQueue.postEvent() -> We intercepted event, incremented counters.
-    try {
-      Class<?> aClass = Class.forName("sun.awt.PostEventQueue");
-      Constructor<?> constructor = aClass.getDeclaredConstructor(EventQueue.class);
-      constructor.setAccessible(true);
-      Object postEventQueue = constructor.newInstance(this);
-      AppContext.getAppContext().put("PostEventQueue", postEventQueue);
-    }
-    catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+    PostEventQueueHacking.replacePostEventQueue(this);
   }
 
   public void setWindowManager(final WindowManagerEx windowManager) {

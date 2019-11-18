@@ -25,6 +25,7 @@
     <module>plugins/platform-base</module>
     <module>plugins/sandLanguage</module>
 
+    <module>modules/desktop/desktop-awt-hacking</module>
     <module>modules/desktop/desktop-main</module>
     <module>modules/desktop/desktop-bootstrap</module>
     <module>modules/desktop/desktop-ui-impl</module>
