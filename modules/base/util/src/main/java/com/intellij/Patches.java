@@ -52,7 +52,7 @@ public class Patches {
    * For instance screen saver activates or computer goes hibernate. The problem still exists in 1.6 when two (or more)
    * monitors exists
    */
-  public static final boolean SUN_BUG_ID_6209673 = true;
+  public static final boolean SUN_BUG_ID_6209673 = !SystemInfo.isJavaVersionAtLeast(8, 0, 60);
 
   /**
    * Desktop API support on X Window is limited to GNOME (and even there it may work incorrectly).
