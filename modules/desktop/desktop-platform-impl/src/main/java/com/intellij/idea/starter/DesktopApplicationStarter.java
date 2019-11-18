@@ -60,7 +60,5 @@ public class DesktopApplicationStarter extends ApplicationStarter {
     }
 
     IconLoader.activate();
-
-    new JFrame().pack(); // this peer will prevent shutting down our application
   }
 }
