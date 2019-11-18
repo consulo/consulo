@@ -18,6 +18,7 @@ package consulo.util.io;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.Processor;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
+import consulo.annotations.ReviewAfterMigrationToJRE;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
@@ -29,7 +30,7 @@ import java.nio.ByteBuffer;
  * @author VISTALL
  * @since 05-Oct-17
  */
-@Deprecated
+@ReviewAfterMigrationToJRE(9)
 public class PreJava9IOUtil {
   private static final Logger LOGGER = Logger.getInstance(PreJava9IOUtil.class);
 
