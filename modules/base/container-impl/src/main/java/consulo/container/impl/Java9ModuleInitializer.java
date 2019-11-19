@@ -69,6 +69,7 @@ public class Java9ModuleInitializer {
     List<String> toResolve = new ArrayList<String>();
 
     toResolve.add("consulo.desktop.awt.hacking");
+    toResolve.add("consulo.util.rmi");
 
     Object bootModuleLayer = staticInvoke(java_lang_ModuleLayer_boot);
 
