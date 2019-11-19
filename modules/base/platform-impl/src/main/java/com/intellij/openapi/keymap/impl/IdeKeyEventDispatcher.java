@@ -62,6 +62,7 @@ import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
 import consulo.awt.TargetAWT;
+import consulo.awt.hacking.AWTKeyStrokeHacking;
 import consulo.ide.base.BaseDataManager;
 import consulo.ui.ex.ToolWindowFloatingDecorator;
 import consulo.wm.util.IdeFrameUtil;
@@ -77,7 +78,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.im.InputContext;
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.*;
 
@@ -316,25 +316,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
                    ~InputEvent.BUTTON2_MASK &
                    ~InputEvent.BUTTON3_DOWN_MASK &
                    ~InputEvent.BUTTON3_MASK;
-    try {
-      Method[] methods = AWTKeyStroke.class.getDeclaredMethods();
-      Method getCachedStrokeMethod = null;
-      for (Method method : methods) {
-        if (GET_CACHED_STROKE_METHOD_NAME.equals(method.getName())) {
-          getCachedStrokeMethod = method;
-          getCachedStrokeMethod.setAccessible(true);
-          break;
-        }
-      }
-      if (getCachedStrokeMethod == null) {
-        throw new IllegalStateException("not found method with name getCachedStrokeMethod");
-      }
-      Object[] getCachedStrokeMethodArgs = {originalKeyStroke.getKeyChar(), originalKeyStroke.getKeyCode(), modifier, originalKeyStroke.isOnKeyRelease()};
-      return (KeyStroke)getCachedStrokeMethod.invoke(originalKeyStroke, getCachedStrokeMethodArgs);
-    }
-    catch (Exception exc) {
-      throw new IllegalStateException(exc.getMessage());
-    }
+    return (KeyStroke)AWTKeyStrokeHacking.getCachedStroke(originalKeyStroke.getKeyChar(), originalKeyStroke.getKeyCode(), modifier, originalKeyStroke.isOnKeyRelease());
   }
 
   private boolean inSecondStrokeInProgressState() {
