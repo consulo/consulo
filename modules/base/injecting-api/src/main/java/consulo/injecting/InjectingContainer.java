@@ -18,7 +18,6 @@ package consulo.injecting;
 import consulo.injecting.key.InjectingKey;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.ServiceLoader;
 
@@ -34,6 +33,8 @@ public interface InjectingContainer {
 
     throw new UnsupportedOperationException("RootInjectingContainerFactory not found");
   }
+
+  boolean LOG_INJECTING_PROBLEMS = Boolean.getBoolean("consulo.log.injecting.problems");
 
   @Nonnull
   <T> T getInstance(@Nonnull Class<T> clazz);

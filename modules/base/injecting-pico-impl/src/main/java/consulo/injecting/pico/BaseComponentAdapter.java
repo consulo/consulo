@@ -17,6 +17,7 @@ package consulo.injecting.pico;
 
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.util.ExceptionUtil;
+import consulo.injecting.InjectingContainer;
 import consulo.injecting.PostInjectListener;
 import consulo.injecting.key.InjectingKey;
 import consulo.logging.Logger;
@@ -142,7 +143,7 @@ class BaseComponentAdapter<T> implements ComponentAdapter<T> {
       }
     }
 
-    if (isSingleton && !isAnnotationSingleton) {
+    if (InjectingContainer.LOG_INJECTING_PROBLEMS && isSingleton && !isAnnotationSingleton) {
       LOG.warn("Class " + targetClass.getName() + " is not annotated by @Singleton");
     }
 

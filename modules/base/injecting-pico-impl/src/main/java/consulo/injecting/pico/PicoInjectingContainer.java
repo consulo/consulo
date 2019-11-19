@@ -62,7 +62,7 @@ class PicoInjectingContainer implements InjectingContainer {
   @SuppressWarnings("unchecked")
   public <T> T getInstance(@Nonnull Class<T> clazz) {
     Class<?> insideObjectCreation = GetInstanceValidator.insideObjectCreation();
-    if (insideObjectCreation != null && myGetInstanceWarningSet.add(Pair.create(clazz, insideObjectCreation))) {
+    if (InjectingContainer.LOG_INJECTING_PROBLEMS && insideObjectCreation != null && myGetInstanceWarningSet.add(Pair.create(clazz, insideObjectCreation))) {
       LOG.warn("Calling #getInstance(" + clazz + ".class) inside object initialization. Use contructor injection instead. MainInjecting: " + insideObjectCreation);
     }
 

@@ -69,11 +69,6 @@
       <artifactId>consulo-injecting-api</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-platform-resources</artifactId>
-      <version>${project.version}</version>
-    </dependency>
     <!--external dependencies-->
     <dependency>
       <groupId>dk.brics.automaton</groupId>

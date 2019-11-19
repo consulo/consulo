@@ -287,7 +287,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   protected <T> T runServiceInitialize(@Nonnull ServiceDescriptor descriptor, @Nonnull Supplier<T> runnable) {
     if (!myNotLazyStepFinished && !descriptor.isLazy() && myCurrentNotLazyServiceClass != null) {
-      if (!Objects.equals(descriptor.getInterface(), myCurrentNotLazyServiceClass.getName())) {
+      if (!Objects.equals(descriptor.getInterface(), myCurrentNotLazyServiceClass.getName()) && InjectingContainer.LOG_INJECTING_PROBLEMS) {
         LOG.warn(new IllegalAccessException("Initializing not lazy service [" + descriptor.getInterface() + "] from another service [" + myCurrentNotLazyServiceClass.getName() + "]"));
       }
     }

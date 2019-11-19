@@ -18,6 +18,7 @@ package consulo.injecting.pico;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.injecting.InjectingContainer;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
@@ -91,7 +92,7 @@ class ConstructorInjectionComponentAdapter<T> implements ComponentAdapter<T> {
   private T doGetComponentInstance(DefaultPicoContainer guardedContainer) {
     Constructor<T> constructor = getGreediestSatisfiableConstructor(guardedContainer);
 
-    if (!isDefaultConstructor(constructor) && !constructor.isAnnotationPresent(Inject.class)) {
+    if (InjectingContainer.LOG_INJECTING_PROBLEMS && !isDefaultConstructor(constructor) && !constructor.isAnnotationPresent(Inject.class)) {
       LOG.warn("Missing @Inject at constructor " + constructor);
     }
     try {
