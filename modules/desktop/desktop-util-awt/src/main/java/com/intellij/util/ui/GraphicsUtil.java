@@ -17,8 +17,8 @@ package com.intellij.util.ui;
 
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.util.MethodInvocator;
 import consulo.annotations.ReviewAfterMigrationToJRE;
+import consulo.awt.hacking.JComponentHacking;
 import consulo.desktop.util.awt.AntialiasingType;
 import consulo.desktop.util.awt.laf.PreJava9UIUtil;
 
@@ -32,8 +32,6 @@ import java.util.Map;
  * @author Konstantin Bulenkov
  */
 public class GraphicsUtil {
-  private static final MethodInvocator ourSafelyGetGraphicsMethod = new MethodInvocator(JComponent.class, "safelyGetGraphics", Component.class);
-
   @SuppressWarnings("UndesirableClassUsage")
   private static final Graphics2D ourGraphics = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB).createGraphics();
 
@@ -123,8 +121,10 @@ public class GraphicsUtil {
    *
    * @see JRootPane#disableTrueDoubleBuffering()
    */
-  public static Graphics safelyGetGraphics(Component c) {
-    return ourSafelyGetGraphicsMethod.isAvailable() ? (Graphics)ourSafelyGetGraphicsMethod.invoke(null, c) : c.getGraphics();
+  @Nonnull
+  public static Graphics safelyGetGraphics(@Nonnull Component c) {
+    Graphics safelyGetGraphics = JComponentHacking.safelyGetGraphics(c);
+    return safelyGetGraphics != null ? safelyGetGraphics : c.getGraphics();
   }
 
   @ReviewAfterMigrationToJRE(9)
