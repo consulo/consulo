@@ -17,7 +17,6 @@ package com.intellij.openapi.ui.popup.util;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.MessageType;
@@ -28,14 +27,15 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.hacking.PopupFactoryHacking;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.plaf.basic.ComboPopup;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
-import java.lang.reflect.Method;
 
 public class PopupUtil {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.ui.popup.util.PopupUtil");
@@ -77,28 +77,11 @@ public class PopupUtil {
   }
 
   public static void setPopupType(@Nonnull final PopupFactory factory, final int type) {
-    try {
-      final Method method = PopupFactory.class.getDeclaredMethod("setPopupType", int.class);
-      method.setAccessible(true);
-      method.invoke(factory, type);
-    }
-    catch (Throwable e) {
-      LOG.error(e);
-    }
+    PopupFactoryHacking.setPopupType(factory, type);
   }
 
   public static int getPopupType(@Nonnull final PopupFactory factory) {
-    try {
-      final Method method = PopupFactory.class.getDeclaredMethod("getPopupType");
-      method.setAccessible(true);
-      final Object result = method.invoke(factory);
-      return result instanceof Integer ? (Integer) result : -1;
-    }
-    catch (Throwable e) {
-      LOG.error(e);
-    }
-
-    return -1;
+    return PopupFactoryHacking.getPopupType(factory);
   }
 
   public static Component getActiveComponent() {
