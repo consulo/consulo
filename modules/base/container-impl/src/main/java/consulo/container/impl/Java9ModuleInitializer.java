@@ -50,7 +50,7 @@ public class Java9ModuleInitializer {
   private static final Method java_lang_Module_addOpens = findMethod(java_lang_Module, "addOpens", String.class, java_lang_Module);
 
   private static final Method java_util_Optional_get = findMethod(java_util_Optional, "get");
-  private static final Method java_lang_module_ModuleFinder_of = findMethod(java_lang_module_ModuleFinder, "of", java_nio_file_Path.arrayType());
+  private static final Method java_lang_module_ModuleFinder_of = findMethod(java_lang_module_ModuleFinder, "of", Array.newInstance(java_nio_file_Path, 0).getClass());
   private static final Method java_lang_module_Configuration_resolve =
           findMethod(java_lang_module_Configuration, "resolve", java_lang_module_ModuleFinder, List.class, java_lang_module_ModuleFinder, Collection.class);
 
