@@ -18,6 +18,7 @@
   <dependencySets>
     <dependencySet>
       <outputDirectory>Consulo/platform/buildSNAPSHOT/modules/consulo.platform.base/lib</outputDirectory>
+      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
       <unpack>false</unpack>
       <includes>
         <include>consulo:consulo-platform-base-plugin</include>

@@ -15,8 +15,6 @@
  */
 package consulo.awt.hacking;
 
-import consulo.logging.Logger;
-
 import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.lang.reflect.Method;
@@ -26,7 +24,6 @@ import java.lang.reflect.Method;
  * @since 2019-11-19
  */
 public class PopupFactoryHacking {
-  private static final Logger LOG = Logger.getInstance(PopupFactoryHacking.class);
 
   public static void setPopupType(@Nonnull final PopupFactory factory, final int type) {
     try {
@@ -34,8 +31,7 @@ public class PopupFactoryHacking {
       method.setAccessible(true);
       method.invoke(factory, type);
     }
-    catch (Throwable e) {
-      LOG.error(e);
+    catch (Throwable ignored) {
     }
   }
 
@@ -46,8 +42,7 @@ public class PopupFactoryHacking {
       final Object result = method.invoke(factory);
       return result instanceof Integer ? (Integer)result : -1;
     }
-    catch (Throwable e) {
-      LOG.error(e);
+    catch (Throwable ignored) {
     }
 
     return -1;

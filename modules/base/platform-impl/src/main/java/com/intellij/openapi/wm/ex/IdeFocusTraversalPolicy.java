@@ -17,11 +17,10 @@ package com.intellij.openapi.wm.ex;
 
 import com.intellij.openapi.editor.impl.EditorComponentImpl;
 import com.intellij.openapi.fileEditor.impl.EditorWindowHolder;
-import com.intellij.util.ReflectionUtil;
+import consulo.awt.hacking.ContainerHacking;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
@@ -50,7 +49,7 @@ public class IdeFocusTraversalPolicy extends LayoutFocusTraversalPolicyExt {
       return null;
     }
 
-    final FocusTraversalPolicy focusTraversalPolicy = getFocusTraversalPolicyAwtImpl(component);
+    final FocusTraversalPolicy focusTraversalPolicy = ContainerHacking.getFocusTraversalPolicyAwtImpl(component);
     if (focusTraversalPolicy != null && focusTraversalPolicy != policyToIgnore) {
       if (focusTraversalPolicy.getClass().getName().indexOf("LegacyGlueFocusTraversalPolicy") >= 0) {
         return component;
@@ -93,10 +92,6 @@ public class IdeFocusTraversalPolicy extends LayoutFocusTraversalPolicyExt {
       }
     }
     return null;
-  }
-
-  private static FocusTraversalPolicy getFocusTraversalPolicyAwtImpl(final JComponent component) {
-    return ReflectionUtil.getField(Container.class, component, FocusTraversalPolicy.class, "focusTraversalPolicy");
   }
 
   protected final boolean accept(final Component aComponent) {

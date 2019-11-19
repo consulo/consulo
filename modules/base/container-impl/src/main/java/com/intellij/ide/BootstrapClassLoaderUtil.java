@@ -22,6 +22,7 @@ import com.intellij.openapi.util.SystemInfoRt;
 import consulo.container.StartupError;
 import consulo.container.boot.ContainerStartup;
 import consulo.container.impl.ContainerLogger;
+import consulo.container.impl.Java9ModuleInitializer;
 import consulo.container.impl.PluginHolderModificator;
 import consulo.container.impl.PluginLoader;
 import consulo.container.plugin.PluginDescriptor;
@@ -104,6 +105,10 @@ public class BootstrapClassLoaderUtil {
     ClassLoader[] parentClassLoaders = getParentClassLoaders();
 
     IdeaPluginClassLoader loader = new IdeaPluginClassLoader(filesToUrls(platformBasePlugin.getClassPath()), parentClassLoaders, platformBasePlugin.getPluginId(), null, platformBaseDirectory);
+
+    if (SystemInfoRt.IS_AT_LEAST_JAVA9) {
+      Java9ModuleInitializer.initializeBaseModules(platformBasePlugin.getClassPath(), loader);
+    }
 
     platformBasePlugin.setLoader(loader);
 
