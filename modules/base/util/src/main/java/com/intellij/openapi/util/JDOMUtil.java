@@ -256,10 +256,13 @@ public class JDOMUtil {
     }
   }
 
-  private static class EmptyTextFilter extends AbstractFilter {
+  private static class EmptyTextFilter extends AbstractFilter<Content> {
     @Override
-    public Object filter(Object obj) {
-      return !(obj instanceof Text) || !CharArrayUtil.containsOnlyWhiteSpaces(((Text)obj).getText());
+    public Content filter(Object obj) {
+      if (obj instanceof Text && CharArrayUtil.containsOnlyWhiteSpaces(((Text)obj).getText())) {
+        return null;
+      }
+      return (Content)obj;
     }
   }
 
