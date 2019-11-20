@@ -25,6 +25,7 @@ import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.CharSequenceReader;
 import com.intellij.util.text.StringFactory;
 import consulo.logging.Logger;
+import consulo.util.jdom.CustomWalker;
 import consulo.util.jdom.JDOMInterner;
 import org.jdom.*;
 import org.jdom.filter.AbstractFilter;
@@ -34,6 +35,9 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.DOMOutputter;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.jdom.output.support.AbstractXMLOutputProcessor;
+import org.jdom.output.support.FormatStack;
+import org.jdom.output.support.Walker;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 import org.xml.sax.EntityResolver;
@@ -96,9 +100,7 @@ public class JDOMUtil {
     if (e1 == null && e2 == null) return true;
     if (e1 == null || e2 == null) return false;
 
-    return Comparing.equal(e1.getName(), e2.getName()) &&
-           attListsEqual(e1.getAttributes(), e2.getAttributes()) &&
-           contentListsEqual(e1.getContent(CONTENT_FILTER), e2.getContent(CONTENT_FILTER));
+    return Comparing.equal(e1.getName(), e2.getName()) && attListsEqual(e1.getAttributes(), e2.getAttributes()) && contentListsEqual(e1.getContent(CONTENT_FILTER), e2.getContent(CONTENT_FILTER));
   }
 
   private static final EmptyTextFilter CONTENT_FILTER = new EmptyTextFilter();
@@ -635,23 +637,29 @@ public class JDOMUtil {
     return result;
   }
 
-  //public static class MyXMLOutputter extends XMLOutputter {
-  //  @Override
-  //  @Nonnull
-  //  public String escapeAttributeEntities(@Nonnull String str) {
-  //    return escapeText(str, false, true);
-  //  }
-  //
-  //  @Override
-  //  @Nonnull
-  //  public String escapeElementEntities(@Nonnull String str) {
-  //    return escapeText(str, false, false);
-  //  }
-  //}
+  private static class XmlProcessor extends AbstractXMLOutputProcessor {
+    @Override
+    protected void attributeEscapedEntitiesFilter(Writer out, FormatStack fstack, String value) throws IOException {
+      if (!fstack.getEscapeOutput()) {
+        // no escaping...
+        write(out, value);
+        return;
+      }
+
+      write(out, escapeText(value, false, true));
+    }
+
+    @Override
+    protected Walker buildWalker(FormatStack fstack, List<? extends Content> content, boolean escape) {
+      if (fstack.getTextMode() != Format.TextMode.TRIM) {
+        throw new IllegalArgumentException("not trim mode unsupported: " + fstack.getTextMode());
+      }
+      return new CustomWalker(content, fstack, escape);
+    }
+  }
 
   public static XMLOutputter newXmlOutputter() {
-    // FIXME [VISTALL] use MyXMLOutputter?
-    return new XMLOutputter();
+    return new XMLOutputter(new XmlProcessor());
   }
 
   private static void printDiagnostics(@Nonnull Element element, String prefix) {
@@ -696,8 +704,7 @@ public class JDOMUtil {
     return info;
   }
 
-  public static void updateFileSet(@Nonnull File[] oldFiles, @Nonnull String[] newFilePaths, @Nonnull Document[] newFileDocuments, String lineSeparator)
-          throws IOException {
+  public static void updateFileSet(@Nonnull File[] oldFiles, @Nonnull String[] newFilePaths, @Nonnull Document[] newFileDocuments, String lineSeparator) throws IOException {
     getLogger().assertTrue(newFilePaths.length == newFileDocuments.length);
 
     ArrayList<String> writtenFilesPaths = new ArrayList<String>();
@@ -826,6 +833,7 @@ public class JDOMUtil {
   }
 
   private static final JDOMInterner ourJDOMInterner = new JDOMInterner();
+
   /**
    * Interns {@code element} to reduce instance count of many identical Elements created after loading JDOM document to memory.
    * For example, after interning <pre>{@code
@@ -833,20 +841,20 @@ public class JDOMUtil {
    *   <component load="true" isDefault="true" name="comp1"/>
    *   <component load="true" isDefault="true" name="comp2"/>
    * </app>}</pre>
-   *
+   * <p>
    * there will be created just one XmlText("\n  ") instead of three for whitespaces between tags,
    * one Attribute("load=true") instead of two equivalent for each component tag etc.
    *
    * <p><h3>Intended usage:</h3>
    * - When you need to keep some part of JDOM tree in memory, use this method before save the element to some collection,
-   *   E.g.: <pre>{@code
+   * E.g.: <pre>{@code
    *   public void readExternal(final Element element) {
    *     myStoredElement = JDOMUtil.internElement(element);
    *   }
    *   }</pre>
    * - When you need to save interned element back to JDOM and/or modify/add it, use {@link ImmutableElement#clone()}
-   *   to obtain mutable modifiable Element.
-   *   E.g.: <pre>{@code
+   * to obtain mutable modifiable Element.
+   * E.g.: <pre>{@code
    *   void writeExternal(Element element) {
    *     for (Attribute a : myStoredElement.getAttributes()) {
    *       element.setAttribute(a.getName(), a.getValue()); // String getters work as before
@@ -863,8 +871,6 @@ public class JDOMUtil {
    * - getParent() method is not implemented (and will throw exception; interning would not make sense otherwise)<br/>
    * - is immutable (all modifications methods like setName(), setParent() etc will throw)<br/>
    * - has {@code clone()} method which will return modifiable org.jdom.Element copy.<br/>
-   *
-   *
    */
   @Nonnull
   public static Element internElement(@Nonnull Element element) {
