@@ -47,20 +47,20 @@ import com.intellij.reference.SoftReference;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.util.IJSwingUtilities;
-import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.OwnerOptional;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.awt.hacking.DialogHacking;
 import consulo.logging.Logger;
 import consulo.ui.SwingUIDecorator;
 import consulo.ui.UIAccess;
 import consulo.ui.desktop.internal.window.JDialogAsUIWindow;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
 import consulo.wm.util.IdeFrameUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -816,7 +816,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
       // http://bugs.sun.com/view_bug.do?bug_id=6614056
       try {
         synchronized (getTreeLock()) {
-          List<?> list = ReflectionUtil.getStaticFieldValue(Dialog.class, List.class, "modalDialogs");
+          List<Dialog> list = DialogHacking.modalDialogs();
           list.remove(this);
         }
       }
