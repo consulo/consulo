@@ -71,6 +71,7 @@ public class Java9ModuleInitializer {
     toResolve.add("consulo.desktop.awt.hacking");
     toResolve.add("consulo.util.rmi");
     toResolve.add("org.jdom");
+    toResolve.add("gnu.trove");
     //toResolve.add("svg.salamander");
     //toResolve.add("org.slf4j");
 

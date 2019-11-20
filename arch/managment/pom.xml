@@ -31,7 +31,7 @@
 
     <jna.version>4.4.0</jna.version>
     <jdom.version>3.0-SNAPSHOT</jdom.version>
-    <trove4j.version>2.0</trove4j.version>
+    <trove4j.version>2.2</trove4j.version>
     <log4j2.version>2.12.1</log4j2.version>
     <guava.version>23.0</guava.version>
     <!--please exclude common logging library from dependency-->
