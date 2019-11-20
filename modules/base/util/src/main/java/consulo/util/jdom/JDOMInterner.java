@@ -11,14 +11,15 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package org.jdom;
+package consulo.util.jdom;
 
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.containers.OpenTHashSet;
 import com.intellij.util.containers.StringInterner;
 import gnu.trove.TObjectHashingStrategy;
-import javax.annotation.Nonnull;
+import org.jdom.*;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class JDOMInterner {

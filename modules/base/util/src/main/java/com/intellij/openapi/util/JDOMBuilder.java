@@ -55,6 +55,7 @@ public class JDOMBuilder {
     private final String myValue;
 
     public AttrContent(final String name, final String value) {
+      super(CType.Text);
       myName = name;
       myValue = value;
     }

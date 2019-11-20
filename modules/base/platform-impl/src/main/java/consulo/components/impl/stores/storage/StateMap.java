@@ -170,7 +170,7 @@ final class StateMap {
     try {
       OutputStreamWriter writer = new OutputStreamWriter(new SnappyOutputStream(byteOut), CharsetToolkit.UTF8_CHARSET);
       try {
-        XMLOutputter xmlOutputter = new JDOMUtil.MyXMLOutputter();
+        XMLOutputter xmlOutputter = JDOMUtil.newXmlOutputter();
         xmlOutputter.setFormat(XML_FORMAT);
         xmlOutputter.output(state, writer);
       }

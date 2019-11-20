@@ -25,9 +25,10 @@ import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.CharSequenceReader;
 import com.intellij.util.text.StringFactory;
 import consulo.logging.Logger;
+import consulo.util.jdom.JDOMInterner;
 import org.jdom.*;
+import org.jdom.filter.AbstractFilter;
 import org.jdom.filter.ElementFilter;
-import org.jdom.filter.Filter;
 import org.jdom.input.DOMBuilder;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.DOMOutputter;
@@ -35,10 +36,10 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.io.*;
@@ -253,9 +254,9 @@ public class JDOMUtil {
     }
   }
 
-  private static class EmptyTextFilter implements Filter {
+  private static class EmptyTextFilter extends AbstractFilter {
     @Override
-    public boolean matches(Object obj) {
+    public Object filter(Object obj) {
       return !(obj instanceof Text) || !CharArrayUtil.containsOnlyWhiteSpaces(((Text)obj).getText());
     }
   }
@@ -541,7 +542,7 @@ public class JDOMUtil {
 
   @Nonnull
   public static XMLOutputter createOutputter(String lineSeparator) {
-    XMLOutputter xmlOutputter = new MyXMLOutputter();
+    XMLOutputter xmlOutputter = newXmlOutputter();
     Format format = Format.getCompactFormat().
             setIndent("  ").
             setTextMode(Format.TextMode.TRIM).
@@ -634,18 +635,23 @@ public class JDOMUtil {
     return result;
   }
 
-  public static class MyXMLOutputter extends XMLOutputter {
-    @Override
-    @Nonnull
-    public String escapeAttributeEntities(@Nonnull String str) {
-      return escapeText(str, false, true);
-    }
+  //public static class MyXMLOutputter extends XMLOutputter {
+  //  @Override
+  //  @Nonnull
+  //  public String escapeAttributeEntities(@Nonnull String str) {
+  //    return escapeText(str, false, true);
+  //  }
+  //
+  //  @Override
+  //  @Nonnull
+  //  public String escapeElementEntities(@Nonnull String str) {
+  //    return escapeText(str, false, false);
+  //  }
+  //}
 
-    @Override
-    @Nonnull
-    public String escapeElementEntities(@Nonnull String str) {
-      return escapeText(str, false, false);
-    }
+  public static XMLOutputter newXmlOutputter() {
+    // FIXME [VISTALL] use MyXMLOutputter?
+    return new XMLOutputter();
   }
 
   private static void printDiagnostics(@Nonnull Element element, String prefix) {

@@ -11,10 +11,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package org.jdom;
+package consulo.util.jdom;
 
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.containers.EmptyIterator;
+import org.jdom.Attribute;
+import org.jdom.AttributeType;
+import org.jdom.Namespace;
+
 import javax.annotation.Nonnull;
 
 import java.util.*;
@@ -22,10 +26,10 @@ import java.util.*;
 class ImmutableSameTypeAttributeList implements List<Attribute> {
   private static final String[] EMPTY_STRING_ARRAY = new String[0];
   private final String[] myNameValues;
-  private final int myType;
+  private final AttributeType myType;
   private final Namespace myNs;
 
-  ImmutableSameTypeAttributeList(@Nonnull String[] nameValues, int type, @Nonnull Namespace ns) {
+  ImmutableSameTypeAttributeList(@Nonnull String[] nameValues, AttributeType type, @Nonnull Namespace ns) {
     myNameValues = nameValues.length == 0 ? EMPTY_STRING_ARRAY : nameValues;
     myType = type;
     myNs = ns;
@@ -33,7 +37,7 @@ class ImmutableSameTypeAttributeList implements List<Attribute> {
 
   @Override
   public Attribute get(int index) {
-    return new ImmutableAttribute(myNameValues[index*2], myNameValues[index*2+1], myType, myNs);
+    return new ImmutableAttribute(myNameValues[index * 2], myNameValues[index * 2 + 1], myType, myNs);
   }
 
   Attribute get(String name, Namespace namespace) {

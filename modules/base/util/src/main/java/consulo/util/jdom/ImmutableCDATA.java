@@ -11,21 +11,21 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package org.jdom;
+package consulo.util.jdom;
+
+import org.jdom.*;
 
 import javax.annotation.Nonnull;
 
-public class ImmutableText extends Text {
-  ImmutableText(@Nonnull String str) {
+public class ImmutableCDATA extends CDATA {
+  ImmutableCDATA(@Nonnull String str) {
     super.setText(str);
   }
 
   @SuppressWarnings("MethodDoesntCallSuperMethod")
   @Override
-  public Text clone() {
-    Text text = new Text();
-    text.value = value;
-    return text;
+  public CDATA clone() {
+    return new CDATA(value);
   }
 
   @Override
@@ -35,7 +35,7 @@ public class ImmutableText extends Text {
 
   //////////////////////////////////////////////////////////////////////////
   @Override
-  public Text setText(String str) {
+  public CDATA setText(String str) {
     throw ImmutableElement.immutableError(this);
   }
 
@@ -50,12 +50,12 @@ public class ImmutableText extends Text {
   }
 
   @Override
-  public Content detach() {
+  public CDATA detach() {
     throw ImmutableElement.immutableError(this);
   }
 
   @Override
-  protected Content setParent(Parent parent) {
+  protected CDATA setParent(Parent parent) {
     throw ImmutableElement.immutableError(this);
     //return null; // to be able to add this to the other element
   }

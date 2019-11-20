@@ -99,7 +99,7 @@
 
         <!--Internal libraries-->
         <include>consulo.internal:trove4j</include>
-        <include>consulo.internal:jdom</include>
+        <include>org.jdom:jdom-core</include>
         <include>consulo.internal:forms_rt</include>
         <include>consulo.internal:svg-salamander</include>
         <include>consulo.internal:javasysmon</include>

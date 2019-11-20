@@ -11,21 +11,24 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package org.jdom;
+package consulo.util.jdom;
+
+import org.jdom.*;
 
 import javax.annotation.Nonnull;
 
-public class ImmutableCDATA extends CDATA {
-  ImmutableCDATA(@Nonnull String str) {
-    super.setText(str);
+class ImmutableAttribute extends Attribute {
+  ImmutableAttribute(@Nonnull String name, @Nonnull String value, AttributeType type, @Nonnull Namespace namespace) {
+    super.setName(name);
+    super.setValue(value);
+    super.setNamespace(namespace);
+    super.setAttributeType(type);
   }
 
   @SuppressWarnings("MethodDoesntCallSuperMethod")
   @Override
-  public Text clone() {
-    CDATA text = new CDATA();
-    text.value = value;
-    return text;
+  public Attribute clone() {
+    return new Attribute(name, value, type, namespace);
   }
 
   @Override
@@ -33,30 +36,35 @@ public class ImmutableCDATA extends CDATA {
     throw ImmutableElement.immutableError(this);
   }
 
-  //////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////
   @Override
-  public Text setText(String str) {
-    throw ImmutableElement.immutableError(this);
-  }
-
-  @Override
-  public void append(String str) {
-    throw ImmutableElement.immutableError(this);
-  }
-
-  @Override
-  public void append(Text text) {
-    throw ImmutableElement.immutableError(this);
-  }
-
-  @Override
-  public Content detach() {
-    throw ImmutableElement.immutableError(this);
-  }
-
-  @Override
-  protected Content setParent(Parent parent) {
+  protected Attribute setParent(Element parent) {
     throw ImmutableElement.immutableError(this);
     //return null; // to be able to add this to the other element
+  }
+
+  @Override
+  public Attribute detach() {
+    throw ImmutableElement.immutableError(this);
+  }
+
+  @Override
+  public Attribute setName(@Nonnull String name) {
+    throw ImmutableElement.immutableError(this);
+  }
+
+  @Override
+  public Attribute setNamespace(Namespace namespace) {
+    throw ImmutableElement.immutableError(this);
+  }
+
+  @Override
+  public Attribute setValue(@Nonnull String value) {
+    throw ImmutableElement.immutableError(this);
+  }
+
+  @Override
+  public Attribute setAttributeType(AttributeType type) {
+    throw ImmutableElement.immutableError(this);
   }
 }

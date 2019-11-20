@@ -70,6 +70,9 @@ public class Java9ModuleInitializer {
 
     toResolve.add("consulo.desktop.awt.hacking");
     toResolve.add("consulo.util.rmi");
+    toResolve.add("org.jdom");
+    //toResolve.add("svg.salamander");
+    //toResolve.add("org.slf4j");
 
     Object bootModuleLayer = staticInvoke(java_lang_ModuleLayer_boot);
 
