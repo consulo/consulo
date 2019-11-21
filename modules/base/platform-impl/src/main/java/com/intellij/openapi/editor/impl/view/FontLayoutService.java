@@ -15,14 +15,14 @@
  */
 package com.intellij.openapi.editor.impl.view;
 
-import consulo.logging.Logger;
 import com.intellij.util.ReflectionUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import consulo.awt.hacking.FontDesignMetricsHacking;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 import sun.font.FontDesignMetrics;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
@@ -98,7 +98,7 @@ public abstract class FontLayoutService {
 
     @Override
     public float charWidth2D(@Nonnull FontMetrics fontMetrics, int codePoint) {
-      if (fontMetrics instanceof FontDesignMetrics) {
+      if (FontDesignMetricsHacking.isFontDesignMetrics(fontMetrics)) {
         if (codePoint < 256 && myGetLatinCharWidthMethod != null) {
           try {
             return (float)myGetLatinCharWidthMethod.invoke(fontMetrics, (char)codePoint);

@@ -69,9 +69,9 @@ public class Java9ModuleInitializer {
     List<String> toResolve = new ArrayList<String>();
 
     toResolve.add("consulo.desktop.awt.hacking");
-    toResolve.add("consulo.util.rmi");
-    toResolve.add("org.jdom");
-    toResolve.add("gnu.trove");
+    //toResolve.add("consulo.util.rmi");
+    //toResolve.add("org.jdom");
+    //toResolve.add("gnu.trove");
     //toResolve.add("svg.salamander");
     //toResolve.add("org.slf4j");
 
@@ -107,6 +107,7 @@ public class Java9ModuleInitializer {
 
     instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "sun.awt", desktopHackingModule);
     instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "sun.java2d", desktopHackingModule);
+    instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "sun.font", desktopHackingModule);
     instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "java.awt", desktopHackingModule);
     instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "javax.swing", desktopHackingModule);
   }

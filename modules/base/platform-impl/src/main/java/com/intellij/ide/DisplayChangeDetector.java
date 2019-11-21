@@ -15,13 +15,16 @@
  */
 package com.intellij.ide;
 
+import consulo.annotations.ReviewAfterMigrationToJRE;
+import consulo.awt.hacking.GraphicsEnvironmentHacking;
 import consulo.logging.Logger;
-import sun.awt.DisplayChangedListener;
 
 import java.awt.*;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+// manybe use Desktop class after migration to jdk 9
+@ReviewAfterMigrationToJRE(9)
 public class DisplayChangeDetector {
   private static final Logger LOG = Logger.getInstance(DisplayChangeDetector.class);
   private static final DisplayChangeDetector INSTANCE = new DisplayChangeDetector();
@@ -31,22 +34,26 @@ public class DisplayChangeDetector {
   }
 
   @SuppressWarnings("FieldCanBeLocal") // we need to keep a strong reference to this listener, as GraphicsEnvironment keeps only weak references to them
-  private final DisplayChangeHandler myHandler = new DisplayChangeHandler();
+  private final Runnable myHandler;
+
   private final List<Listener> myListeners = new CopyOnWriteArrayList<Listener>();
 
   private DisplayChangeDetector() {
+    myHandler = () -> {
+      for (Listener listener : myListeners) {
+        listener.displayChanged();
+      }
+    };
+
     try {
       GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-      env.getScreenDevices();    // init
-      Class<?> aClass = Class.forName("sun.awt.DisplayChangedListener"); // might be absent
 
-      if (aClass.isInstance(env)) { // Headless env does not implement sun.awt.DisplayChangedListener (and lacks addDisplayChangedListener)
-        env.getClass()
-                .getMethod("addDisplayChangedListener", new Class[]{aClass})
-                .invoke(env, myHandler);
-      }
+      env.getScreenDevices();    // init
+
+      GraphicsEnvironmentHacking.addDisplayChangeListener(env, myHandler);
     }
-    catch (HeadlessException ignored) {}
+    catch (HeadlessException ignored) {
+    }
     catch (Throwable t) {
       LOG.error("Cannot setup display change listener", t);
     }
@@ -62,23 +69,5 @@ public class DisplayChangeDetector {
 
   public interface Listener {
     void displayChanged();
-  }
-
-  private class DisplayChangeHandler implements DisplayChangedListener {
-    @Override
-    public void displayChanged() {
-      runActions();
-    }
-
-    @Override
-    public void paletteChanged() {
-      runActions();
-    }
-
-    private void runActions() {
-      for (Listener listener : myListeners) {
-        listener.displayChanged();
-      }
-    }
   }
 }

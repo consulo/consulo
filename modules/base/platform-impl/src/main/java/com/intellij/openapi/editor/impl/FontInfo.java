@@ -5,11 +5,11 @@ import com.intellij.Patches;
 import com.intellij.openapi.editor.impl.view.FontLayoutService;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.awt.hacking.FontDesignMetricsHacking;
 import consulo.logging.Logger;
 import gnu.trove.TIntHashSet;
 import org.intellij.lang.annotations.JdkConstants;
 import sun.font.CompositeGlyphMapper;
-import sun.font.FontDesignMetrics;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -186,7 +186,7 @@ public class FontInfo {
 
   @Nonnull
   public static FontMetrics getFontMetrics(@Nonnull Font font, @Nonnull FontRenderContext fontRenderContext) {
-    return FontDesignMetrics.getMetrics(font, fontRenderContext);
+    return FontDesignMetricsHacking.getMetrics(font, fontRenderContext);
   }
 
   public static FontRenderContext getFontRenderContext(Component component) {

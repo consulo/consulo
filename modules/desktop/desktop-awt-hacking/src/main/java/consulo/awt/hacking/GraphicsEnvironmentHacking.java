@@ -15,6 +15,7 @@
  */
 package consulo.awt.hacking;
 
+import sun.awt.DisplayChangedListener;
 import sun.java2d.SunGraphicsEnvironment;
 
 import javax.annotation.Nullable;
@@ -47,6 +48,22 @@ public class GraphicsEnvironmentHacking {
     }
 
     return null;
+  }
+
+  public static void addDisplayChangeListener(GraphicsEnvironment env, Runnable runnable) throws Throwable {
+    if (env instanceof SunGraphicsEnvironment) {
+      ((SunGraphicsEnvironment)env).addDisplayChangedListener(new DisplayChangedListener() {
+        @Override
+        public void displayChanged() {
+          runnable.run();
+        }
+
+        @Override
+        public void paletteChanged() {
+          runnable.run();
+        }
+      });
+    }
   }
 
   @Nullable
