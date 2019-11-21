@@ -31,10 +31,7 @@ import consulo.container.util.StatCollector;
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ServiceLoader;
+import java.util.*;
 
 /**
  * @author max
@@ -67,6 +64,10 @@ public class BootstrapClassLoaderUtil {
       ClassLoader[] parentClassLoaders = {base.getPluginClassLoader()};
 
       IdeaPluginClassLoader loader = new IdeaPluginClassLoader(filesToUrls(descriptor.getClassPath()), parentClassLoaders, descriptor.getPluginId(), null, moduleDirectory);
+
+      if (SystemInfoRt.IS_AT_LEAST_JAVA9) {
+        descriptor.setModuleLayer(Java9ModuleInitializer.initializeEtcModules(Collections.singletonList(base.getModuleLayer()), descriptor.getClassPath(), loader));
+      }
 
       descriptors.add(descriptor);
 
@@ -107,7 +108,7 @@ public class BootstrapClassLoaderUtil {
     IdeaPluginClassLoader loader = new IdeaPluginClassLoader(filesToUrls(platformBasePlugin.getClassPath()), parentClassLoaders, platformBasePlugin.getPluginId(), null, platformBaseDirectory);
 
     if (SystemInfoRt.IS_AT_LEAST_JAVA9) {
-      Java9ModuleInitializer.initializeBaseModules(platformBasePlugin.getClassPath(), loader);
+      platformBasePlugin.setModuleLayer(Java9ModuleInitializer.initializeBaseModules(platformBasePlugin.getClassPath(), loader));
     }
 
     platformBasePlugin.setLoader(loader);

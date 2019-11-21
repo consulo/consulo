@@ -54,9 +54,9 @@ public class Java9ModuleInitializer {
   private static final Method java_lang_module_Configuration_resolve =
           findMethod(java_lang_module_Configuration, "resolve", java_lang_module_ModuleFinder, List.class, java_lang_module_ModuleFinder, Collection.class);
 
-  public static void initializeBaseModules(List<File> files, final ClassLoader targetClassLoader) {
-    Object emptyPathArray = Array.newInstance(java_nio_file_Path, 0);
+  private static final Object empyArray_java_nio_file_Path = Array.newInstance(java_nio_file_Path, 0);
 
+  private static Object moduleFinderOf(List<File> files) {
     Object paths = Array.newInstance(java_nio_file_Path, files.size());
     for (int i = 0; i < files.size(); i++) {
       File file = files.get(i);
@@ -64,14 +64,34 @@ public class Java9ModuleInitializer {
       Array.set(paths, i, instanceInvoke(java_io_File_toPath, file));
     }
 
-    Object moduleFinder = staticInvoke(java_lang_module_ModuleFinder_of, paths);
+    return staticInvoke(java_lang_module_ModuleFinder_of, paths);
+  }
+
+  private static Object directFunction(final Object returnValue) {
+    return Proxy.newProxyInstance(Java9ModuleInitializer.class.getClassLoader(), new Class[]{java_util_function_Function}, new InvocationHandler() {
+      @Override
+      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        if ("apply".equals(method.getName())) {
+          return returnValue;
+        }
+        throw new UnsupportedOperationException(method.getName());
+      }
+    });
+  }
+
+  /**
+   * @return ModuleLayer
+   */
+  public static Object initializeBaseModules(List<File> files, final ClassLoader targetClassLoader) {
+    Object moduleFinder = moduleFinderOf(files);
 
     List<String> toResolve = new ArrayList<String>();
 
     toResolve.add("consulo.desktop.awt.hacking");
-    //toResolve.add("consulo.util.rmi");
-    //toResolve.add("org.jdom");
-    //toResolve.add("gnu.trove");
+    toResolve.add("consulo.util.rmi");
+    toResolve.add("org.jdom");
+    toResolve.add("gnu.trove");
+    toResolve.add("kava.beans");
     //toResolve.add("svg.salamander");
     //toResolve.add("org.slf4j");
 
@@ -79,23 +99,37 @@ public class Java9ModuleInitializer {
 
     Object confBootModuleLayer = instanceInvoke(java_lang_ModuleLayer_configuration, bootModuleLayer);
 
-    Object configuration =
-            staticInvoke(java_lang_module_Configuration_resolve, moduleFinder, Collections.singletonList(confBootModuleLayer), staticInvoke(java_lang_module_ModuleFinder_of, emptyPathArray),
-                         toResolve);
+    Object configuration = staticInvoke(java_lang_module_Configuration_resolve, moduleFinder, Collections.singletonList(confBootModuleLayer),
+                                        staticInvoke(java_lang_module_ModuleFinder_of, empyArray_java_nio_file_Path), toResolve);
 
-    Object functionLambda = Proxy.newProxyInstance(Java9ModuleInitializer.class.getClassLoader(), new Class[]{java_util_function_Function}, new InvocationHandler() {
-      @Override
-      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if ("apply".equals(method.getName())) {
-          return targetClassLoader;
-        }
-        throw new UnsupportedOperationException(method.getName());
-      }
-    });
+    Object functionLambda = directFunction(targetClassLoader);
 
     Object controller = staticInvoke(java_lang_ModuleLayer_defineModules, configuration, Collections.singletonList(bootModuleLayer), functionLambda);
 
     alohomora(bootModuleLayer, controller);
+
+    return instanceInvoke(java_lang_ModuleLayer$Controller_layout, controller);
+  }
+
+  public static Object initializeEtcModules(List<Object> moduleLayers, List<File> files, final ClassLoader targetClassLoader) {
+    Object moduleFinder = moduleFinderOf(files);
+
+    List<String> toResolve = new ArrayList<String>();
+
+    //TODO [VISTALL] we need resolve all modules, but for now - nothing
+
+    List<Object> layerConfiguration = new ArrayList<Object>(moduleLayers.size());
+    for (Object moduleLayer : moduleLayers) {
+      layerConfiguration.add(instanceInvoke(java_lang_ModuleLayer_configuration, moduleLayer));
+    }
+
+    Object configuration = staticInvoke(java_lang_module_Configuration_resolve, moduleFinder, layerConfiguration, staticInvoke(java_lang_module_ModuleFinder_of, empyArray_java_nio_file_Path), toResolve);
+
+    Object functionLambda = directFunction(targetClassLoader);
+
+    Object controller = staticInvoke(java_lang_ModuleLayer_defineModules, configuration, moduleLayers, functionLambda);
+
+    return instanceInvoke(java_lang_ModuleLayer$Controller_layout, controller);
   }
 
   private static void alohomora(Object bootModuleLayer, Object controller) {

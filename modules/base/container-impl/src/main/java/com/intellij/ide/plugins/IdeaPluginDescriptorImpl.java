@@ -73,6 +73,8 @@ public class IdeaPluginDescriptorImpl extends PluginDescriptorStub {
 
   private boolean myDeleted = false;
   private ClassLoader myLoader;
+  private Object myModuleLayer;
+
   private Collection<HelpSetPath> myHelpSets = Collections.emptyList();
   @Nonnull
   private SimpleMultiMap<String, ExtensionInfo> myExtensions = SimpleMultiMap.emptyMap();
@@ -96,11 +98,6 @@ public class IdeaPluginDescriptorImpl extends PluginDescriptorStub {
     SimpleXmlElement element = SimpleXmlReader.parse(stream);
     readExternal(element, zipFile);
   }
-
-  //public void readExternal(@Nonnull URL url) throws SimpleXmlParsingException {
-  //  SimpleXmlElement element = SimpleXmlReader.parse(url);
-  //  readExternal(element);
-  //}
 
   private void readExternal(@Nonnull SimpleXmlElement element, @Nullable ZipFile zipFile) throws SimpleXmlParsingException {
     final PluginBean pluginBean = PluginBeanParser.parseBean(element, null);
@@ -456,6 +453,14 @@ public class IdeaPluginDescriptorImpl extends PluginDescriptorStub {
 
   public void setLoader(ClassLoader loader) {
     myLoader = loader;
+  }
+
+  public void setModuleLayer(Object moduleLayer) {
+    myModuleLayer = moduleLayer;
+  }
+
+  public Object getModuleLayer() {
+    return myModuleLayer;
   }
 
   @Override

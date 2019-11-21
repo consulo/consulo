@@ -4,6 +4,7 @@ package com.intellij.ide.plugins.cl;
 import com.intellij.diagnostic.PluginException;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.util.containers.ContainerUtilRt;
+import com.intellij.util.containers.HashSet;
 import com.intellij.util.lang.UrlClassLoader;
 
 import javax.annotation.Nonnull;
@@ -28,7 +29,7 @@ public class IdeaPluginClassLoader extends UrlClassLoader {
   private final List<String> myLibDirectories;
 
   public IdeaPluginClassLoader(@Nonnull List<URL> urls, @Nonnull ClassLoader[] parents, PluginId pluginId, String version, File pluginRoot) {
-    super(build().urls(urls).allowLock().useCache());
+    super(build().urls(urls).urlsWithProtectionDomain(new HashSet<URL>(urls)).allowLock().useCache());
     myParents = parents;
     myPluginId = pluginId;
     myPluginVersion = version;

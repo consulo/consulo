@@ -36,7 +36,11 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.security.CodeSource;
 import java.util.*;
 
 import static com.intellij.util.SystemProperties.getUserHome;
@@ -469,7 +473,22 @@ public class PathManager {
 
   @Nullable
   public static String getJarPathForClass(@Nonnull Class aClass) {
-    String resourceRoot = getResourceRoot(aClass, "/" + aClass.getName().replace('.', '/') + ".class");
+    String path = "/" + aClass.getName().replace('.', '/') + ".class";
+    try {
+      CodeSource codeSource = aClass.getProtectionDomain().getCodeSource();
+      if (codeSource != null) {
+        URL location = codeSource.getLocation();
+        if (location != null) {
+          URI uri = location.toURI();
+          return extractRoot(uri.toURL(), path);
+        }
+      }
+    }
+    catch (URISyntaxException | MalformedURLException e) {
+      throw new RuntimeException(e);
+    }
+
+    String resourceRoot = getResourceRoot(aClass, path);
     return resourceRoot != null ? new File(resourceRoot).getAbsolutePath() : null;
   }
 

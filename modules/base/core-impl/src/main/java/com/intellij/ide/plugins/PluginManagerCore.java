@@ -29,6 +29,7 @@ import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.util.BuildNumber;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Couple;
+import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
@@ -39,6 +40,7 @@ import com.intellij.util.lang.UrlClassLoader;
 import consulo.annotations.DeprecationInfo;
 import consulo.application.ApplicationProperties;
 import consulo.container.impl.ContainerLogger;
+import consulo.container.impl.Java9ModuleInitializer;
 import consulo.container.impl.PluginHolderModificator;
 import consulo.container.impl.PluginLoader;
 import consulo.container.impl.parser.ExtensionInfo;
@@ -328,6 +330,22 @@ public class PluginManagerCore {
       classLoaders.add(loader);
     }
     return classLoaders.toArray(new ClassLoader[classLoaders.size()]);
+  }
+
+  @Nonnull
+  static List<Object> getParentModuleLayer(Map<PluginId, ? extends PluginDescriptor> idToDescriptorMap, PluginId[] pluginIds) {
+    final List<Object> result = new ArrayList<>();
+    for (final PluginId id : pluginIds) {
+      PluginDescriptor pluginDescriptor = idToDescriptorMap.get(id);
+      if (pluginDescriptor == null) {
+        continue; // Might be an optional dependency
+      }
+
+      if (pluginDescriptor instanceof IdeaPluginDescriptorImpl) {
+        result.add(((IdeaPluginDescriptorImpl)pluginDescriptor).getModuleLayer());
+      }
+    }
+    return result;
   }
 
   public static int countPlugins(String pluginsPath) {
@@ -735,6 +753,13 @@ public class PluginManagerCore {
 
         final ClassLoader pluginClassLoader =
                 createPluginClassLoader(classPath.toArray(new File[classPath.size()]), parentLoaders.length > 0 ? parentLoaders : new ClassLoader[]{parentLoader}, pluginDescriptor);
+
+        if (SystemInfoRt.IS_AT_LEAST_JAVA9) {
+          List<Object> parentModuleLayer = getParentModuleLayer(idToDescriptorMap, dependentPluginIds);
+
+          pluginDescriptor.setModuleLayer(Java9ModuleInitializer.initializeEtcModules(parentModuleLayer, pluginDescriptor.getClassPath(), pluginClassLoader));
+        }
+
         pluginDescriptor.setLoader(pluginClassLoader);
       }
 

@@ -146,7 +146,7 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
     synchronized (myProcMap) {
       for (Pair<Target, Parameters> pair : myProcMap.keySet()) {
         if (pair.first == target && (configuration == null || pair.second == configuration)) {
-          ContainerUtil.addIfNotNull(myProcMap.get(pair).handler, handlers);
+          ContainerUtil.addIfNotNull(handlers, myProcMap.get(pair).handler);
         }
       }
     }

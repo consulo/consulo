@@ -24,7 +24,7 @@ import consulo.ui.image.Image;
  */
 public class DesktopAppendImageImpl extends RowIcon implements Image {
   public DesktopAppendImageImpl(int iconCount) {
-    super(iconCount, Alignment.CENTER);        
+    super(iconCount, Alignment.CENTER);
   }
 
   @Override
