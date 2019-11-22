@@ -17,7 +17,6 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -28,10 +27,12 @@ import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.pointers.VirtualFilePointerListener;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import consulo.annotations.RequiredWriteAction;
+import consulo.logging.Logger;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.OrderEntryWithTracking;
 import consulo.vfs.ArchiveFileSystem;
@@ -53,6 +54,8 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
   protected final List<OrderEntryWithTracking> myModuleExtensionWithSdkOrderEntries = ContainerUtil.newArrayList();
   protected boolean myStartupActivityPerformed = false;
   private final RootProviderChangeListener myRootProviderChangeListener = new RootProviderChangeListener();
+  private final VirtualFilePointerListener myRootsValidityChangedListener = new VirtualFilePointerListener() {
+  };
 
   protected class BatchSession {
     private int myBatchLevel = 0;
@@ -461,5 +464,10 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
         }
       });
     }
+  }
+
+  @Nonnull
+  public VirtualFilePointerListener getRootsValidityChangedListener() {
+    return myRootsValidityChangedListener;
   }
 }

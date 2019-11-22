@@ -16,13 +16,15 @@
 
 package com.intellij.openapi.roots.impl.libraries;
 
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryProperties;
 import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
 import com.intellij.openapi.vfs.VirtualFile;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -37,7 +39,7 @@ public interface LibraryEx extends Library {
   @Override
   ModifiableModelEx getModifiableModel();
 
-  @javax.annotation.Nullable
+  @Nullable
   PersistentLibraryKind<?> getKind();
 
   LibraryProperties getProperties();
@@ -47,6 +49,13 @@ public interface LibraryEx extends Library {
 
   @Nonnull
   VirtualFile[] getExcludedRoots();
+
+  /**
+   *
+   * @return not null only if it module table
+   */
+  @Nullable
+  Module getModule();
 
   interface ModifiableModelEx extends ModifiableModel {
     void setProperties(LibraryProperties properties);

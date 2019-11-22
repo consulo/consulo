@@ -17,7 +17,6 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.ProjectTopics;
-import consulo.logging.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
@@ -31,6 +30,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
+import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.roots.ModifiableModuleRootLayer;
@@ -38,9 +38,9 @@ import consulo.roots.ModuleRootLayer;
 import consulo.roots.ModuleRootLayerListener;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 /**
@@ -69,7 +69,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   }
 
   @RequiredReadAction
-  RootModelImpl(@Nonnull Element element, @javax.annotation.Nullable ProgressIndicator progressIndicator, @Nonnull ModuleRootManagerImpl moduleRootManager, boolean writable) {
+  RootModelImpl(@Nonnull Element element, @Nullable ProgressIndicator progressIndicator, @Nonnull ModuleRootManagerImpl moduleRootManager, boolean writable) {
     myModuleRootManager = moduleRootManager;
 
     myConfigurationAccessor = new RootConfigurationAccessor();
@@ -202,7 +202,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     return getCurrentLayer().addInvalidModuleEntry(name);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public LibraryOrderEntry findLibraryOrderEntry(@Nonnull Library library) {
     return getCurrentLayer().findLibraryOrderEntry(library);
@@ -521,7 +521,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     return Collections.<String, ModuleRootLayer>unmodifiableSortedMap(myLayers);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public ModuleRootLayer findLayerByName(@Nonnull String name) {
     return myLayers.get(name);

@@ -21,25 +21,30 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkTable;
-import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.projectRoots.SdkTypeId;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.FileTypeManager;
+import com.intellij.openapi.projectRoots.*;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.newvfs.BulkFileListener;
+import com.intellij.openapi.vfs.newvfs.events.VFileCreateEvent;
+import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
+import com.intellij.util.containers.SmartHashSet;
+import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotations.RequiredWriteAction;
 import consulo.fileTypes.ArchiveFileType;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Singleton
 @State(name = "SdkTable", storages = @Storage(value = "sdk.table.xml", roamingType = RoamingType.DISABLED))
@@ -47,35 +52,70 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
   @NonNls
   private static final String ELEMENT_SDK = "sdk";
 
-  private final List<Sdk> mySdks = new ArrayList<>();
+  private final List<SdkImpl> mySdks = new ArrayList<>();
 
   private final Application myApplication;
 
   @Inject
-  public SdkTableImpl(Application application, VirtualFileManager virtualFileManager) {
+  public SdkTableImpl(Application application) {
     myApplication = application;
+    final MessageBusConnection connection = myApplication.getMessageBus().connect();
+
     // support external changes to sdk libraries (Endorsed Standards Override)
-    virtualFileManager.addVirtualFileListener(new VirtualFileListener() {
+    connection.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
+      private final FileTypeManager myFileTypeManager = FileTypeManager.getInstance();
+
       @Override
-      public void fileCreated(@Nonnull VirtualFileEvent event) {
-        updateSdks(event.getFile());
+      public void after(@Nonnull List<? extends VFileEvent> events) {
+        if (!events.isEmpty()) {
+          final Set<Sdk> affected = new SmartHashSet<>();
+          for (VFileEvent event : events) {
+            addAffectedSdk(event, affected);
+          }
+          if (!affected.isEmpty()) {
+            for (Sdk sdk : affected) {
+              ((SdkType)sdk.getSdkType()).setupSdkPaths(sdk);
+            }
+          }
+        }
       }
 
-      private void updateSdks(VirtualFile file) {
-        if (file.isDirectory() || !(file.getFileType() instanceof ArchiveFileType)) {
-          // consider only archive files that may contain libraries
-          return;
+      private void addAffectedSdk(VFileEvent event, Set<? super Sdk> affected) {
+        CharSequence fileName = null;
+        if (event instanceof VFileCreateEvent) {
+          if (((VFileCreateEvent)event).isDirectory()) return;
+          fileName = ((VFileCreateEvent)event).getChildName();
         }
-        for (Sdk sdk : mySdks) {
-          final SdkType sdkType = (SdkType)sdk.getSdkType();
-          final VirtualFile home = sdk.getHomeDirectory();
-          if (home == null) {
-            continue;
+        else {
+          final VirtualFile file = event.getFile();
+
+          if (file != null && file.isValid()) {
+            if (file.isDirectory()) {
+              return;
+            }
+            fileName = file.getNameSequence();
           }
-          if (VfsUtilCore.isAncestor(home, file, true)) {
-            sdkType.setupSdkPaths(sdk);
-            // no need to iterate further assuming the file cannot be under the home of several SDKs
-            break;
+        }
+        if (fileName == null) {
+          final String eventPath = event.getPath();
+          fileName = VfsUtil.extractFileName(eventPath);
+        }
+        if (fileName != null) {
+          // avoid calling getFileType() because it will try to detect file type from content for unknown/text file types
+          // consider only archive files that may contain libraries
+          FileType fileType = myFileTypeManager.getFileTypeByFileName(fileName);
+          if (!(fileType instanceof ArchiveFileType)) {
+            return;
+          }
+        }
+
+        for (Sdk sdk : mySdks) {
+          if (sdk.getSdkType() instanceof JavaSdkType && !affected.contains(sdk)) {
+            final String homePath = sdk.getHomePath();
+            final String eventPath = event.getPath();
+            if (!StringUtil.isEmpty(homePath) && FileUtil.isAncestor(homePath, eventPath, true)) {
+              affected.add(sdk);
+            }
           }
         }
       }
@@ -128,7 +168,9 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
    * Add sdks without write access, and without listener notify
    */
   public void addSdksUnsafe(@Nonnull Collection<? extends Sdk> sdks) {
-    mySdks.addAll(sdks);
+    for (Sdk sdk : sdks) {
+      mySdks.add((SdkImpl)sdk);
+    }
   }
 
   @Override
@@ -136,7 +178,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
   public void addSdk(@Nonnull Sdk sdk) {
     myApplication.assertWriteAccessAllowed();
     myApplication.getMessageBus().syncPublisher(SDK_TABLE_TOPIC).beforeSdkAdded(sdk);
-    mySdks.add(sdk);
+    mySdks.add((SdkImpl)sdk);
     myApplication.getMessageBus().syncPublisher(SDK_TABLE_TOPIC).sdkAdded(sdk);
   }
 
@@ -179,8 +221,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
   }
 
   public static SdkTypeId findSdkTypeByName(String sdkTypeName) {
-    final SdkType[] allSdkTypes = SdkType.EP_NAME.getExtensions();
-    for (final SdkType type : allSdkTypes) {
+    for (final SdkType type : SdkType.EP_NAME.getExtensionList()) {
       if (type.getName().equals(sdkTypeName)) {
         return type;
       }
@@ -196,11 +237,11 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
 
   @Override
   public void loadState(Element element) {
-    Iterator<Sdk> iterator = mySdks.iterator();
+    Iterator<SdkImpl> iterator = mySdks.iterator();
     while (iterator.hasNext()) {
-      Sdk sdk = iterator.next();
+      SdkImpl sdk = iterator.next();
 
-      if(!sdk.isPredefined()) {
+      if (!sdk.isPredefined()) {
         iterator.remove();
       }
     }
@@ -209,7 +250,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
 
     for (final Element child : children) {
       final SdkImpl sdk = new SdkImpl(this, null, null);
-      sdk.loadState(child);
+      sdk.readExternal(child, this);
       mySdks.add(sdk);
     }
   }
@@ -219,7 +260,9 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
     Element element = new Element("SdkTable");
     for (Sdk sdk : mySdks) {
       if (!sdk.isPredefined()) {
-        element.addContent(((SdkImpl)sdk).getState().setName(ELEMENT_SDK));
+        Element e = new Element(ELEMENT_SDK);
+        ((SdkImpl)sdk).writeExternal(e);
+        element.addContent(e);
       }
     }
     return element;

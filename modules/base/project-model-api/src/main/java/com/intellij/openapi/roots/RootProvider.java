@@ -17,17 +17,19 @@ package com.intellij.openapi.roots;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.vfs.VirtualFile;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.EventListener;
 
 /**
- *  Root provider for order entry
- *  @author dsl
+ * Root provider for order entry
+ *
+ * @author dsl
  */
 public interface RootProvider {
   @Nonnull
   String[] getUrls(@Nonnull OrderRootType rootType);
+
   @Nonnull
   VirtualFile[] getFiles(@Nonnull OrderRootType rootType);
 
@@ -36,6 +38,8 @@ public interface RootProvider {
   }
 
   void addRootSetChangedListener(@Nonnull RootSetChangedListener listener);
+
   void addRootSetChangedListener(@Nonnull RootSetChangedListener listener, @Nonnull Disposable parentDisposable);
+
   void removeRootSetChangedListener(@Nonnull RootSetChangedListener listener);
 }

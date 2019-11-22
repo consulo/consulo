@@ -24,21 +24,17 @@ import com.intellij.openapi.roots.libraries.LibraryTablePresentation;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.util.Pair;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
 /**
- *  @author dsl
+ * @author dsl
  */
 @Singleton
-@State(
-  name = "libraryTable",
-  storages = {
-   @Storage( file = StoragePathMacros.PROJECT_CONFIG_DIR + "/libraries/", stateSplitter = ProjectLibraryTable.LibraryStateSplitter.class)
-    }
-)
+@State(name = "libraryTable", storages = @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/libraries/", stateSplitter = ProjectLibraryTable.LibraryStateSplitter.class))
 public class ProjectLibraryTable extends LibraryTableBase {
   private static final LibraryTablePresentation PROJECT_LIBRARY_TABLE_PRESENTATION = new LibraryTablePresentation() {
     @Override
@@ -59,6 +55,18 @@ public class ProjectLibraryTable extends LibraryTableBase {
 
   public static LibraryTable getInstance(Project project) {
     return ServiceManager.getService(project, ProjectLibraryTable.class);
+  }
+
+  private final Project myProject;
+
+  @Inject
+  public ProjectLibraryTable(Project project) {
+    myProject = project;
+  }
+
+  @Nonnull
+  public Project getProject() {
+    return myProject;
   }
 
   @Override

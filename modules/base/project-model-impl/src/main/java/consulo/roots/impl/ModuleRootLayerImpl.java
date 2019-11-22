@@ -17,7 +17,6 @@ package consulo.roots.impl;
 
 import com.google.common.base.Predicate;
 import com.intellij.openapi.Disposable;
-import consulo.logging.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
@@ -30,11 +29,13 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.pointers.VirtualFilePointerListener;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.RequiredReadAction;
+import consulo.logging.Logger;
 import consulo.module.extension.*;
 import consulo.module.extension.impl.ModuleExtensionImpl;
 import consulo.module.extension.impl.ModuleExtensionIndexCache;
@@ -45,9 +46,10 @@ import consulo.roots.ModifiableModuleRootLayer;
 import consulo.roots.orderEntry.OrderEntrySerializationUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 /**
@@ -959,5 +961,10 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     if (entry != null) {
       myOrderEntries.add(0, entry);
     }
+  }
+
+  @NotNull
+  public VirtualFilePointerListener getRootsChangedListener() {
+    return ProjectRootManagerImpl.getInstanceImpl(getProject()).getRootsValidityChangedListener();
   }
 }

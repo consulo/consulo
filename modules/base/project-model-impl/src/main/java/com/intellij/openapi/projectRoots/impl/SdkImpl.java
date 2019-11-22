@@ -1,49 +1,46 @@
-/*
- * Copyright 2000-2012 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.projectRoots.impl;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.PersistentStateComponent;
-import consulo.logging.Logger;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.projectRoots.*;
-import com.intellij.openapi.projectRoots.ex.SdkRoot;
-import com.intellij.openapi.projectRoots.ex.SdkRootContainer;
 import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.RootProvider;
+import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
 import com.intellij.openapi.roots.impl.RootProviderBaseImpl;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.StandardFileSystems;
-import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.containers.ContainerUtil;
+import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
+import com.intellij.openapi.vfs.pointers.VirtualFilePointerListener;
+import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
+import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.Override;
+import java.lang.String;
+import java.lang.SuppressWarnings;
 
-import java.util.ArrayList;
-import java.util.List;
+public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, Disposable {
+  private static final Logger LOG = Logger.getInstance(SdkImpl.class);
 
-public class SdkImpl extends UserDataHolderBase implements PersistentStateComponent<Element>, Sdk, SdkModificator {
-  public static final Logger LOGGER = Logger.getInstance(SdkImpl.class);
-
+  private String myName;
+  private String myVersionString;
+  private boolean myVersionDefined;
+  private String myHomePath = "";
+  private final RootsAsVirtualFilePointers myRoots;
+  private SdkImpl myOrigin;
+  private SdkAdditionalData myAdditionalData;
+  private final SdkTable mySdkTable;
+  private SdkTypeId mySdkType;
   @NonNls
   public static final String ELEMENT_NAME = "name";
   @NonNls
@@ -51,33 +48,25 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
   @NonNls
   public static final String ELEMENT_TYPE = "type";
   @NonNls
-  public static final String ELEMENT_VERSION = "version";
+  private static final String ELEMENT_VERSION = "version";
   @NonNls
   private static final String ELEMENT_ROOTS = "roots";
   @NonNls
-  public static final String ELEMENT_HOMEPATH = "homePath";
+  private static final String ELEMENT_HOMEPATH = "homePath";
   @NonNls
   private static final String ELEMENT_ADDITIONAL = "additional";
-
-
-  private final SdkRootContainerImpl myRootContainer;
-  private final SdkTable mySdkTable;
-  private String myName;
-  private String myVersionString;
-  private boolean myVersionDefined = false;
-  private String myHomePath = "";
   private final MyRootProvider myRootProvider = new MyRootProvider();
-  private SdkImpl myOrigin = null;
-  private SdkAdditionalData myAdditionalData = null;
-  private SdkTypeId mySdkType;
+
   private boolean myPredefined;
 
   public SdkImpl(SdkTable sdkTable, String name, SdkTypeId sdkType) {
     mySdkTable = sdkTable;
     mySdkType = sdkType;
-    myRootContainer = new SdkRootContainerImpl(true);
     myName = name;
-    myRootContainer.addProjectRootContainerListener(myRootProvider);
+
+    myRoots = new RootsAsVirtualFilePointers(true, tellAllProjectsTheirRootsAreGoingToChange, this);
+    // register on VirtualFilePointerManager because we want our virtual pointers to be disposed before VFPM to avoid "pointer leaked" diagnostics fired
+    Disposer.register((Disposable)VirtualFilePointerManager.getInstance(), this);
   }
 
   public SdkImpl(SdkTable sdkTable, String name, SdkTypeId sdkType, String homePath, String version) {
@@ -86,13 +75,43 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
     myVersionString = version;
   }
 
+  private static final VirtualFilePointerListener tellAllProjectsTheirRootsAreGoingToChange = new VirtualFilePointerListener() {
+    @Override
+    public void beforeValidityChanged(@Nonnull VirtualFilePointer[] pointers) {
+      //todo check if this sdk is really used in the project
+      for (Project project : ProjectManager.getInstance().getOpenProjects()) {
+        VirtualFilePointerListener listener = ((ProjectRootManagerImpl)ProjectRootManager.getInstance(project)).getRootsValidityChangedListener();
+        listener.beforeValidityChanged(pointers);
+      }
+    }
+
+    @Override
+    public void validityChanged(@Nonnull VirtualFilePointer[] pointers) {
+      //todo check if this sdk is really used in the project
+      for (Project project : ProjectManager.getInstance().getOpenProjects()) {
+        VirtualFilePointerListener listener = ((ProjectRootManagerImpl)ProjectRootManager.getInstance(project)).getRootsValidityChangedListener();
+        listener.validityChanged(pointers);
+      }
+    }
+  };
+
+  @Nonnull
+  public static VirtualFilePointerListener getGlobalVirtualFilePointerListener() {
+    return tellAllProjectsTheirRootsAreGoingToChange;
+  }
+
+  @Override
+  public void dispose() {
+  }
+
   @Override
   @Nonnull
   public SdkTypeId getSdkType() {
-    if (mySdkType == null) {
-      mySdkType = mySdkTable.getDefaultSdkType();
+    SdkTypeId sdkType = mySdkType;
+    if (sdkType == null) {
+      mySdkType = sdkType = mySdkTable.getDefaultSdkType();
     }
-    return mySdkType;
+    return sdkType;
   }
 
   @Override
@@ -146,13 +165,20 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
     return StandardFileSystems.local().findFileByPath(myHomePath);
   }
 
-  @Override
-  public void loadState(Element element) {
-    myName = element.getChild(ELEMENT_NAME).getAttributeValue(ATTRIBUTE_VALUE);
+  public void readExternal(@Nonnull Element element) {
+    readExternal(element, null);
+  }
+
+  public void readExternal(@Nonnull Element element, @Nullable SdkTable sdkTable) throws InvalidDataException {
+    Element elementName = assertNotMissing(element, ELEMENT_NAME);
+    myName = elementName.getAttributeValue(ATTRIBUTE_VALUE);
     final Element typeChild = element.getChild(ELEMENT_TYPE);
     final String sdkTypeName = typeChild != null ? typeChild.getAttributeValue(ATTRIBUTE_VALUE) : null;
     if (sdkTypeName != null) {
-      mySdkType = mySdkTable.getSdkTypeByName(sdkTypeName);
+      if (sdkTable == null) {
+        sdkTable = mySdkTable;
+      }
+      mySdkType = sdkTable.getSdkTypeByName(sdkTypeName);
     }
     final Element version = element.getChild(ELEMENT_VERSION);
 
@@ -164,12 +190,14 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
     else {
       myVersionDefined = false;
     }
-    myHomePath = element.getChild(ELEMENT_HOMEPATH).getAttributeValue(ATTRIBUTE_VALUE);
-    myRootContainer.loadState(element.getChild(ELEMENT_ROOTS));
+    Element homePath = assertNotMissing(element, ELEMENT_HOMEPATH);
+    myHomePath = homePath.getAttributeValue(ATTRIBUTE_VALUE);
+    Element elementRoots = assertNotMissing(element, ELEMENT_ROOTS);
+    myRoots.readExternal(elementRoots);
 
     final Element additional = element.getChild(ELEMENT_ADDITIONAL);
     if (additional != null) {
-      LOGGER.assertTrue(mySdkType != null);
+      LOG.assertTrue(mySdkType != null);
       myAdditionalData = mySdkType.loadAdditionalData(this, additional);
     }
     else {
@@ -178,13 +206,16 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
   }
 
   @Nonnull
-  @Override
-  public Element getState() {
-    Element element = new Element("state");
+  private static Element assertNotMissing(@Nonnull Element parent, @Nonnull String childName) {
+    Element child = parent.getChild(childName);
+    if (child == null) throw new InvalidDataException("mandatory element '" + childName + "' is missing: " + parent);
+    return child;
+  }
 
-    final Element nameElement = new Element(ELEMENT_NAME);
-    nameElement.setAttribute(ATTRIBUTE_VALUE, myName);
-    element.addContent(nameElement);
+  public void writeExternal(@Nonnull Element element) {
+    final Element name = new Element(ELEMENT_NAME);
+    name.setAttribute(ATTRIBUTE_VALUE, myName);
+    element.addContent(name);
 
     if (mySdkType != null) {
       final Element sdkType = new Element(ELEMENT_TYPE);
@@ -202,15 +233,16 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
     home.setAttribute(ATTRIBUTE_VALUE, myHomePath);
     element.addContent(home);
 
-    element.addContent(myRootContainer.getState().setName(ELEMENT_ROOTS));
+    Element roots = new Element(ELEMENT_ROOTS);
+    myRoots.writeExternal(roots);
+    element.addContent(roots);
 
     Element additional = new Element(ELEMENT_ADDITIONAL);
     if (myAdditionalData != null) {
-      LOGGER.assertTrue(mySdkType != null);
+      LOG.assertTrue(mySdkType != null);
       mySdkType.saveAdditionalData(myAdditionalData, additional);
     }
     element.addContent(additional);
-    return element;
   }
 
   @Override
@@ -218,14 +250,14 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
     final boolean changes = myHomePath == null ? path != null : !myHomePath.equals(path);
     myHomePath = path;
     if (changes) {
-      myVersionString = null; // clear cached value if home path changed
-      myVersionDefined = false;
+      resetVersionString(); // clear cached value if home path changed
     }
   }
 
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
   @Override
   @Nonnull
-  public Object clone() {
+  public SdkImpl clone() {
     SdkImpl newSdk = new SdkImpl(mySdkTable, "", mySdkType);
     copyTo(newSdk);
     return newSdk;
@@ -241,88 +273,36 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
     myPredefined = predefined;
   }
 
-  public void copyTo(SdkImpl dest) {
+  void copyTo(@Nonnull SdkImpl dest) {
     final String name = getName();
     dest.setName(name);
     dest.setHomePath(getHomePath());
-    dest.setPredefined(isPredefined());
-    if (myVersionDefined) {
-      dest.setVersionString(getVersionString());
-    }
-    else {
-      dest.resetVersionString();
-    }
+    dest.setPredefined(myPredefined);
+    dest.myVersionDefined = myVersionDefined;
+    dest.myVersionString = myVersionString;
     dest.setSdkAdditionalData(getSdkAdditionalData());
-    dest.myRootContainer.startChange();
-    dest.myRootContainer.removeAllRoots();
-    for (OrderRootType rootType : OrderRootType.getAllTypes()) {
-      copyRoots(myRootContainer, dest.myRootContainer, rootType);
-    }
-    dest.myRootContainer.finishChange();
-  }
-
-  private static void copyRoots(SdkRootContainer srcContainer, SdkRootContainer destContainer, OrderRootType type) {
-    final SdkRoot[] newRoots = srcContainer.getRoots(type);
-    for (SdkRoot newRoot : newRoots) {
-      destContainer.addRoot(newRoot, type);
-    }
+    dest.myRoots.copyRootsFrom(myRoots);
+    dest.myRootProvider.rootsChanged();
   }
 
   private class MyRootProvider extends RootProviderBaseImpl implements ProjectRootListener {
     @Override
     @Nonnull
     public String[] getUrls(@Nonnull OrderRootType rootType) {
-      final SdkRoot[] rootFiles = myRootContainer.getRoots(rootType);
-      final ArrayList<String> result = new ArrayList<String>();
-      for (SdkRoot rootFile : rootFiles) {
-        ContainerUtil.addAll(result, rootFile.getUrls());
-      }
-      return ArrayUtil.toStringArray(result);
+      return myRoots.getUrls(rootType);
     }
 
     @Override
     @Nonnull
     public VirtualFile[] getFiles(@Nonnull final OrderRootType rootType) {
-      return myRootContainer.getRootFiles(rootType);
-    }
-
-    private final List<RootSetChangedListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
-
-    @Override
-    public void addRootSetChangedListener(@Nonnull RootSetChangedListener listener) {
-      assert !myListeners.contains(listener);
-      myListeners.add(listener);
-      super.addRootSetChangedListener(listener);
-    }
-
-    @Override
-    public void addRootSetChangedListener(@Nonnull final RootSetChangedListener listener, @Nonnull Disposable parentDisposable) {
-      super.addRootSetChangedListener(listener, parentDisposable);
-      Disposer.register(parentDisposable, new Disposable() {
-        @Override
-        public void dispose() {
-          removeRootSetChangedListener(listener);
-        }
-      });
-    }
-
-    @Override
-    public void removeRootSetChangedListener(@Nonnull RootSetChangedListener listener) {
-      super.removeRootSetChangedListener(listener);
-      myListeners.remove(listener);
+      return myRoots.getFiles(rootType);
     }
 
     @Override
     public void rootsChanged() {
-      if (myListeners.isEmpty()) {
-        return;
+      if (myDispatcher.hasListeners()) {
+        ApplicationManager.getApplication().runWriteAction(this::fireRootSetChanged);
       }
-      ApplicationManager.getApplication().runWriteAction(new Runnable() {
-        @Override
-        public void run() {
-          fireRootSetChanged();
-        }
-      });
     }
   }
 
@@ -330,19 +310,18 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
   @Override
   @Nonnull
   public SdkModificator getSdkModificator() {
-    SdkImpl sdk = (SdkImpl)clone();
+    SdkImpl sdk = clone();
     sdk.myOrigin = this;
-    sdk.myRootContainer.startChange();
-    sdk.update();
     return sdk;
   }
 
   @Override
   public void commitChanges() {
-    LOGGER.assertTrue(isWritable());
-    myRootContainer.finishChange();
+    LOG.assertTrue(isWritable());
+
     copyTo(myOrigin);
     myOrigin = null;
+    Disposer.dispose(this);
   }
 
   @Override
@@ -355,34 +334,46 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
     myAdditionalData = data;
   }
 
+  @Nonnull
   @Override
-  public VirtualFile[] getRoots(OrderRootType rootType) {
-    final SdkRoot[] roots = myRootContainer.getRoots(rootType); // use getRoots() cause the data is most up-to-date there
-    final List<VirtualFile> files = new ArrayList<VirtualFile>(roots.length);
-    for (SdkRoot root : roots) {
-      ContainerUtil.addAll(files, root.getVirtualFiles());
-    }
-    return VfsUtilCore.toVirtualFileArray(files);
+  public VirtualFile[] getRoots(@Nonnull OrderRootType rootType) {
+    return myRoots.getFiles(rootType);
+  }
+
+  @Nonnull
+  @Override
+  public String[] getUrls(@Nonnull OrderRootType rootType) {
+    return myRoots.getUrls(rootType);
   }
 
   @Override
   public void addRoot(@Nonnull VirtualFile root, @Nonnull OrderRootType rootType) {
-    myRootContainer.addRoot(root, rootType);
+    myRoots.addRoot(root, rootType);
+  }
+
+  @Override
+  public void addRoot(@Nonnull String url, @Nonnull OrderRootType rootType) {
+    myRoots.addRoot(url, rootType);
   }
 
   @Override
   public void removeRoot(@Nonnull VirtualFile root, @Nonnull OrderRootType rootType) {
-    myRootContainer.removeRoot(root, rootType);
+    myRoots.removeRoot(root, rootType);
   }
 
   @Override
-  public void removeRoots(OrderRootType rootType) {
-    myRootContainer.removeAllRoots(rootType);
+  public void removeRoot(@Nonnull String url, @Nonnull OrderRootType rootType) {
+    myRoots.removeRoot(url, rootType);
+  }
+
+  @Override
+  public void removeRoots(@Nonnull OrderRootType rootType) {
+    myRoots.removeAllRoots(rootType);
   }
 
   @Override
   public void removeAllRoots() {
-    myRootContainer.removeAllRoots();
+    myRoots.removeAllRoots();
   }
 
   @Override
@@ -390,12 +381,8 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
     return myOrigin != null;
   }
 
-  public void update() {
-    myRootContainer.update();
-  }
-
   @Override
   public String toString() {
-    return getName() + ": " + getVersionString() + " (" + getHomePath() + ")";
+    return myName + (myVersionDefined ? ": " + myVersionString : "") + " (" + myHomePath + ")";
   }
 }

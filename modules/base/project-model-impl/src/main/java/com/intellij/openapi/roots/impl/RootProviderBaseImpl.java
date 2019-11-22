@@ -25,7 +25,8 @@ import javax.annotation.Nonnull;
  *  @author dsl
  */
 public abstract class RootProviderBaseImpl implements RootProvider {
-  private final EventDispatcher<RootSetChangedListener> myDispatcher = EventDispatcher.create(RootSetChangedListener.class);
+  protected final EventDispatcher<RootSetChangedListener> myDispatcher = EventDispatcher.create(RootSetChangedListener.class);
+
   @Override
   public void addRootSetChangedListener(@Nonnull RootSetChangedListener listener) {
     myDispatcher.addListener(listener);
@@ -44,5 +45,4 @@ public abstract class RootProviderBaseImpl implements RootProvider {
   public void fireRootSetChanged() {
     myDispatcher.getMulticaster().rootSetChanged(this);
   }
-
 }

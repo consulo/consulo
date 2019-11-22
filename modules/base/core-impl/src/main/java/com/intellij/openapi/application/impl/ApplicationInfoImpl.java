@@ -38,6 +38,10 @@ public class ApplicationInfoImpl {
     return myInPerformanceTest;
   }
 
+  public static boolean isInStressTest() {
+    return false;
+  }
+
   public static void setInPerformanceTest(boolean inPerformanceTest) {
     myInPerformanceTest = inPerformanceTest;
   }
