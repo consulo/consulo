@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2000-2012 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.logging.internal;
+package com.intellij.util.containers;
 
-import consulo.logging.attachment.AttachmentFactory;
-import consulo.util.nodep.ServiceLoaderUtil;
+import java.util.Collection;
 
-/**
- * @author VISTALL
- * @since 2019-08-10
- */
-public class AttachmentFactoryInternal {
-  private static final AttachmentFactory ourInstance = ServiceLoaderUtil.loadSingleOrError(AttachmentFactory.class);
+@SuppressWarnings("ClassNameSameAsAncestorName")
+class LinkedHashSet<E> extends java.util.LinkedHashSet<E> {
+  public LinkedHashSet() { }
 
-  public static AttachmentFactory get() {
-    return ourInstance;
+  public LinkedHashSet(Collection<? extends E> collection) {
+    super(collection);
+  }
+
+  public LinkedHashSet(int i, float v) {
+    super(i, v);
+  }
+
+  public LinkedHashSet(int i) {
+    super(i);
+  }
+
+  public void clear() {
+    if (size() == 0) return; // optimization
+    super.clear();
   }
 }

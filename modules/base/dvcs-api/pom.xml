@@ -38,7 +38,7 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-util-rt</artifactId>
+      <artifactId>consulo-util</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

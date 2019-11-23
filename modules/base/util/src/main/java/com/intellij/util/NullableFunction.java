@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2000-2012 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.logging.internal;
-
-import consulo.logging.attachment.AttachmentFactory;
-import consulo.util.nodep.ServiceLoaderUtil;
+package com.intellij.util;
 
 /**
- * @author VISTALL
- * @since 2019-08-10
+ * @author peter
  */
-public class AttachmentFactoryInternal {
-  private static final AttachmentFactory ourInstance = ServiceLoaderUtil.loadSingleOrError(AttachmentFactory.class);
+public interface NullableFunction<Param, Result> extends Function<Param, Result> {
+  @Override
+  @javax.annotation.Nullable
+  Result fun(final Param param);
 
-  public static AttachmentFactory get() {
-    return ourInstance;
-  }
+  /**
+   * @see FunctionUtil#nullConstant()
+   */
+  NullableFunction NULL = new NullableFunction() {
+    @Override
+    public Object fun(final Object o) {
+      return null;
+    }
+  };
 }

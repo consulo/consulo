@@ -13,19 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.logging.internal;
+package com.intellij.util.lang;
 
-import consulo.logging.attachment.AttachmentFactory;
-import consulo.util.nodep.ServiceLoaderUtil;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 2019-08-10
+ * @since 2019-07-15
+ * <p>
+ * FIXME [VISTALL] make more clear impl ?
  */
-public class AttachmentFactoryInternal {
-  private static final AttachmentFactory ourInstance = ServiceLoaderUtil.loadSingleOrError(AttachmentFactory.class);
+final class IntHashSet {
+  private final Set<Integer> impl;
 
-  public static AttachmentFactory get() {
-    return ourInstance;
+  IntHashSet() {
+    this(10);
+  }
+
+  IntHashSet(int capacity) {
+    impl = new HashSet<Integer>(capacity);
+  }
+
+  void add(int value) {
+    impl.add(value);
+  }
+
+  boolean contains(int value) {
+    return impl.contains(value);
+  }
+
+  int[] toArray() {
+    int[] array = new int[impl.size()];
+    int i = 0;
+    for (Integer val : impl) {
+      array[i++] = val;
+    }
+    return array;
   }
 }

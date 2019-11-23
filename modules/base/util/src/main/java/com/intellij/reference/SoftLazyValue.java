@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2000-2012 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.logging.internal;
+package com.intellij.reference;
 
-import consulo.logging.attachment.AttachmentFactory;
-import consulo.util.nodep.ServiceLoaderUtil;
+import javax.annotation.Nonnull;
+
+import java.lang.ref.SoftReference;
 
 /**
- * @author VISTALL
- * @since 2019-08-10
+ * @author Dmitry Avdeev
+ * @since 25.05.2012
  */
-public class AttachmentFactoryInternal {
-  private static final AttachmentFactory ourInstance = ServiceLoaderUtil.loadSingleOrError(AttachmentFactory.class);
+public abstract class SoftLazyValue<T> {
+  private SoftReference<T> myReference;
 
-  public static AttachmentFactory get() {
-    return ourInstance;
+  public T getValue() {
+    T t;
+    if (myReference == null || (t = myReference.get()) == null) {
+      t = compute();
+      myReference = new SoftReference<T>(t);
+    }
+    return t;
   }
+
+  @Nonnull
+  protected abstract T compute();
 }

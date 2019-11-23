@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2000-2012 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.logging.internal;
+package com.intellij.util.containers;
 
-import consulo.logging.attachment.AttachmentFactory;
-import consulo.util.nodep.ServiceLoaderUtil;
+import java.util.Map;
 
-/**
- * @author VISTALL
- * @since 2019-08-10
- */
-public class AttachmentFactoryInternal {
-  private static final AttachmentFactory ourInstance = ServiceLoaderUtil.loadSingleOrError(AttachmentFactory.class);
+@SuppressWarnings("ClassNameSameAsAncestorName")
+class LinkedHashMap<K, V> extends java.util.LinkedHashMap<K, V> {
+  public LinkedHashMap() { }
 
-  public static AttachmentFactory get() {
-    return ourInstance;
+  public LinkedHashMap(int i, float v) {
+    super(i, v);
+  }
+
+  public LinkedHashMap(int i) {
+    super(i);
+  }
+
+  public <K1 extends K, V1 extends V> LinkedHashMap(Map<K1, V1> map) {
+    super(map);
+  }
+
+  public void clear() {
+    if (size() == 0) return; // optimization
+    super.clear();
   }
 }

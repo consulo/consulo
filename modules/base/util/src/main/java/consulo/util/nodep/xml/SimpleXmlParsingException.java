@@ -13,19 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.logging.internal;
+package consulo.util.nodep.xml;
 
-import consulo.logging.attachment.AttachmentFactory;
-import consulo.util.nodep.ServiceLoaderUtil;
+import java.io.IOException;
 
 /**
  * @author VISTALL
- * @since 2019-08-10
+ * @since 2019-07-17
  */
-public class AttachmentFactoryInternal {
-  private static final AttachmentFactory ourInstance = ServiceLoaderUtil.loadSingleOrError(AttachmentFactory.class);
+public class SimpleXmlParsingException extends IOException {
+  public SimpleXmlParsingException() {
+  }
 
-  public static AttachmentFactory get() {
-    return ourInstance;
+  public SimpleXmlParsingException(String message) {
+    super(message);
+  }
+
+  public SimpleXmlParsingException(String message, Throwable cause) {
+    super(message, cause);
+  }
+
+  public SimpleXmlParsingException(Throwable cause) {
+    super(cause);
   }
 }

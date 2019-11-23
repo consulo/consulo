@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.logging.internal;
+package com.intellij.util;
 
-import consulo.logging.attachment.AttachmentFactory;
-import consulo.util.nodep.ServiceLoaderUtil;
+public interface Consumer<T> {
+  Consumer EMPTY_CONSUMER = new Consumer() {
+    public void consume(final Object t) {
+    }
+  };
 
-/**
- * @author VISTALL
- * @since 2019-08-10
- */
-public class AttachmentFactoryInternal {
-  private static final AttachmentFactory ourInstance = ServiceLoaderUtil.loadSingleOrError(AttachmentFactory.class);
+  /**
+   * @param t consequently takes value of each element of the set this processor is passed to for processing.
+   * t is supposed to be a not-null value. If you need to pass {@code null}s to the consumer use {@link NullableConsumer} instead
+   */
+  void consume(T t);
 
-  public static AttachmentFactory get() {
-    return ourInstance;
-  }
 }

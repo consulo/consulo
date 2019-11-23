@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.logging.internal;
+package consulo.util.nodep;
 
-import consulo.logging.attachment.AttachmentFactory;
-import consulo.util.nodep.ServiceLoaderUtil;
+import javax.annotation.Nonnull;
+
+import java.util.Iterator;
+import java.util.ServiceLoader;
 
 /**
  * @author VISTALL
- * @since 2019-08-10
+ * @since 19-Oct-17
  */
-public class AttachmentFactoryInternal {
-  private static final AttachmentFactory ourInstance = ServiceLoaderUtil.loadSingleOrError(AttachmentFactory.class);
-
-  public static AttachmentFactory get() {
-    return ourInstance;
+public class ServiceLoaderUtil {
+  @Nonnull
+  public static <T> T loadSingleOrError(@Nonnull Class<T> clazz) {
+    ServiceLoader<T> serviceLoader = ServiceLoader.load(clazz, clazz.getClassLoader());
+    Iterator<T> iterator = serviceLoader.iterator();
+    if (iterator.hasNext()) {
+      return iterator.next();
+    }
+    throw new Error("Unable to find '" + clazz.getName() + "' implementation");
   }
 }

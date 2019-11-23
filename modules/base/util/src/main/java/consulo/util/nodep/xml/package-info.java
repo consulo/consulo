@@ -13,19 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.logging.internal;
-
-import consulo.logging.attachment.AttachmentFactory;
-import consulo.util.nodep.ServiceLoaderUtil;
 
 /**
- * @author VISTALL
- * @since 2019-08-10
+ * Xml wrapper over builtin xml reader, more simplified for usage
  */
-public class AttachmentFactoryInternal {
-  private static final AttachmentFactory ourInstance = ServiceLoaderUtil.loadSingleOrError(AttachmentFactory.class);
-
-  public static AttachmentFactory get() {
-    return ourInstance;
-  }
-}
+package consulo.util.nodep.xml;

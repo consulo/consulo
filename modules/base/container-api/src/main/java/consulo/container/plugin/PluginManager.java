@@ -17,7 +17,7 @@ package consulo.container.plugin;
 
 import com.intellij.openapi.extensions.PluginId;
 import consulo.container.plugin.internal.PluginManagerInternal;
-import consulo.util.ServiceLoaderUtil;
+import consulo.util.nodep.ServiceLoaderUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

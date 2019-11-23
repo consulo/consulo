@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.logging.internal;
+package com.intellij.openapi.util;
 
-import consulo.logging.attachment.AttachmentFactory;
-import consulo.util.nodep.ServiceLoaderUtil;
+import javax.annotation.Nonnull;
 
 /**
- * @author VISTALL
- * @since 2019-08-10
+ * @author Konstantin Bulenkov
  */
-public class AttachmentFactoryInternal {
-  private static final AttachmentFactory ourInstance = ServiceLoaderUtil.loadSingleOrError(AttachmentFactory.class);
+public class Couple<T> extends Pair<T, T> {
+  private static final Couple EMPTY_COUPLE = of(null, null);
 
-  public static AttachmentFactory get() {
-    return ourInstance;
+  public Couple(T first, T second) {
+    super(first, second);
+  }
+
+  @Nonnull
+  public static <T> Couple<T> of(T first, T second) {
+    return new Couple<T>(first, second);
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T> Couple<T> getEmpty() {
+    return EMPTY_COUPLE;
   }
 }
