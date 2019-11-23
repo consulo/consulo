@@ -15,6 +15,8 @@
  */
 package consulo.stream;
 
+import consulo.annotations.ReviewAfterMigrationToJRE;
+
 import java.util.Objects;
 import java.util.Spliterator;
 import java.util.Spliterators;
@@ -27,6 +29,7 @@ import java.util.stream.StreamSupport;
 /**
  * port java 9 code. Use Stream#methodName after migration to java 9+
  */
+@ReviewAfterMigrationToJRE(9)
 public interface StreamJava9 {
   /**
    * Returns a sequential ordered {@code Stream} produced by iterative
