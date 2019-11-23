@@ -38,7 +38,7 @@ public class OrderRootType {
   private static NotNullLazyValue<List<OrderRootType>> ourSortExtensions = NotNullLazyValue.createValue(() -> {
     List<OrderRootType> extensions = new ArrayList<>(EP_NAME.getExtensionList());
     Collections.sort(extensions, (o1, o2) -> o1.getName().compareTo(o2.getName()));
-    return extensions;
+    return Collections.unmodifiableList(extensions);
   });
 
   /**
