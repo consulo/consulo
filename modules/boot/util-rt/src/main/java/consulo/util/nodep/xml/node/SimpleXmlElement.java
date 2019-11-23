@@ -17,6 +17,9 @@ package consulo.util.nodep.xml.node;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.Override;
+import java.lang.String;
+import java.lang.StringBuilder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

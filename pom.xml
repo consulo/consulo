@@ -50,6 +50,10 @@
     <module>modules/autonomic/async-api</module>
     <module>modules/autonomic/util-rmi</module>
 
+    <module>modules/boot/container-api</module>
+    <module>modules/boot/container-impl</module>
+    <module>modules/boot/util-rt</module>
+
     <module>modules/base/annotations</module>
     <module>modules/base/analysis-api</module>
     <module>modules/base/analysis-impl</module>
@@ -60,8 +64,7 @@
     <module>modules/base/core-impl</module>
     <module>modules/base/compiler-api</module>
     <module>modules/base/compiler-impl</module>
-    <module>modules/base/container-api</module>
-    <module>modules/base/container-impl</module>
+
     <module>modules/base/diff-api</module>
     <module>modules/base/diff-impl</module>
     <module>modules/base/disposer-api</module>
@@ -110,7 +113,6 @@
     <module>modules/base/vcs-impl-testing</module>
     <module>modules/base/usage-view</module>
     <module>modules/base/util</module>
-    <module>modules/base/util-rt</module>
     <module>modules/base/util-testing</module>
     <module>modules/base/xcoverage-data</module>
     <module>modules/base/xcoverage-impl</module>
