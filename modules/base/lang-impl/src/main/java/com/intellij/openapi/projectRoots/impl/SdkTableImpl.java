@@ -110,7 +110,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
         }
 
         for (Sdk sdk : mySdks) {
-          if (sdk.getSdkType() instanceof JavaSdkType && !affected.contains(sdk)) {
+          if (!affected.contains(sdk)) {
             final String homePath = sdk.getHomePath();
             final String eventPath = event.getPath();
             if (!StringUtil.isEmpty(homePath) && FileUtil.isAncestor(homePath, eventPath, true)) {
