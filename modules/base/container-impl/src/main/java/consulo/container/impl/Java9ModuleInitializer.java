@@ -144,6 +144,7 @@ public class Java9ModuleInitializer {
     instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "sun.font", desktopHackingModule);
     instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "java.awt", desktopHackingModule);
     instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "javax.swing", desktopHackingModule);
+    instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "javax.swing.plaf.basic", desktopHackingModule);
   }
 
   private static <T> T findModuleUnwrap(Object moduleLayer, String moduleName) {

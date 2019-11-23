@@ -23,14 +23,13 @@ import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.*;
-import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.*;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
 import consulo.annotations.DeprecationInfo;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.plaf.TreeUI;
@@ -41,7 +40,6 @@ import java.awt.*;
 import java.awt.dnd.Autoscroll;
 import java.awt.event.*;
 import java.lang.reflect.Array;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -403,7 +401,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
           if (bounds != null &&
               e.getY() > bounds.y && e.getY() < bounds.y + bounds.height &&
               (e.getX() >= bounds.x + bounds.width ||
-               e.getX() < bounds.x && !isLocationInExpandControl(path, e.getX(), e.getY()))) {
+               e.getX() < bounds.x && !TreeUtil.isLocationInExpandControl(this, path, e.getX(), e.getY()))) {
             int newX = bounds.x + bounds.width - 2;
             e2 = MouseEventAdapter.convert(e, e.getComponent(), newX, e.getY());
           }
@@ -412,37 +410,6 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
     }
 
     super.processMouseEvent(e2);
-  }
-
-  /**
-   * Returns true if <code>mouseX</code> falls
-   * in the area of row that is used to expand/collapse the node and
-   * the node at <code>row</code> does not represent a leaf.
-   */
-  protected boolean isLocationInExpandControl(@Nullable TreePath path, int mouseX) {
-    if (path == null) return false;
-    Rectangle bounds = getRowBounds(getRowForPath(path));
-    return isLocationInExpandControl(path, mouseX, bounds.y + bounds.height / 2);
-  }
-
-
-  private boolean isLocationInExpandControl(final TreePath path, final int x, final int y) {
-    final TreeUI ui = getUI();
-    if (!(ui instanceof BasicTreeUI)) return false;
-
-    try {
-      Class aClass = ui.getClass();
-      while (BasicTreeUI.class.isAssignableFrom(aClass) && !BasicTreeUI.class.equals(aClass)) {
-        aClass = aClass.getSuperclass();
-      }
-      final Method method = ReflectionUtil.getDeclaredMethod(aClass, "isLocationInExpandControl", TreePath.class, int.class, int.class);
-      if (method != null) {
-        return (Boolean)method.invoke(ui, path, x, y);
-      }
-    }
-    catch (Throwable ignore) { }
-
-    return false;
   }
 
   /**
@@ -675,8 +642,9 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
   private class MyMouseListener extends MouseAdapter {
     @Override
     public void mousePressed(MouseEvent event) {
-      if (!JBSwingUtilities.isLeftMouseButton(event) &&
-          (JBSwingUtilities.isRightMouseButton(event) || JBSwingUtilities.isMiddleMouseButton(event))) {
+      setPressed(event, true);
+
+      if (!SwingUtilities.isLeftMouseButton(event) && (SwingUtilities.isRightMouseButton(event) || SwingUtilities.isMiddleMouseButton(event))) {
         TreePath path = getClosestPathForLocation(event.getX(), event.getY());
         if (path == null) return;
 
@@ -696,10 +664,47 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
-      if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2 && isLocationInExpandControl(getClosestPathForLocation(e.getX(), e.getY()), e.getX())) {
-        e.consume();
+    public void mouseReleased(MouseEvent event) {
+      setPressed(event, false);
+      if (event.getButton() == MouseEvent.BUTTON1 && event.getClickCount() == 2 && TreeUtil.isLocationInExpandControl(Tree.this, event.getX(), event.getY())) {
+        event.consume();
       }
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+      //if (UIUtil.isUnderWin10LookAndFeel() && rollOverPath != null) {
+      //  TreeCellRenderer renderer = getCellRenderer();
+      //  if (rollOverPath.getLastPathComponent() instanceof TreeNode) {
+      //    TreeNode node = (TreeNode)rollOverPath.getLastPathComponent();
+      //    JComponent c = (JComponent)renderer
+      //            .getTreeCellRendererComponent(Tree.this, node, isPathSelected(rollOverPath), isExpanded(rollOverPath), getModel().isLeaf(node), getRowForPath(rollOverPath), hasFocus());
+      //
+      //    c.putClientProperty(UIUtil.CHECKBOX_ROLLOVER_PROPERTY, null);
+      //    rollOverPath = null;
+      //    UIUtil.repaintViewport(Tree.this);
+      //  }
+      //}
+    }
+
+    private void setPressed(MouseEvent e, boolean pressed) {
+      //if (UIUtil.isUnderWin10LookAndFeel()) {
+      //  Point p = e.getPoint();
+      //  TreePath path = getPathForLocation(p.x, p.y);
+      //  if (path != null) {
+      //    if (path.getLastPathComponent() instanceof TreeNode) {
+      //      TreeNode node = (TreeNode)path.getLastPathComponent();
+      //      JComponent c = (JComponent)getCellRenderer().getTreeCellRendererComponent(Tree.this, node, isPathSelected(path), isExpanded(path), getModel().isLeaf(node), getRowForPath(path), hasFocus());
+      //      if (pressed) {
+      //        c.putClientProperty(UIUtil.CHECKBOX_PRESSED_PROPERTY, c instanceof JCheckBox ? getPathBounds(path) : node);
+      //      }
+      //      else {
+      //        c.putClientProperty(UIUtil.CHECKBOX_PRESSED_PROPERTY, null);
+      //      }
+      //      UIUtil.repaintViewport(Tree.this);
+      //    }
+      //  }
+      //}
     }
   }
 

@@ -15,6 +15,8 @@
  */
 package consulo.awt.hacking;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 
 /**
@@ -22,6 +24,9 @@ import java.lang.reflect.Method;
  * @since 2019-11-21
  */
 public class AWTHackingUtil {
+  private static final Class<?> java_lang_reflect_InaccessibleObjectException = findClassWithRuntimeException("java.lang.reflect.InaccessibleObjectException");
+
+  @Nonnull
   public static Class<?> findClassWithRuntimeException(String name) {
     try {
       return Class.forName(name);
@@ -31,6 +36,7 @@ public class AWTHackingUtil {
     }
   }
 
+  @Nonnull
   public static Method findMethodWithRuntimeException(Class<?> clazz, String name, Class... params) {
     try {
       Method declaredMethod = clazz.getDeclaredMethod(name, params);
@@ -39,6 +45,21 @@ public class AWTHackingUtil {
     }
     catch (Throwable e) {
       throw new RuntimeException(e);
+    }
+  }
+
+  @Nullable
+  public static Method findMethodSilent(Class<?> clazz, String name, Class... params) {
+    try {
+      Method declaredMethod = clazz.getDeclaredMethod(name, params);
+      declaredMethod.setAccessible(true);
+      return declaredMethod;
+    }
+    catch (Throwable e) {
+      if(java_lang_reflect_InaccessibleObjectException.isInstance(e)) {
+        throw (RuntimeException) e;
+      }
+      return null;
     }
   }
 }

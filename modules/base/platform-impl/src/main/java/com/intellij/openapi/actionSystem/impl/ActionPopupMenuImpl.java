@@ -28,13 +28,12 @@ import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.ui.ComponentUtil;
-import com.intellij.util.ReflectionUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.ex.ToolWindowInternalDecorator;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -144,7 +143,7 @@ public final class ActionPopupMenuImpl implements ApplicationActivationListener,
     @Override
     public void setVisible(boolean b) {
       super.setVisible(b);
-      if (!b) ReflectionUtil.resetField(this, "invoker");
+      if (!b) setInvoker(null);
     }
 
     private class MyPopupMenuListener implements PopupMenuListener {
