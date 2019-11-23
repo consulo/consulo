@@ -82,6 +82,10 @@ public final class JavaVersion implements Comparable<JavaVersion> {
     ea = delegate.ea;
   }
 
+  public boolean isAtLeast(int feature) {
+    return myDelegate.isAtLeast(feature);
+  }
+
   @Override
   public int compareTo(@Nonnull JavaVersion o) {
     return myDelegate.compareTo(o.myDelegate);
