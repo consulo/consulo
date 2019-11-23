@@ -60,20 +60,18 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
+import consulo.annotations.RequiredWriteAction;
 import consulo.application.AccessRule;
 import consulo.ui.RequiredUIAccess;
 import gnu.trove.TIntArrayList;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import consulo.annotations.RequiredWriteAction;
-
 import javax.swing.*;
-import javax.swing.Action;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class TextMergeViewer implements MergeTool.MergeViewer {
   @Nonnull

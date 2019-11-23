@@ -1,15 +1,15 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.util.io;
 
-import com.intellij.openapi.diagnostic.LoggerRt;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.util.ArrayUtilRt;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.Contract;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.*;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -20,10 +20,6 @@ import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-/**
- * A stripped-down version of {@link com.intellij.openapi.util.io.FileUtil}.
- * Intended to use by external (out-of-IDE-process) runners and helpers, so it should not contain any library dependencies.
- */
 @SuppressWarnings("UtilityClassWithoutPrivateConstructor")
 public class FileUtilRt {
   private static final int KILOBYTE = 1024;
@@ -1095,7 +1091,7 @@ public class FileUtilRt {
     boolean charsEqual(char ch1, char ch2);
   }
 
-  private static LoggerRt logger() {
-    return LoggerRt.getInstance("#com.intellij.openapi.util.io.FileUtilRt");
+  private static Logger logger() {
+    return Logger.getInstance(FileUtilRt.class);
   }
 }

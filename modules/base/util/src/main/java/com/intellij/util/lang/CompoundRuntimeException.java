@@ -20,9 +20,9 @@ import com.intellij.util.EmptyConsumer;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;

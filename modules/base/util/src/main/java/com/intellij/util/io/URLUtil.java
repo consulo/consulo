@@ -22,6 +22,7 @@ import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.Base64;
 import com.intellij.util.ThreeState;
 import consulo.annotations.DeprecationInfo;
+import consulo.logging.Logger;
 import gnu.trove.TIntArrayList;
 
 import javax.annotation.Nonnull;
@@ -240,6 +241,20 @@ public class URLUtil {
       i++;
     }
     return decoded.toString();
+  }
+
+  public static URL internProtocol(@Nonnull URL url) {
+    try {
+      final String protocol = url.getProtocol();
+      if ("file".equals(protocol) || "jar".equals(protocol)) {
+        return new URL(protocol.intern(), url.getHost(), url.getPort(), url.getFile());
+      }
+      return url;
+    }
+    catch (MalformedURLException e) {
+      Logger.getInstance(URLUtil.class).error(e);
+      return null;
+    }
   }
 
   private static int decode(char c) {

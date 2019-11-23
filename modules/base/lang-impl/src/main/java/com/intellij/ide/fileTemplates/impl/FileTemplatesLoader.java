@@ -16,19 +16,17 @@
 package com.intellij.ide.fileTemplates.impl;
 
 import com.intellij.ide.fileTemplates.FileTemplateManager;
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.IdeaPluginDescriptorImpl;
 import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.ide.plugins.cl.IdeaPluginClassLoader;
 import com.intellij.openapi.application.PathManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.UriUtil;
-import com.intellij.util.lang.UrlClassLoader;
+import com.intellij.util.io.URLUtil;
 import consulo.components.impl.stores.StorageUtil;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -131,12 +129,9 @@ public class FileTemplatesLoader {
 
   private void loadDefaultTemplates() {
     final Set<URL> processedUrls = new HashSet<>();
-    for (IdeaPluginDescriptor plugin : PluginManagerCore.getPlugins()) {
-      if (plugin instanceof IdeaPluginDescriptorImpl && plugin.isEnabled()) {
+    for (PluginDescriptor plugin : PluginManagerCore.getPlugins()) {
+      if (plugin.isEnabled()) {
         final ClassLoader loader = plugin.getPluginClassLoader();
-        if (loader instanceof IdeaPluginClassLoader && ((IdeaPluginClassLoader)loader).getUrls().isEmpty()) {
-          continue; // development mode, when IDEA_CORE's loader contains all the classpath
-        }
         try {
           final Enumeration<URL> systemResources = loader.getResources(DEFAULT_TEMPLATES_ROOT);
           if (systemResources.hasMoreElements()) {
@@ -165,10 +160,10 @@ public class FileTemplatesLoader {
     final Set<String> descriptionPaths = new HashSet<>();
     for (String path : children) {
       if (path.equals("default.html")) {
-        myDefaultTemplateDescription = UrlClassLoader.internProtocol(new URL(UriUtil.trimTrailingSlashes(root.toExternalForm()) + "/" + path));
+        myDefaultTemplateDescription = URLUtil.internProtocol(new URL(UriUtil.trimTrailingSlashes(root.toExternalForm()) + "/" + path));
       }
       else if (path.equals("includes/default.html")) {
-        myDefaultIncludeDescription = UrlClassLoader.internProtocol(new URL(UriUtil.trimTrailingSlashes(root.toExternalForm()) + "/" + path));
+        myDefaultIncludeDescription = URLUtil.internProtocol(new URL(UriUtil.trimTrailingSlashes(root.toExternalForm()) + "/" + path));
       }
       else if (path.endsWith(DESCRIPTION_EXTENSION_SUFFIX)) {
         descriptionPaths.add(path);
@@ -182,9 +177,9 @@ public class FileTemplatesLoader {
             final String filename = path.substring(prefix.length(), path.length() - FTManager.TEMPLATE_EXTENSION_SUFFIX.length());
             final String extension = ((FileTypeManagerEx)myTypeManager).getExtension(filename);
             final String templateName = filename.substring(0, filename.length() - extension.length() - 1);
-            final URL templateUrl = UrlClassLoader.internProtocol(new URL(UriUtil.trimTrailingSlashes(root.toExternalForm()) + "/" + path));
+            final URL templateUrl = URLUtil.internProtocol(new URL(UriUtil.trimTrailingSlashes(root.toExternalForm()) + "/" + path));
             final String descriptionPath = getDescriptionPath(prefix, templateName, extension, descriptionPaths);
-            final URL descriptionUrl = descriptionPath == null ? null : UrlClassLoader.internProtocol(new URL(UriUtil.trimTrailingSlashes(root.toExternalForm()) + "/" + descriptionPath));
+            final URL descriptionUrl = descriptionPath == null ? null : URLUtil.internProtocol(new URL(UriUtil.trimTrailingSlashes(root.toExternalForm()) + "/" + descriptionPath));
             assert templateUrl != null;
             entry.getValue().addDefaultTemplate(new DefaultTemplate(templateName, extension, templateUrl, descriptionUrl));
           }

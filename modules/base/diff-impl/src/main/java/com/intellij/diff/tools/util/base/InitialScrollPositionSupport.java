@@ -23,10 +23,10 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.ui.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class InitialScrollPositionSupport {
   public abstract static class InitialScrollHelperBase {
     protected boolean myShouldScroll = true;
 
-    @javax.annotation.Nullable
+    @Nullable
     protected ScrollToPolicy myScrollToChange;
     @Nullable protected EditorsVisiblePositions myEditorsPosition;
     @Nullable protected LogicalPosition[] myCaretPosition;
@@ -54,7 +54,7 @@ public class InitialScrollPositionSupport {
       request.putUserData(DiffUserDataKeysEx.EDITORS_CARET_POSITION, carets);
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     protected abstract LogicalPosition[] getCaretPositions();
 
     @Nullable
@@ -62,7 +62,7 @@ public class InitialScrollPositionSupport {
   }
 
   private static abstract class SideInitialScrollHelper extends InitialScrollHelperBase {
-    @javax.annotation.Nullable
+    @Nullable
     @Override
     protected LogicalPosition[] getCaretPositions() {
       return doGetCaretPositions(getEditors());
@@ -104,7 +104,7 @@ public class InitialScrollPositionSupport {
   }
 
   public static abstract class TwosideInitialScrollHelper extends SideInitialScrollHelper {
-    @javax.annotation.Nullable
+    @Nullable
     protected Pair<Side, Integer> myScrollToLine;
     @Nullable protected DiffNavigationContext myNavigationContext;
 
@@ -273,7 +273,7 @@ public class InitialScrollPositionSupport {
       myPoints = points;
     }
 
-    public boolean isSame(@javax.annotation.Nullable LogicalPosition... caretPosition) {
+    public boolean isSame(@Nullable LogicalPosition... caretPosition) {
       // TODO: allow small fluctuations ?
       if (caretPosition == null) return true;
       if (myCaretPosition.length != caretPosition.length) return false;

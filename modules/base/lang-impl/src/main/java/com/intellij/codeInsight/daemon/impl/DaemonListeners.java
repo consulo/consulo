@@ -12,7 +12,6 @@ import com.intellij.ide.AppLifecycleListener;
 import com.intellij.ide.IdeTooltipManager;
 import com.intellij.ide.PowerSaveMode;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.scratch.ScratchUtil;
 import com.intellij.ide.todo.TodoConfiguration;
 import com.intellij.openapi.Disposable;
@@ -23,7 +22,6 @@ import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.command.CommandEvent;
 import com.intellij.openapi.command.CommandListener;
 import com.intellij.openapi.command.undo.UndoManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.DocCommandGroupId;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
@@ -65,10 +63,12 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.vcsUtil.VcsUtil;
+import consulo.container.plugin.PluginManager;
+import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import java.beans.PropertyChangeEvent;
@@ -620,7 +620,7 @@ public final class DaemonListeners implements Disposable {
 
   private static boolean isContributedByPlugin(@Nonnull HighlightInfo.IntentionActionDescriptor intentionActionDescriptor, @Nonnull IdeaPluginDescriptor descriptor) {
     IntentionAction action = intentionActionDescriptor.getAction();
-    PluginId pluginId = PluginManagerCore.getPluginByClassName(action.getClass().getName());
+    PluginId pluginId = PluginManager.getPluginId(action.getClass());
     return descriptor.getPluginId().equals(pluginId);
   }
 }

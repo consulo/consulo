@@ -26,6 +26,7 @@ import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.util.pointers.Named;
 import consulo.util.pointers.NamedPointer;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

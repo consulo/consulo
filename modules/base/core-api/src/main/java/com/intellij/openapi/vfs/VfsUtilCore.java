@@ -29,11 +29,10 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.DistinctRootsCollection;
 import com.intellij.util.io.URLUtil;
-import com.intellij.util.lang.UrlClassLoader;
 import com.intellij.util.text.StringFactory;
 import consulo.logging.Logger;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.net.MalformedURLException;
@@ -233,8 +232,7 @@ public class VfsUtilCore {
   }
 
   @Nonnull
-  public static InputStream inputStreamSkippingBOM(@Nonnull InputStream stream, @SuppressWarnings("UnusedParameters") @Nonnull VirtualFile file)
-          throws IOException {
+  public static InputStream inputStreamSkippingBOM(@Nonnull InputStream stream, @SuppressWarnings("UnusedParameters") @Nonnull VirtualFile file) throws IOException {
     return CharsetToolkit.inputStreamSkippingBOM(stream);
   }
 
@@ -247,9 +245,7 @@ public class VfsUtilCore {
     return stream;
   }
 
-  public static boolean iterateChildrenRecursively(@Nonnull final VirtualFile root,
-                                                   @Nullable final VirtualFileFilter filter,
-                                                   @Nonnull final ContentIterator iterator) {
+  public static boolean iterateChildrenRecursively(@Nonnull final VirtualFile root, @Nullable final VirtualFileFilter filter, @Nonnull final ContentIterator iterator) {
     final VirtualFileVisitor.Result result = visitChildrenRecursively(root, new VirtualFileVisitor() {
       @Nonnull
       @Override
@@ -317,9 +313,7 @@ public class VfsUtilCore {
     }
   }
 
-  public static <E extends Exception> VirtualFileVisitor.Result visitChildrenRecursively(@Nonnull VirtualFile file,
-                                                                                         @Nonnull VirtualFileVisitor visitor,
-                                                                                         @Nonnull Class<E> eClass) throws E {
+  public static <E extends Exception> VirtualFileVisitor.Result visitChildrenRecursively(@Nonnull VirtualFile file, @Nonnull VirtualFileVisitor visitor, @Nonnull Class<E> eClass) throws E {
     try {
       return visitChildrenRecursively(file, visitor);
     }
@@ -487,7 +481,7 @@ public class VfsUtilCore {
         return new URL(StandardFileSystems.FILE_PROTOCOL, "", path);
       }
       else {
-        return UrlClassLoader.internProtocol(new URL(vfsUrl));
+        return URLUtil.internProtocol(new URL(vfsUrl));
       }
     }
     catch (MalformedURLException e) {
@@ -516,7 +510,7 @@ public class VfsUtilCore {
   @Nullable
   public static VirtualFile findRelativeFile(@Nonnull String uri, @Nullable VirtualFile base) {
     if (base != null) {
-      if (!base.isValid()){
+      if (!base.isValid()) {
         LOG.error("Invalid file name: " + base.getName() + ", url: " + uri);
       }
     }
@@ -531,7 +525,9 @@ public class VfsUtilCore {
       uri = uri.substring("file:/".length());
       if (!SystemInfo.isWindows) uri = "/" + uri;
     }
-    else uri = StringUtil.trimStart(uri, "file:");
+    else {
+      uri = StringUtil.trimStart(uri, "file:");
+    }
 
     VirtualFile file = null;
 
@@ -540,8 +536,7 @@ public class VfsUtilCore {
       if (!SystemInfo.isWindows) uri = "/" + uri;
       file = VirtualFileManager.getInstance().findFileByUrl(StandardFileSystems.ZIP_PROTOCOL_PREFIX + uri);
     }
-    else if (!SystemInfo.isWindows && StringUtil.startsWithChar(uri, '/') ||
-             SystemInfo.isWindows && uri.length() >= 2 && Character.isLetter(uri.charAt(0)) && uri.charAt(1) == ':') {
+    else if (!SystemInfo.isWindows && StringUtil.startsWithChar(uri, '/') || SystemInfo.isWindows && uri.length() >= 2 && Character.isLetter(uri.charAt(0)) && uri.charAt(1) == ':') {
       file = StandardFileSystems.local().findFileByPath(uri);
     }
 
@@ -667,9 +662,7 @@ public class VfsUtilCore {
     }
   }
 
-  public static void processFilesRecursively(@Nonnull VirtualFile root,
-                                             @Nonnull Processor<VirtualFile> processor,
-                                             @Nonnull Convertor<VirtualFile, Boolean> directoryFilter) {
+  public static void processFilesRecursively(@Nonnull VirtualFile root, @Nonnull Processor<VirtualFile> processor, @Nonnull Convertor<VirtualFile, Boolean> directoryFilter) {
     if (!processor.process(root)) return;
 
     if (root.isDirectory() && directoryFilter.convert(root)) {

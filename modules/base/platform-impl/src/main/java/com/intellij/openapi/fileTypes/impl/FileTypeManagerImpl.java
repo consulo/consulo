@@ -368,7 +368,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         factory.createFileTypes(consumer);
       }
       catch (Throwable e) {
-        PluginManager.handleComponentError(e, factory.getClass().getName(), null);
+        PluginManager.handleComponentError(e, factory.getClass(), null);
       }
     }
     for (StandardFileType pair : myStandardFileTypes.values()) {

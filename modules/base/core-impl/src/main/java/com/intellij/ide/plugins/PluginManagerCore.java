@@ -17,7 +17,6 @@ package com.intellij.ide.plugins;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.StartupProgress;
-import com.intellij.ide.plugins.cl.IdeaPluginClassLoader;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
@@ -36,13 +35,16 @@ import com.intellij.util.Function;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.graph.*;
-import com.intellij.util.lang.UrlClassLoader;
 import consulo.annotations.DeprecationInfo;
 import consulo.application.ApplicationProperties;
+import consulo.container.classloader.PluginClassLoader;
 import consulo.container.impl.ContainerLogger;
-import consulo.container.impl.Java9ModuleInitializer;
+import consulo.container.impl.IdeaPluginDescriptorImpl;
 import consulo.container.impl.PluginHolderModificator;
 import consulo.container.impl.PluginLoader;
+import consulo.container.impl.classloader.Java9ModuleInitializer;
+import consulo.container.impl.classloader.PluginClassLoaderFactory;
+import consulo.container.impl.classloader.PluginLoadStatistics;
 import consulo.container.impl.parser.ExtensionInfo;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
@@ -240,7 +242,7 @@ public class PluginManagerCore {
   }
 
   private static boolean hasLoadedClass(@Nonnull String className, ClassLoader loader) {
-    if (loader instanceof UrlClassLoader) return ((UrlClassLoader)loader).hasLoadedClass(className);
+    if (loader instanceof PluginClassLoader) return ((PluginClassLoader)loader).hasLoadedClass(className);
 
     // it can be an UrlClassLoader loaded by another class loader, so instanceof doesn't work
     try {
@@ -254,10 +256,10 @@ public class PluginManagerCore {
   @Nullable
   public static PluginId getPluginId(@Nonnull Class<?> clazz) {
     ClassLoader loader = clazz.getClassLoader();
-    if (!(loader instanceof IdeaPluginClassLoader)) {
+    if (!(loader instanceof PluginClassLoader)) {
       return null;
     }
-    return ((IdeaPluginClassLoader)loader).getPluginId();
+    return ((PluginClassLoader)loader).getPluginId();
   }
 
   @Nullable
@@ -271,7 +273,7 @@ public class PluginManagerCore {
         final File file = aClassPath.getCanonicalFile(); // it is critical not to have "." and ".." in classpath elements
         urls.add(file.toURI().toURL());
       }
-      return new IdeaPluginClassLoader(urls, parentLoaders, pluginId, pluginDescriptor.getVersion(), pluginRoot);
+      return PluginClassLoaderFactory.create(urls, parentLoaders, pluginId, pluginDescriptor.getVersion(), pluginRoot);
     }
     catch (IOException e) {
       getLogger().error(e);
@@ -621,6 +623,21 @@ public class PluginManagerCore {
     }
 
     return false;
+  }
+
+  public static void markAsDeletedPlugin(PluginDescriptor descriptor) {
+    if(descriptor instanceof IdeaPluginDescriptorImpl) {
+      ((IdeaPluginDescriptorImpl)descriptor).setDeleted(true);
+    }
+  }
+
+  @Nullable
+  public static PluginDescriptor loadPluginDescriptor(File file) {
+    return PluginLoader.loadDescriptor(file, false, false, PluginManagerCore.C_LOG);
+  }
+
+  public static void dumpPluginClassStatistics(Logger logger) {
+    PluginLoadStatistics.get().dumpPluginClassStatistics(logger::info);
   }
 
   public static boolean shouldSkipPlugin(final PluginDescriptor descriptor) {

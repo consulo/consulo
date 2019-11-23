@@ -94,7 +94,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
   @Nonnull
   protected Side myMasterSide = Side.RIGHT;
 
-  @javax.annotation.Nullable
+  @Nullable
   private ChangedBlockData myChangedBlockData;
 
   private final boolean[] myForceReadOnlyFlags;
@@ -357,8 +357,8 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     }
   }
 
-  @javax.annotation.Nullable
-  private EditorHighlighter buildHighlighter(@javax.annotation.Nullable Project project,
+  @Nullable
+  private EditorHighlighter buildHighlighter(@Nullable Project project,
                                              @Nonnull DocumentContent content1,
                                              @Nonnull DocumentContent content2,
                                              @Nonnull CharSequence text1,
@@ -869,7 +869,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
   }
 
   @RequiredUIAccess
-  @javax.annotation.Nullable
+  @Nullable
   protected List<UnifiedDiffChange> getDiffChanges() {
     return myChangedBlockData == null ? null : myChangedBlockData.getDiffChanges();
   }
@@ -880,7 +880,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     return myPanel;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public JComponent getPreferredFocusedComponent() {
     if (!myPanel.isGoodContent()) return null;
@@ -920,7 +920,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
   }
 
   @RequiredUIAccess
-  @javax.annotation.Nullable
+  @Nullable
   protected UnifiedDiffChange getCurrentChange() {
     if (myChangedBlockData == null) return null;
     int caretLine = myEditor.getCaretModel().getLogicalPosition().line;
@@ -952,7 +952,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
   }
 
   @RequiredUIAccess
-  @javax.annotation.Nullable
+  @Nullable
   protected Navigatable getNavigatable(int offset) {
     LogicalPosition position = myEditor.offsetToLogicalPosition(offset);
     Pair<int[], Side> pair = transferLineFromOneside(position.line);
@@ -1165,7 +1165,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
   }
 
   private class MyStatusPanel extends StatusPanel {
-    @javax.annotation.Nullable
+    @Nullable
     @Override
     protected String getMessage() {
       if (myChangedBlockData == null) return null;
@@ -1180,14 +1180,14 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
   private static class TwosideDocumentData {
     @Nonnull
     private final UnifiedFragmentBuilder myBuilder;
-    @javax.annotation.Nullable
+    @Nullable
     private final EditorHighlighter myHighlighter;
-    @javax.annotation.Nullable
+    @Nullable
     private final UnifiedEditorRangeHighlighter myRangeHighlighter;
 
     public TwosideDocumentData(@Nonnull UnifiedFragmentBuilder builder,
-                               @javax.annotation.Nullable EditorHighlighter highlighter,
-                               @javax.annotation.Nullable UnifiedEditorRangeHighlighter rangeHighlighter) {
+                               @Nullable EditorHighlighter highlighter,
+                               @Nullable UnifiedEditorRangeHighlighter rangeHighlighter) {
       myBuilder = builder;
       myHighlighter = highlighter;
       myRangeHighlighter = rangeHighlighter;
@@ -1198,7 +1198,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
       return myBuilder;
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     public EditorHighlighter getHighlighter() {
       return myHighlighter;
     }
@@ -1251,11 +1251,11 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
   private static class CombinedEditorData {
     @Nonnull
     private final CharSequence myText;
-    @javax.annotation.Nullable
+    @Nullable
     private final EditorHighlighter myHighlighter;
-    @javax.annotation.Nullable
+    @Nullable
     private final UnifiedEditorRangeHighlighter myRangeHighlighter;
-    @javax.annotation.Nullable
+    @Nullable
     private final FileType myFileType;
     @Nonnull
     private final TIntFunction myLineConvertor1;
@@ -1263,9 +1263,9 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     private final TIntFunction myLineConvertor2;
 
     public CombinedEditorData(@Nonnull CharSequence text,
-                              @javax.annotation.Nullable EditorHighlighter highlighter,
-                              @javax.annotation.Nullable UnifiedEditorRangeHighlighter rangeHighlighter,
-                              @javax.annotation.Nullable FileType fileType,
+                              @Nullable EditorHighlighter highlighter,
+                              @Nullable UnifiedEditorRangeHighlighter rangeHighlighter,
+                              @Nullable FileType fileType,
                               @Nonnull TIntFunction convertor1,
                               @Nonnull TIntFunction convertor2) {
       myText = text;
@@ -1281,12 +1281,12 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
       return myText;
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     public EditorHighlighter getHighlighter() {
       return myHighlighter;
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     public UnifiedEditorRangeHighlighter getRangeHighlighter() {
       return myRangeHighlighter;
     }
@@ -1418,7 +1418,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
       super(new EditorEx[]{editor}, disposable);
     }
 
-    public void install(@javax.annotation.Nullable List<LineRange> changedLines,
+    public void install(@Nullable List<LineRange> changedLines,
                         @Nonnull UserDataHolder context,
                         @Nonnull FoldingModelSupport.Settings settings) {
       Iterator<int[]> it = map(changedLines, line -> new int[]{

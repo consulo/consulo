@@ -146,7 +146,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
       final PluginDescriptor descriptor = getObjectAt(i);
       final PluginId pluginId = descriptor.getPluginId();
       myDependentToRequiredListMap.remove(pluginId);
-      if (descriptor instanceof IdeaPluginDescriptorImpl && ((IdeaPluginDescriptorImpl)descriptor).isDeleted()) continue;
+      if (descriptor.isDeleted()) continue;
       final Boolean enabled = myEnabled.get(pluginId);
       if (enabled == null || enabled) {
         PluginManager.checkDependants(descriptor, PluginManager::getPlugin, dependantPluginId -> {
@@ -386,7 +386,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
         }
 
         if (!newVal) {
-          if (ideaPluginDescriptor instanceof IdeaPluginDescriptorImpl && ((IdeaPluginDescriptorImpl)ideaPluginDescriptor).isDeleted()) {
+          if (ideaPluginDescriptor.isDeleted()) {
             return true;
           }
           final PluginId pluginDescriptorId = ideaPluginDescriptor.getPluginId();
@@ -488,8 +488,8 @@ public class InstalledPluginsTableModel extends PluginTableModel {
           if (o2 instanceof PluginNode) return 1;
 
 
-          final boolean deleted1 = o1 instanceof IdeaPluginDescriptorImpl && ((IdeaPluginDescriptorImpl)o1).isDeleted();
-          final boolean deleted2 = o2 instanceof IdeaPluginDescriptorImpl && ((IdeaPluginDescriptorImpl)o2).isDeleted();
+          final boolean deleted1 = o1.isDeleted();
+          final boolean deleted2 = o2.isDeleted();
           if (deleted1) {
             if (deleted2) return comparator.compare(o1, o2);
             return -1;

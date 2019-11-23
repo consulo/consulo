@@ -19,20 +19,19 @@ package com.intellij.openapi.roots.impl.libraries;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
-import consulo.logging.Logger;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
-import consulo.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.util.*;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.HashSet;
+import consulo.logging.Logger;
+import consulo.roots.types.BinariesOrderRootType;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 public abstract class LibraryTableBase implements PersistentStateComponent<Element>, LibraryTable, Disposable {

@@ -17,8 +17,8 @@ package com.intellij.diff.actions;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.Pair;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Iterator;
 
 import static com.intellij.diff.util.DiffUtil.getLineCount;

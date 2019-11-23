@@ -16,7 +16,6 @@
 package com.intellij.ide.plugins;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.plugins.cl.IdeaPluginClassLoader;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.StartupUtil;
 import com.intellij.notification.Notification;
@@ -24,7 +23,7 @@ import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.components.ComponentConfig;
+import consulo.container.plugin.ComponentConfig;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.extensions.impl.PluginExtensionInitializationException;
 import com.intellij.openapi.options.ShowSettingsUtil;
@@ -34,7 +33,8 @@ import com.intellij.openapi.wm.ex.WindowManagerEx;
 import consulo.annotations.Exported;
 import consulo.application.ApplicationProperties;
 import consulo.awt.TargetAWT;
-import consulo.container.impl.ExitCodes;
+import consulo.container.ExitCodes;
+import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.logging.internal.LoggerFactoryInitializer;
 import org.jetbrains.annotations.NonNls;
@@ -184,15 +184,15 @@ public class PluginManager extends PluginManagerCore {
   @Exported
   public static File getPluginPath(@Nonnull Class<?> pluginClass) {
     ClassLoader temp = pluginClass.getClassLoader();
-    assert temp instanceof IdeaPluginClassLoader : "classloader is not plugin";
-    IdeaPluginClassLoader classLoader = (IdeaPluginClassLoader)temp;
+    assert temp instanceof PluginClassLoader : "classloader is not plugin";
+    PluginClassLoader classLoader = (PluginClassLoader)temp;
     PluginId pluginId = classLoader.getPluginId();
     PluginDescriptor plugin = consulo.container.plugin.PluginManager.findPlugin(pluginId);
     assert plugin != null : "plugin is not found";
     return plugin.getPath();
   }
 
-  public static void handleComponentError(@Nonnull Throwable t, @Nullable String componentClassName, @Nullable ComponentConfig config) {
+  public static void handleComponentError(@Nonnull Throwable t, @Nullable Class componentClass, @Nullable ComponentConfig config) {
     if (t instanceof StartupAbortedException) {
       throw (StartupAbortedException)t;
     }
@@ -202,7 +202,7 @@ public class PluginManager extends PluginManagerCore {
       pluginId = config.getPluginId();
     }
     if (pluginId == null || CORE_PLUGIN.equals(pluginId)) {
-      pluginId = componentClassName == null ? null : getPluginByClassName(componentClassName);
+      pluginId = componentClass == null ? null : consulo.container.plugin.PluginManager.getPluginId(componentClass);
     }
     if (pluginId == null || CORE_PLUGIN.equals(pluginId)) {
       if (t instanceof PluginExtensionInitializationException) {
@@ -227,7 +227,7 @@ public class PluginManager extends PluginManagerCore {
       throw new StartupAbortedException(t).exitCode(ExitCodes.PLUGIN_ERROR).logError(false);
     }
     else {
-      throw new StartupAbortedException("Fatal error initializing '" + componentClassName + "'", t);
+      throw new StartupAbortedException("Fatal error initializing '" + (componentClass == null ? null : componentClass.getName()) + "'", t);
     }
   }
 }

@@ -15,7 +15,7 @@
  */
 package consulo.util.nodep.xml;
 
-import com.intellij.openapi.util.text.StringUtilRt;
+import consulo.util.nodep.text.StringUtilRt;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;

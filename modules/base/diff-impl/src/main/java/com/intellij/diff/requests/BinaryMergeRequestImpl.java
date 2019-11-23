@@ -31,7 +31,6 @@ import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -62,7 +61,7 @@ public class BinaryMergeRequestImpl extends BinaryMergeRequest {
                                 @Nonnull List<byte[]> byteContents,
                                 @Nullable String title,
                                 @Nonnull List<String> contentTitles,
-                                @javax.annotation.Nullable Consumer<MergeResult> applyCallback) {
+                                @Nullable Consumer<MergeResult> applyCallback) {
     assert byteContents.size() == 3;
     assert contents.size() == 3;
     assert contentTitles.size() == 3;

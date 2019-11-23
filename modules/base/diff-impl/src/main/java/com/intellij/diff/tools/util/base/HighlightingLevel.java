@@ -19,8 +19,9 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.markup.HighlighterLayer;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.util.Condition;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 public enum HighlightingLevel {
@@ -47,12 +48,12 @@ public enum HighlightingLevel {
 
   @Nonnull
   private final String myText;
-  @javax.annotation.Nullable
+  @Nullable
   private final Icon myIcon;
   @Nonnull
   private final Condition<RangeHighlighter> myCondition;
 
-  HighlightingLevel(@Nonnull String text, @javax.annotation.Nullable Icon icon, @Nonnull Condition<RangeHighlighter> condition) {
+  HighlightingLevel(@Nonnull String text, @Nullable Icon icon, @Nonnull Condition<RangeHighlighter> condition) {
     myText = text;
     myIcon = icon;
     myCondition = condition;
@@ -63,7 +64,7 @@ public enum HighlightingLevel {
     return myText;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public Icon getIcon() {
     return myIcon;
   }

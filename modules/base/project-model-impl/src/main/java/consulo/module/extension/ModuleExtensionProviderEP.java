@@ -16,7 +16,6 @@
 package consulo.module.extension;
 
 import com.intellij.icons.AllIcons;
-import consulo.logging.Logger;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.NotNullLazyValue;
@@ -26,6 +25,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
 import consulo.annotations.DeprecationInfo;
+import consulo.logging.Logger;
 import consulo.module.extension.impl.ModuleExtensionProviders;
 import consulo.roots.ModuleRootLayer;
 import consulo.ui.image.Image;
@@ -120,13 +120,13 @@ public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public Class<ModuleExtension> getImmutableClass() {
     Pair<Class<ModuleExtension>, Constructor<ModuleExtension>> value = myImmutableValue.getValue();
     return value == null ? null : value.getFirst();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public MutableModuleExtension<?> createMutable(@Nonnull ModuleRootLayer modifiableRootModel) {
     try {
       Pair<Class<MutableModuleExtension>, Constructor<MutableModuleExtension>> value = myMutableValue.getValue();

@@ -24,9 +24,9 @@ import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.roots.impl.UnknownOrderEntryImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Map;
 
 /**
@@ -42,7 +42,7 @@ public class OrderEntrySerializationUtil {
 
   @Nonnull
   public static Map<String, OrderEntryType> getProvidersAsMap() {
-    return ContainerUtil.map2Map(OrderEntryType.EP_NAME.getExtensions(), orderEntryType -> Pair.create(orderEntryType.getId(), orderEntryType));
+    return ContainerUtil.map2Map(OrderEntryType.EP_NAME.getExtensionList(), orderEntryType -> Pair.create(orderEntryType.getId(), orderEntryType));
   }
 
   @Nullable

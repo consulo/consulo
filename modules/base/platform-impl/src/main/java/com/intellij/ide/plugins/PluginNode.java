@@ -58,7 +58,6 @@ public class PluginNode extends PluginDescriptorStub {
   private List<PluginId> myOptionalDependencies = Collections.emptyList();
 
   private int status = STATUS_UNKNOWN;
-  private boolean loaded = false;
 
   private String myInstalledVersion;
 
@@ -200,14 +199,6 @@ public class PluginNode extends PluginDescriptorStub {
   @Override
   public String toString() {
     return getName();
-  }
-
-  public boolean isLoaded() {
-    return loaded;
-  }
-
-  public void setLoaded(boolean loaded) {
-    this.loaded = loaded;
   }
 
   @Override

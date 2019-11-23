@@ -34,6 +34,7 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.impl.MessageBusFactory;
 import com.intellij.util.messages.impl.MessageBusImpl;
 import consulo.application.ApplicationProperties;
+import consulo.container.plugin.ComponentConfig;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.injecting.InjectingContainer;
@@ -303,7 +304,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     return false;
   }
 
-  protected void handleInitComponentError(@Nonnull Throwable ex, @Nullable String componentClassName, @Nullable ComponentConfig config) {
+  protected void handleInitComponentError(@Nonnull Throwable ex, @Nullable Class componentClass, @Nullable ComponentConfig config) {
     LOG.error(ex);
   }
 

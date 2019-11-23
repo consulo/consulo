@@ -15,7 +15,6 @@
  */
 package consulo.ide.plugins;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptorImpl;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
@@ -66,7 +65,7 @@ public class InstalledPluginsState {
     int state = StringUtil.compareVersionNumbers(descr.getVersion(), existing.getVersion());
     final PluginId pluginId = existing.getPluginId();
     final Set<PluginId> installedPlugins = InstalledPluginsState.getInstance().getInstalledPlugins();
-    if (!installedPlugins.contains(pluginId) && !((IdeaPluginDescriptorImpl)existing).isDeleted()) {
+    if (!installedPlugins.contains(pluginId) && !existing.isDeleted()) {
       installedPlugins.add(pluginId);
     }
     if (state > 0 && !PluginManager.isIncompatible(descr) && !myUpdatedPlugins.contains(descr.getPluginId())) {

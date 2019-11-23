@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.util.lang.JavaVersion;
+import consulo.util.nodep.JavaVersion;
 
 /**
  * Stripped-down version of {@code com.intellij.openapi.util.SystemInfo}.

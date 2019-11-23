@@ -15,10 +15,9 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.util.ClassLoaderUtilRt;
 import com.intellij.util.ThrowableRunnable;
 
-public class ClassLoaderUtil extends ClassLoaderUtilRt {
+public class ClassLoaderUtil {
   private ClassLoaderUtil() {
   }
 

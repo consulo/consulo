@@ -46,7 +46,6 @@ import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;

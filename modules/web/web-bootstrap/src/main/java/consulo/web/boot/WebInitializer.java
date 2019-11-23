@@ -15,8 +15,8 @@
  */
 package consulo.web.boot;
 
-import com.intellij.ide.BootstrapClassLoaderUtil;
-import com.intellij.util.containers.HashMap;
+import consulo.container.impl.classloader.BootstrapClassLoaderUtil;
+import consulo.util.nodep.collection.HashMap;
 import consulo.container.boot.ContainerStartup;
 import consulo.container.impl.ContainerLogger;
 import consulo.container.util.StatCollector;

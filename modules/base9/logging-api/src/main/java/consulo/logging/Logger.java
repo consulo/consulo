@@ -15,7 +15,7 @@
  */
 package consulo.logging;
 
-import com.intellij.util.ArrayUtilRt;
+import consulo.util.nodep.ArrayUtilRt;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.internal.LoggerFactoryInitializer;
 import org.jetbrains.annotations.NonNls;

@@ -18,8 +18,8 @@ package com.intellij.diff.actions;
 import com.intellij.openapi.diff.DiffNavigationContext;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Iterator;
 
 public class NavigationContextChecker {

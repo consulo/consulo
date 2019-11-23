@@ -15,7 +15,10 @@
  */
 package com.intellij.util;
 
-public interface Consumer<T> {
+/**
+ * Deprecated use java.util.function.Consumer
+ */
+public interface Consumer<T> extends java.util.function.Consumer<T> {
   Consumer EMPTY_CONSUMER = new Consumer() {
     public void consume(final Object t) {
     }
@@ -27,4 +30,8 @@ public interface Consumer<T> {
    */
   void consume(T t);
 
+  @Override
+  default void accept(T t) {
+    consume(t);
+  }
 }

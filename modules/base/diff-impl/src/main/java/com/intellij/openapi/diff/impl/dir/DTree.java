@@ -19,14 +19,15 @@ import com.intellij.ide.diff.DiffElement;
 import com.intellij.ide.diff.DiffErrorElement;
 import com.intellij.ide.diff.DiffType;
 import com.intellij.ide.diff.DirDiffSettings;
-import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.SortedList;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 
 import static com.intellij.ide.diff.DiffType.ERROR;
 
@@ -46,7 +47,7 @@ public class DTree {
   };
 
   private boolean myExpanded = true;
-  @javax.annotation.Nullable
+  @Nullable
   private final DTree myParent;
   private HashMap<String, DTree> myChildren;
   private String myName;
@@ -59,7 +60,7 @@ public class DTree {
   private String mySeparator = null;
   private String myPath = null;
 
-  public DTree(@javax.annotation.Nullable DTree parent, @Nonnull String name, boolean container) {
+  public DTree(@Nullable DTree parent, @Nonnull String name, boolean container) {
     this.myParent = parent;
     this.myName = name;
     isContainer = container;
@@ -122,7 +123,7 @@ public class DTree {
     return myName;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public DTree getParent() {
     return myParent;
   }

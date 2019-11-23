@@ -23,19 +23,20 @@ import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.configurations.ParametersList;
 import com.intellij.execution.configurations.SimpleJavaParameters;
 import com.intellij.ide.util.PropertiesComponent;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtilRt;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.CharsetToolkit;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
-import consulo.vfs.util.ArchiveVfsUtil;
 import com.intellij.util.PathUtil;
-import com.intellij.util.lang.UrlClassLoader;
+import com.intellij.util.ReflectionUtil;
+import consulo.logging.Logger;
+import consulo.vfs.util.ArchiveVfsUtil;
 import gnu.trove.THashMap;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
@@ -210,9 +211,10 @@ public class JdkUtil {
             if (!classpath.equals(utilRtPath)) {
               classpath += File.pathSeparator + utilRtPath;
             }
-            final Class<UrlClassLoader> ourUrlClassLoader = UrlClassLoader.class;
-            if (ourUrlClassLoader.getName().equals(vmParametersList.getPropertyValue("java.system.class.loader"))) {
-              classpath += File.pathSeparator + PathUtil.getJarPathForClass(ourUrlClassLoader);
+            Class urlClassLoader = ReflectionUtil.findClassOrNull("consulo.util.nodep.classloader.UrlClassLoader", JdkUtil.class.getClassLoader());
+            assert urlClassLoader != null;
+            if (urlClassLoader.getName().equals(vmParametersList.getPropertyValue("java.system.class.loader"))) {
+              classpath += File.pathSeparator + PathUtil.getJarPathForClass(urlClassLoader);
               classpath += File.pathSeparator + PathUtil.getJarPathForClass(THashMap.class);
             }
 

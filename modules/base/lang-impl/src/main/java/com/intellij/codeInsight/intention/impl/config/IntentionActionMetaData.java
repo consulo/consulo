@@ -20,14 +20,14 @@
 package com.intellij.codeInsight.intention.impl.config;
 
 import com.intellij.codeInsight.intention.IntentionAction;
-import com.intellij.ide.plugins.cl.IdeaPluginClassLoader;
+import com.intellij.util.io.URLUtil;
+import consulo.container.classloader.PluginClassLoader;
 import consulo.logging.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtil;
-import com.intellij.util.lang.UrlClassLoader;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -188,7 +188,7 @@ public final class IntentionActionMetaData {
     if (pageURL != null) {
       try {
         final String url = pageURL.toExternalForm();
-        return UrlClassLoader.internProtocol(new URL(url.substring(0, url.lastIndexOf('/'))));
+        return URLUtil.internProtocol(new URL(url.substring(0, url.lastIndexOf('/'))));
       }
       catch (MalformedURLException e) {
         LOG.error(e);
@@ -210,8 +210,8 @@ public final class IntentionActionMetaData {
   }
 
   @Nullable public PluginId getPluginId() {
-    if (myIntentionLoader instanceof IdeaPluginClassLoader) {
-      return ((IdeaPluginClassLoader)myIntentionLoader).getPluginId();
+    if (myIntentionLoader instanceof PluginClassLoader) {
+      return ((PluginClassLoader)myIntentionLoader).getPluginId();
     }
     return null;
   }

@@ -21,9 +21,12 @@
 package com.intellij.openapi.projectRoots;
 
 import com.intellij.execution.configurations.GeneralCommandLine;
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
+@Deprecated
+@DeprecationInfo("Move to java plugin")
 public interface JavaSdkType {
   @NonNls
   String getBinPath(Sdk sdk);

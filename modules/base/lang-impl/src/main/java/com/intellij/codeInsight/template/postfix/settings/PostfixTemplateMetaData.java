@@ -19,13 +19,13 @@ package com.intellij.codeInsight.template.postfix.settings;
 import com.intellij.codeInsight.intention.impl.config.BeforeAfterActionMetaData;
 import com.intellij.codeInsight.intention.impl.config.TextDescriptor;
 import com.intellij.codeInsight.template.postfix.templates.PostfixTemplate;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.lang.UrlClassLoader;
+import com.intellij.util.io.URLUtil;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -104,7 +104,7 @@ public final class PostfixTemplateMetaData extends BeforeAfterActionMetaData {
     if (pageURL != null) {
       try {
         final String url = pageURL.toExternalForm();
-        urlDir = UrlClassLoader.internProtocol(new URL(url.substring(0, url.lastIndexOf('/'))));
+        urlDir = URLUtil.internProtocol(new URL(url.substring(0, url.lastIndexOf('/'))));
         return urlDir;
       }
       catch (MalformedURLException e) {

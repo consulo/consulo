@@ -18,7 +18,7 @@ package consulo.components.impl;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.components.ComponentConfig;
+import consulo.container.plugin.ComponentConfig;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
@@ -99,11 +99,11 @@ public abstract class PlatformComponentManagerImpl extends ComponentManagerImpl 
   }
 
   @Override
-  protected void handleInitComponentError(@Nonnull Throwable ex, @Nullable String componentClassName, @Nullable ComponentConfig config) {
+  protected void handleInitComponentError(@Nonnull Throwable ex, @Nullable Class componentClass, @Nullable ComponentConfig config) {
     if (!myHandlingInitComponentError) {
       myHandlingInitComponentError = true;
       try {
-        PluginManager.handleComponentError(ex, componentClassName, config);
+        PluginManager.handleComponentError(ex, componentClass, config);
       }
       finally {
         myHandlingInitComponentError = false;

@@ -16,7 +16,6 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.impl.ModuleManagerImpl;
@@ -29,6 +28,7 @@ import com.intellij.util.graph.CachingSemiGraph;
 import com.intellij.util.graph.DFSTBuilder;
 import com.intellij.util.graph.GraphGenerator;
 import consulo.annotations.RequiredWriteAction;
+import consulo.logging.Logger;
 
 import java.util.*;
 
@@ -80,7 +80,7 @@ public class ModifiableModelCommitter {
   }
 
   private static DFSTBuilder<RootModelImpl> createDFSTBuilder(List<RootModelImpl> rootModels, final ModifiableModuleModel moduleModel) {
-    final Map<String, RootModelImpl> nameToModel = new com.intellij.util.containers.HashMap<String, RootModelImpl>();
+    final Map<String, RootModelImpl> nameToModel = new HashMap<String, RootModelImpl>();
     for (final RootModelImpl rootModel : rootModels) {
       final String name = rootModel.getModule().getName();
       LOG.assertTrue(!nameToModel.containsKey(name), name);

@@ -2401,7 +2401,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
             throw io;
           }
           catch (Throwable t) {
-            PluginManager.handleComponentError(t, extension.getClass().getName(), null);
+            PluginManager.handleComponentError(t, extension.getClass(), null);
           }
         });
       }

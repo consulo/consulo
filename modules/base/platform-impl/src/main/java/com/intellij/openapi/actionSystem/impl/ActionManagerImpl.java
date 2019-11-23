@@ -1183,7 +1183,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   //@Override
   public void replaceAction(@Nonnull String actionId, @Nonnull AnAction newAction) {
     Class<?> callerClass = ReflectionUtil.getGrandCallerClass();
-    PluginId pluginId = callerClass != null ? PluginManagerCore.getPluginByClassName(callerClass.getName()) : null;
+    PluginId pluginId = callerClass != null ? consulo.container.plugin.PluginManager.getPluginId(callerClass) : null;
     replaceAction(actionId, newAction, pluginId);
   }
 

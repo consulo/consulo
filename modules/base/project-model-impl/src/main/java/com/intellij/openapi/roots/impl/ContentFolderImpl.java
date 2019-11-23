@@ -24,16 +24,16 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
-import com.intellij.util.containers.HashMap;
-import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-
 import consulo.roots.ContentFolderPropertyProvider;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.impl.UnknownContentFolderTypeProvider;
+import org.jdom.Element;
+import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -68,7 +68,7 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
 
   ContentFolderImpl(@Nonnull String url,
                     @Nonnull ContentFolderTypeProvider contentFolderType,
-                    @javax.annotation.Nullable Map<String, Object> map,
+                    @Nullable Map<String, Object> map,
                     @Nonnull ContentEntryImpl contentEntry) {
     super(contentEntry.getModuleRootLayer());
     myContentEntry = contentEntry;
@@ -86,7 +86,7 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
   }
 
   protected ContentFolderImpl(@Nonnull VirtualFilePointer filePointer,
-                              @javax.annotation.Nullable Map<String, Object> properties,
+                              @Nullable Map<String, Object> properties,
                               @Nonnull ContentFolderTypeProvider contentFolderType,
                               @Nonnull ContentEntryImpl contentEntry) {
     super(contentEntry.getModuleRootLayer());
@@ -104,7 +104,7 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
     return url;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private static Map<String, Object> readProperties(Element element) throws InvalidDataException {
     List<Element> elementChildren = element.getChildren("property");
     if (elementChildren.isEmpty()) {
@@ -216,7 +216,7 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
     }
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   @SuppressWarnings("unchecked")
   public <T> T getPropertyValue(@Nonnull Key<T> key) {
@@ -227,7 +227,7 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
   }
 
   @Override
-  public <T> void setPropertyValue(@Nonnull Key<T> key, @javax.annotation.Nullable T value) {
+  public <T> void setPropertyValue(@Nonnull Key<T> key, @Nullable T value) {
     myPropertiesByKeyCache = null;
 
     if (value == null && myProperties == null) {
@@ -282,7 +282,7 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
     return getUrl().hashCode();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public String toString() {
     return myFilePointer == null ? null : getUrl();

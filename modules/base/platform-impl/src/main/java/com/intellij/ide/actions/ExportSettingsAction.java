@@ -24,7 +24,6 @@ import com.intellij.CommonBundle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.ide.plugins.cl.IdeaPluginClassLoader;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.Application;
@@ -44,6 +43,7 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.ZipUtil;
 import consulo.application.ex.ApplicationEx2;
 import consulo.components.impl.stores.storage.StateStorageManager;
+import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.injecting.key.InjectingKey;
@@ -201,8 +201,8 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
     PluginDescriptor pluginDescriptor = null;
     ClassLoader classLoader = aClass.getClassLoader();
 
-    if(classLoader instanceof IdeaPluginClassLoader) {
-      pluginDescriptor = PluginManager.getPlugin(((IdeaPluginClassLoader)classLoader).getPluginId());
+    if(classLoader instanceof PluginClassLoader) {
+      pluginDescriptor = PluginManager.getPlugin(((PluginClassLoader)classLoader).getPluginId());
     }
 
     if (pluginDescriptor != null && !PluginManagerCore.CORE_PLUGIN.equals(pluginDescriptor.getPluginId())) {

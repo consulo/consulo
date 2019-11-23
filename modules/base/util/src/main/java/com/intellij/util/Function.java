@@ -28,8 +28,13 @@ import java.util.Collection;
  * Consider to use java.util.function.Function
  */
 @SuppressWarnings({"unchecked"})
-public interface Function<Param, Result> {
+public interface Function<Param, Result> extends java.util.function.Function<Param, Result> {
   Result fun(Param param);
+
+  @Override
+  default Result apply(Param param) {
+    return fun(param);
+  }
 
   Function ID = new Function.Mono() {
     @Override

@@ -79,6 +79,12 @@
       <artifactId>consulo-diff-api</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-util-rt</artifactId>
+      <version>${project.version}</version>
+      <optional>true</optional>
+    </dependency>
     <!--internal libraries-->
     <dependency>
       <groupId>consulo.internal</groupId>

@@ -1,6 +1,7 @@
 package com.intellij.ide.plugins;
 
 import consulo.container.impl.ContainerLogger;
+import consulo.container.impl.IdeaPluginDescriptorImpl;
 import consulo.container.impl.PluginLoader;
 import org.junit.Assert;
 import org.junit.Test;

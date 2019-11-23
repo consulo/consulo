@@ -16,14 +16,14 @@
 
 package com.intellij.codeInsight.intention.impl.config;
 
-import com.intellij.util.ResourceUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.lang.UrlClassLoader;
-import javax.annotation.Nonnull;
+import com.intellij.util.ResourceUtil;
+import com.intellij.util.io.URLUtil;
 
-import java.net.URL;
-import java.io.IOException;
+import javax.annotation.Nonnull;
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
 /**
  * @author yole
@@ -32,7 +32,7 @@ public class ResourceTextDescriptor implements TextDescriptor {
   private final URL myUrl;
 
   public ResourceTextDescriptor(@Nonnull URL url) {
-    myUrl = UrlClassLoader.internProtocol(url);
+    myUrl = URLUtil.internProtocol(url);
   }
 
   @Override

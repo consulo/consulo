@@ -19,7 +19,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.lang.JavaVersion;
+import consulo.util.nodep.JavaVersion;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

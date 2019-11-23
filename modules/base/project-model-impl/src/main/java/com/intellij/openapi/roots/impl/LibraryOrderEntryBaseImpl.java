@@ -27,8 +27,9 @@ import consulo.logging.Logger;
 import consulo.roots.OrderEntryWithTracking;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.roots.orderEntry.OrderEntryType;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl imple
   protected final ProjectRootManagerImpl myProjectRootManagerImpl;
   @Nonnull
   protected DependencyScope myScope = DependencyScope.COMPILE;
-  @javax.annotation.Nullable
+  @Nullable
   private RootProvider myCurrentlySubscribedRootProvider = null;
 
   public LibraryOrderEntryBaseImpl(@Nonnull OrderEntryType<?> provider, @Nonnull ModuleRootLayerImpl rootModel,
@@ -54,7 +55,7 @@ public abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl imple
     updateFromRootProviderAndSubscribe();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public Object getEqualObject() {
     return null;
@@ -75,7 +76,7 @@ public abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl imple
 
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   protected abstract RootProvider getRootProvider();
 
   @Override
@@ -126,7 +127,7 @@ public abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl imple
     subscribe(wrapper);
   }
 
-  private void subscribe(@javax.annotation.Nullable RootProvider wrapper) {
+  private void subscribe(@Nullable RootProvider wrapper) {
     if (wrapper != null) {
       myProjectRootManagerImpl.subscribeToRootProvider(this, wrapper);
     }

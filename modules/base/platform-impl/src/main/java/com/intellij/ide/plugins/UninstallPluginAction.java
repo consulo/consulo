@@ -30,7 +30,7 @@ import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -60,9 +60,8 @@ public class UninstallPluginAction extends AnAction implements DumbAware {
 
     if (enabled) {
       for (PluginDescriptor descriptor : selection) {
-        if (descriptor instanceof IdeaPluginDescriptorImpl) {
-          final IdeaPluginDescriptorImpl ideaPluginDescriptor = (IdeaPluginDescriptorImpl)descriptor;
-          if (ideaPluginDescriptor.isDeleted() || PluginIds.isPlatformPlugin(ideaPluginDescriptor.getPluginId())) {
+        if (descriptor.isLoaded()) {
+          if (descriptor.isDeleted() || PluginIds.isPlatformPlugin(descriptor.getPluginId())) {
             enabled = false;
             break;
           }
@@ -95,28 +94,26 @@ public class UninstallPluginAction extends AnAction implements DumbAware {
     if (Messages.showYesNoDialog(host.getMainPanel(), message, IdeBundle.message("title.plugin.uninstall"), Messages.getQuestionIcon()) != Messages.YES) return;
 
     for (PluginDescriptor descriptor : selection) {
-      IdeaPluginDescriptorImpl pluginDescriptor = (IdeaPluginDescriptorImpl)descriptor;
 
       boolean actualDelete = true;
 
       //  Get the list of plugins which depend on this one. If this list is
       //  not empty - issue warning instead of simple prompt.
-      ArrayList<IdeaPluginDescriptorImpl> dependant = host.getDependentList(pluginDescriptor);
+      List<PluginDescriptor> dependant = host.getDependentList(descriptor);
       if (dependant.size() > 0) {
-        message = IdeBundle.message("several.plugins.depend.on.0.continue.to.remove", pluginDescriptor.getName());
+        message = IdeBundle.message("several.plugins.depend.on.0.continue.to.remove", descriptor.getName());
         actualDelete = (Messages.showYesNoDialog(host.getMainPanel(), message, IdeBundle.message("title.plugin.uninstall"), Messages.getQuestionIcon()) == Messages.YES);
       }
 
       if (actualDelete) {
-        uninstallPlugin(pluginDescriptor, host);
+        uninstallPlugin(descriptor, host);
       }
     }
   }
 
-  private static void uninstallPlugin(IdeaPluginDescriptorImpl descriptor, PluginManagerMain host) {
+  private static void uninstallPlugin(PluginDescriptor descriptor, PluginManagerMain host) {
     PluginId pluginId = descriptor.getPluginId();
-    descriptor.setDeleted(true);
-
+    PluginManagerCore.markAsDeletedPlugin(descriptor);
     try {
       PluginInstallUtil.prepareToUninstall(pluginId);
       final Set<PluginId> installedPlugins = InstalledPluginsState.getInstance().getInstalledPlugins();

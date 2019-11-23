@@ -17,7 +17,7 @@ package com.intellij.idea.starter;
 
 import com.intellij.ide.*;
 import com.intellij.ide.plugins.PluginManager;
-import com.intellij.ide.plugins.cl.PluginLoadStatistics;
+import consulo.container.impl.classloader.PluginLoadStatistics;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.openapi.application.Application;

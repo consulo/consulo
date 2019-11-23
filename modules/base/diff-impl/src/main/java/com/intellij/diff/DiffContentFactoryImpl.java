@@ -16,15 +16,7 @@
 package com.intellij.diff;
 
 import com.intellij.diff.actions.DocumentFragmentContent;
-import com.intellij.diff.contents.DiffContent;
-import com.intellij.diff.contents.DiffPsiFileSupport;
-import com.intellij.diff.contents.DirectoryContentImpl;
-import com.intellij.diff.contents.DocumentContent;
-import com.intellij.diff.contents.DocumentContentImpl;
-import com.intellij.diff.contents.EmptyContent;
-import com.intellij.diff.contents.FileContent;
-import com.intellij.diff.contents.FileContentImpl;
-import com.intellij.diff.contents.FileDocumentContentImpl;
+import com.intellij.diff.contents.*;
 import com.intellij.diff.tools.util.DiffNotifications;
 import com.intellij.diff.util.DiffUserDataKeysEx;
 import com.intellij.diff.util.DiffUtil;
@@ -59,7 +51,6 @@ import consulo.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
-
 import java.awt.datatransfer.DataFlavor;
 import java.io.File;
 import java.io.IOException;

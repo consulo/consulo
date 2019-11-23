@@ -25,6 +25,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.logging.Logger;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.roots.orderEntry.LibraryOrderEntryType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

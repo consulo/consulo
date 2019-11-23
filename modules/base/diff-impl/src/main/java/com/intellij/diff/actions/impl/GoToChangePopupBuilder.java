@@ -26,10 +26,9 @@ import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Consumer;
-import javax.annotation.Nonnull;
-
 import consulo.ui.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 

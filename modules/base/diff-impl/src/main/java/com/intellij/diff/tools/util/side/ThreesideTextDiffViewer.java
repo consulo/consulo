@@ -45,9 +45,9 @@ import com.intellij.pom.Navigatable;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.util.List;
 

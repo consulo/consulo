@@ -18,12 +18,13 @@ package com.intellij.diff.util;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.BackgroundTaskUtil;
 import com.intellij.util.Function;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.ui.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class DiffTaskQueue {
-  @javax.annotation.Nullable
+  @Nullable
   private ProgressIndicator myProgressIndicator;
 
   @RequiredUIAccess

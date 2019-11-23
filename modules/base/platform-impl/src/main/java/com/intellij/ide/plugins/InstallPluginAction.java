@@ -77,7 +77,7 @@ public class InstallPluginAction extends AnAction implements DumbAware {
             enabled &= InstalledPluginsTableModel.hasNewerVersion(descr.getPluginId());
           }
         }
-        else if (descr instanceof IdeaPluginDescriptorImpl) {
+        else if (descr.isLoaded()) {
           presentation.setText(IdeBundle.message("action.update.plugin"));
           presentation.setDescription(IdeBundle.message("action.update.plugin"));
           PluginId id = descr.getPluginId();
@@ -105,7 +105,7 @@ public class InstallPluginAction extends AnAction implements DumbAware {
       if (descr instanceof PluginNode) {
         pluginNode = (PluginNode)descr;
       }
-      else if (descr instanceof IdeaPluginDescriptorImpl) {
+      else if (descr.isLoaded()) {
         final PluginId pluginId = descr.getPluginId();
         pluginNode = new PluginNode(pluginId);
         pluginNode.setName(descr.getName());

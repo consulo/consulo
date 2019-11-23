@@ -29,7 +29,6 @@ import com.intellij.psi.tree.IElementType;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;

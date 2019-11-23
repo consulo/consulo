@@ -35,7 +35,6 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.io.ZipUtil;
 import com.intellij.util.ui.StatusText;
-import consulo.container.impl.PluginLoader;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.ide.plugins.AvailablePluginsDialog;
@@ -83,7 +82,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
       FileChooser.chooseFile(descriptor, null, myActionsPanel, null, virtualFile -> {
         final File file = VfsUtilCore.virtualToIoFile(virtualFile);
         try {
-          final IdeaPluginDescriptorImpl pluginDescriptor = loadDescriptionFromJar(file);
+          final PluginDescriptor pluginDescriptor = loadDescriptionFromJar(file);
           if (pluginDescriptor == null) {
             Messages.showErrorDialog("Fail to load plugin descriptor from file " + file.getName(), CommonBundle.getErrorTitle());
             return;
@@ -125,15 +124,15 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
   }
 
   @Nullable
-  public static IdeaPluginDescriptorImpl loadDescriptionFromJar(final File file) throws IOException {
-    IdeaPluginDescriptorImpl descriptor = null;
+  public static PluginDescriptor loadDescriptionFromJar(final File file) throws IOException {
+    PluginDescriptor descriptor = null;
     if (file.getName().endsWith(".zip")) {
       final File outputDir = FileUtil.createTempDirectory("plugin", "");
       try {
         ZipUtil.extract(file, outputDir, null);
         final File[] files = outputDir.listFiles();
         if (files != null && files.length == 1) {
-          descriptor = PluginLoader.loadDescriptor(files[0], false, false, PluginManagerCore.C_LOG);
+          descriptor = PluginManagerCore.loadPluginDescriptor(files[0]);
         }
       }
       finally {
@@ -144,7 +143,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
   }
 
 
-  private void checkInstalledPluginDependencies(IdeaPluginDescriptorImpl pluginDescriptor) {
+  private void checkInstalledPluginDependencies(PluginDescriptor pluginDescriptor) {
     final Set<PluginId> notInstalled = new HashSet<>();
     final Set<PluginId> disabledIds = new HashSet<>();
     final PluginId[] dependentPluginIds = pluginDescriptor.getDependentPluginIds();

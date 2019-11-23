@@ -15,8 +15,8 @@
  */
 package consulo.container.impl;
 
-import com.intellij.ide.plugins.cl.IdeaPluginClassLoader;
 import com.intellij.openapi.extensions.PluginId;
+import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.container.plugin.internal.PluginManagerInternal;
@@ -46,8 +46,8 @@ public class PluginManagerInternalImpl implements PluginManagerInternal {
   @Override
   public File getPluginPath(@Nonnull Class<?> pluginClass) {
     ClassLoader temp = pluginClass.getClassLoader();
-    assert temp instanceof IdeaPluginClassLoader : "classloader is not plugin";
-    IdeaPluginClassLoader classLoader = (IdeaPluginClassLoader)temp;
+    assert temp instanceof PluginClassLoader : "classloader is not plugin";
+    PluginClassLoader classLoader = (PluginClassLoader)temp;
     PluginId pluginId = classLoader.getPluginId();
     PluginDescriptor plugin = PluginManager.findPlugin(pluginId);
     assert plugin != null : "plugin is not found";
@@ -58,9 +58,9 @@ public class PluginManagerInternalImpl implements PluginManagerInternal {
   @Override
   public PluginDescriptor getPlugin(@Nonnull Class<?> pluginClass) {
     ClassLoader temp = pluginClass.getClassLoader();
-    if(!(temp instanceof IdeaPluginClassLoader)) {
+    if(!(temp instanceof PluginClassLoader)) {
       return null;
     }
-    return PluginManager.findPlugin(((IdeaPluginClassLoader)temp).getPluginId());
+    return PluginManager.findPlugin(((PluginClassLoader)temp).getPluginId());
   }
 }

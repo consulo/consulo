@@ -45,14 +45,14 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.RequiredWriteAction;
 import consulo.application.AccessRule;
 import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.*;
-import consulo.annotations.RequiredWriteAction;
+import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;

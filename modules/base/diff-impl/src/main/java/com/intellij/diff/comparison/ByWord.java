@@ -27,17 +27,17 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.text.MergingCharSequence;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.intellij.diff.comparison.ComparisonManagerImpl.convertIntoDiffFragments;
 import static com.intellij.diff.comparison.ComparisonManagerImpl.convertIntoMergeWordFragments;
-import static com.intellij.diff.comparison.TrimUtil.*;
 import static com.intellij.diff.comparison.TrimUtil.trim;
-import static com.intellij.diff.comparison.iterables.DiffIterableUtil.*;
+import static com.intellij.diff.comparison.TrimUtil.*;
 import static com.intellij.diff.comparison.iterables.DiffIterableUtil.trim;
+import static com.intellij.diff.comparison.iterables.DiffIterableUtil.*;
 import static com.intellij.openapi.util.text.StringUtil.isWhiteSpace;
 
 public class ByWord {

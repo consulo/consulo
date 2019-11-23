@@ -26,7 +26,7 @@ import com.intellij.util.MemoryDumpHelper;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.ui.JBUI;
-import consulo.container.impl.ExitCodes;
+import consulo.container.ExitCodes;
 import consulo.ui.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

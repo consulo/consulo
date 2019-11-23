@@ -15,13 +15,13 @@
  */
 package consulo.desktop.boot.main;
 
-import com.intellij.ide.BootstrapClassLoaderUtil;
-import com.intellij.openapi.util.SystemInfoRt;
+import consulo.container.impl.classloader.BootstrapClassLoaderUtil;
 import consulo.container.StartupError;
 import consulo.container.boot.ContainerStartup;
 import consulo.container.impl.ContainerLogger;
-import consulo.container.impl.ExitCodes;
+import consulo.container.ExitCodes;
 import consulo.container.util.StatCollector;
+import consulo.util.nodep.SystemInfoRt;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -75,7 +75,7 @@ public class Main {
       }
     }
 
-    if (!SystemInfoRt.isJavaVersionAtLeast(8, 0, 0)) {
+    if (!SystemInfoRt.isJavaVersionAtLeast(8)) {
       showMessage("Unsupported Java Version", "Cannot start under Java " + SystemInfoRt.JAVA_RUNTIME_VERSION + ": Java 1.8 or later is required.", true);
       System.exit(ExitCodes.UNSUPPORTED_JAVA_VERSION);
     }

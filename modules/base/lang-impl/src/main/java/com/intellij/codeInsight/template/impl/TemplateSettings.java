@@ -17,10 +17,8 @@ package com.intellij.codeInsight.template.impl;
 
 import com.intellij.AbstractBundle;
 import com.intellij.codeInsight.template.Template;
-import com.intellij.ide.plugins.cl.IdeaPluginClassLoader;
 import com.intellij.openapi.application.ex.DecodeDefaultsUtil;
 import com.intellij.openapi.components.*;
-import consulo.logging.Logger;
 import com.intellij.openapi.options.BaseSchemeProcessor;
 import com.intellij.openapi.options.SchemesManager;
 import com.intellij.openapi.options.SchemesManagerFactory;
@@ -34,15 +32,17 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.xmlb.Converter;
 import com.intellij.util.xmlb.annotations.OptionTag;
 import consulo.codeInsight.template.impl.BundleLiveTemplateSetEP;
+import consulo.container.classloader.PluginClassLoader;
+import consulo.logging.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -525,7 +525,7 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
     String groupName = root.getAttributeValue(GROUP);
     if (StringUtil.isEmpty(groupName)) {
       groupName = path.substring(path.lastIndexOf("/") + 1);
-      LOG.warn("Group attribute is empty. Path '" + path + "'. Plugin: " + ((IdeaPluginClassLoader)classLoader).getPluginId());
+      LOG.warn("Group attribute is empty. Path '" + path + "'. Plugin: " + ((PluginClassLoader)classLoader).getPluginId());
     }
 
     TemplateGroup result = new TemplateGroup(groupName, root.getAttributeValue("REPLACE"));

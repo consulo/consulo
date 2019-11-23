@@ -23,10 +23,10 @@ import com.intellij.diff.util.Side;
 import com.intellij.diff.util.ThreeSide;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.util.Consumer;
-import javax.annotation.Nonnull;
-
 import consulo.ui.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ import java.util.List;
 public class ThreesideContentPanel extends JPanel {
   @Nonnull
   private final ThreeDiffSplitter mySplitter;
-  @javax.annotation.Nullable
+  @Nullable
   private final EditorEx myBaseEditor;
 
   public ThreesideContentPanel(@Nonnull List<? extends EditorHolder> holders, @Nonnull List<JComponent> titleComponents) {
@@ -56,7 +56,7 @@ public class ThreesideContentPanel extends JPanel {
   }
 
   @RequiredUIAccess
-  public void setPainter(@javax.annotation.Nullable DiffSplitter.Painter painter, @Nonnull Side side) {
+  public void setPainter(@Nullable DiffSplitter.Painter painter, @Nonnull Side side) {
     mySplitter.setPainter(painter, side);
   }
 

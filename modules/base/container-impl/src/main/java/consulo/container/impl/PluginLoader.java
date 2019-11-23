@@ -15,11 +15,10 @@
  */
 package consulo.container.impl;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptorImpl;
 import com.intellij.openapi.extensions.PluginId;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.io.FileUtilRt;
-import com.intellij.openapi.util.text.StringUtilRt;
+import consulo.util.nodep.Comparing;
+import consulo.util.nodep.io.FileUtilRt;
+import consulo.util.nodep.text.StringUtilRt;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

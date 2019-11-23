@@ -15,7 +15,7 @@
  */
 package consulo.container.plugin.util;
 
-import com.intellij.openapi.util.SystemInfoRt;
+import consulo.util.nodep.SystemInfoRt;
 import consulo.container.plugin.PluginManager;
 
 import javax.annotation.Nonnull;

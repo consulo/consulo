@@ -23,10 +23,11 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import consulo.roots.impl.ModuleRootLayerImpl;
+import consulo.roots.orderEntry.ModuleOrderEntryType;
 import consulo.util.pointers.NamedPointer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.roots.orderEntry.ModuleOrderEntryType;
 
 /**
  * @author dsl

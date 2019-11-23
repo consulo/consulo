@@ -125,7 +125,7 @@ public class PluginHeaderPanel {
       myVersion.setText("Version: " + (version == null ? "N/A" : version));
       myUpdated.setVisible(false);
       if (!PluginIds.isPlatformPlugin(plugin.getPluginId())) {
-        if (((IdeaPluginDescriptorImpl)plugin).isDeleted()) {
+        if (plugin.isDeleted()) {
           myActionId = ACTION_ID.RESTART;
         }
         else {
