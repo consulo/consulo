@@ -1,32 +1,9 @@
-/*
- * Copyright 2000-2015 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/*
- * @author max
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.ProjectTopics;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.TransactionGuard;
-import com.intellij.openapi.application.WriteAction;
-import consulo.logging.Logger;
+import com.intellij.openapi.application.*;
 import com.intellij.openapi.extensions.ExtensionException;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -35,117 +12,136 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.util.ProgressWrapper;
 import com.intellij.openapi.project.*;
 import com.intellij.openapi.roots.*;
-import com.intellij.openapi.startup.StartupManager;
+import com.intellij.openapi.util.ClearableLazyValue;
+import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.EmptyRunnable;
-import com.intellij.openapi.util.ThrowableComputable;
-import com.intellij.openapi.util.registry.Registry;
+import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.newvfs.events.VFileCreateEvent;
-import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
-import com.intellij.openapi.vfs.newvfs.events.VFileMoveEvent;
-import com.intellij.psi.PsiManager;
+import com.intellij.openapi.vfs.newvfs.events.*;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.file.impl.FileManagerImpl;
 import com.intellij.ui.GuiUtils;
-import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.indexing.FileBasedIndexProjectHandler;
-import consulo.application.AccessRule;
+import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Future;
 
-@Singleton
-public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.impl.PushedFilePropertiesUpdater");
+public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater {
+  private static final Logger LOG = Logger.getInstance(PushedFilePropertiesUpdater.class);
 
   private final Project myProject;
-  private final FilePropertyPusher[] myPushers;
-  private final FilePropertyPusher[] myFilePushers;
+
+  private final ClearableLazyValue<List<FilePropertyPusher<?>>> myFilePushers = ClearableLazyValue.create(() -> {
+    //noinspection CodeBlock2Expr
+    return ContainerUtil.findAll(FilePropertyPusher.EP_NAME.getExtensionList(), pusher -> !pusher.pushDirectoriesOnly());
+  });
+
   private final Queue<Runnable> myTasks = new ConcurrentLinkedQueue<>();
 
-  @Inject
-  public PushedFilePropertiesUpdaterImpl(final Project project, StartupManager startupManager) {
+  public PushedFilePropertiesUpdaterImpl(@Nonnull Project project) {
     myProject = project;
-    myPushers = Extensions.getExtensions(FilePropertyPusher.EP_NAME);
-    myFilePushers = ContainerUtil.findAllAsArray(myPushers, pusher -> !pusher.pushDirectoriesOnly());
 
-    if(project.isDefault()) {
+    if (project.isDefault()) {
       return;
     }
 
-    startupManager.registerPreStartupActivity((ui) -> project.getMessageBus().connect().subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
+    project.getMessageBus().connect().subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
       @Override
-      public void rootsChanged(final ModuleRootEvent event) {
-        for (FilePropertyPusher pusher : myPushers) {
+      public void rootsChanged(@Nonnull ModuleRootEvent event) {
+        if (LOG.isTraceEnabled()) {
+          LOG.trace(new Throwable("Processing roots changed event (caused by file type change: " + event.isCausedByFileTypesChange() + ")"));
+        }
+        for (FilePropertyPusher<?> pusher : FilePropertyPusher.EP_NAME.getExtensionList()) {
           pusher.afterRootsChanged(project);
         }
       }
-    }));
+    });
+  }
+
+  private void queueFullUpdate() {
+    myFilePushers.drop();
+    myTasks.clear();
+    queueTasks(Arrays.asList(this::initializeProperties, () -> doPushAll(FilePropertyPusher.EP_NAME.getExtensionList())));
   }
 
   public void processAfterVfsChanges(@Nonnull List<? extends VFileEvent> events) {
-    boolean pushedSomething = false;
-    List<Runnable> delayedTasks = ContainerUtil.newArrayList();
+    List<Runnable> syncTasks = new ArrayList<>();
+    List<Runnable> delayedTasks = new ArrayList<>();
     for (VFileEvent event : events) {
-      final VirtualFile file = event.getFile();
-      if (file == null) continue;
-
-      final FilePropertyPusher[] pushers = file.isDirectory() ? myPushers : myFilePushers;
-      if (pushers.length == 0) continue;
-
       if (event instanceof VFileCreateEvent) {
-        if (!event.isFromRefresh() || !file.isDirectory()) {
-          // push synchronously to avoid entering dumb mode in the middle of a meaningful write action
-          // avoid dumb mode for just one file
-          doPushRecursively(file, pushers, ProjectRootManager.getInstance(myProject).getFileIndex());
-          pushedSomething = true;
+        boolean isDirectory = ((VFileCreateEvent)event).isDirectory();
+        List<FilePropertyPusher<?>> pushers = isDirectory ? FilePropertyPusher.EP_NAME.getExtensionList() : myFilePushers.getValue();
+
+        if (!event.isFromRefresh()) {
+          ContainerUtil.addIfNotNull(syncTasks, createRecursivePushTask(event, pushers));
         }
-        else if (!ProjectCoreUtil.isProjectOrWorkspaceFile(file)) {
-          ContainerUtil.addIfNotNull(delayedTasks, createRecursivePushTask(file, pushers));
+        else {
+          boolean isProjectOrWorkspaceFile = VfsUtilCore.findContainingDirectory(((VFileCreateEvent)event).getParent(), Project.DIRECTORY_STORE_FOLDER) != null;
+          if (!isProjectOrWorkspaceFile) {
+            ContainerUtil.addIfNotNull(delayedTasks, createRecursivePushTask(event, pushers));
+          }
         }
       }
-      else if (event instanceof VFileMoveEvent) {
-        for (FilePropertyPusher pusher : pushers) {
+      else if (event instanceof VFileMoveEvent || event instanceof VFileCopyEvent) {
+        VirtualFile file = getFile(event);
+        if (file == null) continue;
+        boolean isDirectory = file.isDirectory();
+        List<FilePropertyPusher<?>> pushers = isDirectory ? FilePropertyPusher.EP_NAME.getExtensionList() : myFilePushers.getValue();
+        for (FilePropertyPusher<?> pusher : pushers) {
           file.putUserData(pusher.getFileDataKey(), null);
         }
-        // push synchronously to avoid entering dumb mode in the middle of a meaningful write action
-        doPushRecursively(file, pushers, ProjectRootManager.getInstance(myProject).getFileIndex());
-        pushedSomething = true;
+        ContainerUtil.addIfNotNull(syncTasks, createRecursivePushTask(event, pushers));
       }
+    }
+    boolean pushingSomethingSynchronously = !syncTasks.isEmpty() && syncTasks.size() < FileBasedIndexProjectHandler.ourMinFilesToStartDumMode;
+    if (pushingSomethingSynchronously) {
+      // push synchronously to avoid entering dumb mode in the middle of a meaningful write action
+      // when only a few files are created/moved
+      syncTasks.forEach(Runnable::run);
+    }
+    else {
+      delayedTasks.addAll(syncTasks);
     }
     if (!delayedTasks.isEmpty()) {
       queueTasks(delayedTasks);
     }
-    if (pushedSomething) {
-      GuiUtils.invokeLaterIfNeeded(new Runnable() {
-        @Override
-        public void run() {
-          PushedFilePropertiesUpdaterImpl.this.scheduleDumbModeReindexingIfNeeded();
-        }
-      }, ModalityState.defaultModalityState());
+    if (pushingSomethingSynchronously) {
+      GuiUtils.invokeLaterIfNeeded(() -> scheduleDumbModeReindexingIfNeeded(), ModalityState.defaultModalityState());
     }
+  }
+
+  private static VirtualFile getFile(@Nonnull VFileEvent event) {
+    VirtualFile file = event.getFile();
+    if (event instanceof VFileCopyEvent) {
+      file = ((VFileCopyEvent)event).getNewParent().findChild(((VFileCopyEvent)event).getNewChildName());
+    }
+    return file;
+  }
+
+  @Override
+  public void runConcurrentlyIfPossible(List<Runnable> tasks) {
+    invokeConcurrentlyIfPossible(tasks);
   }
 
   @Override
   public void initializeProperties() {
-    for (final FilePropertyPusher pusher : myPushers) {
+    for (FilePropertyPusher<?> pusher : FilePropertyPusher.EP_NAME.getExtensionList()) {
       pusher.initExtra(myProject, myProject.getMessageBus(), new FilePropertyPusher.Engine() {
         @Override
         public void pushAll() {
-          PushedFilePropertiesUpdaterImpl.this.pushForProject(pusher);
+          PushedFilePropertiesUpdaterImpl.this.pushAll(pusher);
         }
 
         @Override
-        public void pushRecursively(VirtualFile file, Project project) {
-          queueTasks(ContainerUtil.createMaybeSingletonList(createRecursivePushTask(file, new FilePropertyPusher[]{pusher})));
+        public void pushRecursively(@Nonnull VirtualFile file, @Nonnull Project project) {
+          queueTasks(ContainerUtil.createMaybeSingletonList(createRecursivePushTask(new VFileContentChangeEvent(this, file, 0, 0, false), Collections.singletonList(pusher))));
         }
       });
     }
@@ -154,41 +150,43 @@ public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater
   @Override
   public void pushAllPropertiesNow() {
     performPushTasks();
-    ThrowableComputable<Module[], RuntimeException> action = () -> ModuleManager.getInstance(myProject).getModules();
-    doPushAll(AccessRule.read(action), myPushers);
+    doPushAll(FilePropertyPusher.EP_NAME.getExtensionList());
   }
 
   @Nullable
-  private Runnable createRecursivePushTask(final VirtualFile dir, final FilePropertyPusher[] pushers) {
-    if (pushers.length == 0) return null;
-    final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
-    if (!fileIndex.isInContent(dir)) return null;
-    return () -> PushedFilePropertiesUpdaterImpl.this.doPushRecursively(dir, pushers, fileIndex);
+  private Runnable createRecursivePushTask(@Nonnull VFileEvent event, @Nonnull List<? extends FilePropertyPusher<?>> pushers) {
+    if (pushers.isEmpty()) {
+      return null;
+    }
+
+    return () -> {
+      // delay calling event.getFile() until background to avoid expensive VFileCreateEvent.getFile() in EDT
+      VirtualFile dir = getFile(event);
+      final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
+      if (dir != null && ReadAction.compute(() -> fileIndex.isInContent(dir)) && !ProjectCoreUtil.isProjectOrWorkspaceFile(dir)) {
+        doPushRecursively(dir, pushers, fileIndex);
+      }
+    };
   }
 
-  private void doPushRecursively(VirtualFile dir, final FilePropertyPusher[] pushers, ProjectFileIndex fileIndex) {
-    fileIndex.iterateContentUnderDirectory(dir, new ContentIterator() {
-      @Override
-      public boolean processFile(final VirtualFile fileOrDir) {
-        applyPushersToFile(fileOrDir, pushers, null);
-        return true;
-      }
+  private void doPushRecursively(VirtualFile dir, @Nonnull List<? extends FilePropertyPusher<?>> pushers, ProjectFileIndex fileIndex) {
+    fileIndex.iterateContentUnderDirectory(dir, fileOrDir -> {
+      applyPushersToFile(fileOrDir, pushers, null);
+      return true;
     });
   }
 
-  private void queueTasks(List<? extends Runnable> actions) {
-    for (Runnable action : actions) {
-      myTasks.offer(action);
-    }
-    final DumbModeTask task = new DumbModeTask() {
+  private void queueTasks(@Nonnull List<? extends Runnable> actions) {
+    actions.forEach(myTasks::offer);
+    DumbModeTask task = new DumbModeTask(this) {
       @Override
       public void performInDumbMode(@Nonnull ProgressIndicator indicator) {
         performPushTasks();
       }
     };
-    myProject.getMessageBus().connect(task).subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
+    myProject.getMessageBus().connect(task).subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
       @Override
-      public void rootsChanged(ModuleRootEvent event) {
+      public void rootsChanged(@Nonnull ModuleRootEvent event) {
         DumbService.getInstance(myProject).cancelTask(task);
       }
     });
@@ -226,68 +224,76 @@ public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater
     }
   }
 
-  private static <T> T findPusherValuesUpwards(Project project, VirtualFile dir, FilePropertyPusher<T> pusher, T moduleValue) {
+  @Override
+  public void filePropertiesChanged(@Nonnull VirtualFile fileOrDir, @Nonnull Condition<? super VirtualFile> acceptFileCondition) {
+    if (fileOrDir.isDirectory()) {
+      for (VirtualFile child : fileOrDir.getChildren()) {
+        if (!child.isDirectory() && acceptFileCondition.value(child)) {
+          filePropertiesChanged(child);
+        }
+      }
+    }
+    else if (acceptFileCondition.value(fileOrDir)) {
+      filePropertiesChanged(fileOrDir);
+    }
+  }
+
+  private static <T> T findPusherValuesUpwards(Project project, VirtualFile dir, FilePropertyPusher<? extends T> pusher, T moduleValue) {
     final T value = pusher.getImmediateValue(project, dir);
     if (value != null) return value;
     if (moduleValue != null) return moduleValue;
-    final VirtualFile parent = dir.getParent();
-    if (parent != null) return findPusherValuesUpwards(project, parent, pusher);
-    T projectValue = pusher.getImmediateValue(project, null);
-    return projectValue != null ? projectValue : pusher.getDefaultValue();
+    return findPusherValuesFromParent(project, dir, pusher);
   }
 
-  private static <T> T findPusherValuesUpwards(Project project, VirtualFile dir, FilePropertyPusher<T> pusher) {
+  private static <T> T findPusherValuesUpwards(Project project, VirtualFile dir, FilePropertyPusher<? extends T> pusher) {
     final T userValue = dir.getUserData(pusher.getFileDataKey());
     if (userValue != null) return userValue;
     final T value = pusher.getImmediateValue(project, dir);
     if (value != null) return value;
+    return findPusherValuesFromParent(project, dir, pusher);
+  }
+
+  private static <T> T findPusherValuesFromParent(Project project, VirtualFile dir, FilePropertyPusher<? extends T> pusher) {
     final VirtualFile parent = dir.getParent();
-    if (parent != null) return findPusherValuesUpwards(project, parent, pusher);
+    if (parent != null && ProjectFileIndex.getInstance(project).isInContent(parent)) return findPusherValuesUpwards(project, parent, pusher);
     T projectValue = pusher.getImmediateValue(project, null);
     return projectValue != null ? projectValue : pusher.getDefaultValue();
   }
 
   @Override
-  public void pushForProject(final FilePropertyPusher... pushers) {
-    queueTasks(Collections.singletonList(() -> {
-      ThrowableComputable<Module[], RuntimeException> action = () -> ModuleManager.getInstance(myProject).getModules();
-      doPushAll(AccessRule.read(action), pushers);
-    }));
+  public void pushAll(@Nonnull FilePropertyPusher<?>... pushers) {
+    queueTasks(Collections.singletonList(() -> doPushAll(Arrays.asList(pushers))));
   }
 
-  @Override
-  public void pushForModules(@Nonnull Collection<Module> modules, FilePropertyPusher... pushers) {
-    queueTasks(Collections.singletonList(() -> doPushAll(ContainerUtil.toArray(modules, Module.ARRAY_FACTORY), pushers)));
-  }
+  private void doPushAll(@Nonnull List<? extends FilePropertyPusher<?>> pushers) {
+    Module[] modules = ReadAction.compute(() -> ModuleManager.getInstance(myProject).getModules());
 
-  private void doPushAll(Module[] modules, FilePropertyPusher[] pushers) {
     List<Runnable> tasks = new ArrayList<>();
 
     for (final Module module : modules) {
-      ThrowableComputable<Runnable,RuntimeException> action = () -> {
+      Runnable iteration = ReadAction.<Runnable, RuntimeException>compute(() -> {
         if (module.isDisposed()) return EmptyRunnable.INSTANCE;
         ProgressManager.checkCanceled();
 
-        final Object[] moduleValues = new Object[pushers.length];
+        final Object[] moduleValues = new Object[pushers.size()];
         for (int i = 0; i < moduleValues.length; i++) {
-          moduleValues[i] = pushers[i].getImmediateValue(module);
+          moduleValues[i] = pushers.get(i).getImmediateValue(module);
         }
 
         final ModuleFileIndex fileIndex = ModuleRootManager.getInstance(module).getFileIndex();
-        return (Runnable)() -> fileIndex.iterateContent(fileOrDir -> {
+        return () -> fileIndex.iterateContent(fileOrDir -> {
           applyPushersToFile(fileOrDir, pushers, moduleValues);
           return true;
         });
-      };
-      Runnable iteration = AccessRule.read(action);
+      });
       tasks.add(iteration);
     }
 
     invokeConcurrentlyIfPossible(tasks);
   }
 
-  public static void invokeConcurrentlyIfPossible(final List<Runnable> tasks) {
-    if (tasks.size() == 1 || ApplicationManager.getApplication().isWriteAccessAllowed() || !Registry.is("idea.concurrent.scanning.files.to.index")) {
+  public static void invokeConcurrentlyIfPossible(final List<? extends Runnable> tasks) {
+    if (tasks.size() == 1 || ApplicationManager.getApplication().isWriteAccessAllowed()) {
       for (Runnable r : tasks) r.run();
       return;
     }
@@ -295,23 +301,15 @@ public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater
     final ProgressIndicator progress = ProgressManager.getInstance().getProgressIndicator();
 
     final ConcurrentLinkedQueue<Runnable> tasksQueue = new ConcurrentLinkedQueue<>(tasks);
-    List<Future<?>> results = ContainerUtil.newArrayList();
+    List<Future<?>> results = new ArrayList<>();
     if (tasks.size() > 1) {
       int numThreads = Math.max(Math.min(CacheUpdateRunner.indexingThreadCount() - 1, tasks.size() - 1), 1);
 
       for (int i = 0; i < numThreads; ++i) {
-        results.add(ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-          @Override
-          public void run() {
-            ProgressManager.getInstance().runProcess(new Runnable() {
-              @Override
-              public void run() {
-                Runnable runnable;
-                while ((runnable = tasksQueue.poll()) != null) runnable.run();
-              }
-            }, ProgressWrapper.wrap(progress));
-          }
-        }));
+        results.add(ApplicationManager.getApplication().executeOnPooledThread(() -> ProgressManager.getInstance().runProcess(() -> {
+          Runnable runnable;
+          while ((runnable = tasksQueue.poll()) != null) runnable.run();
+        }, ProgressWrapper.wrap(progress))));
       }
     }
 
@@ -328,28 +326,26 @@ public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater
     }
   }
 
-  private void applyPushersToFile(final VirtualFile fileOrDir, final FilePropertyPusher[] pushers, final Object[] moduleValues) {
-    ApplicationManager.getApplication().runReadAction(new Runnable() {
-      @Override
-      public void run() {
-        ProgressManager.checkCanceled();
-        if (!fileOrDir.isValid()) return;
-        doApplyPushersToFile(fileOrDir, pushers, moduleValues);
-      }
+  private void applyPushersToFile(final VirtualFile fileOrDir, @Nonnull List<? extends FilePropertyPusher<?>> pushers, final Object[] moduleValues) {
+    ApplicationManager.getApplication().runReadAction(() -> {
+      ProgressManager.checkCanceled();
+      if (!fileOrDir.isValid()) return;
+      doApplyPushersToFile(fileOrDir, pushers, moduleValues);
     });
   }
 
-  private void doApplyPushersToFile(VirtualFile fileOrDir, FilePropertyPusher[] pushers, Object[] moduleValues) {
+  private void doApplyPushersToFile(@Nonnull VirtualFile fileOrDir, @Nonnull List<? extends FilePropertyPusher<?>> pushers, Object[] moduleValues) {
     FilePropertyPusher<Object> pusher = null;
     try {
       final boolean isDir = fileOrDir.isDirectory();
-      for (int i = 0, pushersLength = pushers.length; i < pushersLength; i++) {
+      for (int i = 0; i < pushers.size(); i++) {
         //noinspection unchecked
-        pusher = pushers[i];
-        if (!isDir && (pusher.pushDirectoriesOnly() || !pusher.acceptsFile(fileOrDir)) || isDir && !pusher.acceptsDirectory(fileOrDir, myProject)) {
+        pusher = (FilePropertyPusher<Object>)pushers.get(i);
+        if (isDir ? !pusher.acceptsDirectory(fileOrDir, myProject) : pusher.pushDirectoriesOnly() || !pusher.acceptsFile(fileOrDir, myProject)) {
           continue;
         }
-        findAndUpdateValue(fileOrDir, pusher, moduleValues != null ? moduleValues[i] : null);
+        Object value = moduleValues != null ? moduleValues[i] : null;
+        findAndUpdateValue(fileOrDir, pusher, value);
       }
     }
     catch (AbstractMethodError ame) { // acceptsDirectory is missed
@@ -364,7 +360,7 @@ public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater
     updateValue(myProject, fileOrDir, value, pusher);
   }
 
-  private static <T> void updateValue(final Project project, final VirtualFile fileOrDir, final T value, final FilePropertyPusher<T> pusher) {
+  public static <T> void updateValue(final Project project, final VirtualFile fileOrDir, final T value, final FilePropertyPusher<T> pusher) {
     final T oldValue = fileOrDir.getUserData(pusher.getFileDataKey());
     if (value != oldValue) {
       fileOrDir.putUserData(pusher.getFileDataKey(), value);
@@ -387,19 +383,9 @@ public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater
   }
 
   private static void reloadPsi(final VirtualFile file, final Project project) {
-    final FileManagerImpl fileManager = (FileManagerImpl)((PsiManagerEx)PsiManager.getInstance(project)).getFileManager();
+    final FileManagerImpl fileManager = (FileManagerImpl)PsiManagerEx.getInstanceEx(project).getFileManager();
     if (fileManager.findCachedViewProvider(file) != null) {
-      Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-          WriteAction.run(new ThrowableRunnable<RuntimeException>() {
-            @Override
-            public void run() throws RuntimeException {
-              fileManager.forceReload(file);
-            }
-          });
-        }
-      };
+      Runnable runnable = () -> WriteAction.run(() -> fileManager.forceReload(file));
       if (ApplicationManager.getApplication().isDispatchThread()) {
         runnable.run();
       }

@@ -31,8 +31,8 @@ import com.intellij.util.containers.DistinctRootsCollection;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.text.StringFactory;
 import consulo.logging.Logger;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.io.*;
 import java.net.MalformedURLException;
@@ -639,6 +639,18 @@ public class VfsUtilCore {
       }
     }
     return false;
+  }
+
+  @Nullable
+  public static VirtualFile findContainingDirectory(@Nonnull VirtualFile file, @Nonnull CharSequence name) {
+    VirtualFile parent = file.isDirectory() ? file : file.getParent();
+    while (parent != null) {
+      if (Comparing.equal(parent.getNameSequence(), name, SystemInfo.isFileSystemCaseSensitive)) {
+        return parent;
+      }
+      parent = parent.getParent();
+    }
+    return null;
   }
 
   /**

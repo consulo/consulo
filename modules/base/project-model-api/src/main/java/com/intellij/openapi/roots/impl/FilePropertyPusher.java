@@ -31,11 +31,24 @@ import java.io.IOException;
  * @author Gregory.Shrago
  */
 public interface FilePropertyPusher<T> {
-  ExtensionPointName<FilePropertyPusher> EP_NAME = ExtensionPointName.create("com.intellij.filePropertyPusher");
+  ExtensionPointName<FilePropertyPusher<?>> EP_NAME = ExtensionPointName.create("com.intellij.filePropertyPusher");
 
-  void initExtra(@Nonnull Project project, @Nonnull MessageBus bus, @Nonnull Engine languageLevelUpdater);
+  default void initExtra(@Nonnull Project project, @Nonnull MessageBus bus) {
+  }
+
+  /**
+   * @deprecated use {@link FilePropertyPusher#initExtra(Project, MessageBus)} instead
+   */
+  //@ApiStatus.ScheduledForRemoval(inVersion = "2021.3")
+  @Deprecated
+  @SuppressWarnings("unused")
+  default void initExtra(@Nonnull Project project, @Nonnull MessageBus bus, @Nonnull Engine languageLevelUpdater) {
+    initExtra(project, bus);
+  }
+
   @Nonnull
   Key<T> getFileDataKey();
+
   boolean pushDirectoriesOnly();
 
   @Nonnull
@@ -52,13 +65,20 @@ public interface FilePropertyPusher<T> {
   }
 
   boolean acceptsFile(@Nonnull VirtualFile file);
+
   boolean acceptsDirectory(@Nonnull VirtualFile file, @Nonnull Project project);
 
   void persistAttribute(@Nonnull Project project, @Nonnull VirtualFile fileOrDir, @Nonnull T value) throws IOException;
 
+  /**
+   * @deprecated not used anymore
+   */
+  @Deprecated
+  //@ApiStatus.ScheduledForRemoval(inVersion = "2021.3")
   interface Engine {
     void pushAll();
-    void pushRecursively(VirtualFile vile, Project project);
+
+    void pushRecursively(@Nonnull VirtualFile vile, @Nonnull Project project);
   }
 
   void afterRootsChanged(@Nonnull Project project);

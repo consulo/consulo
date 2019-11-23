@@ -26,13 +26,12 @@ import com.intellij.util.ui.UIUtil;
 import consulo.awt.hacking.BasicTreeUIHacking;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.concurrency.AsyncPromise;
 import org.jetbrains.concurrency.Promise;
 import org.jetbrains.concurrency.Promises;
 
 import javax.accessibility.AccessibleContext;
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.TreeUI;
@@ -41,7 +40,6 @@ import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.*;
 import java.util.function.Consumer;
@@ -49,7 +47,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static com.intellij.util.ReflectionUtil.getDeclaredMethod;
 import static java.util.stream.Collectors.toList;
 
 public final class TreeUtil {

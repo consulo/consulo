@@ -46,9 +46,8 @@ import consulo.roots.ModifiableModuleRootLayer;
 import consulo.roots.orderEntry.OrderEntrySerializationUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.util.*;
 
@@ -963,7 +962,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     }
   }
 
-  @NotNull
+  @Nonnull
   public VirtualFilePointerListener getRootsChangedListener() {
     return ProjectRootManagerImpl.getInstanceImpl(getProject()).getRootsValidityChangedListener();
   }

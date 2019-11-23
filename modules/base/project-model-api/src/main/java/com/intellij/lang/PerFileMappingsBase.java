@@ -42,7 +42,7 @@ import java.util.*;
 public abstract class PerFileMappingsBase<T> implements PersistentStateComponent<Element>, PerFileMappings<T> {
   private final Map<VirtualFile, T> myMappings = ContainerUtil.newHashMap();
 
-  @javax.annotation.Nullable
+  @Nullable
   protected FilePropertyPusher<T> getFilePropertyPusher() {
     return null;
   }
@@ -70,14 +70,14 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
 
   @Override
   @Nullable
-  public T getMapping(@javax.annotation.Nullable VirtualFile file) {
+  public T getMapping(@Nullable VirtualFile file) {
     FilePropertyPusher<T> pusher = getFilePropertyPusher();
     T t = getMappingInner(file, myMappings, pusher == null? null : pusher.getFileDataKey());
     return t == null? getDefaultMapping(file) : t;
   }
 
   @Nullable
-  protected static <T> T getMappingInner(@Nullable VirtualFile file, @Nullable Map<VirtualFile, T> mappings, @javax.annotation.Nullable Key<T> pusherKey) {
+  protected static <T> T getMappingInner(@Nullable VirtualFile file, @Nullable Map<VirtualFile, T> mappings, @Nullable Key<T> pusherKey) {
     if (file instanceof VirtualFileWindow) {
       final VirtualFileWindow window = (VirtualFileWindow)file;
       file = window.getDelegate();
@@ -103,7 +103,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
     }
   }
 
-  private static <T> T getMappingForHierarchy(@javax.annotation.Nullable VirtualFile file, @Nonnull Map<VirtualFile, T> mappings) {
+  private static <T> T getMappingForHierarchy(@Nullable VirtualFile file, @Nonnull Map<VirtualFile, T> mappings) {
     for (VirtualFile cur = file; cur != null; cur = cur.getParent()) {
       T t = mappings.get(cur);
       if (t != null) return t;
@@ -127,7 +127,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public T getImmediateMapping(@Nullable VirtualFile file) {
     synchronized (myMappings) {
       return myMappings.get(file);
@@ -147,7 +147,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
     handleMappingChange(mappings.keySet(), oldFiles, project != null && !project.isDefault());
   }
 
-  public void setMapping(@javax.annotation.Nullable final VirtualFile file, @Nullable T dialect) {
+  public void setMapping(@Nullable final VirtualFile file, @Nullable T dialect) {
     synchronized (myMappings) {
       if (dialect == null) {
         myMappings.remove(file);
@@ -169,7 +169,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
         oldFile.putUserData(pusher.getFileDataKey(), null);
       }
       if (!project.isDefault()) {
-        PushedFilePropertiesUpdater.getInstance(project).pushForProject(pusher);
+        PushedFilePropertiesUpdater.getInstance(project).pushAll(pusher);
       }
     }
     if (shouldReparseFiles()) {
@@ -187,7 +187,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
 
   protected abstract List<T> getAvailableValues();
 
-  @javax.annotation.Nullable
+  @Nullable
   protected abstract String serialize(T t);
 
   @Override
@@ -214,7 +214,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
     }
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   protected T handleUnknownMapping(VirtualFile file, String value) {
     return null;
   }
