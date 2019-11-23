@@ -20,14 +20,14 @@
 package com.intellij.codeInsight.intention.impl.config;
 
 import com.intellij.codeInsight.CodeInsightBundle;
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import consulo.container.plugin.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerConfigurable;
 import com.intellij.ide.plugins.PluginManagerUISettings;
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import consulo.logging.Logger;
-import com.intellij.openapi.extensions.PluginId;
+import consulo.container.plugin.PluginId;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.options.ShowSettingsUtil;

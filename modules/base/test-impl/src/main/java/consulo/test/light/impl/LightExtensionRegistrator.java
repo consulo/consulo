@@ -15,10 +15,10 @@
  */
 package consulo.test.light.impl;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import consulo.container.plugin.IdeaPluginDescriptor;
 import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.PluginId;
+import consulo.container.plugin.PluginId;
 import com.intellij.openapi.extensions.impl.ExtensionPointImpl;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import consulo.container.plugin.PluginDescriptor;

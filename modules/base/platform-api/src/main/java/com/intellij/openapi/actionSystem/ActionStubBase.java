@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import com.intellij.openapi.extensions.PluginId;
+import consulo.container.plugin.PluginId;
 
 /**
  * from kotlin

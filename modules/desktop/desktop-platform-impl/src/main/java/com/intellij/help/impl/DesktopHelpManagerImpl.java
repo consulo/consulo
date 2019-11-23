@@ -18,7 +18,7 @@ package com.intellij.help.impl;
 import com.intellij.CommonBundle;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.plugins.HelpSetPath;
+import consulo.container.plugin.HelpSetPath;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.help.HelpManager;

@@ -15,7 +15,7 @@
  */
 package consulo.container.impl;
 
-import com.intellij.openapi.extensions.PluginId;
+import consulo.container.plugin.PluginId;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;

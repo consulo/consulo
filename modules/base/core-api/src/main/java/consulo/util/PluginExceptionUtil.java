@@ -15,7 +15,7 @@
  */
 package consulo.util;
 
-import com.intellij.diagnostic.PluginException;
+import consulo.container.PluginException;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;

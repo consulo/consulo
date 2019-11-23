@@ -16,8 +16,6 @@
 
 package consulo.container.plugin;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.openapi.extensions.PluginId;
 import consulo.util.nodep.text.StringUtilRt;
 
 import java.util.HashMap;

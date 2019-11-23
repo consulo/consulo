@@ -15,7 +15,6 @@
  */
 package consulo.container.plugin;
 
-import com.intellij.openapi.extensions.PluginId;
 import consulo.container.plugin.internal.PluginManagerInternal;
 import consulo.util.nodep.ServiceLoaderUtil;
 

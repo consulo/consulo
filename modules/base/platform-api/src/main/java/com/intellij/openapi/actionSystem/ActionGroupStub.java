@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import com.intellij.diagnostic.PluginException;
-import com.intellij.openapi.extensions.PluginId;
+import consulo.container.PluginException;
+import consulo.container.plugin.PluginId;
 import com.intellij.util.ObjectUtil;
 
 /**

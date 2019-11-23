@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.module.impl;
 
-import com.intellij.ide.plugins.PluginListenerDescriptor;
+import consulo.container.plugin.PluginListenerDescriptor;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.impl.ModulePathMacroManager;

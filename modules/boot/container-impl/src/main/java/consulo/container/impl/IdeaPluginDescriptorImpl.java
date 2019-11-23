@@ -15,15 +15,12 @@
  */
 package consulo.container.impl;
 
-import com.intellij.ide.plugins.*;
-import consulo.container.plugin.ComponentConfig;
-import com.intellij.openapi.extensions.PluginId;
+import consulo.container.plugin.*;
+import consulo.container.plugin.PluginId;
 import consulo.container.impl.parser.*;
 import consulo.util.nodep.SystemInfoRt;
 import consulo.util.nodep.io.FileUtilRt;
 import consulo.util.nodep.text.StringUtilRt;
-import consulo.container.plugin.PluginDescriptorStub;
-import consulo.container.plugin.PluginIds;
 import consulo.util.nodep.map.SimpleMultiMap;
 import consulo.util.nodep.xml.SimpleXmlParsingException;
 import consulo.util.nodep.xml.SimpleXmlReader;

@@ -15,7 +15,7 @@
  */
 package consulo.container.impl.parser;
 
-import com.intellij.ide.plugins.PluginListenerDescriptor;
+import consulo.container.plugin.PluginListenerDescriptor;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 
 import java.util.Collections;

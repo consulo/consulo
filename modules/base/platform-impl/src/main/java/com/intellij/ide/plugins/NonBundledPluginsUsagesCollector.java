@@ -22,6 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.container.plugin.IdeaPluginDescriptor;
 import consulo.container.plugin.PluginIds;
 
 import javax.annotation.Nonnull;

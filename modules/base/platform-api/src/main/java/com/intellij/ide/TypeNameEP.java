@@ -16,7 +16,7 @@
 package com.intellij.ide;
 
 import com.intellij.AbstractBundle;
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import consulo.container.plugin.IdeaPluginDescriptor;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.NullableLazyValue;

@@ -25,6 +25,7 @@ import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.SplitterProportionsData;
 import com.intellij.openapi.util.Disposer;
+import consulo.container.plugin.IdeaPluginDescriptor;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

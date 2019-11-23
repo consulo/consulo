@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.project.impl;
 
-import com.intellij.ide.plugins.PluginListenerDescriptor;
+import consulo.container.plugin.PluginListenerDescriptor;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.notification.*;
 import com.intellij.openapi.application.Application;

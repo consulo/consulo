@@ -18,7 +18,7 @@ package com.intellij.openapi.actionSystem.ex;
 
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.extensions.PluginId;
+import consulo.container.plugin.PluginId;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

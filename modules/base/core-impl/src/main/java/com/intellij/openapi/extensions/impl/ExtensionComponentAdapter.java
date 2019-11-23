@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.extensions.impl;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import consulo.container.plugin.IdeaPluginDescriptor;
 import com.intellij.openapi.extensions.LoadingOrder;
 import com.intellij.openapi.extensions.PluginAware;
-import com.intellij.openapi.extensions.PluginId;
+import consulo.container.plugin.PluginId;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.util.xmlb.XmlSerializer;
 import consulo.container.plugin.PluginDescriptor;

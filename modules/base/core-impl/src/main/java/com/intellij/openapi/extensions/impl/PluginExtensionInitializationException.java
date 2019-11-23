@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.extensions.impl;
 
-import com.intellij.openapi.extensions.PluginId;
+import consulo.container.plugin.PluginId;
 import consulo.injecting.InjectingProblemException;
 
 public class PluginExtensionInitializationException extends InjectingProblemException {

@@ -15,9 +15,6 @@
  */
 package consulo.container.plugin;
 
-import com.intellij.ide.plugins.HelpSetPath;
-import com.intellij.ide.plugins.PluginListenerDescriptor;
-import com.intellij.openapi.extensions.PluginId;
 import consulo.annotations.DeprecationInfo;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 

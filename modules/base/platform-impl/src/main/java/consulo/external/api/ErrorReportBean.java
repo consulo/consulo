@@ -15,7 +15,7 @@
  */
 package consulo.external.api;
 
-import com.intellij.openapi.extensions.PluginId;
+import consulo.container.plugin.PluginId;
 import com.intellij.util.ExceptionUtil;
 import consulo.logging.attachment.Attachment;
 import org.jetbrains.annotations.NonNls;

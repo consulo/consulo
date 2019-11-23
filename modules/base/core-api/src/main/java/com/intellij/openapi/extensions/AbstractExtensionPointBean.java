@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.extensions;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import consulo.container.plugin.IdeaPluginDescriptor;
 import consulo.logging.Logger;
 import consulo.injecting.InjectingContainer;
 

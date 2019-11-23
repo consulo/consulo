@@ -15,7 +15,7 @@
  */
 package consulo.platform;
 
-import com.intellij.openapi.extensions.PluginId;
+import consulo.container.plugin.PluginId;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.ObjectUtil;
 import consulo.annotations.DeprecationInfo;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.extensions;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import consulo.container.plugin.IdeaPluginDescriptor;
 
 /**
  * Extensions should implement this interface when it is important to find out what particular plugin has provided this extension.

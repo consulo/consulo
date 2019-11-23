@@ -15,7 +15,7 @@
  */
 package consulo.test.light.impl;
 
-import com.intellij.ide.plugins.PluginListenerDescriptor;
+import consulo.container.plugin.PluginListenerDescriptor;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.impl.ModalityStateEx;

@@ -1,6 +1,6 @@
 package consulo.ide.updateSettings.impl;
 
-import com.intellij.openapi.extensions.PluginId;
+import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginDescriptor;
 
 import javax.annotation.Nonnull;

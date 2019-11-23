@@ -19,7 +19,7 @@ import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.extensions.PluginId;
+import consulo.container.plugin.PluginId;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.container.plugin.PluginDescriptor;
 

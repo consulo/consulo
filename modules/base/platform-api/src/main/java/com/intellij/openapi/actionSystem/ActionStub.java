@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import com.intellij.openapi.extensions.PluginId;
+import consulo.container.plugin.PluginId;
 import consulo.logging.Logger;
 import consulo.ui.RequiredUIAccess;
 import javax.annotation.Nonnull;

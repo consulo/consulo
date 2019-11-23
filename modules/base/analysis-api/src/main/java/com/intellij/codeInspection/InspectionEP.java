@@ -18,7 +18,7 @@ package com.intellij.codeInspection;
 import com.intellij.AbstractBundle;
 import com.intellij.CommonBundle;
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import consulo.container.plugin.IdeaPluginDescriptor;
 import com.intellij.lang.LanguageExtensionPoint;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.extensions.ExtensionPointName;

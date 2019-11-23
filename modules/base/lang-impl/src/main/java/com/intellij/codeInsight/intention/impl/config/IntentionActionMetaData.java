@@ -23,7 +23,7 @@ import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.util.io.URLUtil;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.logging.Logger;
-import com.intellij.openapi.extensions.PluginId;
+import consulo.container.plugin.PluginId;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.util.ArrayUtil;

@@ -15,8 +15,8 @@
  */
 package consulo.container.impl.parser;
 
-import com.intellij.ide.plugins.*;
 import consulo.container.plugin.ComponentConfig;
+import consulo.container.plugin.PluginListenerDescriptor;
 import consulo.util.nodep.text.StringUtilRt;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 

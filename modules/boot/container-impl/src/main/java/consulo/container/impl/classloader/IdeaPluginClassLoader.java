@@ -1,8 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.container.impl.classloader;
 
-import com.intellij.diagnostic.PluginException;
-import com.intellij.openapi.extensions.PluginId;
+import consulo.container.PluginException;
+import consulo.container.plugin.PluginId;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.util.nodep.classloader.UrlClassLoader;
 import consulo.util.nodep.collection.ContainerUtilRt;

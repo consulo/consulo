@@ -15,8 +15,6 @@
  */
 package consulo.container.plugin;
 
-import com.intellij.openapi.extensions.PluginId;
-
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.HashSet;

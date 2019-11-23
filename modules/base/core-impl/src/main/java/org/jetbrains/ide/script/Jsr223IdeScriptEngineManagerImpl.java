@@ -15,7 +15,7 @@
  */
 package org.jetbrains.ide.script;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import consulo.container.plugin.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.ClassLoaderUtil;

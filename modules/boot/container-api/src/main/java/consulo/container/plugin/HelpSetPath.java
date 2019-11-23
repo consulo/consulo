@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.plugins;
+package consulo.container.plugin;
 
 /**
  * @author max

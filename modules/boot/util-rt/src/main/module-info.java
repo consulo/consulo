@@ -1,5 +1,4 @@
 module consulo.util.nodep {
-  requires java.base;
   requires java.xml;
 
   exports consulo.util.nodep;

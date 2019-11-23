@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.plugins;
 
-import com.intellij.openapi.extensions.PluginId;
+import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginDescriptorStub;
 import consulo.ide.plugins.PluginJsonNode;
 import consulo.container.plugin.SimpleExtension;

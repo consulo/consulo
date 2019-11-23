@@ -16,6 +16,14 @@
 package consulo.container.impl.classloader;
 
 import java.io.File;
+import java.lang.Class;
+import java.lang.ClassNotFoundException;
+import java.lang.Object;
+import java.lang.Override;
+import java.lang.RuntimeException;
+import java.lang.SuppressWarnings;
+import java.lang.Throwable;
+import java.lang.UnsupportedOperationException;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -87,11 +95,13 @@ public class Java9ModuleInitializer {
 
     List<String> toResolve = new ArrayList<String>();
 
+    //toResolve.add("consulo.logging.api");
     toResolve.add("consulo.desktop.awt.hacking");
     toResolve.add("consulo.util.rmi");
     toResolve.add("org.jdom");
     toResolve.add("gnu.trove");
     toResolve.add("kava.beans");
+
     //toResolve.add("svg.salamander");
     //toResolve.add("org.slf4j");
 

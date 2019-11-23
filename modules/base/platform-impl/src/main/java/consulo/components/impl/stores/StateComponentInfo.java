@@ -15,13 +15,13 @@
  */
 package consulo.components.impl.stores;
 
-import com.intellij.diagnostic.PluginException;
+import consulo.container.PluginException;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import consulo.container.plugin.ComponentConfig;
 import consulo.logging.Logger;
-import com.intellij.openapi.extensions.PluginId;
+import consulo.container.plugin.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.RoamingTypeDisabled;

@@ -15,7 +15,7 @@
  */
 package consulo.test.light.impl;
 
-import com.intellij.ide.plugins.PluginListenerDescriptor;
+import consulo.container.plugin.PluginListenerDescriptor;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;

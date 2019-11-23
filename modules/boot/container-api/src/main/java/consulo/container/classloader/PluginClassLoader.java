@@ -15,7 +15,7 @@
  */
 package consulo.container.classloader;
 
-import com.intellij.openapi.extensions.PluginId;
+import consulo.container.plugin.PluginId;
 
 import javax.annotation.Nonnull;
 

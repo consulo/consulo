@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.components.impl;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginListenerDescriptor;
+import consulo.container.plugin.IdeaPluginDescriptor;
+import consulo.container.plugin.PluginListenerDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;

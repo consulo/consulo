@@ -16,7 +16,7 @@
 package com.intellij.ide.plugins;
 
 import com.intellij.ide.startup.StartupActionScriptManager;
-import com.intellij.openapi.extensions.PluginId;
+import consulo.container.plugin.PluginId;
 import com.intellij.util.containers.ArrayListSet;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.ide.plugins.InstalledPluginsState;
