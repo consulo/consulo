@@ -50,6 +50,7 @@
     <module>modules/base/async-api</module>
     <module>modules/base/util-rmi</module>
 
+    <module>modules/boot/bootstrap</module>
     <module>modules/boot/container-api</module>
     <module>modules/boot/container-impl</module>
     <module>modules/boot/util-rt</module>
@@ -57,14 +58,12 @@
     <module>modules/base/annotations</module>
     <module>modules/base/analysis-api</module>
     <module>modules/base/analysis-impl</module>
-    <module>modules/base/bootstrap</module>
     <module>modules/base/built-in-server-api</module>
     <module>modules/base/built-in-server-impl</module>
     <module>modules/base/core-api</module>
     <module>modules/base/core-impl</module>
     <module>modules/base/compiler-api</module>
     <module>modules/base/compiler-impl</module>
-
     <module>modules/base/diff-api</module>
     <module>modules/base/diff-impl</module>
     <module>modules/base/disposer-api</module>
