@@ -120,8 +120,8 @@
     <module>modules/base/xtest-impl</module>
     <module>modules/base/xtest-sm-impl</module>
 
-    <module>modules/base/injecting-api</module>
-    <module>modules/base/injecting-pico-impl</module>
+    <module>modules/base/injecting/injecting-api</module>
+    <module>modules/base/injecting/injecting-pico-impl</module>
 
     <module>modules/base/language-editor-api</module>
 
