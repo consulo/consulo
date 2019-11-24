@@ -23,4 +23,6 @@ package consulo.annotations;
  */
 public @interface ReviewAfterMigrationToJRE {
   int value();
+
+  String description() default "";
 }

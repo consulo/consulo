@@ -15,6 +15,8 @@
  */
 package consulo.awt;
 
+import consulo.annotations.DeprecationInfo;
+import consulo.annotations.ReviewAfterMigrationToJRE;
 import consulo.container.StartupError;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
@@ -46,6 +48,7 @@ public class TargetAWT {
   private static final TargetAWTFacade ourFacade = findImplementation(TargetAWTFacade.class);
 
   @Nonnull
+  @ReviewAfterMigrationToJRE(value = 9, description = "Use consulo.container.plugin.util.PlatformServiceLocator#findImplementation after migration")
   private static <T, S> T findImplementation(@Nonnull Class<T> interfaceClass) {
     for (T facade : ServiceLoader.load(interfaceClass, TargetAWT.class.getClassLoader())) {
       return facade;

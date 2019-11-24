@@ -21,11 +21,13 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.JBImageIcon;
 import com.intellij.util.ui.JBUI;
 import consulo.annotations.DeprecationInfo;
+import consulo.annotations.ReviewAfterMigrationToJRE;
 import consulo.container.StartupError;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
+import consulo.ui.UIInternal;
 import consulo.ui.migration.IconLoaderFacade;
 import consulo.ui.migration.SwingImageRef;
 import org.jetbrains.annotations.NonNls;
@@ -47,7 +49,12 @@ public final class IconLoader {
   private static IconLoaderFacade ourIconLoaderFacade = findImplementation(IconLoaderFacade.class);
 
   @Nonnull
+  @ReviewAfterMigrationToJRE(value = 9, description = "Use consulo.container.plugin.util.PlatformServiceLocator#findImplementation after migration")
   private static <T> T findImplementation(@Nonnull Class<T> interfaceClass) {
+    for (T value : ServiceLoader.load(interfaceClass, UIInternal.class.getClassLoader())) {
+      return value;
+    }
+
     for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
       if (PluginIds.isPlatformImplementationPlugin(descriptor.getPluginId())) {
         ServiceLoader<T> loader = ServiceLoader.load(interfaceClass, descriptor.getPluginClassLoader());

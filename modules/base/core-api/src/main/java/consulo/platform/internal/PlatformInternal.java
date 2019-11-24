@@ -15,6 +15,7 @@
  */
 package consulo.platform.internal;
 
+import consulo.annotations.ReviewAfterMigrationToJRE;
 import consulo.container.StartupError;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
@@ -34,6 +35,7 @@ public abstract class PlatformInternal {
   private static final Platform ourCurrentPlatform = ourPlatformInternal.build();
 
   @Nonnull
+  @ReviewAfterMigrationToJRE(value = 9, description = "Use consulo.container.plugin.util.PlatformServiceLocator#findImplementation after migration")
   private static <T> T findImplementation(@Nonnull Class<T> interfaceClass) {
     for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
       if (PluginIds.isPlatformImplementationPlugin(descriptor.getPluginId())) {

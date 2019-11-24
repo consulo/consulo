@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import consulo.annotations.Internal;
+import consulo.annotations.ReviewAfterMigrationToJRE;
 import consulo.container.StartupError;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
@@ -49,6 +50,7 @@ public abstract class UIInternal {
   private static UIInternal ourInstance = findImplementation(UIInternal.class);
 
   @Nonnull
+  @ReviewAfterMigrationToJRE(value = 9, description = "Use consulo.container.plugin.util.PlatformServiceLocator#findImplementation after migration")
   private static <T, S> T findImplementation(@Nonnull Class<T> interfaceClass) {
     for (T value : ServiceLoader.load(interfaceClass, UIInternal.class.getClassLoader())) {
       return value;
