@@ -37,7 +37,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.google.code.findbugs</groupId>
+      <groupId>consulo.internal</groupId>
       <artifactId>jsr305</artifactId>
     </dependency>
   </dependencies>

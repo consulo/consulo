@@ -89,9 +89,9 @@
         <version>${gson.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.google.code.findbugs</groupId>
+        <groupId>consulo.internal</groupId>
         <artifactId>jsr305</artifactId>
-        <version>3.0.2</version>
+        <version>3.0.3</version>
       </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>
