@@ -46,7 +46,11 @@ public class TargetAWT {
   private static final TargetAWTFacade ourFacade = findImplementation(TargetAWTFacade.class);
 
   @Nonnull
-  private static <T> T findImplementation(@Nonnull Class<T> interfaceClass) {
+  private static <T, S> T findImplementation(@Nonnull Class<T> interfaceClass) {
+    for (T facade : ServiceLoader.load(interfaceClass, TargetAWT.class.getClassLoader())) {
+      return facade;
+    }
+
     for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
       if (PluginIds.isPlatformImplementationPlugin(descriptor.getPluginId())) {
         ServiceLoader<T> loader = ServiceLoader.load(interfaceClass, descriptor.getPluginClassLoader());
