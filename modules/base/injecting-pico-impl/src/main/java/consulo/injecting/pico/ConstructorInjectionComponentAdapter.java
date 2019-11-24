@@ -233,7 +233,7 @@ class ConstructorInjectionComponentAdapter<T> implements ComponentAdapter<T> {
     }
     else if (greediestConstructor == null) {
       // be nice to the user, show all constructors that were filtered out
-      final Set<Constructor> nonMatching = ContainerUtil.newHashSet(getConstructors());
+      final List<Constructor> nonMatching = Arrays.asList(getConstructors());
       throw new PicoInitializationException("Either do the specified parameters not match any of the following constructors: " +
                                             nonMatching.toString() +
                                             " or the constructors were not accessible for '" +

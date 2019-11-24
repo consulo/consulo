@@ -18,12 +18,11 @@ import com.intellij.remoteServer.runtime.deployment.debug.DebugConnectionData;
 import com.intellij.remoteServer.runtime.deployment.debug.DebugConnectionDataNotAvailableException;
 import com.intellij.remoteServer.runtime.deployment.debug.DebugConnector;
 import com.intellij.util.ParameterizedRunnable;
-import com.intellij.util.containers.ConcurrentHashMap;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 /**
@@ -40,7 +39,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
   private volatile ServerRuntimeInstance<D> myRuntimeInstance;
   private final Map<String, Deployment> myRemoteDeployments = new HashMap<String, Deployment>();
   private final Map<String, DeploymentImpl> myLocalDeployments = new HashMap<String, DeploymentImpl>();
-  private final Map<String, DeploymentLogManagerImpl> myLogManagers = new ConcurrentHashMap<String, DeploymentLogManagerImpl>();
+  private final Map<String, DeploymentLogManagerImpl> myLogManagers = ContainerUtil.newConcurrentMap();
 
   public ServerConnectionImpl(RemoteServer<?> server, ServerConnector connector, ServerConnectionManagerImpl connectionManager) {
     myServer = server;

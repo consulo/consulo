@@ -16,12 +16,11 @@
 package com.intellij.util.containers;
 
 import com.intellij.openapi.util.*;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.*;
 import gnu.trove.*;
 import org.jetbrains.annotations.Contract;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.util.HashMap;
@@ -29,6 +28,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiPredicate;
@@ -396,34 +396,18 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @Nonnull
   @Contract(pure = true)
-  public static <T> Set<T> newConcurrentSet(@Nonnull TObjectHashingStrategy<T> hashStrategy) {
-    return Collections.newSetFromMap(newConcurrentMap(hashStrategy));
-  }
-
-  @Nonnull
-  @Contract(pure = true)
   public static <K, V> ConcurrentMap<K, V> newConcurrentMap() {
-    return CHM_FACTORY.createMap();
-  }
-
-  @Contract(pure = true)
-  public static <K, V> ConcurrentMap<K, V> newConcurrentMap(@Nonnull TObjectHashingStrategy<K> hashStrategy) {
-    return CHM_FACTORY.createMap(hashStrategy);
+    return new ConcurrentHashMap<>();
   }
 
   @Contract(pure = true)
   public static <K, V> ConcurrentMap<K, V> newConcurrentMap(int initialCapacity) {
-    return CHM_FACTORY.createMap(initialCapacity);
-  }
-
-  @Contract(pure = true)
-  public static <K, V> ConcurrentMap<K, V> newConcurrentMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull TObjectHashingStrategy<K> hashStrategy) {
-    return CHM_FACTORY.createMap(initialCapacity, loadFactor, concurrencyLevel, hashStrategy);
+    return new ConcurrentHashMap<>(initialCapacity);
   }
 
   @Contract(pure = true)
   public static <K, V> ConcurrentMap<K, V> newConcurrentMap(int initialCapacity, float loadFactor, int concurrencyLevel) {
-    return CHM_FACTORY.createMap(initialCapacity, loadFactor, concurrencyLevel);
+    return new ConcurrentHashMap<>(initialCapacity, loadFactor, concurrencyLevel);
   }
 
   @Nonnull
@@ -2845,107 +2829,6 @@ public class ContainerUtil extends ContainerUtilRt {
   @Contract(pure = true)
   public static <T, C extends Collection<T>> C nullize(@Nullable C collection) {
     return isEmpty(collection) ? null : collection;
-  }
-
-  private interface ConcurrentMapFactory {
-    @Nonnull
-    <T, V> ConcurrentMap<T, V> createMap();
-
-    @Nonnull
-    <T, V> ConcurrentMap<T, V> createMap(int initialCapacity);
-
-    @Nonnull
-    <T, V> ConcurrentMap<T, V> createMap(@Nonnull TObjectHashingStrategy<T> hashStrategy);
-
-    @Nonnull
-    <T, V> ConcurrentMap<T, V> createMap(int initialCapacity, float loadFactor, int concurrencyLevel);
-
-    @Nonnull
-    <T, V> ConcurrentMap<T, V> createMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull TObjectHashingStrategy<T> hashStrategy);
-  }
-
-  private static final ConcurrentMapFactory V8_MAP_FACTORY = new ConcurrentMapFactory() {
-    @Override
-    @Nonnull
-    public <T, V> ConcurrentMap<T, V> createMap() {
-      //noinspection deprecation
-      return new ConcurrentHashMap<T, V>();
-    }
-
-    @Override
-    @Nonnull
-    public <T, V> ConcurrentMap<T, V> createMap(int initialCapacity) {
-      //noinspection deprecation
-      return new ConcurrentHashMap<T, V>(initialCapacity);
-    }
-
-    @Override
-    @Nonnull
-    public <T, V> ConcurrentMap<T, V> createMap(@Nonnull TObjectHashingStrategy<T> hashStrategy) {
-      //noinspection deprecation
-      return new ConcurrentHashMap<T, V>(hashStrategy);
-    }
-
-    @Override
-    @Nonnull
-    public <T, V> ConcurrentMap<T, V> createMap(int initialCapacity, float loadFactor, int concurrencyLevel) {
-      //noinspection deprecation
-      return new ConcurrentHashMap<T, V>(initialCapacity, loadFactor, concurrencyLevel);
-    }
-
-    @Override
-    @Nonnull
-    public <T, V> ConcurrentMap<T, V> createMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull TObjectHashingStrategy<T> hashingStrategy) {
-      //noinspection deprecation
-      return new ConcurrentHashMap<T, V>(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
-    }
-  };
-
-  private static final ConcurrentMapFactory PLATFORM_MAP_FACTORY = new ConcurrentMapFactory() {
-    @Override
-    @Nonnull
-    public <T, V> ConcurrentMap<T, V> createMap() {
-      return createMap(16, 0.75f, DEFAULT_CONCURRENCY_LEVEL);
-    }
-
-    @Override
-    @Nonnull
-    public <T, V> ConcurrentMap<T, V> createMap(int initialCapacity) {
-      return new java.util.concurrent.ConcurrentHashMap<T, V>(initialCapacity);
-    }
-
-    @Override
-    @Nonnull
-    public <T, V> ConcurrentMap<T, V> createMap(@Nonnull TObjectHashingStrategy<T> hashingStrategy) {
-      if (hashingStrategy != canonicalStrategy()) {
-        throw new UnsupportedOperationException("Custom hashStrategy is not supported in java.util.concurrent.ConcurrentHashMap");
-      }
-      // ignoring strategy parameter, because it is not supported by this implementation
-      return createMap();
-    }
-
-    @Override
-    @Nonnull
-    public <T, V> ConcurrentMap<T, V> createMap(int initialCapacity, float loadFactor, int concurrencyLevel) {
-      return new java.util.concurrent.ConcurrentHashMap<T, V>(initialCapacity, loadFactor, concurrencyLevel);
-    }
-
-    @Override
-    @Nonnull
-    public <T, V> ConcurrentMap<T, V> createMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull TObjectHashingStrategy<T> hashingStrategy) {
-      if (hashingStrategy != canonicalStrategy()) {
-        throw new UnsupportedOperationException("Custom hashStrategy is not supported in java.util.concurrent.ConcurrentHashMap");
-      }
-      // ignoring strategy parameter, because it is not supported by this implementation
-      return createMap(initialCapacity, loadFactor, concurrencyLevel);
-    }
-  };
-
-  private static final ConcurrentMapFactory CHM_FACTORY = SystemInfo.isOracleJvm || SystemInfo.isSunJvm || SystemInfo.isAppleJvm || isAtLeastJava7() ? V8_MAP_FACTORY : PLATFORM_MAP_FACTORY;
-
-  private static boolean isAtLeastJava7() {
-    // IBM JDK provides correct version in java.version property, but not in java.runtime.version property
-    return StringUtil.compareVersionNumbers(SystemInfo.JAVA_VERSION, "1.7") >= 0;
   }
 
   @Contract(pure = true)

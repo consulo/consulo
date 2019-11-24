@@ -27,10 +27,10 @@ import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ConcurrentFactoryMap;
-import com.intellij.util.containers.ConcurrentHashMap;
+import com.intellij.util.containers.ContainerUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 
@@ -38,8 +38,8 @@ import java.util.concurrent.ConcurrentMap;
  * @author Dmitry Avdeev
  */
 public class PsiReferenceRegistrarImpl extends PsiReferenceRegistrar {
-  private final ConcurrentMap<Class, SimpleProviderBinding<PsiReferenceProvider>> myBindingsMap = new ConcurrentHashMap<Class, SimpleProviderBinding<PsiReferenceProvider>>();
-  private final ConcurrentMap<Class, NamedObjectProviderBinding<PsiReferenceProvider>> myNamedBindingsMap = new ConcurrentHashMap<Class, NamedObjectProviderBinding<PsiReferenceProvider>>();
+  private final ConcurrentMap<Class, SimpleProviderBinding<PsiReferenceProvider>> myBindingsMap = ContainerUtil.newConcurrentMap();
+  private final ConcurrentMap<Class, NamedObjectProviderBinding<PsiReferenceProvider>> myNamedBindingsMap = ContainerUtil.newConcurrentMap();
   private final ConcurrentMap<Class, Class[]> myKnownSupers = ConcurrentFactoryMap.createMap(key -> {
     final Set<Class> result = new LinkedHashSet<Class>();
     for (Class candidate : myBindingsMap.keySet()) {

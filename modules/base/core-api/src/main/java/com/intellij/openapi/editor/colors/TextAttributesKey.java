@@ -18,14 +18,17 @@ package com.intellij.openapi.editor.colors;
 import com.intellij.lang.Language;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.JDOMExternalizerUtil;
+import com.intellij.openapi.util.NullableLazyValue;
+import com.intellij.openapi.util.VolatileNullableLazyValue;
+import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.util.ConcurrencyUtil;
-import com.intellij.util.containers.ConcurrentHashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 
@@ -34,7 +37,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public final class TextAttributesKey implements Comparable<TextAttributesKey> {
   private static final TextAttributes NULL_ATTRIBUTES = new TextAttributes();
-  private static final ConcurrentMap<String, TextAttributesKey> ourRegistry = new ConcurrentHashMap<String, TextAttributesKey>();
+  private static final ConcurrentMap<String, TextAttributesKey> ourRegistry = new ConcurrentHashMap<>();
   private static final NullableLazyValue<TextAttributeKeyDefaultsProvider> ourDefaultsProvider = new VolatileNullableLazyValue<TextAttributeKeyDefaultsProvider>() {
     @Nullable
     @Override
