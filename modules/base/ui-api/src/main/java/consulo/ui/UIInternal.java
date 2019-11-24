@@ -49,7 +49,11 @@ public abstract class UIInternal {
   private static UIInternal ourInstance = findImplementation(UIInternal.class);
 
   @Nonnull
-  private static <T> T findImplementation(@Nonnull Class<T> interfaceClass) {
+  private static <T, S> T findImplementation(@Nonnull Class<T> interfaceClass) {
+    for (T value : ServiceLoader.load(interfaceClass, UIInternal.class.getClassLoader())) {
+      return value;
+    }
+
     for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
       if (PluginIds.isPlatformImplementationPlugin(descriptor.getPluginId())) {
         ServiceLoader<T> loader = ServiceLoader.load(interfaceClass, descriptor.getPluginClassLoader());
