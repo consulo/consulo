@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.intellij.lang.properties.charset;
+package consulo.bootstrap.charset;
 
 /**
  * @author Alexey

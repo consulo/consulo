@@ -15,7 +15,7 @@
  */
 package consulo.desktop.container.boot;
 
-import com.intellij.concurrency.IdeaForkJoinWorkerThreadFactory;
+import consulo.bootstrap.concurrent.IdeaForkJoinWorkerThreadFactory;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.idea.ApplicationStarter;
