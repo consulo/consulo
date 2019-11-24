@@ -26,10 +26,9 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.DeprecationInfo;
-import consulo.annotations.Immutable;
 import consulo.annotations.RequiredReadAction;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 
 /**
@@ -49,11 +48,9 @@ public abstract class CompilerManager {
   public abstract boolean isCompilationActive();
   
   @Nonnull
-  @Immutable
   public abstract Collection<FileType> getRegisteredInputTypes(@Nonnull TranslatingCompiler compiler);
   
   @Nonnull
-  @Immutable
   public abstract Collection<FileType> getRegisteredOutputTypes(@Nonnull TranslatingCompiler compiler);
   
   @Nonnull

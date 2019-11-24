@@ -15,7 +15,6 @@
  */
 package consulo.ui;
 
-import consulo.annotations.Internal;
 import consulo.annotations.ReviewAfterMigrationToJRE;
 import consulo.container.StartupError;
 import consulo.container.plugin.PluginDescriptor;
@@ -45,7 +44,6 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 09-Jun-16
  */
-@Internal
 public abstract class UIInternal {
   private static UIInternal ourInstance = findImplementation(UIInternal.class);
 

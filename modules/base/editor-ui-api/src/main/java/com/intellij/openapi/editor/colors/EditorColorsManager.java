@@ -19,10 +19,9 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.util.messages.Topic;
-import consulo.annotations.Immutable;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 
 public abstract class EditorColorsManager {
@@ -43,7 +42,6 @@ public abstract class EditorColorsManager {
   public abstract EditorColorsScheme[] getAllSchemes();
 
   @Nonnull
-  @Immutable
   public abstract Map<String, EditorColorsScheme> getBundledSchemes();
 
   public abstract void setGlobalScheme(EditorColorsScheme scheme);

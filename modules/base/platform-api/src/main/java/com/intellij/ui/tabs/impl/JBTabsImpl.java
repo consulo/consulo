@@ -25,7 +25,9 @@ import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.ui.ShadowAction;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.registry.Registry;
-import com.intellij.openapi.wm.*;
+import com.intellij.openapi.wm.IdeFocusManager;
+import com.intellij.openapi.wm.IdeGlassPane;
+import com.intellij.openapi.wm.IdeGlassPaneUtil;
 import com.intellij.ui.Gray;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.awt.RelativePoint;
@@ -41,7 +43,6 @@ import com.intellij.util.ui.TimedDeadzone;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.LazyUiDisposable;
 import consulo.annotations.DeprecationInfo;
-import consulo.annotations.Internal;
 import consulo.awt.TargetAWT;
 import consulo.ide.ui.laf.JBEditorTabsUI;
 import consulo.ui.RequiredUIAccess;
@@ -502,7 +503,6 @@ public abstract class JBTabsImpl extends JComponent
     return myDropInfo != null && myDropInfo == info;
   }
 
-  @Internal
   public TabInfo getDropInfo() {
     return myDropInfo;
   }
@@ -1205,12 +1205,10 @@ public abstract class JBTabsImpl extends JComponent
   }
 
   @Nullable
-  @Internal
   public TabInfo getSelectedInfoInternal() {
     return mySelectedInfo;
   }
 
-  @Internal
   public SingleRowLayout getSingleRowLayoutInternal() {
     return mySingleRowLayout;
   }
@@ -1580,7 +1578,6 @@ public abstract class JBTabsImpl extends JComponent
     return myPosition;
   }
 
-  @Internal
   public TabLabel getSelectedLabel() {
     return myInfo2Label.get(getSelectedInfo());
   }
@@ -1589,12 +1586,10 @@ public abstract class JBTabsImpl extends JComponent
     return Registry.is("ide.tabbedPane.bufferedPaint") && myUseBufferedPaint;
   }
 
-  @Internal
   public List<TabInfo> getVisibleInfos() {
     return myVisibleInfos;
   }
 
-  @Internal
   public LayoutPassInfo getLastLayoutPass() {
     return myLastLayoutPass;
   }

@@ -40,7 +40,6 @@ import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.Immutable;
 import consulo.annotations.RequiredReadAction;
 import consulo.ui.RequiredUIAccess;
 
@@ -54,7 +53,6 @@ import java.util.*;
  */
 public class TargetElementUtil {
   @Nonnull
-  @Immutable
   public static Set<String> getAllAccepted() {
     Set<String> flags = new LinkedHashSet<String>();
     TargetElementUtilEx.EP_NAME.composite().collectAllAccepted(flags);
@@ -62,7 +60,6 @@ public class TargetElementUtil {
   }
 
   @Nonnull
-  @Immutable
   public static Set<String> getDefinitionSearchFlags() {
     Set<String> flags = new LinkedHashSet<String>();
     TargetElementUtilEx.EP_NAME.composite().collectDefinitionSearchFlags(flags);
@@ -70,7 +67,6 @@ public class TargetElementUtil {
   }
 
   @Nonnull
-  @Immutable
   public static Set<String> getReferenceSearchFlags() {
     Set<String> flags = new LinkedHashSet<String>();
     TargetElementUtilEx.EP_NAME.composite().collectReferenceSearchFlags(flags);

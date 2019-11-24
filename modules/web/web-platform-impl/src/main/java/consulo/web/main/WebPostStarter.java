@@ -21,7 +21,6 @@ import com.intellij.idea.starter.ApplicationPostStarter;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.util.Ref;
-import consulo.annotations.Internal;
 import consulo.container.util.StatCollector;
 import consulo.start.CommandLineArgs;
 import consulo.web.application.impl.WebApplicationImpl;
@@ -36,7 +35,6 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 15-May-16
  */
-@Internal
 public class WebPostStarter extends ApplicationPostStarter {
   public WebPostStarter(ApplicationStarter applicationStarter) {
     super(applicationStarter);

@@ -22,11 +22,10 @@ package com.intellij.lang;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.KeyedExtensionCollector;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.Immutable;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 public class LanguageExtension<T> extends KeyedExtensionCollector<T, Language> {
@@ -40,7 +39,7 @@ public class LanguageExtension<T> extends KeyedExtensionCollector<T, Language> {
   public LanguageExtension(@NonNls final String epName, @Nullable final T defaultImplementation) {
     super(epName);
     myDefaultImplementation = defaultImplementation;
-    IN_LANGUAGE_CACHE = Key.create("EXTENSIONS_IN_LANGUAGE_"+epName);
+    IN_LANGUAGE_CACHE = Key.create("EXTENSIONS_IN_LANGUAGE_" + epName);
   }
 
   @Nonnull
@@ -69,7 +68,6 @@ public class LanguageExtension<T> extends KeyedExtensionCollector<T, Language> {
   }
 
   @Nonnull
-  @Immutable
   public List<T> allForLanguage(Language l) {
     List<T> list = forKey(l);
     if (list.isEmpty()) {

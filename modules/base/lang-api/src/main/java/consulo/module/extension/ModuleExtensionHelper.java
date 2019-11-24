@@ -17,7 +17,6 @@ package consulo.module.extension;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import consulo.annotations.Immutable;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;
@@ -34,7 +33,6 @@ public abstract class ModuleExtensionHelper {
 
   public abstract boolean hasModuleExtension(@Nonnull Class<? extends ModuleExtension> clazz);
 
-  @Immutable
   @Nonnull
   public abstract <T extends ModuleExtension<T>> Collection<T> getModuleExtensions(@Nonnull Class<T> clazz);
 }

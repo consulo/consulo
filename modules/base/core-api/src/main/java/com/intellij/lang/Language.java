@@ -23,7 +23,6 @@ import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.MultiMap;
 import consulo.annotations.Exported;
-import consulo.annotations.Immutable;
 import consulo.lang.LanguageVersion;
 import consulo.lang.LanguageVersionDefines;
 import consulo.logging.Logger;
@@ -269,7 +268,6 @@ public abstract class Language extends UserDataHolderBase implements Named {
   }
 
   @Nonnull
-  @Immutable
   public final LanguageVersion[] getVersions() {
     return myVersions.getValue();
   }

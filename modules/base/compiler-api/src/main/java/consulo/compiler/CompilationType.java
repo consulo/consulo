@@ -15,17 +15,13 @@
  */
 package consulo.compiler;
 
-import consulo.annotations.Immutable;
-
 /**
-* @author VISTALL
-* @since 12:58/10.06.13
-*/
+ * @author VISTALL
+ * @since 12:58/10.06.13
+ */
 public enum CompilationType {
   DISABLE,
   IN_PROGRESS,
   EXTERNAL;
 
-  @Immutable
-  public static CompilationType[] VALUES = values();
-}
+  public static CompilationType[] VALUES = values();}

@@ -15,7 +15,6 @@
  */
 package consulo.desktop.platform.impl;
 
-import consulo.annotations.Internal;
 import consulo.platform.Platform;
 import consulo.platform.internal.PlatformInternal;
 

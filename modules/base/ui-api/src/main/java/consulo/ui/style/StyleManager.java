@@ -15,7 +15,6 @@
  */
 package consulo.ui.style;
 
-import consulo.annotations.Immutable;
 import consulo.ui.UIInternal;
 import javax.annotation.Nonnull;
 
@@ -32,7 +31,6 @@ public interface StyleManager {
   }
 
   @Nonnull
-  @Immutable
   List<Style> getStyles();
 
   @Nonnull

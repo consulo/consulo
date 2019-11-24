@@ -36,7 +36,6 @@ import com.intellij.util.ThrowableConvertor;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.xmlb.annotations.OptionTag;
-import consulo.annotations.Immutable;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
@@ -193,7 +192,6 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
 
   @Override
   @Nonnull
-  @Immutable
   public Map<String, EditorColorsScheme> getBundledSchemes() {
     return myDefaultColorsSchemes;
   }

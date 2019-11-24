@@ -20,7 +20,6 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.util.containers.MultiMap;
-import consulo.annotations.Immutable;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -59,7 +58,6 @@ public class ModuleExtensionHelperImpl extends ModuleExtensionHelper {
 
   @Override
   @Nonnull
-  @Immutable
   @SuppressWarnings("unchecked")
   public <T extends ModuleExtension<T>> Collection<T> getModuleExtensions(@Nonnull Class<T> clazz) {
     checkInit();
