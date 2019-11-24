@@ -125,9 +125,9 @@
 
     <module>modules/base/language-editor-api</module>
 
-    <module>modules/base/logging-api</module>
-    <module>modules/base/logging-slf4j-binding-impl</module>
-    <module>modules/base/logging-log4j2-impl</module>
+    <module>modules/base/logging/logging-api</module>
+    <module>modules/base/logging/logging-slf4j-binding-impl</module>
+    <module>modules/base/logging/logging-log4j2-impl</module>
 
     <module>modules/base/test-impl</module>
 
