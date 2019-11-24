@@ -19,7 +19,7 @@ package consulo.annotations;
  * @author VISTALL
  * @since 2019-11-19
  *
- * Annotation-marker for elements which need revoew after migration to target JRE
+ * Annotation-marker for elements which need review after migration to target JRE
  */
 public @interface ReviewAfterMigrationToJRE {
   int value();
