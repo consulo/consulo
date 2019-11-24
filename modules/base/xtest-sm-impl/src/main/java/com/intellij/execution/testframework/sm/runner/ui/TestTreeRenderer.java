@@ -24,7 +24,7 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

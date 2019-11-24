@@ -24,7 +24,7 @@ package com.intellij.ide;
 
 import com.intellij.reference.SoftReference;
 import com.intellij.util.ReflectionUtil;
-import consulo.annotations.ReviewAfterMigrationToJRE;
+import consulo.annotation.ReviewAfterMigrationToJRE;
 import consulo.logging.Logger;
 
 import javax.swing.*;

@@ -21,7 +21,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.Base64;
 import com.intellij.util.ThreeState;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import gnu.trove.TIntArrayList;
 

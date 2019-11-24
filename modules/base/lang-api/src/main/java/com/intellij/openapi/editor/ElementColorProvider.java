@@ -16,9 +16,9 @@
 package com.intellij.openapi.editor;
 
 import com.intellij.psi.PsiElement;
-import consulo.annotations.DeprecationInfo;
-import consulo.annotations.RequiredReadAction;
-import consulo.annotations.RequiredWriteAction;
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.ui.shared.ColorValue;
 
 import javax.annotation.Nonnull;

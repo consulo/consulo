@@ -18,6 +18,7 @@ package consulo.ui.web.internal;
 import com.intellij.openapi.util.Disposer;
 import com.vaadin.server.Sizeable;
 import consulo.ui.*;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.shared.Size;
 import consulo.ui.web.internal.base.ComponentHolder;
 import consulo.ui.web.internal.base.FromVaadinComponentWrapper;

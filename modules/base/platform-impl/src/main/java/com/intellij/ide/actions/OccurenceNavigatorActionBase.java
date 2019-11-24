@@ -29,7 +29,7 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.ContentManagerUtil;
 import consulo.awt.TargetAWT;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

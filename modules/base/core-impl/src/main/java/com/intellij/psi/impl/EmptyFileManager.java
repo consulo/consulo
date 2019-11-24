@@ -23,8 +23,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.SingleRootFileViewProvider;
 import com.intellij.psi.impl.file.impl.FileManager;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.RequiredReadAction;
-import consulo.annotations.RequiredWriteAction;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;

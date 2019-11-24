@@ -20,7 +20,7 @@ import com.intellij.BundleBase;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 

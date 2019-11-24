@@ -90,7 +90,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.ide.projectView.ProjectViewEx;
 import consulo.psi.PsiPackageSupportProviders;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.wm.impl.ToolWindowContentUI;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;

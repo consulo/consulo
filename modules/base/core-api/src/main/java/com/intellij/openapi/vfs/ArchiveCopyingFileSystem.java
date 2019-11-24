@@ -16,7 +16,7 @@
 package com.intellij.openapi.vfs;
 
 import javax.annotation.Nonnull;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 
 import java.io.File;
 

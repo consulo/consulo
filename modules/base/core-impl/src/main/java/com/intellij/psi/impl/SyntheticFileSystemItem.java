@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import consulo.annotations.RequiredWriteAction;
+import consulo.annotation.access.RequiredWriteAction;
 
 public abstract class SyntheticFileSystemItem extends PsiElementBase implements PsiFileSystemItem {
   public static final Logger LOG = Logger.getInstance("#" + SyntheticFileSystemItem.class.getPackage().getName());

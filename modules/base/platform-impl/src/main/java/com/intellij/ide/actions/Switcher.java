@@ -63,7 +63,7 @@ import com.intellij.util.ui.StatusText;
 import com.intellij.util.ui.UIUtil;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileTypes.impl.VfsIconUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

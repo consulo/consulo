@@ -40,8 +40,8 @@ import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredReadAction;
-import consulo.annotations.RequiredWriteAction;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 
 import java.util.*;
 

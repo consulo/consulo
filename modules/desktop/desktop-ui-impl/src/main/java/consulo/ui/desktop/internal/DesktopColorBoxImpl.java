@@ -21,7 +21,7 @@ import consulo.awt.TargetAWT;
 import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.ui.ColorBox;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.shared.ColorValue;
 

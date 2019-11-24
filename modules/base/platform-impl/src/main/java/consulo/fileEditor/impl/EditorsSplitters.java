@@ -19,10 +19,10 @@ import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.desktop.util.awt.migration.AWTComponentProvider;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import org.jdom.Element;
 

@@ -19,7 +19,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.CharSequenceWithStringHash;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
-import consulo.annotations.ReviewAfterMigrationToJRE;
+import consulo.annotation.ReviewAfterMigrationToJRE;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

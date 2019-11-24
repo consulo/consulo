@@ -16,7 +16,7 @@
 package consulo.ui.web.internal;
 
 import consulo.ui.ListItemRender;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ValueComponent;
 import consulo.ui.model.ListModel;
 import consulo.ui.shared.Size;

@@ -44,7 +44,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import consulo.logging.Logger;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

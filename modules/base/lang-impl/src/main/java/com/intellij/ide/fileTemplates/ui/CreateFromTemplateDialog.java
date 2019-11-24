@@ -33,7 +33,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

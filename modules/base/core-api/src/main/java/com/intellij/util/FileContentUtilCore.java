@@ -23,12 +23,12 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.openapi.vfs.newvfs.events.VFilePropertyChangeEvent;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
-import consulo.annotations.RequiredWriteAction;
+import consulo.annotation.access.RequiredWriteAction;
 
 import java.util.*;
 

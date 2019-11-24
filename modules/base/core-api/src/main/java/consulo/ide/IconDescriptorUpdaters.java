@@ -25,7 +25,7 @@ import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.ui.IconDeferrer;
 import com.intellij.util.NullableFunction;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 

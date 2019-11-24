@@ -40,7 +40,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.graph.Graph;
 import com.intellij.util.graph.GraphGenerator;
 import com.intellij.util.graph.InboundSemiGraph;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.CompilerConfigurationImpl;
 import gnu.trove.THashSet;

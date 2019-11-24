@@ -17,7 +17,7 @@ package com.intellij.openapi.options;
 
 import com.intellij.openapi.util.Getter;
 import com.intellij.util.ReflectionUtil;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

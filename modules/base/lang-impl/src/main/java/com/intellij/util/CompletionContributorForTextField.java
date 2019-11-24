@@ -6,7 +6,7 @@ import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiPlainTextFile;import consulo.annotations.RequiredReadAction;
+import com.intellij.psi.PsiPlainTextFile;import consulo.annotation.access.RequiredReadAction;
 
 /**
  * @author sergey.evdokimov

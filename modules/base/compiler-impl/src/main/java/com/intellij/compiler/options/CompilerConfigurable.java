@@ -25,6 +25,7 @@ import com.intellij.openapi.util.NotNullComputable;
 import consulo.compiler.CompilationType;
 import consulo.options.SimpleConfigurable;
 import consulo.ui.*;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledComponents;
 

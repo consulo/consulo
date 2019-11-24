@@ -15,7 +15,7 @@
  */
 package consulo.application;
 
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.platform.Platform;
 
 /**

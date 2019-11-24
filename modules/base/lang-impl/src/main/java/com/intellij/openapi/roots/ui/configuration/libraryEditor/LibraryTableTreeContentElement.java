@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nullable;
 import java.awt.*;

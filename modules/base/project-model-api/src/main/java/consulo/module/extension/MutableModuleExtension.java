@@ -15,7 +15,7 @@
  */
 package consulo.module.extension;
 
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.roots.ModifiableModuleRootLayer;
 import consulo.ui.Component;
 

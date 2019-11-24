@@ -15,6 +15,8 @@
  */
 package consulo.ui;
 
+import consulo.ui.annotation.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 /**

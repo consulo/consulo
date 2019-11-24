@@ -28,7 +28,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.ILightStubFileElementType;
 import com.intellij.util.containers.BooleanStack;
 import com.intellij.util.containers.Stack;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import gnu.trove.TIntStack;
 import javax.annotation.Nonnull;
 

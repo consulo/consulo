@@ -16,7 +16,7 @@
 package com.intellij.codeHighlighting;
 
 import com.intellij.openapi.progress.ProgressIndicator;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;
 

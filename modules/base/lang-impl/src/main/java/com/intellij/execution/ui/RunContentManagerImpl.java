@@ -56,7 +56,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;

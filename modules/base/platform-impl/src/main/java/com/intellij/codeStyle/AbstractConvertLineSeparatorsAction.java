@@ -33,7 +33,7 @@ import com.intellij.util.containers.Convertor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import java.io.IOException;
 

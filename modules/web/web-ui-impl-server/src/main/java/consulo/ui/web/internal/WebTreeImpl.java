@@ -17,6 +17,7 @@ package consulo.ui.web.internal;
 
 import com.vaadin.ui.UI;
 import consulo.ui.*;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 import consulo.ui.web.internal.base.VaadinComponent;
 import consulo.web.gwt.shared.ui.state.tree.TreeClientRpc;

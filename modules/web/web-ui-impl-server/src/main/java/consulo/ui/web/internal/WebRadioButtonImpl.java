@@ -17,7 +17,7 @@ package consulo.ui.web.internal;
 
 import com.intellij.openapi.util.Comparing;
 import consulo.ui.RadioButton;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;

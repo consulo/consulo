@@ -26,7 +26,7 @@ import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.application.ex.ApplicationEx2;
 
 import javax.annotation.Nonnull;

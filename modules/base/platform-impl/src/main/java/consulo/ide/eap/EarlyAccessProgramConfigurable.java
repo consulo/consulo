@@ -29,7 +29,7 @@ import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.desktop.util.awt.component.VerticalLayoutPanel;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nullable;

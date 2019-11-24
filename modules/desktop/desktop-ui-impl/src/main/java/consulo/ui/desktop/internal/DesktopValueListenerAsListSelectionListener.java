@@ -16,7 +16,7 @@
 package consulo.ui.desktop.internal;
 
 import com.intellij.ui.components.JBList;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ValueComponent;
 
 import javax.swing.event.ListSelectionEvent;

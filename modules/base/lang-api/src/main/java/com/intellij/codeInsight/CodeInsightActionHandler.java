@@ -21,9 +21,9 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import consulo.annotations.DeprecationInfo;
-import consulo.annotations.RequiredWriteAction;
-import consulo.ui.RequiredUIAccess;
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 

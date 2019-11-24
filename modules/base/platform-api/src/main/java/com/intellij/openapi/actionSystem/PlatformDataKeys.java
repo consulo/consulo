@@ -25,7 +25,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.content.ContentManager;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 
 import java.awt.*;
 import java.util.Comparator;

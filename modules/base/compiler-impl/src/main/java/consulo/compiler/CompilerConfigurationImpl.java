@@ -29,7 +29,7 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.io.URLUtil;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
 import consulo.compiler.impl.ModuleCompilerPathsManagerImpl;
 import consulo.roots.ContentFolderScopes;

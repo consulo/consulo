@@ -16,7 +16,7 @@
 package com.intellij.psi;
 
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 
 /**
  * Implementing this interface allows for better control over the references associated with a PSI element.

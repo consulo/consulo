@@ -33,7 +33,7 @@ import consulo.ide.plugins.InstalledPluginsState;
 import consulo.ide.updateSettings.impl.PlatformOrPluginDialog;
 import consulo.ide.updateSettings.impl.PlatformOrPluginNode;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateResult;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

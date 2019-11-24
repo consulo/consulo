@@ -35,7 +35,7 @@ import consulo.moduleImport.ModuleImportProvider;
 import consulo.moduleImport.ModuleImportProviders;
 import consulo.ui.Alerts;
 import consulo.ui.ComboBox;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.fileChooser.FileChooser;
 import consulo.ui.image.Image;
 import consulo.ui.layout.LabeledLayout;

@@ -22,7 +22,7 @@ import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.MultiMap;
-import consulo.annotations.Exported;
+import consulo.annotation.UsedInPlugin;
 import consulo.lang.LanguageVersion;
 import consulo.lang.LanguageVersionDefines;
 import consulo.logging.Logger;
@@ -148,7 +148,7 @@ public abstract class Language extends UserDataHolderBase implements Named {
    * @return collection of all languages for the given <code>mimeType</code>.
    */
   @Nonnull
-  @Exported
+  @UsedInPlugin
   public static Collection<Language> findInstancesByMimeType(@Nullable String mimeType) {
     if(mimeType == null) {
       return Collections.emptyList();
@@ -163,7 +163,7 @@ public abstract class Language extends UserDataHolderBase implements Named {
   }
 
   @Nonnull
-  @Exported
+  @UsedInPlugin
   public static Collection<LanguageVersion> findVersionsByMimeType(@Nullable String mimeType) {
     MultiMap<String, LanguageVersion> map = ourRegisteredMimeTypesValue.getValue();
     return Collections.unmodifiableCollection(map.get(mimeType));
@@ -274,7 +274,7 @@ public abstract class Language extends UserDataHolderBase implements Named {
 
   @Nullable
   @SuppressWarnings("unchecked")
-  @Exported
+  @UsedInPlugin
   public <T extends LanguageVersion> T findVersionByClass(@Nonnull Class<T> clazz) {
     for (LanguageVersion languageVersion : getVersions()) {
       if (languageVersion.getClass() == clazz) {
@@ -305,7 +305,7 @@ public abstract class Language extends UserDataHolderBase implements Named {
     return false;
   }
 
-  @Exported
+  @UsedInPlugin
   public final boolean isKindOf(String anotherLanguageId) {
     Language l = this;
     while (l != null) {

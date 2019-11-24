@@ -31,7 +31,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.Processor;
 import javax.annotation.Nonnull;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 public class GotoNextErrorHandler implements CodeInsightActionHandler {
   private final boolean myGoForward;

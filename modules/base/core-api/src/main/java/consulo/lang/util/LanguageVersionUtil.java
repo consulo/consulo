@@ -16,7 +16,7 @@
 package consulo.lang.util;
 
 import com.intellij.lang.Language;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.lang.LanguageVersion;
 import consulo.lang.LanguageVersionResolvers;
 import com.intellij.openapi.project.Project;

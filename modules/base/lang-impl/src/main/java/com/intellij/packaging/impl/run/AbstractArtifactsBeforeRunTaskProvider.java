@@ -25,7 +25,7 @@ import com.intellij.openapi.ui.DialogBuilder;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
 import com.intellij.packaging.artifacts.*;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import gnu.trove.THashSet;
 

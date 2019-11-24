@@ -19,7 +19,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.messages.Topic;
-import consulo.annotations.RequiredWriteAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.bundle.BundleHolder;
 import consulo.bundle.SdkTableListener;
 

@@ -33,7 +33,7 @@ import com.intellij.ui.content.tabs.TabbedContentAction;
 import com.intellij.util.Alarm;
 import com.intellij.util.ContentUtilEx;
 import consulo.ui.layout.DockLayout;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.wm.impl.layout.UnifiedComboContentLayout;
 import consulo.wm.impl.layout.UnifiedContentLayout;
 import consulo.wm.impl.layout.UnifiedTabContentLayout;

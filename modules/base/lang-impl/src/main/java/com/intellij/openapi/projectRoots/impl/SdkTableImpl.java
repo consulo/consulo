@@ -35,7 +35,7 @@ import com.intellij.openapi.vfs.newvfs.events.VFileCreateEvent;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.containers.SmartHashSet;
 import com.intellij.util.messages.MessageBusConnection;
-import consulo.annotations.RequiredWriteAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.fileTypes.ArchiveFileType;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

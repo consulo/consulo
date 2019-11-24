@@ -29,7 +29,7 @@ import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.EnvironmentUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CaseInsensitiveStringHashingStrategy;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import gnu.trove.THashMap;
 import javax.annotation.Nonnull;

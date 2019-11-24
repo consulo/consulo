@@ -23,7 +23,7 @@ import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nonnull;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 public class CompileProjectAction extends CompileActionBase {
   @RequiredUIAccess

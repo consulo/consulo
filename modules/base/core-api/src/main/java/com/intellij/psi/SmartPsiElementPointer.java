@@ -20,7 +20,7 @@ import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 
 /**
  * A pointer to a PSI element which can survive PSI reparse.

@@ -25,7 +25,7 @@ import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.TObjectIntHashMap;
 import javax.annotation.Nonnull;
 
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.roots.ContentFolderTypeProvider;
 
 /**

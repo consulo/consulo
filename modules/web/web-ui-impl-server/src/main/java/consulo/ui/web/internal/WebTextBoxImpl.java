@@ -16,7 +16,7 @@
 package consulo.ui.web.internal;
 
 import com.intellij.openapi.Disposable;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.TextBox;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 import consulo.ui.web.internal.base.VaadinComponent;

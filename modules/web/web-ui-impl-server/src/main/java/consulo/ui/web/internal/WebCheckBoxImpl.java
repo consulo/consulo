@@ -18,7 +18,7 @@ package consulo.ui.web.internal;
 import com.intellij.openapi.util.Comparing;
 import consulo.ui.CheckBox;
 import consulo.ui.KeyCode;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;

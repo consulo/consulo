@@ -18,6 +18,7 @@ package consulo.ui.app.impl.settings;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.util.Couple;
 import consulo.ui.*;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.app.WholeLeftWindowWrapper;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.shared.Size;

@@ -17,7 +17,7 @@ package com.intellij.openapi.fileTypes;
 
 import com.intellij.lang.LanguageExtensionPoint;
 import com.intellij.util.xmlb.annotations.Attribute;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 
 /**
  * For backward compatibility

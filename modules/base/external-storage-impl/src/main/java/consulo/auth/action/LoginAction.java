@@ -26,7 +26,7 @@ import consulo.auth.ServiceAuthConfiguration;
 import consulo.auth.ServiceAuthEarlyAccessProgramDescriptor;
 import consulo.auth.ui.ServiceAuthDialog;
 import consulo.ide.eap.EarlyAccessProgramManager;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

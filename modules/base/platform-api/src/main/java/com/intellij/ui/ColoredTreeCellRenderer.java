@@ -17,7 +17,7 @@ package com.intellij.ui;
 
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 

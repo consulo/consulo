@@ -58,7 +58,7 @@ import com.intellij.util.ui.update.Update;
 import consulo.application.ApplicationProperties;
 import consulo.logging.Logger;
 import consulo.options.ConfigurableUIMigrationUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.SwingUIDecorator;
 import consulo.util.ProtectedRunnable;
 import org.jetbrains.annotations.Nls;

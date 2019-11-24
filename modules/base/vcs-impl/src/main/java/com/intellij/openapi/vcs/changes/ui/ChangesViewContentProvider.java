@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.ui;
 
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.swing.*;
 

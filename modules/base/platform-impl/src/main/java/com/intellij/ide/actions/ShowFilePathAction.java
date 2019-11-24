@@ -46,11 +46,11 @@ import com.intellij.util.SystemProperties;
 import com.sun.jna.Native;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinDef;
-import consulo.annotations.Exported;
+import consulo.annotation.UsedInPlugin;
 import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.vfs.ArchiveFileSystem;
 import consulo.vfs.util.ArchiveVfsUtil;
@@ -74,7 +74,7 @@ import java.util.stream.Stream;
 public class ShowFilePathAction extends AnAction {
   private static final Logger LOG = Logger.getInstance(ShowFilePathAction.class);
 
-  @Exported
+  @UsedInPlugin
   public static final NotificationListener FILE_SELECTING_LISTENER = new NotificationListener.Adapter() {
     @Override
     protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e) {

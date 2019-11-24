@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.annotations;
+package consulo.annotation;
 
 import java.lang.annotation.*;
 
 /**
  * @author VISTALL
- * @since 24.01.15
+ * @since 30.10.2015
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.PARAMETER})
-public @interface RequiredWriteAction {
+@Target({ElementType.TYPE, ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.FIELD})
+public @interface UsedInPlugin {
 }

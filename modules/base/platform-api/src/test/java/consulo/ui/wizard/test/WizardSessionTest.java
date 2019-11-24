@@ -17,7 +17,7 @@ package consulo.ui.wizard.test;
 
 import com.intellij.util.ObjectUtil;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.wizard.WizardSession;
 import consulo.ui.wizard.WizardStep;
 import org.junit.Assert;

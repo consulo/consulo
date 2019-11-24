@@ -18,7 +18,7 @@ package com.intellij.ui;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
 

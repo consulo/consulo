@@ -19,7 +19,7 @@ import com.intellij.openapi.util.BuildNumber;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PathUtil;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationProperties;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;

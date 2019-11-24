@@ -36,7 +36,7 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.HashMap;
 import consulo.logging.Logger;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

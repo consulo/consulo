@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.extensions;
 
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.container.plugin.PluginDescriptor;
 
 import javax.annotation.Nonnull;

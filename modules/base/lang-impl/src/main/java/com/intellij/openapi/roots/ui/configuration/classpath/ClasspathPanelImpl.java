@@ -59,7 +59,7 @@ import com.intellij.util.IconUtil;
 import com.intellij.util.ui.JBUI;
 import consulo.logging.Logger;
 import consulo.roots.ui.configuration.classpath.AddModuleDependencyDialog;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

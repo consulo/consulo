@@ -36,8 +36,8 @@ import com.intellij.ui.content.ContentManager;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.ui.RequiredUIAccess;
-import consulo.annotations.RequiredReadAction;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.annotation.access.RequiredReadAction;
 
 import java.awt.*;
 import java.util.List;

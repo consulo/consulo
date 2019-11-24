@@ -18,7 +18,7 @@ package consulo.desktop.util.awt.laf;
 import com.intellij.openapi.util.NotNullFactory;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.SystemInfo;
-import consulo.annotations.ReviewAfterMigrationToJRE;
+import consulo.annotation.ReviewAfterMigrationToJRE;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;

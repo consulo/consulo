@@ -42,7 +42,7 @@ import consulo.desktop.util.awt.MorphColor;
 import consulo.ide.welcomeScreen.BaseWelcomeScreenPanel;
 import consulo.ide.welcomeScreen.WelcomeScreenConstants;
 import consulo.spash.AnimatedLogoLabel;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.style.StyleManager;
 
 import javax.accessibility.AccessibleContext;

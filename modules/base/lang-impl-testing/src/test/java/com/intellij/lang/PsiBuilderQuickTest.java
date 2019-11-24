@@ -31,7 +31,7 @@ import com.intellij.util.diff.DiffTree;
 import com.intellij.util.diff.DiffTreeChangeBuilder;
 import com.intellij.util.diff.FlyweightCapableTreeStructure;
 import com.intellij.util.diff.ShallowNodeComparator;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.lang.LanguageVersion;
 import consulo.testFramework.MockApplicationTestCase;
 import org.jetbrains.annotations.NonNls;

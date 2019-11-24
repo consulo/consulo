@@ -17,7 +17,7 @@ package com.intellij.mock;
 
 import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
-import consulo.annotations.RequiredWriteAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.components.impl.stores.IProjectStore;
 import consulo.components.impl.stores.storage.StateStorageManager;
 import com.intellij.openapi.project.impl.ProjectImpl;

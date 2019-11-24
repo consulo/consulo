@@ -29,7 +29,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 public class GotoSuperAction extends BaseCodeInsightAction implements CodeInsightActionHandler, DumbAware {
 

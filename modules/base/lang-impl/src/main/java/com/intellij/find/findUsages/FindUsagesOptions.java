@@ -23,7 +23,7 @@ import com.intellij.psi.search.PredefinedSearchScopeProvider;
 import com.intellij.psi.search.ProjectScope;
 import com.intellij.psi.search.SearchRequestCollector;
 import com.intellij.psi.search.SearchScope;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

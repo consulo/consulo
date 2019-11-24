@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.ui;
 
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * The validator for input dialogs.

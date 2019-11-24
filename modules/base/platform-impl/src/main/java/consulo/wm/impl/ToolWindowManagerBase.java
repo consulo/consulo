@@ -47,7 +47,7 @@ import consulo.component.PersistentStateComponentWithUIState;
 import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.condition.ModuleExtensionCondition;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.*;
 import consulo.ui.image.Image;

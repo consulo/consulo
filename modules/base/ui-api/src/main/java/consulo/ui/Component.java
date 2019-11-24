@@ -18,6 +18,7 @@ package consulo.ui;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.KeyListener;
 import consulo.ui.shared.Size;
 import consulo.ui.shared.border.BorderPosition;

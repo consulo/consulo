@@ -37,7 +37,7 @@ import com.intellij.packaging.impl.elements.moduleContent.TestModuleOutputElemen
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.util.PathUtil;
 import com.intellij.util.io.URLUtil;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.packaging.impl.elements.ZipArchivePackagingElement;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.ui.image.Image;

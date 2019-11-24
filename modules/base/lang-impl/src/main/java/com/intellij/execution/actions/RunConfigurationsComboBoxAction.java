@@ -37,7 +37,7 @@ import com.intellij.util.IconUtil;
 import com.intellij.util.ui.EmptyIcon;
 import consulo.actionSystem.ex.ComboBoxButton;
 import consulo.awt.TargetAWT;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -21,7 +21,7 @@ import com.intellij.pom.Navigatable;
 import com.intellij.pom.NavigatableWithText;
 import com.intellij.pom.PomTargetPsiElement;
 import com.intellij.util.OpenSourceUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

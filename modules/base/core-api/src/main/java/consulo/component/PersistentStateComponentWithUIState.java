@@ -16,8 +16,8 @@
 package consulo.component;
 
 import com.intellij.openapi.components.PersistentStateComponent;
-import consulo.annotations.RequiredWriteAction;
-import consulo.ui.RequiredUIAccess;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nullable;
 

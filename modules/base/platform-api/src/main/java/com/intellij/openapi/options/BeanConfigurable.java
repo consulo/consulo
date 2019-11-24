@@ -18,7 +18,7 @@ package com.intellij.openapi.options;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;

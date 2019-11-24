@@ -19,7 +19,7 @@ import consulo.roots.ModifiableModuleRootLayer;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
-import consulo.annotations.RequiredWriteAction;
+import consulo.annotation.access.RequiredWriteAction;
 
 /**
  * Model of roots that should be used by clients to modify module roots.

@@ -17,7 +17,7 @@ package com.intellij.openapi.startup;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;

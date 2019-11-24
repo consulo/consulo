@@ -20,13 +20,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
-import javax.annotation.Nonnull;
-
-import consulo.annotations.DeprecationInfo;
-import consulo.annotations.Exported;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.UsedInPlugin;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 
@@ -56,7 +55,7 @@ public abstract class EditorNotifications  {
 
   public abstract void updateAllNotifications();
 
-  @Exported
+  @UsedInPlugin
   public static void updateAll() {
     Project[] projects = ProjectManager.getInstance().getOpenProjects();
     for (Project project : projects) {

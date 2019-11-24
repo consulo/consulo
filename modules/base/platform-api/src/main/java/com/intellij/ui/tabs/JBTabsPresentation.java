@@ -16,7 +16,7 @@
 package com.intellij.ui.tabs;
 
 import com.intellij.util.ui.TimedDeadzone;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

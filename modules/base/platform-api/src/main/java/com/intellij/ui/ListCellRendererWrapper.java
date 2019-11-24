@@ -18,7 +18,7 @@ package com.intellij.ui;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.FList;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

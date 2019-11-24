@@ -33,7 +33,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.util.BooleanFunction;
 import com.intellij.util.containers.ContainerUtilRt;
 import consulo.logging.Logger;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 

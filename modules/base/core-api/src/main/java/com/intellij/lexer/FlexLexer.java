@@ -16,7 +16,7 @@
 package com.intellij.lexer;
 
 import com.intellij.psi.tree.IElementType;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 
 import java.io.IOException;
 

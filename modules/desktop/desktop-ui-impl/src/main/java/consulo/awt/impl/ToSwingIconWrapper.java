@@ -15,7 +15,7 @@
  */
 package consulo.awt.impl;
 
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nonnull;
 

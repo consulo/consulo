@@ -16,7 +16,7 @@
 package consulo.ui.web.internal;
 
 import consulo.ui.Label;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.HorizontalAlignment;

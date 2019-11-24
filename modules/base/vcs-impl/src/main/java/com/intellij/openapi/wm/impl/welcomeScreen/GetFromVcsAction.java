@@ -23,7 +23,7 @@ import com.intellij.openapi.vcs.checkout.CheckoutAction;
 import com.intellij.ui.UIBundle;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.start.WelcomeFrameManager;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

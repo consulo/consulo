@@ -8,7 +8,7 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author Roman.Chernyatchik

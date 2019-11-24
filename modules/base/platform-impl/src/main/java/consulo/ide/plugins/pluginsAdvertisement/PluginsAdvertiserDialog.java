@@ -24,7 +24,7 @@ import com.intellij.ui.TableUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.WholeWestDialogWrapper;
 
 import javax.annotation.Nonnull;

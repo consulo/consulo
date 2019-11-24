@@ -22,7 +22,7 @@ import com.intellij.lang.LanguageExtension;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.psi.PsiElement;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import javax.annotation.Nonnull;
 
 import java.util.Collections;

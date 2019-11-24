@@ -55,7 +55,7 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.ui.*;
 import consulo.logging.Logger;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.SwingUIDecorator;
 import consulo.ui.UIAccess;
 import org.intellij.lang.annotations.MagicConstant;

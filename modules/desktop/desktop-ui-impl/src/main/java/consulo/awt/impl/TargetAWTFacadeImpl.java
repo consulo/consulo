@@ -25,6 +25,7 @@ import consulo.logging.Logger;
 import consulo.ui.Component;
 import consulo.ui.Window;
 import consulo.ui.*;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.window.WindowOverAWTWindow;
 import consulo.ui.image.Image;
 import consulo.ui.shared.ColorValue;

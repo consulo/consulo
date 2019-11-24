@@ -23,6 +23,7 @@ import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.ApplicationNamesInfo;
+import consulo.annotation.UsedInPlugin;
 import consulo.container.plugin.ComponentConfig;
 import consulo.container.plugin.PluginId;
 import com.intellij.openapi.extensions.impl.PluginExtensionInitializationException;
@@ -30,7 +31,6 @@ import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import consulo.annotations.Exported;
 import consulo.application.ApplicationProperties;
 import consulo.awt.TargetAWT;
 import consulo.container.ExitCodes;
@@ -182,7 +182,7 @@ public class PluginManager extends PluginManagerCore {
   }
 
   @Nullable
-  @Exported
+  @UsedInPlugin
   public static File getPluginPath(@Nonnull Class<?> pluginClass) {
     ClassLoader temp = pluginClass.getClassLoader();
     assert temp instanceof PluginClassLoader : "classloader is not plugin";

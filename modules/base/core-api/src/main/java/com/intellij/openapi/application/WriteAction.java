@@ -20,11 +20,11 @@ import com.intellij.util.ObjectUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.DeprecationInfo;
-import consulo.annotations.RequiredWriteAction;
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.WriteThreadOption;
 import consulo.application.internal.ApplicationWithOwnWriteThread;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import java.util.function.Supplier;

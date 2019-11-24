@@ -27,8 +27,8 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.PairConsumer;
-import consulo.annotations.Exported;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.UsedInPlugin;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
@@ -83,55 +83,55 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
   }
 
   @Nonnull
-  @Exported
+  @UsedInPlugin
   public ModuleExtensionSdkBoxBuilder<T> sdkTypeClass(@Nonnull final Class<? extends SdkTypeId> clazz) {
     mySdkFilter = sdkTypeId -> clazz.isAssignableFrom(sdkTypeId.getClass());
     return this;
   }
 
   @Nonnull
-  @Exported
+  @UsedInPlugin
   public ModuleExtensionSdkBoxBuilder<T> sdkTypes(@Nonnull final Set<SdkType> sdkTypes) {
     mySdkFilter = sdkTypes::contains;
     return this;
   }
 
   @Nonnull
-  @Exported
+  @UsedInPlugin
   public ModuleExtensionSdkBoxBuilder<T> sdkType(@Nonnull final SdkType sdkType) {
     return sdkTypes(Collections.singleton(sdkType));
   }
 
   @Nonnull
-  @Exported
+  @UsedInPlugin
   public ModuleExtensionSdkBoxBuilder<T> sdkPointerFunc(@Nonnull NullableFunction<T, MutableModuleInheritableNamedPointer<Sdk>> function) {
     mySdkPointerFunction = function;
     return this;
   }
 
   @Nonnull
-  @Exported
+  @UsedInPlugin
   public ModuleExtensionSdkBoxBuilder<T> labelText(@Nonnull String labelText) {
     myLabelText = labelText;
     return this;
   }
 
   @Nonnull
-  @Exported
+  @UsedInPlugin
   public ModuleExtensionSdkBoxBuilder<T> laterUpdater(@Nullable Runnable runnable) {
     myLaterUpdater = runnable;
     return this;
   }
 
   @Nonnull
-  @Exported
+  @UsedInPlugin
   public ModuleExtensionSdkBoxBuilder<T> postConsumer(@Nonnull PairConsumer<Sdk, Sdk> consumer) {
     myPostConsumer = consumer;
     return this;
   }
 
   @Nonnull
-  @Exported
+  @UsedInPlugin
   public ModuleExtensionSdkBoxBuilder<T> nullItem(@Nullable String name, @Nullable Image icon) {
     myNullItemName = name;
     myNullItemIcon = icon;

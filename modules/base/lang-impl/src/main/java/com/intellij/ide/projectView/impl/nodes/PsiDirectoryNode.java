@@ -42,7 +42,7 @@ import com.intellij.psi.impl.file.PsiPackageHelper;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.PathUtil;
 import consulo.fileTypes.impl.VfsIconUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

@@ -47,7 +47,7 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.MultiMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.logging.Logger;
 
 import java.util.*;

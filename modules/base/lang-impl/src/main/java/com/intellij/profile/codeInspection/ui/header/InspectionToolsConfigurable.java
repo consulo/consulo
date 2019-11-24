@@ -62,7 +62,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.HashMap;
 import consulo.logging.Logger;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;

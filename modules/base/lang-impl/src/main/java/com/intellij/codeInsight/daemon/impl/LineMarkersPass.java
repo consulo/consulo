@@ -36,7 +36,7 @@ import com.intellij.util.FunctionUtil;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.NotNullList;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ui.image.Image;
 import gnu.trove.THashSet;
 import gnu.trove.TIntObjectHashMap;

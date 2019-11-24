@@ -21,7 +21,7 @@ package com.intellij.psi.search;
 
 import com.intellij.openapi.application.ReadActionProcessor;
 import com.intellij.psi.PsiReference;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 
 public class PsiReferenceProcessorAdapter extends ReadActionProcessor<PsiReference> {
   private final PsiReferenceProcessor myProcessor;

@@ -18,7 +18,7 @@ package consulo.externalSystem.service.module.wizard;
 import com.intellij.openapi.externalSystem.service.settings.AbstractImportFromExternalSystemControl;
 import com.intellij.openapi.options.ConfigurationException;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.wizard.WizardStep;
 import consulo.ui.wizard.WizardStepValidationException;
 

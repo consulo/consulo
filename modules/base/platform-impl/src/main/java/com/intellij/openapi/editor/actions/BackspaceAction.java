@@ -32,7 +32,7 @@ import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.util.ui.MacUIUtil;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredWriteAction;
+import consulo.annotation.access.RequiredWriteAction;
 
 public class BackspaceAction extends EditorAction {
   public BackspaceAction() {

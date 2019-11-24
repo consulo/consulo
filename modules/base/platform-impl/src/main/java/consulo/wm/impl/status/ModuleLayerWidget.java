@@ -37,7 +37,7 @@ import com.intellij.openapi.wm.impl.status.EditorBasedStatusBarPopup;
 import com.intellij.util.ListWithSelection;
 import consulo.roots.ModuleRootLayer;
 import consulo.roots.ModuleRootLayerListener;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

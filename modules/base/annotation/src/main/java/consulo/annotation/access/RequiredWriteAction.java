@@ -13,21 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.annotations;
+package consulo.annotation.access;
 
 import java.lang.annotation.*;
 
 /**
  * @author VISTALL
- * @since 05.03.14
+ * @since 24.01.15
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DeprecationInfo {
-  String value();
-
-  /**
-   * @return version or date (for date pattern is yyyy-MM-dd)
-   */
-  String until() default "0";
+@Target({ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.PARAMETER})
+public @interface RequiredWriteAction {
 }

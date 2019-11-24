@@ -20,7 +20,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Factory;
 import com.intellij.ui.UserActivityWatcher;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import javax.annotation.Nonnull;

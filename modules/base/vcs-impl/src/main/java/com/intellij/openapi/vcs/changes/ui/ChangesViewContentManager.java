@@ -38,7 +38,7 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.*;
 import com.intellij.util.Alarm;
 import com.intellij.util.NotNullFunction;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

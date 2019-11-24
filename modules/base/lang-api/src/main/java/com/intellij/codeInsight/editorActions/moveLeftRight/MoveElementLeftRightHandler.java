@@ -17,8 +17,9 @@ package com.intellij.codeInsight.editorActions.moveLeftRight;
 
 import com.intellij.lang.LanguageExtension;
 import com.intellij.psi.PsiElement;
+import consulo.annotation.access.RequiredReadAction;
+
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredReadAction;
 
 /**
  * Instances of this class implement language-specific logic of 'move element left/right' actions

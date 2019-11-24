@@ -23,7 +23,7 @@ import com.intellij.openapi.project.Project;
 import javax.annotation.Nonnull;
 
 import consulo.logging.Logger;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 public class MakeModuleAction extends CompileActionBase {
   private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.actions.MakeModuleAction");

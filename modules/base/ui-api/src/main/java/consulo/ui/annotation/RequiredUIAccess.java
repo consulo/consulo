@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.annotations;
+package consulo.ui.annotation;
 
 import java.lang.annotation.*;
 
 /**
  * @author VISTALL
- * @since 03.03.2015
+ * @since 09-Jun-16
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.PARAMETER})
-@Deprecated
-@DeprecationInfo("Use consulo.ui.RequiredUIAccess")
-public @interface RequiredDispatchThread {
+public @interface RequiredUIAccess {
 }

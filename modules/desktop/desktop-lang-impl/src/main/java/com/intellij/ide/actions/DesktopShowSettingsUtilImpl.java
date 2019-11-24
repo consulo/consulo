@@ -38,7 +38,7 @@ import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.ide.base.BaseShowSettingsUtil;
 import consulo.options.ProjectStructureSelector;
 import consulo.roots.ui.configuration.DesktopProjectStructureDialog;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
 
 import javax.annotation.Nonnull;

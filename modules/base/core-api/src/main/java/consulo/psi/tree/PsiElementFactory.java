@@ -18,7 +18,7 @@ package consulo.psi.tree;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

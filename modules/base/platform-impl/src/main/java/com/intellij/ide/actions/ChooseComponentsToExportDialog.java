@@ -31,7 +31,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.FieldPanel;
 import com.intellij.util.containers.MultiMap;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.fileChooser.FileChooser;
 import org.jetbrains.annotations.NonNls;
 

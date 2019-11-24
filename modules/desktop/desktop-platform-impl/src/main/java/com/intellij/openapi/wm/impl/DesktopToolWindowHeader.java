@@ -35,7 +35,7 @@ import com.intellij.util.NotNullProducer;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.desktop.util.awt.MorphColor;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.SwingUIDecorator;
 import consulo.ui.image.Image;
 import consulo.wm.impl.ToolWindowManagerBase;

@@ -22,7 +22,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.Gray;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeManager;
 import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeProvider;
 import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeProviders;

@@ -16,7 +16,7 @@
 
 package org.jetbrains.annotations;
 
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 
 import java.lang.annotation.*;
 

@@ -19,7 +19,7 @@ import com.intellij.packaging.artifacts.*;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElementFactory;
 import com.intellij.util.EventDispatcher;
-import consulo.annotations.RequiredWriteAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.packaging.artifacts.ArtifactPointerUtil;
 import consulo.packaging.impl.artifacts.ArtifactPointerManagerImpl;
 

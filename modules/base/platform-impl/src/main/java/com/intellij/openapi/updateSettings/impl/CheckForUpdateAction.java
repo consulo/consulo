@@ -26,7 +26,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import consulo.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 

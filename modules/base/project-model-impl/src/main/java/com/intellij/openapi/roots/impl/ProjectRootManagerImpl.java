@@ -30,7 +30,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerListener;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.RequiredWriteAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.logging.Logger;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.OrderEntryWithTracking;

@@ -31,7 +31,7 @@ import com.intellij.util.Ticket;
 import com.intellij.util.continuation.ModalityIgnorantBackgroundableTask;
 import javax.annotation.Nonnull;
 
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.swing.*;
 

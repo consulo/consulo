@@ -34,8 +34,8 @@ import com.intellij.util.Range;
 import com.intellij.util.containers.HashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.ui.RequiredUIAccess;
-import consulo.annotations.RequiredWriteAction;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.annotation.access.RequiredWriteAction;
 
 import java.util.Arrays;
 import java.util.Comparator;

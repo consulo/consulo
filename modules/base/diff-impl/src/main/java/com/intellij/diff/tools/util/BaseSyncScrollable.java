@@ -17,7 +17,7 @@ package com.intellij.diff.tools.util;
 
 import com.intellij.diff.util.Side;
 import javax.annotation.Nonnull;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 public abstract class BaseSyncScrollable implements SyncScrollSupport.SyncScrollable {
   /*

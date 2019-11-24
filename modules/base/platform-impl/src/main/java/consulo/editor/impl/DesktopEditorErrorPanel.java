@@ -39,7 +39,7 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.awt.RelativePoint;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

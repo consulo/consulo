@@ -21,7 +21,7 @@ import com.intellij.psi.PsiDirectoryContainer;
 import com.intellij.psi.PsiQualifiedNamedElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayFactory;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

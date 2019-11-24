@@ -16,7 +16,7 @@
 package com.intellij.ui.content;
 
 import com.intellij.openapi.Disposable;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.Component;
 import javax.annotation.Nonnull;
 

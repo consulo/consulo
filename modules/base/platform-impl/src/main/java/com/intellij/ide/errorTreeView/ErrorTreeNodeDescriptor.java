@@ -17,7 +17,7 @@ package com.intellij.ide.errorTreeView;
 
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.project.Project;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author Eugene Zhuravlev

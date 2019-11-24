@@ -46,9 +46,9 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.TabbedPaneWrapper;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.DeprecationInfo;
-import consulo.ui.RequiredUIAccess;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.DeprecationInfo;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 

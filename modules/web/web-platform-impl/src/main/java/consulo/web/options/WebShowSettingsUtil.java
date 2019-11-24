@@ -21,7 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import consulo.ide.base.BaseShowSettingsUtil;
 import consulo.options.ProjectStructureSelector;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.app.impl.settings.SettingsDialog;
 import org.jetbrains.annotations.NonNls;
 

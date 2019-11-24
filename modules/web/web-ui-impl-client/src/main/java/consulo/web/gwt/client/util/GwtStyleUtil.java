@@ -15,7 +15,7 @@
  */
 package consulo.web.gwt.client.util;
 
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.shared.RGBColor;
 import consulo.web.gwt.shared.transport.GwtColor;
 import javax.annotation.Nonnull;

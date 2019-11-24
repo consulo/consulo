@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.tools.util.base;
 
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 public class DiffViewerListener {
   @RequiredUIAccess

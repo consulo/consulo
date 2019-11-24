@@ -18,7 +18,7 @@ package consulo.desktop.start;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.wm.IdeFrame;
 import consulo.start.WelcomeFrameManager;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

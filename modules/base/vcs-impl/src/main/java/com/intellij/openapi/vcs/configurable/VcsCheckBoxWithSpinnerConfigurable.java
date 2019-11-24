@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.configurable;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.JBUI;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.swing.*;
 import java.awt.*;

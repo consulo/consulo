@@ -15,7 +15,7 @@
  */
 package com.intellij.diff;
 
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 public abstract class DiffContextEx extends DiffContext {
   /*

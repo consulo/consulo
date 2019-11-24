@@ -3,7 +3,7 @@ package com.intellij.ide.util.treeView;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.treeStructure.Tree;
 import javax.annotation.Nonnull;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;

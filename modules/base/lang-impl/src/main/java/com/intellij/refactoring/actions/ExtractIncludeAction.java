@@ -26,7 +26,7 @@ import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.lang.LanguageExtractInclude;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author ven

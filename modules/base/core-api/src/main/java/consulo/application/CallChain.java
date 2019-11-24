@@ -16,8 +16,8 @@
 package consulo.application;
 
 import com.intellij.openapi.util.AsyncResult;
-import consulo.annotations.RequiredWriteAction;
-import consulo.ui.RequiredUIAccess;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;

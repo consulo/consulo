@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.application;
 
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 
 /**
  * @author nik

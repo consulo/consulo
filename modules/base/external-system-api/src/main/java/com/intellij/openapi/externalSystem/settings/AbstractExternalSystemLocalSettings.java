@@ -28,7 +28,7 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtilRt;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

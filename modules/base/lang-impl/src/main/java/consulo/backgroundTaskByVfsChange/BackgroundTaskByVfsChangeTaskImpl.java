@@ -39,7 +39,7 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.tools.ToolProcessAdapter;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

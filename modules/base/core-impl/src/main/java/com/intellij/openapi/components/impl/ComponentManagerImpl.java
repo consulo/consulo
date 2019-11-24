@@ -42,7 +42,7 @@ import consulo.injecting.InjectingContainerBuilder;
 import consulo.injecting.InjectingPoint;
 import consulo.injecting.key.InjectingKey;
 import consulo.logging.Logger;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.TestOnly;
 

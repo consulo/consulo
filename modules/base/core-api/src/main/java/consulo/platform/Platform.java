@@ -18,7 +18,7 @@ package consulo.platform;
 import consulo.container.plugin.PluginId;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.ObjectUtil;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.platform.internal.PlatformInternal;
 import consulo.ui.image.Image;
 

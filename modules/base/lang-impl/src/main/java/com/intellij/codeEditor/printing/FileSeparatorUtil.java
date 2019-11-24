@@ -26,7 +26,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.markup.SeparatorPlacement;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -24,7 +24,7 @@ import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nonnull;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 public class BackAction extends AnAction implements DumbAware {
   @RequiredUIAccess

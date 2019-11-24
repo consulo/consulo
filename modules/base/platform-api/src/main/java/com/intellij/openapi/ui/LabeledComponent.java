@@ -21,7 +21,7 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.PanelWithAnchor;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

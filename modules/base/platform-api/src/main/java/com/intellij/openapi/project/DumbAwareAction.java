@@ -19,8 +19,8 @@ package com.intellij.openapi.project;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.util.Consumer;
-import consulo.annotations.DeprecationInfo;
-import consulo.ui.RequiredUIAccess;
+import consulo.annotation.DeprecationInfo;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
 

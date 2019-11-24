@@ -24,7 +24,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.BitUtil;
 import consulo.module.extension.ModuleExtensionProviderEP;
 import consulo.module.extension.impl.ModuleExtensionProviders;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 

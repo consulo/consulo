@@ -16,7 +16,7 @@
 package com.intellij.codeInspection;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 
 @Deprecated
 @DeprecationInfo("Use globalInspection")

@@ -37,7 +37,7 @@ import consulo.ide.welcomeScreen.WelcomeScreenSlideAction;
 import consulo.ide.welcomeScreen.WelcomeScreenSlider;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;
 import consulo.logging.Logger;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;

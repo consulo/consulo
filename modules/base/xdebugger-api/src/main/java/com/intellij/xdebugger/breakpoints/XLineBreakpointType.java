@@ -26,8 +26,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.XSourcePosition;
-import consulo.annotations.Exported;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.UsedInPlugin;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
@@ -177,7 +177,7 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
     }
   }
 
-  @Exported
+  @UsedInPlugin
   public class XLinePsiElementBreakpointVariant extends XLineBreakpointAllVariant {
     private final PsiElement myElement;
 

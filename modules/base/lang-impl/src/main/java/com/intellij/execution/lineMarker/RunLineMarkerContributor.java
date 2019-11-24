@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Function;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 

@@ -31,7 +31,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.ui.EditorNotifications;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.Semaphore;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.logging.Logger;
 

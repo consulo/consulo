@@ -18,7 +18,7 @@ package consulo.ui.web.internal;
 import com.vaadin.ui.Component;
 import consulo.ui.MenuBar;
 import consulo.ui.MenuItem;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 import consulo.ui.web.internal.base.VaadinComponentContainer;
 

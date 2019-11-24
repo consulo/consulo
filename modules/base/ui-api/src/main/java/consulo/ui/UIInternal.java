@@ -15,11 +15,12 @@
  */
 package consulo.ui;
 
-import consulo.annotations.ReviewAfterMigrationToJRE;
+import consulo.annotation.ReviewAfterMigrationToJRE;
 import consulo.container.StartupError;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.layout.*;

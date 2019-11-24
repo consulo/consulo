@@ -18,7 +18,7 @@ package com.intellij.util.ui;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LightColors;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.plaf.ScrollBarUIConstants;
 
 import javax.swing.*;

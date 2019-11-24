@@ -24,7 +24,7 @@ import com.intellij.ui.roots.ScalableIconComponent;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.TextBox;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.desktop.internal.util.AWTFocusAdapterAsFocusListener;

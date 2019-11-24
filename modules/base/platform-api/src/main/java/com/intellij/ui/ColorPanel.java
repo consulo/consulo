@@ -17,7 +17,7 @@ package com.intellij.ui;
 
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

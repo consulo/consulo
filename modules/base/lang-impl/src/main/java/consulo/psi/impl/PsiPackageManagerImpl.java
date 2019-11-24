@@ -30,7 +30,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.Query;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;

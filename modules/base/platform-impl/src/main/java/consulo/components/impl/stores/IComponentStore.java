@@ -18,7 +18,7 @@ package consulo.components.impl.stores;
 import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.util.Pair;
-import consulo.annotations.RequiredWriteAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.components.impl.stores.storage.StateStorageManager;
 import consulo.ui.UIAccess;
 

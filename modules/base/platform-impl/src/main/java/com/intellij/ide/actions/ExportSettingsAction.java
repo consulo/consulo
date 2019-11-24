@@ -47,7 +47,7 @@ import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.injecting.key.InjectingKey;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import gnu.trove.THashSet;
 
 import javax.annotation.Nonnull;

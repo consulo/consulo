@@ -35,7 +35,7 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.intellij.lang.annotations.JdkConstants;
 import javax.annotation.Nonnull;
 

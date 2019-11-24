@@ -27,7 +27,7 @@ import com.intellij.openapi.project.PossiblyDumbAware;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 
 class CodeFoldingPass extends EditorBoundHighlightingPass implements PossiblyDumbAware {
   private static final Key<Boolean> THE_FIRST_TIME = Key.create("FirstFoldingPass");

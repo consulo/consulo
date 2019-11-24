@@ -37,7 +37,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.impl.file.PsiPackageHelper;
 import com.intellij.ui.JBColor;
 import org.jetbrains.annotations.NonNls;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 
 import java.awt.*;
 import java.io.*;

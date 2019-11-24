@@ -15,7 +15,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.TableUtil;
 import com.intellij.ui.table.JBTable;
 import javax.annotation.Nonnull;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.swing.*;
 import java.util.ArrayList;

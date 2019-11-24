@@ -28,7 +28,7 @@ import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredWriteAction;
+import consulo.annotation.access.RequiredWriteAction;
 
 /**
  * @author max

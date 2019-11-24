@@ -24,7 +24,7 @@ import com.intellij.psi.impl.source.tree.FileElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.BooleanStack;
 import com.intellij.util.containers.Stack;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

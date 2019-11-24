@@ -23,7 +23,7 @@ import consulo.module.extension.ModuleExtension;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 
 /**
  * @author VISTALL

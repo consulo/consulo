@@ -24,9 +24,9 @@ import com.intellij.openapi.application.impl.ModalityStateEx;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.ThrowableComputable;
-import consulo.annotations.RequiredReadAction;
-import consulo.annotations.RequiredWriteAction;
-import consulo.ui.RequiredUIAccess;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import org.jetbrains.ide.PooledThreadExecutor;
 

@@ -18,7 +18,7 @@ package consulo.ui.desktop.internal;
 import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.ui.Button;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 
 import javax.annotation.Nonnull;

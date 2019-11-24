@@ -30,7 +30,7 @@ import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.desktop.util.awt.AntialiasingType;
 import consulo.ide.ui.laf.LafWithColorScheme;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

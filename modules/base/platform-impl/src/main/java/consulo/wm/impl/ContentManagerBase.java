@@ -26,7 +26,7 @@ import com.intellij.ui.content.*;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.SmartList;
 import consulo.logging.Logger;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.wm.ContentEx;
 import kava.beans.PropertyChangeEvent;

@@ -22,7 +22,7 @@ package com.intellij.openapi.vfs.newvfs.persistent;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import javax.annotation.Nonnull;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 public class CheckSanityAction extends AnAction {
   @RequiredUIAccess

@@ -23,8 +23,8 @@ import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowEP;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.impl.ToolWindowLayout;
-import consulo.annotations.DeprecationInfo;
-import consulo.ui.RequiredUIAccess;
+import consulo.annotation.DeprecationInfo;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

@@ -28,7 +28,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import javax.annotation.Nonnull;
 
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.roots.ui.StripeTabPanel;
 
 import javax.annotation.Nullable;

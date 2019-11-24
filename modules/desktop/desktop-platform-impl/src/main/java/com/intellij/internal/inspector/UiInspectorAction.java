@@ -51,7 +51,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.AntialiasingType;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.window.JDialogAsUIWindow;
 import consulo.ui.image.ImageEffects;
 import net.miginfocom.swing.MigLayout;

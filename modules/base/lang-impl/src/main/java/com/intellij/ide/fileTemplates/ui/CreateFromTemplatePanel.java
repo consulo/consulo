@@ -24,7 +24,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.ScrollPaneFactory;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

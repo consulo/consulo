@@ -26,7 +26,7 @@ import com.intellij.openapi.vcs.changes.BackgroundFromStartOption;
 import com.intellij.util.Consumer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 public class VcsBackgroundableComputable<T> extends Task.Backgroundable {
   private final String myErrorTitle;

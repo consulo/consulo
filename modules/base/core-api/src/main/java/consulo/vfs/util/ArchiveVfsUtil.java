@@ -25,7 +25,7 @@ import consulo.vfs.impl.archive.ArchiveFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 
 import java.io.*;
 import java.util.Iterator;

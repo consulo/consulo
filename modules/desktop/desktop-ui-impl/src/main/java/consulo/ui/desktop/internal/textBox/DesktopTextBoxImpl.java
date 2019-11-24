@@ -21,7 +21,7 @@ import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.components.JBTextField;
 import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.TextBox;
 import consulo.ui.desktop.internal.validableComponent.DocumentSwingValidator;
 

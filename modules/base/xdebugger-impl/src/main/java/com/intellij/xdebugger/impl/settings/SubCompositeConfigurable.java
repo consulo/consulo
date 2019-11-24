@@ -21,7 +21,7 @@ import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.xdebugger.settings.DebuggerSettingsCategory;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -15,7 +15,7 @@
  */
 package com.intellij.navigation;
 
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;

@@ -17,8 +17,7 @@
 package com.intellij.ide.hierarchy;
 
 import com.intellij.ide.util.treeView.NodeRenderer;
-import consulo.ui.RequiredUIAccess;
-import consulo.awt.TargetAWT;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

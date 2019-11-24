@@ -17,7 +17,7 @@
 package com.intellij.psi;
 
 import com.intellij.util.ArrayFactory;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

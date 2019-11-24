@@ -16,7 +16,7 @@
 package com.intellij.openapi.application.impl;
 
 import com.intellij.openapi.application.ApplicationInfo;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 
 @Deprecated
 @DeprecationInfo("Use ApplicationInfo")

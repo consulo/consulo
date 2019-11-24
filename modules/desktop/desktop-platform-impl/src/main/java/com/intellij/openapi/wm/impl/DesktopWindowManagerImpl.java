@@ -44,7 +44,7 @@ import com.intellij.util.ui.UIUtil;
 import com.sun.jna.platform.WindowUtils;
 import consulo.awt.TargetAWT;
 import consulo.start.WelcomeFrameManager;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.wm.impl.DesktopCommandProcessorImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

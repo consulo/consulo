@@ -61,7 +61,7 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import com.intellij.util.ui.UIUtil;
 import consulo.logging.Logger;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;

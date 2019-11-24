@@ -23,7 +23,7 @@ import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Tab;
 import consulo.ui.layout.TabbedLayout;
 

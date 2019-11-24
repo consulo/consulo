@@ -19,7 +19,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.vaadin.shared.Connector;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HasComponents;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.ThreeComponentSplitLayout;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 import consulo.ui.web.internal.base.VaadinComponent;

@@ -33,11 +33,11 @@ import com.intellij.ui.mac.foundation.Foundation;
 import com.intellij.ui.mac.foundation.ID;
 import com.intellij.util.ThrowableRunnable;
 import com.sun.jna.Callback;
-import consulo.annotations.ReviewAfterMigrationToJRE;
+import consulo.annotation.ReviewAfterMigrationToJRE;
 import consulo.ide.actions.AboutManager;
 import consulo.logging.Logger;
 import consulo.start.CommandLineArgs;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
 
 import javax.annotation.Nonnull;

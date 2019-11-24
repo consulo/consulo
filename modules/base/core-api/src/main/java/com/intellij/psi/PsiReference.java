@@ -19,9 +19,9 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.util.ArrayFactory;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
-import consulo.annotations.DeprecationInfo;
-import consulo.annotations.RequiredReadAction;
-import consulo.annotations.RequiredWriteAction;
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

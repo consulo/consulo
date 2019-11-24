@@ -31,8 +31,8 @@ import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.RequiredUIAccess;
-import consulo.annotations.RequiredWriteAction;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

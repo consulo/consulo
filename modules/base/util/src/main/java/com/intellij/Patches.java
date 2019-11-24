@@ -16,7 +16,7 @@
 package com.intellij;
 
 import com.intellij.openapi.util.SystemInfo;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 
 import java.awt.*;
 

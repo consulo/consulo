@@ -22,7 +22,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.testFramework.LightPlatformLangTestCase;
 import consulo.components.impl.stores.storage.StateStorageFacade;
 import consulo.components.impl.stores.storage.StateStorageManagerImpl;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 

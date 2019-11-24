@@ -49,7 +49,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.ide.projectView.impl.ProjectViewPaneOptionProvider;
 import consulo.logging.Logger;
 import org.jdom.Element;

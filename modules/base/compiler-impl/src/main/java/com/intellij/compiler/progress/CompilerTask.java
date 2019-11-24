@@ -42,7 +42,7 @@ import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.ui.AppIcon;
 import com.intellij.util.ui.UIUtil;
 import consulo.compiler.impl.CompilerManagerImpl;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;

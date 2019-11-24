@@ -16,7 +16,7 @@
 package com.intellij.openapi.diagnostic;
 
 import com.intellij.util.ArrayUtil;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.logging.attachment.Attachment;
 import org.jetbrains.annotations.NonNls;
 

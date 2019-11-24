@@ -35,7 +35,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.ZipUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ide.updateSettings.UpdateSettings;
 
 import javax.annotation.Nonnull;

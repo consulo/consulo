@@ -17,7 +17,7 @@ package com.intellij.openapi.roots;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;
 

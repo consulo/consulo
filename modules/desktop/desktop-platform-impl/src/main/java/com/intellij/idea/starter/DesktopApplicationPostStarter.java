@@ -37,7 +37,7 @@ import consulo.ide.customize.FirstStartCustomizeUtil;
 import consulo.logging.Logger;
 import consulo.start.CommandLineArgs;
 import consulo.start.WelcomeFrameManager;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

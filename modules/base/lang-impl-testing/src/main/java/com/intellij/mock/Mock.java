@@ -22,7 +22,7 @@ import com.intellij.util.ArrayUtil;
 import consulo.fileEditor.impl.EditorComposite;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorsSplitters;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import kava.beans.PropertyChangeListener;
 import org.jdom.Element;

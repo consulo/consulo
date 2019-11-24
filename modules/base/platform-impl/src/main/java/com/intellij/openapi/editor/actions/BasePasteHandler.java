@@ -24,8 +24,8 @@ import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.util.Producer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.ui.RequiredUIAccess;
-import consulo.annotations.RequiredWriteAction;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.annotation.access.RequiredWriteAction;
 
 import java.awt.datatransfer.Transferable;
 

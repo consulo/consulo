@@ -18,7 +18,7 @@ package com.intellij.diff.contents;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.pom.Navigatable;
 import javax.annotation.Nullable;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 public abstract class DiffContentBase extends UserDataHolderBase implements DiffContent {
   @Nullable

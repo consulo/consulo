@@ -29,7 +29,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.ProcessingContext;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeInsight.completion.CompletionProvider;
 
 public class PostfixTemplateCompletionContributor extends CompletionContributor {

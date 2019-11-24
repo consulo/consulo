@@ -18,7 +18,7 @@ package consulo.module.extension;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.roots.ModuleRootLayer;
 import com.intellij.util.messages.Topic;
 import org.jdom.Element;

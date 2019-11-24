@@ -16,7 +16,7 @@
 package com.intellij.ide.util.treeView;
 
 import com.intellij.openapi.project.Project;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;

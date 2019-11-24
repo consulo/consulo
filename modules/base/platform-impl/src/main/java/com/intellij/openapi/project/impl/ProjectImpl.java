@@ -53,7 +53,7 @@ import consulo.components.impl.stores.*;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.logging.Logger;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NonNls;
 

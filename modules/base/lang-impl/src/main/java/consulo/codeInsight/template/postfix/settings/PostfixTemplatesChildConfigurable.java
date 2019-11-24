@@ -29,7 +29,7 @@ import com.intellij.ui.CheckBoxList;
 import com.intellij.ui.OnePixelSplitter;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.ui.JBUI;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nullable;

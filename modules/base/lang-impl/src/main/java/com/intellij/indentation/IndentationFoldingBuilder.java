@@ -6,8 +6,8 @@ import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.psi.tree.TokenSet;
-import consulo.annotations.Exported;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.UsedInPlugin;
+import consulo.annotation.access.RequiredReadAction;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -18,7 +18,7 @@ import java.util.Queue;
 /**
  * @author oleg
  */
-@Exported
+@UsedInPlugin
 public abstract class IndentationFoldingBuilder implements FoldingBuilder, DumbAware {
   private final TokenSet myTokenSet;
 

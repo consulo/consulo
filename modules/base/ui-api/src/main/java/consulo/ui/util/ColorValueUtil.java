@@ -1,7 +1,7 @@
 package consulo.ui.util;
 
 import com.intellij.openapi.util.text.StringUtilRt;
-import consulo.annotations.Exported;
+import consulo.annotation.UsedInPlugin;
 import consulo.ui.shared.RGBColor;
 
 import javax.annotation.Nonnull;
@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2018-06-12
  */
-@Exported
+@UsedInPlugin
 public class ColorValueUtil {
   /**
    * Return Color object from string. The following formats are allowed:

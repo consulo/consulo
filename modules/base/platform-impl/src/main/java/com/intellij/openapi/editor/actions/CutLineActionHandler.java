@@ -25,7 +25,7 @@ import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import consulo.annotations.RequiredWriteAction;
+import consulo.annotation.access.RequiredWriteAction;
 
 class CutLineActionHandler extends EditorWriteActionHandler {
   private final boolean myToLineStart;

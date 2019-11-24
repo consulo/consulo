@@ -20,7 +20,7 @@ import com.intellij.util.ArrayFactory;
 import consulo.options.ApplicationConfigurableEP;
 import consulo.options.ProjectConfigurableEP;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

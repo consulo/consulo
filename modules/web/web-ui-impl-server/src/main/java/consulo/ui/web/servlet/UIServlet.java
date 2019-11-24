@@ -22,7 +22,7 @@ import com.vaadin.server.*;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.web.internal.base.FromVaadinComponentWrapper;
 
 import javax.annotation.Nullable;

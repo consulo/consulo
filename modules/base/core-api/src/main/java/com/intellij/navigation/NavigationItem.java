@@ -17,7 +17,7 @@ package com.intellij.navigation;
 
 import com.intellij.pom.Navigatable;
 import com.intellij.util.ArrayFactory;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

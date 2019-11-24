@@ -17,7 +17,7 @@
 package com.intellij.openapi.module;
 
 import com.intellij.openapi.components.ServiceManager;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nonnull;
 

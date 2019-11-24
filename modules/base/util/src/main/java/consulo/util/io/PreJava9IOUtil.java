@@ -18,7 +18,7 @@ package consulo.util.io;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.Processor;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
-import consulo.annotations.ReviewAfterMigrationToJRE;
+import consulo.annotation.ReviewAfterMigrationToJRE;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

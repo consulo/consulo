@@ -15,7 +15,7 @@
  */
 package consulo.ui.web.servlet;
 
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
 import javax.annotation.Nonnull;
 

@@ -22,7 +22,7 @@ import com.vaadin.server.Page;
 import com.vaadin.ui.UI;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
 import consulo.ui.shared.Size;
 import consulo.ui.shared.border.BorderPosition;

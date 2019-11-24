@@ -34,7 +34,7 @@ import com.intellij.util.Consumer;
 import javax.annotation.Nonnull;
 
 import consulo.logging.Logger;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import java.awt.event.MouseEvent;
 

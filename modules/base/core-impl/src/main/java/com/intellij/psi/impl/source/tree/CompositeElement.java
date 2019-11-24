@@ -38,7 +38,7 @@ import com.intellij.util.ArrayFactory;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
 import com.intellij.util.text.StringFactory;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.logging.Logger;
 import consulo.psi.PsiElementWithSubtreeChangeNotifier;
 import consulo.psi.tree.PsiElementFactory;

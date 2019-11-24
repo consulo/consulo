@@ -24,7 +24,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import consulo.module.extension.impl.ModuleExtensionProviders;
 import consulo.roots.ModuleRootLayer;

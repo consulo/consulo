@@ -22,7 +22,7 @@ import com.intellij.openapi.vcs.changes.CommitExecutor;
 import com.intellij.openapi.vcs.changes.LocalCommitExecutor;
 import com.intellij.openapi.vcs.ui.RefreshableOnComponent;
 import com.intellij.util.PairConsumer;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import javax.annotation.Nullable;
 
 import java.util.List;

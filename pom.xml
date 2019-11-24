@@ -55,6 +55,7 @@
     <module>modules/boot/container-impl</module>
     <module>modules/boot/util-rt</module>
 
+    <module>modules/base/annotation</module>
     <module>modules/base/annotations</module>
     <module>modules/base/analysis-api</module>
     <module>modules/base/analysis-impl</module>

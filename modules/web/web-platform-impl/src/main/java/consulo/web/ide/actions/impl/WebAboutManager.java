@@ -16,7 +16,7 @@
 package consulo.web.ide.actions.impl;
 
 import consulo.ide.actions.AboutManager;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
 
 import javax.annotation.Nullable;

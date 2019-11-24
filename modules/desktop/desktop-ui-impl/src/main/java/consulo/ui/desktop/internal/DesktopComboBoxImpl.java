@@ -20,6 +20,7 @@ import com.intellij.openapi.ui.ComboBoxWithWidePopup;
 import com.intellij.ui.ColoredListCellRenderer;
 import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.ui.*;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.model.ListModel;
 

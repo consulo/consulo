@@ -16,7 +16,7 @@
 package consulo.ui.web.internal;
 
 import consulo.ui.Button;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 import consulo.ui.web.internal.base.VaadinComponent;
 import consulo.web.gwt.shared.ui.state.button.ButtonRpc;

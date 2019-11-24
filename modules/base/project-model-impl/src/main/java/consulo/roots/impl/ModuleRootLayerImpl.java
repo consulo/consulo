@@ -34,7 +34,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.logging.Logger;
 import consulo.module.extension.*;
 import consulo.module.extension.impl.ModuleExtensionImpl;

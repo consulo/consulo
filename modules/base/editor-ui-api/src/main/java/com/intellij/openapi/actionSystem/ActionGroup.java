@@ -3,7 +3,7 @@ package com.intellij.openapi.actionSystem;
 
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
 import kava.beans.PropertyChangeListener;

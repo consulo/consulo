@@ -38,7 +38,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.SyntaxTraverser;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import gnu.trove.TIntObjectHashMap;
 
 import javax.annotation.Nonnull;

@@ -21,6 +21,7 @@ import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import com.intellij.openapi.project.Project;
 import consulo.ide.base.BaseDataManager;
 import consulo.ui.*;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.web.internal.WebRootPaneImpl;
 
 import java.util.LinkedHashMap;

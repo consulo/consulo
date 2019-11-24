@@ -40,15 +40,15 @@ import com.intellij.util.Consumer;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.DeprecationInfo;
-import consulo.annotations.Exported;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.UsedInPlugin;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.bundle.BundleHolder;
 import consulo.bundle.SdkUtil;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -267,7 +267,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
     return (SdkComboBoxItem)super.getSelectedItem();
   }
 
-  @Exported
+  @UsedInPlugin
   public void insertCustomSdkItem(@Nonnull String key, @Nonnull String presentableName, @Nonnull Image icon) {
     CustomSdkComboBoxItem sdkComboBoxItem = new CustomSdkComboBoxItem(key, presentableName, icon);
     int itemCount = getItemCount();

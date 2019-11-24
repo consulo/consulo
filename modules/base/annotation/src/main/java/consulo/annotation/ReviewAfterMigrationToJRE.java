@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.annotations;
-
-import java.lang.annotation.*;
+package consulo.annotation;
 
 /**
  * @author VISTALL
- * @since 30.10.2015
+ * @since 2019-11-19
+ *
+ * Annotation-marker for elements which need review after migration to target JRE
  */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.FIELD})
-public @interface Exported {
+public @interface ReviewAfterMigrationToJRE {
+  int value();
+
+  String description() default "";
 }

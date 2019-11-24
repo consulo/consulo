@@ -20,7 +20,7 @@
 package com.intellij.codeInsight.daemon;
 
 import com.intellij.psi.PsiElement;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import java.awt.event.MouseEvent;
 

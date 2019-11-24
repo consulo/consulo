@@ -66,7 +66,7 @@ import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import org.jetbrains.annotations.TestOnly;
 

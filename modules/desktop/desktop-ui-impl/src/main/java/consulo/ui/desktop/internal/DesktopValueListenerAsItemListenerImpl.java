@@ -15,7 +15,7 @@
  */
 package consulo.ui.desktop.internal;
 
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ValueComponent;
 
 import java.awt.event.ItemEvent;

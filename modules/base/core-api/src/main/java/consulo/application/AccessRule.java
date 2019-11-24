@@ -24,8 +24,8 @@ import com.intellij.util.ObjectUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.concurrency.AppExecutorUtil;
-import consulo.annotations.RequiredReadAction;
-import consulo.annotations.RequiredWriteAction;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.internal.ApplicationWithOwnWriteThread;
 
 import javax.annotation.Nonnull;

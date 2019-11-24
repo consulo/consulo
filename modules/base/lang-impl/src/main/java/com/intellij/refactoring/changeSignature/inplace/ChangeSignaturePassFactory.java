@@ -30,7 +30,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.refactoring.changeSignature.ChangeInfo;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

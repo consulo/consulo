@@ -16,7 +16,7 @@
 package consulo.ui.web.servlet;
 
 import consulo.ui.Label;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.web.internal.WebUIAccessImpl;

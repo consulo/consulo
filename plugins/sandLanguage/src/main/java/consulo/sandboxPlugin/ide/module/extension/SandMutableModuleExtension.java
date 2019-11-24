@@ -23,7 +23,7 @@ import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import consulo.extension.ui.ModuleExtensionSdkBoxBuilder;
 import javax.annotation.Nonnull;
 
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.swing.*;
 

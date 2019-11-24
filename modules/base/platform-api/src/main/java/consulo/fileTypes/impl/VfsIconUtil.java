@@ -29,7 +29,7 @@ import com.intellij.ui.IconDeferrer;
 import com.intellij.util.AnyIconKey;
 import com.intellij.util.BitUtil;
 import com.intellij.util.NullableFunction;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdaters;
 import consulo.ui.image.Image;

@@ -20,7 +20,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Key;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

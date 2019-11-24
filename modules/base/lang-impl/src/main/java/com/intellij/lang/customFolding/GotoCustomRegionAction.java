@@ -33,8 +33,8 @@ import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.HashSet;
-import consulo.ui.RequiredUIAccess;
-import consulo.annotations.RequiredReadAction;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

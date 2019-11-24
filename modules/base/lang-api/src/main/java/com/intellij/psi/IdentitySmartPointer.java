@@ -24,7 +24,7 @@ import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
 
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 
 @Deprecated
 public class IdentitySmartPointer<T extends PsiElement> implements SmartPsiElementPointer<T> {

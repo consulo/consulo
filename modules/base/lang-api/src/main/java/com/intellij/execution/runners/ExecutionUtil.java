@@ -37,7 +37,7 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.content.Content;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;

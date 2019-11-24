@@ -15,7 +15,7 @@
  */
 package consulo.ui.web.internal;
 
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.ValueComponent;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;

@@ -22,14 +22,14 @@ import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
-import consulo.annotations.Exported;
+import consulo.annotation.UsedInPlugin;
 import consulo.bundle.ui.BundleBox;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import consulo.ui.Component;
 import consulo.ui.util.LabeledComponents;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 
@@ -81,55 +81,55 @@ public class ModuleExtensionBundleBoxBuilder<T extends MutableModuleExtension<?>
   }
 
   @Nonnull
-  @Exported
+  @UsedInPlugin
   public ModuleExtensionBundleBoxBuilder<T> sdkTypeClass(@Nonnull final Class<? extends SdkTypeId> clazz) {
     mySdkFilter = sdkTypeId -> clazz.isAssignableFrom(sdkTypeId.getClass());
     return this;
   }
 
   @Nonnull
-  @Exported
+  @UsedInPlugin
   public ModuleExtensionBundleBoxBuilder<T> sdkTypes(@Nonnull final Set<SdkType> sdkTypes) {
     mySdkFilter = sdkTypes::contains;
     return this;
   }
 
   @Nonnull
-  @Exported
+  @UsedInPlugin
   public ModuleExtensionBundleBoxBuilder<T> sdkType(@Nonnull final SdkType sdkType) {
     return sdkTypes(Collections.singleton(sdkType));
   }
 
   @Nonnull
-  @Exported
+  @UsedInPlugin
   public ModuleExtensionBundleBoxBuilder<T> sdkPointerFunc(@Nonnull Function<T, MutableModuleInheritableNamedPointer<Sdk>> function) {
     mySdkPointerFunction = function;
     return this;
   }
 
   @Nonnull
-  @Exported
+  @UsedInPlugin
   public ModuleExtensionBundleBoxBuilder<T> labelText(@Nonnull String labelText) {
     myLabelText = labelText;
     return this;
   }
 
   @Nonnull
-  @Exported
+  @UsedInPlugin
   public ModuleExtensionBundleBoxBuilder<T> laterUpdater(@Nullable Runnable runnable) {
     myLaterUpdater = runnable;
     return this;
   }
 
   @Nonnull
-  @Exported
+  @UsedInPlugin
   public ModuleExtensionBundleBoxBuilder<T> postConsumer(@Nonnull BiConsumer<Sdk, Sdk> consumer) {
     myPostConsumer = consumer;
     return this;
   }
 
   @Nonnull
-  @Exported
+  @UsedInPlugin
   public ModuleExtensionBundleBoxBuilder<T> nullItem(@Nullable String name, @Nullable Image icon) {
     myNullItemName = name;
     myNullItemIcon = icon;

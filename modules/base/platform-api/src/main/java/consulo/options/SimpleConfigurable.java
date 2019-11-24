@@ -18,7 +18,7 @@ package consulo.options;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.UnnamedConfigurable;
 import com.intellij.openapi.util.NotNullComputable;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Component;
 
 import javax.annotation.Nonnull;

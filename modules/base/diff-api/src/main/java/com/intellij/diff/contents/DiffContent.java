@@ -22,7 +22,7 @@ import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.ObjectUtils;
 import javax.annotation.Nullable;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * Represents some data that probably can be compared with some other.

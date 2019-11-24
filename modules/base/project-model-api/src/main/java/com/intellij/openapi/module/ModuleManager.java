@@ -17,8 +17,8 @@ package com.intellij.openapi.module;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.util.graph.Graph;
-import consulo.annotations.RequiredReadAction;
-import consulo.annotations.RequiredWriteAction;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

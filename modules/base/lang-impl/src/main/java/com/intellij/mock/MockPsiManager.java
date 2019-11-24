@@ -29,7 +29,7 @@ import com.intellij.psi.impl.PsiModificationTrackerImpl;
 import com.intellij.psi.impl.PsiTreeChangeEventImpl;
 import com.intellij.psi.impl.file.impl.FileManager;
 import com.intellij.psi.util.PsiModificationTracker;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import gnu.trove.THashMap;
 
 import javax.annotation.Nonnull;

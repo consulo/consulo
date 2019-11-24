@@ -24,7 +24,7 @@ import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.fileEditor.impl.EditorsSplittersBase;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.layout.WrappedLayout;
 import org.jdom.Element;

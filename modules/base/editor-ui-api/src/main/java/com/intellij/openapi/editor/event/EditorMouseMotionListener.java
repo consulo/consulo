@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.event;
 
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import java.util.EventListener;
 

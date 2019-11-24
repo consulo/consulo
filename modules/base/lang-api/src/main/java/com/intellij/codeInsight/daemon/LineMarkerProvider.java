@@ -17,8 +17,8 @@
 package com.intellij.codeInsight.daemon;
 
 import com.intellij.psi.PsiElement;
-import consulo.annotations.DeprecationInfo;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.access.RequiredReadAction;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

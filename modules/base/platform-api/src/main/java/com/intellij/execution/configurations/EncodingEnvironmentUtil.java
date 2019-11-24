@@ -20,7 +20,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
 import com.intellij.util.EnvironmentUtil;
-import consulo.annotations.Exported;
+import consulo.annotation.UsedInPlugin;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
@@ -30,7 +30,7 @@ import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.Map;
 
-@Exported
+@UsedInPlugin
 public class EncodingEnvironmentUtil {
   private static final Logger LOG = Logger.getInstance(EncodingEnvironmentUtil.class);
 

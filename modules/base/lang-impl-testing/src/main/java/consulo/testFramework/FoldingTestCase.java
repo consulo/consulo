@@ -26,10 +26,10 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiFile;
+import consulo.annotation.UsedInPlugin;
 import junit.framework.Assert;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-import consulo.annotations.Exported;
 
 import java.io.File;
 import java.io.IOException;
@@ -88,7 +88,7 @@ public class FoldingTestCase extends OneFileAtProjectTestCase {
     super(dataPath, ext);
   }
 
-  @Exported
+  @UsedInPlugin
   protected void withCheckCollapseState() {
     myDoCheckCollapseStatus = true;
   }

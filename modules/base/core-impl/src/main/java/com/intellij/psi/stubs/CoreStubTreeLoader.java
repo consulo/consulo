@@ -28,7 +28,7 @@ import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.util.indexing.FileContent;
 import com.intellij.util.indexing.FileContentImpl;
 import com.intellij.util.indexing.IndexingDataKeys;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import javax.annotation.Nullable;
 
 import java.io.IOException;

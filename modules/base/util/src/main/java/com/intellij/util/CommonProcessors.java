@@ -20,7 +20,7 @@ import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 
 import java.util.ArrayList;
 import java.util.Collection;

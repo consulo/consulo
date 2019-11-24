@@ -23,8 +23,8 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.util.ObjectUtil;
-import consulo.annotations.Exported;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.UsedInPlugin;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.bundle.BundleHolder;
 import consulo.bundle.SdkUtil;
 import consulo.module.extension.ModuleExtension;
@@ -32,7 +32,7 @@ import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import consulo.ui.ComboBox;
 import consulo.ui.PseudoComponent;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.TextAttribute;
 import consulo.ui.image.Image;
 import consulo.ui.model.ListModel;
@@ -289,7 +289,7 @@ public class BundleBox implements PseudoComponent {
     model.add(new BundleBoxItem(bundle));
   }
 
-  @Exported
+  @UsedInPlugin
   public void addCustomBundleItem(@Nonnull String key, @Nonnull String presentableName, @Nonnull Image icon) {
     CustomBundleBoxItem item = new CustomBundleBoxItem(key, presentableName, icon);
 

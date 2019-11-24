@@ -20,7 +20,7 @@ import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.WindowInfo;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.Component;
 import consulo.ui.ex.*;
 import consulo.ui.web.internal.TargetVaddin;

@@ -37,7 +37,7 @@ import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.PairConvertor;
 import com.intellij.util.ui.JBUI;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import gnu.trove.THashMap;
 
 import javax.annotation.Nonnull;

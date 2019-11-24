@@ -26,7 +26,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.options.ProjectConfigurableEP;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 

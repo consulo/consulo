@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.BusyObject;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

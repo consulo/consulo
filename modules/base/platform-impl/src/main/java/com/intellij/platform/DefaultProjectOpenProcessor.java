@@ -21,13 +21,10 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
-import com.intellij.util.Consumer;
-import consulo.annotations.DeprecationInfo;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.File;
 
 /**

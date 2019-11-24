@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.components;
 
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 
 /**
  * @author mike

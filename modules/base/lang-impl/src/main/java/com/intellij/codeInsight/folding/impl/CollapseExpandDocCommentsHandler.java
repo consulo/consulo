@@ -25,7 +25,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredWriteAction;
+import consulo.annotation.access.RequiredWriteAction;
 
 public class CollapseExpandDocCommentsHandler extends CodeInsightActionHandler.WriteActionAdapter {
   private final boolean myExpand;

@@ -19,7 +19,7 @@ import com.intellij.openapi.util.text.StringUtilRt;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.PseudoComponent;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 

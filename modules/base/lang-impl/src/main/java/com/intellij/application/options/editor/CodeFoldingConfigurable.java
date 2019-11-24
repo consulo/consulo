@@ -29,7 +29,7 @@ import com.intellij.openapi.util.Pair;
 import consulo.options.SimpleConfigurableByProperties;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
 import org.jetbrains.annotations.Nls;
 

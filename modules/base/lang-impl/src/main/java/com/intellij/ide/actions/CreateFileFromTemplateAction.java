@@ -32,7 +32,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.extensions.CompositeExtensionPointName;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;

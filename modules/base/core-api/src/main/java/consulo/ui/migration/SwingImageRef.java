@@ -1,6 +1,6 @@
 package consulo.ui.migration;
 
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.image.Image;
 
 import javax.swing.*;

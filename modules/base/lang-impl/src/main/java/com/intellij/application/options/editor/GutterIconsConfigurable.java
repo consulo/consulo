@@ -43,7 +43,7 @@ import com.intellij.util.containers.hash.HashSet;
 import com.intellij.util.ui.DialogUtil;
 import com.intellij.util.ui.EmptyIcon;
 import consulo.awt.TargetAWT;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.TestOnly;
 

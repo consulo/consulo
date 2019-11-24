@@ -24,7 +24,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.io.URLUtil;
 import com.sun.jna.TypeMapper;
 import com.sun.jna.platform.FileUtils;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationProperties;
 import consulo.application.DefaultPaths;
 import gnu.trove.THashSet;

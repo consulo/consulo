@@ -38,7 +38,7 @@ import com.intellij.util.ui.StatusText;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.ide.plugins.AvailablePluginsDialog;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

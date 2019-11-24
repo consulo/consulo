@@ -43,7 +43,7 @@ import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.FieldPanel;
 import com.intellij.ui.InsertPathAction;
 import com.intellij.ui.ScrollPaneFactory;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.compiler.CompilerConfiguration;
 import consulo.roots.ui.configuration.WholeWestConfigurable;
 import consulo.ui.image.Image;

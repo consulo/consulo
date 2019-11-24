@@ -36,7 +36,7 @@ import com.intellij.psi.impl.PsiTreeChangeEventImpl;
 import com.intellij.util.FileContentUtilCore;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -26,7 +26,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.containers.SmartHashSet;
 import com.intellij.util.messages.MessageBus;
-import consulo.annotations.RequiredWriteAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.component.PersistentStateComponentWithUIState;
 import consulo.components.impl.stores.storage.StateStorageManager.ExternalizationSession;
 import consulo.ui.UIAccess;

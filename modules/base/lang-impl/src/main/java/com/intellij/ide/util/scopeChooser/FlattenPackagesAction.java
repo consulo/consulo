@@ -27,7 +27,7 @@ import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.packageDependencies.DependencyUISettings;
 import consulo.psi.PsiPackageSupportProviders;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 public final class FlattenPackagesAction extends ToggleAction {
   private final Runnable myUpdate;

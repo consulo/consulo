@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.impl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import javax.annotation.Nonnull;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 public class BackgroundableActionLock {
   @Nonnull

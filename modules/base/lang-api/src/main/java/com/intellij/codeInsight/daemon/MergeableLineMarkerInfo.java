@@ -29,7 +29,7 @@ import com.intellij.util.NotNullFunction;
 import com.intellij.util.SmartList;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 

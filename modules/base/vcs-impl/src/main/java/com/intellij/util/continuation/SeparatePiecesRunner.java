@@ -25,7 +25,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.changes.BackgroundFromStartOption;
 import javax.annotation.Nonnull;
 
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.swing.*;
 import java.util.concurrent.atomic.AtomicReference;

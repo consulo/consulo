@@ -16,7 +16,7 @@
 package com.intellij.util.text;
 
 import com.intellij.openapi.util.SystemInfo;
-import consulo.annotations.ReviewAfterMigrationToJRE;
+import consulo.annotation.ReviewAfterMigrationToJRE;
 
 import javax.annotation.Nonnull;
 

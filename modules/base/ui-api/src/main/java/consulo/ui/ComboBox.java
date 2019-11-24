@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.model.ListModel;
 
 import javax.annotation.Nonnull;

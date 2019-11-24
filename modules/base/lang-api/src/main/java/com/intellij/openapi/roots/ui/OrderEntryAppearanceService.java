@@ -24,7 +24,7 @@ import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.libraries.Library;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 
 public abstract class OrderEntryAppearanceService {
   public static OrderEntryAppearanceService getInstance() {

@@ -15,7 +15,7 @@ import com.intellij.remoteServer.runtime.ServerConnectionManager;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.ui.JBUI;
 import consulo.options.ConfigurableUIMigrationUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 

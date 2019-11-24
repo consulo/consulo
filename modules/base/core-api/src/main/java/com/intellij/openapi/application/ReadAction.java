@@ -17,7 +17,7 @@ package com.intellij.openapi.application;
 
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ThrowableRunnable;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.application.AccessRule;
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;

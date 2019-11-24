@@ -24,7 +24,7 @@ import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Couple;
 import javax.annotation.Nonnull;
 
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

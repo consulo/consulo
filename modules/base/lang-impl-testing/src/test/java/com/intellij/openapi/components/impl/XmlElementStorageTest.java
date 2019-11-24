@@ -23,7 +23,7 @@ import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import consulo.components.impl.stores.storage.StorageData;
 import consulo.components.impl.stores.storage.XmlElementStorage;
 import com.intellij.openapi.util.Disposer;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.testFramework.MockApplicationTestCase;
 import org.jdom.Element;
 import javax.annotation.Nonnull;

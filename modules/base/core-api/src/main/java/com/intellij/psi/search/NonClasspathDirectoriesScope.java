@@ -22,9 +22,9 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
-import consulo.annotations.Exported;
+import consulo.annotation.UsedInPlugin;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -45,7 +45,7 @@ public class NonClasspathDirectoriesScope extends GlobalSearchScope {
   }
 
   @Nonnull
-  @Exported
+  @UsedInPlugin
   public static GlobalSearchScope compose(@Nonnull List<VirtualFile> roots) {
     if (roots.isEmpty()) {
       return EMPTY_SCOPE;

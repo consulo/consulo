@@ -29,7 +29,7 @@ import com.intellij.util.Chunk;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.graph.*;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.logging.Logger;
 
 import java.util.*;

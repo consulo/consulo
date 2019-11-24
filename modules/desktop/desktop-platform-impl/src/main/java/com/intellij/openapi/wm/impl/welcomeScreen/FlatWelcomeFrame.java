@@ -37,7 +37,7 @@ import consulo.application.impl.FrameTitleUtil;
 import consulo.awt.TargetAWT;
 import consulo.ide.welcomeScreen.FlatWelcomeScreen;
 import consulo.start.WelcomeFrameManager;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.SwingUIDecorator;
 import consulo.ui.desktop.internal.window.JFrameAsUIWindow;
 import consulo.ui.shared.Rectangle2D;

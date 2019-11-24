@@ -27,7 +27,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.SingleRootFileViewProvider;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import kava.beans.PropertyChangeListener;
 

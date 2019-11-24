@@ -1,7 +1,7 @@
 package com.intellij.indentation;
 
 import com.intellij.lang.ASTNode;
-import consulo.annotations.Exported;
+import consulo.annotation.UsedInPlugin;
 import consulo.lang.LanguageVersion;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 /**
  * @author oleg
  */
-@Exported
+@UsedInPlugin
 public abstract class IndentationParser implements PsiParser {
   @Nonnull
   private final IElementType myEolTokenType;

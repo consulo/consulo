@@ -15,7 +15,7 @@
  */
 package consulo.ide.actions;
 
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
 
 import javax.annotation.Nullable;

@@ -17,7 +17,7 @@ package com.intellij.util.ui;
 
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.SystemInfo;
-import consulo.annotations.ReviewAfterMigrationToJRE;
+import consulo.annotation.ReviewAfterMigrationToJRE;
 import consulo.awt.hacking.JComponentHacking;
 import consulo.desktop.util.awt.AntialiasingType;
 import consulo.desktop.util.awt.laf.PreJava9UIUtil;

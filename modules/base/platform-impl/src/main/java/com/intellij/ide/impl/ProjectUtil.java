@@ -30,7 +30,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.*;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.ui.AppIcon;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.application.DefaultPaths;
 import consulo.async.ex.PooledAsyncResult;
 import consulo.components.impl.stores.IProjectStore;
@@ -38,7 +38,7 @@ import consulo.logging.Logger;
 import consulo.project.ProjectOpenProcessors;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.Alert;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;

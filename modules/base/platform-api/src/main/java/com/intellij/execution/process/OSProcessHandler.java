@@ -23,7 +23,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.util.io.BaseOutputReader;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import gnu.trove.THashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

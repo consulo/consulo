@@ -24,7 +24,7 @@ import com.intellij.util.Processor;
 import consulo.module.extension.ModuleExtension;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 
 /**
  * @author VISTALL

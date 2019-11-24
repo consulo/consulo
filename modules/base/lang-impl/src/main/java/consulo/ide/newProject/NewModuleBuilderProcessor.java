@@ -17,7 +17,7 @@ package consulo.ide.newProject;
 
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;
 import consulo.ide.newProject.ui.ProjectOrModuleNameStep;
 import consulo.ui.wizard.WizardStep;

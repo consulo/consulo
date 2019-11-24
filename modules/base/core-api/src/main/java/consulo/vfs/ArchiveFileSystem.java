@@ -19,7 +19,7 @@ import com.intellij.openapi.vfs.ArchiveCopyingFileSystem;
 import com.intellij.openapi.vfs.LocalFileProvider;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.util.io.URLUtil;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 
 /**
  * @author VISTALL

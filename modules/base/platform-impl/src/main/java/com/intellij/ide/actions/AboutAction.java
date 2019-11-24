@@ -23,7 +23,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.wm.WindowManager;
 import consulo.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ide.actions.AboutManager;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
 
 import javax.annotation.Nonnull;

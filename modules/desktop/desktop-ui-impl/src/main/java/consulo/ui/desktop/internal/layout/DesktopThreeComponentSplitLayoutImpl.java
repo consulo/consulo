@@ -18,7 +18,7 @@ package consulo.ui.desktop.internal.layout;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import consulo.awt.TargetAWT;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.ThreeComponentSplitLayout;

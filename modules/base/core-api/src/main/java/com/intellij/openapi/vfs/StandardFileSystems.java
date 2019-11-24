@@ -17,7 +17,7 @@ package com.intellij.openapi.vfs;
 
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.io.URLUtil;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.fileTypes.ZipArchiveFileType;
 import consulo.vfs.ArchiveFileSystem;
 import javax.annotation.Nonnull;

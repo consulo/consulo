@@ -28,7 +28,7 @@ import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.newProject.NewModuleBuilderProcessor;
 import consulo.ide.newProject.ui.NewProjectPanel;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;
@@ -36,7 +36,7 @@ import consulo.logging.Logger;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
 import consulo.roots.impl.ExcludedContentFolderTypeProvider;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import java.io.File;

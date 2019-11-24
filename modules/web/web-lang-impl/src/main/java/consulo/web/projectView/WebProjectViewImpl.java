@@ -41,7 +41,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import consulo.ide.projectView.ProjectViewEx;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Tree;
 import consulo.ui.TreeNode;
 import consulo.ui.layout.WrappedLayout;

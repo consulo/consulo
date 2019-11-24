@@ -36,7 +36,7 @@ import com.intellij.util.xmlb.SerializationFilter;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Transient;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.desktop.util.awt.AntialiasingType;
 import org.jetbrains.annotations.NonNls;
 

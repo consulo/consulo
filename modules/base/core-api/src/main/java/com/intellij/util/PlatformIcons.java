@@ -16,7 +16,7 @@
 package com.intellij.util;
 
 import com.intellij.icons.AllIcons;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.NonNls;
 

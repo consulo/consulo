@@ -36,7 +36,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.Label;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.TextAttribute;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;

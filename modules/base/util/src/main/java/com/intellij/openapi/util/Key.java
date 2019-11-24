@@ -16,7 +16,7 @@
 package com.intellij.openapi.util;
 
 import com.intellij.util.Function;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.util.KeyRegistry;
 import consulo.util.impl.KeyRegistryImpl;
 import org.jetbrains.annotations.NonNls;

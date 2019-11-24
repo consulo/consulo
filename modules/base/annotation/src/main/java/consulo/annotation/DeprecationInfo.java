@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2016 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.annotations;
+package consulo.annotation;
+
+import java.lang.annotation.*;
 
 /**
  * @author VISTALL
- * @since 2019-11-19
- *
- * Annotation-marker for elements which need review after migration to target JRE
+ * @since 05.03.14
  */
-public @interface ReviewAfterMigrationToJRE {
-  int value();
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+public @interface DeprecationInfo {
+  String value();
 
-  String description() default "";
+  /**
+   * @return version or date (for date pattern is yyyy-MM-dd)
+   */
+  String until() default "0";
 }

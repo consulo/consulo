@@ -17,7 +17,7 @@ package consulo.ui.desktop.internal.window;
 
 import consulo.awt.TargetAWT;
 import consulo.awt.impl.FromSwingWindowWrapper;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
 
 import javax.annotation.Nonnull;

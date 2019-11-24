@@ -26,7 +26,7 @@ import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.KeyWithDefaultValue;
 import consulo.ide.projectView.impl.ProjectViewPaneOptionProvider;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 

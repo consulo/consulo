@@ -21,7 +21,7 @@ import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IFileElementType;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.lang.LanguageVersionableParserDefinition;
 import consulo.sandboxPlugin.lang.psi.SandFile;
 import javax.annotation.Nonnull;

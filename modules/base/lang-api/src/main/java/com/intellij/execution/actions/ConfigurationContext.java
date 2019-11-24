@@ -42,9 +42,9 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import consulo.annotations.Exported;
-import consulo.ui.RequiredUIAccess;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.UsedInPlugin;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -129,7 +129,7 @@ public class ConfigurationContext {
     myContextComponent = null;
   }
 
-  @Exported
+  @UsedInPlugin
   public boolean containsMultipleSelection() {
     return myMultipleSelection;
   }

@@ -55,14 +55,14 @@ import com.intellij.openapi.util.*;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import gnu.trove.TIntFunction;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import consulo.annotations.RequiredWriteAction;
+import consulo.annotation.access.RequiredWriteAction;
 
 import javax.swing.*;
 import java.util.*;

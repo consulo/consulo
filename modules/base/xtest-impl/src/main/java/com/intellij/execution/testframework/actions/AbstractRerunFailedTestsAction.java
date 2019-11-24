@@ -45,7 +45,7 @@ import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.UIUtil;
 import consulo.logging.Logger;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 

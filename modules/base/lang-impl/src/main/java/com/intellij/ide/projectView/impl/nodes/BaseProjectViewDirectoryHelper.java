@@ -44,7 +44,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.PathUtil;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.projectView.ShowExcludedFilesProjectViewPaneOptionProvider;
 import consulo.ide.projectView.impl.nodes.PackageElement;
 import consulo.logging.Logger;

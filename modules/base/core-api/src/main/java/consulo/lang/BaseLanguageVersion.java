@@ -16,7 +16,7 @@
 package consulo.lang;
 
 import com.intellij.lang.Language;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import javax.annotation.Nonnull;
 
 /**

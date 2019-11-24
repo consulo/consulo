@@ -56,7 +56,7 @@ import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
 import consulo.ide.base.BaseDataManager;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

@@ -23,7 +23,7 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.ui.DialogUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
 import consulo.ui.impl.BaseAlert;
 

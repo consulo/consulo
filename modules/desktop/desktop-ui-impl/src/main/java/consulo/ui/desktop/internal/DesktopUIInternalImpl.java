@@ -24,6 +24,7 @@ import consulo.ui.MenuBar;
 import consulo.ui.MenuItem;
 import consulo.ui.Window;
 import consulo.ui.*;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.image.*;
 import consulo.ui.desktop.internal.layout.*;
 import consulo.ui.desktop.internal.textBox.DesktopTextBoxImpl;

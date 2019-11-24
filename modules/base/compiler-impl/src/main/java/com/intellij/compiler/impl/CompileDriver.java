@@ -78,7 +78,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.containers.OrderedSet;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
 import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.CompilerSorter;

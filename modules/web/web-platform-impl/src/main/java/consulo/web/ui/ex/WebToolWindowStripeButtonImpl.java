@@ -18,7 +18,7 @@ package consulo.web.ui.ex;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.WindowInfo;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.ui.image.Image;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;

@@ -15,7 +15,7 @@
  */
 package consulo.web.gwt.shared.transport;
 
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 
 import java.io.Serializable;
 

@@ -35,7 +35,7 @@ import com.intellij.util.Function;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.graph.*;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationProperties;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.container.impl.ContainerLogger;

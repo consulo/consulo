@@ -43,7 +43,7 @@ import com.intellij.ui.content.ContentManagerListener;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.image.Image;
 import consulo.ui.shared.Rectangle2D;

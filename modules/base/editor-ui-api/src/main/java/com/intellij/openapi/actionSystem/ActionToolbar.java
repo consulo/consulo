@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

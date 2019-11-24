@@ -53,7 +53,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.CalledInAwt;
 import com.intellij.openapi.vcs.changes.patch.AppliedTextPatch;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.RequiredWriteAction;
+import consulo.annotation.access.RequiredWriteAction;
 import gnu.trove.TIntArrayList;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

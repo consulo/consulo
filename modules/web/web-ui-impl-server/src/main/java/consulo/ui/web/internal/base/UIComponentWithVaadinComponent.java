@@ -19,7 +19,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Key;
 import com.vaadin.ui.AbstractComponent;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.impl.UIDataObject;
 import consulo.ui.shared.Size;
 import consulo.ui.shared.border.BorderPosition;

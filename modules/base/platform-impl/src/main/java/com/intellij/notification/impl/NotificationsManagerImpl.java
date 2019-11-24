@@ -55,7 +55,7 @@ import com.intellij.util.ui.*;
 import consulo.awt.TargetAWT;
 import consulo.platform.Platform;
 import consulo.start.WelcomeFrameManager;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

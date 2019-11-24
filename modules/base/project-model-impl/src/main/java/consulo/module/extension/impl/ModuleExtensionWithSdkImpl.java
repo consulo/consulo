@@ -16,7 +16,7 @@
 package consulo.module.extension.impl;
 
 import com.intellij.openapi.projectRoots.Sdk;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.module.extension.ModuleInheritableNamedPointer;
 import consulo.roots.ModuleRootLayer;

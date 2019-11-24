@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes;
 
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

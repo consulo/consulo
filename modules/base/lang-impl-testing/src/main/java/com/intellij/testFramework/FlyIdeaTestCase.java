@@ -1,6 +1,6 @@
 package com.intellij.testFramework;
 
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.testFramework.MockApplicationTestCase;
 
 @Deprecated

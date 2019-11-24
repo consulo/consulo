@@ -23,7 +23,7 @@ import com.intellij.util.SmartList;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.breakpoints.XBreakpointType;
 import com.intellij.xdebugger.settings.DebuggerSettingsCategory;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.options.ConfigurableUIMigrationUtil;
 import consulo.ui.Component;
 import org.jetbrains.annotations.NonNls;

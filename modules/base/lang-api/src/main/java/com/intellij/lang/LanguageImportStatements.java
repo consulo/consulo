@@ -20,7 +20,7 @@
 package com.intellij.lang;
 
 import com.intellij.psi.PsiFile;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;

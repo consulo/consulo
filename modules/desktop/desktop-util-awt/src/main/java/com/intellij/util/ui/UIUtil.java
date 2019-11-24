@@ -30,7 +30,7 @@ import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.containers.JBTreeTraverser;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.desktop.util.awt.AllIconsHack;
 import consulo.desktop.util.awt.MorphColor;
 import consulo.desktop.util.awt.StringHtmlUtil;

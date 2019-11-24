@@ -25,7 +25,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.JBUI;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.wizard.WizardStep;
 import consulo.ui.wizard.WizardStepValidationException;
 

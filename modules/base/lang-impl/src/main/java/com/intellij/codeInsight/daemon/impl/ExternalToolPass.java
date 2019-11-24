@@ -34,7 +34,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.update.Update;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 
 import java.util.*;
 

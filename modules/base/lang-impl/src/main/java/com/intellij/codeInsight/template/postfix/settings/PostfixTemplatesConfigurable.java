@@ -26,7 +26,7 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.util.NotNullComputable;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.codeInsight.template.postfix.settings.PostfixTemplatesChildConfigurable;
 import consulo.options.SimpleConfigurable;
 import consulo.ui.*;

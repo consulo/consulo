@@ -24,6 +24,7 @@ import consulo.ide.actions.webSearch.WebSearchEngine;
 import consulo.ide.actions.webSearch.WebSearchOptions;
 import consulo.options.SimpleConfigurable;
 import consulo.ui.*;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.fileOperateDialog.FileChooseDialogProvider;
 import consulo.ui.fileOperateDialog.FileOperateDialogProvider;
 import consulo.ui.fileOperateDialog.FileSaveDialogProvider;

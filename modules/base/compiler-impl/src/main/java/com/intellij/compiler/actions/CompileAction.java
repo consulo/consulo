@@ -36,7 +36,7 @@ import consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
 import javax.annotation.Nonnull;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import java.util.ArrayList;
 import java.util.Collection;

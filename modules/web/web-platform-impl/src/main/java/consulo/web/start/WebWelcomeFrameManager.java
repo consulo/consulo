@@ -26,6 +26,7 @@ import com.intellij.openapi.wm.IdeFrame;
 import consulo.application.impl.FrameTitleUtil;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.*;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.model.ListModel;

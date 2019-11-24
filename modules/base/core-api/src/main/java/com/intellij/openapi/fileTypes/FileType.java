@@ -17,7 +17,7 @@ package com.intellij.openapi.fileTypes;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayFactory;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.image.Image;
 import consulo.util.pointers.Named;
 import org.jetbrains.annotations.NonNls;

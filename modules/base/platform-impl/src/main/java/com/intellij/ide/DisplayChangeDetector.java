@@ -15,7 +15,7 @@
  */
 package com.intellij.ide;
 
-import consulo.annotations.ReviewAfterMigrationToJRE;
+import consulo.annotation.ReviewAfterMigrationToJRE;
 import consulo.awt.hacking.GraphicsEnvironmentHacking;
 import consulo.logging.Logger;
 

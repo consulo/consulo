@@ -15,8 +15,7 @@
  */
 package consulo.awt;
 
-import consulo.annotations.DeprecationInfo;
-import consulo.annotations.ReviewAfterMigrationToJRE;
+import consulo.annotation.ReviewAfterMigrationToJRE;
 import consulo.container.StartupError;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;

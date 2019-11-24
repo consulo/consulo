@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import com.intellij.openapi.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

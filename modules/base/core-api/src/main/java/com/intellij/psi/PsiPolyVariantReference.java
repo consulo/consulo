@@ -15,7 +15,7 @@
  */
 package com.intellij.psi;
 
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import javax.annotation.Nonnull;
 
 /**

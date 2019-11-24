@@ -36,7 +36,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.StringSearcher;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TIntProcedure;
 import javax.annotation.Nonnull;

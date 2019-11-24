@@ -19,7 +19,7 @@ import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 
 import java.util.Arrays;
 import java.util.List;

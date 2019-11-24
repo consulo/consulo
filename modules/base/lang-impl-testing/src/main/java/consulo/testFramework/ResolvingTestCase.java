@@ -30,7 +30,7 @@ import com.intellij.util.containers.MultiMap;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 
 import java.io.File;
 import java.io.FileNotFoundException;

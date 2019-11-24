@@ -37,8 +37,8 @@ import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Consumer;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.DeprecationInfo;
-import consulo.ui.RequiredUIAccess;
+import consulo.annotation.DeprecationInfo;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;

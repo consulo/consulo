@@ -44,7 +44,7 @@ import com.intellij.ui.roots.ToolbarPanel;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.fileChooser.FileChooser;
 
 import javax.annotation.Nonnull;

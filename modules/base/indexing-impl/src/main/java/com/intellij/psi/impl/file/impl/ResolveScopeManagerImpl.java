@@ -31,7 +31,7 @@ import com.intellij.psi.search.DelegatingGlobalSearchScope;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.util.containers.ConcurrentFactoryMap;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.roots.OrderEntryWithTracking;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

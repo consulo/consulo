@@ -46,7 +46,7 @@ import com.intellij.util.CommonProcessors;
 import com.intellij.util.ThrowableRunnable;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import java.util.*;
 

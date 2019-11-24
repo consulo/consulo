@@ -15,7 +15,7 @@
  */
 package consulo.stream;
 
-import consulo.annotations.ReviewAfterMigrationToJRE;
+import consulo.annotation.ReviewAfterMigrationToJRE;
 
 import java.util.Objects;
 import java.util.Spliterator;

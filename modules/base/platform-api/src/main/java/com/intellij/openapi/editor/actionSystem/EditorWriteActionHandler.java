@@ -21,8 +21,8 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
-import consulo.ui.RequiredUIAccess;
-import consulo.annotations.RequiredWriteAction;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.annotation.access.RequiredWriteAction;
 
 import javax.annotation.Nullable;
 

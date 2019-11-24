@@ -58,7 +58,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.IndexableSetContributor;
 import com.intellij.util.indexing.LightDirectoryIndex;
 import com.intellij.util.messages.MessageBus;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdater;
 import org.jdom.Element;

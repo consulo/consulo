@@ -17,7 +17,7 @@ package consulo.ui.layout;
 
 import consulo.ui.Component;
 import consulo.ui.PseudoComponent;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIInternal;
 import consulo.ui.shared.StaticPosition;
 import javax.annotation.Nonnull;

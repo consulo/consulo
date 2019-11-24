@@ -15,7 +15,7 @@
  */
 package consulo.ui.image;
 
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.UIInternal;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.shared.ColorValue;

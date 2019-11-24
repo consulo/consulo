@@ -16,7 +16,7 @@
 package com.intellij.ide;
 
 import com.intellij.util.messages.Topic;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.start.CommandLineArgs;
 import javax.annotation.Nonnull;
 

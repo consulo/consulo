@@ -41,7 +41,7 @@ import com.intellij.psi.impl.source.tree.TreeElement;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.IncorrectOperationException;
 import javax.annotation.Nonnull;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

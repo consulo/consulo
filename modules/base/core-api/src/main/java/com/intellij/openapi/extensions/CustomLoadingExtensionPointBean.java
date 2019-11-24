@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.extensions;
 
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.injecting.InjectingContainer;
 
 /**

@@ -21,8 +21,8 @@ import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.Topic;
-import consulo.annotations.DeprecationInfo;
-import consulo.ui.RequiredUIAccess;
+import consulo.annotation.DeprecationInfo;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import org.jdom.JDOMException;
 

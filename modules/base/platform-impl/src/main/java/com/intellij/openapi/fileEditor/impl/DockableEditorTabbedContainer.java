@@ -32,7 +32,7 @@ import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
 import consulo.awt.TargetAWT;
 import consulo.fileEditor.impl.EditorWindow;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import org.jdom.Element;
 import javax.annotation.Nonnull;

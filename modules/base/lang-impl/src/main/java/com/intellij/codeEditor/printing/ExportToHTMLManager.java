@@ -38,8 +38,8 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.file.PsiPackageHelper;
 import com.intellij.util.containers.HashMap;
 import javax.annotation.Nonnull;
-import consulo.ui.RequiredUIAccess;
-import consulo.annotations.RequiredReadAction;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.annotation.access.RequiredReadAction;
 
 import java.io.*;
 import java.util.ArrayList;

@@ -15,7 +15,7 @@
  */
 package consulo.container.plugin;
 
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 
 /**
  * @author max

@@ -23,7 +23,7 @@ import com.intellij.openapi.util.Computable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 
 /**
  * A computation that needs to be run in background and inside a read action, and canceled whenever a write action is about to occur.

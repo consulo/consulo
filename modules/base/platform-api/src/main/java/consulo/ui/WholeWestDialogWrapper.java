@@ -23,6 +23,7 @@ import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.WindowStateService;
 import com.intellij.ui.JBSplitter;
 import com.intellij.ui.OnePixelSplitter;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

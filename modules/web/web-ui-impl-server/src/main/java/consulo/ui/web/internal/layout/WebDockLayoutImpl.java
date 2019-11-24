@@ -16,7 +16,7 @@
 package consulo.ui.web.internal.layout;
 
 import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.Layout;
 import consulo.ui.web.internal.TargetVaddin;

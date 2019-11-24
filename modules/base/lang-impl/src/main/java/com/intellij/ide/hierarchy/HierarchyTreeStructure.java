@@ -37,7 +37,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ArrayUtil;
 import javax.annotation.Nonnull;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
   protected HierarchyNodeDescriptor myBaseDescriptor;

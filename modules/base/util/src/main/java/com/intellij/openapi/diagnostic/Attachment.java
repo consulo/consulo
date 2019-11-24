@@ -1,7 +1,7 @@
 package com.intellij.openapi.diagnostic;
 
 import com.intellij.util.*;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nonnull;
 import java.io.UnsupportedEncodingException;

@@ -31,7 +31,7 @@ import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.elements.ArtifactPackagingElement;
 import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.packaging.artifacts.ArtifactPointerUtil;
 
 import javax.annotation.Nonnull;

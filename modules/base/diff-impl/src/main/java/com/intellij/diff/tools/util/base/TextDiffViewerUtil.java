@@ -40,7 +40,7 @@ import com.intellij.ui.ToggleActionButton;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 

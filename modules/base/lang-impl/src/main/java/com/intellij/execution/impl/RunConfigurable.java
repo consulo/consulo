@@ -51,7 +51,7 @@ import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.*;
 import com.intellij.util.ui.tree.TreeUtil;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.awt.TargetAWT;
 import consulo.ui.SwingUIDecorator;
 import consulo.ui.image.Image;

@@ -21,7 +21,7 @@ import com.intellij.ide.hierarchy.LanguageCallHierarchy;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 public final class BrowseCallHierarchyAction extends BrowseHierarchyActionBase {
   public BrowseCallHierarchyAction() {

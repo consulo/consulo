@@ -30,7 +30,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.platform.Platform;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.WholeWestDialogWrapper;
 
 import javax.annotation.Nonnull;

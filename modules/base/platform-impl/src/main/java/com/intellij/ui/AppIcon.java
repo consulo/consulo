@@ -26,7 +26,7 @@ import com.intellij.openapi.wm.AppIconScheme;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.ReviewAfterMigrationToJRE;
+import consulo.annotation.ReviewAfterMigrationToJRE;
 import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
 import consulo.ui.taskbar.TaskbarWrapper;

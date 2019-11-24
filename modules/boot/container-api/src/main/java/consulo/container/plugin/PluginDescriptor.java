@@ -15,7 +15,7 @@
  */
 package consulo.container.plugin;
 
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 
 import javax.annotation.Nonnull;

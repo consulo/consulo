@@ -21,7 +21,7 @@
 package com.intellij.openapi.projectRoots;
 
 import com.intellij.execution.configurations.GeneralCommandLine;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

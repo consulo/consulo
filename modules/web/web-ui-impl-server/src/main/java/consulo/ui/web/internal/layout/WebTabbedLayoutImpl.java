@@ -17,7 +17,7 @@ package consulo.ui.web.internal.layout;
 
 import com.intellij.icons.AllIcons;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Tab;
 import consulo.ui.layout.TabbedLayout;
 import consulo.ui.web.internal.TargetVaddin;

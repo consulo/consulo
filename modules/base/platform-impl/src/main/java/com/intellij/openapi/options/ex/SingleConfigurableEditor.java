@@ -29,7 +29,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.util.Alarm;
 import consulo.logging.Logger;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ide.base.BaseShowSettingsUtil;
 import consulo.options.ConfigurableUIMigrationUtil;
 import org.jetbrains.annotations.NonNls;

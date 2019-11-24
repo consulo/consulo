@@ -18,7 +18,7 @@ package com.intellij.ui;
 import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.JBUI;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import org.intellij.lang.annotations.MagicConstant;
 import javax.annotation.Nonnull;

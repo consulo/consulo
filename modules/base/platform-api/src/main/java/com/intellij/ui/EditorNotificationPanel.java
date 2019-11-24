@@ -34,7 +34,7 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;

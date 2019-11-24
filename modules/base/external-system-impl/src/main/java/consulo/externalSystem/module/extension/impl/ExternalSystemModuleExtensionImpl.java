@@ -15,7 +15,7 @@
  */
 package consulo.externalSystem.module.extension.impl;
 
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.externalSystem.module.extension.ExternalSystemModuleExtension;
 import consulo.module.extension.impl.ModuleExtensionImpl;
 import consulo.roots.ModuleRootLayer;

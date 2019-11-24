@@ -41,7 +41,7 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
 import consulo.logging.Logger;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
