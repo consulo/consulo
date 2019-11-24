@@ -27,9 +27,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.ui.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.ui.RequiredUIAccess;
 
 public abstract class BaseCodeInsightAction extends CodeInsightAction {
   private final boolean myLookForInjectedEditor;
@@ -45,10 +46,10 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
   @RequiredUIAccess
   @Override
   @Nullable
-  protected Editor getEditor(@Nonnull final DataContext dataContext, @Nonnull final Project project) {
+  protected Editor getEditor(@Nonnull final DataContext dataContext, @Nonnull final Project project, boolean forUpdate) {
     Editor editor = getBaseEditor(dataContext, project);
     if (!myLookForInjectedEditor) return editor;
-    return getInjectedEditor(project, editor);
+    return getInjectedEditor(project, editor, !forUpdate);
   }
 
   @RequiredUIAccess
@@ -72,7 +73,7 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
 
   @Nullable
   protected Editor getBaseEditor(final DataContext dataContext, final Project project) {
-    return super.getEditor(dataContext, project);
+    return super.getEditor(dataContext, project, true);
   }
 
   @RequiredUIAccess

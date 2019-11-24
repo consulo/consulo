@@ -15,7 +15,10 @@
  */
 package consulo.awt;
 
-import consulo.container.plugin.util.PlatformServiceLocator;
+import consulo.container.StartupError;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginIds;
+import consulo.container.plugin.PluginManager;
 import consulo.ui.Component;
 import consulo.ui.KeyCode;
 import consulo.ui.Window;
@@ -29,6 +32,8 @@ import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.util.Iterator;
+import java.util.ServiceLoader;
 
 /**
  * @author VISTALL
@@ -38,7 +43,23 @@ import javax.swing.*;
  */
 @SuppressWarnings("deprecation")
 public class TargetAWT {
-  private static final TargetAWTFacade ourFacade = PlatformServiceLocator.findImplementation(TargetAWTFacade.class);
+  private static final TargetAWTFacade ourFacade = findImplementation(TargetAWTFacade.class);
+
+  @Nonnull
+  private static <T> T findImplementation(@Nonnull Class<T> interfaceClass) {
+    for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
+      if (PluginIds.isPlatformImplementationPlugin(descriptor.getPluginId())) {
+        ServiceLoader<T> loader = ServiceLoader.load(interfaceClass, descriptor.getPluginClassLoader());
+
+        Iterator<T> iterator = loader.iterator();
+        if (iterator.hasNext()) {
+          return iterator.next();
+        }
+      }
+    }
+
+    throw new StartupError("Can't find platform implementation: " + interfaceClass);
+  }
 
   @Nonnull
   public static java.awt.Dimension to(@Nonnull Size size) {

@@ -21,7 +21,10 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.JBImageIcon;
 import com.intellij.util.ui.JBUI;
 import consulo.annotations.DeprecationInfo;
-import consulo.container.plugin.util.PlatformServiceLocator;
+import consulo.container.StartupError;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginIds;
+import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
 import consulo.ui.migration.IconLoaderFacade;
 import consulo.ui.migration.SwingImageRef;
@@ -33,13 +36,31 @@ import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ServiceLoader;
 
 @SuppressWarnings("deprecation")
 public final class IconLoader {
   private static final Logger LOG = Logger.getInstance(IconLoader.class);
 
-  private static IconLoaderFacade ourIconLoaderFacade = PlatformServiceLocator.findImplementation(IconLoaderFacade.class);
+  private static IconLoaderFacade ourIconLoaderFacade = findImplementation(IconLoaderFacade.class);
+
+  @Nonnull
+  private static <T> T findImplementation(@Nonnull Class<T> interfaceClass) {
+    for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
+      if (PluginIds.isPlatformImplementationPlugin(descriptor.getPluginId())) {
+        ServiceLoader<T> loader = ServiceLoader.load(interfaceClass, descriptor.getPluginClassLoader());
+
+        Iterator<T> iterator = loader.iterator();
+        if (iterator.hasNext()) {
+          return iterator.next();
+        }
+      }
+    }
+
+    throw new StartupError("Can't find platform implementation: " + interfaceClass);
+  }
 
   public static boolean STRICT = false;
 
