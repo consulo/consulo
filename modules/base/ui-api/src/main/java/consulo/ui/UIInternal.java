@@ -16,7 +16,10 @@
 package consulo.ui;
 
 import consulo.annotations.Internal;
-import consulo.container.plugin.util.PlatformServiceLocator;
+import consulo.container.StartupError;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginIds;
+import consulo.container.plugin.PluginManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.layout.*;
@@ -30,7 +33,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ServiceLoader;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -41,7 +46,23 @@ import java.util.function.Supplier;
  */
 @Internal
 public abstract class UIInternal {
-  private static UIInternal ourInstance = PlatformServiceLocator.findImplementation(UIInternal.class);
+  private static UIInternal ourInstance = findImplementation(UIInternal.class);
+
+  @Nonnull
+  private static <T> T findImplementation(@Nonnull Class<T> interfaceClass) {
+    for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
+      if (PluginIds.isPlatformImplementationPlugin(descriptor.getPluginId())) {
+        ServiceLoader<T> loader = ServiceLoader.load(interfaceClass, descriptor.getPluginClassLoader());
+
+        Iterator<T> iterator = loader.iterator();
+        if (iterator.hasNext()) {
+          return iterator.next();
+        }
+      }
+    }
+
+    throw new StartupError("Can't find platform implementation: " + interfaceClass);
+  }
 
   @Nonnull
   public static UIInternal get() {

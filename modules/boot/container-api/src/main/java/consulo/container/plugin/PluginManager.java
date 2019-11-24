@@ -16,19 +16,32 @@
 package consulo.container.plugin;
 
 import consulo.container.plugin.internal.PluginManagerInternal;
-import consulo.util.nodep.ServiceLoaderUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ServiceLoader;
 
 /**
  * @author VISTALL
  * @since 2019-07-25
  */
 public final class PluginManager {
-  private static final PluginManagerInternal ourInternal = ServiceLoaderUtil.loadSingleOrError(PluginManagerInternal.class);
+  private static final PluginManagerInternal ourInternal;
+
+  static {
+    ServiceLoader<PluginManagerInternal> loader = ServiceLoader.load(PluginManagerInternal.class, PluginManagerInternal.class.getClassLoader());
+
+    Iterator<PluginManagerInternal> iterator = loader.iterator();
+    if (iterator.hasNext()) {
+      ourInternal = iterator.next();
+    }
+    else {
+      throw new IllegalArgumentException("no plugin manager internal");
+    }
+  }
 
   @Nonnull
   public static List<PluginDescriptor> getPlugins() {
@@ -42,7 +55,7 @@ public final class PluginManager {
   @Nullable
   public static PluginDescriptor findPlugin(@Nonnull PluginId pluginId) {
     for (PluginDescriptor descriptor : getPlugins()) {
-      if(descriptor.getPluginId().equals(pluginId)) {
+      if (descriptor.getPluginId().equals(pluginId)) {
         return descriptor;
       }
     }

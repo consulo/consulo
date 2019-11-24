@@ -7,4 +7,6 @@ module consulo.container.impl {
   exports consulo.container.impl.parser;
 
   uses consulo.container.boot.ContainerStartup;
+
+  provides consulo.container.plugin.internal.PluginManagerInternal with consulo.container.impl.PluginManagerInternalImpl;
 }

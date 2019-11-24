@@ -7,8 +7,9 @@ module consulo.container.api {
   exports consulo.container.plugin;
   exports consulo.container.plugin.util;
   exports consulo.container.util;
-  // TODO [VISTALL] export only to impl module
-  exports consulo.container.plugin.internal;
+
+  exports consulo.container.plugin.internal to consulo.container.impl;
 
   uses consulo.container.boot.ContainerStartup;
+  uses consulo.container.plugin.internal.PluginManagerInternal;
 }
