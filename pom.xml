@@ -47,8 +47,8 @@
 
     <module>jre9-stub</module>
 
-    <module>modules/autonomic/async-api</module>
-    <module>modules/autonomic/util-rmi</module>
+    <module>modules/base/async-api</module>
+    <module>modules/base/util-rmi</module>
 
     <module>modules/boot/container-api</module>
     <module>modules/boot/container-impl</module>
