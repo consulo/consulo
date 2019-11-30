@@ -32,12 +32,12 @@ import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.Query;
-import com.intellij.util.containers.ConcurrentIntObjectMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.logging.Logger;
 import consulo.roots.ContentFolderTypeProvider;
+import consulo.util.collection.ConcurrentIntObjectMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

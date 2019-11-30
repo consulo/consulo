@@ -17,7 +17,7 @@ package com.intellij.util.containers;
 
 import com.intellij.openapi.util.RecursionGuard;
 import com.intellij.openapi.util.RecursionManager;
-import com.intellij.util.DeprecatedMethodException;
+import consulo.util.lang.DeprecatedMethodException;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
 import gnu.trove.THashMap;

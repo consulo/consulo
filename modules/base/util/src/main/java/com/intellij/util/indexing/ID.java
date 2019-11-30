@@ -18,7 +18,7 @@ package com.intellij.util.indexing;
 
 import com.intellij.openapi.application.PathManager;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.IntObjectMap;
+import consulo.util.collection.IntObjectMap;
 import gnu.trove.TObjectIntHashMap;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

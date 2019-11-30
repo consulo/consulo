@@ -22,6 +22,7 @@ import com.intellij.openapi.util.DifferenceFilter;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.containers.JBTreeTraverser;
+import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -553,6 +554,8 @@ public class ReflectionUtil {
    * These aren't the droids you're looking for!</b>
    */
   @Nullable
+  @Deprecated
+  @DeprecationInfo("Use consulo.util.lang.reflect.ReflectionUtil")
   public static Class findCallerClass(int framesToSkip) {
     try {
       Class[] stack = MySecurityManager.INSTANCE.getStack();
@@ -565,8 +568,9 @@ public class ReflectionUtil {
     }
   }
 
+  @Deprecated
   public static boolean isAssignable(@Nonnull Class<?> ancestor, @Nonnull Class<?> descendant) {
-    return ancestor == descendant || ancestor.isAssignableFrom(descendant);
+    return consulo.util.lang.reflect.ReflectionUtil.isAssignable(ancestor, descendant);
   }
 
   @Nonnull

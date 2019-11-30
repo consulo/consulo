@@ -15,7 +15,10 @@
  */
 package com.intellij.openapi.util;
 
-public interface Getter<A> {
-  @javax.annotation.Nullable
+import javax.annotation.Nullable;
+import java.util.function.Supplier;
+
+public interface Getter<A> extends Supplier<A> {
+  @Nullable
   A get();
 }

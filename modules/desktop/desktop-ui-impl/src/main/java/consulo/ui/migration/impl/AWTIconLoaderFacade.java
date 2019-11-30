@@ -25,7 +25,6 @@ import com.intellij.util.ImageLoader;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.RetinaImage;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.WeakHashMap;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.JBImageIcon;

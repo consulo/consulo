@@ -17,6 +17,8 @@ package com.intellij.openapi.util;
 
 import org.jetbrains.annotations.NonNls;
 
+import java.util.function.Predicate;
+
 /**
  * Returns {@code true} or {@code false} for the given input object.
  * <p/>
@@ -24,8 +26,13 @@ import org.jetbrains.annotations.NonNls;
  *
  * @author dsl
  */
-public interface Condition<T> {
+public interface Condition<T> extends Predicate<T> {
   boolean value(T t);
+
+  @Override
+  default boolean test(T t) {
+    return value(t);
+  }
 
   Condition<Object> NOT_NULL = new Condition<Object>() {
     @Override

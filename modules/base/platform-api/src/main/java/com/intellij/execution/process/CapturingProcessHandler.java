@@ -4,9 +4,9 @@ package com.intellij.execution.process;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.util.DeprecatedMethodException;
-import javax.annotation.Nonnull;
+import consulo.util.lang.DeprecatedMethodException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.nio.charset.Charset;
 

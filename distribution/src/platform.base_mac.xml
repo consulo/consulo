@@ -74,6 +74,8 @@
         <include>consulo:consulo-ui-api-shared</include>
         <include>consulo:consulo-ui-impl</include>
         <include>consulo:consulo-usage-view</include>
+        <include>consulo:consulo-util-lang</include>
+        <include>consulo:consulo-util-collection</include>
         <include>consulo:consulo-util</include>
         <include>consulo:consulo-util-rmi</include>
         <!--<include>consulo:consulo-util-rt</include>-->

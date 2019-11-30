@@ -3,24 +3,29 @@ package com.intellij.psi.stubs;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.LogUtil;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.ArrayUtilRt;
-import com.intellij.util.containers.ConcurrentIntObjectMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.RecentStringInterner;
 import com.intellij.util.io.AbstractStringEnumerator;
 import com.intellij.util.io.DataEnumeratorEx;
 import com.intellij.util.io.DataInputOutputUtil;
-import gnu.trove.*;
+import consulo.logging.Logger;
+import consulo.util.collection.ConcurrentIntObjectMap;
+import gnu.trove.THashMap;
+import gnu.trove.TIntObjectHashMap;
+import gnu.trove.TObjectIntHashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Author: dmitrylomov

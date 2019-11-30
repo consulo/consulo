@@ -15,7 +15,8 @@
  */
 package com.intellij.openapi.editor;
 
-import com.intellij.util.DeprecatedMethodException;
+import consulo.util.lang.DeprecatedMethodException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

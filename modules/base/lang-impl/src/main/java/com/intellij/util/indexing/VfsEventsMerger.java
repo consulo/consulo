@@ -18,11 +18,11 @@ package com.intellij.util.indexing;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.containers.ConcurrentIntObjectMap;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.util.collection.ConcurrentIntObjectMap;
 import org.intellij.lang.annotations.MagicConstant;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;

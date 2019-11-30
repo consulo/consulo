@@ -113,6 +113,9 @@
     <module>modules/base/vcs-impl-testing</module>
     <module>modules/base/usage-view</module>
     <module>modules/base/util</module>
+    <module>modules/base/util-lang</module>
+    <module>modules/base/util-collection</module>
+    <module>modules/base/util-advanced-proxy</module>
     <module>modules/base/util-testing</module>
     <module>modules/base/xcoverage-data</module>
     <module>modules/base/xcoverage-impl</module>

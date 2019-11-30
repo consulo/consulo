@@ -17,7 +17,8 @@ package com.intellij.util;
 
 import org.jetbrains.annotations.NonNls;
 
-public class IncorrectOperationException extends RuntimeException {
+@Deprecated
+public class IncorrectOperationException extends consulo.util.lang.IncorrectOperationException {
   public IncorrectOperationException() {
     super();
   }

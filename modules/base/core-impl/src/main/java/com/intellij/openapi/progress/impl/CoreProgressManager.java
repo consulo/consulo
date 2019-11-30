@@ -21,10 +21,10 @@ import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
-import com.intellij.util.containers.ConcurrentLongObjectMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SmartHashSet;
 import consulo.logging.Logger;
+import consulo.util.collection.ConcurrentLongObjectMap;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.TestOnly;
 

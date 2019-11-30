@@ -15,8 +15,13 @@
  */
 package com.intellij.openapi.diagnostic;
 
+import consulo.annotation.DeprecationInfo;
+
 /**
  * A marker interface for exceptions that should never be logged.
  */
 @SuppressWarnings("NonExceptionNameEndsWithException")
-public interface ControlFlowException { }
+@Deprecated
+@DeprecationInfo("Use consulo.util.lang.ControlFlowException")
+public interface ControlFlowException extends consulo.util.lang.ControlFlowException {
+}

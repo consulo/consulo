@@ -15,7 +15,9 @@
  */
 package com.intellij.util.containers;
 
-public interface Convertor<Src, Dst> {
+import java.util.function.Function;
+
+public interface Convertor<Src, Dst> extends Function<Src, Dst> {
   IntoSelf SELF = new IntoSelf();
 
   class IntoSelf<Src> implements Convertor<Src, Src> {
@@ -25,4 +27,9 @@ public interface Convertor<Src, Dst> {
   }
 
   Dst convert(Src o);
+
+  @Override
+  default Dst apply(Src src) {
+    return convert(src);
+  }
 }

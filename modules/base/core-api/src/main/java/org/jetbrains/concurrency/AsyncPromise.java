@@ -15,12 +15,12 @@
  */
 package org.jetbrains.concurrency;
 
-import com.intellij.openapi.diagnostic.ControlFlowException;
-import consulo.logging.Logger;
 import com.intellij.util.ExceptionUtil;
+import consulo.logging.Logger;
+import consulo.util.lang.ControlFlowException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;

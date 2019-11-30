@@ -10,13 +10,13 @@ import com.intellij.psi.stubs.StubIndexKey;
 import com.intellij.util.SmartList;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.IntObjectMap;
 import com.intellij.util.io.DataInputOutputUtil;
+import consulo.util.collection.IntObjectMap;
 import gnu.trove.TObjectLongHashMap;
 import gnu.trove.TObjectLongProcedure;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -329,7 +329,7 @@ public class IndexingStamp {
     }
   }
 
-  private static final IntObjectMap<IndexingStamp.Timestamps> myTimestampsCache = ContainerUtil.createConcurrentIntObjectMap();
+  private static final IntObjectMap<Timestamps> myTimestampsCache = ContainerUtil.createConcurrentIntObjectMap();
   private static final BlockingQueue<Integer> ourFinishedFiles = new ArrayBlockingQueue<>(100);
 
   public static long getIndexStamp(int fileId, ID<?, ?> indexName) {

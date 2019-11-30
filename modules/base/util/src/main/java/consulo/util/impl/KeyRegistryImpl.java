@@ -17,9 +17,9 @@ package consulo.util.impl;
 
 import com.intellij.openapi.util.Key;
 import com.intellij.util.Function;
-import com.intellij.util.containers.ConcurrentIntObjectMap;
+import consulo.util.collection.ConcurrentIntObjectMap;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.IntObjectMap;
+import consulo.util.collection.IntObjectMap;
 import consulo.util.KeyRegistry;
 
 import java.util.concurrent.atomic.AtomicInteger;

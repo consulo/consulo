@@ -16,8 +16,8 @@
 package com.intellij.reference;
 
 import com.intellij.openapi.util.Getter;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 
@@ -29,30 +29,23 @@ import java.lang.ref.ReferenceQueue;
  * @author max
  */
 @SuppressWarnings("ClassNameSameAsAncestorName")
-public class SoftReference<T> extends java.lang.ref.SoftReference<T> implements Getter<T> {
-  //private final T myReferent;
-
+@Deprecated
+public class SoftReference<T> extends consulo.util.lang.ref.SoftReference<T> implements Getter<T> {
   public SoftReference(final T referent) {
     super(referent);
-    //myReferent = referent;
   }
 
   public SoftReference(final T referent, final ReferenceQueue<? super T> q) {
     super(referent, q);
-    //myReferent = referent;
   }
-
-  //@Override
-  //public T get() {
-  //  return myReferent;
-  //}
 
   @Nullable
-  public static <T> T dereference(@javax.annotation.Nullable Reference<T> ref) {
-    return ref == null ? null : ref.get();
+  public static <T> T dereference(@Nullable Reference<T> ref) {
+    return consulo.util.lang.ref.SoftReference.dereference(ref);
   }
+
   @Nullable
   public static <T> T deref(@Nullable Getter<T> ref) {
-    return ref == null ? null : ref.get();
+    return consulo.util.lang.ref.SoftReference.deref(ref);
   }
 }

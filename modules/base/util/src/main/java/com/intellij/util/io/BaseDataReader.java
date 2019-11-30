@@ -4,7 +4,7 @@ package com.intellij.util.io;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ConcurrencyUtil;
-import com.intellij.util.DeprecatedMethodException;
+import consulo.util.lang.DeprecatedMethodException;
 import javax.annotation.Nonnull;
 
 import java.io.IOException;

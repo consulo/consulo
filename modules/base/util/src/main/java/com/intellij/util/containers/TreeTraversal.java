@@ -18,6 +18,7 @@ package com.intellij.util.containers;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.Function;
 import com.intellij.util.Functions;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

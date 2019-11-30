@@ -15,7 +15,7 @@
  */
 package com.intellij.util.containers;
 
-import com.intellij.util.DeprecatedMethodException;
+import consulo.util.lang.DeprecatedMethodException;
 
 @Deprecated // use TLongArrayList instead
 public class LongArrayList implements Cloneable {

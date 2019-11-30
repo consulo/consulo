@@ -35,12 +35,12 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.*;
 import com.intellij.reference.SoftReference;
 import com.intellij.testFramework.LightVirtualFile;
-import com.intellij.util.DeprecatedMethodException;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ConcurrentList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.lang.LanguageVersion;
 import consulo.lang.util.LanguageVersionUtil;
+import consulo.util.lang.DeprecatedMethodException;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;

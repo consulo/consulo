@@ -17,6 +17,9 @@ package com.intellij.util.containers;
 
 import com.intellij.openapi.util.*;
 import com.intellij.util.*;
+import consulo.util.collection.ConcurrentIntObjectMap;
+import consulo.util.collection.ConcurrentLongObjectMap;
+import consulo.util.collection.Maps;
 import gnu.trove.*;
 import org.jetbrains.annotations.Contract;
 
@@ -28,7 +31,6 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiPredicate;
@@ -126,15 +128,17 @@ public class ContainerUtil extends ContainerUtilRt {
   @SuppressWarnings("unchecked")
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <T> TObjectHashingStrategy<T> canonicalStrategy() {
-    return TObjectHashingStrategy.CANONICAL;
+    return consulo.util.collection.ContainerUtil.canonicalStrategy();
   }
 
   @SuppressWarnings("unchecked")
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <T> TObjectHashingStrategy<T> identityStrategy() {
-    return TObjectHashingStrategy.IDENTITY;
+    return consulo.util.collection.ContainerUtil.identityStrategy();
   }
 
   @Nonnull
@@ -390,24 +394,27 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <T> Set<T> newConcurrentSet() {
-    return Collections.newSetFromMap(newConcurrentMap());
+    return consulo.util.collection.ContainerUtil.newConcurrentSet();
   }
 
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <K, V> ConcurrentMap<K, V> newConcurrentMap() {
-    return new ConcurrentHashMap<>();
+    return consulo.util.collection.ContainerUtil.newConcurrentMap();
   }
 
   @Contract(pure = true)
+  @Deprecated
   public static <K, V> ConcurrentMap<K, V> newConcurrentMap(int initialCapacity) {
-    return new ConcurrentHashMap<>(initialCapacity);
+    return consulo.util.collection.ContainerUtil.newConcurrentMap(initialCapacity);
   }
 
   @Contract(pure = true)
   public static <K, V> ConcurrentMap<K, V> newConcurrentMap(int initialCapacity, float loadFactor, int concurrencyLevel) {
-    return new ConcurrentHashMap<>(initialCapacity, loadFactor, concurrencyLevel);
+    return consulo.util.collection.ContainerUtil.newConcurrentMap(initialCapacity, loadFactor, concurrencyLevel);
   }
 
   @Nonnull
@@ -694,15 +701,14 @@ public class ContainerUtil extends ContainerUtilRt {
     return list.subList(from, list.size());
   }
 
+  @Deprecated
   public static <T> void addAll(@Nonnull Collection<T> collection, @Nonnull Iterable<? extends T> appendix) {
-    addAll(collection, appendix.iterator());
+    consulo.util.collection.ContainerUtil.addAll(collection, appendix);
   }
 
+  @Deprecated
   public static <T> void addAll(@Nonnull Collection<T> collection, @Nonnull Iterator<? extends T> iterator) {
-    while (iterator.hasNext()) {
-      T o = iterator.next();
-      collection.add(o);
-    }
+    consulo.util.collection.ContainerUtil.addAll(collection, iterator);
   }
 
   /**
@@ -1290,11 +1296,9 @@ public class ContainerUtil extends ContainerUtilRt {
     return list;
   }
 
+  @Deprecated
   public static <T> void addAll(@Nonnull Collection<T> collection, @Nonnull Enumeration<? extends T> enumeration) {
-    while (enumeration.hasMoreElements()) {
-      T element = enumeration.nextElement();
-      collection.add(element);
-    }
+    consulo.util.collection.ContainerUtil.addAll(collection, enumeration);
   }
 
   @Nonnull
@@ -2541,68 +2545,67 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <V> ConcurrentIntObjectMap<V> createConcurrentIntObjectMap() {
-    //noinspection deprecation
-    return new ConcurrentIntObjectHashMap<V>();
+    return Maps.newConcurrentIntObjectHashMap();
   }
 
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <V> ConcurrentIntObjectMap<V> createConcurrentIntObjectMap(int initialCapacity, float loadFactor, int concurrencyLevel) {
-    //noinspection deprecation
-    return new ConcurrentIntObjectHashMap<V>(initialCapacity, loadFactor, concurrencyLevel);
+    return Maps.newConcurrentIntObjectHashMap(initialCapacity, loadFactor, concurrencyLevel);
   }
 
   @Nonnull
   @Contract(pure = true)
   public static <V> ConcurrentIntObjectMap<V> createConcurrentIntObjectSoftValueMap() {
-    return new ConcurrentIntKeySoftValueHashMap<>();
+    return consulo.util.collection.ContainerUtil.createConcurrentIntObjectSoftValueMap();
   }
 
   @Nonnull
   @Contract(pure = true)
   public static <V> ConcurrentLongObjectMap<V> createConcurrentLongObjectMap() {
     //noinspection deprecation
-    return new ConcurrentLongObjectHashMap<V>();
+    return consulo.util.collection.ContainerUtil.createConcurrentLongObjectMap();
   }
 
   @Nonnull
   @Contract(pure = true)
   public static <V> ConcurrentLongObjectMap<V> createConcurrentLongObjectMap(int initialCapacity) {
     //noinspection deprecation
-    return new ConcurrentLongObjectHashMap<V>(initialCapacity);
+    return consulo.util.collection.ContainerUtil.createConcurrentLongObjectMap(initialCapacity);
   }
 
   @Nonnull
   @Contract(pure = true)
   public static <K, V> ConcurrentMap<K, V> createConcurrentWeakValueMap() {
-    //noinspection deprecation
-    return new ConcurrentWeakValueHashMap<K, V>();
+    return consulo.util.collection.ContainerUtil.createConcurrentWeakValueMap();
   }
 
   @Nonnull
   @Contract(pure = true)
   public static <V> ConcurrentIntObjectMap<V> createConcurrentIntObjectWeakValueMap() {
-    return new ConcurrentIntKeyWeakValueHashMap<>();
+    return consulo.util.collection.ContainerUtil.createConcurrentIntObjectWeakValueMap();
   }
 
   @Nonnull
   @Contract(pure = true)
   public static <K, V> ConcurrentMap<K, V> createConcurrentWeakKeySoftValueMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull final TObjectHashingStrategy<K> hashingStrategy) {
     //noinspection deprecation
-    return new ConcurrentWeakKeySoftValueHashMap<K, V>(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
+    return consulo.util.collection.ContainerUtil.createConcurrentWeakKeySoftValueMap(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
   }
 
   @Nonnull
   @Contract(value = " -> new", pure = true)
   public static <K, V> ConcurrentMap<K, V> createConcurrentSoftKeySoftValueMap() {
-    return createConcurrentSoftKeySoftValueMap(100, 0.75f, Runtime.getRuntime().availableProcessors(), canonicalStrategy());
+    return consulo.util.collection.ContainerUtil.createConcurrentSoftKeySoftValueMap();
   }
 
   @Nonnull
   @Contract(pure = true)
   public static <K, V> ConcurrentMap<K, V> createConcurrentSoftKeySoftValueMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull final TObjectHashingStrategy<K> hashingStrategy) {
-    return new ConcurrentSoftKeySoftValueHashMap<K, V>(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
+    return consulo.util.collection.ContainerUtil.createConcurrentSoftKeySoftValueMap(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
   }
 
   @Nonnull
@@ -2614,54 +2617,52 @@ public class ContainerUtil extends ContainerUtilRt {
   @Nonnull
   @Contract(pure = true)
   public static <K, V> ConcurrentMap<K, V> createConcurrentWeakKeyWeakValueMap() {
-    return createConcurrentWeakKeyWeakValueMap(ContainerUtil.<K>canonicalStrategy());
+    return consulo.util.collection.ContainerUtil.createConcurrentWeakKeyWeakValueMap();
   }
 
   @Nonnull
   @Contract(pure = true)
   public static <K, V> ConcurrentMap<K, V> createConcurrentWeakKeyWeakValueMap(@Nonnull TObjectHashingStrategy<K> strategy) {
-    //noinspection deprecation
-    return new ConcurrentWeakKeyWeakValueHashMap<K, V>(100, 0.75f, Runtime.getRuntime().availableProcessors(), strategy);
+    return consulo.util.collection.ContainerUtil.createConcurrentWeakKeyWeakValueMap(strategy);
   }
 
   @Nonnull
   @Contract(pure = true)
   public static <K, V> ConcurrentMap<K, V> createConcurrentSoftValueMap() {
-    //noinspection deprecation
-    return new ConcurrentSoftValueHashMap<K, V>();
+    return consulo.util.collection.ContainerUtil.createConcurrentSoftValueMap();
   }
 
   @Nonnull
   @Contract(pure = true)
   public static <K, V> ConcurrentMap<K, V> createConcurrentSoftMap() {
-    return new ConcurrentSoftHashMap<>();
+    return consulo.util.collection.ContainerUtil.createConcurrentSoftMap();
   }
 
   @Nonnull
   @Contract(value = " -> new", pure = true)
   public static <K, V> ConcurrentMap<K, V> createConcurrentWeakMap() {
-    return new ConcurrentWeakHashMap<>(0.75f);
+    return consulo.util.collection.ContainerUtil.createConcurrentWeakMap();
   }
 
   @Nonnull
   @Contract(pure = true)
   public static <K, V> ConcurrentMap<K, V> createConcurrentSoftMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull TObjectHashingStrategy<K> hashingStrategy) {
     //noinspection deprecation
-    return new ConcurrentSoftHashMap<K, V>(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
+    return consulo.util.collection.ContainerUtil.createConcurrentSoftMap(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
   }
 
   @Nonnull
   @Contract(pure = true)
   public static <K, V> ConcurrentMap<K, V> createConcurrentWeakMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull TObjectHashingStrategy<K> hashingStrategy) {
     //noinspection deprecation
-    return new ConcurrentWeakHashMap<K, V>(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
+    return consulo.util.collection.ContainerUtil.createConcurrentWeakMap(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
   }
 
   @Nonnull
   @Contract(pure = true)
   public static <K, V> ConcurrentMap<K, V> createConcurrentWeakMap(@Nonnull TObjectHashingStrategy<K> hashingStrategy) {
     //noinspection deprecation
-    return new ConcurrentWeakHashMap<K, V>(hashingStrategy);
+    return consulo.util.collection.ContainerUtil.createConcurrentWeakMap(hashingStrategy);
   }
 
   /**
@@ -2901,7 +2902,7 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @Nonnull
   public static <K, V> Map<K, V> createWeakKeySoftValueMap() {
-    return new WeakKeySoftValueHashMap<K, V>();
+    return consulo.util.collection.ContainerUtil.createWeakKeySoftValueMap();
   }
 
   public static <T> void weightSort(List<T> list, final Function<T, Integer> weighterFunc) {
@@ -2921,8 +2922,7 @@ public class ContainerUtil extends ContainerUtilRt {
   @Contract(value = " -> new", pure = true)
   @Nonnull
   public static <K, V> Map<K, V> createWeakValueMap() {
-    //noinspection deprecation
-    return new WeakValueHashMap<K, V>(ContainerUtil.<K>canonicalStrategy());
+    return consulo.util.collection.ContainerUtil.createWeakValueMap();
   }
 
   /**
@@ -2932,16 +2932,16 @@ public class ContainerUtil extends ContainerUtilRt {
    */
   @Contract(value = " -> new", pure = true)
   @Nonnull
+  @Deprecated
   public static <K, V> Map<K, V> createSoftMap() {
-    //noinspection deprecation
-    return new SoftHashMap<>(4);
+    return consulo.util.collection.ContainerUtil.createSoftMap();
   }
 
   @Contract(value = "_ -> new", pure = true)
   @Nonnull
+  @Deprecated
   public static <K, V> Map<K, V> createSoftMap(@Nonnull TObjectHashingStrategy<? super K> strategy) {
-    //noinspection deprecation
-    return new SoftHashMap<K, V>(strategy);
+    return consulo.util.collection.ContainerUtil.createSoftMap(strategy);
   }
 
   /**
@@ -2953,7 +2953,7 @@ public class ContainerUtil extends ContainerUtilRt {
   @Nonnull
   public static <K, V> Map<K, V> createSoftValueMap() {
     //noinspection deprecation
-    return new SoftValueHashMap<>(canonicalStrategy());
+    return consulo.util.collection.ContainerUtil.createSoftValueMap();
   }
 
   /**
@@ -2975,16 +2975,16 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @Contract(value = "_, _, _ -> new", pure = true)
   @Nonnull
+  @Deprecated
   public static <K, V> Map<K, V> createWeakMap(int initialCapacity, float loadFactor, @Nonnull TObjectHashingStrategy<? super K> strategy) {
-    //noinspection deprecation
-    return new WeakHashMap<K, V>(initialCapacity, loadFactor, strategy);
+    return consulo.util.collection.ContainerUtil.<K, V>createWeakMap(initialCapacity, loadFactor, strategy);
   }
 
   @Contract(value = " -> new", pure = true)
   @Nonnull
+  @Deprecated
   public static <K, V> Map<K, V> createWeakKeyWeakValueMap() {
-    //noinspection deprecation
-    return new WeakKeyWeakValueHashMap<>(true);
+    return consulo.util.collection.ContainerUtil.createWeakKeyWeakValueMap();
   }
 
   public static <T> boolean all(@Nonnull T[] collection, @Nonnull Condition<? super T> condition) {

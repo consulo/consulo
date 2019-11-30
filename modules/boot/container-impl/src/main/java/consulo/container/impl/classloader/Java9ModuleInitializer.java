@@ -97,6 +97,8 @@ public class Java9ModuleInitializer {
     if(Boolean.valueOf("consulo.module.path.boot")) {
       toResolve.add("consulo.logging.api");
       toResolve.add("consulo.injecting.api");
+      
+      toResolve.add("consulo.util.lang");
     }
 
     //toResolve.add("svg.salamander");

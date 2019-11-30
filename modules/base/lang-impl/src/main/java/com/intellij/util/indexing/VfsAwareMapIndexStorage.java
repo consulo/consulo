@@ -26,17 +26,16 @@ import com.intellij.psi.search.ProjectScopeImpl;
 import com.intellij.util.Processor;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.ThrowableRunnable;
-import com.intellij.util.containers.ConcurrentIntObjectMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.impl.MapIndexStorage;
 import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.io.*;
 import consulo.logging.Logger;
+import consulo.util.collection.ConcurrentIntObjectMap;
 import gnu.trove.TIntHashSet;
-import javax.annotation.Nonnull;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 

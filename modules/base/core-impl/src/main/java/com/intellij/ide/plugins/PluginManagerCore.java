@@ -94,7 +94,6 @@ public class PluginManagerCore {
   public static final PluginId CORE_PLUGIN = PluginIds.CONSULO_PLATFORM_BASE;
 
   public static final float PLUGINS_PROGRESS_MAX_VALUE = 0.3f;
-  static final Map<PluginId, Integer> ourId2Index = new THashMap<>();
 
   static final String DISABLE = "disable";
   static final String ENABLE = "enable";
@@ -193,10 +192,6 @@ public class PluginManagerCore {
 
   public static Logger getLogger() {
     return LoggerHolder.ourLogger;
-  }
-
-  public static int getPluginLoadingOrder(PluginId id) {
-    return ourId2Index.get(id);
   }
 
   public static void checkDependants(final PluginDescriptor pluginDescriptor, final Function<PluginId, PluginDescriptor> pluginId2Descriptor, final Condition<PluginId> check) {
@@ -757,9 +752,12 @@ public class PluginManagerCore {
     // sort descriptors according to plugin dependencies
     Collections.sort(result, (o1, o2) -> idComparator.compare(o1.getPluginId(), o2.getPluginId()));
 
+    Map<PluginId, Integer> id2Index = new HashMap<>();
     for (int i = 0; i < result.size(); i++) {
-      ourId2Index.put(result.get(i).getPluginId(), i);
+      id2Index.put(result.get(i).getPluginId(), i);
     }
+
+    PluginHolderModificator.setPluginLoadOrder(id2Index);
 
     int i = 0;
     for (final IdeaPluginDescriptorImpl pluginDescriptor : result) {

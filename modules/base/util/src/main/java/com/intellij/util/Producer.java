@@ -16,13 +16,18 @@
 package com.intellij.util;
 
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 /**
  * @author pegov
  */
-public interface Producer<T> {
+public interface Producer<T> extends Supplier<T> {
   
   @Nullable
   T produce();
-  
+
+  @Override
+  default T get() {
+    return produce();
+  }
 }

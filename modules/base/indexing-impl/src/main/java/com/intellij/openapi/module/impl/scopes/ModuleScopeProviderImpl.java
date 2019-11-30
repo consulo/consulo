@@ -18,8 +18,8 @@ package com.intellij.openapi.module.impl.scopes;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.impl.ModuleScopeProvider;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.IntObjectMap;
+import consulo.util.collection.ConcurrentIntObjectMap;
+import consulo.util.collection.Maps;
 
 import javax.annotation.Nonnull;
 
@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  */
 public class ModuleScopeProviderImpl implements ModuleScopeProvider {
   private final Module myModule;
-  private final IntObjectMap<GlobalSearchScope> myScopeCache = ContainerUtil.createConcurrentIntObjectMap();
+  private final ConcurrentIntObjectMap<GlobalSearchScope> myScopeCache = Maps.newConcurrentIntObjectHashMap();
   private ModuleWithDependentsTestScope myModuleTestsWithDependentsScope;
 
   public ModuleScopeProviderImpl(@Nonnull Module module) {

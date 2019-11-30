@@ -18,6 +18,7 @@ package consulo.util.nodep;
 import consulo.util.nodep.collection.ContainerUtilRt;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Collection;
 
@@ -43,7 +44,7 @@ public class ArrayUtilRt {
   public static final Runnable[] EMPTY_RUNNABLE_ARRAY = new Runnable[0];
 
   @Nonnull
-  public static String[] toStringArray(@javax.annotation.Nullable Collection<String> collection) {
+  public static String[] toStringArray(@Nullable Collection<String> collection) {
     return collection == null || collection.isEmpty()
            ? EMPTY_STRING_ARRAY : ContainerUtilRt.toArray(collection, new String[collection.size()]);
   }

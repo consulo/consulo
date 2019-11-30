@@ -15,38 +15,39 @@
  */
 package com.intellij.openapi.util;
 
+import consulo.util.lang.ref.SimpleReference;
+
 import javax.annotation.Nullable;
 
 /**
  * @author ven
  */
-public class Ref<T> {
-  private T myValue;
-
-  public Ref() { }
+public class Ref<T> extends SimpleReference<T> {
+  public Ref() {
+  }
 
   public Ref(@Nullable T value) {
-    myValue = value;
+    super(value);
   }
 
+  @Override
   public boolean isNull() {
-    return myValue == null;
+    return super.isNull();
   }
 
+  @Override
   public T get() {
-    return myValue;
+    return super.get();
   }
 
+  @Override
   public void set(@Nullable T value) {
-    myValue = value;
+    super.set(value);
   }
 
+  @Override
   public boolean setIfNull(@Nullable T value) {
-    if (myValue == null) {
-      myValue = value;
-      return true;
-    }
-    return false;
+    return super.setIfNull(value);
   }
 
   public static <T> Ref<T> create() {
@@ -59,6 +60,6 @@ public class Ref<T> {
 
   @Override
   public String toString() {
-    return String.valueOf(myValue);
+    return super.toString();
   }
 }

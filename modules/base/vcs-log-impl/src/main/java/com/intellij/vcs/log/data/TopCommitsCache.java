@@ -17,12 +17,13 @@ package com.intellij.vcs.log.data;
 
 import com.google.common.collect.Iterators;
 import com.google.common.collect.PeekingIterator;
-import com.intellij.util.containers.ConcurrentIntObjectMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.VcsCommitMetadata;
+import consulo.util.collection.ConcurrentIntObjectMap;
+import consulo.util.collection.Maps;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Iterator;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class TopCommitsCache {
   @Nonnull
   private final VcsLogStorage myHashMap;
   @Nonnull
-  private final ConcurrentIntObjectMap<VcsCommitMetadata> myCache = ContainerUtil.createConcurrentIntObjectMap();
+  private final ConcurrentIntObjectMap<VcsCommitMetadata> myCache = Maps.newConcurrentIntObjectHashMap();
   @Nonnull
   private List<VcsCommitMetadata> mySortedDetails = ContainerUtil.newArrayList();
 

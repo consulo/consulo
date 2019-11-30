@@ -29,8 +29,8 @@ import com.intellij.psi.impl.AnyPsiChangeListener;
 import com.intellij.psi.impl.PsiManagerImpl;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ObjectUtil;
-import com.intellij.util.containers.ConcurrentWeakKeySoftValueHashMap;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.util.collection.ConcurrentWeakKeySoftValueHashMap;
+import consulo.util.collection.ContainerUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

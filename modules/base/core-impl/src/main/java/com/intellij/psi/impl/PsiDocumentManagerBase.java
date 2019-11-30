@@ -38,6 +38,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
 import consulo.logging.Logger;
+import consulo.util.lang.DeprecatedMethodException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
