@@ -57,6 +57,21 @@
         </configuration>
       </plugin>
       <plugin>
+        <groupId>consulo.maven</groupId>
+        <artifactId>java9-maven-plugin</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <extensions>true</extensions>
+        <executions>
+          <execution>
+            <id>gen</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>generate-binary-module-info-nocheck</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <artifactId>maven-resources-plugin</artifactId>
         <version>3.0.2</version>
         <executions>
@@ -83,7 +98,7 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-annotations</artifactId>
+      <artifactId>consulo-annotation</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

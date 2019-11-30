@@ -100,6 +100,8 @@ public class Java9ModuleInitializer {
       
       toResolve.add("consulo.util.lang");
       toResolve.add("consulo.util.collection");
+
+      toResolve.add("consulo.ui.api.shared");
     }
 
     //toResolve.add("svg.salamander");
