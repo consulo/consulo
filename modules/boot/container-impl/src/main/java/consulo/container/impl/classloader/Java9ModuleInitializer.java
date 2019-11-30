@@ -99,6 +99,7 @@ public class Java9ModuleInitializer {
       toResolve.add("consulo.injecting.api");
       
       toResolve.add("consulo.util.lang");
+      toResolve.add("consulo.util.collection");
     }
 
     //toResolve.add("svg.salamander");
