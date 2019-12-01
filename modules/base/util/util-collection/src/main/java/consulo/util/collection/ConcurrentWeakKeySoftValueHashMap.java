@@ -32,10 +32,7 @@ import java.util.function.Supplier;
  * Concurrent map with weak keys and soft values.
  * Null keys are NOT allowed
  * Null values are NOT allowed
- *
- * @deprecated Use {@link ContainerUtil#createConcurrentWeakKeySoftValueMap(int, float, int, TObjectHashingStrategy)} instead
  */
-@Deprecated
 public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K, V> {
   private final ConcurrentMap<KeyReference<K, V>, ValueReference<K, V>> myMap;
   final ReferenceQueue<K> myKeyQueue = new ReferenceQueue<>();

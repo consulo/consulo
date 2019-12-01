@@ -93,18 +93,25 @@ public class ContainerUtil {
     return new ConcurrentSoftKeySoftValueHashMap<K, V>(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
   }
 
-  @SuppressWarnings("unchecked")
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <T> TObjectHashingStrategy<T> canonicalStrategy() {
-    return TObjectHashingStrategy.CANONICAL;
+    return ObjectHashingStrategies.canonicalStrategy();
   }
 
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
+  public static <T> TObjectHashingStrategy<T> identityStrategy() {
+    return ObjectHashingStrategies.identityStrategy();
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  @Deprecated
   public static <K, V> ConcurrentMap<K, V> createConcurrentWeakKeySoftValueMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull final TObjectHashingStrategy<K> hashingStrategy) {
-    //noinspection deprecation
-    return new ConcurrentWeakKeySoftValueHashMap<K, V>(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
+    return Maps.newConcurrentWeakKeySoftValueHashMap(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
   }
 
   /**
@@ -118,13 +125,6 @@ public class ContainerUtil {
     return new SoftValueHashMap<>(canonicalStrategy());
   }
 
-  @SuppressWarnings("unchecked")
-  @Nonnull
-  @Contract(pure = true)
-  public static <T> TObjectHashingStrategy<T> identityStrategy() {
-    return TObjectHashingStrategy.IDENTITY;
-  }
-
   /**
    * Weak keys hard values hash map.
    * Null keys are NOT allowed
@@ -132,21 +132,23 @@ public class ContainerUtil {
    */
   @Contract(value = " -> new", pure = true)
   @Nonnull
+  @Deprecated
   public static <K, V> Map<K, V> createWeakMap() {
-    return createWeakMap(4);
+    return Maps.newWeakHashMap(4);
   }
 
   @Contract(value = "_ -> new", pure = true)
   @Nonnull
+  @Deprecated
   public static <K, V> Map<K, V> createWeakMap(int initialCapacity) {
-    return createWeakMap(initialCapacity, 0.8f, canonicalStrategy());
+    return Maps.newWeakHashMap(initialCapacity, 0.8f, canonicalStrategy());
   }
 
   @Contract(value = "_, _, _ -> new", pure = true)
   @Nonnull
+  @Deprecated
   public static <K, V> Map<K, V> createWeakMap(int initialCapacity, float loadFactor, @Nonnull TObjectHashingStrategy<? super K> strategy) {
-    //noinspection deprecation
-    return new WeakHashMap<K, V>(initialCapacity, loadFactor, strategy);
+    return Maps.newWeakHashMap(initialCapacity, loadFactor, strategy);
   }
 
   @Contract(value = " -> new", pure = true)
@@ -289,42 +291,43 @@ public class ContainerUtil {
    */
   @Contract(value = " -> new", pure = true)
   @Nonnull
+  @Deprecated
   public static <K, V> Map<K, V> createWeakValueMap() {
-    //noinspection deprecation
-    return new WeakValueHashMap<K, V>(ContainerUtil.<K>canonicalStrategy());
+    return Maps.newWeakValueHashMap();
   }
 
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <K, V> ConcurrentMap<K, V> createConcurrentSoftMap() {
-    return new ConcurrentSoftHashMap<>();
+    return Maps.newConcurrentSoftHashMap();
   }
 
   @Nonnull
   @Contract(value = " -> new", pure = true)
+  @Deprecated
   public static <K, V> ConcurrentMap<K, V> createConcurrentWeakMap() {
-    return new ConcurrentWeakHashMap<>(0.75f);
+    return Maps.newConcurrentWeakHashMap();
   }
 
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <K, V> ConcurrentMap<K, V> createConcurrentSoftMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull TObjectHashingStrategy<K> hashingStrategy) {
-    //noinspection deprecation
-    return new ConcurrentSoftHashMap<K, V>(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
+    return Maps.newConcurrentSoftHashMap(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
   }
 
   @Nonnull
   @Contract(pure = true)
   public static <K, V> ConcurrentMap<K, V> createConcurrentWeakMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull TObjectHashingStrategy<K> hashingStrategy) {
-    //noinspection deprecation
-    return new ConcurrentWeakHashMap<K, V>(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
+    return Maps.newConcurrentWeakHashMap(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
   }
 
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <K, V> ConcurrentMap<K, V> createConcurrentWeakMap(@Nonnull TObjectHashingStrategy<K> hashingStrategy) {
-    //noinspection deprecation
-    return new ConcurrentWeakHashMap<K, V>(hashingStrategy);
+    return Maps.newConcurrentWeakHashMap(hashingStrategy);
   }
 
   @Nonnull
@@ -343,8 +346,9 @@ public class ContainerUtil {
 
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <V> ConcurrentIntObjectMap<V> createConcurrentIntObjectSoftValueMap() {
-    return new ConcurrentIntKeySoftValueHashMap<>();
+    return Maps.newConcurrentIntObjectSoftValueHashMap();
   }
 
 

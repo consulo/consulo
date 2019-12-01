@@ -15,17 +15,12 @@
  */
 package consulo.util.collection;
 
-import consulo.util.lang.DeprecatedMethodException;
-import consulo.util.collection.RefValueHashMap;
 import gnu.trove.TObjectHashingStrategy;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 
-/**
- * @deprecated use {@link ContainerUtil#createWeakValueMap()} instead
- */
 final class WeakValueHashMap<K, V> extends RefValueHashMap<K, V> {
   private static class MyWeakReference<K, T> extends WeakReference<T> implements MyReference<K, T> {
     private final K key;

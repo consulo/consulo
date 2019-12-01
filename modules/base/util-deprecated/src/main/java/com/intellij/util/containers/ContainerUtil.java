@@ -2634,6 +2634,7 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <K, V> ConcurrentMap<K, V> createConcurrentSoftMap() {
     return consulo.util.collection.ContainerUtil.createConcurrentSoftMap();
   }
@@ -2660,9 +2661,10 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <K, V> ConcurrentMap<K, V> createConcurrentWeakMap(@Nonnull TObjectHashingStrategy<K> hashingStrategy) {
     //noinspection deprecation
-    return consulo.util.collection.ContainerUtil.createConcurrentWeakMap(hashingStrategy);
+    return Maps.newConcurrentWeakHashMap(hashingStrategy);
   }
 
   /**
