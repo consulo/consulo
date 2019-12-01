@@ -74,11 +74,6 @@
         <include>consulo:consulo-ui-api-shared</include>
         <include>consulo:consulo-ui-impl</include>
         <include>consulo:consulo-usage-view</include>
-        <include>consulo:consulo-util-lang</include>
-        <include>consulo:consulo-util-collection</include>
-        <include>consulo:consulo-util</include>
-        <include>consulo:consulo-util-rmi</include>
-        <!--<include>consulo:consulo-util-rt</include>-->
         <include>consulo:consulo-vcs-api</include>
         <include>consulo:consulo-vcs-api-core</include>
         <include>consulo:consulo-vcs-impl</include>
@@ -92,6 +87,13 @@
         <include>consulo:consulo-xdebugger-impl</include>
         <include>consulo:consulo-xtest-impl</include>
         <include>consulo:consulo-xtest-sm-impl</include>
+
+        <!--util group-->
+        <include>consulo:consulo-util-advanced-proxy</include>
+        <include>consulo:consulo-util-lang</include>
+        <include>consulo:consulo-util-collection</include>
+        <include>consulo:consulo-util-rmi</include>
+        <include>consulo:consulo-util</include>
 
         <!--TODO [VISTALL] those dependencies must be removed from base plugin-->
         <include>consulo:consulo-desktop-util-awt</include>

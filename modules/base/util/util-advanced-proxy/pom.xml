@@ -40,6 +40,7 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-container-impl</artifactId>
       <version>${project.version}</version>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -59,7 +60,6 @@
     <dependency>
       <groupId>cglib</groupId>
       <artifactId>cglib-nodep</artifactId>
-      <optional>true</optional>
     </dependency>
   </dependencies>
 </project>
