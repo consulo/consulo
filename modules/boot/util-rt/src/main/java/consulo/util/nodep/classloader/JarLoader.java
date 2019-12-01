@@ -1,9 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.nodep.classloader;
 
+import consulo.util.nodep.JavaVersion;
 import consulo.util.nodep.LoggerRt;
 import consulo.util.nodep.Pair;
 import consulo.util.nodep.io.FileUtilRt;
+import consulo.util.nodep.map.SimpleMultiMap;
 import consulo.util.nodep.reference.SoftReference;
 
 import javax.annotation.Nonnull;
@@ -37,6 +39,8 @@ class JarLoader extends Loader {
   private volatile Map<Resource.Attribute, String> myAttributes;
   private volatile String myClassPathManifestAttribute;
   private static final String NULL_STRING = "<null>";
+
+  private volatile Map<String, String> myRemapMultiVersions;
 
   JarLoader(URL url, int index, ClassPath configuration) throws IOException {
     super(new URL("jar", "", -1, url + "!/"), index);
@@ -224,6 +228,17 @@ class JarLoader extends Loader {
 
     try {
       ZipFile zipFile = getZipFile();
+
+      Map<String, String> remapMultiVersions = myRemapMultiVersions;
+      if (remapMultiVersions == null) {
+        remapMultiVersions = myRemapMultiVersions = buildRemapMultiVersions(zipFile);
+      }
+
+      String remappedUrl = remapMultiVersions.get(name);
+      if(remappedUrl != null) {
+        name = remappedUrl;
+      }
+
       try {
         ZipEntry entry = zipFile.getEntry(name);
         if (entry != null) {
@@ -239,6 +254,68 @@ class JarLoader extends Loader {
     }
 
     return null;
+  }
+
+  private Map<String, String> buildRemapMultiVersions(ZipFile zipFile) {
+    Enumeration<? extends ZipEntry> entries = zipFile.entries();
+
+    SimpleMultiMap<Integer, String> byVersions = SimpleMultiMap.newHashMap();
+
+    while (entries.hasMoreElements()) {
+      ZipEntry zipEntry = entries.nextElement();
+
+      String name = zipEntry.getName();
+
+      String prefix = "META-INF/versions/";
+      if (name.startsWith(prefix)) {
+        try {
+          int endIndex = name.indexOf('/', prefix.length());
+          if (endIndex == -1 || name.charAt(name.length() - 1) == '/') {
+            continue;
+          }
+
+          int ver = Integer.parseInt(name.substring(prefix.length(), endIndex));
+
+          String normalizeUrl = name.substring(endIndex + 1, name.length());
+
+          byVersions.putValue(ver, normalizeUrl);
+        }
+        catch (Exception e) {
+          error("url: " + myFilePath, e);
+        }
+      }
+    }
+
+    if (byVersions.isEmpty()) {
+      return Collections.emptyMap();
+    }
+
+    JavaVersion javaVersion = JavaVersion.current();
+
+    Map<String, String> toRemap = new HashMap<String, String>();
+
+    // if version is 14, array will be 14,13,12,11,10,9,8
+    for (int ver = javaVersion.feature; ver != 7; ver--) {
+      Collection<String> urls = byVersions.get(ver);
+
+      if (urls.isEmpty()) {
+        continue;
+      }
+
+      for (String url : urls) {
+        if (toRemap.containsKey(url)) {
+          continue;
+        }
+
+        toRemap.put(url, buildVersionableUrl(ver, url));
+      }
+    }
+
+    return toRemap;
+  }
+
+  private static String buildVersionableUrl(int ver, String url) {
+    return "META-INF/versions/" + ver + "/" + url;
   }
 
   protected Resource instantiateResource(URL url, ZipEntry entry) throws IOException {

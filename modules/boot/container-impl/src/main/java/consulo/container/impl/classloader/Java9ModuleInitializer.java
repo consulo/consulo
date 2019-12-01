@@ -95,6 +95,8 @@ public class Java9ModuleInitializer {
     toResolve.add("kava.beans");
 
     if(Boolean.valueOf("consulo.module.path.boot")) {
+      toResolve.add("org.apache.logging.log4j");
+
       toResolve.add("consulo.logging.api");
       toResolve.add("consulo.injecting.api");
       
