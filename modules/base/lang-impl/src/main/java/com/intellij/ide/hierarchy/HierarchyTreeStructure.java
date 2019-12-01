@@ -19,7 +19,7 @@ package com.intellij.ide.hierarchy;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.roots.TestSourcesFilter;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
@@ -36,8 +36,9 @@ import com.intellij.psi.search.scope.packageSet.PackageSet;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ArrayUtil;
-import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
 
 public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
   protected HierarchyNodeDescriptor myBaseDescriptor;
@@ -162,14 +163,14 @@ public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
     }
     else if (HierarchyBrowserBaseEx.SCOPE_PROJECT.equals(scopeType)) {
       final VirtualFile virtualFile = srcElement.getContainingFile().getVirtualFile();
-      if (virtualFile != null && ProjectRootManager.getInstance(myProject).getFileIndex().isInTestSourceContent(virtualFile)) {
+      if (virtualFile != null && TestSourcesFilter.isTestSources(virtualFile, myProject)) {
         return false;
       }
     }
     else if (HierarchyBrowserBaseEx.SCOPE_TEST.equals(scopeType)) {
 
       final VirtualFile virtualFile = srcElement.getContainingFile().getVirtualFile();
-      if (virtualFile != null && !ProjectRootManager.getInstance(myProject).getFileIndex().isInTestSourceContent(virtualFile)) {
+      if (virtualFile != null && !TestSourcesFilter.isTestSources(virtualFile, myProject)) {
         return false;
       }
     } else if (!HierarchyBrowserBaseEx.SCOPE_ALL.equals(scopeType)) {

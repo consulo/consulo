@@ -16,8 +16,7 @@
 package com.intellij.psi.search.scope;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.roots.TestSourcesFilter;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.scope.packageSet.AbstractPackageSet;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
@@ -34,8 +33,7 @@ public class TestsScope extends NamedScope {
     super(NAME, new AbstractPackageSet("test:*..*") {
       @Override
       public boolean contains(VirtualFile file, NamedScopesHolder holder) {
-        final ProjectFileIndex index = ProjectRootManager.getInstance(holder.getProject()).getFileIndex();
-        return file != null && index.isInTestSourceContent(file);
+        return file != null && TestSourcesFilter.isTestSources(file, holder.getProject());
       }
     });
   }

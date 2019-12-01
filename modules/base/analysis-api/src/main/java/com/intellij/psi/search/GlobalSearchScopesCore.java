@@ -19,6 +19,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.roots.TestSourcesFilter;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -166,16 +167,17 @@ public class GlobalSearchScopesCore {
   }
 
   private static class TestScopeFilter extends GlobalSearchScope {
-    private final ProjectFileIndex myFileIndex;
+    @Nonnull
+    private final Project myProject;
 
     private TestScopeFilter(@Nonnull Project project) {
       super(project);
-      myFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+      myProject = project;
     }
 
     @Override
     public boolean contains(@Nonnull VirtualFile file) {
-      return myFileIndex.isInTestSourceContent(file);
+      return TestSourcesFilter.isTestSources(file, myProject);
     }
 
     @Override

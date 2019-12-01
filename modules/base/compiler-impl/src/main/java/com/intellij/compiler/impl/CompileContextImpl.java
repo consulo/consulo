@@ -36,6 +36,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.roots.TestSourcesFilter;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.UserDataHolderBase;
@@ -515,7 +516,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
   @Override
   public boolean isInTestSourceContent(@Nonnull final VirtualFile fileOrDir) {
-    if (myProjectFileIndex.isInTestSourceContent(fileOrDir) || myProjectFileIndex.isInTestResource(fileOrDir)) {
+    if (TestSourcesFilter.isTestSources(fileOrDir, myProject) || myProjectFileIndex.isInTestResource(fileOrDir)) {
       return true;
     }
     if (isUnderRoots(myGeneratedTestRoots, fileOrDir)) {

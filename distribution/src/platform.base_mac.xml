@@ -27,6 +27,7 @@
 
         <include>consulo:consulo-analysis-api</include>
         <include>consulo:consulo-analysis-impl</include>
+        <include>consulo:consulo-duplicates-analysis</include>
         <include>consulo:consulo-annotations</include>
         <include>consulo:consulo-built-in-server-api</include>
         <include>consulo:consulo-built-in-server-impl</include>

@@ -71,6 +71,7 @@
     <module>modules/base/dvcs-api</module>
     <module>modules/base/dvcs-impl</module>
     <module>modules/base/dvcs-impl-testing</module>
+    <module>modules/base/duplicates-analysis</module>
     <module>modules/base/editor-ui-api</module>
     <module>modules/base/editor-ui-ex</module>
     <module>modules/base/external-storage-impl</module>

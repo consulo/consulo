@@ -20,6 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.roots.TestSourcesFilter;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiCodeFragment;
 import com.intellij.psi.PsiDirectory;
@@ -56,8 +57,7 @@ public class ProjectRootsUtil {
   }
 
   public static boolean isInTestSource(final VirtualFile directoryFile, final Project project) {
-    final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
-    return projectFileIndex.isInTestSourceContent(directoryFile);
+    return TestSourcesFilter.isTestSources(directoryFile, project);
   }
 
   public static boolean isInTestResource(final PsiDirectory psiDirectory) {

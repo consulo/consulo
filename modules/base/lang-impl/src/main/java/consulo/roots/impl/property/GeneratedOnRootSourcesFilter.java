@@ -32,7 +32,7 @@ public class GeneratedOnRootSourcesFilter extends GeneratedSourcesFilter {
   @RequiredReadAction
   @Override
   public boolean isGeneratedSource(@Nonnull VirtualFile file, @Nonnull Project project) {
-    VirtualFile contentRootForFile = ProjectFileIndex.SERVICE.getInstance(project).getSourceRootForFile(file);
+    VirtualFile contentRootForFile = ProjectFileIndex.getInstance(project).getSourceRootForFile(file);
     if(contentRootForFile == null) {
       return false;
     }

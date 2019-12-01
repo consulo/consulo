@@ -18,6 +18,7 @@ package com.intellij.usages.impl.rules;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.roots.TestSourcesFilter;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -51,7 +52,7 @@ public class UsageScopeGroupingRule implements UsageGroupingRule {
     ProjectFileIndex fileIndex = ProjectRootManager.getInstance(element.getProject()).getFileIndex();
     boolean isInLib = fileIndex.isInLibraryClasses(virtualFile) || fileIndex.isInLibrarySource(virtualFile);
     if (isInLib) return LIBRARY;
-    boolean isInTest = fileIndex.isInTestSourceContent(virtualFile);
+    boolean isInTest = TestSourcesFilter.isTestSources(virtualFile, element.getProject());
     return isInTest ? TEST : PRODUCTION;
   }
 

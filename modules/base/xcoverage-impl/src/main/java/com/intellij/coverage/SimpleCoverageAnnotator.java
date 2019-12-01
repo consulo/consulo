@@ -3,6 +3,7 @@ package com.intellij.coverage;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.roots.TestSourcesFilter;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
@@ -184,7 +185,7 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
 
     visitedDirs.add(dir);
 
-    final boolean isInTestSrcContent = index.isInTestSourceContent(dir);
+    final boolean isInTestSrcContent = TestSourcesFilter.isTestSources(dir, getProject());
 
     // Don't count coverage for tests folders if track test folders is switched off
     if (!trackTestFolders && isInTestSrcContent) {

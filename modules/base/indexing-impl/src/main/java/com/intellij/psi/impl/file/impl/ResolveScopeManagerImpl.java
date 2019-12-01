@@ -80,7 +80,7 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
     ProjectFileIndex projectFileIndex = myProjectRootManager.getFileIndex();
     Module module = projectFileIndex.getModuleForFile(vFile);
     if (module != null) {
-      boolean includeTests = projectFileIndex.isInTestSourceContent(vFile);
+      boolean includeTests = TestSourcesFilter.isTestSources(vFile, myProject);
       return GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module, includeTests);
     }
     else {
@@ -210,7 +210,7 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
     ProjectFileIndex projectFileIndex = myProjectRootManager.getFileIndex();
     Module module = projectFileIndex.getModuleForFile(vFile);
     if (module != null) {
-      boolean isTest = projectFileIndex.isInTestSourceContent(vFile);
+      boolean isTest = TestSourcesFilter.isTestSources(vFile, element.getProject());
       GlobalSearchScope scope = isTest ? GlobalSearchScope.moduleTestsWithDependentsScope(module) : GlobalSearchScope.moduleWithDependentsScope(module);
       return Pair.create(scope, vFile);
     }

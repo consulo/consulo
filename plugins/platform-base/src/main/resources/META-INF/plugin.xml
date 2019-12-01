@@ -70,6 +70,7 @@
     <extensionPoint name="vfs.asyncListener" interface="com.intellij.openapi.vfs.AsyncFileListener"/>
 
     <extensionPoint name="generatedSourcesFilter" interface="com.intellij.openapi.roots.GeneratedSourcesFilter"/>
+    <extensionPoint name="testSourcesFilter" interface="com.intellij.openapi.roots.TestSourcesFilter"/>
     <extensionPoint name="defaultLibraryRootDetector" interface="com.intellij.openapi.roots.libraries.ui.RootDetector"/>
 
     <extensionPoint name="postStartupActivity" interface="com.intellij.openapi.startup.StartupActivity"/>
@@ -935,7 +936,7 @@
     <extensionPoint name="usageContextPanelProvider"
                     interface="com.intellij.usages.UsageContextPanel$Provider"
                     area="PROJECT"/>
-    <extensionPoint name="usageViewElementsListener" interface="com.intellij.usages.impl.UsageViewElementsListener" />
+    <extensionPoint name="usageViewElementsListener" interface="com.intellij.usages.impl.UsageViewElementsListener"/>
 
     <extensionPoint name="treeStructureProvider"
                     interface="com.intellij.ide.projectView.TreeStructureProvider"
@@ -2279,9 +2280,9 @@
     <projectService serviceInterface="com.intellij.codeInspection.InspectionManager"
                     serviceImplementation="com.intellij.codeInspection.ex.InspectionManagerEx"/>
 
-    <projectService serviceImplementation="com.intellij.usageView.UsageViewManager" />
+    <projectService serviceImplementation="com.intellij.usageView.UsageViewManager"/>
 
-    <projectService serviceInterface="com.intellij.usageView.UsageViewContentManager" serviceImplementation="com.intellij.usageView.impl.UsageViewContentManagerImpl" />
+    <projectService serviceInterface="com.intellij.usageView.UsageViewContentManager" serviceImplementation="com.intellij.usageView.impl.UsageViewContentManagerImpl"/>
 
     <applicationService serviceInterface="com.intellij.ide.projectView.impl.ProjectViewSharedSettings"
                         serviceImplementation="com.intellij.ide.projectView.impl.ProjectViewSharedSettings"/>
@@ -2517,6 +2518,7 @@
     <contentFolderPropertyProvider implementation="consulo.roots.impl.property.GeneratedContentFolderPropertyProvider"/>
 
     <generatedSourcesFilter implementation="consulo.roots.impl.property.GeneratedOnRootSourcesFilter"/>
+    <testSourcesFilter implementation="com.intellij.openapi.roots.ProjectRootTestSourcesFilter"/>
     <defaultHighlightingSettingProvider implementation="com.intellij.codeInsight.daemon.impl.analysis.GeneratedSourcesHighlightingSettingProvider"/>
     <editorNotificationProvider implementation="com.intellij.ide.GeneratedFileEditingNotificationProvider"/>
 
