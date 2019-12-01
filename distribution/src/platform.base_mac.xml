@@ -144,7 +144,7 @@
         <include>org.jvnet.winp:winp</include>
         <include>org.apache.commons:commons-lang3</include>
         <include>jaxen:jaxen</include>
-        <include>com.google.code.findbugs:jsr305</include>
+        <include>consulo.internal:jsr305</include>
         <include>org.apache.thrift:libthrift</include>
         <include>org.apache.xmlrpc:xmlrpc-common</include>
         <include>org.apache.xmlrpc:xmlrpc-server</include>
