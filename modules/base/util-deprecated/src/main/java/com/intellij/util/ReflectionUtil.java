@@ -510,11 +510,11 @@ public class ReflectionUtil {
   }
 
   private static boolean isPublic(final Field field) {
-    return (field.getModifiers() & Modifier.PUBLIC) != 0;
+    return Modifier.isPublic(field.getModifiers());
   }
 
   private static boolean isFinal(final Field field) {
-    return (field.getModifiers() & Modifier.FINAL) != 0;
+    return Modifier.isFinal(field.getModifiers());
   }
 
   @Nonnull

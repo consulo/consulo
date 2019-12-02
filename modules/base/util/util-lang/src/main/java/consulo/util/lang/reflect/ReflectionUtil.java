@@ -108,6 +108,26 @@ public class ReflectionUtil {
     }
   }
 
+  @Nonnull
+  public static Class forName(@Nonnull String fqn) {
+    try {
+      return Class.forName(fqn);
+    }
+    catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Nullable
+  public static Class findClassOrNull(@Nonnull String fqn, @Nonnull ClassLoader classLoader) {
+    try {
+      return Class.forName(fqn, true, classLoader);
+    }
+    catch (ClassNotFoundException ignored) {
+      return null;
+    }
+  }
+
   /**
    * Returns the class this method was called 'framesToSkip' frames up the caller hierarchy.
    * <p/>

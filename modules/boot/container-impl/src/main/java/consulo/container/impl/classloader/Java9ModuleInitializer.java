@@ -87,14 +87,13 @@ public class Java9ModuleInitializer {
 
     List<String> toResolve = new ArrayList<String>();
 
-    toResolve.add("consulo.desktop.awt.hacking");
-    toResolve.add("consulo.util.rmi");
-
-    toResolve.add("org.jdom");
-    toResolve.add("gnu.trove");
-    toResolve.add("kava.beans");
-
     if(Boolean.valueOf("consulo.module.path.boot")) {
+      toResolve.add("consulo.desktop.awt.hacking");
+      toResolve.add("consulo.util.rmi");
+
+      toResolve.add("org.jdom");
+      toResolve.add("gnu.trove");
+      toResolve.add("kava.beans");
       toResolve.add("org.apache.logging.log4j");
 
       toResolve.add("consulo.logging.api");
@@ -120,7 +119,9 @@ public class Java9ModuleInitializer {
 
     Object controller = staticInvoke(java_lang_ModuleLayer_defineModules, configuration, Collections.singletonList(bootModuleLayer), functionLambda);
 
-    alohomora(bootModuleLayer, controller);
+    if(Boolean.valueOf("consulo.module.path.boot")) {
+      alohomora(bootModuleLayer, controller);
+    }
 
     return instanceInvoke(java_lang_ModuleLayer$Controller_layout, controller);
   }
