@@ -32,9 +32,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.impl.local.FileWatcher;
 import com.intellij.openapi.vfs.impl.local.LocalFileSystemImpl;
-import com.intellij.project.ProjectKt;
 import com.intellij.ui.GuiUtils;
-import com.intellij.util.PathUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
@@ -313,12 +311,9 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
 
   private void checkFsSanity() {
     try {
-      String path = myProject.getProjectFilePath();
+      String path = myProject.getBasePath();
       if (path == null || FileUtil.isAncestor(PathManager.getConfigPath(), path, true)) {
         return;
-      }
-      if (ProjectKt.isDirectoryBased(myProject)) {
-        path = PathUtil.getParentPath(path);
       }
 
       boolean expected = SystemInfo.isFileSystemCaseSensitive;
