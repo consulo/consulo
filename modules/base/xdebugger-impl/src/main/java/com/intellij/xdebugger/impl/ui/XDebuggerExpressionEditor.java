@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.UIUtil;

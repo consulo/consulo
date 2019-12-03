@@ -22,7 +22,7 @@ package com.intellij.codeInspection.lang;
 
 import com.intellij.codeInspection.reference.RefEntity;
 import com.intellij.lang.Language;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 
 public interface HTMLComposerExtension<T> {
   Key<T> getID();

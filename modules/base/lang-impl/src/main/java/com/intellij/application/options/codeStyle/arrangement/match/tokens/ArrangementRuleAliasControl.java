@@ -17,7 +17,7 @@ package com.intellij.application.options.codeStyle.arrangement.match.tokens;
 
 import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
 import com.intellij.application.options.codeStyle.arrangement.match.ArrangementMatchingRulesControl;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.psi.codeStyle.arrangement.match.StdArrangementMatchRule;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import javax.annotation.Nonnull;

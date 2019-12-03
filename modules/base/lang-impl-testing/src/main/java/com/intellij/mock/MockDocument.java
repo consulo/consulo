@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.EditReadOnlyListener;
 import com.intellij.openapi.editor.ex.LineIterator;
 import com.intellij.openapi.editor.ex.RangeMarkerEx;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.LocalTimeCounter;
 import com.intellij.util.Processor;

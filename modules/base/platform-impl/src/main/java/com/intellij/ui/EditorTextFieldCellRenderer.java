@@ -34,6 +34,7 @@ import com.intellij.openapi.util.text.LineTokenizer;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.text.CharSequenceSubSequence;
 import com.intellij.util.ui.UIUtil;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

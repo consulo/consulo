@@ -40,6 +40,7 @@ import com.intellij.util.*;
 import consulo.application.AccessRule;
 import consulo.ide.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import java.awt.*;

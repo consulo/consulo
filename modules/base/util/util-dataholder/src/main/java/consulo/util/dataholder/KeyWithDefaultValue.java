@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.intellij.openapi.util;
+package consulo.util.dataholder;
 
 import javax.annotation.Nonnull;
 import java.util.function.Supplier;

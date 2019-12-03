@@ -27,7 +27,7 @@ import com.intellij.openapi.editor.impl.FontInfo;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.GraphicsUtil;
 import javax.annotation.Nonnull;

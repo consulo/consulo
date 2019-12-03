@@ -18,7 +18,7 @@ package com.intellij.diff.tools.util.base;
 import com.intellij.diff.DiffContext;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.ui.components.panels.Wrapper;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

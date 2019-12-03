@@ -17,7 +17,7 @@ package com.intellij.codeInsight.highlighting;
 
 import com.intellij.lang.Language;
 import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.psi.*;
 import com.intellij.psi.tree.TokenSet;
 import javax.annotation.Nonnull;

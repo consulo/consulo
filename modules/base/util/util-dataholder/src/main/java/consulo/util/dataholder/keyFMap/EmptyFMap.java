@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.keyFMap;
+package consulo.util.dataholder.keyFMap;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 
 class EmptyFMap implements KeyFMap {
@@ -27,7 +28,7 @@ class EmptyFMap implements KeyFMap {
   @Nonnull
   @Override
   public <V> KeyFMap plus(@Nonnull Key<V> key, @Nonnull V value) {
-    return new OneElementFMap<V>(key, value);
+    return new OneElementFMap<>(key, value);
   }
 
   @Nonnull

@@ -1,6 +1,6 @@
 package com.intellij.psi.scope;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import javax.annotation.Nonnull;

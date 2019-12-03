@@ -34,7 +34,7 @@ import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.psi.search.GlobalSearchScope;

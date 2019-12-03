@@ -19,7 +19,7 @@
  */
 package com.intellij.psi.stubs;
 
-import com.intellij.openapi.util.UserDataHolder;
+import consulo.util.dataholder.UserDataHolder;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.StubFileElementType;
 import javax.annotation.Nonnull;

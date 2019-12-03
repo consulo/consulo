@@ -37,7 +37,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.testIntegration.TestLocationProvider;

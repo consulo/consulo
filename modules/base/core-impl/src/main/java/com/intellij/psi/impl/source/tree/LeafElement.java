@@ -18,7 +18,7 @@ package com.intellij.psi.impl.source.tree;
 
 import com.intellij.lang.ASTFactory;
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;

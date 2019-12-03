@@ -19,8 +19,8 @@
  */
 package com.intellij.psi;
 
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.KeyWithDefaultValue;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.KeyWithDefaultValue;
 import gnu.trove.THashMap;
 
 import java.util.Map;

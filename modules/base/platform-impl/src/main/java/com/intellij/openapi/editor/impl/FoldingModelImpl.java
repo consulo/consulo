@@ -17,7 +17,7 @@ import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Getter;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.containers.ContainerUtil;

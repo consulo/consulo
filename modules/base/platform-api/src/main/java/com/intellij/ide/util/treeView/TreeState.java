@@ -21,6 +21,7 @@ import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Tag;
 import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

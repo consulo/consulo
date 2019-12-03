@@ -16,7 +16,7 @@ import com.intellij.openapi.editor.impl.softwrap.SoftWrapsStorage;
 import com.intellij.openapi.editor.impl.view.IterationState;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;

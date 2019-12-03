@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.ui;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.vcs.log.data.VcsLogUiProperties;
 import com.intellij.vcs.log.impl.VcsLogManager;
 

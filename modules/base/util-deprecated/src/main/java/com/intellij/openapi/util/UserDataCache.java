@@ -16,6 +16,9 @@
 
 package com.intellij.openapi.util;
 
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
+import consulo.util.dataholder.UserDataHolderEx;
 import org.jetbrains.annotations.NonNls;
 
 public abstract class UserDataCache<T, Owner extends UserDataHolder, Param> extends FieldCache<T, Owner, Key<T>, Param> {

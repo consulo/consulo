@@ -13,7 +13,7 @@ import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 
 import javax.inject.Singleton;

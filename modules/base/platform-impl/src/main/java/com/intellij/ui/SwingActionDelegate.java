@@ -4,7 +4,7 @@ package com.intellij.ui;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
 

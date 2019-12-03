@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.actions.exclusion;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 
 public interface ExclusionHandler<Node> {

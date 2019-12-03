@@ -17,8 +17,8 @@ package consulo.ui.impl;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.UserDataHolderBase;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.shared.border.BorderPosition;

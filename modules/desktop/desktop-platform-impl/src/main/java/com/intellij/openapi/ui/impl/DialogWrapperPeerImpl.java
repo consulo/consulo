@@ -58,6 +58,7 @@ import consulo.ui.SwingUIDecorator;
 import consulo.ui.UIAccess;
 import consulo.ui.desktop.internal.window.JDialogAsUIWindow;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
+import consulo.util.dataholder.Key;
 import consulo.wm.util.IdeFrameUtil;
 
 import javax.annotation.Nonnull;

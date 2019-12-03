@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
 import com.intellij.ui.DoubleClickListener;

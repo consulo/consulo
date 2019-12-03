@@ -43,6 +43,8 @@ import com.intellij.util.containers.JBIterable;
 import com.intellij.util.containers.Stack;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolderEx;
 import gnu.trove.THashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

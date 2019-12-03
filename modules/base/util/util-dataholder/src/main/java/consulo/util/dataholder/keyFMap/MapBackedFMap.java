@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.keyFMap;
+package consulo.util.dataholder.keyFMap;
 
-import com.intellij.openapi.util.Key;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.internal.KeyRegistry;
 import gnu.trove.TIntObjectHashMap;
 
 import javax.annotation.Nonnull;
 
-import static com.intellij.util.keyFMap.ArrayBackedFMap.getKeysByIndices;
+import static consulo.util.dataholder.keyFMap.ArrayBackedFMap.getKeysByIndices;
 
 class MapBackedFMap extends TIntObjectHashMap<Object> implements KeyFMap {
+  private static final KeyRegistry ourRegistry = KeyRegistry.ourInstance;
+
   private MapBackedFMap(@Nonnull MapBackedFMap oldMap, final int exclude) {
     super(oldMap.size());
     oldMap.forEachEntry((key, val) -> {
@@ -95,7 +98,7 @@ class MapBackedFMap extends TIntObjectHashMap<Object> implements KeyFMap {
   public String toString() {
     final StringBuilder s = new StringBuilder();
     forEachEntry((key, value) -> {
-      s.append(s.length() == 0 ? "" : ", ").append(Key.getKeyByIndex(key)).append(" -> ").append(value);
+      s.append(s.length() == 0 ? "" : ", ").append(ourRegistry.getKeyByIndex(key)).append(" -> ").append(value);
       return true;
     });
     return "[" + s.toString() + "]";

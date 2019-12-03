@@ -12,7 +12,7 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.progress.util.PingProgress;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import com.intellij.openapi.progress.util.ProgressWindow;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.SystemNotifications;
 import com.intellij.util.containers.ContainerUtil;

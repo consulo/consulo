@@ -49,6 +49,7 @@ import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
 import consulo.ui.desktop.internal.window.JFrameAsUIWindow;
 import consulo.ui.shared.Rectangle2D;
+import consulo.util.dataholder.Key;
 import consulo.wm.impl.status.ModuleLayerWidget;
 
 import javax.accessibility.AccessibleContext;

@@ -45,6 +45,8 @@ import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.logging.attachment.ExceptionWithAttachments;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolderBase;
 import gnu.trove.TIntIntHashMap;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;

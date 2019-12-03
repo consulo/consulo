@@ -23,6 +23,7 @@ import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
 import com.intellij.execution.process.ProcessHandler;
 import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
 import consulo.util.rmi.RemoteUtil;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ProgramRunner;
@@ -174,7 +175,7 @@ public class ExternalSystemUtil {
   @Nullable
   public static <T> T getToolWindowElement(@Nonnull Class<T> clazz,
                                            @Nonnull Project project,
-                                           @Nonnull com.intellij.openapi.util.Key<T> key,
+                                           @Nonnull Key<T> key,
                                            @Nonnull ProjectSystemId externalSystemId) {
     if (project.isDisposed() || !project.isOpen()) {
       return null;

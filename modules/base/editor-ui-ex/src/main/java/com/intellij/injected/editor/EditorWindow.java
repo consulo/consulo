@@ -17,7 +17,7 @@ package com.intellij.injected.editor;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
-import com.intellij.openapi.util.UserDataHolderEx;
+import consulo.util.dataholder.UserDataHolderEx;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
 

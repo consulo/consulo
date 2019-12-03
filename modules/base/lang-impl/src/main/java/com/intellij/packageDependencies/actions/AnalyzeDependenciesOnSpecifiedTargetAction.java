@@ -18,7 +18,7 @@ package com.intellij.packageDependencies.actions;
 import com.intellij.analysis.AnalysisScope;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.psi.search.GlobalSearchScope;
 import consulo.ui.annotation.RequiredUIAccess;
 

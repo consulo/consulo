@@ -22,7 +22,7 @@ package com.intellij.xdebugger.ui;
 import com.intellij.openapi.editor.colors.ColorKey;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.HighlighterLayer;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 
 import java.awt.*;
 

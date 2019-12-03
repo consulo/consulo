@@ -68,6 +68,7 @@ import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

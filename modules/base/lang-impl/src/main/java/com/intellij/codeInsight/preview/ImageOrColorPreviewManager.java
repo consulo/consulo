@@ -27,7 +27,7 @@ import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiCompiledElement;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;

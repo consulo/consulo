@@ -8,7 +8,7 @@ import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.impl.FrozenDocument;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;

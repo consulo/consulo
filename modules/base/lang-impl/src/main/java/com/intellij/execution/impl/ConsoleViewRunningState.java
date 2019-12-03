@@ -18,7 +18,7 @@ package com.intellij.execution.impl;
 import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.process.*;
 import com.intellij.execution.ui.ConsoleViewContentType;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import javax.annotation.Nonnull;
 

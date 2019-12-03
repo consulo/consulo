@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.search;
 
-import com.intellij.openapi.util.UserDataHolderBase;
+import consulo.util.dataholder.UserDataHolderBase;
 
 /**
  * @author peter

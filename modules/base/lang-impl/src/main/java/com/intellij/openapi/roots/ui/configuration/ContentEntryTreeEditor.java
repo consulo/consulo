@@ -38,7 +38,7 @@ import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ui.configuration.actions.IconWithTextAction;
 import com.intellij.openapi.roots.ui.configuration.actions.ToggleFolderStateAction;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;

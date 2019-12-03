@@ -20,7 +20,8 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.concurrency.Promise;
 
@@ -59,16 +60,16 @@ public abstract class DataManager {
   public abstract DataContext getDataContext(@Nullable consulo.ui.Component component);
 
   /**
-   * @param dataContext should be instance of {@link com.intellij.openapi.util.UserDataHolder}
+   * @param dataContext should be instance of {@link UserDataHolder}
    * @param dataKey     key to store value
    * @param data        value to store
    */
   public abstract <T> void saveInDataContext(@Nullable DataContext dataContext, @Nonnull Key<T> dataKey, @Nullable T data);
 
   /**
-   * @param dataContext find by key if instance of {@link com.intellij.openapi.util.UserDataHolder}
+   * @param dataContext find by key if instance of {@link UserDataHolder}
    * @param dataKey     key to find value by
-   * @return value stored by {@link #saveInDataContext(com.intellij.openapi.actionSystem.DataContext, com.intellij.openapi.util.Key, Object)}
+   * @return value stored by {@link #saveInDataContext(com.intellij.openapi.actionSystem.DataContext, Key, Object)}
    */
   @Nullable
   public abstract <T> T loadFromDataContext(@Nonnull DataContext dataContext, @Nonnull Key<T> dataKey);

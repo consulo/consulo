@@ -60,6 +60,7 @@ import consulo.container.PluginException;
 import consulo.container.plugin.PluginId;
 import consulo.logging.Logger;
 import consulo.util.ApplicationPropertiesComponent;
+import consulo.util.dataholder.Key;
 import consulo.util.lang.DeprecatedMethodException;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;

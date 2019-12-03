@@ -21,8 +21,8 @@ import com.intellij.codeInspection.ex.InspectionToolWrapper;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.UserDataHolder;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
 import com.intellij.psi.PsiElement;
 import javax.annotation.Nonnull;
 

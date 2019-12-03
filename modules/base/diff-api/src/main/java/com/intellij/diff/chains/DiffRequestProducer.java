@@ -18,7 +18,7 @@ package com.intellij.diff.chains;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.util.UserDataHolder;
+import consulo.util.dataholder.UserDataHolder;
 import javax.annotation.Nonnull;
 
 public interface DiffRequestProducer {

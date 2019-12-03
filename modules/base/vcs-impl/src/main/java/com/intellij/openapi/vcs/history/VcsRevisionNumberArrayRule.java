@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.history;
 
 import com.intellij.ide.impl.dataRules.GetDataRule;
 import com.intellij.openapi.actionSystem.DataProvider;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.changes.ChangeList;
 import com.intellij.openapi.vcs.changes.committed.CommittedChangeListByDateComparator;

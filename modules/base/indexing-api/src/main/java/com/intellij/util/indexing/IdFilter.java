@@ -21,7 +21,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFileWithId;
 import com.intellij.psi.search.GlobalSearchScope;

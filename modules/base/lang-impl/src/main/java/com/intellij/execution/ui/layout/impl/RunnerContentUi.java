@@ -58,6 +58,7 @@ import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.util.dataholder.Key;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;

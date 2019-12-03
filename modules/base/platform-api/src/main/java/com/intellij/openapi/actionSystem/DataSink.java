@@ -22,7 +22,7 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 
 public interface DataSink {
   <T> void put(Key<T> key, T data);

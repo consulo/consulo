@@ -90,6 +90,7 @@ import consulo.compiler.make.impl.CompositeDependencyCache;
 import consulo.compiler.roots.CompilerPathsImpl;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
+import consulo.util.dataholder.Key;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TIntHashSet;

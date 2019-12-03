@@ -31,7 +31,7 @@ import com.intellij.execution.testframework.sm.runner.ui.statistics.StatisticsPa
 import com.intellij.execution.testframework.ui.BaseTestsOutputConsoleView;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.testIntegration.TestLocationProvider;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TSimpleServer;

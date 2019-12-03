@@ -16,7 +16,7 @@
 package com.intellij.openapi.wm;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.ui.BalloonLayout;
 import consulo.ui.Window;
 import consulo.ui.shared.Rectangle2D;

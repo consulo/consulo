@@ -96,6 +96,7 @@ import consulo.logging.Logger;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.util.dataholder.Key;
 import gnu.trove.THashMap;
 import junit.framework.TestCase;
 import org.jetbrains.annotations.NonNls;

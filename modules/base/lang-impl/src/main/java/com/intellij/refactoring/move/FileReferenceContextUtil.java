@@ -16,7 +16,7 @@
 
 package com.intellij.refactoring.move;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceOwner;

@@ -6,7 +6,7 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.ide.util.treeView.TreeVisitor;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.remoteServer.impl.runtime.ui.tree.ServersTreeStructure;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;

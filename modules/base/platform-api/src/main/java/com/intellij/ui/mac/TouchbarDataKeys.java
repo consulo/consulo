@@ -3,7 +3,7 @@ package com.intellij.ui.mac;
 
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
 

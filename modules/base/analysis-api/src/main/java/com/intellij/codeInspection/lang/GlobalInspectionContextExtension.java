@@ -23,7 +23,7 @@ package com.intellij.codeInspection.lang;
 import com.intellij.codeInspection.GlobalInspectionContext;
 import com.intellij.codeInspection.ex.InspectionToolWrapper;
 import com.intellij.codeInspection.ex.Tools;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 
 import java.util.List;

@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.keyFMap;
+package consulo.util.dataholder.keyFMap;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.dataholder.internal.KeyRegistry;
 
 import javax.annotation.Nonnull;
 
 public class ArrayBackedFMap implements KeyFMap {
+  private static final KeyRegistry ourRegistry = KeyRegistry.ourInstance;
+
   static final int ARRAY_THRESHOLD = 8;
   private final int[] keys;
   private final Object[] values;
@@ -75,11 +78,11 @@ public class ArrayBackedFMap implements KeyFMap {
         if (oldSize == 3) {
           int i1 = (2-i)/2;
           int i2 = 3 - (i+2)/2;
-          Key<Object> key1 = Key.getKeyByIndex(keys[i1]);
-          Key<Object> key2 = Key.getKeyByIndex(keys[i2]);
+          Key<Object> key1 = ourRegistry.getKeyByIndex(keys[i1]);
+          Key<Object> key2 = ourRegistry.getKeyByIndex(keys[i2]);
           if (key1 == null && key2 == null) return EMPTY_MAP;
-          if (key1 == null) return new OneElementFMap<Object>(key2, values[i2]);
-          if (key2 == null) return new OneElementFMap<Object>(key1, values[i1]);
+          if (key1 == null) return new OneElementFMap<>(key2, values[i2]);
+          if (key2 == null) return new OneElementFMap<>(key1, values[i1]);
           return new PairElementsFMap(key1, values[i1], key2, values[i2]);
         }
         int[] newKeys = ArrayUtil.remove(keys, i);
@@ -110,7 +113,7 @@ public class ArrayBackedFMap implements KeyFMap {
     for (int i = 0; i < keys.length; i++) {
       int key = keys[i];
       Object value = values[i];
-      s += (s.isEmpty() ? "" : ", ") + Key.getKeyByIndex(key) + " -> " + value;
+      s += (s.isEmpty() ? "" : ", ") + ourRegistry.getKeyByIndex(key) + " -> " + value;
     }
     return "(" + s + ")";
   }
@@ -141,7 +144,7 @@ public class ArrayBackedFMap implements KeyFMap {
     Key[] result = new Key[indexes.length];
 
     for (int i =0; i < indexes.length; i++) {
-      result[i] = Key.getKeyByIndex(indexes[i]);
+      result[i] = ourRegistry.getKeyByIndex(indexes[i]);
     }
 
     return result;

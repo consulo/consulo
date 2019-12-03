@@ -29,7 +29,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;

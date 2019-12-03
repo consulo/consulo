@@ -16,7 +16,7 @@
 
 package com.intellij.diagnostic.logging;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 
 /**
  * @author yole

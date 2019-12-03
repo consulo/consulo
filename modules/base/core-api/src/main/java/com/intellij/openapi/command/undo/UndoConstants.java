@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.command.undo;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 
 public interface UndoConstants {
   Key<Boolean> FORCE_RECORD_UNDO = Key.create("FORCE_RECORD_UNDO");

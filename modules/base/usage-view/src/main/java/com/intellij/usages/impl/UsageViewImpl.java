@@ -56,6 +56,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeModelAdapter;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.util.dataholder.Key;
 import gnu.trove.THashSet;
 import gnu.trove.TIntArrayList;
 import org.jetbrains.annotations.NonNls;

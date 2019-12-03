@@ -19,7 +19,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
-import com.intellij.openapi.util.UserDataHolderBase;
+import consulo.util.dataholder.UserDataHolderBase;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.UserDataHolderBase;
+import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.SingleRootFileViewProvider;

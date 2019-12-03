@@ -19,7 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.presentation.VirtualFilePresentation;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Iconable;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.WritingAccessProvider;

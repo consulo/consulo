@@ -7,7 +7,7 @@ import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiModificationTracker;
 import javax.annotation.Nonnull;

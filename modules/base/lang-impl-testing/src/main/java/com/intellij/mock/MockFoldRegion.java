@@ -19,7 +19,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.FoldingGroup;
-import com.intellij.openapi.util.UserDataHolderBase;
+import consulo.util.dataholder.UserDataHolderBase;
 import javax.annotation.Nonnull;
 
 /**

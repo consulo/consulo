@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentUI;

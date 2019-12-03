@@ -39,7 +39,7 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.TestSourcesFilter;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.UserDataHolderBase;
+import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;

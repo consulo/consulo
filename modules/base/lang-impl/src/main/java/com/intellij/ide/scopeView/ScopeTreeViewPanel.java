@@ -53,7 +53,7 @@ import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.FileStatusListener;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vcs.changes.*;

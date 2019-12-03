@@ -9,6 +9,7 @@ import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
+import consulo.util.dataholder.Key;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 

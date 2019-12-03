@@ -3,7 +3,7 @@ package com.intellij.ui;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.IconLoader;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.util.concurrency.EdtScheduledExecutorService;
 import com.intellij.util.containers.SmartHashSet;
 import com.intellij.util.ui.UIUtil;

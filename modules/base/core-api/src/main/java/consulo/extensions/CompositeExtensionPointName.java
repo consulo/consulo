@@ -20,7 +20,7 @@ import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 

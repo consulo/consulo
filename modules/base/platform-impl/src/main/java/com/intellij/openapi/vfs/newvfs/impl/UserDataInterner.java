@@ -17,10 +17,10 @@ package com.intellij.openapi.vfs.newvfs.impl;
 
 import com.intellij.reference.SoftReference;
 import com.intellij.util.containers.hash.LinkedHashMap;
-import com.intellij.util.keyFMap.ArrayBackedFMap;
-import com.intellij.util.keyFMap.KeyFMap;
-import com.intellij.util.keyFMap.OneElementFMap;
-import com.intellij.util.keyFMap.PairElementsFMap;
+import consulo.util.dataholder.keyFMap.ArrayBackedFMap;
+import consulo.util.dataholder.keyFMap.KeyFMap;
+import consulo.util.dataholder.keyFMap.OneElementFMap;
+import consulo.util.dataholder.keyFMap.PairElementsFMap;
 import javax.annotation.Nonnull;
 
 import java.lang.ref.WeakReference;

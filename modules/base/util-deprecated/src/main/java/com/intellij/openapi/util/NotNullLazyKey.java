@@ -16,6 +16,8 @@
 package com.intellij.openapi.util;
 
 import com.intellij.util.NotNullFunction;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

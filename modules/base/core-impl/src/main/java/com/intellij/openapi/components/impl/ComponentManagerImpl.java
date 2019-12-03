@@ -43,6 +43,7 @@ import consulo.injecting.InjectingPoint;
 import consulo.injecting.key.InjectingKey;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.UserDataHolderBase;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.TestOnly;
 

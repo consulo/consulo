@@ -27,7 +27,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiElement;
 
 /**

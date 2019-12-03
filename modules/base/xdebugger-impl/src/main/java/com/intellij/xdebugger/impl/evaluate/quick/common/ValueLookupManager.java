@@ -28,7 +28,7 @@ import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.event.EditorMouseEventArea;
 import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.util.Alarm;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.impl.DebuggerSupport;

@@ -19,7 +19,7 @@ import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.JDOMExternalizable;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 
 /**

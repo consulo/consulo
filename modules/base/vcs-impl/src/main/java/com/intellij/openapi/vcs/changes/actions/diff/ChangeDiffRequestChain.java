@@ -1,7 +1,7 @@
 package com.intellij.openapi.vcs.changes.actions.diff;
 
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.util.UserDataHolderBase;
+import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.diff.actions.impl.GoToChangePopupBuilder;
 import com.intellij.diff.chains.DiffRequestChain;
 import com.intellij.openapi.vcs.changes.Change;

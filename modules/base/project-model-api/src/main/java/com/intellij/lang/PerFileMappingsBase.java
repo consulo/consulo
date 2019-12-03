@@ -22,7 +22,7 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.roots.impl.FilePropertyPusher;
 import com.intellij.openapi.roots.impl.PushedFilePropertiesUpdater;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiDocumentManager;

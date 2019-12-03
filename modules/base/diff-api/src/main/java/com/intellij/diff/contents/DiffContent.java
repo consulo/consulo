@@ -18,7 +18,7 @@ package com.intellij.diff.contents;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.util.UserDataHolder;
+import consulo.util.dataholder.UserDataHolder;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.ObjectUtils;
 import javax.annotation.Nullable;

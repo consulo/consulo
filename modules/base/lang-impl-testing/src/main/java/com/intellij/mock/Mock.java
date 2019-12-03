@@ -24,6 +24,7 @@ import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.UserDataHolderBase;
 import kava.beans.PropertyChangeListener;
 import org.jdom.Element;
 

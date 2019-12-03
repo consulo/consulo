@@ -16,8 +16,8 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.UserDataHolder;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
 import com.intellij.util.ProcessingContext;
 import javax.annotation.Nonnull;
 

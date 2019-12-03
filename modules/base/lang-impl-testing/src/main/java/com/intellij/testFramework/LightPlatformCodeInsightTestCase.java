@@ -21,7 +21,7 @@ import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.injected.editor.EditorWindow;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import consulo.testFramework.util.TestPathUtil;
 import com.intellij.openapi.command.CommandProcessor;
 import consulo.logging.Logger;

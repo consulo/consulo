@@ -5,7 +5,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.event.BulkAwareDocumentListener;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.UserDataHolder;
+import consulo.util.dataholder.UserDataHolder;
 import com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;

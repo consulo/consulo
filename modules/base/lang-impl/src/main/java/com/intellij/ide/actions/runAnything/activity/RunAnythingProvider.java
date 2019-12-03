@@ -5,7 +5,7 @@ import com.intellij.ide.actions.runAnything.RunAnythingContext;
 import com.intellij.ide.actions.runAnything.items.RunAnythingItem;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.util.text.Matcher;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;

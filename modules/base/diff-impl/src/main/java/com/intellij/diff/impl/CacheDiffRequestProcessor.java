@@ -31,7 +31,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.UserDataHolder;
+import consulo.util.dataholder.UserDataHolder;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import consulo.ui.annotation.RequiredUIAccess;

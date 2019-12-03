@@ -2,7 +2,7 @@
 package com.intellij.injected.editor;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.util.UserDataHolderBase;
+import consulo.util.dataholder.UserDataHolderBase;
 import javax.annotation.Nonnull;
 
 /**

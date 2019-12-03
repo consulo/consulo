@@ -17,7 +17,7 @@ package com.intellij.psi.tree;
 
 import com.intellij.lang.*;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiElement;
 import consulo.lang.LanguageVersion;
 import org.jetbrains.annotations.NonNls;

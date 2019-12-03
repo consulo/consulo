@@ -29,7 +29,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.*;
 import com.intellij.ui.treeStructure.Tree;

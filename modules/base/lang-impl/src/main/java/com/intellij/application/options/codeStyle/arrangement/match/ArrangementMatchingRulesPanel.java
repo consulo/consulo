@@ -22,7 +22,7 @@ import com.intellij.ide.ui.customization.CustomizationUtil;
 import com.intellij.lang.Language;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.psi.codeStyle.arrangement.match.ArrangementSectionRule;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import com.intellij.psi.codeStyle.arrangement.std.StdArrangementRuleAliasToken;

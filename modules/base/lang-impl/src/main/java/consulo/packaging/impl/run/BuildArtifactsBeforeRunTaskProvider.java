@@ -27,7 +27,7 @@ import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactPointer;
 import com.intellij.packaging.impl.compiler.ArtifactAwareCompiler;

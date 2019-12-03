@@ -16,7 +16,7 @@
 package com.intellij.openapi.diff.impl.incrementalMerge;
 
 import consulo.logging.Logger;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.util.containers.ContainerUtil;
 
 import java.util.Iterator;

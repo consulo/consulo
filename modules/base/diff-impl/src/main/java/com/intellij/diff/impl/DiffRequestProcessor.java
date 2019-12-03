@@ -58,6 +58,9 @@ import com.intellij.util.ui.UIUtil;
 import consulo.ide.base.BaseDataManager;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
+import consulo.util.dataholder.UserDataHolderBase;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

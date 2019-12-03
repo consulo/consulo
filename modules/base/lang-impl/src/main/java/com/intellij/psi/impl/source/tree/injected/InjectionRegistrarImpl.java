@@ -43,6 +43,7 @@ import com.intellij.util.PathUtil;
 import com.intellij.util.SmartList;
 import consulo.lang.LanguageVersion;
 import consulo.lang.util.LanguageVersionUtil;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

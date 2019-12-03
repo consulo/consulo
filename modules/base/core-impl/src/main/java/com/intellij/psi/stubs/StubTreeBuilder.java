@@ -18,7 +18,7 @@ package com.intellij.psi.stubs;
 import com.intellij.lang.Language;
 import com.intellij.lang.TreeBackedLighterAST;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.util.text.StringUtil;

@@ -32,7 +32,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;

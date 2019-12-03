@@ -4,7 +4,7 @@ package com.intellij.xdebugger.attach;
 import com.intellij.execution.process.ProcessInfo;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.UserDataHolder;
+import consulo.util.dataholder.UserDataHolder;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

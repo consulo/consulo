@@ -2,7 +2,7 @@ package com.intellij.refactoring.extractMethod;
 
 import com.intellij.codeInsight.PsiEquivalenceUtil;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiRecursiveElementWalkingVisitor;

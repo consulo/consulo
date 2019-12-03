@@ -28,7 +28,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 
 public class IncrementalFindAction extends EditorAction {
   public static final Key<Boolean> SEARCH_DISABLED = Key.create("EDITOR_SEARCH_DISABLED");

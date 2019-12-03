@@ -19,7 +19,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.UserDataHolder;
+import consulo.util.dataholder.UserDataHolder;
 import com.intellij.diff.chains.DiffRequestProducerException;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.openapi.vcs.changes.Change;

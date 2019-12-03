@@ -22,7 +22,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.FileContentUtilCore;
 import com.intellij.util.ObjectUtil;

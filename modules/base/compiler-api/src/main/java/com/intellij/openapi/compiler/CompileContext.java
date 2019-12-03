@@ -18,7 +18,7 @@ package com.intellij.openapi.compiler;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.UserDataHolder;
+import consulo.util.dataholder.UserDataHolder;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import javax.annotation.Nonnull;

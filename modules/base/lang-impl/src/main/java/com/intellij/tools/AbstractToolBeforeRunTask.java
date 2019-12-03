@@ -21,7 +21,7 @@ import com.intellij.execution.process.ProcessEvent;
 import com.intellij.openapi.actionSystem.DataContext;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import consulo.ui.UIAccess;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

@@ -52,6 +52,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.AbstractLayoutManager;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.JBUI;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

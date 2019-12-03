@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.util.Consumer;
 import com.intellij.util.Processor;
 import javax.annotation.Nonnull;

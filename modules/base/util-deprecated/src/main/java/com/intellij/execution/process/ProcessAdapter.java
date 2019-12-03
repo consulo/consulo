@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.process;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 
 public abstract class ProcessAdapter implements ProcessListener{
   public void startNotified(final ProcessEvent event) {

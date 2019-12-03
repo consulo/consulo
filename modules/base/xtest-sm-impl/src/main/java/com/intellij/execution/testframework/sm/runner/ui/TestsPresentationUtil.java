@@ -27,7 +27,7 @@ import com.intellij.execution.testframework.sm.runner.states.TestStateInfo;
 import com.intellij.execution.testframework.ui.TestsProgressAnimator;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColoredTableCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;

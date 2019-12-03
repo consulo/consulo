@@ -17,7 +17,7 @@
 package com.intellij.codeInspection.reference;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.util.BitUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;

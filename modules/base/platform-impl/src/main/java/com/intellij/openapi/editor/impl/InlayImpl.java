@@ -4,7 +4,7 @@ package com.intellij.openapi.editor.impl;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorCustomElementRenderer;
 import com.intellij.openapi.editor.Inlay;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

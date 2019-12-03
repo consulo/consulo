@@ -72,6 +72,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.codeInsight.TargetElementUtil;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.ui.shared.Rectangle2D;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

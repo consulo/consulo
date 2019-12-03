@@ -17,7 +17,7 @@ package com.intellij.ide.navigationToolbar;
 
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.ScrollingUtil;
 import com.intellij.ui.components.JBScrollPane;

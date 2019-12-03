@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.ui;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 
 /**
  * Base interface for user interface objects which can be refreshed and can save/restore

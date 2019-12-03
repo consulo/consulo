@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration.artifacts;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElement;

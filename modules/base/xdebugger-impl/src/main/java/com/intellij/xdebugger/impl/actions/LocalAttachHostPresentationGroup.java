@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.actions;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.UserDataHolder;
+import consulo.util.dataholder.UserDataHolder;
 import com.intellij.xdebugger.attach.XAttachHost;
 import com.intellij.xdebugger.attach.XAttachPresentationGroup;
 import consulo.ui.image.Image;

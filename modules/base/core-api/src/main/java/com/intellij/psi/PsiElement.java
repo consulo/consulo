@@ -18,9 +18,9 @@ package com.intellij.psi;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.UserDataHolder;
+import consulo.util.dataholder.UserDataHolder;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
@@ -449,7 +449,7 @@ public interface PsiElement extends UserDataHolder {
    *
    * @param key the key for accessing the user data object.
    * @return the user data object, or null if no such object is found in the current element.
-   * @see #putCopyableUserData(com.intellij.openapi.util.Key, Object)
+   * @see #putCopyableUserData(Key, Object)
    */
   @Nullable
   <T> T getCopyableUserData(Key<T> key);
@@ -460,7 +460,7 @@ public interface PsiElement extends UserDataHolder {
    *
    * @param key   the key for accessing the user data object.
    * @param value the user data object to attach.
-   * @see #getCopyableUserData(com.intellij.openapi.util.Key)
+   * @see #getCopyableUserData(Key)
    */
   <T> void putCopyableUserData(Key<T> key, @Nullable T value);
 

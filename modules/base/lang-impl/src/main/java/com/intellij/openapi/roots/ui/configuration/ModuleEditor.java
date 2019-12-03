@@ -32,7 +32,7 @@ import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableBase;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;
 import com.intellij.util.EventDispatcher;

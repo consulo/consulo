@@ -24,7 +24,7 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.DimensionService;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.MutualMap;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.panels.NonOpaquePanel;

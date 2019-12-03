@@ -5,7 +5,7 @@ import com.intellij.lang.injection.ConcatenationAwareInjector;
 import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SimpleModificationTracker;
 import com.intellij.psi.PsiDocumentManager;

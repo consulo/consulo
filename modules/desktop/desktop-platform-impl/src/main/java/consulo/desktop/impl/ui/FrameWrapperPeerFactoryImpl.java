@@ -23,7 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.FrameWrapper;
 import com.intellij.openapi.ui.FrameWrapperPeerFactory;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;

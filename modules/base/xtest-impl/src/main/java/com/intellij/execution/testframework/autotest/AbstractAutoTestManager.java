@@ -35,7 +35,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.ui.content.Content;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;

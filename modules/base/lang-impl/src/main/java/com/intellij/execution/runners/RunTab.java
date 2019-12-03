@@ -30,7 +30,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.psi.search.GlobalSearchScope;
 import consulo.ui.image.Image;
 

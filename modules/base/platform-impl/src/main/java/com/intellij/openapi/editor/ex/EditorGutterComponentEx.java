@@ -8,7 +8,7 @@ import com.intellij.openapi.editor.EditorGutter;
 import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.TextAnnotationGutterProvider;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import gnu.trove.TIntFunction;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

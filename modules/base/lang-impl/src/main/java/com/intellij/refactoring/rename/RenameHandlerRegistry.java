@@ -24,7 +24,7 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.rename.inplace.MemberInplaceRenameHandler;

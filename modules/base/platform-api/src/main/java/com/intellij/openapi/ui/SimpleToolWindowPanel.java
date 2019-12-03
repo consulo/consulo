@@ -18,7 +18,7 @@ package com.intellij.openapi.ui;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataProvider;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.ui.switcher.QuickActionProvider;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.ui.JBUI;

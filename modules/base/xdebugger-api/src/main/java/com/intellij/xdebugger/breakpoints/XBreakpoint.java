@@ -16,7 +16,7 @@
 
 package com.intellij.xdebugger.breakpoints;
 
-import com.intellij.openapi.util.UserDataHolder;
+import consulo.util.dataholder.UserDataHolder;
 import com.intellij.pom.Navigatable;
 import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.XSourcePosition;

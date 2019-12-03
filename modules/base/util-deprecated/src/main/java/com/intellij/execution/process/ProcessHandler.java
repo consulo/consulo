@@ -17,8 +17,8 @@ package com.intellij.execution.process;
 
 import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.UserDataHolderBase;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

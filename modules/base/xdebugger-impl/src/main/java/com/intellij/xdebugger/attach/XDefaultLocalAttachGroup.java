@@ -18,7 +18,7 @@ package com.intellij.xdebugger.attach;
 import com.intellij.execution.process.ProcessInfo;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.UserDataHolder;
+import consulo.util.dataholder.UserDataHolder;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

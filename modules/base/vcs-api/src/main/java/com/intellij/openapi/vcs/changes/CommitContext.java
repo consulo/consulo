@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.vcs.changes;
 
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.UserDataHolder;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
 import javax.annotation.Nonnull;
 
 import java.util.HashMap;

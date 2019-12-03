@@ -30,7 +30,7 @@ import com.intellij.openapi.fileEditor.TransferableFileEditorState;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.ui.ToggleActionButton;
 import com.intellij.util.containers.ContainerUtil;
 import kava.beans.PropertyChangeEvent;

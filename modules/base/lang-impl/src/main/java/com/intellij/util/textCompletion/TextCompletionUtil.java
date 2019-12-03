@@ -27,7 +27,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.FocusChangeListener;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiFile;

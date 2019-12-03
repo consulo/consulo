@@ -16,7 +16,7 @@ import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.SplitterProportionsData;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangesUtil;

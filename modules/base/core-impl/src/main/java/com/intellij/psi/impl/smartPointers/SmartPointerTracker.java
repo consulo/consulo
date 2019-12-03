@@ -4,7 +4,7 @@ package com.intellij.psi.impl.smartPointers;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.impl.FrozenDocument;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.LowMemoryWatcher;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.vfs.VirtualFile;

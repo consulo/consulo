@@ -26,7 +26,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.fileEditor.EditorDataProvider;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.*;

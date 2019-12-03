@@ -25,7 +25,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

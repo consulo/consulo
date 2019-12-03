@@ -72,6 +72,7 @@ import com.intellij.util.ui.*;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import consulo.builtInServer.BuiltInServerManager;
 import consulo.roots.OrderEntryWithTracking;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

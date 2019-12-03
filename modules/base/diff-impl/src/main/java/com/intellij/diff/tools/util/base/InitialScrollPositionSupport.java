@@ -21,7 +21,7 @@ import com.intellij.diff.util.DiffUserDataKeysEx.ScrollToPolicy;
 import com.intellij.openapi.diff.DiffNavigationContext;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import consulo.ui.annotation.RequiredUIAccess;
 

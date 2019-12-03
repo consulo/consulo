@@ -19,6 +19,7 @@ import com.intellij.util.indexing.impl.forward.AbstractForwardIndexAccessor;
 import com.intellij.util.indexing.impl.forward.PersistentMapBasedForwardIndex;
 import com.intellij.util.io.*;
 import com.intellij.util.io.DataOutputStream;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -315,8 +316,8 @@ class SnapshotInputMappings<Key, Value, Input> implements UpdatableSnapshotInput
     return previouslyCalculatedContentHashId;
   }
 
-  private static final com.intellij.openapi.util.Key<Integer> ourSavedContentHashIdKey = com.intellij.openapi.util.Key.create("saved.content.hash.id");
-  private static final com.intellij.openapi.util.Key<Integer> ourSavedUncommittedHashIdKey = com.intellij.openapi.util.Key.create("saved.uncommitted.hash.id");
+  private static final consulo.util.dataholder.Key<Integer> ourSavedContentHashIdKey = consulo.util.dataholder.Key.create("saved.content.hash.id");
+  private static final consulo.util.dataholder.Key<Integer> ourSavedUncommittedHashIdKey = consulo.util.dataholder.Key.create("saved.uncommitted.hash.id");
 
 
   private StringBuilder buildDiff(Map<Key, Value> data, Map<Key, Value> contentData) {

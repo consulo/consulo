@@ -1,6 +1,6 @@
 package com.intellij.util;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

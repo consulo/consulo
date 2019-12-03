@@ -53,6 +53,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.fileEditor.impl.EditorComposite;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

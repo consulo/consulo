@@ -57,6 +57,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

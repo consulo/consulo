@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.util;
+package consulo.util.dataholder;
 
-import com.intellij.util.keyFMap.KeyFMap;
 import consulo.util.concurrent.atomic.AtomicFieldUpdater;
+import consulo.util.dataholder.keyFMap.KeyFMap;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

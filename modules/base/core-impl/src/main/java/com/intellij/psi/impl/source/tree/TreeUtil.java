@@ -16,34 +16,25 @@
 
 package com.intellij.psi.impl.source.tree;
 
-import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.StubBuilder;
 import com.intellij.psi.impl.DebugUtil;
-import com.intellij.psi.impl.source.PsiFileImpl;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.StubBase;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubTree;
 import com.intellij.psi.templateLanguages.OuterLanguageElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IStrongWhitespaceHolderElementType;
-import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.ListIterator;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 

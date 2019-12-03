@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.ListItemDescriptorAdapter;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.scope.NonProjectFilesScope;

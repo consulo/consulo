@@ -16,7 +16,7 @@
 package com.intellij.ide.impl;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

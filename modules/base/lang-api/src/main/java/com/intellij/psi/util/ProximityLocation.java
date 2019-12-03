@@ -17,8 +17,8 @@ package com.intellij.psi.util;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.UserDataHolder;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ProcessingContext;
 import javax.annotation.Nonnull;

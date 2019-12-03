@@ -21,7 +21,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.PersistentFSConstants;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.impl.DebugUtil;

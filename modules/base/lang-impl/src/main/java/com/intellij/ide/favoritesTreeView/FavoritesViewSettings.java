@@ -18,7 +18,7 @@ package com.intellij.ide.favoritesTreeView;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.PropertyName;
-import com.intellij.openapi.util.KeyWithDefaultValue;
+import consulo.util.dataholder.KeyWithDefaultValue;
 import javax.annotation.Nonnull;
 
 /**

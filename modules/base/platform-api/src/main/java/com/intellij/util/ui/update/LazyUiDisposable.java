@@ -23,7 +23,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import consulo.application.ApplicationProperties;
 import javax.annotation.Nonnull;
 

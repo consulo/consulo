@@ -74,6 +74,7 @@ import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.StatusText;
 import com.intellij.util.ui.TableViewModel;
 import com.intellij.util.ui.UIUtil;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

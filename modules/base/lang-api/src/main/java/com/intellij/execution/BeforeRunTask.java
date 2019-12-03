@@ -16,7 +16,7 @@
 
 package com.intellij.execution;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 

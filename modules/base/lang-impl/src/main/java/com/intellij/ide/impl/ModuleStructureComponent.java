@@ -24,7 +24,7 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 
 public class ModuleStructureComponent extends SimpleToolWindowPanel implements Disposable, DataProvider {

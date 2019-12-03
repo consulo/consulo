@@ -21,7 +21,7 @@ import com.intellij.ide.impl.TypeSafeDataProviderAdapter;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangeList;

@@ -36,7 +36,7 @@ import com.intellij.openapi.diff.impl.patch.PatchSyntaxException;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.Change;

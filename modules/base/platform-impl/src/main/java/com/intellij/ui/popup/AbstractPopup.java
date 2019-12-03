@@ -43,6 +43,7 @@ import com.intellij.util.ui.*;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import consulo.application.TransactionGuardEx;
 import consulo.awt.TargetAWT;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

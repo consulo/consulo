@@ -18,7 +18,7 @@ package com.intellij.codeInsight.template;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiFile;
 
 /**

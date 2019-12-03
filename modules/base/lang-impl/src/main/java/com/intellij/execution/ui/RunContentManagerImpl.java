@@ -43,7 +43,7 @@ import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowManager;

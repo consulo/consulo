@@ -19,7 +19,7 @@ package com.intellij.lang.folding;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;

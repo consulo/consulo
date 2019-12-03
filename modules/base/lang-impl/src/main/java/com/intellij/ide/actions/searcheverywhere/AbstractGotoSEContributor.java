@@ -44,6 +44,8 @@ import com.intellij.util.indexing.FindSymbolParameters;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.ide.actions.QualifiedNameProviders;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

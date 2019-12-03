@@ -17,6 +17,8 @@ package com.intellij.ide.structureView;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -62,7 +64,7 @@ public interface StructureView extends Disposable {
    * Restores the state of the structure view (the expanded and selected elements)
    * from the user data of the file editor to which it is linked.
    *
-   * @see FileEditor#getUserData(com.intellij.openapi.util.Key)
+   * @see FileEditor#getUserData(Key)
    */
   void restoreState();
 
@@ -70,7 +72,7 @@ public interface StructureView extends Disposable {
    * Stores the state of the structure view (the expanded and selected elements)
    * in the user data of the file editor to which it is linked.
    *
-   * @see FileEditor#putUserData(com.intellij.openapi.util.Key, Object)
+   * @see FileEditor#putUserData(Key, Object)
    */
   void storeState();
 

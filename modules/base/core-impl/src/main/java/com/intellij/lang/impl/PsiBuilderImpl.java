@@ -45,6 +45,8 @@ import com.intellij.util.diff.ShallowNodeComparator;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.lang.LanguageVersion;
 import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UnprotectedUserDataHolder;
 import gnu.trove.TIntObjectHashMap;
 import org.jetbrains.annotations.NonNls;
 

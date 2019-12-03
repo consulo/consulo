@@ -21,7 +21,7 @@ import com.intellij.navigation.ItemPresentation;
 import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.UserDataHolderBase;
+import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.*;
 import com.intellij.psi.scope.PsiScopeProcessor;

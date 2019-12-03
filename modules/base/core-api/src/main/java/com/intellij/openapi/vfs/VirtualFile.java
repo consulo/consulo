@@ -25,6 +25,9 @@ import com.intellij.openapi.vfs.encoding.EncodingRegistry;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.LineSeparator;
 import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
+import consulo.util.dataholder.UserDataHolderBase;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.annotation.Nonnull;

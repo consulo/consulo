@@ -44,6 +44,9 @@ import consulo.lang.LanguageVersion;
 import consulo.logging.Logger;
 import consulo.psi.PsiElementWithSubtreeChangeNotifier;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolderBase;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

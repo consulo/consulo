@@ -20,7 +20,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.UserDataHolderBase;
+import consulo.util.dataholder.UserDataHolderBase;
 import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;

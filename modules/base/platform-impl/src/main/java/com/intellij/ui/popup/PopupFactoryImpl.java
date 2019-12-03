@@ -22,7 +22,7 @@ import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.EmptyRunnable;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.CollectionListModel;
 import com.intellij.ui.ColorUtil;

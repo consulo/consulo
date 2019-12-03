@@ -58,6 +58,7 @@ import consulo.roots.ContentFolderScopes;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.roots.impl.TestContentFolderTypeProvider;
 import consulo.ui.UIAccess;
+import consulo.util.dataholder.Key;
 import gnu.trove.*;
 
 import javax.annotation.Nonnull;

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util.impl;
+package consulo.util.dataholder.internal;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import consulo.util.collection.ConcurrentIntObjectMap;
 import consulo.util.collection.IntObjectMap;
 import consulo.util.collection.Maps;
@@ -28,8 +28,13 @@ import java.util.function.Function;
  * @since 15-Oct-17
  */
 public class KeyRegistry {
+  public static final KeyRegistry ourInstance = new KeyRegistry();
+
   private final ConcurrentIntObjectMap<Key> myAllKeys = Maps.newConcurrentIntObjectWeakValueHashMap();
   private final AtomicInteger myKeyCounter = new AtomicInteger();
+
+  private KeyRegistry() {
+  }
 
   @SuppressWarnings("deprecation")
   public int register(Key<?> key) {

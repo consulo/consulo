@@ -39,7 +39,7 @@ import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.Conditions;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.annotate.ShowAllAffectedGenericAction;
 import com.intellij.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer;

@@ -9,7 +9,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.SystemInfo;

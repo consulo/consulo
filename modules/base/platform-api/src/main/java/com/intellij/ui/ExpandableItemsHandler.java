@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

@@ -16,7 +16,7 @@
 package com.intellij.ui.switcher;
 
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 
 import java.util.List;
 

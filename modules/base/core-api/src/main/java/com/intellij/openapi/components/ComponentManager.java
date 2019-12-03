@@ -21,7 +21,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.ExtensionsArea;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.UserDataHolder;
+import consulo.util.dataholder.UserDataHolder;
 import com.intellij.util.messages.MessageBus;
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerOwner;

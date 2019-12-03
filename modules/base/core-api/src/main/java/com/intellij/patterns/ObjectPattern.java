@@ -15,7 +15,7 @@
  */
 package com.intellij.patterns;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NonNls;

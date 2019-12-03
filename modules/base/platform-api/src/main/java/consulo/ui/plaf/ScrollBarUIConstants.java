@@ -15,7 +15,7 @@
  */
 package consulo.ui.plaf;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.util.ui.RegionPainter;
 
 import javax.swing.*;

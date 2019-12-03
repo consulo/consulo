@@ -13,7 +13,7 @@ import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
 import com.intellij.openapi.roots.impl.RootProviderBaseImpl;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.UserDataHolderBase;
+import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.vfs.StandardFileSystems;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;

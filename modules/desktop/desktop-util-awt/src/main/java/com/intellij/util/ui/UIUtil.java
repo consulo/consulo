@@ -37,6 +37,7 @@ import consulo.desktop.util.awt.StringHtmlUtil;
 import consulo.desktop.util.awt.laf.BuildInLookAndFeel;
 import consulo.logging.Logger;
 import consulo.ui.style.StyleManager;
+import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;

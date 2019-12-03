@@ -26,7 +26,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.PanelWithActionsAndCloseButton;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.committed.CommittedChangesBrowserUseCase;

@@ -19,7 +19,7 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.application.ApplicationManager;
 import consulo.logging.Logger;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.util.io.BaseOutputReader;

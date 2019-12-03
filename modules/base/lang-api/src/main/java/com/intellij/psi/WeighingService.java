@@ -16,7 +16,7 @@
 package com.intellij.psi;
 
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.KeyedExtensionCollector;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

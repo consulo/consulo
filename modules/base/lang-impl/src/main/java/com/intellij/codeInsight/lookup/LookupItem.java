@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.ClassConditionKey;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import org.jetbrains.annotations.NonNls;

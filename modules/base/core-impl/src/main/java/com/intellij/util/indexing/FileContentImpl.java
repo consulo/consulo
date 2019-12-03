@@ -13,7 +13,7 @@ import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.DefaultProjectFactory;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.LanguageSubstitutors;
 import com.intellij.psi.PsiDocumentManager;

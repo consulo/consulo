@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInspection.reference;
 
-import com.intellij.openapi.util.UserDataHolder;
+import consulo.util.dataholder.UserDataHolder;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

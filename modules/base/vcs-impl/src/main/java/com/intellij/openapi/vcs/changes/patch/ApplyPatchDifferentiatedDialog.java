@@ -63,6 +63,8 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.logging.Logger;
+import consulo.util.dataholder.UserDataHolder;
+import consulo.util.dataholder.UserDataHolderBase;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

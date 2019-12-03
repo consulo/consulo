@@ -23,7 +23,7 @@ import com.intellij.lang.impl.PsiBuilderImpl;
 import com.intellij.lexer.Lexer;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringHash;
 import com.intellij.psi.PsiFile;

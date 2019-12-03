@@ -16,7 +16,7 @@
 package com.intellij.testFramework;
 
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 
 import java.util.HashMap;

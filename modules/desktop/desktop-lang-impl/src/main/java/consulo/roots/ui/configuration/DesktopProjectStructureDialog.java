@@ -21,7 +21,7 @@ import com.intellij.openapi.options.newEditor.DesktopSettingsDialog;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;

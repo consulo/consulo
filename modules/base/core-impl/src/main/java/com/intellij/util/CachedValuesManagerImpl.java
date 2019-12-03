@@ -15,9 +15,9 @@
  */
 package com.intellij.util;
 
-import com.intellij.openapi.util.UserDataHolder;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.UserDataHolderEx;
+import consulo.util.dataholder.UserDataHolder;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolderEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.util.*;
 import javax.annotation.Nonnull;

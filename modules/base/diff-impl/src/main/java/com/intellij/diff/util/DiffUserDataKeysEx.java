@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;

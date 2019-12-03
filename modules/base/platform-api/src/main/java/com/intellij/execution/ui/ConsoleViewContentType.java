@@ -20,7 +20,7 @@ import com.intellij.openapi.editor.colors.ColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.util.containers.HashMap;
 import org.jetbrains.annotations.NonNls;
 

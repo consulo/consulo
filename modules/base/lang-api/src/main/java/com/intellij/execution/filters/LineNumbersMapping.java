@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.filters;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 
 /**
  * @author egor

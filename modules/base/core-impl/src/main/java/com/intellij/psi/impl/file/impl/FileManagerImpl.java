@@ -13,7 +13,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.LowMemoryWatcher;
 import com.intellij.openapi.util.StackOverflowPreventedException;
 import com.intellij.openapi.util.registry.Registry;

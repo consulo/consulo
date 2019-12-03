@@ -19,7 +19,7 @@ import com.intellij.execution.ui.layout.ViewContext;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.SingleAlarm;

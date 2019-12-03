@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.UserDataHolder;
-import com.intellij.openapi.util.UserDataHolderBase;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
+import consulo.util.dataholder.UserDataHolderBase;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

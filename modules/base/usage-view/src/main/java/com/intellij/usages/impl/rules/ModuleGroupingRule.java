@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usages.Usage;

@@ -16,7 +16,7 @@
 package com.intellij.remote;
 
 import com.intellij.openapi.projectRoots.SdkAdditionalData;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.remote.ext.CredentialsCase;
 
 /**

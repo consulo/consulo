@@ -69,6 +69,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.containers.CacheOneStepIterator;
 import com.intellij.util.diff.FilesTooBigForDiffException;
+import consulo.util.dataholder.Key;
 import gnu.trove.TIntFunction;
 
 import javax.annotation.Nonnull;

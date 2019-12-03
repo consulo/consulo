@@ -25,7 +25,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.NavigatablePsiElement;
 import com.intellij.psi.PsiElement;

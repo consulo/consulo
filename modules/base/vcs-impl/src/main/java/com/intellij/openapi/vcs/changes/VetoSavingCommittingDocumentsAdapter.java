@@ -29,7 +29,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.UserDataHolderEx;
+import consulo.util.dataholder.UserDataHolderEx;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.changes.ui.CommitHelper;
 import com.intellij.openapi.vfs.VirtualFile;

@@ -22,7 +22,7 @@ import com.intellij.ide.DeleteProvider;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.fileChooser.actions.VirtualFileDeleteProvider;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.VcsShowConfirmationOption;
 import com.intellij.openapi.vcs.changes.actions.DeleteUnversionedFilesAction;
 import com.intellij.openapi.vfs.VirtualFile;

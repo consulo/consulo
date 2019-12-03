@@ -16,9 +16,9 @@
 package com.intellij.diff.merge;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.UserDataHolder;
-import com.intellij.openapi.util.UserDataHolderBase;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
+import consulo.util.dataholder.UserDataHolderBase;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -61,6 +61,8 @@ import consulo.logging.Logger;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolderEx;
 import gnu.trove.THashSet;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;

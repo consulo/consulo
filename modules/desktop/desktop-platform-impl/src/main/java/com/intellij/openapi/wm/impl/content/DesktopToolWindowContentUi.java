@@ -43,6 +43,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
 import consulo.wm.impl.ToolWindowContentUI;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;

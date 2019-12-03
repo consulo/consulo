@@ -21,7 +21,7 @@
 package com.intellij.codeInspection;
 
 import com.intellij.codeInspection.reference.RefElement;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 

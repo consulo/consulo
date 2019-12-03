@@ -16,7 +16,7 @@
 package com.intellij.remote;
 
 import com.intellij.execution.process.AnsiEscapeDecoder;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

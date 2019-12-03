@@ -16,7 +16,7 @@
 package com.intellij.openapi.diff.impl.patch;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.changes.CommitContext;
 import com.intellij.openapi.vcs.changes.FilePathsHelper;
 import com.intellij.openapi.vfs.LocalFileSystem;

@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.scope;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 
 public abstract class BaseScopeProcessor implements PsiScopeProcessor {

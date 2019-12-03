@@ -73,6 +73,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import consulo.logging.Logger;
 import consulo.util.collection.IntObjectMap;
+import consulo.util.dataholder.Key;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TIntArrayList;

@@ -16,7 +16,7 @@
 package consulo.ui.desktop.internal.base;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.util.ui.JBUI;
 import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;

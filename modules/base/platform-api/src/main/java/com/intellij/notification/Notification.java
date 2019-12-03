@@ -27,7 +27,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupAdapter;
 import com.intellij.openapi.ui.popup.LightweightWindowEvent;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.containers.ContainerUtil;

@@ -48,7 +48,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
     return EP_NAME.findExtension(ModuleDataService.class);
   }
 
-  public static final com.intellij.openapi.util.Key<ModuleData> MODULE_DATA_KEY = com.intellij.openapi.util.Key.create("MODULE_DATA_KEY");
+  public static final consulo.util.dataholder.Key<ModuleData> MODULE_DATA_KEY = consulo.util.dataholder.Key.create("MODULE_DATA_KEY");
 
   private static final Logger LOG = Logger.getInstance(ModuleDataService.class.getName());
 

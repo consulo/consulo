@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.artifacts;
 
-import com.intellij.openapi.util.UserDataHolder;
+import consulo.util.dataholder.UserDataHolder;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import consulo.util.pointers.Named;

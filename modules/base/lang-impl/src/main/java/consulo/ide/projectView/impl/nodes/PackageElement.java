@@ -19,7 +19,7 @@ import com.intellij.ide.projectView.RootsProvider;
 import com.intellij.ide.projectView.impl.nodes.PackageNodeUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.Queryable;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import consulo.psi.PsiPackage;

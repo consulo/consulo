@@ -20,7 +20,7 @@ import com.intellij.application.options.codeStyle.arrangement.color.ArrangementC
 import com.intellij.application.options.codeStyle.arrangement.match.tokens.ArrangementRuleAliasDialog;
 import com.intellij.lang.Language;
 import consulo.logging.Logger;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.arrangement.ArrangementUtil;
 import com.intellij.psi.codeStyle.arrangement.match.ArrangementSectionRule;

@@ -55,6 +55,7 @@ import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FactoryMap;
 import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

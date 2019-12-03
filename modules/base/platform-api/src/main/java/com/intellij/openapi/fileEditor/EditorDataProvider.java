@@ -16,7 +16,7 @@
 package com.intellij.openapi.fileEditor;
 
 import com.intellij.openapi.editor.Caret;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import com.intellij.openapi.editor.Editor;

@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.ActiveRunnable;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;

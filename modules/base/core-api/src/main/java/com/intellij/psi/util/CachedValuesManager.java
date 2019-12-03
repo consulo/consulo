@@ -17,10 +17,10 @@ package com.intellij.psi.util;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.NotNullLazyKey;
-import com.intellij.openapi.util.UserDataHolder;
-import com.intellij.openapi.util.UserDataHolderEx;
+import consulo.util.dataholder.UserDataHolder;
+import consulo.util.dataholder.UserDataHolderEx;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.ArrayUtil;

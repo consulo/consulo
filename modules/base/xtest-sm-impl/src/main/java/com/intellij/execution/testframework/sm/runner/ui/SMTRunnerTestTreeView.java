@@ -19,7 +19,7 @@ import com.intellij.execution.testframework.TestConsoleProperties;
 import com.intellij.execution.testframework.TestTreeView;
 import com.intellij.execution.testframework.sm.runner.SMTRunnerNodeDescriptor;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

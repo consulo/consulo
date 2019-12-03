@@ -5,7 +5,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.PossiblyDumbAware;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.util.Processor;
 import javax.annotation.Nonnull;
 

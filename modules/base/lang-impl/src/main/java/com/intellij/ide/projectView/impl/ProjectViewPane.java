@@ -15,7 +15,7 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.AbstractTreeUpdater;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.KeyWithDefaultValue;
+import consulo.util.dataholder.KeyWithDefaultValue;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.psi.PsiDirectory;
 import org.jetbrains.annotations.NonNls;

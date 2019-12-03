@@ -20,7 +20,7 @@ import com.intellij.navigation.NavigationItemFileStatus;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;

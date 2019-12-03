@@ -31,6 +31,7 @@ import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

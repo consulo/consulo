@@ -15,7 +15,7 @@ import com.intellij.openapi.editor.markup.MarkupEditorFilter;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;

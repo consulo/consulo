@@ -20,7 +20,7 @@ import com.intellij.openapi.externalSystem.model.execution.ExternalTaskPojo;
 import com.intellij.openapi.externalSystem.model.project.ExternalProjectPojo;
 import com.intellij.openapi.externalSystem.service.task.ui.ExternalSystemRecentTasksList;
 import com.intellij.openapi.externalSystem.service.task.ui.ExternalSystemTasksTreeModel;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 
 /**
  * @author Denis Zhdanov

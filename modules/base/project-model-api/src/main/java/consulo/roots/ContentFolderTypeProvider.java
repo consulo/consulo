@@ -19,7 +19,7 @@ import com.google.common.base.Predicate;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiDirectory;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.IconDescriptor;

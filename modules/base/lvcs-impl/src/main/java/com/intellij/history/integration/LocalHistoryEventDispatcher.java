@@ -21,7 +21,7 @@ import com.intellij.history.core.tree.Entry;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.command.CommandEvent;
 import com.intellij.openapi.command.CommandListener;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;

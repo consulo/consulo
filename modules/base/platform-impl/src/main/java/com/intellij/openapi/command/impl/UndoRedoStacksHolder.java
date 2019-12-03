@@ -18,7 +18,7 @@ package com.intellij.openapi.command.impl;
 import com.intellij.openapi.command.undo.DocumentReference;
 import com.intellij.openapi.command.undo.DocumentReferenceManager;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.WeakList;
 import gnu.trove.THashSet;

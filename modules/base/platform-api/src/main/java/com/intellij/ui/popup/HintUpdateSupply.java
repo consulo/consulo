@@ -18,7 +18,7 @@ package com.intellij.ui.popup;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.ui.popup.JBPopup;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.ListUtil;
 import com.intellij.ui.components.JBList;

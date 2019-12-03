@@ -19,7 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Iconable;
-import com.intellij.openapi.util.UserDataHolderBase;
+import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.UIBundle;

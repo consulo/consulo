@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.markup;
 
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.UserDataHolder;
+import consulo.util.dataholder.UserDataHolder;
 import javax.annotation.Nonnull;
 
 /**

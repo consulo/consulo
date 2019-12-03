@@ -10,7 +10,7 @@ import com.intellij.openapi.editor.FoldingGroup;
 import com.intellij.openapi.editor.ex.FoldingListener;
 import com.intellij.openapi.editor.ex.FoldingModelEx;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.openapi.util.TextRange;
 import javax.annotation.Nonnull;

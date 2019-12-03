@@ -23,7 +23,7 @@ import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actions.TextComponentEditorAction;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 
 import javax.inject.Singleton;

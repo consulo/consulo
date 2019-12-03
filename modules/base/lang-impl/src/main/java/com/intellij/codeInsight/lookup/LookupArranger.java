@@ -6,7 +6,7 @@ import com.intellij.codeInsight.completion.LookupElementListPresenter;
 import com.intellij.codeInsight.completion.PrefixMatcher;
 import com.intellij.codeInsight.completion.impl.CompletionServiceImpl;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

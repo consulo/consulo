@@ -61,6 +61,7 @@ import consulo.options.ConfigurableUIMigrationUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.SwingUIDecorator;
 import consulo.util.ProtectedRunnable;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.concurrency.Promise;

@@ -66,6 +66,8 @@ import com.intellij.vcsUtil.VcsUtil;
 import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolderEx;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

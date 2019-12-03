@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2010 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,33 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.keyFMap;
+package consulo.util.dataholder;
 
-import com.intellij.openapi.util.Key;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-/**
- * An immutable map optimized for storing few {@link Key} entries with relatively rare updates
- * To construct a map, start with {@link KeyFMap#EMPTY_MAP} and call {@link #plus} and {@link #minus}
- *
- * @author peter
- */
-public interface KeyFMap {
-  KeyFMap EMPTY_MAP = new EmptyFMap();
-
-  @Nonnull
-  <V> KeyFMap plus(@Nonnull Key<V> key, @Nonnull V value);
-  @Nonnull
-  KeyFMap minus(@Nonnull Key<?> key);
-
+public interface UserDataHolder {
   @Nullable
-  <V> V get(@Nonnull Key<V> key);
+  <T> T getUserData(@Nonnull Key<T> key);
 
-  @Nonnull
-  Key[] getKeys();
-
-  String toString();
-
-  boolean isEmpty();
+  <T> void putUserData(@Nonnull Key<T> key, @Nullable T value);
 }

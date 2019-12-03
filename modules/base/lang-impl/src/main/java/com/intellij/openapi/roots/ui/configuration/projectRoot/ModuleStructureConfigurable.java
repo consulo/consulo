@@ -54,6 +54,7 @@ import com.intellij.util.ui.tree.TreeUtil;
 import consulo.awt.TargetAWT;
 import consulo.moduleImport.ModuleImportProviders;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

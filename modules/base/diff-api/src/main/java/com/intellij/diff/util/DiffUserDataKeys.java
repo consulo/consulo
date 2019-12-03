@@ -18,7 +18,7 @@ package com.intellij.diff.util;
 import com.intellij.lang.Language;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataProvider;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 
 import javax.swing.*;

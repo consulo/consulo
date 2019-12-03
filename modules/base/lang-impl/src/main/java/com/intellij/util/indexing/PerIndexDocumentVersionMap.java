@@ -17,8 +17,8 @@
 package com.intellij.util.indexing;
 
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.UserDataHolderEx;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolderEx;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

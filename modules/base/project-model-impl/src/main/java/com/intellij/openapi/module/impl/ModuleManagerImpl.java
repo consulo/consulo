@@ -54,6 +54,7 @@ import consulo.application.AccessRule;
 import consulo.logging.Logger;
 import consulo.module.ModuleDirIsNotExistsException;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectHashingStrategy;
 import org.jdom.Element;

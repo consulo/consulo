@@ -28,7 +28,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;

@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorLastActionTracker;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.ui.LightweightHint;
 

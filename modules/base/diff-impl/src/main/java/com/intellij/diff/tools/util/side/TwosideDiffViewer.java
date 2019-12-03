@@ -29,7 +29,7 @@ import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.Side;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.pom.Navigatable;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

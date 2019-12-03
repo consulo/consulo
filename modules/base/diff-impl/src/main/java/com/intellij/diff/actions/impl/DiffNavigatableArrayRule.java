@@ -18,7 +18,7 @@ package com.intellij.diff.actions.impl;
 import com.intellij.diff.tools.util.DiffDataKeys;
 import com.intellij.ide.impl.dataRules.GetDataRule;
 import com.intellij.openapi.actionSystem.DataProvider;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.pom.Navigatable;
 import javax.annotation.Nonnull;
 

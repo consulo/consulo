@@ -19,7 +19,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import consulo.command.undo.ApplicationUndoManager;
 import consulo.command.undo.ProjectUndoManager;

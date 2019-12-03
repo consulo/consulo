@@ -54,6 +54,7 @@ import com.intellij.util.ui.JBSwingUtilities;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import consulo.application.ex.ApplicationEx2;
+import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
 

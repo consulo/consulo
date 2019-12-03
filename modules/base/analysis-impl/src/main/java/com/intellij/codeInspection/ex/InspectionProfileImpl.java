@@ -49,6 +49,7 @@ import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Tag;
 import com.intellij.util.xmlb.annotations.Transient;
 import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

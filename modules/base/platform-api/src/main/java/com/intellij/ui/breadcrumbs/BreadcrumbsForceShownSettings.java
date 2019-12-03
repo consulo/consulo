@@ -2,7 +2,7 @@
 package com.intellij.ui.breadcrumbs;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

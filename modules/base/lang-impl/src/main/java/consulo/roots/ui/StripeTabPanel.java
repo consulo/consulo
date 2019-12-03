@@ -16,7 +16,7 @@
 package consulo.roots.ui;
 
 import com.intellij.openapi.ui.VerticalFlowLayout;
-import com.intellij.openapi.util.UserDataHolderBase;
+import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.impl.StaticAnchoredButton;

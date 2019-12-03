@@ -8,7 +8,7 @@ package com.intellij.ui.speedSearch;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.DocumentAdapter;

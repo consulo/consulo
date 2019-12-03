@@ -5,6 +5,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 import org.jetbrains.concurrency.CancellablePromise;
@@ -74,7 +75,7 @@ public interface NonBlockingReadAction<T> {
    *
    * @param equality objects that together identify the computation: if they're all equal in two submissions,
    *                 then the computations are merged. Callers should take care to pass something unique there
-   *                 (e.g. some {@link com.intellij.openapi.util.Key} or {@code this} {@code getClass()}),
+   *                 (e.g. some {@link Key} or {@code this} {@code getClass()}),
    *                 so that computations from different places won't interfere.
    * @return a copy of this builder which, when submitted, cancels previously submitted running computations with equal equality objects
    */
