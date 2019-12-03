@@ -18,6 +18,7 @@ package com.intellij.util.containers;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Function;
+import consulo.annotation.DeprecationInfo;
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,13 +31,9 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-/**
- * Stripped-down version of {@code com.intellij.util.containers.ContainerUtil}.
- * Intended to use by external (out-of-IDE-process) runners and helpers so it should not contain any library dependencies.
- *
- * @since 12.0
- */
 @SuppressWarnings("UtilityClassWithoutPrivateConstructor")
+@Deprecated
+@DeprecationInfo("Use ContainerUtil")
 public class ContainerUtilRt {
   private static final int ARRAY_COPY_THRESHOLD = 20;
 
