@@ -30,9 +30,9 @@ import com.intellij.util.io.BaseOutputReader;
 import com.intellij.util.text.CaseInsensitiveStringHashingStrategy;
 import consulo.logging.Logger;
 import gnu.trove.THashMap;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.InputStream;
@@ -161,10 +161,7 @@ public class EnvironmentUtil {
   public static class ShellEnvReader {
 
     public Map<String, String> readShellEnv() throws Exception {
-      File reader = FileUtil.findFirstThatExist(
-              PathManager.getBinPath() + "/printenv.py",
-              PathManager.getHomePath() + "/community/bin/mac/printenv.py",
-              PathManager.getHomePath() + "/bin/mac/printenv.py");
+      File reader = FileUtil.findFirstThatExist(PathManager.getBinPath() + "/printenv.py");
       if (reader == null) {
         throw new Exception("bin:" + PathManager.getBinPath());
       }
