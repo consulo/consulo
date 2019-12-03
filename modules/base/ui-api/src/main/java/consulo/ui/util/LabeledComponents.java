@@ -15,13 +15,13 @@
  */
 package consulo.ui.util;
 
-import com.intellij.openapi.util.text.StringUtilRt;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.PseudoComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 
@@ -37,7 +37,7 @@ public class LabeledComponents {
 
   @RequiredUIAccess
   public static Component left(@Nonnull String text, @Nonnull PseudoComponent component) {
-    if (!StringUtilRt.endsWithChar(text, ':')) {
+    if (!StringUtil.endsWithChar(text, ':')) {
       text += ": ";
     }
 
@@ -54,7 +54,7 @@ public class LabeledComponents {
 
   @RequiredUIAccess
   public static Component leftFilled(@Nonnull String text, @Nonnull PseudoComponent component) {
-    if (!StringUtilRt.endsWithChar(text, ':')) {
+    if (!StringUtil.endsWithChar(text, ':')) {
       text += ": ";
     }
 

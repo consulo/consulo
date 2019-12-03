@@ -178,4 +178,18 @@ public class StringUtil {
 
     return true;
   }
+
+  @Contract(pure = true)
+  public static boolean endsWithChar(@Nullable CharSequence s, char suffix) {
+    return s != null && s.length() != 0 && s.charAt(s.length() - 1) == suffix;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String trimStart(@Nonnull String s, @NonNls @Nonnull String prefix) {
+    if (s.startsWith(prefix)) {
+      return s.substring(prefix.length());
+    }
+    return s;
+  }
 }

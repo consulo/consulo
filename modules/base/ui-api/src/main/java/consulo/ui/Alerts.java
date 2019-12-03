@@ -15,7 +15,7 @@
  */
 package consulo.ui;
 
-import com.intellij.util.ThreeState;
+import consulo.util.lang.ThreeState;
 
 import javax.annotation.Nonnull;
 

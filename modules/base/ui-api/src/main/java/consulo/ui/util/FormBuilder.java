@@ -15,12 +15,13 @@
  */
 package consulo.ui.util;
 
-import com.intellij.openapi.util.text.StringUtilRt;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.TableLayout;
 import consulo.ui.shared.StaticPosition;
+import consulo.util.lang.StringUtil;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -40,7 +41,7 @@ public class FormBuilder {
   @RequiredUIAccess
   public FormBuilder addLabeled(@Nonnull final String labelText, @Nonnull Component component) {
     String newLabelText = labelText;
-    if (!StringUtilRt.endsWithChar(newLabelText, ':')) {
+    if (!StringUtil.endsWithChar(newLabelText, ':')) {
       newLabelText += ": ";
     }
 

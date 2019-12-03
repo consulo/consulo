@@ -15,8 +15,8 @@
  */
 package consulo.ui.event;
 
-import com.intellij.util.BitUtil;
 import consulo.ui.Component;
+import consulo.util.lang.BitUtil;
 
 import javax.annotation.Nonnull;
 

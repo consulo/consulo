@@ -1,8 +1,8 @@
 package consulo.ui.util;
 
-import com.intellij.openapi.util.text.StringUtilRt;
 import consulo.annotation.UsedInPlugin;
 import consulo.ui.shared.RGBColor;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 
@@ -24,7 +24,7 @@ public class ColorValueUtil {
    */
   @Nonnull
   public static RGBColor fromHex(@Nonnull String str) {
-    str = StringUtilRt.trimStart(str, "#");
+    str = StringUtil.trimStart(str, "#");
     if (str.length() == 3) {
       return new RGBColor(17 * Integer.valueOf(String.valueOf(str.charAt(0)), 16), 17 * Integer.valueOf(String.valueOf(str.charAt(1)), 16), 17 * Integer.valueOf(String.valueOf(str.charAt(2)), 16));
     }
