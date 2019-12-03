@@ -15,8 +15,6 @@
  */
 package com.intellij.openapi.util;
 
-import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -114,7 +112,6 @@ class ExecutionCallback {
     return myCurrentCount >= myCountToExecution;
   }
 
-  @NonNls
   @Override
   public synchronized String toString() {
     return "current=" + myCurrentCount + " countToExecution=" + myCountToExecution;

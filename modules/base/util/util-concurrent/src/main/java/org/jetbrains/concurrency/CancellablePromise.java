@@ -1,6 +1,9 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package org.jetbrains.concurrency;
 
+import org.jetbrains.concurrency.internal.DonePromise;
+import org.jetbrains.concurrency.internal.InternalPromiseUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -16,7 +19,7 @@ public interface CancellablePromise<T> extends Promise<T>, Future<T> {
   static <T> CancellablePromise<T> resolve(@Nullable T result) {
     if (result == null) {
       //noinspection unchecked
-      return (CancellablePromise<T>)InternalPromiseUtil.FULFILLED_PROMISE.getValue();
+      return (CancellablePromise<T>)InternalPromiseUtil.FULFILLED_PROMISE.get();
     }
     else {
       return new DonePromise<>(InternalPromiseUtil.PromiseValue.createFulfilled(result));

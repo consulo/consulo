@@ -52,6 +52,7 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-util-rt</artifactId>
       <version>${project.version}</version>
+      <optional>true</optional>
     </dependency>
 
     <dependency>

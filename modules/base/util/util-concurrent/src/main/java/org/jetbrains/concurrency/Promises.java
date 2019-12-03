@@ -15,27 +15,23 @@
  */
 package org.jetbrains.concurrency;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.ControlFlowException;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.util.ThreeState;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
+import consulo.util.lang.ControlFlowException;
+import org.jetbrains.concurrency.internal.DonePromise;
+import org.jetbrains.concurrency.internal.InternalPromiseUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @SuppressWarnings("unchecked")
 public class Promises {
-  private static final NotNullLazyValue<Promise> REJECTED = NotNullLazyValue.createValue(() -> new DonePromise(InternalPromiseUtil.PromiseValue.createRejected(createError("rejected"))));
+  private static final Supplier<Promise> REJECTED = new InternalPromiseUtil.LazyValue<>(() -> new DonePromise(InternalPromiseUtil.PromiseValue.createRejected(createError("rejected"))));
 
   private static class CountDownConsumer<T> implements Consumer<Object> {
     private final AsyncPromise<T> myPromise;
@@ -66,7 +62,7 @@ public class Promises {
 
   @Nonnull
   public static <T> Promise<T> rejectedPromise() {
-    return REJECTED.getValue();
+    return REJECTED.get();
   }
 
   @Nonnull
@@ -76,7 +72,7 @@ public class Promises {
 
   @Nonnull
   public static <T> Promise<T> resolvedPromise() {
-    return (Promise<T>)InternalPromiseUtil.FULFILLED_PROMISE.getValue();
+    return (Promise<T>)InternalPromiseUtil.FULFILLED_PROMISE.get();
   }
 
   @Nonnull
@@ -87,7 +83,7 @@ public class Promises {
   @Nonnull
   public static <T> CancellablePromise<T> resolvedCancellablePromise(@Nullable T result) {
     if (result == null) {
-      return (CancellablePromise<T>)InternalPromiseUtil.FULFILLED_PROMISE.getValue();
+      return (CancellablePromise<T>)InternalPromiseUtil.FULFILLED_PROMISE.get();
     }
     else {
       return new DonePromise(InternalPromiseUtil.PromiseValue.createFulfilled(result));
@@ -96,12 +92,13 @@ public class Promises {
 
   public static boolean errorIfNotMessage(Logger logger, Throwable e) {
     if (e instanceof InternalPromiseUtil.MessageError) {
-      ThreeState log = ((InternalPromiseUtil.MessageError)e).log;
+      boolean log = ((InternalPromiseUtil.MessageError)e).log;
 
-      if (log == ThreeState.YES || (log == ThreeState.UNSURE && ApplicationManager.getApplication().isUnitTestMode())) {
-        logger.error(e);
-        return true;
-      }
+      // TODO handle unit test?
+      //if (log == ThreeState.YES || (log == ThreeState.UNSURE && ApplicationManager.getApplication().isUnitTestMode())) {
+      //  logger.error(e);
+      //  return true;
+      //}
     }
     else if (!(e instanceof ControlFlowException) && !(e instanceof CancellationException)) {
       logger.error(e);
@@ -119,7 +116,7 @@ public class Promises {
 
     AsyncPromise<List<T>> result = new AsyncPromise<>();
     AtomicInteger latch = new AtomicInteger(thisValue.size());
-    List<T> list = Collections.synchronizedList(ContainerUtil.toMutableSmartList(Collections.nCopies(thisValue.size(), null)));
+    List<T> list = Collections.synchronizedList(new ArrayList<T>(Collections.nCopies(thisValue.size(), null)));
 
     Runnable arrive = () -> {
       if (latch.decrementAndGet() == 0) {
@@ -162,7 +159,7 @@ public class Promises {
   @Nonnull
   public static Promise<?> all(Collection<? extends Promise<?>> promises) {
     if (promises.size() == 1) {
-      return ContainerUtil.getFirstItem(promises);
+      return promises.iterator().next();
     }
     else {
       return all(promises, null);
@@ -201,7 +198,7 @@ public class Promises {
   }
 
   @Nonnull
-  public static Promise<Object> toPromise(ActionCallback callback)  {
+  public static Promise<Object> toPromise(ActionCallback callback) {
     AsyncPromise<Object> promise = new AsyncPromise<>();
     callback.doWhenDone(() -> promise.setResult(null));
     callback.doWhenRejected(error -> promise.setError(createError(error == null ? "Internal error" : error)));

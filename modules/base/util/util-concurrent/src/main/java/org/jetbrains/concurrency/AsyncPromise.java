@@ -15,9 +15,10 @@
  */
 package org.jetbrains.concurrency;
 
-import com.intellij.util.ExceptionUtil;
 import consulo.logging.Logger;
 import consulo.util.lang.ControlFlowException;
+import consulo.util.lang.ExceptionUtil;
+import org.jetbrains.concurrency.internal.InternalPromiseUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -167,15 +168,15 @@ public class AsyncPromise<T> implements CancellablePromise<T>, InternalPromiseUt
 
   @Nonnull
   @Override
-  public <SUB_RESULT> Promise<SUB_RESULT> then(@Nonnull com.intellij.util.Function<? super T, ? extends SUB_RESULT> done) {
-    return new AsyncPromise<>(f.thenApply(done::fun), hasErrorHandler);
+  public <SUB_RESULT> Promise<SUB_RESULT> then(@Nonnull Function<? super T, ? extends SUB_RESULT> done) {
+    return new AsyncPromise<>(f.thenApply(done::apply), hasErrorHandler);
   }
 
   @Nonnull
   @Override
-  public <SUB_RESULT> Promise<SUB_RESULT> thenAsync(@Nonnull com.intellij.util.Function<? super T, Promise<SUB_RESULT>> doneF) {
+  public <SUB_RESULT> Promise<SUB_RESULT> thenAsync(@Nonnull Function<? super T, Promise<SUB_RESULT>> doneF) {
     Function<T, CompletableFuture<SUB_RESULT>> convert = it -> {
-      Promise<SUB_RESULT> promise = doneF.fun(it);
+      Promise<SUB_RESULT> promise = doneF.apply(it);
       CompletableFuture<SUB_RESULT> future = new CompletableFuture<>();
 
       promise.onSuccess(future::complete).onError(future::completeExceptionally);

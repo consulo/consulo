@@ -23,8 +23,6 @@
       <includes>
         <include>consulo:consulo-platform-base-plugin</include>
 
-        <include>consulo:consulo-async-api</include>
-
         <include>consulo:consulo-analysis-api</include>
         <include>consulo:consulo-analysis-impl</include>
         <include>consulo:consulo-duplicates-analysis</include>
@@ -95,6 +93,7 @@
         <include>consulo:consulo-util-advanced-proxy</include>
         <include>consulo:consulo-util-lang</include>
         <include>consulo:consulo-util-collection</include>
+        <include>consulo:consulo-util-concurrent</include>
         <include>consulo:consulo-util-rmi</include>
         <include>consulo:consulo-util</include>
 

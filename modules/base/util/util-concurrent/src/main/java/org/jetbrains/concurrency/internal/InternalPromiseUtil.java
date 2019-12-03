@@ -1,17 +1,19 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package org.jetbrains.concurrency;
+package org.jetbrains.concurrency.internal;
 
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.util.ExceptionUtil;
-import com.intellij.util.ThreeState;
+import consulo.util.lang.ExceptionUtil;
+import org.jetbrains.concurrency.CancellablePromise;
+import org.jetbrains.concurrency.Obsolescent;
+import org.jetbrains.concurrency.Promise;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Supplier;
 
 /**
  * Only internal usage.
@@ -19,21 +21,26 @@ import java.util.concurrent.TimeoutException;
 public class InternalPromiseUtil {
   public static final RuntimeException OBSOLETE_ERROR = new MessageError("Obsolete", false);
 
-  public static final NotNullLazyValue<Promise<Object>> CANCELLED_PROMISE = new NotNullLazyValue<Promise<Object>>() {
-    @Nonnull
-    @Override
-    protected Promise<Object> compute() {
-      return new DonePromise<>(PromiseValue.createRejected(OBSOLETE_ERROR));
-    }
-  };
+  public static final Supplier<Promise<Object>> CANCELLED_PROMISE = new LazyValue<>(() -> new DonePromise<>(PromiseValue.createRejected(OBSOLETE_ERROR)));
 
-  public static final NotNullLazyValue<CancellablePromise<Object>> FULFILLED_PROMISE = new NotNullLazyValue<CancellablePromise<Object>>() {
-    @Nonnull
-    @Override
-    protected CancellablePromise<Object> compute() {
-      return new DonePromise<>(PromiseValue.createFulfilled(null));
+  public static final Supplier<CancellablePromise<Object>> FULFILLED_PROMISE = new LazyValue<>(() -> new DonePromise<>(PromiseValue.createFulfilled(null)));
+
+  public static class LazyValue<T> implements Supplier<T> {
+    private final Supplier<T> myFactory;
+    private T myValue;
+
+    public LazyValue(Supplier<T> factory) {
+      myFactory = factory;
     }
-  };
+
+    @Override
+    public T get() {
+      if (myValue == null) {
+        return myValue = myFactory.get();
+      }
+      return myValue;
+    }
+  }
 
   public static boolean isHandlerObsolete(@Nonnull Object handler) {
     return handler instanceof Obsolescent && ((Obsolescent)handler).isObsolete();
@@ -51,12 +58,12 @@ public class InternalPromiseUtil {
 
   @SuppressWarnings("ExceptionClassNameDoesntEndWithException")
   public static class MessageError extends RuntimeException {
-    public final ThreeState log;
+    public final boolean log;
 
     public MessageError(@Nonnull String message, boolean isLog) {
       super(message);
 
-      log = ThreeState.fromBoolean(isLog);
+      log = isLog;
     }
 
     @Override

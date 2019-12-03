@@ -1,23 +1,24 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package org.jetbrains.concurrency;
+package org.jetbrains.concurrency.internal;
 
-import com.intellij.util.Function;
+import org.jetbrains.concurrency.Promise;
+import org.jetbrains.concurrency.internal.InternalPromiseUtil.PromiseValue;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.concurrency.InternalPromiseUtil.PromiseValue;
-
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
-import static org.jetbrains.concurrency.InternalPromiseUtil.CANCELLED_PROMISE;
-import static org.jetbrains.concurrency.InternalPromiseUtil.isHandlerObsolete;
+import static org.jetbrains.concurrency.internal.InternalPromiseUtil.CANCELLED_PROMISE;
+import static org.jetbrains.concurrency.internal.InternalPromiseUtil.isHandlerObsolete;
 
-class DonePromise<T> extends InternalPromiseUtil.BasePromise<T> {
+public class DonePromise<T> extends InternalPromiseUtil.BasePromise<T> {
   private final PromiseValue<T> value;
 
-  DonePromise(@Nonnull PromiseValue<T> value) {
+  public DonePromise(@Nonnull PromiseValue<T> value) {
     this.value = value;
   }
 
@@ -78,10 +79,10 @@ class DonePromise<T> extends InternalPromiseUtil.BasePromise<T> {
     }
     else if (isHandlerObsolete(done)) {
       //noinspection unchecked
-      return (Promise<SUB_RESULT>)CANCELLED_PROMISE.getValue();
+      return (Promise<SUB_RESULT>)CANCELLED_PROMISE.get();
     }
     else {
-      return new DonePromise<>(PromiseValue.createFulfilled(done.fun(value.result)));
+      return new DonePromise<>(PromiseValue.createFulfilled(done.apply(value.result)));
     }
   }
 
@@ -89,7 +90,7 @@ class DonePromise<T> extends InternalPromiseUtil.BasePromise<T> {
   @Override
   public <SUB_RESULT> Promise<SUB_RESULT> thenAsync(@Nonnull Function<? super T, Promise<SUB_RESULT>> done) {
     if (value.error == null) {
-      return done.fun(value.result);
+      return done.apply(value.result);
     }
     else {
       //noinspection unchecked

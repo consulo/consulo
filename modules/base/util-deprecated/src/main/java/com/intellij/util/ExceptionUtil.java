@@ -17,6 +17,7 @@ package com.intellij.util;
 
 import consulo.logging.Logger;
 import com.intellij.openapi.util.text.StringUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -152,36 +153,19 @@ public class ExceptionUtil {
   }
 
   public static void rethrowUnchecked(@Nullable Throwable t) {
-    if (t != null) {
-      if (t instanceof Error) throw (Error)t;
-      if (t instanceof RuntimeException) throw (RuntimeException)t;
-    }
+    consulo.util.lang.ExceptionUtil.rethrowUnchecked(t);
   }
 
   public static void rethrowAll(@Nullable Throwable t) throws Exception {
-    if (t != null) {
-      rethrowUnchecked(t);
-      throw (Exception)t;
-    }
+    consulo.util.lang.ExceptionUtil.rethrowAll(t);
   }
 
   public static void rethrow(@Nullable Throwable throwable) {
-    if (throwable instanceof Error) {
-      throw (Error)throwable;
-    }
-    else if (throwable instanceof RuntimeException) {
-      throw (RuntimeException)throwable;
-    }
-    else {
-      throw new RuntimeException(throwable);
-    }
+    consulo.util.lang.ExceptionUtil.rethrow(throwable);
   }
 
   public static void rethrowAllAsUnchecked(@Nullable Throwable t) {
-    if (t != null) {
-      rethrowUnchecked(t);
-      throw new RuntimeException(t);
-    }
+    consulo.util.lang.ExceptionUtil.rethrowAllAsUnchecked(t);
   }
 
   @Nonnull

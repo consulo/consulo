@@ -1,14 +1,16 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package org.jetbrains.concurrency;
 
-import com.intellij.util.Consumer;
-import com.intellij.util.Function;
-import javax.annotation.Nonnull;
+import org.jetbrains.concurrency.internal.DonePromise;
+import org.jetbrains.concurrency.internal.InternalPromiseUtil;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * The Promise represents the eventual completion (or failure) of an asynchronous operation, and its resulting value.
@@ -41,7 +43,7 @@ public interface Promise<T> {
   static <T> Promise<T> resolve(@Nullable T result) {
     if (result == null) {
       //noinspection unchecked
-      return (Promise<T>)InternalPromiseUtil.FULFILLED_PROMISE.getValue();
+      return (Promise<T>)InternalPromiseUtil.FULFILLED_PROMISE.get();
     }
     else {
       return new DonePromise<>(InternalPromiseUtil.PromiseValue.createFulfilled(result));
@@ -81,33 +83,14 @@ public interface Promise<T> {
    * Execute passed handler on promise resolve.
    */
   @Nonnull
-  Promise<T> onSuccess(@Nonnull java.util.function.Consumer<? super T> handler);
+  Promise<T> onSuccess(@Nonnull Consumer<? super T> handler);
 
-  /**
-   * Execute passed handler on promise resolve.
-   *
-   * @deprecated Use {@link #onSuccess(java.util.function.Consumer)}
-   */
-  @Deprecated
-  @Nonnull
-  default Promise<T> done(@Nonnull Consumer<? super T> done) {
-    return onSuccess(it -> done.consume(it));
-  }
 
   /**
    * Execute passed handler on promise reject.
    */
   @Nonnull
-  Promise<T> onError(@Nonnull java.util.function.Consumer<Throwable> rejected);
-
-  /**
-   * @deprecated Use {@link #onError(java.util.function.Consumer)}
-   */
-  @Deprecated
-  @Nonnull
-  default Promise<T> rejected(@Nonnull Consumer<Throwable> rejected) {
-    return onError(it -> rejected.consume(it));
-  }
+  Promise<T> onError(@Nonnull Consumer<Throwable> rejected);
 
   /**
    * Resolve or reject passed promise as soon as this promise resolved or rejected.
@@ -120,17 +103,8 @@ public interface Promise<T> {
    * or on promise reject (null as result value will be passed).
    */
   @Nonnull
-  Promise<T> onProcessed(@Nonnull java.util.function.Consumer<? super T> processed);
+  Promise<T> onProcessed(@Nonnull Consumer<? super T> processed);
 
-  /**
-   * Execute passed handler on promise resolve (result value will be passed),
-   * or on promise reject (null as result value will be passed).
-   */
-  @Deprecated
-  @Nonnull
-  default Promise<T> processed(@Nonnull Consumer<? super T> action) {
-    return onProcessed(it -> action.consume(it));
-  }
 
   /**
    * Get promise state.

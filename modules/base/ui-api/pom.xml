@@ -49,7 +49,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-async-api</artifactId>
+      <artifactId>consulo-util-concurrent</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

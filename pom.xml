@@ -47,8 +47,6 @@
 
     <module>jre9-stub</module>
 
-    <module>modules/base/async-api</module>
-
     <module>modules/boot/bootstrap</module>
     <module>modules/boot/container-api</module>
     <module>modules/boot/container-impl</module>
@@ -116,6 +114,7 @@
     <module>modules/base/util/util-rmi</module>
     <module>modules/base/util/util-lang</module>
     <module>modules/base/util/util-collection</module>
+    <module>modules/base/util/util-concurrent</module>
     <module>modules/base/util/util-advanced-proxy</module>
     <module>modules/base/util-testing</module>
     <module>modules/base/xcoverage-data</module>
