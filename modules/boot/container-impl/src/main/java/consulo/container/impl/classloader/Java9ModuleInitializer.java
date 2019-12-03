@@ -15,15 +15,14 @@
  */
 package consulo.container.impl.classloader;
 
+import consulo.container.impl.ContainerLogger;
+
 import java.io.File;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author VISTALL
@@ -35,7 +34,9 @@ public class Java9ModuleInitializer {
   private static final Class java_nio_file_Path = findClass("java.nio.file.Path");
   private static final Class java_lang_Module = findClass("java.lang.Module");
   private static final Class java_lang_module_ModuleFinder = findClass("java.lang.module.ModuleFinder");
+  private static final Class java_lang_module_ModuleReference = findClass("java.lang.module.ModuleReference");
   private static final Class java_lang_module_Configuration = findClass("java.lang.module.Configuration");
+  private static final Class java_lang_module_ModuleDescriptor = findClass("java.lang.module.ModuleDescriptor");
   private static final Class java_lang_ModuleLayer = findClass("java.lang.ModuleLayer");
   private static final Class java_lang_ModuleLayer$Controller = findClass("java.lang.ModuleLayer$Controller");
   private static final Class java_util_function_Function = findClass("java.util.function.Function");
@@ -51,10 +52,15 @@ public class Java9ModuleInitializer {
 
   private static final Method java_util_Optional_get = findMethod(java_util_Optional, "get");
   private static final Method java_lang_module_ModuleFinder_of = findMethod(java_lang_module_ModuleFinder, "of", Array.newInstance(java_nio_file_Path, 0).getClass());
+  private static final Method java_lang_module_ModuleFinder_findAll = findMethod(java_lang_module_ModuleFinder, "findAll");
+  private static final Method java_lang_module_ModuleReference_descriptor = findMethod(java_lang_module_ModuleReference, "descriptor");
+  private static final Method java_lang_module_ModuleDescriptor_name = findMethod(java_lang_module_ModuleDescriptor, "name");
   private static final Method java_lang_module_Configuration_resolve =
           findMethod(java_lang_module_Configuration, "resolve", java_lang_module_ModuleFinder, List.class, java_lang_module_ModuleFinder, Collection.class);
 
   private static final Object empyArray_java_nio_file_Path = Array.newInstance(java_nio_file_Path, 0);
+
+  private static final boolean ourConsuloModulePathBoot = Boolean.getBoolean("consulo.module.path.boot");
 
   private static Object moduleFinderOf(List<File> files) {
     Object paths = Array.newInstance(java_nio_file_Path, files.size());
@@ -82,31 +88,50 @@ public class Java9ModuleInitializer {
   /**
    * @return ModuleLayer
    */
-  public static Object initializeBaseModules(List<File> files, final ClassLoader targetClassLoader) {
+  public static Object initializeBaseModules(List<File> files, final ClassLoader targetClassLoader, ContainerLogger containerLogger) {
     Object moduleFinder = moduleFinderOf(files);
 
     List<String> toResolve = new ArrayList<String>();
 
-    if(Boolean.valueOf("consulo.module.path.boot")) {
-      toResolve.add("consulo.desktop.awt.hacking");
-      toResolve.add("consulo.util.rmi");
-
+    containerLogger.info("Java 9 modules: " + (ourConsuloModulePathBoot ? "enabled" : "disabled"));
+    if (ourConsuloModulePathBoot) {
+      // apache
+      //toResolve.add("org.apache.commons.compress");
+      toResolve.add("org.apache.logging.log4j");
+      // consulo internal
       toResolve.add("org.jdom");
+      //toResolve.add("jsr305");
       toResolve.add("gnu.trove");
       toResolve.add("kava.beans");
-      toResolve.add("org.apache.logging.log4j");
+      // google
+      //toResolve.add("com.google.common");
+      //toResolve.add("com.google.gson");
 
       toResolve.add("consulo.logging.api");
       toResolve.add("consulo.injecting.api");
-      
+
+      toResolve.add("consulo.desktop.awt.hacking");
+
       toResolve.add("consulo.util.lang");
       toResolve.add("consulo.util.collection");
+      toResolve.add("consulo.util.rmi");
 
-      toResolve.add("consulo.ui.api.shared");
+      //toResolve.add("consulo.ui.api.shared");
+      //toResolve.add("svg.salamander");
+      //toResolve.add("org.slf4j");
+
+      Set findAll = instanceInvoke(java_lang_module_ModuleFinder_findAll, moduleFinder);
+
+      for (Object moduleReference : findAll) {
+        Object moduleDescriptor = instanceInvoke(java_lang_module_ModuleReference_descriptor, moduleReference);
+
+        String moduleName = instanceInvoke(java_lang_module_ModuleDescriptor_name, moduleDescriptor);
+
+        if (!toResolve.contains(moduleName)) {
+          containerLogger.warn("Module '" + moduleName + "' is not resolved");
+        }
+      }
     }
-
-    //toResolve.add("svg.salamander");
-    //toResolve.add("org.slf4j");
 
     Object bootModuleLayer = staticInvoke(java_lang_ModuleLayer_boot);
 
@@ -119,7 +144,7 @@ public class Java9ModuleInitializer {
 
     Object controller = staticInvoke(java_lang_ModuleLayer_defineModules, configuration, Collections.singletonList(bootModuleLayer), functionLambda);
 
-    if(Boolean.valueOf("consulo.module.path.boot")) {
+    if (ourConsuloModulePathBoot) {
       alohomora(bootModuleLayer, controller);
     }
 
@@ -138,7 +163,8 @@ public class Java9ModuleInitializer {
       layerConfiguration.add(instanceInvoke(java_lang_ModuleLayer_configuration, moduleLayer));
     }
 
-    Object configuration = staticInvoke(java_lang_module_Configuration_resolve, moduleFinder, layerConfiguration, staticInvoke(java_lang_module_ModuleFinder_of, empyArray_java_nio_file_Path), toResolve);
+    Object configuration =
+            staticInvoke(java_lang_module_Configuration_resolve, moduleFinder, layerConfiguration, staticInvoke(java_lang_module_ModuleFinder_of, empyArray_java_nio_file_Path), toResolve);
 
     Object functionLambda = directFunction(targetClassLoader);
 

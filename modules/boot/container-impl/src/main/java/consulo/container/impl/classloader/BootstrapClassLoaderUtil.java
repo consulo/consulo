@@ -105,7 +105,7 @@ public class BootstrapClassLoaderUtil {
     ClassLoader loader = PluginClassLoaderFactory.create(filesToUrls(platformBasePlugin.getClassPath()), parentClassLoaders, platformBasePlugin.getPluginId(), null, platformBaseDirectory);
 
     if (SystemInfoRt.IS_AT_LEAST_JAVA9) {
-      platformBasePlugin.setModuleLayer(Java9ModuleInitializer.initializeBaseModules(platformBasePlugin.getClassPath(), loader));
+      platformBasePlugin.setModuleLayer(Java9ModuleInitializer.initializeBaseModules(platformBasePlugin.getClassPath(), loader, containerLogger));
     }
 
     platformBasePlugin.setLoader(loader);

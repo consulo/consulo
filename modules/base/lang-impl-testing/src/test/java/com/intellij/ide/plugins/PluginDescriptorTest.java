@@ -29,6 +29,11 @@ public class PluginDescriptorTest extends Assert {
       }
 
       @Override
+      public void warn(String message) {
+        System.out.println(message);
+      }
+
+      @Override
       public void info(String message, Throwable t) {
         System.out.println(message);
         t.printStackTrace(System.out);

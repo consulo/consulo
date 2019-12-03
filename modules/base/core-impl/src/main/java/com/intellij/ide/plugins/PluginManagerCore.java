@@ -72,6 +72,11 @@ public class PluginManagerCore {
     }
 
     @Override
+    public void warn(String message) {
+      Logger.getInstance(PluginManagerCore.class).warn(message);
+    }
+
+    @Override
     public void info(String message, Throwable t) {
       Logger.getInstance(PluginManagerCore.class).info(message, t);
     }

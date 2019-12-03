@@ -22,6 +22,8 @@ package consulo.container.impl;
 public interface ContainerLogger {
   void info(String message);
 
+  void warn(String message);
+
   void info(String message, Throwable t);
 
   void error(String message, Throwable t);
