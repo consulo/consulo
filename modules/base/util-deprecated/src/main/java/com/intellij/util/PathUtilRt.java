@@ -15,11 +15,11 @@
  */
 package com.intellij.util;
 
-import com.intellij.openapi.diagnostic.LoggerRt;
 import com.intellij.openapi.util.SystemInfoRt;
-import com.intellij.util.containers.ContainerUtilRt;
-import javax.annotation.Nonnull;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
 
+import javax.annotation.Nonnull;
 import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.Set;
@@ -123,7 +123,7 @@ public class PathUtilRt {
   }
 
   private static final String WINDOWS_CHARS = "<>:\"|?*";
-  private static final Set<String> WINDOWS_NAMES = ContainerUtilRt.newHashSet(
+  private static final Set<String> WINDOWS_NAMES = ContainerUtil.newHashSet(
           "CON", "PRN", "AUX", "NUL",
           "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
           "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9");
@@ -137,7 +137,7 @@ public class PathUtilRt {
           return Charset.forName(property);
         }
         catch (Exception e) {
-          LoggerRt.getInstance(PathUtilRt.class).warn("unknown JNU charset: " + property, e);
+          Logger.getInstance(PathUtilRt.class).warn("unknown JNU charset: " + property, e);
         }
       }
     }
