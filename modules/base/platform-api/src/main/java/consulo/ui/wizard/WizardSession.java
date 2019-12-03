@@ -103,9 +103,11 @@ public final class WizardSession<CONTEXT> {
 
     myFinished = true;
 
-    WizardStep<CONTEXT> step = mySteps.get(myCurrentStepIndex);
+    if(!mySteps.isEmpty()) {
+      WizardStep<CONTEXT> step = mySteps.get(myCurrentStepIndex);
 
-    step.onStepLeave(myContext);
+      step.onStepLeave(myContext);
+    }
   }
 
   private int findNextStepIndex() {
