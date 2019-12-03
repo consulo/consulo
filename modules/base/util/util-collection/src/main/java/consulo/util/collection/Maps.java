@@ -29,6 +29,12 @@ import java.util.concurrent.ConcurrentMap;
 public final class Maps {
   @Nonnull
   @Contract(pure = true)
+  public static <V> ConcurrentIntObjectMap<V> newConcurrentIntObjectWeakValueHashMap() {
+    return new ConcurrentIntKeyWeakValueHashMap<>();
+  }
+
+  @Nonnull
+  @Contract(pure = true)
   public static <V> ConcurrentIntObjectMap<V> newConcurrentIntObjectHashMap() {
     return new ConcurrentIntObjectHashMap<>();
   }

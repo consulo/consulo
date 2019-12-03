@@ -16,40 +16,37 @@
 package consulo.util.impl;
 
 import com.intellij.openapi.util.Key;
-import com.intellij.util.Function;
 import consulo.util.collection.ConcurrentIntObjectMap;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.IntObjectMap;
-import consulo.util.KeyRegistry;
+import consulo.util.collection.Maps;
 
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
  * @since 15-Oct-17
  */
-public class KeyRegistryImpl implements KeyRegistry {
-  private final ConcurrentIntObjectMap<Key> myAllKeys = ContainerUtil.createConcurrentIntObjectWeakValueMap();
+public class KeyRegistry {
+  private final ConcurrentIntObjectMap<Key> myAllKeys = Maps.newConcurrentIntObjectWeakValueHashMap();
   private final AtomicInteger myKeyCounter = new AtomicInteger();
 
-  @Override
+  @SuppressWarnings("deprecation")
   public int register(Key<?> key) {
     int index = myKeyCounter.getAndIncrement();
     myAllKeys.put(index, key);
     return index;
   }
 
-  @Override
   public Key<?> findKeyByName(String name, Function<Key<?>, String> nameFunc) {
     for (IntObjectMap.Entry<Key> key : myAllKeys.entrySet()) {
-      if (name.equals(nameFunc.fun(key.getValue()))) {
+      if (name.equals(nameFunc.apply(key.getValue()))) {
         return key.getValue();
       }
     }
     return null;
   }
 
-  @Override
   @SuppressWarnings("unchecked")
   public <T> Key<T> getKeyByIndex(int index) {
     return myAllKeys.get(index);

@@ -14,28 +14,15 @@
  * limitations under the License.
  */
 
-package com.intellij.openapi.util;
+/*
+ * @author max
+ */
+package consulo.util.collection;
 
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
-/**
- * @author peter
- */
-public abstract class KeyWithDefaultValue<T> extends Key<T> {
-  public KeyWithDefaultValue(@Nonnull @NonNls String name) {
-    super(name);
-  }
-
-  public abstract T getDefaultValue();
-
+@FunctionalInterface
+public interface ArrayFactory<T> {
   @Nonnull
-  public static <T> KeyWithDefaultValue<T> create(@Nonnull @NonNls String name, final T defValue) {
-    return new KeyWithDefaultValue<T>(name) {
-      @Override
-      public T getDefaultValue() {
-        return defValue;
-      }
-    };
-  }
+  T[] create(int count);
 }

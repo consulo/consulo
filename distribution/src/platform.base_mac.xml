@@ -95,6 +95,7 @@
         <include>consulo:consulo-util-collection</include>
         <include>consulo:consulo-util-concurrent</include>
         <include>consulo:consulo-util-rmi</include>
+        <include>consulo:consulo-util-dataholder</include>
         <include>consulo:consulo-util</include>
 
         <!--TODO [VISTALL] those dependencies must be removed from base plugin-->

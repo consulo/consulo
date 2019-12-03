@@ -2586,7 +2586,7 @@ public class ContainerUtil extends ContainerUtilRt {
   @Nonnull
   @Contract(pure = true)
   public static <V> ConcurrentIntObjectMap<V> createConcurrentIntObjectWeakValueMap() {
-    return consulo.util.collection.ContainerUtil.createConcurrentIntObjectWeakValueMap();
+    return Maps.newConcurrentIntObjectWeakValueHashMap();
   }
 
   @Nonnull

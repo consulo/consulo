@@ -16,9 +16,9 @@
 package com.intellij.util.keyFMap;
 
 import com.intellij.openapi.util.Key;
-import com.intellij.util.ArrayUtil;
+import consulo.util.collection.ArrayUtil;
 import gnu.trove.TIntObjectHashMap;
-import gnu.trove.TIntObjectProcedure;
+
 import javax.annotation.Nonnull;
 
 import static com.intellij.util.keyFMap.ArrayBackedFMap.getKeysByIndices;
@@ -26,13 +26,10 @@ import static com.intellij.util.keyFMap.ArrayBackedFMap.getKeysByIndices;
 class MapBackedFMap extends TIntObjectHashMap<Object> implements KeyFMap {
   private MapBackedFMap(@Nonnull MapBackedFMap oldMap, final int exclude) {
     super(oldMap.size());
-    oldMap.forEachEntry(new TIntObjectProcedure<Object>() {
-      @Override
-      public boolean execute(int key, Object val) {
-        if (key != exclude) put(key, val);
-        assert key >= 0 : key;
-        return true;
-      }
+    oldMap.forEachEntry((key, val) -> {
+      if (key != exclude) put(key, val);
+      assert key >= 0 : key;
+      return true;
     });
     assert size() > ArrayBackedFMap.ARRAY_THRESHOLD;
   }
@@ -97,12 +94,9 @@ class MapBackedFMap extends TIntObjectHashMap<Object> implements KeyFMap {
   @Override
   public String toString() {
     final StringBuilder s = new StringBuilder();
-    forEachEntry(new TIntObjectProcedure<Object>() {
-      @Override
-      public boolean execute(int key, Object value) {
-        s.append(s.length() == 0 ? "" : ", ").append(Key.getKeyByIndex(key)).append(" -> ").append(value);
-        return true;
-      }
+    forEachEntry((key, value) -> {
+      s.append(s.length() == 0 ? "" : ", ").append(Key.getKeyByIndex(key)).append(" -> ").append(value);
+      return true;
     });
     return "[" + s.toString() + "]";
   }

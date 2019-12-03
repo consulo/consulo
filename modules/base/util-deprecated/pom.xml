@@ -53,6 +53,11 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-util-dataholder</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-util-rt</artifactId>
       <version>${project.version}</version>
       <optional>true</optional>

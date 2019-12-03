@@ -196,6 +196,11 @@
       <artifactId>consulo-util-advanced-proxy</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-util-dataholder</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <!--copied from consulo-bundle module-->
 

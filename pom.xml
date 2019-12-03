@@ -116,6 +116,7 @@
     <module>modules/base/util/util-collection</module>
     <module>modules/base/util/util-concurrent</module>
     <module>modules/base/util/util-advanced-proxy</module>
+    <module>modules/base/util/util-dataholder</module>
     <module>modules/base/util-testing</module>
     <module>modules/base/xcoverage-data</module>
     <module>modules/base/xcoverage-impl</module>

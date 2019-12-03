@@ -15,19 +15,13 @@
  */
 package com.intellij.util;
 
-import javax.annotation.Nonnull;
 import com.intellij.util.containers.ContainerUtilRt;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.Collection;
 
-/**
- * Stripped-down version of {@code com.intellij.util.ArrayUtil}.
- * Intended to use by external (out-of-IDE-process) runners and helpers so it should not contain any library dependencies.
- *
- * @since 12.0
- */
-@SuppressWarnings({"UtilityClassWithoutPrivateConstructor", "SSBasedInspection"})
+@Deprecated
 public class ArrayUtilRt {
   public static final short[] EMPTY_SHORT_ARRAY = new short[0];
   public static final char[] EMPTY_CHAR_ARRAY = new char[0];

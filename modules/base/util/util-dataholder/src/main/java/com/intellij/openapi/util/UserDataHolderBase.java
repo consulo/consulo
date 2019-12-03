@@ -15,15 +15,17 @@
  */
 package com.intellij.openapi.util;
 
-
-import com.intellij.util.concurrency.AtomicFieldUpdater;
 import com.intellij.util.keyFMap.KeyFMap;
+import consulo.util.concurrent.atomic.AtomicFieldUpdater;
+import org.jetbrains.annotations.TestOnly;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.TestOnly;
 
 public class UserDataHolderBase implements UserDataHolderEx, Cloneable {
   public static final Key<KeyFMap> COPYABLE_USER_MAP_KEY = Key.create("COPYABLE_USER_MAP_KEY");
+
+  private static final AtomicFieldUpdater<UserDataHolderBase, KeyFMap> updater = AtomicFieldUpdater.forFieldOfType(UserDataHolderBase.class, KeyFMap.class);
 
   /**
    * Concurrent writes to this field are via CASes only, using the {@link #updater}
@@ -147,6 +149,4 @@ public class UserDataHolderBase implements UserDataHolderEx, Cloneable {
   public boolean isUserDataEmpty() {
     return getUserMap().isEmpty();
   }
-
-  private static final AtomicFieldUpdater<UserDataHolderBase, KeyFMap> updater = AtomicFieldUpdater.forFieldOfType(UserDataHolderBase.class, KeyFMap.class);
 }

@@ -35,12 +35,7 @@ import javax.annotation.Nonnull;
  * @since 09.05.2015
  */
 public class ShowExcludedFilesProjectViewPaneOptionProvider extends ProjectViewPaneOptionProvider.BoolValue {
-  public static final KeyWithDefaultValue<Boolean> KEY = new KeyWithDefaultValue<Boolean>("show-excluded-files") {
-    @Override
-    public Boolean getDefaultValue() {
-      return Boolean.FALSE;
-    }
-  };
+  public static final KeyWithDefaultValue<Boolean> KEY = KeyWithDefaultValue.create("show-excluded-files", Boolean.FALSE);
 
   private final class ShowExcludedFilesAction extends ToggleAction implements DumbAware {
     private AbstractProjectViewPane myPane;

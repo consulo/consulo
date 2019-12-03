@@ -16,7 +16,8 @@
 package com.intellij.util.keyFMap;
 
 import com.intellij.openapi.util.Key;
-import com.intellij.util.ArrayUtil;
+import consulo.util.collection.ArrayUtil;
+
 import javax.annotation.Nonnull;
 
 public class ArrayBackedFMap implements KeyFMap {

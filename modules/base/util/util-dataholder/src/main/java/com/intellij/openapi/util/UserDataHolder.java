@@ -15,11 +15,12 @@
  */
 package com.intellij.openapi.util;
 
-import javax.annotation.Nullable;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface UserDataHolder {
-  @Nullable <T> T getUserData(@Nonnull Key<T> key);
+  @Nullable
+  <T> T getUserData(@Nonnull Key<T> key);
 
   <T> void putUserData(@Nonnull Key<T> key, @Nullable T value);
 }

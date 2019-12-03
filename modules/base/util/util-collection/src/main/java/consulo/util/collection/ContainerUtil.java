@@ -228,7 +228,7 @@ public class ContainerUtil {
   @Nonnull
   @Contract(pure = true)
   public static <V> ConcurrentIntObjectMap<V> createConcurrentIntObjectWeakValueMap() {
-    return new ConcurrentIntKeyWeakValueHashMap<>();
+    return Maps.newConcurrentIntObjectWeakValueHashMap();
   }
 
   @Nullable

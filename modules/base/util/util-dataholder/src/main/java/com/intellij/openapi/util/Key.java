@@ -15,10 +15,8 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.util.Function;
 import consulo.annotation.DeprecationInfo;
-import consulo.util.KeyRegistry;
-import consulo.util.impl.KeyRegistryImpl;
+import consulo.util.impl.KeyRegistry;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -31,9 +29,8 @@ import java.util.Map;
  * @author max
  * @author Konstantin Bulenkov
  */
-@SuppressWarnings({"EqualsWhichDoesntCheckParameterClass"})
 public class Key<T> {
-  private static final KeyRegistry ourRegistry = new KeyRegistryImpl();
+  private static final KeyRegistry ourRegistry = new KeyRegistry();
 
   private final String myName; // for debug purposes only
   private final int myIndex;
@@ -64,7 +61,7 @@ public class Key<T> {
   @Nonnull
   @SuppressWarnings("deprecation")
   public static <T> Key<T> create(@Nonnull @NonNls String name) {
-    return new Key<T>(name);
+    return new Key<>(name);
   }
 
   public T get(@Nullable UserDataHolder holder) {
@@ -121,11 +118,6 @@ public class Key<T> {
    */
   @Nullable
   public static Key<?> findKeyByName(String name) {
-    return ourRegistry.findKeyByName(name, new Function<Key<?>, String>() {
-      @Override
-      public String fun(Key<?> key) {
-        return key.myName;
-      }
-    });
+    return ourRegistry.findKeyByName(name, key -> key.myName);
   }
 }
