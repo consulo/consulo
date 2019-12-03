@@ -2,7 +2,7 @@
 package com.intellij.execution.testframework.sm.runner;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 
 /**
  * @author Roman Chernyatchik

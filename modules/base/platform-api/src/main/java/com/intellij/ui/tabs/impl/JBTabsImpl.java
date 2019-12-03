@@ -46,6 +46,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;
 import consulo.ide.ui.laf.JBEditorTabsUI;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;

@@ -15,8 +15,8 @@
  */
 package com.intellij.psi.stubs;
 
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.UserDataHolderBase;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.psi.StubBasedPsiElement;
 
 /**

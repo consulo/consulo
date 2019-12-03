@@ -40,7 +40,7 @@ import com.intellij.openapi.diff.impl.dir.DirDiffWindow;
 import com.intellij.openapi.project.DefaultProjectFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import consulo.fileTypes.ArchiveFileType;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

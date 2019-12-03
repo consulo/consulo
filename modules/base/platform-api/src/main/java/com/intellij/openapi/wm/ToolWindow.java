@@ -16,7 +16,7 @@
 package com.intellij.openapi.wm;
 
 import com.intellij.openapi.util.BusyObject;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.ui.content.ContentManager;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;

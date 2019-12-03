@@ -44,6 +44,7 @@ import com.intellij.util.Function;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.util.dataholder.Key;
 import gnu.trove.THashSet;
 import junit.framework.*;
 import org.intellij.lang.annotations.RegExp;

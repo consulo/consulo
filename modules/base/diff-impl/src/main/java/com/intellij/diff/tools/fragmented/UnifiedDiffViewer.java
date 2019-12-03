@@ -56,6 +56,8 @@ import com.intellij.pom.Navigatable;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
 import gnu.trove.TIntFunction;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;

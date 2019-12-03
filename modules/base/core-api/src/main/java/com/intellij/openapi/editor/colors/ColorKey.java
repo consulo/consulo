@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.colors;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.ui.Gray;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;

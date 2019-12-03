@@ -16,7 +16,7 @@
 package com.intellij.openapi.fileChooser.ex;
 
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 
 /**
  * @author yole

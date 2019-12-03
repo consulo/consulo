@@ -55,6 +55,8 @@ import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;

@@ -72,6 +72,8 @@ import consulo.application.TransactionGuardEx;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolderBase;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;

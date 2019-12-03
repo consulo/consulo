@@ -16,7 +16,7 @@
 package com.intellij.execution.testframework.sm.runner;
 
 import com.intellij.execution.process.ProcessOutputTypes;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import gnu.trove.THashMap;
 import javax.annotation.Nonnull;
 

@@ -2,7 +2,7 @@
 package com.intellij.openapi.editor;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.UserDataHolderEx;
+import consulo.util.dataholder.UserDataHolderEx;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

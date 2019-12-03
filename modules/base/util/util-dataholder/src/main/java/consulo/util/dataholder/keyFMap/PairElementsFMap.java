@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.keyFMap;
+package consulo.util.dataholder.keyFMap;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 
 public class PairElementsFMap implements KeyFMap {
@@ -43,8 +44,8 @@ public class PairElementsFMap implements KeyFMap {
   @Nonnull
   @Override
   public KeyFMap minus(@Nonnull Key<?> key) {
-    if (key == key1) return new OneElementFMap<Object>(key2, value2);
-    if (key == key2) return new OneElementFMap<Object>(key1, value1);
+    if (key == key1) return new OneElementFMap<>(key2, value2);
+    if (key == key2) return new OneElementFMap<>(key1, value1);
     return this;
   }
 

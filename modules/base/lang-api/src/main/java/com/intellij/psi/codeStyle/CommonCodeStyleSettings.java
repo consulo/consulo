@@ -28,6 +28,7 @@ import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsAwa
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
+import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

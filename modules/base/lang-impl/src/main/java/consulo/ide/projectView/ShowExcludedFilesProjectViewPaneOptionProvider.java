@@ -24,7 +24,7 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.util.KeyWithDefaultValue;
+import consulo.util.dataholder.KeyWithDefaultValue;
 import consulo.ide.projectView.impl.ProjectViewPaneOptionProvider;
 import consulo.ui.annotation.RequiredUIAccess;
 

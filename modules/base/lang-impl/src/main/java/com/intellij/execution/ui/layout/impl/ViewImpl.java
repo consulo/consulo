@@ -19,7 +19,7 @@ package com.intellij.execution.ui.layout.impl;
 import com.intellij.execution.ui.layout.PlaceInGrid;
 import com.intellij.execution.ui.layout.Tab;
 import com.intellij.execution.ui.layout.View;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Element;
 

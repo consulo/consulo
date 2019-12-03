@@ -19,7 +19,7 @@ package com.intellij.ide.fileTemplates;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import consulo.annotation.DeprecationInfo;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;

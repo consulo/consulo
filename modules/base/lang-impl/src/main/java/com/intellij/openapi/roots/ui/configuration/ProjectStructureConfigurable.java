@@ -34,7 +34,7 @@ import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactsStructureC
 import com.intellij.openapi.roots.ui.configuration.projectRoot.*;
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;

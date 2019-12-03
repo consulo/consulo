@@ -3,7 +3,7 @@
  */
 package com.intellij.patterns;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.testFramework.UsefulTestCase;
 import com.intellij.util.ProcessingContext;
 

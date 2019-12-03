@@ -16,7 +16,7 @@
 package consulo.ui.desktop.internal.window;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import consulo.awt.TargetAWT;
 import consulo.awt.impl.ToSwingWindowWrapper;
 import consulo.ui.Component;

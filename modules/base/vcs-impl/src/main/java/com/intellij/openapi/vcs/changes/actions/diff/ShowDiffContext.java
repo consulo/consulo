@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.changes.actions.diff;
 
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.diff.DiffDialogHints;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.util.containers.ContainerUtil;

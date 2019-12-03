@@ -17,7 +17,7 @@ package com.intellij.ide.projectView;
 
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 
 import java.util.Collection;
 

@@ -17,7 +17,7 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.UserDataHolder;
+import consulo.util.dataholder.UserDataHolder;
 import consulo.injecting.InjectingContainer;
 import gnu.trove.THashMap;
 

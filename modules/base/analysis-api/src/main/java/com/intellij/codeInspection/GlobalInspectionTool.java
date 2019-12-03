@@ -21,6 +21,8 @@ import com.intellij.codeInspection.reference.RefEntity;
 import com.intellij.codeInspection.reference.RefGraphAnnotator;
 import com.intellij.codeInspection.reference.RefManager;
 import com.intellij.codeInspection.reference.RefVisitor;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -48,7 +50,7 @@ public abstract class GlobalInspectionTool extends InspectionProfileEntry {
   /**
    * Returns the annotator which will receive callbacks while the reference graph
    * is being built. The annotator can be used to add additional markers to reference
-   * graph nodes, through calls to {@link RefEntity#putUserData(com.intellij.openapi.util.Key, Object)}.
+   * graph nodes, through calls to {@link RefEntity#putUserData(Key, Object)}.
    *
    * @param refManager the reference graph manager instance
    * @return the annotator instance, or null if the inspection does not need any

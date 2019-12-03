@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.util;
+package consulo.util.dataholder;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.util.impl.KeyRegistry;
+import consulo.util.dataholder.internal.KeyRegistry;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -30,7 +30,7 @@ import java.util.Map;
  * @author Konstantin Bulenkov
  */
 public class Key<T> {
-  private static final KeyRegistry ourRegistry = new KeyRegistry();
+  private static final KeyRegistry ourRegistry = KeyRegistry.ourInstance;
 
   private final String myName; // for debug purposes only
   private final int myIndex;
@@ -68,8 +68,9 @@ public class Key<T> {
     return holder == null ? null : holder.getUserData(this);
   }
 
+  @Nullable
+  @SuppressWarnings("unchecked")
   public T get(@Nullable Map<Key, ?> holder) {
-    //noinspection unchecked
     return holder == null ? null : (T)holder.get(this);
   }
 
@@ -100,24 +101,5 @@ public class Key<T> {
     if (holder != null) {
       holder.put(this, value);
     }
-  }
-
-  /**
-   *
-   * @param index
-   * @param <T>
-   * @return can become null if the key has been gc-ed
-   */
-  @Nullable
-  public static <T> Key<T> getKeyByIndex(int index) {
-    return ourRegistry.getKeyByIndex(index);
-  }
-
-  /**
-   * @deprecated access to Key via its name is a kind of hack, use Key instance directly instead
-   */
-  @Nullable
-  public static Key<?> findKeyByName(String name) {
-    return ourRegistry.findKeyByName(name, key -> key.myName);
   }
 }

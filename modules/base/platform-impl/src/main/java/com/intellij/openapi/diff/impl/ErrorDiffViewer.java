@@ -18,7 +18,7 @@ package com.intellij.openapi.diff.impl;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.diff.*;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.AbstractDataProviderPanel;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;

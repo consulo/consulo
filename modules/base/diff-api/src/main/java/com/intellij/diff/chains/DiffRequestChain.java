@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.chains;
 
-import com.intellij.openapi.util.UserDataHolder;
+import consulo.util.dataholder.UserDataHolder;
 import javax.annotation.Nonnull;
 
 import java.util.List;

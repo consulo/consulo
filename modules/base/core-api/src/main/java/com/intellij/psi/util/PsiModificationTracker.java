@@ -3,7 +3,7 @@ package com.intellij.psi.util;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.util.messages.Topic;
 import javax.annotation.Nonnull;

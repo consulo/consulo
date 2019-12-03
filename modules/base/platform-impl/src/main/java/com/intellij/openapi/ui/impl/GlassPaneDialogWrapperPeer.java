@@ -43,6 +43,7 @@ import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.util.dataholder.Key;
 import consulo.wm.util.IdeFrameUtil;
 
 import javax.annotation.Nonnull;

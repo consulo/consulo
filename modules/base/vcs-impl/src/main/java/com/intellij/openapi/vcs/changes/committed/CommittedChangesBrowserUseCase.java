@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.committed;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 
 public enum CommittedChangesBrowserUseCase {
   COMMITTED,

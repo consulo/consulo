@@ -16,7 +16,7 @@
 package consulo.ui.web.internal.base;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.vaadin.ui.AbstractComponent;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -42,6 +42,7 @@ import com.intellij.util.containers.HashMap;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import consulo.util.ProjectPropertiesComponent;
+import consulo.util.dataholder.Key;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jdom.Element;

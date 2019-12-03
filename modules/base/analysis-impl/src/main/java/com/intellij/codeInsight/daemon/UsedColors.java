@@ -15,8 +15,8 @@
  */
 package com.intellij.codeInsight.daemon;
 
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.UserDataHolderEx;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolderEx;
 import com.intellij.openapi.util.text.StringHash;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.Contract;

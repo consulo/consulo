@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.process;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 
 public interface ProcessOutputTypes {
   Key SYSTEM = new Key("system");

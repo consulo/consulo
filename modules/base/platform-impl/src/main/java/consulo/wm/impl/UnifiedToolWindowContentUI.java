@@ -34,6 +34,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.ContentUtilEx;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
 import consulo.wm.impl.layout.UnifiedComboContentLayout;
 import consulo.wm.impl.layout.UnifiedContentLayout;
 import consulo.wm.impl.layout.UnifiedTabContentLayout;

@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.event.CaretEvent;
 import com.intellij.openapi.editor.event.EditorMouseEvent;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import consulo.logging.Logger;
 
 import java.util.Iterator;

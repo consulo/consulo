@@ -15,7 +15,7 @@
  */
 package com.intellij.analysis;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 
 public class AnalysisScopeUtil {
   public static final Key<AnalysisScope> KEY = Key.create("analysisScope");

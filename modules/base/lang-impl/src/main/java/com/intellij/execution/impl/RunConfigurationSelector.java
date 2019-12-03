@@ -16,7 +16,7 @@
 package com.intellij.execution.impl;
 
 import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 
 public interface RunConfigurationSelector {

@@ -16,7 +16,7 @@
 
 package com.intellij.ide.impl.dataRules;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import com.intellij.openapi.actionSystem.DataProvider;

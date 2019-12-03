@@ -17,13 +17,15 @@ package com.intellij.openapi.util;
 
 import com.intellij.util.NullableFunction;
 import com.intellij.util.ObjectUtil;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;
 
 /**
  * @author peter
  */
-public class NullableLazyKey<T,H extends UserDataHolder> extends Key<T>{
+public class NullableLazyKey<T,H extends UserDataHolder> extends Key<T> {
   private final NullableFunction<H,T> myFunction;
 
   private NullableLazyKey(@NonNls String name, final NullableFunction<H, T> function) {

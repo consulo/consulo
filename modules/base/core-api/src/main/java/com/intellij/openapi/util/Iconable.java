@@ -18,6 +18,9 @@ package com.intellij.openapi.util;
 import consulo.ui.image.Image;
 import consulo.util.collection.ConcurrentIntObjectMap;
 import consulo.util.collection.Maps;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
+import consulo.util.dataholder.UserDataHolderEx;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.annotation.Nonnull;

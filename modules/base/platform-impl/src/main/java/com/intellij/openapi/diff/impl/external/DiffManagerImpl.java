@@ -34,7 +34,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.markup.MarkupEditorFilter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.util.SmartList;
 import com.intellij.util.config.*;
 import com.intellij.util.containers.ContainerUtil;

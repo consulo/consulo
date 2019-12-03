@@ -16,7 +16,7 @@
 package consulo.roots;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

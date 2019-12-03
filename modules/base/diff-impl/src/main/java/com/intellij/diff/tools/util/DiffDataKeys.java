@@ -22,7 +22,7 @@ import com.intellij.diff.merge.MergeTool;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.diff.util.LineRange;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.pom.Navigatable;
 
 public interface DiffDataKeys {

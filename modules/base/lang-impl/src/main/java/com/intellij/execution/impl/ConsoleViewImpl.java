@@ -64,6 +64,7 @@ import com.intellij.util.DocumentUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.*;
 
 import javax.annotation.Nonnull;

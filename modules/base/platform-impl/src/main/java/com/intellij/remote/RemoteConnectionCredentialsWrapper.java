@@ -15,9 +15,9 @@
  */
 package com.intellij.remote;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.UserDataHolderBase;
+import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.remote.ext.CredentialsCase;
 import com.intellij.remote.ext.CredentialsManager;
 import com.intellij.remote.ext.RemoteCredentialsHandler;

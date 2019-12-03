@@ -4,7 +4,7 @@
 package com.intellij.usages;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.usageView.UsageInfo;
 import javax.annotation.Nonnull;

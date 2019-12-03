@@ -35,7 +35,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import consulo.logging.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

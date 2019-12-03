@@ -22,7 +22,7 @@ import com.intellij.codeInspection.InspectionProfileEntry;
 import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Function;
 import gnu.trove.THashSet;

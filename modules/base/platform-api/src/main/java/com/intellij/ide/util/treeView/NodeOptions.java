@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.util.treeView;
 
-import com.intellij.openapi.util.KeyWithDefaultValue;
+import consulo.util.dataholder.KeyWithDefaultValue;
 import javax.annotation.Nonnull;
 
 /**

@@ -15,7 +15,7 @@
  */
 package consulo.editor.notifications;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import java.util.Map;

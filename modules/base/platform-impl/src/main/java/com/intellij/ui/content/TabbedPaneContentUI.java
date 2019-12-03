@@ -16,7 +16,7 @@
 package com.intellij.ui.content;
 
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.*;
 import com.intellij.ui.content.tabs.PinToolwindowTabAction;

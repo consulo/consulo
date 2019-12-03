@@ -56,6 +56,7 @@ import com.intellij.util.ui.*;
 import com.intellij.util.ui.JBValue.JBValueGroup;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import consulo.awt.TargetAWT;
+import consulo.util.dataholder.Key;
 import gnu.trove.*;
 import org.jetbrains.annotations.NonNls;
 

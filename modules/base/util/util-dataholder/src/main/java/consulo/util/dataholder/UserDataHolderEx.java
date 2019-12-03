@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.util;
+
+package consulo.util.dataholder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public interface UserDataHolder {
-  @Nullable
-  <T> T getUserData(@Nonnull Key<T> key);
+/**
+ * @author cdr
+ */
+public interface UserDataHolderEx extends UserDataHolder {
+  /**
+   * @return written value
+   */
+  @Nonnull
+  <T> T putUserDataIfAbsent(@Nonnull Key<T> key, @Nonnull T value);
 
-  <T> void putUserData(@Nonnull Key<T> key, @Nullable T value);
+  /**
+   * Replaces (atomically) old value in the map with the new one
+   * @return true if old value got replaced, false otherwise
+   * @see java.util.concurrent.ConcurrentMap#replace(Object, Object, Object)
+   */
+  <T> boolean replace(@Nonnull Key<T> key, @Nullable T oldValue, @Nullable T newValue);
 }

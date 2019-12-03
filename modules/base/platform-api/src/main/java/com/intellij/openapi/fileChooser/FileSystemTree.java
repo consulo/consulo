@@ -16,7 +16,7 @@
 package com.intellij.openapi.fileChooser;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
 

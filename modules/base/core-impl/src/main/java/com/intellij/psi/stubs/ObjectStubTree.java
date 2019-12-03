@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.stubs;
 
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import gnu.trove.THashMap;
