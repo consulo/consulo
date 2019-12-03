@@ -35,6 +35,7 @@ import consulo.vfs.ArchiveFileSystem;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -50,8 +51,8 @@ public class FileTreeStructure extends AbstractTreeStructure {
 
   public FileTreeStructure(Project project, FileChooserDescriptor chooserDescriptor) {
     myProject = project;
-    final VirtualFile[] rootFiles = VfsUtilCore.toVirtualFileArray(chooserDescriptor.getRoots());
-    final String name = rootFiles.length == 1 && rootFiles[0] != null ? rootFiles[0].getPresentableUrl() : chooserDescriptor.getTitle();
+    List<VirtualFile> rootFiles = chooserDescriptor.getRoots();
+    String name = rootFiles.size() == 1 && rootFiles.get(0) != null ? rootFiles.get(0).getPresentableUrl() : chooserDescriptor.getTitle();
     myRootElement = new RootFileElement(rootFiles, name, chooserDescriptor.isShowFileSystemRoots());
     myChooserDescriptor = chooserDescriptor;
     myShowHidden = myChooserDescriptor.isShowHiddenFiles();

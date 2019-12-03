@@ -15,27 +15,29 @@
  */
 package com.intellij.openapi.fileChooser.ex;
 
+import com.intellij.execution.wsl.WSLUtil;
 import com.intellij.openapi.fileChooser.FileElement;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.ArrayUtil;
-import javax.annotation.Nonnull;
+import com.intellij.util.containers.ContainerUtil;
 
-import java.io.File;
+import javax.annotation.Nonnull;
+import java.nio.file.FileSystems;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class RootFileElement extends FileElement {
-  private VirtualFile[] myFiles;
+  private List<VirtualFile> myFiles;
   private Object[] myChildren;
 
-  public RootFileElement(@Nonnull VirtualFile[] files, String name, boolean showFileSystemRoots) {
-    super(files.length == 1 ? files[0] : null, name);
-    myFiles = files.length == 0 && showFileSystemRoots ? null : files;
+  public RootFileElement(@Nonnull List<VirtualFile> files, String name, boolean showFileSystemRoots) {
+    super(files.size() == 1 ? files.get(0) : null, name);
+    myFiles = files.isEmpty() && showFileSystemRoots ? null : files;
   }
 
   public Object[] getChildren() {
@@ -44,30 +46,25 @@ public class RootFileElement extends FileElement {
         myFiles = getFileSystemRoots();
       }
 
-      List<FileElement> children = new ArrayList<FileElement>();
-      for (final VirtualFile file : myFiles) {
-        if (file != null) {
-          children.add(new FileElement(file, file.getPresentableUrl()));
-        }
-      }
-      myChildren = ArrayUtil.toObjectArray(children);
+      myChildren = myFiles.stream().
+              filter(Objects::nonNull).
+              map(file -> new FileElement(file, file.getPresentableUrl())).
+              toArray();
     }
     return myChildren;
   }
 
-  private static VirtualFile[] getFileSystemRoots() {
-    final LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
-    final Set<VirtualFile> roots = new HashSet<VirtualFile>();
-    final File[] ioRoots = File.listRoots();
-    if (ioRoots != null) {
-      for (final File root : ioRoots) {
-        final String path = FileUtil.toSystemIndependentName(root.getAbsolutePath());
-        final VirtualFile file = localFileSystem.findFileByPath(path);
-        if (file != null) {
-          roots.add(file);
-        }
-      }
+  private static List<VirtualFile> getFileSystemRoots() {
+    LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
+
+    final List<VirtualFile> result = new ArrayList<>(StreamSupport.stream(FileSystems.getDefault().getRootDirectories().spliterator(), false).
+            map(root -> localFileSystem.findFileByPath(FileUtil.toSystemIndependentName(root.toString()))).
+            collect(Collectors.toList()));
+
+    if (SystemInfo.isWin10OrNewer && Boolean.getBoolean("wsl.p9.show.roots.in.file.chooser")) {
+      final List<VirtualFile> wslRoots = ContainerUtil.mapNotNull(WSLUtil.getExistingUNCRoots(), root -> localFileSystem.findFileByPath(FileUtil.toSystemIndependentName(root.getAbsolutePath())));
+      result.addAll(wslRoots);
     }
-    return VfsUtilCore.toVirtualFileArray(roots);
+    return result;
   }
 }

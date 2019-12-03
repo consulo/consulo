@@ -16,6 +16,7 @@
 package com.intellij.util;
 
 import com.intellij.openapi.util.SystemInfoRt;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 
@@ -30,11 +31,21 @@ import java.util.Set;
 public class PathUtilRt {
   @Nonnull
   public static String getFileName(@Nonnull String path) {
-    if (path.length() == 0) return "";
+    if (StringUtil.isEmpty(path)) {
+      return "";
+    }
+
+    int end = getEnd(path);
+    int start = getLastIndexOfPathSeparator(path, end);
+    if (isWindowsUNCRoot(path, start)) {
+      start = -1;
+    }
+    return path.substring(start + 1, end);
+  }
+
+  private static int getEnd(@Nonnull String path) {
     char c = path.charAt(path.length() - 1);
-    int end = c == '/' || c == '\\' ? path.length() - 1 : path.length();
-    int start = Math.max(path.lastIndexOf('/', end - 1), path.lastIndexOf('\\', end - 1)) + 1;
-    return path.substring(start, end);
+    return c == '/' || c == '\\' ? path.length() - 1 : path.length();
   }
 
   @Nonnull
@@ -42,9 +53,28 @@ public class PathUtilRt {
     if (path.length() == 0) return "";
     int end = Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\'));
     if (end == path.length() - 1) {
-      end = Math.max(path.lastIndexOf('/', end - 1), path.lastIndexOf('\\', end - 1));
+      end = getLastIndexOfPathSeparator(path, end);
     }
-    return end == -1 ? "" : path.substring(0, end);
+    if (end == -1 || end == 0) {
+      return "";
+    }
+    if (isWindowsUNCRoot(path, end)) {
+      return "";
+    }
+    // parent of '//host' is root
+    char prev = path.charAt(end - 1);
+    if (prev == '/' || prev == '\\') {
+      end--;
+    }
+    return path.substring(0, end);
+  }
+
+  private static int getLastIndexOfPathSeparator(@Nonnull String path, int end) {
+    return Math.max(path.lastIndexOf('/', end - 1), path.lastIndexOf('\\', end - 1));
+  }
+
+  private static boolean isWindowsUNCRoot(@Nonnull String path, int lastPathSeparatorPosition) {
+    return Platform.CURRENT == Platform.WINDOWS && (path.startsWith("//") || path.startsWith("\\\\")) && getLastIndexOfPathSeparator(path, lastPathSeparatorPosition) == 1;
   }
 
   @Nonnull
