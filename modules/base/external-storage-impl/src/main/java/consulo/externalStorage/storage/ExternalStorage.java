@@ -15,14 +15,13 @@
  */
 package consulo.externalStorage.storage;
 
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.RoamingType;
-import consulo.components.impl.stores.storage.StateStorageManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
+import consulo.components.impl.stores.storage.StateStorageManager;
+import consulo.container.boot.ContainerPathManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,14 +38,12 @@ import java.util.Collections;
  * @since 12-Feb-17
  */
 public class ExternalStorage {
-  private static final Logger LOGGER = Logger.getInstance(ExternalStorage.class);
-
   private File myProxyDirectory;
 
   private final ExternalStorageQueue myQueue = new ExternalStorageQueue(this);
 
   public ExternalStorage() {
-    myProxyDirectory = new File(PathManager.getSystemPath(), "externalStorage");
+    myProxyDirectory = new File(ContainerPathManager.get().getSystemPath(), "externalStorage");
   }
 
   File getProxyDirectory() {

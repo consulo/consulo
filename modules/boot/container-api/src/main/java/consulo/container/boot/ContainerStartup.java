@@ -15,8 +15,6 @@
  */
 package consulo.container.boot;
 
-import consulo.container.util.StatCollector;
-
 import javax.annotation.Nonnull;
 import java.util.Map;
 
@@ -28,8 +26,10 @@ public interface ContainerStartup {
   String STAT_COLLECTOR = "statCollector";
   String ARGS = "args";
 
-  void run(@Nonnull Map<String, Object> map, @Nonnull StatCollector stat, @Nonnull String[] args);
+  @Nonnull
+  ContainerPathManager createPathManager(@Nonnull Map<String, Object> args);
 
+  void run(@Nonnull Map<String, Object> args);
 
   void destroy();
 }

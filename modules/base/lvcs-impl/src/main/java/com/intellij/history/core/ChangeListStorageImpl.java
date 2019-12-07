@@ -24,12 +24,12 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.util.Consumer;
 import com.intellij.util.io.storage.AbstractStorage;
+import consulo.container.boot.ContainerPathManager;
 import gnu.trove.TIntHashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -123,7 +123,7 @@ public class ChangeListStorageImpl implements ChangeListStorage {
 
 
   public static void notifyUser(String message) {
-    final String logFile = PathManager.getLogPath();
+    final String logFile = ContainerPathManager.get().getLogPath();
     /*String createIssuePart = "<br>" +
                              "<br>" +
                              "Please attach log files from <a href=\"file\">" + logFile + "</a><br>" +

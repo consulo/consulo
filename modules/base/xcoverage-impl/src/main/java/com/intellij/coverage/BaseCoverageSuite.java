@@ -1,7 +1,7 @@
 package com.intellij.coverage;
 
 import com.intellij.execution.configurations.RunConfigurationBase;
-import com.intellij.openapi.application.PathManager;
+import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
@@ -107,7 +107,7 @@ public abstract class BaseCoverageSuite  implements CoverageSuite, JDOMExternali
     final String relativePath = FileUtil.toSystemDependentName(element.getAttributeValue(FILE_PATH));
     final File file = new File(relativePath);
     return new DefaultCoverageFileProvider(file.exists() ? file
-                                                         : new File(PathManager.getSystemPath(), relativePath),
+                                                         : new File(ContainerPathManager.get().getSystemPath(), relativePath),
                                             sourceProvider != null ? sourceProvider
                                                                    : DefaultCoverageFileProvider.class.getName());
   }
@@ -168,7 +168,7 @@ public abstract class BaseCoverageSuite  implements CoverageSuite, JDOMExternali
 
   public void writeExternal(final Element element) throws WriteExternalException {
     final String fileName =
-      FileUtil.getRelativePath(new File(PathManager.getSystemPath()), new File(myCoverageDataFileProvider.getCoverageDataFilePath()));
+      FileUtil.getRelativePath(new File(ContainerPathManager.get().getSystemPath()), new File(myCoverageDataFileProvider.getCoverageDataFilePath()));
     element.setAttribute(FILE_PATH, fileName != null ? FileUtil.toSystemIndependentName(fileName) : myCoverageDataFileProvider.getCoverageDataFilePath());
     element.setAttribute(NAME_ATTRIBUTE, myName);
     element.setAttribute(MODIFIED_STAMP, String.valueOf(myLastCoverageTimeStamp));

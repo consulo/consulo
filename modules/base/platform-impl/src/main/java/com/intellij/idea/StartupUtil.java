@@ -18,7 +18,6 @@ package com.intellij.idea;
 import com.intellij.jna.JnaLoader;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.SystemInfo;
@@ -31,6 +30,7 @@ import com.intellij.util.PairConsumer;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.container.ExitCodes;
 import consulo.container.StartupError;
+import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import consulo.logging.internal.LoggerFactory;
 import consulo.logging.internal.LoggerFactoryInitializer;
@@ -89,7 +89,7 @@ public class StartupUtil {
     }
 
     AppUIUtil.updateFrameClass();
-    newConfigFolder = !new File(PathManager.getConfigPath()).exists();
+    newConfigFolder = !new File(ContainerPathManager.get().getConfigPath()).exists();
 
     ActivationResult result = lockSystemFolders(lockFactory, args);
     if (result == ActivationResult.ACTIVATED) {
@@ -126,7 +126,7 @@ public class StartupUtil {
       throw new AssertionError();
     }
 
-    ourFolderLocker = lockFactory.apply(PathManager.getConfigPath(), PathManager.getSystemPath());
+    ourFolderLocker = lockFactory.apply(ContainerPathManager.get().getConfigPath(), ContainerPathManager.get().getSystemPath());
 
     ImportantFolderLocker.ActivateStatus status;
     try {
@@ -171,7 +171,7 @@ public class StartupUtil {
 
   public static void loadSystemLibraries(final Logger log) {
     // load JNA in own temp directory - to avoid collisions and work around no-exec /tmp
-    File ideTempDir = new File(PathManager.getTempPath());
+    File ideTempDir = new File(ContainerPathManager.get().getTempPath());
     if (!(ideTempDir.mkdirs() || ideTempDir.exists())) {
       throw new RuntimeException("Unable to create temp directory '" + ideTempDir + "'");
     }

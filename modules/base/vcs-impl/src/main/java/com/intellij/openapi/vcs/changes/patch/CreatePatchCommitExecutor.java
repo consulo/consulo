@@ -19,7 +19,6 @@ package com.intellij.openapi.vcs.changes.patch;
 import com.intellij.CommonBundle;
 import com.intellij.ide.actions.ShowFilePathAction;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diff.impl.patch.FilePatch;
 import com.intellij.openapi.diff.impl.patch.IdeaTextPatchBuilder;
@@ -41,12 +40,13 @@ import com.intellij.openapi.vcs.changes.ui.SessionDialog;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.WaitForProgressToShow;
 import com.intellij.vcsUtil.VcsUtil;
+import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -138,7 +138,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor implements Pr
         VcsApplicationSettings settings = VcsApplicationSettings.getInstance();
         PATCH_PATH = settings.PATCH_STORAGE_LOCATION;
         if (PATCH_PATH == null) {
-          PATCH_PATH = myProject.getBaseDir() == null ? PathManager.getHomePath() : myProject.getBaseDir().getPresentableUrl();
+          PATCH_PATH = myProject.getBaseDir() == null ? ContainerPathManager.get().getHomePath() : myProject.getBaseDir().getPresentableUrl();
         }
       }
       myPanel.setFileName(ShelveChangesManager.suggestPatchName(myProject, commitMessage, new File(PATCH_PATH), null));

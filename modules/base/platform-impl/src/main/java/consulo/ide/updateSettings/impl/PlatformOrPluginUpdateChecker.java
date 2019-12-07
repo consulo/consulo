@@ -22,8 +22,6 @@ import com.intellij.notification.*;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
-import com.intellij.openapi.application.PathManager;
-import consulo.container.plugin.PluginId;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
@@ -35,7 +33,9 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.ide.plugins.InstalledPluginsState;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
@@ -91,7 +91,7 @@ public class PlatformOrPluginUpdateChecker {
   }
 
   public static boolean isJreBuild() {
-    return new File(PathManager.getHomePath(), "jre").exists() || isForceBundledJreAtUpdate();
+    return new File(ContainerPathManager.get().getHomePath(), "jre").exists() || isForceBundledJreAtUpdate();
   }
 
   public static boolean isForceBundledJreAtUpdate() {

@@ -16,11 +16,11 @@
 package com.intellij.diagnostic;
 
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SystemProperties;
+import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
@@ -174,12 +174,12 @@ public class VMOptions {
     }
 
     vmOptionsFile = new File(vmOptionsFile).getAbsolutePath();
-    if (!FileUtil.isAncestor(PathManager.getHomePath(), vmOptionsFile, true)) {
+    if (!FileUtil.isAncestor(ContainerPathManager.get().getHomePath(), vmOptionsFile, true)) {
       // a file is located outside the IDE installation - meaning it is safe to overwrite
       return new File(vmOptionsFile);
     }
 
-    File appHomeDirectory = PathManager.getAppHomeDirectory();
+    File appHomeDirectory = ContainerPathManager.get().getAppHomeDirectory();
 
     String fileName = ApplicationNamesInfo.getInstance().getProductName().toLowerCase(Locale.US);
     if (SystemInfo.is64Bit && !SystemInfo.isMac) fileName += "64";

@@ -16,13 +16,12 @@
 
 package com.intellij.util.indexing;
 
-import com.intellij.openapi.application.PathManager;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.container.boot.ContainerPathManager;
 import consulo.util.collection.IntObjectMap;
+import consulo.util.collection.Maps;
 import gnu.trove.TObjectIntHashMap;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 
@@ -30,7 +29,7 @@ import java.io.*;
  * @author Eugene Zhuravlev
  */
 public class ID<K, V> extends IndexId<K, V> {
-  private static final IntObjectMap<ID> ourRegistry = ContainerUtil.createConcurrentIntObjectMap();
+  private static final IntObjectMap<ID> ourRegistry = Maps.newConcurrentIntObjectHashMap();
   private static final TObjectIntHashMap<String> ourNameToIdRegistry = new TObjectIntHashMap<>();
   static final int MAX_NUMBER_OF_INDICES = Short.MAX_VALUE;
 
@@ -66,7 +65,7 @@ public class ID<K, V> extends IndexId<K, V> {
 
   @Nonnull
   private static File getEnumFile() {
-    final File indexFolder = PathManager.getIndexRoot();
+    final File indexFolder = ContainerPathManager.get().getIndexRoot();
     return new File(indexFolder, "indices.enum");
   }
 
@@ -122,12 +121,13 @@ public class ID<K, V> extends IndexId<K, V> {
   }
 
   @Nonnull
-  public static <K, V> ID<K, V> create(@NonNls @Nonnull String name) {
+  public static <K, V> ID<K, V> create(@Nonnull String name) {
     final ID<K, V> found = findByName(name);
     return found == null ? new ID<>(name) : found;
   }
 
   @Nullable
+  @SuppressWarnings("unchecked")
   public static <K, V> ID<K, V> findByName(@Nonnull String name) {
     return (ID<K, V>)findById(stringToId(name));
   }

@@ -1,6 +1,5 @@
 package com.intellij.compiler.artifacts;
 
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -14,6 +13,7 @@ import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.testFramework.VfsTestUtil;
 import com.intellij.util.PathUtil;
+import consulo.container.boot.ContainerPathManager;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.vfs.util.ArchiveVfsUtil;
 import junit.framework.Assert;
@@ -84,7 +84,7 @@ public abstract class PackagingElementsTestCase extends ArtifactsTestCase {
   }
 
   private static VirtualFile getJarFromLibDirectory(final String relativePath) {
-    final File file = PathManager.findFileInLibDirectory(relativePath);
+    final File file = ContainerPathManager.get().findFileInLibDirectory(relativePath);
     final VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(file);
     Assert.assertNotNull(file.getAbsolutePath() + " not found", virtualFile);
     final VirtualFile jarRoot = ArchiveVfsUtil.getJarRootForLocalFile(virtualFile);

@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.application;
 
+import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -31,7 +31,7 @@ public class PathManagerEx {
 
   @Nonnull
   public static Path getAppSystemDir() {
-    Path path = Paths.get(PathManager.getSystemPath());
+    Path path = Paths.get(ContainerPathManager.get().getSystemPath());
     try {
       return path.toRealPath();
     }

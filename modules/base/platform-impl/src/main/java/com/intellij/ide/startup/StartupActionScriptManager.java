@@ -16,9 +16,9 @@
 package com.intellij.ide.startup;
 
 import com.intellij.ide.actions.ImportSettingsFilenameFilter;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.util.io.ZipUtil;
+import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -192,7 +192,7 @@ public class StartupActionScriptManager {
   }
 
   private static String getStartXmlFilePath() {
-    String systemPath = PathManager.getPluginTempPath();
+    String systemPath = ContainerPathManager.get().getPluginTempPath();
     return systemPath + File.separator + ourStartXmlFileName;
   }
 
@@ -251,7 +251,7 @@ public class StartupActionScriptManager {
 
   @SuppressWarnings("unchecked")
   private static List<ActionCommand> loadObsoleteActionScriptFile(Logger logger) {
-    File file = new File(PathManager.getPluginTempPath(), "action.script");
+    File file = new File(ContainerPathManager.get().getPluginTempPath(), "action.script");
     if (file.exists()) {
       ObjectInputStream stream = null;
       try {
@@ -283,7 +283,7 @@ public class StartupActionScriptManager {
   }
 
   private static void saveStartActions(List<ActionCommand> commands) throws IOException {
-    File temp = new File(PathManager.getPluginTempPath());
+    File temp = new File(ContainerPathManager.get().getPluginTempPath());
     boolean exists = true;
     if (!temp.exists()) {
       exists = temp.mkdirs();

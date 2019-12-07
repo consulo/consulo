@@ -1,15 +1,15 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.indexing;
 
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.events.*;
-import javax.annotation.Nonnull;
+import consulo.container.boot.ContainerPathManager;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.List;
 
@@ -17,8 +17,8 @@ abstract class IndexedFilesListener implements AsyncFileListener {
   private final VfsEventsMerger myEventMerger = new VfsEventsMerger();
 
   private static class ConfigHolder {
-    private static final VirtualFile myConfig = LocalFileSystem.getInstance().findFileByIoFile(new File(PathManager.getConfigPath()));
-    private static final VirtualFile myLog = LocalFileSystem.getInstance().findFileByIoFile(new File(PathManager.getLogPath()));
+    private static final VirtualFile myConfig = LocalFileSystem.getInstance().findFileByIoFile(new File(ContainerPathManager.get().getConfigPath()));
+    private static final VirtualFile myLog = LocalFileSystem.getInstance().findFileByIoFile(new File(ContainerPathManager.get().getLogPath()));
   }
 
   @Nonnull

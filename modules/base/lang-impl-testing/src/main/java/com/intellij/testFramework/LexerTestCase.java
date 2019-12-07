@@ -17,13 +17,13 @@ package com.intellij.testFramework;
 
 import com.intellij.lang.TokenWrapper;
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.tree.IElementType;
+import consulo.container.boot.ContainerPathManager;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 
@@ -43,7 +43,7 @@ public abstract class LexerTestCase extends UsefulTestCase {
       assertSameLines(expected, result);
     }
     else {
-      assertSameLinesWithFile(PathManager.getHomePath() + "/" + getDirPath() + "/" + getTestName(true) + ".txt", result);
+      assertSameLinesWithFile(ContainerPathManager.get().getHomePath() + "/" + getDirPath() + "/" + getTestName(true) + ".txt", result);
     }
   }
 
@@ -91,7 +91,7 @@ public abstract class LexerTestCase extends UsefulTestCase {
   }
 
   protected void doFileTest(@NonNls String fileExt) {
-    String fileName = PathManager.getHomePath() + "/" + getDirPath() + "/" + getTestName(true) + "." + fileExt;
+    String fileName = ContainerPathManager.get().getHomePath() + "/" + getDirPath() + "/" + getTestName(true) + "." + fileExt;
     String text = "";
     try {
       String fileText = FileUtil.loadFile(new File(fileName));

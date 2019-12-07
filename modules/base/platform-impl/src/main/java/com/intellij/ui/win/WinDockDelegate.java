@@ -19,9 +19,9 @@ import com.intellij.ide.RecentProjectsManager;
 import com.intellij.ide.ReopenProjectAction;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.SystemInfo;
 import consulo.application.ApplicationProperties;
+import consulo.container.boot.ContainerPathManager;
 import consulo.wm.impl.SystemDockImpl;
 
 import java.io.File;
@@ -46,7 +46,7 @@ public class WinDockDelegate implements SystemDockImpl.Delegate {
       final AnAction[] recentProjectActions = RecentProjectsManager.getInstance().getRecentProjectsActions(false);
       RecentTasks.clear();
       String name = ApplicationNamesInfo.getInstance().getProductName().toLowerCase(Locale.US);
-      File exePath = new File(PathManager.getAppHomeDirectory(), name + (SystemInfo.is64Bit ? "64" : "") + ".exe");
+      File exePath = new File(ContainerPathManager.get().getAppHomeDirectory(), name + (SystemInfo.is64Bit ? "64" : "") + ".exe");
       if (!exePath.exists()) {
         throw new IllegalArgumentException("Executable is not exists. Path: " + exePath.getPath());
       }

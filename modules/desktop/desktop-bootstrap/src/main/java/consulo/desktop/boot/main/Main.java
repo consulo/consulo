@@ -99,13 +99,14 @@ public class Main {
 
     File modulesDirectory = getModulesDirectory();
 
-    ContainerStartup containerStartup = BootstrapClassLoaderUtil.buildContainerStartup(stat, modulesDirectory, new ContainerLoggerImpl());
 
     Map<String, Object> map = new HashMap<String, Object>();
     map.put(ContainerStartup.ARGS, args);
     map.put(ContainerStartup.STAT_COLLECTOR, stat);
 
-    containerStartup.run(map, stat, args);
+    ContainerStartup containerStartup = BootstrapClassLoaderUtil.buildContainerStartup(map, modulesDirectory, new ContainerLoggerImpl());
+
+    containerStartup.run(map);
   }
 
   @Nonnull

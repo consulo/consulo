@@ -28,7 +28,6 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
@@ -43,6 +42,7 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.ZipUtil;
 import consulo.application.ex.ApplicationEx2;
 import consulo.components.impl.stores.storage.StateStorageManager;
+import consulo.container.boot.ContainerPathManager;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
@@ -90,7 +90,7 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
         if (ret != Messages.OK) return;
       }
       try (ZipOutputStream output = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(saveFile)))) {
-        final File configPath = new File(PathManager.getConfigPath());
+        final File configPath = new File(ContainerPathManager.get().getConfigPath());
         final HashSet<String> writtenItemRelativePaths = new HashSet<>();
         for (File file : exportFiles) {
           final String rPath = FileUtil.getRelativePath(configPath, file);

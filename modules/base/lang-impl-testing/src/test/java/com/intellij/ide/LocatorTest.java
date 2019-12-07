@@ -15,22 +15,22 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.testFramework.PlatformLangTestCase;
+import consulo.container.boot.ContainerPathManager;
 
 import java.io.File;
 
 public abstract class LocatorTest extends PlatformLangTestCase {
   public void test() throws Exception {
-    File locatorFile = new File(PathManager.getSystemPath() + "/" + ApplicationEx.LOCATOR_FILE_NAME);
+    File locatorFile = new File(ContainerPathManager.get().getSystemPath() + "/" + ApplicationEx.LOCATOR_FILE_NAME);
     assertTrue(locatorFile.getPath(), locatorFile.canRead());
 
     String home = FileUtil.loadFile(locatorFile, "UTF-8");
     assertTrue(home, StringUtil.isNotEmpty(home));
 
-    assertEquals(home, PathManager.getHomePath());
+    assertEquals(home, ContainerPathManager.get().getHomePath());
   }
 }

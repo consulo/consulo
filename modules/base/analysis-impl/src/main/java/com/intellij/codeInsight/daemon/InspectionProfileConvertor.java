@@ -20,18 +20,18 @@ import com.intellij.codeInspection.InspectionProfile;
 import com.intellij.codeInspection.ModifiableModel;
 import com.intellij.codeInspection.ex.InspectionToolWrapper;
 import com.intellij.lang.annotation.HighlightSeverity;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
+import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
@@ -129,7 +129,7 @@ public class InspectionProfileConvertor {
   }
 
   private static void renameOldDefaultsProfile() {
-    String directoryPath = PathManager.getConfigPath() + File.separator + InspectionProfileManager.INSPECTION_DIR;
+    String directoryPath = ContainerPathManager.get().getConfigPath() + File.separator + InspectionProfileManager.INSPECTION_DIR;
     File profileDirectory = new File(directoryPath);
     if (!profileDirectory.exists()) {
       return;

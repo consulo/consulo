@@ -16,8 +16,8 @@
 package com.intellij.ui.win;
 
 import com.intellij.openapi.application.ApplicationInfo;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.util.loader.NativeLibraryLoader;
+import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -31,7 +31,7 @@ public class RecentTasks {
     if(initialized.compareAndSet(false, true)) {
       try {
         NativeLibraryLoader.loadPlatformLibrary("jumpListBridge");
-        initialize(ApplicationInfo.getInstance().getName() + "." + PathManager.getConfigPath().hashCode());
+        initialize(ApplicationInfo.getInstance().getName() + "." + ContainerPathManager.get().getConfigPath().hashCode());
       }
       catch (Exception e) {
         LOG.error(e);

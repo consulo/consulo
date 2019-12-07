@@ -17,10 +17,10 @@ package consulo.components.impl.stores;
 
 import com.intellij.application.options.PathMacrosImpl;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
+import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import com.intellij.util.messages.MessageBus;
 import consulo.components.impl.stores.storage.DirectoryStorageData;
@@ -95,7 +95,7 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
     String configPath = myConfigPath;
     if (configPath == null) {
       // unrealistic case, but we keep backward compatibility
-      configPath = PathManager.getConfigPath();
+      configPath = ContainerPathManager.get().getConfigPath();
     }
     return configPath;
   }

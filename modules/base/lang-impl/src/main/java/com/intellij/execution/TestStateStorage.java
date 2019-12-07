@@ -16,9 +16,7 @@
 package com.intellij.execution;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.ServiceManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtilRt;
@@ -28,11 +26,13 @@ import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.EnumeratorStringDescriptor;
 import com.intellij.util.io.IOUtil;
 import com.intellij.util.io.PersistentHashMap;
+import consulo.container.boot.ContainerPathManager;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.File;
@@ -47,7 +47,7 @@ import java.util.concurrent.ScheduledFuture;
 @Singleton
 public class TestStateStorage implements Disposable {
 
-  private static final File TEST_HISTORY_PATH = new File(PathManager.getSystemPath(), "testHistory");
+  private static final File TEST_HISTORY_PATH = new File(ContainerPathManager.get().getSystemPath(), "testHistory");
 
   private static final int CURRENT_VERSION = 1;
 

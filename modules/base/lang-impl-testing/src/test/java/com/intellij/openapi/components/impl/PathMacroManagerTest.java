@@ -20,7 +20,6 @@ import com.intellij.application.options.ReplacePathToMacroMap;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.PathMacros;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.ex.ProjectEx;
@@ -28,6 +27,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.SystemProperties;
+import consulo.container.boot.ContainerPathManager;
 import org.hamcrest.Description;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -50,7 +50,7 @@ import static org.junit.Assume.assumeNotNull;
 @RunWith(JMock.class)
 @Ignore
 public class PathMacroManagerTest {
-  private static final String APP_HOME = FileUtil.toSystemIndependentName(PathManager.getHomePath());
+  private static final String APP_HOME = FileUtil.toSystemIndependentName(ContainerPathManager.get().getHomePath());
   private static final String USER_HOME = FileUtil.toSystemIndependentName(StringUtil.trimEnd(SystemProperties.getUserHome(), "/"));
 
   private Module myModule;

@@ -76,19 +76,19 @@ public class WebInitializer implements ServletContextListener {
 
     StatCollector stat = new StatCollector();
 
+    Map<String, Object> map = new HashMap<>();
+    map.put(ContainerStartup.STAT_COLLECTOR, stat);
+    map.put(ServletContext.class.getName(), servletContext);
+    map.put("platformPath", platformDirectory);
+
     File modulesDirectory = new File(platformDirectory, "modules");
 
     try {
-      ContainerStartup containerStartup = BootstrapClassLoaderUtil.buildContainerStartup(stat, modulesDirectory, new ContainerLoggerImpl());
-
-      Map<String, Object> map = new HashMap<>();
-      map.put(ContainerStartup.STAT_COLLECTOR, stat);
-      map.put(ServletContext.class.getName(), servletContext);
-      map.put("platformPath", platformDirectory);
+      ContainerStartup containerStartup = BootstrapClassLoaderUtil.buildContainerStartup(map, modulesDirectory, new ContainerLoggerImpl());
 
       servletContext.setAttribute(ContainerStartup.class.getName(), containerStartup);
 
-      containerStartup.run(map, stat, new String[0]);
+      containerStartup.run(map);
     }
     catch (Exception e) {
       e.printStackTrace();

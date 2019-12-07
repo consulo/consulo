@@ -16,6 +16,7 @@
 package com.intellij.openapi.util.io;
 
 import com.intellij.openapi.util.SystemInfo;
+import consulo.vfs.impl.mediator.FileSystemMediatorOverride;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
@@ -28,7 +29,7 @@ public abstract class FileAttributesNio2ReadingTest extends FileAttributesReadin
   private static final String FORCE_USE_NIO_2_KEY;
   static {
     try {
-      Field field = FileSystemUtil.class.getDeclaredField("FORCE_USE_NIO2_KEY");
+      Field field = FileSystemMediatorOverride.class.getDeclaredField("FORCE_USE_NIO2_KEY");
       field.setAccessible(true);
       FORCE_USE_NIO_2_KEY = (String)field.get(null);
     }

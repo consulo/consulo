@@ -26,7 +26,6 @@ import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -38,11 +37,11 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.io.File;
@@ -129,7 +128,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
   }
 
   private static File prepare() throws IOException {
-    File distributionDirectory = PathManager.getAppHomeDirectory();
+    File distributionDirectory = ContainerPathManager.get().getAppHomeDirectory();
     String name = ApplicationNamesInfo.getInstance().getFullProductName();
 
     final String iconPath = AppUIUtil.findIcon(distributionDirectory.getPath());

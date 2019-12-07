@@ -19,7 +19,6 @@ import com.intellij.CommonBundle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.psi.statistics.StatisticsInfo;
@@ -29,6 +28,7 @@ import com.intellij.util.NotNullFunction;
 import com.intellij.util.ScrambledInputStream;
 import com.intellij.util.ScrambledOutputStream;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.container.boot.ContainerPathManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
@@ -44,7 +44,7 @@ public class StatisticsManagerImpl extends StatisticsManager {
   private static final int UNIT_COUNT = 997;
   private static final Object LOCK = new Object();
 
-  @NonNls private static final String STORE_PATH = PathManager.getSystemPath() + File.separator + "stat";
+  @NonNls private static final String STORE_PATH = ContainerPathManager.get().getSystemPath() + File.separator + "stat";
 
   private final List<SoftReference<StatisticsUnit>> myUnits = ContainerUtil.newArrayList(Collections.nCopies(UNIT_COUNT, null));
   private final HashSet<StatisticsUnit> myModifiedUnits = new HashSet<>();

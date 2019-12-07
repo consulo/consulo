@@ -15,12 +15,12 @@
  */
 package com.intellij.ide.fileTemplates;
 
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import consulo.container.boot.ContainerPathManager;
 import consulo.util.pointers.Named;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 
 /**
@@ -32,7 +32,7 @@ public abstract class FileTemplatesScheme implements Named {
     @Nonnull
     @Override
     public String getTemplatesDir() {
-      return new File(PathManager.getConfigPath(), TEMPLATES_DIR).getPath();
+      return new File(ContainerPathManager.get().getConfigPath(), TEMPLATES_DIR).getPath();
     }
 
     @Nonnull

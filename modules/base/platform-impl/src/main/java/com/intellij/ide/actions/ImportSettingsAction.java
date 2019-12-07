@@ -27,7 +27,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.ui.Messages;
@@ -35,16 +34,16 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.ZipUtil;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.container.boot.ContainerPathManager;
 import consulo.ide.updateSettings.UpdateSettings;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
-
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -54,7 +53,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final Component component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
-    ChooseComponentsToExportDialog.chooseSettingsFile(PathManager.getConfigPath(), component, IdeBundle.message("title.import.file.location"),
+    ChooseComponentsToExportDialog.chooseSettingsFile(ContainerPathManager.get().getConfigPath(), component, IdeBundle.message("title.import.file.location"),
                                                       IdeBundle.message("prompt.choose.import.file.path")).doWhenDone(ImportSettingsAction::doImport);
   }
 
@@ -92,7 +91,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
       for (ExportSettingsAction.ExportableItem chosenComponent : chosenComponents) {
         final File[] exportFiles = chosenComponent.getExportFiles();
         for (File exportFile : exportFiles) {
-          final File configPath = new File(PathManager.getConfigPath());
+          final File configPath = new File(ContainerPathManager.get().getConfigPath());
           final String rPath = FileUtil.getRelativePath(configPath, exportFile);
           assert rPath != null;
           final String relativePath = FileUtil.toSystemIndependentName(rPath);
@@ -102,9 +101,9 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
 
       relativeNamesToExtract.add(PluginManager.INSTALLED_TXT);
 
-      final File tempFile = new File(PathManager.getPluginTempPath() + "/" + saveFile.getName());
+      final File tempFile = new File(ContainerPathManager.get().getPluginTempPath() + "/" + saveFile.getName());
       FileUtil.copy(saveFile, tempFile);
-      File outDir = new File(PathManager.getConfigPath());
+      File outDir = new File(ContainerPathManager.get().getConfigPath());
       final ImportSettingsFilenameFilter filenameFilter = new ImportSettingsFilenameFilter(relativeNamesToExtract);
       StartupActionScriptManager.ActionCommand unzip = new StartupActionScriptManager.UnzipCommand(tempFile, outDir, filenameFilter);
 
@@ -147,7 +146,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
   private static List<ExportSettingsAction.ExportableItem> getComponentsStored(@Nonnull File zipFile,
                                                                                @Nonnull Collection<? extends ExportSettingsAction.ExportableItem> registeredComponents)
           throws IOException {
-    File configPath = new File(PathManager.getConfigPath());
+    File configPath = new File(ContainerPathManager.get().getConfigPath());
     List<ExportSettingsAction.ExportableItem> components = new ArrayList<>();
     for (ExportSettingsAction.ExportableItem component : registeredComponents) {
       for (File exportFile : component.getExportFiles()) {

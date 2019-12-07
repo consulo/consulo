@@ -44,6 +44,14 @@ public class StatCollector {
     };
   }
 
+  public void markWith(final String id, Runnable task) {
+    Runnable mark = mark(id);
+
+    task.run();
+
+    mark.run();
+  }
+
   public void dump(String title, Consumer<String> logInfo) {
     logInfo.accept(title + ":");
     for (Map.Entry<String, Long> entry : data()) {

@@ -19,7 +19,10 @@ import com.intellij.concurrency.JobScheduler;
 import com.intellij.diagnostic.VMOptions;
 import com.intellij.jna.JnaLoader;
 import com.intellij.notification.*;
-import com.intellij.openapi.application.*;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ApplicationNamesInfo;
+import com.intellij.openapi.application.PreloadingActivity;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.SystemInfo;
@@ -35,6 +38,7 @@ import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import consulo.application.AccessRule;
+import consulo.container.boot.ContainerPathManager;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
 import consulo.logging.Logger;
 import consulo.util.ApplicationPropertiesComponent;
@@ -174,7 +178,7 @@ public class SystemHealthMonitor extends PreloadingActivity {
       return;
     }
 
-    final File file = new File(PathManager.getSystemPath());
+    final File file = new File(ContainerPathManager.get().getSystemPath());
     final AtomicBoolean reported = new AtomicBoolean();
     final ThreadLocal<Future<Long>> ourFreeSpaceCalculation = new ThreadLocal<>();
 

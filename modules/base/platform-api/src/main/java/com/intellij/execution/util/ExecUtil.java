@@ -19,16 +19,16 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.process.CapturingProcessHandler;
 import com.intellij.execution.process.ProcessOutput;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.container.boot.ContainerPathManager;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Arrays;
@@ -111,7 +111,7 @@ public class ExecUtil {
 
   @Nonnull
   public static File createTempExecutableScript(@Nonnull String prefix, @Nonnull String suffix, @Nonnull String content) throws IOException, ExecutionException {
-    File tempDir = new File(PathManager.getTempPath());
+    File tempDir = new File(ContainerPathManager.get().getTempPath());
     File tempFile = FileUtil.createTempFile(tempDir, prefix, suffix, true, true);
     FileUtil.writeToFile(tempFile, content.getBytes(CharsetToolkit.UTF8));
     if (!tempFile.setExecutable(true, true)) {

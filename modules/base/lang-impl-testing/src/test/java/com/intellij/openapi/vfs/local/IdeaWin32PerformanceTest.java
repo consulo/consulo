@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vfs.local;import com.intellij.openapi.application.PathManager;
+package com.intellij.openapi.vfs.local;
+
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.win32.FileInfo;
 import com.intellij.openapi.util.io.win32.IdeaWin32;
+import consulo.container.boot.ContainerPathManager;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.junit.Assume.assumeTrue;
 
 public class IdeaWin32PerformanceTest {
@@ -40,7 +40,7 @@ public class IdeaWin32PerformanceTest {
 
   @Test
   public void list() throws Exception {
-    String path = PathManager.getHomePath();
+    String path = ContainerPathManager.get().getHomePath();
     doTest(new File(path));
     long gain = (myJavaTotal - myIdeaTotal) * 100 / myJavaTotal;
     String message = "home=" + path + " java.io=" + myJavaTotal / 1000 + "ms IdeaWin32=" + myIdeaTotal / 1000 + "ms gain=" + gain + "%";

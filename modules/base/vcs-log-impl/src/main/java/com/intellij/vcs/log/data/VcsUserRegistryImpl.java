@@ -16,8 +16,6 @@
 package com.intellij.vcs.log.data;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.PathManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Interner;
@@ -25,11 +23,13 @@ import com.intellij.util.io.*;
 import com.intellij.vcs.log.VcsUser;
 import com.intellij.vcs.log.VcsUserRegistry;
 import com.intellij.vcs.log.impl.VcsUserImpl;
+import consulo.container.boot.ContainerPathManager;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.File;
@@ -44,7 +44,7 @@ import java.util.Set;
 @Singleton
 public class VcsUserRegistryImpl implements Disposable, VcsUserRegistry {
 
-  private static final File USER_CACHE_APP_DIR = new File(PathManager.getSystemPath(), "vcs-users");
+  private static final File USER_CACHE_APP_DIR = new File(ContainerPathManager.get().getSystemPath(), "vcs-users");
   private static final Logger LOG = Logger.getInstance(VcsUserRegistryImpl.class);
   private static final int STORAGE_VERSION = 2;
   private static final PersistentEnumeratorBase.DataFilter ACCEPT_ALL_DATA_FILTER = id -> true;

@@ -32,7 +32,6 @@ import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.ide.actions.OpenProjectFileChooserDescriptor;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.PathManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.externalSystem.ExternalSystemManager;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
@@ -54,11 +53,13 @@ import com.intellij.util.PathUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
+import consulo.container.boot.ContainerPathManager;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.nio.charset.Charset;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -125,7 +126,7 @@ public class RemoteExternalSystemCommunicationManager implements ExternalSystemC
         final SimpleJavaParameters params = new SimpleJavaParameters();
         params.setJdk(new SimpleJavaSdkType().createJdk("tmp", SystemProperties.getJavaHome()));
 
-        params.setWorkingDirectory(PathManager.getBinPath());
+        params.setWorkingDirectory(ContainerPathManager.get().getBinPath());
         final List<String> classPath = ContainerUtilRt.newArrayList();
 
         // IDE jars.

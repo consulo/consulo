@@ -23,7 +23,6 @@ import com.intellij.lang.PerFileMappingsBase;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
@@ -59,6 +58,7 @@ import com.intellij.util.indexing.IndexableSetContributor;
 import com.intellij.util.indexing.LightDirectoryIndex;
 import com.intellij.util.messages.MessageBus;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.container.boot.ContainerPathManager;
 import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdater;
 import org.jdom.Element;
@@ -150,7 +150,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
 
   @Nonnull
   protected String getRootPath() {
-    return FileUtil.toSystemIndependentName(PathManager.getScratchPath());
+    return FileUtil.toSystemIndependentName(ContainerPathManager.get().getScratchPath());
   }
 
   @Nonnull

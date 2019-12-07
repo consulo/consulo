@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.vfs.impl.http;
 
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.PathUtil;
-import javax.annotation.Nonnull;
+import consulo.container.boot.ContainerPathManager;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 
@@ -30,7 +30,7 @@ public class LocalFileStorage {
   private final File myStorageIODirectory;
 
   public LocalFileStorage() {
-    myStorageIODirectory = new File(PathManager.getSystemPath(), "httpFileSystem");
+    myStorageIODirectory = new File(ContainerPathManager.get().getSystemPath(), "httpFileSystem");
     myStorageIODirectory.mkdirs();
   }
 

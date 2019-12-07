@@ -2,16 +2,16 @@
 package com.intellij.psi.stubs;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.PathManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.util.io.IOUtil;
 import com.intellij.util.io.PersistentStringEnumerator;
+import consulo.container.boot.ContainerPathManager;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.io.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -31,7 +31,7 @@ public final class SerializationManagerImpl extends SerializationManagerEx imple
 
   @Inject
   public SerializationManagerImpl() {
-    this(new File(PathManager.getIndexRoot(), "rep.names"), false);
+    this(new File(ContainerPathManager.get().getIndexRoot(), "rep.names"), false);
   }
 
   public SerializationManagerImpl(@Nonnull File nameStorageFile, boolean unmodifiable) {

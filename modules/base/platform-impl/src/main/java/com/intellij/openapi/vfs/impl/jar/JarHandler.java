@@ -17,8 +17,6 @@ package com.intellij.openapi.vfs.impl.jar;
 
 import com.intellij.notification.NotificationGroup;
 import com.intellij.notification.NotificationType;
-import com.intellij.openapi.application.PathManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.NotNullLazyValue;
@@ -34,14 +32,16 @@ import com.intellij.util.CommonProcessors;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.*;
+import consulo.container.boot.ContainerPathManager;
+import consulo.logging.Logger;
 import consulo.vfs.impl.archive.ArchiveFile;
 import consulo.vfs.impl.archive.ArchiveFileSystemBase;
 import gnu.trove.THashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.io.*;
 import java.io.DataOutputStream;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -216,7 +216,7 @@ public class JarHandler extends ZipHandler {
   @Nonnull
   private static String getJarsDir() {
     String dir = System.getProperty("jars_dir");
-    return dir == null ? PathManager.getSystemPath() + File.separatorChar + JARS_FOLDER : dir;
+    return dir == null ? ContainerPathManager.get().getSystemPath() + File.separatorChar + JARS_FOLDER : dir;
   }
 
   @Nonnull

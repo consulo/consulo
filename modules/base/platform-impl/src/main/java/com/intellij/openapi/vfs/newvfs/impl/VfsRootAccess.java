@@ -4,7 +4,6 @@ package com.intellij.openapi.vfs.newvfs.impl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -23,12 +22,12 @@ import com.intellij.util.PathUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ex.ApplicationEx2;
+import consulo.container.boot.ContainerPathManager;
 import consulo.vfs.ArchiveFileSystem;
 import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
@@ -98,7 +97,7 @@ public class VfsRootAccess {
     if (openProjects.length == 0) return null;
 
     final Set<String> allowed = new THashSet<>(FileUtil.PATH_HASHING_STRATEGY);
-    allowed.add(FileUtil.toSystemIndependentName(PathManager.getHomePath()));
+    allowed.add(FileUtil.toSystemIndependentName(ContainerPathManager.get().getHomePath()));
 
     // In plugin development environment PathManager.getHomePath() returns path like "~/.IntelliJIdea/system/plugins-sandbox/test" when running tests
     // The following is to avoid errors in tests like "File accessed outside allowed roots: file://C:/Program Files/idea/lib/idea.jar"

@@ -24,7 +24,6 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
@@ -46,6 +45,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.io.ZipUtil;
 import com.intellij.util.ui.OptionsDialog;
+import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.Contract;
 
@@ -316,7 +316,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
   }
 
   private static File getExtractedFilesDir() {
-    return new File(PathManager.getSystemPath(), "ExtractedFiles");
+    return new File(ContainerPathManager.get().getSystemPath(), "ExtractedFiles");
   }
 
   public static void clearExtractedFiles() {

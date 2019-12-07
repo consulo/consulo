@@ -15,16 +15,16 @@
  */
 package com.intellij.util.proxy;
 
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.io.FileUtil;
+import consulo.container.boot.ContainerPathManager;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.util.Properties;
 
 public class SharedProxyConfig {
-  private static final File CONFIG_FILE = new File(PathManager.getConfigPath(), "proxy_config");
+  private static final File CONFIG_FILE = new File(ContainerPathManager.get().getConfigPath(), "proxy_config");
   private static final String HOST = "host";
   private static final String PORT = "port";
   private static final String LOGIN = "login";

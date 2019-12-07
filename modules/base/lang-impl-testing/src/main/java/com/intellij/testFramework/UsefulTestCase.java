@@ -20,12 +20,14 @@ import com.intellij.diagnostic.PerformanceWatcher;
 import com.intellij.mock.MockApplication;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.impl.StartMarkAction;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.JDOMExternalizable;
+import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
@@ -44,14 +46,18 @@ import com.intellij.util.Function;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.container.boot.ContainerPathManager;
 import consulo.util.dataholder.Key;
 import gnu.trove.THashSet;
-import junit.framework.*;
+import junit.framework.AssertionFailedError;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 import org.intellij.lang.annotations.RegExp;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -60,8 +66,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.security.SecureRandom;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -118,7 +124,7 @@ public abstract class UsefulTestCase extends TestCase {
   protected void setUp() throws Exception {
     super.setUp();
 
-    PathManager.ensureConfigFolderExists();
+    ensureConfigFolderExists();
 
     if (shouldContainTempFiles()) {
       String testName = getTestName(true);
@@ -128,6 +134,20 @@ public abstract class UsefulTestCase extends TestCase {
       FileUtil.resetCanonicalTempPathCache(myTempDir);
     }
     ApplicationInfoImpl.setInPerformanceTest(isPerformanceTest());
+  }
+
+  public static void ensureConfigFolderExists() {
+    checkAndCreate(ContainerPathManager.get().getConfigPath(), true);
+  }
+
+  private static boolean checkAndCreate(String path, boolean createIfNotExists) {
+    if (createIfNotExists) {
+      File file = new File(path);
+      if (!file.exists()) {
+        return file.mkdirs();
+      }
+    }
+    return false;
   }
 
   @Override
@@ -850,7 +870,7 @@ public abstract class UsefulTestCase extends TestCase {
   }
 
   protected String getHomePath() {
-    return PathManager.getHomePath().replace(File.separatorChar, '/');
+    return ContainerPathManager.get().getHomePath().replace(File.separatorChar, '/');
   }
 
   protected static boolean isInHeadlessEnvironment() {

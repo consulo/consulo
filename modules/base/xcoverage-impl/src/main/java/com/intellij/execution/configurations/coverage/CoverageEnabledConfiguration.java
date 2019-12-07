@@ -4,11 +4,14 @@ import com.intellij.coverage.CoverageEngine;
 import com.intellij.coverage.CoverageRunner;
 import com.intellij.coverage.CoverageSuite;
 import com.intellij.execution.configurations.RunConfigurationBase;
-import com.intellij.openapi.application.PathManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.util.JDOMExternalizable;
+import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.io.FileUtil;
+import consulo.container.boot.ContainerPathManager;
+import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -231,7 +234,7 @@ public abstract class CoverageEnabledConfiguration implements JDOMExternalizable
       return null;
     }
 
-    @NonNls final String coverageRootPath = PathManager.getSystemPath() + File.separator + "coverage";
+    @NonNls final String coverageRootPath = ContainerPathManager.get().getSystemPath() + File.separator + "coverage";
     final String path = coverageRootPath + File.separator + myProject.getName() + coverageFileNameSeparator()
                         + FileUtil.sanitizeFileName(myConfiguration.getName()) + ".coverage";
 

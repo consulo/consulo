@@ -9,6 +9,7 @@ module consulo.container.api {
   exports consulo.container.util;
 
   exports consulo.container.plugin.internal to consulo.container.impl;
+  exports consulo.container.boot.internal to consulo.container.impl;
 
   uses consulo.container.boot.ContainerStartup;
   uses consulo.container.plugin.internal.PluginManagerInternal;

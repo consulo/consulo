@@ -5,9 +5,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.ServiceManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
@@ -15,9 +13,11 @@ import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ApplicationProperties;
+import consulo.container.boot.ContainerPathManager;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.management.ListenerNotFoundException;
 import javax.management.Notification;
 import javax.management.NotificationEmitter;
@@ -51,7 +51,7 @@ public final class PerformanceWatcher implements Disposable {
   private static final String DURATION_FILE_NAME = ".duration";
   private ScheduledFuture<?> myThread;
   private volatile SamplingTask myDumpTask;
-  private final File myLogDir = new File(PathManager.getLogPath());
+  private final File myLogDir = new File(ContainerPathManager.get().getLogPath());
   private List<StackTraceElement> myStacktraceCommonPart;
 
   private volatile ApdexData mySwingApdex = ApdexData.EMPTY;

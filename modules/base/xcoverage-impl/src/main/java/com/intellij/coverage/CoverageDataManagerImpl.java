@@ -13,7 +13,6 @@ import com.intellij.execution.process.ProcessHandler;
 import com.intellij.ide.projectView.ProjectView;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
@@ -50,6 +49,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.UIUtil;
+import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -210,7 +210,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
     final String fileName = suite.getCoverageDataFileName();
 
     boolean deleteTraces = suite.isTracingEnabled();
-    if (!FileUtil.isAncestor(PathManager.getSystemPath(), fileName, false)) {
+    if (!FileUtil.isAncestor(ContainerPathManager.get().getSystemPath(), fileName, false)) {
       String message = "Would you like to delete file \'" + fileName + "\' ";
       if (deleteTraces) {
         message += "and traces directory \'" + FileUtil.getNameWithoutExtension(new File(fileName)) + "\' ";

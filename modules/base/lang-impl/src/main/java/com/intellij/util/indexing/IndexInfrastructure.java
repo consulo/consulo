@@ -7,8 +7,6 @@ package com.intellij.util.indexing;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.CacheUpdateRunner;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -19,10 +17,11 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
-import javax.annotation.Nonnull;
-
+import consulo.container.boot.ContainerPathManager;
+import consulo.logging.Logger;
 import org.jetbrains.ide.PooledThreadExecutor;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
@@ -64,7 +63,7 @@ public class IndexInfrastructure {
   }
 
   public static File getPersistentIndexRoot() {
-    File indexDir = new File(PathManager.getIndexRoot() + File.separator + PERSISTENT_INDEX_DIRECTORY_NAME);
+    File indexDir = new File(ContainerPathManager.get().getIndexRoot() + File.separator + PERSISTENT_INDEX_DIRECTORY_NAME);
     indexDir.mkdirs();
     return indexDir;
   }
@@ -91,7 +90,7 @@ public class IndexInfrastructure {
     }
     else {
       if (relativePath.length() > 0) relativePath = File.separator + relativePath;
-      indexDir = new File(PathManager.getIndexRoot() + relativePath, dirName);
+      indexDir = new File(ContainerPathManager.get().getIndexRoot() + relativePath, dirName);
     }
     indexDir.mkdirs();
     return indexDir;

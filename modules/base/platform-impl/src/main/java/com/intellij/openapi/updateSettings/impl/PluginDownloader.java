@@ -22,9 +22,6 @@ import com.intellij.ide.plugins.RepositoryHelper;
 import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
-import consulo.logging.Logger;
-import consulo.container.plugin.PluginId;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.SystemInfo;
@@ -33,9 +30,12 @@ import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.io.HttpRequests;
 import com.intellij.util.io.ZipUtil;
+import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
+import consulo.logging.Logger;
 import consulo.util.io2.PathUtil;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -131,7 +131,7 @@ public class PluginDownloader {
 
       String prefix = SystemInfo.isMac ? "Consulo.app/Contents/platform/" : "Consulo/platform/";
 
-      File platformDirectory = PathManager.getExternalPlatformDirectory();
+      File platformDirectory = ContainerPathManager.get().getExternalPlatformDirectory();
 
       try (TarArchiveInputStream ais = new TarArchiveInputStream(new GzipCompressorInputStream(new FileInputStream(myFile)))) {
         TarArchiveEntry tempEntry;
@@ -188,10 +188,10 @@ public class PluginDownloader {
     // add command to unzip file to the plugins path
     String unzipPath;
     if (ZipUtil.isZipContainsFolder(fromFile)) {
-      unzipPath = PathManager.getInstallPluginsPath();
+      unzipPath = ContainerPathManager.get().getInstallPluginsPath();
     }
     else {
-      unzipPath = PathManager.getInstallPluginsPath() + File.separator + pluginName;
+      unzipPath = ContainerPathManager.get().getInstallPluginsPath() + File.separator + pluginName;
     }
 
     StartupActionScriptManager.ActionCommand unzip = new StartupActionScriptManager.UnzipCommand(fromFile, new File(unzipPath));
@@ -206,7 +206,7 @@ public class PluginDownloader {
   }
 
   private File downloadPlugin(final ProgressIndicator indicator) throws IOException {
-    File pluginsTemp = new File(PathManager.getPluginTempPath());
+    File pluginsTemp = new File(ContainerPathManager.get().getPluginTempPath());
     if (!pluginsTemp.exists() && !pluginsTemp.mkdirs()) {
       throw new IOException(IdeBundle.message("error.cannot.create.temp.dir", pluginsTemp));
     }

@@ -18,7 +18,7 @@ package com.intellij.ide.actions;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.ElementsChooser;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.application.PathManager;
+import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
@@ -51,7 +51,7 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
   private final ElementsChooser<ComponentElementProperties> myChooser;
   private final FieldPanel myPathPanel;
   @NonNls
-  public static final String DEFAULT_PATH = FileUtil.toSystemDependentName(PathManager.getConfigPath() + "/" + "settings.zip");
+  public static final String DEFAULT_PATH = FileUtil.toSystemDependentName(ContainerPathManager.get().getConfigPath() + "/" + "settings.zip");
   private final boolean myShowFilePath;
   private final String myDescription;
 

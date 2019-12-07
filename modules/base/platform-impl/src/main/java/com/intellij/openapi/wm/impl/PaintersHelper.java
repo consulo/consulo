@@ -17,7 +17,6 @@ package com.intellij.openapi.wm.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.AbstractPainter;
 import com.intellij.openapi.ui.GraphicsConfig;
@@ -31,12 +30,12 @@ import com.intellij.util.ImageLoader;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.container.boot.ContainerPathManager;
 import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -244,7 +243,7 @@ final class PaintersHelper implements Painter.Listener {
           URL url = filePath.contains("://") ? new URL(filePath) :
                     (FileUtil.isAbsolutePlatformIndependent(filePath)
                      ? new File(filePath)
-                     : new File(PathManager.getConfigPath(), filePath)).toURI().toURL();
+                     : new File(ContainerPathManager.get().getConfigPath(), filePath)).toURI().toURL();
           ApplicationManager.getApplication().executeOnPooledThread(() -> {
             final Image m = ImageLoader.loadFromUrl(url);
             ModalityState modalityState = ModalityState.stateForComponent(rootComponent);

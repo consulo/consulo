@@ -19,11 +19,11 @@
  */
 package com.intellij.testFramework;
 
-import com.intellij.openapi.application.PathManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.io.FileUtil;
-import javax.annotation.Nullable;
+import consulo.container.boot.ContainerPathManager;
+import consulo.logging.Logger;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 
@@ -35,7 +35,7 @@ public class TeamCityLogger {
   private TeamCityLogger() {}
 
   private static File reportFile() {
-    return new File(PathManager.getHomePath() + "/reports/report.txt");
+    return new File(ContainerPathManager.get().getHomePath() + "/reports/report.txt");
   }
 
   public static void info(String message) {

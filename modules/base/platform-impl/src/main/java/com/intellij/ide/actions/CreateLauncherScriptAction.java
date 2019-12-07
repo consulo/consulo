@@ -25,13 +25,13 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
@@ -138,14 +138,14 @@ public class CreateLauncherScriptAction extends DumbAwareAction {
   }
 
   private static File createLauncherScriptFile() throws IOException, ExecutionException {
-    String runPath = PathManager.getHomePath();
+    String runPath = ContainerPathManager.get().getHomePath();
     String productName = ApplicationNamesInfo.getInstance().getProductName().toLowerCase(Locale.US);
     if (!SystemInfo.isMac) runPath += "/bin/" + productName + ".sh";
     else if (runPath.endsWith(CONTENTS)) runPath = runPath.substring(0, runPath.length() - CONTENTS.length());
 
     ClassLoader loader = CreateLauncherScriptAction.class.getClassLoader();
     assert loader != null;
-    Map<String, String> variables = newHashMap(pair("$CONFIG_PATH$", PathManager.getConfigPath()), pair("$RUN_PATH$", runPath));
+    Map<String, String> variables = newHashMap(pair("$CONFIG_PATH$", ContainerPathManager.get().getConfigPath()), pair("$RUN_PATH$", runPath));
     String launcherContents = StringUtil.convertLineSeparators(ExecUtil.loadTemplate(loader, "launcher.py", variables));
 
     return ExecUtil.createTempExecutableScript("launcher", "", launcherContents);

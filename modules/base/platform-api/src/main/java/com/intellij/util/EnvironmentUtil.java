@@ -16,7 +16,6 @@
 package com.intellij.util;
 
 import com.intellij.execution.process.UnixProcessManager;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.SystemInfo;
@@ -28,6 +27,7 @@ import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.FixedFuture;
 import com.intellij.util.io.BaseOutputReader;
 import com.intellij.util.text.CaseInsensitiveStringHashingStrategy;
+import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.TestOnly;
@@ -161,9 +161,9 @@ public class EnvironmentUtil {
   public static class ShellEnvReader {
 
     public Map<String, String> readShellEnv() throws Exception {
-      File reader = FileUtil.findFirstThatExist(PathManager.getBinPath() + "/printenv.py");
+      File reader = FileUtil.findFirstThatExist(ContainerPathManager.get().getBinPath() + "/printenv.py");
       if (reader == null) {
-        throw new Exception("bin:" + PathManager.getBinPath());
+        throw new Exception("bin:" + ContainerPathManager.get().getBinPath());
       }
 
       File envFile = FileUtil.createTempFile("intellij-shell-env.", ".tmp", false);

@@ -15,7 +15,6 @@
  */
 package consulo.desktop.container.boot;
 
-import consulo.bootstrap.concurrent.IdeaForkJoinWorkerThreadFactory;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.idea.ApplicationStarter;
@@ -23,11 +22,13 @@ import com.intellij.idea.DesktopImportantFolderLocker;
 import com.intellij.idea.StartupUtil;
 import com.intellij.idea.starter.DesktopApplicationPostStarter;
 import com.intellij.idea.starter.DesktopApplicationStarter;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.ui.AppUIUtil;
+import consulo.bootstrap.concurrent.IdeaForkJoinWorkerThreadFactory;
+import consulo.container.boot.ContainerPathManager;
 import consulo.container.boot.ContainerStartup;
 import consulo.container.util.StatCollector;
 import consulo.logging.Logger;
+import consulo.vfs.impl.mediator.FileSystemMediatorOverride;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -42,20 +43,30 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public class DesktopContainerStartup implements ContainerStartup {
   @Override
-  public void run(@Nonnull Map<String, Object> map, @Nonnull StatCollector stat, @Nonnull String[] args) {
+  public void run(@Nonnull Map<String, Object> map) {
+    StatCollector stat = (StatCollector)map.get(ContainerStartup.STAT_COLLECTOR);
+    String[] args = (String[])map.get(ContainerStartup.ARGS);
+
     Runnable appInitializeMark = stat.mark(StatCollector.APP_INITIALIZE);
 
     IdeaForkJoinWorkerThreadFactory.setupForkJoinCommonPool();
 
-    PathManager.loadProperties();
+    DesktopContainerPathManager pathManager = (DesktopContainerPathManager)ContainerPathManager.get();
+
+    pathManager.loadProperties();
 
     StartupUtil.initializeLogger();
 
-    Runnable hackAwt = stat.mark("boot.hack.awt");
-    DesktopStartUIUtil.hackAWT();
-    DesktopStartUIUtil.initDefaultLAF();
-    DesktopStartUIUtil.initSystemFontData();
-    hackAwt.run();
+    stat.markWith("fs.mediator.replace", () -> {
+      //noinspection Convert2MethodRef
+      FileSystemMediatorOverride.replaceIfNeedMediator();
+    });
+
+    stat.markWith("boot.hack.awt", () -> {
+      DesktopStartUIUtil.hackAWT();
+      DesktopStartUIUtil.initDefaultLAF();
+      DesktopStartUIUtil.initSystemFontData();
+    });
 
     ThreadGroup threadGroup = new ThreadGroup("Consulo Thread Group") {
       @Override
@@ -74,6 +85,12 @@ public class DesktopContainerStartup implements ContainerStartup {
     };
 
     new Thread(threadGroup, runnable, "Consulo Main Thread").start();
+  }
+
+  @Nonnull
+  @Override
+  public ContainerPathManager createPathManager(@Nonnull Map<String, Object> args) {
+    return new DesktopContainerPathManager();
   }
 
   @Override

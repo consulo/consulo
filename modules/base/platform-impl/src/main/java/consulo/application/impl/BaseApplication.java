@@ -21,6 +21,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.ActivityTracker;
 import com.intellij.ide.ApplicationLoadListener;
 import com.intellij.ide.StartupProgress;
+import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginListenerDescriptor;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
@@ -246,7 +247,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   @Override
   public void load(@Nullable String optionsPath) throws IOException {
-    load(PathManager.getConfigPath(), optionsPath == null ? PathManager.getOptionsPath() : optionsPath);
+    load(ContainerPathManager.get().getConfigPath(), optionsPath == null ? ContainerPathManager.get().getOptionsPath() : optionsPath);
   }
 
   public void load(@Nonnull String configPath, @Nonnull String optionsPath) throws IOException {
@@ -272,9 +273,10 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   }
 
   private static void createLocatorFile() {
-    File locatorFile = new File(PathManager.getSystemPath() + "/" + ApplicationEx.LOCATOR_FILE_NAME);
+    ContainerPathManager containerPathManager = ContainerPathManager.get();
+    File locatorFile = new File(containerPathManager.getSystemPath() + "/" + ApplicationEx.LOCATOR_FILE_NAME);
     try {
-      byte[] data = PathManager.getHomePath().getBytes(CharsetToolkit.UTF8_CHARSET);
+      byte[] data = containerPathManager.getHomePath().getBytes(CharsetToolkit.UTF8_CHARSET);
       FileUtil.writeToFile(locatorFile, data);
     }
     catch (IOException e) {

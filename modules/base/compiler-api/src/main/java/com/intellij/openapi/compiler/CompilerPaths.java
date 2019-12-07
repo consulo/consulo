@@ -15,16 +15,16 @@
  */
 package com.intellij.openapi.compiler;
 
-import com.intellij.openapi.application.PathManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.PathUtil;
+import consulo.container.boot.ContainerPathManager;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.util.Comparator;
 import java.util.Locale;
@@ -125,7 +125,7 @@ public class CompilerPaths {
   public static File getCompilerSystemDirectory() {
     //noinspection HardCodedStringLiteral
     final String systemPath =
-      ourSystemPath != null ? ourSystemPath : (ourSystemPath = PathUtil.getCanonicalPath(PathManager.getSystemPath()));
+      ourSystemPath != null ? ourSystemPath : (ourSystemPath = PathUtil.getCanonicalPath(ContainerPathManager.get().getSystemPath()));
     return new File(systemPath, "compiler");
   }
 

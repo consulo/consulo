@@ -17,12 +17,12 @@ package com.intellij.execution.process;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.openapi.application.PathManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.SystemInfo;
+import consulo.container.boot.ContainerPathManager;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -93,7 +93,7 @@ public class RunnerMediator {
       }
       LOG.warn("Cannot locate " + RUNNERW + " by " + IDEA_RUNNERW + " environment variable (" + path + ")");
     }
-    File runnerw = new File(PathManager.getBinPath(), SystemInfo.is64Bit ? RUNNERW64 : RUNNERW);
+    File runnerw = new File(ContainerPathManager.get().getBinPath(), SystemInfo.is64Bit ? RUNNERW64 : RUNNERW);
     if (runnerw.exists()) {
       return runnerw.getPath();
     }

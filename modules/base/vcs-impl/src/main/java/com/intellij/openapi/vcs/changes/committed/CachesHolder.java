@@ -15,13 +15,13 @@
  */
 package com.intellij.openapi.vcs.changes.committed;
 
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.PairProcessor;
+import consulo.container.boot.ContainerPathManager;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -126,7 +126,7 @@ public class CachesHolder {
   }
 
   public File getCacheBasePath() {
-    File file = new File(PathManager.getSystemPath(), VCS_CACHE_PATH);
+    File file = new File(ContainerPathManager.get().getSystemPath(), VCS_CACHE_PATH);
     file = new File(file, myProject.getLocationHash());
     return file;
   }

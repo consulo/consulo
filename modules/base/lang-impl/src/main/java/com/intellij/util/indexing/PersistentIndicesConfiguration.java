@@ -1,8 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.indexing;
 
-import com.intellij.openapi.application.PathManager;
 import com.intellij.util.io.DataInputOutputUtil;
+import consulo.container.boot.ContainerPathManager;
 
 import java.io.*;
 
@@ -29,6 +29,6 @@ class PersistentIndicesConfiguration {
   }
 
   private static File indicesConfigurationFile() {
-    return new File(PathManager.getIndexRoot(), "indices.config");
+    return new File(ContainerPathManager.get().getIndexRoot(), "indices.config");
   }
 }

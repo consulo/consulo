@@ -24,7 +24,6 @@ import com.intellij.history.utils.LocalHistoryLog;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ShutDownTracker;
@@ -32,12 +31,12 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileListener;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.application.AccessRule;
+import consulo.container.boot.ContainerPathManager;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -114,7 +113,7 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
   }
 
   protected String getSystemPath() {
-    return PathManager.getSystemPath();
+    return ContainerPathManager.get().getSystemPath();
   }
 
   @Override

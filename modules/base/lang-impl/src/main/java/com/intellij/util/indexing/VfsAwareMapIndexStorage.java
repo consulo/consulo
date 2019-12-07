@@ -16,7 +16,6 @@
 
 package com.intellij.util.indexing;
 
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
@@ -30,6 +29,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.impl.MapIndexStorage;
 import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.io.*;
+import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import consulo.util.collection.ConcurrentIntObjectMap;
 import gnu.trove.TIntHashSet;
@@ -261,7 +261,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
         sessionDirectory = mySessionDirectory;
         if (sessionDirectory == null) {
           try {
-            mySessionDirectory = sessionDirectory = FileUtil.createTempDirectory(new File(PathManager.getTempPath()), Long.toString(System.currentTimeMillis()), "", true);
+            mySessionDirectory = sessionDirectory = FileUtil.createTempDirectory(new File(ContainerPathManager.get().getTempPath()), Long.toString(System.currentTimeMillis()), "", true);
           }
           catch (IOException ex) {
             throw new RuntimeException("Can not create temp directory", ex);

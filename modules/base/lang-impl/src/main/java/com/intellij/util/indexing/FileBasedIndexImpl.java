@@ -71,6 +71,7 @@ import com.intellij.util.io.IOUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
+import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import consulo.util.collection.IntObjectMap;
 import consulo.util.dataholder.Key;
@@ -432,7 +433,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     if (ApplicationManager.getApplication().isDisposed() || !IndexInfrastructure.hasIndices()) {
       return;
     }
-    final File registeredIndicesFile = new File(PathManager.getIndexRoot(), "registered");
+    final File registeredIndicesFile = new File(ContainerPathManager.get().getIndexRoot(), "registered");
     final Set<String> indicesToDrop = new THashSet<>();
     boolean exceptionThrown = false;
     if (registeredIndicesFile.exists()) {
@@ -2428,7 +2429,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
 
       initAssociatedDataForExtensions();
 
-      File indexRoot = PathManager.getIndexRoot();
+      File indexRoot = ContainerPathManager.get().getIndexRoot();
 
       PersistentIndicesConfiguration.loadConfiguration();
 
@@ -2519,7 +2520,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
 
   @Override
   public void invalidateCaches() {
-    File indexRoot = PathManager.getIndexRoot();
+    File indexRoot = ContainerPathManager.get().getIndexRoot();
     LOG.info("Requesting explicit indices invalidation", new Throwable());
     try {
       final File corruptionMarker = new File(indexRoot, CORRUPTION_MARKER_NAME);

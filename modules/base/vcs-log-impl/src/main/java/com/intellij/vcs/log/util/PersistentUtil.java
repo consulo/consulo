@@ -15,7 +15,6 @@
  */
 package com.intellij.vcs.log.util;
 
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -24,8 +23,9 @@ import com.intellij.util.PathUtilRt;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.*;
 import com.intellij.vcs.log.VcsLogProvider;
-import javax.annotation.Nonnull;
+import consulo.container.boot.ContainerPathManager;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
@@ -34,7 +34,7 @@ import java.util.Map;
 
 public class PersistentUtil {
   @Nonnull
-  public static final File LOG_CACHE = new File(PathManager.getSystemPath(), "vcs-log");
+  public static final File LOG_CACHE = new File(ContainerPathManager.get().getSystemPath(), "vcs-log");
   @Nonnull
   private static final String CORRUPTION_MARKER = "corruption.marker";
 

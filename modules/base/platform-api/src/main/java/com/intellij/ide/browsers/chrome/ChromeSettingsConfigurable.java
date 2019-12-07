@@ -15,7 +15,6 @@
  */
 package com.intellij.ide.browsers.chrome;
 
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
@@ -23,9 +22,10 @@ import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.RawCommandLineEditor;
+import consulo.container.boot.ContainerPathManager;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -110,7 +110,7 @@ public class ChromeSettingsConfigurable implements Configurable {
   }
 
   private static String getDefaultUserDataPath() {
-    File dir = new File(PathManager.getConfigPath(), "chrome-user-data");
+    File dir = new File(ContainerPathManager.get().getConfigPath(), "chrome-user-data");
     try {
       return FileUtil.toSystemIndependentName(dir.getCanonicalPath());
     }

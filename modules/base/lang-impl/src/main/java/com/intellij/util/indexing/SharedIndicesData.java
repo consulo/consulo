@@ -15,18 +15,18 @@
  */
 package com.intellij.util.indexing;
 
-import com.intellij.openapi.application.PathManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.util.SystemProperties;
-import com.intellij.util.io.*;
 import com.intellij.util.io.DataOutputStream;
+import com.intellij.util.io.*;
+import consulo.container.boot.ContainerPathManager;
+import consulo.logging.Logger;
 import gnu.trove.*;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.*;
 import java.util.Arrays;
 
@@ -43,8 +43,8 @@ public class SharedIndicesData {
   static {
     if (ourFileSharedIndicesEnabled) {
       try {
-        ourSharedFileInputs = IndexedStateMap.createMap(new File(PathManager.getIndexRoot(), "file_inputs.data"));
-        ourSharedFileContentIndependentInputs = IndexedStateMap.createMap(new File(PathManager.getIndexRoot(), "file_inputs_content_independent.data"));
+        ourSharedFileInputs = IndexedStateMap.createMap(new File(ContainerPathManager.get().getIndexRoot(), "file_inputs.data"));
+        ourSharedFileContentIndependentInputs = IndexedStateMap.createMap(new File(ContainerPathManager.get().getIndexRoot(), "file_inputs_content_independent.data"));
         ourSharedContentInputs = IndexedStateMap.createMap(new File(IndexInfrastructure.getPersistentIndexRoot(), "content_inputs.data"));
 
         ShutDownTracker.getInstance().registerShutdownTask(new Runnable() {

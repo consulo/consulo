@@ -16,8 +16,8 @@
 
 package com.intellij.ide.actions;
 
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.io.FileUtil;
+import consulo.container.boot.ContainerPathManager;
 import org.jetbrains.annotations.NonNls;
 
 import java.io.File;
@@ -42,7 +42,7 @@ public class ImportSettingsFilenameFilter implements FilenameFilter {
   @Override
   public boolean accept(File dir, String name) {
     if (name.equals(SETTINGS_ZIP_MARKER)) return false;
-    final File configPath = new File(PathManager.getConfigPath());
+    final File configPath = new File(ContainerPathManager.get().getConfigPath());
     final String rPath = FileUtil.getRelativePath(configPath, new File(dir, name));
     assert rPath != null;
     final String relativePath = FileUtil.toSystemIndependentName(rPath);

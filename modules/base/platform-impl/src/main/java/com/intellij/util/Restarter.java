@@ -15,7 +15,6 @@
  */
 package com.intellij.util;
 
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.io.StreamUtil;
@@ -26,8 +25,9 @@ import com.sun.jna.WString;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.win32.StdCallLibrary;
 import consulo.application.ApplicationProperties;
-import javax.annotation.Nonnull;
+import consulo.container.boot.ContainerPathManager;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -114,7 +114,7 @@ public class Restarter {
     final String[] argv = argv_ptr.getWideStringArray(0, argc.getValue());
     kernel32.LocalFree(argv_ptr);
 
-    doScheduleRestart(new File(PathManager.getBinPath(), "restarter.exe"), PathManager.getAppHomeDirectory(), commands -> {
+    doScheduleRestart(new File(ContainerPathManager.get().getBinPath(), "restarter.exe"), ContainerPathManager.get().getAppHomeDirectory(), commands -> {
       Collections.addAll(commands, String.valueOf(pid), String.valueOf(beforeRestart.length));
       Collections.addAll(commands, beforeRestart);
       Collections.addAll(commands, String.valueOf(argc.getValue()));
@@ -132,14 +132,14 @@ public class Restarter {
   }
 
   private static void restartOnMac(@Nonnull final String... beforeRestart) throws IOException {
-    File distributionDirectory = PathManager.getAppHomeDirectory();
+    File distributionDirectory = ContainerPathManager.get().getAppHomeDirectory();
 
     File appDirectory = distributionDirectory.getParentFile();
     if (!StringUtil.endsWithIgnoreCase(appDirectory.getName(), ".app")) {
       throw new IOException("Application bundle not found: " + appDirectory.getPath());
     }
 
-    doScheduleRestart(new File(PathManager.getBinPath(), "restarter"), appDirectory, commands -> {
+    doScheduleRestart(new File(ContainerPathManager.get().getBinPath(), "restarter"), appDirectory, commands -> {
       Collections.addAll(commands, appDirectory.getPath());
       Collections.addAll(commands, beforeRestart);
     });

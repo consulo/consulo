@@ -18,12 +18,11 @@ package com.intellij.ide.actions;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.project.DumbAware;
+import consulo.container.boot.ContainerPathManager;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
-
 import java.io.File;
 
 /**
@@ -33,7 +32,7 @@ public class ShowLogAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final File logFile = new File(PathManager.getLogPath(), "consulo.log");
+    final File logFile = new File(ContainerPathManager.get().getLogPath(), "consulo.log");
     ShowFilePathAction.openFile(logFile);
   }
 

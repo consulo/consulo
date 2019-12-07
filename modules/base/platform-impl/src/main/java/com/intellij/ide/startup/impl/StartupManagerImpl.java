@@ -37,6 +37,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
+import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
@@ -312,7 +313,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
   private void checkFsSanity() {
     try {
       String path = myProject.getBasePath();
-      if (path == null || FileUtil.isAncestor(PathManager.getConfigPath(), path, true)) {
+      if (path == null || FileUtil.isAncestor(ContainerPathManager.get().getConfigPath(), path, true)) {
         return;
       }
 

@@ -15,7 +15,6 @@
  */
 package com.intellij.testFramework.fixtures;
 
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -23,6 +22,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.UsefulTestCase;
 import com.intellij.testFramework.builders.EmptyModuleFixtureBuilder;
 import com.intellij.testFramework.builders.ModuleFixtureBuilder;
+import consulo.container.boot.ContainerPathManager;
 import org.jetbrains.annotations.NonNls;
 
 import java.io.File;
@@ -66,7 +66,7 @@ public abstract class CodeInsightFixtureTestCase<T extends ModuleFixtureBuilder>
 
   /**
    * Return relative path to the test data. Path is relative to the
-   * {@link com.intellij.openapi.application.PathManager#getHomePath()}
+   * {@link ContainerPathManager#getHomePath()}
    *
    * @return relative path to the test data.
    */
@@ -82,7 +82,7 @@ public abstract class CodeInsightFixtureTestCase<T extends ModuleFixtureBuilder>
    */
   @NonNls
   protected final String getTestDataPath() {
-    String path = PathManager.getHomePath();
+    String path = ContainerPathManager.get().getHomePath();
     return path.replace(File.separatorChar, '/') + getBasePath();
   }
 

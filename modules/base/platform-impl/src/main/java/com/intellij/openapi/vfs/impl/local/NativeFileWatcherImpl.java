@@ -8,8 +8,6 @@ import com.intellij.notification.NotificationListener;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.SystemInfo;
@@ -22,7 +20,9 @@ import com.intellij.util.TimeoutUtil;
 import com.intellij.util.io.BaseDataReader;
 import com.intellij.util.io.BaseOutputReader;
 import com.sun.jna.Platform;
+import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -147,7 +147,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
     }
     if (names == null) return PLATFORM_NOT_SUPPORTED;
 
-    return Arrays.stream(names).map(PathManager::findBinFile).filter(Objects::nonNull).findFirst().orElse(null);
+    return Arrays.stream(names).map(ContainerPathManager.get()::findBinFile).filter(Objects::nonNull).findFirst().orElse(null);
   }
 
   /* internal stuff */

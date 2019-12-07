@@ -15,12 +15,12 @@
  */
 package consulo.ide.updateSettings;
 
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.*;
 import consulo.application.ApplicationProperties;
+import consulo.container.boot.ContainerPathManager;
+
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
-
 import java.io.File;
 
 /**
@@ -51,7 +51,7 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
       return UpdateChannel.nightly;
     }
 
-    File file = PathManager.getAppHomeDirectory();
+    File file = ContainerPathManager.get().getAppHomeDirectory();
     for (UpdateChannel channel : UpdateChannel.values()) {
       if (new File(file, "." + channel.name()).exists()) {
         return channel;

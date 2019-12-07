@@ -39,7 +39,6 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
@@ -54,8 +53,9 @@ import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.ui.tree.TreeUtil;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.container.boot.ContainerPathManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -98,7 +98,7 @@ public class ExportHTMLAction extends AnAction implements DumbAware {
     ExportToHTMLDialog exportToHTMLDialog = new ExportToHTMLDialog(myView.getProject(), exportToHTML);
     final ExportToHTMLSettings exportToHTMLSettings = ExportToHTMLSettings.getInstance(myView.getProject());
     if (exportToHTMLSettings.OUTPUT_DIRECTORY == null) {
-      exportToHTMLSettings.OUTPUT_DIRECTORY = PathManager.getHomePath() + File.separator + "inspections";
+      exportToHTMLSettings.OUTPUT_DIRECTORY = ContainerPathManager.get().getHomePath() + File.separator + "inspections";
     }
     exportToHTMLDialog.reset();
     exportToHTMLDialog.show();

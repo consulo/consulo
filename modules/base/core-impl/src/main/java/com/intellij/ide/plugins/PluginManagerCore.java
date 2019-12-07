@@ -20,9 +20,7 @@ import com.intellij.ide.StartupProgress;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.extensions.ExtensionPoint;
-import consulo.container.plugin.PluginId;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.util.BuildNumber;
@@ -37,6 +35,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.graph.*;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationProperties;
+import consulo.container.boot.ContainerPathManager;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.container.impl.ContainerLogger;
 import consulo.container.impl.IdeaPluginDescriptorImpl;
@@ -46,10 +45,7 @@ import consulo.container.impl.classloader.Java9ModuleInitializer;
 import consulo.container.impl.classloader.PluginClassLoaderFactory;
 import consulo.container.impl.classloader.PluginLoadStatistics;
 import consulo.container.impl.parser.ExtensionInfo;
-import consulo.container.plugin.IdeaPluginDescriptor;
-import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginIds;
-import consulo.container.plugin.PluginManager;
+import consulo.container.plugin.*;
 import consulo.logging.Logger;
 import consulo.util.nodep.map.SimpleMultiMap;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
@@ -147,7 +143,7 @@ public class PluginManagerCore {
     if (ourDisabledPlugins == null) {
       ourDisabledPlugins = new ArrayList<>();
       if (System.getProperty("consulo.ignore.disabled.plugins") == null && !isUnitTestMode()) {
-        loadDisabledPlugins(PathManager.getConfigPath(), ourDisabledPlugins);
+        loadDisabledPlugins(ContainerPathManager.get().getConfigPath(), ourDisabledPlugins);
       }
     }
     return ourDisabledPlugins;
@@ -190,7 +186,7 @@ public class PluginManagerCore {
   }
 
   public static void saveDisabledPlugins(Collection<String> ids, boolean append) throws IOException {
-    File plugins = new File(PathManager.getConfigPath(), DISABLED_PLUGINS_FILENAME);
+    File plugins = new File(ContainerPathManager.get().getConfigPath(), DISABLED_PLUGINS_FILENAME);
     savePluginsList(ids, append, plugins);
     ourDisabledPlugins = null;
   }
@@ -549,7 +545,7 @@ public class PluginManagerCore {
     final List<IdeaPluginDescriptorImpl> result = new ArrayList<>();
 
     int pluginsCount = 0;
-    String[] pluginsPaths = PathManager.getPluginsPaths();
+    String[] pluginsPaths = ContainerPathManager.get().getPluginsPaths();
     for (String pluginsPath : pluginsPaths) {
       pluginsCount += countPlugins(pluginsPath);
     }

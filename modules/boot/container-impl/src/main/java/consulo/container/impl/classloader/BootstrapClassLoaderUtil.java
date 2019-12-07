@@ -15,10 +15,11 @@
  */
 package consulo.container.impl.classloader;
 
-import consulo.container.impl.IdeaPluginDescriptorImpl;
 import consulo.container.StartupError;
 import consulo.container.boot.ContainerStartup;
+import consulo.container.boot.internal.PathManagerHolder;
 import consulo.container.impl.ContainerLogger;
+import consulo.container.impl.IdeaPluginDescriptorImpl;
 import consulo.container.impl.PluginHolderModificator;
 import consulo.container.impl.PluginLoader;
 import consulo.container.plugin.PluginDescriptor;
@@ -37,7 +38,9 @@ public class BootstrapClassLoaderUtil {
   private static final String CONSULO_PLATFORM_BASE = "consulo.platform.base";
 
   @Nonnull
-  public static ContainerStartup buildContainerStartup(StatCollector stat, File modulesDirectory, ContainerLogger containerLogger) throws Exception {
+  public static ContainerStartup buildContainerStartup(Map<String, Object> args, File modulesDirectory, ContainerLogger containerLogger) throws Exception {
+    StatCollector stat = (StatCollector)args.get(ContainerStartup.STAT_COLLECTOR);
+
     Runnable bootInitialize = stat.mark("boot.classloader.initialize");
 
     IdeaPluginDescriptorImpl base = initalizePlatformBase(modulesDirectory, containerLogger);
@@ -83,7 +86,11 @@ public class BootstrapClassLoaderUtil {
       if (iterator.hasNext()) {
         bootInitialize.run();
 
-        return iterator.next();
+        ContainerStartup startup = iterator.next();
+
+        PathManagerHolder.setInstance(startup.createPathManager(args));
+
+        return startup;
       }
     }
 

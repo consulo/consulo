@@ -3,7 +3,6 @@ package com.intellij.openapi.vfs.newvfs.persistent;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
@@ -22,6 +21,7 @@ import com.intellij.util.containers.IntArrayList;
 import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.io.*;
 import com.intellij.util.io.storage.*;
+import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import consulo.util.collection.ConcurrentIntObjectMap;
 import gnu.trove.TIntArrayList;
@@ -365,13 +365,13 @@ public class FSRecords {
 
     private static void invalidateIndex(@Nonnull String reason) {
       LOG.info("Marking VFS as corrupted: " + reason);
-      final File indexRoot = PathManager.getIndexRoot();
+      final File indexRoot = ContainerPathManager.get().getIndexRoot();
       if (indexRoot.exists()) {
         final String[] children = indexRoot.list();
         if (children != null && children.length > 0) {
           // create index corruption marker only if index directory exists and is non-empty
           // It is incorrect to consider non-existing indices "corrupted"
-          FileUtil.createIfDoesntExist(new File(PathManager.getIndexRoot(), "corruption.marker"));
+          FileUtil.createIfDoesntExist(new File(ContainerPathManager.get().getIndexRoot(), "corruption.marker"));
         }
       }
     }
@@ -379,7 +379,7 @@ public class FSRecords {
     @Nonnull
     private static String getCachesDir() {
       String dir = System.getProperty("caches_dir");
-      return dir == null ? PathManager.getSystemPath() + "/caches/" : dir;
+      return dir == null ? ContainerPathManager.get().getSystemPath() + "/caches/" : dir;
     }
 
     private static void markDirty() {

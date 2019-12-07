@@ -19,7 +19,6 @@ import com.intellij.ide.customize.CustomizeIDEWizardDialog;
 import com.intellij.ide.plugins.RepositoryHelper;
 import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.FileUtil;
@@ -27,6 +26,7 @@ import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.DownloadUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.logging.Logger;
@@ -101,7 +101,7 @@ public class FirstStartCustomizeUtil {
 
   public static void loadPredefinedTemplateSets(MultiMap<String, String> predefinedTemplateSets) {
 
-    String systemPath = PathManager.getSystemPath();
+    String systemPath = ContainerPathManager.get().getSystemPath();
 
     File customizeDir = new File(systemPath, "startCustomization");
 

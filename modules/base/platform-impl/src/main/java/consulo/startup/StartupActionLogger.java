@@ -15,8 +15,8 @@
  */
 package consulo.startup;
 
-import com.intellij.openapi.application.PathManager;
 import com.intellij.util.ExceptionUtil;
+import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 
@@ -90,7 +90,7 @@ public class StartupActionLogger implements Logger, Closeable {
 
   @Override
   public void close() throws IOException {
-    String systemPath = PathManager.getPluginTempPath();
+    String systemPath = ContainerPathManager.get().getPluginTempPath();
 
     File file = new File(systemPath, "start.log");
 

@@ -21,6 +21,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PathUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationProperties;
+import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 
@@ -137,7 +138,7 @@ public class ApplicationInfo {
 
   @NonNls
   private String getHelpJarPath() {
-    return PathManager.getHomePath() + File.separator + "help" + File.separator + "ideahelp.jar";
+    return ContainerPathManager.get().getHomePath() + File.separator + "help" + File.separator + "ideahelp.jar";
   }
 
   @Nonnull

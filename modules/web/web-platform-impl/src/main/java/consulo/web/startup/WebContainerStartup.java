@@ -20,10 +20,10 @@ import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.StartupUtil;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.container.boot.ContainerPathManager;
 import consulo.container.boot.ContainerStartup;
 import consulo.container.util.StatCollector;
 import consulo.ui.web.servlet.UIIconServlet;
@@ -53,18 +53,24 @@ public class WebContainerStartup implements ContainerStartup {
     }
   }
 
+  @Nonnull
   @Override
-  public void run(@Nonnull Map<String, Object> map, @Nonnull StatCollector stat, @Nonnull String[] args) {
+  public ContainerPathManager createPathManager(@Nonnull Map<String, Object> args) {
+    File platformPath = (File)args.get("platformPath");
+    return new WebContainerPathManager(platformPath);
+  }
+
+  @Override
+  public void run(@Nonnull Map<String, Object> map) {
+    StatCollector stat = (StatCollector)map.get(ContainerStartup.STAT_COLLECTOR);
+    String[] args = (String[])map.get(ContainerStartup.ARGS);
+
     ServletContext servletContext = (ServletContext)map.get(ServletContext.class.getName());
 
     registerServlets(servletContext);
 
-    File homePath = (File)map.get("platformPath");
-
+    // FIXME [VISTALL] we ned this?
     System.setProperty("java.awt.headless", "true");
-    System.setProperty(PathManager.OLD_PROPERTY_HOME_PATH, homePath.getPath());
-    System.setProperty(PathManager.PROPERTY_CONFIG_PATH, homePath.getPath() + "/.config/sandbox/config");
-    System.setProperty(PathManager.PROPERTY_SYSTEM_PATH, homePath.getPath() + "/.config/sandbox/system");
 
     new Thread(() -> startApplication(stat, args), "Consulo App Start").start();
   }

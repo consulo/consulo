@@ -15,16 +15,16 @@
  */
 package com.intellij.execution.configurations;
 
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.ArrayUtil;
 import com.pty4j.PtyProcess;
 import consulo.application.ApplicationProperties;
+import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -107,7 +107,7 @@ public class PtyCommandLine extends GeneralCommandLine {
   }
 
   private static File getPtyLogFile() {
-    return ApplicationProperties.isInSandbox() ? new File(PathManager.getLogPath(), "pty.log") : null;
+    return ApplicationProperties.isInSandbox() ? new File(ContainerPathManager.get().getLogPath(), "pty.log") : null;
   }
 
   @Nonnull
