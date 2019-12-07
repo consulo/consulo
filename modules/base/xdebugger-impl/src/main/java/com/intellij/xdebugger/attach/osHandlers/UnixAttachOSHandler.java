@@ -3,7 +3,7 @@ package com.intellij.xdebugger.attach.osHandlers;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.xdebugger.attach.EnvironmentAwareHost;
 import javax.annotation.Nonnull;
 

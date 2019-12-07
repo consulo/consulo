@@ -4,7 +4,7 @@ import com.intellij.dupLocator.*;
 import com.intellij.dupLocator.util.DuplocatorUtil;
 import com.intellij.dupLocator.util.PsiFragment;
 import com.intellij.openapi.components.PathMacroManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;

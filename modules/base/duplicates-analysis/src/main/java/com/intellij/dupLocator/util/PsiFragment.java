@@ -3,7 +3,7 @@ package com.intellij.dupLocator.util;
 import com.intellij.dupLocator.DuplicatesProfile;
 import com.intellij.lang.Language;
 import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiAnchor;
 import com.intellij.psi.PsiElement;

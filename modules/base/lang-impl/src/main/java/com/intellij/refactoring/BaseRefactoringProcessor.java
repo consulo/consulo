@@ -17,7 +17,6 @@ import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.command.undo.BasicUndoableAction;
 import com.intellij.openapi.command.undo.UndoManager;
 import com.intellij.openapi.command.undo.UndoableAction;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.UnloadedModuleDescription;
@@ -57,6 +56,7 @@ import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import consulo.application.ex.ApplicationEx2;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

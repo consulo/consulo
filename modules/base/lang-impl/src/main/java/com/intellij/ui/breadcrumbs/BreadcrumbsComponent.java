@@ -17,7 +17,6 @@ package com.intellij.ui.breadcrumbs;
 
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
@@ -27,6 +26,7 @@ import com.intellij.ui.paint.RectanglePainter;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBInsets;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

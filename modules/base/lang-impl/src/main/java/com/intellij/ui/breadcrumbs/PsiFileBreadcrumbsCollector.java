@@ -4,7 +4,6 @@ package com.intellij.ui.breadcrumbs;
 import com.intellij.codeInsight.breadcrumbs.FileBreadcrumbsCollector;
 import com.intellij.lang.Language;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -17,6 +16,8 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.ui.components.breadcrumbs.Crumb;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -12,7 +12,7 @@ import com.intellij.notification.NotificationsConfiguration;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.impl.ui.ActionsTreeUtil;
 import com.intellij.openapi.keymap.impl.ui.KeymapPanel;

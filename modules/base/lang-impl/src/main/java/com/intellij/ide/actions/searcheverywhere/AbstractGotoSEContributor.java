@@ -15,7 +15,7 @@ import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.actionSystem.impl.ActionButtonWithText;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.progress.ProgressIndicator;

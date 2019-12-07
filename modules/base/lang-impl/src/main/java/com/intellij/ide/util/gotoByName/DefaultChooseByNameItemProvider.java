@@ -3,7 +3,6 @@ package com.intellij.ide.util.gotoByName;
 
 import com.intellij.concurrency.JobLauncher;
 import com.intellij.ide.actions.searcheverywhere.FoundItemDescriptor;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
@@ -24,6 +23,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FList;
 import com.intellij.util.indexing.FindSymbolParameters;
 import com.intellij.util.indexing.IdFilter;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

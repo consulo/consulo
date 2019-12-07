@@ -9,7 +9,7 @@ import com.intellij.history.core.changes.StructuralChange;
 import com.intellij.history.integration.IdeaGateway;
 import com.intellij.history.integration.LocalHistoryImpl;
 import com.intellij.openapi.command.undo.*;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VirtualFile;

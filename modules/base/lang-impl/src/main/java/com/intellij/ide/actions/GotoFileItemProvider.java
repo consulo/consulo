@@ -4,7 +4,6 @@ package com.intellij.ide.actions;
 import com.intellij.ide.actions.searcheverywhere.FoundItemDescriptor;
 import com.intellij.ide.util.gotoByName.*;
 import com.intellij.navigation.ChooseByNameContributor;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbService;
@@ -31,6 +30,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FList;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.indexing.FindSymbolParameters;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

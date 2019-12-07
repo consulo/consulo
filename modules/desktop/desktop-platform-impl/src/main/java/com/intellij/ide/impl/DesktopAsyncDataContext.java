@@ -6,7 +6,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionUpdateEdtExecutor;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.containers.ConcurrentFactoryMap;

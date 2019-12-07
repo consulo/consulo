@@ -3,7 +3,7 @@
  */
 package com.intellij.execution.process;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import javax.annotation.Nonnull;
 

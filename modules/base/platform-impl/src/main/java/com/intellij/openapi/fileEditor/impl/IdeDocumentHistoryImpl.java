@@ -13,7 +13,6 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -53,6 +52,7 @@ import com.intellij.util.messages.Topic;
 import com.intellij.util.text.DateFormatUtil;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.logging.Logger;
 import gnu.trove.THashSet;
 
 import javax.annotation.Nonnull;

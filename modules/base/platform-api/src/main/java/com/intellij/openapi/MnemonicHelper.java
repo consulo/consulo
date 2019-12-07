@@ -3,7 +3,7 @@ package com.intellij.openapi;
 
 import com.intellij.openapi.actionSystem.ActionButtonComponent;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;

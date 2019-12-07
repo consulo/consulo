@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.impl.LaterInvocator;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import consulo.container.plugin.PluginId;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
