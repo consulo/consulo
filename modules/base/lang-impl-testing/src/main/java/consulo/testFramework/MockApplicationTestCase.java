@@ -18,8 +18,8 @@ package consulo.testFramework;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.testFramework.UsefulTestCase;
 import consulo.test.light.LightApplicationBuilder;
+import junit.framework.TestCase;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,7 +28,7 @@ import java.io.IOException;
  * @author VISTALL
  * @since 10-Sep-17
  */
-public class MockApplicationTestCase extends UsefulTestCase {
+public class MockApplicationTestCase extends TestCase {
   protected Disposable myRootDisposable;
   private File myTempDir;
 
@@ -50,11 +50,6 @@ public class MockApplicationTestCase extends UsefulTestCase {
 
   public Disposable getRootDisposable() {
     return myRootDisposable;
-  }
-
-  @Override
-  protected boolean shouldContainTempFiles() {
-    return false;
   }
 
   @Override

@@ -32,7 +32,7 @@ import static com.intellij.openapi.util.io.IoTestUtil.assertTimestampsEqual;
 import static org.junit.Assert.*;
 import static org.junit.Assume.assumeTrue;
 
-public class FileAttributesReadingTest {
+public abstract class FileAttributesReadingTest {
   private final byte[] myTestData = new byte[]{'t', 'e', 's', 't'};
   private File myTempDirectory;
 

@@ -27,7 +27,7 @@ import java.io.File;
 import static org.junit.Assert.*;
 import static org.junit.Assume.assumeTrue;
 
-public class IdeaWin32PerformanceTest {
+public abstract class IdeaWin32PerformanceTest {
   private IdeaWin32 myDriver;
   private long myJavaTotal, myIdeaTotal;
 
