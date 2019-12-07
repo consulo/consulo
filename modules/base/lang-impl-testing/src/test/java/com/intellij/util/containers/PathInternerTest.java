@@ -15,9 +15,9 @@
  */
 package com.intellij.util.containers;
 
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.Processor;
+import consulo.container.boot.ContainerPathManager;
 import gnu.trove.THashSet;
 import junit.framework.TestCase;
 
