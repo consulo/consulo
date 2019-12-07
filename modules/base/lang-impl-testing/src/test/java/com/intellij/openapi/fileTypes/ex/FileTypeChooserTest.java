@@ -15,18 +15,18 @@
  */
 package com.intellij.openapi.fileTypes.ex;
 
-import com.intellij.testFramework.UsefulTestCase;
+import consulo.testFramework.AssertEx;
+import org.junit.Test;
 
 /**
  * @author Nikolay Matveev
  */
-public class FileTypeChooserTest extends UsefulTestCase {
-
+public class FileTypeChooserTest {
+  @Test
   public void testSuggestPatterns() {
-    assertSameElements(FileTypeChooser.suggestPatterns("a"), "a");
-    assertSameElements(FileTypeChooser.suggestPatterns("a.b"), "a.b", "*.b");
-    assertSameElements(FileTypeChooser.suggestPatterns("a.b.c"), "a.b.c", "*.c", "*.b.c");
+    AssertEx.assertSameElements(FileTypeChooser.suggestPatterns("a"), "a");
+    AssertEx.assertSameElements(FileTypeChooser.suggestPatterns("a.b"), "a.b", "*.b");
+    AssertEx.assertSameElements(FileTypeChooser.suggestPatterns("a.b.c"), "a.b.c", "*.c", "*.b.c");
   }
-
 }
 

@@ -3,19 +3,20 @@
  */
 package com.intellij.patterns;
 
-import consulo.util.dataholder.Key;
-import com.intellij.testFramework.UsefulTestCase;
 import com.intellij.util.ProcessingContext;
+import consulo.util.dataholder.Key;
+import org.junit.Test;
 
 import java.util.Arrays;
 
 import static com.intellij.patterns.StandardPatterns.*;
+import static org.junit.Assert.*;
 
 /**
  * @author peter
  */
-public class StandardPatternsTest extends UsefulTestCase {
-
+public class StandardPatternsTest {
+   @Test
   public void testNull() throws Throwable {
     assertTrue(object().isNull().accepts(null));
     assertFalse(object().isNull().accepts(""));
@@ -23,12 +24,14 @@ public class StandardPatternsTest extends UsefulTestCase {
     assertTrue(string().isNull().accepts(null));
   }
 
+  @Test
   public void testString() throws Throwable {
     final ElementPattern pattern = string();
     assertFalse(string().accepts(new Object()));
     assertTrue(pattern.accepts(""));
   }
 
+  @Test
   public void testStartsWith() throws Throwable {
     final ElementPattern pattern = string().startsWith("abc");
     assertFalse(pattern.accepts(""));
@@ -38,6 +41,7 @@ public class StandardPatternsTest extends UsefulTestCase {
     assertFalse(string().startsWith("abc").accepts(new Object()));
   }
 
+  @Test
   public void testEndsWith() throws Throwable {
     final ElementPattern pattern = string().endsWith("abc");
     assertFalse(pattern.accepts(""));
@@ -53,22 +57,27 @@ public class StandardPatternsTest extends UsefulTestCase {
     assertFalse(pattern.accepts("abcdab"));
   }
 
+  @Test
   public void testPrefixSuffix() throws Throwable {
     checkPrefixSuffix(string().endsWith("abc").startsWith("abc"));
   }
 
+  @Test
   public void testAnd1() throws Throwable {
     checkPrefixSuffix(and(string().endsWith("abc"), string().startsWith("abc")));
   }
 
+  @Test
   public void testAnd2() throws Throwable {
     checkPrefixSuffix(string().endsWith("abc").and(string().startsWith("abc")));
   }
 
+  @Test
   public void testOr1() throws Throwable {
     checkOr(or(string().endsWith("abc"), string().startsWith("abc")));
   }
 
+  @Test
   public void testNot1() throws Throwable {
     final ElementPattern pattern = not(or(string().endsWith("abc"), string().startsWith("abc")));
     assertTrue(pattern.accepts(""));
@@ -90,6 +99,7 @@ public class StandardPatternsTest extends UsefulTestCase {
     assertTrue(filterFactory.accepts("abcdab"));
   }
 
+  @Test
   public void testEquals() throws Throwable {
     final Object foo = new Object();
     final Object bar = new Object();
@@ -102,8 +112,7 @@ public class StandardPatternsTest extends UsefulTestCase {
     assertFalse(stringPattern.accepts("bar"));
   }
 
-
-
+  @Test
   public void testAll() throws Throwable {
     ElementPattern pattern = collection(String.class).all(string().startsWith("abc"));
     assertTrue(pattern.accepts(Arrays.asList("abc")));
@@ -111,6 +120,7 @@ public class StandardPatternsTest extends UsefulTestCase {
     assertFalse(pattern.accepts(Arrays.asList("abc", "bcd")));
   }
 
+  @Test
   public void testAtLeastOne() throws Throwable {
     ElementPattern pattern = collection(String.class).atLeastOne(string().startsWith("abc"));
     assertTrue(pattern.accepts(Arrays.asList("abc")));
@@ -120,6 +130,7 @@ public class StandardPatternsTest extends UsefulTestCase {
     assertTrue(pattern.accepts(Arrays.asList("bc", "abc")));
   }
 
+  @Test
   public void testFilter() throws Throwable {
     ElementPattern pattern = collection(String.class).filter(string().endsWith("x"), collection(String.class).all(string().startsWith("abc")));
     assertTrue(pattern.accepts(Arrays.asList("abc")));
@@ -128,6 +139,7 @@ public class StandardPatternsTest extends UsefulTestCase {
     assertTrue(pattern.accepts(Arrays.asList("abcx", "abc")));
   }
 
+  @Test
   public void testFirst() throws Throwable {
     ElementPattern pattern = collection(String.class).first(string().startsWith("abc"));
     assertFalse(pattern.accepts(Arrays.<String>asList()));
@@ -138,6 +150,7 @@ public class StandardPatternsTest extends UsefulTestCase {
     assertFalse(pattern.accepts(Arrays.asList("bc", "abc")));
   }
 
+  @Test
   public void testLast() throws Throwable {
     //collection(String.class)
 
@@ -150,6 +163,7 @@ public class StandardPatternsTest extends UsefulTestCase {
     assertTrue(pattern.accepts(Arrays.asList("bc", "abc")));
   }
 
+  @Test
   public void testSize() throws Throwable {
     final CollectionPattern<String> filter = collection(String.class);
     assertTrue(filter.size(0).accepts(Arrays.<String>asList()));
@@ -165,6 +179,7 @@ public class StandardPatternsTest extends UsefulTestCase {
     assertTrue(filter.size(2).accepts(Arrays.asList("abc", "abc")));
   }
 
+  @Test
   public void testEmpty() throws Throwable {
     final CollectionPattern<String> filter = collection(String.class);
     assertTrue(filter.empty().accepts(Arrays.<String>asList()));
@@ -176,6 +191,7 @@ public class StandardPatternsTest extends UsefulTestCase {
     assertTrue(not(filter.empty()).accepts(Arrays.asList("abc", "abc")));
   }
 
+  @Test
   public void testSave() throws Throwable {
     Key<String> key = Key.create("abc");
     final ProcessingContext context = new ProcessingContext();
@@ -189,6 +205,4 @@ public class StandardPatternsTest extends UsefulTestCase {
     assertTrue(string().contains("abc").save(key).accepts(s, context));
     assertSame(s, context.get(key));
   }
-
-
 }
