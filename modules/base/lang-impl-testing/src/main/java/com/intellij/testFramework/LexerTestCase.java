@@ -21,6 +21,9 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.tree.IElementType;
 import consulo.container.boot.ContainerPathManager;
+import consulo.testFramework.AssertEx;
+import consulo.testFramework.util.TestUtil;
+import junit.framework.TestCase;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
@@ -30,7 +33,7 @@ import java.io.IOException;
 /**
  * @author peter
  */
-public abstract class LexerTestCase extends UsefulTestCase {
+public abstract class LexerTestCase extends TestCase {
 
   protected void doTest(@NonNls String text) {
     doTest(text, null);
@@ -40,10 +43,10 @@ public abstract class LexerTestCase extends UsefulTestCase {
     String result = printTokens(text, 0);
 
     if (expected != null) {
-      assertSameLines(expected, result);
+      AssertEx.assertSameLines(expected, result);
     }
     else {
-      assertSameLinesWithFile(ContainerPathManager.get().getHomePath() + "/" + getDirPath() + "/" + getTestName(true) + ".txt", result);
+      AssertEx.assertSameLinesWithFile(ContainerPathManager.get().getHomePath() + "/" + getDirPath() + "/" + TestUtil.getTestName(this, true) + ".txt", result);
     }
   }
 
@@ -91,7 +94,7 @@ public abstract class LexerTestCase extends UsefulTestCase {
   }
 
   protected void doFileTest(@NonNls String fileExt) {
-    String fileName = ContainerPathManager.get().getHomePath() + "/" + getDirPath() + "/" + getTestName(true) + "." + fileExt;
+    String fileName = ContainerPathManager.get().getHomePath() + "/" + getDirPath() + "/" + TestUtil.getTestName(this, true) + "." + fileExt;
     String text = "";
     try {
       String fileText = FileUtil.loadFile(new File(fileName));

@@ -15,14 +15,20 @@
  */
 package consulo.testFramework;
 
+import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.FileComparisonFailure;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.util.lang.Comparing;
 import gnu.trove.THashSet;
 import junit.framework.AssertionFailedError;
 import org.jetbrains.annotations.NonNls;
 import org.junit.Assert;
 
 import javax.annotation.Nonnull;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -31,6 +37,8 @@ import java.util.function.Consumer;
  * @since 2019-12-07
  */
 public class AssertEx extends Assert {
+  protected static boolean OVERWRITE_TESTDATA = false;
+
   public static <T> void assertOrderedCollection(T[] collection, @Nonnull Consumer<T>... checkers) {
     assertNotNull(collection);
     assertOrderedCollection(Arrays.asList(collection), checkers);
@@ -182,6 +190,31 @@ public class AssertEx extends Assert {
     catch (Throwable e) {
       return e;
     }
+  }
+
+  public static void assertSameLinesWithFile(String filePath, String actualText) {
+    String fileText;
+    try {
+      if (OVERWRITE_TESTDATA) {
+        FileUtil.writeToFile(new File(filePath), actualText);
+        System.out.println("File " + filePath + " created.");
+      }
+      fileText = FileUtil.loadFile(new File(filePath));
+    }
+    catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    String expected = StringUtil.convertLineSeparators(fileText.trim());
+    String actual = StringUtil.convertLineSeparators(actualText.trim());
+    if (!Comparing.equal(expected, actual)) {
+      throw new FileComparisonFailure(null, expected, actual, filePath);
+    }
+  }
+
+  public static void assertSameLines(String expected, String actual) {
+    String expectedText = StringUtil.convertLineSeparators(expected.trim());
+    String actualText = StringUtil.convertLineSeparators(actual.trim());
+    assertEquals(expectedText, actualText);
   }
 
   @NonNls
