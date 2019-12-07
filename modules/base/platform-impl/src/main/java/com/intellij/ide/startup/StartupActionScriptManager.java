@@ -23,6 +23,7 @@ import consulo.logging.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import org.jdom.input.sax.XMLReaders;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.jetbrains.annotations.NonNls;
@@ -206,7 +207,7 @@ public class StartupActionScriptManager {
 
     if (file.exists()) {
       try {
-        SAXBuilder builder = new SAXBuilder(false);
+        SAXBuilder builder = new SAXBuilder(XMLReaders.NONVALIDATING);
 
         Document document = builder.build(file);
 
