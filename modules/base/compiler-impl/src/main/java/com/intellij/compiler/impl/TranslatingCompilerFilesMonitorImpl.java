@@ -1389,6 +1389,10 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   }
 
   private String getFilePath0(int id) {
+    if(id <= 0) {
+      throw new IllegalArgumentException("Try to get enumerated path by id  " + id);
+    }
+
     try {
       return myFilePathsEnumerator.valueOf(id);
     }

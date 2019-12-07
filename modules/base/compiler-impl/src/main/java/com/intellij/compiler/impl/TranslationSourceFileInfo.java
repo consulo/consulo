@@ -208,7 +208,7 @@ public class TranslationSourceFileInfo {
     if (myProjectToOutputPathMap != null) {
       final Object val = myProjectToOutputPathMap.get(projectId);
       if (val instanceof Integer) {
-        proc.execute(projectId, TranslatingCompilerFilesMonitorImpl.getFilePath(((Integer)val).intValue()));
+        proc.execute(projectId, TranslatingCompilerFilesMonitorImpl.getFilePath((Integer)val));
       }
       else if (val instanceof TIntHashSet) {
         ((TIntHashSet)val).forEach(new TIntProcedure() {
