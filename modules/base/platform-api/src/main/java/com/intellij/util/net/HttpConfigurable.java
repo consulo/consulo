@@ -435,9 +435,9 @@ public class HttpConfigurable implements PersistentStateComponent<HttpConfigurab
    * @deprecated use {@link #getJvmProperties(boolean, URI)} (to be removed in IDEA 2018)
    */
   @SuppressWarnings({"deprecation", "unused"})
-  public static List<KeyValue<String, String>> getJvmPropertiesList(boolean withAutodetection, @Nullable URI uri) {
+  public static List<Pair<String, String>> getJvmPropertiesList(boolean withAutodetection, @Nullable URI uri) {
     List<Pair<String, String>> properties = getInstance().getJvmProperties(withAutodetection, uri);
-    return properties.stream().map(p -> KeyValue.create(p.first, p.second)).collect(Collectors.toList());
+    return properties.stream().map(p -> Pair.create(p.first, p.second)).collect(Collectors.toList());
   }
 
   @Nonnull
@@ -505,13 +505,13 @@ public class HttpConfigurable implements PersistentStateComponent<HttpConfigurab
    */
   @SuppressWarnings({"deprecation", "unused"})
   @Nonnull
-  public static List<String> convertArguments(@Nonnull final List<KeyValue<String, String>> list) {
+  public static List<String> convertArguments(@Nonnull final List<Pair<String, String>> list) {
     if (list.isEmpty()) {
       return Collections.emptyList();
     }
     final List<String> result = new ArrayList<>(list.size());
-    for (KeyValue<String, String> value : list) {
-      result.add("-D" + value.getKey() + "=" + value.getValue());
+    for (Pair<String, String> value : list) {
+      result.add("-D" + value.getFirst() + "=" + value.getSecond());
     }
     return result;
   }
