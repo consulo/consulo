@@ -30,7 +30,7 @@ import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.DesktopWindowManagerImpl;
 import com.intellij.openapi.wm.impl.SystemDock;
-import com.intellij.ui.DesktopSplash;
+import consulo.desktop.start.splash.DesktopSplash;
 import consulo.application.ApplicationProperties;
 import consulo.container.util.StatCollector;
 import consulo.ide.customize.FirstStartCustomizeUtil;

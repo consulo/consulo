@@ -41,7 +41,7 @@ import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.MorphColor;
 import consulo.ide.welcomeScreen.BaseWelcomeScreenPanel;
 import consulo.ide.welcomeScreen.WelcomeScreenConstants;
-import consulo.spash.AnimatedLogoLabel;
+import consulo.desktop.start.splash.AnimatedLogoLabel;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.style.StyleManager;
 

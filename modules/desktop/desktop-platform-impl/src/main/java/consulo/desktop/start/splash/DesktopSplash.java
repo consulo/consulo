@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui;
+package consulo.desktop.start.splash;
 
 import com.intellij.ide.StartupProgress;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.ui.ScreenUtil;
 import com.intellij.util.ui.JBUI;
 import consulo.application.ApplicationProperties;
-import consulo.spash.AnimatedLogoLabel;
 import consulo.ui.desktop.internal.window.JDialogAsUIWindow;
 
 import javax.annotation.Nullable;
@@ -42,7 +42,7 @@ public class DesktopSplash extends JDialogAsUIWindow implements StartupProgress 
     super(null, false);
 
     setUndecorated(true);
-    if (!(SystemInfo.isLinux && SystemInfo.isJavaVersionAtLeast(7, 0, 0))) {
+    if (!(SystemInfo.isLinux && SystemInfo.isJavaVersionAtLeast(7))) {
       setResizable(false);
     }
     setFocusableWindowState(false);
