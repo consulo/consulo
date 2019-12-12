@@ -210,8 +210,7 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
         try {
           final TranslationOutputFileInfo outputInfo = TranslationOutputFileInfo.loadOutputInfo(file);
           if (outputInfo != null) {
-            final String srcPath = outputInfo.getSourceFilePath();
-            final VirtualFile srcFile = srcPath != null ? LocalFileSystem.getInstance().findFileByPath(srcPath) : null;
+            final VirtualFile srcFile = outputInfo.getSourceFile();
             if (srcFile != null) {
               final TranslationSourceFileInfo srcInfo = TranslationSourceFileInfo.loadSourceInfo(srcFile);
               if (srcInfo != null) {

@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.util;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nullable;
@@ -22,6 +23,8 @@ import javax.annotation.Nullable;
 /**
  * @author ven
  */
+@Deprecated
+@DeprecationInfo("Use consulo.util.lang.ref.SimpleReference")
 public class Ref<T> extends SimpleReference<T> {
   public Ref() {
   }

@@ -25,6 +25,7 @@ import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.Set;
@@ -51,7 +52,7 @@ public interface DependencyCache {
 
   void update() throws CacheCorruptedException;
 
-  @javax.annotation.Nullable
+  @Nullable
   String relativePathToQName(@Nonnull String path, char separator);
 
   void syncOutDir(Trinity<File, String, Boolean> trinity) throws CacheCorruptedException;

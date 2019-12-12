@@ -16,8 +16,11 @@
 package com.intellij.compiler.impl;
 
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
+import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.io.DataInputOutputUtil;
 import consulo.logging.Logger;
 import gnu.trove.TIntHashSet;
@@ -32,7 +35,7 @@ import java.io.*;
 public class TranslationSourceFileInfo {
   private static final Logger LOG = Logger.getInstance(TranslationSourceFileInfo.class);
 
-  private static final FileAttribute ourSourceFileAttribute = new FileAttribute("_make_source_file_info_", 3, false);
+  private static final FileAttribute ourSourceFileAttribute = new FileAttribute("_make_source_file_info_", 4, false);
 
   @Nullable
   public static TranslationSourceFileInfo loadSourceInfo(final VirtualFile file) {
@@ -162,8 +165,8 @@ public class TranslationSourceFileInfo {
     return result;
   }
 
-  public void addOutputPath(final int projectId, String outputPath) {
-    addOutputPath(projectId, TranslatingCompilerFilesMonitorImpl.cacheFilePath(outputPath));
+  public void addOutputPath(final int projectId, @Nonnull VirtualFile outputPath) {
+    addOutputPath(projectId, FileBasedIndex.getFileId(outputPath));
   }
 
   private void addOutputPath(final int projectId, final int outputPath) {
@@ -208,15 +211,12 @@ public class TranslationSourceFileInfo {
     if (myProjectToOutputPathMap != null) {
       final Object val = myProjectToOutputPathMap.get(projectId);
       if (val instanceof Integer) {
-        proc.execute(projectId, TranslatingCompilerFilesMonitorImpl.getFilePath((Integer)val));
+        proc.execute(projectId, VirtualFileManager.getInstance().findFileById((Integer)val));
       }
       else if (val instanceof TIntHashSet) {
-        ((TIntHashSet)val).forEach(new TIntProcedure() {
-          @Override
-          public boolean execute(final int value) {
-            proc.execute(projectId, TranslatingCompilerFilesMonitorImpl.getFilePath(value));
-            return true;
-          }
+        ((TIntHashSet)val).forEach(value -> {
+          proc.execute(projectId, VirtualFileManager.getInstance().findFileById(value));
+          return true;
         });
       }
     }
@@ -226,10 +226,12 @@ public class TranslationSourceFileInfo {
     if (myProjectToOutputPathMap != null) {
       final Object val = myProjectToOutputPathMap.get(projectId);
       if (val instanceof Integer) {
-        return FileUtil.pathsEqual(outputPath, TranslatingCompilerFilesMonitorImpl.getFilePath(((Integer)val).intValue()));
+        VirtualFile fileById = VirtualFileManager.getInstance().findFileById((Integer)val);
+        return FileUtil.pathsEqual(outputPath, fileById != null ? fileById.getPath() : "");
       }
       if (val instanceof TIntHashSet) {
-        final int _outputPath = TranslatingCompilerFilesMonitorImpl.cacheFilePath(outputPath);
+        VirtualFile vf = LocalFileSystem.getInstance().findFileByPath(outputPath);
+        int _outputPath = vf == null ? -1 : FileBasedIndex.getFileId(vf);
         return ((TIntHashSet)val).contains(_outputPath);
       }
     }

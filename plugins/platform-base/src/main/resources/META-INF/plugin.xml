@@ -2675,6 +2675,7 @@
     <vfs.asyncListener implementation="consulo.roots.impl.ContentEntryFileListener"/>
 
     <applicationService serviceInterface="consulo.compiler.impl.TranslatingCompilerFilesMonitor" serviceImplementation="com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl"/>
+    <projectService serviceImplementation="consulo.compiler.impl.TranslationCompilerProjectMonitor" />
 
     <cachesInvalidator implementation="com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl$MonitorCachesInvalidator"/>
 

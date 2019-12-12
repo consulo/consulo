@@ -72,11 +72,6 @@ public class CompilerPaths {
     return new File(getCompilerSystemDirectory(project), ".caches");
   }
 
-  public static File getCacheStoreDirectory(String compilerProjectDirName) {
-    //noinspection HardCodedStringLiteral
-    return new File(getCompilerSystemDirectory(compilerProjectDirName), ".caches");
-  }
-
   public static File getRebuildMarkerFile(Project project) {
     return new File(getCompilerSystemDirectory(project), "rebuild_required");
   }

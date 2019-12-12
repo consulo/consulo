@@ -35,31 +35,35 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.startup.StartupManager;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.util.Couple;
+import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
-import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SLRUCache;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.io.DataOutputStream;
-import com.intellij.util.io.*;
+import com.intellij.util.io.PersistentHashMap;
 import com.intellij.util.messages.MessageBusConnection;
-import consulo.compiler.ModuleCompilerPathsManager;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.compiler.impl.TranslatingCompilerFilesMonitor;
 import consulo.compiler.impl.TranslatingCompilerFilesMonitorHelper;
 import consulo.compiler.impl.TranslationCompilerFilesMonitorVfsListener;
+import consulo.compiler.impl.TranslationCompilerProjectMonitor;
 import consulo.compiler.make.DependencyCache;
 import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
 import consulo.roots.ContentFolderScopes;
-import consulo.roots.impl.ProductionContentFolderTypeProvider;
-import consulo.roots.impl.TestContentFolderTypeProvider;
 import consulo.ui.UIAccess;
 import consulo.util.dataholder.Key;
-import gnu.trove.*;
+import consulo.util.lang.ref.SimpleReference;
+import gnu.trove.TIntHashSet;
+import gnu.trove.TIntIntHashMap;
+import gnu.trove.TIntObjectHashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -178,7 +182,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                       if (oldRoots.size() > 0) {
                         monitor.scanSourceContent(projRef, oldRoots, oldRoots.size(), false);
                       }
-                      monitor.markOldOutputRoots(projRef, monitor.buildOutputRootsLayout(projRef));
+                      monitor.markOldOutputRoots(projRef, TranslationCompilerProjectMonitor.getInstance(projRef.get()).buildOutputRootsLayout());
                     }
                     catch (ProjectRef.ProjectClosedException swallowed) {
                       // ignored
@@ -246,9 +250,6 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   private final TIntHashSet mySuspendedProjects = new TIntHashSet(); // projectId for all projects that should not be monitored
 
   private final TIntObjectHashMap<TIntHashSet> mySourcesToRecompile = new TIntObjectHashMap<>();
-  // ProjectId->set of source file paths
-  private PersistentHashMap<Integer, TIntObjectHashMap<Pair<Integer, Integer>>> myOutputRootsStorage;
-  // ProjectId->map[moduleId->Pair(outputDirId, testOutputDirId)]
 
   // Map: projectId -> Map{output path -> [sourceUrl; className]}
   private final SLRUCache<Integer, Outputs> myOutputsToDelete = new SLRUCache<Integer, Outputs>(3, 3) {
@@ -271,16 +272,25 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
     @Nonnull
     @Override
-    public Outputs createValue(Integer key) {
-      final String dirName = getFilePath(key);
-      final File storeFile;
-      if (StringUtil.isEmpty(dirName)) {
-        storeFile = null;
+    public Outputs createValue(Integer projectId) {
+      VirtualFile projectDir = VirtualFileManager.getInstance().findFileById(projectId);
+      if(projectDir == null) {
+        return new Outputs(null, new LinkedHashMap<>());
       }
-      else {
-        final File compilerCacheDir = CompilerPaths.getCacheStoreDirectory(dirName);
-        storeFile = compilerCacheDir.exists() ? new File(compilerCacheDir, "paths_to_delete.dat") : null;
+
+      Project project = null;
+      for (Project temp : ProjectManager.getInstance().getOpenProjects()) {
+        if(projectDir.equals(temp.getBaseDir())) {
+          project = temp;
+          break;
+        }
       }
+      if (project == null) {
+        return new Outputs(null, new LinkedHashMap<>());
+      }
+
+      File compilerCacheDir = CompilerPaths.getCacheStoreDirectory(project);
+      File storeFile = compilerCacheDir.exists() ? new File(compilerCacheDir, "paths_to_delete.dat") : null;
       return new Outputs(storeFile, loadPathsToDelete(storeFile));
     }
 
@@ -289,6 +299,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
       value.release();
     }
   };
+
   private final SLRUCache<Project, File> myGeneratedDataPaths = new SLRUCache<Project, File>(8, 8) {
     @Override
     @Nonnull
@@ -297,45 +308,14 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
       return CompilerPaths.getGeneratedDataDirectory(project);
     }
   };
-  private final SLRUCache<Integer, TIntObjectHashMap<Pair<Integer, Integer>>> myProjectOutputRoots = new SLRUCache<Integer, TIntObjectHashMap<Pair<Integer, Integer>>>(2, 2) {
-    @Override
-    protected void onDropFromCache(Integer key, TIntObjectHashMap<Pair<Integer, Integer>> value) {
-      try {
-        myOutputRootsStorage.put(key, value);
-      }
-      catch (IOException e) {
-        LOG.info(e);
-      }
-    }
-
-    @Override
-    @Nonnull
-    public TIntObjectHashMap<Pair<Integer, Integer>> createValue(Integer key) {
-      TIntObjectHashMap<Pair<Integer, Integer>> map = null;
-      try {
-        map = myOutputRootsStorage.get(key);
-      }
-      catch (IOException e) {
-        LOG.info(e);
-      }
-      return map != null ? map : new TIntObjectHashMap<>();
-    }
-  };
-
-  private static final int VERSION = 2;
 
   private final TIntIntHashMap myInitInProgress = new TIntIntHashMap(); // projectId for successfully initialized projects
   private final Object myAsyncScanLock = new Object();
 
   private boolean myForceCompiling;
 
-  private PersistentStringEnumerator myFilePathsEnumerator;
-
-  private boolean myInitialized;
-
   @Inject
   public TranslatingCompilerFilesMonitorImpl() {
-    ensureOutputStorageInitialized();
   }
 
   @Override
@@ -351,16 +331,8 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
       mySourcesToRecompile.remove(projectId);
       myOutputsToDelete.remove(projectId);
       myGeneratedDataPaths.remove(project);
-    }
 
-    synchronized (myProjectOutputRoots) {
-      myProjectOutputRoots.remove(projectId);
-      try {
-        myOutputRootsStorage.remove(projectId);
-      }
-      catch (IOException e) {
-        LOG.info(e);
-      }
+      TranslationCompilerProjectMonitor.getInstance(project).removeCompileOutputInfoFile();
     }
   }
 
@@ -392,10 +364,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   public static VirtualFile getSourceFileByOutput(VirtualFile outputFile) {
     final TranslationOutputFileInfo outputFileInfo = TranslationOutputFileInfo.loadOutputInfo(outputFile);
     if (outputFileInfo != null) {
-      final String path = outputFileInfo.getSourceFilePath();
-      if (path != null) {
-        return LocalFileSystem.getInstance().findFileByPath(path);
-      }
+      return outputFileInfo.getSourceFile();
     }
     return null;
   }
@@ -557,10 +526,6 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     return FileBasedIndex.getFileId(file);
   }
 
-  public static VirtualFile findFileById(int id) {
-    return ManagingFS.getInstance().findFileById(id);
-  }
-
   @Override
   public void update(final CompileContext context, @Nullable final String outputRoot, final Collection<TranslatingCompiler.OutputItem> successfullyCompiled, final VirtualFile[] filesToRecompile)
           throws IOException {
@@ -604,11 +569,11 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                   if (!sourceFile.equals(outputFile)) {
                     final String className = outputRoot == null ? null : dependencyCache.relativePathToQName(outputPath.substring(outputRoot.length()), '/');
                     if (isSourceValid) {
-                      srcInfo.addOutputPath(projectId, outputPath);
-                      TranslationOutputFileInfo.saveOutputInfo(outputFile, new TranslationOutputFileInfo(sourceFile.getPath(), className));
+                      srcInfo.addOutputPath(projectId, outputFile);
+                      TranslationOutputFileInfo.saveOutputInfo(outputFile, new TranslationOutputFileInfo(sourceFile, className));
                     }
                     else {
-                      markOutputPathForDeletion(projectId, outputPath, className, sourceFile.getUrl());
+                      markOutputPathForDeletion(projectId, outputFile, className, sourceFile.getUrl());
                     }
                   }
                 }
@@ -669,24 +634,13 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   }
 
   @Override
+  @RequiredReadAction
   public void updateOutputRootsLayout(Project project) {
-    final TIntObjectHashMap<Pair<Integer, Integer>> map = buildOutputRootsLayout(new ProjectRef(project));
-    final int projectId = getProjectId(project);
-    synchronized (myProjectOutputRoots) {
-      myProjectOutputRoots.put(projectId, map);
-    }
-  }
-
-  private static File getOutputRootsFile() {
-    return new File(CompilerPaths.getCompilerSystemDirectory(), "output_roots.dat");
+    TranslationCompilerProjectMonitor.getInstance(project).updateCompileOutputInfoFile();
   }
 
   private static File getFilePathsFile() {
     return new File(CompilerPaths.getCompilerSystemDirectory(), "file_paths.dat");
-  }
-
-  private static File getInvalidateMarkerFile() {
-    return new File(CompilerPaths.getCompilerSystemDirectory(), "invalidate.marker");
   }
 
   private static Map<String, SourceUrlClassNamePair> loadPathsToDelete(@Nullable final File file) {
@@ -712,174 +666,16 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     return map;
   }
 
-  private void ensureOutputStorageInitialized() {
-    if (myInitialized) {
-      throw new IllegalArgumentException();
-    }
-
-    File invalidateMarkerFile = getInvalidateMarkerFile();
-    if (invalidateMarkerFile.exists()) {
-      try {
-        invalidateMarkerFile.delete();
-
-        LOG.info("invalidate marker found");
-
-        FileUtil.delete(CompilerPaths.getCompilerSystemDirectory());
-      }
-      catch (Exception e) {
-        LOG.error(e);
-      }
-    }
-
-    int i = readVersion();
-    if (i != VERSION) {
-      try {
-        dropCache();
-
-        FileUtil.writeToFile(getFileVersion(), String.valueOf(VERSION));
-      }
-      catch (IOException e) {
-        LOG.error(e);
-      }
-    }
-
-    try {
-      initOutputRootsFile();
-    }
-    catch (IOException e) {
-      LOG.info(e);
-
-      dropCache();
-
-      try {
-        initOutputRootsFile();
-      }
-      catch (IOException e1) {
-        LOG.error(e1);
-      }
-    }
-  }
-
   private void close() {
-    boolean failed = false;
-    try {
-      myFilePathsEnumerator.close();
-    }
-    catch (IOException e) {
-      LOG.error(e);
-      failed = true;
-    }
-
-    try {
-      myOutputRootsStorage.close();
-    }
-    catch (IOException e) {
-      LOG.error(e);
-      failed = true;
-    }
-
-    if (failed) {
-      dropCache();
-    }
-  }
-
-  private static void dropCache() {
-    try {
-      PersistentHashMap.deleteFilesStartingWith(getOutputRootsFile());
-      PersistentHashMap.deleteFilesStartingWith(getFilePathsFile());
-    }
-    catch (Exception e) {
-      LOG.warn(e);
-    }
-  }
-
-  private static int readVersion() {
-    File versionFile = getFileVersion();
-    try {
-      return StringUtil.parseInt(FileUtil.loadFile(versionFile), -1);
-    }
-    catch (IOException ignored) {
-    }
-
-    return -1;
-  }
-
-  private static File getFileVersion() {
-    return new File(CompilerPaths.getCompilerSystemDirectory(), "tr_compiler_ver");
-  }
-
-  private TIntObjectHashMap<Pair<Integer, Integer>> buildOutputRootsLayout(ProjectRef projRef) {
-    final TIntObjectHashMap<Pair<Integer, Integer>> map = new TIntObjectHashMap<>();
-    for (Module module : ModuleManager.getInstance(projRef.get()).getModules()) {
-      ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
-
-      final VirtualFile output = moduleCompilerPathsManager.getCompilerOutput(ProductionContentFolderTypeProvider.getInstance());
-      final int first = output != null ? Math.abs(getFileId(output)) : -1;
-      final VirtualFile testsOutput = moduleCompilerPathsManager.getCompilerOutput(TestContentFolderTypeProvider.getInstance());
-      final int second = testsOutput != null ? Math.abs(getFileId(testsOutput)) : -1;
-      map.put(getModuleId(module), new Pair<>(first, second));
-    }
-    return map;
-  }
-
-  private void initOutputRootsFile() throws IOException {
-    myFilePathsEnumerator = new PersistentStringEnumerator(getFilePathsFile());
-
-    myOutputRootsStorage = new PersistentHashMap<>(getOutputRootsFile(), EnumeratorIntegerDescriptor.INSTANCE, new DataExternalizer<TIntObjectHashMap<Pair<Integer, Integer>>>() {
-      @Override
-      public void save(DataOutput out, TIntObjectHashMap<Pair<Integer, Integer>> value) throws IOException {
-        for (final TIntObjectIterator<Pair<Integer, Integer>> it = value.iterator(); it.hasNext(); ) {
-          it.advance();
-          DataInputOutputUtil.writeINT(out, it.key());
-          final Pair<Integer, Integer> pair = it.value();
-          DataInputOutputUtil.writeINT(out, pair.first);
-          DataInputOutputUtil.writeINT(out, pair.second);
-        }
-      }
-
-      @Override
-      public TIntObjectHashMap<Pair<Integer, Integer>> read(DataInput in) throws IOException {
-        final DataInputStream _in = (DataInputStream)in;
-        final TIntObjectHashMap<Pair<Integer, Integer>> map = new TIntObjectHashMap<>();
-        while (_in.available() > 0) {
-          final int key = DataInputOutputUtil.readINT(_in);
-          final int first = DataInputOutputUtil.readINT(_in);
-          final int second = DataInputOutputUtil.readINT(_in);
-          map.put(key, new Pair<>(first, second));
-        }
-        return map;
-      }
-    });
-
-    myInitialized = true;
   }
 
   private void invalidate() {
-    File marker = getInvalidateMarkerFile();
-
-    if(marker.exists()) {
-      return;
-    }
-
-    try {
-      FileUtil.writeToFile(marker, String.valueOf(new Date()));
-    }
-    catch (IOException e) {
-      LOG.error(e);
-    }
   }
 
   @Override
   public void dispose() {
-    try {
-      synchronized (myProjectOutputRoots) {
-        myProjectOutputRoots.clear();
-      }
-    }
-    finally {
-      synchronized (myDataLock) {
-        myOutputsToDelete.clear();
-      }
+    synchronized (myDataLock) {
+      myOutputsToDelete.clear();
     }
 
     close();
@@ -913,11 +709,12 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   }
 
   public int getProjectId(Project project) {
-    return cacheFilePath(CompilerPaths.getCompilerSystemDirectoryName(project));
-  }
+    VirtualFile baseDir = project.getBaseDir();
+    if(baseDir == null) {
+      throw new IllegalArgumentException("there no base directory: " + project.getBasePath());
+    }
 
-  private int getModuleId(Module module) {
-    return cacheFilePath(module.getName().toLowerCase(Locale.US));
+    return FileBasedIndex.getFileId(baseDir);
   }
 
   @Override
@@ -931,8 +728,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
     info.processOutputPaths(getProjectId(project), new Proc() {
       @Override
-      public boolean execute(int projectId, String outputPath) {
-        VirtualFile clsFile = LocalFileSystem.getInstance().findFileByPath(outputPath);
+      public boolean execute(int projectId, VirtualFile clsFile) {
         if (clsFile != null) {
           TranslationOutputFileInfo outputInfo = TranslationOutputFileInfo.loadOutputInfo(clsFile);
           if (outputInfo != null) {
@@ -1029,36 +825,48 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
   }
 
-  private void markOldOutputRoots(final ProjectRef projRef, final TIntObjectHashMap<Pair<Integer, Integer>> currentLayout) {
+  private void markOldOutputRoots(final ProjectRef projRef, final Map<String, Couple<String>> currentLayout) {
     final int projectId = getProjectId(projRef.get());
 
-    final TIntHashSet rootsToMark = new TIntHashSet();
-    synchronized (myProjectOutputRoots) {
-      final TIntObjectHashMap<Pair<Integer, Integer>> oldLayout = myProjectOutputRoots.get(projectId);
-      for (final TIntObjectIterator<Pair<Integer, Integer>> it = oldLayout.iterator(); it.hasNext(); ) {
-        it.advance();
-        final Pair<Integer, Integer> currentRoots = currentLayout.get(it.key());
-        final Pair<Integer, Integer> oldRoots = it.value();
-        if (shouldMark(oldRoots.first, currentRoots != null ? currentRoots.first : -1)) {
-          rootsToMark.add(oldRoots.first);
+    Set<VirtualFile> rootsToMark = new HashSet<>();
+
+    Map<String, Couple<String>> lastOutputRootsLayout = TranslationCompilerProjectMonitor.getInstance(projRef.get()).getLastOutputRootsLayout();
+
+    for (Map.Entry<String, Couple<String>> last : lastOutputRootsLayout.entrySet()) {
+      Couple<String> current = currentLayout.get(last.getKey());
+
+      // module was removed, renamed, etc - remove old source info
+      if(current == null) {
+        addIfDirectoryExists(last.getValue().getFirst(), rootsToMark);
+        addIfDirectoryExists(last.getValue().getSecond(), rootsToMark);
+      }
+      else {
+        String lastOutput = last.getValue().getFirst();
+        if(lastOutput != null && !lastOutput.equals(current.getFirst())) {
+          addIfDirectoryExists(lastOutput, rootsToMark);
         }
-        if (shouldMark(oldRoots.second, currentRoots != null ? currentRoots.second : -1)) {
-          rootsToMark.add(oldRoots.second);
+
+        String lastTestOutput = last.getValue().getSecond();
+        if (lastTestOutput != null && !lastTestOutput.equals(current.getSecond())) {
+          addIfDirectoryExists(lastTestOutput, rootsToMark);
         }
       }
     }
 
-    for (TIntIterator it = rootsToMark.iterator(); it.hasNext(); ) {
-      final int id = it.next();
-      final VirtualFile outputRoot = findFileById(id);
-      if (outputRoot != null) {
-        processOldOutputRoot(projectId, outputRoot);
-      }
+    for (VirtualFile outputRoot : rootsToMark) {
+      processOldOutputRoot(projectId, outputRoot);
     }
   }
 
-  private static boolean shouldMark(Integer oldOutputRoot, Integer currentOutputRoot) {
-    return oldOutputRoot != null && oldOutputRoot.intValue() > 0 && !Comparing.equal(oldOutputRoot, currentOutputRoot);
+  private static void addIfDirectoryExists(String url, Set<VirtualFile> rootsToRemove) {
+    if (url == null) {
+      return;
+    }
+
+    VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(url);
+    if (fileByUrl != null) {
+      rootsToRemove.add(fileByUrl);
+    }
   }
 
   private void processOldOutputRoot(final int projectId, VirtualFile outputRoot) {
@@ -1070,8 +878,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
           // todo: possible optimization - process only those outputs that are not marked for deletion yet
           final TranslationOutputFileInfo outputInfo = TranslationOutputFileInfo.loadOutputInfo(file);
           if (outputInfo != null) {
-            final String srcPath = outputInfo.getSourceFilePath();
-            final VirtualFile srcFile = srcPath != null ? LocalFileSystem.getInstance().findFileByPath(srcPath) : null;
+            final VirtualFile srcFile = outputInfo.getSourceFile();
             if (srcFile != null) {
               loadInfoAndAddSourceForRecompilation(projectId, srcFile);
             }
@@ -1144,9 +951,9 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
             }
           }
 
-          markOldOutputRoots(projRef, buildOutputRootsLayout(projRef));
+          markOldOutputRoots(projRef, TranslationCompilerProjectMonitor.getInstance(projRef.get()).buildOutputRootsLayout());
         }
-        catch (ProjectRef.ProjectClosedException swallowed) {
+        catch (ProjectRef.ProjectClosedException ignored) {
         }
         finally {
           terminateAsyncScan(projectId, false);
@@ -1286,7 +1093,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
   @FunctionalInterface
   public interface Proc {
-    boolean execute(final int projectId, String outputPath);
+    boolean execute(final int projectId, VirtualFile outputPath);
   }
 
   public class ScheduleOutputsForDeletionProc implements Proc {
@@ -1305,28 +1112,27 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
 
     @Override
-    public boolean execute(final int projectId, String outputPath) {
-      final VirtualFile outFile = myFileSystem.findFileByPath(outputPath);
+    public boolean execute(final int projectId, VirtualFile outFile) {
       if (outFile != null) { // not deleted yet
         if (myRootBeingDeleted != null && VfsUtil.isAncestor(myRootBeingDeleted, outFile, false)) {
-          unmarkOutputPathForDeletion(projectId, outputPath);
+          unmarkOutputPathForDeletion(projectId, outFile.getPath());
         }
         else {
           final TranslationOutputFileInfo outputInfo = TranslationOutputFileInfo.loadOutputInfo(outFile);
           final String classname = outputInfo != null ? outputInfo.getClassName() : null;
-          markOutputPathForDeletion(projectId, outputPath, classname, mySrcUrl);
+          markOutputPathForDeletion(projectId, outFile, classname, mySrcUrl);
         }
       }
       return true;
     }
   }
 
-  private void markOutputPathForDeletion(final int projectId, final String outputPath, final String classname, final String srcUrl) {
+  private void markOutputPathForDeletion(final int projectId, final VirtualFile outputPath, final String classname, final String srcUrl) {
     final SourceUrlClassNamePair pair = new SourceUrlClassNamePair(srcUrl, classname);
     synchronized (myDataLock) {
       final Outputs outputs = myOutputsToDelete.get(projectId);
       try {
-        outputs.put(outputPath, pair);
+        outputs.put(outputPath.getPath(), pair);
         if (LOG.isDebugEnabled() || DEBUG_MODE) {
           final String message = "ADD path to delete: " + outputPath + "; source: " + srcUrl;
           LOG.debug(message);
@@ -1362,53 +1168,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
   }
 
-  public static int cacheFilePath(String filePath) {
-    TranslatingCompilerFilesMonitorImpl monitor = (TranslatingCompilerFilesMonitorImpl)TranslatingCompilerFilesMonitor.getInstance();
-    return monitor.cacheFilePath0(filePath);
-  }
-
-  public static String getFilePath(int id) {
-    TranslatingCompilerFilesMonitorImpl monitor = (TranslatingCompilerFilesMonitorImpl)TranslatingCompilerFilesMonitor.getInstance();
-    return monitor.getFilePath0(id);
-  }
-
-  private int cacheFilePath0(@Nonnull String filePath) {
-    try {
-      return myFilePathsEnumerator.enumerate(filePath);
-    }
-    catch (IOException e) {
-      try {
-        myFilePathsEnumerator.markCorrupted();
-        dropCache();
-      }
-      catch (Exception ignored) {
-      }
-      LOG.warn(e);
-      return -1;
-    }
-  }
-
-  private String getFilePath0(int id) {
-    if(id <= 0) {
-      throw new IllegalArgumentException("Try to get enumerated path by id  " + id);
-    }
-
-    try {
-      return myFilePathsEnumerator.valueOf(id);
-    }
-    catch (IOException e) {
-      try {
-        myFilePathsEnumerator.markCorrupted();
-        dropCache();
-      }
-      catch (Exception ignored) {
-      }
-      LOG.warn(e);
-      return "";
-    }
-  }
-
-  public static final class ProjectRef extends Ref<Project> {
+  public static final class ProjectRef extends SimpleReference<Project> {
     static class ProjectClosedException extends RuntimeException {
     }
 

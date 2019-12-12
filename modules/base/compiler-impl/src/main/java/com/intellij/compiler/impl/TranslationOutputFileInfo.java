@@ -16,19 +16,17 @@
 package com.intellij.compiler.impl;
 
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
+import com.intellij.util.indexing.FileBasedIndex;
 import consulo.logging.Logger;
 
 import javax.annotation.Nullable;
-import java.io.DataInput;
-import java.io.DataInputStream;
-import java.io.DataOutput;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 public class TranslationOutputFileInfo {
   private static final Logger LOG = Logger.getInstance(TranslationOutputFileInfo.class);
-  private static final FileAttribute ourOutputFileAttribute = new FileAttribute("_make_output_file_info_", 3, false);
+  private static final FileAttribute ourOutputFileAttribute = new FileAttribute("_make_output_file_info_", 4, true);
 
   @Nullable
   public static TranslationOutputFileInfo loadOutputInfo(final VirtualFile file) {
@@ -71,29 +69,30 @@ public class TranslationOutputFileInfo {
 
   private final int mySourcePath;
 
-  private final int myClassName;
+  private final String myClassName;
 
-  TranslationOutputFileInfo(final String sourcePath, @Nullable String className) throws IOException {
-    mySourcePath = TranslatingCompilerFilesMonitorImpl.cacheFilePath(sourcePath);
-    myClassName = className != null ? TranslatingCompilerFilesMonitorImpl.cacheFilePath(className) : -1;
+  TranslationOutputFileInfo(final VirtualFile sourcePath, @Nullable String className) throws IOException {
+    mySourcePath = FileBasedIndex.getFileId(sourcePath);
+    myClassName = className;
   }
 
   TranslationOutputFileInfo(final DataInput in) throws IOException {
     mySourcePath = in.readInt();
-    myClassName = in.readInt();
+    myClassName = in.readUTF();
   }
 
-  public String getSourceFilePath() {
-    return TranslatingCompilerFilesMonitorImpl.getFilePath(mySourcePath);
+  @Nullable
+  public VirtualFile getSourceFile() {
+    return VirtualFileManager.getInstance().findFileById(mySourcePath);
   }
 
   @Nullable
   public String getClassName() {
-    return myClassName < 0 ? null : TranslatingCompilerFilesMonitorImpl.getFilePath(myClassName);
+    return myClassName;
   }
 
   public void save(final DataOutput out) throws IOException {
     out.writeInt(mySourcePath);
-    out.writeInt(myClassName);
+    out.writeUTF(myClassName);
   }
 }
