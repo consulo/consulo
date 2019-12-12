@@ -20,6 +20,7 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
 import com.intellij.util.indexing.FileBasedIndex;
 import consulo.logging.Logger;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nullable;
 import java.io.*;
@@ -78,7 +79,7 @@ public class TranslationOutputFileInfo {
 
   TranslationOutputFileInfo(final DataInput in) throws IOException {
     mySourcePath = in.readInt();
-    myClassName = in.readUTF();
+    myClassName = StringUtil.nullize(in.readUTF());
   }
 
   @Nullable
@@ -93,6 +94,6 @@ public class TranslationOutputFileInfo {
 
   public void save(final DataOutput out) throws IOException {
     out.writeInt(mySourcePath);
-    out.writeUTF(myClassName);
+    out.writeUTF(myClassName == null ? "" : myClassName);
   }
 }
