@@ -295,7 +295,9 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
                                           FileTypesBundle.message("filetype.edit.add.pattern.reassign.button"),
                                           CommonBundle.getCancelButtonText(), Messages.getQuestionIcon())) {
             myTempPatternsTable.removeAssociation(matcher, registeredFileType);
-            myTempTemplateDataLanguages.removeAssociation(matcher, oldLanguage);
+            if(oldLanguage != null) {
+              myTempTemplateDataLanguages.removeAssociation(matcher, oldLanguage);
+            }
             myReassigned.put(matcher, registeredFileType);
           }
           else {
@@ -307,7 +309,9 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
       if (item != null) {
         final FileNameMatcher oldMatcher = FileTypeManager.parseFromString(item);
         myTempPatternsTable.removeAssociation(oldMatcher, type);
-        myTempTemplateDataLanguages.removeAssociation(oldMatcher, oldLanguage);
+        if(oldLanguage != null) {
+          myTempTemplateDataLanguages.removeAssociation(oldMatcher, oldLanguage);
+        }
       }
       myTempPatternsTable.addAssociation(matcher, type);
       myTempTemplateDataLanguages.addAssociation(matcher, dialog.getTemplateDataLanguage());
