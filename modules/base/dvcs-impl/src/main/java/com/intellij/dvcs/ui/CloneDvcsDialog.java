@@ -72,7 +72,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
 
   @Nonnull
   private String myTestURL; // the repository URL at the time of the last test
-  @javax.annotation.Nullable
+  @Nullable
   private Boolean myTestResult; // the test result of the last test or null if not tested
   @Nonnull
   private String myDefaultDirectoryName = "";
@@ -86,7 +86,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
     this(project, displayName, vcsDirectoryName, null);
   }
 
-  public CloneDvcsDialog(@Nonnull Project project, @Nonnull String displayName, @Nonnull String vcsDirectoryName, @javax.annotation.Nullable String defaultUrl) {
+  public CloneDvcsDialog(@Nonnull Project project, @Nonnull String displayName, @Nonnull String vcsDirectoryName, @Nullable String defaultUrl) {
     super(project, true);
     myDefaultRepoUrl = defaultUrl;
     myProject = project;
@@ -98,7 +98,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
     myRepositoryUrlLabel.setDisplayedMnemonic('R');
     setOKButtonText(DvcsBundle.message("clone.button"));
 
-    FrameStateManager.getInstance().addListener(new FrameStateListener.Adapter() {
+    FrameStateManager.getInstance().addListener(new FrameStateListener() {
       @Override
       public void onFrameActivated() {
         updateButtons();
@@ -369,7 +369,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
   protected static class TestResult {
     @Nonnull
     public static final TestResult SUCCESS = new TestResult(null);
-    @javax.annotation.Nullable
+    @Nullable
     private final String myErrorMessage;
 
     public TestResult(@Nullable String errorMessage) {
@@ -380,7 +380,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
       return myErrorMessage == null;
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     public String getError() {
       return myErrorMessage;
     }
