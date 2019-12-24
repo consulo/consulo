@@ -26,27 +26,7 @@ public interface IdePerformanceListener {
    * Invoked after the UI has become responsive again following a {@link #uiFreezeStarted()} event.
    *
    * @param lengthInSeconds approximate length in seconds of the interval that the IDE was unresponsive
-   * @deprecated use {@link #uiFreezeFinished(long, File)}
    */
-  @Deprecated
   default void uiFreezeFinished(int lengthInSeconds) {
-  }
-
-  /**
-   * Invoked after the UI has become responsive again following a {@link #uiFreezeStarted()} event.
-   *
-   * @param durationMs freeze duration in milliseconds
-   * @param reportDir  folder where all freeze report data is collected
-   */
-  default void uiFreezeFinished(long durationMs, @Nullable File reportDir) {
-    uiFreezeFinished((int)(durationMs / 1000));
-  }
-
-  /**
-   * Invoked on each UI response sampled every <code>performance.watcher.sampling.interval.ms</code> set in the Registry.
-   *
-   * @param latencyMs time between scheduling a UI event and executing it, in milliseconds
-   */
-  default void uiResponded(long latencyMs) {
   }
 }
