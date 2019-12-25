@@ -2723,8 +2723,6 @@
   </extensions>
 
   <applicationListeners>
-    <listener class="com.intellij.diagnostic.IdeaFreezeReporter" topic="com.intellij.diagnostic.IdePerformanceListener" activeInTestMode="false" activeInHeadlessMode="false"/>
-
     <listener class="com.intellij.util.gist.GistManagerImpl$MyBulkFileListener" topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
     <listener class="com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl$ProjectListener" topic="com.intellij.openapi.project.ProjectManagerListener"/>
   </applicationListeners>
