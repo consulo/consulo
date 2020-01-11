@@ -18,8 +18,9 @@ package com.intellij.execution.process;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.KillableProcess;
 import com.intellij.execution.configurations.GeneralCommandLine;
-import javax.annotation.Nonnull;
+import com.intellij.util.io.BaseOutputReader;
 
+import javax.annotation.Nonnull;
 import java.nio.charset.Charset;
 
 /**
@@ -59,5 +60,17 @@ public class KillableColoredProcessHandler extends ColoredProcessHandler impleme
   @SuppressWarnings("unused")
   public static KillableColoredProcessHandler create(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
     return new KillableColoredProcessHandler(commandLine, true);
+  }
+
+  public static class Silent extends KillableColoredProcessHandler {
+    public Silent(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
+      super(commandLine);
+    }
+
+    @Nonnull
+    @Override
+    protected BaseOutputReader.Options readerOptions() {
+      return BaseOutputReader.Options.forMostlySilentProcess();
+    }
   }
 }
