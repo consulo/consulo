@@ -28,12 +28,12 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DefaultProjectFactory;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.AsyncResult;
+import com.intellij.util.Function;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.ide.base.BaseShowSettingsUtil;
@@ -79,14 +79,11 @@ public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil implements
     return mySdksModel;
   }
 
-  @RequiredUIAccess
-  @Override
-  public void showSettingsDialog(@Nullable Project project) {
-    showSettingsImpl(project, null);
-  }
-
   @SuppressWarnings("deprecation")
-  private void showSettingsImpl(@Nullable Project tempProject, @Nullable Configurable toSelect) {
+  private void showSettingsImpl(@Nullable Project tempProject,
+                                @Nonnull Function<Project, Configurable[]> buildConfigurables,
+                                @Nullable Configurable toSelect,
+                                @Nonnull Consumer<DesktopSettingsDialog> onShow) {
     Project actualProject = tempProject != null ? tempProject : myDefaultProjectFactory.getDefaultProject();
 
     new Task.Backgroundable(actualProject, "Opening " + CommonBundle.settingsTitle() + "...") {
@@ -96,7 +93,7 @@ public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil implements
       @Override
       public void run(@Nonnull ProgressIndicator indicator) {
         myStartTime = System.currentTimeMillis();
-        myConfigurables = buildConfigurables(actualProject);
+        myConfigurables = buildConfigurables.apply(actualProject);
       }
 
       @RequiredUIAccess
@@ -113,22 +110,19 @@ public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil implements
             dialog = new DesktopSettingsDialog(actualProject, myConfigurables, toSelect);
           }
 
+          new UiNotifyConnector.Once(dialog.getContentPane(), new Activatable() {
+            @Override
+            public void showNotify() {
+              onShow.accept(dialog);
+            }
+          });
+
           long time = System.currentTimeMillis() - myStartTime;
           LOG.info("Settings dialog initialization took " + time + " ms.");
           dialog.showAsync().doWhenProcessed(() -> myShown.set(false));
         }, ModalityState.NON_MODAL);
       }
     }.queue();
-  }
-
-  @RequiredUIAccess
-  private static AsyncResult<Void> _showSettingsDialog(@Nonnull final Project project, @Nonnull Configurable[] configurables, @Nullable Configurable toSelect) {
-    if (ModalityPerProjectEAPDescriptor.is()) {
-      return new DesktopSettingsDialog(project, configurables, toSelect, true).showAsync();
-    }
-    else {
-      return new DesktopSettingsDialog(project, configurables, toSelect).showAsync();
-    }
   }
 
   @RequiredUIAccess
@@ -142,8 +136,8 @@ public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil implements
 
     assert config != null : "Cannot find configurable: " + configurableClass.getName();
 
-    @Nonnull Project nnProject = project != null ? project : ProjectManager.getInstance().getDefaultProject();
-    _showSettingsDialog(nnProject, configurables, config);
+    showSettingsImpl(project, project1 -> configurables, config, dialog -> {
+    });
   }
 
   @Nullable
@@ -161,16 +155,10 @@ public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil implements
   public void showSettingsDialog(@Nullable final Project project, @Nonnull final String nameToSelect) {
     Configurable[] configurables = buildConfigurables(project);
 
-    Project actualProject = project != null ? project : ProjectManager.getInstance().getDefaultProject();
+    Configurable toSelect = DesktopSettingsDialog.getPreselectedByDisplayName(configurables, nameToSelect, project);
 
-    DesktopSettingsDialog dialog;
-    if (ModalityPerProjectEAPDescriptor.is()) {
-      dialog = new DesktopSettingsDialog(actualProject, configurables, nameToSelect, true);
-    }
-    else {
-      dialog = new DesktopSettingsDialog(actualProject, configurables, nameToSelect);
-    }
-    dialog.show();
+    showSettingsImpl(project, it -> configurables, toSelect, dialog -> {
+    });
   }
 
   @Override
@@ -178,27 +166,13 @@ public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil implements
   public void showSettingsDialog(@Nullable Project project, final String id2Select, final String filter) {
     Configurable[] configurables = buildConfigurables(project);
 
-    Project actualProject = project != null ? project : ProjectManager.getInstance().getDefaultProject();
-
     final Configurable configurable2Select = findConfigurable2Select(id2Select, configurables);
 
-    final DesktopSettingsDialog dialog;
-    if (ModalityPerProjectEAPDescriptor.is()) {
-      dialog = new DesktopSettingsDialog(actualProject, configurables, configurable2Select, true);
-    }
-    else {
-      dialog = new DesktopSettingsDialog(actualProject, configurables, configurable2Select);
-    }
-
-    new UiNotifyConnector.Once(dialog.getContentPane(), new Activatable() {
-      @Override
-      public void showNotify() {
-        final OptionsEditor editor = dialog.getDataUnchecked(OptionsEditor.KEY);
-        LOG.assertTrue(editor != null);
-        editor.select(configurable2Select, filter);
-      }
+    showSettingsImpl(project, it -> configurables, configurable2Select, dialog -> {
+      final OptionsEditor editor = dialog.getDataUnchecked(OptionsEditor.KEY);
+      LOG.assertTrue(editor != null);
+      editor.select(configurable2Select, filter);
     });
-    dialog.showAsync();
   }
 
   @Nullable
@@ -226,8 +200,9 @@ public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil implements
 
   @RequiredUIAccess
   @Override
-  public void showSettingsDialog(@Nonnull final Project project, final Configurable toSelect) {
-    _showSettingsDialog(project, buildConfigurables(project), toSelect);
+  public void showSettingsDialog(@Nullable Project project, @Nullable Configurable toSelect) {
+    showSettingsImpl(project, BaseShowSettingsUtil::buildConfigurables, toSelect, dialog -> {
+    });
   }
 
   @RequiredUIAccess

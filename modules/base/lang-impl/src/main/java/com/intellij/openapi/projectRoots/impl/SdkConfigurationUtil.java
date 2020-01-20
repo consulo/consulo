@@ -122,7 +122,7 @@ public class SdkConfigurationUtil {
       }
 
       sdk.setHomePath(sdkPath);
-      sdkType.setupSdkPaths(sdk);
+      sdkType.setupSdkPaths((Sdk)sdk);
     }
     catch (Exception e) {
       if (!silent) {
@@ -181,7 +181,7 @@ public class SdkConfigurationUtil {
   }
 
   @RequiredUIAccess
-  public static void selectSdkHome(final SdkType sdkType, @Nonnull final Consumer<String> consumer) {
+  public static void selectSdkHome(final SdkType sdkType, @Nonnull @RequiredUIAccess final Consumer<String> consumer) {
     final FileChooserDescriptor descriptor = sdkType.getHomeChooserDescriptor();
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       Sdk sdk = SdkTable.getInstance().findMostRecentSdkOfType(sdkType);

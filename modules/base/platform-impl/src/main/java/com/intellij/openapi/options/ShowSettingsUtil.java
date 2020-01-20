@@ -36,7 +36,9 @@ public abstract class ShowSettingsUtil {
   }
 
   @RequiredUIAccess
-  public abstract void showSettingsDialog(@Nullable Project project);
+  public void showSettingsDialog(@Nullable Project project) {
+    showSettingsDialog(project, (Configurable)null);
+  }
 
   @RequiredUIAccess
   public abstract void showSettingsDialog(@Nullable Project project, Class toSelect);
@@ -48,11 +50,12 @@ public abstract class ShowSettingsUtil {
   public abstract void showSettingsDialog(@Nullable Project project, final String id2Select, final String filter);
 
   @RequiredUIAccess
-  public abstract void showSettingsDialog(@Nonnull final Project project, final Configurable toSelect);
+  public abstract void showSettingsDialog(@Nullable Project project, @Nullable Configurable toSelect);
 
   @RequiredUIAccess
   public void showProjectStructureDialog(@Nonnull Project project) {
-    showProjectStructureDialog(project, projectStructureSelector -> {});
+    showProjectStructureDialog(project, projectStructureSelector -> {
+    });
   }
 
   @RequiredUIAccess

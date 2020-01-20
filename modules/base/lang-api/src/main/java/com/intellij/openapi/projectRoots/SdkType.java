@@ -21,6 +21,7 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -78,7 +79,13 @@ public abstract class SdkType implements SdkTypeId {
 
   public abstract String suggestSdkName(String currentSdkName, String sdkHome);
 
-  public void setupSdkPaths(Sdk sdk) {
+  public void setupSdkPaths(@Nonnull Sdk sdk) {
+    SdkModificator sdkModificator = sdk.getSdkModificator();
+    setupSdkPaths(sdkModificator);
+    sdkModificator.commitChanges();
+  }
+
+  public void setupSdkPaths(@Nonnull SdkModificator sdkModificator) {
   }
 
   /**
@@ -203,7 +210,7 @@ public abstract class SdkType implements SdkTypeId {
    * @param sdkCreatedCallback the callback to which the created SDK is passed.
    * @since 12.0
    */
-  public void showCustomCreateUI(SdkModel sdkModel, JComponent parentComponent, Consumer<Sdk> sdkCreatedCallback) {
+  public void showCustomCreateUI(SdkModel sdkModel, JComponent parentComponent, @RequiredUIAccess Consumer<Sdk> sdkCreatedCallback) {
   }
 
   /**

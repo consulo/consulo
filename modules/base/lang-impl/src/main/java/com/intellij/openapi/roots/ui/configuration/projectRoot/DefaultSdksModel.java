@@ -22,6 +22,9 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.progress.PerformInBackgroundOption;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.*;
@@ -37,6 +40,7 @@ import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ide.settings.impl.SettingsSdksModel;
 import consulo.logging.Logger;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
 
@@ -286,6 +290,7 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
     }
   }
 
+  @RequiredUIAccess
   public void doAdd(JComponent parent, final SdkType type, final Consumer<Sdk> callback) {
     myModified = true;
     if (type.supportsCustomCreateUI()) {
@@ -301,16 +306,26 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
     }
   }
 
+  @RequiredUIAccess
   private void setupSdk(Sdk newSdk, Consumer<Sdk> callback) {
-    String home = newSdk.getHomePath();
-    SdkType sdkType = (SdkType)newSdk.getSdkType();
-    sdkType.setupSdkPaths(newSdk);
+    UIAccess uiAccess = UIAccess.current();
 
-    if (newSdk.getVersionString() == null) {
-      Messages.showMessageDialog(ProjectBundle.message("sdk.java.corrupt.error", home), ProjectBundle.message("sdk.java.corrupt.title"), Messages.getErrorIcon());
-    }
+    new Task.ConditionalModal(null, "Setuping SDK...", false, PerformInBackgroundOption.DEAF) {
+      @Override
+      public void run(@Nonnull ProgressIndicator indicator) {
+        SdkType sdkType = (SdkType)newSdk.getSdkType();
+        sdkType.setupSdkPaths(newSdk);
 
-    doAdd(newSdk, callback);
+        uiAccess.give(() -> {
+          if (newSdk.getVersionString() == null) {
+            String home = newSdk.getHomePath();
+            Messages.showMessageDialog(ProjectBundle.message("sdk.java.corrupt.error", home), ProjectBundle.message("sdk.java.corrupt.title"), Messages.getErrorIcon());
+          }
+
+          doAdd(newSdk, callback);
+        });
+      }
+    }.queue();
   }
 
   @Override
