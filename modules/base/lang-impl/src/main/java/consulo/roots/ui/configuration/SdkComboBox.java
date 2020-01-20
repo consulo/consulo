@@ -24,9 +24,10 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
+import com.intellij.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable;
 import com.intellij.openapi.ui.ComboBoxWithWidePopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
@@ -182,7 +183,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
   @DeprecationInfo(value = "Use #setSetupButton() without 'moduleJdkSetup' parameter", until = "1.0")
   public void setSetupButton(final JButton setUpButton,
                              @Nullable final Project project,
-                             final ProjectSdksModel sdksModel,
+                             final SdkModel sdksModel,
                              final SdkComboBoxItem firstItem,
                              @Nullable final Condition<Sdk> additionalSetup,
                              final boolean moduleJdkSetup) {
@@ -193,7 +194,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
   @DeprecationInfo(value = "Use #setSetupButton() without 'actionGroupTitle' parameter", until = "1.0")
   public void setSetupButton(final JButton setUpButton,
                              @Nullable final Project project,
-                             final ProjectSdksModel sdksModel,
+                             final SdkModel sdksModel,
                              final SdkComboBoxItem firstItem,
                              @Nullable final Condition<Sdk> additionalSetup,
                              final String actionGroupTitle) {
@@ -202,7 +203,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
 
   public void setSetupButton(@Nonnull final JButton setUpButton,
                              @Nullable final Project project,
-                             @Nonnull final ProjectSdksModel sdksModel,
+                             @Nonnull final SdkModel sdksModel,
                              @Nullable final SdkComboBoxItem firstItem,
                              @Nullable final Condition<Sdk> additionalSetup) {
     setUpButton.addActionListener(new ActionListener() {
@@ -210,7 +211,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
       @RequiredUIAccess
       public void actionPerformed(ActionEvent e) {
         DefaultActionGroup group = new DefaultActionGroup();
-        sdksModel.createAddActions(group, SdkComboBox.this, new Consumer<Sdk>() {
+        ((DefaultSdksModel)sdksModel).createAddActions(group, SdkComboBox.this, new Consumer<Sdk>() {
           @Override
           public void consume(final Sdk sdk) {
             if (project != null) {
@@ -457,7 +458,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
     }
     model.removeAllElements();
     model.addElement(firstItem);
-    final ProjectSdksModel projectSdksModel = ProjectStructureConfigurable.getInstance(project).getProjectSdksModel();
+    final DefaultSdksModel projectSdksModel = ProjectStructureConfigurable.getInstance(project).getProjectSdksModel();
     List<Sdk> sdks = new ArrayList<Sdk>(projectSdksModel.getProjectSdks().values());
     if (myFilter != null) {
       sdks = ContainerUtil.filter(sdks, getSdkFilter(myFilter));

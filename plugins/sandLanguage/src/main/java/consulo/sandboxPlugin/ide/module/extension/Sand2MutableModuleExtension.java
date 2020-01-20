@@ -15,15 +15,16 @@
  */
 package consulo.sandboxPlugin.ide.module.extension;
 
-import consulo.ui.annotation.RequiredUIAccess;
+import com.intellij.openapi.Disposable;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.roots.ModuleRootLayer;
 import consulo.ui.CheckBox;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author VISTALL
@@ -32,13 +33,6 @@ import javax.swing.*;
 public class Sand2MutableModuleExtension extends Sand2ModuleExtension implements MutableModuleExtension<Sand2ModuleExtension> {
   public Sand2MutableModuleExtension(@Nonnull String id, @Nonnull ModuleRootLayer moduleRootLayer) {
     super(id, moduleRootLayer);
-  }
-
-  @RequiredUIAccess
-  @Nullable
-  @Override
-  public JComponent createConfigurablePanel(@Nonnull Runnable updateOnCheck) {
-    throw new UnsupportedOperationException("This should never called. See #createConfigurablePanel2()");
   }
 
   @Override
@@ -54,7 +48,7 @@ public class Sand2MutableModuleExtension extends Sand2ModuleExtension implements
   @RequiredUIAccess
   @Nullable
   @Override
-  public consulo.ui.Component createConfigurationComponent(@Nonnull Runnable updateOnCheck) {
+  public Component createConfigurationComponent(@Nonnull Disposable uiDisposable, @Nonnull Runnable updateOnCheck) {
     final VerticalLayout vertical = VerticalLayout.create();
     vertical.add(CheckBox.create("Omg new UI?"));
     return vertical;

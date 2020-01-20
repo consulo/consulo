@@ -45,6 +45,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
+import java.util.function.Consumer;
 
 @Singleton
 @State(name = "SdkTable", storages = @Storage(value = "sdk.table.xml", roamingType = RoamingType.DISABLED))
@@ -139,6 +140,13 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
   @Override
   public Sdk[] getAllSdks() {
     return mySdks.toArray(new Sdk[mySdks.size()]);
+  }
+
+  @Override
+  public void forEachBundle(@Nonnull Consumer<Sdk> sdkConsumer) {
+    for (SdkImpl sdk : mySdks) {
+      sdkConsumer.accept(sdk);
+    }
   }
 
   @Override

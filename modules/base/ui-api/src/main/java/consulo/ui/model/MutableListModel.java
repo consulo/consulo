@@ -17,9 +17,11 @@ package consulo.ui.model;
 
 import com.intellij.openapi.Disposable;
 import consulo.ui.UIInternal;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -31,13 +33,23 @@ public interface MutableListModel<E> extends ListModel<E> {
     return UIInternal.get()._MutableListModel_create(items);
   }
 
+  @RequiredUIAccess
   default void add(@Nonnull E e) {
     add(e, getSize());
   }
 
+  @RequiredUIAccess
   void add(@Nonnull E e, int index);
 
+  @RequiredUIAccess
   void remove(@Nonnull E e);
+
+  /**
+   * @param newItems
+   * @return oldItems
+   */
+  @RequiredUIAccess
+  List<E> replaceAll(@Nonnull Iterable<E> newItems);
 
   Disposable adddListener(@Nonnull MutableListModelListener<E> modelListener);
 }

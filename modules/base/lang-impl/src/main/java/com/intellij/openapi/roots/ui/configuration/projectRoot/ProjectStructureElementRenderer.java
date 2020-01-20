@@ -25,21 +25,24 @@ import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
 /**
 * @author nik
 */
-class ProjectStructureElementRenderer extends ColoredTreeCellRenderer {
+public class ProjectStructureElementRenderer extends ColoredTreeCellRenderer {
   private StructureConfigurableContext myContext;
 
-  public ProjectStructureElementRenderer(StructureConfigurableContext context) {
+  public ProjectStructureElementRenderer(@Nullable StructureConfigurableContext context) {
     myContext = context;
   }
 
+  @RequiredUIAccess
   @Override
   public void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
     if (value instanceof MasterDetailsComponent.MyNode) {
@@ -64,8 +67,8 @@ class ProjectStructureElementRenderer extends ColoredTreeCellRenderer {
         final ProjectStructureElement projectStructureElement =
           ((ProjectStructureElementConfigurable)namedConfigurable).getProjectStructureElement();
         if (projectStructureElement != null) {
-          final ProjectStructureDaemonAnalyzer daemonAnalyzer = myContext.getDaemonAnalyzer();
-          final ProjectStructureProblemsHolderImpl problemsHolder = daemonAnalyzer.getProblemsHolder(projectStructureElement);
+          final ProjectStructureDaemonAnalyzer daemonAnalyzer = myContext == null ? null : myContext.getDaemonAnalyzer();
+          final ProjectStructureProblemsHolderImpl problemsHolder = daemonAnalyzer == null ? null : daemonAnalyzer.getProblemsHolder(projectStructureElement);
           if (problemsHolder != null && problemsHolder.containsProblems()) {
             final boolean isUnused = problemsHolder.containsProblems(ProjectStructureProblemType.Severity.UNUSED);
             final boolean haveWarnings = problemsHolder.containsProblems(ProjectStructureProblemType.Severity.WARNING);

@@ -17,11 +17,14 @@ package consulo.ui.impl.model;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.util.EventDispatcher;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.model.MutableListModel;
 import consulo.ui.model.MutableListModelListener;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -34,6 +37,7 @@ public class MutableListModelImpl<E> extends ImmutableListModelImpl<E> implement
     super(items);
   }
 
+  @RequiredUIAccess
   @Override
   public void add(@Nonnull E item, int index) {
     myItems.add(index, item);
@@ -41,11 +45,34 @@ public class MutableListModelImpl<E> extends ImmutableListModelImpl<E> implement
     myDispatcher.getMulticaster().itemAdded(item);
   }
 
+  @RequiredUIAccess
   @Override
   public void remove(@Nonnull E item) {
     myItems.remove(item);
 
-    myDispatcher.getMulticaster().itemRemove(item);
+    myDispatcher.getMulticaster().itemRemoved(item);
+  }
+
+  @RequiredUIAccess
+  @Override
+  public List<E> replaceAll(@Nonnull Iterable<E> newItems) {
+    List<E> oldItems = new ArrayList<>(myItems);
+
+    myItems.clear();
+
+    for (E oldItem : oldItems) {
+      myDispatcher.getMulticaster().itemRemoved(oldItem);
+    }
+
+    for (E newItem : newItems) {
+      myItems.add(newItem);
+    }
+
+    for (E newItem : newItems) {
+      myDispatcher.getMulticaster().itemAdded(newItem);
+    }
+
+    return oldItems;
   }
 
   @Override

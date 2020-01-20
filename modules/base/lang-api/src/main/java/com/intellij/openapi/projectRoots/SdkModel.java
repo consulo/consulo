@@ -15,7 +15,9 @@
  */
 package com.intellij.openapi.projectRoots;
 
+import com.intellij.openapi.Disposable;
 import consulo.bundle.BundleHolder;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,6 +27,52 @@ import java.util.EventListener;
  * Represents the current state of the Bundle list in the Bundle configuration dialog.
  */
 public interface SdkModel extends BundleHolder {
+  /**
+   * Allows to receive notifications when the SDK list has been changed by the
+   * user configuring the SDKs.
+   */
+
+  interface Listener extends EventListener {
+    /**
+     * Called when a SDK has been added.
+     *
+     * @param sdk the added SDK.
+     */
+    @RequiredUIAccess
+    default void sdkAdded(Sdk sdk) {
+    }
+
+    /**
+     * Called after a SDK is removed.
+     *
+     * @param sdk the removed SDK.
+     */
+    @RequiredUIAccess
+    default void sdkRemove(Sdk sdk) {
+    }
+
+    /**
+     * Called when a SDK has been changed or renamed.
+     *
+     * @param sdk          the changed or renamed SDK.
+     * @param previousName the old name of the changed or renamed SDK.
+     * @since 5.0.1
+     */
+    @RequiredUIAccess
+    default void sdkChanged(Sdk sdk, String previousName) {
+    }
+
+    /**
+     * Called when the home directory of a SDK has been changed.
+     *
+     * @param sdk        the changed SDK.
+     * @param newSdkHome the new home directory.
+     */
+    @RequiredUIAccess
+    default void sdkHomeSelected(Sdk sdk, String newSdkHome) {
+    }
+  }
+
   @Nonnull
   @Override
   default Sdk[] getBundles() {
@@ -55,49 +103,18 @@ public interface SdkModel extends BundleHolder {
   void addSdk(Sdk sdk);
 
   /**
-   * Allows to receive notifications when the JDK list has been changed by the
-   * user configuring the JDKs.
+   * Adds a listener for receiving notifications about changes in the list.
+   *
+   * @param listener the listener instance.
    */
-
-  interface Listener extends EventListener {
-    /**
-     * Called when a JDK has been added.
-     *
-     * @param sdk the added JDK.
-     */
-    void sdkAdded(Sdk sdk);
-
-    /**
-     * Called before a JDK is removed.
-     *
-     * @param sdk the removed JDK.
-     */
-    void beforeSdkRemove(Sdk sdk);
-
-    /**
-     * Called when a JDK has been changed or renamed.
-     *
-     * @param sdk          the changed or renamed JDK.
-     * @param previousName the old name of the changed or renamed JDK.
-     * @since 5.0.1
-     */
-    void sdkChanged(Sdk sdk, String previousName);
-
-    /**
-     * Called when the home directory of a JDK has been changed.
-     *
-     * @param sdk        the changed JDK.
-     * @param newSdkHome the new home directory.
-     */
-    void sdkHomeSelected(Sdk sdk, String newSdkHome);
-  }
+  void addListener(Listener listener);
 
   /**
    * Adds a listener for receiving notifications about changes in the list.
    *
    * @param listener the listener instance.
    */
-  void addListener(Listener listener);
+  void addListener(Listener listener, Disposable disposable);
 
   /**
    * Removes a listener for receiving notifications about changes in the list.

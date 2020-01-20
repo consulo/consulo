@@ -16,15 +16,16 @@
 package consulo.bundle.ui;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.util.ObjectUtil;
 import consulo.annotation.UsedInPlugin;
-import consulo.annotation.access.RequiredReadAction;
 import consulo.bundle.BundleHolder;
 import consulo.bundle.SdkUtil;
 import consulo.module.extension.ModuleExtension;
@@ -32,8 +33,8 @@ import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import consulo.ui.ComboBox;
 import consulo.ui.PseudoComponent;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.TextAttribute;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
@@ -41,11 +42,10 @@ import consulo.ui.model.MutableListModel;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * @author VISTALL
@@ -54,21 +54,58 @@ import java.util.stream.Collectors;
  * Cross-Platform version of {@link consulo.roots.ui.configuration.SdkComboBox}
  */
 public class BundleBox implements PseudoComponent {
-  public static class BundleBoxItem {
-    private final Sdk myBundle;
+  /**
+   * @return builder with global sdk table
+   */
+  @Nonnull
+  public static BundleBoxBuilder builder(@Nonnull Disposable uiDisposable) {
+    return BundleBoxBuilder.create(uiDisposable);
+  }
 
-    public BundleBoxItem(@Nullable Sdk bundle) {
-      myBundle = bundle;
-    }
+  @Nonnull
+  public static BundleBoxBuilder builder(@Nonnull SdkModel sdkModel, @Nonnull Disposable uiDisposable) {
+    return BundleBoxBuilder.create(sdkModel, uiDisposable);
+  }
 
+  public abstract static class BundleBoxItem {
     @Nullable
     public Sdk getBundle() {
-      return myBundle;
+      return null;
     }
 
     @Nullable
     public String getBundleName() {
-      return myBundle != null ? myBundle.getName() : null;
+      Sdk bundle = getBundle();
+      return bundle != null ? bundle.getName() : null;
+    }
+
+    public abstract boolean equals(Object o);
+  }
+
+  public static class BaseBundleBoxItem extends BundleBoxItem{
+     private final Sdk myBundle;
+
+    public BaseBundleBoxItem(Sdk bundle) {
+      myBundle = bundle;
+    }
+
+    @Nullable
+    @Override
+    public Sdk getBundle() {
+      return myBundle;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+      BaseBundleBoxItem that = (BaseBundleBoxItem)o;
+      return Objects.equals(myBundle, that.myBundle);
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(myBundle);
     }
   }
 
@@ -77,7 +114,6 @@ public class BundleBox implements PseudoComponent {
     private final MutableModuleInheritableNamedPointer<Sdk> mySdkPointer;
 
     public ModuleExtensionBundleBoxItem(ModuleExtension<?> moduleExtension, MutableModuleInheritableNamedPointer<Sdk> sdkPointer) {
-      super(null);
       myModuleExtension = moduleExtension;
       mySdkPointer = sdkPointer;
     }
@@ -97,6 +133,19 @@ public class BundleBox implements PseudoComponent {
     public Module getModule() {
       return myModuleExtension.getModule();
     }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+      ModuleExtensionBundleBoxItem that = (ModuleExtensionBundleBoxItem)o;
+      return Objects.equals(myModuleExtension, that.myModuleExtension);
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(myModuleExtension);
+    }
   }
 
   public static class CustomBundleBoxItem extends BundleBoxItem {
@@ -105,7 +154,6 @@ public class BundleBox implements PseudoComponent {
     private final Image myIcon;
 
     public CustomBundleBoxItem(String key, String presentableName, Image icon) {
-      super(null);
       myKey = key;
       myPresentableName = presentableName;
       myIcon = icon;
@@ -126,13 +174,25 @@ public class BundleBox implements PseudoComponent {
     public String getBundleName() {
       return myKey;
     }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+      CustomBundleBoxItem that = (CustomBundleBoxItem)o;
+      return Objects.equals(myKey, that.myKey);
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(myKey);
+    }
   }
 
   public static class InvalidModuleBundleBoxItem extends BundleBoxItem {
     private final String myModuleName;
 
     public InvalidModuleBundleBoxItem(String moduleName) {
-      super(null);
       myModuleName = moduleName;
     }
 
@@ -140,11 +200,28 @@ public class BundleBox implements PseudoComponent {
     public String getModuleName() {
       return myModuleName;
     }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+      InvalidModuleBundleBoxItem that = (InvalidModuleBundleBoxItem)o;
+      return Objects.equals(myModuleName, that.myModuleName);
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(myModuleName);
+    }
   }
 
   public static class NullBundleBoxItem extends BundleBoxItem {
     public NullBundleBoxItem() {
-      super(null);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      return o instanceof NullBundleBoxItem;
     }
   }
 
@@ -152,13 +229,25 @@ public class BundleBox implements PseudoComponent {
     private final String mySdkName;
 
     public InvalidBundleBoxItem(String name) {
-      super(null);
       mySdkName = name;
     }
 
     @Override
     public String getBundleName() {
       return mySdkName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+      InvalidBundleBoxItem that = (InvalidBundleBoxItem)o;
+      return Objects.equals(mySdkName, that.mySdkName);
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(mySdkName);
     }
   }
 
@@ -228,35 +317,42 @@ public class BundleBox implements PseudoComponent {
   }
 
   @Nonnull
-  private static ListModel<BundleBoxItem> model(@Nonnull BundleHolder holder, @Nullable Predicate<SdkTypeId> filter, String nullItemName) {
+  static List<BundleBoxItem> buildItems(@Nonnull BundleHolder holder, @Nullable Predicate<SdkTypeId> filter, boolean withNullItem) {
     List<BundleBoxItem> list = new ArrayList<>();
 
-    Sdk[] sdks = holder.getBundles();
-    if (filter != null) {
-      List<Sdk> filtered = Arrays.stream(sdks).filter(sdk -> filter.test(sdk.getSdkType())).collect(Collectors.toList());
-      sdks = filtered.toArray(new Sdk[filtered.size()]);
-    }
+    List<Sdk> targetSdks = new ArrayList<>();
+    holder.forEachBundle(sdk -> {
+      if (filter == null || filter.test(sdk.getSdkType())) {
+        targetSdks.add(sdk);
+      }
+    });
 
-    Arrays.sort(sdks, (s1, s2) -> s1.getName().compareToIgnoreCase(s2.getName()));
+    targetSdks.sort((s1, s2) -> s1.getName().compareToIgnoreCase(s2.getName()));
 
-    if (nullItemName != null) {
+    if (withNullItem) {
       list.add(new NullBundleBoxItem());
     }
 
-    for (Sdk sdk : sdks) {
-      list.add(new BundleBoxItem(sdk));
+    for (Sdk sdk : targetSdks) {
+      list.add(new BaseBundleBoxItem(sdk));
     }
-
-    return MutableListModel.create(list);
+    return list;
   }
 
+  @Nonnull
+  @RequiredUIAccess
+  private static ListModel<BundleBoxItem> model(@Nonnull BundleHolder holder, @Nullable Predicate<SdkTypeId> filter, String nullItemName) {
+    return MutableListModel.create(buildItems(holder, filter, nullItemName != null));
+  }
+
+  @RequiredUIAccess
   public void addInvalidModuleItem(@Nullable String name) {
     MutableListModel<BundleBoxItem> listModel = (MutableListModel<BundleBoxItem>)myOriginalComboBox.getListModel();
 
     listModel.add(new InvalidModuleBundleBoxItem(name));
   }
 
-  @RequiredReadAction
+  @RequiredUIAccess
   @SuppressWarnings("unchecked")
   public <T extends MutableModuleExtension<?>> void addModuleExtensionItems(@Nonnull T moduleExtension, @Nonnull Function<T, MutableModuleInheritableNamedPointer<Sdk>> sdkPointerFunction) {
     MutableListModel<BundleBoxItem> listModel = (MutableListModel<BundleBoxItem>)myOriginalComboBox.getListModel();
@@ -283,13 +379,15 @@ public class BundleBox implements PseudoComponent {
     }
   }
 
+  @RequiredUIAccess
   public void addBundleItem(@Nonnull Sdk bundle) {
     MutableListModel<BundleBoxItem> model = (MutableListModel<BundleBoxItem>)myOriginalComboBox.getListModel();
 
-    model.add(new BundleBoxItem(bundle));
+    model.add(new BaseBundleBoxItem(bundle));
   }
 
   @UsedInPlugin
+  @RequiredUIAccess
   public void addCustomBundleItem(@Nonnull String key, @Nonnull String presentableName, @Nonnull Image icon) {
     CustomBundleBoxItem item = new CustomBundleBoxItem(key, presentableName, icon);
 

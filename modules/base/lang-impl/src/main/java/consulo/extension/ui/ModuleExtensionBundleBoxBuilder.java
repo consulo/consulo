@@ -15,23 +15,23 @@
  */
 package consulo.extension.ui;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.SdkTypeId;
-import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import consulo.annotation.UsedInPlugin;
 import consulo.bundle.ui.BundleBox;
+import consulo.bundle.ui.BundleBoxBuilder;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import consulo.ui.Component;
-import consulo.ui.util.LabeledComponents;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.ui.util.LabeledComponents;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -75,6 +75,8 @@ public class ModuleExtensionBundleBoxBuilder<T extends MutableModuleExtension<?>
   private Runnable myLaterUpdater;
 
   private BiConsumer<Sdk, Sdk> myPostConsumer;
+
+  private Disposable myUIDisposable;
 
   private ModuleExtensionBundleBoxBuilder(@Nonnull T mutableModuleExtension) {
     myMutableModuleExtension = mutableModuleExtension;
@@ -137,11 +139,24 @@ public class ModuleExtensionBundleBoxBuilder<T extends MutableModuleExtension<?>
   }
 
   @Nonnull
+  @UsedInPlugin
+  public ModuleExtensionBundleBoxBuilder<T> uiDisposable(@Nonnull Disposable disposable) {
+    myUIDisposable = disposable;
+    return this;
+  }
+
+  @Nonnull
   @RequiredUIAccess
   public Component build() {
-    final ProjectSdksModel sdksModel = ProjectStructureConfigurable.getInstance(myMutableModuleExtension.getProject()).getProjectSdksModel();
+    BundleBoxBuilder builder = BundleBox.builder(myUIDisposable);
+    builder.withNoneItem(myNullItemName);
+    if (myNullItemIcon != null) {
+      builder.withNoneItemImage(myNullItemIcon);
+    }
 
-    final BundleBox box = new BundleBox(sdksModel, mySdkFilter, myNullItemName, myNullItemIcon);
+    builder.withSdkTypeFilter(mySdkFilter);
+
+    final BundleBox box = builder.build();
 
     box.addModuleExtensionItems(myMutableModuleExtension, mySdkPointerFunction);
 
@@ -175,7 +190,7 @@ public class ModuleExtensionBundleBoxBuilder<T extends MutableModuleExtension<?>
       }
 
       if (myLaterUpdater != null) {
-        UIAccess.get().give(myLaterUpdater);
+        UIAccess.current().give(myLaterUpdater);
       }
     });
 

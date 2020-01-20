@@ -28,7 +28,6 @@ import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -53,8 +52,8 @@ public abstract class BaseShowSettingsUtil extends ShowSettingsUtil {
     final Project tempProject = project;
 
     List<ConfigurableEP<Configurable>> configurableEPs = new ArrayList<>();
-    Collections.addAll(configurableEPs, Configurable.APPLICATION_CONFIGURABLE.getExtensions());
-    Collections.addAll(configurableEPs, Configurable.PROJECT_CONFIGURABLE.getExtensions(project));
+    configurableEPs.addAll(Configurable.APPLICATION_CONFIGURABLE.getExtensionList());
+    configurableEPs.addAll(Configurable.PROJECT_CONFIGURABLE.getExtensionList(project));
 
     List<Configurable> result =
             ConfigurableExtensionPointUtil.buildConfigurablesList(configurableEPs, configurable -> !tempProject.isDefault() || !ConfigurableWrapper.isNonDefaultProject(configurable));

@@ -21,14 +21,15 @@ import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.ui.configuration.*;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.CheckboxTreeNoPolicy;
 import com.intellij.ui.CheckedTreeNode;
 import com.intellij.ui.OnePixelSplitter;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.awt.TargetAWT;
+import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleExtension;
@@ -37,6 +38,7 @@ import consulo.psi.PsiPackageSupportProvider;
 import consulo.roots.ModifiableModuleRootLayer;
 import consulo.roots.ui.configuration.extension.ExtensionCheckedTreeNode;
 import consulo.roots.ui.configuration.extension.ExtensionTreeCellRenderer;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.Layout;
 import consulo.ui.shared.border.BorderStyle;
 import org.jetbrains.annotations.Nls;
@@ -50,8 +52,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
 
 /**
@@ -59,6 +60,8 @@ import java.util.List;
  * @since 10:33/19.05.13
  */
 public class ExtensionEditor extends ModuleElementsEditor {
+  private static final Logger LOG = Logger.getInstance(ExtensionEditor.class);
+
   private final ModuleConfigurationState myState;
   private final OutputEditor myOutputEditor;
   private final ClasspathEditor myClasspathEditor;
@@ -68,12 +71,22 @@ public class ExtensionEditor extends ModuleElementsEditor {
 
   private ModuleExtension<?> myConfigurablePanelExtension;
 
+  private final Map<JComponent, Disposable> myExtensionDisposables = new HashMap<>();
+
   public ExtensionEditor(ModuleConfigurationState state, OutputEditor outputEditor, ClasspathEditor classpathEditor, ContentEntriesEditor contentEntriesEditor) {
     super(state);
     myState = state;
     myOutputEditor = outputEditor;
     myClasspathEditor = classpathEditor;
     myContentEntriesEditor = contentEntriesEditor;
+
+    registerDisposable(() -> {
+      for (Disposable disposable : myExtensionDisposables.values()) {
+        Disposer.dispose(disposable);
+      }
+
+      myExtensionDisposables.clear();
+    });
   }
 
   @Override
@@ -153,9 +166,12 @@ public class ExtensionEditor extends ModuleElementsEditor {
       }
     };
 
-    JComponent configurablePanel = null;
+    Disposable uiDisposable = Disposer.newDisposable("module extension: " + extension.getId());
 
-    final consulo.ui.Component component = extension.createConfigurationComponent(updateOnCheck);
+    @Nullable
+    JComponent configurablePanel;
+
+    final consulo.ui.Component component = extension.createConfigurationComponent(uiDisposable, updateOnCheck);
 
     if (component != null) {
       if (component instanceof Layout) {
@@ -167,22 +183,32 @@ public class ExtensionEditor extends ModuleElementsEditor {
       configurablePanel = (JComponent)TargetAWT.to(component);
     }
     else {
-      configurablePanel = extension.createConfigurablePanel(updateOnCheck);
+      // noinspection deprecation
+      configurablePanel = extension.createConfigurablePanel(uiDisposable, updateOnCheck);
     }
 
-    if (configurablePanel instanceof Disposable) {
-      registerDisposable((Disposable)configurablePanel);
+    if(configurablePanel != null) {
+      myExtensionDisposables.put(configurablePanel, uiDisposable);
     }
+
     return configurablePanel;
   }
 
   @RequiredUIAccess
   private void updateSecondComponent(@Nullable MutableModuleExtension extension) {
+    JComponent oldComponent;
     if (extension == null || !extension.isEnabled()) {
-      mySplitter.setSecondComponent(null);
+      oldComponent = mySplitter.replaceSecondComponent(null);
     }
     else {
-      mySplitter.setSecondComponent(createConfigurationPanel(extension));
+      oldComponent = mySplitter.replaceSecondComponent(createConfigurationPanel(extension));
+    }
+
+    if(oldComponent != null) {
+      Disposable disposable = myExtensionDisposables.remove(oldComponent);
+      if(disposable != null) {
+        Disposer.dispose(disposable);
+      }
     }
   }
 
@@ -222,7 +248,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
       }
     }
 
-    for (PsiPackageSupportProvider supportProvider : PsiPackageSupportProvider.EP_NAME.getExtensions()) {
+    for (PsiPackageSupportProvider supportProvider : PsiPackageSupportProvider.EP_NAME.getExtensionList()) {
       final Module module = extension.getModule();
       if (supportProvider.isSupported(extension)) {
         PsiPackageManager.getInstance(module.getProject()).dropCache(extension.getClass());
@@ -243,11 +269,5 @@ public class ExtensionEditor extends ModuleElementsEditor {
   @Override
   public String getDisplayName() {
     return "Extensions";
-  }
-
-  @Nullable
-  @Override
-  public String getHelpTopic() {
-    return null;
   }
 }

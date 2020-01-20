@@ -464,16 +464,37 @@ public class Splitter extends JPanel implements Splittable {
    * @param component
    */
   public void setSecondComponent(@Nullable JComponent component) {
+    replaceSecondComponent(component);
+  }
+
+  /**
+   * Sets component which is located as the "second" splitted area. The method doesn't validate and
+   * repaint the splitter.
+   *
+   * @param component
+   * @return old component if replaced
+   */
+  @Nullable
+  public JComponent replaceSecondComponent(@Nullable JComponent component) {
     if (mySecondComponent != component) {
-      if (mySecondComponent != null) {
-        remove(mySecondComponent);
+      JComponent oldComponent = mySecondComponent;
+      if (oldComponent != null) {
+        remove(oldComponent);
       }
+
       mySecondComponent = component;
+
       if (mySecondComponent != null) {
         super.add(mySecondComponent);
       }
       revalidate();
       repaint();
+
+      return oldComponent;
+    }
+    else {
+      // return null due component not changed
+      return null;
     }
   }
 

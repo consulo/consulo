@@ -33,7 +33,7 @@ import java.util.Set;
 /**
  * @author nik
  */
-public class RemoteServerListConfigurable extends MasterDetailsComponent implements OptionalConfigurable, SearchableConfigurable, Configurable.NoScroll {
+public class RemoteServerListConfigurable extends MasterDetailsComponent implements OptionalConfigurable, SearchableConfigurable, Configurable.NoScroll, Configurable.NoMargin {
   private final RemoteServersManager myServersManager;
   @Nullable private final ServerType<?> myServerType;
   private RemoteServer<?> myLastSelectedServer;

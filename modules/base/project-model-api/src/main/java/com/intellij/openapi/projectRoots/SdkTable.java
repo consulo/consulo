@@ -19,6 +19,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.messages.Topic;
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.bundle.BundleHolder;
 import consulo.bundle.SdkTableListener;
@@ -29,6 +30,8 @@ import java.util.List;
 
 public abstract class SdkTable implements BundleHolder {
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use constructor injecting")
   public static SdkTable getInstance() {
     return ServiceManager.getService(SdkTable.class);
   }

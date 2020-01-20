@@ -18,10 +18,10 @@ package consulo.extension.ui;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
@@ -37,7 +37,6 @@ import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.util.Collections;
@@ -141,7 +140,7 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
   @Nonnull
   @RequiredReadAction
   public JComponent build() {
-    final ProjectSdksModel projectSdksModel = ProjectStructureConfigurable.getInstance(myMutableModuleExtension.getProject()).getProjectSdksModel();
+    final SdkModel projectSdksModel = ProjectStructureConfigurable.getInstance(myMutableModuleExtension.getProject()).getProjectSdksModel();
 
     final SdkComboBox comboBox = new SdkComboBox(projectSdksModel, mySdkFilter, null, myNullItemName, myNullItemIcon);
 

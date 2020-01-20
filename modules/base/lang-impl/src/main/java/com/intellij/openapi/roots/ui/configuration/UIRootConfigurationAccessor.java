@@ -18,13 +18,14 @@ package com.intellij.openapi.roots.ui.configuration;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.roots.impl.RootConfigurationAccessor;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.util.pointers.NamedPointer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -60,7 +61,7 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
   @Override
   @Nullable
   public Sdk getSdk(final Sdk sdk, final String sdkName) {
-    final ProjectSdksModel model = ProjectStructureConfigurable.getInstance(myProject).getSdkConfigurable().getSdksTreeModel();
+    final SdkModel model = ProjectStructureConfigurable.getInstance(myProject).getSdkConfigurable().getSdksModel();
     return sdkName != null ? model.findSdk(sdkName) : sdk;
   }
 
@@ -71,7 +72,7 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
       @Nullable
       @Override
       public Sdk get() {
-        return ProjectStructureConfigurable.getInstance(myProject).getSdkConfigurable().getSdksTreeModel().findSdk(sdkName);
+        return ProjectStructureConfigurable.getInstance(myProject).getSdkConfigurable().getSdksModel().findSdk(sdkName);
       }
 
       @Nonnull

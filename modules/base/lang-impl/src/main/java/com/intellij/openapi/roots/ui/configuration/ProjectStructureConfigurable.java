@@ -23,6 +23,7 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -34,6 +35,8 @@ import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactsStructureC
 import com.intellij.openapi.roots.ui.configuration.projectRoot.*;
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.util.AsyncResult;
+import consulo.annotation.DeprecationInfo;
+import consulo.ide.settings.impl.ShowSdksSettingsUtil;
 import consulo.util.dataholder.Key;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.ui.navigation.History;
@@ -72,10 +75,7 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
 
   private History myHistory = new History(this);
 
-
   private Configurable mySelectedConfigurable;
-
-  private final ProjectSdksModel myProjectSdksModel = new ProjectSdksModel();
 
   private ProjectConfigurable myProjectConfig;
   private final ProjectLibrariesConfigurable myProjectLibrariesConfig;
@@ -188,7 +188,9 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
     try {
       myContext.reset();
 
-      myProjectSdksModel.reset();
+      ShowSdksSettingsUtil settingsUtil = (ShowSdksSettingsUtil)ShowSettingsUtil.getInstance();
+
+      settingsUtil.getSdksModel().reset();
 
       Configurable toSelect = null;
       for (Configurable each : myName2Config) {
@@ -387,8 +389,11 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
     return ServiceManager.getService(project, ProjectStructureConfigurable.class);
   }
 
-  public ProjectSdksModel getProjectSdksModel() {
-    return myProjectSdksModel;
+  @Deprecated
+  @DeprecationInfo("Use ShowSdksSettingsUtil class")
+  public DefaultSdksModel getProjectSdksModel() {
+    ShowSdksSettingsUtil settingsUtil = (ShowSdksSettingsUtil)ShowSettingsUtil.getInstance();
+    return (DefaultSdksModel)settingsUtil.getSdksModel();
   }
 
   public SdkListConfigurable getSdkConfigurable() {

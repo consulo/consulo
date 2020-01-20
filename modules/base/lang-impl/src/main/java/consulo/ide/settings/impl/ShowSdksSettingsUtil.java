@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.model;
+package consulo.ide.settings.impl;
+
+import com.intellij.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
 
 import javax.annotation.Nonnull;
-import java.util.EventListener;
 
 /**
  * @author VISTALL
- * @since 2018-05-15
+ * @since 2020-01-20
+ * <p>
+ * Marker for {@link com.intellij.openapi.options.ShowSettingsUtil} with return current {@link com.intellij.openapi.projectRoots.SdkModel} for dialog, or for SdkTable
  */
-public interface MutableListModelListener<E> extends EventListener {
-  void itemAdded(@Nonnull E item);
-
-  void itemRemoved(@Nonnull E item);
+public interface ShowSdksSettingsUtil {
+  @Nonnull
+  default SettingsSdksModel getSdksModel() {
+    DefaultSdksModel model = new DefaultSdksModel();
+    model.reset();
+    return model;
+  }
 }

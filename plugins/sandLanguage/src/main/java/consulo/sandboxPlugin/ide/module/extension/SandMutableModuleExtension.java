@@ -15,17 +15,18 @@
  */
 package consulo.sandboxPlugin.ide.module.extension;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.projectRoots.Sdk;
-import consulo.roots.ModuleRootLayer;
-import com.intellij.openapi.ui.VerticalFlowLayout;
+import consulo.extension.ui.ModuleExtensionBundleBoxBuilder;
 import consulo.module.extension.MutableModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
-import consulo.extension.ui.ModuleExtensionSdkBoxBuilder;
-import javax.annotation.Nonnull;
-
+import consulo.roots.ModuleRootLayer;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.VerticalLayout;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -42,12 +43,12 @@ public class SandMutableModuleExtension extends SandModuleExtension implements M
     return (MutableModuleInheritableNamedPointer<Sdk>)super.getInheritableSdk();
   }
 
-  @javax.annotation.Nullable
-  @Override
   @RequiredUIAccess
-  public JComponent createConfigurablePanel(@Nonnull Runnable updateOnCheck) {
-    JPanel panel = new JPanel(new VerticalFlowLayout(true, false));
-    panel.add(ModuleExtensionSdkBoxBuilder.createAndDefine(this, updateOnCheck).build());
+  @Nullable
+  @Override
+  public Component createConfigurationComponent(@Nonnull Disposable uiDisposable, @Nonnull Runnable updateOnCheck) {
+    VerticalLayout panel = VerticalLayout.create();
+    panel.add(ModuleExtensionBundleBoxBuilder.createAndDefine(this, updateOnCheck).uiDisposable(uiDisposable).build());
     return panel;
   }
 

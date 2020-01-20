@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.roots.ui.configuration.projectRoot;
+package consulo.roots.ui.configuration;
 
 import com.intellij.ide.CommonActionsManager;
 import com.intellij.ide.TreeExpander;
@@ -28,6 +28,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
+import com.intellij.openapi.roots.ui.configuration.projectRoot.BaseStructureConfigurable;
+import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectStructureElementConfigurable;
+import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectStructureElementRenderer;
+import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.ui.MasterDetailsState;
@@ -39,14 +43,12 @@ import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.ui.TreeSpeedSearch;
-import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.navigation.Place;
 import com.intellij.util.Function;
 import com.intellij.util.IconUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.ui.tree.TreeUtil;
-import consulo.roots.ui.configuration.WholeWestConfigurable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
@@ -54,14 +56,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.TreePath;
-import java.awt.*;
-import java.util.List;
 import java.util.*;
 
-public abstract class BaseStructureConfigurable extends MasterDetailsComponent
-        implements SearchableConfigurable, Disposable, Place.Navigator, WholeWestConfigurable {
-
-  protected StructureConfigurableContext myContext;
+/**
+ * Version {@link BaseStructureConfigurable} without {@link StructureConfigurableContext}
+ */
+public abstract class BaseStructureConfigurableNoDaemon extends MasterDetailsComponent implements SearchableConfigurable, Disposable, Place.Navigator, WholeWestConfigurable {
 
   protected final Project myProject;
 
@@ -71,23 +71,13 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent
 
   protected boolean myAutoScrollEnabled = true;
 
-  protected BaseStructureConfigurable(Project project, MasterDetailsState state) {
+  protected BaseStructureConfigurableNoDaemon(Project project, MasterDetailsState state) {
     super(state);
     myProject = project;
   }
 
-  protected BaseStructureConfigurable(final Project project) {
+  protected BaseStructureConfigurableNoDaemon(final Project project) {
     myProject = project;
-  }
-
-  public void init(StructureConfigurableContext context) {
-    myContext = context;
-    myContext.getDaemonAnalyzer().addListener(element -> {
-      if (!myTree.isShowing()) return;
-
-      myTree.revalidate();
-      myTree.repaint();
-    });
   }
 
   @Nonnull
@@ -165,7 +155,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent
       }
     }, true);
     ToolTipManager.sharedInstance().registerComponent(myTree);
-    myTree.setCellRenderer(new ProjectStructureElementRenderer(myContext));
+    myTree.setCellRenderer(new ProjectStructureElementRenderer(null));
   }
 
   @Override
@@ -178,8 +168,6 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent
     myUiDisposed = true;
 
     myAutoScrollHandler.cancelAllRequests();
-
-    myContext.getDaemonAnalyzer().clear();
 
     Disposer.dispose(this);
   }
@@ -227,43 +215,6 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent
     return null;
   }
 
-  private class MyFindUsagesAction extends FindUsagesInProjectStructureActionBase {
-
-    public MyFindUsagesAction(JComponent parentComponent) {
-      super(parentComponent, myProject);
-    }
-
-    @Override
-    protected boolean isEnabled() {
-      final TreePath selectionPath = myTree.getSelectionPath();
-      if (selectionPath != null) {
-        final MyNode node = (MyNode)selectionPath.getLastPathComponent();
-        return !node.isDisplayInBold();
-      }
-      else {
-        return false;
-      }
-    }
-
-    @Override
-    protected StructureConfigurableContext getContext() {
-      return myContext;
-    }
-
-    @Override
-    protected ProjectStructureElement getSelectedElement() {
-      return BaseStructureConfigurable.this.getSelectedElement();
-    }
-
-    @Override
-    protected RelativePoint getPointToShowResults() {
-      final int selectedRow = myTree.getSelectionRows()[0];
-      final Rectangle rowBounds = myTree.getRowBounds(selectedRow);
-      final Point location = rowBounds.getLocation();
-      location.x += rowBounds.width;
-      return new RelativePoint(myTree, location);
-    }
-  }
 
 
   @Override
@@ -280,25 +231,16 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent
       myTree.setShowsRootHandles(false);
       loadTree();
     }
-    for (ProjectStructureElement element : getProjectStructureElements()) {
-      myContext.getDaemonAnalyzer().queueUpdate(element);
-    }
 
     super.reset();
   }
 
-  @Nonnull
-  protected Collection<? extends ProjectStructureElement> getProjectStructureElements() {
-    return Collections.emptyList();
-  }
-
   protected abstract void loadTree();
-
 
   @Override
   @Nonnull
   protected ArrayList<AnAction> createActions(final boolean fromPopup) {
-    final ArrayList<AnAction> result = new ArrayList<AnAction>();
+    final ArrayList<AnAction> result = new ArrayList<>();
     AbstractAddGroup addAction = createAddAction();
     if (addAction != null) {
       result.add(addAction);
@@ -308,9 +250,6 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent
     final List<? extends AnAction> copyActions = createCopyActions(fromPopup);
     result.addAll(copyActions);
     result.add(AnSeparator.getInstance());
-
-    result.add(new MyFindUsagesAction(myTree));
-
 
     return result;
   }
@@ -356,7 +295,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent
       final TreePath[] paths = myTree.getSelectionPaths();
       if (paths == null) return;
 
-      final Set<TreePath> pathsToRemove = new HashSet<TreePath>();
+      final Set<TreePath> pathsToRemove = new HashSet<>();
       for (TreePath path : paths) {
         if (removeFromModel(path)) {
           pathsToRemove.add(path);
@@ -387,9 +326,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent
   }
 
   private static boolean canObjectBeRemoved(Object editableObject) {
-    if (editableObject instanceof Sdk ||
-        editableObject instanceof Module ||
-        editableObject instanceof Artifact) {
+    if (editableObject instanceof Sdk || editableObject instanceof Module || editableObject instanceof Artifact) {
       return true;
     }
     if (editableObject instanceof Library) {

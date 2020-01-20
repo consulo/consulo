@@ -24,6 +24,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.navigation.History;
+import consulo.ui.annotation.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -50,6 +52,7 @@ public abstract class ModuleElementsEditor implements ModuleConfigurationEditor 
     myHistory = history;
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     return getModel() != null && getModel().isChanged();
@@ -65,9 +68,11 @@ public abstract class ModuleElementsEditor implements ModuleConfigurationEditor 
 
   public void canApply() throws ConfigurationException {}
 
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {}
 
+  @RequiredUIAccess
   @Override
   public void reset() {}
 
@@ -76,12 +81,14 @@ public abstract class ModuleElementsEditor implements ModuleConfigurationEditor 
 
   public void moduleCompileOutputChanged(final String baseUrl, final String moduleName){}
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     Disposer.dispose(myDisposables);
   }
 
   // caching
+  @RequiredUIAccess
   @Override
   public final JComponent createComponent() {
     if (myComponent == null) {

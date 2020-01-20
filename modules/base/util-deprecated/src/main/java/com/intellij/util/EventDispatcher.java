@@ -2,17 +2,16 @@
 package com.intellij.util;
 
 import com.intellij.openapi.Disposable;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.StaticGetter;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.DisposableWrapperList;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -23,7 +22,7 @@ import java.util.*;
  * @author max
  */
 public class EventDispatcher<T extends EventListener> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.EventDispatcher");
+  private static final Logger LOG = Logger.getInstance(EventDispatcher.class);
 
   private T myMulticaster;
 

@@ -122,6 +122,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     return NAME;
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     if (myRootTreeEditor != null) {

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.roots.ui.configuration.projectRoot;
+package consulo.roots.ui.configuration;
 
 import com.intellij.CommonBundle;
 import com.intellij.icons.AllIcons;
@@ -21,6 +21,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
@@ -32,8 +33,8 @@ import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.impl.UnknownSdkType;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
+import com.intellij.openapi.roots.ui.configuration.projectRoot.SdkConfigurable;
+import com.intellij.openapi.roots.ui.configuration.projectRoot.TextConfigurable;
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.NamedConfigurable;
@@ -57,21 +58,16 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.util.*;
 
+/**
+ * Version {@link com.intellij.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable} without {@link com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext}
+ */
 @Singleton
-public class SdkListConfigurable extends BaseStructureConfigurable {
+public class SdkListConfigurable extends BaseStructureConfigurableNoDaemon implements Configurable.NoScroll, Configurable.NoMargin {
   public static final Condition<SdkTypeId> ADD_SDK_FILTER = sdkTypeId -> sdkTypeId instanceof SdkType && ((SdkType)sdkTypeId).supportsUserAdd();
 
   private static final UnknownSdkType ourUnknownSdkType = UnknownSdkType.getInstance("UNKNOWN_BUNDLE");
   private final SettingsSdksModel mySdksModel;
   private final SdkModel.Listener myListener = new SdkModel.Listener() {
-    @Override
-    public void sdkAdded(Sdk sdk) {
-    }
-
-    @Override
-    public void sdkRemove(Sdk sdk) {
-    }
-
     @Override
     public void sdkChanged(Sdk sdk, String previousName) {
       updateName();
@@ -211,7 +207,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
       addNode(groupNode, myRoot);
 
       for (Sdk sdk : value) {
-        final SdkConfigurable configurable = new SdkConfigurable((SdkImpl)sdk, mySdksModel, TREE_UPDATER, myHistory, myProject);
+        final SdkConfigurable configurable = new SdkConfigurable((SdkImpl)sdk, mySdksModel, TREE_UPDATER, myHistory, true);
 
         addNode(new MyNode(configurable), groupNode);
       }
@@ -229,21 +225,9 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
     return new MyNode(new TextConfigurable<>(key, key.getPresentableName(), "", "", key.getGroupIcon()), true);
   }
 
-  @Nonnull
-  @Override
-  protected Collection<? extends ProjectStructureElement> getProjectStructureElements() {
-    final List<ProjectStructureElement> result = new ArrayList<>();
-    for (Sdk sdk : mySdksModel.getModifiedSdksMap().values()) {
-      result.add(new SdkProjectStructureElement(myContext, sdk));
-    }
-    return result;
-  }
-
   public boolean addSdkNode(final Sdk sdk, final boolean selectInTree) {
     if (!myUiDisposed) {
-      myContext.getDaemonAnalyzer().queueUpdate(new SdkProjectStructureElement(myContext, sdk));
-
-      MyNode newSdkNode = new MyNode(new SdkConfigurable((SdkImpl)sdk, mySdksModel, TREE_UPDATER, myHistory, myProject));
+      MyNode newSdkNode = new MyNode(new SdkConfigurable((SdkImpl)sdk, mySdksModel, TREE_UPDATER, myHistory, true));
 
       final MyNode groupNode = MasterDetailsComponent.findNodeByObject(myRoot, sdk.getSdkType());
       if (groupNode != null) {
@@ -299,7 +283,10 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
 
   @Override
   public void reset() {
+    mySdksModel.reset();
+
     super.reset();
+
     myTree.setRootVisible(false);
   }
 
@@ -359,7 +346,6 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
   @Override
   protected void removeSdk(final Sdk jdk) {
     mySdksModel.removeSdk(jdk);
-    myContext.getDaemonAnalyzer().removeElement(new SdkProjectStructureElement(myContext, jdk));
   }
 
   @Override

@@ -18,7 +18,6 @@ package com.intellij.ide.actions;
 import com.intellij.CommonBundle;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ModalityState;
-import consulo.logging.Logger;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.options.ShowSettingsUtil;
@@ -30,12 +29,17 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DefaultProjectFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
+import com.intellij.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.ide.base.BaseShowSettingsUtil;
+import consulo.ide.settings.impl.SettingsSdksModel;
+import consulo.ide.settings.impl.ShowSdksSettingsUtil;
+import consulo.logging.Logger;
 import consulo.options.ProjectStructureSelector;
 import consulo.roots.ui.configuration.DesktopProjectStructureDialog;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -44,6 +48,7 @@ import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -53,16 +58,25 @@ import java.util.function.Consumer;
  * @author max
  */
 @Singleton
-public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil {
+public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil implements ShowSdksSettingsUtil {
   private static final Logger LOG = Logger.getInstance(DesktopShowSettingsUtilImpl.class);
 
   private final AtomicBoolean myShown = new AtomicBoolean(false);
 
   private final DefaultProjectFactory myDefaultProjectFactory;
 
+  private final DefaultSdksModel mySdksModel;
+
   @Inject
-  DesktopShowSettingsUtilImpl(DefaultProjectFactory defaultProjectFactory) {
+  DesktopShowSettingsUtilImpl(DefaultProjectFactory defaultProjectFactory, Provider<SdkTable> sdkTableProvider) {
     myDefaultProjectFactory = defaultProjectFactory;
+    mySdksModel = new DefaultSdksModel(sdkTableProvider);
+  }
+
+  @Nonnull
+  @Override
+  public SettingsSdksModel getSdksModel() {
+    return mySdksModel;
   }
 
   @RequiredUIAccess

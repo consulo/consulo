@@ -3,6 +3,7 @@ package consulo.bundle;
 import com.intellij.openapi.projectRoots.Sdk;
 
 import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -13,4 +14,10 @@ public interface BundleHolder {
 
   @Nonnull
   Sdk[] getBundles();
+
+  default void forEachBundle(@Nonnull Consumer<Sdk> sdkConsumer) {
+    for (Sdk sdk : getBundles()) {
+      sdkConsumer.accept(sdk);
+    }
+  }
 }

@@ -1615,6 +1615,8 @@
     <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable"/>
     <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable"/>
 
+    <projectConfigurable bundle="messages.ProjectBundle" key="global.bundles.display.name" instance="consulo.roots.ui.configuration.SdkListConfigurable" id="sdks.list" />
+
     <!-- Compiler -->
     <projectConfigurable instance="com.intellij.compiler.options.CompilerConfigurable" id="project.propCompiler"
                          key="compiler.configurable.display.name" bundle="messages.CompilerBundle" order="after project"/>

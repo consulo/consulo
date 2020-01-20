@@ -41,7 +41,7 @@ public class DesktopComboBoxModelWrapper<E> extends AbstractListModel<E> impleme
         }
 
         @Override
-        public void itemRemove(@Nonnull Object item) {
+        public void itemRemoved(@Nonnull Object item) {
           fireContentsChanged(this, -1, -1);
         }
       });

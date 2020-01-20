@@ -20,6 +20,7 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.ui.BaseSdkEditor;
@@ -47,7 +48,7 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> im
   private final SdkProjectStructureElement myProjectStructureElement;
 
   public SdkConfigurable(@Nonnull final SdkImpl sdk,
-                         final ProjectSdksModel sdksModel,
+                         final SdkModel sdksModel,
                          final Runnable updateTree,
                          @Nonnull History history,
                          Project project) {
@@ -58,7 +59,14 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> im
     myProjectStructureElement = new SdkProjectStructureElement(context, mySdk);
   }
 
-  protected BaseSdkEditor createSdkEditor(ProjectSdksModel sdksModel, History history, SdkImpl projectJdk) {
+  public SdkConfigurable(@Nonnull final SdkImpl sdk, final SdkModel sdksModel, final Runnable updateTree, @Nonnull History history, boolean noContext) {
+    super(!sdk.isPredefined(), updateTree);
+    mySdk = sdk;
+    mySdkEditor = createSdkEditor(sdksModel, history, mySdk);
+    myProjectStructureElement = new SdkProjectStructureElement(null, sdk);
+  }
+
+  protected BaseSdkEditor createSdkEditor(SdkModel sdksModel, History history, SdkImpl projectJdk) {
     return new SdkEditor(sdksModel, history, projectJdk);
   }
 

@@ -26,11 +26,11 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.SdkConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable;
 import com.intellij.openapi.ui.MasterDetailsComponent;
@@ -39,12 +39,14 @@ import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.ui.TreeSpeedSearch;
-import com.intellij.util.Consumer;
 import com.intellij.util.IconUtil;
 import com.intellij.util.containers.Convertor;
+import consulo.ide.settings.impl.SettingsSdksModel;
+import consulo.ide.settings.impl.ShowSdksSettingsUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;
@@ -52,18 +54,18 @@ import java.util.*;
 
 public class SdksConfigurable extends MasterDetailsComponent {
 
-  private final ProjectSdksModel myProjectSdksModel;
+  private final SettingsSdksModel mySdksModel;
   private final Project myProject;
   @NonNls
   private static final String SPLITTER_PROPORTION = "project.jdk.splitter";
 
   public SdksConfigurable(Project project) {
-    this(project, ProjectStructureConfigurable.getInstance(project).getProjectSdksModel());
+    this(project, ((ShowSdksSettingsUtil)ShowSettingsUtil.getInstance()).getSdksModel());
   }
 
-  public SdksConfigurable(Project project, ProjectSdksModel sdksModel) {
+  public SdksConfigurable(Project project, SettingsSdksModel sdksModel) {
     myProject = project;
-    myProjectSdksModel = sdksModel;
+    mySdksModel = sdksModel;
     initTree();
   }
 
@@ -94,12 +96,12 @@ public class SdksConfigurable extends MasterDetailsComponent {
   public void reset() {
     super.reset();
 
-    myProjectSdksModel.reset(myProject);
+    mySdksModel.reset();
 
     myRoot.removeAllChildren();
-    final Map<Sdk, Sdk> sdks = myProjectSdksModel.getProjectSdks();
+    final Map<Sdk, Sdk> sdks = mySdksModel.getModifiedSdksMap();
     for (Sdk sdk : sdks.keySet()) {
-      final SdkConfigurable configurable = new SdkConfigurable((SdkImpl)sdks.get(sdk), myProjectSdksModel, TREE_UPDATER, myHistory, myProject);
+      final SdkConfigurable configurable = new SdkConfigurable((SdkImpl)sdks.get(sdk), mySdksModel, TREE_UPDATER, myHistory, myProject);
       addNode(new MyNode(configurable), myRoot);
     }
 
@@ -126,6 +128,7 @@ public class SdksConfigurable extends MasterDetailsComponent {
     return null;
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     super.apply();
@@ -138,13 +141,13 @@ public class SdksConfigurable extends MasterDetailsComponent {
       }
     }
 
-    if (myProjectSdksModel.isModified() || modifiedJdks) myProjectSdksModel.apply(this);
+    if (mySdksModel.isModified() || modifiedJdks) mySdksModel.apply(this);
   }
 
 
   @Override
   public boolean isModified() {
-    return super.isModified() || myProjectSdksModel.isModified();
+    return super.isModified() || mySdksModel.isModified();
   }
 
 
@@ -154,7 +157,7 @@ public class SdksConfigurable extends MasterDetailsComponent {
     if (splitter != null) {
       PropertiesComponent.getInstance().setValue(SPLITTER_PROPORTION, String.valueOf(splitter.getProportion()));
     }
-    myProjectSdksModel.disposeUIResources();
+    mySdksModel.disposeUIResources();
     super.disposeUIResources();
   }
 
@@ -164,12 +167,9 @@ public class SdksConfigurable extends MasterDetailsComponent {
     final ArrayList<AnAction> actions = new ArrayList<AnAction>();
     DefaultActionGroup group = new DefaultActionGroup(ProjectBundle.message("add.action.name"), true);
     group.getTemplatePresentation().setIcon(IconUtil.getAddIcon());
-    myProjectSdksModel.createAddActions(group, myTree, new Consumer<Sdk>() {
-      @Override
-      public void consume(final Sdk projectJdk) {
-        addNode(new MyNode(new SdkConfigurable(((SdkImpl)projectJdk), myProjectSdksModel, TREE_UPDATER, myHistory, myProject), false), myRoot);
-        selectNodeInTree(findNodeByObject(myRoot, projectJdk));
-      }
+    mySdksModel.createAddActions(group, myTree, projectJdk -> {
+      addNode(new MyNode(new SdkConfigurable(((SdkImpl)projectJdk), mySdksModel, TREE_UPDATER, myHistory, myProject), false), myRoot);
+      selectNodeInTree(findNodeByObject(myRoot, projectJdk));
     }, SdkListConfigurable.ADD_SDK_FILTER);
     actions.add(new MyActionGroupWrapper(group));
     actions.add(new MyDeleteAction(forAll(Conditions.alwaysTrue())));
@@ -184,10 +184,10 @@ public class SdksConfigurable extends MasterDetailsComponent {
       final NamedConfigurable namedConfigurable = (NamedConfigurable)node.getUserObject();
       sdks.add(((SdkConfigurable)namedConfigurable).getEditableObject());
     }
-    final HashMap<Sdk, Sdk> map = new HashMap<Sdk, Sdk>(myProjectSdksModel.getProjectSdks());
+    final HashMap<Sdk, Sdk> map = new HashMap<Sdk, Sdk>(mySdksModel.getModifiedSdksMap());
     for (Sdk sdk : map.values()) {
       if (!sdks.contains(sdk)) {
-        myProjectSdksModel.removeSdk(sdk);
+        mySdksModel.removeSdk(sdk);
       }
     }
   }
@@ -195,7 +195,7 @@ public class SdksConfigurable extends MasterDetailsComponent {
   @Override
   protected boolean wasObjectStored(Object editableObject) {
     //noinspection RedundantCast
-    return myProjectSdksModel.getProjectSdks().containsKey((Sdk)editableObject);
+    return mySdksModel.getModifiedSdksMap().containsKey((Sdk)editableObject);
   }
 
   @Nullable
