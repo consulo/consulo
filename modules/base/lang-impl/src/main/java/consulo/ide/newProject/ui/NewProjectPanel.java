@@ -313,6 +313,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
   @Override
   public void dispose() {
     if (myWizardSession != null) {
+      myWizardSession.finish();
       myWizardSession.dispose();
     }
   }
