@@ -22,8 +22,6 @@ import com.intellij.dvcs.repo.Repository;
 import com.intellij.dvcs.repo.RepositoryManager;
 import com.intellij.ide.file.BatchFileChangeListener;
 import com.intellij.openapi.application.AccessToken;
-import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.Extensions;
@@ -31,6 +29,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.TextEditor;
+import com.intellij.openapi.progress.util.BackgroundTaskUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.LibraryOrderEntry;
 import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
@@ -53,16 +52,16 @@ import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.vcs.log.TimedVcsCommit;
 import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcsUtil.VcsImplUtil;
 import com.intellij.vcsUtil.VcsUtil;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.Contract;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -208,21 +207,29 @@ public class DvcsUtil {
 
   @Nonnull
   public static AccessToken workingTreeChangeStarted(@Nonnull Project project) {
-    ApplicationManager.getApplication().getMessageBus().syncPublisher(BatchFileChangeListener.TOPIC).batchChangeStarted(project, null);
-    return HeavyProcessLatch.INSTANCE.processStarted("Changing DVCS working tree");
+    return workingTreeChangeStarted(project, null);
   }
 
+  @Nonnull
+  public static AccessToken workingTreeChangeStarted(@Nonnull Project project, @Nullable String activityName) {
+    BackgroundTaskUtil.syncPublisher(BatchFileChangeListener.TOPIC).batchChangeStarted(project, activityName);
+    return new AccessToken() {
+      @Override
+      public void finish() {
+        BackgroundTaskUtil.syncPublisher(BatchFileChangeListener.TOPIC).batchChangeCompleted(project);
+      }
+    };
+  }
+
+  /**
+   * @deprecated Call {@link AccessToken#finish()} directly from the AccessToken received by {@link #workingTreeChangeStarted(Project)}
+   */
+  @Deprecated
   public static void workingTreeChangeFinished(@Nonnull Project project, @Nonnull AccessToken token) {
     token.finish();
-    ApplicationManager.getApplication().getMessageBus().syncPublisher(BatchFileChangeListener.TOPIC).batchChangeCompleted(project);
   }
 
-  public static final Comparator<Repository> REPOSITORY_COMPARATOR = new Comparator<Repository>() {
-    @Override
-    public int compare(Repository o1, Repository o2) {
-      return o1.getPresentableUrl().compareTo(o2.getPresentableUrl());
-    }
-  };
+  public static final Comparator<Repository> REPOSITORY_COMPARATOR = Comparator.comparing(Repository::getPresentableUrl);
 
   public static void assertFileExists(File file, String message) throws IllegalStateException {
     if (!file.exists()) {
