@@ -54,7 +54,7 @@ public class DaemonTooltipActionProvider implements TooltipActionProvider {
   private TooltipAction wrapIntentionToTooltipAction(IntentionAction intention, HighlightInfo info) {
     Pair<HighlightInfo.IntentionActionDescriptor, RangeMarker> pair = ContainerUtil.find(info.quickFixActionMarkers, it -> it.getFirst().getAction() == intention);
 
-    int offset = pair.getSecond().isValid() ? pair.getSecond().getStartOffset() : info.getActualStartOffset();
+    int offset = pair != null && pair.getSecond().isValid() ? pair.getSecond().getStartOffset() : info.getActualStartOffset();
 
      return new DaemonTooltipAction(intention.getText(), offset);
   }
