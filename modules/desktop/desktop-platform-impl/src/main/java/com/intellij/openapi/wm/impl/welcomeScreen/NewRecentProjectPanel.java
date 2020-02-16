@@ -26,6 +26,8 @@ import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.util.io.UniqueNameBuilder;
 import com.intellij.openapi.wm.IdeFocusManager;
+import com.intellij.ui.ColorUtil;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.panels.NonOpaquePanel;
@@ -76,8 +78,8 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
   }
 
   @Override
-  protected JBList createList(AnAction[] recentProjectActions, Dimension size) {
-    final JBList list = super.createList(recentProjectActions, size);
+  protected JBList<AnAction> createList(AnAction[] recentProjectActions, Dimension size) {
+    final JBList<AnAction> list = super.createList(recentProjectActions, size);
     list.addKeyListener(new KeyAdapter() {
       @Override
       public void keyPressed(KeyEvent e) {
@@ -208,7 +210,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
       };
 
       @Override
-      public Component getListCellRendererComponent(JList list, final Object value, int index, final boolean isSelected, boolean cellHasFocus) {
+      public Component getListCellRendererComponent(JList list, final AnAction value, int index, final boolean isSelected, boolean cellHasFocus) {
         final Color fore = getListForeground(isSelected, list.hasFocus());
         final Color back = getListBackground(isSelected, list.hasFocus());
         final JLabel name = new JLabel();
@@ -251,6 +253,11 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
               final NonOpaquePanel p = new NonOpaquePanel(new BorderLayout());
               name.setText(getTitle2Text(((ReopenProjectAction)value).getTemplatePresentation().getText(), name, JBUI.scale(55)));
               path.setText(getTitle2Text(((ReopenProjectAction)value).getProjectPath(), path, JBUI.scale(isInsideGroup ? 80 : 60)));
+
+              if (!isPathValid((((ReopenProjectAction)value).getProjectPath()))) {
+                path.setForeground(ColorUtil.mix(path.getForeground(), JBColor.red, .5));
+              }
+
               p.add(name, BorderLayout.NORTH);
               p.add(path, BorderLayout.SOUTH);
 

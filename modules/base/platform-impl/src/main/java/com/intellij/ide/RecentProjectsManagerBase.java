@@ -62,6 +62,10 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
     return (RecentProjectsManagerBase)RecentProjectsManager.getInstance();
   }
 
+  public static boolean isFileSystemPath(String path) {
+    return path.indexOf('/') != -1 || path.indexOf('\\') != -1;
+  }
+
   public static class State {
     public List<String> recentPaths = new SmartList<>();
     public List<String> openPaths = new SmartList<>();

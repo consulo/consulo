@@ -40,6 +40,7 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
   private final String myProjectPath;
   private final String myProjectName;
   private List<String> myExtensions;
+  private boolean myIsRemoved;
 
   public ReopenProjectAction(final String projectPath, final String projectName, final String displayName, @Nonnull List<String> extensions) {
     myProjectPath = projectPath;
@@ -51,7 +52,6 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
     presentation.setText(text, false);
     presentation.setDescription(projectPath);
   }
-
 
   @RequiredUIAccess
   @Override
@@ -69,12 +69,17 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
                                        " does not exist.\n" +
                                        "If it is on a removable or network drive, please make sure that the drive is connected.", "Reopen Project", new String[]{"OK", "&Remove From List"}, 0,
                               Messages.getErrorIcon()) == 1) {
+        myIsRemoved = true;
         RecentProjectsManager.getInstance().removePath(myProjectPath);
       }
       return;
     }
 
     ProjectUtil.openAsync(myProjectPath, project, forceOpenInNewFrame, UIAccess.current());
+  }
+
+  public boolean isRemoved() {
+    return myIsRemoved;
   }
 
   @Nonnull

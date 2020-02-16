@@ -72,7 +72,7 @@ public class AnActionEvent implements PlaceProvider<String> {
   @Nonnull
   public static DataContext getInjectedDataContext(final DataContext context) {
     return new DataContextWrapper(context) {
-      @javax.annotation.Nullable
+      @Nullable
       @Override
       public <T> T getData(@Nonnull Key<T> dataId) {
         T injected = super.getData(injectedId(dataId));
@@ -138,13 +138,13 @@ public class AnActionEvent implements PlaceProvider<String> {
 
   @Deprecated
   @Nonnull
-  public static AnActionEvent createFromInputEvent(@Nonnull AnAction action, @javax.annotation.Nullable InputEvent event, @Nonnull String place) {
+  public static AnActionEvent createFromInputEvent(@Nonnull AnAction action, @Nullable InputEvent event, @Nonnull String place) {
     DataContext context = event == null ? DataManager.getInstance().getDataContext() : DataManager.getInstance().getDataContext(event.getComponent());
     return createFromAnAction(action, event, place, context);
   }
 
   @Nonnull
-  public static AnActionEvent createFromAnAction(@Nonnull AnAction action, @javax.annotation.Nullable InputEvent event, @Nonnull String place, @Nonnull DataContext dataContext) {
+  public static AnActionEvent createFromAnAction(@Nonnull AnAction action, @Nullable InputEvent event, @Nonnull String place, @Nonnull DataContext dataContext) {
     int modifiers = event == null ? 0 : event.getModifiers();
     Presentation presentation = action.getTemplatePresentation().clone();
     AnActionEvent anActionEvent = new AnActionEvent(event, dataContext, place, presentation, ActionManager.getInstance(), modifiers);
@@ -153,7 +153,7 @@ public class AnActionEvent implements PlaceProvider<String> {
   }
 
   @Nonnull
-  public static AnActionEvent createFromDataContext(@Nonnull String place, @javax.annotation.Nullable Presentation presentation, @Nonnull DataContext dataContext) {
+  public static AnActionEvent createFromDataContext(@Nonnull String place, @Nullable Presentation presentation, @Nonnull DataContext dataContext) {
     return new AnActionEvent(null, dataContext, place, presentation == null ? new Presentation() : presentation, ActionManager.getInstance(), 0);
   }
 
@@ -187,7 +187,7 @@ public class AnActionEvent implements PlaceProvider<String> {
   /**
    * @return Project from the context of this event.
    */
-  @javax.annotation.Nullable
+  @Nullable
   public Project getProject() {
     return getData(CommonDataKeys.PROJECT);
   }
