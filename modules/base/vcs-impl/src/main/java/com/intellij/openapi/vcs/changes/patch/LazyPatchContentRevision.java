@@ -23,6 +23,8 @@ import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.application.AccessRule;
+
 import javax.annotation.Nonnull;
 
 public class LazyPatchContentRevision implements ContentRevision {
@@ -40,14 +42,22 @@ public class LazyPatchContentRevision implements ContentRevision {
     myPatch = patch;
   }
 
+  @Override
   public String getContent() {
     if (myContent == null) {
-      final Document doc = FileDocumentManager.getInstance().getDocument(myVf);
-      if (doc == null) {
+      String localContext = AccessRule.read(() -> {
+        final Document doc = FileDocumentManager.getInstance().getDocument(myVf);
+        if(doc == null) {
+          return null;
+        }
+
+        return doc.getText();
+      });
+
+      if (localContext == null) {
         myPatchApplyFailed = true;
         return null;
       }
-      final String localContext = doc.getText();
 
       final GenericPatchApplier applier = new GenericPatchApplier(localContext, myPatch.getHunks());
       if (applier.execute()) {
