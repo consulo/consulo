@@ -55,7 +55,10 @@ import com.intellij.openapi.vcs.changes.actions.diff.ChangeGoToChangePopupAction
 import com.intellij.openapi.vcs.changes.shelf.ShelvedBinaryFilePatch;
 import com.intellij.openapi.vcs.changes.ui.*;
 import com.intellij.openapi.vfs.*;
-import com.intellij.ui.*;
+import com.intellij.ui.DocumentAdapter;
+import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.ui.SimpleColoredComponent;
+import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
@@ -63,13 +66,13 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.ui.annotation.RequiredUIAccess;
-
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.tree.DefaultTreeModel;
@@ -77,8 +80,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.intellij.ui.SimpleTextAttributes.STYLE_PLAIN;
@@ -938,7 +941,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
         component.append(text, SimpleTextAttributes.GRAY_ATTRIBUTES);
         if (!patchInProgress.baseExistsOrAdded()) {
           component.append("  ");
-          component.append("Select missing base", new SimpleTextAttributes(STYLE_PLAIN, UI.getColor("link.foreground")),
+          component.append("Select missing base", new SimpleTextAttributes(STYLE_PLAIN, JBUI.CurrentTheme.Link.linkColor()),
                            (Runnable)myChangesTreeList::handleInvalidChangesAndToggle);
         }
         else {

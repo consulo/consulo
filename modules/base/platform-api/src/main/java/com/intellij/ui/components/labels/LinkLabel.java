@@ -21,17 +21,17 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.ui.ScreenUtil;
-import com.intellij.ui.UI;
 import com.intellij.util.ui.JBRectangle;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import javax.accessibility.AccessibleAction;
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -216,7 +216,7 @@ public class LinkLabel<T> extends JLabel {
   }
 
   protected Color getTextColor() {
-    return myIsLinkActive ? getActive() : isVisited() ? getVisited() : getNormal();
+    return myIsLinkActive ? getActive() : myUnderline ? getHover() : isVisited() ? getVisited() : getNormal();
   }
 
   public void setPaintUnderline(boolean paintUnderline) {
@@ -306,15 +306,19 @@ public class LinkLabel<T> extends JLabel {
   }
 
   protected Color getVisited() {
-    return UI.getColor("link.visited.foreground");
+    return JBUI.CurrentTheme.Link.linkVisitedColor();
   }
 
   protected Color getActive() {
-    return UI.getColor("link.pressed.foreground");
+    return JBUI.CurrentTheme.Link.linkPressedColor();
   }
 
   protected Color getNormal() {
-    return UI.getColor("link.foreground");
+    return JBUI.CurrentTheme.Link.linkColor();
+  }
+
+  protected Color getHover() {
+    return JBUI.CurrentTheme.Link.linkHoverColor();
   }
 
   public void entered(MouseEvent e) {

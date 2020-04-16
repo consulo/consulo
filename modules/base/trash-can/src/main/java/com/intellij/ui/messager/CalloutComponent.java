@@ -19,7 +19,6 @@ package com.intellij.ui.messager;
 import com.intellij.ui.DrawUtil;
 import com.intellij.ui.LineEndDecorator;
 import com.intellij.ui.ScreenUtil;
-import com.intellij.ui.UI;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.ui.components.panels.NonOpaquePanel;
@@ -312,11 +311,11 @@ public class CalloutComponent {
   }
 
   private Color getFillColor() {
-    return UI.getColor("callout.background");
+    return Color.WHITE;
   }
 
   private Color getBoundsColor() {
-    return UI.getColor("callout.frame.color");
+    return Color.RED;
   }
 
   private class Wrapper extends NonOpaquePanel {

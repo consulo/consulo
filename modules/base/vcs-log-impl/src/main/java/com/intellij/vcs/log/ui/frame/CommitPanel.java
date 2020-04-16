@@ -24,7 +24,6 @@ import com.intellij.openapi.vcs.ui.FontUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.JBColor;
-import com.intellij.ui.UI;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.containers.ContainerUtil;
@@ -223,7 +222,7 @@ class CommitPanel extends JBPanel {
       Document document = getDocument();
       if (document instanceof HTMLDocument) {
         StyleSheet styleSheet = ((HTMLDocument)document).getStyleSheet();
-        String linkColor = "#" + ColorUtil.toHex(UI.getColor("link.foreground"));
+        String linkColor = "#" + ColorUtil.toHex(JBUI.CurrentTheme.Link.linkColor());
         styleSheet.addRule("a { color: " + linkColor + "; text-decoration: none;}");
       }
     }
