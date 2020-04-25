@@ -41,7 +41,7 @@ public class LabeledComponents {
       text += ": ";
     }
 
-    HorizontalLayout horizontal = HorizontalLayout.create();
+    HorizontalLayout horizontal = HorizontalLayout.create(5);
     horizontal.add(Label.create(text));
     horizontal.add(component);
     return horizontal;
@@ -61,6 +61,23 @@ public class LabeledComponents {
     DockLayout dock = DockLayout.create();
     dock.left(Label.create(text));
     dock.center(component);
+    return dock;
+  }
+
+  @RequiredUIAccess
+  public static Component leftWithRight(@Nonnull String text, @Nonnull Component component) {
+    return leftWithRight(text, () -> component);
+  }
+
+  @RequiredUIAccess
+  public static Component leftWithRight(@Nonnull String text, @Nonnull PseudoComponent component) {
+    if (!StringUtil.endsWithChar(text, ':')) {
+      text += ": ";
+    }
+
+    DockLayout dock = DockLayout.create();
+    dock.left(Label.create(text));
+    dock.right(component);
     return dock;
   }
 }

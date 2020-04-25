@@ -76,11 +76,15 @@ public abstract class SimpleConfigurableByProperties extends SimpleConfigurable<
     }
   }
 
-  protected static class PropertyBuilder {
+  public static class PropertyBuilder {
     private List<Property<?>> myProperties = new ArrayList<>();
 
     public <T> void add(@Nonnull ValueComponent<T> valueComponent, @Nonnull Supplier<T> getter, @Nonnull Consumer<T> setter) {
-      myProperties.add(new Property<T>(valueComponent::getValue, valueComponent::setValue, getter, setter));
+      add(valueComponent::getValue, valueComponent::setValue, getter, setter);
+    }
+
+    public <T> void add(@Nonnull Supplier<T> uiGetter, @RequiredUIAccess @Nonnull Consumer<T> uiSetter, @Nonnull Supplier<T> getter, @Nonnull Consumer<T> setter) {
+      myProperties.add(new Property<>(uiGetter, uiSetter, getter, setter));
     }
   }
 

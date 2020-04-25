@@ -175,6 +175,15 @@ public class ContainerUtil {
     }
   }
 
+  @Nonnull
+  public static <T, A extends T, C extends Collection<T>> C addAll(@Nonnull C collection, @Nonnull A... elements) {
+    //noinspection ManualArrayToCollectionCopy
+    for (T element : elements) {
+      collection.add(element);
+    }
+    return collection;
+  }
+
   @Nullable
   @Contract(pure = true)
   public static <T, V extends T> V find(@Nonnull Iterable<V> iterable, @Nonnull Predicate<T> condition) {

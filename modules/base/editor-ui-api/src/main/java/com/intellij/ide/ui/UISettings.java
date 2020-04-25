@@ -563,6 +563,10 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     return RECENT_FILES_LIMIT;
   }
 
+  public void setRecentFilesLimit(int limit) {
+    RECENT_FILES_LIMIT = limit;
+  }
+
   public int getRecentLocationsLimit() {
     return RECENT_LOCATIONS_LIMIT;
   }

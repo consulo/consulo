@@ -325,9 +325,7 @@
                     interface="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureValidator"/>
 
     <!--Lang-->
-    <extensionPoint name="errorOptionsProvider" beanClass="com.intellij.profile.codeInspection.ui.ErrorOptionsProviderEP">
-      <with attribute="instance" implements="com.intellij.profile.codeInspection.ui.ErrorOptionsProvider"/>
-    </extensionPoint>
+    <extensionPoint name="errorPropertiesProvider" interface="consulo.codeInspection.ui.ErrorPropertiesProvider" />
 
     <extensionPoint name="indexPatternProvider"
                     interface="com.intellij.psi.search.IndexPatternProvider"/>

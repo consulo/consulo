@@ -33,7 +33,7 @@ import javax.swing.event.DocumentEvent;
  * @author VISTALL
  * @since 19-Nov-16.
  */
-public class DesktopTextBoxImpl extends DocumentSwingValidator<JBTextField> implements TextBox {
+public class DesktopTextBoxImpl extends DocumentSwingValidator<String, JBTextField> implements TextBox {
   private static class Listener extends DocumentAdapter {
     private DesktopTextBoxImpl myTextField;
 

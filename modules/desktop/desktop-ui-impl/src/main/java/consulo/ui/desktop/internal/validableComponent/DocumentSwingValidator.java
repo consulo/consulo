@@ -25,13 +25,17 @@ import javax.swing.text.Document;
  * @author VISTALL
  * @since 2019-11-04
  */
-public abstract class DocumentSwingValidator<C extends JComponent> extends SwingValidableComponent<String, C> {
+public abstract class DocumentSwingValidator<V, C extends JComponent> extends SwingValidableComponent<V, C> {
   protected void addDocumentListenerForValidator(Document document) {
     document.addDocumentListener(new DocumentAdapter() {
       @Override
       protected void textChanged(DocumentEvent e) {
-        myValidator.validateValue(toAWTComponent(), getValue(), true);
+        myValidator.validateValue(toAWTComponent(), getPrevValue(e), true);
       }
     });
+  }
+
+  protected V getPrevValue(DocumentEvent e) {
+    return getValue();
   }
 }

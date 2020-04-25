@@ -126,6 +126,12 @@ public class WebUIInternalImpl extends UIInternal {
     return new WebTextBoxImpl(text);
   }
 
+  @Nonnull
+  @Override
+  public IntBox _Components_intBox(int value) {
+    throw new UnsupportedOperationException();
+  }
+
   @Override
   public <E> ListBox<E> _Components_listBox(ListModel<E> model) {
     return new WebListBoxImpl<>(model);

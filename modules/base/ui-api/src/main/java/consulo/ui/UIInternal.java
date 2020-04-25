@@ -106,6 +106,9 @@ public abstract class UIInternal {
 
   public abstract TextBox _Components_textBox(String text);
 
+  @Nonnull
+  public abstract IntBox _Components_intBox(int value);
+
   public abstract <E> ListBox<E> _Components_listBox(ListModel<E> model);
 
   public abstract RadioButton _Components_radioButton(String text, boolean selected);

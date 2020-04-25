@@ -43,6 +43,7 @@ import com.intellij.util.containers.hash.HashSet;
 import com.intellij.util.ui.DialogUtil;
 import com.intellij.util.ui.EmptyIcon;
 import consulo.awt.TargetAWT;
+import consulo.ide.settings.impl.EditorGeneralConfigurable;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.TestOnly;
@@ -209,7 +210,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
     EditorSettingsExternalizable editorSettings = EditorSettingsExternalizable.getInstance();
     if (myShowGutterIconsJBCheckBox.isSelected() != editorSettings.areGutterIconsShown()) {
       editorSettings.setGutterIconsShown(myShowGutterIconsJBCheckBox.isSelected());
-      EditorOptionsPanel.reinitAllEditors();
+      EditorGeneralConfigurable.reinitAllEditors();
     }
     for (GutterIconDescriptor descriptor : myDescriptors) {
       LineMarkerSettings.getInstance().setEnabled(descriptor, myList.isItemSelected(descriptor));

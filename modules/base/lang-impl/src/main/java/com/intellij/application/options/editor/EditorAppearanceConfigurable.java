@@ -27,6 +27,7 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.UnnamedConfigurable;
 import com.intellij.openapi.options.ex.ConfigurableWrapper;
 import com.intellij.ui.components.JBCheckBox;
+import consulo.ide.settings.impl.EditorGeneralConfigurable;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 
@@ -119,11 +120,11 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
     editorSettings.setWhitespacesShown(myCbShowWhitespaces.isSelected());
     editorSettings.setIndentGuidesShown(myShowVerticalIndentGuidesCheckBox.isSelected());
 
-    EditorOptionsPanel.reinitAllEditors();
+    EditorGeneralConfigurable.reinitAllEditors();
 
     DaemonCodeAnalyzerSettings.getInstance().SHOW_METHOD_SEPARATORS = myCbShowMethodSeparators.isSelected();
 
-    EditorOptionsPanel.restartDaemons();
+    EditorGeneralConfigurable.restartDaemons();
 
     applyNameHintsSettings();
     super.apply();

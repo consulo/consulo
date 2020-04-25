@@ -19,14 +19,18 @@ import com.intellij.openapi.Disposable;
 import com.intellij.ui.components.JBCheckBox;
 import consulo.awt.TargetAWT;
 import consulo.awt.impl.FromSwingComponentWrapper;
-import consulo.ui.*;
+import consulo.ui.CheckBox;
+import consulo.ui.Component;
+import consulo.ui.KeyCode;
+import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.util.MnemonicInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 /**
  * @author VISTALL
@@ -88,9 +92,13 @@ class DesktopCheckBoxImpl extends SwingComponentDelegate<JBCheckBox> implements 
   @Nonnull
   @Override
   public Disposable addValueListener(@Nonnull ValueComponent.ValueListener<Boolean> valueListener) {
-    ActionListener listener = e -> valueListener.valueChanged(new ValueEvent<>(this, myComponent.isSelected()));
-    myComponent.addActionListener(listener);
-    return () -> myComponent.removeActionListener(listener);
+    ItemListener listener = e -> {
+      if (e.getStateChange() == ItemEvent.SELECTED || e.getStateChange() == ItemEvent.DESELECTED) {
+        valueListener.valueChanged(new ValueEvent<>(this, myComponent.isSelected()));
+      }
+    };
+    myComponent.addItemListener(listener);
+    return () -> myComponent.removeItemListener(listener);
   }
 
   @Override

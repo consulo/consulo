@@ -47,7 +47,7 @@ import java.util.List;
  * @since 2019-10-31
  */
 public class DesktopTextBoxWithExtensions {
-  private static class Supported extends DocumentSwingValidator<ExtendableTextField> implements TextBoxWithExtensions {
+  private static class Supported extends DocumentSwingValidator<String, ExtendableTextField> implements TextBoxWithExtensions {
     public Supported(String text) {
       initialize(new ExtendableTextField(text));
       TextFieldPlaceholderFunction.install(toAWTComponent());
@@ -121,7 +121,7 @@ public class DesktopTextBoxWithExtensions {
     }
   }
 
-  private static class Unsupported extends DocumentSwingValidator<JPanel> implements TextBoxWithExtensions {
+  private static class Unsupported extends DocumentSwingValidator<String, JPanel> implements TextBoxWithExtensions {
     private JBTextField myTextField;
 
     private Unsupported(String text) {

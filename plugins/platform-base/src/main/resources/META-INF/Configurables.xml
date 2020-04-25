@@ -98,8 +98,9 @@
                              parentId="execution"
                              instance="com.intellij.xdebugger.impl.settings.DebuggerConfigurable"/>
 
-    <applicationConfigurable instance="com.intellij.application.options.editor.EditorGeneralConfigurable"
-                             parentId="editor" key="title.editor"
+    <applicationConfigurable instance="consulo.ide.settings.impl.EditorGeneralConfigurable"
+                             parentId="editor"
+                             key="title.editor"
                              bundle="messages.ApplicationBundle"
                              order="after appearance"/>
 

@@ -27,6 +27,7 @@ import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.image.*;
 import consulo.ui.desktop.internal.layout.*;
+import consulo.ui.desktop.internal.textBox.DesktopIntBoxImpl;
 import consulo.ui.desktop.internal.textBox.DesktopTextBoxImpl;
 import consulo.ui.desktop.internal.textBox.DesktopTextBoxWithExpandAction;
 import consulo.ui.desktop.internal.textBox.DesktopTextBoxWithExtensions;
@@ -249,6 +250,12 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Override
   public TextBox _Components_textBox(String text) {
     return new DesktopTextBoxImpl(text);
+  }
+
+  @Nonnull
+  @Override
+  public IntBox _Components_intBox(int value) {
+    return new DesktopIntBoxImpl(value);
   }
 
   @Override

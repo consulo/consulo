@@ -26,6 +26,7 @@ import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
+import consulo.ide.settings.impl.EditorGeneralConfigurable;
 import consulo.options.SimpleConfigurableByProperties;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
@@ -87,7 +88,7 @@ public class CodeFoldingConfigurable extends SimpleConfigurableByProperties impl
           foldingManager.buildInitialFoldings(each.first);
         }
       }
-      EditorOptionsPanel.reinitAllEditors();
+      EditorGeneralConfigurable.reinitAllEditors();
     }, ModalityState.NON_MODAL);
   }
 }
