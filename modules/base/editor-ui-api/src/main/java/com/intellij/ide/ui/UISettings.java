@@ -118,7 +118,6 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   /**
    * Not tabbed pane.
    */
-  public static final int TABS_NONE = 0;
   public static final int ANIMATION_DURATION = 300; // Milliseconds
 
   @Property(filter = FontFilter.class)
@@ -148,7 +147,18 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   public boolean SCROLL_TAB_LAYOUT_IN_EDITOR = true;
   public boolean HIDE_TABS_IF_NEED = true;
   public boolean SHOW_CLOSE_BUTTON = true;
-  public int EDITOR_TAB_PLACEMENT = 1;
+
+  public static final int PLACEMENT_EDITOR_TAB_NONE = 0;
+  public static final int PLACEMENT_EDITOR_TAB_TOP = 1;
+  public static final int PLACEMENT_EDITOR_TAB_LEFT = 2;
+  public static final int PLACEMENT_EDITOR_TAB_BOTTOM = 3;
+  public static final int PLACEMENT_EDITOR_TAB_RIGHT = 4;
+
+  @Deprecated
+  @DeprecationInfo("Use #PLACEMENT_EDITOR_TAB_NONE")
+  public static final int TABS_NONE = PLACEMENT_EDITOR_TAB_NONE;
+
+  public int EDITOR_TAB_PLACEMENT = PLACEMENT_EDITOR_TAB_TOP;
   public boolean HIDE_KNOWN_EXTENSION_IN_TABS = false;
   public boolean SHOW_ICONS_IN_QUICK_NAVIGATION = true;
   public boolean CLOSE_NON_MODIFIED_FILES_FIRST = false;
@@ -254,12 +264,12 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     XmlSerializerUtil.copyBean(object, this);
 
     // Check tab placement in editor
-    if (EDITOR_TAB_PLACEMENT != TABS_NONE &&
-        EDITOR_TAB_PLACEMENT != SwingConstants.TOP &&
-        EDITOR_TAB_PLACEMENT != SwingConstants.LEFT &&
-        EDITOR_TAB_PLACEMENT != SwingConstants.BOTTOM &&
-        EDITOR_TAB_PLACEMENT != SwingConstants.RIGHT) {
-      EDITOR_TAB_PLACEMENT = SwingConstants.TOP;
+    if (EDITOR_TAB_PLACEMENT != PLACEMENT_EDITOR_TAB_NONE &&
+        EDITOR_TAB_PLACEMENT != PLACEMENT_EDITOR_TAB_TOP &&
+        EDITOR_TAB_PLACEMENT != PLACEMENT_EDITOR_TAB_LEFT &&
+        EDITOR_TAB_PLACEMENT != PLACEMENT_EDITOR_TAB_BOTTOM &&
+        EDITOR_TAB_PLACEMENT != PLACEMENT_EDITOR_TAB_RIGHT) {
+      EDITOR_TAB_PLACEMENT = PLACEMENT_EDITOR_TAB_TOP;
     }
 
     // Check that alpha delay and ratio are valid

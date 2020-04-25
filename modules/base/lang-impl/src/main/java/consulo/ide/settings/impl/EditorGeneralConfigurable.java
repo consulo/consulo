@@ -52,9 +52,7 @@ import consulo.util.collection.ContainerUtil;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author VISTALL
@@ -290,13 +288,12 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
 
     VerticalLayout otherLayout = VerticalLayout.create();
 
-    Map<String, String> stripSpacesConfig = new LinkedHashMap<>();
-    stripSpacesConfig.put(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_CHANGED, ApplicationBundle.message("combobox.strip.modified.lines"));
-    stripSpacesConfig.put(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_WHOLE, ApplicationBundle.message("combobox.strip.all"));
-    stripSpacesConfig.put(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_NONE, ApplicationBundle.message("combobox.strip.none"));
+    ComboBox.Builder<String> stripSpacesConfig = ComboBox.builder();
+    stripSpacesConfig.add(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_CHANGED, ApplicationBundle.message("combobox.strip.modified.lines"));
+    stripSpacesConfig.add(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_WHOLE, ApplicationBundle.message("combobox.strip.all"));
+    stripSpacesConfig.add(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_NONE, ApplicationBundle.message("combobox.strip.none"));
 
-    ComboBox<String> stripTrailingSpacesOnSave = ComboBox.create(stripSpacesConfig.keySet());
-    stripTrailingSpacesOnSave.setRender((render, index, item) -> render.append(stripSpacesConfig.get(item)));
+    ComboBox<String> stripTrailingSpacesOnSave = stripSpacesConfig.build();
     propertyBuilder.add(stripTrailingSpacesOnSave, editorSettings::getStripTrailingSpaces, editorSettings::setStripTrailingSpaces);
     otherLayout.add(LabeledComponents.leftWithRight(ApplicationBundle.message("combobox.strip.trailing.spaces.on.save"), stripTrailingSpacesOnSave));
 

@@ -292,16 +292,16 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
 
   public void setTabPlacement(final int tabPlacement) {
     switch (tabPlacement) {
-      case SwingConstants.TOP:
+      case UISettings.PLACEMENT_EDITOR_TAB_TOP:
         myTabs.getPresentation().setTabsPosition(JBTabsPosition.top);
         break;
-      case SwingConstants.BOTTOM:
+      case UISettings.PLACEMENT_EDITOR_TAB_BOTTOM:
         myTabs.getPresentation().setTabsPosition(JBTabsPosition.bottom);
         break;
-      case SwingConstants.LEFT:
+      case UISettings.PLACEMENT_EDITOR_TAB_LEFT:
         myTabs.getPresentation().setTabsPosition(JBTabsPosition.left);
         break;
-      case SwingConstants.RIGHT:
+      case UISettings.PLACEMENT_EDITOR_TAB_RIGHT:
         myTabs.getPresentation().setTabsPosition(JBTabsPosition.right);
         break;
       default:

@@ -30,7 +30,7 @@ import java.awt.*;
 public class EditorHeaderComponent extends JPanel {
   public EditorHeaderComponent() {
     super(new BorderLayout(0, 0));
-    boolean topBorderRequired = !SystemInfo.isMac && UISettings.getInstance().EDITOR_TAB_PLACEMENT != SwingConstants.TOP &&
+    boolean topBorderRequired = !SystemInfo.isMac && UISettings.getInstance().EDITOR_TAB_PLACEMENT != UISettings.PLACEMENT_EDITOR_TAB_TOP &&
                                 !(UISettings.getInstance().SHOW_MAIN_TOOLBAR && UISettings.getInstance().SHOW_NAVIGATION_BAR);
     setBorder(new CustomLineBorder(JBColor.border(), topBorderRequired ? 1 : 0, 0, 1, 0));
   }

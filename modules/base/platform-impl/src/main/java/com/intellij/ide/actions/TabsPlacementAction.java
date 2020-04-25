@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.project.DumbAware;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -30,12 +30,12 @@ public abstract class TabsPlacementAction extends ToggleAction implements DumbAw
   abstract int getPlace();
 
   @Override
-  public boolean isSelected(AnActionEvent e) {
+  public boolean isSelected(@Nonnull AnActionEvent e) {
     return UISettings.getInstance().EDITOR_TAB_PLACEMENT == getPlace();
   }
 
   @Override
-  public void setSelected(AnActionEvent e, boolean state) {
+  public void setSelected(@Nonnull AnActionEvent e, boolean state) {
     UISettings.getInstance().EDITOR_TAB_PLACEMENT = getPlace();
     LafManager.getInstance().repaintUI();
     UISettings.getInstance().fireUISettingsChanged();
@@ -44,35 +44,35 @@ public abstract class TabsPlacementAction extends ToggleAction implements DumbAw
   public static class Top extends TabsPlacementAction {
     @Override
     int getPlace() {
-      return SwingConstants.TOP;
+      return UISettings.PLACEMENT_EDITOR_TAB_TOP;
     }
   }
 
   public static class Left extends TabsPlacementAction {
     @Override
     int getPlace() {
-      return SwingConstants.LEFT;
+      return UISettings.PLACEMENT_EDITOR_TAB_LEFT;
     }
   }
 
   public static class Bottom extends TabsPlacementAction {
     @Override
     int getPlace() {
-      return SwingConstants.BOTTOM;
+      return UISettings.PLACEMENT_EDITOR_TAB_BOTTOM;
     }
   }
 
   public static class Right extends TabsPlacementAction {
     @Override
     int getPlace() {
-      return SwingConstants.RIGHT;
+      return UISettings.PLACEMENT_EDITOR_TAB_RIGHT;
     }
   }
 
   public static class None extends TabsPlacementAction {
     @Override
     int getPlace() {
-      return UISettings.TABS_NONE;
+      return UISettings.PLACEMENT_EDITOR_TAB_NONE;
     }
   }
 }

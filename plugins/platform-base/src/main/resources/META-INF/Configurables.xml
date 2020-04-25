@@ -111,7 +111,7 @@
                              key="title.colors.and.fonts"
                              bundle="messages.ApplicationBundle"/>
 
-    <applicationConfigurable instance="com.intellij.application.options.editor.EditorTabsConfigurable"
+    <applicationConfigurable instance="consulo.ide.settings.impl.EditorTabsConfigurable"
                              id="editor.preferences.tabs"
                              parentId="editor"
                              displayName="Tabs"/>
