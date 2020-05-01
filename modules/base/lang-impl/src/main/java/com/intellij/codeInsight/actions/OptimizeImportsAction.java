@@ -218,7 +218,7 @@ public class OptimizeImportsAction extends AnAction {
     if (editor != null) {
       PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
       if (file == null || !isOptimizeImportsAvailable(file)) {
-        updatePresentationForFiles(presentation, false, Collections.singletonList(file));
+        updatePresentationForFiles(presentation, false, Collections.emptyList());
         return;
       }
       else {
@@ -257,7 +257,7 @@ public class OptimizeImportsAction extends AnAction {
         if (!(element instanceof PsiDirectory)) {
           PsiFile file = element.getContainingFile();
           if (file == null || !isOptimizeImportsAvailable(file)) {
-            updatePresentationForFiles(presentation, false, Collections.singletonList(file));
+            updatePresentationForFiles(presentation, false, Collections.emptyList());
             return;
           }
         }
