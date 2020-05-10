@@ -34,7 +34,26 @@ public class BorderListState implements Serializable {
     public BorderStyle myStyle;
     public RGBColor myColor;
     public int myWidth;
+
+    @Override
+    public String toString() {
+      final StringBuilder sb = new StringBuilder("BorderState{");
+      sb.append("myPosition=").append(myPosition);
+      sb.append(", myStyle=").append(myStyle);
+      sb.append(", myColor=").append(myColor);
+      sb.append(", myWidth=").append(myWidth);
+      sb.append('}');
+      return sb.toString();
+    }
   }
 
   public List<BorderState> myBorders = new ArrayList<>();
+
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder("BorderListState{");
+    sb.append("myBorders=").append(myBorders);
+    sb.append('}');
+    return sb.toString();
+  }
 }

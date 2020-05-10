@@ -40,14 +40,20 @@ public class GwtBorderSetter {
     for (BorderListState.BorderState border : borderListState.myBorders) {
       String prefix = prefix(border.myPosition);
 
+      String color = null;
       String style = null;
       switch (border.myStyle) {
         case LINE:
           style = "solid";
+          color = GwtStyleUtil.toString(border.myColor);
+          break;
+        case EMPTY:
+          style = "solid";
+          color = "transparent";
           break;
       }
 
-      element.getStyle().setProperty("border" + prefix + "Color", GwtStyleUtil.toString(border.myColor));
+      element.getStyle().setProperty("border" + prefix + "Color", color);
       element.getStyle().setProperty("border" + prefix + "Style", style);
       element.getStyle().setProperty("border" + prefix + "Width", border.myWidth + "px");
     }
