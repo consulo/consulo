@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.layout;
+package consulo.web.gwt.client.ui;
 
-import consulo.ui.Component;
-import consulo.ui.UIInternal;
-
-import javax.annotation.Nonnull;
+import com.google.gwt.user.client.ui.ScrollPanel;
 
 /**
  * @author VISTALL
- * @since 2018-07-03
+ * @since 2020-05-10
  */
-public interface ScrollLayout extends Layout {
-  @Nonnull
-  static ScrollLayout create(@Nonnull Component component) {
-    return UIInternal.get()._ScrollLayout_create(component);
-  }
+public class GwtScrollLayoutImpl extends ScrollPanel {
 }

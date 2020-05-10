@@ -16,11 +16,13 @@
 package consulo.ui.app.impl.settings;
 
 import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.options.ex.ConfigurableWrapper;
 import com.intellij.openapi.util.Couple;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.app.WholeLeftWindowWrapper;
 import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.ScrollLayout;
 import consulo.ui.shared.Size;
 
 import javax.annotation.Nonnull;
@@ -86,7 +88,12 @@ public class SettingsDialog extends WholeLeftWindowWrapper {
       if (uiComponent != null) {
         configurable.reset();
 
-        rightPart.center(uiComponent);
+        if(ConfigurableWrapper.isNoScroll(configurable)) {
+          rightPart.center(uiComponent);
+        }
+        else {
+          rightPart.center(ScrollLayout.create(uiComponent));
+        }
       }
       else {
         rightPart.center(Label.create("Not supported UI"));

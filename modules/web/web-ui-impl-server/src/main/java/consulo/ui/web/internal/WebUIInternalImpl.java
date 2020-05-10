@@ -103,7 +103,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public ScrollLayout _ScrollLayout_create(Component component) {
-    throw new UnsupportedOperationException();
+    return new WebScrollLayoutImpl(component);
   }
 
   @Override

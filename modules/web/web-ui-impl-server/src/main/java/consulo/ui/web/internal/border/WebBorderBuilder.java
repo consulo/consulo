@@ -23,6 +23,8 @@ import consulo.ui.style.StyleManager;
 import consulo.ui.web.internal.base.DataObjectHolder;
 import consulo.web.gwt.shared.ui.state.border.BorderListState;
 
+import java.util.Collection;
+
 /**
  * @author VISTALL
  * @since 15-Sep-17
@@ -35,7 +37,12 @@ public class WebBorderBuilder {
 
     Style currentStyle = StyleManager.get().getCurrentStyle();
 
-    for (BorderInfo info : dataObjectHolder.dataObject().getBorders()) {
+    Collection<BorderInfo> borders = dataObjectHolder.dataObject().getBorders();
+    if(borders.isEmpty()) {
+      return;
+    }
+    
+    for (BorderInfo info : borders) {
       BorderListState.BorderState borderState = new BorderListState.BorderState();
       borderState.myPosition = info.getBorderPosition();
       borderState.myStyle = info.getBorderStyle();
