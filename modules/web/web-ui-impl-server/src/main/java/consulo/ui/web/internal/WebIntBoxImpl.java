@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 package consulo.ui.web.internal;
 
 import com.intellij.openapi.Disposable;
+import consulo.ui.IntBox;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.TextBox;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 import consulo.ui.web.internal.base.VaadinComponent;
 
@@ -26,14 +26,14 @@ import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 2019-02-18
+ * @since 2020-05-10
  */
-public class WebTextBoxImpl extends UIComponentWithVaadinComponent<WebTextBoxImpl.Vaadin> implements TextBox {
+public class WebIntBoxImpl extends UIComponentWithVaadinComponent<WebIntBoxImpl.Vaadin> implements IntBox {
   public static class Vaadin extends VaadinComponent {
   }
 
-  public WebTextBoxImpl(String text) {
-    setValue(text, false);
+  public WebIntBoxImpl(int value) {
+    setValue(value, false);
   }
 
   @Override
@@ -44,37 +44,32 @@ public class WebTextBoxImpl extends UIComponentWithVaadinComponent<WebTextBoxImp
 
   @Nullable
   @Override
-  public String getValue() {
-    return getVaadinComponent().getState().caption;
+  public Integer getValue() {
+    return Integer.parseInt(getVaadinComponent().getState().caption);
   }
 
   @RequiredUIAccess
   @Override
-  public void setValue(String value, boolean fireEvents) {
-    getVaadinComponent().getState().caption = value;
+  public void setValue(Integer value, boolean fireEvents) {
+    getVaadinComponent().getState().caption = String.valueOf(value);
     getVaadinComponent().markAsDirty();
   }
 
   @Nullable
   @Override
-  public TextBox setPlaceholder(@Nullable String text) {
+  public IntBox setPlaceholder(@Nullable String text) {
     return null;
   }
 
   @Nonnull
   @Override
-  public TextBox setVisibleLength(int columns) {
+  public IntBox setRange(int min, int max) {
     return this;
-  }
-
-  @Override
-  public void selectAll() {
-
   }
 
   @Nonnull
   @Override
-  public Disposable addValidator(@Nonnull Validator<String> validator) {
+  public Disposable addValidator(@Nonnull Validator<Integer> validator) {
     return () -> {
     };
   }

@@ -20,6 +20,7 @@ import com.intellij.openapi.project.DefaultProjectFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import consulo.ide.base.BaseShowSettingsUtil;
+import consulo.ide.settings.impl.ShowSdksSettingsUtil;
 import consulo.options.ProjectStructureSelector;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.app.impl.settings.SettingsDialog;
@@ -37,7 +38,7 @@ import java.util.function.Consumer;
  * @since 2019-02-02
  */
 @Singleton
-public class WebShowSettingsUtil extends BaseShowSettingsUtil {
+public class WebShowSettingsUtil extends BaseShowSettingsUtil implements ShowSdksSettingsUtil {
   private DefaultProjectFactory myDefaultProjectFactory;
 
   @Inject

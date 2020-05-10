@@ -78,6 +78,7 @@ public class WebInitializer implements ServletContextListener {
 
     Map<String, Object> map = new HashMap<>();
     map.put(ContainerStartup.STAT_COLLECTOR, stat);
+    map.put(ContainerStartup.ARGS, new String[0]);
     map.put(ServletContext.class.getName(), servletContext);
     map.put("platformPath", platformDirectory);
 
@@ -91,6 +92,7 @@ public class WebInitializer implements ServletContextListener {
       containerStartup.run(map);
     }
     catch (Exception e) {
+
       e.printStackTrace();
     }
   }

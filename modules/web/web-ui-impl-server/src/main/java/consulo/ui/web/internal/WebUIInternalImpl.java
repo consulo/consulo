@@ -129,7 +129,7 @@ public class WebUIInternalImpl extends UIInternal {
   @Nonnull
   @Override
   public IntBox _Components_intBox(int value) {
-    throw new UnsupportedOperationException();
+    return new WebIntBoxImpl(value);
   }
 
   @Override
