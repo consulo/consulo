@@ -60,18 +60,7 @@ public abstract class ActionManager {
   public abstract ActionPopupMenu createActionPopupMenu(@NonNls String place, @Nonnull ActionGroup group);
 
   /**
-   * Factory method that creates an <code>ActionToolbar</code> from the
-   * specified group. The specified place is associated with the created toolbar.
-   *
-   * @param place Determines the place that will be set for {@link AnActionEvent} passed
-   *  when an action from the group is either performed or updated.
-   *  See {@link com.intellij.openapi.actionSystem.ActionPlaces}
-   *
-   * @param group Group from which the actions for the toolbar are taken.
-   *
-   * @param horizontal The orientation of the toolbar (true - horizontal, false - vertical)
-   *
-   * @return An instance of <code>ActionToolbar</code>
+   * @see consulo.actionSystem.ActionToolbarFactory
    */
   public abstract ActionToolbar createActionToolbar(@NonNls String place, ActionGroup group, boolean horizontal);
 

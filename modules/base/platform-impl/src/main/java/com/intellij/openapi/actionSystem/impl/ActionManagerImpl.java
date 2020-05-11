@@ -3,11 +3,9 @@ package com.intellij.openapi.actionSystem.impl;
 
 import com.intellij.AbstractBundle;
 import com.intellij.CommonBundle;
-import consulo.container.PluginException;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.ActivityTracker;
 import com.intellij.ide.DataManager;
-import consulo.container.plugin.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.internal.statistic.collectors.fus.actions.persistence.ActionIdProvider;
@@ -20,8 +18,6 @@ import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.impl.LaterInvocator;
-import consulo.logging.Logger;
-import consulo.container.plugin.PluginId;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
@@ -43,9 +39,14 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
+import consulo.actionSystem.ActionToolbarFactory;
 import consulo.application.TransactionGuardEx;
+import consulo.container.PluginException;
+import consulo.container.plugin.IdeaPluginDescriptor;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
 import consulo.extensions.ListOfElementsEP;
+import consulo.logging.Logger;
 import consulo.platform.impl.action.LastActionTracker;
 import consulo.ui.image.Image;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
@@ -54,6 +55,7 @@ import gnu.trove.TObjectIntHashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.swing.Timer;
 import javax.swing.*;
 import java.awt.*;
@@ -133,7 +135,12 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   private int myAnonymousGroupIdCounter;
   private boolean myPreloadComplete;
 
-  ActionManagerImpl() {
+  private ActionToolbarFactory myToolbarFactory;
+
+  @Inject
+  ActionManagerImpl(ActionToolbarFactory toolbarFactory) {
+    myToolbarFactory = toolbarFactory;
+
     for (PluginDescriptor plugin : consulo.container.plugin.PluginManager.getPlugins()) {
       if (PluginManagerCore.shouldSkipPlugin(plugin)) {
         continue;
@@ -465,7 +472,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   @Nonnull
   @Override
   public ActionToolbar createActionToolbar(@Nonnull final String place, @Nonnull final ActionGroup group, final boolean horizontal, final boolean decorateButtons) {
-    return new ActionToolbarImpl(place, group, horizontal, decorateButtons);
+    return myToolbarFactory.createActionToolbar(place, group, horizontal, decorateButtons);
   }
 
   public void registerPluginActions(@Nonnull PluginDescriptor plugin) {
