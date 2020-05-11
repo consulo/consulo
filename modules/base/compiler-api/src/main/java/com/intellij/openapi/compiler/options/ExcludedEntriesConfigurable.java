@@ -16,7 +16,6 @@
 
 package com.intellij.openapi.compiler.options;
 
-import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.options.UnnamedConfigurable;
@@ -31,14 +30,8 @@ import com.intellij.ui.table.JBTable;
 import consulo.ui.fileChooser.FileChooser;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -109,46 +102,13 @@ public class ExcludedEntriesConfigurable implements UnnamedConfigurable {
     myExcludedEntriesPanel = null;
   }
 
-  private class ExcludedEntriesPanel extends PanelWithButtons {
-    private JButton myRemoveButton;
+  private class ExcludedEntriesPanel extends JPanel {
     private JBTable myExcludedTable;
 
     public ExcludedEntriesPanel() {
-      initPanel();
-    }
+      super(new BorderLayout());
 
-    protected String getLabelText(){
-      return null;
-    }
-
-    protected JButton[] createButtons(){
-      final JButton addButton = new JButton(IdeBundle.message("button.add"));
-      addButton.addActionListener(
-        new ActionListener() {
-          public void actionPerformed(ActionEvent e){
-            addPath(myDescriptor);
-          }
-        }
-      );
-
-      myRemoveButton = new JButton(IdeBundle.message("button.remove"));
-      myRemoveButton.addActionListener(
-        new ActionListener(){
-          public void actionPerformed(ActionEvent e){
-            removePaths();
-          }
-        }
-      );
-      myRemoveButton.setEnabled(false);
-      myRemoveButton.getModel().addChangeListener(new ChangeListener() {
-        public void stateChanged(ChangeEvent e) {
-          if (myExcludedTable.getSelectedRow() == -1) {
-            myRemoveButton.setEnabled(false);
-          }
-        }
-      });
-
-      return new JButton[]{/*addButton, myRemoveButton*/};
+      add(createMainComponent(), BorderLayout.CENTER);
     }
 
     private void addPath(FileChooserDescriptor descriptor) {
@@ -228,7 +188,7 @@ public class ExcludedEntriesConfigurable implements UnnamedConfigurable {
       });
     }
 
-    protected JComponent createMainComponent(){
+    private JComponent createMainComponent() {
       final String[] names = {
         CompilerBundle.message("exclude.from.compile.table.path.column.name"),
         CompilerBundle.message("exclude.from.compile.table.recursively.column.name")
@@ -305,11 +265,6 @@ public class ExcludedEntriesConfigurable implements UnnamedConfigurable {
       cbColumn.setPreferredWidth(cbWidth);
       cbColumn.setMaxWidth(cbWidth);
       myExcludedTable.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-      myExcludedTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-        public void valueChanged(ListSelectionEvent e) {
-          myRemoveButton.setEnabled(myExcludedTable.getSelectedRow() >= 0);
-        }
-      });
       TableCellEditor editor = myExcludedTable.getDefaultEditor(String.class);
       if(editor instanceof DefaultCellEditor) {
         ((DefaultCellEditor)editor).setClickCountToStart(1);
@@ -318,21 +273,8 @@ public class ExcludedEntriesConfigurable implements UnnamedConfigurable {
       return ToolbarDecorator.createDecorator(myExcludedTable)
         .disableUpAction()
         .disableDownAction()
-        .setAddAction(new AnActionButtonRunnable() {
-          @Override
-          public void run(AnActionButton anActionButton) {
-            addPath(myDescriptor);
-          }
-        })
-        .setRemoveAction(new AnActionButtonRunnable() {
-          @Override
-          public void run(AnActionButton anActionButton) {
-            removePaths();
-          }
-        }).createPanel();
-
-
-      //return ScrollPaneFactory.createScrollPane(myExcludedTable);
+        .setAddAction(anActionButton -> addPath(myDescriptor))
+        .setRemoveAction(anActionButton -> removePaths()).createPanel();
     }
   }
 

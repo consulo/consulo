@@ -15,10 +15,14 @@
  */
 package com.intellij.ui;
 
+import consulo.annotation.DeprecationInfo;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
+@Deprecated
+@DeprecationInfo("Old IDEA UI code")
 public abstract class PanelWithButtons extends JPanel {
   public PanelWithButtons() {
     super(new GridBagLayout());
