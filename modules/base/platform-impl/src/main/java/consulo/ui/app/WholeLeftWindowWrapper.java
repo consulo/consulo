@@ -41,7 +41,7 @@ public abstract class WholeLeftWindowWrapper extends WindowWrapper {
     TwoComponentSplitLayout layout = TwoComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
     layout.setProportion(30);
 
-    Couple<Component> compoents = createCompoents();
+    Couple<Component> compoents = createComponents();
 
     layout.setFirstComponent(compoents.getFirst());
 
@@ -55,7 +55,7 @@ public abstract class WholeLeftWindowWrapper extends WindowWrapper {
 
   @Nonnull
   @RequiredUIAccess
-  protected abstract Couple<Component> createCompoents();
+  protected abstract Couple<Component> createComponents();
 
   @RequiredUIAccess
   @Nonnull

@@ -23,7 +23,7 @@ import consulo.ide.base.BaseShowSettingsUtil;
 import consulo.ide.settings.impl.ShowSdksSettingsUtil;
 import consulo.options.ProjectStructureSelector;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.app.impl.settings.SettingsDialog;
+import consulo.ui.app.impl.settings.UnifiedSettingsDialog;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -51,7 +51,7 @@ public class WebShowSettingsUtil extends BaseShowSettingsUtil implements ShowSdk
   public void showSettingsDialog(@Nullable Project project) {
     Project actualProject = project == null ? myDefaultProjectFactory.getDefaultProject() : project;
 
-    SettingsDialog settingsDialog = new SettingsDialog(buildConfigurables(actualProject));
+    UnifiedSettingsDialog settingsDialog = new UnifiedSettingsDialog(buildConfigurables(actualProject));
     settingsDialog.showAsync();
   }
 

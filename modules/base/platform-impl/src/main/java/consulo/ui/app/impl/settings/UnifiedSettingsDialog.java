@@ -27,16 +27,17 @@ import consulo.ui.shared.Size;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Comparator;
 import java.util.function.Function;
 
 /**
  * @author VISTALL
  * @since 25-Oct-17
  */
-public class SettingsDialog extends WholeLeftWindowWrapper {
+public class UnifiedSettingsDialog extends WholeLeftWindowWrapper {
   private Configurable[] myConfigurables;
 
-  public SettingsDialog(Configurable[] configurables) {
+  public UnifiedSettingsDialog(Configurable[] configurables) {
     super("Settings");
     myConfigurables = configurables;
   }
@@ -50,7 +51,7 @@ public class SettingsDialog extends WholeLeftWindowWrapper {
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected Couple<Component> createCompoents() {
+  protected Couple<Component> createComponents() {
     TreeModel<Configurable> configurableTreeModel = new TreeModel<Configurable>() {
       @Override
       public void fetchChildren(@Nonnull Function<Configurable, TreeNode<Configurable>> nodeFactory, @Nullable Configurable parentValue) {
@@ -62,6 +63,12 @@ public class SettingsDialog extends WholeLeftWindowWrapper {
         else {
           build(nodeFactory, myConfigurables);
         }
+      }
+
+      @Nullable
+      @Override
+      public Comparator<TreeNode<Configurable>> getNodeComparator() {
+        return UnifiedConfigurableComparator.INSTANCE;
       }
 
       private void build(@Nonnull Function<Configurable, TreeNode<Configurable>> nodeFactory, Configurable[] configurables) {

@@ -34,7 +34,10 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
+import consulo.ui.ItemPresentation;
 import consulo.ui.SwingUIDecorator;
+import consulo.ui.TreeNode;
+import consulo.ui.app.impl.settings.UnifiedConfigurableComparator;
 import org.jetbrains.concurrency.Promise;
 
 import javax.annotation.Nonnull;
@@ -50,6 +53,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.*;
+import java.util.function.BiConsumer;
 
 class OptionsTree implements Disposable, OptionsEditorColleague {
   private final Configurable[] myConfigurables;
@@ -327,39 +331,13 @@ class OptionsTree implements Disposable, OptionsEditorColleague {
           result.add(new ConfigurableNode(this, eachKid));
         }
       }
-      return sort(result);
+      result.sort(UnifiedConfigurableComparator.INSTANCE);
+      return result;
     }
   }
 
   private static boolean isInvisibleNode(final Configurable child) {
     return child instanceof SearchableConfigurable.Parent && !((SearchableConfigurable.Parent)child).isVisible();
-  }
-
-  private static List<ConfigurableNode> sort(List<ConfigurableNode> c) {
-    List<ConfigurableNode> cc = new ArrayList<>(c);
-    Collections.sort(cc, (o1, o2) -> {
-      double weight1 = getWeight(o1);
-      double weight2 = getWeight(o2);
-      if (weight1 != weight2) {
-        return (int)(weight2 - weight1);
-      }
-
-      return getConfigurableDisplayName(o1.getConfigurable()).compareToIgnoreCase(getConfigurableDisplayName(o2.getConfigurable()));
-    });
-    return cc;
-  }
-
-  private static double getWeight(ConfigurableNode node) {
-    Configurable configurable = node.getConfigurable();
-    if (configurable instanceof Weighted) {
-      return ((Weighted)configurable).getWeight();
-    }
-    return 0;
-  }
-
-  private static String getConfigurableDisplayName(final Configurable c) {
-    final String name = c.getDisplayName();
-    return name != null ? name : "{ Unnamed Page:" + c.getClass().getSimpleName() + " }";
   }
 
   private List<ConfigurableNode> buildChildren(final Configurable configurable, SimpleNode parent) {
@@ -373,7 +351,9 @@ class OptionsTree implements Disposable, OptionsEditorColleague {
         result.add(new ConfigurableNode(parent, child));
         myContext.registerKid(configurable, child);
       }
-      return sort(result);
+
+      result.sort(UnifiedConfigurableComparator.INSTANCE);
+      return result;
     }
     else {
       return Collections.emptyList();
@@ -382,7 +362,7 @@ class OptionsTree implements Disposable, OptionsEditorColleague {
 
   private static final ConfigurableNode[] EMPTY_EN_ARRAY = new ConfigurableNode[0];
 
-  class ConfigurableNode extends Base {
+  class ConfigurableNode extends Base implements TreeNode<Configurable> {
     Configurable myConfigurable;
 
     ConfigurableNode(SimpleNode parent, Configurable configurable) {
@@ -395,7 +375,7 @@ class OptionsTree implements Disposable, OptionsEditorColleague {
     protected void update(PresentationData presentation) {
       super.update(presentation);
 
-      String displayName = getConfigurableDisplayName(myConfigurable);
+      String displayName = UnifiedConfigurableComparator.getConfigurableDisplayName(myConfigurable);
       if (getParent() instanceof Root) {
         presentation.addText(displayName, SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
       }
@@ -427,7 +407,7 @@ class OptionsTree implements Disposable, OptionsEditorColleague {
 
     @Override
     String getText() {
-      return getConfigurableDisplayName(myConfigurable).replace("\n", " ");
+      return UnifiedConfigurableComparator.getConfigurableDisplayName(myConfigurable).replace("\n", " ");
     }
 
     @Override
@@ -438,6 +418,27 @@ class OptionsTree implements Disposable, OptionsEditorColleague {
     @Override
     boolean isError() {
       return myContext.getErrors().containsKey(myConfigurable);
+    }
+
+    @Override
+    public void setRender(@Nonnull BiConsumer<Configurable, ItemPresentation> render) {
+      throw new UnsupportedOperationException("just stub, for comparator");
+    }
+
+    @Override
+    public void setLeaf(boolean leaf) {
+      throw new UnsupportedOperationException("just stub, for comparator");
+    }
+
+    @Override
+    public boolean isLeaf() {
+      throw new UnsupportedOperationException("just stub, for comparator");
+    }
+
+    @Nullable
+    @Override
+    public Configurable getValue() {
+      return myConfigurable;
     }
   }
 
