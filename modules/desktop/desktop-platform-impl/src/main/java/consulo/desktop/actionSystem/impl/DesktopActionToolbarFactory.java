@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.actionSystem.impl;
+package consulo.desktop.actionSystem.impl;
 
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionToolbar;
@@ -22,11 +22,13 @@ import consulo.actionSystem.ActionToolbarFactory;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 /**
  * @author VISTALL
  * @since 2020-05-11
  */
+@Singleton
 public class DesktopActionToolbarFactory implements ActionToolbarFactory {
   @Nonnull
   @Override

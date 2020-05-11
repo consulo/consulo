@@ -161,7 +161,7 @@
 
     <applicationService serviceInterface="consulo.progress.util.ProgressDialogFactory" serviceImplementation="consulo.progress.util.impl.DesktopProgressDialogFactory" />
 
-    <applicationService serviceInterface="consulo.actionSystem.ActionToolbarFactory" serviceImplementation="consulo.actionSystem.impl.DesktopActionToolbarFactory" />
+    <applicationService serviceInterface="consulo.actionSystem.ActionToolbarFactory" serviceImplementation="consulo.desktop.actionSystem.impl.DesktopActionToolbarFactory" />
 
     <applicationService serviceInterface="com.intellij.ui.debugger.extensions.PlaybackDebugger$PlaybackDebuggerState"
                         serviceImplementation="com.intellij.ui.debugger.extensions.PlaybackDebugger$PlaybackDebuggerState"/>
