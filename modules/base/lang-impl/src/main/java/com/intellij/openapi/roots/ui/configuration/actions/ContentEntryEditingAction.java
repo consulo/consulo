@@ -23,9 +23,8 @@ import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.fileChooser.ex.FileNodeDescriptor;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.ui.JBUI;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
@@ -86,6 +85,6 @@ public abstract class ContentEntryEditingAction extends ToggleAction implements 
 
   @Override
   public JComponent createCustomComponent(Presentation presentation) {
-    return new ActionButtonWithText(this, presentation, ActionPlaces.UNKNOWN, JBUI.size(ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE));
+    return new ActionButtonWithText(this, presentation, ActionPlaces.UNKNOWN, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
   }
 }

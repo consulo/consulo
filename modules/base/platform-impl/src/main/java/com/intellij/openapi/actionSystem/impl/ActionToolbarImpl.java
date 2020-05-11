@@ -14,7 +14,10 @@ import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.util.Disposer;
+import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.shared.Size;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFocusManager;
@@ -362,7 +365,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
   }
 
   @Nonnull
-  private Dimension getMinimumButtonSize() {
+  private Size getMinimumButtonSize() {
     return isInsideNavBar() ? NAVBAR_MINIMUM_BUTTON_SIZE : DEFAULT_MINIMUM_BUTTON_SIZE;
   }
 
@@ -1002,31 +1005,33 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
   }
 
   @Override
-  public void setMinimumButtonSize(@Nonnull final Dimension size) {
-    myMinimumButtonSize = JBDimension.create(size, true);
+  public void setMinimumButtonSize(@Nonnull final Size size) {
+    Dimension dimension = TargetAWT.to(size);
+    myMinimumButtonSize = JBDimension.create(dimension, true);
     for (int i = getComponentCount() - 1; i >= 0; i--) {
       final Component component = getComponent(i);
       if (component instanceof ActionButton) {
         final ActionButton button = (ActionButton)component;
-        button.setMinimumButtonSize(size);
+        button.setMinimumButtonSize(dimension);
       }
     }
     revalidate();
   }
 
   @Override
-  public void setOrientation(@MagicConstant(intValues = {SwingConstants.HORIZONTAL, SwingConstants.VERTICAL}) int orientation) {
-    if (SwingConstants.HORIZONTAL != orientation && SwingConstants.VERTICAL != orientation) {
+  public void setOrientation(@MagicConstant(intValues = {HORIZONTAL_ORIENTATION, VERTICAL_ORIENTATION}) int orientation) {
+    if (HORIZONTAL_ORIENTATION != orientation && VERTICAL_ORIENTATION != orientation) {
       throw new IllegalArgumentException("wrong orientation: " + orientation);
     }
     myOrientation = orientation;
   }
 
-  @MagicConstant(intValues = {SwingConstants.HORIZONTAL, SwingConstants.VERTICAL})
+  @MagicConstant(intValues = {HORIZONTAL_ORIENTATION, VERTICAL_ORIENTATION})
   public int getOrientation() {
     return myOrientation;
   }
 
+  @RequiredUIAccess
   @Override
   public void updateActionsImmediately() {
     ApplicationManager.getApplication().assertIsDispatchThread();
@@ -1361,7 +1366,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
     }
     else {
       setBorder(JBUI.Borders.empty(2));
-      setMinimumButtonSize(myDecorateButtons ? JBUI.size(30, 20) : DEFAULT_MINIMUM_BUTTON_SIZE);
+      setMinimumButtonSize(myDecorateButtons ? new Size(30, 20) : DEFAULT_MINIMUM_BUTTON_SIZE);
       setOpaque(true);
       setLayoutPolicy(AUTO_LAYOUT_POLICY);
     }

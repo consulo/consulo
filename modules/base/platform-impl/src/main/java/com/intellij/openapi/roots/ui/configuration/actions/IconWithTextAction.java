@@ -45,6 +45,6 @@ public abstract class IconWithTextAction extends AnAction implements CustomCompo
   }
 
   public static JComponent createCustomComponentImpl(final AnAction action, final Presentation presentation) {
-    return new ActionButtonWithText(action, presentation, ActionPlaces.UNKNOWN, JBUI.size(ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE));
+    return new ActionButtonWithText(action, presentation, ActionPlaces.UNKNOWN, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
   }
 }

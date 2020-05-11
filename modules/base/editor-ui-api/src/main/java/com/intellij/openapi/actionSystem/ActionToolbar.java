@@ -15,14 +15,16 @@
  */
 package com.intellij.openapi.actionSystem;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.awt.TargetAWT;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.ui.shared.Size;
+import org.intellij.lang.annotations.MagicConstant;
 
 import javax.annotation.Nonnull;
-import javax.swing.*;
-import java.awt.*;
 import java.util.List;
-
 
 /**
  * Represents a toolbar with a visual presentation.
@@ -49,17 +51,36 @@ public interface ActionToolbar {
   int AUTO_LAYOUT_POLICY = 2;
 
   /**
+   * Horizontal orientation. Used for scrollbars and sliders.
+   */
+  int HORIZONTAL_ORIENTATION = 0;
+  /**
+   * Vertical orientation. Used for scrollbars and sliders.
+   */
+  int VERTICAL_ORIENTATION = 1;
+
+  /**
    * This is default minimum size of the toolbar button, without scaling
    */
-  Dimension DEFAULT_MINIMUM_BUTTON_SIZE = new Dimension(25, 25);
+  Size DEFAULT_MINIMUM_BUTTON_SIZE = new Size(25, 25);
 
-  Dimension NAVBAR_MINIMUM_BUTTON_SIZE = new Dimension(20, 20);
+  Size NAVBAR_MINIMUM_BUTTON_SIZE = new Size(20, 20);
 
   /**
    * @return component which represents the tool bar on UI
    */
   @Nonnull
-  JComponent getComponent();
+  default javax.swing.JComponent getComponent() {
+    return (javax.swing.JComponent)TargetAWT.to(getUIComponent());
+  }
+
+  /**
+   * @return component which represents the tool bar on UI
+   */
+  @Nonnull
+  default Component getUIComponent() {
+    throw new AbstractMethodError();
+  }
 
   /**
    * @return current layout policy
@@ -88,15 +109,28 @@ public interface ActionToolbar {
    * @throws IllegalArgumentException if <code>size</code>
    *                                  is <code>null</code>
    */
-  void setMinimumButtonSize(@Nonnull Dimension size);
+  @Deprecated
+  @DeprecationInfo("Use with Size parameter")
+  default void setMinimumButtonSize(@Nonnull java.awt.Dimension size) {
+    setMinimumButtonSize(new Size(size.width, size.height));
+  }
+
+  /**
+   * Sets minimum size of toolbar button. By default all buttons
+   * at toolbar has 25x25 pixels size.
+   *
+   * @throws IllegalArgumentException if <code>size</code>
+   *                                  is <code>null</code>
+   */
+  void setMinimumButtonSize(@Nonnull Size size);
 
   /**
    * Sets toolbar orientation
    *
-   * @see SwingConstants#HORIZONTAL
-   * @see SwingConstants#VERTICAL
+   * @see #HORIZONTAL_ORIENTATION
+   * @see #VERTICAL_ORIENTATION
    */
-  void setOrientation(int orientation);
+  void setOrientation(@MagicConstant(intValues = {HORIZONTAL_ORIENTATION, VERTICAL_ORIENTATION}) int orientation);
 
   /**
    * @return maximum button height
@@ -114,7 +148,13 @@ public interface ActionToolbar {
   /**
    * @param component will be used for datacontext computations
    */
-  void setTargetComponent(final JComponent component);
+  default void setTargetComponent(final javax.swing.JComponent component) {
+    throw new AbstractMethodError();
+  }
+
+  default void setTargetUIComponent(@Nonnull Component component) {
+    setTargetComponent((javax.swing.JComponent)TargetAWT.to(component));
+  }
 
   void setReservePlaceAutoPopupIcon(final boolean reserve);
 

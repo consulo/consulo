@@ -24,7 +24,6 @@ import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.util.IconLoader;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.EmptyIcon;
@@ -32,6 +31,10 @@ import com.intellij.util.ui.JBDimension;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
+import consulo.annotation.DeprecationInfo;
+import consulo.awt.TargetAWT;
+import consulo.ui.shared.Size;
+import consulo.util.dataholder.Key;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
@@ -75,8 +78,14 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
   private boolean myMinimalMode;
   private boolean myDecorateButtons;
 
+  @Deprecated
+  @DeprecationInfo("Use constructor with Size parameter")
   public ActionButton(AnAction action, Presentation presentation, String place, @Nonnull Dimension minimumSize) {
-    setMinimumButtonSize(minimumSize);
+    this(action, presentation, place, new Size(minimumSize.width, minimumSize.height));
+  }
+
+  public ActionButton(AnAction action, Presentation presentation, String place, @Nonnull Size minimumSize) {
+    setMinimumButtonSize(TargetAWT.to(minimumSize));
     setIconInsets(null);
     myRollover = false;
     myMouseDown = false;

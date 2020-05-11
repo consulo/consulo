@@ -20,6 +20,8 @@ import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotation.DeprecationInfo;
+import consulo.ui.shared.Size;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,10 +29,13 @@ import java.awt.*;
 public class ActionButtonWithText extends ActionButton {
   private static final int ICON_TEXT_SPACE = 2;
 
-  public ActionButtonWithText(final AnAction action,
-                              final Presentation presentation,
-                              final String place,
-                              final Dimension minimumSize) {
+  @Deprecated
+  @DeprecationInfo("Use constructor with Size parameter")
+  public ActionButtonWithText(final AnAction action, final Presentation presentation, final String place, final Dimension minimumSize) {
+    this(action, presentation, place, new Size(minimumSize.width, minimumSize.height));
+  }
+
+  public ActionButtonWithText(final AnAction action, final Presentation presentation, final String place, final Size minimumSize) {
     super(action, presentation, place, minimumSize);
     setFont(UIUtil.getLabelFont());
     setForeground(UIUtil.getLabelForeground());
@@ -51,11 +56,11 @@ public class ActionButtonWithText extends ActionButton {
   }
 
   public int iconTextSpace() {
-    return (getIcon() instanceof EmptyIcon || getIcon() == null ) ? 0 : JBUI.scale(ICON_TEXT_SPACE);
+    return (getIcon() instanceof EmptyIcon || getIcon() == null) ? 0 : JBUI.scale(ICON_TEXT_SPACE);
   }
 
   public String getText() {
     final String text = myPresentation.getText();
-    return text != null? text : "";
+    return text != null ? text : "";
   }
 }
