@@ -1013,6 +1013,10 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
     @Override
     public void notify(@Nonnull Notification notification) {
+      if(Platform.current().isWebService()) {
+        return;
+      }
+      
       doNotify(notification, null, myProject);
     }
   }

@@ -126,6 +126,11 @@ public class WebUIInternalImpl extends UIInternal {
     return new WebTextBoxImpl(text);
   }
 
+  @Override
+  public ProgressBar _Components_progressBar() {
+    return new WebProgressBarImpl();
+  }
+
   @Nonnull
   @Override
   public IntBox _Components_intBox(int value) {

@@ -65,6 +65,8 @@ public class WebContainerStartup implements ContainerStartup {
     StatCollector stat = (StatCollector)map.get(ContainerStartup.STAT_COLLECTOR);
     String[] args = (String[])map.get(ContainerStartup.ARGS);
 
+    StartupUtil.initializeLogger();
+
     ServletContext servletContext = (ServletContext)map.get(ServletContext.class.getName());
 
     registerServlets(servletContext);

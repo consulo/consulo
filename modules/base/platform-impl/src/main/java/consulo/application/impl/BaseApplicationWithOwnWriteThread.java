@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
  * @since 2018-05-12
  */
 public abstract class BaseApplicationWithOwnWriteThread extends BaseApplication implements ApplicationWithOwnWriteThread {
-  private final WriteThread myWriteThread;
+  protected final WriteThread myWriteThread;
 
   public BaseApplicationWithOwnWriteThread(@Nonnull Ref<? extends StartupProgress> splashRef) {
     super(splashRef);

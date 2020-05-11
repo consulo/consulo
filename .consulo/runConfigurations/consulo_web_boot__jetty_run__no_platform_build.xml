@@ -19,7 +19,7 @@
             <map />
           </option>
           <option name="resolveToWorkspace" value="false" />
-          <option name="workingDirPath" value="$PROJECT_DIR$/modules/web/web-boot" />
+          <option name="workingDirPath" value="$PROJECT_DIR$/modules/web/web-bootstrap" />
         </MavenRunnerParameters>
       </option>
     </MavenSettings>

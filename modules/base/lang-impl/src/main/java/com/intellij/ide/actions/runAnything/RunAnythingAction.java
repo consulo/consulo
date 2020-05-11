@@ -13,6 +13,7 @@ import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.keymap.MacKeymapUtil;
 import com.intellij.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
 import com.intellij.openapi.project.DumbAware;
+import consulo.platform.Platform;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.SystemInfo;
@@ -45,18 +46,20 @@ public class RunAnythingAction extends AnAction implements CustomComponentAction
   };
 
   static {
-    IdeEventQueue.getInstance().addPostprocessor(event -> {
-      if (event instanceof KeyEvent) {
-        final int keyCode = ((KeyEvent)event).getKeyCode();
-        if (keyCode == KeyEvent.VK_SHIFT) {
-          SHIFT_IS_PRESSED.set(event.getID() == KeyEvent.KEY_PRESSED);
+    if(Platform.current().isDesktop()) {
+      IdeEventQueue.getInstance().addPostprocessor(event -> {
+        if (event instanceof KeyEvent) {
+          final int keyCode = ((KeyEvent)event).getKeyCode();
+          if (keyCode == KeyEvent.VK_SHIFT) {
+            SHIFT_IS_PRESSED.set(event.getID() == KeyEvent.KEY_PRESSED);
+          }
+          else if (keyCode == KeyEvent.VK_ALT) {
+            ALT_IS_PRESSED.set(event.getID() == KeyEvent.KEY_PRESSED);
+          }
         }
-        else if (keyCode == KeyEvent.VK_ALT) {
-          ALT_IS_PRESSED.set(event.getID() == KeyEvent.KEY_PRESSED);
-        }
-      }
-      return false;
-    }, null);
+        return false;
+      }, null);
+    }
   }
 
   @Override

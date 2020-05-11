@@ -252,6 +252,11 @@ public class DesktopUIInternalImpl extends UIInternal {
     return new DesktopTextBoxImpl(text);
   }
 
+  @Override
+  public ProgressBar _Components_progressBar() {
+    return new DesktopProgressBarImpl();
+  }
+
   @Nonnull
   @Override
   public IntBox _Components_intBox(int value) {

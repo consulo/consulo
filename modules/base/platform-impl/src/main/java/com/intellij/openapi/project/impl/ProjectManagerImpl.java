@@ -992,7 +992,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
       succeed = true;
     }
     catch (Throwable e) {
-      e.printStackTrace();
+      LOG.error(e);
     }
     finally {
       if (!succeed && !project.isDefault()) {

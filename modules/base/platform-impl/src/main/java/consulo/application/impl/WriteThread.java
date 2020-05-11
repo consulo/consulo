@@ -83,7 +83,7 @@ public class WriteThread extends Thread implements Disposable {
   }
 
   @SuppressWarnings("unchecked")
-  private void runImpl(@Nonnull Class caller, @Nonnull ThrowableComputable computable, @Nonnull AsyncResult asyncResult, @Nonnull Exception e) {
+  public void runImpl(@Nonnull Class caller, @Nonnull ThrowableComputable computable, @Nonnull AsyncResult asyncResult, @Nonnull Exception e) {
     long start = System.currentTimeMillis();
     try {
       Object compute;

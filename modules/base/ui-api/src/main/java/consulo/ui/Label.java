@@ -31,7 +31,7 @@ import java.util.function.Supplier;
 public interface Label extends Component {
   @Nonnull
   static Label create() {
-    return create(null);
+    return create("");
   }
 
   @Nonnull

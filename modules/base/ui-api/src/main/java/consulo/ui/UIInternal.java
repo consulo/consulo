@@ -106,6 +106,8 @@ public abstract class UIInternal {
 
   public abstract TextBox _Components_textBox(String text);
 
+  public abstract ProgressBar _Components_progressBar();
+
   @Nonnull
   public abstract IntBox _Components_intBox(int value);
 

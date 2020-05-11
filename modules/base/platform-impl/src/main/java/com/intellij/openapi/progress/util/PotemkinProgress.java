@@ -9,10 +9,10 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.concurrency.Semaphore;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import sun.awt.SunToolkit;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -71,7 +71,7 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
   @Nonnull
   @Override
   protected ProgressDialog getDialog() {
-    return Objects.requireNonNull(super.getDialog());
+    return (ProgressDialog) Objects.requireNonNull(super.getDialog());
   }
 
   private long myLastInteraction;

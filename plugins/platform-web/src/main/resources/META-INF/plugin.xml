@@ -29,6 +29,9 @@
     <applicationService serviceInterface="consulo.start.WelcomeFrameManager"
                         serviceImplementation="consulo.web.start.WebWelcomeFrameManager"/>
 
+    <applicationService serviceInterface="consulo.progress.util.ProgressDialogFactory"
+                        serviceImplementation="consulo.web.progress.util.WebProgressDialogFactory" />
+
     <applicationService serviceInterface="com.intellij.ui.content.ContentFactory"
                         serviceImplementation="consulo.wm.impl.UnifiedContentFactoryImpl"/>
 

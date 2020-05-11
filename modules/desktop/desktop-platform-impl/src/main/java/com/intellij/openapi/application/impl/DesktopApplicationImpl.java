@@ -54,16 +54,16 @@ import consulo.desktop.boot.main.windows.WindowsCommandLineProcessor;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.logging.Logger;
 import consulo.start.CommandLineArgs;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.AWTUIAccessImpl;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 import sun.awt.AWTAccessor;
 import sun.awt.AWTAutoShutdown;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -266,22 +266,6 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
   @Override
   public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final ModalityState state, @Nonnull final Condition expired) {
     myInvokator.invokeLater(transactionGuard().wrapLaterInvocation(runnable, state), state, expired);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public boolean runProcessWithProgressSynchronously(@Nonnull final Runnable process, @Nonnull String progressTitle, boolean canBeCanceled, Project project) {
-    return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, project, null);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public boolean runProcessWithProgressSynchronously(@Nonnull final Runnable process,
-                                                     @Nonnull final String progressTitle,
-                                                     final boolean canBeCanceled,
-                                                     @Nullable final Project project,
-                                                     final JComponent parentComponent) {
-    return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, project, parentComponent, null);
   }
 
   @RequiredUIAccess
@@ -623,6 +607,31 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
                                          isDispatchThread() +
                                          " Toolkit.getEventQueue()=" +
                                          Toolkit.getDefaultToolkit().getSystemEventQueue() +
+                                         " Current thread: " +
+                                         describe(Thread.currentThread()) +
+                                         " SystemEventQueueThread: " +
+                                         describe(getEventQueueThread()), dump);
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void assertIsWriteThread() {
+    if (isWriteThread()) return;
+    if (ShutDownTracker.isShutdownHookRunning()) return;
+    assertIsIsWriteThread("Access is allowed from write thread only.");
+  }
+
+  private void assertIsIsWriteThread(@Nonnull String message) {
+    if (isWriteThread()) return;
+    final Attachment dump = new Attachment("threadDump.txt", ThreadDumper.dumpThreadsToString());
+    throw new LogEventException(message, " EventQueue.isDispatchThread()=" +
+                                         EventQueue.isDispatchThread() +
+                                         " isDispatchThread()=" +
+                                         isDispatchThread() +
+                                         " Toolkit.getEventQueue()=" +
+                                         Toolkit.getDefaultToolkit().getSystemEventQueue() +
+                                         " Write Thread=" +
+                                         mySubWriteThread +
                                          " Current thread: " +
                                          describe(Thread.currentThread()) +
                                          " SystemEventQueueThread: " +

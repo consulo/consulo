@@ -4,19 +4,19 @@ import com.intellij.ide.StartupProgress;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.TransactionGuard;
+import com.intellij.openapi.progress.EmptyProgressIndicator;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.ThrowableComputable;
+import com.intellij.openapi.util.*;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
 import consulo.application.impl.BaseApplicationWithOwnWriteThread;
 import consulo.injecting.InjectingContainerBuilder;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.logging.Logger;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.web.application.WebApplication;
 import consulo.web.application.WebSession;
 import org.jetbrains.annotations.NonNls;
@@ -25,12 +25,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author VISTALL
  * @since 16-Sep-17
  */
 public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implements WebApplication {
+  private static final Logger LOG = Logger.getInstance(WebApplicationImpl.class);
+
   private WebSession myCurrentSession;
   private static final ModalityState ANY = new ModalityState() {
     @Override
@@ -66,19 +69,33 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
   @RequiredUIAccess
   @Override
   public <T> T runWriteAction(@Nonnull Computable<T> computation) {
-    return AccessRule.<T>writeAsync(computation::compute).getResultSync(-1);
+    try {
+      return runWriteAction((ThrowableComputable<T, Throwable>)computation::compute);
+    }
+    catch (Throwable e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @RequiredUIAccess
   @Override
   public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
-    return AccessRule.<T>writeAsync(computation::compute).getResultSync(-1);
+    if(isWriteThread()) {
+      // FIXME [VISTALL] temp dirty hack, until sync write calls exists
+      return computation.compute();
+    }
+    else {
+      return AccessRule.<T>writeAsync(computation::compute).getResultSync(-1);
+    }
   }
 
   @RequiredUIAccess
   @Override
   public void runWriteAction(@Nonnull Runnable action) {
-    AccessRule.writeAsync(action::run).getResultSync(-1);
+    runWriteAction((ThrowableComputable<Object, RuntimeException>)() -> {
+      action.run();
+      return null;
+    });
   }
 
   @Override
@@ -103,6 +120,14 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
     }
   }
 
+  @RequiredUIAccess
+  @Override
+  public void assertIsWriteThread() {
+    if (!isWriteThread()) {
+      throw new IllegalArgumentException(Thread.currentThread().getName() + " is not write thread");
+    }
+  }
+
   @Override
   public void exit() {
 
@@ -111,31 +136,31 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
   @Override
   public void invokeLater(@Nonnull Runnable runnable) {
     WebSession currentSession = getCurrentSession();
-    if (currentSession != null) currentSession.getAccess().give(runnable);
+    if (currentSession != null) currentSession.getAccess().giveIfNeed(runnable);
   }
 
   @Override
   public void invokeLater(@Nonnull Runnable runnable, @Nonnull Condition expired) {
     WebSession currentSession = getCurrentSession();
-    if (currentSession != null) currentSession.getAccess().give(runnable);
+    if (currentSession != null) currentSession.getAccess().giveIfNeed(runnable);
   }
 
   @Override
   public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state) {
     WebSession currentSession = getCurrentSession();
-    if (currentSession != null) currentSession.getAccess().give(runnable);
+    if (currentSession != null) currentSession.getAccess().giveIfNeed(runnable);
   }
 
   @Override
   public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state, @Nonnull Condition expired) {
     WebSession currentSession = getCurrentSession();
-    if (currentSession != null) currentSession.getAccess().give(runnable);
+    if (currentSession != null) currentSession.getAccess().giveIfNeed(runnable);
   }
 
   @Override
   public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
     WebSession currentSession = getCurrentSession();
-    if (currentSession != null) currentSession.getAccess().giveAndWait(runnable);
+    if (currentSession != null) currentSession.getAccess().giveAndWaitIfNeed(runnable);
   }
 
   @Nonnull
@@ -205,18 +230,6 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
 
   @RequiredUIAccess
   @Override
-  public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process, @Nonnull String progressTitle, boolean canBeCanceled, Project project) {
-    return false;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process, @Nonnull String progressTitle, boolean canBeCanceled, @Nullable Project project, JComponent parentComponent) {
-    return false;
-  }
-
-  @RequiredUIAccess
-  @Override
   public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
                                                      @Nonnull String progressTitle,
                                                      boolean canBeCanceled,
@@ -224,24 +237,56 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
                                                      JComponent parentComponent,
                                                      String cancelText) {
 
-    WebModalProgressIndicator progress = new WebModalProgressIndicator();
-
-    executeOnPooledThread(() -> {
+    assertIsDispatchThread();
+    boolean writeAccessAllowed = isWriteAccessAllowed();
+    if (writeAccessAllowed // Disallow running process in separate thread from under write action.
+        // The thread will deadlock trying to get read action otherwise.
+        || isHeadlessEnvironment() && !isUnitTestMode()) {
+      if (writeAccessAllowed) {
+        LOG.debug("Starting process with progress from within write action makes no sense");
+      }
       try {
-        ProgressManager.getInstance().runProcess(process, progress);
+        ProgressManager.getInstance().runProcess(process, new EmptyProgressIndicator());
       }
       catch (ProcessCanceledException e) {
-        progress.cancel();
         // ok to ignore.
+        return false;
       }
-      catch (RuntimeException e) {
-        progress.cancel();
-        throw e;
-      }
+      return true;
+    }
+
+    final ProgressWindow progress = new ProgressWindow(canBeCanceled, false, project, parentComponent, cancelText);
+    // in case of abrupt application exit when 'ProgressManager.getInstance().runProcess(process, progress)' below
+    // does not have a chance to run, and as a result the progress won't be disposed
+    Disposer.register(this, progress);
+
+    progress.setTitle(progressTitle);
+
+    final AtomicBoolean threadStarted = new AtomicBoolean();
+    //noinspection SSBasedInspection
+    getLastUIAccess().give(() -> {
+      executeOnPooledThread(() -> {
+        try {
+          ProgressManager.getInstance().runProcess(process, progress);
+        }
+        catch (ProcessCanceledException e) {
+          progress.cancel();
+          // ok to ignore.
+        }
+        catch (RuntimeException e) {
+          progress.cancel();
+          throw e;
+        }
+      });
+      threadStarted.set(true);
     });
 
+    progress.startBlocking();
 
-    return true;
+    LOG.assertTrue(threadStarted.get());
+    LOG.assertTrue(!progress.isRunning());
+
+    return !progress.isCanceled();
   }
 
   @RequiredUIAccess

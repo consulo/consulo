@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.progress.util;
 
-import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -24,7 +23,6 @@ import com.intellij.openapi.application.impl.ModalityStateEx;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.TaskInfo;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.EmptyRunnable;
@@ -34,18 +32,17 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.messages.Topic;
 import com.intellij.util.ui.UIUtil;
 import consulo.logging.Logger;
-import consulo.platform.Platform;
+import consulo.progress.util.ProgressDialog;
+import consulo.progress.util.ProgressDialogFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-@SuppressWarnings("NonStaticInitializer")
 public class ProgressWindow extends ProgressIndicatorBase implements BlockingProgressIndicator, Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.progress.util.ProgressWindow");
+  private static final Logger LOG = Logger.getInstance(ProgressWindow.class);
 
   /**
    * This constant defines default delay for showing progress dialog (in millis).
@@ -97,14 +94,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
     myCancelText = cancelText;
     setModalityProgress(shouldShowBackground ? null : this);
 
-    Component parent = parentComponent;
-    if (parent == null && project == null && !ApplicationManager.getApplication().isHeadlessEnvironment() && !Platform.current().isWebService()) {
-      parent = JOptionPane.getRootFrame();
-    }
-
-    myDialog = parent == null
-               ? new ProgressDialog(this, shouldShowBackground, myProject, myCancelText)
-               : new ProgressDialog(this, shouldShowBackground, parent, myCancelText);
+    myDialog = ProgressDialogFactory.getInstance().create(this, shouldShowBackground, parentComponent, project, cancelText);
 
     Disposer.register(this, myDialog);
 
@@ -143,7 +133,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
     myDelayInMillis = delayInMillis;
   }
 
-  private synchronized boolean isStarted() {
+  public synchronized boolean isStarted() {
     return myStarted;
   }
 
@@ -155,12 +145,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
     Timer timer = UIUtil.createNamedTimer("Progress window timer", myDelayInMillis, e -> ApplicationManager.getApplication().invokeLater(() -> {
       if (isRunning()) {
         if (myDialog != null) {
-          final DialogWrapper popup = myDialog.myPopup;
-          if (popup != null) {
-            if (popup.isShowing()) {
-              myDialog.myWasShown = true;
-            }
-          }
+          myDialog.copyPopupStateToWindow();
         }
         showDialog();
       }
@@ -204,12 +189,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
     init.run();
 
     try {
-      IdeEventQueue.getInstance().pumpEventsForHierarchy(myDialog.myPanel, event -> {
-        if (isCancellationEvent(event)) {
-          cancel();
-        }
-        return isStarted() && !isRunning();
-      });
+      myDialog.startBlocking();
     }
     finally {
       exitModality();
@@ -231,7 +211,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
 
     myDialog.show();
     if (myDialog != null) {
-      myDialog.myRepaintRunnable.run();
+      myDialog.runRepaintRunnable();
     }
   }
 
@@ -345,7 +325,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
 
   @Override
   public boolean isPopupWasShown() {
-    return myDialog != null && myDialog.myPopup != null && myDialog.myPopup.isShowing();
+    return myDialog != null && myDialog.isPopupWasShown();
   }
 
   private void enableCancelButton(boolean enable) {

@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="consulo-web-boot [jetty:run]" type="MavenRunConfiguration" factoryName="Maven" singleton="true">
-    <log_file path="$PROJECT_DIR$/sandbox/web/target/consulo-sandbox-web-2-SNAPSHOT-main/workdir/platform/buildSNAPSHOT/.config/sandbox/system/logs/consulo.log" checked="true" skipped="true" show_all="false" alias="CONSULO.LOG" />
+    <log_file path="$PROJECT_DIR$/sandbox/web-bootstrap/target/consulo-sandbox-web-2-SNAPSHOT-main/workdir/platform/buildSNAPSHOT/.config/sandbox/system/logs/consulo.log" checked="true" skipped="true" show_all="false" alias="CONSULO.LOG" />
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings" />

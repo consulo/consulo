@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.progress.util;
 
-import com.intellij.openapi.Disposable;
+import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.Project;
@@ -31,7 +31,7 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 
 
-class ProgressDialog implements Disposable {
+public class ProgressDialog implements consulo.progress.util.ProgressDialog {
   private final ProgressWindow myProgressWindow;
   private long myLastTimeDrawn = -1;
   private volatile boolean myShouldShowBackground;
@@ -151,7 +151,23 @@ class ProgressDialog implements Disposable {
     return myPanel;
   }
 
-  void changeCancelButtonText(String text) {
+  @Override
+  public void startBlocking() {
+    IdeEventQueue.getInstance().pumpEventsForHierarchy(myPanel, event -> {
+      if (myProgressWindow.isCancellationEvent(event)) {
+        cancel();
+      }
+      return myProgressWindow.isStarted() && !myProgressWindow.isRunning();
+    });
+  }
+
+  @Override
+  public boolean isPopupWasShown() {
+    return myPopup != null && myPopup.isShowing();
+  }
+
+  @Override
+  public void changeCancelButtonText(String text) {
     myCancelButton.setText(text);
   }
 
@@ -161,8 +177,14 @@ class ProgressDialog implements Disposable {
     }
   }
 
-  void cancel() {
-    enableCancelButtonIfNeeded(false);
+  @Override
+  public void copyPopupStateToWindow() {
+    final DialogWrapper popup = myPopup;
+    if (popup != null) {
+      if (popup.isShowing()) {
+        myWasShown = true;
+      }
+    }
   }
 
   private void setCancelButtonEnabledInEDT() {
@@ -173,7 +195,8 @@ class ProgressDialog implements Disposable {
     myCancelButton.setEnabled(false);
   }
 
-  void enableCancelButtonIfNeeded(boolean enable) {
+  @Override
+  public void enableCancelButtonIfNeeded(boolean enable) {
     if (!myProgressWindow.myShouldShowCancel || myDisableCancelAlarm.isDisposed()) return;
 
     myDisableCancelAlarm.cancelAllRequests();
@@ -200,7 +223,8 @@ class ProgressDialog implements Disposable {
 
   static final int UPDATE_INTERVAL = 50; //msec. 20 frames per second.
 
-  synchronized void update() {
+  @Override
+  public synchronized void update() {
     if (myRepaintedFlag) {
       if (System.currentTimeMillis() > myLastTimeDrawn + UPDATE_INTERVAL) {
         myRepaintedFlag = false;
@@ -219,7 +243,8 @@ class ProgressDialog implements Disposable {
     }
   }
 
-  synchronized void background() {
+  @Override
+  public synchronized void background() {
     if (myShouldShowBackground) {
       myBackgroundButton.setEnabled(false);
     }
@@ -227,7 +252,8 @@ class ProgressDialog implements Disposable {
     hide();
   }
 
-  void hide() {
+  @Override
+  public void hide() {
     ApplicationManager.getApplication().invokeLater(this::hideImmediately, ModalityState.any());
   }
 
@@ -238,7 +264,7 @@ class ProgressDialog implements Disposable {
     }
   }
 
-  void show() {
+  public void show() {
     myWasShown = true;
     if (ApplicationManager.getApplication().isHeadlessEnvironment()) return;
     if (myParentWindow == null) return;
@@ -270,6 +296,11 @@ class ProgressDialog implements Disposable {
     Disposer.register(myPopup.getDisposable(), () -> myProgressWindow.exitModality());
 
     myPopup.show();
+  }
+
+  @Override
+  public void runRepaintRunnable() {
+    myRepaintRunnable.run();
   }
 
   private boolean isWriteActionProgress() {

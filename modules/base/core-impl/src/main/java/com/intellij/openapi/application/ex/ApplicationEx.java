@@ -84,13 +84,17 @@ public interface ApplicationEx extends Application {
    * Runs modal process. For internal use only, see {@link Task}
    */
   @RequiredUIAccess
-  boolean runProcessWithProgressSynchronously(@Nonnull Runnable process, @Nonnull String progressTitle, boolean canBeCanceled, Project project);
+  default boolean runProcessWithProgressSynchronously(@Nonnull Runnable process, @Nonnull String progressTitle, boolean canBeCanceled, Project project) {
+    return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, project, null);
+  }
 
   /**
    * Runs modal process. For internal use only, see {@link Task}
    */
   @RequiredUIAccess
-  boolean runProcessWithProgressSynchronously(@Nonnull Runnable process, @Nonnull String progressTitle, boolean canBeCanceled, @Nullable Project project, JComponent parentComponent);
+  default boolean runProcessWithProgressSynchronously(@Nonnull Runnable process, @Nonnull String progressTitle, boolean canBeCanceled, @Nullable Project project, JComponent parentComponent) {
+    return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, project, parentComponent, null);
+  }
 
   /**
    * Runs modal process. For internal use only, see {@link Task}
