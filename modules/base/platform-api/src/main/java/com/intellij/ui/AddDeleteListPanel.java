@@ -16,13 +16,12 @@
 
 package com.intellij.ui;
 
-import com.intellij.CommonBundle;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.ComponentWithEmptyText;
 import com.intellij.util.ui.StatusText;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -35,24 +34,16 @@ import java.util.List;
  * @author anna
  * @since 5.1
  */
-public abstract class AddDeleteListPanel<T> extends PanelWithButtons implements ComponentWithEmptyText {
+public abstract class AddDeleteListPanel<T> extends JPanel implements ComponentWithEmptyText {
   private final String myTitle;
 
-  /**
-   * @deprecated
-   */
-  protected JButton myAddButton = new JButton(CommonBundle.message("button.add"));
-  /**
-   * @deprecated
-   */
-  protected JButton myDeleteButton = new JButton(CommonBundle.message("button.delete"));
+  protected DefaultListModel<T> myListModel = new DefaultListModel<>();
+  protected JBList<T> myList = new JBList<>(myListModel);
 
-  protected DefaultListModel myListModel = new DefaultListModel();
-  protected JBList myList = new JBList(myListModel);
-
+  @SuppressWarnings("unchecked")
   public AddDeleteListPanel(final String title, final List<T> initialList) {
     myTitle = title;
-    for (Object o : initialList) {
+    for (T o : initialList) {
       if (o != null) {
         myListModel.addElement(o);
       }
@@ -61,17 +52,11 @@ public abstract class AddDeleteListPanel<T> extends PanelWithButtons implements 
     initPanel();
   }
 
-  @Override
   protected void initPanel() {
     final ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myList)
       .disableUpAction()
       .disableDownAction()
-      .setAddAction(new AnActionButtonRunnable() {
-        @Override
-        public void run(AnActionButton button) {
-          addElement(findItemToAdd());
-        }
-      });
+      .setAddAction(b -> addElement(findItemToAdd()));
     customizeDecorator(decorator);
     setLayout(new BorderLayout());
     add(decorator.createPanel(), BorderLayout.CENTER);
@@ -99,28 +84,12 @@ public abstract class AddDeleteListPanel<T> extends PanelWithButtons implements 
   @Nullable
   protected abstract T findItemToAdd();
 
-  public Object [] getListItems(){
-    List<Object> items = new ArrayList<Object>();
-    for (int i = 0; i < myListModel.size(); i++){
+  public Object [] getListItems() {
+    List<Object> items = new ArrayList<>();
+    for (int i = 0; i < myListModel.size(); i++) {
       items.add(myListModel.getElementAt(i));
     }
     return items.toArray();
-  }
-
-  @Override
-  protected String getLabelText() {
-    return myTitle;
-  }
-
-  @Override
-  protected JButton[] createButtons() {
-    return new JButton[]{myAddButton, myDeleteButton};
-  }
-
-  @Override
-  protected JComponent createMainComponent() {
-    if (!myListModel.isEmpty()) myList.setSelectedIndex(0);
-    return ScrollPaneFactory.createScrollPane(myList);
   }
 
   protected ListCellRenderer getListCellRenderer(){

@@ -37,12 +37,7 @@ public abstract class AddEditDeleteListPanel<T> extends AddDeleteListPanel<T> {
 
   @Override
   protected void customizeDecorator(ToolbarDecorator decorator) {
-    decorator.setEditAction(new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton anActionButton) {
-        editSelectedItem();
-      }
-    });
+    decorator.setEditAction(b -> editSelectedItem());
   }
 
   @Nullable
@@ -57,6 +52,4 @@ public abstract class AddEditDeleteListPanel<T> extends AddDeleteListPanel<T> {
       }
     }
   }
-
-
 }
