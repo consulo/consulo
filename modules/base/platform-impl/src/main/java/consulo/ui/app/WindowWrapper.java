@@ -39,6 +39,10 @@ public abstract class WindowWrapper {
   private Window myWindow;
   private String myTitle;
 
+  private Boolean myPreOkEnabled;
+
+  private Button myOkButton;
+
   public WindowWrapper(@Nonnull String title) {
     myTitle = title;
   }
@@ -90,14 +94,37 @@ public abstract class WindowWrapper {
     dockLayout.addBorder(BorderPosition.TOP, BorderStyle.LINE, ComponentColors.BORDER, 1);
 
     HorizontalLayout bottomLayout = HorizontalLayout.create();
-    Button okButton = Button.create("OK", () -> close());
-    bottomLayout.add(okButton);
-    Button cancelButton = Button.create("Cancel", () -> close());
+    myOkButton = Button.create("OK", this::doOKAction);
+    if(myPreOkEnabled != null) {
+      myOkButton.setEnabled(myPreOkEnabled);
+    }
+    bottomLayout.add(myOkButton);
+    Button cancelButton = Button.create("Cancel", this::doCancelAction);
     bottomLayout.add(cancelButton);
 
     bottomLayout.addBorders(BorderStyle.EMPTY, null, 5);
 
     return dockLayout.right(bottomLayout);
+  }
+
+  @RequiredUIAccess
+  public void doOKAction() {
+    close();
+  }
+
+  @RequiredUIAccess
+  public void setOKEnabled(boolean value) {
+    if(myOkButton == null) {
+      myPreOkEnabled = value;
+    }
+    else {
+      myOkButton.setEnabled(value);
+    }
+  }
+
+  @RequiredUIAccess
+  public void doCancelAction() {
+    close();
   }
 
   @RequiredUIAccess
@@ -108,5 +135,6 @@ public abstract class WindowWrapper {
     myWindow.close();
     Disposer.dispose(myWindow);
     myWindow = null;
+    myOkButton = null;
   }
 }

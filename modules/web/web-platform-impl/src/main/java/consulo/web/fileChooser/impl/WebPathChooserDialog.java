@@ -22,12 +22,12 @@ import com.intellij.openapi.fileChooser.PathChooserDialog;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.ui.*;
+import consulo.ui.Component;
+import consulo.ui.Tree;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.layout.DockLayout;
-import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.app.WindowWrapper;
 import consulo.ui.shared.Size;
-import consulo.ui.shared.border.BorderPosition;
 import consulo.web.fileChooser.FileTreeComponent;
 
 import javax.annotation.Nonnull;
@@ -38,6 +38,62 @@ import javax.annotation.Nullable;
  * @since 15-Sep-17
  */
 public class WebPathChooserDialog implements PathChooserDialog, FileChooserDialog {
+  private static class DialogImpl extends WindowWrapper {
+
+    private final Project myProject;
+    private final FileChooserDescriptor myDescriptor;
+    private final AsyncResult<VirtualFile[]> myResult;
+
+    private Tree<FileElement> myTree;
+
+    public DialogImpl(Project project, FileChooserDescriptor descriptor, AsyncResult<VirtualFile[]> result) {
+      super("Select File");
+      myProject = project;
+      myDescriptor = descriptor;
+      myResult = result;
+    }
+
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    protected Component createCenterComponent() {
+      setOKEnabled(false);
+
+      myTree = FileTreeComponent.create(myProject, myDescriptor);
+      
+      myTree.addSelectListener(node -> {
+        VirtualFile file = node.getValue().getFile();
+        setOKEnabled(myDescriptor.isFileSelectable(file));
+      });
+
+      return myTree;
+    }
+
+    @Nullable
+    @Override
+    protected Size getDefaultSize() {
+      return new Size(400, 400);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void doOKAction() {
+      VirtualFile file = myTree.getSelectedNode().getValue().getFile();
+
+      super.doOKAction();
+
+      UIAccess.current().give(() -> myResult.setDone(new VirtualFile[]{file}));
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void doCancelAction() {
+      super.doCancelAction();
+
+      UIAccess.current().give((Runnable)myResult::setRejected);
+    }
+  }
+
   private FileChooserDescriptor myDescriptor;
   @Nullable
   private Project myProject;
@@ -59,50 +115,8 @@ public class WebPathChooserDialog implements PathChooserDialog, FileChooserDialo
   @Override
   public AsyncResult<VirtualFile[]> chooseAsync(@Nullable Project project, @Nonnull VirtualFile[] toSelect) {
     AsyncResult<VirtualFile[]> result = AsyncResult.undefined();
-
-    Window fileTree = Window.createModal("Select file");
-    fileTree.setSize(new Size(400, 400));
-    fileTree.setContent(Label.create("Test"));
-
-    DockLayout dockLayout = DockLayout.create();
-    Tree<FileElement> component = FileTreeComponent.create(myProject, myDescriptor);
-
-    dockLayout.center(component);
-
-    DockLayout bottomLayout = DockLayout.create();
-    bottomLayout.addBorder(BorderPosition.TOP);
-    HorizontalLayout rightButtons = HorizontalLayout.create();
-    bottomLayout.right(rightButtons);
-
-    Button ok = Button.create("OK");
-    ok.addClickListener(() -> {
-      fileTree.close();
-
-      VirtualFile file = component.getSelectedNode().getValue().getFile();
-
-      UIAccess.current().give(() -> result.setDone(new VirtualFile[]{file}));
-    });
-    ok.setEnabled(false);
-    rightButtons.add(ok);
-    consulo.ui.Button cancel = Button.create("Cancel");
-    cancel.addClickListener(() -> {
-      fileTree.close();
-
-      UIAccess.current().give((Runnable)result::setRejected);
-    });
-
-    component.addSelectListener(node -> {
-      VirtualFile file = node.getValue().getFile();
-      ok.setEnabled(myDescriptor.isFileSelectable(file));
-    });
-
-    rightButtons.add(cancel);
-    dockLayout.bottom(bottomLayout);
-
-    fileTree.setContent(dockLayout);
-
-    fileTree.show();
-
+    DialogImpl dialog = new DialogImpl(project, myDescriptor, result);
+    dialog.showAsync();
     return result;
   }
 }
