@@ -15,9 +15,10 @@
  */
 package com.intellij.openapi.extensions;
 
-import consulo.container.plugin.IdeaPluginDescriptor;
-import consulo.logging.Logger;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.extensions.PluginAware;
 import consulo.injecting.InjectingContainer;
+import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,18 +28,19 @@ import javax.annotation.Nullable;
  */
 public abstract class AbstractExtensionPointBean implements PluginAware {
   private static final Logger LOG = Logger.getInstance(AbstractExtensionPointBean.class);
-  protected IdeaPluginDescriptor myPluginDescriptor;
+  protected PluginDescriptor myPluginDescriptor;
 
   @Override
-  public final void setPluginDescriptor(IdeaPluginDescriptor pluginDescriptor) {
+  public final void setPluginDescriptor(PluginDescriptor pluginDescriptor) {
     myPluginDescriptor = pluginDescriptor;
   }
 
-  public IdeaPluginDescriptor getPluginDescriptor() {
+  public PluginDescriptor getPluginDescriptor() {
     return myPluginDescriptor;
   }
 
   @Nonnull
+  @SuppressWarnings("unchecked")
   public final <T> Class<T> findClass(@Nonnull String className) throws ClassNotFoundException {
     return (Class<T>)Class.forName(className, true, getLoaderForClass());
   }

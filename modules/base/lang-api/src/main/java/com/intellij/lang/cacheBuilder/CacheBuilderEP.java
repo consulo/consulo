@@ -16,19 +16,19 @@
 
 package com.intellij.lang.cacheBuilder;
 
-import consulo.container.plugin.IdeaPluginDescriptor;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.PluginAware;
 import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.extensions.PluginAware;
 import consulo.logging.Logger;
 
 /**
  * @author yole
  */
 public class CacheBuilderEP implements PluginAware {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.lang.cacheBuilder.CacheBuilderEP");
+  private static final Logger LOG = Logger.getInstance(CacheBuilderEP.class);
 
-  public static final ExtensionPointName<CacheBuilderEP> EP_NAME = new ExtensionPointName<CacheBuilderEP>("com.intellij.cacheBuilder");
+  public static final ExtensionPointName<CacheBuilderEP> EP_NAME = ExtensionPointName.create("com.intellij.cacheBuilder");
 
 
   @Attribute("fileType")
@@ -36,7 +36,7 @@ public class CacheBuilderEP implements PluginAware {
   @Attribute("wordsScannerClass")
   public String wordsScannerClass;
   private WordsScanner myWordsScanner;
-  private IdeaPluginDescriptor myPluginDescriptor;
+  private PluginDescriptor myPluginDescriptor;
 
   public String getFileType() {
     return fileType;
@@ -47,7 +47,7 @@ public class CacheBuilderEP implements PluginAware {
   }
 
   @Override
-  public void setPluginDescriptor(IdeaPluginDescriptor pluginDescriptor) {
+  public void setPluginDescriptor(PluginDescriptor pluginDescriptor) {
     myPluginDescriptor = pluginDescriptor;
   }
 

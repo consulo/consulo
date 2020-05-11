@@ -16,13 +16,13 @@
 
 package com.intellij.openapi.components;
 
-import consulo.container.plugin.IdeaPluginDescriptor;
-import consulo.logging.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.extensions.PluginAware;
 import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.extensions.PluginAware;
+import consulo.logging.Logger;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,15 +30,18 @@ import java.util.List;
  * @author mike
  */
 public class ServiceBean implements PluginAware {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.components.ServiceBean");
+  private static final Logger LOG = Logger.getInstance(ServiceBean.class);
 
   @Attribute("serviceInterface")
   public String serviceInterface;
-  private IdeaPluginDescriptor myPluginDescriptor;
 
+  private PluginDescriptor myPluginDescriptor;
+
+  @Nonnull
+  @SuppressWarnings("unchecked")
   public static <T> List<T> loadServicesFromBeans(final ExtensionPointName<ServiceBean> epName, Class<T> componentClass) {
-    final List<T> components = new ArrayList<T>();
-    final ServiceBean[] exportableBeans = Extensions.getExtensions(epName);
+    final List<ServiceBean> exportableBeans = epName.getExtensionList();
+    final List<T> components = new ArrayList<>(exportableBeans.size());
     for (ServiceBean exportableBean : exportableBeans) {
       final String serviceClass = exportableBean.serviceInterface;
       if (serviceClass == null) {
@@ -66,11 +69,12 @@ public class ServiceBean implements PluginAware {
     return components;
   }
 
-  public void setPluginDescriptor(final IdeaPluginDescriptor pluginDescriptor) {
+  @Override
+  public void setPluginDescriptor(PluginDescriptor pluginDescriptor) {
     myPluginDescriptor = pluginDescriptor;
   }
 
-  public IdeaPluginDescriptor getPluginDescriptor() {
+  public PluginDescriptor getPluginDescriptor() {
     return myPluginDescriptor;
   }
 }

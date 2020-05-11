@@ -53,7 +53,7 @@ public class ExtensionComponentAdapter<T> implements LoadingOrder.Orderable {
     return loadImplementationClass();
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "deprecation"})
   public T getComponentInstance(Function<Class<T>, T> getUnbindedInstanceFunc) {
     if (myComponentInstance == null) {
       try {
@@ -86,6 +86,11 @@ public class ExtensionComponentAdapter<T> implements LoadingOrder.Orderable {
       if (myComponentInstance instanceof PluginAware) {
         PluginAware pluginAware = (PluginAware)myComponentInstance;
         pluginAware.setPluginDescriptor((IdeaPluginDescriptor)myPluginDescriptor);
+      }
+
+      if(myComponentInstance instanceof consulo.extensions.PluginAware) {
+        consulo.extensions.PluginAware pluginAware = (consulo.extensions.PluginAware)myComponentInstance;
+        pluginAware.setPluginDescriptor(myPluginDescriptor);
       }
     }
 

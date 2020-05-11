@@ -16,9 +16,9 @@
 
 package com.intellij.openapi.components;
 
-import consulo.container.plugin.IdeaPluginDescriptor;
-import com.intellij.openapi.extensions.PluginAware;
 import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.extensions.PluginAware;
 
 public class ServiceDescriptor implements PluginAware {
   @Attribute("serviceInterface")
@@ -30,7 +30,7 @@ public class ServiceDescriptor implements PluginAware {
   @Attribute("lazy")
   public boolean lazy = true;
 
-  private IdeaPluginDescriptor myPluginDescriptor;
+  private PluginDescriptor myPluginDescriptor;
 
   public String getInterface() {
     return serviceInterface != null ? serviceInterface : getImplementation();
@@ -45,11 +45,11 @@ public class ServiceDescriptor implements PluginAware {
   }
 
   @Override
-  public void setPluginDescriptor(IdeaPluginDescriptor pluginDescriptor) {
+  public void setPluginDescriptor(PluginDescriptor pluginDescriptor) {
     myPluginDescriptor = pluginDescriptor;
   }
 
-  public IdeaPluginDescriptor getPluginDescriptor() {
+  public PluginDescriptor getPluginDescriptor() {
     return myPluginDescriptor;
   }
 }

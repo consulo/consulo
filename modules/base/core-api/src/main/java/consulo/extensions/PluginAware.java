@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.extensions;
+package consulo.extensions;
 
-import consulo.annotation.DeprecationInfo;
-import consulo.container.plugin.IdeaPluginDescriptor;
+import consulo.container.plugin.PluginDescriptor;
 
 /**
  * Extensions should implement this interface when it is important to find out what particular plugin has provided this extension.
+ *
  * @author akireyev
  */
-@Deprecated
-@DeprecationInfo("Use consulo.extensions.PluginAware")
 public interface PluginAware {
   /**
    * Called by extensions framework when extension is loaded from plugin.xml descriptor.
+   *
    * @param pluginDescriptor descriptor of the plugin that provided this particular extension.
    */
-  void setPluginDescriptor(IdeaPluginDescriptor pluginDescriptor);
+  void setPluginDescriptor(PluginDescriptor pluginDescriptor);
 }

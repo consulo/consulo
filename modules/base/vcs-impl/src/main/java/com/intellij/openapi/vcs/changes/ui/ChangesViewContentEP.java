@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.vcs.changes.ui;
 
-import consulo.container.plugin.IdeaPluginDescriptor;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.PluginAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.extensions.PluginAware;
 import consulo.logging.Logger;
 
 import javax.annotation.Nullable;
@@ -29,9 +29,9 @@ import javax.annotation.Nullable;
  * @author yole
  */
 public class ChangesViewContentEP implements PluginAware {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.ui.ChangesViewContentEP");
+  private static final Logger LOG = Logger.getInstance(ChangesViewContentEP.class);
 
-  public static final ExtensionPointName<ChangesViewContentEP> EP_NAME = new ExtensionPointName<ChangesViewContentEP>("com.intellij.changesViewContent");
+  public static final ExtensionPointName<ChangesViewContentEP> EP_NAME = ExtensionPointName.create("com.intellij.changesViewContent");
 
   @Attribute("tabName") public String tabName;
 
@@ -39,11 +39,12 @@ public class ChangesViewContentEP implements PluginAware {
 
   @Attribute("predicateClassName") public String predicateClassName;
 
-  private IdeaPluginDescriptor myPluginDescriptor;
+  private PluginDescriptor myPluginDescriptor;
+
   private ChangesViewContentProvider myInstance;
 
   @Override
-  public void setPluginDescriptor(IdeaPluginDescriptor pluginDescriptor) {
+  public void setPluginDescriptor(PluginDescriptor pluginDescriptor) {
     myPluginDescriptor = pluginDescriptor;
   }
 

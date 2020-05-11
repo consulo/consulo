@@ -65,7 +65,7 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
 
   private final SchemesManager<EditorColorsScheme, EditorColorsSchemeImpl> mySchemesManager;
   private State myState = new State();
-  private final Map<String, EditorColorsScheme> myDefaultColorsSchemes = new LinkedHashMap<String, EditorColorsScheme>();
+  private final Map<String, EditorColorsScheme> myDefaultColorsSchemes = new LinkedHashMap<>();
 
   @Inject
   public EditorColorsManagerImpl(SchemesManagerFactory schemesManagerFactory) {
@@ -118,7 +118,7 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
     addDefaultSchemes();
 
     // Load default schemes from providers
-    for (BundledColorSchemeEP ep : BundledColorSchemeEP.EP_NAME.getExtensions()) {
+    for (BundledColorSchemeEP ep : BundledColorSchemeEP.EP_NAME.getExtensionList()) {
       mySchemesManager.loadBundledScheme(ep.path, ep, new ThrowableConvertor<Element, EditorColorsScheme, Throwable>() {
         @Override
         public EditorColorsScheme convert(Element element) throws Throwable {
@@ -158,7 +158,7 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
   }
 
   private void loadAdditionalTextAttributes() {
-    for (AdditionalTextAttributesEP attributesEP : AdditionalTextAttributesEP.EP_NAME.getExtensions()) {
+    for (AdditionalTextAttributesEP attributesEP : AdditionalTextAttributesEP.EP_NAME.getExtensionList()) {
       EditorColorsScheme editorColorsScheme = mySchemesManager.findSchemeByName(attributesEP.scheme);
       if (editorColorsScheme == null) {
         if (!isUnitTestOrHeadlessMode()) {

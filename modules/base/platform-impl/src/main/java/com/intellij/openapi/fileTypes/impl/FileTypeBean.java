@@ -1,19 +1,17 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.fileTypes.impl;
 
-import consulo.container.plugin.IdeaPluginDescriptor;
-import com.intellij.openapi.extensions.PluginAware;
-import consulo.container.plugin.PluginId;
 import com.intellij.openapi.fileTypes.FileNameMatcher;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.util.SmartList;
 import com.intellij.util.xmlb.annotations.Attribute;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
+import consulo.extensions.PluginAware;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,11 +94,11 @@ public final class FileTypeBean implements PluginAware {
   }
 
   @Override
-  public void setPluginDescriptor(@Nonnull IdeaPluginDescriptor pluginDescriptor) {
+  public void setPluginDescriptor(@Nonnull PluginDescriptor pluginDescriptor) {
     myPluginDescriptor = pluginDescriptor;
   }
 
-  @Nullable
+  @Nonnull
   public PluginId getPluginId() {
     return myPluginDescriptor.getPluginId();
   }

@@ -18,14 +18,12 @@ package com.intellij.ide.util;
 import com.intellij.CommonBundle;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.IdeBundle;
-import consulo.container.plugin.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.ui.LafManager;
 import com.intellij.openapi.actionSystem.KeyboardShortcut;
 import com.intellij.openapi.actionSystem.Shortcut;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import consulo.logging.Logger;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
@@ -37,7 +35,10 @@ import com.intellij.util.ResourceUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.container.plugin.IdeaPluginDescriptor;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.ide.util.URLDictionatyLoader;
+import consulo.logging.Logger;
 import consulo.ui.style.StyleManager;
 import consulo.wm.util.IdeFrameUtil;
 
@@ -67,7 +68,7 @@ public class TipUIUtil {
 
   @Nonnull
   public static String getPoweredByText(@Nonnull TipAndTrickBean tip) {
-    IdeaPluginDescriptor descriptor = tip.getPluginDescriptor();
+    PluginDescriptor descriptor = tip.getPluginDescriptor();
     return !PluginManagerCore.CORE_PLUGIN_ID.equals(descriptor.getPluginId().getIdString()) ? descriptor.getName() : "";
   }
 
@@ -83,7 +84,7 @@ public class TipUIUtil {
   public static void openTipInBrowser(@Nullable TipAndTrickBean tip, JEditorPane browser) {
     if (tip == null) return;
     try {
-      IdeaPluginDescriptor pluginDescriptor = tip.getPluginDescriptor();
+      PluginDescriptor pluginDescriptor = tip.getPluginDescriptor();
       ClassLoader tipLoader = pluginDescriptor == null ? TipUIUtil.class.getClassLoader() : ObjectUtils.notNull(pluginDescriptor.getPluginClassLoader(), TipUIUtil.class.getClassLoader());
 
       URL url = ResourceUtil.getResource(tipLoader, "/tips/", tip.fileName);
