@@ -53,6 +53,7 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.awt.TargetAWT;
+import consulo.components.impl.stores.ProjectStorageUtil;
 import consulo.components.impl.stores.StorageUtil;
 import consulo.components.impl.stores.storage.StateStorageBase;
 import consulo.components.impl.stores.storage.StateStorageManager;
@@ -762,8 +763,8 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
   }
 
   private static boolean ensureCouldCloseIfUnableToSave(@Nonnull final Project project) {
-    final ProjectImpl.UnableToSaveProjectNotification[] notifications =
-            NotificationsManager.getNotificationsManager().getNotificationsOfType(ProjectImpl.UnableToSaveProjectNotification.class, project);
+    final ProjectStorageUtil.UnableToSaveProjectNotification[] notifications =
+            NotificationsManager.getNotificationsManager().getNotificationsOfType(ProjectStorageUtil.UnableToSaveProjectNotification.class, project);
     if (notifications.length == 0) return true;
 
     final String fileNames = StringUtil.join(notifications[0].getFileNames(), "\n");

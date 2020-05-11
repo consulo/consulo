@@ -15,17 +15,12 @@
  */
 package com.intellij.openapi.project.impl;
 
-import consulo.container.plugin.PluginListenerDescriptor;
 import com.intellij.ide.startup.StartupManagerEx;
-import com.intellij.notification.*;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import consulo.container.plugin.ComponentConfig;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.components.ServiceDescriptor;
-import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
@@ -39,31 +34,36 @@ import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.AsyncResult;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.FrameTitleBuilder;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.util.TimedReference;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
 import consulo.components.impl.PlatformComponentManagerImpl;
-import consulo.components.impl.stores.*;
+import consulo.components.impl.stores.DefaultProjectStoreImpl;
+import consulo.components.impl.stores.IProjectStore;
+import consulo.components.impl.stores.ProjectStoreImpl;
+import consulo.components.impl.stores.StoreUtil;
+import consulo.container.plugin.ComponentConfig;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginListenerDescriptor;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.logging.Logger;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import javax.swing.event.HyperlinkEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -430,49 +430,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     return false;
   }
 
-  @Override
-  public void checkUnknownMacros(final boolean showDialog) {
-    final IProjectStore stateStore = getStateStore();
-
-    final TrackingPathMacroSubstitutor[] substitutors = stateStore.getSubstitutors();
-    final Set<String> unknownMacros = new HashSet<>();
-    for (final TrackingPathMacroSubstitutor substitutor : substitutors) {
-      unknownMacros.addAll(substitutor.getUnknownMacros(null));
-    }
-
-    if (!unknownMacros.isEmpty()) {
-      if (!showDialog || ProjectMacrosUtil.checkMacros(this, new HashSet<>(unknownMacros))) {
-        final PathMacros pathMacros = PathMacros.getInstance();
-        final Set<String> macros2invalidate = new HashSet<>(unknownMacros);
-        for (Iterator it = macros2invalidate.iterator(); it.hasNext(); ) {
-          final String macro = (String)it.next();
-          final String value = pathMacros.getValue(macro);
-          if ((value == null || value.trim().isEmpty()) && !pathMacros.isIgnoredMacroName(macro)) {
-            it.remove();
-          }
-        }
-
-        if (!macros2invalidate.isEmpty()) {
-          final Set<String> components = new HashSet<>();
-          for (TrackingPathMacroSubstitutor substitutor : substitutors) {
-            components.addAll(substitutor.getComponents(macros2invalidate));
-          }
-
-          for (final TrackingPathMacroSubstitutor substitutor : substitutors) {
-            substitutor.invalidateUnknownMacros(macros2invalidate);
-          }
-
-          final UnknownMacroNotification[] notifications = NotificationsManager.getNotificationsManager().getNotificationsOfType(UnknownMacroNotification.class, this);
-          for (final UnknownMacroNotification notification : notifications) {
-            if (macros2invalidate.containsAll(notification.getMacros())) notification.expire();
-          }
-
-          ApplicationManager.getApplication().runWriteAction(() -> stateStore.reinitComponents(components, true));
-        }
-      }
-    }
-  }
-
   @NonNls
   @Override
   public String toString() {
@@ -480,54 +437,5 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
            (isDisposed() ? " (Disposed" + (temporarilyDisposed ? " temporarily" : "") + ")" : isDefault() ? "" : " '" + myDirPath + "'") +
            (isDefault() ? " (Default)" : "") +
            " " + myName;
-  }
-
-  public static void dropUnableToSaveProjectNotification(@Nonnull final Project project, Collection<File> readOnlyFiles) {
-    final UnableToSaveProjectNotification[] notifications = NotificationsManager.getNotificationsManager().getNotificationsOfType(UnableToSaveProjectNotification.class, project);
-    if (notifications.length == 0) {
-      Notifications.Bus.notify(new UnableToSaveProjectNotification(project, readOnlyFiles), project);
-    }
-  }
-
-  public static class UnableToSaveProjectNotification extends Notification {
-    private Project myProject;
-    private final List<String> myFileNames;
-
-    private UnableToSaveProjectNotification(@Nonnull final Project project, final Collection<File> readOnlyFiles) {
-      super("Project Settings", "Could not save project!", buildMessage(), NotificationType.ERROR, new NotificationListener() {
-        @Override
-        public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
-          final UnableToSaveProjectNotification unableToSaveProjectNotification = (UnableToSaveProjectNotification)notification;
-          final Project _project = unableToSaveProjectNotification.getProject();
-          notification.expire();
-
-          if (_project != null && !_project.isDisposed()) {
-            _project.save();
-          }
-        }
-      });
-
-      myProject = project;
-      myFileNames = ContainerUtil.map(readOnlyFiles, File::getPath);
-    }
-
-    public List<String> getFileNames() {
-      return myFileNames;
-    }
-
-    private static String buildMessage() {
-      final StringBuilder sb = new StringBuilder("<p>Unable to save project files. Please ensure project files are writable and you have permissions to modify them.");
-      return sb.append(" <a href=\"\">Try to save project again</a>.</p>").toString();
-    }
-
-    public Project getProject() {
-      return myProject;
-    }
-
-    @Override
-    public void expire() {
-      myProject = null;
-      super.expire();
-    }
   }
 }

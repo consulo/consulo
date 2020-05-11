@@ -24,7 +24,6 @@ import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.project.ex.ProjectEx;
@@ -40,6 +39,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.UnsyncByteArrayOutputStream;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.AccessRule;
+import consulo.logging.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Parent;
@@ -94,8 +94,8 @@ public class StorageUtil {
                            "and " +
                            productName +
                            " cannot restore those paths.";
-          new UnknownMacroNotification("Load Error", "Load error: undefined path variables", content, NotificationType.ERROR, (notification, event) -> ((ProjectEx)project).checkUnknownMacros(true),
-                                       macros).notify(project);
+          new UnknownMacroNotification("Load Error", "Load error: undefined path variables", content, NotificationType.ERROR,
+                                       (notification, event) -> ProjectStorageUtil.checkUnknownMacros((ProjectEx)project, true), macros).notify(project);
         }
       }
     });

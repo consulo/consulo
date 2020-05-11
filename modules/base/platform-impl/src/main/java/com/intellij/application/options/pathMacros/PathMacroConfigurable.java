@@ -22,10 +22,12 @@ import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ex.ProjectEx;
+import consulo.components.impl.stores.ProjectStorageUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 
 /**
@@ -36,45 +38,55 @@ public class PathMacroConfigurable implements SearchableConfigurable, Configurab
   public static final String HELP_ID = "preferences.pathVariables";
   private PathMacroListEditor myEditor;
 
+  @Override
   public JComponent createComponent() {
     myEditor = new PathMacroListEditor();
     return myEditor.getPanel();
   }
 
+  @RequiredUIAccess
+  @Override
   public void apply() throws ConfigurationException {
     myEditor.commit();
 
     final Project[] projects = ProjectManager.getInstance().getOpenProjects();
     for (Project project : projects) {
-      ((ProjectEx)project).checkUnknownMacros(false);
+      ProjectStorageUtil.checkUnknownMacros((ProjectEx)project, false);
     }
   }
 
+  @Override
   public void reset() {
     myEditor.reset();
   }
 
+  @Override
   public void disposeUIResources() {
     myEditor = null;
   }
 
+  @Override
   public String getDisplayName() {
     return ApplicationBundle.message("title.path.variables");
   }
 
+  @Override
   public String getHelpTopic() {
     return HELP_ID;
   }
 
+  @Override
   public boolean isModified() {
     return myEditor != null && myEditor.isModified();
   }
 
+  @Override
   @Nonnull
   public String getId() {
     return getHelpTopic();
   }
 
+  @Override
   @Nullable
   public Runnable enableSearch(String option) {
     return null;

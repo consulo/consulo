@@ -300,7 +300,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
   @Override
   protected final void doSave(@Nullable List<SaveSession> saveSessions, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
-    ProjectImpl.UnableToSaveProjectNotification[] notifications = NotificationsManager.getNotificationsManager().getNotificationsOfType(ProjectImpl.UnableToSaveProjectNotification.class, myProject);
+    ProjectStorageUtil.UnableToSaveProjectNotification[] notifications = NotificationsManager.getNotificationsManager().getNotificationsOfType(ProjectStorageUtil.UnableToSaveProjectNotification.class, myProject);
     if (notifications.length > 0) {
       throw new SaveCancelledException();
     }
@@ -317,7 +317,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
       });
 
       if (status.hasReadonlyFiles()) {
-        ProjectImpl.dropUnableToSaveProjectNotification(myProject, VfsUtil.virtualToIoFiles(Arrays.asList(status.getReadonlyFiles())));
+        ProjectStorageUtil.dropUnableToSaveProjectNotification(myProject, VfsUtil.virtualToIoFiles(Arrays.asList(status.getReadonlyFiles())));
         throw new SaveCancelledException();
       }
       else {
@@ -328,7 +328,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
         }
 
         if (!readonlyFiles.isEmpty()) {
-          ProjectImpl.dropUnableToSaveProjectNotification(myProject, getFilesList(readonlyFiles));
+          ProjectStorageUtil.dropUnableToSaveProjectNotification(myProject, getFilesList(readonlyFiles));
           throw new SaveCancelledException();
         }
       }

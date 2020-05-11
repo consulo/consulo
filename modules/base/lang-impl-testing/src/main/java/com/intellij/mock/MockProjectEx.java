@@ -31,10 +31,6 @@ public class MockProjectEx  extends MockProject implements ProjectEx {
   }
 
   @Override
-  public void checkUnknownMacros(final boolean showDialog) {
-  }
-
-  @Override
   @Nonnull
   public IProjectStore getStateStore() {
     return new MockProjectStore();
