@@ -8,7 +8,6 @@ import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.JBColor;
-import com.intellij.ui.components.JBOptionButton;
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.*;
@@ -186,8 +185,6 @@ public class DarculaButtonUI extends BasicButtonUI {
   }
 
   protected void paintContents(Graphics g, AbstractButton b) {
-    if (b instanceof JBOptionButton) return;
-
     FontMetrics fm = SwingUtilities2.getFontMetrics(b, g);
     boolean isDotButton = isSquare(b) && b.getIcon() == AllIcons.General.Ellipsis;
     String text = isDotButton ? "..." : b.getText();

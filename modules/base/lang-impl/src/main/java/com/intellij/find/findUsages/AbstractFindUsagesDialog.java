@@ -83,8 +83,6 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
       }
     };
 
-    setButtonsMargin(null);
-
     setOKButtonText(FindBundle.message("find.dialog.find.button"));
     setTitle(isSingleFile ? FindBundle.message("find.usages.in.file.dialog.title") : FindBundle.message("find.usages.dialog.title"));
   }

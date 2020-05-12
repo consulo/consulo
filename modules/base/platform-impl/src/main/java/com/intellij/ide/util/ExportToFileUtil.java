@@ -129,7 +129,6 @@ public class ExportToFileUtil {
       setHorizontalStretch(1.5f);
       setTitle(IdeBundle.message("title.export.preview"));
       setOKButtonText(IdeBundle.message("button.save"));
-      setButtonsMargin(null);
       init();
       try {
         myListener = new ChangeListener() {

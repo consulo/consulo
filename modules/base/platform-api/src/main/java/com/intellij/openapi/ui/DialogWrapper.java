@@ -55,14 +55,14 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.ui.*;
 import consulo.logging.Logger;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.SwingUIDecorator;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import sun.swing.SwingUtilities2;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -157,7 +157,6 @@ public abstract class DialogWrapper {
   private int myButtonAlignment = SwingConstants.RIGHT;
   private final boolean myCreateSouthSection;
   private boolean myCrossClosesWindow = true;
-  private Insets myButtonMargins = new Insets(2, 16, 2, 16);
 
   protected Action myOKAction;
   protected Action myCancelAction;
@@ -783,24 +782,13 @@ public abstract class DialogWrapper {
 
       button.setMnemonic(mnemonic);
     }
-    setMargin(button);
+
     if (action.getValue(DEFAULT_ACTION) != null) {
       if (myPeer != null && !myPeer.isHeadless()) {
         getRootPane().setDefaultButton(button);
       }
     }
     return button;
-  }
-
-  private void setMargin(JButton button) {
-    // Aqua LnF does a good job of setting proper margin between buttons. Setting them specifically causes them be 'square' style instead of
-    // 'rounded', which is expected by apple users.
-    if (!SystemInfo.isMac) {
-      if (myButtonMargins == null) {
-        return;
-      }
-      button.setMargin(myButtonMargins);
-    }
   }
 
   protected DialogWrapperPeer createPeer(@Nonnull Component parent, final boolean canBeParent) {
@@ -1372,7 +1360,6 @@ public abstract class DialogWrapper {
     if (myCurrentOptionsButtonIndex >= 0 && myCurrentOptionsButtonIndex < myOptionsButtons.size()) {
       myOptionsButtons.get(myCurrentOptionsButtonIndex).showPopup(null, true);
     }
-
   }
 
   void startTrackingValidation() {
@@ -1451,15 +1438,6 @@ public abstract class DialogWrapper {
       throw new IllegalArgumentException("unknown alignment: " + alignment);
     }
     myButtonAlignment = alignment;
-  }
-
-  /**
-   * Sets margin for command buttons ("OK", "Cancel", "Help").
-   *
-   * @param insets buttons margin
-   */
-  public final void setButtonsMargin(@Nullable Insets insets) {
-    myButtonMargins = insets;
   }
 
   public final void setCrossClosesWindow(boolean crossClosesWindow) {

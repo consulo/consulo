@@ -15,17 +15,11 @@
  */
 package com.intellij.ui.components;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.Weighted;
-import com.intellij.openapi.wm.IdeGlassPane;
-import com.intellij.openapi.wm.IdeGlassPaneUtil;
 import com.intellij.ui.ScreenUtil;
-import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -37,12 +31,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class JBOptionButton extends JButton implements MouseMotionListener, Weighted {
+  //private static final Insets myDownIconInsets = new Insets(0, 6, 0, 4);
 
-
-  private static final Insets myDownIconInsets = new Insets(0, 6, 0, 4);
-
-  private Rectangle myMoreRec;
-  private Rectangle myMoreRecMouse;
+  //private Rectangle myMoreRec;
+  //private Rectangle myMoreRecMouse;
   private Action[] myOptions;
 
   private JPopupMenu myUnderPopup;
@@ -51,40 +43,41 @@ public class JBOptionButton extends JButton implements MouseMotionListener, Weig
 
   private String myOptionTooltipText;
 
-  private Set<OptionInfo> myOptionInfos = new HashSet<OptionInfo>();
+  private Set<OptionInfo> myOptionInfos = new HashSet<>();
   private boolean myOkToProcessDefaultMnemonics = true;
 
-  private IdeGlassPane myGlassPane;
-  private final Disposable myDisposable = Disposer.newDisposable();
+  //private IdeGlassPane myGlassPane;
+  //private final Disposable myDisposable = Disposer.newDisposable();
 
   public JBOptionButton(Action action, Action[] options) {
     super(action);
+    setText((String)action.getValue(Action.NAME));
     myOptions = options;
-    myMoreRec = new Rectangle(0, 0, AllIcons.General.ArrowDown.getIconWidth(), AllIcons.General.ArrowDown.getIconHeight());
+    //myMoreRec = new Rectangle(0, 0, AllIcons.General.ArrowDown.getIconWidth(), AllIcons.General.ArrowDown.getIconHeight());
 
     myUnderPopup = fillMenu(true);
     myAbovePopup = fillMenu(false);
     enableEvents(MouseEvent.MOUSE_EVENT_MASK | MouseEvent.MOUSE_MOTION_EVENT_MASK);
   }
 
-  @Override
-  public void addNotify() {
-    super.addNotify();
-    if (!ScreenUtil.isStandardAddRemoveNotify(this))
-      return;
-    myGlassPane = IdeGlassPaneUtil.find(this);
-    if (myGlassPane != null) {
-      myGlassPane.addMouseMotionPreprocessor(this, myDisposable);
-    }
-  }
-
-  @Override
-  public void removeNotify() {
-    super.removeNotify();
-    if (!ScreenUtil.isStandardAddRemoveNotify(this))
-      return;
-    Disposer.dispose(myDisposable);
-  }
+  //@Override
+  //public void addNotify() {
+  //  super.addNotify();
+  //  if (!ScreenUtil.isStandardAddRemoveNotify(this))
+  //    return;
+  //  myGlassPane = IdeGlassPaneUtil.find(this);
+  //  if (myGlassPane != null) {
+  //    myGlassPane.addMouseMotionPreprocessor(this, myDisposable);
+  //  }
+  //}
+  //
+  //@Override
+  //public void removeNotify() {
+  //  super.removeNotify();
+  //  if (!ScreenUtil.isStandardAddRemoveNotify(this))
+  //    return;
+  //  Disposer.dispose(myDisposable);
+  //}
 
   @Override
   public double getWeight() {
@@ -125,55 +118,55 @@ public class JBOptionButton extends JButton implements MouseMotionListener, Weig
     }
   }
 
-  @Override
-  public Dimension getPreferredSize() {
-    final Dimension size = super.getPreferredSize();
-    size.width += (myMoreRec.width + myDownIconInsets.left + myDownIconInsets.right);
-    size.height += (myDownIconInsets.top + myDownIconInsets.bottom);
-    return size;
-  }
+  //@Override
+  //public Dimension getPreferredSize() {
+  //  final Dimension size = super.getPreferredSize();
+  //  size.width += (myMoreRec.width + myDownIconInsets.left + myDownIconInsets.right);
+  //  size.height += (myDownIconInsets.top + myDownIconInsets.bottom);
+  //  return size;
+  //}
+  //
+  //@Override
+  //public void doLayout() {
+  //  super.doLayout();
+  //
+  //  Insets insets = getInsets();
+  //  myMoreRec.x = getSize().width - myMoreRec.width - insets.right + 8;
+  //  myMoreRec.y = (getHeight() / 2 - myMoreRec.height / 2);
+  //
+  //  myMoreRecMouse = new Rectangle(myMoreRec.x - 8, 0, getWidth() - myMoreRec.x, getHeight());
+  //}
+  //
+  //@Override
+  //public String getToolTipText(MouseEvent event) {
+  //  if (myMoreRec.x < event.getX()) {
+  //    return myOptionTooltipText;
+  //  } else {
+  //    return super.getToolTipText(event);
+  //  }
+  //}
+  //
+  //@Override
+  //protected void processMouseEvent(MouseEvent e) {
+  //  if (myMoreRecMouse.contains(e.getPoint())) {
+  //    if (e.getID() == MouseEvent.MOUSE_PRESSED) {
+  //      if (!myPopupIsShowing) {
+  //        togglePopup();
+  //      }
+  //    }
+  //  }
+  //  else {
+  //    super.processMouseEvent(e);
+  //  }
+  //}
 
-  @Override
-  public void doLayout() {
-    super.doLayout();
-
-    Insets insets = getInsets();
-    myMoreRec.x = getSize().width - myMoreRec.width - insets.right + 8;
-    myMoreRec.y = (getHeight() / 2 - myMoreRec.height / 2);
-
-    myMoreRecMouse = new Rectangle(myMoreRec.x - 8, 0, getWidth() - myMoreRec.x, getHeight());
-  }
-
-  @Override
-  public String getToolTipText(MouseEvent event) {
-    if (myMoreRec.x < event.getX()) {
-      return myOptionTooltipText;
-    } else {
-      return super.getToolTipText(event);
-    }
-  }
-
-  @Override
-  protected void processMouseEvent(MouseEvent e) {
-    if (myMoreRecMouse.contains(e.getPoint())) {
-      if (e.getID() == MouseEvent.MOUSE_PRESSED) {
-        if (!myPopupIsShowing) {
-          togglePopup();
-        }
-      }
-    }
-    else {
-      super.processMouseEvent(e);
-    }
-  }
-
-  public void togglePopup() {
-    if (myPopupIsShowing) {
-      closePopup();
-    } else {
-      showPopup(null, false);
-    }
-  }
+  //public void togglePopup() {
+  //  if (myPopupIsShowing) {
+  //    closePopup();
+  //  } else {
+  //    showPopup(null, false);
+  //  }
+  //}
 
   public void showPopup(final Action actionToSelect, final boolean ensureSelection) {
     if (myPopupIsShowing) return;
@@ -291,9 +284,7 @@ public class JBOptionButton extends JButton implements MouseMotionListener, Weig
     return myOkToProcessDefaultMnemonics;
   }
 
-
   public static class OptionInfo {
-
     String myPlainText;
     int myMnemonic;
     int myMnemonicIndex;
@@ -355,29 +346,29 @@ public class JBOptionButton extends JButton implements MouseMotionListener, Weig
     return myOptionInfos;
   }
 
-  @Override
-  protected void paintChildren(Graphics g) {
-    super.paintChildren(g);
-    boolean dark = UIUtil.isUnderDarcula();
-    int off = dark ? 6 : 0;
-    AllIcons.General.ArrowDown.paintIcon(this, g, myMoreRec.x - off, myMoreRec.y);
-    if (dark) return;
-    int y1 = myMoreRec.y - 2;
-    int y2 = myMoreRec.y + myMoreRec.height + 2;
-
-    final Insets insets = getInsets();
-
-    if (y1 < getInsets().top) {
-      y1 = insets.top;
-    }
-
-    if (y2 > getHeight() - insets.bottom) {
-      y2 = getHeight() - insets.bottom;
-    }
-
-    final int x = myMoreRec.x - 4;
-    UIUtil.drawDottedLine(((Graphics2D)g), x, y1, x, y2, null, Color.darkGray);
-  }
+  //@Override
+  //protected void paintChildren(Graphics g) {
+  //  super.paintChildren(g);
+  //  boolean dark = UIUtil.isUnderDarcula();
+  //  int off = dark ? 6 : 0;
+  //  AllIcons.General.ArrowDown.paintIcon(this, g, myMoreRec.x - off, myMoreRec.y);
+  //  if (dark) return;
+  //  int y1 = myMoreRec.y - 2;
+  //  int y2 = myMoreRec.y + myMoreRec.height + 2;
+  //
+  //  final Insets insets = getInsets();
+  //
+  //  if (y1 < getInsets().top) {
+  //    y1 = insets.top;
+  //  }
+  //
+  //  if (y2 > getHeight() - insets.bottom) {
+  //    y2 = getHeight() - insets.bottom;
+  //  }
+  //
+  //  final int x = myMoreRec.x - 4;
+  //  UIUtil.drawDottedLine(((Graphics2D)g), x, y1, x, y2, null, Color.darkGray);
+  //}
 
   public void setOptionTooltipText(String text) {
     myOptionTooltipText = text;
