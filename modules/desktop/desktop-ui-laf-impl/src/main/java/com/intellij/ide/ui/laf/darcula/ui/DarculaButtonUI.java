@@ -35,8 +35,7 @@ import java.awt.*;
 /**
  * @author Konstantin Bulenkov
  */
-public class
-DarculaButtonUI extends BasicButtonUI {
+public class DarculaButtonUI extends BasicButtonUI {
   @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
   public static ComponentUI createUI(JComponent c) {
     return new DarculaButtonUI();
