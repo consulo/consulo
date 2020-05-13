@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 
 import javax.swing.*;
 
-public abstract class ConfigurableBase<UI extends ConfigurableUi<S>, S> implements SearchableConfigurable, Configurable.NoScroll {
+public abstract class ConfigurableBase<UI extends ConfigurableUi<S>, S> implements SearchableConfigurable {
   private final String id;
   private final String displayName;
   private final String helpTopic;
