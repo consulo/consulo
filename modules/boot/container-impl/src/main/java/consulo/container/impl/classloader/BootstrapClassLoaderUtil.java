@@ -19,7 +19,7 @@ import consulo.container.StartupError;
 import consulo.container.boot.ContainerStartup;
 import consulo.container.boot.internal.PathManagerHolder;
 import consulo.container.impl.ContainerLogger;
-import consulo.container.impl.IdeaPluginDescriptorImpl;
+import consulo.container.impl.PluginDescriptorImpl;
 import consulo.container.impl.PluginHolderModificator;
 import consulo.container.impl.PluginLoader;
 import consulo.container.plugin.PluginDescriptor;
@@ -43,9 +43,9 @@ public class BootstrapClassLoaderUtil {
 
     Runnable bootInitialize = stat.mark("boot.classloader.initialize");
 
-    IdeaPluginDescriptorImpl base = initalizePlatformBase(modulesDirectory, containerLogger);
+    PluginDescriptorImpl base = initalizePlatformBase(modulesDirectory, containerLogger);
 
-    List<IdeaPluginDescriptorImpl> descriptors = new ArrayList<IdeaPluginDescriptorImpl>();
+    List<PluginDescriptorImpl> descriptors = new ArrayList<PluginDescriptorImpl>();
     descriptors.add(base);
 
     File[] files = modulesDirectory.listFiles();
@@ -55,7 +55,7 @@ public class BootstrapClassLoaderUtil {
         continue;
       }
 
-      IdeaPluginDescriptorImpl descriptor = PluginLoader.loadDescriptor(moduleDirectory, false, true, containerLogger);
+      PluginDescriptorImpl descriptor = PluginLoader.loadDescriptor(moduleDirectory, false, true, containerLogger);
 
       if (descriptor == null) {
         continue;
@@ -98,10 +98,10 @@ public class BootstrapClassLoaderUtil {
   }
 
   @Nonnull
-  private static IdeaPluginDescriptorImpl initalizePlatformBase(File modulesDirectory, ContainerLogger containerLogger) throws Exception {
+  private static PluginDescriptorImpl initalizePlatformBase(File modulesDirectory, ContainerLogger containerLogger) throws Exception {
     File platformBaseDirectory = new File(modulesDirectory, CONSULO_PLATFORM_BASE);
 
-    IdeaPluginDescriptorImpl platformBasePlugin = PluginLoader.loadDescriptor(platformBaseDirectory, false, true, containerLogger);
+    PluginDescriptorImpl platformBasePlugin = PluginLoader.loadDescriptor(platformBaseDirectory, false, true, containerLogger);
 
     if (platformBasePlugin == null) {
       throw new StartupError("No base module. Broken installation");

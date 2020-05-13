@@ -39,8 +39,8 @@ import java.util.zip.ZipFile;
 /**
  * @author mike
  */
-public class IdeaPluginDescriptorImpl extends PluginDescriptorStub {
-  public static final IdeaPluginDescriptorImpl[] EMPTY_ARRAY = new IdeaPluginDescriptorImpl[0];
+public class PluginDescriptorImpl extends PluginDescriptorStub {
+  public static final PluginDescriptorImpl[] EMPTY_ARRAY = new PluginDescriptorImpl[0];
 
   private String myName;
   private PluginId myId;
@@ -58,7 +58,7 @@ public class IdeaPluginDescriptorImpl extends PluginDescriptorStub {
   private PluginId[] myDependencies = PluginId.EMPTY_ARRAY;
   private PluginId[] myOptionalDependencies = PluginId.EMPTY_ARRAY;
   private Map<PluginId, String> myOptionalConfigs;
-  private Map<PluginId, IdeaPluginDescriptorImpl> myOptionalDescriptors;
+  private Map<PluginId, PluginDescriptorImpl> myOptionalDescriptors;
   @Nonnull
   private List<SimpleXmlElement> myActionsElements = Collections.emptyList();
   private List<ComponentConfig> myAppComponents = Collections.emptyList();
@@ -81,7 +81,7 @@ public class IdeaPluginDescriptorImpl extends PluginDescriptorStub {
   private boolean myEnabled = true;
   private Boolean mySkipped;
 
-  public IdeaPluginDescriptorImpl(@Nonnull File pluginPath, boolean isPreInstalled) {
+  public PluginDescriptorImpl(@Nonnull File pluginPath, boolean isPreInstalled) {
     myPath = pluginPath;
     myIsPreInstalled = isPreInstalled;
   }
@@ -249,7 +249,7 @@ public class IdeaPluginDescriptorImpl extends PluginDescriptorStub {
     return result;
   }
 
-  public void mergeOptionalConfig(final IdeaPluginDescriptorImpl descriptor) {
+  public void mergeOptionalConfig(final PluginDescriptorImpl descriptor) {
     initializeExtensions();
 
     myExtensions.putAll(descriptor.myExtensions);
@@ -463,9 +463,9 @@ public class IdeaPluginDescriptorImpl extends PluginDescriptorStub {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof IdeaPluginDescriptorImpl)) return false;
+    if (!(o instanceof PluginDescriptorImpl)) return false;
 
-    final IdeaPluginDescriptorImpl pluginDescriptor = (IdeaPluginDescriptorImpl)o;
+    final PluginDescriptorImpl pluginDescriptor = (PluginDescriptorImpl)o;
 
     return myName == null ? pluginDescriptor.myName == null : myName.equals(pluginDescriptor.myName);
   }
@@ -509,11 +509,11 @@ public class IdeaPluginDescriptorImpl extends PluginDescriptorStub {
   }
 
   @Nullable
-  public Map<PluginId, IdeaPluginDescriptorImpl> getOptionalDescriptors() {
+  public Map<PluginId, PluginDescriptorImpl> getOptionalDescriptors() {
     return myOptionalDescriptors;
   }
 
-  public void setOptionalDescriptors(final Map<PluginId, IdeaPluginDescriptorImpl> optionalDescriptors) {
+  public void setOptionalDescriptors(final Map<PluginId, PluginDescriptorImpl> optionalDescriptors) {
     myOptionalDescriptors = optionalDescriptors;
   }
 

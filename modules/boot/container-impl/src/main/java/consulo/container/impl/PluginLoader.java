@@ -44,13 +44,13 @@ public class PluginLoader {
   public static final String PLUGIN_XML = "plugin.xml";
 
   @Nullable
-  public static IdeaPluginDescriptorImpl loadDescriptor(final File pluginPath, boolean isHeadlessMode, boolean isPreInstalledPath, ContainerLogger containerLogger) {
+  public static PluginDescriptorImpl loadDescriptor(final File pluginPath, boolean isHeadlessMode, boolean isPreInstalledPath, ContainerLogger containerLogger) {
     return loadDescriptor(pluginPath, PLUGIN_XML, isHeadlessMode, isPreInstalledPath, containerLogger);
   }
 
   @Nullable
-  public static IdeaPluginDescriptorImpl loadDescriptor(final File pluginPath, @NonNls final String fileName, boolean isHeadlessMode, boolean isPreInstalledPath, ContainerLogger containerLogger) {
-    IdeaPluginDescriptorImpl descriptor = null;
+  public static PluginDescriptorImpl loadDescriptor(final File pluginPath, @NonNls final String fileName, boolean isHeadlessMode, boolean isPreInstalledPath, ContainerLogger containerLogger) {
+    PluginDescriptorImpl descriptor = null;
 
     if (pluginPath.isDirectory()) {
       File libDir = new File(pluginPath, "lib");
@@ -73,12 +73,12 @@ public class PluginLoader {
     }
 
     if (descriptor != null && descriptor.getOptionalConfigs() != null && !descriptor.getOptionalConfigs().isEmpty()) {
-      final Map<PluginId, IdeaPluginDescriptorImpl> descriptors = new HashMap<PluginId, IdeaPluginDescriptorImpl>(descriptor.getOptionalConfigs().size());
+      final Map<PluginId, PluginDescriptorImpl> descriptors = new HashMap<PluginId, PluginDescriptorImpl>(descriptor.getOptionalConfigs().size());
       for (Map.Entry<PluginId, String> entry : descriptor.getOptionalConfigs().entrySet()) {
         String optionalDescriptorName = entry.getValue();
         assert !Comparing.equal(fileName, optionalDescriptorName) : "recursive dependency: " + fileName;
 
-        IdeaPluginDescriptorImpl optionalDescriptor = loadDescriptor(pluginPath, optionalDescriptorName, isHeadlessMode, isPreInstalledPath, containerLogger);
+        PluginDescriptorImpl optionalDescriptor = loadDescriptor(pluginPath, optionalDescriptorName, isHeadlessMode, isPreInstalledPath, containerLogger);
         if (optionalDescriptor == null && !FileUtilRt.isJarOrZip(pluginPath)) {
           for (URL url : getClassLoaderUrls()) {
             if ("file".equals(url.getProtocol())) {
@@ -135,12 +135,12 @@ public class PluginLoader {
 
 
   @Nullable
-  public static IdeaPluginDescriptorImpl loadDescriptorFromJar(@Nonnull File jarFile,
-                                                        @Nonnull File pluginPath,
-                                                        @Nonnull String fileName,
-                                                        boolean isHeadlessMode,
-                                                        boolean isPreInstalledPath,
-                                                        @Nonnull ContainerLogger logger) {
+  public static PluginDescriptorImpl loadDescriptorFromJar(@Nonnull File jarFile,
+                                                           @Nonnull File pluginPath,
+                                                           @Nonnull String fileName,
+                                                           boolean isHeadlessMode,
+                                                           boolean isPreInstalledPath,
+                                                           @Nonnull ContainerLogger logger) {
     try {
       ZipFile zipFile = new ZipFile(jarFile.getPath());
       try {
@@ -148,7 +148,7 @@ public class PluginLoader {
         if (entry != null) {
           InputStream inputStream = zipFile.getInputStream(entry);
 
-          IdeaPluginDescriptorImpl descriptor = new IdeaPluginDescriptorImpl(pluginPath, isPreInstalledPath);
+          PluginDescriptorImpl descriptor = new PluginDescriptorImpl(pluginPath, isPreInstalledPath);
           descriptor.readExternal(inputStream, zipFile);
           return descriptor;
         }

@@ -38,7 +38,7 @@ import consulo.application.ApplicationProperties;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.container.impl.ContainerLogger;
-import consulo.container.impl.IdeaPluginDescriptorImpl;
+import consulo.container.impl.PluginDescriptorImpl;
 import consulo.container.impl.PluginHolderModificator;
 import consulo.container.impl.PluginLoader;
 import consulo.container.impl.classloader.Java9ModuleInitializer;
@@ -340,8 +340,8 @@ public class PluginManagerCore {
         continue; // Might be an optional dependency
       }
 
-      if (pluginDescriptor instanceof IdeaPluginDescriptorImpl) {
-        result.add(((IdeaPluginDescriptorImpl)pluginDescriptor).getModuleLayer());
+      if (pluginDescriptor instanceof PluginDescriptorImpl) {
+        result.add(((PluginDescriptorImpl)pluginDescriptor).getModuleLayer());
       }
     }
     return result;
@@ -374,7 +374,7 @@ public class PluginManagerCore {
     }
   }
 
-  static Comparator<PluginDescriptor> getPluginDescriptorComparator(Map<PluginId, IdeaPluginDescriptorImpl> idToDescriptorMap) {
+  static Comparator<PluginDescriptor> getPluginDescriptorComparator(Map<PluginId, PluginDescriptorImpl> idToDescriptorMap) {
     final Graph<PluginId> graph = createPluginIdGraph(idToDescriptorMap);
     final DFSTBuilder<PluginId> builder = new DFSTBuilder<>(graph);
     /*
@@ -387,7 +387,7 @@ public class PluginManagerCore {
     return (o1, o2) -> idComparator.compare(o1.getPluginId(), o2.getPluginId());
   }
 
-  private static Graph<PluginId> createPluginIdGraph(final Map<PluginId, IdeaPluginDescriptorImpl> idToDescriptorMap) {
+  private static Graph<PluginId> createPluginIdGraph(final Map<PluginId, PluginDescriptorImpl> idToDescriptorMap) {
     final List<PluginId> ids = new ArrayList<>(idToDescriptorMap.keySet());
     // this magic ensures that the dependent plugins always follow their dependencies in lexicographic order
     // needed to make sure that extensions are always in the same order
@@ -420,7 +420,7 @@ public class PluginManagerCore {
 
 
   public static void loadDescriptors(String pluginsPath,
-                                     List<IdeaPluginDescriptorImpl> result,
+                                     List<PluginDescriptorImpl> result,
                                      @Nullable StartupProgress progress,
                                      int pluginsCount,
                                      boolean isHeadlessMode,
@@ -429,7 +429,7 @@ public class PluginManagerCore {
   }
 
   public static void loadDescriptors(@Nonnull File pluginsHome,
-                                     List<IdeaPluginDescriptorImpl> result,
+                                     List<PluginDescriptorImpl> result,
                                      @Nullable StartupProgress progress,
                                      int pluginsCount,
                                      boolean isHeadlessMode,
@@ -438,14 +438,14 @@ public class PluginManagerCore {
     if (files != null) {
       int i = result.size();
       for (File file : files) {
-        final IdeaPluginDescriptorImpl descriptor = PluginLoader.loadDescriptor(file, isHeadlessMode, isPreInstalledPath, C_LOG);
+        final PluginDescriptorImpl descriptor = PluginLoader.loadDescriptor(file, isHeadlessMode, isPreInstalledPath, C_LOG);
         if (descriptor == null) continue;
         if (progress != null) {
           progress.showProgress(descriptor.getName(), PLUGINS_PROGRESS_MAX_VALUE * ((float)++i / pluginsCount));
         }
         int oldIndex = result.indexOf(descriptor);
         if (oldIndex >= 0) {
-          final IdeaPluginDescriptorImpl oldDescriptor = result.get(oldIndex);
+          final PluginDescriptorImpl oldDescriptor = result.get(oldIndex);
           if (StringUtil.compareVersionNumbers(oldDescriptor.getVersion(), descriptor.getVersion()) < 0) {
             result.set(oldIndex, descriptor);
           }
@@ -541,8 +541,8 @@ public class PluginManagerCore {
   }
 
   @Nonnull
-  public static List<IdeaPluginDescriptorImpl> loadDescriptorsFromPluginPath(@Nullable StartupProgress progress, boolean isHeadlessMode) {
-    final List<IdeaPluginDescriptorImpl> result = new ArrayList<>();
+  public static List<PluginDescriptorImpl> loadDescriptorsFromPluginPath(@Nullable StartupProgress progress, boolean isHeadlessMode) {
+    final List<PluginDescriptorImpl> result = new ArrayList<>();
 
     int pluginsCount = 0;
     String[] pluginsPaths = ContainerPathManager.get().getPluginsPaths();
@@ -557,12 +557,12 @@ public class PluginManagerCore {
     return result;
   }
 
-  static void mergeOptionalConfigs(Map<PluginId, IdeaPluginDescriptorImpl> descriptors) {
-    final Map<PluginId, IdeaPluginDescriptorImpl> descriptorsWithModules = new THashMap<>(descriptors);
-    for (IdeaPluginDescriptorImpl descriptor : descriptors.values()) {
-      final Map<PluginId, IdeaPluginDescriptorImpl> optionalDescriptors = descriptor.getOptionalDescriptors();
+  static void mergeOptionalConfigs(Map<PluginId, PluginDescriptorImpl> descriptors) {
+    final Map<PluginId, PluginDescriptorImpl> descriptorsWithModules = new THashMap<>(descriptors);
+    for (PluginDescriptorImpl descriptor : descriptors.values()) {
+      final Map<PluginId, PluginDescriptorImpl> optionalDescriptors = descriptor.getOptionalDescriptors();
       if (optionalDescriptors != null && !optionalDescriptors.isEmpty()) {
-        for (Map.Entry<PluginId, IdeaPluginDescriptorImpl> entry : optionalDescriptors.entrySet()) {
+        for (Map.Entry<PluginId, PluginDescriptorImpl> entry : optionalDescriptors.entrySet()) {
           if (descriptorsWithModules.containsKey(entry.getKey())) {
             descriptor.mergeOptionalConfig(entry.getValue());
           }
@@ -571,7 +571,7 @@ public class PluginManagerCore {
     }
   }
 
-  public static void initClassLoader(@Nonnull ClassLoader parentLoader, @Nonnull IdeaPluginDescriptorImpl descriptor) {
+  public static void initClassLoader(@Nonnull ClassLoader parentLoader, @Nonnull PluginDescriptorImpl descriptor) {
     final List<File> classPath = descriptor.getClassPath();
     final ClassLoader loader = createPluginClassLoader(classPath.toArray(new File[classPath.size()]), new ClassLoader[]{parentLoader}, descriptor);
     descriptor.setLoader(loader);
@@ -598,7 +598,7 @@ public class PluginManagerCore {
     if (!descriptor.isEnabled()) return PluginSkipReason.DISABLED;
 
     boolean shouldLoad = !getDisabledPlugins().contains(idString);
-    if (shouldLoad && descriptor instanceof IdeaPluginDescriptorImpl) {
+    if (shouldLoad && descriptor instanceof PluginDescriptorImpl) {
       if (isIncompatible(descriptor)) return PluginSkipReason.INCOMPATIBLE;
     }
 
@@ -623,8 +623,8 @@ public class PluginManagerCore {
   }
 
   public static void markAsDeletedPlugin(PluginDescriptor descriptor) {
-    if(descriptor instanceof IdeaPluginDescriptorImpl) {
-      ((IdeaPluginDescriptorImpl)descriptor).setDeleted(true);
+    if(descriptor instanceof PluginDescriptorImpl) {
+      ((PluginDescriptorImpl)descriptor).setDeleted(true);
     }
   }
 
@@ -638,8 +638,8 @@ public class PluginManagerCore {
   }
 
   public static boolean shouldSkipPlugin(final PluginDescriptor descriptor) {
-    if (descriptor instanceof IdeaPluginDescriptorImpl) {
-      IdeaPluginDescriptorImpl descriptorImpl = (IdeaPluginDescriptorImpl)descriptor;
+    if (descriptor instanceof PluginDescriptorImpl) {
+      PluginDescriptorImpl descriptorImpl = (PluginDescriptorImpl)descriptor;
       Boolean skipped = descriptorImpl.getSkipped();
       if (skipped != null) {
         return skipped;
@@ -652,17 +652,17 @@ public class PluginManagerCore {
   }
 
   @Nonnull
-  private static List<IdeaPluginDescriptorImpl> loadPluginDescriptors(@Nullable StartupProgress progress, boolean isHeadlessMode) {
-    List<IdeaPluginDescriptorImpl> pluginDescriptors = new ArrayList<>();
+  private static List<PluginDescriptorImpl> loadPluginDescriptors(@Nullable StartupProgress progress, boolean isHeadlessMode) {
+    List<PluginDescriptorImpl> pluginDescriptors = new ArrayList<>();
     for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
-      pluginDescriptors.add((IdeaPluginDescriptorImpl)descriptor);
+      pluginDescriptors.add((PluginDescriptorImpl)descriptor);
     }
 
     pluginDescriptors.addAll(loadDescriptorsFromPluginPath(progress, isHeadlessMode));
 
-    final Map<PluginId, IdeaPluginDescriptorImpl> idToDescriptorMap = new THashMap<>();
+    final Map<PluginId, PluginDescriptorImpl> idToDescriptorMap = new THashMap<>();
 
-    for (IdeaPluginDescriptorImpl descriptor : pluginDescriptors) {
+    for (PluginDescriptorImpl descriptor : pluginDescriptors) {
       idToDescriptorMap.put(descriptor.getPluginId(), descriptor);
     }
 
@@ -672,16 +672,16 @@ public class PluginManagerCore {
   }
 
   static void initializePlugins(@Nullable StartupProgress progress, boolean isHeadlessMode) {
-    List<IdeaPluginDescriptorImpl> pluginDescriptors = loadPluginDescriptors(progress, isHeadlessMode);
+    List<PluginDescriptorImpl> pluginDescriptors = loadPluginDescriptors(progress, isHeadlessMode);
 
     final Class callerClass = ReflectionUtil.findCallerClass(1);
     assert callerClass != null;
     final ClassLoader parentLoader = callerClass.getClassLoader();
 
-    final List<IdeaPluginDescriptorImpl> result = new ArrayList<>();
+    final List<PluginDescriptorImpl> result = new ArrayList<>();
     final Map<String, String> disabledPluginNames = new THashMap<>();
     List<String> brokenPluginsList = new SmartList<>();
-    for (IdeaPluginDescriptorImpl descriptor : pluginDescriptors) {
+    for (PluginDescriptorImpl descriptor : pluginDescriptors) {
       PluginSkipReason pluginSkipReason = calcPluginSkipReason(descriptor);
       switch (pluginSkipReason) {
         case NO:
@@ -707,8 +707,8 @@ public class PluginManagerCore {
       problemsWithPlugins.add(badPluginMessage);
     }
 
-    final Map<PluginId, IdeaPluginDescriptorImpl> idToDescriptorMap = new THashMap<>();
-    for (IdeaPluginDescriptorImpl descriptor : result) {
+    final Map<PluginId, PluginDescriptorImpl> idToDescriptorMap = new THashMap<>();
+    for (PluginDescriptorImpl descriptor : result) {
       idToDescriptorMap.put(descriptor.getPluginId(), descriptor);
     }
 
@@ -761,7 +761,7 @@ public class PluginManagerCore {
     PluginHolderModificator.setPluginLoadOrder(id2Index);
 
     int i = 0;
-    for (final IdeaPluginDescriptorImpl pluginDescriptor : result) {
+    for (final PluginDescriptorImpl pluginDescriptor : result) {
       // platform plugin already have classloader
       if (!PluginIds.isPlatformPlugin(pluginDescriptor.getPluginId())) {
         final List<File> classPath = pluginDescriptor.getClassPath();
@@ -802,7 +802,7 @@ public class PluginManagerCore {
 
   private static void registerExtensionPointsAndExtensions(ExtensionAreaId areaId, ExtensionsAreaImpl area, List<? extends PluginDescriptor> pluginDescriptors) {
     for (PluginDescriptor descriptor : pluginDescriptors) {
-      registerExtensionPoints(((IdeaPluginDescriptorImpl)descriptor), areaId, area);
+      registerExtensionPoints(((PluginDescriptorImpl)descriptor), areaId, area);
     }
 
     ExtensionPoint[] extensionPoints = area.getExtensionPoints();
@@ -812,7 +812,7 @@ public class PluginManagerCore {
     }
 
     for (PluginDescriptor descriptor : pluginDescriptors) {
-      IdeaPluginDescriptorImpl pluginDescriptor = (IdeaPluginDescriptorImpl)descriptor;
+      PluginDescriptorImpl pluginDescriptor = (PluginDescriptorImpl)descriptor;
 
       SimpleMultiMap<String, ExtensionInfo> extensions = pluginDescriptor.getExtensions();
 
@@ -825,7 +825,7 @@ public class PluginManagerCore {
     }
   }
 
-  private static void registerExtensionPoints(IdeaPluginDescriptorImpl pluginDescriptor, ExtensionAreaId areaId, @Nonnull ExtensionsAreaImpl area) {
+  private static void registerExtensionPoints(PluginDescriptorImpl pluginDescriptor, ExtensionAreaId areaId, @Nonnull ExtensionsAreaImpl area) {
     SimpleMultiMap<String, SimpleXmlElement> extensionsPoints = pluginDescriptor.getExtensionsPoints();
 
     Collection<SimpleXmlElement> extensionPoints = extensionsPoints.get(areaId.name());
