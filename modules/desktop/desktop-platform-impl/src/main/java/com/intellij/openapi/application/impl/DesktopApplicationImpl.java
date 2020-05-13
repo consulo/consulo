@@ -718,29 +718,27 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
       return;
     }
 
-    transactionGuard().submitTransactionAndWait(() -> {
-      int prevBase = myWriteStackBase;
-      myWriteStackBase = myWriteActionsStack.size();
-      try (AccessToken ignored = myLock.writeSuspend()) {
-        runModalProgress(project, title, () -> {
-          try (AccessToken ignored1 = myLock.grantReadPrivilege()) {
-            runnable.run();
-          }
-        });
-      }
-      finally {
-        myWriteStackBase = prevBase;
-      }
-    });
+    int prevBase = myWriteStackBase;
+    myWriteStackBase = myWriteActionsStack.size();
+    try (AccessToken ignored = myLock.writeSuspend()) {
+      runModalProgress(project, title, () -> {
+        try (AccessToken ignored1 = myLock.grantReadPrivilege()) {
+          runnable.run();
+        }
+      });
+    }
+    finally {
+      myWriteStackBase = prevBase;
+    }
   }
 
   private static void runModalProgress(@Nullable Project project, @Nonnull String title, @Nonnull Runnable runnable) {
-    ProgressManager.getInstance().run(new Task.Modal(project, title, false) {
+    new Task.Modal(project, title, false) {
       @Override
       public void run(@Nonnull ProgressIndicator indicator) {
         runnable.run();
       }
-    });
+    }.queue();
   }
 
   @Override
