@@ -15,10 +15,12 @@
  */
 package com.intellij.find.impl.livePreview;
 
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
-import javax.annotation.Nonnull;
+import com.intellij.ui.components.JBLabel;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -31,11 +33,10 @@ public class ReplacementView extends JPanel {
   }
 
   public ReplacementView(@Nullable String replacement) {
-    String textToShow = replacement;
-    if (replacement == null) {
-      textToShow = MALFORMED_REPLACEMENT_STRING;
-    }
-    JLabel jLabel = new JLabel(textToShow);
+    String textToShow = StringUtil.notNullize(replacement, MALFORMED_REPLACEMENT_STRING);
+    textToShow = StringUtil.escapeXmlEntities(StringUtil.shortenTextWithEllipsis(textToShow, 500, 0, true)).replaceAll("\n+", "\n").replace("\n", "<br>");
+    //noinspection HardCodedStringLiteral
+    JLabel jLabel = new JBLabel("<html>" + textToShow).setAllowAutoWrapping(true);
     jLabel.setForeground(replacement != null ? new JBColor(Gray._240, Gray._200) : JBColor.RED);
     add(jLabel);
   }

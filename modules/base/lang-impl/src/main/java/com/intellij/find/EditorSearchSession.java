@@ -35,8 +35,8 @@ import com.intellij.openapi.editor.event.SelectionEvent;
 import com.intellij.openapi.editor.event.SelectionListener;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Disposer;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.components.labels.LinkLabel;
@@ -44,8 +44,9 @@ import com.intellij.ui.components.labels.LinkListener;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import javax.annotation.Nonnull;
+import consulo.util.dataholder.Key;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -308,7 +309,12 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
 
   public void replaceCurrent() {
     if (mySearchResults.getCursor() != null) {
-      myLivePreviewController.performReplace();
+      try {
+        myLivePreviewController.performReplace();
+      }
+      catch (FindManager.MalformedReplacementStringException e) {
+        Messages.showErrorDialog(myComponent, e.getMessage(), FindBundle.message("find.replace.invalid.replacement.string.title"));
+      }
     }
   }
 

@@ -41,6 +41,7 @@ public class JBLabel extends JLabel implements AnchorableComponent {
   private JEditorPane myEditorPane = null;
   private JLabel myIconLabel = null;
   private boolean myMultiline = false;
+  private boolean myAllowAutoWrapping = false;
 
   public JBLabel() {
     super();
@@ -222,7 +223,7 @@ public class JBLabel extends JLabel implements AnchorableComponent {
           @Override
           public void paint(Graphics g) {
             Dimension size = getSize();
-            boolean paintEllipsis = getPreferredSize().width > size.width && !myMultiline;
+            boolean paintEllipsis = getPreferredSize().width > size.width && !myMultiline && !myAllowAutoWrapping;
 
             if (!paintEllipsis) {
               super.paint(g);
@@ -281,7 +282,18 @@ public class JBLabel extends JLabel implements AnchorableComponent {
     return this;
   }
 
+  /**
+   * In 'copyable' mode auto-wrapping is disabled by default.
+   * (In this case you have to markup your HTML with P or BR tags explicitly)
+   */
+  public JBLabel setAllowAutoWrapping(boolean allowAutoWrapping) {
+    myAllowAutoWrapping = allowAutoWrapping;
+    return this;
+  }
+
   private void updateStyle(@Nonnull JEditorPane pane) {
+    myEditorPane.setFont(getFont());
+    myEditorPane.setForeground(getForeground());
     EditorKit kit = pane.getEditorKit();
     if (kit instanceof HTMLEditorKit) {
       StyleSheet css = ((HTMLEditorKit)kit).getStyleSheet();
@@ -289,7 +301,7 @@ public class JBLabel extends JLabel implements AnchorableComponent {
                   "color:#" + ColorUtil.toHex(getForeground()) + ";" +
                   "font-family:" + getFont().getFamily() + ";" +
                   "font-size:" + getFont().getSize() + "pt;" +
-                  "white-space:nowrap;}");
+                  "white-space:" + (myAllowAutoWrapping ? "normal" : "nowrap") + ";}");
     }
   }
 }

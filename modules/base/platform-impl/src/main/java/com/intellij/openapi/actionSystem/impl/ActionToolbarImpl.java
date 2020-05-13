@@ -1359,7 +1359,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
 
     myMinimalMode = minimalMode;
     if (myMinimalMode) {
-      setMinimumButtonSize(JBUI.emptySize());
+      setMinimumButtonSize(Size.ZERO);
       setLayoutPolicy(NOWRAP_LAYOUT_POLICY);
       setBorder(JBUI.Borders.empty());
       setOpaque(false);

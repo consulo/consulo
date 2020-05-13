@@ -3262,7 +3262,8 @@ public class StringUtil extends StringUtilRt {
    */
   public abstract static class BombedCharSequence implements CharSequence {
     private final CharSequence delegate;
-    private int i = 0;
+    private int i;
+    private boolean myDefused;
 
     public BombedCharSequence(@Nonnull CharSequence sequence) {
       delegate = sequence;
@@ -3281,9 +3282,16 @@ public class StringUtil extends StringUtilRt {
     }
 
     protected void check() {
+      if (myDefused) {
+        return;
+      }
       if ((++i & 1023) == 0) {
         checkCanceled();
       }
+    }
+
+    public final void defuse() {
+      myDefused = true;
     }
 
     @Nonnull
@@ -3295,12 +3303,14 @@ public class StringUtil extends StringUtilRt {
 
     protected abstract void checkCanceled();
 
+    @Nonnull
     @Override
     public CharSequence subSequence(int i, int i1) {
       check();
       return delegate.subSequence(i, i1);
     }
   }
+
 
   /**
    * @return {@code text} with some characters replaced with standard XML entities, e.g. '<' replaced with '{@code &lt;}'
