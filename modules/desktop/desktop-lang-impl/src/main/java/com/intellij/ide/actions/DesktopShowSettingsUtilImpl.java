@@ -42,6 +42,7 @@ import consulo.ide.settings.impl.ShowSdksSettingsUtil;
 import consulo.logging.Logger;
 import consulo.options.ProjectStructureSelector;
 import consulo.roots.ui.configuration.DesktopProjectStructureDialog;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
 
@@ -99,7 +100,8 @@ public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil implements
       @RequiredUIAccess
       @Override
       public void onFinished() {
-        Application.get().invokeLater(() -> {
+        UIAccess uiAccess = UIAccess.current();
+        uiAccess.give(() -> {
           myShown.set(true);
 
           DesktopSettingsDialog dialog;
@@ -120,7 +122,7 @@ public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil implements
           long time = System.currentTimeMillis() - myStartTime;
           LOG.info("Settings dialog initialization took " + time + " ms.");
           dialog.showAsync().doWhenProcessed(() -> myShown.set(false));
-        }, ModalityState.NON_MODAL);
+        });
       }
     }.queue();
   }
@@ -219,7 +221,8 @@ public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil implements
       @RequiredUIAccess
       @Override
       public void onFinished() {
-        Application.get().invokeLater(() -> {
+        UIAccess uiAccess = UIAccess.current();
+        uiAccess.give(() -> {
           DesktopProjectStructureDialog dialog = new DesktopProjectStructureDialog(project, myConfigurable, ShowSettingsUtil.DIMENSION_KEY, myConfigurable);
           new UiNotifyConnector.Once(dialog.getContentPane(), new Activatable() {
             @Override
@@ -228,7 +231,7 @@ public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil implements
             }
           });
           dialog.showAsync();
-        }, ModalityState.NON_MODAL);
+        });
       }
     }.queue();
   }
