@@ -92,6 +92,7 @@
     <module>modules/base/lvcs-impl</module>
     <module>modules/base/lvcs-impl-testing</module>
     <module>modules/base/localize-api</module>
+    <module>modules/base/localize-impl</module>
     <module>modules/base/test</module>
     <module>modules/base/remote-servers-api</module>
     <module>modules/base/remote-servers-agent-rt</module>

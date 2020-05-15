@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,28 +15,9 @@
  */
 package consulo.localize;
 
-import javax.annotation.Nonnull;
-
 /**
  * @author VISTALL
- * @since 09-Nov-17
+ * @since 2019-07-08
  */
-public interface LocalizeKey {
-  @Nonnull
-  LocalizeValue getValue();
-
-  @Nonnull
-  LocalizeValue getValue(Object arg);
-
-  @Nonnull
-  LocalizeValue getValue(Object arg0, Object arg1);
-
-  @Nonnull
-  LocalizeValue getValue(Object arg0, Object arg1, Object arg2);
-
-  @Nonnull
-  LocalizeValue getValue(Object arg0, Object arg1, Object arg2, Object arg3);
-
-  @Nonnull
-  LocalizeValue getValue(Object arg0, Object arg1, Object arg2, Object arg3, Object arg4);
+public interface Localize {
 }

@@ -19,6 +19,7 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.util.NotNullComputable;
 import com.intellij.util.ObjectUtil;
+import consulo.base.library.localize.IdeLocalize;
 import consulo.fileChooser.FileOperateDialogSettings;
 import consulo.ide.actions.webSearch.WebSearchEngine;
 import consulo.ide.actions.webSearch.WebSearchOptions;
@@ -86,7 +87,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
       myRootLayout.add(LabeledLayout.create("Project Opening", projectReopeningLayout));
 
       VerticalLayout syncLayout = VerticalLayout.create();
-      syncLayout.add(myChkSyncOnFrameActivation = CheckBox.create(IdeBundle.message("checkbox.synchronize.files.on.frame.activation")));
+      syncLayout.add(myChkSyncOnFrameActivation = CheckBox.create(IdeLocalize.checkboxSynchronizeFilesOnFrameActivation()));
       syncLayout.add(myChkSaveOnFrameDeactivation = CheckBox.create(IdeBundle.message("checkbox.save.files.on.frame.deactivation")));
 
       HorizontalLayout syncWithIde = HorizontalLayout.create();

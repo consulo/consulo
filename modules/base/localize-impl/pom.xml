@@ -26,7 +26,7 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>consulo-localize-api</artifactId>
+  <artifactId>consulo-localize-impl</artifactId>
   <version>2-SNAPSHOT</version>
 
   <packaging>jar</packaging>
@@ -38,14 +38,18 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-annotations</artifactId>
+      <artifactId>consulo-localize-api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-util-rt</artifactId>
+      <artifactId>consulo-util</artifactId>
       <version>${project.version}</version>
-      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.yaml</groupId>
+      <artifactId>snakeyaml</artifactId>
     </dependency>
   </dependencies>
 </project>

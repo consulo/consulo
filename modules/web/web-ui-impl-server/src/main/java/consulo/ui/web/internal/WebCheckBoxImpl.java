@@ -16,6 +16,7 @@
 package consulo.ui.web.internal;
 
 import com.intellij.openapi.util.Comparing;
+import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
 import consulo.ui.KeyCode;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -60,10 +61,10 @@ public class WebCheckBoxImpl extends WebBooleanValueComponentBase<WebCheckBoxImp
 
   @RequiredUIAccess
   @Override
-  public void setText(@Nonnull final String text) {
+  public void setText(@Nonnull LocalizeValue textValue) {
     UIAccess.assertIsUIThread();
 
-    getVaadinComponent().setText(text);
+    getVaadinComponent().setText(textValue.getValue());
   }
 
   @Override

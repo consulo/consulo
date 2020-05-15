@@ -17,28 +17,22 @@ package consulo.localize;
 
 import javax.annotation.Nonnull;
 
-import java.util.Locale;
-
 /**
  * @author VISTALL
  * @since 09-Nov-17
  */
-class SingleLocalizeKeyAsValue implements LocalizeKeyAsValue {
+class SingleLocalizeValue implements LocalizeValue {
+  static final SingleLocalizeValue ourEmpty = new SingleLocalizeValue("");
+
   private final String myValue;
 
-  SingleLocalizeKeyAsValue(String value) {
+  SingleLocalizeValue(String value) {
     myValue = value;
   }
 
   @Nonnull
   @Override
   public String getValue() {
-    return myValue;
-  }
-
-  @Nonnull
-  @Override
-  public String getValue(@Nonnull Locale locale) {
     return myValue;
   }
 }

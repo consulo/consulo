@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,28 +15,28 @@
  */
 package consulo.localize;
 
+import consulo.util.ServiceLoaderUtil;
+
 import javax.annotation.Nonnull;
+import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 09-Nov-17
+ * @since 2019-04-11
  */
-public interface LocalizeKey {
-  @Nonnull
-  LocalizeValue getValue();
+public abstract class LocalizeManager {
+  private static LocalizeManager ourInstance = ServiceLoaderUtil.loadSingleOrError(LocalizeManager.class);
 
   @Nonnull
-  LocalizeValue getValue(Object arg);
+  public static LocalizeManager getInstance() {
+    return ourInstance;
+  }
+
+  /**
+   * Will throw exception on second call
+   */
+  public abstract void initiaze(@Nonnull Set<ClassLoader> classLoaders);
 
   @Nonnull
-  LocalizeValue getValue(Object arg0, Object arg1);
-
-  @Nonnull
-  LocalizeValue getValue(Object arg0, Object arg1, Object arg2);
-
-  @Nonnull
-  LocalizeValue getValue(Object arg0, Object arg1, Object arg2, Object arg3);
-
-  @Nonnull
-  LocalizeValue getValue(Object arg0, Object arg1, Object arg2, Object arg3, Object arg4);
+  public abstract LocalizeLibraryBuilder newBuilder(@Nonnull String pluginId, @Nonnull Localize localize);
 }
