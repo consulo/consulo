@@ -74,7 +74,7 @@ import java.util.function.Consumer;
 public abstract class AnAction implements PossiblyDumbAware {
   @Nonnull
   public static AnAction create(@Nonnull String text, @Nullable String description, @Nullable Image image, @RequiredUIAccess @Nonnull Consumer<AnActionEvent> actionPerformed) {
-    return new AnAction() {
+    return new AnAction(text, description, image) {
       @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
