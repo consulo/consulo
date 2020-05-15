@@ -20,16 +20,15 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.PossiblyDumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
-import consulo.util.dataholder.Key;
 import com.intellij.util.ArrayFactory;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
-import consulo.awt.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
+import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.annotation.Nonnull;
@@ -42,8 +41,8 @@ import java.util.function.Consumer;
  * Represents an entity that has a state, a presentation and can be performed.
  * <p>
  * For an action to be useful, you need to implement {@link AnAction#actionPerformed}
- * and optionally to override {@link com.intellij.openapi.actionSystem.AnAction#update}. By overriding the
- * {@link com.intellij.openapi.actionSystem.AnAction#update} method you can dynamically change action's presentation
+ * and optionally to override {@link AnAction#update}. By overriding the
+ * {@link AnAction#update} method you can dynamically change action's presentation
  * depending on the place (for more information on places see {@link ActionPlaces}.
  * <p>
  * The same action can have various presentations.
@@ -105,12 +104,8 @@ public abstract class AnAction implements PossiblyDumbAware {
     // avoid eagerly creating template presentation
   }
 
-  public AnAction(SwingImageRef icon) {
-    this(null, null, icon);
-  }
-
   public AnAction(Image icon) {
-    this(null, null, TargetAWT.to(icon));
+    this(null, null, icon);
   }
 
   /**
@@ -125,25 +120,6 @@ public abstract class AnAction implements PossiblyDumbAware {
   }
 
   /**
-   * Creates a new action with the specified text. Description and icon are
-   * set to <code>null</code>.
-   *
-   * @param text Serves as a tooltip when the presentation is a button and the name of the
-   *             menu item when the presentation is a menu item.
-   */
-  public AnAction(@Nullable String text) {
-    this(text, null, null);
-  }
-
-  public AnAction(@Nullable String text, @Nullable String description, @Nullable SwingImageRef icon) {
-    this(text, description, (Icon)icon);
-  }
-
-  public AnAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
-    this(text, description, TargetAWT.to(icon));
-  }
-
-  /**
    * Constructs a new action with the specified text, description and icon.
    *
    * @param text        Serves as a tooltip when the presentation is a button and the name of the
@@ -155,6 +131,32 @@ public abstract class AnAction implements PossiblyDumbAware {
   @Deprecated
   @DeprecationInfo("Use contructor with ui image")
   public AnAction(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
+    Presentation presentation = getTemplatePresentation();
+    presentation.setText(text);
+    presentation.setDescription(description);
+    presentation.setIcon(icon);
+  }
+
+  public AnAction(SwingImageRef icon) {
+    this(null, null, icon);
+  }
+
+  public AnAction(@Nullable String text, @Nullable String description, @Nullable SwingImageRef icon) {
+    this(text, description, (Icon)icon);
+  }
+
+  /**
+   * Creates a new action with the specified text. Description and icon are
+   * set to <code>null</code>.
+   *
+   * @param text Serves as a tooltip when the presentation is a button and the name of the
+   *             menu item when the presentation is a menu item.
+   */
+  public AnAction(@Nullable String text) {
+    this(text, null, null);
+  }
+
+  public AnAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
     Presentation presentation = getTemplatePresentation();
     presentation.setText(text);
     presentation.setDescription(description);
@@ -202,12 +204,7 @@ public abstract class AnAction implements PossiblyDumbAware {
     }
 
     if (parentDisposable != null) {
-      Disposer.register(parentDisposable, new Disposable() {
-        @Override
-        public void dispose() {
-          unregisterCustomShortcutSet(component);
-        }
-      });
+      Disposer.register(parentDisposable, () -> unregisterCustomShortcutSet(component));
     }
   }
 
