@@ -26,7 +26,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.roots.ui.configuration.actions.IconWithTextAction;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.ui.Splitter;
@@ -152,7 +151,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
       setTitle(component.getClass().getName());
 
       DefaultActionGroup actions = new DefaultActionGroup();
-      actions.addAction(new IconWithTextAction("Highlight") {
+      actions.addAction(new AnAction("Highlight") {
         @RequiredUIAccess
         @Override
         public void actionPerformed(AnActionEvent e) {
@@ -169,7 +168,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
       actions.addSeparator();
 
-      actions.add(new IconWithTextAction("Refresh") {
+      actions.add(new AnAction("Refresh") {
 
         @RequiredUIAccess
         @Override

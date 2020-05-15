@@ -23,8 +23,6 @@ import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.fileChooser.FileSystemTree;
@@ -35,10 +33,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
-import com.intellij.openapi.roots.ui.configuration.actions.IconWithTextAction;
 import com.intellij.openapi.roots.ui.configuration.actions.ToggleFolderStateAction;
 import com.intellij.openapi.util.Disposer;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -50,7 +46,7 @@ import com.intellij.util.containers.ComparatorUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.ContentFoldersSupportUtil;
-import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -105,12 +101,7 @@ public class ContentEntryTreeEditor {
 
     Set<ContentFolderTypeProvider> folders = ContentFoldersSupportUtil.getSupportedFolders(myState.getRootModel());
     ContentFolderTypeProvider[] supportedFolders = folders.toArray(new ContentFolderTypeProvider[folders.size()]);
-    Arrays.sort(supportedFolders, new Comparator<ContentFolderTypeProvider>() {
-      @Override
-      public int compare(ContentFolderTypeProvider o1, ContentFolderTypeProvider o2) {
-        return ComparatorUtil.compareInt(o1.getWeight(), o2.getWeight());
-      }
-    });
+    Arrays.sort(supportedFolders, (o1, o2) -> ComparatorUtil.compareInt(o1.getWeight(), o2.getWeight()));
     for (ContentFolderTypeProvider contentFolderTypeProvider : supportedFolders) {
       ToggleFolderStateAction action = new ToggleFolderStateAction(myTree, this, contentFolderTypeProvider);
      /* CustomShortcutSet shortcutSet = editor.getMarkRootShortcutSet();
@@ -226,19 +217,7 @@ public class ContentEntryTreeEditor {
     }
   }
 
-  private static class MarkSourceToggleActionsGroup extends DefaultActionGroup {
-    public MarkSourceToggleActionsGroup(String groupName, final Image rootIcon) {
-      super(groupName, true);
-      getTemplatePresentation().setIcon(rootIcon);
-    }
-
-    @Override
-    public boolean displayTextInToolbar() {
-      return true;
-    }
-  }
-
-  private class MyContentEntryEditorListener extends ContentEntryEditorListenerAdapter {
+  private class MyContentEntryEditorListener implements ContentEntryEditor.ContentEntryEditorListener {
     @Override
     public void folderAdded(@Nonnull ContentEntryEditor editor, ContentFolder folder) {
       update();
@@ -250,14 +229,9 @@ public class ContentEntryTreeEditor {
     }
   }
 
-  private static class MyNewFolderAction extends NewFolderAction implements CustomComponentAction {
+  private static class MyNewFolderAction extends NewFolderAction {
     private MyNewFolderAction() {
       super(ActionsBundle.message("action.FileChooser.NewFolder.text"), ActionsBundle.message("action.FileChooser.NewFolder.description"), AllIcons.Actions.NewFolder);
-    }
-
-    @Override
-    public JComponent createCustomComponent(Presentation presentation) {
-      return IconWithTextAction.createCustomComponentImpl(this, presentation);
     }
   }
 

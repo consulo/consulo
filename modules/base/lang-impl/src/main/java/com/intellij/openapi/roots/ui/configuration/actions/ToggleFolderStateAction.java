@@ -16,7 +16,6 @@
 package com.intellij.openapi.roots.ui.configuration.actions;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ui.configuration.ContentEntryEditor;
 import com.intellij.openapi.roots.ui.configuration.ContentEntryTreeEditor;
@@ -34,13 +33,14 @@ public class ToggleFolderStateAction extends ContentEntryEditingAction {
   private final ContentFolderTypeProvider myContentFolderType;
 
   public ToggleFolderStateAction(JTree tree, ContentEntryTreeEditor entryEditor, ContentFolderTypeProvider contentFolderType) {
-    super(tree);
+    super(tree, contentFolderType.getName(), contentFolderType.getIcon());
     myEntryTreeEditor = entryEditor;
     myContentFolderType = contentFolderType;
+  }
 
-    final Presentation templatePresentation = getTemplatePresentation();
-    templatePresentation.setText(contentFolderType.getName());
-    templatePresentation.setIcon(contentFolderType.getIcon());
+  @Override
+  public boolean displayTextInToolbar() {
+    return true;
   }
 
   @Override

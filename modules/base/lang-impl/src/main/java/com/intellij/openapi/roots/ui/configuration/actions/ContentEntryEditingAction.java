@@ -16,15 +16,17 @@
 
 package com.intellij.openapi.roots.ui.configuration.actions;
 
-import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
-import com.intellij.openapi.actionSystem.impl.ActionButtonWithText;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.fileChooser.ex.FileNodeDescriptor;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
@@ -35,10 +37,15 @@ import java.util.List;
  * @author Eugene Zhuravlev
  * @since Oct 14, 2003
  */
-public abstract class ContentEntryEditingAction extends ToggleAction implements CustomComponentAction, DumbAware {
+public abstract class ContentEntryEditingAction extends ToggleAction implements DumbAware {
   protected final JTree myTree;
 
   protected ContentEntryEditingAction(JTree tree) {
+    this(tree, null, null);
+  }
+
+  protected ContentEntryEditingAction(JTree tree, @Nullable String text, @Nullable Image image) {
+    super(text, null, image);
     myTree = tree;
     getTemplatePresentation().setEnabled(true);
   }
@@ -81,10 +88,5 @@ public abstract class ContentEntryEditingAction extends ToggleAction implements 
       }
     }
     return selected.toArray(new VirtualFile[selected.size()]);
-  }
-
-  @Override
-  public JComponent createCustomComponent(Presentation presentation) {
-    return new ActionButtonWithText(this, presentation, ActionPlaces.UNKNOWN, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
   }
 }

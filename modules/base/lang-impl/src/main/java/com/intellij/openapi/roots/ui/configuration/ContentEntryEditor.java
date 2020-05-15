@@ -51,15 +51,15 @@ public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallb
   private final ContentEntry myContentEntry;
 
   public interface ContentEntryEditorListener extends EventListener {
-    void editingStarted(@Nonnull ContentEntryEditor editor);
+    default void editingStarted(@Nonnull ContentEntryEditor editor) {}
 
-    void beforeEntryDeleted(@Nonnull ContentEntryEditor editor);
+    default void beforeEntryDeleted(@Nonnull ContentEntryEditor editor) {}
 
-    void folderAdded(@Nonnull ContentEntryEditor editor, ContentFolder contentFolder);
+    default void folderAdded(@Nonnull ContentEntryEditor editor, ContentFolder contentFolder) {}
 
-    void folderRemoved(@Nonnull ContentEntryEditor editor, ContentFolder contentFolder);
+    default void folderRemoved(@Nonnull ContentEntryEditor editor, ContentFolder contentFolder) {}
 
-    void navigationRequested(@Nonnull ContentEntryEditor editor, VirtualFile file);
+    default void navigationRequested(@Nonnull ContentEntryEditor editor, VirtualFile file) {}
   }
 
   public ContentEntryEditor(final ContentEntry contentEntry) {

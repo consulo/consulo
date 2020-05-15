@@ -19,11 +19,10 @@ package com.intellij.openapi.roots.ui.configuration;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
-import consulo.logging.Logger;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.ex.FileChooserKeys;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ContentEntry;
@@ -31,7 +30,6 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.roots.ui.componentsList.components.ScrollablePanel;
 import com.intellij.openapi.roots.ui.componentsList.layout.VerticalStackLayout;
-import com.intellij.openapi.roots.ui.configuration.actions.IconWithTextAction;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
@@ -44,6 +42,7 @@ import com.intellij.ui.roots.ToolbarPanel;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.fileChooser.FileChooser;
 
@@ -330,16 +329,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
   public void saveData() {
   }
 
-  protected void addContentEntryPanels(ContentEntry[] contentEntriesArray) {
-    for (ContentEntry contentEntry : contentEntriesArray) {
-      addContentEntryPanel(contentEntry);
-    }
-    myEditorsPanel.revalidate();
-    myEditorsPanel.repaint();
-    selectContentEntry(contentEntriesArray[contentEntriesArray.length - 1]);
-  }
-
-  private final class MyContentEntryEditorListener extends ContentEntryEditorListenerAdapter {
+  private final class MyContentEntryEditorListener implements ContentEntryEditor.ContentEntryEditorListener {
     @Override
     public void editingStarted(@Nonnull ContentEntryEditor editor) {
       selectContentEntry(editor.getContentEntry());
@@ -381,7 +371,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     }
   }
 
-  private class AddContentEntryAction extends IconWithTextAction implements DumbAware {
+  private class AddContentEntryAction extends DumbAwareAction {
     private final FileChooserDescriptor myDescriptor;
 
     public AddContentEntryAction() {
