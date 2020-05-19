@@ -98,7 +98,6 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
       JPanel buttonsPanel = new JPanel(new GridLayout(1, 2, SystemInfo.isMacOSLeopard ? 0 : 5, 0));
 
       myCancelButton = new JButton(CommonBundle.getCancelButtonText());
-      myCancelButton.setMargin(JBUI.insets(2, 16));
       myCancelButton.addActionListener(e -> doCancelAction());
 
       buttonsPanel.add(myCancelButton);
@@ -109,7 +108,6 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
           return true;
         }
       };
-      myOkButton.setMargin(JBUI.insets(2, 16));
       myOkButton.setEnabled(false);
 
       myOkButton.addActionListener(e -> doOkAction());
