@@ -21,11 +21,15 @@ import com.intellij.idea.ApplicationStarter;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.util.Ref;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.container.util.StatCollector;
+import consulo.localize.LocalizeManager;
+import consulo.localize.impl.LocalizeManagerImpl;
 import consulo.start.CommandLineArgs;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 public abstract class ApplicationPostStarter {
   protected final Ref<StartupProgress> mySplashRef = Ref.create();
@@ -45,6 +49,12 @@ public abstract class ApplicationPostStarter {
     }
 
     PluginManager.initPlugins(splash, isHeadlessMode);
+
+    List<PluginDescriptor> plugins = consulo.container.plugin.PluginManager.getPlugins();
+
+    LocalizeManagerImpl localizeManager = (LocalizeManagerImpl)LocalizeManager.getInstance();
+
+    localizeManager.initialize(plugins);
 
     createApplication(isHeadlessMode, mySplashRef, args);
   }

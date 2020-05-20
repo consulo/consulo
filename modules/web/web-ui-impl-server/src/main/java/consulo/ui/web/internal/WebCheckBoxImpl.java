@@ -15,12 +15,11 @@
  */
 package consulo.ui.web.internal;
 
-import com.intellij.openapi.util.Comparing;
 import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
 import consulo.ui.KeyCode;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,14 +31,25 @@ import javax.annotation.Nullable;
 public class WebCheckBoxImpl extends WebBooleanValueComponentBase<WebCheckBoxImpl.Vaadin> implements CheckBox {
 
   public static class Vaadin extends VaadinBooleanValueComponentBase {
-    public void setText(@Nonnull final String text) {
-      if (Comparing.equal(getState().caption, text)) {
-        return;
-      }
+    private LocalizeValue myLabelText = LocalizeValue.empty();
 
-      getState().caption = text;
+    @Override
+    public void beforeClientResponse(boolean initial) {
+      super.beforeClientResponse(initial);
 
-      markAsDirty();
+      updateLabelText();
+    }
+
+    public void setLabelText(LocalizeValue labelText) {
+      myLabelText = labelText;
+    }
+
+    public LocalizeValue getLabelText() {
+      return myLabelText;
+    }
+
+    private void updateLabelText() {
+      getState().caption = myLabelText.getValue();
     }
   }
 
@@ -55,16 +65,16 @@ public class WebCheckBoxImpl extends WebBooleanValueComponentBase<WebCheckBoxImp
 
   @Override
   @Nonnull
-  public String getText() {
-    return getVaadinComponent().getState().caption;
+  public LocalizeValue getLabelText() {
+    return toVaadinComponent().getLabelText();
   }
 
   @RequiredUIAccess
   @Override
-  public void setText(@Nonnull LocalizeValue textValue) {
+  public void setLabelText(@Nonnull LocalizeValue textValue) {
     UIAccess.assertIsUIThread();
 
-    getVaadinComponent().setText(textValue.getValue());
+    toVaadinComponent().setLabelText(textValue);
   }
 
   @Override

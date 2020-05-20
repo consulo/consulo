@@ -259,6 +259,7 @@ class IdeaPluginClassLoader extends UrlClassLoader implements PluginClassLoader 
     }
   };
 
+  @Nonnull
   @Override
   public Enumeration<URL> findResources(String name) throws IOException {
     @SuppressWarnings("unchecked") List<Enumeration<URL>> resources = new ArrayList<Enumeration<URL>>();
@@ -267,7 +268,9 @@ class IdeaPluginClassLoader extends UrlClassLoader implements PluginClassLoader 
     return new DeepEnumeration(resources.toArray(new Enumeration[resources.size()]));
   }
 
-  private Enumeration<URL> findOwnResources(String name) throws IOException {
+  @Override
+  @Nonnull
+  public Enumeration<URL> findOwnResources(String name) throws IOException {
     return super.findResources(name);
   }
 

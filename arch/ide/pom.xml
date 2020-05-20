@@ -208,5 +208,15 @@
       <artifactId>consulo-xtest-sm-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-localize-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-base-localize-library</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 </project>

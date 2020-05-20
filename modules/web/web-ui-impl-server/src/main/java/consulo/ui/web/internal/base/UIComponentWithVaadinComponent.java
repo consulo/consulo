@@ -55,7 +55,7 @@ public abstract class UIComponentWithVaadinComponent<T extends AbstractComponent
 
   @Nonnull
   @Override
-  public com.vaadin.ui.Component toVaadinComponent() {
+  public T toVaadinComponent() {
     return myVaadinComponent;
   }
 

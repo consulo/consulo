@@ -15,6 +15,8 @@
  */
 package consulo.ui;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -26,15 +28,31 @@ import javax.annotation.Nonnull;
 public interface CheckBox extends ValueComponent<Boolean>, Mnemonicable{
   @Nonnull
   @RequiredUIAccess
-  static CheckBox create(@Nonnull String text) {
-    return create(text, false);
+  @Deprecated
+  @DeprecationInfo("Please don't use not localize text")
+  static CheckBox create(@Nonnull String label) {
+    return create(LocalizeValue.of(label));
   }
 
   @Nonnull
   @RequiredUIAccess
-  static CheckBox create(@Nonnull String text, boolean selected) {
+  @Deprecated
+  @DeprecationInfo("Please don't use not localize text")
+  static CheckBox create(@Nonnull String label, boolean selected) {
+    return create(LocalizeValue.of(label), selected);
+  }
+
+  @Nonnull
+  @RequiredUIAccess
+  static CheckBox create(@Nonnull LocalizeValue label) {
+    return create(label, false);
+  }
+
+  @Nonnull
+  @RequiredUIAccess
+  static CheckBox create(@Nonnull LocalizeValue label, boolean selected) {
     CheckBox box = UIInternal.get()._Components_checkBox();
-    box.setText(text);
+    box.setLabelText(label);
     box.setValue(selected);
     return box;
   }
@@ -53,8 +71,8 @@ public interface CheckBox extends ValueComponent<Boolean>, Mnemonicable{
   void setValue(@Nonnull Boolean value, boolean fireEvents);
 
   @Nonnull
-  String getText();
+  LocalizeValue getLabelText();
 
   @RequiredUIAccess
-  void setText(@Nonnull String text);
+  void setLabelText(@Nonnull LocalizeValue labelText);
 }

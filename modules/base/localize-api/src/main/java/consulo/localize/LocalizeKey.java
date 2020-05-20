@@ -23,6 +23,22 @@ import javax.annotation.Nonnull;
  */
 public interface LocalizeKey {
   @Nonnull
+  static LocalizeKey empty() {
+    return EmptyLocalizeKey.INSTANCE;
+  }
+
+  @Nonnull
+  static LocalizeKey of(@Nonnull String localizeId, @Nonnull String key) {
+    return new DefaultLocalizeKey(localizeId, key);
+  }
+
+  @Nonnull
+  String getLocalizeId();
+
+  @Nonnull
+  String getKey();
+
+  @Nonnull
   LocalizeValue getValue();
 
   @Nonnull

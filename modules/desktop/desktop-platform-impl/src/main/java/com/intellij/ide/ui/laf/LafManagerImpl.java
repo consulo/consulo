@@ -67,6 +67,7 @@ import consulo.ide.ui.laf.mac.MacEditorTabsUI;
 import consulo.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.ModernWhiteLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.NativeModernWhiteLookAndFeelInfo;
+import consulo.localize.LocalizeManager;
 import consulo.logging.Logger;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
@@ -142,8 +143,8 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
       lafList.add(new UIManager.LookAndFeelInfo("GTK+", "com.sun.java.swing.plaf.gtk.GTKLookAndFeel"));
     }
 
-    for (LookAndFeelProvider provder : LookAndFeelProvider.EP_NAME.getExtensionList()) {
-      provder.register(lafList::add);
+    for (LookAndFeelProvider provider : LookAndFeelProvider.EP_NAME.getExtensionList()) {
+      provider.register(lafList::add);
     }
 
     myLaFs = lafList.toArray(new UIManager.LookAndFeelInfo[lafList.size()]);
@@ -201,6 +202,9 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
       };
       Toolkit.getDefaultToolkit().addPropertyChangeListener(GNOME_THEME_PROPERTY_NAME, myThemeChangeListener);
     }
+
+    // refresh UI on localize change
+    LocalizeManager.getInstance().addListener((oldLocale, newLocale) -> updateUI(), this);
   }
 
   @Override

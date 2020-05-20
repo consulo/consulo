@@ -175,6 +175,11 @@
       <artifactId>consulo-util-dataholder</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-localize-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <!--copied from consulo-bundle module-->
 
@@ -286,6 +291,10 @@
     <dependency>
       <groupId>jakarta.activation</groupId>
       <artifactId>jakarta.activation-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.yaml</groupId>
+      <artifactId>snakeyaml</artifactId>
     </dependency>
   </dependencies>
 </project>

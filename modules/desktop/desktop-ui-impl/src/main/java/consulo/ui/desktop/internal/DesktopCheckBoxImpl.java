@@ -19,6 +19,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.ui.components.JBCheckBox;
 import consulo.awt.TargetAWT;
 import consulo.awt.impl.FromSwingComponentWrapper;
+import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.KeyCode;
@@ -36,24 +37,60 @@ import java.awt.event.ItemListener;
  * @author VISTALL
  * @since 09-Jun-16
  */
-class DesktopCheckBoxImpl extends SwingComponentDelegate<JBCheckBox> implements CheckBox {
+class DesktopCheckBoxImpl extends SwingComponentDelegate<DesktopCheckBoxImpl.MyJBCheckBox> implements CheckBox {
   class MyJBCheckBox extends JBCheckBox implements FromSwingComponentWrapper {
+    private LocalizeValue myLabelText = LocalizeValue.empty();
+
+    @Override
+    public void updateUI() {
+      super.updateUI();
+
+      // null if called from parent object before field initialize
+      if(myLabelText != null) {
+        updateLabelText();
+      }
+    }
 
     @Nonnull
     @Override
     public Component toUIComponent() {
       return DesktopCheckBoxImpl.this;
     }
+
+    public void setLabelText(LocalizeValue labelText) {
+      myLabelText = labelText;
+    }
+
+    public LocalizeValue getLabelText() {
+      return myLabelText;
+    }
+
+    private void updateLabelText() {
+      String text = myLabelText.getValue();
+
+      MnemonicInfo mnemonicInfo = MnemonicInfo.parse(text);
+      if (mnemonicInfo == null) {
+        toAWTComponent().setText(text);
+
+        setMnemonic(0);
+        setDisplayedMnemonicIndex(-1);
+      }
+      else {
+        toAWTComponent().setText(mnemonicInfo.getText());
+        setMnemonic(TargetAWT.to(mnemonicInfo.getKeyCode()));
+        setDisplayedMnemonicIndex(mnemonicInfo.getIndex());
+      }
+    }
   }
 
   public DesktopCheckBoxImpl() {
-    myComponent = new MyJBCheckBox();
+    initialize(new MyJBCheckBox());
   }
 
   @Nonnull
   @Override
   public Boolean getValue() {
-    return myComponent.isSelected();
+    return toAWTComponent().isSelected();
   }
 
   @RequiredUIAccess
@@ -63,30 +100,20 @@ class DesktopCheckBoxImpl extends SwingComponentDelegate<JBCheckBox> implements 
       throw new IllegalArgumentException();
     }
 
-    myComponent.setSelected(value);
+    toAWTComponent().setSelected(value);
   }
 
   @Nonnull
   @Override
-  public String getText() {
-    return myComponent.getText();
+  public LocalizeValue getLabelText() {
+    return toAWTComponent().getLabelText();
   }
 
   @RequiredUIAccess
   @Override
-  public void setText(@Nonnull String text) {
-    MnemonicInfo mnemonicInfo = MnemonicInfo.parse(text);
-    if (mnemonicInfo == null) {
-      myComponent.setText(text);
-
-      setMnemonicKey(null);
-      setMnemonicTextIndex(-1);
-    }
-    else {
-      myComponent.setText(mnemonicInfo.getText());
-      setMnemonicKey(mnemonicInfo.getKeyCode());
-      setMnemonicTextIndex(mnemonicInfo.getIndex());
-    }
+  public void setLabelText(@Nonnull LocalizeValue labelText) {
+    toAWTComponent().setLabelText(labelText);
+    toAWTComponent().updateLabelText();
   }
 
   @Nonnull
@@ -94,20 +121,20 @@ class DesktopCheckBoxImpl extends SwingComponentDelegate<JBCheckBox> implements 
   public Disposable addValueListener(@Nonnull ValueComponent.ValueListener<Boolean> valueListener) {
     ItemListener listener = e -> {
       if (e.getStateChange() == ItemEvent.SELECTED || e.getStateChange() == ItemEvent.DESELECTED) {
-        valueListener.valueChanged(new ValueEvent<>(this, myComponent.isSelected()));
+        valueListener.valueChanged(new ValueEvent<>(this, toAWTComponent().isSelected()));
       }
     };
-    myComponent.addItemListener(listener);
-    return () -> myComponent.removeItemListener(listener);
+    toAWTComponent().addItemListener(listener);
+    return () -> toAWTComponent().removeItemListener(listener);
   }
 
   @Override
   public void setMnemonicKey(@Nullable KeyCode key) {
-    myComponent.setMnemonic(key == null ? 0 : TargetAWT.to(key));
+    toAWTComponent().setMnemonic(key == null ? 0 : TargetAWT.to(key));
   }
 
   @Override
   public void setMnemonicTextIndex(int index) {
-    myComponent.setDisplayedMnemonicIndex(index);
+    toAWTComponent().setDisplayedMnemonicIndex(index);
   }
 }

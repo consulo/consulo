@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
  */
 public interface LocalizeValue {
   @Nonnull
-  static LocalizeValue of() {
+  static LocalizeValue empty() {
     return SingleLocalizeValue.ourEmpty;
   }
 

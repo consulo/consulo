@@ -19,7 +19,8 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.util.NotNullComputable;
 import com.intellij.util.ObjectUtil;
-import consulo.base.library.localize.IdeLocalize;
+import consulo.localize.LocalizeManager;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.fileChooser.FileOperateDialogSettings;
 import consulo.ide.actions.webSearch.WebSearchEngine;
 import consulo.ide.actions.webSearch.WebSearchOptions;
@@ -37,7 +38,9 @@ import consulo.ui.util.LabeledComponents;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -58,6 +61,8 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
     private CheckBox myChkUseSafeWrite;
 
     private CheckBox myChkSupportScreenReaders;
+
+    private ComboBox<Locale> myLocaleBox;
 
     private RadioButton myTerminateProcessRadioButton;
     private RadioButton myDisconnectRadioButton;
@@ -105,6 +110,14 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
       screenLayout.add(myChkSupportScreenReaders = CheckBox.create(IdeBundle.message("checkbox.support.screen.readers")));
       myRootLayout.add(LabeledLayout.create("Accessibility", screenLayout));
 
+      VerticalLayout localizeLayout = VerticalLayout.create();
+      Set<Locale> avaliableLocales = LocalizeManager.getInstance().getAvaliableLocales();
+      ComboBox.Builder<Locale> builder = ComboBox.builder();
+      builder.add(avaliableLocales, Locale::getDisplayName);
+
+      localizeLayout.add(LabeledComponents.leftWithRight("Locale", myLocaleBox = builder.build()));
+      myRootLayout.add(LabeledLayout.create("Localization", localizeLayout));
+
       VerticalLayout processLayout = VerticalLayout.create();
       ValueGroup<Boolean> processGroup = ValueGroup.createBool();
       processLayout.add(myTerminateProcessRadioButton = RadioButton.create(IdeBundle.message("radio.process.close.terminate")).toGroup(processGroup));
@@ -116,7 +129,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
       HorizontalLayout fileDialogsLayout = HorizontalLayout.create(10);
 
       ComboBox.Builder<FileOperateDialogProvider> fileChooseDialogBox = ComboBox.<FileOperateDialogProvider>builder();
-      for (FileChooseDialogProvider fileChooseDialogProvider : FileChooseDialogProvider.EP_NAME.getExtensions()) {
+      for (FileChooseDialogProvider fileChooseDialogProvider : FileChooseDialogProvider.EP_NAME.getExtensionList()) {
         if (fileChooseDialogProvider.isAvaliable()) {
           fileChooseDialogBox.add(fileChooseDialogProvider, fileChooseDialogProvider.getName());
         }
@@ -125,7 +138,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
       fileDialogsLayout.add(LabeledComponents.left("File/Path Choose Dialog Type", myFileChooseDialogBox = fileChooseDialogBox.build()));
 
       ComboBox.Builder<FileOperateDialogProvider> fileSaveDialogBox = ComboBox.<FileOperateDialogProvider>builder();
-      for (FileSaveDialogProvider fileSaveDialogProvider : FileSaveDialogProvider.EP_NAME.getExtensions()) {
+      for (FileSaveDialogProvider fileSaveDialogProvider : FileSaveDialogProvider.EP_NAME.getExtensionList()) {
         if (fileSaveDialogProvider.isAvaliable()) {
           fileSaveDialogBox.add(fileSaveDialogProvider, fileSaveDialogProvider.getName());
         }
@@ -183,6 +196,9 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
     isModified |= isModified(myFileOperateDialogSettings.getFileChooseDialogId(), component.myFileChooseDialogBox);
     isModified |= isModified(myFileOperateDialogSettings.getFileSaveDialogId(), component.myFileSaveDialogBox);
 
+    LocalizeManager localizeManager = LocalizeManager.getInstance();
+    isModified |= !localizeManager.getLocale().equals(component.myLocaleBox.getValueOrError());
+
     int inactiveTimeout = -1;
     try {
       inactiveTimeout = Integer.parseInt(component.myTfInactiveTimeout.getValue());
@@ -217,6 +233,9 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
     myGeneralSettings.setConfirmExit(component.myConfirmExit.getValue());
     myGeneralSettings.setConfirmOpenNewProject(getConfirmOpenNewProject(component));
     myGeneralSettings.setProcessCloseConfirmation(getProcessCloseConfirmation(component));
+
+    LocalizeManager localizeManager = LocalizeManager.getInstance();
+    localizeManager.setLocale(component.myLocaleBox.getValueOrError());
 
     myGeneralSettings.setAutoSaveIfInactive(component.myChkAutoSaveIfInactive.getValue());
     try {
@@ -287,6 +306,9 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
 
     reset(component.myFileChooseDialogBox, myFileOperateDialogSettings::getFileChooseDialogId);
     reset(component.myFileSaveDialogBox, myFileOperateDialogSettings::getFileSaveDialogId);
+
+    LocalizeManager localizeManager = LocalizeManager.getInstance();
+    component.myLocaleBox.setValue(localizeManager.getLocale());
   }
 
   @RequiredUIAccess

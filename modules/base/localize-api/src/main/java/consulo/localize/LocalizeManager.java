@@ -15,9 +15,11 @@
  */
 package consulo.localize;
 
-import consulo.util.ServiceLoaderUtil;
+import com.intellij.openapi.Disposable;
+import consulo.util.nodep.ServiceLoaderUtil;
 
 import javax.annotation.Nonnull;
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -33,10 +35,25 @@ public abstract class LocalizeManager {
   }
 
   /**
-   * Will throw exception on second call
+   * Return unformatted localize text
+   *
+   * @throws IllegalArgumentException if key is invalid
    */
-  public abstract void initiaze(@Nonnull Set<ClassLoader> classLoaders);
+  @Nonnull
+  public abstract String getUnformattedText(@Nonnull LocalizeKey key);
+
+  public abstract void setLocale(@Nonnull Locale locale);
 
   @Nonnull
-  public abstract LocalizeLibraryBuilder newBuilder(@Nonnull String pluginId, @Nonnull Localize localize);
+  public abstract Locale getLocale();
+
+  @Nonnull
+  public abstract Set<Locale> getAvaliableLocales();
+
+  public abstract void addListener(@Nonnull LocalizeManagerListener listener, @Nonnull Disposable disposable);
+
+  public abstract int getModificationCount();
+
+  @Nonnull
+  public abstract String formatText(String unformattedText, Object... arg);
 }

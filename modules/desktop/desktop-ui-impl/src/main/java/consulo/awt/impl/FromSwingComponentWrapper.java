@@ -15,7 +15,6 @@
  */
 package consulo.awt.impl;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.ui.Component;
 
 import javax.annotation.Nonnull;
@@ -24,8 +23,6 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2019-02-16
  */
-@Deprecated
-@DeprecationInfo("Internal class, don't use it in plugins")
 public interface FromSwingComponentWrapper {
   @Nonnull
   Component toUIComponent();

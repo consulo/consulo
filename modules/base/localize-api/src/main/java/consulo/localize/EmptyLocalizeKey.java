@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,64 +13,62 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.localize.impl;
-
-import com.intellij.CommonBundle;
-import consulo.localize.LocalizeKey;
-import consulo.localize.LocalizeValue;
+package consulo.localize;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 2019-04-11
+ * @since 2020-05-20
  */
-class LocalizeKeyImpl implements LocalizeKey {
-  private final String myId;
+final class EmptyLocalizeKey implements LocalizeKey {
+  static final EmptyLocalizeKey INSTANCE = new EmptyLocalizeKey();
 
-  private LocalizeLibraryImpl myLibrary;
-
-  LocalizeKeyImpl(String id) {
-    myId = id;
+  @Nonnull
+  @Override
+  public String getLocalizeId() {
+    return "";
   }
 
-  void setLibrary(LocalizeLibraryImpl library) {
-    myLibrary = library;
+  @Nonnull
+  @Override
+  public String getKey() {
+    return "";
   }
 
   @Nonnull
   @Override
   public LocalizeValue getValue() {
-    return () -> myLibrary.getText(myId);
+    return LocalizeValue.empty();
   }
 
   @Nonnull
   @Override
   public LocalizeValue getValue(Object arg) {
-    return () -> CommonBundle.format(myLibrary.getText(myId), arg);
+    return LocalizeValue.empty();
   }
 
   @Nonnull
   @Override
   public LocalizeValue getValue(Object arg0, Object arg1) {
-    return () -> CommonBundle.format(myLibrary.getText(myId), arg0, arg1);
+    return LocalizeValue.empty();
   }
 
   @Nonnull
   @Override
   public LocalizeValue getValue(Object arg0, Object arg1, Object arg2) {
-    return () -> CommonBundle.format(myLibrary.getText(myId), arg0, arg1, arg2);
+    return LocalizeValue.empty();
   }
 
   @Nonnull
   @Override
   public LocalizeValue getValue(Object arg0, Object arg1, Object arg2, Object arg3) {
-    return () -> CommonBundle.format(myLibrary.getText(myId), arg0, arg1, arg2, arg3);
+    return LocalizeValue.empty();
   }
 
   @Nonnull
   @Override
   public LocalizeValue getValue(Object arg0, Object arg1, Object arg2, Object arg3, Object arg4) {
-    return () -> CommonBundle.format(myLibrary.getText(myId), arg0, arg1, arg2, arg3, arg4);
+    return LocalizeValue.empty();
   }
 }

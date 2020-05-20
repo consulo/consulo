@@ -18,6 +18,9 @@ package consulo.container.classloader;
 import consulo.container.plugin.PluginId;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Enumeration;
 
 /**
  * @author VISTALL
@@ -28,4 +31,7 @@ public interface PluginClassLoader {
   PluginId getPluginId();
 
   boolean hasLoadedClass(@Nonnull String className);
+
+  @Nonnull
+  Enumeration<URL> findOwnResources(String name) throws IOException;
 }

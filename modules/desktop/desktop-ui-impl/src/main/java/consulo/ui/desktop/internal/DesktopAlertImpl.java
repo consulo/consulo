@@ -23,6 +23,7 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.ui.DialogUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
 import consulo.ui.impl.BaseAlert;
@@ -95,14 +96,14 @@ class DesktopAlertImpl<V> extends BaseAlert<V> {
 
       if (myRemember != null) {
         myRememberBox = new DesktopCheckBoxImpl();
-        myRememberBox.setText(myRemember.getMessageBoxText());
+        myRememberBox.setLabelText(LocalizeValue.of(myRemember.getMessageBoxText()));
         myRememberBox.setValue(myRemember.isRememberByDefault());
 
-        DialogUtil.registerMnemonic((JCheckBox)myRememberBox.toAWTComponent(), '&');
+        DialogUtil.registerMnemonic(myRememberBox.toAWTComponent(), '&');
 
         JComponent southPanel = panel;
 
-        panel = addDoNotShowCheckBox(southPanel, (JComponent)myRememberBox.toAWTComponent());
+        panel = addDoNotShowCheckBox(southPanel, myRememberBox.toAWTComponent());
 
         panel.setBorder(IdeBorderFactory.createEmptyBorder(JBUI.insetsTop(8)));
       }
