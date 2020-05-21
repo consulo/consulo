@@ -44,7 +44,7 @@ public class UiDebugger extends JPanel implements Disposable {
   private final UiDebuggerExtension[] myExtensions;
 
   public UiDebugger() {
-    Disposer.register(Disposer.get("ui"), this);
+    consulo.disposer.Disposer.register(consulo.disposer.Disposer.get("ui"), this);
 
     myTabs = new JBEditorTabs(null, ActionManager.getInstance(), null, this);
     myTabs.getPresentation().setPaintBorder(JBUI.scale(1), 0, 0, 0)

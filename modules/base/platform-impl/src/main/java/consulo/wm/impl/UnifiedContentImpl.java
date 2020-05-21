@@ -223,7 +223,7 @@ public class UnifiedContentImpl extends UserDataHolderBase implements ContentEx 
 
   @Override
   public final void release() {
-    Disposer.dispose(this);
+    consulo.disposer.Disposer.dispose(this);
   }
 
   //TODO[anton,vova] investigate
@@ -306,7 +306,7 @@ public class UnifiedContentImpl extends UserDataHolderBase implements ContentEx 
   @Override
   public void dispose() {
     if (myShouldDisposeContent && myComponent != null) {
-      Disposer.dispose(myComponent);
+      consulo.disposer.Disposer.dispose(myComponent);
     }
 
     myComponent = null;
@@ -315,7 +315,7 @@ public class UnifiedContentImpl extends UserDataHolderBase implements ContentEx 
 
     clearUserData();
     if (myDisposer != null) {
-      Disposer.dispose(myDisposer);
+      consulo.disposer.Disposer.dispose(myDisposer);
       myDisposer = null;
     }
   }

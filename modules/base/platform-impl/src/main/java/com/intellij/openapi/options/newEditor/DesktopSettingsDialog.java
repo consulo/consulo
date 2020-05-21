@@ -32,6 +32,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.WholeWestDialogWrapper;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
@@ -314,14 +315,14 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
     return null;
   }
 
-  private class ApplyAction extends AbstractAction {
+  private class ApplyAction extends DialogWrapperAction {
     public ApplyAction() {
-      super(CommonBundle.getApplyButtonText());
+      super(CommonLocalize.buttonApply());
       setEnabled(false);
     }
 
     @Override
-    public void actionPerformed(final ActionEvent e) {
+    protected void doAction(ActionEvent e) {
       myEditor.apply();
       myEditor.repaint();
     }

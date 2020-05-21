@@ -200,6 +200,11 @@ public class RegistryValue {
     });
   }
 
+  public void addListener(@Nonnull final RegistryValueListener listener, @Nonnull consulo.disposer.Disposable parent) {
+    myListeners.add(listener);
+    consulo.disposer.Disposer.register(parent, () -> myListeners.remove(listener));
+  }
+
   @Override
   public String toString() {
     return myKey + "=" + asString();

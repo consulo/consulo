@@ -15,7 +15,7 @@
  */
 package consulo.ui.app;
 
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;

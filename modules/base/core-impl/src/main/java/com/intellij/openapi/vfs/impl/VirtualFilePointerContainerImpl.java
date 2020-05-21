@@ -4,6 +4,7 @@ package com.intellij.openapi.vfs.impl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
+import consulo.disposer.TraceableDisposable;
 import consulo.logging.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
@@ -60,7 +61,7 @@ public class VirtualFilePointerContainerImpl implements VirtualFilePointerContai
   private final TraceableDisposable myTraceableDisposable;
 
   VirtualFilePointerContainerImpl(@Nonnull VirtualFilePointerManager manager, @Nonnull Disposable parentDisposable, @Nullable VirtualFilePointerListener listener) {
-    myTraceableDisposable = Disposer.newTraceDisposable(TRACE_CREATION && !ApplicationInfoImpl.isInStressTest());
+    myTraceableDisposable = TraceableDisposable.newTraceDisposable(TRACE_CREATION && !ApplicationInfoImpl.isInStressTest());
     myVirtualFilePointerManager = manager;
     myParent = parentDisposable;
     myListener = listener;

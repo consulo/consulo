@@ -17,13 +17,12 @@ package com.intellij.openapi.vfs.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.TraceableDisposable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.PathUtil;
+import consulo.disposer.TraceableDisposable;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
@@ -39,7 +38,7 @@ class VirtualFilePointerImpl implements VirtualFilePointer {
   private final TraceableDisposable myTraceableDisposable;
 
   VirtualFilePointerImpl() {
-    myTraceableDisposable = Disposer.newTraceDisposable(TRACE_CREATION);
+    myTraceableDisposable = TraceableDisposable.newTraceDisposable(TRACE_CREATION);
   }
 
   @Override

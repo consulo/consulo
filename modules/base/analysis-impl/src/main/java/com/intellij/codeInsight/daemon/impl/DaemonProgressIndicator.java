@@ -19,8 +19,8 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.progress.StandardProgressIndicator;
 import com.intellij.openapi.progress.util.AbstractProgressIndicatorBase;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.TraceableDisposable;
+import consulo.disposer.Disposer;
+import consulo.disposer.TraceableDisposable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

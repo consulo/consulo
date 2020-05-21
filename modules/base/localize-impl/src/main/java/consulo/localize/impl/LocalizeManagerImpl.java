@@ -16,7 +16,6 @@
 package consulo.localize.impl;
 
 import com.intellij.CommonBundle;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.io.StreamUtil;
@@ -25,6 +24,7 @@ import com.intellij.util.EventDispatcher;
 import com.intellij.util.io.URLUtil;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeManagerListener;

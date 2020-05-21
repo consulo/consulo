@@ -16,13 +16,13 @@
 package com.intellij.util.ui.update;
 
 import com.intellij.ide.DataManager;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import consulo.application.ApplicationProperties;
 import javax.annotation.Nonnull;
@@ -83,7 +83,7 @@ public abstract class LazyUiDisposable<T extends Disposable> implements Activata
   private static AsyncResult<Disposable> findDisposable(Disposable defaultValue, final Key<? extends Disposable> key) {
     if (defaultValue == null) {
       if (ApplicationManager.getApplication() != null) {
-        final AsyncResult<Disposable> result = new AsyncResult<>();
+        final AsyncResult<Disposable> result = AsyncResult.undefined();
         DataManager.getInstance().getDataContextFromFocus().doWhenDone(context -> {
           Disposable disposable = context.getData(key);
           if (disposable == null) {

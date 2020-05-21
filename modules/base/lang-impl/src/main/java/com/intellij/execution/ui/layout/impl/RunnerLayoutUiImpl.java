@@ -45,7 +45,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
-public class RunnerLayoutUiImpl implements Disposable.Parent, RunnerLayoutUi, LayoutStateDefaults, LayoutViewOptions, DataProvider {
+public class RunnerLayoutUiImpl implements consulo.disposer.Disposable.Parent, RunnerLayoutUi, LayoutStateDefaults, LayoutViewOptions, DataProvider {
   private final RunnerLayout myLayout;
   private final RunnerContentUi myContentUI;
 
@@ -58,15 +58,15 @@ public class RunnerLayoutUiImpl implements Disposable.Parent, RunnerLayoutUi, La
                             @Nonnull String runnerTitle,
                             @Nonnull String sessionName) {
     myLayout = RunnerLayoutSettings.getInstance().getLayout(runnerId);
-    Disposer.register(parent, this);
+    consulo.disposer.Disposer.register(parent, this);
 
     myContentUI = new RunnerContentUi(project, this, ActionManager.getInstance(), IdeFocusManager.getInstance(project), myLayout,
                                       runnerTitle + " - " + sessionName);
-    Disposer.register(this, myContentUI);
+    consulo.disposer.Disposer.register(this, myContentUI);
 
     myViewsContentManager = getContentFactory().createContentManager(myContentUI.getContentUI(), true, project);
     myViewsContentManager.addDataProvider(this);
-    Disposer.register(this, myViewsContentManager);
+    consulo.disposer.Disposer.register(this, myViewsContentManager);
   }
 
   @Override

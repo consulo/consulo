@@ -24,6 +24,7 @@ import com.intellij.util.EventDispatcher;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.XmlSerializer;
+import consulo.disposer.TraceableDisposable;
 import consulo.logging.Logger;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import gnu.trove.THashSet;
@@ -101,7 +102,7 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
 
   // primary
   private LibraryImpl(LibraryTable table, @Nullable ModuleRootLayerImpl rootModel, LibraryImpl newSource, String name, @Nullable PersistentLibraryKind<?> kind) {
-    myTraceableDisposable = Disposer.newTraceDisposable(true);
+    myTraceableDisposable = TraceableDisposable.newTraceDisposable(true);
     myLibraryTable = table;
     myRootModel = rootModel;
     mySource = newSource;

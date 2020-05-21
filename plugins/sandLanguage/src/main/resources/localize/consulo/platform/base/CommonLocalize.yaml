@@ -1,0 +1,6 @@
+button.apply:
+  text: '&Применить'
+button.cancel:
+  text: Отмена
+button.help:
+  text: Помощь

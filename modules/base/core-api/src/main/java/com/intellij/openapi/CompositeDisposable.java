@@ -16,6 +16,8 @@
 package com.intellij.openapi;
 
 import com.intellij.openapi.util.Disposer;
+import consulo.annotation.DeprecationInfo;
+
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -27,6 +29,8 @@ import java.util.List;
  * Comparing to registering these additional disposables with Disposer one by one,
  * this class improves on the memory usage by not creating temporary objects inside Disposer.
  */
+@Deprecated
+@DeprecationInfo("Use consulo.disposer.CompositeDisposable")
 public class CompositeDisposable implements Disposable {
   private final List<Disposable> myDisposables = new ArrayList<Disposable>();
   private boolean disposed;

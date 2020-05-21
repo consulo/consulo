@@ -297,7 +297,7 @@ public abstract class JBTabsImpl extends JComponent
 
     new LazyUiDisposable<JBTabsImpl>(parent, this, this) {
       @Override
-      protected void initialize(@Nonnull Disposable parent, @Nonnull JBTabsImpl child, @Nullable Project project) {
+      protected void initialize(@Nonnull consulo.disposer.Disposable parent, @Nonnull JBTabsImpl child, @Nullable Project project) {
         if (project != null) {
           myProject = project;
         }

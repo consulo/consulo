@@ -13,26 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.util;
-
-import com.intellij.openapi.Disposable;
+package consulo.disposer;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
+import javax.annotation.Nullable;
 
 /**
- * @author VISTALL
- * @since 2019-03-07
+ * Traces creation and disposal by storing corresponding stacktraces.
+ * In constructor it saves creation stacktrace
+ * In kill() it saves disposal stacktrace
  */
-public class DisposerUtil {
-  public static <T> void add(final T element, @Nonnull final Collection<T> result, @Nonnull final Disposable parentDisposable) {
-    if (result.add(element)) {
-      Disposer.register(parentDisposable, new Disposable() {
-        @Override
-        public void dispose() {
-          result.remove(element);
-        }
-      });
-    }
+public interface TraceableDisposable {
+  static TraceableDisposable newTraceDisposable(boolean debug) {
+    return Disposer.newTraceDisposable(debug);
   }
+
+  void kill(@Nullable String msg);
+
+  void killExceptionally(@Nonnull Throwable throwable);
+
+  void throwObjectNotDisposedError(@Nonnull final String msg);
+
+  void throwDisposalError(String msg) throws RuntimeException;
+
+  String getStackTrace();
 }

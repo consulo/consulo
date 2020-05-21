@@ -108,6 +108,12 @@ select.in.aspects:
   text: Aspects
 action.flatten.packages:
   text: Flatten Packages
+action.flatten.view:
+  text: Flatten View
+group.group.by:
+  text: Group By
+group.view.options:
+  text: View Options
 button.go.to:
   text: '&Go to'
 button.remove:
@@ -222,6 +228,8 @@ command.create.class.from.template:
   text: Create Class From Template
 command.create.file.from.template:
   text: Create File From Template
+action.create.new.class.name.field:
+  text: Name
 error.parsing.file.template:
   text: 'Error parsing file template: {0}'
 title.velocity.error:
@@ -690,6 +698,8 @@ command.close.active.editor:
   text: Close Active Editor
 action.close:
   text: _Close
+action.close.project:
+  text: Close Pro_ject
 action.create.new.directory.or.package:
   text: Create new directory or package
 title.new.directory:
@@ -719,7 +729,7 @@ title.cannot.create.enum:
 command.create.enum:
   text: Create enum
 action.create.new.file:
-  text: Create New File
+  text: File
 action.create.new.file.description:
   text: Create new file
 prompt.enter.new.file.name:
@@ -1306,7 +1316,7 @@ text.todo.no.patterns:
 text.todo.no.filters:
   text: No filters configured
 node.todo.group:
-  text: '{0} ({1} {1,choice,0#items|1#item|2#items} in {2} {2,choice,0#files|1#file|2#files})'
+  text: '{0} {0,choice,0#items|1#item|2#items}'
 node.todo.summary:
   text: Found {0} TODO {0,choice,0#items|1#item|2#items} in {1} {1,choice,0#files|1#file|2#files}
 node.todo.no.items.found:
@@ -1314,9 +1324,11 @@ node.todo.no.items.found:
 node.todo.found.items:
   text: '{0} (found {1} {1,choice,1#item|2#items})'
 node.todo.items:
-  text: '{0} ({1} {1, choice, 1#item|2#items})'
+  text: '{0} {0, choice, 0#items|1#item|2#items}'
 title.appearance:
   text: Appearance
+node.todo.more.items:
+  text: '...more...'
 group.window.options:
   text: Window Options
 checkbox.show.memory.indicator:
@@ -2131,6 +2143,10 @@ plugin.manager.incompatible.deps.tooltip:
   text: Required {0, choice, 1#plugin|2#plugins} {1} {0, choice, 1#is|2#are} not enabled
 plugin.manager.incompatible.tooltip:
   text: Plugin is incompatible with current installation
+plugin.advestiser.notification.text:
+  text: '{0, choice, 1#Plugin|2#Plugins} supporting current file are found'
+plugin.advestiser.notification.install.link:
+  text: Install {0, choice, 1#plugin|2#plugins}
 project.new.wizard.project.identification:
   text: project
 project.new.wizard.module.identification:
@@ -2309,6 +2325,8 @@ update.there.are.no.updates:
   text: There are no updates
 vmoptions.warn.message:
   text: The code cache size of {0}m is too low. Please increase it to {1}m (or more) to avoid performance degradation. How you can do it read at <a href="https://github.com/consulo/consulo/wiki/VM-Options">wiki</a>.
+lower.jre.versions.11.message:
+  text: Java versions lower 11 will be not supported in near future. Please migrate to JRE 11+(<a href="ignore">ignore</a>) or <a href="jre">use bundled jre</a>(at next update)
 unsupported.jvm.ea.message:
   text: Early Access Java versions may cause compatibility issues. Please use stable release.
 outdated.jre.version.message1:
@@ -2363,3 +2381,151 @@ activation.auth.title:
   text: Unauthorized Operation
 activation.auth.message:
   text: The command line launcher is outdated. Please refresh it (via Tools | Create Command-line Launcher).
+error.0.browser.path.not.specified:
+  text: '{0} browser path is not specified.'
+show.in.find.window.button.name:
+  text: Open in Find Tool Window
+searcheverywhere.allelements.tab.name:
+  text: All
+searcheverywhere.commands.tab.name:
+  text: Commands
+searcheverywhere.run.configs.tab.name:
+  text: Run Configurations
+searcheverywhere.textfield.hint:
+  text: Type {0} to see commands
+searcheverywhere.found.matches.title:
+  text: Matches for ''{0}'' in [{1}]
+searcheverywhere.found.targets.title:
+  text: Unsorted results
+searcheverywhere.found.matches.generated.code.title:
+  text: Matches for ''{0}'' in [{1}] in generated code
+searcheverywhere.history.shortcuts.hint:
+  text: Press {0} or {1} to navigate through the search history
+searcheverywhere.nothing.found.for.contributor:
+  text: No {0} found.
+searcheverywhere.nothing.found.for.contributor.anywhere:
+  text: No {0} found.
+searcheverywhere.nothing.found.for.all:
+  text: Nothing found.
+searcheverywhere.nothing.found.for.all.anywhere:
+  text: Nothing found.
+searcheverywhere.indexing.mode.not.supported:
+  text: Search in ''{0}'' is not available while {1} is updating indices
+searcheverywhere.indexing.incomplete.results:
+  text: Search in ''{0}'' results maybe incomplete while {1} is updating indices
+searcheverywhere.runconfigurations.command.run.description:
+  text: Start Run Configuration in 'Run' mode
+searcheverywhere.runconfigurations.command.debug.description:
+  text: Start Run Configuration in 'Debug' mode
+checkbox.include.non.project.items:
+  text: Include &non-&&{0} items
+show.in.find.window.button.description:
+  text: Open search results in Find tool window
+go.to.class.kind.text:
+  text: class
+go.to.file.toolwindow.title:
+  text: Files matching pattern
+go.to.class.toolwindow.title:
+  text: '{0} matching pattern'
+go.to.class.dumb.mode.message:
+  text: Go To {0} action is not available until indices are built, using Go To File instead
+go.to.class.action.description:
+  text: Quickly navigate to a {0} by name
+checkbox.disabled.included:
+  text: Include &disabled actions
+label.no.enabled.actions.found:
+  text: No enabled actions found
+recent.files.checkbox.label:
+  text: Show changed only
+recent.locations.popup.title:
+  text: Recent Locations
+recent.locations.changed.locations:
+  text: Recent Changed Locations
+recent.locations.popup.empty.text:
+  text: No recent locations found
+recent.locations.title.text:
+  text: Show changed only
+recent.locations.popup.empty.file.text:
+  text: Empty lines
+run.anything.command.empty.list.title:
+  text: Press ENTER to execute input command
+run.anything.console.process.finished:
+  text: |2-
+
+    Process finished with exit code {0}.
+run.anything.console.title:
+  text: Run anything command
+run.anything.console.error.title:
+  text: Cannot Run Command
+run.anything.run.debug.title:
+  text: 'Debug:'
+run.anything.run.in.context.title:
+  text: 'Run in Context:'
+run.anything.run.in.context.debug.title:
+  text: 'Run in Context with Debug:'
+run.anything.run.anything.title:
+  text: Run Anything
+run.anything.group.title.commands:
+  text: Recent commands
+run.anything.group.title.temporary:
+  text: Temporary configurations
+run.anything.group.title.permanent:
+  text: Permanent configurations
+run.anything.group.settings.title:
+  text: Show ''{0}''
+run.anything.custom.activity.rollback.action:
+  text: Rollback
+run.anything.custom.activity.notification.group.id:
+  text: Run Anything
+run.anything.ad.run.action.with.default.settings:
+  text: Press {0} to run with default settings
+run.anything.ad.run.with.debug:
+  text: '{0} to debug'
+run.anything.ad.run.in.context:
+  text: Press {0} to run in the current file context
+run.anything.ad.command.delete:
+  text: '{0} to delete recent command'
+run.anything.general.group.title:
+  text: General
+run.anything.recent.group.title:
+  text: Recent
+run.anything.recent.project.help.group.title:
+  text: Recent projects
+run.anything.recent.project.completion.group.title:
+  text: Recent projects
+run.anything.recent.project.command.placeholder:
+  text: open <project name>
+run.anything.actions.undefined:
+  text: Undefined
+run.anything.notification.warning.content:
+  text: Command ''{0}'' failed to execute.
+run.anything.notification.warning.title:
+  text: Failed Command Execution
+run.anything.run.configurations.group.title:
+  text: Run configurations
+run.anything.help.list.empty.secondary.text:
+  text: Select command
+run.anything.main.list.empty.primary.text:
+  text: Run command or configuration
+run.anything.main.list.empty.secondary.text:
+  text: Type "?" to see all commands
+run.anything.action.tooltip.text:
+  text: Run Anything
+run.anything.double.ctrl.shortcut:
+  text: Double {0}
+run.anything.hint.initial.text:
+  text: Press {0} or {1} to navigate through the suggestion list
+run.anything.indexing.mode.not.supported:
+  text: Run anything is not available while indices are updating
+run.anything.context.browse.directory:
+  text: Browse Directory...
+run.anything.context.project:
+  text: Project
+run.anything.context.title.working.directory:
+  text: Working Directory
+run.anything.context.separator.directories:
+  text: Directories
+run.anything.context.separator.modules:
+  text: Modules
+run.anything.context.tooltip:
+  text: Choose context the current command will be executed in

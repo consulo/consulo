@@ -15,11 +15,10 @@
  */
 package consulo.disposer.internal;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.TraceableDisposable;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import consulo.disposer.Disposable;
+import consulo.disposer.TraceableDisposable;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.ServiceLoader;
@@ -31,7 +30,7 @@ import java.util.ServiceLoader;
 public abstract class DisposerInternal {
   public static final DisposerInternal ourInstance = loadSingleOrError(DisposerInternal.class);
 
-  public abstract void register(@Nonnull Disposable parent, @Nonnull Disposable child, @NonNls @Nullable final String key);
+  public abstract void register(@Nonnull Disposable parent, @Nonnull Disposable child, @Nullable final String key);
 
   public abstract boolean isDisposed(@Nonnull Disposable disposable);
 

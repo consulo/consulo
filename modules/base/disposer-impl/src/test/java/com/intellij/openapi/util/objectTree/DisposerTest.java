@@ -19,6 +19,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Disposer;
 import consulo.disposer.internal.DisposerInternal;
 import consulo.disposer.internal.impl.DisposerInternalImpl;
+import consulo.disposer.internal.impl.objectTree.ObjectTree;
 import junit.framework.TestCase;
 import org.jetbrains.annotations.NonNls;
 

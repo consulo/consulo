@@ -51,6 +51,7 @@ import consulo.application.impl.BaseApplication;
 import consulo.application.impl.WriteThread;
 import consulo.application.internal.ApplicationWithOwnWriteThread;
 import consulo.desktop.boot.main.windows.WindowsCommandLineProcessor;
+import consulo.disposer.Disposable;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.logging.Logger;
 import consulo.start.CommandLineArgs;
@@ -122,7 +123,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     myGatherStatistics = LOG.isDebugEnabled() || isInternal();
 
     if (!isHeadless) {
-      Disposer.register(this, Disposer.newDisposable(), "ui");
+      consulo.disposer.Disposer.register(this, Disposable.newDisposable(), "ui");
 
       StartupUtil.addExternalInstanceListener(commandLineArgs -> {
         LOG.info("ApplicationImpl.externalInstanceListener invocation");

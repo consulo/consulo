@@ -1,21 +1,21 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.openapi.util.objectTree;
+package consulo.disposer.internal.impl.objectTree;
 
-import com.intellij.openapi.Disposable;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.SmartList;
+import consulo.disposer.Disposable;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 final class ObjectNode {
   private static final ObjectNode[] EMPTY_ARRAY = new ObjectNode[0];
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.util.objectTree.ObjectNode");
+  private static final Logger LOG = Logger.getInstance(ObjectNode.class);
 
   private final ObjectTree myTree;
 

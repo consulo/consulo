@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,39 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.util;
+package consulo.disposer;
 
-import com.intellij.openapi.Disposable;
 import consulo.disposer.internal.DisposerInternal;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+/**
+ * @author VISTALL
+ * @since 2020-05-21
+ */
 public class Disposer {
   private static final DisposerInternal ourInternal = DisposerInternal.ourInstance;
 
   public static TraceableDisposable newTraceDisposable(boolean debug) {
     return ourInternal.newTraceDisposable(debug);
-  }
-
-  @Nonnull
-  public static Disposable newDisposable() {
-    return newDisposable(null);
-  }
-
-  @Nonnull
-  public static Disposable newDisposable(@Nullable final String debugName) {
-    return new Disposable() {
-      @Override
-      public void dispose() {
-      }
-
-      @Override
-      public String toString() {
-        return debugName == null ? super.toString() : debugName;
-      }
-    };
   }
 
   @Nullable
@@ -57,7 +40,7 @@ public class Disposer {
     register(parent, child, null);
   }
 
-  public static void register(@Nonnull Disposable parent, @Nonnull Disposable child, @NonNls @Nullable final String key) {
+  public static void register(@Nonnull Disposable parent, @Nonnull Disposable child, @Nullable final String key) {
     ourInternal.register(parent, child, key);
   }
 

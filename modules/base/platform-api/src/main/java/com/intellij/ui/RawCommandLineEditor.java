@@ -16,12 +16,12 @@
 package com.intellij.ui;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.Function;
 import com.intellij.util.execution.ParametersListUtil;
 import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
 import consulo.ui.TextBoxWithExpandAction;
 import consulo.ui.ValueComponent;
 

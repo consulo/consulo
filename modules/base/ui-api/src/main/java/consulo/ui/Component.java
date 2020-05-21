@@ -15,9 +15,7 @@
  */
 package consulo.ui;
 
-import com.intellij.openapi.Disposable;
-import consulo.util.dataholder.Key;
-import consulo.util.dataholder.UserDataHolder;
+import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.KeyListener;
 import consulo.ui.shared.Size;
@@ -25,6 +23,8 @@ import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.shared.border.BorderStyle;
 import consulo.ui.style.ColorKey;
 import consulo.ui.style.ComponentColors;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;

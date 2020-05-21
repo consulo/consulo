@@ -15,16 +15,15 @@
  */
 package consulo.disposer.internal.impl;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.TraceableDisposable;
-import com.intellij.openapi.util.TraceableDisposableImpl;
-import com.intellij.openapi.util.objectTree.ObjectTree;
-import com.intellij.util.ObjectUtils;
+import consulo.disposer.internal.impl.objectTree.ObjectTree;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.TraceableDisposable;
 import consulo.disposer.internal.DisposerInternal;
+import consulo.util.lang.ObjectUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
 
@@ -96,8 +95,9 @@ public class DisposerInternalImpl extends DisposerInternal {
     return myKeyDisposables.get(key);
   }
 
+  @Override
   public Throwable getDisposalTrace(@Nonnull Disposable disposable) {
-    return ObjectUtils.tryCast(getTree().getDisposalInfo(disposable), Throwable.class);
+    return ObjectUtil.tryCast(getTree().getDisposalInfo(disposable), Throwable.class);
   }
 
   public void dispose(@Nonnull Disposable disposable) {

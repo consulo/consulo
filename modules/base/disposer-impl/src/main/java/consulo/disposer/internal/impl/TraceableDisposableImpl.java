@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.util;
+package consulo.disposer.internal.impl;
 
-import com.intellij.openapi.util.objectTree.ThrowableInterner;
+import consulo.disposer.internal.impl.objectTree.ThrowableInterner;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.disposer.TraceableDisposable;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

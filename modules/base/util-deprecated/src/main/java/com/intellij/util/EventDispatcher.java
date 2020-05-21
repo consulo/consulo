@@ -1,12 +1,13 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.StaticGetter;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.DisposableWrapperList;
+import consulo.annotation.DeprecationInfo;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
@@ -153,6 +154,12 @@ public class EventDispatcher<T extends EventListener> {
   }
 
   public void addListener(@Nonnull T listener, @Nonnull Disposable parentDisposable) {
+    myListeners.add(listener, parentDisposable);
+  }
+
+  @Deprecated
+  @DeprecationInfo("com.intellij.openapi.Disposable deprecated")
+  public void addListener(@Nonnull T listener, @Nonnull com.intellij.openapi.Disposable parentDisposable) {
     myListeners.add(listener, parentDisposable);
   }
 

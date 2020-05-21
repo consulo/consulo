@@ -21,6 +21,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.application.ApplicationManager;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import com.intellij.openapi.fileChooser.FileTextField;
 import com.intellij.openapi.keymap.Keymap;
@@ -28,7 +29,6 @@ import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.*;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -165,7 +165,7 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
 
 
     new LazyUiDisposable<FileTextFieldImpl>(parent, field, this) {
-      protected void initialize(@Nonnull Disposable parent, @Nonnull FileTextFieldImpl child, @Nullable Project project) {
+      protected void initialize(@Nonnull consulo.disposer.Disposable parent, @Nonnull FileTextFieldImpl child, @Nullable Project project) {
         Disposer.register(child, myUiUpdater);
       }
     };

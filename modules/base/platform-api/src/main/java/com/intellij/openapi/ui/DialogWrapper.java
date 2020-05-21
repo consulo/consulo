@@ -54,7 +54,11 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.ui.*;
+import consulo.annotation.DeprecationInfo;
+import consulo.desktop.ui.swing.LocalizeAction;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.SwingUIDecorator;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -721,6 +725,18 @@ public abstract class DialogWrapper {
     else {
       button = new JButton(action) {
         @Override
+        public void updateUI() {
+          super.updateUI();
+
+          Action a = getAction();
+          if(a instanceof LocalizeAction) {
+            ((LocalizeAction)a).updateName();
+            
+            updateMnemonic(this, this.getText(), a);
+          }
+        }
+
+        @Override
         protected void configurePropertiesFromAction(Action a) {
           super.configurePropertiesFromAction(a);
 
@@ -749,39 +765,7 @@ public abstract class DialogWrapper {
       button.putClientProperty("JButton.buttonType", "text");
     }
 
-    if (text != null) {
-      int mnemonic = 0;
-      StringBuilder plainText = new StringBuilder();
-      for (int i = 0; i < text.length(); i++) {
-        char ch = text.charAt(i);
-        if (ch == '_' || ch == '&') {
-          i++;
-          if (i >= text.length()) {
-            break;
-          }
-          ch = text.charAt(i);
-          if (ch != '_' && ch != '&') {
-            // Mnemonic is case insensitive.
-            int vk = ch;
-            if (vk >= 'a' && vk <= 'z') {
-              vk -= 'a' - 'A';
-            }
-            mnemonic = vk;
-          }
-        }
-        plainText.append(ch);
-      }
-      button.setText(plainText.toString());
-      final Object name = action.getValue(Action.NAME);
-      if (mnemonic == KeyEvent.VK_Y && "Yes".equals(name)) {
-        myYesAction = action;
-      }
-      else if (mnemonic == KeyEvent.VK_N && "No".equals(name)) {
-        myNoAction = action;
-      }
-
-      button.setMnemonic(mnemonic);
-    }
+    updateMnemonic(button, text, action);
 
     if (action.getValue(DEFAULT_ACTION) != null) {
       if (myPeer != null && !myPeer.isHeadless()) {
@@ -789,6 +773,44 @@ public abstract class DialogWrapper {
       }
     }
     return button;
+  }
+
+  private void updateMnemonic(JButton button, String text, Action action) {
+    if(text == null) {
+      return;
+    }
+
+    int mnemonic = 0;
+    StringBuilder plainText = new StringBuilder();
+    for (int i = 0; i < text.length(); i++) {
+      char ch = text.charAt(i);
+      if (ch == '_' || ch == '&') {
+        i++;
+        if (i >= text.length()) {
+          break;
+        }
+        ch = text.charAt(i);
+        if (ch != '_' && ch != '&') {
+          // Mnemonic is case insensitive.
+          int vk = ch;
+          if (vk >= 'a' && vk <= 'z') {
+            vk -= 'a' - 'A';
+          }
+          mnemonic = vk;
+        }
+      }
+      plainText.append(ch);
+    }
+    button.setText(plainText.toString());
+    final Object name = action.getValue(Action.NAME);
+    if (mnemonic == KeyEvent.VK_Y && "Yes".equals(name)) {
+      myYesAction = action;
+    }
+    else if (mnemonic == KeyEvent.VK_N && "No".equals(name)) {
+      myNoAction = action;
+    }
+
+    button.setMnemonic(mnemonic);
   }
 
   protected DialogWrapperPeer createPeer(@Nonnull Component parent, final boolean canBeParent) {
@@ -1306,7 +1328,7 @@ public abstract class DialogWrapper {
       myErrorPane = c;
     }
 
-    if(myCreateSouthSection) {
+    if (myCreateSouthSection) {
       final JPanel southSection = new JPanel(new BorderLayout());
       root.add(southSection, BorderLayout.SOUTH);
 
@@ -1634,12 +1656,12 @@ public abstract class DialogWrapper {
     registerKeyboardShortcuts();
 
 
-    final Disposable uiParent = Disposer.get("ui");
+    final consulo.disposer.Disposable uiParent = consulo.disposer.Disposer.get("ui");
     if (uiParent != null) { // may be null if no app yet (license agreement)
-      Disposer.register(uiParent, myDisposable); // ensure everything is disposed on app quit
+      consulo.disposer.Disposer.register(uiParent, myDisposable); // ensure everything is disposed on app quit
     }
 
-    Disposer.register(myDisposable, () -> result.setDone(isOK()));
+    consulo.disposer.Disposer.register(myDisposable, () -> result.setDone(isOK()));
 
     myPeer.show();
 
@@ -1669,9 +1691,9 @@ public abstract class DialogWrapper {
 
     registerKeyboardShortcuts();
 
-    final Disposable uiParent = Disposer.get("ui");
-    if (uiParent != null) { // may be null if no app yet (license agreement)
-      Disposer.register(uiParent, myDisposable); // ensure everything is disposed on app quit
+    final consulo.disposer.Disposable uiParent = consulo.disposer.Disposer.get("ui");
+    if (uiParent != null) {
+      consulo.disposer.Disposer.register(uiParent, myDisposable); // ensure everything is disposed on app quit
     }
     return myPeer.showAsync();
   }
@@ -1814,18 +1836,24 @@ public abstract class DialogWrapper {
    * Base class for dialog wrapper actions that need to ensure that only
    * one action for the dialog is running.
    */
-  protected abstract class DialogWrapperAction extends AbstractAction {
+  protected abstract class DialogWrapperAction extends LocalizeAction {
     public static final String VISIBLE = "actionVisible";
 
     private boolean myVisible = true;
+
+    @Deprecated
+    @DeprecationInfo("Use constructor with LocalizeValue")
+    protected DialogWrapperAction(String name) {
+      super(name);
+    }
 
     /**
      * The constructor
      *
      * @param name the action name (see {@link Action#NAME})
      */
-    protected DialogWrapperAction(String name) {
-      putValue(NAME, name);
+    protected DialogWrapperAction(LocalizeValue localizeValue) {
+      super(localizeValue);
     }
 
     public void setVisible(boolean visible) {
@@ -1866,7 +1894,7 @@ public abstract class DialogWrapper {
 
   protected class OkAction extends DialogWrapperAction {
     public OkAction() {
-      super(CommonBundle.getOkButtonText());
+      super(CommonLocalize.buttonOk());
       putValue(DEFAULT_ACTION, Boolean.TRUE);
     }
 
@@ -1887,7 +1915,7 @@ public abstract class DialogWrapper {
 
   protected class CancelAction extends DialogWrapperAction {
     private CancelAction() {
-      super(CommonBundle.getCancelButtonText());
+      super(CommonLocalize.buttonCancel());
     }
 
     @Override
@@ -1925,9 +1953,9 @@ public abstract class DialogWrapper {
     }
   }
 
-  private class HelpAction extends AbstractAction {
+  private class HelpAction extends LocalizeAction {
     private HelpAction() {
-      putValue(NAME, CommonBundle.getHelpButtonText());
+      super(CommonLocalize.buttonHelp());
     }
 
     @Override

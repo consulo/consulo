@@ -15,7 +15,7 @@
  */
 package consulo.ui.model;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import consulo.ui.UIInternal;
 import consulo.ui.annotation.RequiredUIAccess;
 

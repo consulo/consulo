@@ -15,7 +15,7 @@
  */
 package consulo.ui;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import consulo.ui.event.FocusListener;
 
 import javax.annotation.Nonnull;

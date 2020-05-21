@@ -15,9 +15,8 @@
  */
 package consulo.ui.web.internal.base;
 
-import com.intellij.openapi.Disposable;
-import consulo.util.dataholder.Key;
 import com.vaadin.ui.AbstractComponent;
+import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.impl.UIDataObject;
@@ -26,6 +25,7 @@ import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.shared.border.BorderStyle;
 import consulo.ui.style.ColorKey;
 import consulo.ui.web.internal.TargetVaddin;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

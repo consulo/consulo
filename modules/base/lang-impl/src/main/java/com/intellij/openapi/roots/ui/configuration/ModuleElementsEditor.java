@@ -16,18 +16,17 @@
 
 package com.intellij.openapi.roots.ui.configuration;
 
-import com.intellij.openapi.CompositeDisposable;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.ModuleConfigurationEditor;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.navigation.History;
+import consulo.disposer.CompositeDisposable;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 
 /**
@@ -66,20 +65,25 @@ public abstract class ModuleElementsEditor implements ModuleConfigurationEditor 
     return myState;
   }
 
-  public void canApply() throws ConfigurationException {}
+  public void canApply() throws ConfigurationException {
+  }
 
   @RequiredUIAccess
   @Override
-  public void apply() throws ConfigurationException {}
+  public void apply() throws ConfigurationException {
+  }
 
   @RequiredUIAccess
   @Override
-  public void reset() {}
+  public void reset() {
+  }
 
   @Override
-  public void moduleStateChanged() {}
+  public void moduleStateChanged() {
+  }
 
-  public void moduleCompileOutputChanged(final String baseUrl, final String moduleName){}
+  public void moduleCompileOutputChanged(final String baseUrl, final String moduleName) {
+  }
 
   @RequiredUIAccess
   @Override

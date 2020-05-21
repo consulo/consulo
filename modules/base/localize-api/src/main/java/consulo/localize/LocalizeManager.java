@@ -15,7 +15,7 @@
  */
 package consulo.localize;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import consulo.util.nodep.ServiceLoaderUtil;
 
 import javax.annotation.Nonnull;

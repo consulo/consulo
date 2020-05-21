@@ -149,7 +149,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   private final EditorComponentImpl myEditorComponent;
   @Nonnull
   private final EditorGutterComponentImpl myGutterComponent;
-  private final TraceableDisposable myTraceableDisposable = Disposer.newTraceDisposable(true);
+  private final consulo.disposer.TraceableDisposable myTraceableDisposable = consulo.disposer.TraceableDisposable.newTraceDisposable(true);
   private final FocusModeModel myFocusModeModel;
   private volatile long myLastTypedActionTimestamp = -1;
   private String myLastTypedAction;

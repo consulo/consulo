@@ -13,21 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.platform.base.localize;
+package com.intellij.openapi.util;
 
-import consulo.localize.*;
+import com.intellij.openapi.Disposable;
+import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
 
 /**
  * @author VISTALL
- * @since 2019-04-11
+ * @since 2019-03-07
  */
-public class IdeLocalize {
-  private static final LocalizeKey checkbox_synchronize_files_on_frame_activation = LocalizeKey.of("consulo.platform.base.IdeLocalize", "checkbox.synchronize.files.on.frame.activation");
-
-  @Nonnull
-  public static LocalizeValue checkboxSynchronizeFilesOnFrameActivation() {
-    return checkbox_synchronize_files_on_frame_activation.getValue();
+@Deprecated
+@DeprecationInfo("Use consulo.disposer.util.DisposerUtil")
+public class DisposerUtil {
+  public static <T> void add(final T element, @Nonnull final Collection<T> result, @Nonnull final Disposable parentDisposable) {
+    if (result.add(element)) {
+      Disposer.register(parentDisposable, () -> result.remove(element));
+    }
   }
 }

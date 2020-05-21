@@ -1,0 +1,353 @@
+button.yes:
+  text: '&Yes'
+button.no:
+  text: '&No'
+dialog.options.do.not.show:
+  text: Do not show this dialog in the future
+dialog.options.do.not.ask:
+  text: Remember, don't ask again
+dialog.title.choose.date:
+  text: Choose Date
+dialog.ioexception.proxy:
+  text: Set up HTTP proxy settings
+dialog.ioexception.tryagain:
+  text: Try again
+button.cancel:
+  text: Cancel
+button.ok:
+  text: OK
+button.next:
+  text: Next
+button.back:
+  text: Back
+button.help:
+  text: Help
+button.retry:
+  text: '&Retry'
+button.skip:
+  text: Skip
+editbox.password:
+  text: '&Password:'
+checkbox.remember.password:
+  text: '&Remember password'
+editbox.login:
+  text: '&Login:'
+checkbox.use.http.proxy:
+  text: '&Use proxy'
+checkbox.proxy.authentication:
+  text: Proxy &authentication
+checkbox.use.http.proxy.pac:
+  text: Auto-detect proxy settings
+tooltip.http.proxy.pac:
+  text: This will attempt to use your system settings and is useful if your system uses a proxy autoconfiguration file (.pac).
+editbox.port.number:
+  text: 'Port &number:'
+editbox.host.name:
+  text: '&Host name:'
+title.http.proxy.settings:
+  text: HTTP Proxy Settings
+tree.node.loading:
+  text: Loading...
+title.error:
+  text: Error
+title.warning:
+  text: Warning
+button.continue:
+  text: Con&tinue
+button.yes.for.all:
+  text: Yes for &All
+button.no.for.all:
+  text: N&o for All
+button.apply:
+  text: '&Apply'
+action.close:
+  text: '&Close'
+action.help:
+  text: Help
+action.rerun:
+  text: Rerun
+button.reset:
+  text: '&Reset'
+button.reset.to.default:
+  text: '&Reset to Default'
+button.delete:
+  text: Delete
+button.copy:
+  text: Copy...
+button.close:
+  text: '&Close'
+exception.directory.can.not.create:
+  text: Cannot create directory {0}
+exception.directory.is.not.readable:
+  text: Directory is not readable {0}
+exception.directory.is.invalid:
+  text: Directory is invalid {0}
+button.add:
+  text: Add
+button.add.a:
+  text: '&Add'
+action.refresh:
+  text: Refresh
+close.action.name:
+  text: Close
+button.edit:
+  text: Edit
+button.remove:
+  text: Remove
+button.remove.r:
+  text: '&Remove'
+title.settings:
+  text: Settings
+title.settings.mac:
+  text: Preferences
+action.settings:
+  text: Se_ttings...
+action.settings.mac:
+  text: Preferences...
+action.settings.description:
+  text: Edit application settings
+action.settings.description.mac:
+  text: Edit application preferences
+action.settings.path:
+  text: File | Settings
+action.settings.path.mac:
+  text: Preferences
+date.format.less.than.a.minute:
+  text: less than a minute
+date.format.right.now:
+  text: right now
+date.format.minutes.ago:
+  text: '{0,choice, 0#Moments|1#A minute|2#{0,number} minutes|60#1 hour} ago'
+date.format.today:
+  text: Today
+date.format.yesterday:
+  text: Yesterday
+date.format.a.few.moments.ago:
+  text: moments ago
+date.format.in.a.few.moments:
+  text: in a few moments
+date.format.n.days:
+  text: '{0,choice, 0#zero days|1#one day|2#{0,number} days}'
+date.format.n.minutes:
+  text: '{0,choice, 0#zero minutes|1#one minute|2#{0,number} minutes}'
+date.format.n.hours:
+  text: '{0,choice, 0#zero hours|1#one hour|2#{0,number} hours}'
+date.format.n.months:
+  text: '{0,choice, 0#zero months|1#one month|2#{0,number} months}'
+date.format.n.weeks:
+  text: '{0,choice, 0#zero weeks|1#one week|2#{0,number} weeks}'
+date.format.n.years:
+  text: '{0,choice, 0#zero years|1#one year|2#{0,number} years}'
+date.format.in.n.days:
+  text: in {0,choice, 0#zero days|1#one day|2#{0,number} days}
+date.format.in.n.minutes:
+  text: in {0,choice, 0#zero minutes|1#one minute|2#{0,number} minutes}
+date.format.in.n.hours:
+  text: in {0,choice, 0#zero hours|1#one hour|2#{0,number} hours}
+date.format.in.n.months:
+  text: in {0,choice, 0#zero months|1#one month|2#{0,number} months}
+date.format.in.n.weeks:
+  text: in {0,choice, 0#zero weeks|1#one week|2#{0,number} weeks}
+date.format.in.n.years:
+  text: in {0,choice, 0#zero years|1#one year|2#{0,number} years}
+date.format.n.days.ago:
+  text: '{0,choice, 0#zero days|1#one day|2#{0,number} days} ago'
+date.format.n.minutes.ago:
+  text: '{0,choice, 0#zero minutes|1#one minute|2#{0,number} minutes} ago'
+date.format.n.hours.ago:
+  text: '{0,choice, 0#zero hours|1#one hour|2#{0,number} hours} ago'
+date.format.n.months.ago:
+  text: '{0,choice, 0#zero months|1#one month|2#{0,number} months} ago'
+date.format.n.weeks.ago:
+  text: '{0,choice, 0#zero weeks|1#one week|2#{0,number} weeks} ago'
+date.format.n.years.ago:
+  text: '{0,choice, 0#zero years|1#one year|2#{0,number} years} ago'
+incorrect.function.error.message:
+  text: Incorrect function.
+the.system.cannot.find.the.file.specified.error.message:
+  text: The system cannot find the file specified.
+the.system.cannot.find.the.path.specified.error.message:
+  text: The system cannot find the path specified.
+the.system.cannot.open.the.file.error.message:
+  text: The system cannot open the file.
+access.is.denied.error.message:
+  text: Access is denied.
+the.handle.is.invalid.error.message:
+  text: The handle is invalid.
+the.storage.control.blocks.were.destroyed.error.message:
+  text: The storage control blocks were destroyed.
+not.enough.storage.is.available.to.process.this.command.error.message:
+  text: Not enough storage is available to process this command.
+the.storage.control.block.address.is.invalid.error.message:
+  text: The storage control block address is invalid.
+the.environment.is.incorrect.error.message:
+  text: The environment is incorrect.
+an.attempt.was.made.to.load.a.program.with.an.incorrect.format.error.message:
+  text: An attempt was made to load a program with an incorrect format.
+the.access.code.is.invalid.error.message:
+  text: The access code is invalid.
+the.data.is.invalid.error.message:
+  text: The data is invalid.
+not.enough.storage.is.available.to.complete.this.operation.error.message:
+  text: Not enough storage is available to complete this operation.
+the.system.cannot.find.the.drive.specified.error.message:
+  text: The system cannot find the drive specified.
+the.directory.cannot.be.removed.error.message:
+  text: The directory cannot be removed.
+the.system.cannot.move.the.file.to.a.different.disk.drive.error.message:
+  text: The system cannot move the file to a different disk drive.
+there.are.no.more.files.error.message:
+  text: There are no more files.
+the.media.is.write.protected.error.message:
+  text: The media is write protected.
+the.system.cannot.find.the.device.specified.error.message:
+  text: The system cannot find the device specified.
+the.device.is.not.ready.error.message:
+  text: The device is not ready.
+the.device.does.not.recognize.the.command.error.message:
+  text: The device does not recognize the command.
+data.error.cyclic.redundancy.check.error.message:
+  text: Data error (cyclic redundancy check).
+the.program.issued.a.command.but.the.command.length.is.incorrect.error.message:
+  text: The program issued a command but the command length is incorrect.
+the.drive.cannot.locate.a.specific.area.or.track.on.the.disk.error.message:
+  text: The drive cannot locate a specific area or track on the disk.
+the.specified.disk.or.diskette.cannot.be.accessed.error.message:
+  text: The specified disk or diskette cannot be accessed.
+the.drive.cannot.find.the.sector.requested.error.message:
+  text: The drive cannot find the sector requested.
+failed.to.make.the.following.files.writable.error.message:
+  text: Failed to make the following files writable:{0}
+failed.to.make.file.writeable.error.message:
+  text: Failed to make {0} writeable.
+format.file.size.bytes:
+  text: '{0}b'
+format.file.size.kbytes:
+  text: '{0}Kb'
+format.file.size.mbytes:
+  text: '{0}Mb'
+profiling.captured.cpu.snapshot.message.text:
+  text: 'Captured CPU snapshot: ''''{0}'''' is placed in user home directory.'
+profiling.captured.allocations.snapshot.message.text:
+  text: 'Captured allocations snapshot: ''''{0}'''' is placed in user home directory.'
+information.dialog.title:
+  text: Information
+captured.memory.snapshot.placed.in.user.home.directory.message.text:
+  text: 'Captured memory snapshot: ''''{0}'''' is placed in user home directory.'
+cannot.undo.dialog.title:
+  text: Cannot Undo
+cannot.undo.error.other.affected.files.changed.message:
+  text: 'Following files affected by this action have been already changed:'
+cannot.undo.error.contains.nonundoable.changes.message:
+  text: 'Following files have changes that cannot be undone:'
+undo.dialog.title:
+  text: Undo
+redo.command.confirmation.text:
+  text: Redo {0}
+redo.confirmation.title:
+  text: Redo
+undo.command.confirmation.text:
+  text: Undo {0}
+cannot.redo.dialog.title:
+  text: Cannot Redo
+drop.undo.history.command.name:
+  text: Dummy
+cannot.undo.message:
+  text: Cannot undo
+cannot.redo.message:
+  text: Cannot redo
+local.vcs.action.name.undo.command:
+  text: Undo {0}
+local.vcs.action.name.redo.command:
+  text: Redo {0}
+error.reading.color.scheme.from.file.error.message:
+  text: Error reading color scheme from {0}
+corrupted.scheme.file.message.title:
+  text: Corrupted File
+button.background:
+  text: '&Background'
+vcs.configurable.general.tab.title:
+  text: General
+cannot.start.other.instance.is.running.error.message:
+  text: |-
+    {0} was unable to create a local connection in order to check whether
+    other instance of {0} is currently running on the same machine.
+    Running multiple instances of {0} on the same machine may cause unpredictable
+    results because of sharing system folders.
+    Please troubleshoot your TCP/IP configuration and/or local firewall settings.
+    and attach the {1}
+button.load.file:
+  text: Load File
+date.frequency:
+  text: Once {0}
+name.label.text:
+  text: 'Na&me:'
+smth.already.exist.error.message:
+  text: '{0} with name ''''{1}'''' already exist.'
+comparison.policy.default.name:
+  text: Default
+comparison.policy.trim.space.name:
+  text: Trim space
+comparison.policy.ignore.spaces.name:
+  text: Ignore spaces
+comparison.ignore.whitespace.acton.name:
+  text: 'Ignore whitespace:'
+safe.write.failed:
+  text: |-
+    Cannot save {0}.
+    Unable to create a backup file ({1}).
+    The file left unchanged.
+safe.write.rename.original:
+  text: |-
+    Cannot save {0}.
+    The file left unchanged.
+    Your changes were written to {1}.
+safe.write.rename.backup:
+  text: |-
+    Cannot save {0}.
+    The file was renamed to {1}.
+    Your changes were written to {2}.
+safe.write.drop.temp:
+  text: Cannot delete temporary file {0}.
+vfs.broken.link:
+  text: Broken link
+label.system.proxy.used:
+  text: <html>You have JVM property 'java.net.useSystemProxies' set to true.<br>This will cause some network calls to go through operating system-defined proxy.<br>If you didn't intend to use system-defined proxy, disable this property
+http.noproxy:
+  text: No proxy
+http.proxy.type:
+  text: HTTP
+socks.proxy.type:
+  text: SOCKS
+autodetected.proxies.clear.button:
+  text: Clear passwords
+label.old.way.jvm.property.used:
+  text: '<html>You have JVM property "{0}" set to "{1}".<br>This may lead to incorrect behaviour. Proxy should be set in Settings | HTTP Proxy<br>This JVM property is old and its usage is not recommended by Oracle.<br>(Note: It could have been assigned by some code dynamically.)'
+label.proxy.exceptions.text:
+  text: 'Example: *.domain.com, 192.168.*'
+checkbox.automatic.proxy.configuration.url:
+  text: 'Automatic proxy configuration URL:'
+safe.write.backup:
+  text: |-
+    Cannot save {0}.
+    Unable to create a backup file ({1}).
+    The file left unchanged.
+safe.write.open:
+  text: |-
+    Cannot save {0}.
+    Unable to open the file for writing.
+safe.write.junk:
+  text: |-
+    Cannot save {0}.
+    Unable to write data.
+    The file may be corrupted.
+safe.write.junk.backup:
+  text: |-
+    Cannot save {0}.
+    Unable to write data.
+    The file may be corrupted; backup was created in {1}.
+safe.write.restored:
+  text: |-
+    Cannot save {0}.
+    Unable to write data.
+    Original content was restored from backup.

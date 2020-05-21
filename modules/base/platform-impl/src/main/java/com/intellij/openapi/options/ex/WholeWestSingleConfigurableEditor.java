@@ -19,7 +19,6 @@ import com.intellij.CommonBundle;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.TransactionGuard;
-import consulo.logging.Logger;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
@@ -28,10 +27,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.util.Alarm;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ide.base.BaseShowSettingsUtil;
+import consulo.logging.Logger;
 import consulo.options.ConfigurableUIMigrationUtil;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.WholeWestDialogWrapper;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -210,11 +211,11 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
     return "#" + displayName;
   }
 
-  protected class ApplyAction extends AbstractAction {
+  protected class ApplyAction extends DialogWrapperAction {
     private final Alarm myUpdateAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
 
     public ApplyAction() {
-      super(CommonBundle.getApplyButtonText());
+      super(CommonLocalize.buttonApply());
       final Runnable updateRequest = new Runnable() {
         @Override
         public void run() {
@@ -229,12 +230,7 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
       };
 
       // invokeLater necessary to make sure dialog is already shown so we calculate modality state correctly.
-      SwingUtilities.invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          addUpdateRequest(updateRequest);
-        }
-      });
+      SwingUtilities.invokeLater(() -> addUpdateRequest(updateRequest));
     }
 
     private void addUpdateRequest(final Runnable updateRequest) {
@@ -242,26 +238,22 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
     }
 
     @Override
-    public void actionPerformed(ActionEvent event) {
-      if (myPerformAction) return;
+    @RequiredUIAccess
+    protected void doAction(ActionEvent e) {
       try {
-        myPerformAction = true;
         if (myConfigurable.isModified()) {
           myConfigurable.apply();
           myChangesWereApplied = true;
           setCancelButtonText(CommonBundle.getCloseButtonText());
         }
       }
-      catch (ConfigurationException e) {
+      catch (ConfigurationException ex) {
         if (myProject != null) {
-          Messages.showMessageDialog(myProject, e.getMessage(), e.getTitle(), Messages.getErrorIcon());
+          Messages.showMessageDialog(myProject, ex.getMessage(), ex.getTitle(), Messages.getErrorIcon());
         }
         else {
-          Messages.showMessageDialog(myParentComponent, e.getMessage(), e.getTitle(), Messages.getErrorIcon());
+          Messages.showMessageDialog(myParentComponent, ex.getMessage(), ex.getTitle(), Messages.getErrorIcon());
         }
-      }
-      finally {
-        myPerformAction = false;
       }
     }
   }

@@ -15,12 +15,12 @@
  */
 package com.intellij.util.containers;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.util.ArrayUtilRt;
+import com.intellij.util.ArrayUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -171,7 +171,7 @@ public class DisposableWrapperList<E> extends AbstractList<E> {
   public Object[] toArray() {
     Object[] elements = myWrappedList.toArray();
     if (elements.length == 0) {
-      return ArrayUtilRt.EMPTY_OBJECT_ARRAY;
+      return ArrayUtil.EMPTY_OBJECT_ARRAY;
     }
     for (int i = 0, n = elements.length; i < n; i++) {
       elements[i] = ((DisposableWrapper)elements[i]).delegate;
