@@ -51,7 +51,7 @@ public final class ObjectTree {
   }
 
   @Nonnull
-  final List<ObjectNode> getNodesInExecution() {
+  public final List<ObjectNode> getNodesInExecution() {
     return myExecutedNodes;
   }
 
@@ -200,7 +200,7 @@ public final class ObjectTree {
   }
 
   @TestOnly
-  void assertNoReferenceKeptInTree(@Nonnull Disposable disposable) {
+  public void assertNoReferenceKeptInTree(@Nonnull Disposable disposable) {
     synchronized (treeLock) {
       for (Map.Entry<Disposable, ObjectNode> entry : myObject2NodeMap.entrySet()) {
         Disposable key = entry.getKey();
