@@ -20,10 +20,6 @@ import consulo.disposer.internal.DisposerInternal;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-/**
- * @author VISTALL
- * @since 2020-05-21
- */
 public class Disposer {
   private static final DisposerInternal ourInternal = DisposerInternal.ourInstance;
 

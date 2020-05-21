@@ -1,4 +1,5 @@
 /*
+ * Copyright 2000-2009 JetBrains s.r.o.
  * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,8 +20,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * @author VISTALL
- * @since 2020-05-21
+ * This class marks classes, which require some work done for cleaning up.
+ * As a general policy you shouldn't call the {@link #dispose} method directly,
+ * but register your object to be chained with a parent disposable via {@link com.intellij.openapi.util.Disposer#register(Disposable, Disposable)}.
+ * If you're 100% sure that you should control disposion of your object manually,
+ * do not call the {@link #dispose} method either. Use {@link com.intellij.openapi.util.Disposer#dispose(Disposable)} instead, since
+ * there might be any object registered in chain.
  */
 public interface Disposable {
   @Nonnull
