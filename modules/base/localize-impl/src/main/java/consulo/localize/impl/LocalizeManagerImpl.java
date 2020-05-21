@@ -162,20 +162,27 @@ public class LocalizeManagerImpl extends LocalizeManager {
   }
 
   @Override
-  public void setLocale(@Nonnull Locale locale) {
+  public void setLocale(@Nonnull Locale locale, boolean fireEvents) {
     Locale oldLocale = myCurrentLocale;
 
     myCurrentLocale = locale;
 
     myModificationCount.incrementAndGet();
 
-    myEventDispatcher.getMulticaster().localeChanged(oldLocale, locale);
+    if(fireEvents) {
+      myEventDispatcher.getMulticaster().localeChanged(oldLocale, locale);
+    }
   }
 
   @Nonnull
   @Override
   public Locale getLocale() {
     return myCurrentLocale;
+  }
+
+  @Override
+  public boolean isDefaultLocale() {
+    return ourDefaultLocale.equals(myCurrentLocale);
   }
 
   @Override
@@ -186,6 +193,18 @@ public class LocalizeManagerImpl extends LocalizeManager {
   @Override
   public int getModificationCount() {
     return myModificationCount.get();
+  }
+
+  @Nonnull
+  @Override
+  public Locale parseLocale(@Nonnull String localeText) {
+    try {
+      return buildLocale(localeText);
+    }
+    catch (Exception e) {
+      LOG.error(e);
+      return ourDefaultLocale;
+    }
   }
 
   @Nonnull

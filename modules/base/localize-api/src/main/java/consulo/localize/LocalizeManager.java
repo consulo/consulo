@@ -55,10 +55,19 @@ public abstract class LocalizeManager {
   @Nonnull
   public abstract String getUnformattedText(@Nonnull LocalizeKey key);
 
-  public abstract void setLocale(@Nonnull Locale locale);
+  @Nonnull
+  public abstract Locale parseLocale(@Nonnull String localeText);
+
+  public void setLocale(@Nonnull Locale locale) {
+    setLocale(locale, true);
+  }
+
+  public abstract void setLocale(@Nonnull Locale locale, boolean fireEvents);
 
   @Nonnull
   public abstract Locale getLocale();
+
+  public abstract boolean isDefaultLocale();
 
   @Nonnull
   public abstract Set<Locale> getAvaliableLocales();

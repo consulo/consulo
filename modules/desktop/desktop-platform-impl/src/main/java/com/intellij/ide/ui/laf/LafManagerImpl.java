@@ -51,6 +51,7 @@ import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.plaf.beg.BegMenuItemUI;
 import com.intellij.ui.plaf.beg.IdeaMenuUI;
+import com.intellij.util.EventDispatcher;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
@@ -78,7 +79,6 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
-import javax.swing.event.EventListenerList;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.synth.Region;
@@ -103,8 +103,12 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
 
   @NonNls
   private static final String ELEMENT_LAF = "laf";
+
+  private static final String ELEMENT_LOCALE = "locale";
+
   @NonNls
   private static final String ATTRIBUTE_CLASS_NAME = "class-name";
+
   @NonNls
   private static final String GNOME_THEME_PROPERTY_NAME = "gnome.Net/ThemeName";
 
@@ -116,15 +120,18 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
   @NonNls
   private static final String[] ourOptionPaneIconKeys = {"OptionPane.errorIcon", "OptionPane.informationIcon", "OptionPane.warningIcon", "OptionPane.questionIcon"};
 
-  private final EventListenerList myListenerList;
+  private final EventDispatcher<LafManagerListener> myListenerList = EventDispatcher.create(LafManagerListener.class);
+
   private final UIManager.LookAndFeelInfo[] myLaFs;
   private UIManager.LookAndFeelInfo myCurrentLaf;
   private final HashMap<UIManager.LookAndFeelInfo, HashMap<String, Object>> myStoredDefaults = new HashMap<>();
   private PropertyChangeListener myThemeChangeListener = null;
 
+  private final LocalizeManager myLocalizeManager;
+
   @Inject
   LafManagerImpl() {
-    myListenerList = new EventListenerList();
+    myLocalizeManager = LocalizeManager.getInstance();
 
     List<UIManager.LookAndFeelInfo> lafList = ContainerUtil.newArrayList();
 
@@ -152,27 +159,23 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     myCurrentLaf = getDefaultLaf();
   }
 
-  /**
-   * Adds specified listener
-   */
   @Override
   public void addLafManagerListener(@Nonnull final LafManagerListener l) {
-    myListenerList.add(LafManagerListener.class, l);
+    myListenerList.addListener(l);
   }
 
-  /**
-   * Removes specified listener
-   */
+  @Override
+  public void addLafManagerListener(LafManagerListener l, consulo.disposer.Disposable disposable) {
+    myListenerList.addListener(l, disposable);
+  }
+
   @Override
   public void removeLafManagerListener(@Nonnull final LafManagerListener l) {
-    myListenerList.remove(LafManagerListener.class, l);
+    myListenerList.removeListener(l);
   }
 
   private void fireLookAndFeelChanged() {
-    LafManagerListener[] listeners = myListenerList.getListeners(LafManagerListener.class);
-    for (LafManagerListener listener : listeners) {
-      listener.lookAndFeelChanged(this);
-    }
+    myListenerList.getMulticaster().lookAndFeelChanged(this);
   }
 
   @Override
@@ -218,12 +221,15 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
   @Override
   public void loadState(final Element element) {
     String className = null;
-    for (final Object o : element.getChildren()) {
-      Element child = (Element)o;
-      if (ELEMENT_LAF.equals(child.getName())) {
-        className = child.getAttributeValue(ATTRIBUTE_CLASS_NAME);
-        break;
-      }
+
+    Element lafElement = element.getChild(ELEMENT_LAF);
+    if(lafElement != null) {
+      className = lafElement.getAttributeValue(ATTRIBUTE_CLASS_NAME);
+    }
+
+    String localeText = element.getChildText(ELEMENT_LOCALE);
+    if(localeText != null) {
+      myLocalizeManager.setLocale(myLocalizeManager.parseLocale(localeText), false);
     }
 
     UIManager.LookAndFeelInfo laf = findLaf(className);
@@ -250,6 +256,13 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
         child.setAttribute(ATTRIBUTE_CLASS_NAME, className);
         element.addContent(child);
       }
+    }
+
+    if(!myLocalizeManager.isDefaultLocale()) {
+      Element localeElement = new Element(ELEMENT_LOCALE);
+      element.addContent(localeElement);
+
+      localeElement.setText(myLocalizeManager.getLocale().toString());
     }
     return element;
   }

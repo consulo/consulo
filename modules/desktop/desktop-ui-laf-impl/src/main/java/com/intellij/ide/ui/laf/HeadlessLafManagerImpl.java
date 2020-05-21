@@ -18,6 +18,7 @@ package com.intellij.ide.ui.laf;
 
 import com.intellij.ide.ui.LafManager;
 import com.intellij.ide.ui.LafManagerListener;
+import consulo.disposer.Disposable;
 
 import javax.swing.*;
 
@@ -50,6 +51,11 @@ public class HeadlessLafManagerImpl extends LafManager {
 
   @Override
   public void addLafManagerListener(LafManagerListener l) {
+  }
+
+  @Override
+  public void addLafManagerListener(LafManagerListener l, Disposable disposable) {
+
   }
 
   @Override

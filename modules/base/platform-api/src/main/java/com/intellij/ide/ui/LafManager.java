@@ -17,6 +17,7 @@
 package com.intellij.ide.ui;
 
 import com.intellij.openapi.application.ApplicationManager;
+import consulo.disposer.Disposable;
 
 import javax.swing.*;
 
@@ -45,6 +46,8 @@ public abstract class LafManager {
   public abstract void repaintUI();
 
   public abstract void addLafManagerListener(LafManagerListener l);
+
+  public abstract void addLafManagerListener(LafManagerListener l, Disposable disposable);
 
   public abstract void removeLafManagerListener(LafManagerListener l);
 }

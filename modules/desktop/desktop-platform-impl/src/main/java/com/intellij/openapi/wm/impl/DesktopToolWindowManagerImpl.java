@@ -459,11 +459,10 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     final MyLafManagerListener lafManagerListener = new MyLafManagerListener();
 
     UIManager.addPropertyChangeListener(uiManagerPropertyListener);
-    LafManager.getInstance().addLafManagerListener(lafManagerListener);
+    LafManager.getInstance().addLafManagerListener(lafManagerListener, this);
 
     Disposer.register(this, () -> {
       UIManager.removePropertyChangeListener(uiManagerPropertyListener);
-      LafManager.getInstance().removeLafManagerListener(lafManagerListener);
     });
 
     WindowManagerEx windowManager = (WindowManagerEx)myWindowManager.get();
