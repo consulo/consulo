@@ -15,6 +15,7 @@
  */
 package consulo.disposer.internal;
 
+import consulo.annotation.ReviewAfterMigrationToJRE;
 import consulo.disposer.Disposable;
 import consulo.disposer.TraceableDisposable;
 
@@ -50,8 +51,8 @@ public abstract class DisposerInternal {
 
   public abstract boolean setDebugMode(boolean debugMode);
 
-  // TODO [VISTALL] use consulo.util.ServiceLoaderUtil
   @Nonnull
+  @ReviewAfterMigrationToJRE(value = 9, description = "Use consulo.util.ServiceLoaderUtil")
   private static <T> T loadSingleOrError(@Nonnull Class<T> clazz) {
     ServiceLoader<T> serviceLoader = ServiceLoader.load(clazz, clazz.getClassLoader());
     Iterator<T> iterator = serviceLoader.iterator();

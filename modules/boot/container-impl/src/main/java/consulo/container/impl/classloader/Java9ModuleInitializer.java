@@ -109,6 +109,7 @@ public class Java9ModuleInitializer {
 
       toResolve.add("consulo.logging.api");
       toResolve.add("consulo.injecting.api");
+      toResolve.add("consulo.disposer.api");
 
       toResolve.add("consulo.desktop.awt.hacking");
 
