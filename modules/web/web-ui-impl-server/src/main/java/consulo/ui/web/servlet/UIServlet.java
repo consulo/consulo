@@ -15,12 +15,12 @@
  */
 package consulo.ui.web.servlet;
 
-import com.intellij.openapi.util.Disposer;
 import com.intellij.util.ReflectionUtil;
 import com.vaadin.annotations.StyleSheet;
 import com.vaadin.server.*;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
+import consulo.disposer.Disposer;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.web.internal.base.FromVaadinComponentWrapper;

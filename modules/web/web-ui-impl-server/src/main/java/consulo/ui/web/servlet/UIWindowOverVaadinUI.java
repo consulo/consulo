@@ -15,21 +15,21 @@
  */
 package consulo.ui.web.servlet;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Disposer;
-import consulo.util.dataholder.Key;
 import com.vaadin.server.Page;
 import com.vaadin.ui.UI;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.shared.Size;
 import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.shared.border.BorderStyle;
 import consulo.ui.style.ColorKey;
 import consulo.ui.web.internal.TargetVaddin;
 import consulo.ui.web.internal.WebRootPaneImpl;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
