@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  */
 public class DesktopVerticalLayoutImpl extends DesktopLayoutBase implements VerticalLayout {
   public DesktopVerticalLayoutImpl() {
-    super(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, false));
+    initDefaultPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, false));
   }
 
   @RequiredUIAccess

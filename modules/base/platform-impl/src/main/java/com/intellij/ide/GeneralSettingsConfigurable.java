@@ -80,8 +80,8 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
       myRootLayout = VerticalLayout.create();
 
       VerticalLayout startupOrShutdownLayout = VerticalLayout.create();
-      startupOrShutdownLayout.add(myChkReopenLastProject = CheckBox.create(IdeBundle.message("checkbox.reopen.last.project.on.startup")));
-      startupOrShutdownLayout.add(myConfirmExit = CheckBox.create(IdeBundle.message("checkbox.confirm.application.exit")));
+      startupOrShutdownLayout.add(myChkReopenLastProject = CheckBox.create(IdeLocalize.checkboxReopenLastProjectOnStartup()));
+      startupOrShutdownLayout.add(myConfirmExit = CheckBox.create(IdeLocalize.checkboxConfirmApplicationExit()));
       myRootLayout.add(LabeledLayout.create("Startup/Shutdown", startupOrShutdownLayout));
 
       VerticalLayout projectReopeningLayout = VerticalLayout.create();
@@ -152,7 +152,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
       ComboBox.Builder<WebSearchEngine> webSearchEngineBuilder = ComboBox.<WebSearchEngine>builder().fillByEnum(WebSearchEngine.class, WebSearchEngine::getPresentableName);
       webSearchOptionsLayout.add(LabeledComponents.left("Engine", myWebSearchEngineComboBox = webSearchEngineBuilder.build()));
 
-      myRootLayout.add(LabeledLayout.create("Web Search", webSearchOptionsLayout));
+      myRootLayout.add(LabeledLayout.create(IdeLocalize.webSearchLabelLayout(), webSearchOptionsLayout));
     }
 
     @Nonnull

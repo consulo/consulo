@@ -28,7 +28,7 @@ import java.awt.*;
  */
 public class DesktopDockLayoutImpl extends DesktopLayoutBase implements DockLayout {
   public DesktopDockLayoutImpl() {
-    super(new BorderLayout());
+    initDefaultPanel(new BorderLayout());
   }
 
   @RequiredUIAccess

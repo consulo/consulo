@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  */
 public class DesktopHorizontalLayoutImpl extends DesktopLayoutBase implements HorizontalLayout {
   public DesktopHorizontalLayoutImpl(int gapInPixesl) {
-    super(new com.intellij.ui.components.panels.HorizontalLayout(JBUI.scale(gapInPixesl)));
+    initDefaultPanel(new com.intellij.ui.components.panels.HorizontalLayout(JBUI.scale(gapInPixesl)));
   }
 
   @RequiredUIAccess

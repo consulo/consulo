@@ -34,6 +34,11 @@ abstract class DesktopLayoutBase extends SwingComponentDelegate<JPanel> {
       super(layout);
     }
 
+    @Override
+    public void updateUI() {
+      super.updateUI();
+    }
+
     @Nonnull
     @Override
     public Component toUIComponent() {
@@ -41,11 +46,11 @@ abstract class DesktopLayoutBase extends SwingComponentDelegate<JPanel> {
     }
   }
 
-  protected DesktopLayoutBase(LayoutManager layoutManager) {
-    myComponent = new MyJPanel(layoutManager);
+  protected void initDefaultPanel(LayoutManager layoutManager) {
+    initialize(new MyJPanel(layoutManager));
   }
 
   protected void add(Component component, Object constraints) {
-    myComponent.add(TargetAWT.to(component), constraints);
+    toAWTComponent().add(TargetAWT.to(component), constraints);
   }
 }

@@ -1,2 +1,8 @@
 checkbox.synchronize.files.on.frame.activation:
   text: Синхронизировать файлы при активации фрейма
+checkbox.confirm.application.exit:
+  text: Подтверждать закрытия приложения
+checkbox.reopen.last.project.on.startup:
+  text: Переоткрыть последний проект при запуске
+web.search.label.layout:
+  text: Веб-поиск

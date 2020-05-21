@@ -16,9 +16,10 @@
 package consulo.ui.desktop.internal.layout;
 
 import com.intellij.ui.IdeBorderFactory;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
-import consulo.ui.layout.LabeledLayout;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.LabeledLayout;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -28,9 +29,33 @@ import java.awt.*;
  * @since 15-Jun-16
  */
 public class DesktopLabeledLayoutImpl extends DesktopLayoutBase implements LabeledLayout {
-  public DesktopLabeledLayoutImpl(String text) {
-    super(new BorderLayout());
-    myComponent.setBorder(IdeBorderFactory.createTitledBorder(text));
+  class LabelJPanel extends MyJPanel {
+    private final LocalizeValue myLabelValue;
+
+    private LabelJPanel(LayoutManager layout, LocalizeValue labelValue) {
+      super(layout);
+      myLabelValue = labelValue;
+    }
+
+    @Override
+    public void updateUI() {
+      super.updateUI();
+
+      updateBorder();
+    }
+
+    public void updateBorder() {
+      // first component create
+      if (myLabelValue != null) {
+        setBorder(IdeBorderFactory.createTitledBorder(myLabelValue.getValue()));
+      }
+    }
+  }
+
+  public DesktopLabeledLayoutImpl(LocalizeValue label) {
+    LabelJPanel component = new LabelJPanel(new BorderLayout(), label);
+    component.updateBorder();
+    initialize(component);
   }
 
   @RequiredUIAccess

@@ -16,6 +16,7 @@
 package consulo.ui.web.internal;
 
 import com.vaadin.ui.UI;
+import consulo.localize.LocalizeValue;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -92,7 +93,7 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public LabeledLayout _Layouts_labeled(String label) {
+  public LabeledLayout _Layouts_labeled(LocalizeValue label) {
     return new WebLabeledLayoutImpl(label);
   }
 

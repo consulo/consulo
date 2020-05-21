@@ -16,6 +16,7 @@
 package consulo.ui.desktop.internal;
 
 import consulo.awt.TargetAWT;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Button;
 import consulo.ui.Component;
 import consulo.ui.Label;
@@ -218,7 +219,7 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public LabeledLayout _Layouts_labeled(String label) {
+  public LabeledLayout _Layouts_labeled(LocalizeValue label) {
     return new DesktopLabeledLayoutImpl(label);
   }
 

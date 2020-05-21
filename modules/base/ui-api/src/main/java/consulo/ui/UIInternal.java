@@ -20,6 +20,7 @@ import consulo.container.StartupError;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
@@ -90,7 +91,7 @@ public abstract class UIInternal {
 
   public abstract TabbedLayout _Layouts_tabbed();
 
-  public abstract LabeledLayout _Layouts_labeled(String label);
+  public abstract LabeledLayout _Layouts_labeled(LocalizeValue label);
 
   public abstract TableLayout _Layouts_table(StaticPosition fillOption);
 

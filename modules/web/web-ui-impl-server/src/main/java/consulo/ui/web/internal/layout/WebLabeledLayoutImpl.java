@@ -15,6 +15,7 @@
  */
 package consulo.ui.web.internal.layout;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LabeledLayout;
@@ -30,11 +31,22 @@ import javax.annotation.Nonnull;
  */
 public class WebLabeledLayoutImpl extends UIComponentWithVaadinComponent<WebLabeledLayoutImpl.Vaadin> implements LabeledLayout {
   public static class Vaadin extends VaadinSingleComponentContainer {
+    private LocalizeValue myLabelValue = LocalizeValue.empty();
 
+    @Override
+    public void beforeClientResponse(boolean initial) {
+      super.beforeClientResponse(initial);
+
+      getState().caption = myLabelValue.getValue();
+    }
+
+    public void setLabelValue(LocalizeValue labelValue) {
+      myLabelValue = labelValue;
+    }
   }
 
-  public WebLabeledLayoutImpl(String text) {
-    getVaadinComponent().getState().caption = text;
+  public WebLabeledLayoutImpl(LocalizeValue label) {
+    getVaadinComponent().setLabelValue(label);
   }
 
   @Override

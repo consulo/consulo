@@ -44,7 +44,7 @@ public class DesktopSwipeLayoutImpl extends DesktopLayoutBase implements SwipeLa
   private final List<LayoutInfo> myLayoutInfos = new ArrayList<>();
 
   public DesktopSwipeLayoutImpl() {
-    super(new JBCardLayout());
+    initDefaultPanel(new JBCardLayout());
   }
 
   @Nonnull
