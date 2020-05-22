@@ -24,7 +24,6 @@ import com.intellij.openapi.options.BaseSchemeProcessor;
 import com.intellij.openapi.options.SchemesManager;
 import com.intellij.openapi.options.SchemesManagerFactory;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
@@ -221,12 +220,14 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
   public void addKeymapManagerListener(@Nonnull final KeymapManagerListener listener, @Nonnull Disposable parentDisposable) {
     pollQueue();
     myListeners.add(listener);
-    Disposer.register(parentDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        removeKeymapManagerListener(listener);
-      }
-    });
+    consulo.disposer.Disposer.register(parentDisposable, () -> removeKeymapManagerListener(listener));
+  }
+
+  @Override
+  public void addKeymapManagerListener(@Nonnull KeymapManagerListener listener, @Nonnull consulo.disposer.Disposable parentDisposable) {
+    pollQueue();
+    myListeners.add(listener);
+    consulo.disposer.Disposer.register(parentDisposable, () -> removeKeymapManagerListener(listener));
   }
 
   private void pollQueue() {

@@ -40,7 +40,10 @@ public abstract class KeymapManager {
    * @deprecated use {@link KeymapManager#addKeymapManagerListener(KeymapManagerListener, Disposable)} instead
    */
   public abstract void addKeymapManagerListener(@Nonnull KeymapManagerListener listener);
+
   public abstract void addKeymapManagerListener(@Nonnull KeymapManagerListener listener, @Nonnull Disposable parentDisposable);
+
+  public abstract void addKeymapManagerListener(@Nonnull KeymapManagerListener listener, @Nonnull consulo.disposer.Disposable parentDisposable);
 
   public abstract void removeKeymapManagerListener(@Nonnull KeymapManagerListener listener);
 }

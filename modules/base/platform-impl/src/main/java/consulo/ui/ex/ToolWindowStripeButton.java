@@ -15,8 +15,8 @@
  */
 package consulo.ui.ex;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.wm.WindowInfo;
+import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;
 
