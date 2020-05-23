@@ -19,7 +19,6 @@ import com.intellij.CommonBundle;
 import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
-import consulo.container.plugin.PluginId;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.DumbAware;
@@ -32,13 +31,15 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.io.ZipUtil;
 import com.intellij.util.ui.StatusText;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.ide.plugins.AvailablePluginsDialog;
+import consulo.plugins.internal.PluginsLoader;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.collection.ArrayUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -132,7 +133,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
         ZipUtil.extract(file, outputDir, null);
         final File[] files = outputDir.listFiles();
         if (files != null && files.length == 1) {
-          descriptor = PluginManagerCore.loadPluginDescriptor(files[0]);
+          descriptor = PluginsLoader.loadPluginDescriptor(files[0]);
         }
       }
       finally {
@@ -149,7 +150,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
     final PluginId[] dependentPluginIds = pluginDescriptor.getDependentPluginIds();
     final PluginId[] optionalDependentPluginIds = pluginDescriptor.getOptionalDependentPluginIds();
     for (PluginId id : dependentPluginIds) {
-      if (ArrayUtilRt.find(optionalDependentPluginIds, id) > -1) continue;
+      if (ArrayUtil.find(optionalDependentPluginIds, id) > -1) continue;
       final boolean disabled = ((InstalledPluginsTableModel)myPluginsModel).isDisabled(id);
       final boolean enabled = ((InstalledPluginsTableModel)myPluginsModel).isEnabled(id);
       if (!enabled && !disabled) {
@@ -286,19 +287,16 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
     for (PluginDescriptor descriptor : myPluginsModel.filtered) {
       descriptor.setEnabled(((InstalledPluginsTableModel)myPluginsModel).isEnabled(descriptor.getPluginId()));
     }
-    try {
-      final ArrayList<String> ids = new ArrayList<>();
-      for (Map.Entry<PluginId, Boolean> entry : ((InstalledPluginsTableModel)myPluginsModel).getEnabledMap().entrySet()) {
-        final Boolean value = entry.getValue();
-        if (value != null && !value) {
-          ids.add(entry.getKey().getIdString());
-        }
+    
+    final ArrayList<String> ids = new ArrayList<>();
+    for (Map.Entry<PluginId, Boolean> entry : ((InstalledPluginsTableModel)myPluginsModel).getEnabledMap().entrySet()) {
+      final Boolean value = entry.getValue();
+      if (value != null && !value) {
+        ids.add(entry.getKey().getIdString());
       }
-      PluginManagerCore.saveDisabledPlugins(ids, false);
     }
-    catch (IOException e) {
-      LOG.error(e);
-    }
+
+    consulo.container.plugin.PluginManager.replaceDisabledPlugins(ids);
 
     return null;
   }

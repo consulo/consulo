@@ -20,8 +20,8 @@ import consulo.container.boot.ContainerStartup;
 import consulo.container.boot.internal.PathManagerHolder;
 import consulo.container.impl.ContainerLogger;
 import consulo.container.impl.PluginDescriptorImpl;
+import consulo.container.impl.PluginDescriptorLoader;
 import consulo.container.impl.PluginHolderModificator;
-import consulo.container.impl.PluginLoader;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.util.StatCollector;
 import consulo.util.nodep.SystemInfoRt;
@@ -55,7 +55,7 @@ public class BootstrapClassLoaderUtil {
         continue;
       }
 
-      PluginDescriptorImpl descriptor = PluginLoader.loadDescriptor(moduleDirectory, false, true, containerLogger);
+      PluginDescriptorImpl descriptor = PluginDescriptorLoader.loadDescriptor(moduleDirectory, false, true, containerLogger);
 
       if (descriptor == null) {
         continue;
@@ -101,7 +101,7 @@ public class BootstrapClassLoaderUtil {
   private static PluginDescriptorImpl initalizePlatformBase(File modulesDirectory, ContainerLogger containerLogger) throws Exception {
     File platformBaseDirectory = new File(modulesDirectory, CONSULO_PLATFORM_BASE);
 
-    PluginDescriptorImpl platformBasePlugin = PluginLoader.loadDescriptor(platformBaseDirectory, false, true, containerLogger);
+    PluginDescriptorImpl platformBasePlugin = PluginDescriptorLoader.loadDescriptor(platformBaseDirectory, false, true, containerLogger);
 
     if (platformBasePlugin == null) {
       throw new StartupError("No base module. Broken installation");

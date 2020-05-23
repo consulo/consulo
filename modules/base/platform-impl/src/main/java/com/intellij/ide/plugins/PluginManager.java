@@ -15,44 +15,37 @@
  */
 package com.intellij.ide.plugins;
 
-import com.intellij.ide.IdeBundle;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.StartupUtil;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationListener;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import consulo.annotation.UsedInPlugin;
-import consulo.container.plugin.ComponentConfig;
-import consulo.container.plugin.PluginId;
 import com.intellij.openapi.extensions.impl.PluginExtensionInitializationException;
-import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.wm.IdeFrame;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
+import consulo.annotation.UsedInPlugin;
 import consulo.application.ApplicationProperties;
-import consulo.awt.TargetAWT;
 import consulo.container.ExitCodes;
 import consulo.container.classloader.PluginClassLoader;
+import consulo.container.plugin.ComponentConfig;
 import consulo.container.plugin.IdeaPluginDescriptor;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
+import consulo.logging.Logger;
 import consulo.logging.internal.LoggerFactoryInitializer;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.event.HyperlinkEvent;
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.List;
 
 /**
  * @author mike
  */
 public class PluginManager extends PluginManagerCore {
+  private static class LoggerHolder {
+    private static final Logger ourLogger = Logger.getInstance(PluginManagerCore.class);
+  }
+
   public static class StartupAbortedException extends RuntimeException {
     private int exitCode = ExitCodes.STARTUP_EXCEPTION;
     private boolean logError = true;
@@ -121,55 +114,15 @@ public class PluginManager extends PluginManagerCore {
     }
   }
 
+
+  public static Logger getLogger() {
+    return LoggerHolder.ourLogger;
+  }
+
   private static Thread.UncaughtExceptionHandler HANDLER = (t, e) -> processException(e);
 
   public static void installExceptionHandler() {
     Thread.currentThread().setUncaughtExceptionHandler(HANDLER);
-  }
-
-  public static void reportPluginError() {
-    if (ourPluginErrors != null) {
-      for (String pluginError : ourPluginErrors) {
-        String message = IdeBundle.message("title.plugin.notification.title");
-        Notifications.Bus.notify(new Notification(message, message, pluginError, NotificationType.ERROR, new NotificationListener() {
-          @SuppressWarnings("AssignmentToStaticFieldFromInstanceMethod")
-          @Override
-          public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
-            notification.expire();
-
-            String description = event.getDescription();
-            if (EDIT.equals(description)) {
-              PluginManagerConfigurable configurable = new PluginManagerConfigurable(PluginManagerUISettings.getInstance());
-              IdeFrame ideFrame = WindowManagerEx.getInstanceEx().findFrameFor(null);
-              ShowSettingsUtil.getInstance().editConfigurable(ideFrame == null ? null : TargetAWT.to(ideFrame.getWindow()), configurable);
-              return;
-            }
-
-            List<String> disabledPlugins = getDisabledPlugins();
-            if (myPlugins2Disable != null && DISABLE.equals(description)) {
-              for (String pluginId : myPlugins2Disable) {
-                if (!disabledPlugins.contains(pluginId)) {
-                  disabledPlugins.add(pluginId);
-                }
-              }
-            }
-            else if (myPlugins2Enable != null && ENABLE.equals(description)) {
-              disabledPlugins.removeAll(myPlugins2Enable);
-            }
-
-            try {
-              saveDisabledPlugins(disabledPlugins, false);
-            }
-            catch (IOException ignore) {
-            }
-
-            myPlugins2Enable = null;
-            myPlugins2Disable = null;
-          }
-        }));
-      }
-      ourPluginErrors = null;
-    }
   }
 
   public static boolean isPluginInstalled(PluginId id) {
@@ -183,6 +136,7 @@ public class PluginManager extends PluginManagerCore {
 
   @Nullable
   @UsedInPlugin
+  @Deprecated
   public static File getPluginPath(@Nonnull Class<?> pluginClass) {
     ClassLoader temp = pluginClass.getClassLoader();
     assert temp instanceof PluginClassLoader : "classloader is not plugin";
@@ -214,8 +168,8 @@ public class PluginManager extends PluginManagerCore {
     if (pluginId != null && !isSystemPlugin(pluginId)) {
       getLogger().warn(t);
 
-      if(!ApplicationProperties.isInSandbox()) {
-        disablePlugin(pluginId.getIdString());
+      if (!ApplicationProperties.isInSandbox()) {
+        consulo.container.plugin.PluginManager.disablePlugin(pluginId.getIdString());
       }
 
       StringWriter message = new StringWriter();

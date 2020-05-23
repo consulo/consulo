@@ -440,6 +440,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     return "PluginDescriptor[name='" + myName + "', classpath='" + myPath + "']";
   }
 
+  @Override
   public boolean isDeleted() {
     return myDeleted;
   }
@@ -490,7 +491,10 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   @Nonnull
   @Override
   public ClassLoader getPluginClassLoader() {
-    return myLoader != null ? myLoader : getClass().getClassLoader();
+    if(myLoader == null) {
+      throw new IllegalArgumentException("Do not call #getPluginClassLoader() is plugin is not loaded");
+    }
+    return myLoader;
   }
 
   @Override

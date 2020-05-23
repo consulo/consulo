@@ -149,7 +149,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
       if (descriptor.isDeleted()) continue;
       final Boolean enabled = myEnabled.get(pluginId);
       if (enabled == null || enabled) {
-        PluginManager.checkDependants(descriptor, PluginManager::getPlugin, dependantPluginId -> {
+        consulo.container.plugin.PluginManager.checkDependants(descriptor, PluginManager::getPlugin, dependantPluginId -> {
           final Boolean enabled1 = myEnabled.get(dependantPluginId);
           if ((enabled1 == null && !updatedPlugins.contains(dependantPluginId)) || (enabled1 != null && !enabled1)) {
             Set<PluginId> required = myDependentToRequiredListMap.get(pluginId);
@@ -376,7 +376,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
     }
 
     for (final PluginDescriptor ideaPluginDescriptor : descriptorsToCheckDependencies) {
-      PluginManager.checkDependants(ideaPluginDescriptor, PluginManager::getPlugin, pluginId -> {
+      consulo.container.plugin.PluginManager.checkDependants(ideaPluginDescriptor, PluginManager::getPlugin, pluginId -> {
         Boolean enabled = myEnabled.get(pluginId);
         if (enabled == null) {
           return false;

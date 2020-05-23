@@ -15,9 +15,9 @@
  */
 package consulo.container.impl;
 
-import consulo.container.plugin.PluginId;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.container.plugin.internal.PluginManagerInternal;
 
@@ -31,6 +31,7 @@ import java.util.List;
  * @since 2019-07-25
  */
 public class PluginManagerInternalImpl implements PluginManagerInternal {
+
   @Nonnull
   @Override
   public List<PluginDescriptor> getPlugins() {
@@ -58,9 +59,40 @@ public class PluginManagerInternalImpl implements PluginManagerInternal {
   @Override
   public PluginDescriptor getPlugin(@Nonnull Class<?> pluginClass) {
     ClassLoader temp = pluginClass.getClassLoader();
-    if(!(temp instanceof PluginClassLoader)) {
+    if (!(temp instanceof PluginClassLoader)) {
       return null;
     }
     return PluginManager.findPlugin(((PluginClassLoader)temp).getPluginId());
+  }
+
+  @Nonnull
+  @Override
+  public List<String> getDisabledPlugins() {
+    return PluginValidator.getDisabledPlugins();
+  }
+
+  @Override
+  public boolean shouldSkipPlugin(@Nonnull PluginDescriptor descriptor) {
+    return PluginValidator.shouldSkipPlugin(descriptor);
+  }
+
+  @Override
+  public PluginManager.PluginSkipReason calcPluginSkipReason(PluginDescriptor descriptor) {
+    return PluginValidator.calcPluginSkipReason(descriptor);
+  }
+
+  @Override
+  public boolean disablePlugin(String id) {
+    return PluginValidator.disablePlugin(id);
+  }
+
+  @Override
+  public boolean enablePlugin(String id) {
+    return PluginValidator.enablePlugin(id);
+  }
+
+  @Override
+  public void replaceDisabledPlugins(List<String> ids) {
+    PluginValidator.replaceDisabledPlugins(ids);
   }
 }

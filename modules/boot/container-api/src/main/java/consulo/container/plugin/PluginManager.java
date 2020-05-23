@@ -16,13 +16,13 @@
 package consulo.container.plugin;
 
 import consulo.container.plugin.internal.PluginManagerInternal;
+import consulo.util.nodep.function.Condition;
+import consulo.util.nodep.function.Function;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ServiceLoader;
+import java.util.*;
 
 /**
  * @author VISTALL
@@ -41,6 +41,13 @@ public final class PluginManager {
     else {
       throw new IllegalArgumentException("no plugin manager internal");
     }
+  }
+
+  public enum PluginSkipReason {
+    NO,
+    DISABLED,
+    INCOMPATIBLE,
+    DEPENDENCY_IS_NOT_RESOLVED
   }
 
   @Nonnull
@@ -79,7 +86,60 @@ public final class PluginManager {
     return ourInternal.getPluginPath(pluginClass);
   }
 
+  public static boolean shouldSkipPlugin(@Nonnull PluginDescriptor descriptor) {
+    return ourInternal.shouldSkipPlugin(descriptor);
+  }
+
+  @Nonnull
+  public static PluginSkipReason calcPluginSkipReason(@Nonnull PluginDescriptor pluginDescriptor) {
+    return ourInternal.calcPluginSkipReason(pluginDescriptor);
+  }
+
+  public static boolean disablePlugin(@Nonnull String id) {
+    return ourInternal.disablePlugin(id);
+  }
+
+  public static boolean enablePlugin(@Nonnull String id) {
+    return ourInternal.enablePlugin(id);
+  }
+
+  public static void replaceDisabledPlugins(@Nonnull List<String> ids) {
+    ourInternal.replaceDisabledPlugins(ids);
+  }
+
+  @Nonnull
+  public static List<String> getDisabledPlugins() {
+    return ourInternal.getDisabledPlugins();
+  }
+
   public static boolean isInitialized() {
     return ourInternal.isInitialized();
+  }
+
+  public static void checkDependants(final PluginDescriptor pluginDescriptor, final Function<PluginId, PluginDescriptor> pluginId2Descriptor, final Condition<PluginId> check) {
+    checkDependants(pluginDescriptor, pluginId2Descriptor, check, new HashSet<PluginId>());
+  }
+
+  private static boolean checkDependants(final PluginDescriptor pluginDescriptor,
+                                         final Function<PluginId, PluginDescriptor> pluginId2Descriptor,
+                                         final Condition<PluginId> check,
+                                         final Set<PluginId> processed) {
+    processed.add(pluginDescriptor.getPluginId());
+    final PluginId[] dependentPluginIds = pluginDescriptor.getDependentPluginIds();
+    final Set<PluginId> optionalDependencies = new HashSet<PluginId>(Arrays.asList(pluginDescriptor.getOptionalDependentPluginIds()));
+    for (final PluginId dependentPluginId : dependentPluginIds) {
+      if (processed.contains(dependentPluginId)) continue;
+
+      if (!optionalDependencies.contains(dependentPluginId)) {
+        if (!check.value(dependentPluginId)) {
+          return false;
+        }
+        final PluginDescriptor dependantPluginDescriptor = pluginId2Descriptor.fun(dependentPluginId);
+        if (dependantPluginDescriptor != null && !checkDependants(dependantPluginDescriptor, pluginId2Descriptor, check, processed)) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 }

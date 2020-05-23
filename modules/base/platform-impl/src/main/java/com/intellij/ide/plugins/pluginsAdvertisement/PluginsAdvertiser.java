@@ -15,7 +15,6 @@
  */
 package com.intellij.ide.plugins.pluginsAdvertisement;
 
-import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationGroup;
 import com.intellij.notification.NotificationType;
@@ -31,6 +30,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.EditorNotifications;
 import com.intellij.util.ui.UIUtil;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginManager;
 import consulo.container.plugin.SimpleExtension;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
@@ -73,7 +73,7 @@ public class PluginsAdvertiser implements StartupActivity.Background, DumbAware 
       for (UnknownExtension feature : unknownExtensions) {
         final Set<PluginDescriptor> descriptors = findByFeature(pluginDescriptors, feature);
         //do not suggest to download disabled plugins
-        final List<String> disabledPlugins = PluginManagerCore.getDisabledPlugins();
+        final List<String> disabledPlugins = PluginManager.getDisabledPlugins();
         for (PluginDescriptor id : descriptors) {
           if (!disabledPlugins.contains(id.getPluginId().getIdString())) {
             ids.add(id);

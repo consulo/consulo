@@ -42,6 +42,7 @@ import consulo.injecting.InjectingContainerBuilder;
 import consulo.injecting.InjectingPoint;
 import consulo.injecting.key.InjectingKey;
 import consulo.logging.Logger;
+import consulo.plugins.internal.PluginExtensionRegistrator;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.UserDataHolderBase;
 import gnu.trove.THashMap;
@@ -209,7 +210,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   protected void registerExtensionPointsAndExtensions(ExtensionsAreaImpl area) {
-    PluginManagerCore.registerExtensionPointsAndExtensions(myExtensionAreaId, area);
+    PluginExtensionRegistrator.registerExtensionPointsAndExtensions(myExtensionAreaId, area);
   }
 
   protected void registerServices(InjectingContainerBuilder builder) {

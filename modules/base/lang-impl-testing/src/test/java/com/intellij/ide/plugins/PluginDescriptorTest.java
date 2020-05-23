@@ -2,7 +2,7 @@ package com.intellij.ide.plugins;
 
 import consulo.container.impl.ContainerLogger;
 import consulo.container.impl.PluginDescriptorImpl;
-import consulo.container.impl.PluginLoader;
+import consulo.container.impl.PluginDescriptorLoader;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -21,7 +21,7 @@ public class PluginDescriptorTest extends Assert {
     assertNotNull(url);
 
     File jarFile = Paths.get(url.toURI()).toFile();
-    PluginDescriptorImpl descriptor = PluginLoader.loadDescriptorFromJar(jarFile, jarFile, PluginLoader.PLUGIN_XML, true, false, new ContainerLogger() {
+    PluginDescriptorImpl descriptor = PluginDescriptorLoader.loadDescriptorFromJar(jarFile, jarFile, PluginDescriptorLoader.PLUGIN_XML, true, false, new ContainerLogger() {
 
       @Override
       public void info(String message) {

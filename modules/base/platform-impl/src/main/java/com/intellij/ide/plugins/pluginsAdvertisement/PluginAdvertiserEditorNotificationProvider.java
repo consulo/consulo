@@ -95,7 +95,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
     if (disabledPlugin != null) {
       panel.createActionLabel("Enable " + disabledPlugin.getName() + " plugin", () -> {
         myEnabledExtensions.add(extension);
-        PluginManagerCore.enablePlugin(disabledPlugin.getPluginId().getIdString());
+        consulo.container.plugin.PluginManager.enablePlugin(disabledPlugin.getPluginId().getIdString());
         myNotifications.updateAllNotifications();
         PluginManagerMain.notifyPluginsWereUpdated("Plugin was successfully enabled", null);
       });

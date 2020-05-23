@@ -19,7 +19,6 @@ import com.intellij.CommonBundle;
 import com.intellij.diagnostic.errordialog.*;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
-import consulo.container.plugin.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.*;
@@ -29,7 +28,6 @@ import com.intellij.openapi.diagnostic.ErrorReportSubmitter;
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.openapi.diagnostic.SubmittedReportInfo;
 import com.intellij.openapi.extensions.ExtensionException;
-import consulo.container.plugin.PluginId;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -37,8 +35,6 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Condition;
-import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
@@ -52,11 +48,16 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.application.ApplicationProperties;
 import consulo.container.PluginException;
+import consulo.container.plugin.IdeaPluginDescriptor;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
 import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
 import consulo.ide.base.BaseDataManager;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.ref.SimpleReference;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -413,9 +414,9 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
       return;
     }
 
-    IdeaPluginDescriptor plugin = PluginManager.getPlugin(pluginId);
-    final Ref<Boolean> hasDependants = new Ref<Boolean>(false);
-    PluginManager.checkDependants(plugin, PluginManager::getPlugin, pluginId1 -> {
+    PluginDescriptor plugin = consulo.container.plugin.PluginManager.findPlugin(pluginId);
+    final SimpleReference<Boolean> hasDependants = SimpleReference.create(false);
+    consulo.container.plugin.PluginManager.checkDependants(plugin, PluginManager::getPlugin, pluginId1 -> {
       if (PluginManager.isSystemPlugin(pluginId1)) {
         return true;
       }
@@ -430,10 +431,10 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
       case CANCEL_EXIT_CODE:
         return;
       case DisablePluginWarningDialog.DISABLE_EXIT_CODE:
-        PluginManager.disablePlugin(pluginId.getIdString());
+        consulo.container.plugin.PluginManager.disablePlugin(pluginId.getIdString());
         break;
       case DisablePluginWarningDialog.DISABLE_AND_RESTART_EXIT_CODE:
-        PluginManager.disablePlugin(pluginId.getIdString());
+        consulo.container.plugin.PluginManager.disablePlugin(pluginId.getIdString());
         app.restart();
         break;
     }

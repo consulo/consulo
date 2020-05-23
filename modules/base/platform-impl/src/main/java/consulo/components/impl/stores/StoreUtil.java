@@ -16,19 +16,19 @@
 package consulo.components.impl.stores;
 
 import com.intellij.diagnostic.IdeErrorsDialog;
-import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import consulo.logging.Logger;
-import consulo.container.plugin.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SmartList;
 import consulo.application.ApplicationProperties;
+import consulo.container.plugin.PluginId;
+import consulo.container.plugin.PluginManager;
+import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
@@ -65,7 +65,7 @@ public final class StoreUtil {
       }
       else {
         if (!ApplicationProperties.isInSandbox()) {
-          PluginManagerCore.disablePlugin(pluginId.getIdString());
+          PluginManager.disablePlugin(pluginId.getIdString());
         }
 
         new Notification("Settings Error", "Unable to save plugin settings", "<p>The plugin <i>" + pluginId + "</i> failed to save settings and has been disabled." + messagePostfix,
@@ -103,7 +103,7 @@ public final class StoreUtil {
         }
         else {
           if (!ApplicationProperties.isInSandbox()) {
-            PluginManagerCore.disablePlugin(pluginId.getIdString());
+            PluginManager.disablePlugin(pluginId.getIdString());
           }
 
           new Notification("Settings Error", "Unable to save plugin settings", "<p>The plugin <i>" + pluginId + "</i> failed to save settings and has been disabled." + messagePostfix,

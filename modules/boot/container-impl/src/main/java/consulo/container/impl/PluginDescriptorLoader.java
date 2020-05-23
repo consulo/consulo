@@ -19,7 +19,6 @@ import consulo.container.plugin.PluginId;
 import consulo.util.nodep.Comparing;
 import consulo.util.nodep.io.FileUtilRt;
 import consulo.util.nodep.text.StringUtilRt;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,8 +38,7 @@ import java.util.zip.ZipFile;
  * @author VISTALL
  * @since 2019-07-25
  */
-public class PluginLoader {
-  @NonNls
+public class PluginDescriptorLoader {
   public static final String PLUGIN_XML = "plugin.xml";
 
   @Nullable
@@ -49,7 +47,7 @@ public class PluginLoader {
   }
 
   @Nullable
-  public static PluginDescriptorImpl loadDescriptor(final File pluginPath, @NonNls final String fileName, boolean isHeadlessMode, boolean isPreInstalledPath, ContainerLogger containerLogger) {
+  public static PluginDescriptorImpl loadDescriptor(final File pluginPath, final String fileName, boolean isHeadlessMode, boolean isPreInstalledPath, ContainerLogger containerLogger) {
     PluginDescriptorImpl descriptor = null;
 
     if (pluginPath.isDirectory()) {
@@ -114,7 +112,7 @@ public class PluginLoader {
 
   @SuppressWarnings("unchecked")
   static Collection<URL> getClassLoaderUrls() {
-    final ClassLoader classLoader = PluginLoader.class.getClassLoader();
+    final ClassLoader classLoader = PluginDescriptorLoader.class.getClassLoader();
     final Class<? extends ClassLoader> aClass = classLoader.getClass();
     try {
       return (List<URL>)aClass.getMethod("getUrls").invoke(classLoader);

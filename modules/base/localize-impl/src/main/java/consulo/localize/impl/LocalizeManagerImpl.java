@@ -24,6 +24,7 @@ import com.intellij.util.EventDispatcher;
 import com.intellij.util.io.URLUtil;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginManager;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeManager;
@@ -64,9 +65,14 @@ public class LocalizeManagerImpl extends LocalizeManager {
 
   private AtomicInteger myModificationCount = new AtomicInteger();
 
-  public void initialize(@Nonnull List<PluginDescriptor> pluginDescriptors) {
+  public void initialize() {
+    List<PluginDescriptor> pluginDescriptors = PluginManager.getPlugins();
     if (myInitialized.compareAndSet(false, true)) {
       for (PluginDescriptor pluginDescriptor : pluginDescriptors) {
+        if(PluginManager.shouldSkipPlugin(pluginDescriptor)) {
+          continue;
+        }
+
         try {
           ClassLoader classLoader = pluginDescriptor.getPluginClassLoader();
 

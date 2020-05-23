@@ -16,25 +16,36 @@
 package com.intellij.idea.starter;
 
 import com.intellij.ide.*;
-import com.intellij.ide.plugins.PluginManager;
-import consulo.container.impl.classloader.PluginLoadStatistics;
+import com.intellij.ide.plugins.PluginManagerConfigurable;
+import com.intellij.ide.plugins.PluginManagerUISettings;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.internal.statistic.UsageTrigger;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationListener;
+import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.impl.DesktopApplicationImpl;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
+import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.DesktopWindowManagerImpl;
 import com.intellij.openapi.wm.impl.SystemDock;
-import consulo.desktop.start.splash.DesktopSplash;
 import consulo.application.ApplicationProperties;
+import consulo.awt.TargetAWT;
+import consulo.container.impl.classloader.PluginLoadStatistics;
+import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
+import consulo.desktop.start.splash.DesktopSplash;
 import consulo.ide.customize.FirstStartCustomizeUtil;
 import consulo.logging.Logger;
+import consulo.plugins.internal.PluginsInitializeInfo;
 import consulo.start.CommandLineArgs;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -42,7 +53,10 @@ import consulo.ui.annotation.RequiredUIAccess;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
+import java.util.List;
+import java.util.Set;
 
 public class DesktopApplicationPostStarter extends ApplicationPostStarter {
   private static final Logger LOG = Logger.getInstance(DesktopApplicationPostStarter.class);
@@ -139,9 +153,52 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
         projectFromCommandLine.doWhenRejected(recentProjectsManager::doReopenLastProject);
       }
 
-      SwingUtilities.invokeLater(PluginManager::reportPluginError);
+      SwingUtilities.invokeLater(() -> reportPluginError(myPluginsInitializeInfo));
 
       UsageTrigger.trigger("consulo.app.started");
     }, ModalityState.NON_MODAL);
   }
+
+  static void reportPluginError(PluginsInitializeInfo info) {
+    List<String> pluginErrors = info.getPluginErrors();
+
+    List<String> plugins2Disable = info.getPlugins2Disable();
+    Set<String> plugins2Enable = info.getPlugins2Enable();
+
+    if (pluginErrors != null) {
+      for (String pluginError : pluginErrors) {
+        String message = IdeBundle.message("title.plugin.notification.title");
+        Notifications.Bus.notify(new Notification(message, message, pluginError, NotificationType.ERROR, new NotificationListener() {
+          @RequiredUIAccess
+          @Override
+          public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
+            notification.expire();
+
+            String description = event.getDescription();
+            if (PluginsInitializeInfo.EDIT.equals(description)) {
+              PluginManagerConfigurable configurable = new PluginManagerConfigurable(PluginManagerUISettings.getInstance());
+              IdeFrame ideFrame = WindowManagerEx.getInstanceEx().findFrameFor(null);
+              ShowSettingsUtil.getInstance().editConfigurable(ideFrame == null ? null : TargetAWT.to(ideFrame.getWindow()), configurable);
+              return;
+            }
+
+            List<String> disabledPlugins = consulo.container.plugin.PluginManager.getDisabledPlugins();
+            if (plugins2Disable != null && PluginsInitializeInfo.DISABLE.equals(description)) {
+              for (String pluginId : plugins2Disable) {
+                if (!disabledPlugins.contains(pluginId)) {
+                  disabledPlugins.add(pluginId);
+                }
+              }
+            }
+            else if (plugins2Enable != null && PluginsInitializeInfo.ENABLE.equals(description)) {
+              disabledPlugins.removeAll(plugins2Enable);
+            }
+
+            PluginManager.replaceDisabledPlugins(disabledPlugins);
+          }
+        }));
+      }
+    }
+  }
+
 }

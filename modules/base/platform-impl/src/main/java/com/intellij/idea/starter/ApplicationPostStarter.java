@@ -16,24 +16,25 @@
 package com.intellij.idea.starter;
 
 import com.intellij.ide.StartupProgress;
-import com.intellij.ide.plugins.PluginManager;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.util.Ref;
-import consulo.container.plugin.PluginDescriptor;
 import consulo.container.util.StatCollector;
 import consulo.localize.LocalizeManager;
 import consulo.localize.impl.LocalizeManagerImpl;
+import consulo.plugins.internal.PluginsInitializeInfo;
+import consulo.plugins.internal.PluginsLoader;
 import consulo.start.CommandLineArgs;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 
 public abstract class ApplicationPostStarter {
   protected final Ref<StartupProgress> mySplashRef = Ref.create();
   protected ApplicationStarter myApplicationStarter;
+
+  protected PluginsInitializeInfo myPluginsInitializeInfo;
 
   public ApplicationPostStarter(ApplicationStarter applicationStarter) {
     myApplicationStarter = applicationStarter;
@@ -48,13 +49,13 @@ public abstract class ApplicationPostStarter {
       mySplashRef.set(splash);
     }
 
-    PluginManager.initPlugins(splash, isHeadlessMode);
+    PluginsLoader.setVersionChecker();
 
-    List<PluginDescriptor> plugins = consulo.container.plugin.PluginManager.getPlugins();
+    myPluginsInitializeInfo = PluginsLoader.initPlugins(splash, isHeadlessMode);
 
     LocalizeManagerImpl localizeManager = (LocalizeManagerImpl)LocalizeManager.getInstance();
 
-    localizeManager.initialize(plugins);
+    localizeManager.initialize();
 
     createApplication(isHeadlessMode, mySplashRef, args);
   }

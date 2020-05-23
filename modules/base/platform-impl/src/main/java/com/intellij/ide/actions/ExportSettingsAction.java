@@ -56,6 +56,8 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.zip.ZipOutputStream;
 
@@ -118,8 +120,8 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
   }
 
   private static void exportInstalledPlugins(File saveFile, ZipOutputStream output, HashSet<String> writtenItemRelativePaths) throws IOException {
-    final List<String> oldPlugins = new ArrayList<>();
-    for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
+    final Set<String> oldPlugins = new LinkedHashSet<>();
+    for (PluginDescriptor descriptor : consulo.container.plugin.PluginManager.getPlugins()) {
       if (!PluginIds.isPlatformPlugin(descriptor.getPluginId()) && descriptor.isEnabled()) {
         oldPlugins.add(descriptor.getPluginId().getIdString());
       }
@@ -127,7 +129,7 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
     if (!oldPlugins.isEmpty()) {
       final File tempFile = File.createTempFile("installed", "plugins");
       tempFile.deleteOnExit();
-      PluginManagerCore.savePluginsList(oldPlugins, false, tempFile);
+      Files.write(tempFile.toPath(), oldPlugins, StandardCharsets.UTF_8);
       ZipUtil.addDirToZipRecursively(output, saveFile, tempFile, "/" + PluginManager.INSTALLED_TXT, null, writtenItemRelativePaths);
     }
   }

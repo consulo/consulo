@@ -16,6 +16,8 @@
 
 package org.jetbrains.annotations;
 
+import consulo.annotation.DeprecationInfo;
+
 import java.lang.annotation.*;
 
 /**
@@ -50,6 +52,8 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.CLASS)
 @Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.LOCAL_VARIABLE, ElementType.TYPE, ElementType.PACKAGE})
+@Deprecated
+@DeprecationInfo("LocalizeValue introduced, we don't need that")
 public @interface NonNls {
 
 }
