@@ -15,11 +15,11 @@
  */
 package consulo.ui.desktop.internal.textBox;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.components.JBTextField;
 import consulo.awt.impl.FromSwingComponentWrapper;
+import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.TextBox;
@@ -42,6 +42,7 @@ public class DesktopTextBoxImpl extends DocumentSwingValidator<String, JBTextFie
     }
 
     @Override
+    @RequiredUIAccess
     protected void textChanged(DocumentEvent e) {
       myTextField.valueChanged();
     }
@@ -56,6 +57,7 @@ public class DesktopTextBoxImpl extends DocumentSwingValidator<String, JBTextFie
     }
   }
 
+  @RequiredUIAccess
   public DesktopTextBoxImpl(String text) {
     MyJBTextField field = new MyJBTextField();
     TextFieldPlaceholderFunction.install(field);

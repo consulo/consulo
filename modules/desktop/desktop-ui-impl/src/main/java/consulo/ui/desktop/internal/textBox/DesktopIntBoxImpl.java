@@ -15,11 +15,11 @@
  */
 package consulo.ui.desktop.internal.textBox;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.Function;
 import consulo.awt.impl.FromSwingComponentWrapper;
+import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.IntBox;
 import consulo.ui.annotation.RequiredUIAccess;

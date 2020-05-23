@@ -15,15 +15,15 @@
  */
 package consulo.ui.impl;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import consulo.util.dataholder.Key;
-import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.disposer.Disposable;
 import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.shared.border.BorderStyle;
 import consulo.ui.style.ColorKey;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolderBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

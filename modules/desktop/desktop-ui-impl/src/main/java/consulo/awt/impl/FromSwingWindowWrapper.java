@@ -15,7 +15,6 @@
  */
 package consulo.awt.impl;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.ui.Window;
 
 import javax.annotation.Nullable;
@@ -23,9 +22,9 @@ import javax.annotation.Nullable;
 /**
  * @author VISTALL
  * @since 2019-02-16
+ *
+ * Internal class, don't use it in plugins
  */
-@Deprecated
-@DeprecationInfo("Internal class, don't use it in plugins")
 public interface FromSwingWindowWrapper {
   @Nullable
   Window toUIWindow();

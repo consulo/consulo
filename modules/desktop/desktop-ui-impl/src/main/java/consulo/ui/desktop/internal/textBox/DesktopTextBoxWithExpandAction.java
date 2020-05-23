@@ -15,13 +15,13 @@
  */
 package consulo.ui.desktop.internal.textBox;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.ui.ComponentWithBrowseButton;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.components.fields.ExpandableTextField;
 import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.TextBox;
 import consulo.ui.TextBoxWithExpandAction;
@@ -43,8 +43,8 @@ import java.util.function.Function;
  * @since 2019-04-26
  */
 public class DesktopTextBoxWithExpandAction {
+  @RequiredUIAccess
   public static TextBoxWithExpandAction create(@Nullable Image editButtonImage, String dialogTitle, Function<String, List<String>> parser, Function<List<String>, String> joiner) {
-
     SupportTextBoxWithExpandActionExtender extender = LafExtendUtil.getExtender(SupportTextBoxWithExpandActionExtender.class);
     if (extender != null) {
       return new SupportedTextBoxWithExpandAction(parser, joiner, extender);
@@ -113,6 +113,7 @@ public class DesktopTextBoxWithExpandAction {
 
     private String myDialogTitle;
 
+    @RequiredUIAccess
     private FallbackTextBoxWithExpandAction(Image editButtonImage, String dialogTitle, Function<String, List<String>> parser, Function<List<String>, String> joiner) {
       myTextBox = new DesktopTextBoxImpl("");
       myDialogTitle = StringUtil.notNullize(dialogTitle);

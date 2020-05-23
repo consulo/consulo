@@ -15,7 +15,7 @@
  */
 package consulo.ui.desktop.internal.window;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import consulo.awt.TargetAWT;
 import consulo.awt.impl.ToSwingWindowWrapper;
@@ -102,7 +102,7 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
 
   @RequiredUIAccess
   @Override
-  public void addBorder(@Nonnull BorderPosition borderPosition, BorderStyle borderStyle, ColorKey colorKey, int width) {
+  public void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, ColorKey colorKey, int width) {
     throw new UnsupportedOperationException();
   }
 
