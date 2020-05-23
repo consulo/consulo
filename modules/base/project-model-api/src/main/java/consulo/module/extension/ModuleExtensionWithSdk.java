@@ -18,6 +18,7 @@ package consulo.module.extension;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -27,10 +28,10 @@ public interface ModuleExtensionWithSdk<T extends ModuleExtensionWithSdk<T>> ext
   @Nonnull
   ModuleInheritableNamedPointer<Sdk> getInheritableSdk();
 
-  @javax.annotation.Nullable
+  @Nullable
   Sdk getSdk();
 
-  @javax.annotation.Nullable
+  @Nullable
   String getSdkName();
 
   @Nonnull
