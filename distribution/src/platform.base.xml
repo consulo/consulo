@@ -133,6 +133,7 @@
         <include>org.slf4j:slf4j-api</include>
         <include>javax.inject:javax.inject</include>
         <include>com.google.guava:guava</include>
+        <include>com.google.guava:failureaccess</include>
         <include>org.apache.httpcomponents:httpcore</include>
         <include>org.apache.httpcomponents:httpclient</include>
         <include>org.apache.httpcomponents:httpmime</include>

@@ -33,7 +33,7 @@
     <jdom.version>3.0-SNAPSHOT</jdom.version>
     <trove4j.version>2.2</trove4j.version>
     <log4j2.version>2.12.1</log4j2.version>
-    <guava.version>28.1-jre</guava.version>
+    <guava.version>29.0-jre</guava.version>
     <!--please exclude common logging library from dependency-->
     <httpclient.version>4.5.3</httpclient.version>
     <netty.version>4.1.33.Final</netty.version>
@@ -82,6 +82,11 @@
             <artifactId>jsr305</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>failureaccess</artifactId>
+        <version>1.0.1</version>
       </dependency>
       <dependency>
         <groupId>com.google.code.gson</groupId>
@@ -195,7 +200,7 @@
       <dependency>
         <groupId>consulo.internal</groupId>
         <artifactId>pty4j</artifactId>
-        <version>0.7.2</version>
+        <version>0.7.3</version>
         <exclusions>
           <exclusion>
             <groupId>net.java.dev.jna</groupId>
