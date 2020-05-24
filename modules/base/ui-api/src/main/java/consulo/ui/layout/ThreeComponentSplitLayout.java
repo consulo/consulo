@@ -20,6 +20,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIInternal;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -33,13 +34,13 @@ public interface ThreeComponentSplitLayout extends Layout {
 
   @RequiredUIAccess
   @Nonnull
-  ThreeComponentSplitLayout setFirstComponent(@Nonnull Component component);
+  ThreeComponentSplitLayout setFirstComponent(@Nullable Component component);
 
   @RequiredUIAccess
   @Nonnull
-  ThreeComponentSplitLayout setCenterComponent(@Nonnull Component component);
+  ThreeComponentSplitLayout setCenterComponent(@Nullable Component component);
 
   @RequiredUIAccess
   @Nonnull
-  ThreeComponentSplitLayout setSecondComponent(@Nonnull Component component);
+  ThreeComponentSplitLayout setSecondComponent(@Nullable Component component);
 }

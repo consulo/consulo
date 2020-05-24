@@ -103,7 +103,7 @@ public class WebThreeComponentSplitLayoutImpl extends UIComponentWithVaadinCompo
   @RequiredUIAccess
   @Nonnull
   @Override
-  public ThreeComponentSplitLayout setFirstComponent(@Nonnull consulo.ui.Component component) {
+  public ThreeComponentSplitLayout setFirstComponent(@Nullable consulo.ui.Component component) {
     getVaadinComponent().setFirstComponent(TargetVaddin.to(component));
     return this;
   }
@@ -119,7 +119,7 @@ public class WebThreeComponentSplitLayoutImpl extends UIComponentWithVaadinCompo
   @RequiredUIAccess
   @Nonnull
   @Override
-  public ThreeComponentSplitLayout setSecondComponent(@Nonnull consulo.ui.Component component) {
+  public ThreeComponentSplitLayout setSecondComponent(@Nullable consulo.ui.Component component) {
     getVaadinComponent().setSecondComponent(TargetVaddin.to(component));
     return this;
   }
