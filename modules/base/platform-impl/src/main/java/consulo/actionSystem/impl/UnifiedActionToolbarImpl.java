@@ -28,6 +28,7 @@ import consulo.ui.shared.Size;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.annotation.Nonnull;
+import javax.swing.*;
 import java.util.Collections;
 import java.util.List;
 
@@ -58,6 +59,13 @@ public class UnifiedActionToolbarImpl implements ActionToolbar {
     myComponent = myOrientation == HORIZONTAL_ORIENTATION ? HorizontalLayout.create() : VerticalLayout.create();
 
     
+  }
+
+  @Nonnull
+  @Override
+  public JComponent getComponent() {
+    // unsupported UI - just return stub, we don't care
+    return new JPanel();
   }
 
   @Nonnull

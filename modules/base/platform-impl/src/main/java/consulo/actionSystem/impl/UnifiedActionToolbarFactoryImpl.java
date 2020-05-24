@@ -21,11 +21,13 @@ import consulo.actionSystem.ActionToolbarFactory;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
 /**
  * @author VISTALL
  * @since 2020-05-11
  */
+@Singleton
 public class UnifiedActionToolbarFactoryImpl implements ActionToolbarFactory {
   @Nonnull
   @Override
