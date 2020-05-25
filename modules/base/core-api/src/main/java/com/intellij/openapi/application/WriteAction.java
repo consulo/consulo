@@ -22,8 +22,6 @@ import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.application.WriteThreadOption;
-import consulo.application.internal.ApplicationWithOwnWriteThread;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -73,17 +71,6 @@ public final class WriteAction {
 
   public static <T, E extends Throwable> T compute(@Nonnull ThrowableComputable<T, E> action) throws E {
     Application application = Application.get();
-    if (application instanceof ApplicationWithOwnWriteThread && WriteThreadOption.isSeparateWriteThreadSuppored()) {
-      //noinspection RequiredXAction
-      return application.runWriteAction(action);
-    }
-
-    AccessToken token = start();
-    try {
-      return action.compute();
-    }
-    finally {
-      token.finish();
-    }
+    return application.runWriteAction(action);
   }
 }

@@ -234,7 +234,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
   }
 
   public boolean commitTransaction(@Nonnull Document document) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    ApplicationManager.getApplication().assertIsWriteThread();
     final DocumentChangeTransaction documentChangeTransaction = removeTransaction(document);
     if (documentChangeTransaction == null) return false;
     final PsiFile changeScope = documentChangeTransaction.myChangeScope;

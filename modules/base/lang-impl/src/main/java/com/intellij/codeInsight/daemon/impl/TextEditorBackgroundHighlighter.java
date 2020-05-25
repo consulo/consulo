@@ -28,12 +28,14 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.PsiFileEx;
 import com.intellij.util.ArrayUtil;
+import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
 public class TextEditorBackgroundHighlighter implements BackgroundEditorHighlighter {
+  private static final Logger LOG = Logger.getInstance(TextEditorBackgroundHighlighter.class);
   private static final int[] EXCEPT_OVERRIDDEN = {
           Pass.UPDATE_FOLDING,
           Pass.POPUP_HINTS,
@@ -76,7 +78,7 @@ public class TextEditorBackgroundHighlighter implements BackgroundEditorHighligh
   @Nonnull
   List<TextEditorHighlightingPass> getPasses(@Nonnull int[] passesToIgnore) {
     if (myProject.isDisposed()) return Collections.emptyList();
-    PsiDocumentManager.getInstance(myProject).commitAllDocuments();
+    LOG.assertTrue(PsiDocumentManager.getInstance(myProject).isCommitted(myDocument));
     renewFile();
     if (myFile == null) return Collections.emptyList();
     if (myCompiled) {

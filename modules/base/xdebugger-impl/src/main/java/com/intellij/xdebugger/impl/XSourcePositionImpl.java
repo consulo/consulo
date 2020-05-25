@@ -1,57 +1,33 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.xdebugger.impl;
 
-import com.intellij.openapi.application.AccessToken;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
 import com.intellij.pom.Navigatable;
+import com.intellij.pom.NonNavigatable;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.SmartPointerManager;
+import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.testFramework.LightVirtualFile;
+import com.intellij.util.DocumentUtil;
+import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XSourcePosition;
+import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-/**
- * @author nik
- */
-public class XSourcePositionImpl implements XSourcePosition {
+public abstract class XSourcePositionImpl implements XSourcePosition {
   private final VirtualFile myFile;
-  private final int myLine;
-  private final int myOffset;
 
-  private XSourcePositionImpl(@Nonnull VirtualFile file, final int line, final int offset) {
+  private XSourcePositionImpl(@Nonnull VirtualFile file) {
     myFile = file;
-    myLine = line;
-    myOffset = offset;
-  }
-
-  @Override
-  public int getLine() {
-    return myLine;
-  }
-
-  @Override
-  public int getOffset() {
-    return myOffset;
   }
 
   @Override
@@ -61,70 +37,148 @@ public class XSourcePositionImpl implements XSourcePosition {
   }
 
   /**
-   * do not call this method from plugins, use {@link com.intellij.xdebugger.XDebuggerUtil#createPositionByOffset(com.intellij.openapi.vfs.VirtualFile, int)} instead
+   * do not call this method from plugins, use {@link XDebuggerUtil#createPositionByOffset(VirtualFile, int)} instead
    */
   @Nullable
   public static XSourcePositionImpl createByOffset(@Nullable VirtualFile file, final int offset) {
     if (file == null) return null;
 
-    AccessToken lock = ApplicationManager.getApplication().acquireReadActionLock();
-    try {
-      Document document = FileDocumentManager.getInstance().getDocument(file);
+    return new XSourcePositionImpl(file) {
+      private final AtomicNotNullLazyValue<Integer> myLine = new AtomicNotNullLazyValue<Integer>() {
+        @Nonnull
+        @Override
+        protected Integer compute() {
+          return ReadAction.compute(() -> {
+            Document document = FileDocumentManager.getInstance().getDocument(file);
+            if (document == null) {
+              return -1;
+            }
+            return DocumentUtil.isValidOffset(offset, document) ? document.getLineNumber(offset) : -1;
+          });
+        }
+      };
 
-      if (document == null) {
-        return null;
+      @Override
+      public int getLine() {
+        return myLine.getValue();
       }
-      int line = offset < document.getTextLength() ? document.getLineNumber(offset) : -1;
-      return new XSourcePositionImpl(file, line, offset);
-    }
-    finally {
-      lock.finish();
-    }
+
+      @Override
+      public int getOffset() {
+        return offset;
+      }
+    };
   }
 
+  /**
+   * do not call this method from plugins, use {@link XDebuggerUtil#createPositionByElement(PsiElement)} instead
+   */
   @Nullable
   public static XSourcePositionImpl createByElement(@Nullable PsiElement element) {
     if (element == null) return null;
 
-    VirtualFile file = element.getContainingFile().getVirtualFile();
+    PsiFile psiFile = element.getContainingFile();
+    if (psiFile == null) return null;
 
+    final VirtualFile file = psiFile.getVirtualFile();
     if (file == null) return null;
 
-    return createByOffset(file, element.getTextOffset());
+    final SmartPsiElementPointer<PsiElement> pointer = SmartPointerManager.getInstance(element.getProject()).createSmartPsiElementPointer(element);
+
+    return new XSourcePositionImpl(file) {
+      private final AtomicNotNullLazyValue<XSourcePosition> myDelegate = new AtomicNotNullLazyValue<XSourcePosition>() {
+        @Nonnull
+        @Override
+        protected XSourcePosition compute() {
+          return ReadAction.compute(() -> {
+            PsiElement elem = pointer.getElement();
+            return XSourcePositionImpl.createByOffset(pointer.getVirtualFile(), elem != null ? elem.getTextOffset() : -1);
+          });
+        }
+      };
+
+      @Override
+      public int getLine() {
+        return myDelegate.getValue().getLine();
+      }
+
+      @Override
+      public int getOffset() {
+        return myDelegate.getValue().getOffset();
+      }
+
+      @Nonnull
+      @Override
+      public Navigatable createNavigatable(@Nonnull Project project) {
+        // no need to create delegate here, it may be expensive
+        if (myDelegate.isComputed()) {
+          return myDelegate.getValue().createNavigatable(project);
+        }
+        PsiElement elem = pointer.getElement();
+        if (elem instanceof Navigatable) {
+          return ((Navigatable)elem);
+        }
+        return NonNavigatable.INSTANCE;
+      }
+    };
   }
 
   /**
-   * do not call this method from plugins, use {@link com.intellij.xdebugger.XDebuggerUtil#createPosition(com.intellij.openapi.vfs.VirtualFile, int)} instead
+   * do not call this method from plugins, use {@link XDebuggerUtil#createPosition(VirtualFile, int)} instead
    */
-  @Nullable
+  @Contract("null , _ -> null; !null, _ -> !null")
   public static XSourcePositionImpl create(@Nullable VirtualFile file, int line) {
+    return file == null ? null : create(file, line, 0);
+  }
+
+  /**
+   * do not call this method from plugins, use {@link XDebuggerUtil#createPosition(VirtualFile, int, int)} instead
+   */
+  @Contract("null , _, _ -> null; !null, _, _ -> !null")
+  public static XSourcePositionImpl create(@Nullable VirtualFile file, final int line, final int column) {
     if (file == null) {
       return null;
     }
 
-    AccessToken lock = ApplicationManager.getApplication().acquireReadActionLock();
-    try {
-      int offset;
-      if (file instanceof LightVirtualFile || file instanceof HttpVirtualFile) {
-        offset = -1;
-      }
-      else {
+    return new XSourcePositionImpl(file) {
+      private final AtomicNotNullLazyValue<Integer> myOffset = new AtomicNotNullLazyValue<Integer>() {
+        @Nonnull
+        @Override
+        protected Integer compute() {
+          return ReadAction.compute(() -> {
+            int offset;
+            if (file instanceof LightVirtualFile || file instanceof HttpVirtualFile) {
+              return -1;
+            }
+            else {
+              Document document = FileDocumentManager.getInstance().getDocument(file);
+              if (document == null) {
+                return -1;
+              }
+              int l = Math.max(0, line);
+              int c = Math.max(0, column);
 
-        Document document = file.isValid() ? FileDocumentManager.getInstance().getDocument(file) : null;
-        if (document == null) {
-          return null;
-        }
-        if (line < 0) {
-          line = 0;
-        }
+              offset = l < document.getLineCount() ? document.getLineStartOffset(l) + c : -1;
 
-        offset = line < document.getLineCount() ? document.getLineStartOffset(line) : -1;
+              if (offset >= document.getTextLength()) {
+                offset = document.getTextLength() - 1;
+              }
+            }
+            return offset;
+          });
+        }
+      };
+
+      @Override
+      public int getLine() {
+        return line;
       }
-      return new XSourcePositionImpl(file, line, offset);
-    }
-    finally {
-      lock.finish();
-    }
+
+      @Override
+      public int getOffset() {
+        return myOffset.getValue();
+      }
+    };
   }
 
   @Override
@@ -146,13 +200,11 @@ public class XSourcePositionImpl implements XSourcePosition {
 
   @Nonnull
   public static OpenFileDescriptor doCreateOpenFileDescriptor(@Nonnull Project project, @Nonnull XSourcePosition position) {
-    return position.getOffset() != -1
-           ? new OpenFileDescriptor(project, position.getFile(), position.getOffset())
-           : new OpenFileDescriptor(project, position.getFile(), position.getLine(), 0);
+    return position.getOffset() != -1 ? new OpenFileDescriptor(project, position.getFile(), position.getOffset()) : new OpenFileDescriptor(project, position.getFile(), position.getLine(), 0);
   }
 
   @Override
   public String toString() {
-    return "XSourcePositionImpl[" + myFile + ":" + myLine + "(" + myOffset + ")]";
+    return "XSourcePositionImpl[" + myFile + ":" + getLine() + "(" + getOffset() + ")]";
   }
 }

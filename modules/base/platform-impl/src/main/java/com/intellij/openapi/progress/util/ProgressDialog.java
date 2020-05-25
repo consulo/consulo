@@ -304,7 +304,7 @@ public class ProgressDialog implements consulo.progress.util.ProgressDialog {
   }
 
   private boolean isWriteActionProgress() {
-    return myProgressWindow instanceof PotemkinProgress;
+    return false;
   }
 
   private class MyDialogWrapper extends DialogWrapper {

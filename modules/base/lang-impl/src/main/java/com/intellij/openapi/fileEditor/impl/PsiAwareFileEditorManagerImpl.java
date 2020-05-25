@@ -17,6 +17,7 @@
 package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.ide.PowerSaveMode;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
@@ -38,6 +39,7 @@ import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.ui.docking.DockManager;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.inject.Provider;
@@ -165,6 +167,15 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
     }
 
     private void doChange(final PsiTreeChangeEvent event) {
+      if(UIAccess.isUIThread()) {
+        doChangeInUI(event);
+      }
+      else {
+        Application.get().getLastUIAccess().giveAndWait(() -> doChangeInUI(event));
+      }
+    }
+
+    private void doChangeInUI(final PsiTreeChangeEvent event) {
       final PsiFile psiFile = event.getFile();
       if (psiFile == null) return;
       VirtualFile file = psiFile.getVirtualFile();

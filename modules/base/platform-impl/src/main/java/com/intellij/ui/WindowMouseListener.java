@@ -2,7 +2,6 @@
 
 package com.intellij.ui;
 
-import com.intellij.openapi.progress.util.PotemkinProgress;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.FieldAccessor;
 import com.intellij.util.MethodInvocator;
@@ -11,6 +10,7 @@ import org.intellij.lang.annotations.JdkConstants;
 import sun.awt.AWTAccessor;
 
 import javax.annotation.Nullable;
+import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import java.awt.*;
 import java.awt.event.*;
@@ -257,7 +257,7 @@ abstract class WindowMouseListener extends MouseAdapter implements MouseInputLis
     }
 
     public void setCursor(Component content, @SuppressWarnings("unused") Cursor cursor, Runnable defaultAction) {
-      PotemkinProgress.invokeLaterNotBlocking(content, defaultAction);
+      SwingUtilities.invokeLater(defaultAction);
     }
 
     public void setBounds(Component comp, Rectangle bounds, Runnable defaultAction) {
@@ -270,7 +270,7 @@ abstract class WindowMouseListener extends MouseAdapter implements MouseInputLis
         heightAccessor.set(comp, bounds.height);
       }
       else {
-        PotemkinProgress.invokeLaterNotBlocking(comp, defaultAction);
+        SwingUtilities.invokeLater(defaultAction);
       }
     }
 

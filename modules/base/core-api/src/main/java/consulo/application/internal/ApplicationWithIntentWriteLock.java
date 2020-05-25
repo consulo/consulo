@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,25 @@
  */
 package consulo.application.internal;
 
-import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.ThrowableComputable;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 2018-05-12
+ * @since 2020-05-24
  */
-public interface ApplicationWithOwnWriteThread extends Application {
-  default boolean isWriteThreadEnabled() {
-    return true;
+public interface ApplicationWithIntentWriteLock extends Application {
+  default void acquireWriteIntentLock() {
+    throw new UnsupportedOperationException();
   }
 
-  @Nonnull
-  AccessToken acquireWriteActionLockInternal(Class<?> callerClass);
+  default void releaseWriteIntentLock() {
+    throw new UnsupportedOperationException();
+  }
 
-  @Nonnull
-  <T> AsyncResult<T> pushWriteAction(@Nonnull Class<?> caller, @Nonnull ThrowableComputable<T, Throwable> computable);
+  default <T, E extends Throwable> T runWriteActionNoIntentLock(@Nonnull ThrowableComputable<T, E> computation) throws E {
+    throw new UnsupportedOperationException();
+  }
 }

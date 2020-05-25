@@ -21,14 +21,14 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.ActivityTracker;
 import com.intellij.ide.ApplicationLoadListener;
 import com.intellij.ide.StartupProgress;
-import consulo.container.boot.ContainerPathManager;
-import consulo.container.plugin.PluginListenerDescriptor;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.*;
+import com.intellij.openapi.application.AccessToken;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationInfo;
+import com.intellij.openapi.application.ApplicationListener;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.application.impl.ReadMostlyRWLock;
-import consulo.container.plugin.ComponentConfig;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
@@ -48,7 +48,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.PausesStat;
-import com.intellij.util.ReflectionUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.containers.Stack;
@@ -56,20 +55,26 @@ import com.intellij.util.io.storage.HeavyProcessLatch;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.ApplicationProperties;
 import consulo.application.ex.ApplicationEx2;
+import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.components.impl.PlatformComponentManagerImpl;
 import consulo.components.impl.stores.ApplicationStoreImpl;
 import consulo.components.impl.stores.IApplicationStore;
 import consulo.components.impl.stores.StoreUtil;
+import consulo.container.boot.ContainerPathManager;
+import consulo.container.plugin.ComponentConfig;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginListenerDescriptor;
+import consulo.disposer.Disposer;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
+import consulo.util.lang.reflect.ReflectionUtil;
 import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -83,7 +88,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author VISTALL
  * @since 2018-05-12
  */
-public abstract class BaseApplication extends PlatformComponentManagerImpl implements ApplicationEx2 {
+public abstract class BaseApplication extends PlatformComponentManagerImpl implements ApplicationEx2, ApplicationWithIntentWriteLock {
   private class ReadAccessToken extends AccessToken {
     private ReadAccessToken() {
       startRead();
@@ -99,9 +104,11 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     @Nonnull
     private final Class clazz;
 
+    private boolean needUnlock;
+
     public WriteAccessToken(@Nonnull Class clazz) {
       this.clazz = clazz;
-      startWrite(clazz);
+      needUnlock = startWriteUI(clazz);
       markThreadNameInStackTrace();
     }
 
@@ -112,6 +119,9 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
       }
       finally {
         unmarkThreadNameInStackTrace();
+        if(needUnlock) {
+          releaseWriteIntentLock();
+        }
       }
     }
 
@@ -164,7 +174,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @Nonnull
   protected final Ref<? extends StartupProgress> mySplashRef;
 
-  protected final Disposable myLastDisposable = Disposer.newDisposable(); // will be disposed last
+  protected final consulo.disposer.Disposable myLastDisposable = consulo.disposer.Disposable.newDisposable(); // will be disposed last
   private final EventDispatcher<ApplicationListener> myDispatcher = EventDispatcher.create(ApplicationListener.class);
 
   private final ExecutorService myThreadExecutorsService = PooledThreadExecutor.INSTANCE;
@@ -174,7 +184,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   private final long myStartTime;
 
-  protected ReadMostlyRWLock myLock;
+  protected final ReadMostlyRWLock myLock = new ReadMostlyRWLock();
 
   protected boolean myDoNotSave;
   private boolean myLoaded;
@@ -359,39 +369,16 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @Nonnull
   @Override
   public Future<?> executeOnPooledThread(@Nonnull final Runnable action) {
-    ReadMostlyRWLock.SuspensionId suspensionId = myLock.currentReadPrivilege();
-    return myThreadExecutorsService.submit(new Runnable() {
-      @Override
-      public String toString() {
-        return action.toString();
-      }
-
-      @Override
-      public void run() {
-        try (AccessToken ignored = myLock.applyReadPrivilege(suspensionId)) {
-          action.run();
-        }
-        catch (ProcessCanceledException e) {
-          // ignore
-        }
-        catch (Throwable t) {
-          LOG.error(t);
-        }
-        finally {
-          Thread.interrupted(); // reset interrupted status
-        }
-      }
-    });
+    return myThreadExecutorsService.submit(new CallableAsRunnable(action));
   }
 
   @Nonnull
   @Override
   public <T> Future<T> executeOnPooledThread(@Nonnull final Callable<T> action) {
-    ReadMostlyRWLock.SuspensionId suspensionId = myLock.currentReadPrivilege();
     return myThreadExecutorsService.submit(new Callable<T>() {
       @Override
       public T call() {
-        try (AccessToken ignored = myLock.applyReadPrivilege(suspensionId)) {
+        try {
           return action.call();
         }
         catch (ProcessCanceledException e) {
@@ -489,7 +476,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   @Override
   public void runReadAction(@Nonnull final Runnable action) {
-    if (isReadAccessAllowed()) {
+    if (checkReadAccessAllowedAndNoPendingWrites()) {
       action.run();
     }
     else {
@@ -505,7 +492,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   @Override
   public <T> T runReadAction(@Nonnull final Computable<T> computation) {
-    if (isReadAccessAllowed()) {
+    if (checkReadAccessAllowedAndNoPendingWrites()) {
       return computation.compute();
     }
     startRead();
@@ -519,7 +506,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   @Override
   public <T, E extends Throwable> T runReadAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
-    if (isReadAccessAllowed()) {
+    if (checkReadAccessAllowedAndNoPendingWrites()) {
       return computation.compute();
     }
     startRead();
@@ -534,7 +521,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @Override
   public boolean tryRunReadAction(@Nonnull Runnable action) {
     //if we are inside read action, do not try to acquire read lock again since it will deadlock if there is a pending writeAction
-    if (isReadAccessAllowed()) {
+    if (checkReadAccessAllowedAndNoPendingWrites()) {
       action.run();
     }
     else {
@@ -547,6 +534,10 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
       }
     }
     return true;
+  }
+
+  private boolean checkReadAccessAllowedAndNoPendingWrites() throws ApplicationUtil.CannotRunReadActionException {
+    return isWriteThread() || myLock.checkReadLockedByThisThreadAndNoPendingWrites();
   }
 
   @Override
@@ -618,15 +609,13 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
       fireBeforeWriteActionStart(clazz);
 
       if (!myLock.isWriteLocked()) {
-        if (!myLock.tryWriteLock()) {
-          Future<?> reportSlowWrite = ourDumpThreadsOnLongWriteActionWaiting <= 0
-                                      ? null
-                                      : JobScheduler.getScheduler().scheduleWithFixedDelay(() -> PerformanceWatcher.getInstance().dumpThreads("waiting", true), ourDumpThreadsOnLongWriteActionWaiting,
-                                                                                           ourDumpThreadsOnLongWriteActionWaiting, TimeUnit.MILLISECONDS);
-          myLock.writeLock();
-          if (reportSlowWrite != null) {
-            reportSlowWrite.cancel(false);
-          }
+        Future<?> reportSlowWrite = ourDumpThreadsOnLongWriteActionWaiting <= 0
+                                    ? null
+                                    : JobScheduler.getScheduler().scheduleWithFixedDelay(() -> PerformanceWatcher.getInstance().dumpThreads("waiting", true), ourDumpThreadsOnLongWriteActionWaiting,
+                                                                                         ourDumpThreadsOnLongWriteActionWaiting, TimeUnit.MILLISECONDS);
+        myLock.writeLock();
+        if (reportSlowWrite != null) {
+          reportSlowWrite.cancel(false);
         }
       }
     }
@@ -668,26 +657,32 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @RequiredUIAccess
   @Override
   public void runWriteAction(@Nonnull final Runnable action) {
-    Class<? extends Runnable> clazz = action.getClass();
-    startWrite(clazz);
-    try {
+    runWriteAction((Computable<Object>)() -> {
       action.run();
-    }
-    finally {
-      endWrite(clazz);
-    }
+      return null;
+    });
   }
 
   @RequiredUIAccess
   @Override
   public <T> T runWriteAction(@Nonnull final Computable<T> computation) {
-    Class<? extends Computable> clazz = computation.getClass();
-    startWrite(clazz);
+    return runWriteAction((ThrowableComputable<T, RuntimeException>)computation::compute);
+  }
+
+  @RequiredUIAccess
+  @Override
+  public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
+    Class<? extends ThrowableComputable> clazz = computation.getClass();
+
+    boolean needUnlock = startWriteUI(clazz);
     try {
       return computation.compute();
     }
     finally {
       endWrite(clazz);
+      if(needUnlock) {
+        releaseWriteIntentLock();
+      }
     }
   }
 
@@ -704,10 +699,40 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     return false;
   }
 
-  @RequiredUIAccess
   @Override
-  public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
+  public boolean isWriteThread() {
+    return myLock.isWriteThread(EventQueue::isDispatchThread);
+  }
+
+  public boolean startWriteUI(Class<?> clazz) {
+    if(!EventQueue.isDispatchThread()) {
+      throw new IllegalArgumentException("Current thread is not EDT: " + Thread.currentThread());
+    }
+
+    boolean needUnlock = false;
+    if(!myLock.isWriteThread(() -> false)) {
+      acquireWriteIntentLock();
+      needUnlock = true;
+    }
+
+    startWrite(clazz);
+    return needUnlock;
+  }
+
+  @Override
+  public void acquireWriteIntentLock() {
+    myLock.writeIntentLock();
+  }
+
+  @Override
+  public void releaseWriteIntentLock() {
+    myLock.writeIntentUnlock();
+  }
+
+  @Override
+  public <T, E extends Throwable> T runWriteActionNoIntentLock(@Nonnull ThrowableComputable<T, E> computation) throws E {
     Class<? extends ThrowableComputable> clazz = computation.getClass();
+
     startWrite(clazz);
     try {
       return computation.compute();
@@ -718,11 +743,10 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   }
 
   @Override
-  public boolean isWriteThread() {
-    return myLock.isWriteThread();
+  public boolean isWriteAccessAllowed() {
+    return isWriteThread() && myLock.isWriteLocked();
   }
 
-  @NonNls
   @Override
   public String toString() {
     return "Application" +

@@ -80,11 +80,11 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   private final List<String> myRequestedSuspensions = ContainerUtil.createEmptyCOWList();
 
   @Inject
-  public DumbServiceImpl(Project project) {
+  public DumbServiceImpl(Application application, Project project) {
     myProject = project;
     myPublisher = project.getMessageBus().syncPublisher(DUMB_MODE);
 
-    ApplicationManager.getApplication().getMessageBus().connect(project).subscribe(BatchFileChangeListener.TOPIC, new BatchFileChangeListener() {
+    application.getMessageBus().connect(project).subscribe(BatchFileChangeListener.TOPIC, new BatchFileChangeListener() {
       @SuppressWarnings("UnnecessaryFullyQualifiedName")
       final // synchronized, can be accessed from different threads
               java.util.Stack<AccessToken> stack = new Stack<>();
@@ -132,7 +132,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
     }
     for (DumbModeTask task : new ArrayList<>(myProgresses.keySet())) {
       cancelTask(task);
-      Disposer.dispose(task);
+      consulo.disposer.Disposer.dispose(task);
     }
   }
 

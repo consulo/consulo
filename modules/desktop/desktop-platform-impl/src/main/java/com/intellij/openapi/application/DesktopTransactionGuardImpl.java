@@ -229,7 +229,7 @@ public class DesktopTransactionGuardImpl extends TransactionGuardEx {
 
   @Override
   public void assertWriteActionAllowed() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    ApplicationManager.getApplication().assertIsWriteThread();
     if (areAssertionsEnabled() && !myWritingAllowed && !myErrorReported) {
       // please assign exceptions here to Peter
       LOG.error(reportWriteUnsafeContext(ModalityState.current()));

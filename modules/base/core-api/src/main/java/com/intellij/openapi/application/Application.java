@@ -144,7 +144,6 @@ public interface Application extends ComponentManager {
   /**
    * Asserts whether the method is being called from the write thread.
    */
-  @RequiredUIAccess
   default void assertIsWriteThread() {
     assertIsDispatchThread();
   }

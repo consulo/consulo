@@ -289,7 +289,7 @@ public class UndoManagerImpl implements UndoManager, Disposable {
 
   @Override
   public void undoableActionPerformed(@Nonnull UndoableAction action) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    ApplicationManager.getApplication().assertIsWriteThread();
     if (myProject != null && myProject.isDisposed()) return;
 
     if (myCurrentOperationState != OperationState.NONE) return;

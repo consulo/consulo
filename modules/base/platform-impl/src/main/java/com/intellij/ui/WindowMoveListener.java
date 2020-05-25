@@ -16,8 +16,7 @@
 
 package com.intellij.ui;
 
-import com.intellij.openapi.progress.util.PotemkinProgress;
-
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
@@ -110,7 +109,7 @@ public class WindowMoveListener extends WindowMouseListener {
     @Override
     public void mouseClicked(MouseEvent event) {
       if (hitTest(event)) {
-        PotemkinProgress.invokeLaterNotBlocking(event.getSource(), () -> super.mouseClicked(event));
+        SwingUtilities.invokeLater(() -> super.mouseClicked(event));
       }
     }
 

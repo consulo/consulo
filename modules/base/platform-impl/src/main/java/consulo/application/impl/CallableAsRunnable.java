@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.application;
+package consulo.application.impl;
 
-import consulo.annotation.DeprecationInfo;
-import consulo.platform.Platform;
+import java.util.concurrent.Callable;
 
 /**
  * @author VISTALL
- * @since 2019-05-09
+ * @since 2020-05-24
  */
-public class WriteThreadOption {
-  @Deprecated
-  @DeprecationInfo("Always enabled")
-  public static boolean isSubWriteThreadSupported() {
-    return true;
+class CallableAsRunnable implements Callable<Void> {
+  private final Runnable myRunnable;
+
+  CallableAsRunnable(Runnable runnable) {
+    myRunnable = runnable;
   }
 
-  public static boolean isSeparateWriteThreadSuppored() {
-    return Platform.current().isWebService();
+  @Override
+  public Void call() throws Exception {
+    myRunnable.run();
+    return null;
+  }
+
+  @Override
+  public String toString() {
+    return myRunnable.toString();
   }
 }

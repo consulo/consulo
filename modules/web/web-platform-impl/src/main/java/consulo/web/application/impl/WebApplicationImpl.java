@@ -9,17 +9,17 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Ref;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AccessRule;
-import consulo.application.impl.BaseApplicationWithOwnWriteThread;
+import consulo.application.impl.BaseApplication;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.web.application.WebApplication;
 import consulo.web.application.WebSession;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author VISTALL
  * @since 16-Sep-17
  */
-public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implements WebApplication {
+public class WebApplicationImpl extends BaseApplication implements WebApplication {
   private static final Logger LOG = Logger.getInstance(WebApplicationImpl.class);
 
   private WebSession myCurrentSession;
@@ -41,7 +41,6 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
       return false;
     }
 
-    @NonNls
     @Override
     public String toString() {
       return "ANY";
@@ -64,38 +63,6 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
   @Nullable
   public WebStartupProgressImpl getSplash() {
     return (WebStartupProgressImpl)mySplashRef.get();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public <T> T runWriteAction(@Nonnull Computable<T> computation) {
-    try {
-      return runWriteAction((ThrowableComputable<T, Throwable>)computation::compute);
-    }
-    catch (Throwable e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  @RequiredUIAccess
-  @Override
-  public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
-    if(isWriteThread()) {
-      // FIXME [VISTALL] temp dirty hack, until sync write calls exists
-      return computation.compute();
-    }
-    else {
-      return AccessRule.<T>writeAsync(computation::compute).getResultSync(-1);
-    }
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void runWriteAction(@Nonnull Runnable action) {
-    runWriteAction((ThrowableComputable<Object, RuntimeException>)() -> {
-      action.run();
-      return null;
-    });
   }
 
   @Override
@@ -324,5 +291,18 @@ public class WebApplicationImpl extends BaseApplicationWithOwnWriteThread implem
   @Override
   public void executeSuspendingWriteAction(@Nullable Project project, @Nonnull String title, @Nonnull Runnable runnable) {
 
+  }
+
+  @Override
+  public boolean isReadAccessAllowed() {
+    if (isDispatchThread()) {
+      return true;
+    }
+    return isWriteThread() || myLock.isReadLockedByThisThread();
+  }
+
+  @Override
+  public boolean isDispatchThread() {
+    return UIAccess.isUIThread();
   }
 }

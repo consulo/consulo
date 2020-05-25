@@ -25,7 +25,6 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.progress.impl.CoreProgressManager;
-import com.intellij.openapi.progress.util.PotemkinProgress;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -48,8 +47,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationProperties;
 import consulo.application.ex.ApplicationEx2;
 import consulo.application.impl.BaseApplication;
-import consulo.application.impl.WriteThread;
-import consulo.application.internal.ApplicationWithOwnWriteThread;
 import consulo.desktop.boot.main.windows.WindowsCommandLineProcessor;
 import consulo.disposer.Disposable;
 import consulo.injecting.InjectingContainerBuilder;
@@ -59,7 +56,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.AWTUIAccessImpl;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 import sun.awt.AWTAccessor;
 import sun.awt.AWTAutoShutdown;
@@ -73,7 +69,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
-public class DesktopApplicationImpl extends BaseApplication implements ApplicationEx2, ApplicationWithOwnWriteThread {
+public class DesktopApplicationImpl extends BaseApplication implements ApplicationEx2 {
   private static final Logger LOG = Logger.getInstance(DesktopApplicationImpl.class);
 
   private final ModalityInvokator myInvokator = new ModalityInvokatorImpl();
@@ -87,7 +83,6 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
 
   private volatile boolean myDisposeInProgress;
 
-  @NonNls
   private static final String WAS_EVER_SHOWN = "was.ever.shown";
 
   private static final ModalityState ANY = new ModalityState() {
@@ -96,14 +91,11 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
       return false;
     }
 
-    @NonNls
     @Override
     public String toString() {
       return "ANY";
     }
   };
-
-  private final WriteThread mySubWriteThread;
 
   public DesktopApplicationImpl(boolean isHeadless, @Nonnull Ref<? extends StartupProgress> splashRef) {
     super(splashRef);
@@ -115,7 +107,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     myIsInternal = ApplicationProperties.isInternal();
 
     String debugDisposer = System.getProperty("idea.disposer.debug");
-    Disposer.setDebugMode((myIsInternal || "on".equals(debugDisposer)) && !"off".equals(debugDisposer));
+    consulo.disposer.Disposer.setDebugMode((myIsInternal || "on".equals(debugDisposer)) && !"off".equals(debugDisposer));
 
     myHeadlessMode = isHeadless;
 
@@ -151,45 +143,17 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
       AppScheduledExecutorService service = (AppScheduledExecutorService)AppExecutorUtil.getAppScheduledExecutorService();
       Thread thread = service.getPeriodicTasksThread();
       AWTAutoShutdown.getInstance().notifyThreadBusy(thread); // needed for EDT not to exit suddenly
-      Disposer.register(this, () -> {
+      consulo.disposer.Disposer.register(this, () -> {
         AWTAutoShutdown.getInstance().notifyThreadFree(thread); // allow for EDT to exit - needed for Upsource
       });
       return Thread.currentThread();
     });
 
-    mySubWriteThread = new WriteThread(this);
-
-    myLock = new ReadMostlyRWLock(edt, mySubWriteThread);
-
     NoSwingUnderWriteAction.watchForEvents(this);
   }
 
-  @Nonnull
-  @Override
-  public AccessToken acquireWriteActionLockInternal(Class<?> callerClass) {
-    return new WriteAccessToken(callerClass);
-  }
-
-  @Override
-  public boolean isWriteThread() {
-    return super.isWriteThread() || Thread.currentThread() == mySubWriteThread;
-  }
-
-  @Nonnull
-  @Override
-  public <T> AsyncResult<T> pushWriteAction(@Nonnull Class<?> caller, @Nonnull ThrowableComputable<T, Throwable> computable) {
-    AsyncResult<T> asyncResult = AsyncResult.undefined();
-    mySubWriteThread.push(computable, asyncResult, caller);
-    return asyncResult;
-  }
-
-  @Override
-  public boolean isWriteThreadEnabled() {
-    return mySubWriteThread != null;
-  }
-
   private DesktopTransactionGuardImpl transactionGuard() {
-    if(myTransactionGuardImpl == null) {
+    if (myTransactionGuardImpl == null) {
       myTransactionGuardImpl = new DesktopTransactionGuardImpl();
     }
     return myTransactionGuardImpl;
@@ -223,9 +187,9 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
         }
       }
     }
-    runWriteAction(() -> Disposer.dispose(DesktopApplicationImpl.this));
+    runWriteAction(() -> consulo.disposer.Disposer.dispose(DesktopApplicationImpl.this));
 
-    Disposer.assertIsEmpty();
+    consulo.disposer.Disposer.assertIsEmpty();
     return true;
   }
 
@@ -241,7 +205,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
 
   @Override
   public boolean isDispatchThread() {
-    return myLock.isWriteThread();
+    return EventQueue.isDispatchThread();
   }
 
   @Nonnull
@@ -529,7 +493,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
                                                                           @Nullable Project project,
                                                                           @Nullable JComponent parentComponent,
                                                                           @Nonnull Consumer<? super ProgressIndicator> action) {
-    return runEdtProgressWriteAction(title, project, parentComponent, null, action);
+    return runProgressWindowAction(title, project, parentComponent, null, action);
   }
 
   @Override
@@ -537,29 +501,35 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
                                                                        @Nullable Project project,
                                                                        @Nullable JComponent parentComponent,
                                                                        @Nonnull Consumer<? super ProgressIndicator> action) {
-    return runEdtProgressWriteAction(title, project, parentComponent, IdeBundle.message("action.stop"), action);
+    return runProgressWindowAction(title, project, parentComponent, IdeBundle.message("action.stop"), action);
   }
 
-  private boolean runEdtProgressWriteAction(@Nonnull String title,
-                                            @Nullable Project project,
-                                            @Nullable JComponent parentComponent,
-                                            @Nullable @Nls(capitalization = Nls.Capitalization.Title) String cancelText,
-                                            @Nonnull Consumer<? super ProgressIndicator> action) {
-    return runWriteActionWithClass(action.getClass(), () -> {
-      PotemkinProgress indicator = new PotemkinProgress(title, project, parentComponent, cancelText);
-      indicator.runInSwingThread(() -> action.accept(indicator));
-      return !indicator.isCanceled();
+  private boolean runProgressWindowAction(@Nonnull String title,
+                                          @Nullable Project project,
+                                          @Nullable JComponent parentComponent,
+                                          @Nullable @Nls(capitalization = Nls.Capitalization.Title) String cancelText,
+                                          @Nonnull Consumer<? super ProgressIndicator> action) {
+    ProgressWindow progressWindow = new ProgressWindow(true, false, project, parentComponent, cancelText);
+    progressWindow.setTitle(title);
+
+    AppExecutorUtil.getAppExecutorService().execute(() -> {
+      ProgressManager.getInstance().runProcess(() -> {
+        try {
+          acquireWriteIntentLock();
+
+          runWriteActionNoIntentLock(() -> {
+            action.accept(progressWindow);
+
+            return null;
+          });
+        }
+        finally {
+          releaseWriteIntentLock();
+        }
+      }, progressWindow);
     });
-  }
 
-  private <T, E extends Throwable> T runWriteActionWithClass(@Nonnull Class<?> clazz, @Nonnull ThrowableComputable<T, E> computable) throws E {
-    startWrite(clazz);
-    try {
-      return computable.compute();
-    }
-    finally {
-      endWrite(clazz);
-    }
+    return !progressWindow.isCanceled();
   }
 
   @RequiredReadAction
@@ -572,7 +542,6 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     }
   }
 
-  @NonNls
   private static String describe(Thread o) {
     if (o == null) return "null";
     return o + " " + System.identityHashCode(o);
@@ -585,10 +554,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
 
   @Override
   public boolean isReadAccessAllowed() {
-    if (isDispatchThread()) {
-      return true;
-    }
-    return myLock.isReadLockedByThisThread();
+    return isWriteThread() || myLock.isReadLockedByThisThread();
   }
 
   @RequiredUIAccess
@@ -632,7 +598,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
                                          " Toolkit.getEventQueue()=" +
                                          Toolkit.getDefaultToolkit().getSystemEventQueue() +
                                          " Write Thread=" +
-                                         mySubWriteThread +
+                                         myLock.writeThread +
                                          " Current thread: " +
                                          describe(Thread.currentThread()) +
                                          " SystemEventQueueThread: " +
@@ -658,8 +624,10 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
                                          " Current thread: " +
                                          describe(Thread.currentThread()) +
                                          " SystemEventQueueThread: " +
-                                         describe(getEventQueueThread()) + "" +
-                                         " WriteThread: " + mySubWriteThread, dump);
+                                         describe(getEventQueueThread()) +
+                                         "" +
+                                         " WriteThread: " +
+                                         myLock.writeThread, dump);
   }
 
   @RequiredUIAccess
@@ -707,11 +675,6 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
   }
 
   @Override
-  public boolean isWriteAccessAllowed() {
-    return isWriteThread() && myLock.isWriteLocked();
-  }
-
-  @Override
   public void executeSuspendingWriteAction(@Nullable Project project, @Nonnull String title, @Nonnull Runnable runnable) {
     assertIsDispatchThread();
     if (!myLock.isWriteLocked()) {
@@ -722,11 +685,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     int prevBase = myWriteStackBase;
     myWriteStackBase = myWriteActionsStack.size();
     try (AccessToken ignored = myLock.writeSuspend()) {
-      runModalProgress(project, title, () -> {
-        try (AccessToken ignored1 = myLock.grantReadPrivilege()) {
-          runnable.run();
-        }
-      });
+      runModalProgress(project, title, runnable);
     }
     finally {
       myWriteStackBase = prevBase;

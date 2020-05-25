@@ -15,40 +15,34 @@
  */
 package consulo.application;
 
-import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.ThrowableComputable;
-import com.intellij.util.ObjectUtil;
-import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.application.internal.ApplicationWithOwnWriteThread;
+import consulo.application.internal.ApplicationWithIntentWriteLock;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.concurrent.ExecutorService;
 
 /**
  * @author VISTALL
  * @since 2018-04-24
  */
 public final class AccessRule {
-  @SuppressWarnings("deprecation")
   public static <E extends Throwable> void read(@RequiredReadAction @Nonnull ThrowableRunnable<E> action) throws E {
-    try (AccessToken ignored = Application.get().acquireReadActionLock()) {
+    Application.get().runReadAction((ThrowableComputable<Object, E>)() -> {
       action.run();
-    }
+      return null;
+    });
   }
 
   @Nullable
-  @SuppressWarnings("deprecation")
   public static <T, E extends Throwable> T read(@RequiredReadAction @Nonnull ThrowableComputable<T, E> action) throws E {
-    try (AccessToken ignored = Application.get().acquireReadActionLock()) {
-      return action.compute();
-    }
+    return Application.get().runReadAction(action);
   }
 
   @Nonnull
@@ -82,29 +76,27 @@ public final class AccessRule {
     });
   }
 
-  @SuppressWarnings("deprecation")
   @Nonnull
   public static <T> AsyncResult<T> writeAsync(@RequiredWriteAction @Nonnull ThrowableComputable<T, Throwable> action) {
-    Class aClass = ObjectUtil.notNull(ReflectionUtil.getGrandCallerClass(), WriteAction.class);
+    ApplicationWithIntentWriteLock application = (ApplicationWithIntentWriteLock)Application.get();
+    ExecutorService service = AppExecutorUtil.getAppExecutorService();
+    AsyncResult<T> result = AsyncResult.undefined();
+    service.execute(() -> {
+      application.acquireWriteIntentLock();
 
-    Application application = Application.get();
-
-    if (application instanceof ApplicationWithOwnWriteThread && ((ApplicationWithOwnWriteThread)application).isWriteThreadEnabled()) {
-      return ((ApplicationWithOwnWriteThread)application).pushWriteAction(aClass, action);
-    }
-    else {
-      AsyncResult<T> result = AsyncResult.undefined();
-
-      // noinspection RequiredXAction
-      try (AccessToken ignored = Application.get().acquireWriteActionLock(aClass)) {
+      try {
         try {
-          result.setDone(action.compute());
+          result.setDone(application.runWriteActionNoIntentLock(action));
         }
         catch (Throwable throwable) {
           result.rejectWithThrowable(throwable);
         }
       }
-      return result;
-    }
+      finally {
+        application.releaseWriteIntentLock();
+      }
+    });
+
+    return result;
   }
 }

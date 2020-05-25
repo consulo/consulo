@@ -15,10 +15,10 @@
  */
 package com.intellij.testFramework;
 
-import com.intellij.openapi.application.AccessToken;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.WriteAction;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -26,6 +26,7 @@ import com.intellij.util.ExceptionUtil;
 import com.intellij.util.PathUtil;
 import com.intellij.util.text.StringTokenizer;
 import com.intellij.util.ui.UIUtil;
+import consulo.util.dataholder.Key;
 import junit.framework.Assert;
 
 import java.io.File;
@@ -54,8 +55,7 @@ public class VfsTestUtil {
 
   private static VirtualFile createFileOrDir(final VirtualFile root, final String relativePath, final String text, final boolean dir) {
     try {
-      AccessToken token = WriteAction.start();
-      try {
+      return Application.get().runWriteAction((ThrowableComputable<VirtualFile, IOException>)() -> {
         VirtualFile parent = root;
         Assert.assertNotNull(parent);
         StringTokenizer parents = new StringTokenizer(PathUtil.getParentPath(relativePath), "/");
@@ -79,10 +79,7 @@ public class VfsTestUtil {
           }
         }
         return file;
-      }
-      finally {
-        token.finish();
-      }
+      });
     }
     catch (IOException e) {
       throw new RuntimeException(e);
