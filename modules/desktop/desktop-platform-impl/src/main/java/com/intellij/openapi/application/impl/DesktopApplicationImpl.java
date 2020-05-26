@@ -722,11 +722,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     int prevBase = myWriteStackBase;
     myWriteStackBase = myWriteActionsStack.size();
     try (AccessToken ignored = myLock.writeSuspend()) {
-      runModalProgress(project, title, () -> {
-        try (AccessToken ignored1 = myLock.grantReadPrivilege()) {
-          runnable.run();
-        }
-      });
+      runModalProgress(project, title, runnable);
     }
     finally {
       myWriteStackBase = prevBase;

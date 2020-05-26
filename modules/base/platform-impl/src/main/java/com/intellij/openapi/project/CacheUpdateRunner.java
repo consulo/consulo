@@ -13,17 +13,18 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
+import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import com.intellij.openapi.progress.util.ProgressWrapper;
 import com.intellij.openapi.util.Disposer;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.Consumer;
 import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
 import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.Future;
@@ -41,6 +42,8 @@ public class CacheUpdateRunner {
     final FileContentQueue queue = new FileContentQueue(project, files, indicator);
     final double total = files.size();
     queue.startLoading();
+
+    indicator.setIndeterminate(false);
 
     ProgressUpdater progressUpdater = new ProgressUpdater() {
       final Set<VirtualFile> myFilesBeingProcessed = new THashSet<>();
@@ -160,7 +163,7 @@ public class CacheUpdateRunner {
     assert !ApplicationManager.getApplication().isWriteAccessAllowed();
     try {
       for (Future<?> future : futures) {
-        future.get();
+        ProgressIndicatorUtils.awaitWithCheckCanceled(future);
       }
 
       boolean allFinished = true;
@@ -172,7 +175,8 @@ public class CacheUpdateRunner {
       }
       return allFinished;
     }
-    catch (InterruptedException ignored) {
+    catch (ProcessCanceledException e) {
+      throw e;
     }
     catch (Throwable throwable) {
       LOG.error(throwable);

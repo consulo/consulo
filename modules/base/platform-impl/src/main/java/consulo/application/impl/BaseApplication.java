@@ -359,7 +359,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @Nonnull
   @Override
   public Future<?> executeOnPooledThread(@Nonnull final Runnable action) {
-    ReadMostlyRWLock.SuspensionId suspensionId = myLock.currentReadPrivilege();
     return myThreadExecutorsService.submit(new Runnable() {
       @Override
       public String toString() {
@@ -368,7 +367,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
       @Override
       public void run() {
-        try (AccessToken ignored = myLock.applyReadPrivilege(suspensionId)) {
+        try {
           action.run();
         }
         catch (ProcessCanceledException e) {
@@ -387,11 +386,10 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @Nonnull
   @Override
   public <T> Future<T> executeOnPooledThread(@Nonnull final Callable<T> action) {
-    ReadMostlyRWLock.SuspensionId suspensionId = myLock.currentReadPrivilege();
     return myThreadExecutorsService.submit(new Callable<T>() {
       @Override
       public T call() {
-        try (AccessToken ignored = myLock.applyReadPrivilege(suspensionId)) {
+        try {
           return action.call();
         }
         catch (ProcessCanceledException e) {
