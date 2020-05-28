@@ -58,5 +58,7 @@
     <remoteServer.type implementation="consulo.sandboxPlugin.ide.remoteServer.SandServerType" />
 
     <xdebugger.attachDebuggerProvider implementation="consulo.sandboxPlugin.ide.debugger.attach.SandAttachToProcessProvider" />
+
+    <runConfigurationsSettings implementation="consulo.sandboxPlugin.ide.run.SandRunConfigurationsSettings" />
   </extensions>
 </consulo-plugin>
