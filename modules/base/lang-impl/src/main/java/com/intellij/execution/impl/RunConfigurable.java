@@ -76,6 +76,33 @@ import static com.intellij.execution.impl.RunConfigurable.NodeKind.*;
 import static com.intellij.ui.RowsDnDSupport.RefinedDropSupport.Position.*;
 
 class RunConfigurable extends BaseConfigurable {
+  private static ConfigurationType HIDDEN_ITEMS_STUB = new ConfigurationType() {
+    @Override
+    public String getDisplayName() {
+      return "";
+    }
+
+    @Override
+    public String getConfigurationTypeDescription() {
+      return "";
+    }
+
+    @Override
+    public Image getIcon() {
+      return Image.empty(Image.DEFAULT_ICON_SIZE);
+    }
+
+    @Nonnull
+    @Override
+    public String getId() {
+      return "";
+    }
+
+    @Override
+    public ConfigurationFactory[] getConfigurationFactories() {
+      return new ConfigurationFactory[0];
+    }
+  };
 
   private static final Image ADD_ICON = IconUtil.getAddIcon();
   private static final Image REMOVE_ICON = IconUtil.getRemoveIcon();
@@ -1154,7 +1181,7 @@ class RunConfigurable extends BaseConfigurable {
       });
       final int hiddenCount = allTypes.length - configurationTypes.size();
       if (hiddenCount > 0) {
-        configurationTypes.add(null);
+        configurationTypes.add(HIDDEN_ITEMS_STUB);
       }
 
       final ListPopup popup = JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<ConfigurationType>(
@@ -1163,7 +1190,10 @@ class RunConfigurable extends BaseConfigurable {
         @Override
         @Nonnull
         public String getTextFor(final ConfigurationType type) {
-          return type != null ? type.getDisplayName() :  hiddenCount + " items more (irrelevant)...";
+          if(type == HIDDEN_ITEMS_STUB) {
+            return hiddenCount + " items more (irrelevant)...";
+          }
+          return type.getDisplayName();
         }
 
         @Override
@@ -1178,7 +1208,7 @@ class RunConfigurable extends BaseConfigurable {
 
         @Override
         public Icon getIconFor(final ConfigurationType type) {
-          return type != null ? TargetAWT.to(type.getIcon()) : EmptyIcon.ICON_16;
+          return TargetAWT.to(type.getIcon());
         }
 
         @Override
@@ -1186,13 +1216,8 @@ class RunConfigurable extends BaseConfigurable {
           if (hasSubstep(type)) {
             return getSupStep(type);
           }
-          if (type == null) {
-            return doFinalStep(new Runnable() {
-              @Override
-              public void run() {
-                showAddPopup(false);
-              }
-            });
+          if (type == HIDDEN_ITEMS_STUB) {
+            return doFinalStep(() -> showAddPopup(false));
           }
 
           final ConfigurationFactory[] factories = type.getConfigurationFactories();
@@ -1210,14 +1235,8 @@ class RunConfigurable extends BaseConfigurable {
 
         private ListPopupStep getSupStep(final ConfigurationType type) {
           final ConfigurationFactory[] factories = type.getConfigurationFactories();
-          Arrays.sort(factories, new Comparator<ConfigurationFactory>() {
-            @Override
-            public int compare(final ConfigurationFactory factory1, final ConfigurationFactory factory2) {
-              return factory1.getName().compareToIgnoreCase(factory2.getName());
-            }
-          });
-          return new BaseListPopupStep<ConfigurationFactory>(
-                  ExecutionBundle.message("add.new.run.configuration.action.name", type.getDisplayName()), factories) {
+          Arrays.sort(factories, (factory1, factory2) -> factory1.getName().compareToIgnoreCase(factory2.getName()));
+          return new BaseListPopupStep<ConfigurationFactory>(ExecutionBundle.message("add.new.run.configuration.action.name", type.getDisplayName()), factories) {
 
             @Override
             @Nonnull
@@ -1240,7 +1259,7 @@ class RunConfigurable extends BaseConfigurable {
 
         @Override
         public boolean hasSubstep(final ConfigurationType type) {
-          return type != null && type.getConfigurationFactories().length > 1;
+          return type.getConfigurationFactories().length > 1;
         }
       });
       //new TreeSpeedSearch(myTree);
