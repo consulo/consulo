@@ -206,12 +206,12 @@ public class ApplicationInfo {
 
   public final boolean hasHelp() {
     // TODO [VISTALL] impl it?
-    return true;
+    return false;
   }
 
   public final boolean hasContextHelp() {
     // TODO [VISTALL] impl it?
-    return true;
+    return false;
   }
 
   public String getFullVersion() {
