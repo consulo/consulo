@@ -40,10 +40,12 @@ import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
 import com.intellij.openapi.wm.impl.commands.InvokeLaterCmd;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.EventDispatcher;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.component.PersistentStateComponentWithUIState;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.condition.ModuleExtensionCondition;
@@ -261,7 +263,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   protected abstract ToolWindowStripeButton createStripeButton(ToolWindowInternalDecorator internalDecorator);
 
   @Nonnull
-  protected abstract ToolWindowEx createToolWindow(String id, boolean canCloseContent, @Nullable Object component);
+  protected abstract ToolWindowEx createToolWindow(String id, LocalizeValue displayName, boolean canCloseContent, @Nullable Object component);
 
   @Nonnull
   protected abstract ToolWindowInternalDecorator createInternalDecorator(Project project, @Nonnull WindowInfoImpl info, ToolWindowEx toolWindow, boolean dumbAware);
@@ -1068,7 +1070,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     Object label = createInitializingLabel();
     ToolWindowAnchor toolWindowAnchor = ToolWindowAnchor.fromText(bean.anchor);
     final ToolWindowFactory factory = bean.getToolWindowFactory();
-    ToolWindow window = registerToolWindow(bean.id, label, toolWindowAnchor, false, bean.canCloseContents, DumbService.isDumbAware(factory), factory.shouldBeAvailable(myProject));
+    ToolWindow window = registerToolWindow(bean.id, bean.displayName, label, toolWindowAnchor, false, bean.canCloseContents, DumbService.isDumbAware(factory), factory.shouldBeAvailable(myProject));
     final ToolWindowBase toolWindow = (ToolWindowBase)registerDisposable(bean.id, myProject, window);
     toolWindow.setContentFactory(factory);
     if (bean.icon != null && toolWindow.getIcon() == null) {
@@ -1120,6 +1122,19 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
                                           boolean canCloseContent,
                                           final boolean canWorkInDumbMode,
                                           boolean shouldBeAvailable) {
+    return registerToolWindow(id, null, component, anchor, sideTool, canCloseContent, canWorkInDumbMode, shouldBeAvailable);
+  }
+
+  @Nonnull
+  @RequiredUIAccess
+  protected ToolWindow registerToolWindow(@Nonnull final String id,
+                                          @Nullable LocalizeValue displayName,
+                                          @Nullable final Object component,
+                                          @Nonnull final ToolWindowAnchor anchor,
+                                          boolean sideTool,
+                                          boolean canCloseContent,
+                                          final boolean canWorkInDumbMode,
+                                          boolean shouldBeAvailable) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("enter: installToolWindow(" + id + "," + component + "," + anchor + "\")");
     }
@@ -1138,8 +1153,10 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
       info.setShowStripeButton(shouldBeAvailable);
     }
 
+    LocalizeValue displayNameNonnull = ObjectUtil.notNull(displayName, LocalizeValue.of(id));
+
     // Create decorator
-    ToolWindowEx toolWindow = createToolWindow(id, canCloseContent, component);
+    ToolWindowEx toolWindow = createToolWindow(id, displayNameNonnull, canCloseContent, component);
     ToolWindowInternalDecorator decorator = createInternalDecorator(myProject, info.copy(), toolWindow, canWorkInDumbMode);
     ActivateToolWindowAction.ensureToolWindowActionRegistered(toolWindow);
     myId2InternalDecorator.put(id, decorator);

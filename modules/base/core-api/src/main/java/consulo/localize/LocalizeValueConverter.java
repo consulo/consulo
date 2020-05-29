@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex;
+package consulo.localize;
 
-import com.intellij.openapi.wm.WindowInfo;
-import consulo.disposer.Disposable;
-import consulo.ui.annotation.RequiredUIAccess;
+import com.intellij.util.xmlb.Converter;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 12-Oct-17
+ * @since 2020-05-29
  */
-public interface ToolWindowStripeButton extends Disposable {
+public final class LocalizeValueConverter extends Converter<LocalizeValue> {
+  @Override
+  public LocalizeValue fromString(@Nonnull String value) {
+    return LocalizeManager.getInstance().fromStringKey(value);
+  }
+
   @Nonnull
-  WindowInfo getWindowInfo();
-
-  void apply(@Nonnull WindowInfo windowInfo);
-
-  @RequiredUIAccess
-  void updatePresentation();
+  @Override
+  public String toString(@Nonnull LocalizeValue localizeValue) {
+    throw new UnsupportedOperationException("We can't write localize value");
+  }
 }

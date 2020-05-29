@@ -36,10 +36,11 @@ import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.Label;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.ui.layout.DockLayout;
@@ -175,8 +176,8 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
 
   @Nonnull
   @Override
-  protected ToolWindowEx createToolWindow(String id, boolean canCloseContent, @javax.annotation.Nullable Object component) {
-    return new UnifiedToolWindowImpl(this, id, canCloseContent, component);
+  protected ToolWindowEx createToolWindow(String id, LocalizeValue displayName, boolean canCloseContent, @Nullable Object component) {
+    return new UnifiedToolWindowImpl(this, id, displayName, canCloseContent, component);
   }
 
   @Nonnull

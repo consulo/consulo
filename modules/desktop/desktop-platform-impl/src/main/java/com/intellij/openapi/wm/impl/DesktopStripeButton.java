@@ -35,6 +35,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -331,8 +332,12 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
     setUI(DesktopStripeButtonUI.createUI(this));
     Font font = UIUtil.getLabelFont(UIUtil.FontSize.SMALL);
     setFont(font);
+
+    // update text if localize was changed
+    updateText();
   }
 
+  @RequiredUIAccess
   @Override
   public void updatePresentation() {
     updateState();
@@ -342,8 +347,14 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
     setDisabledIcon(image == null ? null : TargetAWT.to(ImageEffects.grayed(image)));
   }
 
+  @RequiredUIAccess
   private void updateText() {
-    String text = myDecorator.getToolWindow().getStripeTitle();
+    // called from component base initialize updateUI()
+    if(myDecorator == null) {
+      return;
+    }
+
+    String text = myDecorator.getToolWindow().getDisplayName().getValue();
     if (UISettings.getInstance().SHOW_TOOL_WINDOW_NUMBERS) {
       String toolWindowId = myDecorator.getToolWindow().getId();
       int mnemonic = ActivateToolWindowAction.getMnemonicForToolWindow(toolWindowId);

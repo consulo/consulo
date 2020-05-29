@@ -34,19 +34,12 @@ public interface ToolWindowInternalDecorator extends Disposable {
   /**
    * Catches all event from tool window and modifies decorator's appearance.
    */
-  @NonNls
   String HIDE_ACTIVE_WINDOW_ACTION_ID = "HideActiveWindow";
-  @NonNls
   String TOGGLE_PINNED_MODE_ACTION_ID = "TogglePinnedMode";
-  @NonNls
   String TOGGLE_DOCK_MODE_ACTION_ID = "ToggleDockMode";
-  @NonNls
   String TOGGLE_FLOATING_MODE_ACTION_ID = "ToggleFloatingMode";
-  @NonNls
   String TOGGLE_WINDOWED_MODE_ACTION_ID = "ToggleWindowedMode";
-  @NonNls
   String TOGGLE_SIDE_MODE_ACTION_ID = "ToggleSideMode";
-  @NonNls
   String TOGGLE_CONTENT_UI_TYPE_ACTION_ID = "ToggleContentUiTypeMode";
 
   @Nonnull

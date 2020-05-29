@@ -2293,7 +2293,10 @@
 
     <http.fileEditorActionProvider implementation="com.intellij.openapi.fileEditor.impl.http.LangRemoteFileEditorActionProvider"/>
 
-    <toolWindow id="Project" anchor="left" icon="AllIcons.Toolwindows.ToolWindowProject"
+    <toolWindow id="Project"
+                anchor="left"
+                icon="AllIcons.Toolwindows.ToolWindowProject"
+                dispayName="consulo.platform.base.IdeLocalize@title.project"
                 factoryClass="com.intellij.ide.projectView.impl.ProjectViewToolWindowFactory"/>
     <toolWindow id="TODO" anchor="bottom" icon="AllIcons.Toolwindows.ToolWindowTodo"
                 factoryClass="com.intellij.ide.todo.TodoToolWindowFactory" canCloseContents="true"/>

@@ -48,6 +48,14 @@ public abstract class LocalizeManager {
   }
 
   /**
+   * Parse localizeKeyInfo
+   * @param localizeKeyInfo string like 'consulo.platform.base.IdeLocalize@text.some.value'
+   * @return localize value, if key not found, or parsing error return localize value like parameter
+   */
+  @Nonnull
+  public abstract LocalizeValue fromStringKey(@Nonnull String localizeKeyInfo);
+
+  /**
    * Return unformatted localize text
    *
    * @throws IllegalArgumentException if key is invalid

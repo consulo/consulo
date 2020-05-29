@@ -21,7 +21,6 @@ import com.intellij.ide.impl.ContentManagerWatcher;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ModalityState;
-import consulo.logging.Logger;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowContentUiType;
 import com.intellij.openapi.wm.ToolWindowFactory;
@@ -30,9 +29,10 @@ import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.impl.ContentImpl;
-import com.intellij.util.ObjectUtil;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.image.Image;
 import consulo.ui.shared.Rectangle2D;
@@ -56,8 +56,8 @@ public abstract class ToolWindowBase implements ToolWindowEx {
 
   private final PropertyChangeSupport myChangeSupport;
   private final String myId;
+  private final LocalizeValue myDisplayName;
   protected boolean myAvailable;
-  private String myStripeTitle;
 
   private ToolWindowInternalDecorator myDecorator;
 
@@ -70,10 +70,11 @@ public abstract class ToolWindowBase implements ToolWindowEx {
   private boolean myUseLastFocused = true;
 
   @RequiredUIAccess
-  protected ToolWindowBase(final ToolWindowManagerBase toolWindowManager, final String id, boolean canCloseContent, @Nullable Object component) {
+  protected ToolWindowBase(final ToolWindowManagerBase toolWindowManager, String id, LocalizeValue displayName, boolean canCloseContent, @Nullable Object component) {
     myToolWindowManager = toolWindowManager;
     myChangeSupport = new PropertyChangeSupport(this);
     myId = id;
+    myDisplayName = displayName;
     myAvailable = true;
 
     init(canCloseContent, component);
@@ -81,6 +82,12 @@ public abstract class ToolWindowBase implements ToolWindowEx {
 
   @RequiredUIAccess
   protected abstract void init(boolean canCloseContent, @Nullable Object component);
+
+  @Nonnull
+  @Override
+  public LocalizeValue getDisplayName() {
+    return myDisplayName;
+  }
 
   @Override
   public final void addPropertyChangeListener(final PropertyChangeListener l) {
@@ -315,28 +322,11 @@ public abstract class ToolWindowBase implements ToolWindowEx {
 
   @RequiredUIAccess
   @Override
-  @Nonnull
-  public final String getStripeTitle() {
-    UIAccess.assertIsUIThread();
-    return ObjectUtil.notNull(myStripeTitle, myId);
-  }
-
-  @RequiredUIAccess
-  @Override
   public final void setTitle(String title) {
     UIAccess.assertIsUIThread();
     String oldTitle = getTitle();
     getSelectedContent().setDisplayName(title);
     myChangeSupport.firePropertyChange(PROP_TITLE, oldTitle, title);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public final void setStripeTitle(@Nonnull String stripeTitle) {
-    UIAccess.assertIsUIThread();
-    String oldTitle = myStripeTitle;
-    myStripeTitle = stripeTitle;
-    myChangeSupport.firePropertyChange(PROP_STRIPE_TITLE, oldTitle, stripeTitle);
   }
 
   private Content getSelectedContent() {

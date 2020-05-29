@@ -20,6 +20,7 @@ import com.intellij.openapi.util.AsyncResult;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 
@@ -34,8 +35,8 @@ public class UnifiedToolWindowImpl extends ToolWindowBase {
   private Component myComponent;
 
   @RequiredUIAccess
-  public UnifiedToolWindowImpl(ToolWindowManagerBase toolWindowManager, String id, boolean canCloseContent, @Nullable Object component) {
-    super(toolWindowManager, id, canCloseContent, component);
+  public UnifiedToolWindowImpl(ToolWindowManagerBase toolWindowManager, String id, LocalizeValue displayName, boolean canCloseContent, @Nullable Object component) {
+    super(toolWindowManager, id, displayName, canCloseContent, component);
   }
 
   @Override

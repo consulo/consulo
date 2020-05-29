@@ -6,3 +6,5 @@ checkbox.reopen.last.project.on.startup:
   text: Переоткрыть последний проект при запуске
 web.search.label.layout:
   text: Веб-поиск
+title.project:
+  text: Проэкт

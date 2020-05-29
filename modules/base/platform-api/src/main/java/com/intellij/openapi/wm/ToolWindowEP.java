@@ -17,11 +17,13 @@
 package com.intellij.openapi.wm;
 
 import com.intellij.openapi.application.Application;
-import consulo.logging.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.localize.LocalizeValue;
+import consulo.localize.LocalizeValueConverter;
+import consulo.logging.Logger;
 import consulo.module.extension.condition.ExtensionPointBeanWithModuleExtensionCondition;
 
 import javax.annotation.Nullable;
@@ -63,6 +65,9 @@ public class ToolWindowEP extends ExtensionPointBeanWithModuleExtensionCondition
 
   @Attribute("canCloseContents")
   public boolean canCloseContents;
+
+  @Attribute(value = "dispayName", converter = LocalizeValueConverter.class)
+  public LocalizeValue displayName;
 
   private Class<? extends ToolWindowFactory> myFactoryClass;
   private ToolWindowFactory myFactory;
