@@ -5,6 +5,12 @@
 
   <depends config-file="consulo.platform.desktop.xml" optional="true">consulo.platform.desktop</depends>
 
+  <actions>
+    <action id="ShowUITesterAction" text="Show UI Tester" class="consulo.sandboxPlugin.ide.action.ShowUITesterAction">
+        <add-to-group group-id="ToolsMenu" />
+    </action>
+  </actions>
+
   <extensions defaultExtensionNs="com.intellij">
     <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand1EapDescriptor" />
     <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand2EapDescriptor" />

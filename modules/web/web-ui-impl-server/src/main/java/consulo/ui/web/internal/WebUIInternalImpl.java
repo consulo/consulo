@@ -339,4 +339,9 @@ public class WebUIInternalImpl extends UIInternal {
   public TextBoxWithExtensions _Components_textBoxWithExtensions(String text) {
     throw new UnsupportedOperationException();
   }
+
+  @Override
+  public FoldoutLayout _Layouts_foldout(LocalizeValue titleValue, Component component, boolean show) {
+    throw new UnsupportedOperationException();
+  }
 }

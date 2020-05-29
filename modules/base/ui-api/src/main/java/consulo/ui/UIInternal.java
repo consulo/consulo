@@ -183,4 +183,6 @@ public abstract class UIInternal {
   public abstract TextBoxWithExpandAction _Components_textBoxWithExpandAction(Image editButtonImage, String dialogTitle, Function<String, List<String>> parser, Function<List<String>, String> joiner);
 
   public abstract TextBoxWithExtensions _Components_textBoxWithExtensions(String text);
+
+  public abstract FoldoutLayout _Layouts_foldout(LocalizeValue titleValue, Component component, boolean show);
 }

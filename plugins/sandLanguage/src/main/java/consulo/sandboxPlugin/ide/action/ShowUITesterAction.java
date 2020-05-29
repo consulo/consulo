@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,32 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.sandboxPlugin.ide.action;
 
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.project.DumbAwareAction;
+import consulo.sandboxPlugin.ui.UITester;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 13-Sep-17
+ * @since 2020-05-29
  */
-public interface Button extends Clickable {
-  @Nonnull
-  static Button create(@Nonnull String text) {
-    return UIInternal.get()._Components_button(text);
-  }
-
-  @Nonnull
-  static Button create(@Nonnull String text, @Nonnull @RequiredUIAccess ClickListener clickListener) {
-    Button button = UIInternal.get()._Components_button(text);
-    button.addClickListener(clickListener);
-    return button;
-  }
-
-  @Nonnull
-  String getText();
-
+public class ShowUITesterAction extends DumbAwareAction {
   @RequiredUIAccess
-  void setText(@Nonnull String text);
+  @Override
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    UITester.show();
+  }
 }

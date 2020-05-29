@@ -146,7 +146,7 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Nonnull
   @Override
   public Window _Window_modalWindow(String title) {
-    throw new UnsupportedOperationException();
+    return new DesktopWindowWrapper(title);
   }
 
   @Nullable
@@ -324,5 +324,10 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Override
   public TextBoxWithExtensions _Components_textBoxWithExtensions(String text) {
     return DesktopTextBoxWithExtensions.create(text);
+  }
+
+  @Override
+  public FoldoutLayout _Layouts_foldout(LocalizeValue titleValue, Component component, boolean show) {
+    return new DesktopFoldoutLayoutImpl(titleValue, component, show);
   }
 }

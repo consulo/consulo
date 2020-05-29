@@ -23,8 +23,6 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 12-Sep-17
  */
-@Deprecated
-@DeprecationInfo("Internal class, don't use it in plugins")
 public interface ToSwingComponentWrapper {
   @Nonnull
   java.awt.Component toAWTComponent();
