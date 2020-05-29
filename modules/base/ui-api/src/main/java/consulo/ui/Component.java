@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.annotation.ApiType;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.KeyListener;
@@ -37,6 +38,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 09-Jun-16
  */
+@ApiType
 public interface Component extends Disposable, UserDataHolder {
 
   @RequiredUIAccess
