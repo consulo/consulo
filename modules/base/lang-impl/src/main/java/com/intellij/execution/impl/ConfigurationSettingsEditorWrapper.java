@@ -27,10 +27,9 @@ import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.HideableDecorator;
+import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -45,12 +44,9 @@ import java.util.List;
 public class ConfigurationSettingsEditorWrapper extends SettingsEditor<RunnerAndConfigurationSettings> implements BeforeRunStepsPanel.StepsBeforeRunListener {
   public static Key<ConfigurationSettingsEditorWrapper> CONFIGURATION_EDITOR_KEY = Key.create("ConfigurationSettingsEditor");
 
-  @NonNls
   private static final String EXPAND_PROPERTY_KEY = "ExpandBeforeRunStepsPanel";
-  private JPanel myComponentPlace;
-  private JPanel myWholePanel;
 
-  private JPanel myBeforeLaunchContainer;
+  private final JPanel myBeforeLaunchContainer;
   private BeforeRunStepsPanel myBeforeRunStepsPanel;
 
   private final ConfigurationSettingsEditor myEditor;
@@ -60,6 +56,8 @@ public class ConfigurationSettingsEditorWrapper extends SettingsEditor<RunnerAnd
     myEditor = new ConfigurationSettingsEditor(settings);
     Disposer.register(this, myEditor);
     myBeforeRunStepsPanel = new BeforeRunStepsPanel(this);
+
+    myBeforeLaunchContainer = new JPanel(new BorderLayout());
     myDecorator = new HideableDecorator(myBeforeLaunchContainer, "", false) {
       @Override
       protected void on() {
@@ -91,10 +89,13 @@ public class ConfigurationSettingsEditorWrapper extends SettingsEditor<RunnerAnd
   @Override
   @Nonnull
   protected JComponent createEditor() {
-    myComponentPlace.setLayout(new BorderLayout());
-    myComponentPlace.add(myEditor.getComponent(), BorderLayout.CENTER);
-    DataManager.registerDataProvider(myWholePanel, new TypeSafeDataProviderAdapter(new MyDataProvider()));
-    return myWholePanel;
+    JPanel wholePanel = new JPanel(new BorderLayout());
+
+    wholePanel.add(myEditor.getComponent(), BorderLayout.NORTH);
+    wholePanel.add(myBeforeLaunchContainer, BorderLayout.SOUTH);
+
+    DataManager.registerDataProvider(wholePanel, new TypeSafeDataProviderAdapter(new MyDataProvider()));
+    return wholePanel;
   }
 
   @Override
