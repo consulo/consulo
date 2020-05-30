@@ -97,6 +97,7 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, IdeEvent
     super.addNotify();
   }
 
+  @Override
   public boolean dispatch(@Nonnull final AWTEvent e) {
     JRootPane eventRootPane = myRootPane;
 
@@ -404,6 +405,7 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, IdeEvent
     return true;
   }
 
+  @Override
   public void setCursor(Cursor cursor, @Nonnull Object requestor) {
     if (cursor == null) {
       myListener2Cursor.remove(requestor);
@@ -442,32 +444,31 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, IdeEvent
     }
   }
 
-  public void addMousePreprocessor(final MouseListener listener, Disposable parent) {
+  @Override
+  public void addMousePreprocessor(final MouseListener listener, consulo.disposer.Disposable parent) {
     _addListener(listener, parent);
   }
 
-
-  public void addMouseMotionPreprocessor(final MouseMotionListener listener, final Disposable parent) {
+  @Override
+  public void addMouseMotionPreprocessor(final MouseMotionListener listener, final consulo.disposer.Disposable parent) {
     _addListener(listener, parent);
   }
 
-  private void _addListener(final EventListener listener, final Disposable parent) {
+  private void _addListener(final EventListener listener, final consulo.disposer.Disposable parent) {
     if (!myMouseListeners.contains(listener)) {
       myMouseListeners.add(listener);
       updateSortedList();
     }
     activateIfNeeded();
-    Disposer.register(parent, new Disposable() {
-      public void dispose() {
-        UIUtil.invokeLaterIfNeeded(() -> removeListener(listener));
-      }
-    });
+    consulo.disposer.Disposer.register(parent, () -> UIUtil.invokeLaterIfNeeded(() -> removeListener(listener)));
   }
 
+  @Override
   public void removeMousePreprocessor(final MouseListener listener) {
     removeListener(listener);
   }
 
+  @Override
   public void removeMouseMotionPreprocessor(final MouseMotionListener listener) {
     removeListener(listener);
   }
@@ -532,16 +533,19 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, IdeEvent
     return getNamedPainters("glass");
   }
 
+  @Override
   public void addPainter(final Component component, final Painter painter, final Disposable parent) {
     getPainters().addPainter(painter, component);
     activateIfNeeded();
     Disposer.register(parent, new Disposable() {
+      @Override
       public void dispose() {
         SwingUtilities.invokeLater(() -> removePainter(painter));
       }
     });
   }
 
+  @Override
   public void removePainter(final Painter painter) {
     getPainters().removePainter(painter);
     deactivateIfNeeded();
@@ -562,6 +566,7 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, IdeEvent
     SwingUtilities.invokeLater(() -> deactivateIfNeeded());
   }
 
+  @Override
   public boolean isInModalContext() {
     final Component[] components = getComponents();
     for (Component component : components) {
@@ -573,6 +578,7 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, IdeEvent
     return false;
   }
 
+  @Override
   protected void paintComponent(final Graphics g) {
     getPainters().paint(g);
   }

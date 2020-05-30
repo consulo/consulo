@@ -15,11 +15,13 @@
  */
 package consulo.ui.desktop.internal.layout;
 
+import com.intellij.ui.tabs.TabInfo;
+import com.intellij.ui.tabs.impl.JBEditorTabs;
 import consulo.awt.TargetAWT;
 import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.ui.Component;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Tab;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.layout.TabbedLayout;
 
@@ -30,8 +32,26 @@ import javax.swing.*;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JTabbedPane> implements TabbedLayout {
-  class MyJTabbedPane extends JTabbedPane implements FromSwingComponentWrapper {
+public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JBEditorTabs> implements TabbedLayout {
+  class MyJTabbedPane extends JBEditorTabs implements FromSwingComponentWrapper {
+    public MyJTabbedPane() {
+      super(null, null, null, null);
+
+      setFirstTabOffset(10);
+
+      getPresentation().setPaintBorder(1, 1, 1, 1).setTabSidePaintBorder(2);
+    }
+
+    @Override
+    public boolean isAlphabeticalMode() {
+      return false;
+    }
+
+    @Override
+    public boolean supportsCompression() {
+      return false;
+    }
+
     @Nonnull
     @Override
     public Component toUIComponent() {
@@ -40,7 +60,7 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JTabbedPane>
   }
 
   public DesktopTabbedLayoutImpl() {
-    myComponent = new MyJTabbedPane();
+    initialize(new MyJTabbedPane());
   }
 
   @Nonnull
@@ -60,7 +80,9 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JTabbedPane>
   @Nonnull
   @Override
   public Tab addTab(@Nonnull String tabName, @Nonnull Component component) {
-    myComponent.addTab(tabName, TargetAWT.to(component));
+    TabInfo tabInfo = new TabInfo((JComponent)TargetAWT.to(component));
+    tabInfo.setText(tabName);
+    toAWTComponent().addTab(tabInfo);
     return new DesktopTabImpl();
   }
 }

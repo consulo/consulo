@@ -15,13 +15,12 @@
  */
 package consulo.disposer.internal.impl;
 
-import consulo.disposer.internal.impl.objectTree.ThrowableInterner;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.disposer.TraceableDisposable;
-import org.jetbrains.annotations.NonNls;
+import consulo.disposer.internal.impl.objectTree.ThrowableInterner;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -43,7 +42,7 @@ public class TraceableDisposableImpl implements TraceableDisposable {
   }
 
   @Override
-  public void kill(@NonNls @Nullable String msg) {
+  public void kill(@Nullable String msg) {
     if (CREATE_TRACE != null) {
       KILL_TRACE = ThrowableInterner.intern(new Throwable(msg));
     }
@@ -60,13 +59,13 @@ public class TraceableDisposableImpl implements TraceableDisposable {
    * Call when object is not disposed while it should
    */
   @Override
-  public void throwObjectNotDisposedError(@NonNls @Nonnull final String msg) {
+  public void throwObjectNotDisposedError(@Nonnull final String msg) {
     throw new ObjectNotDisposedException(msg);
   }
 
   private class ObjectNotDisposedException extends AbstractDisposalException {
 
-    ObjectNotDisposedException(@Nullable @NonNls final String msg) {
+    ObjectNotDisposedException(@Nullable final String msg) {
       super(msg);
     }
 
@@ -84,7 +83,7 @@ public class TraceableDisposableImpl implements TraceableDisposable {
    * in case of "object not disposed" use {@link #throwObjectNotDisposedError(String)} instead
    */
   @Override
-  public void throwDisposalError(@NonNls String msg) throws RuntimeException {
+  public void throwDisposalError(String msg) throws RuntimeException {
     throw new DisposalException(msg);
   }
 

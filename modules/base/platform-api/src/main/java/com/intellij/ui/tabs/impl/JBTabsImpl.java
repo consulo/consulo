@@ -44,6 +44,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.LazyUiDisposable;
 import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;
+import consulo.disposer.Disposer;
 import consulo.ide.ui.laf.JBEditorTabsUI;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
@@ -67,12 +68,11 @@ import static com.intellij.openapi.wm.IdeFocusManager.getGlobalInstance;
 
 /**
  * Consulo tab panel
- *
+ * <p>
  * For implementation use {@link JBEditorTabs} or {@link com.intellij.ui.TabbedPaneWrapper}
  */
 public abstract class JBTabsImpl extends JComponent
-        implements JBTabs, PropertyChangeListener, TimerListener, DataProvider, PopupMenuListener, Disposable, JBTabsPresentation, Queryable,
-                   QuickActionProvider {
+        implements JBTabs, PropertyChangeListener, TimerListener, DataProvider, PopupMenuListener, consulo.disposer.Disposable, JBTabsPresentation, Queryable, QuickActionProvider {
 
   private static final String uiClassID = "JBEditorTabsUI";
 
@@ -214,11 +214,7 @@ public abstract class JBTabsImpl extends JComponent
   }
 
   @SuppressWarnings("unused")
-  protected JBTabsImpl(@Nullable Project project,
-                       ActionManager actionManager,
-                       IdeFocusManager focusManager,
-                       @Nonnull Disposable parent,
-                       boolean onlyForChildren) {
+  protected JBTabsImpl(@Nullable Project project, @Nullable ActionManager actionManager, @Nullable IdeFocusManager focusManager, @Nullable Disposable parent, boolean onlyForChildren) {
     myProject = project;
     myActionManager = actionManager;
     myFocusManager = focusManager != null ? focusManager : getGlobalInstance();
@@ -226,17 +222,7 @@ public abstract class JBTabsImpl extends JComponent
     setOpaque(true);
     setPaintBorder(-1, -1, -1, -1);
 
-    Disposer.register(parent, this);
-
     myNavigationActions = new DefaultActionGroup();
-
-    if (myActionManager != null) {
-      myNextAction = new SelectNextAction(this, myActionManager);
-      myPrevAction = new SelectPreviousAction(this, myActionManager);
-
-      myNavigationActions.add(myNextAction);
-      myNavigationActions.add(myPrevAction);
-    }
 
     setUiDecorator(null);
 
@@ -262,9 +248,7 @@ public abstract class JBTabsImpl extends JComponent
     addMouseListener(new MouseAdapter() {
       @Override
       public void mousePressed(final MouseEvent e) {
-        if (mySingleRowLayout.myLastSingRowLayout != null &&
-            mySingleRowLayout.myLastSingRowLayout.moreRect != null &&
-            mySingleRowLayout.myLastSingRowLayout.moreRect.contains(e.getPoint())) {
+        if (mySingleRowLayout.myLastSingRowLayout != null && mySingleRowLayout.myLastSingRowLayout.moreRect != null && mySingleRowLayout.myLastSingRowLayout.moreRect.contains(e.getPoint())) {
           showMorePopup(e);
         }
       }
@@ -295,37 +279,49 @@ public abstract class JBTabsImpl extends JComponent
     add(mySingleRowLayout.myRightGhost);
 
 
-    new LazyUiDisposable<JBTabsImpl>(parent, this, this) {
-      @Override
-      protected void initialize(@Nonnull consulo.disposer.Disposable parent, @Nonnull JBTabsImpl child, @Nullable Project project) {
-        if (project != null) {
-          myProject = project;
-        }
+    if(parent != null) {
+      consulo.disposer.Disposer.register(parent, this);
 
-        Disposer.register(child, myAnimator);
-        Disposer.register(child, () -> removeTimerUpdate());
+      if (myActionManager != null) {
+        myNextAction = new SelectNextAction(this, myActionManager);
+        myPrevAction = new SelectPreviousAction(this, myActionManager);
 
-        if (!myTestMode) {
-          final IdeGlassPane gp = IdeGlassPaneUtil.find(child);
-          if (gp != null) {
-            gp.addMouseMotionPreprocessor(myTabActionsAutoHideListener, child);
-            myGlassPane = gp;
+        myNavigationActions.add(myNextAction);
+        myNavigationActions.add(myPrevAction);
+      }
+
+      new LazyUiDisposable<JBTabsImpl>(parent, this, this) {
+        @Override
+        protected void initialize(@Nonnull consulo.disposer.Disposable parent, @Nonnull JBTabsImpl child, @Nullable Project project) {
+          if (project != null) {
+            myProject = project;
           }
 
-          UIUtil.addAwtListener(event -> {
-            if (mySingleRowLayout.myMorePopup != null) return;
-            processFocusChange();
-          }, AWTEvent.FOCUS_EVENT_MASK, child);
+          consulo.disposer.Disposer.register(child, myAnimator);
+          consulo.disposer.Disposer.register(child, () -> removeTimerUpdate());
 
-          myDragHelper = new DragHelper(child);
-          myDragHelper.start();
-        }
+          if (!myTestMode) {
+            final IdeGlassPane gp = IdeGlassPaneUtil.find(child);
+            if (gp != null) {
+              gp.addMouseMotionPreprocessor(myTabActionsAutoHideListener, child);
+              myGlassPane = gp;
+            }
 
-        if (myProject != null && myFocusManager == getGlobalInstance()) {
-          myFocusManager = IdeFocusManager.getInstance(myProject);
+            UIUtil.addAwtListener(event -> {
+              if (mySingleRowLayout.myMorePopup != null) return;
+              processFocusChange();
+            }, AWTEvent.FOCUS_EVENT_MASK, child);
+
+            myDragHelper = new DragHelper(child);
+            myDragHelper.start();
+          }
+
+          if (myProject != null && myFocusManager == getGlobalInstance()) {
+            myFocusManager = IdeFocusManager.getInstance(myProject);
+          }
         }
-      }
-    };
+      };
+    }
 
     updateUI();
   }
@@ -2239,7 +2235,7 @@ public abstract class JBTabsImpl extends JComponent
   }
 
   @Override
-  public  String getUIClassID() {
+  public String getUIClassID() {
     return uiClassID;
   }
 

@@ -16,15 +16,15 @@
 package com.intellij.ui;
 
 import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.ui.NullableComponent;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Weighted;
 import com.intellij.openapi.wm.IdeGlassPane;
 import com.intellij.openapi.wm.IdeGlassPaneUtil;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,7 +57,6 @@ public abstract class MouseDragHelper implements MouseListener, MouseMotionListe
   }
 
   /**
-   *
    * @param event
    * @return false if Settings -> Appearance -> Drag-n-Drop with ALT pressed only is selected but event doesn't have ALT modifier
    */
@@ -70,20 +69,18 @@ public abstract class MouseDragHelper implements MouseListener, MouseMotionListe
     if (myGlassPane != null) return;
 
     new UiNotifyConnector(myDragComponent, new Activatable() {
+      @Override
       public void showNotify() {
         attach();
       }
 
+      @Override
       public void hideNotify() {
         detach(true);
       }
     });
 
-    Disposer.register(myParentDisposable, new Disposable() {
-      public void dispose() {
-        stop();
-      }
-    });
+    Disposer.register(myParentDisposable, this::stop);
   }
 
   private void attach() {
@@ -95,12 +92,7 @@ public abstract class MouseDragHelper implements MouseListener, MouseMotionListe
     myGlassPane.addMousePreprocessor(this, myParentDisposable);
     myGlassPane.addMouseMotionPreprocessor(this, myParentDisposable);
     KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(this);
-    Disposer.register(myParentDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(MouseDragHelper.this);
-      }
-    });
+    Disposer.register(myParentDisposable, () -> KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(MouseDragHelper.this));
   }
 
   public void stop() {
@@ -125,6 +117,7 @@ public abstract class MouseDragHelper implements MouseListener, MouseMotionListe
     return 2;
   }
 
+  @Override
   public void mousePressed(final MouseEvent e) {
     if (!canStartDragging(e)) return;
 
@@ -141,6 +134,7 @@ public abstract class MouseDragHelper implements MouseListener, MouseMotionListe
     }
   }
 
+  @Override
   public void mouseReleased(final MouseEvent e) {
     if (myCancelled) {
       myCancelled = false;
@@ -155,7 +149,8 @@ public abstract class MouseDragHelper implements MouseListener, MouseMotionListe
       try {
         if (myDetachingMode) {
           processDragOutFinish(e);
-        } else {
+        }
+        else {
           processDragFinish(e, false);
         }
       }
@@ -179,6 +174,7 @@ public abstract class MouseDragHelper implements MouseListener, MouseMotionListe
     myDetachingMode = false;
   }
 
+  @Override
   public void mouseDragged(final MouseEvent e) {
     if (myPressPointScreen == null || myCancelled) return;
 
@@ -205,7 +201,8 @@ public abstract class MouseDragHelper implements MouseListener, MouseMotionListe
 
       if (myDetachingMode) {
         processDragOut(e, draggedTo, (Point)myPressPointScreen.clone(), dragOutStarted);
-      } else {
+      }
+      else {
         processDrag(e, draggedTo, (Point)myPressPointScreen.clone());
       }
     }
@@ -256,19 +253,22 @@ public abstract class MouseDragHelper implements MouseListener, MouseMotionListe
 
   private boolean isWithinDeadZone(final MouseEvent e) {
     final Point screen = new RelativePoint(e).getScreenPoint();
-    return Math.abs(myPressPointScreen.x - screen.x - myDelta.width) < DRAG_START_DEADZONE &&
-           Math.abs(myPressPointScreen.y - screen.y - myDelta.height) < DRAG_START_DEADZONE;
+    return Math.abs(myPressPointScreen.x - screen.x - myDelta.width) < DRAG_START_DEADZONE && Math.abs(myPressPointScreen.y - screen.y - myDelta.height) < DRAG_START_DEADZONE;
   }
 
+  @Override
   public void mouseClicked(final MouseEvent e) {
   }
 
+  @Override
   public void mouseEntered(final MouseEvent e) {
   }
 
+  @Override
   public void mouseExited(final MouseEvent e) {
   }
 
+  @Override
   public void mouseMoved(final MouseEvent e) {
   }
 

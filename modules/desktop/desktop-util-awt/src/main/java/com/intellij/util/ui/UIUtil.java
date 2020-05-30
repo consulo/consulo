@@ -41,9 +41,9 @@ import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.Timer;
 import javax.swing.*;
@@ -2059,13 +2059,12 @@ public class UIUtil {
   }
 
   public static void addAwtListener(final AWTEventListener listener, long mask, Disposable parent) {
+    addAwtListener(listener, mask, (consulo.disposer.Disposable) parent);
+  }
+
+  public static void addAwtListener(final AWTEventListener listener, long mask, consulo.disposer.Disposable parent) {
     Toolkit.getDefaultToolkit().addAWTEventListener(listener, mask);
-    Disposer.register(parent, new Disposable() {
-      @Override
-      public void dispose() {
-        Toolkit.getDefaultToolkit().removeAWTEventListener(listener);
-      }
-    });
+    consulo.disposer.Disposer.register(parent, () -> Toolkit.getDefaultToolkit().removeAWTEventListener(listener));
   }
 
   public static void addParentChangeListener(@Nonnull Component component, @Nonnull PropertyChangeListener listener) {
