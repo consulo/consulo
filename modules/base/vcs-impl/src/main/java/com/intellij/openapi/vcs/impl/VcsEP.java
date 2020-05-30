@@ -16,24 +16,19 @@
 
 package com.intellij.openapi.vcs.impl;
 
-import com.intellij.openapi.components.BaseComponent;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.util.xmlb.annotations.Attribute;
-import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author yole
  */
 public class VcsEP extends AbstractExtensionPointBean {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.impl.VcsEP");
-
   public static final ExtensionPointName<VcsEP> EP_NAME = ExtensionPointName.create("com.intellij.vcs");
 
   // these must be public for scrambling compatibility
@@ -48,44 +43,16 @@ public class VcsEP extends AbstractExtensionPointBean {
   @Attribute("crawlUpToCheckUnderVcs")
   public boolean crawlUpToCheckUnderVcs;
 
-  private AbstractVcs myVcs;
-  private final Object LOCK = new Object();
-
-  @Nullable
+  @Nonnull
   public AbstractVcs getVcs(@Nonnull Project project) {
-    synchronized (LOCK) {
-      if (myVcs != null) {
-        return myVcs;
-      }
-    }
-    AbstractVcs vcs = getInstance(project, vcsClass);
-    synchronized (LOCK) {
-      if (myVcs == null && vcs != null) {
-        vcs.setupEnvironments();
-        myVcs = vcs;
-      }
-      return myVcs;
-    }
-  }
-
-  @Nullable
-  private AbstractVcs getInstance(@Nonnull Project project, @Nonnull String vcsClass) {
     try {
-      final Class<? extends AbstractVcs> foundClass = findClass(vcsClass);
-      final Class<?>[] interfaces = foundClass.getInterfaces();
-      for (Class<?> anInterface : interfaces) {
-        if (BaseComponent.class.isAssignableFrom(anInterface)) {
-          return project.getComponent(foundClass);
-        }
-      }
       return instantiate(vcsClass, project.getInjectingContainer());
     }
     catch (ProcessCanceledException pce) {
       throw pce;
     }
     catch(Exception e) {
-      LOG.error(e);
-      return null;
+      throw new RuntimeException(e);
     }
   }
 

@@ -7,6 +7,7 @@ import consulo.util.dataholder.Key;
 import com.intellij.remoteServer.impl.runtime.ui.tree.TreeBuilderBase;
 import com.intellij.ui.treeStructure.Tree;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -28,6 +29,6 @@ public abstract class RemoteServersViewContributor {
   @Nonnull
   public abstract List<AbstractTreeNode<?>> createServerNodes(Project project);
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract Object getData(@Nonnull Key<?> dataId, @Nonnull ServersToolWindowContent content);
 }
