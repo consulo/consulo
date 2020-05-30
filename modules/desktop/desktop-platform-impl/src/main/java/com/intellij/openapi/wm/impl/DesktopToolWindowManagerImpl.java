@@ -271,8 +271,8 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
   @Nonnull
   @Override
-  protected ToolWindowEx createToolWindow(String id, LocalizeValue displayName, boolean canCloseContent, @Nullable Object component) {
-    return new DesktopToolWindowImpl(this, id, displayName, canCloseContent, (JComponent)component);
+  protected ToolWindowEx createToolWindow(String id, LocalizeValue displayName, boolean canCloseContent, @Nullable Object component, boolean shouldBeAvailable) {
+    return new DesktopToolWindowImpl(this, id, displayName, canCloseContent, (JComponent)component, shouldBeAvailable);
   }
 
   @Nonnull

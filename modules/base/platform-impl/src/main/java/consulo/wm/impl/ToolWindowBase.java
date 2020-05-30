@@ -70,12 +70,12 @@ public abstract class ToolWindowBase implements ToolWindowEx {
   private boolean myUseLastFocused = true;
 
   @RequiredUIAccess
-  protected ToolWindowBase(final ToolWindowManagerBase toolWindowManager, String id, LocalizeValue displayName, boolean canCloseContent, @Nullable Object component) {
+  protected ToolWindowBase(final ToolWindowManagerBase toolWindowManager, String id, LocalizeValue displayName, boolean canCloseContent, @Nullable Object component, boolean available) {
     myToolWindowManager = toolWindowManager;
     myChangeSupport = new PropertyChangeSupport(this);
     myId = id;
     myDisplayName = displayName;
-    myAvailable = true;
+    myAvailable = available;
 
     init(canCloseContent, component);
   }

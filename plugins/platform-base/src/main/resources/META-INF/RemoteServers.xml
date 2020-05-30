@@ -25,13 +25,6 @@
     </group>
   </actions>
 
-
-  <project-components>
-    <component>
-      <implementation-class>com.intellij.remoteServer.impl.runtime.ui.ServersToolWindowOpener</implementation-class>
-    </component>
-  </project-components>
-
   <extensionPoints>
     <extensionPoint name="remoteServer.type" interface="com.intellij.remoteServer.ServerType"/>
     <extensionPoint name="remoteServer.deploymentSource.type" interface="com.intellij.remoteServer.configuration.deployment.DeploymentSourceType"/>
@@ -47,6 +40,9 @@
                         serviceImplementation="com.intellij.remoteServer.agent.impl.RemoteAgentManagerImpl"/>
     <applicationConfigurable parentId="execution" instance="com.intellij.remoteServer.impl.configuration.RemoteServerListConfigurable"/>
     <programRunner implementation="com.intellij.remoteServer.impl.runtime.DeployToServerRunner"/>
+
+    <toolWindow id="Application Servers" icon="/icons/serversToolWindow.png" factoryClass="consulo.remoteServer.ui.ServersToolWindowFactory" anchor="bottom" />
+    <projectService serviceImplementation="consulo.remoteServer.ui.ServersToolWindowManager" />
 
     <remoteServer.deploymentSource.type implementation="com.intellij.remoteServer.impl.configuration.deploySource.ModuleDeploymentSourceType"/>
     <remoteServer.deploymentSource.type implementation="com.intellij.remoteServer.impl.configuration.deploySource.ArtifactDeploymentSourceType"/>

@@ -52,8 +52,8 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
     }
   };
 
-  protected DesktopToolWindowImpl(DesktopToolWindowManagerImpl toolWindowManager, String id, LocalizeValue displayName, boolean canCloseContent, @Nullable JComponent component) {
-    super(toolWindowManager, id, displayName, canCloseContent, component);
+  protected DesktopToolWindowImpl(DesktopToolWindowManagerImpl toolWindowManager, String id, LocalizeValue displayName, boolean canCloseContent, @Nullable JComponent component, boolean avaliable) {
+    super(toolWindowManager, id, displayName, canCloseContent, component, avaliable);
   }
 
   @RequiredUIAccess
@@ -73,7 +73,7 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
 
     DesktopInternalDecorator.installFocusTraversalPolicy(myComponent, new LayoutFocusTraversalPolicy());
 
-    UiNotifyConnector notifyConnector = new UiNotifyConnector(myComponent, new Activatable.Adapter() {
+    UiNotifyConnector notifyConnector = new UiNotifyConnector(myComponent, new Activatable() {
       @Override
       public void showNotify() {
         myShowing.onReady();

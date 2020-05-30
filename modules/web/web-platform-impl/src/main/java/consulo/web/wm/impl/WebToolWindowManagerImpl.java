@@ -176,8 +176,8 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
 
   @Nonnull
   @Override
-  protected ToolWindowEx createToolWindow(String id, LocalizeValue displayName, boolean canCloseContent, @Nullable Object component) {
-    return new UnifiedToolWindowImpl(this, id, displayName, canCloseContent, component);
+  protected ToolWindowEx createToolWindow(String id, LocalizeValue displayName, boolean canCloseContent, @Nullable Object component, boolean shouldBeAvailable) {
+    return new UnifiedToolWindowImpl(this, id, displayName, canCloseContent, component, shouldBeAvailable);
   }
 
   @Nonnull

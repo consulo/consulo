@@ -263,7 +263,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   protected abstract ToolWindowStripeButton createStripeButton(ToolWindowInternalDecorator internalDecorator);
 
   @Nonnull
-  protected abstract ToolWindowEx createToolWindow(String id, LocalizeValue displayName, boolean canCloseContent, @Nullable Object component);
+  protected abstract ToolWindowEx createToolWindow(String id, LocalizeValue displayName, boolean canCloseContent, @Nullable Object component, boolean shouldBeAvailable);
 
   @Nonnull
   protected abstract ToolWindowInternalDecorator createInternalDecorator(Project project, @Nonnull WindowInfoImpl info, ToolWindowEx toolWindow, boolean dumbAware);
@@ -1139,7 +1139,6 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
       LOG.debug("enter: installToolWindow(" + id + "," + component + "," + anchor + "\")");
     }
     UIAccess.assertIsUIThread();
-    boolean known = myLayout.isToolWindowUnregistered(id);
     if (myLayout.isToolWindowRegistered(id)) {
       throw new IllegalArgumentException("window with id=\"" + id + "\" is already registered");
     }
@@ -1149,14 +1148,12 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     final boolean wasVisible = info.isVisible();
     info.setActive(false);
     info.setVisible(false);
-    if (!known) {
-      info.setShowStripeButton(shouldBeAvailable);
-    }
 
     LocalizeValue displayNameNonnull = ObjectUtil.notNull(displayName, LocalizeValue.of(id));
 
     // Create decorator
-    ToolWindowEx toolWindow = createToolWindow(id, displayNameNonnull, canCloseContent, component);
+    ToolWindowEx toolWindow = createToolWindow(id, displayNameNonnull, canCloseContent, component, shouldBeAvailable);
+
     ToolWindowInternalDecorator decorator = createInternalDecorator(myProject, info.copy(), toolWindow, canWorkInDumbMode);
     ActivateToolWindowAction.ensureToolWindowActionRegistered(toolWindow);
     myId2InternalDecorator.put(id, decorator);

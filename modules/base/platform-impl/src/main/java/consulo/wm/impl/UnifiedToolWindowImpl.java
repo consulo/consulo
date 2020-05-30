@@ -35,8 +35,8 @@ public class UnifiedToolWindowImpl extends ToolWindowBase {
   private Component myComponent;
 
   @RequiredUIAccess
-  public UnifiedToolWindowImpl(ToolWindowManagerBase toolWindowManager, String id, LocalizeValue displayName, boolean canCloseContent, @Nullable Object component) {
-    super(toolWindowManager, id, displayName, canCloseContent, component);
+  public UnifiedToolWindowImpl(ToolWindowManagerBase toolWindowManager, String id, LocalizeValue displayName, boolean canCloseContent, @Nullable Object component, boolean avaliable) {
+    super(toolWindowManager, id, displayName, canCloseContent, component, avaliable);
   }
 
   @Override
