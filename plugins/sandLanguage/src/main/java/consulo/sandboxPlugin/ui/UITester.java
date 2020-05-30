@@ -23,9 +23,7 @@ import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.app.WindowWrapper;
-import consulo.ui.layout.DockLayout;
-import consulo.ui.layout.FoldoutLayout;
-import consulo.ui.layout.VerticalLayout;
+import consulo.ui.layout.*;
 import consulo.ui.shared.Size;
 
 import javax.annotation.Nonnull;
@@ -46,7 +44,17 @@ public class UITester {
     @Nonnull
     @Override
     protected Component createCenterComponent() {
-      VerticalLayout root = VerticalLayout.create();
+      TabbedLayout tabbedLayout = TabbedLayout.create();
+
+      tabbedLayout.addTab("Layouts", layouts());
+      tabbedLayout.addTab("Components", components());
+
+      return tabbedLayout;
+    }
+
+    @RequiredUIAccess
+    private Component layouts() {
+      TabbedLayout tabbedLayout = TabbedLayout.create();
 
       VerticalLayout fold = VerticalLayout.create();
       fold.add(Label.create("Some label"));
@@ -55,13 +63,24 @@ public class UITester {
       FoldoutLayout layout = FoldoutLayout.create(LocalizeValue.of("Show Me"), fold);
       layout.addStateListener(state -> Alerts.okInfo("State " + state).show());
 
-      root.add(layout);
+      tabbedLayout.addTab("FoldoutLayout", layout);
+
+      TwoComponentSplitLayout splitLayout = TwoComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
+      splitLayout.setFirstComponent(DockLayout.create().center(Button.create("Left")));
+      splitLayout.setSecondComponent(DockLayout.create().center(Button.create("Second")));
+
+      tabbedLayout.addTab("SplitLayout", splitLayout);
+      return tabbedLayout;
+    }
+
+    @RequiredUIAccess
+    private Component components() {
+      VerticalLayout layout = VerticalLayout.create();
 
       FileChooserTextBoxBuilder builder = FileChooserTextBoxBuilder.create(null);
+      layout.add(builder.build());
 
-      root.add(builder.build());
-
-      return DockLayout.create().center(root);
+      return layout;
     }
 
     @Nullable
