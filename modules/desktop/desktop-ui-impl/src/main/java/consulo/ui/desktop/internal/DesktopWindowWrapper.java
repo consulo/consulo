@@ -16,6 +16,7 @@
 package consulo.ui.desktop.internal;
 
 import com.intellij.openapi.wm.WindowManager;
+import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.awt.TargetAWT;
 import consulo.awt.impl.FromSwingWindowWrapper;
 import consulo.ui.Component;
@@ -53,6 +54,7 @@ public class DesktopWindowWrapper extends WindowOverAWTWindow {
     super(new MyJDialog(WindowManager.getInstance().findVisibleFrame(), title));
 
     MyJDialog dialog = (MyJDialog)toAWTWindow();
+    dialog.setGlassPane(new IdeGlassPaneImpl(dialog.getRootPane(), false));
     dialog.myWindow = this;
   }
 
