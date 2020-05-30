@@ -324,10 +324,10 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
             .setTabColor(calcTabColor(myProject, file)).setDragOutDelegate(myDragOutDelegate);
     tab.setTestableUi(new MyQueryable(tab));
 
-    final DefaultActionGroup tabActions = new DefaultActionGroup();
+    final ActionGroup.Builder tabActions = ActionGroup.newImmutableBuilder();
     tabActions.add(new CloseTab(comp, tab));
 
-    tab.setTabLabelActions(tabActions, ActionPlaces.EDITOR_TAB);
+    tab.setTabLabelActions(tabActions.build(), ActionPlaces.EDITOR_TAB);
     myTabs.addTabSilently(tab, indexToInsert);
   }
 

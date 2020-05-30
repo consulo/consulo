@@ -46,7 +46,7 @@ public class UITester {
     protected Component createCenterComponent() {
       TabbedLayout tabbedLayout = TabbedLayout.create();
 
-      tabbedLayout.addTab("Layouts", layouts());
+      tabbedLayout.addTab("Layouts", layouts()).setCloseHandler((tab, component) -> {});
       tabbedLayout.addTab("Components", components());
 
       return tabbedLayout;

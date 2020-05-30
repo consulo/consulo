@@ -15,9 +15,8 @@
  */
 package consulo.ui.desktop.internal.layout;
 
-import com.intellij.ui.tabs.TabInfo;
+import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.ui.tabs.impl.JBEditorTabs;
-import consulo.awt.TargetAWT;
 import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.Tab;
@@ -26,7 +25,6 @@ import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.layout.TabbedLayout;
 
 import javax.annotation.Nonnull;
-import javax.swing.*;
 
 /**
  * @author VISTALL
@@ -35,7 +33,7 @@ import javax.swing.*;
 public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JBEditorTabs> implements TabbedLayout {
   class MyJTabbedPane extends JBEditorTabs implements FromSwingComponentWrapper {
     public MyJTabbedPane() {
-      super(null, null, null, null);
+      super(null, ActionManager.getInstance(), null, null);
 
       setFirstTabOffset(10);
 
@@ -66,23 +64,28 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JBEditorTabs
   @Nonnull
   @Override
   public Tab createTab() {
-    throw new UnsupportedOperationException();
+    return new DesktopTabImpl(this);
   }
 
   @RequiredUIAccess
   @Nonnull
   @Override
   public Tab addTab(@Nonnull Tab tab, @Nonnull Component component) {
-    throw new UnsupportedOperationException();
+    DesktopTabImpl desktopTab = (DesktopTabImpl)tab;
+
+    desktopTab.setComponent(component);
+
+    toAWTComponent().addTab(desktopTab.getTabInfo());
+
+    return tab;
   }
 
   @RequiredUIAccess
   @Nonnull
   @Override
   public Tab addTab(@Nonnull String tabName, @Nonnull Component component) {
-    TabInfo tabInfo = new TabInfo((JComponent)TargetAWT.to(component));
-    tabInfo.setText(tabName);
-    toAWTComponent().addTab(tabInfo);
-    return new DesktopTabImpl();
+    Tab tab = createTab();
+    tab.append(tabName);
+    return addTab(tab, component);
   }
 }
