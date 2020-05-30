@@ -429,7 +429,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     Application.get().assertIsDispatchThread();
 
     if (myMessageBus != null) {
-      myMessageBus.dispose();
+      Disposer.dispose(myMessageBus);
       myMessageBus = null;
     }
 
