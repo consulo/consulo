@@ -16,11 +16,6 @@
 <consulo-plugin>
   <project-components>
     <component>
-      <implementation-class>com.intellij.notification.EventLog$ProjectTracker</implementation-class>
-      <skipForDefaultProject/>
-    </component>
-
-    <component>
       <interface-class>consulo.command.undo.ProjectUndoManager</interface-class>
       <implementation-class>consulo.command.undo.impl.ProjectUndoManagerImpl</implementation-class>
     </component>

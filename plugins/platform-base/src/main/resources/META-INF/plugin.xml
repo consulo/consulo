@@ -1473,6 +1473,8 @@
                 icon="AllIcons.Ide.Notification.NoEvents"
                 factoryClass="com.intellij.notification.EventLogToolWindowFactory"/>
 
+    <projectService serviceImplementation="com.intellij.notification.EventLog$ProjectTracker" lazy="false"/>
+
     <projectService serviceInterface="com.intellij.openapi.wm.impl.ProjectFrameBounds"
                     serviceImplementation="com.intellij.openapi.wm.impl.ProjectFrameBounds"/>
 

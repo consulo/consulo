@@ -20,8 +20,8 @@ import com.intellij.execution.filters.HyperlinkInfo;
 import com.intellij.notification.impl.NotificationsConfigurationImpl;
 import com.intellij.notification.impl.NotificationsManagerImpl;
 import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.impl.DocumentImpl;
@@ -41,6 +41,7 @@ import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import com.intellij.util.text.CharArrayUtil;
+import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -67,10 +68,13 @@ public class EventLog {
   private static final Set<String> NEW_LINES = ContainerUtil.newHashSet("<br>", "</br>", "<br/>", "<p>", "</p>", "<p/>");
   private static final String DEFAULT_CATEGORY = "";
 
-  private final LogModel myModel = new LogModel(null, ApplicationManager.getApplication());
+  private final LogModel myModel;
 
-  public EventLog() {
-    ApplicationManager.getApplication().getMessageBus().connect().subscribe(Notifications.TOPIC, new NotificationsAdapter() {
+  @Inject
+  public EventLog(Application application) {
+    myModel = new LogModel(null, application);
+
+    application.getMessageBus().connect().subscribe(Notifications.TOPIC, new NotificationsAdapter() {
       @Override
       public void notify(@Nonnull Notification notification) {
         final Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
@@ -459,19 +463,26 @@ public class EventLog {
   }
 
   @Singleton
-  public static class ProjectTracker implements ProjectComponent {
+  public static class ProjectTracker implements Disposable {
     private final Map<String, EventLogConsole> myCategoryMap = ContainerUtil.newConcurrentMap();
     private final List<Notification> myInitial = ContainerUtil.createLockFreeCopyOnWriteList();
-    private final LogModel myProjectModel;
     private final Project myProject;
+    private final EventLog myEventLog;
+
+    private LogModel myProjectModel;
 
     @Inject
-    public ProjectTracker(@Nonnull final Project project) {
+    public ProjectTracker(@Nonnull final Project project, EventLog eventLog) {
       myProject = project;
+      myEventLog = eventLog;
+
+      if(project.isDefault()) {
+        return;
+      }
 
       myProjectModel = new LogModel(project, project);
 
-      for (Notification notification : getApplicationComponent().myModel.takeNotifications()) {
+      for (Notification notification : myEventLog.myModel.takeNotifications()) {
         printNotification(notification);
       }
 
@@ -487,14 +498,14 @@ public class EventLog {
       createNewContent(DEFAULT_CATEGORY);
 
       for (Notification notification : myInitial) {
-        doPrintNotification(notification, ObjectUtils.assertNotNull(getConsole(notification)));
+        doPrintNotification(notification, ObjectUtil.assertNotNull(getConsole(notification)));
       }
       myInitial.clear();
     }
 
     @Override
-    public void projectClosed() {
-      getApplicationComponent().myModel.setStatusMessage(null, 0);
+    public void dispose() {
+      myEventLog.myModel.setStatusMessage(null, 0);
       StatusBar.Info.set("", null, LOG_REQUESTOR);
     }
 
