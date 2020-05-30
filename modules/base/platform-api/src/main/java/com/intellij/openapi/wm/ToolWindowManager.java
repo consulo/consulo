@@ -19,6 +19,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.Balloon;
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
@@ -40,18 +41,26 @@ public abstract class ToolWindowManager {
 
   @Nonnull
   @RequiredUIAccess
+  @Deprecated
+  @DeprecationInfo("Use extension ToolWindowFactory")
   public abstract ToolWindow registerToolWindow(@Nonnull String id, boolean canCloseContent, @Nonnull ToolWindowAnchor anchor);
 
   @Nonnull
   @RequiredUIAccess
+  @Deprecated
+  @DeprecationInfo("Use extension ToolWindowFactory")
   public abstract ToolWindow registerToolWindow(@Nonnull String id, boolean canCloseContent, @Nonnull ToolWindowAnchor anchor, boolean secondary);
 
   @Nonnull
   @RequiredUIAccess
+  @Deprecated
+  @DeprecationInfo("Use extension ToolWindowFactory")
   public abstract ToolWindow registerToolWindow(@Nonnull String id, boolean canCloseContent, @Nonnull ToolWindowAnchor anchor, Disposable parentDisposable, boolean canWorkInDumbMode);
 
   @Nonnull
   @RequiredUIAccess
+  @Deprecated
+  @DeprecationInfo("Use extension ToolWindowFactory")
   public abstract ToolWindow registerToolWindow(@Nonnull String id,
                                                 boolean canCloseContent,
                                                 @Nonnull ToolWindowAnchor anchor,
@@ -61,6 +70,8 @@ public abstract class ToolWindowManager {
 
   @Nonnull
   @RequiredUIAccess
+  @Deprecated
+  @DeprecationInfo("Use extension ToolWindowFactory")
   public ToolWindow registerToolWindow(@Nonnull final String id, final boolean canCloseContent, @Nonnull final ToolWindowAnchor anchor, final Disposable parentDisposable) {
     return registerToolWindow(id, canCloseContent, anchor, parentDisposable, false);
   }
