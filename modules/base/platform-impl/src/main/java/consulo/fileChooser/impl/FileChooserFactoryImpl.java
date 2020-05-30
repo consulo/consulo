@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2017 JetBrains s.r.o.
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,35 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.fileChooser.impl;
+package consulo.fileChooser.impl;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.fileChooser.*;
-import com.intellij.openapi.fileChooser.ex.FileTextFieldImpl;
-import com.intellij.openapi.fileChooser.ex.LocalFsFinder;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.ObjectUtil;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.disposer.Disposable;
+import consulo.fileChooser.FileOperateDialogSettings;
+import consulo.ui.TextBox;
 import consulo.ui.fileOperateDialog.FileChooseDialogProvider;
 import consulo.ui.fileOperateDialog.FileOperateDialogProvider;
-import consulo.fileChooser.FileOperateDialogSettings;
 import consulo.ui.fileOperateDialog.FileSaveDialogProvider;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.ObjectUtil;
 import gnu.trove.THashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
-import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-@Singleton
+/**
+ * @author VISTALL
+ * @since 2020-05-30
+ */
 public class FileChooserFactoryImpl extends FileChooserFactory {
   @Nonnull
   @Override
@@ -57,15 +56,18 @@ public class FileChooserFactoryImpl extends FileChooserFactory {
 
   @Nonnull
   @Override
-  public FileTextField createFileTextField(@Nonnull final FileChooserDescriptor descriptor, boolean showHidden, @Nullable Disposable parent) {
-    return new FileTextFieldImpl.Vfs(new JTextField(), getMacroMap(), parent, new LocalFsFinder.FileChooserFilter(descriptor, showHidden));
+  public FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nullable Project project) {
+    return findProvider(descriptor, FileOperateDialogSettings::getFileSaveDialogId, FileSaveDialogProvider.EP_NAME).createSaveFileDialog(descriptor, project, null);
+  }
+
+  @Nonnull
+  @Override
+  public FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nonnull Component parent) {
+    return findProvider(descriptor, FileOperateDialogSettings::getFileSaveDialogId, FileSaveDialogProvider.EP_NAME).createSaveFileDialog(descriptor, null, parent);
   }
 
   @Override
-  public void installFileCompletion(@Nonnull JTextField field, @Nonnull FileChooserDescriptor descriptor, boolean showHidden, @Nullable Disposable parent) {
-    if (!ApplicationManager.getApplication().isUnitTestMode() && !ApplicationManager.getApplication().isHeadlessEnvironment()) {
-      new FileTextFieldImpl.Vfs(field, getMacroMap(), parent, new LocalFsFinder.FileChooserFilter(descriptor, showHidden));
-    }
+  public void installFileCompletion(@Nonnull TextBox textBox, @Nonnull FileChooserDescriptor descriptor, boolean showHidden, @Nullable Disposable parent) {
   }
 
   public static Map<String, String> getMacroMap() {
@@ -77,18 +79,6 @@ public class FileChooserFactoryImpl extends FileChooserFactory {
     }
 
     return map;
-  }
-
-  @Nonnull
-  @Override
-  public FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nullable Project project) {
-    return findProvider(descriptor, FileOperateDialogSettings::getFileSaveDialogId, FileSaveDialogProvider.EP_NAME).createSaveFileDialog(descriptor, project, null);
-  }
-
-  @Nonnull
-  @Override
-  public FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nonnull Component parent) {
-    return findProvider(descriptor, FileOperateDialogSettings::getFileSaveDialogId, FileSaveDialogProvider.EP_NAME).createSaveFileDialog(descriptor, null, parent);
   }
 
   @Nonnull

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,22 +15,16 @@
  */
 package consulo.ui.desktop.internal.textBox;
 
-import com.intellij.ui.components.JBTextField;
-import com.intellij.util.BooleanFunction;
+import consulo.ui.TextBox;
+
+import javax.annotation.Nonnull;
+import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 2019-11-07
+ * @since 2020-05-30
  */
-public class TextFieldPlaceholderFunction implements BooleanFunction<JBTextField> {
-  public static void install(JBTextField textField) {
-    textField.putClientProperty("StatusVisibleFunction", INSTANCE);
-  }
-
-  private static final TextFieldPlaceholderFunction INSTANCE = new TextFieldPlaceholderFunction();
-
-  @Override
-  public boolean fun(JBTextField textField) {
-    return textField.getText().length() == 0;
-  }
+public interface TextBoxWithTextField extends TextBox {
+  @Nonnull
+  JTextField getTextField();
 }

@@ -1347,9 +1347,6 @@
 
     <applicationService serviceInterface="com.intellij.ide.RecentProjectsManager" serviceImplementation="com.intellij.ide.RecentDirectoryProjectsManager"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.fileChooser.FileChooserFactory"
-                        serviceImplementation="com.intellij.openapi.fileChooser.impl.FileChooserFactoryImpl"/>
-
     <applicationService serviceImplementation="consulo.fileChooser.FileOperateDialogSettings"/>
     <applicationService serviceImplementation="com.intellij.openapi.util.registry.RegistryState"/>
     <applicationService serviceImplementation="com.intellij.ide.MacOSApplicationProvider"/>

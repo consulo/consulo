@@ -3,8 +3,10 @@ package com.intellij.openapi.fileChooser.ex;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import consulo.testFramework.MockApplicationTestCase;
+import junit.framework.TestCase;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
@@ -23,12 +25,12 @@ public class FileChooserCompletionTest extends MockApplicationTestCase {
     myParent = getTempDir();
 
     myFolder11 = new File(myParent, "folder1/folder11");
-    assertTrue(myFolder11.mkdirs());
-    assertTrue(new File(myParent, "a").mkdirs());
+    TestCase.assertTrue(myFolder11.mkdirs());
+    TestCase.assertTrue(new File(myParent, "a").mkdirs());
     myFolder21 = new File(myParent, "folder1/folder11/folder21");
-    assertTrue(myFolder21.mkdirs());
-    assertTrue(new File(myParent, "folder1/folder12").mkdirs());
-    assertTrue(new File(myParent, "file1").mkdir());
+    TestCase.assertTrue(myFolder21.mkdirs());
+    TestCase.assertTrue(new File(myParent, "folder1/folder12").mkdirs());
+    TestCase.assertTrue(new File(myParent, "file1").mkdir());
   }
 
   public void testBasicComplete() throws Exception {
@@ -75,8 +77,8 @@ public class FileChooserCompletionTest extends MockApplicationTestCase {
 
     assertComplete("/foo", ArrayUtil.EMPTY_STRING_ARRAY, null);
 
-    assertTrue(new File(myParent, "qw/child.txt").mkdirs());
-    assertTrue(new File(myParent, "qwe").mkdir());
+    TestCase.assertTrue(new File(myParent, "qw/child.txt").mkdirs());
+    TestCase.assertTrue(new File(myParent, "qwe").mkdir());
     assertComplete("/qw", new String[] {
       "qw",
       "qwe"
@@ -127,7 +129,7 @@ public class FileChooserCompletionTest extends MockApplicationTestCase {
       }
     }, myMacros, getRootDisposable()) {
       @Override
-      @javax.annotation.Nullable
+      @Nullable
       public VirtualFile getSelectedFile() {
         return null;
       }
@@ -147,12 +149,12 @@ public class FileChooserCompletionTest extends MockApplicationTestCase {
     });
     Collections.sort(expectedList);
 
-    assertEquals(asString(expectedList, result), asString(result.myToComplete, result));
+    TestCase.assertEquals(asString(expectedList, result), asString(result.myToComplete, result));
 
     final String preselectedText = preselected != null ? preselected.replace("/", myFinder.getSeparator()) : null;
-    assertEquals(preselectedText, toFileText(result.myPreselected, result));
+    TestCase.assertEquals(preselectedText, toFileText(result.myPreselected, result));
     if (preselected != null) {
-      assertTrue(result.myToComplete.contains(result.myPreselected));
+      TestCase.assertTrue(result.myToComplete.contains(result.myPreselected));
     }
   }
 

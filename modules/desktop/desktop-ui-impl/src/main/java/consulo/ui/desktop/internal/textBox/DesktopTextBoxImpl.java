@@ -27,13 +27,14 @@ import consulo.ui.desktop.internal.validableComponent.DocumentSwingValidator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 
 /**
  * @author VISTALL
  * @since 19-Nov-16.
  */
-public class DesktopTextBoxImpl extends DocumentSwingValidator<String, JBTextField> implements TextBox {
+public class DesktopTextBoxImpl extends DocumentSwingValidator<String, JBTextField> implements TextBox, TextBoxWithTextField {
   private static class Listener extends DocumentAdapter {
     private DesktopTextBoxImpl myTextField;
 
@@ -66,6 +67,12 @@ public class DesktopTextBoxImpl extends DocumentSwingValidator<String, JBTextFie
 
     field.getDocument().addDocumentListener(new Listener(this));
     setValue(text);
+  }
+
+  @Nonnull
+  @Override
+  public JTextField getTextField() {
+    return toAWTComponent();
   }
 
   @Nonnull

@@ -26,25 +26,39 @@ import javax.annotation.Nullable;
  * @since 2019-10-31
  */
 public interface TextBoxWithExtensions extends TextBox {
-  public class Extension {
+  public final class Extension {
     private final boolean myLeft;
     private final Image myIcon;
     private final Image myHoveredIcon;
 
+    private Clickable.ClickListener myClickListener;
+
     public Extension(boolean left, @Nonnull Image icon, @Nullable Image hoveredIcon) {
+      this(left, icon, hoveredIcon, null);
+    }
+
+    public Extension(boolean left, @Nonnull Image icon, @Nullable Image hoveredIcon, @Nullable Clickable.ClickListener clickListener) {
       myLeft = left;
       myIcon = icon;
       myHoveredIcon = ObjectUtil.notNull(hoveredIcon, icon);
+      myClickListener = clickListener;
+    }
+
+    @Nullable
+    public Clickable.ClickListener getClickListener() {
+      return myClickListener;
     }
 
     public boolean isLeft() {
       return myLeft;
     }
 
+    @Nonnull
     public Image getIcon() {
       return myIcon;
     }
 
+    @Nonnull
     public Image getHoveredIcon() {
       return myHoveredIcon;
     }

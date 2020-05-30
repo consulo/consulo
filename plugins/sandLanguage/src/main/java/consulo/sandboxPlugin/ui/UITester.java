@@ -15,6 +15,7 @@
  */
 package consulo.sandboxPlugin.ui;
 
+import consulo.ide.ui.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Alerts;
 import consulo.ui.Button;
@@ -55,6 +56,10 @@ public class UITester {
       layout.addStateListener(state -> Alerts.okInfo("State " + state).show());
 
       root.add(layout);
+
+      FileChooserTextBoxBuilder builder = FileChooserTextBoxBuilder.create(null);
+
+      root.add(builder.build());
 
       return DockLayout.create().center(root);
     }
