@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
 public class UnifiedActionToolbarFactoryImpl implements ActionToolbarFactory {
   @Nonnull
   @Override
-  public ActionToolbar createActionToolbar(@NonNls String place, ActionGroup group, boolean horizontal, boolean decorateButtons) {
+  public ActionToolbar createActionToolbar(String place, ActionGroup group, boolean horizontal, boolean decorateButtons) {
     return new UnifiedActionToolbarImpl(place, group, horizontal, decorateButtons);
   }
 }

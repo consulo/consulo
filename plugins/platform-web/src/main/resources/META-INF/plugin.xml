@@ -50,6 +50,11 @@
     <applicationService serviceInterface="com.intellij.openapi.options.ShowSettingsUtil"
                         serviceImplementation="consulo.web.options.WebShowSettingsUtil"/>
 
+    <applicationService serviceInterface="consulo.actionSystem.ActionToolbarFactory"
+                        serviceImplementation="consulo.actionSystem.impl.UnifiedActionToolbarFactoryImpl" />
+
+    <applicationService serviceInterface="com.intellij.openapi.fileChooser.FileChooserFactory"
+                        serviceImplementation="consulo.fileChooser.impl.FileChooserFactoryImpl" />
     <fileChooseDialogProvider implementation="consulo.web.fileChooser.impl.WebFileChooseDialogProvider" order="last"/>
 
     <fileEditorProvider implementation="consulo.web.fileEditor.impl.text.WebTextEditorProvider"/>
