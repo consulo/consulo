@@ -229,11 +229,6 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     myMappings.disposeMe();
     Disposer.dispose(myAnnotationLocalChangesListener);
     myContentManager = null;
-
-    ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(myProject);
-    if (toolWindowManager != null && toolWindowManager.getToolWindow(ToolWindowId.VCS) != null) {
-      toolWindowManager.unregisterToolWindow(ToolWindowId.VCS);
-    }
   }
 
   @Nonnull
