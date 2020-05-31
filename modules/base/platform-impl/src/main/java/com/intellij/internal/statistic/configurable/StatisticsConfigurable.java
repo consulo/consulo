@@ -19,10 +19,9 @@ import com.intellij.internal.statistic.persistence.UsageStatisticsPersistenceCom
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 
 public class StatisticsConfigurable implements SearchableConfigurable {
@@ -36,7 +35,6 @@ public class StatisticsConfigurable implements SearchableConfigurable {
 
   @Override
   @Nullable
-  @NonNls
   public String getHelpTopic() {
     return "preferences.usage.statictics";
   }

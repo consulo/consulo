@@ -15,21 +15,20 @@
  */
 package com.intellij.internal.statistic;
 
-import com.intellij.internal.statistic.beans.GroupDescriptor;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Set;
 
 public abstract class UsagesCollector {
   public static ExtensionPointName<UsagesCollector> EP_NAME = ExtensionPointName.create("com.intellij.statistics.usagesCollector");
 
-  public abstract @Nonnull
-  Set<UsageDescriptor> getUsages(@Nullable Project project) throws CollectUsagesException;
+  @Nonnull
+  public abstract Set<UsageDescriptor> getUsages(@Nullable Project project) throws CollectUsagesException;
 
-  public abstract @Nonnull
-  GroupDescriptor getGroupId();
+  @Nonnull
+  public abstract String getGroupId();
 }

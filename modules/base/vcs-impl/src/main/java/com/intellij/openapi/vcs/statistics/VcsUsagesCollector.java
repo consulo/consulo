@@ -16,34 +16,25 @@
 package com.intellij.openapi.vcs.statistics;
 
 import com.intellij.internal.statistic.AbstractApplicationUsagesCollector;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vcs.AbstractVcs;
-import com.intellij.openapi.vcs.ProjectLevelVcsManager;
-import com.intellij.internal.statistic.beans.GroupDescriptor;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
-import com.intellij.util.Function;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;
-
 import java.util.Set;
 
 public class VcsUsagesCollector extends AbstractApplicationUsagesCollector {
-    private static final String GROUP_ID = "vcs";
+  private static final String GROUP_ID = "vcs";
 
-    @Nonnull
-    public GroupDescriptor getGroupId() {
-        return GroupDescriptor.create(GROUP_ID, GroupDescriptor.HIGHER_PRIORITY);
-    }
+  @Nonnull
+  public String getGroupId() {
+    return GROUP_ID;
+  }
 
-    @Nonnull
-    public Set<UsageDescriptor> getProjectUsages(@Nonnull Project project) {
-        return ContainerUtil.map2Set(ProjectLevelVcsManager.getInstance(project).getAllActiveVcss(), new Function<AbstractVcs, UsageDescriptor>() {
-            @Override
-            public UsageDescriptor fun(AbstractVcs vcs) {
-                return new UsageDescriptor(vcs.getName(), 1);
-            }
-        });
-    }
+  @Nonnull
+  public Set<UsageDescriptor> getProjectUsages(@Nonnull Project project) {
+    return ContainerUtil.map2Set(ProjectLevelVcsManager.getInstance(project).getAllActiveVcss(), vcs -> new UsageDescriptor(vcs.getName(), 1));
+  }
 }
 

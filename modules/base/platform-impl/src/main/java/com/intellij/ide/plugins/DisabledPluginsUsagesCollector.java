@@ -15,34 +15,26 @@
  */
 package com.intellij.ide.plugins;
 
-import com.intellij.openapi.project.Project;
 import com.intellij.internal.statistic.UsagesCollector;
-import com.intellij.internal.statistic.beans.GroupDescriptor;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
-import com.intellij.util.Function;
+import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.container.plugin.PluginManager;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Set;
 
 public class DisabledPluginsUsagesCollector extends UsagesCollector {
-  private static final String GROUP_ID = "disabled-plugins";
-
   @Override
   @Nonnull
-  public GroupDescriptor getGroupId() {
-    return GroupDescriptor.create(GROUP_ID, GroupDescriptor.HIGHER_PRIORITY);
+  public String getGroupId() {
+    return "disabled-plugins";
   }
 
   @Override
   @Nonnull
   public Set<UsageDescriptor> getUsages(@Nullable Project project) {
-    return ContainerUtil.map2Set(PluginManagerCore.getDisabledPlugins(), new Function<String, UsageDescriptor>() {
-      @Override
-      public UsageDescriptor fun(String descriptor) {
-        return new UsageDescriptor(descriptor, 1);
-      }
-    });
+    return ContainerUtil.map2Set(PluginManager.getDisabledPlugins(), descriptor -> new UsageDescriptor(descriptor, 1));
   }
 }

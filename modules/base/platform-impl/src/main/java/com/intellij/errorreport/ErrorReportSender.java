@@ -18,27 +18,19 @@ package com.intellij.errorreport;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.intellij.diagnostic.DiagnosticBundle;
-import consulo.external.api.ErrorReportBean;
 import com.intellij.errorreport.error.AuthorizationFailedException;
 import com.intellij.errorreport.error.UpdateAvailableException;
-import com.intellij.errorreport.error.WebServiceException;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.Consumer;
 import com.intellij.util.net.HttpConfigurable;
+import consulo.external.api.ErrorReportBean;
 import consulo.ide.webService.WebServiceApi;
-import consulo.ide.webService.WebServicesConfiguration;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-import javax.annotation.Nonnull;
+import consulo.ide.webService.WebServiceApiSender;
+import consulo.ide.webService.WebServiceException;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -74,14 +66,14 @@ public class ErrorReportSender {
 
   @Nonnull
   public static String sendAndHandleResult(@Nonnull ErrorReportBean error) throws IOException, AuthorizationFailedException, UpdateAvailableException {
-    String reply = doPost(WebServiceApi.ERROR_REPORTER_API.buildUrl("create"), error);
+    String reply = WebServiceApiSender.doPost(WebServiceApi.ERROR_REPORTER_API, "create", error);
 
     Map<String, String> map = new Gson().fromJson(reply, new TypeToken<Map<String, String>>() {
     }.getType());
 
     String type = map.get("type");
     if (type == null) {
-      throw new WebServiceException();
+      throw new WebServiceException("No 'type' data", 500);
     }
 
     try {
@@ -90,7 +82,7 @@ public class ErrorReportSender {
         case OK:
           String id = map.get("id");
           if (id == null) {
-            throw new WebServiceException();
+            throw new WebServiceException("No 'id' data", 500);
           }
           return id;
         case BAD_OAUTHK_KEY:
@@ -100,31 +92,11 @@ public class ErrorReportSender {
           throw new UpdateAvailableException();
         case BAD_REPORT:
         default:
-          throw new WebServiceException();
+          throw new WebServiceException("Unknown error " + resultType, 500);
       }
     }
     catch (IllegalArgumentException e) {
-      throw new WebServiceException();
-    }
-  }
-
-  private static String doPost(String url, ErrorReportBean errorBean) throws IOException {
-    try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-      HttpPost post = new HttpPost(url);
-      post.setEntity(new StringEntity(new Gson().toJson(errorBean), ContentType.APPLICATION_JSON));
-
-      String authKey = WebServicesConfiguration.getInstance().getOAuthKey(WebServiceApi.ERROR_REPORTER_API);
-      if (authKey != null) {
-        post.addHeader("Authorization", authKey);
-      }
-      return httpClient.execute(post, response -> {
-        int statusCode = response.getStatusLine().getStatusCode();
-        if (statusCode != HttpURLConnection.HTTP_OK) {
-          throw new WebServiceException(DiagnosticBundle.message("error.http.result.code", statusCode));
-        }
-
-        return EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
-      });
+      throw new WebServiceException(e.getMessage(), 500);
     }
   }
 }

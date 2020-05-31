@@ -17,20 +17,17 @@ package com.intellij.execution.impl.statistics;
 
 import com.intellij.execution.RunManager;
 import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.internal.statistic.beans.GroupDescriptor;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author Nikolay Matveev
  */
 public class TemporaryRunConfigurationTypeUsagesCollector extends AbstractRunConfigurationTypeUsagesCollector {
-
-  private static final GroupDescriptor GROUP_ID = GroupDescriptor.create("run-configuration-type-temp");
-
   @Nonnull
   @Override
-  public GroupDescriptor getGroupId() {
-    return GROUP_ID;
+  public String getGroupId() {
+    return "run-configuration-type-temp";
   }
 
   @Override

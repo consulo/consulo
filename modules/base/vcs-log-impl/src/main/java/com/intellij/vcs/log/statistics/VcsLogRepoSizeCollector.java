@@ -18,7 +18,6 @@ package com.intellij.vcs.log.statistics;
 import com.intellij.internal.statistic.AbstractApplicationUsagesCollector;
 import com.intellij.internal.statistic.CollectUsagesException;
 import com.intellij.internal.statistic.StatisticsUtilKt;
-import com.intellij.internal.statistic.beans.GroupDescriptor;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.VcsKey;
@@ -30,8 +29,8 @@ import com.intellij.vcs.log.data.DataPack;
 import com.intellij.vcs.log.data.VcsLogData;
 import com.intellij.vcs.log.graph.PermanentGraph;
 import com.intellij.vcs.log.impl.VcsProjectLog;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -40,9 +39,6 @@ import static java.util.Arrays.asList;
 
 @SuppressWarnings("StringToUpperCaseOrToLowerCaseWithoutLocale")
 public class VcsLogRepoSizeCollector extends AbstractApplicationUsagesCollector {
-
-  public static final GroupDescriptor ID = GroupDescriptor.create("VCS Log 2");
-
   @Nonnull
   @Override
   public Set<UsageDescriptor> getProjectUsages(@Nonnull Project project) throws CollectUsagesException {
@@ -80,7 +76,7 @@ public class VcsLogRepoSizeCollector extends AbstractApplicationUsagesCollector 
 
   @Nonnull
   @Override
-  public GroupDescriptor getGroupId() {
-    return ID;
+  public String getGroupId() {
+    return "VCS Log 2";
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.internal.statistic.connect;
+package consulo.ide.webService;
 
-import com.intellij.internal.statistic.SettingsConnectionService;
-import javax.annotation.Nonnull;
+import java.io.IOException;
 
-import java.util.Collections;
-import java.util.Set;
+/**
+ * @author VISTALL
+ * @since 2020-05-30
+ */
+public class WebServiceException extends IOException {
+  private final int myCode;
 
-public class StatisticsConnectionService extends SettingsConnectionService {
-
-  public Boolean isTransmissionPermitted() {
-    return true;
+  public WebServiceException(String message, int code) {
+    super(message);
+    myCode = code;
   }
 
-  @Nonnull
-  public Set<String> getDisabledGroups() {
-    return Collections.emptySet();
+  public int getCode() {
+    return myCode;
   }
 }
+

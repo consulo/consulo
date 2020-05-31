@@ -16,7 +16,6 @@
 package com.intellij.openapi.roots.ui.configuration.libraries.impl;
 
 import com.intellij.internal.statistic.AbstractApplicationUsagesCollector;
-import com.intellij.internal.statistic.beans.GroupDescriptor;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -25,9 +24,8 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryKind;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,9 +33,6 @@ import java.util.Set;
  * @author nik
  */
 public class LibraryUsageCollector extends AbstractApplicationUsagesCollector {
-
-  @NonNls private static final String GROUP_ID = "libraries";
-
   @Nonnull
   @Override
   public Set<UsageDescriptor> getProjectUsages(@Nonnull Project project) {
@@ -62,6 +57,7 @@ public class LibraryUsageCollector extends AbstractApplicationUsagesCollector {
 
   @Nonnull
   @Override
-  public GroupDescriptor getGroupId() {
-    return GroupDescriptor.create(GROUP_ID);  }
+  public String getGroupId() {
+    return "libraries";
+  }
 }
