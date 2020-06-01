@@ -152,4 +152,27 @@ public class BootstrapClassLoaderUtil {
       return new ClassLoader[]{classLoader};
     }
   }
+
+
+  @Nonnull
+  public static File getModulesDirectory() throws Exception {
+    Class<BootstrapClassLoaderUtil> aClass = BootstrapClassLoaderUtil.class;
+
+    URL url = aClass.getResource("/" + aClass.getName().replace('.', '/') + ".class");
+
+    String file = url.getFile();
+
+    int i = file.indexOf("!/");
+    if (i == -1) {
+      throw new IllegalArgumentException("Wrong path: " + file);
+    }
+
+    String jarUrlPath = file.substring(0, i);
+
+    File jarFile = new File(new URL(jarUrlPath).toURI().getSchemeSpecificPart());
+
+    File bootDirectory = jarFile.getParentFile();
+
+    return new File(bootDirectory.getParentFile(), "modules");
+  }
 }

@@ -38,7 +38,35 @@
         <include>org.w3c.css:sac</include>
         <include>ar.com.hjg:pngj</include>
 
+        <include>org.eclipse.jetty:jetty-server</include>
+        <include>org.eclipse.jetty:jetty-servlet</include>
+        <include>org.eclipse.jetty:jetty-util</include>
+        <include>org.eclipse.jetty:jetty-http</include>
+        <include>org.eclipse.jetty:jetty-io</include>
+        <include>org.eclipse.jetty:jetty-security</include>
+        <include>org.eclipse.jetty:jetty-continuation</include>
+        <include>org.eclipse.jetty.websocket:websocket-server</include>
+        <include>org.eclipse.jetty.websocket:websocket-api</include>
+        <include>org.eclipse.jetty.websocket:websocket-servlet</include>
+        <include>org.eclipse.jetty.websocket:websocket-common</include>
+
+        <include>javax.servlet:javax.servlet-api</include>
+
         <include>consulo:consulo-web-ui-impl-client</include>
+      </includes>
+    </dependencySet>
+
+    <dependencySet>
+      <outputDirectory>Consulo/platform/buildSNAPSHOT/boot</outputDirectory>
+      <unpack>false</unpack>
+      <scope>runtime</scope>
+      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+      <includes>
+        <include>consulo:consulo-container-api</include>
+        <include>consulo:consulo-container-impl</include>
+        <include>consulo:consulo-web-bootstrap</include>
+        <include>consulo:consulo-bootstrap</include>
+        <include>consulo:consulo-util-rt</include>
       </includes>
     </dependencySet>
   </dependencySets>

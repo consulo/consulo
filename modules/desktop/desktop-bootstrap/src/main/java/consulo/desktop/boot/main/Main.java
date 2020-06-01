@@ -15,51 +15,24 @@
  */
 package consulo.desktop.boot.main;
 
-import consulo.container.impl.classloader.BootstrapClassLoaderUtil;
+import consulo.container.ExitCodes;
 import consulo.container.StartupError;
 import consulo.container.boot.ContainerStartup;
-import consulo.container.impl.ContainerLogger;
-import consulo.container.ExitCodes;
+import consulo.container.impl.SystemContainerLogger;
+import consulo.container.impl.classloader.BootstrapClassLoaderUtil;
 import consulo.container.util.StatCollector;
 import consulo.util.nodep.SystemInfoRt;
 
-import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Main {
-  private static class ContainerLoggerImpl implements ContainerLogger {
-
-    @Override
-    public void info(String message) {
-      System.out.println(message);
-    }
-
-    @Override
-    public void warn(String message) {
-      System.out.println(message);
-    }
-
-    @Override
-    public void info(String message, Throwable t) {
-      System.out.println(message);
-      t.printStackTrace(System.out);
-    }
-
-    @Override
-    public void error(String message, Throwable t) {
-      System.err.println(message);
-      t.printStackTrace(System.err);
-    }
-  }
-
   private static final String AWT_HEADLESS = "java.awt.headless";
 
   private static boolean isHeadless;
@@ -97,38 +70,16 @@ public class Main {
   private static void initAndCallStartup(String[] args) throws Exception {
     StatCollector stat = new StatCollector();
 
-    File modulesDirectory = getModulesDirectory();
+    File modulesDirectory = BootstrapClassLoaderUtil.getModulesDirectory();
 
 
     Map<String, Object> map = new HashMap<String, Object>();
     map.put(ContainerStartup.ARGS, args);
     map.put(ContainerStartup.STAT_COLLECTOR, stat);
 
-    ContainerStartup containerStartup = BootstrapClassLoaderUtil.buildContainerStartup(map, modulesDirectory, new ContainerLoggerImpl());
+    ContainerStartup containerStartup = BootstrapClassLoaderUtil.buildContainerStartup(map, modulesDirectory, SystemContainerLogger.INSTANCE);
 
     containerStartup.run(map);
-  }
-
-  @Nonnull
-  private static File getModulesDirectory() throws Exception {
-    Class<BootstrapClassLoaderUtil> aClass = BootstrapClassLoaderUtil.class;
-
-    URL url = aClass.getResource("/" + aClass.getName().replace('.', '/') + ".class");
-
-    String file = url.getFile();
-
-    int i = file.indexOf("!/");
-    if (i == -1) {
-      throw new IllegalArgumentException("Wrong path: " + file);
-    }
-
-    String jarUrlPath = file.substring(0, i);
-
-    File jarFile = new File(new URL(jarUrlPath).toURI().getSchemeSpecificPart());
-
-    File bootDirectory = jarFile.getParentFile();
-
-    return new File(bootDirectory.getParentFile(), "modules");
   }
 
   public static boolean isHeadless() {

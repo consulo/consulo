@@ -20,24 +20,26 @@ import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.StartupUtil;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.boot.ContainerStartup;
 import consulo.container.util.StatCollector;
+import consulo.disposer.Disposer;
 import consulo.ui.web.servlet.UIIconServlet;
 import consulo.ui.web.servlet.UIServlet;
 import consulo.web.main.WebPostStarter;
 import consulo.web.servlet.RootUIBuilder;
 import consulo.web.start.WebImportantFolderLocker;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.session.DefaultSessionIdManager;
+import org.eclipse.jetty.server.session.SessionHandler;
+import org.eclipse.jetty.servlet.ServletHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 
 import javax.annotation.Nonnull;
 import javax.servlet.Servlet;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletRegistration;
 import javax.servlet.annotation.WebServlet;
-import java.io.File;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -56,8 +58,7 @@ public class WebContainerStartup implements ContainerStartup {
   @Nonnull
   @Override
   public ContainerPathManager createPathManager(@Nonnull Map<String, Object> args) {
-    File platformPath = (File)args.get("platformPath");
-    return new WebContainerPathManager(platformPath);
+    return new WebContainerPathManager();
   }
 
   @Override
@@ -67,14 +68,31 @@ public class WebContainerStartup implements ContainerStartup {
 
     StartupUtil.initializeLogger();
 
-    ServletContext servletContext = (ServletContext)map.get(ServletContext.class.getName());
+    ServletHandler handler = new ServletHandler();
 
-    registerServlets(servletContext);
+    Server server = new Server(8080);
 
-    // FIXME [VISTALL] we ned this?
-    System.setProperty("java.awt.headless", "true");
+    DefaultSessionIdManager idmanager = new DefaultSessionIdManager(server);
 
-    new Thread(() -> startApplication(stat, args), "Consulo App Start").start();
+    server.setSessionIdManager(idmanager);
+
+    SessionHandler sessionHandler = new SessionHandler();
+    sessionHandler.setSessionIdManager(idmanager);
+
+    handler.setHandler(sessionHandler);
+    
+    server.setHandler(handler);
+
+    registerServlets(handler);
+
+    try {
+      server.start();
+
+      new Thread(() -> startApplication(stat, args), "Consulo App Start").start();
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   private void startApplication(@Nonnull StatCollector stat, @Nonnull String[] args) {
@@ -90,18 +108,21 @@ public class WebContainerStartup implements ContainerStartup {
     });
   }
 
-  private void registerServlets(ServletContext servletContext) {
+  private void registerServlets(ServletHandler handler) {
     Class[] classes = new Class[]{RootUIServlet.class, UIIconServlet.class};
 
     for (Class aClass : classes) {
       Servlet servlet = (Servlet)ReflectionUtil.newInstance(aClass);
 
-      ServletRegistration.Dynamic dynamic = servletContext.addServlet(aClass.getName(), servlet);
+      ServletHolder servletHolder = new ServletHolder(servlet);
 
       WebServlet declaredAnnotation = (WebServlet)aClass.getDeclaredAnnotation(WebServlet.class);
 
       String[] urls = declaredAnnotation.urlPatterns();
-      dynamic.addMapping(urls);
+
+      for (String url : urls) {
+        handler.addServletWithMapping(servletHolder, url);
+      }
 
       System.out.println(aClass.getName() + " registered to: " + Arrays.asList(urls));
     }

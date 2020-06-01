@@ -27,25 +27,7 @@
 
   <artifactId>consulo-web-bootstrap</artifactId>
   <version>2-SNAPSHOT</version>
-  <packaging>war</packaging>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.eclipse.jetty</groupId>
-        <artifactId>jetty-maven-plugin</artifactId>
-        <version>9.4.28.v20200408</version>
-        <configuration>
-          <systemProperties>
-            <systemProperty>
-              <name>consulo.web.work.directory</name>
-              <value>${project.basedir}/../../../sandbox/web/target/consulo-sandbox-web-${project.version}-main/Consulo/</value>
-            </systemProperty>
-          </systemProperties>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+  <packaging>jar</packaging>
 
   <dependencies>
     <dependency>
