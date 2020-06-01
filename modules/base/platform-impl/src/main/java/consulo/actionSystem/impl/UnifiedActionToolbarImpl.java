@@ -28,6 +28,7 @@ import consulo.ui.shared.Size;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.annotation.Nonnull;
+import javax.swing.*;
 import java.util.Collections;
 import java.util.List;
 
@@ -56,8 +57,13 @@ public class UnifiedActionToolbarImpl implements ActionToolbar {
 
   private void rebuildUI() {
     myComponent = myOrientation == HORIZONTAL_ORIENTATION ? HorizontalLayout.create() : VerticalLayout.create();
+  }
 
-    
+  @Nonnull
+  @Override
+  public javax.swing.JComponent getComponent() {
+    // FIXME [VISTALL] just stub - not throw on old ui
+    return new JPanel();
   }
 
   @Nonnull
