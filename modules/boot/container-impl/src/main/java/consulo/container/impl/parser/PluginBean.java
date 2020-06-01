@@ -65,6 +65,8 @@ public class PluginBean extends ComponentManagerConfig {
   //@Tag("resource-bundle")
   public String resourceBundle;
 
+  public String localize;
+
   //@Tag("change-notes")
   public String changeNotes;
 

@@ -50,6 +50,7 @@ public class PluginBeanParser {
     pluginBean.platformVersion = rootTag.getChildText("platformVersion");
     pluginBean.category = rootTag.getChildText("category");
     pluginBean.resourceBundle = rootTag.getChildText("resource-bundle");
+    pluginBean.localize = rootTag.getChildText("localize");
     pluginBean.changeNotes = rootTag.getChildText("change-notes");
     pluginBean.url = rootTag.getAttributeValue("url");
 

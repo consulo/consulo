@@ -2,11 +2,12 @@
   <id>consulo.sandbox.plugin</id>
   <name>Sand Language</name>
   <platformVersion>SNAPSHOT</platformVersion>
+  <localize>consulo.sandbox.SandboxLocalize</localize>
 
   <depends config-file="consulo.platform.desktop.xml" optional="true">consulo.platform.desktop</depends>
 
   <actions>
-    <action id="ShowUITesterAction" text="Show UI Tester" class="consulo.sandboxPlugin.ide.action.ShowUITesterAction">
+    <action id="ShowUITesterAction" class="consulo.sandboxPlugin.ide.action.ShowUITesterAction">
         <add-to-group group-id="ToolsMenu" />
     </action>
   </actions>

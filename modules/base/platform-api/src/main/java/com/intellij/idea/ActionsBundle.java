@@ -39,17 +39,17 @@ public class ActionsBundle extends AbstractBundle{
   }
 
   @SuppressWarnings({"HardCodedStringLiteral", "UnresolvedPropertyKey"})
-  public static String actionText(@NonNls String actionId) {
+  public static String actionText(String actionId) {
     return message("action." + actionId + ".text");
   }
 
   @SuppressWarnings({"HardCodedStringLiteral", "UnresolvedPropertyKey"})
-  public static String groupText(@NonNls String actionId) {
+  public static String groupText(String actionId) {
     return message("group." + actionId + ".text");
   }
 
   @SuppressWarnings({"HardCodedStringLiteral", "UnresolvedPropertyKey"})
-  public static String actionDescription(@NonNls String actionId) {
+  public static String actionDescription(String actionId) {
     return message("action." + actionId + ".description");
   }
 }
