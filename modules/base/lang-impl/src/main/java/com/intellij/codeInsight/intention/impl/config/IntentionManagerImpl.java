@@ -30,21 +30,19 @@ import com.intellij.codeInspection.actions.CleanupAllIntention;
 import com.intellij.codeInspection.actions.CleanupInspectionIntention;
 import com.intellij.codeInspection.actions.RunInspectionIntention;
 import com.intellij.codeInspection.ex.*;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.util.Alarm;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,56 +55,27 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
   private static final Logger LOG = Logger.getInstance(IntentionManagerImpl.class);
 
   private final List<IntentionAction> myActions = ContainerUtil.createLockFreeCopyOnWriteList();
-  private final IntentionManagerSettings mySettings;
 
-  private final Alarm myInitActionsAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, this);
+  private final Provider<IntentionManagerSettings> mySettingsProvider;
+
+  private ThreadLocal<Boolean> myInsideEpInitialization = ThreadLocal.withInitial(() -> Boolean.FALSE);
 
   @Inject
-  public IntentionManagerImpl(IntentionManagerSettings intentionManagerSettings) {
-    mySettings = intentionManagerSettings;
+  public IntentionManagerImpl(@Nonnull Provider<IntentionManagerSettings> settingsProvider) {
+    mySettingsProvider = settingsProvider;
 
     addAction(new EditInspectionToolsSettingsInSuppressedPlaceIntention());
 
-    for (IntentionActionBean bean : EP_INTENTION_ACTIONS.getExtensionList()) {
-      registerIntentionFromBean(bean);
-    }
-  }
+    try {
+      myInsideEpInitialization.set(Boolean.TRUE);
 
-  private void registerIntentionFromBean(@Nonnull final IntentionActionBean extension) {
-    final Runnable runnable = new Runnable() {
-      @Override
-      public void run() {
-        final String descriptionDirectoryName = extension.getDescriptionDirectoryName();
-        final String[] categories = extension.getCategories();
-        final IntentionAction instance = createIntentionActionWrapper(extension, categories);
-        if (categories == null) {
-          addAction(instance);
-        }
-        else {
-          if (descriptionDirectoryName != null) {
-            addAction(instance);
-            mySettings.registerIntentionMetaData(instance, categories, descriptionDirectoryName, extension.getMetadataClassLoader());
-          }
-          else {
-            registerIntentionAndMetaData(instance, categories);
-          }
-        }
+      for (IntentionActionBean bean : EP_INTENTION_ACTIONS.getExtensionList()) {
+        addAction(new IntentionActionWrapper(bean));
       }
-    };
-    //todo temporary hack, need smarter logic:
-    // * on the first request, wait until all the initialization is finished
-    // * ensure this request doesn't come on EDT
-    // * while waiting, check for ProcessCanceledException
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
-      runnable.run();
     }
-    else {
-      myInitActionsAlarm.addRequest(runnable, 300);
+    finally {
+      myInsideEpInitialization.set(Boolean.FALSE);
     }
-  }
-
-  private static IntentionAction createIntentionActionWrapper(@Nonnull IntentionActionBean intentionActionBean, String[] categories) {
-    return new IntentionActionWrapper(intentionActionBean, categories);
   }
 
   @Override
@@ -115,7 +84,7 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
   }
 
   @Nonnull
-  private static String getDescriptionDirectoryName(final IntentionAction action) {
+  public static String getDescriptionDirectoryName(final IntentionAction action) {
     if (action instanceof IntentionActionWrapper) {
       final IntentionActionWrapper wrapper = (IntentionActionWrapper)action;
       return getDescriptionDirectoryName(wrapper.getImplementationClassName());
@@ -130,11 +99,10 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
   }
 
   @Override
-  public void registerIntentionAndMetaData(@Nonnull IntentionAction action,
-                                           @Nonnull String[] category,
-                                           @Nonnull @NonNls String descriptionDirectoryName) {
+  public void registerIntentionAndMetaData(@Nonnull IntentionAction action, @Nonnull String[] category, @Nonnull String descriptionDirectoryName) {
     addAction(action);
-    mySettings.registerIntentionMetaData(action, category, descriptionDirectoryName);
+
+    getSettings().registerIntentionMetaData(action, category, descriptionDirectoryName);
   }
 
   @Override
@@ -146,20 +114,21 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
                                            @Nonnull final String[] exampleTextAfter) {
     addAction(action);
 
-    IntentionActionMetaData metaData = new IntentionActionMetaData(action, category,
-                                                                   new PlainTextDescriptor(description, "description.html"),
-                                                                   mapToDescriptors(exampleTextBefore, "before." + exampleFileExtension),
-                                                                   mapToDescriptors(exampleTextAfter, "after." + exampleFileExtension));
-    mySettings.registerMetaData(metaData);
+    IntentionActionMetaData metaData =
+            new IntentionActionMetaData(action, category, new PlainTextDescriptor(description, "description.html"), mapToDescriptors(exampleTextBefore, "before." + exampleFileExtension),
+                                        mapToDescriptors(exampleTextAfter, "after." + exampleFileExtension));
+    getSettings().registerMetaData(metaData);
   }
 
   @Override
   public void unregisterIntention(@Nonnull IntentionAction intentionAction) {
+    IntentionManagerSettings settings = getSettings();
+
     myActions.remove(intentionAction);
-    mySettings.unregisterMetaData(intentionAction);
+    settings.unregisterMetaData(intentionAction);
   }
 
-  private static TextDescriptor[] mapToDescriptors(String[] texts, @NonNls String fileName) {
+  private static TextDescriptor[] mapToDescriptors(String[] texts, String fileName) {
     TextDescriptor[] result = new TextDescriptor[texts.length];
     for (int i = 0; i < texts.length; i++) {
       result[i] = new PlainTextDescriptor(texts[i], fileName);
@@ -169,9 +138,8 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
 
   @Override
   @Nonnull
-  public List<IntentionAction> getStandardIntentionOptions(@Nonnull final HighlightDisplayKey displayKey,
-                                                           @Nonnull final PsiElement context) {
-    List<IntentionAction> options = new ArrayList<IntentionAction>(9);
+  public List<IntentionAction> getStandardIntentionOptions(@Nonnull final HighlightDisplayKey displayKey, @Nonnull final PsiElement context) {
+    List<IntentionAction> options = new ArrayList<>();
     options.add(new EditInspectionToolsSettingsAction(displayKey));
     options.add(new RunInspectionIntention(displayKey));
     options.add(new DisableInspectionToolAction(displayKey));
@@ -250,17 +218,15 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
   @Nonnull
   @Override
   public IntentionAction[] getAvailableIntentionActions() {
-    List<IntentionAction> list = new ArrayList<IntentionAction>(myActions.size());
+    IntentionManagerSettings settings = getSettings();
+
+    List<IntentionAction> list = new ArrayList<>(myActions.size());
     for (IntentionAction action : myActions) {
-      if (mySettings.isEnabled(action)) {
+      if (settings.isEnabled(action)) {
         list.add(action);
       }
     }
     return list.toArray(new IntentionAction[list.size()]);
-  }
-
-  public boolean hasActiveRequests() {
-    return !myInitActionsAlarm.isEmpty();
   }
 
   @Nonnull
@@ -281,5 +247,13 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
   @Override
   public void dispose() {
 
+  }
+
+  @Nonnull
+  private IntentionManagerSettings getSettings() {
+    if(myInsideEpInitialization.get()) {
+      throw new IllegalArgumentException("Can't call settings here");
+    }
+    return mySettingsProvider.get();
   }
 }

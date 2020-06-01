@@ -32,16 +32,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class IntentionActionWrapper implements IntentionAction, ShortcutProvider, IntentionActionDelegate {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.intention.impl.config.IntentionActionWrapper");
+  private static final Logger LOG = Logger.getInstance(IntentionActionWrapper.class);
 
   private IntentionAction myDelegate;
-  private final String[] myCategories;
   private final IntentionActionBean myExtension;
   private String myFullFamilyName;
 
-  IntentionActionWrapper(@Nonnull IntentionActionBean extension, String[] categories) {
+  IntentionActionWrapper(@Nonnull IntentionActionBean extension) {
     myExtension = extension;
-    myCategories = categories;
   }
 
   @Override
@@ -81,7 +79,8 @@ public class IntentionActionWrapper implements IntentionAction, ShortcutProvider
   public String getFullFamilyName(){
     String result = myFullFamilyName;
     if (result == null) {
-      myFullFamilyName = result = myCategories != null ? StringUtil.join(myCategories, "/") + "/" + getFamilyName() : getFamilyName();
+      String[] categories = myExtension.getCategories();
+      myFullFamilyName = result = categories != null ? StringUtil.join(categories, "/") + "/" + getFamilyName() : getFamilyName();
     }
     return result;
   }

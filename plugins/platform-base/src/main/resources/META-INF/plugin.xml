@@ -45,6 +45,7 @@
     <extensionPoint name="listOfElements" beanClass="consulo.extensions.ListOfElementsEP"/>
     <extensionPoint name="addTo.listOfElements" beanClass="consulo.extensions.AddToElementEP"/>
     <extensionPoint name="search.topHitProvider" interface="com.intellij.ide.SearchTopHitProvider"/>
+    <extensionPoint name="search.optionContributor" interface="com.intellij.ide.ui.search.SearchableOptionContributor"/>
     <extensionPoint name="referenceInjector" interface="com.intellij.psi.injection.ReferenceInjector"/>
     <extensionPoint name="customPropertyScopeProvider" interface="com.intellij.psi.impl.search.CustomPropertyScopeProvider"/>
     <extensionPoint name="contentFolderTypeProvider" interface="consulo.roots.ContentFolderTypeProvider"/>
@@ -325,7 +326,7 @@
                     interface="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureValidator"/>
 
     <!--Lang-->
-    <extensionPoint name="errorPropertiesProvider" interface="consulo.codeInspection.ui.ErrorPropertiesProvider" />
+    <extensionPoint name="errorPropertiesProvider" interface="consulo.codeInspection.ui.ErrorPropertiesProvider"/>
 
     <extensionPoint name="indexPatternProvider"
                     interface="com.intellij.psi.search.IndexPatternProvider"/>
@@ -1613,7 +1614,7 @@
     <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable"/>
     <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable"/>
 
-    <projectConfigurable bundle="messages.ProjectBundle" key="global.bundles.display.name" instance="consulo.roots.ui.configuration.SdkListConfigurable" id="sdks.list" />
+    <projectConfigurable bundle="messages.ProjectBundle" key="global.bundles.display.name" instance="consulo.roots.ui.configuration.SdkListConfigurable" id="sdks.list"/>
 
     <!-- Compiler -->
     <projectConfigurable instance="com.intellij.compiler.options.CompilerConfigurable" id="project.propCompiler"
@@ -1764,6 +1765,8 @@
 
     <applicationService serviceInterface="com.intellij.codeInsight.intention.impl.config.IntentionManagerSettings"
                         serviceImplementation="com.intellij.codeInsight.intention.impl.config.IntentionManagerSettings"/>
+
+    <search.optionContributor implementation="com.intellij.codeInsight.intention.impl.config.IntentionManagerSettings$IntentionSearchableOptionContributor"/>
 
     <applicationService serviceInterface="com.intellij.find.FindSettings"
                         serviceImplementation="com.intellij.find.impl.FindSettingsImpl"/>
@@ -2678,7 +2681,7 @@
     <vfs.asyncListener implementation="consulo.roots.impl.ContentEntryFileListener"/>
 
     <applicationService serviceInterface="consulo.compiler.impl.TranslatingCompilerFilesMonitor" serviceImplementation="com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl"/>
-    <projectService serviceImplementation="consulo.compiler.impl.TranslationCompilerProjectMonitor" />
+    <projectService serviceImplementation="consulo.compiler.impl.TranslationCompilerProjectMonitor"/>
 
     <cachesInvalidator implementation="com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl$MonitorCachesInvalidator"/>
 
@@ -2722,9 +2725,9 @@
     <runAnything.executionProvider implementation="com.intellij.ide.actions.runAnything.activity.RunAnythingCommandExecutionProvider"
                                    order="last"/>
 
-    <applicationService serviceImplementation="com.intellij.execution.wsl.WSLDistributionService" />
+    <applicationService serviceImplementation="com.intellij.execution.wsl.WSLDistributionService"/>
 
-    <applicationService serviceImplementation="com.intellij.internal.statistic.updater.StatisticsSendManager" lazy="false" />
+    <applicationService serviceImplementation="com.intellij.internal.statistic.updater.StatisticsSendManager" lazy="false"/>
   </extensions>
 
   <applicationListeners>

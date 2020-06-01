@@ -19,7 +19,6 @@
  */
 package com.intellij.codeInsight.intention.impl.config;
 
-import com.intellij.codeInsight.intention.IntentionManager;
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.wm.IdeFocusManager;
@@ -36,8 +35,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public abstract class IntentionSettingsTree {
   private JComponent myComponent;
@@ -50,7 +49,7 @@ public abstract class IntentionSettingsTree {
     initTree();
   }
 
-  public JTree getTree(){
+  public JTree getTree() {
     return myTree;
   }
 
@@ -69,12 +68,7 @@ public abstract class IntentionSettingsTree {
         final Color background = selected ? UIUtil.getTreeSelectionBackground() : UIUtil.getTreeTextBackground();
         UIUtil.changeBackGround(this, background);
         if (text != null) {
-          SearchUtil.appendFragments(myFilter != null ? myFilter.getFilter() : null,
-                                     text,
-                                     attributes.getStyle(),
-                                     attributes.getFgColor(),
-                                     background,
-                                     getTextRenderer());
+          SearchUtil.appendFragments(myFilter != null ? myFilter.getFilter() : null, text, attributes.getStyle(), attributes.getFgColor(), background, getTextRenderer());
         }
       }
     }, new CheckedTreeNode(null));
@@ -98,6 +92,7 @@ public abstract class IntentionSettingsTree {
   }
 
   protected abstract void selectionChanged(Object selected);
+
   protected abstract List<IntentionActionMetaData> filterModel(String filter, final boolean force);
 
   public void filter(List<IntentionActionMetaData> intentionsToShow) {
@@ -105,15 +100,8 @@ public abstract class IntentionSettingsTree {
     reset(intentionsToShow);
   }
 
-  public void reset(){
-    while (((IntentionManagerImpl)IntentionManager.getInstance()).hasActiveRequests()) {
-      try {
-        Thread.sleep(100);
-      }
-      catch (InterruptedException ignored) {
-      }
-    }
-    resetCheckStatus();    
+  public void reset() {
+    resetCheckStatus();
     reset(IntentionManagerSettings.getInstance().getMetaData());
   }
 
@@ -168,7 +156,7 @@ public abstract class IntentionSettingsTree {
         String[] category1 = data1.myCategory;
         String[] category2 = data2.myCategory;
         int result = ArrayUtil.lexicographicCompare(category1, category2);
-        if (result!= 0) {
+        if (result != 0) {
           return result;
         }
         return data1.getFamily().compareTo(data2.getFamily());
@@ -230,7 +218,8 @@ public abstract class IntentionSettingsTree {
           if (name.equals(text)) {
             found.set(node);
           }
-        } else {
+        }
+        else {
           final CheckedTreeNode child = findChildRecursively(node, name);
           if (child != null) {
             found.set(child);
@@ -306,7 +295,7 @@ public abstract class IntentionSettingsTree {
       return enabled != root.isChecked();
     }
     else {
-      final boolean[] modified = new boolean[] { false };
+      final boolean[] modified = new boolean[]{false};
       visitChildren(root, new CheckedNodeVisitor() {
         @Override
         public void visit(CheckedTreeNode node) {
@@ -321,7 +310,7 @@ public abstract class IntentionSettingsTree {
     myFilter.dispose();
   }
 
-  public void setFilter(String filter){
+  public void setFilter(String filter) {
     myFilter.setFilter(filter);
   }
 
@@ -332,6 +321,7 @@ public abstract class IntentionSettingsTree {
   interface CheckedNodeVisitor {
     void visit(CheckedTreeNode node);
   }
+
   private static void visitChildren(CheckedTreeNode node, CheckedNodeVisitor visitor) {
     Enumeration children = node.children();
     while (children.hasMoreElements()) {
