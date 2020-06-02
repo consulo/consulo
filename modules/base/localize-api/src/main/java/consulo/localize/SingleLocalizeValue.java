@@ -35,4 +35,9 @@ class SingleLocalizeValue implements LocalizeValue {
   public String getValue() {
     return myValue;
   }
+
+  @Override
+  public String toString() {
+    return getValue();
+  }
 }
