@@ -15,12 +15,12 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.AbstractTreeUpdater;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.KeyWithDefaultValue;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.psi.PsiDirectory;
+import consulo.util.dataholder.KeyWithDefaultValue;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
@@ -76,16 +76,18 @@ public class ProjectViewPane extends AbstractProjectViewPSIPane {
   protected ProjectViewTree createTree(@Nonnull DefaultTreeModel treeModel) {
     return new ProjectViewTree(treeModel) {
       @Override
-      public String toString() {
-        return getTitle() + " " + super.toString();
+      public void updateUI() {
+        super.updateUI();
+
+        if (Registry.is("bigger.font.in.project.view")) {
+          Font font = getFont();
+          setFont(font.deriveFont(font.getSize() + 1f));
+        }
       }
 
       @Override
-      public void setFont(Font font) {
-        if (Registry.is("bigger.font.in.project.view")) {
-          font = font.deriveFont(font.getSize() + 1.0f);
-        }
-        super.setFont(font);
+      public String toString() {
+        return getTitle() + " " + super.toString();
       }
     };
   }

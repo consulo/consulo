@@ -23,8 +23,10 @@ import consulo.ide.impl.UnzipNewModuleBuilderProcessor;
 import consulo.ide.newProject.NewModuleBuilder;
 import consulo.ide.newProject.NewModuleBuilderProcessor;
 import consulo.ide.newProject.NewModuleContext;
+import consulo.ide.newProject.node.NewModuleContextGroup;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;
 import consulo.ide.wizard.newModule.NewModuleWizardContextBase;
+import consulo.localize.LocalizeValue;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.sandboxPlugin.ide.module.extension.SandMutableModuleExtension;
 import consulo.ui.Component;
@@ -43,9 +45,9 @@ import java.util.function.Consumer;
 public class SandNewModuleBuilder implements NewModuleBuilder {
   @Override
   public void setupContext(@Nonnull NewModuleContext context) {
-    NewModuleContext.Group group = context.createGroup("sand", "Sand");
+    NewModuleContextGroup group = context.addGroup("sand", LocalizeValue.of("Sand"));
 
-    group.add("Sand Example", AllIcons.Nodes.Static, new UnzipNewModuleBuilderProcessor<NewModuleWizardContext>("/moduleTemplates/Hello.zip") {
+    group.add(LocalizeValue.of("Sand Example"), AllIcons.Nodes.Static, new UnzipNewModuleBuilderProcessor<NewModuleWizardContext>("/moduleTemplates/Hello.zip") {
       @Nonnull
       @Override
       public NewModuleWizardContext createContext(boolean isNewProject) {
@@ -65,7 +67,25 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
       }
     });
 
-    group.add("Sand Hello", AllIcons.Nodes.ProjectTab, new NewModuleBuilderProcessor<NewModuleWizardContext>() {
+    group.add(LocalizeValue.of("Empty"), AllIcons.FileTypes.Any_type, Integer.MAX_VALUE, new NewModuleBuilderProcessor<NewModuleWizardContext>() {
+      @Nonnull
+      @Override
+      public NewModuleWizardContext createContext(boolean isNewProject) {
+        return new NewModuleWizardContextBase(isNewProject);
+      }
+
+      @RequiredReadAction
+      @Override
+      public void process(@Nonnull NewModuleWizardContext context, @Nonnull ContentEntry contentEntry, @Nonnull ModifiableRootModel modifiableRootModel) {
+        SandMutableModuleExtension extension = modifiableRootModel.getExtensionWithoutCheck(SandMutableModuleExtension.class);
+        assert extension != null;
+        extension.setEnabled(true);
+      }
+    });
+
+    NewModuleContextGroup subGroup = group.addGroup("sand-sub", LocalizeValue.of("Sand Inner"), AllIcons.Nodes.UnknownJdk);
+
+    subGroup.add(LocalizeValue.of("Sand Hello"), AllIcons.Nodes.ProjectTab, new NewModuleBuilderProcessor<NewModuleWizardContext>() {
       @Nonnull
       @Override
       public NewModuleWizardContext createContext(boolean isNewProject) {

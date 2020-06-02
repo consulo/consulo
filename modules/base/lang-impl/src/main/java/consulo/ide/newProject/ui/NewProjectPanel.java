@@ -18,35 +18,38 @@ package consulo.ide.newProject.ui;
 import com.intellij.CommonBundle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.impl.ProjectUtil;
+import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.CollectionListModel;
-import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.JBCardLayout;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.components.JBLabel;
-import com.intellij.ui.components.JBList;
+import com.intellij.ui.tree.AsyncTreeModel;
+import com.intellij.ui.tree.StructureTreeModel;
+import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ui.tree.TreeUtil;
 import consulo.ide.newProject.NewModuleBuilder;
 import consulo.ide.newProject.NewModuleBuilderProcessor;
 import consulo.ide.newProject.NewModuleContext;
+import consulo.ide.newProject.node.NewModuleContextItem;
 import consulo.ide.welcomeScreen.BaseWelcomeScreenPanel;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;
 import consulo.logging.Logger;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.SwingUIDecorator;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.wizard.WizardSession;
 import consulo.ui.wizard.WizardStep;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
@@ -68,7 +71,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
   @Nullable
   private final VirtualFile myModuleHome;
 
-  private JBList<Object> myList;
+  private Tree myTree;
 
   @RequiredUIAccess
   public NewProjectPanel(@Nonnull Disposable parentDisposable, @Nullable Project project, @Nullable VirtualFile moduleHome) {
@@ -113,51 +116,21 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
 
     NewModuleBuilder.EP_NAME.composite().setupContext(context);
 
-    CollectionListModel<Object> model = new CollectionListModel<>();
-    myList = new JBList<>(model);
-    myList.setBackground(SwingUIDecorator.get(SwingUIDecorator::getSidebarColor));
-    myList.setCellRenderer(new ColoredListCellRenderer<Object>() {
-      @Override
-      protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
-        setFont(UIUtil.getFont(UIUtil.FontSize.BIGGER, null));
+    myTree = new Tree(new AsyncTreeModel(new StructureTreeModel<>(new NewProjectTreeStructure(context), parentDisposable), parentDisposable));
+    myTree.setFont(UIUtil.getFont(UIUtil.FontSize.BIGGER, null));
+    myTree.setOpaque(false);
+    myTree.setBackground(SwingUIDecorator.get(SwingUIDecorator::getSidebarColor));
+    myTree.setRootVisible(false);
+    myTree.setRowHeight(JBUI.scale(24));
 
-        if (value instanceof NewModuleContext.Group) {
-          setSeparator(StringUtil.nullize(((NewModuleContext.Group)value).getName()));
-        }
-        else if (value instanceof NewModuleContext.Item) {
-          setIcon(((NewModuleContext.Item)value).getIcon());
-          append(((NewModuleContext.Item)value).getName());
-        }
-      }
-
-      @Override
-      public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        Dimension preferredSize = component.getPreferredSize();
-        component.setPreferredSize(new Dimension(preferredSize.width, JBUI.scale(25)));
-        return component;
-      }
-    });
-
-    NewModuleContext.Group[] groups = context.getGroups();
-
-    for (NewModuleContext.Group group : groups) {
-      // do not add simple line
-      if (!(groups.length == 1 && group.getId().equals(NewModuleContext.UGROUPED))) {
-        model.add(group);
-      }
-
-      for (NewModuleContext.Item item : group.getItems()) {
-        model.add(item);
-      }
-    }
-    return ScrollPaneFactory.createScrollPane(myList, true);
+    TreeUtil.expandAll(myTree);
+    return ScrollPaneFactory.createScrollPane(myTree, true);
   }
 
   @RequiredUIAccess
   @Nonnull
   @Override
-  @SuppressWarnings({"deprecation", "unchecked", "RequiredXAction"})
+  @SuppressWarnings({"unchecked", "RequiredXAction"})
   protected JComponent createRightComponent() {
     final JPanel panel = new JPanel(new VerticalFlowLayout());
 
@@ -177,7 +150,15 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
     rightContentPanel.add(nullPanel, EMPTY_PANEL);
     rightContentLayout.show(rightContentPanel, EMPTY_PANEL);
 
-    myList.addListSelectionListener(e -> {
+    myTree.addTreeSelectionListener(e -> {
+      TreePath selected = e.getPath();
+
+      Object node = TreeUtil.getLastUserObject(selected);
+      Object selectedValue = node;
+      if(node instanceof NodeDescriptor) {
+        selectedValue = ((NodeDescriptor)node).getElement();
+      }
+
       rightContentPanel.removeAll();
 
       if (myWizardSession != null) {
@@ -186,14 +167,12 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
         myWizardSession = null;
       }
 
-      Object selectedValue = myList.getSelectedValue();
-
-      myProcessor = selectedValue instanceof NewModuleContext.Item ? (NewModuleBuilderProcessor<NewModuleWizardContext>)((NewModuleContext.Item)selectedValue).getProcessor() : null;
+      myProcessor = selectedValue instanceof NewModuleContextItem ? (NewModuleBuilderProcessor<NewModuleWizardContext>)((NewModuleContextItem)selectedValue).getProcessor() : null;
 
       String id = null;
       Component toShow = null;
 
-      if (selectedValue instanceof NewModuleContext.Item) {
+      if (selectedValue instanceof NewModuleContextItem) {
         if (myProcessor != null) {
           myWizardContext = myProcessor.createContext(!isModuleCreation());
 
@@ -292,7 +271,9 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
   }
 
   public void finish() {
-    myWizardSession.finish();
+    if(myWizardSession != null) {
+      myWizardSession.finish();
+    }
   }
 
   @RequiredUIAccess

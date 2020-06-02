@@ -21,6 +21,7 @@ import consulo.ide.newProject.NewModuleBuilderProcessor;
 import consulo.ide.newProject.NewModuleContext;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;
 import consulo.ide.wizard.newModule.NewModuleWizardContextBase;
+import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;
 
@@ -31,9 +32,7 @@ import javax.annotation.Nonnull;
 public class EmptyNewModuleBuilder implements NewModuleBuilder {
   @Override
   public void setupContext(@Nonnull NewModuleContext context) {
-    NewModuleContext.Group group = context.createGroup(NewModuleContext.UGROUPED, "");
-
-    group.add("Empty", AllIcons.FileTypes.Any_type, new NewModuleBuilderProcessor<NewModuleWizardContext>() {
+    context.add(LocalizeValue.of("Empty"), AllIcons.FileTypes.Any_type, new NewModuleBuilderProcessor<NewModuleWizardContext>() {
       @Nonnull
       @Override
       public NewModuleWizardContext createContext(boolean isNewProject) {
