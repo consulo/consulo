@@ -160,18 +160,17 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
 
       @Override
       public Component getListCellRendererComponent(JList list, final AnAction value, int index, final boolean isSelected, boolean cellHasFocus) {
-        boolean selectedAndFocused = isSelected && list.hasFocus();
-        final Color fore = UIUtil.getListForeground(selectedAndFocused);
-        final Color back = UIUtil.getListBackground(selectedAndFocused);
+        final Color fore = UIUtil.getListForeground(isSelected);
+        final Color back = UIUtil.getListBackground(isSelected);
         final JLabel name = new JLabel();
         final JLabel path = new JLabel();
         name.setForeground(fore);
-        path.setForeground(selectedAndFocused ? fore : UIUtil.getInactiveTextColor());
+        path.setForeground(isSelected ? fore : UIUtil.getInactiveTextColor());
 
         return new JPanel() {
           {
             setLayout(new BorderLayout());
-            setOpaque(selectedAndFocused);
+            setOpaque(isSelected);
             setBackground(back);
 
             boolean isGroup = value instanceof ProjectGroupActionGroup;
