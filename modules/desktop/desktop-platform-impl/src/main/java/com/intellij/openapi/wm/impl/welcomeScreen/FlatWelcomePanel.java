@@ -66,21 +66,6 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
   public FlatWelcomePanel(FlatWelcomeFrame flatWelcomeFrame) {
     super(flatWelcomeFrame);
     myFlatWelcomeFrame = flatWelcomeFrame;
-
-    final JList projectsList = UIUtil.findComponentOfType(myLeftComponent, JList.class);
-    if (projectsList != null) {
-      projectsList.addFocusListener(new FocusListener() {
-        @Override
-        public void focusGained(FocusEvent e) {
-          projectsList.repaint();
-        }
-
-        @Override
-        public void focusLost(FocusEvent e) {
-          projectsList.repaint();
-        }
-      });
-    }
   }
 
   @RequiredUIAccess
@@ -89,7 +74,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
   @Nonnull
   @Override
   protected JComponent createLeftComponent(@Nonnull Disposable parentDisposable) {
-    return new NewRecentProjectPanel(parentDisposable);
+    return new NewRecentProjectPanel(parentDisposable, true).getRootPanel();
   }
 
   @RequiredUIAccess

@@ -25,12 +25,9 @@ import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.impl.welcomeScreen.NewRecentProjectPanel;
-import com.intellij.util.ui.UIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
-
-import javax.swing.*;
 
 /**
  * @author Konstantin Bulenkov
@@ -44,16 +41,15 @@ public class ManageRecentProjectsAction extends DumbAwareAction {
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     Disposable disposable = Disposer.newDisposable();
-    NewRecentProjectPanel panel = new NewRecentProjectPanel(disposable);
-    JList list = UIUtil.findComponentOfType(panel, JList.class);
-    JBPopup popup = JBPopupFactory.getInstance().createComponentPopupBuilder(panel, list)
+    NewRecentProjectPanel panel = new NewRecentProjectPanel(disposable, false);
+    JBPopup popup = JBPopupFactory.getInstance().createComponentPopupBuilder(panel.getRootPanel(), panel.getList())
             .setTitle("Recent Projects")
             .setFocusable(true)
             .setRequestFocus(true)
             .setMayBeParent(true)
             .setMovable(true)
             .createPopup();
-    Disposer.register(popup, disposable);
+    consulo.disposer.Disposer.register(popup, disposable);
     Project project = e.getRequiredData(CommonDataKeys.PROJECT);
     popup.showCenteredInCurrentWindow(project);
   }

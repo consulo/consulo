@@ -19,7 +19,6 @@ import com.intellij.ide.ProjectGroup;
 import com.intellij.ide.ProjectGroupActionGroup;
 import com.intellij.ide.RecentProjectsManager;
 import com.intellij.ide.ReopenProjectAction;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
@@ -38,6 +37,8 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
+import consulo.ui.SwingUIDecorator;
 import consulo.ui.image.Image;
 
 import javax.swing.*;
@@ -51,30 +52,28 @@ import java.util.List;
  * @author Konstantin Bulenkov
  */
 public class NewRecentProjectPanel extends RecentProjectPanel {
-  public NewRecentProjectPanel(Disposable parentDisposable) {
+  public NewRecentProjectPanel(Disposable parentDisposable, boolean welcomeScreen) {
     super(parentDisposable);
-    setBorder(null);
-    JScrollPane scrollPane = UIUtil.findComponentOfType(this, JScrollPane.class);
-    if (scrollPane != null) {
+
+    myRootPanel.setBorder(JBUI.Borders.empty());
+    if(welcomeScreen) {
+      myRootPanel.setBackground(SwingUIDecorator.get(SwingUIDecorator::getSidebarColor));
+
+      myScrollPane.setOpaque(false);
+      myScrollPane.getViewport().setOpaque(false);
+      myTargetComponent.setOpaque(false);
+      myList.setOpaque(false);
+
       JBDimension size = JBUI.size(300, 460);
-      scrollPane.setSize(size);
-      scrollPane.setMinimumSize(size);
-      scrollPane.setPreferredSize(size);
+      myScrollPane.setSize(size);
+      myScrollPane.setMinimumSize(size);
+      myScrollPane.setPreferredSize(size);
     }
   }
 
   @Override
   protected Dimension getPreferredScrollableViewportSize() {
     return null;
-  }
-
-  @Override
-  public void addNotify() {
-    super.addNotify();
-    final JList list = UIUtil.findComponentOfType(this, JList.class);
-    if (list != null) {
-      list.updateUI();
-    }
   }
 
   @Override
@@ -149,58 +148,8 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
   }
 
   @Override
-  protected ListCellRenderer createRenderer(UniqueNameBuilder<ReopenProjectAction> pathShortener) {
-    return new RecentProjectItemRenderer(myPathShortener) {
-      private GridBagConstraints nameCell;
-      private GridBagConstraints pathCell;
-      private GridBagConstraints closeButtonCell;
-
-      private void initConstraints() {
-        nameCell = new GridBagConstraints();
-        pathCell = new GridBagConstraints();
-        closeButtonCell = new GridBagConstraints();
-
-        nameCell.gridx = 0;
-        nameCell.gridy = 0;
-        nameCell.weightx = 1.0;
-        nameCell.weighty = 1.0;
-        nameCell.anchor = GridBagConstraints.FIRST_LINE_START;
-        nameCell.insets = JBUI.insets(6, 5, 1, 5);
-
-
-        pathCell.gridx = 0;
-        pathCell.gridy = 1;
-
-        pathCell.insets = JBUI.insets(1, 5, 6, 5);
-        pathCell.anchor = GridBagConstraints.LAST_LINE_START;
-
-
-        closeButtonCell.gridx = 1;
-        closeButtonCell.gridy = 0;
-        closeButtonCell.anchor = GridBagConstraints.FIRST_LINE_END;
-        closeButtonCell.insets = JBUI.insets(7, 7, 7, 7);
-        closeButtonCell.gridheight = 2;
-
-        //closeButtonCell.anchor = GridBagConstraints.WEST;
-      }
-
-      @Override
-      protected Color getListBackground(boolean isSelected, boolean hasFocus) {
-        return UIUtil.getListBackground(isSelected && hasFocus);
-      }
-
-      @Override
-      protected Color getListForeground(boolean isSelected, boolean hasFocus) {
-        return UIUtil.getListForeground(isSelected && hasFocus);
-      }
-
-      @Override
-      protected void layoutComponents() {
-        setLayout(new GridBagLayout());
-        initConstraints();
-        add(myName, nameCell);
-        add(myPath, pathCell);
-      }
+  protected ListCellRenderer<AnAction> createRenderer(UniqueNameBuilder<ReopenProjectAction> pathShortener) {
+    return new ListCellRenderer<AnAction> () {
 
       JComponent spacer = new NonOpaquePanel() {
         @Override
@@ -211,18 +160,18 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
 
       @Override
       public Component getListCellRendererComponent(JList list, final AnAction value, int index, final boolean isSelected, boolean cellHasFocus) {
-        final Color fore = getListForeground(isSelected, list.hasFocus());
-        final Color back = getListBackground(isSelected, list.hasFocus());
+        boolean selectedAndFocused = isSelected && list.hasFocus();
+        final Color fore = UIUtil.getListForeground(selectedAndFocused);
+        final Color back = UIUtil.getListBackground(selectedAndFocused);
         final JLabel name = new JLabel();
         final JLabel path = new JLabel();
         name.setForeground(fore);
-        path.setForeground(isSelected ? fore : UIUtil.getInactiveTextColor());
-
-        setBackground(back);
+        path.setForeground(selectedAndFocused ? fore : UIUtil.getInactiveTextColor());
 
         return new JPanel() {
           {
             setLayout(new BorderLayout());
+            setOpaque(selectedAndFocused);
             setBackground(back);
 
             boolean isGroup = value instanceof ProjectGroupActionGroup;
@@ -284,13 +233,6 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
             return new Dimension(super.getPreferredSize().width, JBUI.scale(44));
           }
         };
-      }
-
-      @Override
-      public Dimension getPreferredSize() {
-        Dimension size = super.getPreferredSize();
-        int h = myName.getPreferredSize().height + myPath.getPreferredSize().height;
-        return new Dimension(size.width, h + JBUI.scale(26));
       }
     };
   }
