@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.tabs.impl;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.Project;

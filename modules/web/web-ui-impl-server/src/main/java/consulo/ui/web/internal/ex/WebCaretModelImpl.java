@@ -15,10 +15,10 @@
  */
 package consulo.ui.web.internal.ex;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

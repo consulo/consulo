@@ -32,7 +32,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;

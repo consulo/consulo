@@ -21,9 +21,9 @@ package com.intellij.util.indexing;
 
 import com.intellij.diagnostic.PerformanceWatcher;
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.TransactionGuard;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.*;

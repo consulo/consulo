@@ -15,7 +15,8 @@
  */
 package com.intellij.openapi.diff.impl;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 
 public interface DiffVersionComponent {

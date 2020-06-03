@@ -3,7 +3,7 @@ package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.completion.impl.CompletionServiceImpl;
 import com.intellij.lang.Language;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationListener;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -17,7 +17,6 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.FocusChangeListenerImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -29,6 +28,7 @@ import com.intellij.ui.LightweightHint;
 import com.intellij.util.ThreeState;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

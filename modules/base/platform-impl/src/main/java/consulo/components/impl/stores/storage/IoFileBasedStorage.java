@@ -18,7 +18,6 @@ package consulo.components.impl.stores.storage;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.StoragePathMacros;
@@ -29,6 +28,7 @@ import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.LineSeparator;
 import consulo.components.impl.stores.StorageUtil;
 import consulo.components.impl.stores.StreamProvider;
+import consulo.disposer.Disposable;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 

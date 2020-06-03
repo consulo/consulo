@@ -16,7 +16,6 @@
 package consulo.test.light.impl;
 
 import consulo.container.plugin.PluginListenerDescriptor;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.impl.ModalityStateEx;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
@@ -28,6 +27,7 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.containers.MultiMap;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.disposer.Disposable;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;

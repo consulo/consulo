@@ -16,7 +16,7 @@
 package com.intellij.openapi.projectRoots.ui;
 
 import com.intellij.ide.DataManager;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
@@ -25,7 +25,7 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ui.configuration.SdksConfigurable;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 
 import javax.swing.*;
 import java.awt.*;

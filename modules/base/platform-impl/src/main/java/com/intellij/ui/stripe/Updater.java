@@ -16,7 +16,6 @@
 package com.intellij.ui.stripe;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
 import com.intellij.openapi.actionSystem.ShortcutSet;
 import com.intellij.openapi.keymap.KeymapManager;
@@ -24,6 +23,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
+import consulo.disposer.Disposable;
 import consulo.ui.plaf.ScrollBarUIConstants;
 import javax.annotation.Nonnull;
 

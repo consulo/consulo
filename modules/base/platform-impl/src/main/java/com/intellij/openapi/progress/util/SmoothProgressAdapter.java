@@ -15,16 +15,17 @@
  */
 package com.intellij.openapi.progress.util;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.StandardProgressIndicator;
 import com.intellij.openapi.progress.WrappedProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.Semaphore;
+import consulo.disposer.Disposer;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

@@ -15,13 +15,13 @@
  */
 package com.intellij.mock;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.EditReadOnlyListener;
 import com.intellij.openapi.editor.ex.LineIterator;
 import com.intellij.openapi.editor.ex.RangeMarkerEx;
+import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.LocalTimeCounter;

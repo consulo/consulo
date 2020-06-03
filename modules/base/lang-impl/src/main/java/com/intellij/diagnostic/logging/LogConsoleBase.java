@@ -35,7 +35,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.FilterComponent;

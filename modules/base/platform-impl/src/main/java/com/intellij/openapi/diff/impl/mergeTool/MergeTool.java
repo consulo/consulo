@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.diff.impl.mergeTool;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diff.DiffContent;
 import com.intellij.openapi.diff.DiffRequest;
 import com.intellij.openapi.diff.DiffTool;
@@ -23,7 +22,9 @@ import com.intellij.openapi.diff.DiffViewer;
 import com.intellij.openapi.diff.impl.incrementalMerge.ui.MergePanel2;
 import com.intellij.openapi.ui.DialogBuilder;
 import com.intellij.openapi.ui.FrameWrapper;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+
 import javax.annotation.Nonnull;
 
 import java.awt.*;
@@ -54,7 +55,7 @@ public class MergeTool implements DiffTool {
     DialogBuilder builder = new DialogBuilder(data.getProject());
     builder.setDimensionServiceKey(data.getGroupKey());
     builder.setTitle(data.getWindowTitle());
-    Disposable parent = Disposer.newDisposable();
+    Disposable parent = Disposable.newDisposable();
     builder.addDisposable(parent);
     MergePanel2 mergePanel = createMergeComponent(data, builder, parent);
     builder.setCenterPanel(mergePanel.getComponent());

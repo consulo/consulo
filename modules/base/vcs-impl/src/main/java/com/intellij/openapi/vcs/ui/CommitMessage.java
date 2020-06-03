@@ -16,13 +16,13 @@
 package com.intellij.openapi.vcs.ui;
 
 import com.intellij.ide.DataManager;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import com.intellij.openapi.project.Project;
+import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.wm.IdeFocusManager;

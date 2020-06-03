@@ -20,14 +20,14 @@ import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.ide.ui.customization.CustomActionsSchema;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionMenu;
 import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import com.intellij.openapi.actionSystem.impl.WeakTimerListener;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
@@ -82,7 +82,7 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
   private final MenuItemPresentationFactory myPresentationFactory;
   private final DataManager myDataManager;
   private final ActionManager myActionManager;
-  private final Disposable myDisposable = Disposer.newDisposable();
+  private final Disposable myDisposable = Disposable.newDisposable();
   private boolean myDisabled = false;
 
   @Nullable

@@ -21,7 +21,7 @@ import com.intellij.execution.testframework.ui.BaseTestsOutputConsoleView;
 import com.intellij.execution.testframework.ui.TestsOutputConsolePrinter;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
 import javax.annotation.Nonnull;
 

@@ -24,6 +24,7 @@ import com.intellij.ui.LoadingNode;
 import com.intellij.util.Time;
 import com.intellij.util.WaitFor;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposer;
 import junit.framework.AssertionFailedError;
 import junit.framework.TestSuite;
 

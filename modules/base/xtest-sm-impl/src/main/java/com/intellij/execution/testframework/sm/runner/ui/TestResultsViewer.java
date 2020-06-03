@@ -18,7 +18,7 @@ package com.intellij.execution.testframework.sm.runner.ui;
 import com.intellij.execution.testframework.AbstractTestProxy;
 import com.intellij.execution.testframework.TestFrameworkRunningModel;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import javax.annotation.Nonnull;
 
 /**

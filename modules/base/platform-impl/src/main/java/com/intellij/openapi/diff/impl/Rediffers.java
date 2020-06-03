@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.diff.impl;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.DocumentEvent;
@@ -23,6 +22,7 @@ import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.HashMap;
+import consulo.disposer.Disposable;
 
 import java.util.Iterator;
 

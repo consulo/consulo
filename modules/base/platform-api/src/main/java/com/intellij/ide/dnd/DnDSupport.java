@@ -15,8 +15,8 @@
  */
 package com.intellij.ide.dnd;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.Function;

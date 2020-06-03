@@ -20,7 +20,7 @@ import com.intellij.openapi.diff.impl.DiffSideView;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.ui.DialogWrapperDialog;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.wm.IdeFocusManager;
 import consulo.logging.Logger;
 

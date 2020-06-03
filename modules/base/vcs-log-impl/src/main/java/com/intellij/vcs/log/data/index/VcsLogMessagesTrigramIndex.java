@@ -15,13 +15,13 @@
  */
 package com.intellij.vcs.log.data.index;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.text.TrigramBuilder;
 import com.intellij.util.indexing.DataIndexer;
 import com.intellij.util.indexing.StorageException;
 import com.intellij.util.io.VoidDataExternalizer;
 import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcs.log.impl.FatalErrorHandler;
+import consulo.disposer.Disposable;
 import gnu.trove.THashMap;
 import gnu.trove.TIntHashSet;
 import javax.annotation.Nonnull;

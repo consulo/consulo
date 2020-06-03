@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.ui.laf;
 
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;

@@ -16,15 +16,15 @@
 package com.intellij.ide;
 
 import com.intellij.idea.ActionsBundle;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.impl.welcomeScreen.NewRecentProjectPanel;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -40,7 +40,7 @@ public class ManageRecentProjectsAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Disposable disposable = Disposer.newDisposable();
+    Disposable disposable = Disposable.newDisposable();
     NewRecentProjectPanel panel = new NewRecentProjectPanel(disposable, false);
     JBPopup popup = JBPopupFactory.getInstance().createComponentPopupBuilder(panel.getRootPanel(), panel.getList())
             .setTitle("Recent Projects")

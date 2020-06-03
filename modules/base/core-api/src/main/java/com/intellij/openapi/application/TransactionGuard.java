@@ -15,9 +15,10 @@
  */
 package com.intellij.openapi.application;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.progress.ProcessCanceledException;
+import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -115,7 +116,7 @@ public abstract class TransactionGuard {
    *
    * For more advanced version, see {@link #submitTransaction(Disposable, TransactionId, Runnable)}.
    *
-   * @param parentDisposable an object whose disposing (via {@link com.intellij.openapi.util.Disposer} makes this transaction invalid,
+   * @param parentDisposable an object whose disposing (via {@link Disposer} makes this transaction invalid,
    *                         and so it won't be run after it has been disposed
    * @param transaction code to execute inside a transaction.
    */
@@ -150,7 +151,7 @@ public abstract class TransactionGuard {
    * no active transaction running, or when the running transaction has the same (or compatible) id as {@code expectedContext}. If the id of
    * the current transaction is passed, the transaction is executed immediately. Otherwise adds the runnable to a queue,
    * to execute after all transactions scheduled before this one are finished.
-   * @param parentDisposable an object whose disposing (via {@link com.intellij.openapi.util.Disposer} makes this transaction invalid,
+   * @param parentDisposable an object whose disposing (via {@link Disposer} makes this transaction invalid,
    *                         and so it won't be run after it has been disposed.
    * @param expectedContext an optional id of another transaction, to allow execution inside that transaction if it's still running
    * @param transaction code to execute inside a transaction.

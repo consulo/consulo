@@ -1,6 +1,6 @@
 package com.intellij.openapi.application;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 
 /**
  * A unique object identifying each running transaction. Can be retrieved from {@link TransactionGuard#getContextTransaction()}

@@ -3,11 +3,12 @@ package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.lookup.Lookup;
 import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.patterns.ElementPattern;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

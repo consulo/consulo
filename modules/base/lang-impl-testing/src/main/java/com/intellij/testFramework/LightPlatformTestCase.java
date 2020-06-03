@@ -92,6 +92,7 @@ import com.intellij.util.indexing.IndexableFileSet;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.ui.annotation.RequiredUIAccess;

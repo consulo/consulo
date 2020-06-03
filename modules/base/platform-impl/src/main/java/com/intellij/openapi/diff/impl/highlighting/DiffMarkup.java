@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.diff.impl.highlighting;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import com.intellij.openapi.diff.actions.MergeActionGroup;
 import com.intellij.openapi.diff.actions.MergeOperations;
@@ -33,7 +33,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.UIUtil;

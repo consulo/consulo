@@ -18,14 +18,14 @@ package com.intellij.application.options.colors;
 
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
 import com.intellij.codeInsight.daemon.impl.TrafficLightRenderer;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.util.EventDispatcher;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 

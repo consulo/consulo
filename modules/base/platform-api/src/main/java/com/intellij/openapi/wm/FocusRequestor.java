@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.wm;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.util.AsyncResult;
 
 import javax.annotation.Nonnull;

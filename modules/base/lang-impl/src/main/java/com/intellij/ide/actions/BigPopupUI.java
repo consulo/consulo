@@ -2,7 +2,7 @@
 package com.intellij.ide.actions;
 
 import com.intellij.codeInsight.hint.HintUtil;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.MnemonicHelper;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.project.Project;

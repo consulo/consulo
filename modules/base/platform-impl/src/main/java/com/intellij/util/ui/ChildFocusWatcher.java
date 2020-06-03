@@ -15,7 +15,7 @@
  */
 package com.intellij.util.ui;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 
 import javax.swing.*;
 import java.awt.*;

@@ -16,9 +16,9 @@
 package consulo.builtInServer.impl.net.http;
 
 import consulo.builtInServer.xml.XmlRpcServer;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
 import com.intellij.util.net.NetUtils;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;

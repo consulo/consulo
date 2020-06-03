@@ -61,6 +61,7 @@ import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
+import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;

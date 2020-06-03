@@ -19,10 +19,10 @@ import com.intellij.ide.StartupProgress;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.impl.ReadMostlyRWLock;
 import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.ThrowableComputable;
 import consulo.application.internal.ApplicationWithOwnWriteThread;
+import consulo.disposer.Disposer;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;

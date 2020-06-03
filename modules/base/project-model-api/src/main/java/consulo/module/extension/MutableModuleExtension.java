@@ -15,7 +15,7 @@
  */
 package consulo.module.extension;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import consulo.annotation.DeprecationInfo;
 import consulo.roots.ModifiableModuleRootLayer;
 import consulo.ui.Component;

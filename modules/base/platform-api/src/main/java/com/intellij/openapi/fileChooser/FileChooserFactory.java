@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileChooser;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;

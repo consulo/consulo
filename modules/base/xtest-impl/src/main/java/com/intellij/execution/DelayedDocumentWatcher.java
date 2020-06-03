@@ -17,7 +17,7 @@ package com.intellij.execution;
 
 import com.intellij.AppTopics;
 import com.intellij.execution.testframework.autotest.AutoTestWatcher;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.editor.Document;
@@ -30,7 +30,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectCoreUtil;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
@@ -79,7 +79,7 @@ public class DelayedDocumentWatcher implements AutoTestWatcher {
 
   public void activate() {
     if (myConnection == null) {
-      myListenerDisposable = Disposer.newDisposable();
+      myListenerDisposable = Disposable.newDisposable();
       Disposer.register(myProject, myListenerDisposable);
       EditorFactory.getInstance().getEventMulticaster().addDocumentListener(myListener, myListenerDisposable);
       myConnection = ApplicationManager.getApplication().getMessageBus().connect(myProject);

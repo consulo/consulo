@@ -23,7 +23,7 @@ import com.intellij.history.integration.ui.models.FileHistoryDialogModel;
 import com.intellij.history.integration.ui.models.NullRevisionsProgress;
 import com.intellij.history.integration.ui.models.RevisionProcessingProgress;
 import com.intellij.history.integration.ui.views.FileHistoryDialog;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.text.DateFormatUtil;

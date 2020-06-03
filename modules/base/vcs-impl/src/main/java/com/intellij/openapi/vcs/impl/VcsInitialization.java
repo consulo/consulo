@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.impl;
 
 import com.intellij.diagnostic.ThreadDumper;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Attachment;
 import consulo.logging.Logger;

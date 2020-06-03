@@ -16,9 +16,9 @@
 
 package com.intellij.ui.navigation;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

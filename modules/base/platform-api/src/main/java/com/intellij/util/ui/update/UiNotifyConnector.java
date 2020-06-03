@@ -15,11 +15,11 @@
  */
 package com.intellij.util.ui.update;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

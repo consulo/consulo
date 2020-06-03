@@ -1,10 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.tree;
 
-import com.intellij.openapi.Disposable;
-import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.LoadingNode;
 import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.Command;
@@ -14,6 +11,9 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SmartHashSet;
 import com.intellij.util.ui.tree.AbstractTreeModel;
 import com.intellij.util.ui.tree.TreeModelAdapter;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
 import org.jetbrains.concurrency.AsyncPromise;
 import org.jetbrains.concurrency.Obsolescent;
 import org.jetbrains.concurrency.Promise;

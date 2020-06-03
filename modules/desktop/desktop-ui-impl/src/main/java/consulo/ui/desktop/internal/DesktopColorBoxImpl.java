@@ -15,10 +15,10 @@
  */
 package consulo.ui.desktop.internal;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.ui.ColorPanel;
 import consulo.awt.TargetAWT;
 import consulo.awt.impl.FromSwingComponentWrapper;
+import consulo.disposer.Disposable;
 import consulo.ui.ColorBox;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -40,7 +40,7 @@ import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;

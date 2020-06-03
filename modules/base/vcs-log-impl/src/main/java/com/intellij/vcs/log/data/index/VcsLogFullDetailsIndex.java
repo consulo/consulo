@@ -15,9 +15,9 @@
  */
 package com.intellij.vcs.log.data.index;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.Consumer;
 import com.intellij.util.indexing.*;

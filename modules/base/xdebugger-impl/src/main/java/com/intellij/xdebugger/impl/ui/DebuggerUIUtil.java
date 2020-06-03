@@ -17,7 +17,7 @@ package com.intellij.xdebugger.impl.ui;
 
 import com.intellij.codeInsight.hint.HintUtil;
 import com.intellij.ide.DataManager;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ApplicationManager;
@@ -56,6 +56,7 @@ import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTreeState;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import consulo.awt.TargetAWT;
+import consulo.disposer.Disposer;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

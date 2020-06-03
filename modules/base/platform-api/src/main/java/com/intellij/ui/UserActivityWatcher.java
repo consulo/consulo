@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.EventDispatcher;
 

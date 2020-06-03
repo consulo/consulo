@@ -15,12 +15,12 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationActivationListener;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.BusyObject;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;

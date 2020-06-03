@@ -15,8 +15,8 @@
  */
 package com.intellij.util.ui;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.table.TableView;
 
@@ -43,7 +43,7 @@ public abstract class ChangesTrackingTableView<T> extends TableView<T> {
   public boolean editCellAt(final int row, final int column, EventObject e) {
     if (super.editCellAt(row, column, e)) {
       assert myEditorListenerDisposable == null;
-      myEditorListenerDisposable = Disposer.newDisposable();
+      myEditorListenerDisposable = Disposable.newDisposable();
       addChangeListener(getEditorComponent(), new ChangeListener() {
           @Override
           public void stateChanged(ChangeEvent e) {

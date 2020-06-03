@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.structureView;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.fileEditor.FileEditor;
 import consulo.util.dataholder.Key;
 

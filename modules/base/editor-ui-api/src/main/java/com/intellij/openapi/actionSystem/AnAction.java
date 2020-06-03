@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.PossiblyDumbAware;
 import com.intellij.openapi.project.Project;
@@ -24,6 +23,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -188,19 +188,9 @@ public abstract class AnAction implements PossiblyDumbAware {
     registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(keyCode, modifiers)), component);
   }
 
-  @Deprecated
-  public final void registerCustomShortcutSet(@Nonnull ShortcutSet shortcutSet, @Nullable JComponent component, @Nullable Disposable parentDisposable) {
-    registerCustomShortcutSet(shortcutSet, component, (consulo.disposer.Disposable)parentDisposable);
-  }
-
   public final void registerCustomShortcutSet(@Nonnull ShortcutSet shortcutSet, @Nullable JComponent component, @Nullable consulo.disposer.Disposable parentDisposable) {
     setShortcutSet(shortcutSet);
     registerCustomShortcutSet(component, parentDisposable);
-  }
-
-  @Deprecated
-  public final void registerCustomShortcutSet(@Nullable JComponent component, @Nullable Disposable parentDisposable) {
-    registerCustomShortcutSet(component, (consulo.disposer.Disposable)parentDisposable);
   }
 
   public final void registerCustomShortcutSet(@Nullable JComponent component, @Nullable consulo.disposer.Disposable parentDisposable) {

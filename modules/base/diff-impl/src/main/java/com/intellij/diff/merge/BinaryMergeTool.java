@@ -24,10 +24,11 @@ import com.intellij.diff.requests.SimpleDiffRequest;
 import com.intellij.diff.tools.binary.ThreesideBinaryDiffViewer;
 import com.intellij.diff.tools.holders.BinaryEditorHolder;
 import com.intellij.openapi.util.BooleanGetter;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.swing.*;

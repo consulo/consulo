@@ -16,7 +16,7 @@
 package com.intellij.compiler.impl;
 
 import com.intellij.compiler.impl.generic.GenericCompilerCache;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.Compiler;
 import com.intellij.openapi.compiler.generic.GenericCompiler;

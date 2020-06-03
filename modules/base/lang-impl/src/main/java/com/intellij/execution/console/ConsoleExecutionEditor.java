@@ -3,7 +3,7 @@ package com.intellij.execution.console;
 
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.ide.GeneralSettings;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.EmptyAction;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.application.ApplicationManager;

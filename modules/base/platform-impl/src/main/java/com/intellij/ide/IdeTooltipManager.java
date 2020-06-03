@@ -2,7 +2,7 @@
 package com.intellij.ide;
 
 import com.intellij.codeInsight.hint.HintUtil;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
@@ -17,7 +17,7 @@ import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.registry.Registry;

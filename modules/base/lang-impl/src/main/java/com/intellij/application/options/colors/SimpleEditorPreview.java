@@ -34,12 +34,12 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.options.colors.EditorHighlightingProvidingColorSettingsPage;
 import com.intellij.openapi.options.colors.RainbowColorSettingsPage;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.Alarm;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposer;
 import org.intellij.lang.annotations.JdkConstants;
 import javax.annotation.Nonnull;
 

@@ -19,7 +19,6 @@
  */
 package com.intellij.util.io.storage;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.Forceable;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.ByteArraySequence;
@@ -29,6 +28,7 @@ import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.io.PagePool;
 import com.intellij.util.io.RecordDataOutput;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;

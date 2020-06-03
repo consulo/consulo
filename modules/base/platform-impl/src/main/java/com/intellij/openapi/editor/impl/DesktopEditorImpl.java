@@ -7,7 +7,7 @@ import com.intellij.diagnostic.Dumpable;
 import com.intellij.ide.*;
 import com.intellij.ide.dnd.DnDManager;
 import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
@@ -70,6 +70,7 @@ import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.application.TransactionGuardEx;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
+import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
@@ -256,7 +257,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   private static final int MOUSE_SELECTION_STATE_LINE_SELECTED = 2;
 
   private volatile EditorHighlighter myHighlighter; // updated in EDT, but can be accessed from other threads (under read action)
-  private Disposable myHighlighterDisposable = Disposer.newDisposable();
+  private Disposable myHighlighterDisposable = Disposable.newDisposable();
   private final TextDrawingCallback myTextDrawingCallback = new MyTextDrawingCallback();
 
   @MagicConstant(intValues = {VERTICAL_SCROLLBAR_LEFT, VERTICAL_SCROLLBAR_RIGHT})
@@ -320,7 +321,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   private boolean myPaintSelection;
 
   private final EditorSizeAdjustmentStrategy mySizeAdjustmentStrategy = new EditorSizeAdjustmentStrategy();
-  private final Disposable myDisposable = Disposer.newDisposable();
+  private final Disposable myDisposable = Disposable.newDisposable();
 
   private List<CaretState> myCaretStateBeforeLastPress;
   LogicalPosition myLastMousePressedLocation;
@@ -4432,7 +4433,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
               Point mouseLocationOnScreen = MouseInfo.getPointerInfo().getLocation();
               JComponent editorComponent = editor.getComponent();
               Point editorComponentLocationOnScreen = editorComponent.getLocationOnScreen();
-              Disposable painterListenersDisposable = Disposer.newDisposable("PainterListenersDisposable");
+              Disposable painterListenersDisposable = Disposable.newDisposable("PainterListenersDisposable");
               Disposer.register(editor.getDisposable(), painterListenersDisposable);
               ExplosionPainter painter = new ExplosionPainter(new Point(mouseLocationOnScreen.x - editorComponentLocationOnScreen.x, mouseLocationOnScreen.y - editorComponentLocationOnScreen.y),
                                                               editor.getGutterComponentEx().getDragImage((GutterIconRenderer)attachedObject), painterListenersDisposable);

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.diff.impl;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.editor.CaretModel;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.CaretEvent;

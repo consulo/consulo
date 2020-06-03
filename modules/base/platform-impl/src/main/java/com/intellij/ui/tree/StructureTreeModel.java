@@ -5,19 +5,19 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.ide.util.treeView.ValidateableNode;
-import com.intellij.openapi.Disposable;
-import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.util.concurrency.Invoker;
 import com.intellij.util.concurrency.InvokerSupplier;
 import com.intellij.util.ui.tree.AbstractTreeModel;
 import com.intellij.util.ui.tree.TreeUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
 import org.jetbrains.concurrency.AsyncPromise;
 import org.jetbrains.concurrency.Promise;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
@@ -56,7 +56,7 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
   @Deprecated
   //@ApiStatus.ScheduledForRemoval(inVersion = "2019.3")
   public StructureTreeModel(@Nonnull Structure structure) {
-    this(structure, Disposer.newDisposable());
+    this(structure, Disposable.newDisposable());
   }
 
   /**
@@ -65,7 +65,7 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
   @Deprecated
   //@ApiStatus.ScheduledForRemoval(inVersion = "2019.3")
   public StructureTreeModel(@Nonnull Structure structure, @Nonnull Comparator<? super NodeDescriptor> comparator) {
-    this(structure, comparator, Disposer.newDisposable());
+    this(structure, comparator, Disposable.newDisposable());
   }
 
   public StructureTreeModel(@Nonnull Structure structure, @Nonnull Disposable parentDisposable) {

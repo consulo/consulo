@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.ui.layout.impl;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.project.Project;

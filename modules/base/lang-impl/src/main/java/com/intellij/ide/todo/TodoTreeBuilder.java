@@ -22,7 +22,7 @@ import com.intellij.ide.todo.nodes.TodoItemNode;
 import com.intellij.ide.todo.nodes.TodoTreeHelper;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.NodeDescriptor;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;

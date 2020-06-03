@@ -21,7 +21,7 @@ import com.intellij.find.editorHeaderActions.*;
 import com.intellij.find.impl.livePreview.LivePreviewController;
 import com.intellij.find.impl.livePreview.SearchResults;
 import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.actionSystem.ex.DefaultCustomComponentAction;
@@ -36,7 +36,7 @@ import com.intellij.openapi.editor.event.SelectionListener;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.components.labels.LinkLabel;
@@ -73,7 +73,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
       updateResults(true);
     }
   });
-  private final Disposable myDisposable = Disposer.newDisposable(EditorSearchSession.class.getName());
+  private final Disposable myDisposable = Disposable.newDisposable(EditorSearchSession.class.getName());
 
   public EditorSearchSession(@Nonnull Editor editor, Project project) {
     this(editor, project, createDefaultFindModel(project, editor));

@@ -15,9 +15,9 @@
  */
 package com.intellij.profile;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
+import consulo.disposer.Disposable;
 
 /**
  * User: anna

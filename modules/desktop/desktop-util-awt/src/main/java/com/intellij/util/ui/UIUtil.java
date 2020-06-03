@@ -16,7 +16,7 @@
 package com.intellij.util.ui;
 
 import com.intellij.BundleBase;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.registry.Registry;
@@ -35,6 +35,7 @@ import consulo.desktop.util.awt.AllIconsHack;
 import consulo.desktop.util.awt.MorphColor;
 import consulo.desktop.util.awt.StringHtmlUtil;
 import consulo.desktop.util.awt.laf.BuildInLookAndFeel;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.style.StyleManager;
 import consulo.util.dataholder.Key;
@@ -2058,10 +2059,6 @@ public class UIUtil {
     }
   }
 
-  public static void addAwtListener(final AWTEventListener listener, long mask, Disposable parent) {
-    addAwtListener(listener, mask, (consulo.disposer.Disposable) parent);
-  }
-
   public static void addAwtListener(final AWTEventListener listener, long mask, consulo.disposer.Disposable parent) {
     Toolkit.getDefaultToolkit().addAWTEventListener(listener, mask);
     consulo.disposer.Disposer.register(parent, () -> Toolkit.getDefaultToolkit().removeAWTEventListener(listener));
@@ -3511,7 +3508,7 @@ public class UIUtil {
       runnable.run();
     }
     else {
-      Disposable disposable = Disposer.newDisposable();
+      Disposable disposable = Disposable.newDisposable();
       FocusListener focusListener = new FocusAdapter() {
         @Override
         public void focusGained(FocusEvent e) {

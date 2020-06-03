@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.EditorFontType;
@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.ui.Component;
 import javax.annotation.Nonnull;

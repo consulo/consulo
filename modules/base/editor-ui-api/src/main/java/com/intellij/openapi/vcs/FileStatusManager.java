@@ -15,9 +15,10 @@
  */
 package com.intellij.openapi.vcs;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 
 import java.awt.*;

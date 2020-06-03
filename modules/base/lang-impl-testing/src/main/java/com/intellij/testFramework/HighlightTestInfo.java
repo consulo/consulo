@@ -15,8 +15,8 @@
  */
 package com.intellij.testFramework;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

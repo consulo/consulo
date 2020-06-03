@@ -17,10 +17,10 @@ package com.intellij.openapi.wm.impl;
 
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.MnemonicHelper;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.Gray;
@@ -62,7 +62,7 @@ public final class DesktopFloatingDecorator extends JDialogAsUIWindow implements
   private final MyUISettingsListener myUISettingsListener;
   private WindowInfoImpl myInfo;
 
-  private final Disposable myDisposable = Disposer.newDisposable();
+  private final Disposable myDisposable = Disposable.newDisposable();
   private final Alarm myDelayAlarm; // Determines moment when tool window should become transparent
   private final Alarm myFrameTicker; // Determines moments of rendering of next frame
   private final MyAnimator myAnimator; // Renders alpha ratio

@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.projectRoots;
 
-import com.intellij.openapi.Disposable;
 import consulo.bundle.BundleHolder;
+import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

@@ -21,7 +21,7 @@ import com.intellij.ide.DataManager;
 import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.impl.IdeNotificationArea;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Computable;

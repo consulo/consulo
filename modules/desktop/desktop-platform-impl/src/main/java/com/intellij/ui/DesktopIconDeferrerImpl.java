@@ -19,7 +19,6 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.impl.ProjectLifecycleListener;
@@ -27,6 +26,7 @@ import com.intellij.openapi.util.LowMemoryWatcher;
 import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.Function;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.disposer.Disposable;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -36,7 +36,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Singleton
-public class DesktopIconDeferrerImpl extends IconDeferrer implements Disposable{
+public class DesktopIconDeferrerImpl extends IconDeferrer implements Disposable {
   private static final ThreadLocal<Boolean> ourEvaluationIsInProgress = ThreadLocal.withInitial(() -> Boolean.FALSE);
 
   private final Object LOCK = new Object();

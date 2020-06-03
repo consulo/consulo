@@ -19,7 +19,6 @@ package com.intellij.execution.ui;
 import com.intellij.execution.ui.layout.LayoutStateDefaults;
 import com.intellij.execution.ui.layout.LayoutViewOptions;
 import com.intellij.execution.ui.layout.PlaceInGrid;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComponentWithActions;
@@ -27,6 +26,7 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.ContentManagerListener;
+import consulo.disposer.Disposable;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

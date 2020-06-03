@@ -4,7 +4,7 @@ package com.intellij.openapi.wm.impl.content;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.ui.popup.*;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.content.TabbedContent;
 import javax.annotation.Nonnull;

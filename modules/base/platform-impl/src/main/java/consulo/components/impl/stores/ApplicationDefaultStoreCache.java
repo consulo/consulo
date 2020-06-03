@@ -15,10 +15,10 @@
  */
 package consulo.components.impl.stores;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.ObjectUtil;
+import consulo.disposer.Disposable;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;

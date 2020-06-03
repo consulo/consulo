@@ -15,7 +15,6 @@
  */
 package com.intellij.util.net;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -41,6 +40,7 @@ import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.Transient;
 import consulo.container.boot.ContainerPathManager;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;

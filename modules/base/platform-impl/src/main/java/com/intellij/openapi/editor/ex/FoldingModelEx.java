@@ -15,11 +15,12 @@
  */
 package com.intellij.openapi.editor.ex;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.FoldingGroup;
 import com.intellij.openapi.editor.FoldingModel;
 import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

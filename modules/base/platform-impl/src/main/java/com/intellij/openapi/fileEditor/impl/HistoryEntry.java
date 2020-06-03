@@ -15,13 +15,13 @@
  */
 package com.intellij.openapi.fileEditor.impl;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.FileEditorState;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.LightFilePointer;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -103,7 +103,7 @@ public final class HistoryEntry {
                                          @Nonnull FileEditorProvider selectedProvider) {
     if (project.isDisposed()) return createLight(file, providers, states, selectedProvider);
 
-    Disposable disposable = Disposer.newDisposable();
+    Disposable disposable = Disposable.newDisposable();
     VirtualFilePointer pointer = VirtualFilePointerManager.getInstance().create(file, disposable, null);
 
     HistoryEntry entry = new HistoryEntry(pointer, selectedProvider, disposable);
@@ -123,7 +123,7 @@ public final class HistoryEntry {
 
     EntryData entryData = parseEntry(project, e);
 
-    Disposable disposable = Disposer.newDisposable();
+    Disposable disposable = Disposable.newDisposable();
     VirtualFilePointer pointer = VirtualFilePointerManager.getInstance().create(entryData.url, disposable, null);
 
     HistoryEntry entry = new HistoryEntry(pointer, entryData.selectedProvider, disposable);

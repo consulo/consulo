@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.wm;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.JBUI;
+import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 

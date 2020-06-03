@@ -16,7 +16,7 @@
 package com.intellij.ui.breadcrumbs;
 
 import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.TextAttributesKey;

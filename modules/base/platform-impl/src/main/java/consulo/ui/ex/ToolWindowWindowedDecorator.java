@@ -15,7 +15,7 @@
  */
 package consulo.ui.ex;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 
 /**
  * @author VISTALL

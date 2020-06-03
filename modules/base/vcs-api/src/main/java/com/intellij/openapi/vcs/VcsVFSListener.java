@@ -16,10 +16,10 @@
 
 package com.intellij.openapi.vcs;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.command.CommandEvent;
 import com.intellij.openapi.command.CommandListener;
 import com.intellij.openapi.command.CommandProcessor;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;

@@ -15,7 +15,6 @@
  */
 package com.intellij.xdebugger.impl.evaluate;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.JBSplitter;
@@ -26,6 +25,8 @@ import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
 import com.intellij.xdebugger.impl.ui.XDebuggerEditorBase;
 import com.intellij.xdebugger.impl.ui.XDebuggerExpressionEditor;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

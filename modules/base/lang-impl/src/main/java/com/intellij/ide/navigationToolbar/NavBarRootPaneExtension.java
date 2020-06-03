@@ -28,7 +28,6 @@ import com.intellij.ide.ui.customization.CustomisedActionGroup;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
@@ -37,6 +36,7 @@ import com.intellij.util.ui.JBSwingUtilities;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.disposer.Disposer;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;
 

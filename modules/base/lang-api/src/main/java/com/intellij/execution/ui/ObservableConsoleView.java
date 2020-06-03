@@ -16,7 +16,7 @@
 
 package com.intellij.execution.ui;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

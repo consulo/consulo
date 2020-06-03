@@ -16,7 +16,7 @@
 package com.intellij.openapi.progress.util;
 
 import com.intellij.concurrency.SensitiveProgressWrapper;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationAdapter;
 import com.intellij.openapi.application.ApplicationManager;

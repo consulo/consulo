@@ -15,7 +15,7 @@
  */
 package com.intellij.dvcs.repo;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.util.BackgroundTaskUtil;

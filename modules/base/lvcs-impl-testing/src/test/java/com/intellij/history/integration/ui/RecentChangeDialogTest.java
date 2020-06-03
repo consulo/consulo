@@ -20,7 +20,7 @@ import com.intellij.history.core.revisions.RecentChange;
 import com.intellij.history.integration.revertion.Reverter;
 import com.intellij.history.integration.ui.models.RecentChangeDialogModel;
 import com.intellij.history.integration.ui.views.RecentChangeDialog;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 
 import java.io.IOException;
 

@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.progress.StandardProgressIndicator;
 import com.intellij.openapi.progress.util.AbstractProgressIndicatorBase;
 import consulo.disposer.Disposer;

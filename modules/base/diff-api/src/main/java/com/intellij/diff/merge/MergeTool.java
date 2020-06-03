@@ -15,12 +15,13 @@
  */
 package com.intellij.diff.merge;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.BooleanGetter;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.swing.*;

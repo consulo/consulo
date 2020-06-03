@@ -25,7 +25,7 @@ import com.intellij.execution.runners.ExecutionUtil;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.Application;
 import consulo.logging.Logger;

@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.ui;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.keymap.Keymap;

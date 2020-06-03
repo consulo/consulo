@@ -5,7 +5,6 @@ import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.StaticGetter;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.DisposableWrapperList;
-import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
@@ -154,12 +153,6 @@ public class EventDispatcher<T extends EventListener> {
   }
 
   public void addListener(@Nonnull T listener, @Nonnull Disposable parentDisposable) {
-    myListeners.add(listener, parentDisposable);
-  }
-
-  @Deprecated
-  @DeprecationInfo("com.intellij.openapi.Disposable deprecated")
-  public void addListener(@Nonnull T listener, @Nonnull com.intellij.openapi.Disposable parentDisposable) {
     myListeners.add(listener, parentDisposable);
   }
 

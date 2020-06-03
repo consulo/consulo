@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.application;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
@@ -25,6 +24,7 @@ import com.intellij.util.TimeoutUtil;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import consulo.container.util.StatCollector;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import org.jetbrains.concurrency.AsyncPromise;
 import org.jetbrains.concurrency.Promises;

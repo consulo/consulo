@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.Inlay;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import javax.annotation.Nonnull;
 
 import java.awt.*;

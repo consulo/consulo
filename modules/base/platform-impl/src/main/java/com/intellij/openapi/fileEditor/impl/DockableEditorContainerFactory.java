@@ -16,7 +16,6 @@
 package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFrame;
@@ -24,6 +23,7 @@ import com.intellij.ui.docking.DockContainer;
 import com.intellij.ui.docking.DockContainerFactory;
 import com.intellij.ui.docking.DockManager;
 import com.intellij.ui.docking.DockableContent;
+import consulo.disposer.Disposer;
 import org.jdom.Element;
 
 public class DockableEditorContainerFactory implements DockContainerFactory.Persistent {

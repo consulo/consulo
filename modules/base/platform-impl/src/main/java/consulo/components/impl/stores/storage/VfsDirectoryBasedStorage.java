@@ -15,7 +15,6 @@
  */
 package consulo.components.impl.stores.storage;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
@@ -33,6 +32,7 @@ import consulo.application.options.PathMacrosService;
 import consulo.components.impl.stores.DefaultStateSerializer;
 import consulo.components.impl.stores.ReadOnlyModificationException;
 import consulo.components.impl.stores.StorageUtil;
+import consulo.disposer.Disposable;
 import gnu.trove.TObjectObjectProcedure;
 import org.jdom.Element;
 import org.jdom.JDOMException;

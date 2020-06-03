@@ -19,7 +19,7 @@
  */
 package com.intellij.util.io.storage;
 
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.io.ByteArraySequence;
 import com.intellij.openapi.util.io.FileUtil;
 import junit.framework.TestCase;

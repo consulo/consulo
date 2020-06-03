@@ -15,10 +15,10 @@
  */
 package consulo.ide.welcomeScreen;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

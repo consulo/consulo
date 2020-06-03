@@ -16,7 +16,7 @@
 package com.intellij.openapi.diff.impl;
 
 import com.intellij.execution.ui.RunnerLayoutUi;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.diff.DiffRequest;
 import com.intellij.openapi.diff.DiffViewer;
@@ -24,9 +24,10 @@ import com.intellij.openapi.diff.DiffViewerType;
 import com.intellij.openapi.diff.impl.external.DiscloseMultiRequest;
 import com.intellij.openapi.diff.impl.external.MultiLevelDiffTool;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.content.Content;
+import consulo.disposer.Disposer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

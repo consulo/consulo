@@ -23,7 +23,7 @@ import com.intellij.ide.ApplicationLoadListener;
 import com.intellij.ide.StartupProgress;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginListenerDescriptor;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationUtil;
@@ -61,6 +61,7 @@ import consulo.components.impl.stores.ApplicationStoreImpl;
 import consulo.components.impl.stores.IApplicationStore;
 import consulo.components.impl.stores.StoreUtil;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.disposer.Disposer;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -164,7 +165,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @Nonnull
   protected final Ref<? extends StartupProgress> mySplashRef;
 
-  protected final Disposable myLastDisposable = Disposer.newDisposable(); // will be disposed last
+  protected final Disposable myLastDisposable = Disposable.newDisposable(); // will be disposed last
   private final EventDispatcher<ApplicationListener> myDispatcher = EventDispatcher.create(ApplicationListener.class);
 
   private final ExecutorService myThreadExecutorsService = PooledThreadExecutor.INSTANCE;

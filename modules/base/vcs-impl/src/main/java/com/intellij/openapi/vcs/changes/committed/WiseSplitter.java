@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.vcs.changes.committed;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.SideBorder;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 
 import javax.swing.*;
 import javax.swing.border.Border;

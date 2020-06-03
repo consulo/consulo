@@ -3,7 +3,6 @@ package com.intellij.openapi.wm.impl;
 
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.UiActivityMonitor;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.Application;
@@ -11,6 +10,8 @@ import com.intellij.openapi.application.ApplicationActivationListener;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;

@@ -17,16 +17,17 @@ package com.intellij.vcs;
 
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationAction;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vcs.ex.ProjectLevelVcsManagerEx;
 import com.intellij.openapi.vcs.update.UpdateInfoTree;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.ContentUtilEx;
+import consulo.disposer.Disposer;
+
 import javax.annotation.Nonnull;
 
 public class ViewUpdateInfoNotification extends NotificationAction {

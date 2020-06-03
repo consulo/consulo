@@ -15,8 +15,8 @@
  */
 package consulo.sandboxPlugin.ide.module.extension;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.projectRoots.Sdk;
+import consulo.disposer.Disposable;
 import consulo.extension.ui.ModuleExtensionBundleBoxBuilder;
 import consulo.module.extension.MutableModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;

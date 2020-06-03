@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.diff.impl.external;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
@@ -29,8 +29,9 @@ import com.intellij.openapi.ui.FrameWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.ex.MessagesEx;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.disposer.Disposer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -165,7 +166,7 @@ public class FrameDiffTool implements DiffTool {
       if (!Comparing.equal(manager.getComparisonPolicy(), ComparisonPolicy.DEFAULT)) {
         ComparisonPolicy oldPolicy = manager.getComparisonPolicy();
         manager.setComparisonPolicy(ComparisonPolicy.DEFAULT);
-        Disposable parentDisposable = Disposer.newDisposable();
+        Disposable parentDisposable = Disposable.newDisposable();
         DiffPanel maybeDiffPanel = DiffManagerImpl.createDiffPanel(data, window, parentDisposable, this);
         manager.setComparisonPolicy(oldPolicy);
 

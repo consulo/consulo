@@ -16,10 +16,10 @@
 package com.intellij.util;
 
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
@@ -75,7 +75,7 @@ public class ContentUtilEx extends ContentsUtil {
     TabbedContent tabbedContent = findTabbedContent(manager, groupPrefix);
 
     if (tabbedContent == null) {
-      final Disposable disposable = Disposer.newDisposable();
+      final Disposable disposable = Disposable.newDisposable();
       tabbedContent = new TabbedContentImpl(contentComponent, tabName, true, groupPrefix);
       ContentsUtil.addOrReplaceContent(manager, tabbedContent, select);
       Disposer.register(tabbedContent, disposable);

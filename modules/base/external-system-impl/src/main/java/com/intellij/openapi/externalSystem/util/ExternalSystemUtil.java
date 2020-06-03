@@ -22,12 +22,12 @@ import com.intellij.execution.executors.DefaultRunExecutor;
 import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
 import com.intellij.execution.process.ProcessHandler;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 import consulo.util.rmi.RemoteUtil;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ProgramRunner;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
@@ -74,7 +74,7 @@ import com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
@@ -587,7 +587,7 @@ public class ExternalSystemUtil {
       public void execute(@Nonnull ProgressIndicator indicator) {
         final Semaphore targetDone = new Semaphore();
         final Ref<Boolean> result = new Ref<Boolean>(false);
-        final Disposable disposable = Disposer.newDisposable();
+        final Disposable disposable = Disposable.newDisposable();
 
         project.getMessageBus().connect(disposable).subscribe(ExecutionManager.EXECUTION_TOPIC, new ExecutionAdapter() {
           public void processStartScheduled(final String executorIdLocal, final ExecutionEnvironment environmentLocal) {

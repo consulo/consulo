@@ -47,7 +47,7 @@ public class JBOptionButton extends JButton {
   private boolean myOkToProcessDefaultMnemonics = true;
 
   //private IdeGlassPane myGlassPane;
-  //private final Disposable myDisposable = Disposer.newDisposable();
+  //private final Disposable myDisposable = Disposable.newDisposable();
 
   public JBOptionButton(Action action, Action[] options) {
     super(action);

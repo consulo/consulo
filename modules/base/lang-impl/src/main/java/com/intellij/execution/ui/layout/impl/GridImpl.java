@@ -17,13 +17,13 @@
 package com.intellij.execution.ui.layout.impl;
 
 import com.intellij.execution.ui.layout.*;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.ui.NullableComponent;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.ui.content.Content;

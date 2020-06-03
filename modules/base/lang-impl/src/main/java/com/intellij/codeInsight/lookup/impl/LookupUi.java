@@ -19,7 +19,6 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.project.DumbAwareAction;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.ScrollPaneFactory;
@@ -32,6 +31,7 @@ import com.intellij.util.PlatformIcons;
 import com.intellij.util.ui.AbstractLayoutManager;
 import com.intellij.util.ui.AsyncProcessIcon;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

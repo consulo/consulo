@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.data.index;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;

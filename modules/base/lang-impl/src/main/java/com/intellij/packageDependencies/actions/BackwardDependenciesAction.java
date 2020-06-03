@@ -22,8 +22,9 @@ import com.intellij.analysis.BaseAnalysisAction;
 import com.intellij.analysis.BaseAnalysisActionDialog;
 import com.intellij.ide.util.scopeChooser.ScopeChooserCombo;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.psi.search.SearchScope;
+import consulo.disposer.Disposer;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

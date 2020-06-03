@@ -16,7 +16,6 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.hints.InlayParameterHintsProvider;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
@@ -26,7 +25,8 @@ import com.intellij.openapi.editor.Inlay;
 import com.intellij.openapi.editor.impl.FontInfo;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.ui.GraphicsConfig;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.GraphicsUtil;

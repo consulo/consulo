@@ -33,7 +33,6 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.actions.ContextHelpAction;
 import com.intellij.ide.actions.ShowFilePathAction;
 import com.intellij.ide.ui.SplitterProportionsDataImpl;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.help.HelpManager;
@@ -60,6 +59,8 @@ import com.intellij.util.ui.AnimatedIcon;
 import com.intellij.util.ui.AsyncProcessIcon;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

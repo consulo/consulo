@@ -2,13 +2,13 @@
 package com.intellij.ide.ui.newItemPopup;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.ui.popup.JBPopup;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.util.Consumer;
 import consulo.awt.TargetAWT;
+import consulo.disposer.Disposer;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.ValidableComponent;
 import consulo.ui.event.KeyEvent;

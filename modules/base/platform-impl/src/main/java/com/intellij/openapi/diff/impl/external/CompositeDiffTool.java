@@ -16,7 +16,7 @@
 package com.intellij.openapi.diff.impl.external;
 
 import consulo.fileTypes.ArchiveFileType;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import com.intellij.openapi.diff.DiffContent;
 import com.intellij.openapi.diff.DiffRequest;

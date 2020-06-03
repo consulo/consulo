@@ -15,7 +15,7 @@
  */
 package consulo.sandboxPlugin.ide.module.extension;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.roots.ModuleRootLayer;
 import consulo.ui.CheckBox;

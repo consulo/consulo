@@ -16,13 +16,14 @@
 
 package com.intellij.openapi.vcs.checkin;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.changes.CommitExecutor;
 import com.intellij.openapi.vcs.changes.LocalCommitExecutor;
 import com.intellij.openapi.vcs.ui.RefreshableOnComponent;
 import com.intellij.util.PairConsumer;
 import consulo.annotation.DeprecationInfo;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nullable;
 
 import java.util.List;

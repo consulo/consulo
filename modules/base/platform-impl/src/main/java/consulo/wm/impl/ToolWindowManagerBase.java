@@ -17,7 +17,6 @@ package consulo.wm.impl;
 
 import com.intellij.ide.actions.ActivateToolWindowAction;
 import com.intellij.internal.statistic.UsageTrigger;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -44,6 +43,7 @@ import com.intellij.util.ObjectUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.component.PersistentStateComponentWithUIState;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;

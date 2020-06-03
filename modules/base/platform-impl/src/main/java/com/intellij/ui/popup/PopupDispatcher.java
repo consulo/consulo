@@ -5,7 +5,7 @@ import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ui.popup.IdePopupEventDispatcher;
 import com.intellij.openapi.ui.popup.JBPopup;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

@@ -16,12 +16,10 @@
 
 package com.intellij.ui.debugger;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.tabs.JBTabs;
@@ -29,6 +27,9 @@ import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.UiDecorator;
 import com.intellij.ui.tabs.impl.JBEditorTabs;
 import com.intellij.util.ui.JBUI;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

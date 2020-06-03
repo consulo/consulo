@@ -15,8 +15,8 @@
  */
 package consulo.testFramework;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.test.light.LightApplicationBuilder;
 import junit.framework.TestCase;
@@ -35,7 +35,7 @@ public class MockApplicationTestCase extends TestCase {
   @Override
   protected void setUp() throws Exception {
     super.setUp();
-    myRootDisposable = Disposer.newDisposable();
+    myRootDisposable = Disposable.newDisposable();
 
     LightApplicationBuilder.create(myRootDisposable).build();
   }

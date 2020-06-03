@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.util.registry;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.List;
 import java.util.MissingResourceException;
@@ -190,19 +190,10 @@ public class RegistryValue {
     setValue(getBundleValue(myKey, true));
   }
 
+
   public void addListener(@Nonnull final RegistryValueListener listener, @Nonnull Disposable parent) {
     myListeners.add(listener);
-    Disposer.register(parent, new Disposable() {
-      @Override
-      public void dispose() {
-        myListeners.remove(listener);
-      }
-    });
-  }
-
-  public void addListener(@Nonnull final RegistryValueListener listener, @Nonnull consulo.disposer.Disposable parent) {
-    myListeners.add(listener);
-    consulo.disposer.Disposer.register(parent, () -> myListeners.remove(listener));
+    Disposer.register(parent, () -> myListeners.remove(listener));
   }
 
   @Override

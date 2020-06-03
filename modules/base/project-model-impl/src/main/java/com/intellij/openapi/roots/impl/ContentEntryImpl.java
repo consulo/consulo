@@ -17,12 +17,12 @@
 package com.intellij.openapi.roots.impl;
 
 import com.google.common.base.Predicate;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;

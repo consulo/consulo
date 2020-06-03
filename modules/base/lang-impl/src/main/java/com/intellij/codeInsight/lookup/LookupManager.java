@@ -2,11 +2,11 @@
 
 package com.intellij.codeInsight.lookup;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.disposer.Disposable;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

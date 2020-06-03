@@ -15,7 +15,7 @@
  */
 package consulo.ui.desktop.internal;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import consulo.ui.Component;
 import consulo.ui.MenuSeparator;

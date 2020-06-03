@@ -16,7 +16,6 @@
 package com.intellij.openapi.wm.impl;
 
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
@@ -33,7 +32,8 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileEditor.impl.EditorEmptyTextPainter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.AbstractPainter;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.Graphics2DDelegate;

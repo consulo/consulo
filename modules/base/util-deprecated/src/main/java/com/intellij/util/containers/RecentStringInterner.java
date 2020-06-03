@@ -15,7 +15,7 @@
  */
 package com.intellij.util.containers;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.util.LowMemoryWatcher;
 import javax.annotation.Nonnull;
 

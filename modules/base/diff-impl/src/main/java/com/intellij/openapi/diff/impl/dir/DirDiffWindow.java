@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.diff.impl.dir;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 
 import javax.swing.*;
 import java.awt.*;

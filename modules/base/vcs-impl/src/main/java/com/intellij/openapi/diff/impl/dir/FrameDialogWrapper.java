@@ -1,10 +1,10 @@
 package com.intellij.openapi.diff.impl.dir;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.FrameWrapper;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

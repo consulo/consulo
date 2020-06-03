@@ -16,7 +16,6 @@
 
 package com.intellij.codeInsight.preview;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -27,6 +26,7 @@ import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
+import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiCompiledElement;
 import com.intellij.psi.PsiDocumentManager;

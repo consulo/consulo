@@ -16,10 +16,10 @@
 
 package com.intellij.util.ui;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 
 import javax.swing.*;
 import java.awt.*;

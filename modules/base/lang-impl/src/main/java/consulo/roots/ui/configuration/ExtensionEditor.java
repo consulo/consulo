@@ -15,13 +15,13 @@
  */
 package consulo.roots.ui.configuration;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.ui.configuration.*;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import com.intellij.ui.CheckboxTreeNoPolicy;
 import com.intellij.ui.CheckedTreeNode;
 import com.intellij.ui.OnePixelSplitter;
@@ -166,7 +166,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
       }
     };
 
-    Disposable uiDisposable = Disposer.newDisposable("module extension: " + extension.getId());
+    Disposable uiDisposable = Disposable.newDisposable("module extension: " + extension.getId());
 
     @Nullable
     JComponent configurablePanel;

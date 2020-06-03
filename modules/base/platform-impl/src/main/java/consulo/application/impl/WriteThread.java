@@ -15,12 +15,12 @@
  */
 package consulo.application.impl;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ExceptionUtil;
 import consulo.application.internal.ApplicationWithOwnWriteThread;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

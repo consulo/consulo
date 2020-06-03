@@ -25,11 +25,11 @@ import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsHolderImpl;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.packaging.artifacts.*;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.artifacts.DefaultPackagingElementResolvingContext;
+import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

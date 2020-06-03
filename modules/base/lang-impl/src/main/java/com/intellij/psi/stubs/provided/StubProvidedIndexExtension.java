@@ -2,7 +2,6 @@
 package com.intellij.psi.stubs.provided;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.stubs.*;
 import com.intellij.util.indexing.ID;
@@ -11,6 +10,8 @@ import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.EnumeratorIntegerDescriptor;
 import com.intellij.util.io.KeyDescriptor;
 import com.intellij.util.io.VoidDataExternalizer;
+import consulo.disposer.Disposer;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

@@ -2,10 +2,10 @@
 package com.intellij.util.messages.impl;
 
 import consulo.container.plugin.PluginListenerDescriptor;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.EventDispatcher;
@@ -74,7 +74,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
 
   public MessageBusImpl(@Nonnull InjectingContainerOwner owner, @Nonnull MessageBusImpl parentBus) {
     myOwner = owner;
-    myConnectionDisposable = Disposer.newDisposable(myOwner.toString());
+    myConnectionDisposable = Disposable.newDisposable(myOwner.toString());
     myParentBus = parentBus;
     myRootBus = parentBus.myRootBus;
     synchronized (parentBus.myChildBuses) {
@@ -90,7 +90,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
   // root message bus constructor
   private MessageBusImpl(@Nonnull InjectingContainerOwner owner) {
     myOwner = owner;
-    myConnectionDisposable = Disposer.newDisposable(myOwner.toString());
+    myConnectionDisposable = Disposable.newDisposable(myOwner.toString());
     myOrder = ArrayUtil.EMPTY_INT_ARRAY;
     myRootBus = (RootBus)this;
     myLazyConnection = connect();

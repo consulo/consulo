@@ -4,7 +4,6 @@ package com.intellij.openapi.wm.impl.status;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.progress.TaskInfo;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.openapi.ui.GraphicsConfig;
@@ -19,6 +18,8 @@ import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

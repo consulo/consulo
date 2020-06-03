@@ -3,7 +3,7 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.diagnostic.Dumpable;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.EditorColors;
@@ -15,7 +15,7 @@ import com.intellij.openapi.editor.ex.PrioritizedInternalDocumentListener;
 import com.intellij.openapi.editor.ex.util.EditorScrollingPositionKeeper;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Getter;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.ModificationTracker;

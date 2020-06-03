@@ -15,13 +15,12 @@
  */
 package com.intellij.openapi.fileEditor.impl;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.awt.RelativeRectangle;
@@ -31,6 +30,7 @@ import com.intellij.ui.tabs.JBTabs;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
 import consulo.awt.TargetAWT;
+import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;

@@ -15,14 +15,14 @@
  */
 package consulo.components.impl.stores.storage;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StateStorage.SaveSession;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PathUtilRt;

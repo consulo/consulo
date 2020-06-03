@@ -6,7 +6,7 @@ package com.intellij.mock;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import consulo.lang.LanguageVersion;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Ref;

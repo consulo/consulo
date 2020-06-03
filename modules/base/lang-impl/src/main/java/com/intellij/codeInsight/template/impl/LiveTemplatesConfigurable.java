@@ -20,7 +20,8 @@ import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

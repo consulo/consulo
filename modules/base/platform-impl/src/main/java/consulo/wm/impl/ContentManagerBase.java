@@ -15,7 +15,6 @@
  */
 package consulo.wm.impl;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.ApplicationManager;
@@ -25,6 +24,8 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.content.*;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.SmartList;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;

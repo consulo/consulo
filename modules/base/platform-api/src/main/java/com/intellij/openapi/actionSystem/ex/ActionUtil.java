@@ -16,7 +16,7 @@
 package com.intellij.openapi.actionSystem.ex;
 
 import com.intellij.ide.DataManager;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.TransactionGuard;

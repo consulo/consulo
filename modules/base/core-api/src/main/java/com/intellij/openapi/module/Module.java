@@ -15,13 +15,13 @@
  */
 package com.intellij.openapi.module;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayFactory;
 import consulo.annotation.DeprecationInfo;
+import consulo.disposer.Disposable;
 import consulo.util.pointers.Named;
 
 import javax.annotation.Nonnull;

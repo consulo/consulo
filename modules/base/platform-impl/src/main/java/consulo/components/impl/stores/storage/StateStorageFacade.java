@@ -15,7 +15,7 @@
  */
 package consulo.components.impl.stores.storage;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.StateSplitterEx;
 import com.intellij.openapi.components.StateStorage;

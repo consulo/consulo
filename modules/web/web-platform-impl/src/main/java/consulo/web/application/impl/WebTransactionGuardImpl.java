@@ -15,11 +15,11 @@
  */
 package consulo.web.application.impl;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.TransactionId;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import consulo.application.TransactionGuardEx;
+import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -16,10 +16,10 @@
 
 package com.intellij.ide.util.gotoByName;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
+import consulo.disposer.Disposable;
 
 import javax.swing.*;
 import java.awt.*;

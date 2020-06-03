@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.impl.projectlevelman;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;

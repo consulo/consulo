@@ -21,7 +21,7 @@
 package com.intellij.execution.testframework;
 
 import com.intellij.execution.testframework.ui.AbstractTestTreeBuilder;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 
 public interface TestFrameworkRunningModel extends Disposable {
   TestConsoleProperties getProperties();

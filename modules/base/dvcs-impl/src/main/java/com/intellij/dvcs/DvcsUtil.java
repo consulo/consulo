@@ -36,7 +36,6 @@ import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.AbstractVcs;
@@ -57,6 +56,7 @@ import com.intellij.vcs.log.TimedVcsCommit;
 import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcsUtil.VcsImplUtil;
 import com.intellij.vcsUtil.VcsUtil;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.Contract;
 

@@ -17,10 +17,10 @@
 package com.intellij.lang.injection;
 
 import com.intellij.injected.editor.DocumentWindow;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
+import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.NotNullLazyKey;
 import com.intellij.openapi.util.Pair;

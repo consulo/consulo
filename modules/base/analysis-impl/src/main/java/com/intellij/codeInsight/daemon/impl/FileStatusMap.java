@@ -5,7 +5,7 @@ import com.intellij.codeHighlighting.DirtyScopeTrackingHighlightingPassFactory;
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassManager;
 import com.intellij.codeInsight.daemon.ProblemHighlightFilter;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;

@@ -37,11 +37,11 @@ import com.intellij.openapi.editor.event.VisibleAreaListener;
 import com.intellij.openapi.editor.ex.ScrollingModelEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.fileEditor.impl.text.DesktopAsyncEditorLoader;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.components.Interpolable;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.Animator;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

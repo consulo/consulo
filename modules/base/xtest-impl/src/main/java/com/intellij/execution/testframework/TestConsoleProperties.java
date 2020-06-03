@@ -25,7 +25,6 @@ import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ExecutionConsole;
 import com.intellij.execution.util.StoringPropertyContainer;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.module.Module;
@@ -35,6 +34,7 @@ import com.intellij.util.config.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
+import consulo.disposer.Disposable;
 import org.intellij.lang.annotations.JdkConstants;
 import javax.annotation.Nonnull;
 

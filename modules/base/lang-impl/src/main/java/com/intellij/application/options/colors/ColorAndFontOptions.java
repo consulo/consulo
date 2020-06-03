@@ -21,7 +21,6 @@ import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.execution.impl.ConsoleViewUtil;
 import com.intellij.ide.bookmarks.BookmarkManager;
 import com.intellij.ide.todo.TodoConfiguration;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
@@ -45,7 +44,8 @@ import com.intellij.openapi.options.newEditor.OptionsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Weighted;
 import com.intellij.openapi.vcs.FileStatus;
@@ -175,7 +175,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
 
   private boolean myApplyCompleted = false;
   private boolean myDisposeCompleted = false;
-  private final Disposable myDisposable = Disposer.newDisposable();
+  private final Disposable myDisposable = Disposable.newDisposable();
   private static final Logger LOG = Logger.getInstance("#com.intellij.application.options.colors.ColorAndFontOptions");
 
   @Override

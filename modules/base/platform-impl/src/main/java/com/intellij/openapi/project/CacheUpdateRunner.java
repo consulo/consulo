@@ -2,7 +2,7 @@
 package com.intellij.openapi.project;
 
 import com.intellij.ide.caches.FileContent;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationListener;
 import com.intellij.openapi.application.ApplicationManager;
@@ -15,11 +15,11 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import com.intellij.openapi.progress.util.ProgressWrapper;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.Consumer;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 import gnu.trove.THashSet;
@@ -110,7 +110,7 @@ public class CacheUpdateRunner {
       }
     };
     final Application application = ApplicationManager.getApplication();
-    Disposable listenerDisposable = Disposer.newDisposable();
+    Disposable listenerDisposable = Disposable.newDisposable();
     application.invokeAndWait(() -> application.addApplicationListener(canceller, listenerDisposable), ModalityState.any());
 
     final AtomicBoolean isFinished = new AtomicBoolean();

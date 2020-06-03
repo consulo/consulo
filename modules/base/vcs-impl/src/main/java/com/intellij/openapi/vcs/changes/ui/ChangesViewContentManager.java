@@ -17,16 +17,16 @@
 package com.intellij.openapi.vcs.changes.ui;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.ProjectComponent;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Disposer;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;

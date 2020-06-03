@@ -20,7 +20,6 @@ import com.intellij.application.options.codeStyle.CodeStyleSchemesModel;
 import com.intellij.application.options.codeStyle.CodeStyleSpacesPanel;
 import com.intellij.application.options.codeStyle.WrappingAndBracesPanel;
 import com.intellij.lang.Language;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
@@ -33,12 +32,14 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.psi.codeStyle.*;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.TabbedPaneWrapper;
 import com.intellij.util.containers.hash.HashSet;
 import com.intellij.util.ui.GraphicsUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

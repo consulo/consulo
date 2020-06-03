@@ -15,13 +15,13 @@
  */
 package com.intellij.execution.impl;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
 import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.util.ui.AbstractLayoutManager;
 import com.intellij.util.ui.AnimatedIcon;
 import com.intellij.util.ui.AsyncProcessIcon;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposer;
 
 import javax.swing.*;
 import java.awt.*;

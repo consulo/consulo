@@ -21,7 +21,6 @@ import com.intellij.codeInsight.template.TemplateContextType;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.dnd.*;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.ConfigurationException;
@@ -40,6 +39,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 
 import javax.annotation.Nullable;

@@ -17,7 +17,7 @@
 package com.intellij.openapi.module.impl;
 
 import com.intellij.ProjectTopics;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.WriteAction;
@@ -51,6 +51,7 @@ import com.intellij.util.messages.MessageBus;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessRule;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.module.ModuleDirIsNotExistsException;
 import consulo.ui.annotation.RequiredUIAccess;

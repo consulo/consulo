@@ -13,6 +13,7 @@ import com.intellij.openapi.util.*;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
 import consulo.application.impl.BaseApplicationWithOwnWriteThread;
+import consulo.disposer.Disposer;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;

@@ -15,8 +15,9 @@
  */
 package com.intellij.openapi;
 
-import com.intellij.openapi.util.Disposer;
 import consulo.annotation.DeprecationInfo;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;
 
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Like {@link com.intellij.openapi.Disposable}, you register instance of this class in {@link com.intellij.openapi.util.Disposer}.
+ * Like {@link Disposable}, you register instance of this class in {@link Disposer}.
  * Call {@link #add(Disposable)} to request automatic disposal of additional objects.
  * Comparing to registering these additional disposables with Disposer one by one,
  * this class improves on the memory usage by not creating temporary objects inside Disposer.

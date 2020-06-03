@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import consulo.container.plugin.PluginId;
 import com.intellij.openapi.util.ActionCallback;
+import consulo.disposer.Disposable;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

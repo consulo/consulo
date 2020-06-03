@@ -28,7 +28,7 @@ import com.intellij.diff.tools.util.base.ListenerDiffViewerBase;
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.Side;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import com.intellij.pom.Navigatable;
 import org.jetbrains.annotations.NonNls;

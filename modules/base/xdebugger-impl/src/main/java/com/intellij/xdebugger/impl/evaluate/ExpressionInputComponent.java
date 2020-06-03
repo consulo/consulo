@@ -17,7 +17,6 @@ package com.intellij.xdebugger.impl.evaluate;
 
 import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
@@ -39,6 +38,8 @@ import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
 import com.intellij.xdebugger.impl.ui.XDebuggerEditorBase;
 import com.intellij.xdebugger.impl.ui.XDebuggerExpressionEditor;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

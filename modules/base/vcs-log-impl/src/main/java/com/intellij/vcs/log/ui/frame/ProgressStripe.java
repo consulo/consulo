@@ -15,13 +15,14 @@
  */
 package com.intellij.vcs.log.ui.frame;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.ui.LoadingDecorator;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.NotNullComputable;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.ui.AsyncProcessIcon;
+import consulo.disposer.Disposer;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -40,7 +41,7 @@ public class ProgressStripe extends JBPanel {
     myPanel.add(targetComponent);
 
     myCreateLoadingDecorator = () -> {
-      Disposable disposable = Disposer.newDisposable();
+      Disposable disposable = Disposable.newDisposable();
       Disposer.register(parent, disposable);
       return new MyLoadingDecorator(targetComponent, myPanel, disposable, startDelayMs);
     };

@@ -17,14 +17,15 @@ package com.intellij.find.impl;
 
 import com.intellij.find.*;
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

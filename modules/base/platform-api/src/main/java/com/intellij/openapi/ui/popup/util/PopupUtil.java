@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.ui.popup.util;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -28,6 +27,7 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.hacking.PopupFactoryHacking;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

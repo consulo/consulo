@@ -17,7 +17,6 @@
 package com.intellij.openapi.vcs.impl;
 
 import com.intellij.ProjectTopics;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.ProjectComponent;
@@ -39,6 +38,7 @@ import com.intellij.openapi.vcs.VcsDirectoryMapping;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.disposer.Disposable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

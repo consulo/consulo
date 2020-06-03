@@ -24,10 +24,11 @@ import com.intellij.history.integration.ui.models.EntireFileHistoryDialogModel;
 import com.intellij.history.integration.ui.models.FileDifferenceModel;
 import com.intellij.history.integration.ui.models.FileHistoryDialogModel;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ExcludingTraversalPolicy;
+import consulo.disposer.Disposer;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

@@ -30,7 +30,7 @@ import com.intellij.execution.testframework.sm.runner.ui.SMTestRunnerResultsForm
 import com.intellij.execution.testframework.sm.runner.ui.statistics.StatisticsPanel;
 import com.intellij.execution.testframework.ui.BaseTestsOutputConsoleView;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import com.intellij.testIntegration.TestLocationProvider;
 import org.apache.thrift.server.TServer;

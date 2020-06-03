@@ -24,11 +24,12 @@
  */
 package com.intellij.openapi.diff.ex;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diff.DiffPanel;
 import com.intellij.openapi.diff.impl.ComparisonPolicy;
 import com.intellij.openapi.diff.impl.processing.HighlightMode;
 import com.intellij.openapi.editor.Editor;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

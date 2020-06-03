@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.artifacts;
 import com.intellij.ide.dnd.DnDEvent;
 import com.intellij.ide.dnd.DnDManager;
 import com.intellij.ide.dnd.DnDTarget;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.ArtifactRootNode;
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
@@ -26,7 +26,6 @@ import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.PackagingNode
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.PackagingTreeNodeFactory;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactType;
@@ -49,6 +48,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.disposer.Disposer;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 

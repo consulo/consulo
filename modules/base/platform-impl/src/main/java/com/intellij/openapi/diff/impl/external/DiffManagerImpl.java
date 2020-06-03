@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.diff.impl.external;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import com.intellij.openapi.diff.DiffManager;
 import com.intellij.openapi.diff.DiffPanel;
@@ -33,7 +33,7 @@ import com.intellij.openapi.diff.impl.processing.HighlightMode;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.markup.MarkupEditorFilter;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import com.intellij.util.SmartList;
 import com.intellij.util.config.*;

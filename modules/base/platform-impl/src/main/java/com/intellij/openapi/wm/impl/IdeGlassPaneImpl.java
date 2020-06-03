@@ -18,14 +18,12 @@ package com.intellij.openapi.wm.impl;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.IdeTooltipManager;
 import com.intellij.ide.dnd.DnDAware;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ui.Divider;
 import com.intellij.openapi.ui.Painter;
 import com.intellij.openapi.ui.impl.GlassPaneDialogWrapperPeer;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Weighted;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeGlassPane;
@@ -35,6 +33,8 @@ import com.intellij.util.containers.FactoryMap;
 import com.intellij.util.ui.EmptyClipboardOwner;
 import com.intellij.util.ui.MouseEventAdapter;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
@@ -445,22 +445,22 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, IdeEvent
   }
 
   @Override
-  public void addMousePreprocessor(final MouseListener listener, consulo.disposer.Disposable parent) {
+  public void addMousePreprocessor(final MouseListener listener, Disposable parent) {
     _addListener(listener, parent);
   }
 
   @Override
-  public void addMouseMotionPreprocessor(final MouseMotionListener listener, final consulo.disposer.Disposable parent) {
+  public void addMouseMotionPreprocessor(final MouseMotionListener listener, final Disposable parent) {
     _addListener(listener, parent);
   }
 
-  private void _addListener(final EventListener listener, final consulo.disposer.Disposable parent) {
+  private void _addListener(final EventListener listener, final Disposable parent) {
     if (!myMouseListeners.contains(listener)) {
       myMouseListeners.add(listener);
       updateSortedList();
     }
     activateIfNeeded();
-    consulo.disposer.Disposer.register(parent, () -> UIUtil.invokeLaterIfNeeded(() -> removeListener(listener)));
+    Disposer.register(parent, () -> UIUtil.invokeLaterIfNeeded(() -> removeListener(listener)));
   }
 
   @Override

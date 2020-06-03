@@ -18,7 +18,7 @@ package com.intellij.ide.impl;
 import com.intellij.ide.SelectInEditorManager;
 import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.injected.editor.VirtualFileWindow;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;

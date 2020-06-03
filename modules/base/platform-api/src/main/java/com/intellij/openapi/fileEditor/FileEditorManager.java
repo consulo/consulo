@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileEditor;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -186,7 +186,7 @@ public abstract class FileEditorManager {
 
   /**
    * Returns data associated with given editor/caret context. Data providers are registered via
-   * {@link #registerExtraEditorDataProvider(EditorDataProvider, com.intellij.openapi.Disposable)} method.
+   * {@link #registerExtraEditorDataProvider(EditorDataProvider, Disposable)} method.
    */
   @Nullable
   public abstract Object getData(@Nonnull Key<?> dataId, @Nonnull Editor editor, @Nonnull Caret caret);

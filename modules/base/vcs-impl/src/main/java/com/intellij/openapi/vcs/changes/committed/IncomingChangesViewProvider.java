@@ -22,7 +22,6 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vcs.RepositoryLocation;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsException;
@@ -33,6 +32,8 @@ import com.intellij.util.Consumer;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposer;
+
 import javax.annotation.Nullable;
 
 import javax.swing.*;

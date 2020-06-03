@@ -18,12 +18,12 @@ package com.intellij.openapi.wm.impl;
 import com.intellij.ide.RemoteDesktopService;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
@@ -94,7 +94,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
   private final DesktopToolWindowManagerImpl myManager;
 
   private boolean myStripesOverlayed;
-  private final Disposable myDisposable = Disposer.newDisposable();
+  private final Disposable myDisposable = Disposable.newDisposable();
   private boolean myWidescreen;
   private boolean myLeftHorizontalSplit;
   private boolean myRightHorizontalSplit;

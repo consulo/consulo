@@ -15,9 +15,10 @@
  */
 package com.intellij.openapi.vfs.impl.http;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.vfs.ex.http.HttpVirtualFileListener;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 
 /**

@@ -16,12 +16,12 @@
 package com.intellij.openapi.application;
 
 import com.google.common.base.MoreObjects;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ex.ApplicationEx;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
@@ -159,7 +159,7 @@ public class DesktopTransactionGuardImpl extends TransactionGuardEx {
     final Semaphore semaphore = new Semaphore();
     semaphore.down();
     final Throwable[] exception = {null};
-    submitTransaction(Disposer.newDisposable("never disposed"), getContextTransaction(), () -> {
+    submitTransaction(Disposable.newDisposable("never disposed"), getContextTransaction(), () -> {
       try {
         runnable.run();
       }

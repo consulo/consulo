@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.vfs.tracker;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.vfs.VirtualFileListener;
 import javax.annotation.Nonnull;
 

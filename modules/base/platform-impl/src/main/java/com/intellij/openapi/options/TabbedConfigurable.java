@@ -15,8 +15,9 @@
  */
 package com.intellij.openapi.options;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.ui.TabbedPaneWrapper;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

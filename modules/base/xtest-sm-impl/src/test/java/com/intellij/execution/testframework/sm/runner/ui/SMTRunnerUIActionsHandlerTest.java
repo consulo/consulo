@@ -19,7 +19,7 @@ import com.intellij.execution.testframework.AbstractTestProxy;
 import com.intellij.execution.testframework.TestConsoleProperties;
 import com.intellij.execution.testframework.sm.runner.BaseSMTRunnerTestCase;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 
 /**
  * @author Roman Chernyatchik

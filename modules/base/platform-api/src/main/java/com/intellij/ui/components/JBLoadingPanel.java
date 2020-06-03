@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.components;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.ui.LoadingDecorator;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.components.panels.NonOpaquePanel;

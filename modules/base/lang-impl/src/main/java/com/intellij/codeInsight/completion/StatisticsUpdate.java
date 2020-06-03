@@ -20,16 +20,16 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupEvent;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.featureStatistics.FeatureUsageTrackerImpl;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.statistics.StatisticsInfo;
 import com.intellij.util.Alarm;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 
 import javax.annotation.Nullable;
 

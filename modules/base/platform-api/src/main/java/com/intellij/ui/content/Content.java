@@ -15,11 +15,11 @@
  */
 package com.intellij.ui.content;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.ui.ComponentContainer;
 import com.intellij.openapi.util.BusyObject;
 import com.intellij.openapi.util.Computable;
+import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.ui.Component;

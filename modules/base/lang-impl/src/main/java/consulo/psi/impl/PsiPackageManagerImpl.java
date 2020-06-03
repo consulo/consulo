@@ -16,7 +16,6 @@
 package consulo.psi.impl;
 
 import com.intellij.ProjectTopics;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -31,6 +30,7 @@ import com.intellij.util.ObjectUtil;
 import com.intellij.util.Query;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.disposer.Disposable;
 import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;

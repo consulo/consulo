@@ -24,7 +24,7 @@ import com.intellij.ide.util.treeView.smartTree.NodeProvider;
 import com.intellij.ide.util.treeView.smartTree.ProvidingTreeModel;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.JBIterable;

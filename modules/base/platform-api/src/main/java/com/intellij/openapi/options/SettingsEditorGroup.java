@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.options;
 
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
 import javax.annotation.Nonnull;
 

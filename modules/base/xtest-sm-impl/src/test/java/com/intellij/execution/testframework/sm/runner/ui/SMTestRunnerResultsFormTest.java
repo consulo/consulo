@@ -23,8 +23,9 @@ import com.intellij.execution.testframework.sm.runner.GeneralToSMTRunnerEventsCo
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
 import com.intellij.execution.testframework.sm.runner.events.*;
 import com.intellij.openapi.progress.util.ColorProgressBar;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Ref;
+import consulo.disposer.Disposer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

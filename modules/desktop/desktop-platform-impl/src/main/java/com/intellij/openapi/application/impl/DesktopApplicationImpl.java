@@ -52,6 +52,7 @@ import consulo.application.impl.WriteThread;
 import consulo.application.internal.ApplicationWithOwnWriteThread;
 import consulo.desktop.boot.main.windows.WindowsCommandLineProcessor;
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.logging.Logger;
 import consulo.start.CommandLineArgs;

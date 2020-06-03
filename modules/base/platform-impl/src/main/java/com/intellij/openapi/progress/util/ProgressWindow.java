@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.progress.util;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.impl.LaterInvocator;
@@ -24,7 +24,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.TaskInfo;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;

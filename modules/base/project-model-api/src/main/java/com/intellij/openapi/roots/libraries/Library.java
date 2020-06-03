@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.roots.libraries;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.RootProvider;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.disposer.Disposable;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

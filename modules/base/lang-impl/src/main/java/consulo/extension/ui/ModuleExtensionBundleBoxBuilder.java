@@ -15,7 +15,6 @@
  */
 package consulo.extension.ui;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -24,6 +23,7 @@ import com.intellij.openapi.projectRoots.SdkTypeId;
 import consulo.annotation.UsedInPlugin;
 import consulo.bundle.ui.BundleBox;
 import consulo.bundle.ui.BundleBoxBuilder;
+import consulo.disposer.Disposable;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;

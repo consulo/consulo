@@ -1,6 +1,5 @@
 package com.intellij.openapi.externalSystem.service.internal;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.model.task.*;
@@ -10,6 +9,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;

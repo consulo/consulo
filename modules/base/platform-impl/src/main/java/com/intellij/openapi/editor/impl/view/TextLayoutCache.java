@@ -15,14 +15,14 @@
  */
 package com.intellij.openapi.editor.impl.view;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Attachment;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.PrioritizedDocumentListener;
 import com.intellij.openapi.editor.impl.EditorDocumentPriorities;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import javax.annotation.Nonnull;

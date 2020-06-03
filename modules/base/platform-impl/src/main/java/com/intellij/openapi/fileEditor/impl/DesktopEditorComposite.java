@@ -50,6 +50,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
+import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.EditorComposite;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;

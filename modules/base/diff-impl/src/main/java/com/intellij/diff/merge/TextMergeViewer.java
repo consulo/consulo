@@ -52,7 +52,6 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.text.LineTokenizer;
 import com.intellij.openapi.util.text.StringUtil;
@@ -62,6 +61,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessRule;
+import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 import gnu.trove.TIntArrayList;
 

@@ -3,7 +3,6 @@ package com.intellij.codeInsight.folding.impl;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.folding.CodeFoldingManager;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -13,6 +12,7 @@ import com.intellij.openapi.editor.ex.FoldingModelEx;
 import com.intellij.openapi.fileEditor.impl.text.CodeFoldingState;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
+import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
 import com.intellij.psi.PsiDocumentManager;

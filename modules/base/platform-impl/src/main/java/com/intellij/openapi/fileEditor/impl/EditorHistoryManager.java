@@ -17,7 +17,6 @@ package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
@@ -41,6 +40,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.component.PersistentStateComponentWithUIState;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jdom.Element;

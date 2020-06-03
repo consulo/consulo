@@ -15,9 +15,7 @@
  */
 package com.intellij.vcs.log.impl;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
@@ -29,6 +27,8 @@ import com.intellij.ui.content.TabbedContent;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.data.VcsLogFilterer;
 import com.intellij.vcs.log.impl.PostponableLogRefresher.VcsLogWindow;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 

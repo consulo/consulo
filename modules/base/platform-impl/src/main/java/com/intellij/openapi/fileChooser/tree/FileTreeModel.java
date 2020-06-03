@@ -45,7 +45,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import static com.intellij.openapi.application.ApplicationManager.getApplication;
-import static com.intellij.openapi.util.Disposer.register;
+import static consulo.disposer.Disposer.register;
 import static com.intellij.openapi.util.io.FileUtil.toSystemIndependentName;
 import static com.intellij.openapi.util.text.StringUtil.naturalCompare;
 import static com.intellij.openapi.vfs.VirtualFileManager.VFS_CHANGES;

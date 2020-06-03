@@ -15,9 +15,9 @@
  */
 package com.intellij.util.io.socketConnection.impl;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.io.socketConnection.*;
 import gnu.trove.TIntObjectHashMap;

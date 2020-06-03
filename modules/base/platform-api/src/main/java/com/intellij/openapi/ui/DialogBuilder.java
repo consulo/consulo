@@ -16,11 +16,11 @@
 package com.intellij.openapi.ui;
 
 import com.intellij.CommonBundle;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.intellij.lang.annotations.MagicConstant;

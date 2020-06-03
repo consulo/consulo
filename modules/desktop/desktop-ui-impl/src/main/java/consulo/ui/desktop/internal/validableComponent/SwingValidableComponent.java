@@ -15,7 +15,7 @@
  */
 package consulo.ui.desktop.internal.validableComponent;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ValidableComponent;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;

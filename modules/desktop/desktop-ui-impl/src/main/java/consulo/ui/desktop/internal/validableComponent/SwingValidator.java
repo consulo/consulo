@@ -15,7 +15,6 @@
  */
 package consulo.ui.desktop.internal.validableComponent;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.ui.ComponentValidator;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.ui.popup.ComponentPopupBuilder;
@@ -26,6 +25,7 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposable;
 import consulo.ui.ValidableComponent;
 
 import javax.annotation.Nonnull;

@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.vcs.impl.projectlevelman;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;

@@ -16,7 +16,7 @@
 
 package com.intellij.util;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import javax.annotation.Nonnull;
 
 @SuppressWarnings({"NonPrivateFieldAccessedInSynchronizedContext"})

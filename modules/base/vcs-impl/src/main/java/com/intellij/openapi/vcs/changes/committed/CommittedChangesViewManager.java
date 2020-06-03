@@ -26,7 +26,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentProvider;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;

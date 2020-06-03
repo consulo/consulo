@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.ui;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
@@ -25,6 +24,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.TextAccessor;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

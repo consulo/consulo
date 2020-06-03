@@ -46,6 +46,7 @@ import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
 import consulo.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.application.impl.FrameTitleUtil;
 import consulo.awt.TargetAWT;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.desktop.internal.window.JFrameAsUIWindow;
 import consulo.ui.shared.Rectangle2D;

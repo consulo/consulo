@@ -2,7 +2,7 @@
 package com.intellij.openapi.vfs.newvfs;
 
 import com.intellij.concurrency.SensitiveProgressWrapper;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.diagnostic.FrequentEventDetector;

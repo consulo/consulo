@@ -21,14 +21,14 @@ import com.intellij.execution.Executor;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.RunContentManager;
 import com.intellij.execution.ui.RunContentWithExecutorListener;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.IdeFocusManager;
 import javax.annotation.Nonnull;
 
@@ -48,7 +48,7 @@ public abstract class TreeInplaceEditor implements AWTEventListener {
   private static final Logger LOG = Logger.getInstance("#com.intellij.debugger.ui.impl.watch.DebuggerTreeInplaceEditor");
   private JComponent myInplaceEditorComponent;
   private final List<Runnable> myRemoveActions = new ArrayList<>();
-  protected final Disposable myDisposable = Disposer.newDisposable();
+  protected final Disposable myDisposable = Disposable.newDisposable();
 
   protected abstract JComponent createInplaceEditorComponent();
 

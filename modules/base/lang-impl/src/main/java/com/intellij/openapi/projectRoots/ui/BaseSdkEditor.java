@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.projectRoots.ui;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import consulo.logging.Logger;
 import com.intellij.openapi.options.Configurable;
@@ -30,7 +30,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.navigation.History;
@@ -79,7 +79,7 @@ public abstract class BaseSdkEditor implements Configurable, Place.Navigator {
   private String myInitialName;
   private String myInitialPath;
 
-  protected final Disposable myDisposable = Disposer.newDisposable();
+  protected final Disposable myDisposable = Disposable.newDisposable();
 
   public BaseSdkEditor(@Nonnull SdkModel sdkModel, @Nonnull SdkImpl sdk) {
     mySdkModel = sdkModel;

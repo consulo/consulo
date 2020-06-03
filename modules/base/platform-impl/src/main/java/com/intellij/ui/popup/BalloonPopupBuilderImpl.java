@@ -16,13 +16,13 @@
 package com.intellij.ui.popup;
 
 import com.intellij.ide.IdeTooltipManager;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupAdapter;
 import com.intellij.openapi.ui.popup.LightweightWindowEvent;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.ui.BalloonImpl;
 import com.intellij.util.ui.JBUI;
 

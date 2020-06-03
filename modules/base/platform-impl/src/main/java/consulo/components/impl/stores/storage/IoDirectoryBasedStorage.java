@@ -15,7 +15,6 @@
  */
 package consulo.components.impl.stores.storage;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.StateSplitterEx;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.Storage;
@@ -30,6 +29,7 @@ import com.intellij.util.containers.StringInterner;
 import consulo.application.options.PathMacrosService;
 import consulo.components.impl.stores.DefaultStateSerializer;
 import consulo.components.impl.stores.StorageUtil;
+import consulo.disposer.Disposable;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 

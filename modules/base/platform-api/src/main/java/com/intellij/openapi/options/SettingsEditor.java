@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.options;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Factory;
 import com.intellij.ui.UserActivityWatcher;
 import com.intellij.util.containers.ContainerUtil;

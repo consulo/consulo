@@ -19,7 +19,8 @@ import com.intellij.execution.filters.HyperlinkInfo;
 import com.intellij.execution.testframework.*;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 
 public class TestsOutputConsolePrinter implements Printer, Disposable {

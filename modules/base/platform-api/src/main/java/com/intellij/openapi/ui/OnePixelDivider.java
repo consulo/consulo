@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.ui;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.Weighted;
 import com.intellij.openapi.wm.IdeGlassPane;
@@ -179,7 +179,7 @@ public class OnePixelDivider extends Divider {
 
   private void init() {
     myGlassPane = IdeGlassPaneUtil.find(this);
-    myDisposable = Disposer.newDisposable();
+    myDisposable = Disposable.newDisposable();
     myGlassPane.addMouseMotionPreprocessor(myListener, myDisposable);
     myGlassPane.addMousePreprocessor(myListener, myDisposable);
   }

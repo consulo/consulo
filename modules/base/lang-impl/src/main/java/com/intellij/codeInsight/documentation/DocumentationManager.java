@@ -26,6 +26,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.ServiceManager;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.impl.EditorMouseHoverPopupControl;

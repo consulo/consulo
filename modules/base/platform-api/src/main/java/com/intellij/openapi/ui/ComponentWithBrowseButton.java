@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.ui;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
 import com.intellij.openapi.actionSystem.ShortcutSet;
@@ -35,6 +34,7 @@ import com.intellij.ui.GuiUtils;
 import com.intellij.ui.UIBundle;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.fileChooser.FileChooser;

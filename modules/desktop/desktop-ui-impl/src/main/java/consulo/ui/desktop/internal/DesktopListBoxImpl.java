@@ -15,7 +15,7 @@
  */
 package consulo.ui.desktop.internal;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.components.JBList;
 import consulo.awt.impl.FromSwingComponentWrapper;

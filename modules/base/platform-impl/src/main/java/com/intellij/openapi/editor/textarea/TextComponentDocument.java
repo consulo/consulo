@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.editor.textarea;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.util.TextRange;
+import consulo.disposer.Disposable;
 import consulo.util.dataholder.UserDataHolderBase;
 import kava.beans.PropertyChangeListener;
 

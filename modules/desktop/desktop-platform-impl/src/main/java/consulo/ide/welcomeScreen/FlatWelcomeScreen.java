@@ -17,7 +17,6 @@ package consulo.ide.welcomeScreen;
 
 import com.intellij.ide.DataManager;
 import com.intellij.internal.statistic.UsageTrigger;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
@@ -32,6 +31,7 @@ import com.intellij.ui.JBCardLayout;
 import com.intellij.ui.components.labels.ActionLink;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.ui.JBUI;
+import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

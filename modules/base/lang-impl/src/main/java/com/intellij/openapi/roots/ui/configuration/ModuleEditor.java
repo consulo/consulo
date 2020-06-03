@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.roots.ui.configuration;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.module.Module;
@@ -32,6 +31,7 @@ import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableBase;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
+import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;

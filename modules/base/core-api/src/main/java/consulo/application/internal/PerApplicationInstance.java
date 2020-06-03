@@ -16,7 +16,7 @@
 package consulo.application.internal;
 
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;
 

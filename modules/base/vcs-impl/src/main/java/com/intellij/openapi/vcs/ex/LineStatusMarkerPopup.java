@@ -24,7 +24,6 @@ import com.intellij.diff.fragments.DiffFragment;
 import com.intellij.diff.util.DiffDrawUtil;
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.TextDiffType;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.EditorColors;
@@ -36,7 +35,8 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.BackgroundTaskUtil;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.HintHint;
@@ -115,7 +115,7 @@ public abstract class LineStatusMarkerPopup {
 
   public void showHintAt(@javax.annotation.Nullable Point mousePosition) {
     if (!myTracker.isValid()) return;
-    final Disposable disposable = Disposer.newDisposable();
+    final Disposable disposable = Disposable.newDisposable();
 
     FileType fileType = getFileType();
     List<DiffFragment> wordDiff = computeWordDiff();

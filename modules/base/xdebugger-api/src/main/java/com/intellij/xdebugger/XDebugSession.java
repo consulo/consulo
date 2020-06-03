@@ -20,7 +20,7 @@ import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.RunnerLayoutUi;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import consulo.util.dataholder.Key;

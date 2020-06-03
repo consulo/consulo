@@ -16,9 +16,10 @@
 
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.roots.RootProvider;
 import com.intellij.util.EventDispatcher;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 
 /**

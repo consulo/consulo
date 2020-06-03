@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.diff.impl.util;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diff.DiffContent;
 import com.intellij.openapi.diff.impl.DiffVersionComponent;
+import consulo.disposer.Disposable;
 
 public class ContentDocumentListener implements DiffContent.Listener {
   private final DiffVersionComponent myDiffComponent;

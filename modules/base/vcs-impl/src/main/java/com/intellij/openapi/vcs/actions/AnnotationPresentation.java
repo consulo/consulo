@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.vcs.actions;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.editor.colors.ColorKey;
 import com.intellij.openapi.editor.colors.EditorFontType;
 import com.intellij.openapi.localVcs.UpToDateLineNumberProvider;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.vcs.annotate.*;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.util.ObjectUtils;

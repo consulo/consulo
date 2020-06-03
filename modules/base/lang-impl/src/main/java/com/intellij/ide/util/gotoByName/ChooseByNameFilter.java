@@ -24,8 +24,8 @@ import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.JBPopupListener;
 import com.intellij.openapi.ui.popup.LightweightWindowEvent;
-import com.intellij.openapi.util.Disposer;
 import consulo.awt.TargetAWT;
+import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nonnull;

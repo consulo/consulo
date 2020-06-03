@@ -24,7 +24,7 @@ import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.util.PathUtil;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.roots.orderEntry.ModuleLibraryOrderEntryType;

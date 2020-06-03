@@ -17,7 +17,7 @@ package com.intellij.openapi.wm.impl.status;
 
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.notification.impl.IdeNotificationArea;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.TaskInfo;
 import com.intellij.openapi.project.Project;
@@ -25,7 +25,7 @@ import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.BalloonHandler;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;

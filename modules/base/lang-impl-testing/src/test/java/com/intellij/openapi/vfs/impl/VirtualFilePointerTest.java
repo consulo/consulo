@@ -16,11 +16,10 @@
 package com.intellij.openapi.vfs.impl;
 
 import com.intellij.concurrency.JobLauncher;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.ex.temp.TempFileSystem;
@@ -37,6 +36,7 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Processor;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposer;
 import consulo.testFramework.util.TestPathUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -53,7 +53,7 @@ import java.util.List;
 public abstract class VirtualFilePointerTest extends PlatformLangTestCase {
   private VirtualFilePointerManagerImpl myVirtualFilePointerManager;
   private int numberOfPointersBefore;
-  private final Disposable disposable = Disposer.newDisposable();
+  private final Disposable disposable = Disposable.newDisposable();
   private int numberOfListenersBefore;
 
   @Override
@@ -403,7 +403,7 @@ public abstract class VirtualFilePointerTest extends PlatformLangTestCase {
     PlatformTestUtil.startPerformanceTest("VF container create/delete",200, new ThrowableRunnable() {
       @Override
       public void run() throws Exception {
-        Disposable parent = Disposer.newDisposable();
+        Disposable parent = Disposable.newDisposable();
         for (int i = 0; i < 10000; i++) {
           myVirtualFilePointerManager.createContainer(parent);
         }
@@ -431,7 +431,7 @@ public abstract class VirtualFilePointerTest extends PlatformLangTestCase {
     final String url = VirtualFileManager.constructUrl(LocalFileSystem.PROTOCOL, file.getCanonicalPath().replace(File.separatorChar, '/'));
     final VirtualFile vFile = refreshAndFind(url);
 
-    Disposable disposable = Disposer.newDisposable();
+    Disposable disposable = Disposable.newDisposable();
     final VirtualFilePointer pointer = myVirtualFilePointerManager.create(vFile, disposable, new VirtualFilePointerListener() {
       @Override
       public void beforeValidityChanged(@Nonnull VirtualFilePointer[] pointers) {
@@ -487,7 +487,7 @@ public abstract class VirtualFilePointerTest extends PlatformLangTestCase {
         stressRead(pointer);
       }
     };
-    Disposable disposable = Disposer.newDisposable();
+    Disposable disposable = Disposable.newDisposable();
     VirtualFileManager.getInstance().addVirtualFileListener(listener, disposable);
     int N = Timings.adjustAccordingToMySpeed(1000, false);
     System.out.println("N = " + N);

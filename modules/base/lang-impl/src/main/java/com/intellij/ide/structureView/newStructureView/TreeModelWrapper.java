@@ -7,7 +7,7 @@ import com.intellij.ide.structureView.ModelListener;
 import com.intellij.ide.structureView.StructureViewModel;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.util.treeView.smartTree.*;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

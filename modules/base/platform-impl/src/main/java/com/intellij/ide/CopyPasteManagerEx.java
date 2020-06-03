@@ -2,7 +2,6 @@
 package com.intellij.ide;
 
 import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.CaretStateTransferableData;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.ide.CopyPasteManager;
@@ -10,6 +9,8 @@ import com.intellij.openapi.ide.CutElementMarker;
 import com.intellij.openapi.ide.KillRingTransferable;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.EventDispatcher;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

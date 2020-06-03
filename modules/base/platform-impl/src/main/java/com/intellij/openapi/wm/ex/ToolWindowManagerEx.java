@@ -16,7 +16,7 @@
 package com.intellij.openapi.wm.ex;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.wm.ToolWindowAnchor;

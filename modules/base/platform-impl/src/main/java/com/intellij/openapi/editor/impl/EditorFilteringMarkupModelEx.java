@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.ex.MarkupIterator;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
@@ -25,6 +24,7 @@ import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Condition;
+import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import com.intellij.util.Consumer;
 import com.intellij.util.FilteringProcessor;

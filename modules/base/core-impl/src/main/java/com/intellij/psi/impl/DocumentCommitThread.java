@@ -3,7 +3,6 @@ package com.intellij.psi.impl;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.intellij.lang.FileASTNode;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.components.ServiceManager;
@@ -29,6 +28,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSetQueue;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
