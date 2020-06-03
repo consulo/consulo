@@ -47,16 +47,16 @@ import java.util.function.Predicate;
  */
 public class ModuleExtensionBundleBoxBuilder<T extends MutableModuleExtension<?>> {
   @Nonnull
-  public static <T extends MutableModuleExtensionWithSdk<?>> ModuleExtensionBundleBoxBuilder createAndDefine(@Nonnull T extension, @Nullable Runnable updater) {
-    ModuleExtensionBundleBoxBuilder<T> builder = create(extension, updater);
+  public static <T extends MutableModuleExtensionWithSdk<?>> ModuleExtensionBundleBoxBuilder createAndDefine(@Nonnull T extension, @Nonnull Disposable uiDisposable, @Nullable Runnable updater) {
+    ModuleExtensionBundleBoxBuilder<T> builder = create(extension, uiDisposable, updater);
     builder.sdkTypeClass(extension.getSdkTypeClass());
     builder.sdkPointerFunc(dom -> dom.getInheritableSdk());
     return builder;
   }
 
   @Nonnull
-  public static <T extends MutableModuleExtension<?>> ModuleExtensionBundleBoxBuilder<T> create(@Nonnull T extension, @Nullable Runnable updater) {
-    return new ModuleExtensionBundleBoxBuilder<>(extension).laterUpdater(updater);
+  public static <T extends MutableModuleExtension<?>> ModuleExtensionBundleBoxBuilder<T> create(@Nonnull T extension, @Nonnull Disposable uiDisposable, @Nullable Runnable updater) {
+    return new ModuleExtensionBundleBoxBuilder<>(extension).laterUpdater(updater).uiDisposable(uiDisposable);
   }
 
   @Nonnull

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.annotation;
+package consulo.module.extension.swing;
 
-import java.lang.annotation.*;
+import consulo.annotation.DeprecationInfo;
+import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 2020-06-03
  */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.PARAMETER, ElementType.LOCAL_VARIABLE})
-public @interface RequiredUIAccess {
+@Deprecated
+@DeprecationInfo("Temporary interface for creating swing component")
+public interface SwingMutableModuleExtension {
+  @Nullable
+  @RequiredUIAccess
+  JComponent createConfigurablePanel(@Nonnull Disposable uiDisposable, @Nonnull Runnable updateOnCheck);
 }
