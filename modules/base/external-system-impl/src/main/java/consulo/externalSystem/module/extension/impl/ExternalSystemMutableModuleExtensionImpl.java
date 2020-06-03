@@ -15,22 +15,26 @@
  */
 package consulo.externalSystem.module.extension.impl;
 
+import consulo.disposer.Disposable;
 import consulo.externalSystem.module.extension.ExternalSystemMutableModuleExtension;
 import consulo.roots.ModuleRootLayer;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 03-Jun-17
  */
-public class ExternalSystemMutableModuleExtensionImpl extends ExternalSystemModuleExtensionImpl
-        implements ExternalSystemMutableModuleExtension<ExternalSystemModuleExtensionImpl> {
+public class ExternalSystemMutableModuleExtensionImpl extends ExternalSystemModuleExtensionImpl implements ExternalSystemMutableModuleExtension<ExternalSystemModuleExtensionImpl> {
   public ExternalSystemMutableModuleExtensionImpl(@Nonnull String id, @Nonnull ModuleRootLayer moduleRootLayer) {
     super(id, moduleRootLayer);
   }
 
   @Override
-  public void setOption(@Nonnull String key, @javax.annotation.Nullable String value) {
+  public void setOption(@Nonnull String key, @Nullable String value) {
     if (value == null) {
       myOptions.remove(key);
     }
@@ -47,6 +51,13 @@ public class ExternalSystemMutableModuleExtensionImpl extends ExternalSystemModu
   @Override
   public void removeAllOptions() {
     myOptions.clear();
+  }
+
+  @RequiredUIAccess
+  @Nullable
+  @Override
+  public Component createConfigurationComponent(@Nonnull Disposable uiDisposable, @Nonnull Runnable updateOnCheck) {
+    return null;
   }
 
   @Override
