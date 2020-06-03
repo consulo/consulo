@@ -46,7 +46,8 @@ public class UITester {
     protected Component createCenterComponent() {
       TabbedLayout tabbedLayout = TabbedLayout.create();
 
-      tabbedLayout.addTab("Layouts", layouts()).setCloseHandler((tab, component) -> {});
+      tabbedLayout.addTab("Layouts", layouts()).setCloseHandler((tab, component) -> {
+      });
       tabbedLayout.addTab("Components", components());
 
       return tabbedLayout;
@@ -70,7 +71,24 @@ public class UITester {
       splitLayout.setSecondComponent(DockLayout.create().center(Button.create("Second")));
 
       tabbedLayout.addTab("SplitLayout", splitLayout);
+
+      SwipeLayout swipeLayout = SwipeLayout.create();
+
+      swipeLayout.register("left", () -> swipeChildLayout("Right", () -> swipeLayout.swipeRightTo("right")));
+      swipeLayout.register("right", () -> swipeChildLayout("Left", () -> swipeLayout.swipeLeftTo("left")));
+
+      tabbedLayout.addTab("SwipeLayout", swipeLayout);
+
       return tabbedLayout;
+    }
+
+    @RequiredUIAccess
+    private Layout swipeChildLayout(String text, @RequiredUIAccess Runnable runnable) {
+      DockLayout dockLayout = DockLayout.create();
+
+      dockLayout.center(HorizontalLayout.create().add(Button.create(text, runnable::run)));
+
+      return dockLayout;
     }
 
     @RequiredUIAccess

@@ -16,47 +16,125 @@
 package consulo.ui.desktop.internal.layout;
 
 import com.intellij.ui.JBCardLayout;
+import consulo.awt.TargetAWT;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.SwipeLayout;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.Nullable;
+import javax.swing.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 2018-07-01
  */
-public class DesktopSwipeLayoutImpl extends DesktopLayoutBase implements SwipeLayout {
+public class DesktopSwipeLayoutImpl extends DesktopLayoutBase<JPanel> implements SwipeLayout {
   static class LayoutInfo {
     private String myId;
     private Supplier<Layout> myLayoutSupplier;
 
     private Layout myLayout;
 
+    private boolean myIsAdded;
+
     LayoutInfo(String id, Supplier<Layout> layoutSupplier) {
       myId = id;
       myLayoutSupplier = layoutSupplier;
     }
+
+    @Nonnull
+    Layout get() {
+      if (myLayout == null) {
+        myLayout = myLayoutSupplier.get();
+      }
+      return myLayout;
+    }
   }
 
-  private final List<LayoutInfo> myLayoutInfos = new ArrayList<>();
+  private final Map<String, LayoutInfo> myLayoutInfos = new HashMap<>();
+
+  private JBCardLayout myCardLayout;
 
   public DesktopSwipeLayoutImpl() {
-    initDefaultPanel(new JBCardLayout());
+    initDefaultPanel(myCardLayout = new JBCardLayout());
+  }
+
+  private Layout show(LayoutInfo layoutInfo, @Nullable JBCardLayout.SwipeDirection swipeDirection) {
+    if (!layoutInfo.myIsAdded) {
+      layoutInfo.myIsAdded = true;
+
+      toAWTComponent().add(layoutInfo.myId, TargetAWT.to(layoutInfo.get()));
+    }
+
+    if (swipeDirection == null) {
+      myCardLayout.show(toAWTComponent(), layoutInfo.myId);
+    }
+    else {
+      myCardLayout.swipe(toAWTComponent(), layoutInfo.myId, swipeDirection);
+    }
+
+    return layoutInfo.get();
   }
 
   @Nonnull
   @Override
   public SwipeLayout register(@Nonnull String id, @Nonnull Supplier<Layout> layoutSupplier) {
-    myLayoutInfos.add(new LayoutInfo(id, layoutSupplier));
+    LayoutInfo layoutInfo = new LayoutInfo(id, layoutSupplier);
+
+    myLayoutInfos.put(id, layoutInfo);
+
+    if (toAWTComponent().getComponentCount() == 0) {
+      show(layoutInfo, null);
+    }
     return this;
   }
 
   @Nonnull
   @Override
-  public Layout swipeTo(@Nonnull String id) {
-    return null;
+  public Layout swipeLeftTo(@Nonnull String id) {
+    LayoutInfo info = myLayoutInfos.get(id);
+    if (info == null) {
+      throw new IllegalArgumentException(id + " is not registered");
+    }
+    return show(info, JBCardLayout.SwipeDirection.FORWARD);
+  }
+
+  @Nonnull
+  @Override
+  public Layout swipeRightTo(@Nonnull String id) {
+    LayoutInfo info = myLayoutInfos.get(id);
+    if (info == null) {
+      throw new IllegalArgumentException(id + " is not registered");
+    }
+    return show(info, JBCardLayout.SwipeDirection.BACKWARD);
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void removeAll() {
+    myLayoutInfos.clear();
+    toAWTComponent().removeAll();
+  }
+
+  @Override
+  public void remove(@Nonnull Component component) {
+    String id = null;
+    for (LayoutInfo info : myLayoutInfos.values()) {
+      if (info.get() == component) {
+        id = info.myId;
+        break;
+      }
+    }
+
+    if (id != null) {
+      LayoutInfo info = myLayoutInfos.remove(id);
+      assert info != null;
+      toAWTComponent().remove(TargetAWT.to(info.get()));
+    }
   }
 }

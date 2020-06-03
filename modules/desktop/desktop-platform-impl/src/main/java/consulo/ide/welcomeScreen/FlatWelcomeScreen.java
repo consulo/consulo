@@ -154,7 +154,6 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreenSlider {
     myWelcomeFrame.setTitle(title);
   }
 
-
   @Override
   public void removeSlide(@Nonnull JComponent target) {
     JBCardLayout layout = (JBCardLayout)getLayout();
