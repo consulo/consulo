@@ -33,9 +33,6 @@ public abstract class ProductivityFeaturesRegistry {
   public abstract GroupDescriptor getGroupDescriptor(@Nonnull String id);
 
   @Nonnull
-  public abstract ApplicabilityFilter[] getMatchingFilters(@Nonnull String featureId);
-
-  @Nonnull
   public static ProductivityFeaturesRegistry getInstance() {
     return ServiceManager.getService(ProductivityFeaturesRegistry.class);
   }

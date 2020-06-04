@@ -19,29 +19,39 @@ import com.intellij.openapi.util.text.StringUtil;
 import javax.annotation.Nonnull;
 
 import java.util.UUID;
+import java.util.function.Supplier;
 import java.util.prefs.Preferences;
 
 /**
  * UUID identifying pair user@computer
+ *
+ * FIXME [VISTALL] review this code for Web Plaform
  */
 public class PermanentInstallationID {
   private static final String INSTALLATION_ID_KEY = "user_id_on_machine";
-  private static final String INSTALLATION_ID = calculateInstallationId();
+  private static final String INSTALLATION_DATE_KEY = "user_date_on_machine";
+
+  private static final String INSTALLATION_ID = calculateValue(INSTALLATION_ID_KEY, () -> UUID.randomUUID().toString());
+  private static final long INSTALLATION_DATE = Long.parseLong(calculateValue(INSTALLATION_DATE_KEY, () -> String.valueOf(System.currentTimeMillis())));
 
   @Nonnull
   public static String get() {
     return INSTALLATION_ID;
   }
 
-  private static String calculateInstallationId() {
+  public static long date() {
+    return INSTALLATION_DATE;
+  }
+
+  private static String calculateValue(String key, Supplier<String> factory) {
     final Preferences prefs = Preferences.userRoot().node("consulo");
 
-    String installationId = prefs.get(INSTALLATION_ID_KEY, null);
-    if (StringUtil.isEmptyOrSpaces(installationId)) {
-      installationId = UUID.randomUUID().toString();
-      prefs.put(INSTALLATION_ID_KEY, installationId);
+    String value = prefs.get(key, null);
+    if (StringUtil.isEmptyOrSpaces(value)) {
+      value = factory.get();
+      prefs.put(key, value);
     }
 
-    return installationId;
+    return value;
   }
 }

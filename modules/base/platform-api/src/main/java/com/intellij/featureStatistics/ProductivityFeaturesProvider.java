@@ -27,6 +27,4 @@ public abstract class ProductivityFeaturesProvider {
   public abstract FeatureDescriptor[] getFeatureDescriptors();
 
   public abstract GroupDescriptor[] getGroupDescriptors();
-
-  public abstract ApplicabilityFilter[] getApplicabilityFilters();
 }

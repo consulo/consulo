@@ -15,39 +15,35 @@
  */
 package com.intellij.featureStatistics;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
+import consulo.logging.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.inject.Singleton;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
 @Singleton
 public class ProductivityFeaturesRegistryImpl extends ProductivityFeaturesRegistry {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.featureStatistics.ProductivityFeaturesRegistry");
-  private final Map<String, FeatureDescriptor> myFeatures = new HashMap<String, FeatureDescriptor>();
-  private final Map<String, GroupDescriptor> myGroups = new HashMap<String, GroupDescriptor>();
-  private final List<Pair<String, ApplicabilityFilter>> myApplicabilityFilters = new ArrayList<Pair<String,ApplicabilityFilter>>();
+  private static final Logger LOG = Logger.getInstance(ProductivityFeaturesRegistryImpl.class);
+
+  private final Map<String, FeatureDescriptor> myFeatures = new HashMap<>();
+  private final Map<String, GroupDescriptor> myGroups = new HashMap<>();
 
   private boolean myAdditionalFeaturesLoaded = false;
 
-  @NonNls public static final String WELCOME = "features.welcome";
+  public static final String WELCOME = "features.welcome";
 
-  @NonNls private static final String TAG_FILTER = "filter";
-  @NonNls private static final String TAG_GROUP = "group";
-  @NonNls private static final String TAG_FEATURE = "feature";
-  @NonNls private static final String TODO_HTML_MARKER = "todo.html";
-  @NonNls private static final String CLASS_ATTR = "class";
-  @NonNls private static final String PREFIX_ATTR = "prefix";
+  private static final String TAG_GROUP = "group";
+  private static final String TAG_FEATURE = "feature";
+  private static final String TODO_HTML_MARKER = "todo.html";
 
   public ProductivityFeaturesRegistryImpl() {
     reloadFromXml();
@@ -60,28 +56,21 @@ public class ProductivityFeaturesRegistryImpl extends ProductivityFeaturesRegist
     catch (Exception e) {
       LOG.error(e);
     }
-
-    try {
-      readFromXml("file:///IdeSpecificFeatures.xml");
-    }
-    catch (Exception e) {// ignore
-    }
   }
 
   private void readFromXml(String path) throws JDOMException, IOException {
     final Document document = JDOMUtil.loadResourceDocument(new URL(path));
     final Element root = document.getRootElement();
     readGroups(root);
-    readFilters(root);
   }
 
   private void lazyLoadFromPluginsFeaturesProviders() {
     if (myAdditionalFeaturesLoaded) return;
-    loadFeaturesFromProviders(ProductivityFeaturesProvider.EP_NAME.getExtensions());
+    loadFeaturesFromProviders(ProductivityFeaturesProvider.EP_NAME.getExtensionList());
     myAdditionalFeaturesLoaded = true;
   }
 
-  private void loadFeaturesFromProviders(ProductivityFeaturesProvider[] providers) {
+  private void loadFeaturesFromProviders(List<ProductivityFeaturesProvider> providers) {
     for (ProductivityFeaturesProvider provider : providers) {
       final GroupDescriptor[] groupDescriptors = provider.getGroupDescriptors();
       if (groupDescriptors != null) {
@@ -98,33 +87,6 @@ public class ProductivityFeaturesRegistryImpl extends ProductivityFeaturesRegist
           }
           myFeatures.put(featureDescriptor.getId(), featureDescriptor);
         }
-      }
-      final ApplicabilityFilter[] applicabilityFilters = provider.getApplicabilityFilters();
-      if (applicabilityFilters != null) {
-        for (ApplicabilityFilter applicabilityFilter : applicabilityFilters) {
-          myApplicabilityFilters.add(new Pair<String, ApplicabilityFilter>(applicabilityFilter.getPrefix(), applicabilityFilter));
-        }
-      }
-    }
-  }
-
-  private void readFilters(Element element) {
-    List filters = element.getChildren(TAG_FILTER);
-    for (Object filter1 : filters) {
-      Element filterElement = (Element)filter1;
-      String className = filterElement.getAttributeValue(CLASS_ATTR);
-      try {
-        Class klass = Class.forName(className);
-        if (!ApplicabilityFilter.class.isAssignableFrom(klass)) {
-          LOG.error("filter class must implement com.intellij.featureSatistics.ApplicabilityFilter");
-          continue;
-        }
-
-        ApplicabilityFilter filter = (ApplicabilityFilter)klass.newInstance();
-        myApplicabilityFilters.add(new Pair<String, ApplicabilityFilter>(filterElement.getAttributeValue(PREFIX_ATTR), filter));
-      }
-      catch (Exception e) {
-        LOG.error("Cannot instantiate filter " + className, e);
       }
     }
   }
@@ -157,12 +119,14 @@ public class ProductivityFeaturesRegistryImpl extends ProductivityFeaturesRegist
     }
   }
 
+  @Override
   @Nonnull
   public Set<String> getFeatureIds() {
     lazyLoadFromPluginsFeaturesProviders();
     return myFeatures.keySet();
   }
 
+  @Override
   public FeatureDescriptor getFeatureDescriptor(@Nonnull String id) {
     lazyLoadFromPluginsFeaturesProviders();
     return getFeatureDescriptorEx(id);
@@ -175,21 +139,10 @@ public class ProductivityFeaturesRegistryImpl extends ProductivityFeaturesRegist
     return myFeatures.get(id);
   }
 
+  @Override
   public GroupDescriptor getGroupDescriptor(@Nonnull String id) {
     lazyLoadFromPluginsFeaturesProviders();
     return myGroups.get(id);
-  }
-
-  @Nonnull
-  public ApplicabilityFilter[] getMatchingFilters(@Nonnull String featureId) {
-    lazyLoadFromPluginsFeaturesProviders();
-    List<ApplicabilityFilter> filters = new ArrayList<ApplicabilityFilter>();
-    for (Pair<String, ApplicabilityFilter> pair : myApplicabilityFilters) {
-      if (featureId.startsWith(pair.getFirst())) {
-        filters.add(pair.getSecond());
-      }
-    }
-    return filters.toArray(new ApplicabilityFilter[filters.size()]);
   }
 
   @Override
@@ -201,7 +154,6 @@ public class ProductivityFeaturesRegistryImpl extends ProductivityFeaturesRegist
   public void prepareForTest() {
     myAdditionalFeaturesLoaded = false;
     myFeatures.clear();
-    myApplicabilityFilters.clear();
     myGroups.clear();
     reloadFromXml();
   }

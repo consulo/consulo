@@ -15,8 +15,6 @@
  */
 package com.intellij.internal.statistic.updater;
 
-import com.intellij.featureStatistics.FeatureUsageTracker;
-import com.intellij.featureStatistics.FeatureUsageTrackerImpl;
 import com.intellij.internal.statistic.persistence.UsageStatisticsPersistenceComponent;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
@@ -24,10 +22,10 @@ import com.intellij.notification.NotificationType;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationNamesInfo;
+import com.intellij.openapi.application.PermanentInstallationID;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
-import com.intellij.util.Time;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.external.api.StatisticsBean;
 import consulo.ide.webService.WebServiceApi;
@@ -66,16 +64,36 @@ public class StatisticsSendManager {
     });
   }
 
+  public void sheduleRunIfStarted() {
+    if (myFuture != null) {
+      myFuture.cancel(false);
+      myFuture = null;
+
+      runStatisticsService();
+    }
+  }
+
   private void runStatisticsService() {
+    if(!myUsageStatisticsComponent.isAllowed()) {
+      if (myFuture != null) {
+        myFuture.cancel(false);
+        myFuture = null;
+      }
+      return;
+    }
+
     if (myFuture != null) {
       return;
     }
 
-    if (System.currentTimeMillis() - Time.DAY > ((FeatureUsageTrackerImpl)FeatureUsageTracker.getInstance()).getFirstRunTime()) {
+    long oneDayAfterStart = System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1);
+
+    // one day after installation
+    if(oneDayAfterStart > PermanentInstallationID.date()) {
       return;
     }
 
-    if (myUsageStatisticsComponent.isAllowed() && myUsageStatisticsComponent.isTimeToSend()) {
+    if (myUsageStatisticsComponent.isTimeToSend()) {
       runWithDelay();
     }
   }
@@ -106,7 +124,7 @@ public class StatisticsSendManager {
     }
   }
 
-  // FIXME [VISTALL] at current moment
+  // FIXME [VISTALL] at current moment we not show this notification
   public Notification createNotification(@Nonnull final String groupDisplayId, @Nullable NotificationListener listener) {
     final String fullProductName = ApplicationNamesInfo.getInstance().getFullProductName();
     final String companyName = ApplicationInfo.getInstance().getCompanyName();

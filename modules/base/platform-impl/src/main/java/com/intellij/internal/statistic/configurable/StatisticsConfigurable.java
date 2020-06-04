@@ -16,16 +16,28 @@
 package com.intellij.internal.statistic.configurable;
 
 import com.intellij.internal.statistic.persistence.UsageStatisticsPersistenceComponent;
+import com.intellij.internal.statistic.updater.StatisticsSendManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.swing.*;
 
 public class StatisticsConfigurable implements SearchableConfigurable {
   private StatisticsConfigurationComponent myConfig;
+
+  private final UsageStatisticsPersistenceComponent myUsageStatisticsPersistenceComponent;
+  private final StatisticsSendManager myStatisticsSendManager;
+
+  @Inject
+  public StatisticsConfigurable(UsageStatisticsPersistenceComponent usageStatisticsPersistenceComponent, StatisticsSendManager statisticsSendManager) {
+    myUsageStatisticsPersistenceComponent = usageStatisticsPersistenceComponent;
+    myStatisticsSendManager = statisticsSendManager;
+  }
 
   @Override
   @Nls
@@ -39,31 +51,35 @@ public class StatisticsConfigurable implements SearchableConfigurable {
     return "preferences.usage.statictics";
   }
 
+  @RequiredUIAccess
   @Override
   public JComponent createComponent() {
     myConfig = new StatisticsConfigurationComponent();
     return myConfig.getJComponent();
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
-    final UsageStatisticsPersistenceComponent persistenceComponent = UsageStatisticsPersistenceComponent.getInstance();
-    return myConfig.isAllowed() != persistenceComponent.isAllowed() || myConfig.getPeriod() != persistenceComponent.getPeriod();
+    return myConfig.isAllowed() != myUsageStatisticsPersistenceComponent.isAllowed() || myConfig.getPeriod() != myUsageStatisticsPersistenceComponent.getPeriod();
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
-    final UsageStatisticsPersistenceComponent persistenceComponent = UsageStatisticsPersistenceComponent.getInstance();
+    myUsageStatisticsPersistenceComponent.setPeriod(myConfig.getPeriod());
+    myUsageStatisticsPersistenceComponent.setAllowed(myConfig.isAllowed());
 
-    persistenceComponent.setPeriod(myConfig.getPeriod());
-    persistenceComponent.setAllowed(myConfig.isAllowed());
+    myStatisticsSendManager.sheduleRunIfStarted();
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     myConfig.reset();
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     myConfig = null;
@@ -73,10 +89,5 @@ public class StatisticsConfigurable implements SearchableConfigurable {
   @Override
   public String getId() {
     return "usage.statistics";
-  }
-
-  @Override
-  public Runnable enableSearch(String option) {
-    return null;
   }
 }

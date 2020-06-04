@@ -15,10 +15,8 @@
  */
 package com.intellij.featureStatistics;
 
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
+import com.intellij.openapi.application.PermanentInstallationID;
+import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Element;
@@ -31,27 +29,21 @@ import java.util.List;
 import java.util.Set;
 
 @Singleton
-@SuppressWarnings({"NonPrivateFieldAccessedInSynchronizedContext"})
-@State(
-    name = "FeatureUsageStatistics",
-    storages = {@Storage(
-        file = StoragePathMacros.APP_CONFIG + "/feature.usage.statistics.xml")})
+@State(name = "FeatureUsageStatistics", storages = @Storage(value = "feature.usage.statistics.xml", roamingType = RoamingType.DISABLED))
 public class FeatureUsageTrackerImpl extends FeatureUsageTracker implements PersistentStateComponent<Element> {
   private static final int HOUR = 1000 * 60 * 60;
   private static final long DAY = HOUR * 24;
-  private long FIRST_RUN_TIME = 0;
   private CompletionStatistics myCompletionStats = new CompletionStatistics();
   private CumulativeStatistics myFixesStats = new CumulativeStatistics();
-  boolean HAVE_BEEN_SHOWN = false;
+  private boolean HAVE_BEEN_SHOWN = false;
 
   private final ProductivityFeaturesRegistry myRegistry;
 
-  @NonNls private static final String FEATURE_TAG = "feature";
-  @NonNls private static final String ATT_ID = "id";
-  @NonNls private static final String ATT_FIRST_RUN = "first-run";
-  @NonNls private static final String COMPLETION_STATS_TAG = "completionStatsTag";
-  @NonNls private static final String FIXES_STATS_TAG = "fixesStatsTag";
-  @NonNls private static final String ATT_HAVE_BEEN_SHOWN = "have-been-shown";
+  private static final String FEATURE_TAG = "feature";
+  private static final String ATT_ID = "id";
+  private static final String COMPLETION_STATS_TAG = "completionStatsTag";
+  private static final String FIXES_STATS_TAG = "fixesStatsTag";
+  private static final String ATT_HAVE_BEEN_SHOWN = "have-been-shown";
 
   @Inject
   public FeatureUsageTrackerImpl(ProductivityFeaturesRegistry productivityFeaturesRegistry) {
@@ -76,11 +68,6 @@ public class FeatureUsageTrackerImpl extends FeatureUsageTracker implements Pers
       }
     }
     if (locked) return false;
-
-    ApplicabilityFilter[] filters = registry.getMatchingFilters(featureId);
-    for (ApplicabilityFilter filter: filters) {
-      if (!filter.isApplicable(featureId, project)) return false;
-    }
 
     long current = System.currentTimeMillis();
     long succesive_interval = descriptor.getDaysBetweenSuccesiveShowUps() * timeUnit + descriptor.getShownCount() * 2;
@@ -111,10 +98,7 @@ public class FeatureUsageTrackerImpl extends FeatureUsageTracker implements Pers
   }
 
   public long getFirstRunTime() {
-    if (FIRST_RUN_TIME == 0) {
-      FIRST_RUN_TIME = System.currentTimeMillis();
-    }
-    return FIRST_RUN_TIME;
+    return PermanentInstallationID.date();
   }
 
   @Override
@@ -127,13 +111,6 @@ public class FeatureUsageTrackerImpl extends FeatureUsageTracker implements Pers
       if (descriptor != null) {
         descriptor.readStatistics(featureElement);
       }
-    }
-
-    try {
-      FIRST_RUN_TIME = Long.parseLong(element.getAttributeValue(ATT_FIRST_RUN));
-    }
-    catch (NumberFormatException e) {
-      FIRST_RUN_TIME = 0;
     }
 
     Element stats = element.getChild(COMPLETION_STATS_TAG);
@@ -170,7 +147,6 @@ public class FeatureUsageTrackerImpl extends FeatureUsageTracker implements Pers
     XmlSerializer.serializeInto(myFixesStats, fstatsTag);
     element.addContent(fstatsTag);
 
-    element.setAttribute(ATT_FIRST_RUN, String.valueOf(getFirstRunTime()));
     element.setAttribute(ATT_HAVE_BEEN_SHOWN, String.valueOf(HAVE_BEEN_SHOWN));
 
     return element;
