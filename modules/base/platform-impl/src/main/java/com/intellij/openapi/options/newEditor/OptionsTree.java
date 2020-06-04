@@ -17,6 +17,7 @@ package com.intellij.openapi.options.newEditor;
 
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.NodeDescriptor;
+import com.intellij.util.ui.JBUI;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
@@ -91,6 +92,7 @@ class OptionsTree implements Disposable, OptionsEditorColleague {
     TreeUtil.installActions(myTree);
     myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
     myTree.setRootVisible(false);
+    myTree.setRowHeight(JBUI.scale(24));
     myTree.setShowsRootHandles(true);
     myBuilder = new MyBuilder(structure);
     myBuilder.setFilteringMerge(300, null);
