@@ -27,6 +27,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.disposer.Disposable;
 import consulo.external.api.StatisticsBean;
 import consulo.ide.webService.WebServiceApi;
 import consulo.ide.webService.WebServiceApiSender;
@@ -43,7 +44,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 @Singleton
-public class StatisticsSendManager {
+public class StatisticsSendManager implements Disposable {
   private static final Logger LOG = Logger.getInstance(StatisticsSendManager.class);
 
   private static final int DELAY_IN_MIN = 10;
@@ -62,6 +63,14 @@ public class StatisticsSendManager {
         runStatisticsService();
       }
     });
+  }
+
+  @Override
+  public void dispose() {
+    if (myFuture != null) {
+      myFuture.cancel(false);
+      myFuture = null;
+    }
   }
 
   public void sheduleRunIfStarted() {
@@ -102,6 +111,8 @@ public class StatisticsSendManager {
     myFuture = AppExecutorUtil.getAppScheduledExecutorService().schedule((Runnable)() -> {
       try {
         sendNow();
+
+        myUsageStatisticsComponent.setSentTime(System.currentTimeMillis());
       }
       finally {
         myFuture = null;
