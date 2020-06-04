@@ -23,6 +23,8 @@ import consulo.ui.Component;
 import consulo.ui.MenuBar;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.font.Font;
+import consulo.ui.font.FontManager;
 import consulo.ui.shared.Size;
 import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.shared.border.BorderStyle;
@@ -43,6 +45,8 @@ import java.util.function.Function;
 class UIWindowOverVaadinUI implements Window {
   private final UI myUI;
   private WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
+
+  private Font myFont = FontManager.get().createFont("?", 12);
 
   private boolean myDisposed;
 
@@ -119,6 +123,17 @@ class UIWindowOverVaadinUI implements Window {
   @Override
   public <T extends EventListener> Disposable addListener(@Nonnull Class<T> eventClass, @Nonnull T listener) {
     throw new UnsupportedOperationException();
+  }
+
+  @Nonnull
+  @Override
+  public Font getFont() {
+    return myFont;
+  }
+
+  @Override
+  public void setFont(@Nonnull Font font) {
+    myFont = font;
   }
 
   @RequiredUIAccess

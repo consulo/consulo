@@ -19,6 +19,7 @@ import consulo.annotation.ApiType;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.KeyListener;
+import consulo.ui.font.Font;
 import consulo.ui.shared.Size;
 import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.shared.border.BorderStyle;
@@ -106,6 +107,11 @@ public interface Component extends Disposable, UserDataHolder {
 
   @Nonnull
   Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function);
+
+  @Nonnull
+  Font getFont();
+
+  void setFont(@Nonnull Font font);
 
   /**
    * @return runner for unregister listener

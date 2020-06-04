@@ -16,6 +16,8 @@
 package consulo.ui.desktop.internal.base;
 
 import consulo.disposer.Disposable;
+import consulo.ui.desktop.internal.DesktopFontImpl;
+import consulo.ui.font.Font;
 import consulo.util.dataholder.Key;
 import com.intellij.util.ui.JBUI;
 import consulo.annotation.DeprecationInfo;
@@ -48,12 +50,12 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 27-Oct-17
  */
-@SuppressWarnings("deprecation")
 public class SwingComponentDelegate<T extends java.awt.Component> implements Component, ToSwingComponentWrapper {
   @Deprecated
   @DeprecationInfo("Use #initialize() method")
   protected T myComponent;
 
+  @SuppressWarnings("deprecation")
   protected void initialize(T component) {
     myComponent = component;
 
@@ -70,46 +72,58 @@ public class SwingComponentDelegate<T extends java.awt.Component> implements Com
 
   @Nonnull
   @Override
+  @SuppressWarnings("deprecation")
   public T toAWTComponent() {
     return myComponent;
   }
 
   @Override
   public boolean isVisible() {
-    return myComponent.isVisible();
+    return toAWTComponent().isVisible();
   }
 
   @RequiredUIAccess
   @Override
   public void setVisible(boolean value) {
-    myComponent.setVisible(value);
+    toAWTComponent().setVisible(value);
   }
 
   @Override
   public boolean isEnabled() {
-    return myComponent.isEnabled();
+    return toAWTComponent().isEnabled();
   }
 
   @RequiredUIAccess
   @Override
   public void setEnabled(boolean value) {
-    myComponent.setEnabled(value);
+    toAWTComponent().setEnabled(value);
   }
 
   @Nullable
   @Override
   public Component getParent() {
-    return TargetAWT.from(myComponent.getParent());
+    return TargetAWT.from(toAWTComponent().getParent());
   }
 
   @RequiredUIAccess
   @Override
   public void setSize(@Nonnull Size size) {
-    myComponent.setPreferredSize(TargetAWT.to(size));
+    toAWTComponent().setPreferredSize(TargetAWT.to(size));
+  }
+
+  @Nonnull
+  @Override
+  public Font getFont() {
+    return new DesktopFontImpl(toAWTComponent().getFont());
   }
 
   @Override
-  public <T> void putUserData(@Nonnull Key<T> key, @javax.annotation.Nullable T value) {
+  public void setFont(@Nonnull Font font) {
+    toAWTComponent().setFont(TargetAWT.to(font));
+  }
+
+  @Override
+  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
     dataObject().putUserData(key, value);
   }
 

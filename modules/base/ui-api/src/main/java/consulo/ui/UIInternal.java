@@ -22,6 +22,7 @@ import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.font.FontManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.layout.*;
@@ -158,6 +159,9 @@ public abstract class UIInternal {
 
   @Nonnull
   public abstract StyleManager _StyleManager_get();
+
+  @Nonnull
+  public abstract FontManager _FontManager_get();
 
   @Nonnull
   public abstract Window _Window_modalWindow(String title);

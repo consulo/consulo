@@ -18,6 +18,7 @@ package consulo.awt;
 import consulo.ui.Component;
 import consulo.ui.KeyCode;
 import consulo.ui.Window;
+import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.RGBColor;
@@ -69,6 +70,9 @@ public interface TargetAWTFacade {
 
   @Contract("null -> null")
   Image from(@Nullable Icon icon);
+
+  @Nonnull
+  java.awt.Font to(@Nonnull Font font);
 
   int to(@Nonnull KeyCode code);
 }

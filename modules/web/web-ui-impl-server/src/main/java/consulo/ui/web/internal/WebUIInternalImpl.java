@@ -19,6 +19,7 @@ import com.vaadin.ui.UI;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.font.FontManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.impl.model.ImmutableListModelImpl;
@@ -271,6 +272,12 @@ public class WebUIInternalImpl extends UIInternal {
   @Override
   public StyleManager _StyleManager_get() {
     return WebStyleManagerImpl.ourInstance;
+  }
+
+  @Nonnull
+  @Override
+  public FontManager _FontManager_get() {
+    return WebFontManagerImpl.ourInstance;
   }
 
   @Nonnull

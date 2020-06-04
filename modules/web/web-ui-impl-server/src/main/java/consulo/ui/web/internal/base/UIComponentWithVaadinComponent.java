@@ -19,12 +19,15 @@ import com.vaadin.ui.AbstractComponent;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.font.Font;
+import consulo.ui.font.FontManager;
 import consulo.ui.impl.UIDataObject;
 import consulo.ui.shared.Size;
 import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.shared.border.BorderStyle;
 import consulo.ui.style.ColorKey;
 import consulo.ui.web.internal.TargetVaddin;
+import consulo.ui.web.internal.WebFontImpl;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
@@ -39,6 +42,8 @@ import java.util.function.Function;
 public abstract class UIComponentWithVaadinComponent<T extends AbstractComponent & ComponentHolder> implements Component, DataObjectHolder, ToVaddinComponentWrapper {
   private T myVaadinComponent;
 
+  private Font myFont = FontManager.get().createFont("?", 12);
+
   public UIComponentWithVaadinComponent() {
     myVaadinComponent = createVaadinComponent();
 
@@ -47,6 +52,21 @@ public abstract class UIComponentWithVaadinComponent<T extends AbstractComponent
 
   @Nonnull
   public abstract T createVaadinComponent();
+
+  @Override
+  public void setFont(@Nonnull Font font) {
+    if(!(font instanceof WebFontImpl)) {
+      throw new IllegalArgumentException("not web font");
+    }
+
+    myFont = font;
+  }
+
+  @Nonnull
+  @Override
+  public Font getFont() {
+    return myFont;
+  }
 
   @Nonnull
   protected T getVaadinComponent() {

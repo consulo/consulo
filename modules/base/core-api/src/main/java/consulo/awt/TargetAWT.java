@@ -23,6 +23,7 @@ import consulo.container.plugin.PluginManager;
 import consulo.ui.Component;
 import consulo.ui.KeyCode;
 import consulo.ui.Window;
+import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.RGBColor;
@@ -125,6 +126,11 @@ public class TargetAWT {
   @Contract("null -> null")
   public static Image from(@Nullable Icon icon) {
     return ourFacade.from(icon);
+  }
+
+  @Nonnull
+  public static java.awt.Font to(@Nonnull Font font) {
+    return ourFacade.to(font);
   }
 
   public static int to(@Nonnull KeyCode code) {

@@ -32,6 +32,7 @@ import consulo.ui.desktop.internal.textBox.DesktopIntBoxImpl;
 import consulo.ui.desktop.internal.textBox.DesktopTextBoxImpl;
 import consulo.ui.desktop.internal.textBox.DesktopTextBoxWithExpandAction;
 import consulo.ui.desktop.internal.textBox.DesktopTextBoxWithExtensions;
+import consulo.ui.font.FontManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.impl.model.ImmutableListModelImpl;
@@ -141,6 +142,12 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Override
   public StyleManager _StyleManager_get() {
     return DesktopStyleManagerImpl.ourInstance;
+  }
+
+  @Nonnull
+  @Override
+  public FontManager _FontManager_get() {
+    return DesktopFontManagerImpl.ourInstance;
   }
 
   @Nonnull
