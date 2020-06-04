@@ -1,16 +1,12 @@
 package consulo.ui.desktop.internal.image.canvas;
 
-import com.intellij.util.BitUtil;
 import com.intellij.util.ui.GraphicsUtil;
-import com.intellij.util.ui.JBUI;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxLightweightLabel;
 import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
-import consulo.ui.TextAttribute;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
-import consulo.ui.image.canvas.Canvas2DFont;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.RGBColor;
 import consulo.ui.style.StandardColors;
@@ -86,9 +82,7 @@ public class DesktopCanvas2DImpl implements Canvas2D {
      */
     protected double miterLimit = 10;
 
-    protected Canvas2DFont myFontStyle = new Canvas2DFont(mxConstants.DEFAULT_FONTFAMILIES, 11);
-
-    protected Font myFont;
+    protected Font myFont = new Font("Arial", 0, 11);
 
     protected TextAlign myTextAlign;
 
@@ -428,10 +422,9 @@ public class DesktopCanvas2DImpl implements Canvas2D {
   }
 
   @Override
-  public void setFont(@Nonnull Canvas2DFont style) {
-    if (!style.equals(state.myFontStyle)) {
-      state.myFontStyle = style;
-      state.myFont = null;
+  public void setFont(@Nonnull consulo.ui.font.Font font) {
+    if (!font.equals(state.myFont)) {
+      state.myFont = TargetAWT.to(font);
     }
   }
 
@@ -746,7 +739,7 @@ public class DesktopCanvas2DImpl implements Canvas2D {
    */
   protected final Graphics2D createTextGraphics(double x, double y, double w, double h, double rotation, boolean clip, TextAlign align, TextBaseline valign) {
     Graphics2D g2 = state.g;
-    updateFont();
+    state.g.setFont(state.myFont);
 
     if (rotation != 0) {
       g2 = (Graphics2D)state.g.create();
@@ -972,47 +965,6 @@ public class DesktopCanvas2DImpl implements Canvas2D {
     state.shadowOffsetX = dx;
     state.shadowOffsetY = dy;
   }
-
-  /**
-   *
-   */
-  protected void updateFont() {
-    if (state.myFont == null) {
-      Canvas2DFont fontStyle = state.myFontStyle;
-      int style = 0;
-      style = BitUtil.set(style, Font.ITALIC, BitUtil.isSet(fontStyle.getFontStyle(), TextAttribute.STYLE_ITALIC));
-      style = BitUtil.set(style, Font.BOLD, BitUtil.isSet(fontStyle.getFontStyle(), TextAttribute.STYLE_BOLD));
-
-      state.myFont = createFont(fontStyle.getFontName(), style, fontStyle.getFontSize());
-
-      state.g.setFont(state.myFont);
-    }
-  }
-
-  /**
-   * Hook for subclassers to implement font caching.
-   */
-  protected Font createFont(String family, int style, int size) {
-    return new Font(getFontName(family), style, JBUI.scaleFontSize(size));
-  }
-
-  /**
-   * Returns a font name for the given CSS values for font-family.
-   * This implementation returns the first entry for comma-separated
-   * lists of entries.
-   */
-  protected String getFontName(String family) {
-    if (family != null) {
-      int comma = family.indexOf(',');
-
-      if (comma >= 0) {
-        family = family.substring(0, comma);
-      }
-    }
-
-    return family;
-  }
-
   /**
    *
    */

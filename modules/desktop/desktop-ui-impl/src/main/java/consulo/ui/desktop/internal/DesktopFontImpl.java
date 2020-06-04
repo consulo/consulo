@@ -15,7 +15,9 @@
  */
 package consulo.ui.desktop.internal;
 
+import com.intellij.util.ui.JBUI;
 import consulo.ui.font.Font;
+import consulo.util.lang.BitUtil;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
@@ -26,13 +28,28 @@ import java.util.Objects;
  */
 public final class DesktopFontImpl implements Font {
   private final java.awt.Font myFont;
+  private final int myFontStyle;
 
   public DesktopFontImpl(@Nonnull String fontName, int fontSize, int fontStyle) {
-    myFont = new java.awt.Font(fontName, fontStyle, fontSize);
+    myFontStyle = fontStyle;
+
+    int style = 0;
+    style = BitUtil.set(style, java.awt.Font.PLAIN, BitUtil.isSet(fontStyle, Font.STYLE_PLAIN));
+    style = BitUtil.set(style, java.awt.Font.BOLD, BitUtil.isSet(fontStyle, Font.STYLE_BOLD));
+    style = BitUtil.set(style, java.awt.Font.ITALIC, BitUtil.isSet(fontStyle, Font.STYLE_ITALIC));
+
+    myFont = new java.awt.Font(fontName, style, JBUI.scaleFontSize(fontSize));
   }
 
   public DesktopFontImpl(java.awt.Font font) {
     myFont = font;
+
+    int result = 0;
+    result = BitUtil.set(result, Font.STYLE_PLAIN, BitUtil.isSet(font.getStyle(), java.awt.Font.PLAIN));
+    result = BitUtil.set(result, Font.STYLE_BOLD, BitUtil.isSet(font.getStyle(), java.awt.Font.BOLD));
+    result = BitUtil.set(result, Font.STYLE_ITALIC, BitUtil.isSet(font.getStyle(), java.awt.Font.ITALIC));
+
+    myFontStyle = result;
   }
 
   @Nonnull
@@ -60,7 +77,7 @@ public final class DesktopFontImpl implements Font {
 
   @Override
   public int getFontStyle() {
-    return myFont.getStyle();
+    return myFontStyle;
   }
 
   @Override

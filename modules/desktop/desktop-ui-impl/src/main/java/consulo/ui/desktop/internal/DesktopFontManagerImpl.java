@@ -53,6 +53,6 @@ public class DesktopFontManagerImpl implements FontManager {
   @Nonnull
   @Override
   public Font createFont(@Nonnull String fontName, int fontSize, int fontStyle) {
-    return new DesktopFontImpl(fontName, fontStyle, fontSize);
+    return new DesktopFontImpl(fontName, fontSize, fontStyle);
   }
 }

@@ -50,11 +50,10 @@ import com.intellij.psi.PsiManager;
 import com.intellij.ui.JBColor;
 import com.intellij.util.Processor;
 import consulo.awt.TargetAWT;
-import consulo.ui.TextAttribute;
+import consulo.ui.font.FontManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.image.canvas.Canvas2D;
-import consulo.ui.image.canvas.Canvas2DFont;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
 
@@ -100,7 +99,7 @@ public class Bookmark implements Navigatable {
       c.stroke();
 
       c.setFillStyle(ComponentColors.TEXT);
-      c.setFont(new Canvas2DFont("Monospaced", 11, TextAttribute.STYLE_BOLD));
+      c.setFont(FontManager.get().createFont("Monospaced", 11, consulo.ui.font.Font.STYLE_BOLD));
       c.setTextAlign(Canvas2D.TextAlign.center);
       c.setTextBaseline(Canvas2D.TextBaseline.middle);
 

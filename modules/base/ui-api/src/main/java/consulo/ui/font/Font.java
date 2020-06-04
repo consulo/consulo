@@ -24,6 +24,10 @@ import javax.annotation.Nonnull;
  * Immutable info about font
  */
 public interface Font {
+  int STYLE_PLAIN = 1 << 0;
+  int STYLE_BOLD = 1 << 1;
+  int STYLE_ITALIC = 1 << 2;
+
   @Nonnull
   String getName();
 

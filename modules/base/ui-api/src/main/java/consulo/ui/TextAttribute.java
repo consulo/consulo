@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.ui.font.Font;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
@@ -26,9 +27,12 @@ import javax.annotation.Nullable;
  * @since 2018-05-14
  */
 public final class TextAttribute {
-  public static final int STYLE_PLAIN = 1 << 0;
-  public static final int STYLE_BOLD = 1 << 1;
-  public static final int STYLE_ITALIC = 1 << 2;
+  @Deprecated
+  public static final int STYLE_PLAIN = Font.STYLE_PLAIN;
+  @Deprecated
+  public static final int STYLE_BOLD = Font.STYLE_BOLD;
+  @Deprecated
+  public static final int STYLE_ITALIC = Font.STYLE_ITALIC;
 
   public static final TextAttribute REGULAR = new TextAttribute(STYLE_PLAIN, null, null);
   public static final TextAttribute REGULAR_BOLD = new TextAttribute(STYLE_BOLD, null);
