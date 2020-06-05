@@ -1959,6 +1959,8 @@
                    serviceImplementation="com.intellij.openapi.roots.impl.ModuleFileIndexImpl"/>
     <moduleService serviceInterface="com.intellij.openapi.roots.ModuleRootManager"
                    serviceImplementation="com.intellij.openapi.roots.impl.ModuleRootManagerImpl"/>
+    <moduleService serviceInterface="com.intellij.openapi.module.ModuleScopeProvider"
+                   serviceImplementation="com.intellij.openapi.module.impl.scopes.ModuleScopeProviderImpl" />
     <projectService serviceInterface="com.intellij.openapi.roots.ProjectRootModificationTracker"
                     serviceImplementation="com.intellij.openapi.roots.ProjectRootModificationTrackerImpl"/>
 

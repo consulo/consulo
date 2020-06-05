@@ -28,6 +28,4 @@ public interface ModuleEx extends Module {
   void moduleAdded();
 
   void rename(String newName);
-
-  void clearScopesCache();
 }

@@ -16,14 +16,11 @@
 
 package com.intellij.openapi.module.impl;
 
-import consulo.container.plugin.PluginListenerDescriptor;
-import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.impl.ModulePathMacroManager;
-import consulo.components.impl.PlatformComponentManagerImpl;
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.impl.scopes.ModuleScopeProviderImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.impl.ModuleRootManagerImpl;
@@ -31,10 +28,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.components.impl.PlatformComponentManagerImpl;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginListenerDescriptor;
 import consulo.injecting.InjectingContainerBuilder;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -50,10 +47,8 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
   private final Project myProject;
 
   @Nonnull
-  @NonNls
   private String myName;
-  @Nonnull
-  private final ModuleScopeProvider myModuleScopeProvider;
+
   @Nullable
   private final VirtualFilePointer myDirVirtualFilePointer;
 
@@ -61,7 +56,6 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
     super(project, "Module " + name, ExtensionAreaId.MODULE);
     myName = name;
     myProject = project;
-    myModuleScopeProvider = new ModuleScopeProviderImpl(this);
     myDirVirtualFilePointer = dirUrl == null ? null : VirtualFilePointerManager.getInstance().create(dirUrl, this, null);
   }
 
@@ -125,71 +119,6 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
     ModuleRootManagerImpl manager = (ModuleRootManagerImpl)ModuleRootManager.getInstance(this);
 
     manager.moduleAdded();
-  }
-
-  @Nonnull
-  @Override
-  public GlobalSearchScope getModuleScope() {
-    return myModuleScopeProvider.getModuleScope();
-  }
-
-  @Nonnull
-  @Override
-  public GlobalSearchScope getModuleScope(boolean includeTests) {
-    return myModuleScopeProvider.getModuleScope(includeTests);
-  }
-
-  @Nonnull
-  @Override
-  public GlobalSearchScope getModuleWithLibrariesScope() {
-    return myModuleScopeProvider.getModuleWithLibrariesScope();
-  }
-
-  @Nonnull
-  @Override
-  public GlobalSearchScope getModuleWithDependenciesScope() {
-    return myModuleScopeProvider.getModuleWithDependenciesScope();
-  }
-
-  @Nonnull
-  @Override
-  public GlobalSearchScope getModuleContentScope() {
-    return myModuleScopeProvider.getModuleContentScope();
-  }
-
-  @Nonnull
-  @Override
-  public GlobalSearchScope getModuleContentWithDependenciesScope() {
-    return myModuleScopeProvider.getModuleContentWithDependenciesScope();
-  }
-
-  @Nonnull
-  @Override
-  public GlobalSearchScope getModuleWithDependenciesAndLibrariesScope(boolean includeTests) {
-    return myModuleScopeProvider.getModuleWithDependenciesAndLibrariesScope(includeTests);
-  }
-
-  @Nonnull
-  @Override
-  public GlobalSearchScope getModuleWithDependentsScope() {
-    return myModuleScopeProvider.getModuleWithDependentsScope();
-  }
-
-  @Nonnull
-  @Override
-  public GlobalSearchScope getModuleTestsWithDependentsScope() {
-    return myModuleScopeProvider.getModuleTestsWithDependentsScope();
-  }
-
-  @Nonnull
-  @Override
-  public GlobalSearchScope getModuleRuntimeScope(boolean includeTests) {
-    return myModuleScopeProvider.getModuleRuntimeScope(includeTests);
-  }
-
-  @Override
-  public void clearScopesCache() {
-    myModuleScopeProvider.clearCache();
   }
 
   @Override

@@ -64,7 +64,7 @@ public class PsiFileReferenceHelper extends FileReferenceHelper {
   @Override
   @Nonnull
   public Collection<PsiFileSystemItem> getRoots(@Nonnull final Module module) {
-    return getContextsForModule(module, "", module.getModuleWithDependenciesScope());
+    return getContextsForModule(module, "", GlobalSearchScope.moduleWithDependenciesScope(module));
   }
 
   @Override
@@ -85,7 +85,7 @@ public class PsiFileReferenceHelper extends FileReferenceHelper {
             final Module module = ModuleUtilCore.findModuleForFile(file, project);
 
             if (module != null) {
-              return getContextsForModule(module, path, module.getModuleWithDependenciesScope());
+              return getContextsForModule(module, path, GlobalSearchScope.moduleWithDependenciesScope(module));
             }
           }
 

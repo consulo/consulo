@@ -18,9 +18,7 @@ package com.intellij.openapi.module;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayFactory;
-import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.util.pointers.Named;
 
@@ -85,85 +83,4 @@ public interface Module extends ComponentManager, Disposable, Named {
    */
   @Override
   boolean isDisposed();
-
-  /**
-   * Sets a custom option for this module.
-   *
-   * @param optionName  the name of the custom option.
-   * @param optionValue the value of the custom option.
-   */
-  @Deprecated
-  @DeprecationInfo("Use ModuleExtension for store your variables")
-  default void setOption(@Nonnull String optionName, @Nonnull String optionValue) {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * Removes a custom option from this module.
-   *
-   * @param optionName the name of the custom option.
-   */
-  @Deprecated
-  @DeprecationInfo("Use ModuleExtension for store your variables")
-  default void clearOption(@Nonnull String optionName) {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * Gets the value of a custom option for this module.
-   *
-   * @param optionName the name of the custom option.
-   * @return the value of the custom option, or null if no value has been set.
-   */
-  @Nullable
-  @Deprecated
-  @DeprecationInfo("Use ModuleExtension for store your variables")
-  default String getOptionValue(@Nonnull String optionName) {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * Returns module scope including sources and tests, excluding libraries and dependencies.
-   *
-   * @return scope including sources and tests, excluding libraries and dependencies.
-   */
-  @Nonnull
-  GlobalSearchScope getModuleScope();
-
-  @Nonnull
-  GlobalSearchScope getModuleScope(boolean includeTests);
-
-  /**
-   * Returns module scope including sources, tests, and libraries, excluding dependencies.
-   *
-   * @return scope including sources, tests, and libraries, excluding dependencies.
-   */
-  @Nonnull
-  GlobalSearchScope getModuleWithLibrariesScope();
-
-  /**
-   * Returns module scope including sources, tests, and dependencies, excluding libraries.
-   *
-   * @return scope including sources, tests, and dependencies, excluding libraries.
-   */
-  @Nonnull
-  GlobalSearchScope getModuleWithDependenciesScope();
-
-  @Nonnull
-  GlobalSearchScope getModuleContentScope();
-
-  @Nonnull
-  GlobalSearchScope getModuleContentWithDependenciesScope();
-
-  @Nonnull
-  GlobalSearchScope getModuleWithDependenciesAndLibrariesScope(boolean includeTests);
-
-  @Nonnull
-  GlobalSearchScope getModuleWithDependentsScope();
-
-  @Nonnull
-  GlobalSearchScope getModuleTestsWithDependentsScope();
-
-  @Nonnull
-  GlobalSearchScope getModuleRuntimeScope(boolean includeTests);
 }

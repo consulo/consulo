@@ -13,16 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.module.impl;
+package com.intellij.openapi.module;
 
 
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.psi.search.GlobalSearchScope;
+
 import javax.annotation.Nonnull;
 
 /**
  * Author: dmitrylomov
  */
 public interface ModuleScopeProvider {
+  @Nonnull
+  static ModuleScopeProvider getInstance(@Nonnull Module module) {
+    return ServiceManager.getService(module, ModuleScopeProvider.class);
+  }
+
   /**
    * Returns module scope including sources and tests, excluding libraries and dependencies.
    *
@@ -52,17 +59,19 @@ public interface ModuleScopeProvider {
 
   @Nonnull
   GlobalSearchScope getModuleContentScope();
+
   @Nonnull
   GlobalSearchScope getModuleContentWithDependenciesScope();
 
   @Nonnull
   GlobalSearchScope getModuleWithDependenciesAndLibrariesScope(boolean includeTests);
+
   @Nonnull
   GlobalSearchScope getModuleWithDependentsScope();
+
   @Nonnull
   GlobalSearchScope getModuleTestsWithDependentsScope();
+
   @Nonnull
   GlobalSearchScope getModuleRuntimeScope(boolean includeTests);
-
-  void clearCache();
 }

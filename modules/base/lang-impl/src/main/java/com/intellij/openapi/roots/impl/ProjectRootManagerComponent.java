@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.ProjectTopics;
-import com.intellij.openapi.application.ApplicationAdapter;
+import com.intellij.openapi.application.ApplicationListener;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.extensions.Extensions;
@@ -25,7 +25,8 @@ import com.intellij.openapi.fileTypes.FileTypeListener;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.impl.ModuleEx;
+import com.intellij.openapi.module.ModuleScopeProvider;
+import com.intellij.openapi.module.impl.scopes.ModuleScopeProviderImpl;
 import com.intellij.openapi.project.DumbModeTask;
 import com.intellij.openapi.project.DumbServiceImpl;
 import com.intellij.openapi.project.Project;
@@ -55,8 +56,8 @@ import consulo.roots.ContentFolderScopes;
 import consulo.roots.OrderEntryWithTracking;
 import consulo.vfs.ArchiveFileSystem;
 import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -324,11 +325,14 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     super.clearScopesCachesForModules();
     Module[] modules = ModuleManager.getInstance(myProject).getModules();
     for (Module module : modules) {
-      ((ModuleEx)module).clearScopesCache();
+      ModuleScopeProvider scopeProvider = ModuleScopeProvider.getInstance(module);
+      if(scopeProvider instanceof ModuleScopeProviderImpl) {
+        ((ModuleScopeProviderImpl)scopeProvider).clearCache();
+      }
     }
   }
 
-  private class AppListener extends ApplicationAdapter {
+  private class AppListener implements ApplicationListener {
     @Override
     public void beforeWriteActionStart(@Nonnull Object action) {
       myInsideRefresh++;

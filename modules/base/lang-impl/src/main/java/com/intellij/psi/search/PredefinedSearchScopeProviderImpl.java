@@ -112,7 +112,7 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
           module = dataContext.getData(LangDataKeys.MODULE);
         }
         if (module != null) {
-          result.add(module.getModuleScope());
+          result.add(GlobalSearchScope.moduleScope(module));
         }
 
         if (currentFile == null) {

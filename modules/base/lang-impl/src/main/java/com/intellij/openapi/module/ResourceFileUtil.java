@@ -55,7 +55,7 @@ public class ResourceFileUtil {
 
   @Nullable
   public static VirtualFile findResourceFileInDependents(final Module searchFromModule, final String fileName) {
-    return findResourceFileInScope(fileName, searchFromModule.getProject(), searchFromModule.getModuleWithDependenciesAndLibrariesScope(true));
+    return findResourceFileInScope(fileName, searchFromModule.getProject(), GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(searchFromModule, true));
   }
 
   @Nullable

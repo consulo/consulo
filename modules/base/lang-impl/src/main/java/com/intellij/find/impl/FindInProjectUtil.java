@@ -30,7 +30,6 @@ import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.registry.Registry;
@@ -56,11 +55,12 @@ import com.intellij.util.PatternUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
 import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.PropertyKey;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -628,7 +628,7 @@ public class FindInProjectUtil {
            // because all found usages are guaranteed to be not in excluded dir
            directory != null
            ? forDirectory(project, findModel.isWithSubdirectories(), directory)
-           : module != null ? module.getModuleContentScope() : findModel.isProjectScope() ? ProjectScope.getContentScope(project) : GlobalSearchScope.allScope(project);
+           : module != null ? GlobalSearchScope.moduleContentScope(module) : findModel.isProjectScope() ? ProjectScope.getContentScope(project) : GlobalSearchScope.allScope(project);
   }
 
   @Nonnull

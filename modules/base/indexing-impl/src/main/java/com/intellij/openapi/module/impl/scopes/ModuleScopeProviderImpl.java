@@ -16,21 +16,25 @@
 package com.intellij.openapi.module.impl.scopes;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.impl.ModuleScopeProvider;
+import com.intellij.openapi.module.ModuleScopeProvider;
 import com.intellij.psi.search.GlobalSearchScope;
 import consulo.util.collection.ConcurrentIntObjectMap;
 import consulo.util.collection.Maps;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Author: dmitrylomov
  */
+@Singleton
 public class ModuleScopeProviderImpl implements ModuleScopeProvider {
   private final Module myModule;
   private final ConcurrentIntObjectMap<GlobalSearchScope> myScopeCache = Maps.newConcurrentIntObjectHashMap();
   private ModuleWithDependentsTestScope myModuleTestsWithDependentsScope;
 
+  @Inject
   public ModuleScopeProviderImpl(@Nonnull Module module) {
     myModule = module;
   }
@@ -112,7 +116,6 @@ public class ModuleScopeProviderImpl implements ModuleScopeProvider {
             ModuleWithDependenciesScope.MODULES | ModuleWithDependenciesScope.LIBRARIES | (includeTests ? ModuleWithDependenciesScope.TESTS : 0));
   }
 
-  @Override
   public void clearCache() {
     myScopeCache.clear();
     myModuleTestsWithDependentsScope = null;

@@ -17,6 +17,7 @@ package com.intellij.psi.search;
 
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleScopeProvider;
 import com.intellij.openapi.module.UnloadedModuleDescription;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
@@ -259,7 +260,12 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
    */
   @Nonnull
   public static GlobalSearchScope moduleScope(@Nonnull Module module) {
-    return module.getModuleScope();
+    return ModuleScopeProvider.getInstance(module).getModuleScope();
+  }
+
+  @Nonnull
+  public static GlobalSearchScope moduleContentScope(@Nonnull Module module) {
+    return ModuleScopeProvider.getInstance(module).getModuleContentScope();
   }
 
   /**
@@ -270,7 +276,7 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
    */
   @Nonnull
   public static GlobalSearchScope moduleWithLibrariesScope(@Nonnull Module module) {
-    return module.getModuleWithLibrariesScope();
+    return ModuleScopeProvider.getInstance(module).getModuleWithLibrariesScope();
   }
 
   /**
@@ -281,12 +287,12 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
    */
   @Nonnull
   public static GlobalSearchScope moduleWithDependenciesScope(@Nonnull Module module) {
-    return module.getModuleWithDependenciesScope();
+    return ModuleScopeProvider.getInstance(module).getModuleWithDependenciesScope();
   }
 
   @Nonnull
   public static GlobalSearchScope moduleRuntimeScope(@Nonnull Module module, final boolean includeTests) {
-    return module.getModuleRuntimeScope(includeTests);
+    return ModuleScopeProvider.getInstance(module).getModuleRuntimeScope(includeTests);
   }
 
   @Nonnull
@@ -296,17 +302,17 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
 
   @Nonnull
   public static GlobalSearchScope moduleWithDependenciesAndLibrariesScope(@Nonnull Module module, boolean includeTests) {
-    return module.getModuleWithDependenciesAndLibrariesScope(includeTests);
+    return ModuleScopeProvider.getInstance(module).getModuleWithDependenciesAndLibrariesScope(includeTests);
   }
 
   @Nonnull
   public static GlobalSearchScope moduleWithDependentsScope(@Nonnull Module module) {
-    return module.getModuleWithDependentsScope();
+    return ModuleScopeProvider.getInstance(module).getModuleWithDependentsScope();
   }
 
   @Nonnull
   public static GlobalSearchScope moduleTestsWithDependentsScope(@Nonnull Module module) {
-    return module.getModuleTestsWithDependentsScope();
+    return ModuleScopeProvider.getInstance(module).getModuleTestsWithDependentsScope();
   }
 
   @Nonnull
