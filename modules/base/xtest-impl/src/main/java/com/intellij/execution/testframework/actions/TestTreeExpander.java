@@ -17,8 +17,8 @@ package com.intellij.execution.testframework.actions;
 
 import com.intellij.execution.testframework.TestFrameworkRunningModel;
 import com.intellij.ide.TreeExpander;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import com.intellij.util.ui.tree.TreeUtil;
 
 import javax.swing.*;

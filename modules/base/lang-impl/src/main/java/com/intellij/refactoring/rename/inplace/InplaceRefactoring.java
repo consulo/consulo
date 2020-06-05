@@ -27,7 +27,7 @@ import com.intellij.lang.Language;
 import com.intellij.lang.LanguageNamesValidation;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.lang.refactoring.NamesValidator;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.Shortcut;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
@@ -35,6 +35,7 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.command.impl.FinishMarkAction;
 import com.intellij.openapi.command.impl.StartMarkAction;
 import com.intellij.openapi.command.undo.UndoUtil;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.EditorColors;
@@ -359,7 +360,7 @@ public abstract class InplaceRefactoring {
   }
 
   private void startTemplate(final TemplateBuilderImpl builder) {
-    final Disposable disposable = Disposer.newDisposable();
+    final Disposable disposable = Disposable.newDisposable();
     DaemonCodeAnalyzer.getInstance(myProject).disableUpdateByTimer(disposable);
 
     final MyTemplateListener templateListener = new MyTemplateListener() {

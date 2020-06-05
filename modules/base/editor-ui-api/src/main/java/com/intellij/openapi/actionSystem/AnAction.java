@@ -15,16 +15,16 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.PossiblyDumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.util.ArrayFactory;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
@@ -181,19 +181,19 @@ public abstract class AnAction implements PossiblyDumbAware {
    * @param component   the component for which the shortcuts will be active.
    */
   public final void registerCustomShortcutSet(@Nonnull ShortcutSet shortcutSet, @Nullable JComponent component) {
-    registerCustomShortcutSet(shortcutSet, component, null);
+    registerCustomShortcutSet(shortcutSet, component, (consulo.disposer.Disposable)null);
   }
 
   public final void registerCustomShortcutSet(int keyCode, @JdkConstants.InputEventMask int modifiers, @Nullable JComponent component) {
     registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(keyCode, modifiers)), component);
   }
 
-  public final void registerCustomShortcutSet(@Nonnull ShortcutSet shortcutSet, @Nullable JComponent component, @Nullable Disposable parentDisposable) {
+  public final void registerCustomShortcutSet(@Nonnull ShortcutSet shortcutSet, @Nullable JComponent component, @Nullable consulo.disposer.Disposable parentDisposable) {
     setShortcutSet(shortcutSet);
     registerCustomShortcutSet(component, parentDisposable);
   }
 
-  public final void registerCustomShortcutSet(@Nullable JComponent component, @Nullable Disposable parentDisposable) {
+  public final void registerCustomShortcutSet(@Nullable JComponent component, @Nullable consulo.disposer.Disposable parentDisposable) {
     if (component == null) return;
     List<AnAction> actionList = UIUtil.getClientProperty(component, ACTIONS_KEY);
     if (actionList == null) {

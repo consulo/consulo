@@ -22,8 +22,9 @@ import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.util.ui.FormBuilder;
+import consulo.disposer.Disposer;
+
 import javax.annotation.Nullable;
 
 import javax.swing.*;

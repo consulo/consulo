@@ -26,16 +26,14 @@ import com.intellij.openapi.application.ApplicationActivationListener;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.fileChooser.*;
-import com.intellij.openapi.fileChooser.impl.FileChooserFactoryImpl;
 import com.intellij.openapi.fileChooser.impl.FileChooserUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Iconable;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -56,8 +54,10 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.util.ui.update.Update;
+import consulo.fileChooser.impl.FileChooserFactoryImpl;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -373,12 +373,13 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     myPathTextFieldWrapper = new JPanel(new BorderLayout());
     myPathTextFieldWrapper.setBorder(JBUI.Borders.emptyBottom(2));
     myPathTextField = new FileTextFieldImpl.Vfs(FileChooserFactoryImpl.getMacroMap(), getDisposable(), new LocalFsFinder.FileChooserFilter(myChooserDescriptor, myFileSystemTree)) {
+      @Override
       protected void onTextChanged(final String newValue) {
         myUiUpdater.cancelAllUpdates();
         updateTreeFromPath(newValue);
       }
     };
-    Disposer.register(myDisposable, myPathTextField);
+    consulo.disposer.Disposer.register(myDisposable, myPathTextField);
     myPathTextFieldWrapper.add(myPathTextField.getField(), BorderLayout.CENTER);
     if (getRecentFiles().length > 0) {
       myPathTextFieldWrapper.add(createHistoryButton(), BorderLayout.EAST);

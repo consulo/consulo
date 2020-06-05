@@ -23,7 +23,7 @@ import com.intellij.lang.LanguageExtensionPoint;
 import com.intellij.lang.LanguageParserDefinitions;
 import com.intellij.lang.PsiBuilderFactory;
 import com.intellij.lang.impl.PsiBuilderFactoryImpl;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.PathMacroFilter;
 import com.intellij.openapi.application.PathMacros;

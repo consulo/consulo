@@ -15,7 +15,7 @@
  */
 package com.intellij.mock;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.editor.event.*;
 import javax.annotation.Nonnull;
 

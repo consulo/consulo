@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.libraries;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

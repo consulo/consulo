@@ -24,8 +24,8 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.tabs.JBTabsPosition;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.util.Axis;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -46,7 +46,6 @@ class DragHelper extends MouseDragHelper {
     super(tabs, tabs);
     myTabs = tabs;
   }
-
 
   @Override
   protected boolean isDragOut(MouseEvent event, Point dragToScreenPoint, Point startScreenPoint) {

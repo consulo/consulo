@@ -15,7 +15,7 @@
  */
 package com.intellij.find.impl;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import javax.annotation.Nonnull;
 
 public interface FindUI {

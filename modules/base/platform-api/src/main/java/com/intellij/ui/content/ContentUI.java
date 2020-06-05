@@ -15,8 +15,8 @@
  */
 package com.intellij.ui.content;
 
-import com.intellij.openapi.Disposable;
 import consulo.annotation.DeprecationInfo;
+import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import javax.annotation.Nonnull;
 

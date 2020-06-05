@@ -15,14 +15,14 @@
  */
 package com.intellij.openapi.components.impl;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import consulo.components.impl.stores.storage.StorageData;
 import consulo.components.impl.stores.storage.XmlElementStorage;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.testFramework.MockApplicationTestCase;
 import org.jdom.Element;
@@ -46,7 +46,7 @@ public  class XmlElementStorageTest extends MockApplicationTestCase {
   @Override
   public void setUp() throws Exception {
     super.setUp();
-    myParentDisposable = Disposer.newDisposable();
+    myParentDisposable = Disposable.newDisposable();
   }
 
   @Override

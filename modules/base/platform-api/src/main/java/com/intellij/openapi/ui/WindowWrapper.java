@@ -1,7 +1,8 @@
 package com.intellij.openapi.ui;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

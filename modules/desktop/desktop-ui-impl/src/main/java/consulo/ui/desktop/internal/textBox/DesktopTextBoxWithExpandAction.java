@@ -53,7 +53,7 @@ public class DesktopTextBoxWithExpandAction {
     return new FallbackTextBoxWithExpandAction(editButtonImage, dialogTitle, parser, joiner);
   }
 
-  private static class SupportedTextBoxWithExpandAction extends DocumentSwingValidator<String, ExpandableTextField> implements TextBoxWithExpandAction {
+  private static class SupportedTextBoxWithExpandAction extends DocumentSwingValidator<String, ExpandableTextField> implements TextBoxWithExpandAction, TextBoxWithTextField {
     private SupportedTextBoxWithExpandAction(Function<String, List<String>> parser, Function<List<String>, String> joiner, SupportTextBoxWithExpandActionExtender lookAndFeel) {
       ExpandableTextField field = new ExpandableTextField(parser::apply, joiner::apply, lookAndFeel);
       TextFieldPlaceholderFunction.install(field);
@@ -68,6 +68,12 @@ public class DesktopTextBoxWithExpandAction {
           getListenerDispatcher(ValueListener.class).valueChanged(new ValueEvent(SupportedTextBoxWithExpandAction.this, getValue()));
         }
       });
+    }
+
+    @Nonnull
+    @Override
+    public JTextField getTextField() {
+      return toAWTComponent();
     }
 
     @Nullable
@@ -108,7 +114,7 @@ public class DesktopTextBoxWithExpandAction {
     }
   }
 
-  private static class FallbackTextBoxWithExpandAction extends DocumentSwingValidator<String, ComponentWithBrowseButton<JComponent>> implements TextBoxWithExpandAction {
+  private static class FallbackTextBoxWithExpandAction extends DocumentSwingValidator<String, ComponentWithBrowseButton<JComponent>> implements TextBoxWithTextField, TextBoxWithExpandAction {
     private DesktopTextBoxImpl myTextBox;
 
     private String myDialogTitle;
@@ -127,6 +133,12 @@ public class DesktopTextBoxWithExpandAction {
       if (editButtonImage != null) {
         toAWTComponent().setButtonIcon(TargetAWT.to(editButtonImage));
       }
+    }
+
+    @Nonnull
+    @Override
+    public JTextField getTextField() {
+      return myTextBox.getTextField();
     }
 
     @Nonnull

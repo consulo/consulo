@@ -54,6 +54,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.awt.hacking.DialogHacking;
 import consulo.desktop.start.splash.DesktopSplash;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.SwingUIDecorator;
 import consulo.ui.UIAccess;

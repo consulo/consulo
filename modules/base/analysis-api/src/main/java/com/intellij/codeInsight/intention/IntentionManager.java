@@ -20,12 +20,12 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ex.InspectionToolWrapper;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiElement;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import com.intellij.psi.PsiElement;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -34,7 +34,7 @@ import java.util.List;
  * @see IntentionAction
  */
 public abstract class IntentionManager  {
-  public static final ExtensionPointName<IntentionActionBean> EP_INTENTION_ACTIONS = new ExtensionPointName<IntentionActionBean>("com.intellij.intentionAction");
+  public static final ExtensionPointName<IntentionActionBean> EP_INTENTION_ACTIONS = ExtensionPointName.create("com.intellij.intentionAction");
 
   /**
    * Key to be used within {@link UserDataHolder} in order to check presence of explicit indication on if intentions sub-menu
@@ -42,18 +42,7 @@ public abstract class IntentionManager  {
    */
   public static final Key<Boolean> SHOW_INTENTION_OPTIONS_KEY = Key.create("SHOW_INTENTION_OPTIONS_KEY");
 
-  /**
-   * @deprecated Use {@link #getInstance()} unstead.
-   * Returns instance of <code>IntentionManager</code> for given project.
-   *
-   * @param project the project for which the instance is returned.
-   * @return instance of the <code>IntentionManager</code> assigned for given project.
-   */
-  @Deprecated
-  public static IntentionManager getInstance(Project project) {
-    return getInstance();
-  }
-
+  @Nonnull
   public static IntentionManager getInstance() {
     return ServiceManager.getService(IntentionManager.class);
   }
@@ -98,6 +87,7 @@ public abstract class IntentionManager  {
    * @param category the name of the category or categories under which the intention will be shown
    *                 in the "Intention Settings" dialog.
    */
+  @Deprecated
   public abstract void registerIntentionAndMetaData(@Nonnull IntentionAction action, @Nonnull String... category);
 
   /**
@@ -116,6 +106,7 @@ public abstract class IntentionManager  {
                                                     @Nonnull String[] exampleTextBefore,
                                                     @Nonnull String[] exampleTextAfter);
 
+  @Deprecated
   public abstract void unregisterIntention(@Nonnull IntentionAction intentionAction);
 
   /**
@@ -129,7 +120,7 @@ public abstract class IntentionManager  {
   /**
    * @return "Fix all '' inspections problems for a file" intention if toolWrapper is local inspection or simple global one
    */
-  @javax.annotation.Nullable
+  @Nullable
   public abstract IntentionAction createFixAllIntention(InspectionToolWrapper toolWrapper, IntentionAction action);
 
   /**

@@ -71,10 +71,6 @@ public class LabeledComponents {
 
   @RequiredUIAccess
   public static Component leftWithRight(@Nonnull String text, @Nonnull PseudoComponent component) {
-    if (!StringUtil.endsWithChar(text, ':')) {
-      text += ": ";
-    }
-
     DockLayout dock = DockLayout.create();
     dock.left(Label.create(text));
     dock.right(component);

@@ -17,11 +17,12 @@ package com.intellij.ide.navigationToolbar;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.navigationToolbar.ui.NavBarUI;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.EmptyIcon;
+import consulo.disposer.Disposer;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

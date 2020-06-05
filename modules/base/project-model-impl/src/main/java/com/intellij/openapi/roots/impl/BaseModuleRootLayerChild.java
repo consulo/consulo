@@ -16,8 +16,8 @@
 
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import javax.annotation.Nonnull;
 

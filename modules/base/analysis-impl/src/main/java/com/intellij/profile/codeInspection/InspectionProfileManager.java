@@ -15,7 +15,7 @@
  */
 package com.intellij.profile.codeInspection;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.util.DisposerUtil;

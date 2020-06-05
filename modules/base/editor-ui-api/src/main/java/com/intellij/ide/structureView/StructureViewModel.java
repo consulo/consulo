@@ -16,7 +16,7 @@
 package com.intellij.ide.structureView;
 
 import com.intellij.ide.util.treeView.smartTree.TreeModel;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.editor.Editor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

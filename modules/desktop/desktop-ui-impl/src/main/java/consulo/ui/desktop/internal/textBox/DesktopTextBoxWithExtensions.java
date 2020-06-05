@@ -15,7 +15,6 @@
  */
 package consulo.ui.desktop.internal.textBox;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.ui.components.fields.ExtendableTextComponent;
@@ -24,6 +23,8 @@ import com.intellij.ui.roots.ScalableIconComponent;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
+import consulo.ui.Clickable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.TextBox;
 import consulo.ui.TextBoxWithExtensions;
@@ -47,7 +48,7 @@ import java.util.List;
  * @since 2019-10-31
  */
 public class DesktopTextBoxWithExtensions {
-  private static class Supported extends DocumentSwingValidator<String, ExtendableTextField> implements TextBoxWithExtensions {
+  private static class Supported extends DocumentSwingValidator<String, ExtendableTextField> implements TextBoxWithExtensions, TextBoxWithTextField {
     public Supported(String text) {
       initialize(new ExtendableTextField(text));
       TextFieldPlaceholderFunction.install(toAWTComponent());
@@ -62,6 +63,12 @@ public class DesktopTextBoxWithExtensions {
           getListenerDispatcher(ValueListener.class).valueChanged(new ValueEvent(Supported.this, getValue()));
         }
       });
+    }
+
+    @Nonnull
+    @Override
+    public JTextField getTextField() {
+      return toAWTComponent();
     }
 
     @Nullable
@@ -92,6 +99,12 @@ public class DesktopTextBoxWithExtensions {
           public boolean isIconBeforeText() {
             return extension.isLeft();
           }
+
+          @Override
+          public Runnable getActionOnClick() {
+            Clickable.ClickListener clickListener = extension.getClickListener();
+            return clickListener == null ? null : clickListener::onClick;
+          }
         };
 
         awtExtensions.add(ex);
@@ -121,7 +134,7 @@ public class DesktopTextBoxWithExtensions {
     }
   }
 
-  private static class Unsupported extends DocumentSwingValidator<String, JPanel> implements TextBoxWithExtensions {
+  private static class Unsupported extends DocumentSwingValidator<String, JPanel> implements TextBoxWithExtensions, TextBoxWithTextField {
     private JBTextField myTextField;
 
     private Unsupported(String text) {
@@ -158,6 +171,12 @@ public class DesktopTextBoxWithExtensions {
 
       myTextField.setBorder(JBUI.Borders.empty(0, 4));
       panel.setBorder(JBUI.Borders.customLine(UIUtil.getBorderColor(), 1));
+    }
+
+    @Nonnull
+    @Override
+    public JBTextField getTextField() {
+      return myTextField;
     }
 
     @Nonnull

@@ -15,8 +15,8 @@
  */
 package consulo.ui.desktop.internal;
 
-import com.intellij.openapi.Disposable;
 import consulo.awt.impl.FromSwingComponentWrapper;
+import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.RadioButton;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.diff;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

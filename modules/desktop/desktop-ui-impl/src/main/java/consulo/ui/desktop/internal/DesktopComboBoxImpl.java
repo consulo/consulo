@@ -15,7 +15,7 @@
  */
 package consulo.ui.desktop.internal;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.ui.ComboBoxWithWidePopup;
 import com.intellij.ui.ColoredListCellRenderer;
 import consulo.awt.impl.FromSwingComponentWrapper;

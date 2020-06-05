@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.docking;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import org.jdom.Element;
 
 public interface DockContainerFactory extends Disposable {

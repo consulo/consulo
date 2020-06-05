@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.diff.impl.highlighting;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diff.impl.ComparisonPolicy;
 import com.intellij.openapi.diff.impl.ContentChangeListener;
@@ -25,7 +24,8 @@ import com.intellij.openapi.diff.impl.processing.HighlightMode;
 import com.intellij.openapi.diff.impl.processing.TextCompareProcessor;
 import com.intellij.openapi.diff.impl.splitter.LineBlocks;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public abstract class SimpleDiffPanelState implements Disposable  {
+public abstract class SimpleDiffPanelState implements Disposable {
   protected ComparisonPolicy myComparisonPolicy = ComparisonPolicy.DEFAULT;
   protected DiffPolicy myDiffPolicy;
   protected HighlightMode myHighlightMode;

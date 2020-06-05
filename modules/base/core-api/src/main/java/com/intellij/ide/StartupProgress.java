@@ -15,7 +15,7 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 
 /**
  * @author Dmitry Avdeev

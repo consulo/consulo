@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.mac.touchbar;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.ui.popup.AbstractPopup;
 

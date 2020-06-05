@@ -1,5 +1,6 @@
 package consulo.ui.image.canvas;
 
+import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 import consulo.ui.shared.ColorValue;
 
@@ -24,7 +25,7 @@ public interface Canvas2D {
 
   void setGlobalAlpha(float value);
 
-  void setFont(@Nonnull Canvas2DFont style);
+  void setFont(@Nonnull Font font);
 
   void setFillStyle(@Nullable ColorValue value);
 

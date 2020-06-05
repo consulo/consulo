@@ -26,6 +26,7 @@ import consulo.ui.Component;
 import consulo.ui.Window;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.desktop.internal.DesktopFontImpl;
 import consulo.ui.desktop.internal.window.WindowOverAWTWindow;
 import consulo.ui.image.Image;
 import consulo.ui.shared.ColorValue;
@@ -251,6 +252,15 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
     }
 
     throw new IllegalArgumentException(icon + "' is not supported");
+  }
+
+  @Nonnull
+  @Override
+  public Font to(@Nonnull consulo.ui.font.Font font) {
+    if(font instanceof DesktopFontImpl) {
+      return ((DesktopFontImpl)font).getFont();
+    }
+    throw new UnsupportedOperationException(font + " unsupported");
   }
 
   @Override

@@ -2,8 +2,15 @@
   <id>consulo.sandbox.plugin</id>
   <name>Sand Language</name>
   <platformVersion>SNAPSHOT</platformVersion>
+  <localize>consulo.sandbox.SandboxLocalize</localize>
 
   <depends config-file="consulo.platform.desktop.xml" optional="true">consulo.platform.desktop</depends>
+
+  <actions>
+    <action id="ShowUITesterAction" class="consulo.sandboxPlugin.ide.action.ShowUITesterAction">
+        <add-to-group group-id="ToolsMenu" />
+    </action>
+  </actions>
 
   <extensions defaultExtensionNs="com.intellij">
     <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand1EapDescriptor" />
@@ -58,5 +65,7 @@
     <remoteServer.type implementation="consulo.sandboxPlugin.ide.remoteServer.SandServerType" />
 
     <xdebugger.attachDebuggerProvider implementation="consulo.sandboxPlugin.ide.debugger.attach.SandAttachToProcessProvider" />
+
+    <runConfigurationsSettings implementation="consulo.sandboxPlugin.ide.run.SandRunConfigurationsSettings" />
   </extensions>
 </consulo-plugin>

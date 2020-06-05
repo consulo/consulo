@@ -23,7 +23,7 @@ import com.intellij.ide.actions.ShowFilePathAction;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.ide.ui.customization.CustomActionsSchema;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
@@ -56,6 +56,7 @@ import com.intellij.util.BitUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.TimedDeadzone;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
@@ -324,10 +325,10 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
             .setTabColor(calcTabColor(myProject, file)).setDragOutDelegate(myDragOutDelegate);
     tab.setTestableUi(new MyQueryable(tab));
 
-    final DefaultActionGroup tabActions = new DefaultActionGroup();
+    final ActionGroup.Builder tabActions = ActionGroup.newImmutableBuilder();
     tabActions.add(new CloseTab(comp, tab));
 
-    tab.setTabLabelActions(tabActions, ActionPlaces.EDITOR_TAB);
+    tab.setTabLabelActions(tabActions.build(), ActionPlaces.EDITOR_TAB);
     myTabs.addTabSilently(tab, indexToInsert);
   }
 

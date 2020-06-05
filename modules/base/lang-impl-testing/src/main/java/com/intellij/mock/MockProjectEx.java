@@ -15,7 +15,7 @@
  */
 package com.intellij.mock;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import consulo.components.impl.stores.IProjectStore;
 import com.intellij.openapi.project.ex.ProjectEx;

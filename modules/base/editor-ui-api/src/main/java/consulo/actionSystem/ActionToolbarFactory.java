@@ -17,7 +17,6 @@ package consulo.actionSystem;
 
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionToolbar;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 
@@ -38,10 +37,10 @@ public interface ActionToolbarFactory {
    * @return An instance of <code>ActionToolbar</code>
    */
   @Nonnull
-  default ActionToolbar createActionToolbar(@NonNls String place, ActionGroup group, boolean horizontal) {
+  default ActionToolbar createActionToolbar(String place, ActionGroup group, boolean horizontal) {
     return createActionToolbar(place, group, horizontal, false);
   }
 
   @Nonnull
-  ActionToolbar createActionToolbar(@NonNls String place, ActionGroup group, boolean horizontal, boolean decorateButtons);
+  ActionToolbar createActionToolbar(String place, ActionGroup group, boolean horizontal, boolean decorateButtons);
 }

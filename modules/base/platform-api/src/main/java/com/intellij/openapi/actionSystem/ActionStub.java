@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.actionSystem;
 
+import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -33,22 +34,20 @@ public class ActionStub extends AnAction implements ActionStubBase {
 
   private final String myClassName;
   private final String myId;
-  private final ClassLoader myLoader;
-  private final PluginId myPluginId;
   private final String myIconPath;
   private final Supplier<Presentation> myTemplatePresentation;
+  @Nonnull
+  private final PluginDescriptor myPluginDescriptor;
 
   public ActionStub(@Nonnull String actionClass,
                     @Nonnull String id,
-                    ClassLoader loader,
-                    PluginId pluginId,
+                    @Nonnull PluginDescriptor pluginDescriptor,
                     String iconPath,
                     @Nonnull Supplier<Presentation> templatePresentation) {
-    myLoader = loader;
-    myClassName = actionClass;
     LOG.assertTrue(id.length() > 0);
+    myPluginDescriptor = pluginDescriptor;
+    myClassName = actionClass;
     myId = id;
-    myPluginId = pluginId;
     myIconPath = iconPath;
     myTemplatePresentation = templatePresentation;
   }
@@ -69,12 +68,12 @@ public class ActionStub extends AnAction implements ActionStubBase {
   }
 
   public ClassLoader getLoader() {
-    return myLoader;
+    return myPluginDescriptor.getPluginClassLoader();
   }
 
   @Override
   public PluginId getPluginId() {
-    return myPluginId;
+    return myPluginDescriptor.getPluginId();
   }
 
   @Override

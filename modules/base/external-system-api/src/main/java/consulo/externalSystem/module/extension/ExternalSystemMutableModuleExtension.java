@@ -16,15 +16,16 @@
 package consulo.externalSystem.module.extension;
 
 import consulo.module.extension.MutableModuleExtension;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 03-Jun-17
  */
-public interface ExternalSystemMutableModuleExtension<T extends ExternalSystemModuleExtension<T>>
-        extends ExternalSystemModuleExtension<T>, MutableModuleExtension<T> {
-  void setOption(@Nonnull String key, @javax.annotation.Nullable String value);
+public interface ExternalSystemMutableModuleExtension<T extends ExternalSystemModuleExtension<T>> extends ExternalSystemModuleExtension<T>, MutableModuleExtension<T> {
+  void setOption(@Nonnull String key, @Nullable String value);
 
   void removeOption(@Nonnull String key);
 

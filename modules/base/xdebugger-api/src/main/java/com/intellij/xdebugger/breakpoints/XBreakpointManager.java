@@ -16,7 +16,7 @@
 
 package com.intellij.xdebugger.breakpoints;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.ui.image.Image;
 

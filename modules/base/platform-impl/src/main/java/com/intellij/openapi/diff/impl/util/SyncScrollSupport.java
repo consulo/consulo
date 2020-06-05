@@ -15,7 +15,8 @@
  */
 package com.intellij.openapi.diff.impl.util;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import com.intellij.openapi.diff.impl.EditingSides;
 import com.intellij.openapi.diff.impl.highlighting.FragmentSide;
@@ -25,7 +26,7 @@ import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.ScrollingModel;
 import com.intellij.openapi.editor.event.VisibleAreaEvent;
 import com.intellij.openapi.editor.event.VisibleAreaListener;
-import com.intellij.openapi.util.Disposer;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

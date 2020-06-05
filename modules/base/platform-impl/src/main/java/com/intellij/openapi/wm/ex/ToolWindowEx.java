@@ -22,19 +22,16 @@ import com.intellij.openapi.wm.ToolWindowType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import kava.beans.PropertyChangeListener;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public interface ToolWindowEx extends ToolWindow {
-  @NonNls
   String PROP_AVAILABLE = "available";
-  @NonNls
   String PROP_ICON = "icon";
-  @NonNls
+  @Deprecated
   String PROP_TITLE = "title";
-  @NonNls
+  @Deprecated
   String PROP_STRIPE_TITLE = "stripe-title";
 
   void addPropertyChangeListener(final PropertyChangeListener l);

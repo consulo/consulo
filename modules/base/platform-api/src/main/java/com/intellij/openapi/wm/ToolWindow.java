@@ -16,6 +16,8 @@
 package com.intellij.openapi.wm;
 
 import com.intellij.openapi.util.BusyObject;
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.util.dataholder.Key;
 import com.intellij.ui.content.ContentManager;
 import consulo.ui.Component;
@@ -31,6 +33,9 @@ public interface ToolWindow extends BusyObject {
 
   @Nonnull
   String getId();
+
+  @Nonnull
+  LocalizeValue getDisplayName();
 
   /**
    * @throws IllegalStateException if tool window isn't installed.
@@ -121,15 +126,18 @@ public interface ToolWindow extends BusyObject {
   void setType(@Nonnull ToolWindowType type, @Nullable Runnable runnable);
 
   /**
-   * @return window title. Returns <code>null</code> if window has no title.
+   * @return selected content title
    */
   @RequiredUIAccess
+  @Deprecated
   String getTitle();
 
   /**
    * Sets new window title.
    */
   @RequiredUIAccess
+  @Deprecated
+  @DeprecationInfo("Use getSelectedContent() for change")
   void setTitle(String title);
 
   /**
@@ -137,13 +145,20 @@ public interface ToolWindow extends BusyObject {
    */
   @Nonnull
   @RequiredUIAccess
-  String getStripeTitle();
+  @Deprecated
+  default String getStripeTitle() {
+    return getDisplayName().getValue();
+  }
 
   /**
    * Sets new window stripe button text.
    */
   @RequiredUIAccess
-  void setStripeTitle(@Nonnull String title);
+  @Deprecated
+  @DeprecationInfo("Use 'displayName' attribute")
+  default void setStripeTitle(@Nonnull String title) {
+    // unsupported
+  }
 
   /**
    * @return whether the window is available or not.

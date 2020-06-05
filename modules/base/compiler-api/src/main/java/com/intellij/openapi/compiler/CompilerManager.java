@@ -16,7 +16,7 @@
 package com.intellij.openapi.compiler;
 
 import com.intellij.notification.NotificationGroup;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.compiler.options.ExcludedEntriesConfiguration;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileTypes.FileType;

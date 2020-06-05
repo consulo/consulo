@@ -16,7 +16,7 @@
 package com.intellij.diagnostic;
 
 import com.intellij.concurrency.JobScheduler;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;

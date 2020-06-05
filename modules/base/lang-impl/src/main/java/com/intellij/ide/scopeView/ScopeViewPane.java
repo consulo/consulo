@@ -41,6 +41,7 @@ import com.intellij.ui.PopupHandler;
 import com.intellij.util.Alarm;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 

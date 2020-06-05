@@ -32,6 +32,7 @@ import consulo.ui.desktop.internal.textBox.DesktopIntBoxImpl;
 import consulo.ui.desktop.internal.textBox.DesktopTextBoxImpl;
 import consulo.ui.desktop.internal.textBox.DesktopTextBoxWithExpandAction;
 import consulo.ui.desktop.internal.textBox.DesktopTextBoxWithExtensions;
+import consulo.ui.font.FontManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.impl.model.ImmutableListModelImpl;
@@ -145,8 +146,14 @@ public class DesktopUIInternalImpl extends UIInternal {
 
   @Nonnull
   @Override
+  public FontManager _FontManager_get() {
+    return DesktopFontManagerImpl.ourInstance;
+  }
+
+  @Nonnull
+  @Override
   public Window _Window_modalWindow(String title) {
-    throw new UnsupportedOperationException();
+    return new DesktopWindowWrapper(title);
   }
 
   @Nullable
@@ -324,5 +331,10 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Override
   public TextBoxWithExtensions _Components_textBoxWithExtensions(String text) {
     return DesktopTextBoxWithExtensions.create(text);
+  }
+
+  @Override
+  public FoldoutLayout _Layouts_foldout(LocalizeValue titleValue, Component component, boolean show) {
+    return new DesktopFoldoutLayoutImpl(titleValue, component, show);
   }
 }

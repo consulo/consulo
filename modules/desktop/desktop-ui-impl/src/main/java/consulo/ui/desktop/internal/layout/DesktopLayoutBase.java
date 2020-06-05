@@ -28,7 +28,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 2019-02-16
  */
-abstract class DesktopLayoutBase extends SwingComponentDelegate<JPanel> {
+abstract class DesktopLayoutBase<T extends JPanel> extends SwingComponentDelegate<T> {
   class MyJPanel extends JPanel implements FromSwingComponentWrapper {
     MyJPanel(LayoutManager layout) {
       super(layout);
@@ -46,8 +46,9 @@ abstract class DesktopLayoutBase extends SwingComponentDelegate<JPanel> {
     }
   }
 
+  @SuppressWarnings("unchecked")
   protected void initDefaultPanel(LayoutManager layoutManager) {
-    initialize(new MyJPanel(layoutManager));
+    initialize((T)new MyJPanel(layoutManager));
   }
 
   protected void add(Component component, Object constraints) {

@@ -25,33 +25,28 @@ import java.io.File;
  * @since 2019-12-07
  */
 class WebContainerPathManager extends ContainerPathManager {
-  private final File myPlatformPath;
-
-  public WebContainerPathManager(File platformPath) {
-    myPlatformPath = platformPath;
-  }
 
   @Nonnull
   @Override
   public String getHomePath() {
-    return myPlatformPath.getPath();
+    return System.getProperty("consulo.home.path");
   }
 
   @Nonnull
   @Override
   public File getAppHomeDirectory() {
-    return myPlatformPath;
+    return new File(System.getProperty("user.dir"));
   }
 
   @Nonnull
   @Override
   public String getConfigPath() {
-    return new File(myPlatformPath, "/.sandbox/config").getPath();
+    return new File(getAppHomeDirectory(), "/.sandbox/config").getPath();
   }
 
   @Nonnull
   @Override
   public String getSystemPath() {
-    return new File(myPlatformPath, "/.sandbox/system").getPath();
+    return new File(getAppHomeDirectory(), "/.sandbox/system").getPath();
   }
 }

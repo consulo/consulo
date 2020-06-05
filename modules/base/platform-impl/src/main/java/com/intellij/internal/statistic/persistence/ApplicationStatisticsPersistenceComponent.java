@@ -19,7 +19,6 @@ package com.intellij.internal.statistic.persistence;
 import com.intellij.ide.AppLifecycleListener;
 import com.intellij.internal.statistic.AbstractApplicationUsagesCollector;
 import com.intellij.internal.statistic.UsagesCollector;
-import com.intellij.internal.statistic.beans.GroupDescriptor;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
@@ -32,7 +31,6 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.messages.MessageBus;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
@@ -40,45 +38,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@State(name = "StatisticsApplicationUsages", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/statistics.application.usages.xml", roamingType = RoamingType.DISABLED))
+@State(name = "StatisticsApplicationUsages", storages = @Storage(value = "statistics.application.usages.xml", roamingType = RoamingType.DISABLED))
 @Singleton
 public class ApplicationStatisticsPersistenceComponent extends ApplicationStatisticsPersistence implements PersistentStateComponent<Element> {
   private boolean persistOnClosing = !ApplicationManager.getApplication().isUnitTestMode();
 
   private static final String TOKENIZER = ",";
 
-  @NonNls
   private static final String GROUP_TAG = "group";
-  @NonNls
   private static final String GROUP_NAME_ATTR = "name";
-
-  @NonNls
   private static final String PROJECT_TAG = "project";
-  @NonNls
   private static final String PROJECT_ID_ATTR = "id";
-  @NonNls
   private static final String VALUES_ATTR = "values";
 
   public ApplicationStatisticsPersistenceComponent() {
   }
 
   public static ApplicationStatisticsPersistenceComponent getInstance() {
-    return ApplicationManager.getApplication().getComponent(ApplicationStatisticsPersistenceComponent.class);
+    return ServiceManager.getService(ApplicationStatisticsPersistenceComponent.class);
   }
 
   @Override
   public void loadState(final Element element) {
-    List groups = element.getChildren(GROUP_TAG);
+    List<Element> groups = element.getChildren(GROUP_TAG);
 
-    for (Object group : groups) {
-      Element groupElement = (Element)group;
+    for (Element groupElement : groups) {
       String groupName = groupElement.getAttributeValue(GROUP_NAME_ATTR);
 
-      final GroupDescriptor groupDescriptor = GroupDescriptor.create(groupName);
-
-      List projectsList = groupElement.getChildren(PROJECT_TAG);
-      for (Object project : projectsList) {
-        Element projectElement = (Element)project;
+      List<Element> projectsList = groupElement.getChildren(PROJECT_TAG);
+      for (Element projectElement : projectsList) {
         String projectId = projectElement.getAttributeValue(PROJECT_ID_ATTR);
         String frameworks = projectElement.getAttributeValue(VALUES_ATTR);
         if (!StringUtil.isEmptyOrSpaces(projectId) && !StringUtil.isEmptyOrSpaces(frameworks)) {
@@ -87,7 +75,7 @@ public class ApplicationStatisticsPersistenceComponent extends ApplicationStatis
             final UsageDescriptor descriptor = getUsageDescriptor(key);
             if (descriptor != null) frameworkDescriptors.add(descriptor);
           }
-          getApplicationData(groupDescriptor).put(projectId, frameworkDescriptors);
+          getApplicationData(groupName).put(projectId, frameworkDescriptors);
         }
       }
     }
@@ -97,9 +85,9 @@ public class ApplicationStatisticsPersistenceComponent extends ApplicationStatis
   public Element getState() {
     Element element = new Element("state");
 
-    for (Map.Entry<GroupDescriptor, Map<String, Set<UsageDescriptor>>> appData : getApplicationData().entrySet()) {
+    for (Map.Entry<String, Map<String, Set<UsageDescriptor>>> appData : getApplicationData().entrySet()) {
       Element groupElement = new Element(GROUP_TAG);
-      groupElement.setAttribute(GROUP_NAME_ATTR, appData.getKey().getId());
+      groupElement.setAttribute(GROUP_NAME_ATTR, appData.getKey());
       boolean isEmptyGroup = true;
 
       for (Map.Entry<String, Set<UsageDescriptor>> projectData : appData.getValue().entrySet()) {

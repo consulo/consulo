@@ -1,5 +1,7 @@
 package com.intellij.ui;
 
+import consulo.annotation.DeprecationInfo;
+
 import javax.annotation.Nullable;
 
 import javax.swing.*;
@@ -8,6 +10,8 @@ import java.awt.*;
 /**
  * @author evgeny zakrevsky
  */
+@Deprecated
+@DeprecationInfo("Use consulo.ui.layout.FoldoutLayout")
 public class HideableTitledPanel extends JPanel {
 
   private final HideableDecorator myDecorator;

@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.roots.impl.libraries;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ComponentSerializationUtil;
 import com.intellij.openapi.module.Module;
@@ -24,6 +23,8 @@ import com.intellij.util.EventDispatcher;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.XmlSerializer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.disposer.TraceableDisposable;
 import consulo.logging.Logger;
 import consulo.roots.impl.ModuleRootLayerImpl;
@@ -60,7 +61,7 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
   @Nullable
   private final ModuleRootLayerImpl myRootModel;
   private boolean myDisposed;
-  private final Disposable myPointersDisposable = Disposer.newDisposable();
+  private final Disposable myPointersDisposable = Disposable.newDisposable();
   private final EventDispatcher<RootSetChangedListener> myDispatcher = EventDispatcher.create(RootSetChangedListener.class);
 
   private TraceableDisposable myTraceableDisposable;

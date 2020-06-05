@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.impl.projectlevelman;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
@@ -75,6 +75,7 @@ public class AllVcses implements AllVcsesI, Disposable {
     vcs.getProvidedStatuses();
   }
 
+  @Override
   public void registerManually(@Nonnull final AbstractVcs vcs) {
     synchronized (myLock) {
       if (myVcses.containsKey(vcs.getName())) return;
@@ -82,6 +83,7 @@ public class AllVcses implements AllVcsesI, Disposable {
     }
   }
 
+  @Override
   public void unregisterManually(@Nonnull final AbstractVcs vcs) {
     synchronized (myLock) {
       if (! myVcses.containsKey(vcs.getName())) return;
@@ -90,6 +92,7 @@ public class AllVcses implements AllVcsesI, Disposable {
     }
   }
 
+  @Override
   public AbstractVcs getByName(final String name) {
     synchronized (myLock) {
       final AbstractVcs vcs = myVcses.get(name);
@@ -105,14 +108,15 @@ public class AllVcses implements AllVcsesI, Disposable {
     }
 
     // VcsEP guarantees to always return the same vcs value
-    final AbstractVcs vcs1 = ep.getVcs(myProject);
-    LOG.assertTrue(vcs1 != null, name);
+    final AbstractVcs newVcs = ep.getVcs(myProject);
+
+    newVcs.setupEnvironments();
 
     synchronized (myLock) {
       if (!myVcses.containsKey(name)) {
-        addVcs(vcs1);
+        addVcs(newVcs);
       }
-      return vcs1;
+      return newVcs;
     }
   }
 
@@ -123,6 +127,7 @@ public class AllVcses implements AllVcsesI, Disposable {
     return ep == null ? null : ep.createDescriptor();
   }
 
+  @Override
   public void dispose() {
     synchronized (myLock) {
       for (AbstractVcs vcs : myVcses.values()) {
@@ -140,10 +145,12 @@ public class AllVcses implements AllVcsesI, Disposable {
     }
   }
 
+  @Override
   public boolean isEmpty() {
     return myExtensions.isEmpty();
   }
 
+  @Override
   public VcsDescriptor[] getAll() {
     final List<VcsDescriptor> result = new ArrayList<>(myExtensions.size());
     for (VcsEP vcsEP : myExtensions.values()) {

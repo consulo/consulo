@@ -61,12 +61,14 @@ import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
+import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.ui.image.Image;
@@ -270,8 +272,8 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
   @Nonnull
   @Override
-  protected ToolWindowEx createToolWindow(String id, boolean canCloseContent, @Nullable Object component) {
-    return new DesktopToolWindowImpl(this, id, canCloseContent, (JComponent)component);
+  protected ToolWindowEx createToolWindow(String id, LocalizeValue displayName, boolean canCloseContent, @Nullable Object component, boolean shouldBeAvailable) {
+    return new DesktopToolWindowImpl(this, id, displayName, canCloseContent, (JComponent)component, shouldBeAvailable);
   }
 
   @Nonnull

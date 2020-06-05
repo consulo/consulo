@@ -16,8 +16,8 @@
 package com.intellij.execution.testframework;
 
 import com.intellij.ide.util.treeView.NodeDescriptor;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pass;
 import com.intellij.ui.ClickListener;
 import javax.annotation.Nullable;

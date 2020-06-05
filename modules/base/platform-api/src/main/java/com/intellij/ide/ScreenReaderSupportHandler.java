@@ -15,8 +15,8 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.util.ui.accessibility.ScreenReader;
+import consulo.disposer.Disposable;
 import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;

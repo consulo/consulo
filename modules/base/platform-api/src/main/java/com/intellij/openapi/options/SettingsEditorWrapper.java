@@ -16,7 +16,7 @@
 package com.intellij.openapi.options;
 
 import consulo.logging.Logger;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.util.containers.Convertor;
 import javax.annotation.Nonnull;
 

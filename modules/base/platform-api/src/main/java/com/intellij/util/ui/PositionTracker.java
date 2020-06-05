@@ -15,8 +15,8 @@
  */
 package com.intellij.util.ui;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import com.intellij.ui.awt.RelativePoint;
 
 import java.awt.*;

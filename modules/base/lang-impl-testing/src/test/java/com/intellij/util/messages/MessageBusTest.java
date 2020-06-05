@@ -20,9 +20,9 @@
 package com.intellij.util.messages;
 
 import com.intellij.mock.MockApplication;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.messages.impl.MessageBusFactory;
+import consulo.disposer.Disposable;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;
@@ -84,7 +84,7 @@ public class MessageBusTest extends TestCase {
   @Override
   protected void setUp() throws Exception {
     super.setUp();
-    myBus = MessageBusFactory.newMessageBus(new MockApplication(Disposer.newDisposable()));
+    myBus = MessageBusFactory.newMessageBus(new MockApplication(Disposable.newDisposable()));
     myLog = new ArrayList<String>();
   }
 

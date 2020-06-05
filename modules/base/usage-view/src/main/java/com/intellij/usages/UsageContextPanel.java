@@ -15,9 +15,10 @@
  */
 package com.intellij.usages;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.usageView.UsageInfo;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

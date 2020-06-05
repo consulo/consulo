@@ -49,6 +49,7 @@ import consulo.application.ex.ApplicationEx2;
 import consulo.application.impl.BaseApplication;
 import consulo.desktop.boot.main.windows.WindowsCommandLineProcessor;
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.logging.Logger;
 import consulo.start.CommandLineArgs;

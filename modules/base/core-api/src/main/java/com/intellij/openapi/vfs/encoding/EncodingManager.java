@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.vfs.encoding;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.disposer.Disposable;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;
 

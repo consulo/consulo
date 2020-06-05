@@ -15,7 +15,6 @@
  */
 package consulo.extension.ui;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -24,6 +23,7 @@ import com.intellij.openapi.projectRoots.SdkTypeId;
 import consulo.annotation.UsedInPlugin;
 import consulo.bundle.ui.BundleBox;
 import consulo.bundle.ui.BundleBoxBuilder;
+import consulo.disposer.Disposable;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
@@ -47,16 +47,16 @@ import java.util.function.Predicate;
  */
 public class ModuleExtensionBundleBoxBuilder<T extends MutableModuleExtension<?>> {
   @Nonnull
-  public static <T extends MutableModuleExtensionWithSdk<?>> ModuleExtensionBundleBoxBuilder createAndDefine(@Nonnull T extension, @Nullable Runnable updater) {
-    ModuleExtensionBundleBoxBuilder<T> builder = create(extension, updater);
+  public static <T extends MutableModuleExtensionWithSdk<?>> ModuleExtensionBundleBoxBuilder createAndDefine(@Nonnull T extension, @Nonnull Disposable uiDisposable, @Nullable Runnable updater) {
+    ModuleExtensionBundleBoxBuilder<T> builder = create(extension, uiDisposable, updater);
     builder.sdkTypeClass(extension.getSdkTypeClass());
     builder.sdkPointerFunc(dom -> dom.getInheritableSdk());
     return builder;
   }
 
   @Nonnull
-  public static <T extends MutableModuleExtension<?>> ModuleExtensionBundleBoxBuilder<T> create(@Nonnull T extension, @Nullable Runnable updater) {
-    return new ModuleExtensionBundleBoxBuilder<>(extension).laterUpdater(updater);
+  public static <T extends MutableModuleExtension<?>> ModuleExtensionBundleBoxBuilder<T> create(@Nonnull T extension, @Nonnull Disposable uiDisposable, @Nullable Runnable updater) {
+    return new ModuleExtensionBundleBoxBuilder<>(extension).laterUpdater(updater).uiDisposable(uiDisposable);
   }
 
   @Nonnull

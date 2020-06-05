@@ -22,15 +22,15 @@ package com.intellij.ide.todo;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangeList;
 import com.intellij.openapi.vcs.changes.ChangeListAdapter;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
-import com.intellij.openapi.Disposable;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.content.Content;
 import com.intellij.util.Alarm;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 
 import java.util.Collection;
 

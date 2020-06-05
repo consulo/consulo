@@ -15,30 +15,27 @@
  */
 package com.intellij.featureStatistics;
 
-import com.intellij.openapi.project.Project;
 import com.intellij.internal.statistic.UsagesCollector;
-import com.intellij.internal.statistic.beans.*;
-import com.intellij.internal.statistic.beans.GroupDescriptor;
+import com.intellij.internal.statistic.beans.UsageDescriptor;
+import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.HashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Set;
 
 public class FeaturesUsageCollector extends UsagesCollector {
 
   @Nonnull
   @Override
-  public GroupDescriptor getGroupId() {
-    return GroupDescriptor.create("productivity",  GroupDescriptor.LOWER_PRIORITY);
+  public String getGroupId() {
+    return "productivity";
   }
 
   @Nonnull
   @Override
   public Set<UsageDescriptor> getUsages(@Nullable Project project) {
     Set<UsageDescriptor> usages = new HashSet<UsageDescriptor>();
-
-    final FeatureUsageTracker usageTracker = FeatureUsageTracker.getInstance(); //
 
     final ProductivityFeaturesRegistry registry = ProductivityFeaturesRegistry.getInstance();
     for (String featureId : registry.getFeatureIds()) {

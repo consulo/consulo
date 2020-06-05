@@ -97,7 +97,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
 
       HorizontalLayout syncWithIde = HorizontalLayout.create();
       syncLayout.add(syncWithIde);
-      syncWithIde.add(myChkAutoSaveIfInactive = CheckBox.create(IdeBundle.message("checkbox.save.files.automatically")));
+      syncWithIde.add(myChkAutoSaveIfInactive = CheckBox.create(IdeLocalize.checkboxSaveFilesAutomatically()));
       syncWithIde.add(myTfInactiveTimeout = TextBox.create());
       myTfInactiveTimeout.setEnabled(false);
       syncWithIde.add(Label.create(IdeBundle.message("label.inactive.timeout.sec")));
@@ -107,7 +107,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
       myRootLayout.add(LabeledLayout.create("Synchronization", syncLayout));
 
       VerticalLayout screenLayout = VerticalLayout.create();
-      screenLayout.add(myChkSupportScreenReaders = CheckBox.create(IdeBundle.message("checkbox.support.screen.readers")));
+      screenLayout.add(myChkSupportScreenReaders = CheckBox.create(IdeLocalize.checkboxSupportScreenReaders()));
       myRootLayout.add(LabeledLayout.create("Accessibility", screenLayout));
 
       VerticalLayout localizeLayout = VerticalLayout.create();
@@ -126,7 +126,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
 
       myRootLayout.add(LabeledLayout.create(IdeBundle.message("group.settings.process.tab.close"), processLayout));
 
-      HorizontalLayout fileDialogsLayout = HorizontalLayout.create(10);
+      VerticalLayout fileDialogsLayout = VerticalLayout.create();
 
       ComboBox.Builder<FileOperateDialogProvider> fileChooseDialogBox = ComboBox.<FileOperateDialogProvider>builder();
       for (FileChooseDialogProvider fileChooseDialogProvider : FileChooseDialogProvider.EP_NAME.getExtensionList()) {
@@ -135,7 +135,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         }
       }
 
-      fileDialogsLayout.add(LabeledComponents.left("File/Path Choose Dialog Type", myFileChooseDialogBox = fileChooseDialogBox.build()));
+      fileDialogsLayout.add(LabeledComponents.leftWithRight("File/Path Choose Dialog Type", myFileChooseDialogBox = fileChooseDialogBox.build()));
 
       ComboBox.Builder<FileOperateDialogProvider> fileSaveDialogBox = ComboBox.<FileOperateDialogProvider>builder();
       for (FileSaveDialogProvider fileSaveDialogProvider : FileSaveDialogProvider.EP_NAME.getExtensionList()) {
@@ -144,13 +144,13 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         }
       }
 
-      fileDialogsLayout.add(LabeledComponents.left("File Save Dialog Type", myFileSaveDialogBox = fileSaveDialogBox.build()));
+      fileDialogsLayout.add(LabeledComponents.leftWithRight("File Save Dialog Type", myFileSaveDialogBox = fileSaveDialogBox.build()));
 
       myRootLayout.add(LabeledLayout.create("File Dialogs", fileDialogsLayout));
 
-      HorizontalLayout webSearchOptionsLayout = HorizontalLayout.create(10);
+      VerticalLayout webSearchOptionsLayout = VerticalLayout.create();
       ComboBox.Builder<WebSearchEngine> webSearchEngineBuilder = ComboBox.<WebSearchEngine>builder().fillByEnum(WebSearchEngine.class, WebSearchEngine::getPresentableName);
-      webSearchOptionsLayout.add(LabeledComponents.left("Engine", myWebSearchEngineComboBox = webSearchEngineBuilder.build()));
+      webSearchOptionsLayout.add(LabeledComponents.leftWithRight("Engine", myWebSearchEngineComboBox = webSearchEngineBuilder.build()));
 
       myRootLayout.add(LabeledLayout.create(IdeLocalize.webSearchLabelLayout(), webSearchOptionsLayout));
     }

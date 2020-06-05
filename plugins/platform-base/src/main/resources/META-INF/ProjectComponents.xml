@@ -16,11 +16,6 @@
 <consulo-plugin>
   <project-components>
     <component>
-      <implementation-class>com.intellij.notification.EventLog$ProjectTracker</implementation-class>
-      <skipForDefaultProject/>
-    </component>
-
-    <component>
       <interface-class>consulo.command.undo.ProjectUndoManager</interface-class>
       <implementation-class>consulo.command.undo.impl.ProjectUndoManagerImpl</implementation-class>
     </component>
@@ -166,9 +161,6 @@
       <loadForDefaultProject/>
     </component>
 
-    <component>
-      <implementation-class>com.intellij.internal.statistic.updater.SendStatisticsProjectComponent</implementation-class>
-    </component>
     <component>
       <interface-class>com.intellij.openapi.vcs.ProjectLevelVcsManager</interface-class>
       <implementation-class>com.intellij.openapi.vcs.impl.ProjectLevelVcsManagerImpl</implementation-class>

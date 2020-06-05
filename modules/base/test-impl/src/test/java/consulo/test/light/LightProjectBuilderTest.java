@@ -15,11 +15,11 @@
  */
 package consulo.test.light;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.impl.DebugUtil;
@@ -59,7 +59,7 @@ public class LightProjectBuilderTest {
 
   @Test
   public void testPlaintTextFileParser() throws Throwable {
-    Disposable disposable = Disposer.newDisposable("root");
+    Disposable disposable = Disposable.newDisposable("root");
 
     LightApplicationBuilder builder = LightApplicationBuilder.create(disposable);
 

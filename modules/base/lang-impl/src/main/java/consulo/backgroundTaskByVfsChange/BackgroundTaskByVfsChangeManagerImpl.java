@@ -16,12 +16,12 @@
 package consulo.backgroundTaskByVfsChange;
 
 import com.intellij.application.options.ReplacePathToMacroMap;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
+import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileEvent;

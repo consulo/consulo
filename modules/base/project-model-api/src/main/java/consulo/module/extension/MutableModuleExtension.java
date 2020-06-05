@@ -15,15 +15,13 @@
  */
 package consulo.module.extension;
 
-import com.intellij.openapi.Disposable;
-import consulo.annotation.DeprecationInfo;
+import consulo.disposer.Disposable;
 import consulo.roots.ModifiableModuleRootLayer;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 /**
  * @author VISTALL
@@ -32,35 +30,7 @@ import javax.swing.*;
 public interface MutableModuleExtension<T extends ModuleExtension<T>> extends ModuleExtension<T> {
   @Nullable
   @RequiredUIAccess
-  @Deprecated
-  @DeprecationInfo("Use #createConfigurationComponent()")
-  @SuppressWarnings("deprecation")
-  default JComponent createConfigurablePanel(@Nonnull Disposable uiDisposable, @Nonnull Runnable updateOnCheck) {
-    return createConfigurablePanel(updateOnCheck);
-  }
-
-  @Nullable
-  @RequiredUIAccess
-  @SuppressWarnings("deprecation")
-  default Component createConfigurationComponent(@Nonnull Disposable uiDisposable, @Nonnull Runnable updateOnCheck) {
-    return createConfigurationComponent(updateOnCheck);
-  }
-
-  @Nullable
-  @RequiredUIAccess
-  @Deprecated
-  @DeprecationInfo("Use #createConfigurationComponent()")
-  default JComponent createConfigurablePanel(@Nonnull Runnable updateOnCheck) {
-    return null;
-  }
-
-  @Nullable
-  @RequiredUIAccess
-  @Deprecated
-  @DeprecationInfo("Use #createConfigurationComponent(@Nonnull Disposable uiDisposable, @Nonnull Runnable updateOnCheck)")
-  default Component createConfigurationComponent(@Nonnull Runnable updateOnCheck) {
-    return null;
-  }
+  Component createConfigurationComponent(@Nonnull Disposable uiDisposable, @Nonnull Runnable updateOnCheck);
 
   @Override
   @Nonnull

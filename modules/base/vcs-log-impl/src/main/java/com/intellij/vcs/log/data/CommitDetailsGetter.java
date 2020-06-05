@@ -1,12 +1,13 @@
 package com.intellij.vcs.log.data;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcs.log.VcsLogProvider;
 import com.intellij.vcs.log.data.index.VcsLogIndex;
 import com.intellij.vcs.log.impl.VcsLogUtil;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

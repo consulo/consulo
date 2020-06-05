@@ -15,23 +15,14 @@
  */
 package com.intellij.internal.statistic;
 
-import com.intellij.internal.statistic.beans.ConvertUsagesUtil;
-import com.intellij.internal.statistic.beans.GroupDescriptor;
 import com.intellij.internal.statistic.beans.PatchedUsage;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
-import com.intellij.internal.statistic.connect.RemotelyConfigurableStatisticsService;
-import com.intellij.internal.statistic.connect.StatisticsConnectionService;
-import com.intellij.internal.statistic.connect.StatisticsHttpClientSender;
-import com.intellij.internal.statistic.connect.StatisticsService;
-import com.intellij.internal.statistic.persistence.SentUsagesPersistence;
-import com.intellij.internal.statistic.persistence.UsageStatisticsPersistenceComponent;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Pair;
-import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.util.PluginExceptionUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,109 +30,14 @@ import java.util.*;
 
 public class StatisticsUploadAssistant {
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.internal.statistic.StatisticsUploadAssistant");
-
-  public String getData() {
-    return getData(Collections.<String>emptySet());
-  }
-
-  public static boolean isTimeToSend() {
-    return isTimeToSend(UsageStatisticsPersistenceComponent.getInstance());
-  }
-
-  public static boolean isTimeToSend(UsageStatisticsPersistenceComponent settings) {
-    final long timeDelta = System.currentTimeMillis() - settings.getLastTimeSent();
-
-    return Math.abs(timeDelta) > settings.getPeriod().getMillis();
-  }
-
-  public static boolean isSendAllowed() {
-    return isSendAllowed(UsageStatisticsPersistenceComponent.getInstance());
-  }
-
-  public static boolean isSendAllowed(final SentUsagesPersistence settings) {
-    return settings != null && settings.isAllowed();
-  }
-
-  public String getData(@Nonnull Set<String> disabledGroups) {
-    return getStringPatch(disabledGroups, ProjectManager.getInstance().getOpenProjects());
-  }
-
-  public static void persistSentPatch(@Nonnull String patchStr) {
-    persistSentPatch(patchStr, UsageStatisticsPersistenceComponent.getInstance());
-  }
-
-  public static void persistSentPatch(@Nonnull String patchStr, @Nonnull SentUsagesPersistence persistenceComponent) {
-    Map<GroupDescriptor, Set<PatchedUsage>> patchedUsages = mapToPatchedUsagesMap(ConvertUsagesUtil.convertString(patchStr));
-
-    if (patchedUsages.size() > 0) persistenceComponent.persistPatch(patchedUsages);
-  }
+  private static final Logger LOG = Logger.getInstance(StatisticsUploadAssistant.class);
 
   @Nonnull
-  public static String getStringPatch(@Nonnull Set<String> disabledGroups, Project... project) {
-    return getStringPatch(disabledGroups, project, UsageStatisticsPersistenceComponent.getInstance(), 0);
-  }
+  public static Map<String, Set<PatchedUsage>> getPatchedUsages(@Nonnull final Map<String, Set<UsageDescriptor>> allUsages, final Map<String, Set<UsageDescriptor>> sentUsageMap) {
+    Map<String, Set<PatchedUsage>> patchedUsages = mapToPatchedUsagesMap(allUsages);
 
-  @Nonnull
-  public static String getStringPatch(@Nonnull Set<String> disabledGroups,
-                                      @Nonnull Project[] projects,
-                                      @Nonnull SentUsagesPersistence usagesPersistence,
-                                      int maxSize) {
-    final Map<GroupDescriptor, Set<PatchedUsage>> patchedUsages = getPatchedUsages(disabledGroups, projects, usagesPersistence);
-
-    return getStringPatch(patchedUsages, maxSize);
-  }
-
-  public static String getStringPatch(@Nonnull Map<GroupDescriptor, Set<PatchedUsage>> patchedUsages, int maxSize) {
-    if (patchedUsages.size() == 0) return "";
-
-    String patchStr = ConvertUsagesUtil.convertUsages(patchedUsages);
-    if (maxSize > 0 && patchStr.getBytes().length > maxSize) {
-      patchStr = ConvertUsagesUtil.cutPatchString(patchStr, maxSize);
-    }
-
-    return patchStr;
-  }
-
-  @Nonnull
-  public static Map<GroupDescriptor, Set<PatchedUsage>> getPatchedUsages(@Nonnull Set<String> disabledGroups,
-                                                                         @Nonnull Project[] projects,
-                                                                         @Nonnull SentUsagesPersistence usagesPersistence) {
-    Map<GroupDescriptor, Set<PatchedUsage>> usages = new LinkedHashMap<GroupDescriptor, Set<PatchedUsage>>();
-
-    for (Project project : projects) {
-      final Map<GroupDescriptor, Set<UsageDescriptor>> allUsages = getAllUsages(project, disabledGroups);
-      final Map<GroupDescriptor, Set<UsageDescriptor>> sentUsages = filterDisabled(disabledGroups, usagesPersistence.getSentUsages());
-
-      usages.putAll(getPatchedUsages(allUsages, sentUsages));
-    }
-    return usages;
-  }
-
-  @Nonnull
-  private static Map<GroupDescriptor, Set<UsageDescriptor>> filterDisabled(@Nonnull Set<String> disabledGroups, @Nonnull Map<GroupDescriptor, Set<UsageDescriptor>> usages) {
-    Map<GroupDescriptor, Set<UsageDescriptor>> filtered = new LinkedHashMap<GroupDescriptor, Set<UsageDescriptor>>();
-
-    for (Map.Entry<GroupDescriptor, Set<UsageDescriptor>> usage : usages.entrySet()) {
-      if (!disabledGroups.contains(usage.getKey().getId())) {
-        filtered.put(usage.getKey(), usage.getValue());
-      }
-    }
-    return filtered;
-  }
-
-  @Nonnull
-  public static Map<GroupDescriptor, Set<PatchedUsage>> getPatchedUsages(@Nonnull final Map<GroupDescriptor, Set<UsageDescriptor>> allUsages,
-                                                                         @Nonnull SentUsagesPersistence usagesPersistence) {
-    return getPatchedUsages(allUsages, usagesPersistence.getSentUsages());
-  }
-
-  @Nonnull
-  public static Map<GroupDescriptor, Set<PatchedUsage>> getPatchedUsages(@Nonnull final Map<GroupDescriptor, Set<UsageDescriptor>> allUsages, final Map<GroupDescriptor, Set<UsageDescriptor>> sentUsageMap) {
-    Map<GroupDescriptor, Set<PatchedUsage>> patchedUsages = mapToPatchedUsagesMap(allUsages);
-
-    for (Map.Entry<GroupDescriptor, Set<UsageDescriptor>> sentUsageEntry : sentUsageMap.entrySet()) {
-      final GroupDescriptor sentUsageGroupDescriptor = sentUsageEntry.getKey();
+    for (Map.Entry<String, Set<UsageDescriptor>> sentUsageEntry : sentUsageMap.entrySet()) {
+      final String sentUsageGroupDescriptor = sentUsageEntry.getKey();
 
       final Set<UsageDescriptor> sentUsages = sentUsageEntry.getValue();
 
@@ -149,41 +45,32 @@ public class StatisticsUploadAssistant {
         final PatchedUsage descriptor = findDescriptor(patchedUsages, Pair.create(sentUsageGroupDescriptor, sentUsage.getKey()));
         if (descriptor == null) {
           if (!patchedUsages.containsKey(sentUsageGroupDescriptor)) {
-            patchedUsages.put(sentUsageGroupDescriptor, new LinkedHashSet<PatchedUsage>());
+            patchedUsages.put(sentUsageGroupDescriptor, new LinkedHashSet<>());
           }
           patchedUsages.get(sentUsageGroupDescriptor).add(new PatchedUsage(sentUsage.getKey(), -sentUsage.getValue()));
-        } else {
+        }
+        else {
           descriptor.subValue(sentUsage.getValue());
         }
       }
 
     }
 
-    return packCollection(patchedUsages, new Condition<PatchedUsage>() {
-      @Override
-      public boolean value(PatchedUsage patchedUsage) {
-        return patchedUsage.getDelta() != 0;
-      }
-    });
+    return packCollection(patchedUsages, patchedUsage -> patchedUsage.getDelta() != 0);
   }
 
-  private static Map<GroupDescriptor, Set<PatchedUsage>> mapToPatchedUsagesMap(Map<GroupDescriptor, Set<UsageDescriptor>> allUsages) {
-    Map<GroupDescriptor, Set<PatchedUsage>> patchedUsages = new LinkedHashMap<GroupDescriptor, Set<PatchedUsage>>();
-    for (Map.Entry<GroupDescriptor, Set<UsageDescriptor>> entry : allUsages.entrySet()) {
-      patchedUsages.put(entry.getKey(), new HashSet<PatchedUsage>(ContainerUtil.map2Set(entry.getValue(), new Function<UsageDescriptor, PatchedUsage>() {
-        @Override
-        public PatchedUsage fun(UsageDescriptor usageDescriptor) {
-          return new PatchedUsage(usageDescriptor);
-        }
-      })));
+  private static Map<String, Set<PatchedUsage>> mapToPatchedUsagesMap(Map<String, Set<UsageDescriptor>> allUsages) {
+    Map<String, Set<PatchedUsage>> patchedUsages = new LinkedHashMap<>();
+    for (Map.Entry<String, Set<UsageDescriptor>> entry : allUsages.entrySet()) {
+      patchedUsages.put(entry.getKey(), new HashSet<>(ContainerUtil.map2Set(entry.getValue(), PatchedUsage::new)));
     }
     return patchedUsages;
   }
 
   @Nonnull
-  private static Map<GroupDescriptor, Set<PatchedUsage>> packCollection(@Nonnull Map<GroupDescriptor, Set<PatchedUsage>> patchedUsages, Condition<PatchedUsage> condition) {
-    Map<GroupDescriptor, Set<PatchedUsage>> result = new LinkedHashMap<GroupDescriptor, Set<PatchedUsage>>();
-    for (GroupDescriptor descriptor : patchedUsages.keySet()) {
+  private static Map<String, Set<PatchedUsage>> packCollection(@Nonnull Map<String, Set<PatchedUsage>> patchedUsages, Condition<PatchedUsage> condition) {
+    Map<String, Set<PatchedUsage>> result = new LinkedHashMap<>();
+    for (String descriptor : patchedUsages.keySet()) {
       final Set<PatchedUsage> usages = packCollection(patchedUsages.get(descriptor), condition);
       if (usages.size() > 0) {
         result.put(descriptor, usages);
@@ -195,7 +82,7 @@ public class StatisticsUploadAssistant {
 
   @Nonnull
   private static <T> Set<T> packCollection(@Nonnull Collection<T> set, @Nonnull Condition<T> condition) {
-    final Set<T> result = new LinkedHashSet<T>();
+    final Set<T> result = new LinkedHashSet<>();
     for (T t : set) {
       if (condition.value(t)) {
         result.add(t);
@@ -205,44 +92,36 @@ public class StatisticsUploadAssistant {
   }
 
   @Nullable
-  public static <T extends UsageDescriptor> T findDescriptor(@Nonnull Map<GroupDescriptor, Set<T>> descriptors,
-                                                             @Nonnull final Pair<GroupDescriptor, String> id) {
+  public static <T extends UsageDescriptor> T findDescriptor(@Nonnull Map<String, Set<T>> descriptors, @Nonnull final Pair<String, String> id) {
     final Set<T> usages = descriptors.get(id.getFirst());
     if (usages == null) return null;
 
-    return ContainerUtil.find(usages, new Condition<T>() {
-      @Override
-      public boolean value(T t) {
-        return id.getSecond().equals(t.getKey());
-      }
-    });
+    return ContainerUtil.find(usages, t -> id.getSecond().equals(t.getKey()));
   }
 
   @Nonnull
-  public static Map<GroupDescriptor, Set<UsageDescriptor>> getAllUsages(@Nullable Project project, @Nonnull Set<String> disabledGroups) {
-    Map<GroupDescriptor, Set<UsageDescriptor>> usageDescriptors = new LinkedHashMap<GroupDescriptor, Set<UsageDescriptor>>();
+  public static Map<String, Set<UsageDescriptor>> getAllUsages(@Nullable Project project, @Nonnull Set<String> disabledGroups) {
+    Map<String, Set<UsageDescriptor>> usageDescriptors = new LinkedHashMap<>();
 
     for (UsagesCollector usagesCollector : UsagesCollector.EP_NAME.getExtensionList()) {
-      final GroupDescriptor groupDescriptor = usagesCollector.getGroupId();
+      try {
+        final String groupDescriptor = usagesCollector.getGroupId();
 
-      if (!disabledGroups.contains(groupDescriptor.getId())) {
-        try {
-          final Set<UsageDescriptor> usages = usagesCollector.getUsages(project);
-          usageDescriptors.put(groupDescriptor, usages);
+        if (!disabledGroups.contains(groupDescriptor)) {
+          try {
+            final Set<UsageDescriptor> usages = usagesCollector.getUsages(project);
+            usageDescriptors.put(groupDescriptor, usages);
+          }
+          catch (CollectUsagesException e) {
+            LOG.info(e);
+          }
         }
-        catch (CollectUsagesException e) {
-          LOG.info(e);
-        }
+      }
+      catch (Throwable e) {
+        PluginExceptionUtil.logPluginError(LOG, "Error processing: " + usagesCollector.getClass().getName(), e, usageDescriptors.getClass());
       }
     }
 
     return usageDescriptors;
-  }
-
-  public static StatisticsService getStatisticsService() {
-
-    return new RemotelyConfigurableStatisticsService(new StatisticsConnectionService(),
-                                                     new StatisticsHttpClientSender(),
-                                                     new StatisticsUploadAssistant());
   }
 }

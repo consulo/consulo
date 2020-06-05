@@ -16,7 +16,6 @@
 
 package com.intellij.injected.editor;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.ex.MarkupIterator;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
@@ -27,6 +26,7 @@ import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.util.TextRange;
+import consulo.disposer.Disposable;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.util.Consumer;
 import com.intellij.util.Processor;

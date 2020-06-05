@@ -41,6 +41,7 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.PathUtil;
 import com.intellij.util.SmartList;
+import consulo.disposer.Disposer;
 import consulo.lang.LanguageVersion;
 import consulo.lang.util.LanguageVersionUtil;
 import consulo.util.dataholder.Key;

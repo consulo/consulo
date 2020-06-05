@@ -16,6 +16,7 @@
 package consulo.ui.layout;
 
 import consulo.ui.UIInternal;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import java.util.function.Supplier;
@@ -31,8 +32,24 @@ public interface SwipeLayout extends Layout {
   }
 
   @Nonnull
-  SwipeLayout register(@Nonnull String id, @Nonnull Supplier<Layout> layoutSupplier);
+  default SwipeLayout register(@Nonnull String id, @Nonnull Layout layout) {
+    return register(id, () -> layout);
+  }
 
   @Nonnull
-  Layout swipeTo(@Nonnull String id);
+  SwipeLayout register(@Nonnull String id, @Nonnull @RequiredUIAccess Supplier<Layout> layoutSupplier);
+
+  /**
+   * @param id of child
+   * @return child layout which will be showed
+   */
+  @Nonnull
+  Layout swipeLeftTo(@Nonnull String id);
+
+  /**
+   * @param id of child
+   * @return child layout which will be showed
+   */
+  @Nonnull
+  Layout swipeRightTo(@Nonnull String id);
 }

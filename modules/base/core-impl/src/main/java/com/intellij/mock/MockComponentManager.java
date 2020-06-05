@@ -15,11 +15,11 @@
  */
 package com.intellij.mock;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
+import consulo.disposer.Disposable;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.impl.MessageBusFactory;

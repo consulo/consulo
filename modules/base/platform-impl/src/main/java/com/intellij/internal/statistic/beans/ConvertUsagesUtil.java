@@ -30,23 +30,6 @@ public class ConvertUsagesUtil {
   private ConvertUsagesUtil() {
   }
 
-
-  // @NotNull
-  public static <T extends UsageDescriptor> String convertUsages(Map<GroupDescriptor, Set<T>> map) {
-    assert map != null;
-    final Map<GroupDescriptor, Set<T>> sortedMap = sortDescriptorsByPriority(map);
-
-    StringBuilder buffer = new StringBuilder();
-    for (Map.Entry<GroupDescriptor, Set<T>> entry : sortedMap.entrySet()) {
-      buffer.append(entry.getKey().getId());
-      buffer.append(GROUP_SEPARATOR);
-      buffer.append(convertValueMap(entry.getValue()));
-      buffer.append(GROUPS_SEPARATOR);
-    }
-
-    return buffer.toString();
-  }
-
   //@NotNull
   public static String convertValueMap(Set<? extends UsageDescriptor> descriptors) {
     assert descriptors != null;
@@ -63,40 +46,9 @@ public class ConvertUsagesUtil {
   }
 
   //@NotNull
-  public static String cutPatchString(String patchStr, int maxSize) {
-    assert patchStr != null;
-    for (int i = maxSize - 1; i >= 0; i--) {
-      final char c = patchStr.charAt(i);
-      if (c == GROUPS_SEPARATOR || c == GROUP_VALUE_SEPARATOR) {
-        return patchStr.substring(0, i);
-      }
-    }
-    return "";
-  }
-
-  //@NotNull
-  public static Map<GroupDescriptor, Set<UsageDescriptor>> convertString(String usages) {
-    assert usages != null;
-    Map<GroupDescriptor, Set<UsageDescriptor>> descriptors = new HashMap<GroupDescriptor, Set<UsageDescriptor>>();
-    for (String groupStr : usages.split(Character.toString(GROUPS_SEPARATOR))) {
-      if (!isEmptyOrSpaces(groupStr)) {
-        final StringPair group = getPair(groupStr, Character.toString(GROUP_SEPARATOR));
-        if (group != null) {
-          final String groupId = group.first;
-          assert groupId != null;
-          if (groupId.length() < GroupDescriptor.MAX_ID_LENGTH) {
-            descriptors.putAll(convertValueString(GroupDescriptor.create(groupId), group.second));
-          }
-        }
-      }
-    }
-    return descriptors;
-  }
-
-  //@NotNull
-  public static Map<GroupDescriptor, Set<UsageDescriptor>> convertValueString(GroupDescriptor groupId, String valueData) {
+  public static Map<String, Set<UsageDescriptor>> convertValueString(String groupId, String valueData) {
     assert groupId != null;
-    final Map<GroupDescriptor, Set<UsageDescriptor>> descriptors = new HashMap<GroupDescriptor, Set<UsageDescriptor>>();
+    final Map<String, Set<UsageDescriptor>> descriptors = new HashMap<>();
     for (String value : valueData.split(Character.toString(GROUP_VALUE_SEPARATOR))) {
       if (!isEmptyOrSpaces(value)) {
         final StringPair pair = getPair(value, "=");
@@ -106,7 +58,7 @@ public class ConvertUsagesUtil {
             try {
               final int i = Integer.parseInt(count);
               if (!descriptors.containsKey(groupId)) {
-                descriptors.put(groupId, new LinkedHashSet<UsageDescriptor>());
+                descriptors.put(groupId, new LinkedHashSet<>());
               }
               descriptors.get(groupId).add(new UsageDescriptor(pair.first, i));
             }
@@ -133,22 +85,6 @@ public class ConvertUsagesUtil {
       }
     }
     return null;
-  }
-
-  //@NotNull
-  public static <T extends UsageDescriptor> Map<GroupDescriptor, Set<T>> sortDescriptorsByPriority(Map<GroupDescriptor, Set<T>> descriptors) {
-    assert descriptors != null;
-    final SortedMap<GroupDescriptor, Set<T>> map = new TreeMap<GroupDescriptor, Set<T>>(new Comparator<GroupDescriptor>() {
-      @Override
-      public int compare(GroupDescriptor g1, GroupDescriptor g2) {
-        final int priority = (int)(g2.getPriority() - g1.getPriority());
-        return priority == 0 ? g1.getId().compareTo(g2.getId()) : priority;
-      }
-    });
-
-    map.putAll(descriptors);
-
-    return map;
   }
 
   private static class StringPair {

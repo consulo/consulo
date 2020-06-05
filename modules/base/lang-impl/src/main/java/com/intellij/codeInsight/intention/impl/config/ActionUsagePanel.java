@@ -15,7 +15,6 @@
  */
 package com.intellij.codeInsight.intention.impl.config;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
@@ -28,6 +27,7 @@ import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.ui.RangeBlinker;
+import consulo.disposer.Disposable;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;

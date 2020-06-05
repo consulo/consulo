@@ -15,7 +15,7 @@
  */
 package consulo.moduleImport;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.project.Project;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;
 

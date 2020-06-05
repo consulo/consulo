@@ -17,7 +17,7 @@ package com.intellij.xdebugger.impl.frame;
 
 import com.intellij.execution.ui.layout.ViewContext;
 import com.intellij.ide.DataManager;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.DataContext;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VirtualFile;

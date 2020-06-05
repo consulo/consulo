@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import consulo.util.dataholder.UserDataHolderEx;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

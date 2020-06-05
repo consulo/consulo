@@ -141,6 +141,7 @@ public class WebToolWindowStripeButtonImpl extends UIComponentWithVaadinComponen
     return new Vaadin();
   }
 
+  @RequiredUIAccess
   @Override
   public void updatePresentation() {
 

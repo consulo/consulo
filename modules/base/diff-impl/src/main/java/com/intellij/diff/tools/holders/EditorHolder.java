@@ -15,7 +15,8 @@
  */
 package com.intellij.diff.tools.holders;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

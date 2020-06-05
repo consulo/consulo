@@ -19,11 +19,8 @@ package com.intellij.ide.ui.search;
 import com.intellij.application.options.CodeStyle;
 import com.intellij.codeStyle.CodeStyleFacade;
 import com.intellij.ide.IdeBundle;
-import consulo.container.plugin.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerConfigurable;
-import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
@@ -35,12 +32,13 @@ import com.intellij.util.ResourceUtil;
 import com.intellij.util.SingletonSet;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.StringInterner;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -75,12 +73,10 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.ui.search.SearchableOptionsRegistrarImpl");
   public static final int LOAD_FACTOR = 20;
-  @NonNls
+
   private static final Pattern REG_EXP = Pattern.compile("[\\W&&[^-]]+");
 
   public SearchableOptionsRegistrarImpl() {
-    if (ApplicationManager.getApplication().isCommandLine() ||
-        ApplicationManager.getApplication().isUnitTestMode()) return;
     try {
       //stop words
       final String text = ResourceUtil.loadText(ResourceUtil.getResource(SearchableOptionsRegistrarImpl.class, "/search/", "ignore.txt"));
@@ -105,8 +101,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
         return;
       }
 
-      Document document =
-        JDOMUtil.loadDocument(indexResource);
+      Document document = JDOMUtil.loadDocument(indexResource);
       Element root = document.getRootElement();
       List configurables = root.getChildren("configurable");
       for (final Object o : configurables) {
@@ -171,7 +166,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
       LOG.error(e);
     }
 
-    for (IdeaPluginDescriptor plugin : PluginManagerCore.getPlugins()) {
+    for (PluginDescriptor plugin : PluginManager.getPlugins()) {
       final Set<String> words = getProcessedWordsWithoutStemming(plugin.getName());
       final String description = plugin.getDescription();
       if (description != null) {
@@ -180,6 +175,25 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
       for (String word : words) {
         addOption(word, null, plugin.getName(), PluginManagerConfigurable.ID, IdeBundle.message("title.plugins"));
       }
+    }
+
+    for (SearchableOptionContributor contributor : SearchableOptionContributor.EP_NAME.getExtensionList()) {
+      contributor.processOptions(new SearchableOptionProcessor() {
+        @Override
+        public void addOption(String option, String path, String hit, String configurableId, String configurableDisplayName) {
+          SearchableOptionsRegistrarImpl.this.addOption(option, path, hit, configurableId, configurableDisplayName);
+        }
+
+        @Override
+        public Set<String> getProcessedWordsWithoutStemming(@Nonnull String text) {
+          return SearchableOptionsRegistrarImpl.this.getProcessedWordsWithoutStemming(text);
+        }
+
+        @Override
+        public Set<String> getProcessedWords(@Nonnull String text) {
+          return SearchableOptionsRegistrarImpl.this.getProcessedWords(text);
+        }
+      });
     }
   }
 
@@ -193,14 +207,13 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
     }
 
     OptionDescription description =
-      new OptionDescription(null, myIdentifierTable.intern(id).trim(), hit != null ? myIdentifierTable.intern(hit).trim() : null,
-                            path != null ? myIdentifierTable.intern(path).trim() : null);
+            new OptionDescription(null, myIdentifierTable.intern(id).trim(), hit != null ? myIdentifierTable.intern(hit).trim() : null, path != null ? myIdentifierTable.intern(path).trim() : null);
     Set<OptionDescription> configs = myStorage.get(option);
     if (configs == null) {
       configs = new SingletonSet<>(description);
       myStorage.put(new String(option), configs);
     }
-    else if (configs instanceof SingletonSet){
+    else if (configs instanceof SingletonSet) {
       configs = new THashSet<>(configs);
       configs.add(description);
       myStorage.put(new String(option), configs);
@@ -212,11 +225,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
 
   @Override
   @Nonnull
-  public ConfigurableHit getConfigurables(Configurable[] allConfigurables,
-                                            final DocumentEvent.EventType type,
-                                            Set<Configurable> configurables,
-                                            String option,
-                                            Project project) {
+  public ConfigurableHit getConfigurables(Configurable[] allConfigurables, final DocumentEvent.EventType type, Set<Configurable> configurables, String option, Project project) {
 
     final ConfigurableHit hits = new ConfigurableHit();
     final Set<Configurable> contentHits = hits.getContentHits();
@@ -256,7 +265,8 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
       String[] components = REG_EXP.split(optionToCheck);
       if (components.length > 0) {
         Collections.addAll(options, components);
-      } else {
+      }
+      else {
         options.add(option);
       }
     }
@@ -277,7 +287,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
       helpIds.retainAll(ids);
     }
     if (helpIds != null) {
-      for (Iterator<Configurable> it = contentHits.iterator(); it.hasNext();) {
+      for (Iterator<Configurable> it = contentHits.iterator(); it.hasNext(); ) {
         Configurable configurable = it.next();
         if (CodeStyleFacade.getInstance(project).isUnsuitableCodeStyleConfigurable(configurable)) {
           it.remove();
@@ -323,7 +333,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
 
   @Override
   @Nullable
-  public String getInnerPath(SearchableConfigurable configurable, @NonNls String option) {
+  public String getInnerPath(SearchableConfigurable configurable, String option) {
     loadHugeFilesIfNecessary();
     Set<OptionDescription> path = null;
     final Set<String> words = getProcessedWordsWithoutStemming(option);
@@ -419,7 +429,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
   @Override
   public Set<String> getProcessedWordsWithoutStemming(@Nonnull String text) {
     Set<String> result = new HashSet<>();
-    @NonNls final String toLowerCase = text.toLowerCase();
+    final String toLowerCase = text.toLowerCase();
     final String[] options = REG_EXP.split(toLowerCase);
     for (String opt : options) {
       if (isStopWord(opt)) continue;
@@ -433,7 +443,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
   @Override
   public Set<String> getProcessedWords(@Nonnull String text) {
     Set<String> result = new HashSet<>();
-    @NonNls final String toLowerCase = text.toLowerCase();
+    final String toLowerCase = text.toLowerCase();
     final String[] options = REG_EXP.split(toLowerCase);
     for (String opt : options) {
       if (isStopWord(opt)) continue;

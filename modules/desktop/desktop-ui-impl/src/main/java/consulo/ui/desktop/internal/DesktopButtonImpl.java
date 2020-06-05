@@ -42,18 +42,20 @@ class DesktopButtonImpl extends SwingComponentDelegate<JButton> implements Butto
   }
 
   public DesktopButtonImpl(String text) {
-    myComponent = new MyButton(text);
+    initialize(new MyButton(text));
+
+    toAWTComponent().addActionListener(e -> getListenerDispatcher(ClickListener.class).onClick());
   }
 
   @Nonnull
   @Override
   public String getText() {
-    return myComponent.getText();
+    return toAWTComponent().getText();
   }
 
   @RequiredUIAccess
   @Override
   public void setText(@Nonnull String text) {
-    myComponent.setText(text);
+    toAWTComponent().setText(text);
   }
 }

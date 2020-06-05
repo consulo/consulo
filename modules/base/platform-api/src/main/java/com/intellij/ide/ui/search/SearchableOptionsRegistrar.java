@@ -31,7 +31,7 @@ import java.util.Set;
  * User: anna
  * Date: 13-Feb-2006
  */
-public abstract class SearchableOptionsRegistrar{
+public abstract class SearchableOptionsRegistrar {
   public static SearchableOptionsRegistrar getInstance(){
     return ServiceManager.getService(SearchableOptionsRegistrar.class);
   }

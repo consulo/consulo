@@ -15,8 +15,8 @@
  */
 package consulo.sandboxPlugin.ide.module.extension;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.projectRoots.Sdk;
+import consulo.disposer.Disposable;
 import consulo.extension.ui.ModuleExtensionBundleBoxBuilder;
 import consulo.module.extension.MutableModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
@@ -48,7 +48,7 @@ public class SandMutableModuleExtension extends SandModuleExtension implements M
   @Override
   public Component createConfigurationComponent(@Nonnull Disposable uiDisposable, @Nonnull Runnable updateOnCheck) {
     VerticalLayout panel = VerticalLayout.create();
-    panel.add(ModuleExtensionBundleBoxBuilder.createAndDefine(this, updateOnCheck).uiDisposable(uiDisposable).build());
+    panel.add(ModuleExtensionBundleBoxBuilder.createAndDefine(this, uiDisposable, updateOnCheck).uiDisposable(uiDisposable).build());
     return panel;
   }
 

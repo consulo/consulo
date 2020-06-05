@@ -16,7 +16,7 @@
 package com.intellij.util.ui;
 
 import com.intellij.BundleBase;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.registry.Registry;
@@ -35,15 +35,16 @@ import consulo.desktop.util.awt.AllIconsHack;
 import consulo.desktop.util.awt.MorphColor;
 import consulo.desktop.util.awt.StringHtmlUtil;
 import consulo.desktop.util.awt.laf.BuildInLookAndFeel;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.style.StyleManager;
 import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.Timer;
 import javax.swing.*;
@@ -2058,14 +2059,9 @@ public class UIUtil {
     }
   }
 
-  public static void addAwtListener(final AWTEventListener listener, long mask, Disposable parent) {
+  public static void addAwtListener(final AWTEventListener listener, long mask, consulo.disposer.Disposable parent) {
     Toolkit.getDefaultToolkit().addAWTEventListener(listener, mask);
-    Disposer.register(parent, new Disposable() {
-      @Override
-      public void dispose() {
-        Toolkit.getDefaultToolkit().removeAWTEventListener(listener);
-      }
-    });
+    consulo.disposer.Disposer.register(parent, () -> Toolkit.getDefaultToolkit().removeAWTEventListener(listener));
   }
 
   public static void addParentChangeListener(@Nonnull Component component, @Nonnull PropertyChangeListener listener) {
@@ -3512,7 +3508,7 @@ public class UIUtil {
       runnable.run();
     }
     else {
-      Disposable disposable = Disposer.newDisposable();
+      Disposable disposable = Disposable.newDisposable();
       FocusListener focusListener = new FocusAdapter() {
         @Override
         public void focusGained(FocusEvent e) {

@@ -3,7 +3,7 @@
  */
 package com.intellij.usages;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.usageView.UsageInfo;

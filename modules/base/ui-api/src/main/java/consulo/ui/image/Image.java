@@ -28,6 +28,8 @@ import java.util.function.Supplier;
 public interface Image {
   Image[] EMPTY_ARRAY = new Image[0];
 
+  int DEFAULT_ICON_SIZE = 16;
+
   @Nonnull
   @Deprecated
   static Image create(@Nonnull URL url) {

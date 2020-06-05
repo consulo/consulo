@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.messages;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
  * <p/>
  * Please see <a href="docs">https://www.jetbrains.org/intellij/sdk/docs/reference_guide/messaging_infrastructure.html</a>.
  */
-public interface MessageBus extends Disposable {
+public interface MessageBus {
 
   /**
    * Messages buses can be organised into hierarchies. That allows facilities {@link Topic#getBroadcastDirection() broadcasting}.
@@ -112,13 +112,6 @@ public interface MessageBus extends Disposable {
    */
   @Nonnull
   <L> L syncPublisher(@Nonnull Topic<L> topic);
-
-  /**
-   * Disposes current bus, i.e. drops all queued but not delivered messages (if any) and disallows further
-   * {@link #connect(Disposable) connections}.
-   */
-  @Override
-  void dispose();
 
   /**
    * Returns true if this bus is disposed.

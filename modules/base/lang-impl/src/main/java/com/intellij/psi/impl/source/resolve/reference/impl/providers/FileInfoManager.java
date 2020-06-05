@@ -18,8 +18,8 @@ package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
 import consulo.ide.IconDescriptorUpdaters;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.util.Pair;

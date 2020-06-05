@@ -15,10 +15,18 @@
  */
 package consulo.ui.desktop.internal.layout;
 
+import com.intellij.icons.AllIcons;
+import com.intellij.openapi.actionSystem.ActionGroup;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.project.DumbAwareAction;
+import com.intellij.ui.tabs.TabInfo;
+import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.TextAttribute;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,28 +37,78 @@ import java.util.function.BiConsumer;
  * @since 12-Sep-17
  */
 public class DesktopTabImpl implements Tab {
+  private static class CloseAction extends DumbAwareAction {
+
+    private final BiConsumer<Tab, Component> myCloseHandler;
+    private final DesktopTabImpl myTabInfo;
+
+    public CloseAction(BiConsumer<Tab, Component> closeHandler, DesktopTabImpl tabInfo) {
+      myCloseHandler = closeHandler;
+      myTabInfo = tabInfo;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+      myCloseHandler.accept(myTabInfo, myTabInfo.myComponent);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+      e.getPresentation().setIcon(AllIcons.Actions.CloseNew);
+      e.getPresentation().setHoveredIcon(AllIcons.Actions.CloseNewHovered);
+      e.getPresentation().setText("Close.");
+    }
+  }
+
+  private final TabInfo myTabInfo = new TabInfo(null);
+
+  private final DesktopTabbedLayoutImpl myTabbedLayout;
+
+  private Component myComponent;
+
+  public DesktopTabImpl(DesktopTabbedLayoutImpl tabbedLayout) {
+    myTabbedLayout = tabbedLayout;
+  }
+
+  public void setComponent(Component component) {
+    myComponent = component;
+
+    myTabInfo.setComponent(TargetAWT.to(component));
+  }
+
+  public TabInfo getTabInfo() {
+    return myTabInfo;
+  }
+
   @Override
   public void setIcon(@Nullable Image image) {
-
+    myTabInfo.setIcon(image);
   }
 
   @Override
   public void clearText() {
-
+    myTabInfo.setText("");
   }
 
   @Override
   public void append(@Nonnull String text, @Nonnull TextAttribute textAttribute) {
+    String oldText = myTabInfo.getText();
 
+    myTabInfo.setText(StringUtil.notNullize(oldText) + text);
   }
 
   @Override
   public void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler) {
+    ActionGroup.Builder builder = ActionGroup.newImmutableBuilder();
+    builder.add(new CloseAction(closeHandler, this));
 
+    myTabInfo.setTabLabelActions(builder.build(), "TabActions");
   }
 
   @Override
   public void select() {
-
+    myTabbedLayout.toAWTComponent().select(myTabInfo, true);
   }
 }

@@ -15,7 +15,8 @@
  */
 package consulo.sandboxPlugin.ide.module.extension;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.roots.ModuleRootLayer;
 import consulo.ui.CheckBox;
@@ -50,7 +51,7 @@ public class Sand2MutableModuleExtension extends Sand2ModuleExtension implements
   @Override
   public Component createConfigurationComponent(@Nonnull Disposable uiDisposable, @Nonnull Runnable updateOnCheck) {
     final VerticalLayout vertical = VerticalLayout.create();
-    vertical.add(CheckBox.create("Omg new UI?"));
+    vertical.add(CheckBox.create(LocalizeValue.of("Check Me (New UI)")));
     return vertical;
   }
 }

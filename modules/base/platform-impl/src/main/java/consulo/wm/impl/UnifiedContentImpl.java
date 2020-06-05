@@ -17,11 +17,10 @@
 package consulo.wm.impl;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.util.BusyObject;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.Disposer;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.ui.content.AlertIcon;
 import com.intellij.ui.content.ContentManager;

@@ -3,14 +3,13 @@ package com.intellij.internal.statistic.ideSettings;
 import com.intellij.ide.ui.LafManager;
 import com.intellij.internal.statistic.CollectUsagesException;
 import com.intellij.internal.statistic.UsagesCollector;
-import com.intellij.internal.statistic.beans.GroupDescriptor;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.util.Collections;
 import java.util.Set;
@@ -30,7 +29,7 @@ public class LaFUsagesCollector extends UsagesCollector {
 
   @Nonnull
   @Override
-  public GroupDescriptor getGroupId() {
-    return GroupDescriptor.create("Look and Feel");
+  public String getGroupId() {
+    return "Look and Feel";
   }
 }

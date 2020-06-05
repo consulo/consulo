@@ -15,7 +15,7 @@
  */
 package com.intellij.util.concurrency;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

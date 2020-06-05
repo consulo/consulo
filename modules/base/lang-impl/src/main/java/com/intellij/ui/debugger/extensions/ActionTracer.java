@@ -16,13 +16,13 @@
 package com.intellij.ui.debugger.extensions;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.application.Application;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import com.intellij.openapi.keymap.KeymapManager;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.debugger.UiDebuggerExtension;
 
@@ -64,7 +64,7 @@ public class ActionTracer implements UiDebuggerExtension, AnActionListener {
       myComponent.add(ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true).getComponent(), BorderLayout.NORTH);
       myComponent.add(log);
 
-      myListenerDisposable = Disposer.newDisposable();
+      myListenerDisposable = Disposable.newDisposable();
       Application.get().getMessageBus().connect(myListenerDisposable).subscribe(AnActionListener.TOPIC, this);
     }
 

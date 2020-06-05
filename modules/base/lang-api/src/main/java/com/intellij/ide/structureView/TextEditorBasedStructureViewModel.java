@@ -16,12 +16,12 @@
 package com.intellij.ide.structureView;
 
 import com.intellij.ide.util.treeView.smartTree.*;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.event.CaretAdapter;
 import com.intellij.openapi.editor.event.CaretEvent;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
@@ -88,7 +88,7 @@ public abstract class TextEditorBasedStructureViewModel implements StructureView
   @Override
   public final void addEditorPositionListener(@Nonnull FileEditorPositionListener listener) {
     if (myEditor != null && myListeners.isEmpty()) {
-      myEditorCaretListenerDisposable = Disposer.newDisposable();
+      myEditorCaretListenerDisposable = Disposable.newDisposable();
       EditorFactory.getInstance().getEventMulticaster().addCaretListener(myEditorCaretListener, myEditorCaretListenerDisposable);
     }
     myListeners.add(listener);

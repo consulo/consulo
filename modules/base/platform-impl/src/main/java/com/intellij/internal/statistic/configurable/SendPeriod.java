@@ -15,13 +15,13 @@
  */
 package com.intellij.internal.statistic.configurable;
 
-import org.jetbrains.annotations.NonNls;
-
 public enum SendPeriod {
-  DAILY("daily", 24L * 60 * 60 * 1000), WEEKLY("weekly", 7L * 24 * 60 * 60 * 1000), MONTHLY("monthly", 30L * 24 * 60 * 60 * 1000);
+  DAILY("daily", 24L * 60 * 60 * 1000),
+  WEEKLY("weekly", 7L * 24 * 60 * 60 * 1000),
+  MONTHLY("monthly", 30L * 24 * 60 * 60 * 1000);
 
-  @NonNls private final String myName;
-  @NonNls private final long myPeriod;
+  private final String myName;
+  private final long myPeriod;
 
   SendPeriod(String name, long period) {
     myName = name;

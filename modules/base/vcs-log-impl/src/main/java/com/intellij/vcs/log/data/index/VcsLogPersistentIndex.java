@@ -15,13 +15,13 @@
  */
 package com.intellij.vcs.log.data.index;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -407,7 +407,7 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
                           @Nonnull FatalErrorHandler fatalErrorHandler,
                           @Nonnull Disposable parentDisposable)
             throws IOException {
-      Disposable disposable = Disposer.newDisposable();
+      Disposable disposable = Disposable.newDisposable();
       Disposer.register(parentDisposable, disposable);
 
       try {

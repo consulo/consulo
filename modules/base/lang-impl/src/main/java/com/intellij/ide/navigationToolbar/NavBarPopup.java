@@ -16,11 +16,11 @@
 package com.intellij.ide.navigationToolbar;
 
 import com.intellij.ide.navigationToolbar.ui.NavBarUIManager;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Queryable;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.IdeFocusManager;
@@ -46,7 +46,7 @@ import java.util.Map;
 /**
  * @author Konstantin Bulenkov
  */
-public class NavBarPopup extends LightweightHint implements Disposable{
+public class NavBarPopup extends LightweightHint implements Disposable {
   private static final String JBLIST_KEY = "OriginalList";
   private static final String NAV_BAR_POPUP = "NAV_BAR_POPUP";
   private final NavBarPanel myPanel;

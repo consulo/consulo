@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.diff.impl.external;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.diff.*;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.util.ArrayUtil;

@@ -15,7 +15,7 @@
  */
 package consulo.wm.impl;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.impl.SystemDock;
 import com.intellij.ui.mac.MacDockDelegate;

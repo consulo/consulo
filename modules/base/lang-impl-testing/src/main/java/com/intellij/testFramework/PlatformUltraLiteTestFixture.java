@@ -16,10 +16,10 @@
 package com.intellij.testFramework;
 
 import com.intellij.mock.MockApplication;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import javax.annotation.Nonnull;
 
 public class PlatformUltraLiteTestFixture {
@@ -35,7 +35,7 @@ public class PlatformUltraLiteTestFixture {
   public void setUp() {
     final Application application = ApplicationManager.getApplication();
     if (application == null) {
-      myAppDisposable = Disposer.newDisposable();
+      myAppDisposable = Disposable.newDisposable();
       ApplicationManager.setApplication(new MockApplication(myAppDisposable), myAppDisposable);
     }
   }

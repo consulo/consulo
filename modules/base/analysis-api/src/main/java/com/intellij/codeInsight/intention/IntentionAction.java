@@ -36,8 +36,6 @@ import javax.annotation.Nonnull;
  * {@link LowPriorityAction LowPriorityAction} to change ordering.
  * <p/>
  * Can be {@link com.intellij.openapi.project.DumbAware}.
- *
- * @see IntentionManager#registerIntentionAndMetaData(IntentionAction, String...)
  */
 public interface IntentionAction extends FileModifier {
   IntentionAction[] EMPTY_ARRAY = new IntentionAction[0];
@@ -59,7 +57,6 @@ public interface IntentionAction extends FileModifier {
    * The name is also shown in settings tree.
    *
    * @return the intention family name.
-   * @see IntentionManager#registerIntentionAndMetaData(IntentionAction, String...)
    */
   @Nonnull
   @Nls(capitalization = Nls.Capitalization.Sentence)

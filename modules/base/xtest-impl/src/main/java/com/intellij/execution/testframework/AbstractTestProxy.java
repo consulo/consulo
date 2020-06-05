@@ -18,7 +18,7 @@ package com.intellij.execution.testframework;
 import com.intellij.execution.Location;
 import com.intellij.execution.testframework.stacktrace.DiffHyperlink;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.search.GlobalSearchScope;

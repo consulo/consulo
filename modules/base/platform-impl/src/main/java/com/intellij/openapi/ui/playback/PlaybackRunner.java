@@ -17,7 +17,7 @@ package com.intellij.openapi.ui.playback;
 
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.UiActivityMonitor;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationActivationListener;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ui.playback.commands.AssertFocused;
@@ -25,7 +25,7 @@ import consulo.logging.Logger;
 import com.intellij.openapi.ui.playback.commands.*;
 import com.intellij.openapi.ui.playback.commands.ActionCommand;
 import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFrame;
@@ -66,7 +66,7 @@ public class PlaybackRunner {
 
   private Map<String, String> myRegistryValues = new HashMap<String, String>();
 
-  private Disposable myOnStop = Disposer.newDisposable();
+  private Disposable myOnStop = Disposable.newDisposable();
 
   public PlaybackRunner(String script, StatusCallback callback, final boolean useDirectActionCall, boolean stopOnAppDeactivation, boolean useTypingTargets) {
     myScript = script;

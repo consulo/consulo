@@ -17,7 +17,7 @@
 package com.intellij.util.ui;
 
 import com.intellij.concurrency.JobScheduler;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import org.jetbrains.annotations.NonNls;
 
 import java.util.concurrent.ScheduledFuture;

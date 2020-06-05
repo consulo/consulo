@@ -18,6 +18,7 @@ package consulo.ui;
 import consulo.util.lang.ThreeState;
 
 import javax.annotation.Nonnull;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -27,9 +28,19 @@ public final class Alerts {
   private static final Object ourStableNull = new Object();
 
   @Nonnull
+  public static Alert<Object> okInfo(@Nonnull String text) {
+    return okTemplate(text, o -> o);
+  }
+
+  @Nonnull
   public static Alert<Object> okError(@Nonnull String text) {
+    return okTemplate(text, Alert::asError);
+  }
+
+  @Nonnull
+  private static Alert<Object> okTemplate(@Nonnull String text, Function<Alert<Object>, Alert<Object>> levelSet) {
     Alert<Object> builder = Alert.create();
-    builder.asError();
+    levelSet.apply(builder);
     builder.text(text);
 
     builder.button(Alert.OK, ourStableNull);

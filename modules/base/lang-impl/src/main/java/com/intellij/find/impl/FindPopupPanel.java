@@ -8,7 +8,7 @@ import com.intellij.find.replaceInProject.ReplaceInProjectManager;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.MnemonicHelper;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.DefaultCustomComponentAction;
@@ -68,6 +68,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.ui.*;
 import consulo.awt.TargetAWT;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import net.miginfocom.swing.MigLayout;
 
@@ -152,7 +153,7 @@ public class FindPopupPanel extends JBPanel implements FindUI {
   FindPopupPanel(@Nonnull FindUIHelper helper) {
     myHelper = helper;
     myProject = myHelper.getProject();
-    myDisposable = Disposer.newDisposable();
+    myDisposable = Disposable.newDisposable();
     myPreviewUpdater = new Alarm(myDisposable);
     myScopeUI = FindPopupScopeUIProvider.getInstance().create(this);
     myComponentValidator = new ComponentValidator(myDisposable) {

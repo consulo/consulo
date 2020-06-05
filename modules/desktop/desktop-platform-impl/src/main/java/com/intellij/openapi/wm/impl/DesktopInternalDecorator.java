@@ -18,7 +18,7 @@ package com.intellij.openapi.wm.impl;
 import com.intellij.ide.actions.ResizeToolWindowAction;
 import com.intellij.ide.actions.ToggleToolbarAction;
 import com.intellij.idea.ActionsBundle;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbService;
@@ -26,7 +26,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
@@ -718,7 +718,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     public void addNotify() {
       super.addNotify();
       myGlassPane = IdeGlassPaneUtil.find(this);
-      myDisposable = Disposer.newDisposable();
+      myDisposable = Disposable.newDisposable();
       myGlassPane.addMouseMotionPreprocessor(myListener, myDisposable);
       myGlassPane.addMousePreprocessor(myListener, myDisposable);
     }

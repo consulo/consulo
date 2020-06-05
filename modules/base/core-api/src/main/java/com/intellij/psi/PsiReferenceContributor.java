@@ -1,7 +1,7 @@
 package com.intellij.psi;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.disposer.Disposable;
 
 /**
  * Via implementing this extension it's possible to provide references ({@link com.intellij.psi.PsiReference}) to

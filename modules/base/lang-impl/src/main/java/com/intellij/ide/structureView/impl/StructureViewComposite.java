@@ -23,7 +23,7 @@ import com.intellij.ide.structureView.TextEditorBasedStructureViewModel;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.util.ArrayUtil;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;

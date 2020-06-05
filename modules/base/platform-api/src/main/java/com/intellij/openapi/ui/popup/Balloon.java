@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.ui.popup;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ui.PositionTracker;
 import javax.annotation.Nonnull;

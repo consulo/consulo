@@ -15,7 +15,8 @@
  */
 package com.intellij.util.io.socketConnection;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

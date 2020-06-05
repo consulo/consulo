@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
@@ -24,6 +23,7 @@ import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.mac.MacMainFrameDecorator;
 import consulo.annotation.ReviewAfterMigrationToJRE;
 import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
 import consulo.ui.Window;
 
 import javax.annotation.Nonnull;

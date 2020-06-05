@@ -20,13 +20,13 @@ import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.reference.SoftReference;
 import com.intellij.ui.IconDeferrer;
 import com.intellij.ui.PlaceProvider;
 import com.intellij.ui.SimpleColoredText;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.content.AlertIcon;
 import consulo.ui.image.Image;
+import consulo.util.lang.ref.SoftReference;
 import kava.beans.PropertyChangeSupport;
 
 import javax.annotation.Nonnull;
@@ -96,7 +96,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
    * The tab which was selected before the mouse was pressed on this tab. Focus will be transferred to that tab if this tab is dragged
    * out of its container. (IDEA-61536)
    */
-  private WeakReference<TabInfo> myPreviousSelection = new WeakReference<TabInfo>(null);
+  private WeakReference<TabInfo> myPreviousSelection = new WeakReference<>(null);
 
   public TabInfo(final JComponent component) {
     myComponent = component;
@@ -406,7 +406,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
   }
 
   public void setPreviousSelection(@Nullable TabInfo previousSelection) {
-    myPreviousSelection = new WeakReference<TabInfo>(previousSelection);
+    myPreviousSelection = new WeakReference<>(previousSelection);
   }
 
   @Nullable
@@ -415,7 +415,6 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
   }
 
   public interface DragOutDelegate {
-
     void dragOutStarted(MouseEvent mouseEvent, TabInfo info);
     void processDragOut(MouseEvent event, TabInfo source);
     void dragOutFinished(MouseEvent event, TabInfo source);

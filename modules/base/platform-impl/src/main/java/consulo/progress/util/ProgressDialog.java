@@ -15,7 +15,7 @@
  */
 package consulo.progress.util;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 
 /**
  * @author VISTALL

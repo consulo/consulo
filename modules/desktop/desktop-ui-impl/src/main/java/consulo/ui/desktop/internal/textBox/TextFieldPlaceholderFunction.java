@@ -30,7 +30,7 @@ public class TextFieldPlaceholderFunction implements BooleanFunction<JBTextField
   private static final TextFieldPlaceholderFunction INSTANCE = new TextFieldPlaceholderFunction();
 
   @Override
-  public boolean fun(JBTextField jbTextField) {
-    return jbTextField.getText().length() == 0;
+  public boolean fun(JBTextField textField) {
+    return textField.getText().length() == 0;
   }
 }

@@ -22,6 +22,7 @@ import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.font.FontManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.layout.*;
@@ -160,6 +161,9 @@ public abstract class UIInternal {
   public abstract StyleManager _StyleManager_get();
 
   @Nonnull
+  public abstract FontManager _FontManager_get();
+
+  @Nonnull
   public abstract Window _Window_modalWindow(String title);
 
   @Nullable
@@ -183,4 +187,6 @@ public abstract class UIInternal {
   public abstract TextBoxWithExpandAction _Components_textBoxWithExpandAction(Image editButtonImage, String dialogTitle, Function<String, List<String>> parser, Function<List<String>, String> joiner);
 
   public abstract TextBoxWithExtensions _Components_textBoxWithExtensions(String text);
+
+  public abstract FoldoutLayout _Layouts_foldout(LocalizeValue titleValue, Component component, boolean show);
 }

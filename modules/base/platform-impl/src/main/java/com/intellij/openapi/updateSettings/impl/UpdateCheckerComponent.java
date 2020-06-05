@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.updateSettings.impl;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.text.DateFormatUtil;
+import consulo.disposer.Disposable;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
 

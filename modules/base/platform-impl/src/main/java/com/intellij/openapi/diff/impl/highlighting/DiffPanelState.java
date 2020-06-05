@@ -15,12 +15,13 @@
  */
 package com.intellij.openapi.diff.impl.highlighting;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diff.DiffContent;
 import com.intellij.openapi.diff.impl.ContentChangeListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

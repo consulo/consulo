@@ -37,11 +37,11 @@ import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.TextAttribute;
+import consulo.ui.font.Font;
+import consulo.ui.font.FontManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.image.canvas.Canvas2D;
-import consulo.ui.image.canvas.Canvas2DFont;
 import consulo.ui.style.ComponentColors;
 
 import javax.annotation.Nonnull;
@@ -141,7 +141,7 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
       int height = AllIcons.Ide.Notification.NoEvents.getHeight();
 
       mainIcon = ImageEffects.layered(mainIcon, ImageEffects.canvas(width, height, ctx -> {
-        ctx.setFont(new Canvas2DFont(NotificationsUtil.getFontName(), 9, TextAttribute.STYLE_BOLD));
+        ctx.setFont(FontManager.get().createFont(NotificationsUtil.getFontName(), 9, Font.STYLE_BOLD));
 
         ctx.setFillStyle(ComponentColors.LAYOUT);
         ctx.setTextAlign(Canvas2D.TextAlign.center);

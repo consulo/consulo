@@ -17,65 +17,61 @@
 package com.intellij.internal.statistic.persistence;
 
 import com.intellij.internal.statistic.StatisticsUploadAssistant;
-import com.intellij.internal.statistic.beans.GroupDescriptor;
 import com.intellij.internal.statistic.beans.PatchedUsage;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.containers.hash.HashMap;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Set;
 
 public class BasicSentUsagesPersistenceComponent extends SentUsagesPersistence {
 
-    public BasicSentUsagesPersistenceComponent() {
-    }
+  protected Map<String, Set<UsageDescriptor>> mySentDescriptors = new HashMap<>();
 
-    protected Map<GroupDescriptor, Set<UsageDescriptor>> mySentDescriptors = new HashMap<GroupDescriptor, Set<UsageDescriptor>>();
-    @NonNls
-    private long mySentTime = 0;
+  private long mySentTime = 0;
 
-    @Override
-    public boolean isAllowed() {
-        return true;
-    }
+  @Override
+  public boolean isAllowed() {
+    return true;
+  }
 
-    @Override
-    public long getLastTimeSent() {
-        return mySentTime;
-    }
+  @Override
+  public long getLastTimeSent() {
+    return mySentTime;
+  }
 
-    public void setSentTime(long time) {
-        mySentTime = time;
-    }
+  public void setSentTime(long time) {
+    mySentTime = time;
+  }
 
-    @Override
-    public void persistPatch(@Nonnull Map<GroupDescriptor, Set<PatchedUsage>> patchedDescriptorMap) {
-        for (Map.Entry<GroupDescriptor, Set<PatchedUsage>> entry : patchedDescriptorMap.entrySet()) {
-            final GroupDescriptor groupDescriptor = entry.getKey();
-            for (PatchedUsage patchedUsage : entry.getValue()) {
-                UsageDescriptor usageDescriptor = StatisticsUploadAssistant.findDescriptor(mySentDescriptors, Pair.create(groupDescriptor, patchedUsage.getKey()));
-                if (usageDescriptor != null) {
-                    usageDescriptor.setValue(usageDescriptor.getValue() + patchedUsage.getDelta());
-                } else {
-                    if (!mySentDescriptors.containsKey(groupDescriptor)) {
-                        mySentDescriptors.put(groupDescriptor, new HashSet<UsageDescriptor>());
-                    }
-                    mySentDescriptors.get(groupDescriptor).add(new UsageDescriptor(patchedUsage.getKey(), patchedUsage.getValue()));
-                }
-            }
+  @Override
+  public void persistPatch(@Nonnull Map<String, Set<PatchedUsage>> patchedDescriptorMap) {
+    for (Map.Entry<String, Set<PatchedUsage>> entry : patchedDescriptorMap.entrySet()) {
+      final String groupDescriptor = entry.getKey();
+      for (PatchedUsage patchedUsage : entry.getValue()) {
+        UsageDescriptor usageDescriptor = StatisticsUploadAssistant.findDescriptor(mySentDescriptors, Pair.create(groupDescriptor, patchedUsage.getKey()));
+        if (usageDescriptor != null) {
+          usageDescriptor.setValue(usageDescriptor.getValue() + patchedUsage.getDelta());
         }
-
-        setSentTime(System.currentTimeMillis());
+        else {
+          if (!mySentDescriptors.containsKey(groupDescriptor)) {
+            mySentDescriptors.put(groupDescriptor, new HashSet<>());
+          }
+          mySentDescriptors.get(groupDescriptor).add(new UsageDescriptor(patchedUsage.getKey(), patchedUsage.getValue()));
+        }
+      }
     }
 
+    setSentTime(System.currentTimeMillis());
+  }
 
-    @Override
-    @Nonnull
-    public Map<GroupDescriptor, Set<UsageDescriptor>> getSentUsages () {
-        return mySentDescriptors;
-    }
+
+  @Override
+  @Nonnull
+  public Map<String, Set<UsageDescriptor>> getSentUsages() {
+    return mySentDescriptors;
+  }
 }

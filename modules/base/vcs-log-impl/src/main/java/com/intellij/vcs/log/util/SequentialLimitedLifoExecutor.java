@@ -15,11 +15,12 @@
  */
 package com.intellij.vcs.log.util;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
 import com.intellij.util.Consumer;
 import com.intellij.util.ThrowableConsumer;
 import com.intellij.util.concurrency.QueueProcessor;
+import consulo.disposer.Disposer;
+
 import javax.annotation.Nonnull;
 
 /**

@@ -1,7 +1,7 @@
 package com.intellij.openapi.ui;
 
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.IconLoader;
+import consulo.disposer.Disposable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +17,7 @@ public class LoadingDecoratorTest {
 
     final JPanel content = new JPanel(new BorderLayout());
 
-    final LoadingDecorator loadingTree = new LoadingDecorator(new JComboBox(), Disposer.newDisposable(), -1);
+    final LoadingDecorator loadingTree = new LoadingDecorator(new JComboBox(), Disposable.newDisposable(), -1);
 
     content.add(loadingTree.getComponent(), BorderLayout.CENTER);
 

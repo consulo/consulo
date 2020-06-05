@@ -16,7 +16,7 @@
 package consulo.bundle.ui;
 
 import com.google.common.base.Predicates;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;

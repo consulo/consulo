@@ -19,41 +19,37 @@
  * User: mike
  * Date: Aug 23, 2002
  * Time: 8:15:58 PM
- * To change template for new class use 
+ * To change template for new class use
  * Code Style | Class Templates options (Tools | IDE Options).
  */
 package com.intellij.codeInsight.intention.impl.config;
 
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.intention.IntentionAction;
+import com.intellij.codeInsight.intention.IntentionActionBean;
 import com.intellij.codeInsight.intention.IntentionManager;
-import com.intellij.ide.ui.search.SearchableOptionsRegistrar;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.*;
-import consulo.logging.Logger;
+import com.intellij.ide.ui.search.SearchableOptionContributor;
+import com.intellij.ide.ui.search.SearchableOptionProcessor;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.StringInterner;
+import consulo.logging.Logger;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
-
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
 @Singleton
-@State(
-  name = "IntentionManagerSettings",
-  storages = {
-    @Storage(
-      file = StoragePathMacros.APP_CONFIG + "/intentionSettings.xml"
-    )}
-)
+@State(name = "IntentionManagerSettings", storages = @Storage("intentionSettings.xml"))
 public class IntentionManagerSettings implements PersistentStateComponent<Element> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.intention.impl.config.IntentionManagerSettings");
+  private static final Logger LOG = Logger.getInstance(IntentionManagerSettings.class);
   private static final StringInterner ourStringInterner = new StringInterner();
 
   private static class MetaDataKey extends Pair<String, String> {
@@ -62,11 +58,12 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
     }
   }
 
-  private final Set<String> myIgnoredActions = new LinkedHashSet<String>();
+  private final Set<String> myIgnoredActions = new LinkedHashSet<>();
 
-  private final Map<MetaDataKey, IntentionActionMetaData> myMetaData = new LinkedHashMap<MetaDataKey, IntentionActionMetaData>();
-  @NonNls private static final String IGNORE_ACTION_TAG = "ignoreAction";
-  @NonNls private static final String NAME_ATT = "name";
+  private final Map<MetaDataKey, IntentionActionMetaData> myMetaData = new LinkedHashMap<>();
+
+  private static final String IGNORE_ACTION_TAG = "ignoreAction";
+  private static final String NAME_ATT = "name";
   private static final Pattern HTML_PATTERN = Pattern.compile("<[^<>]*>");
 
 
@@ -79,16 +76,23 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
   }
 
   private static ClassLoader getClassLoader(@Nonnull IntentionAction intentionAction) {
-    return intentionAction instanceof IntentionActionWrapper
-           ? ((IntentionActionWrapper)intentionAction).getImplementationClassLoader()
-           : intentionAction.getClass().getClassLoader();
+    return intentionAction instanceof IntentionActionWrapper ? ((IntentionActionWrapper)intentionAction).getImplementationClassLoader() : intentionAction.getClass().getClassLoader();
   }
 
-  public void registerIntentionMetaData(@Nonnull IntentionAction intentionAction,
-                                        @Nonnull String[] category,
-                                        @Nonnull String descriptionDirectoryName,
-                                        final ClassLoader classLoader) {
-    registerMetaData(new IntentionActionMetaData(intentionAction, classLoader, category, descriptionDirectoryName));
+  public IntentionManagerSettings() {
+    for (IntentionActionBean bean : IntentionManager.EP_INTENTION_ACTIONS.getExtensionList()) {
+      String[] categories = bean.getCategories();
+      if (categories != null) {
+        String descriptionDirectoryName = bean.getDescriptionDirectoryName();
+
+        IntentionActionWrapper intentionAction = new IntentionActionWrapper(bean);
+        if (descriptionDirectoryName == null) {
+          descriptionDirectoryName = IntentionManagerImpl.getDescriptionDirectoryName(intentionAction);
+        }
+
+        registerIntentionMetaData(intentionAction, categories, descriptionDirectoryName);
+      }
+    }
   }
 
   public synchronized boolean isShowLightBulb(@Nonnull IntentionAction action) {
@@ -98,9 +102,8 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
   @Override
   public void loadState(Element element) {
     myIgnoredActions.clear();
-    List children = element.getChildren(IGNORE_ACTION_TAG);
-    for (final Object aChildren : children) {
-      Element e = (Element)aChildren;
+    List<Element> children = element.getChildren(IGNORE_ACTION_TAG);
+    for (Element e : children) {
       myIgnoredActions.add(e.getAttributeValue(NAME_ATT));
     }
   }
@@ -116,8 +119,7 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
 
   @Nonnull
   public synchronized List<IntentionActionMetaData> getMetaData() {
-    IntentionManager.getInstance(); // TODO: Hack to make IntentionManager actually register metadata here. Dependencies between IntentionManager and IntentionManagerSettings should be revised.
-    return new ArrayList<IntentionActionMetaData>(myMetaData.values());
+    return new ArrayList<>(myMetaData.values());
   }
 
   public synchronized boolean isEnabled(@Nonnull IntentionActionMetaData metaData) {
@@ -144,6 +146,7 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
   public synchronized boolean isEnabled(@Nonnull IntentionAction action) {
     return !myIgnoredActions.contains(getFamilyName(action));
   }
+
   public synchronized void setEnabled(@Nonnull IntentionAction action, boolean enabled) {
     if (enabled) {
       myIgnoredActions.remove(getFamilyName(action));
@@ -154,39 +157,7 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
   }
 
   public synchronized void registerMetaData(@Nonnull IntentionActionMetaData metaData) {
-    MetaDataKey key = new MetaDataKey(metaData.myCategory, metaData.getFamily());
-    //LOG.assertTrue(!myMetaData.containsKey(metaData.myFamily), "Action '"+metaData.myFamily+"' already registered");
-    if (!myMetaData.containsKey(key)){
-      processMetaData(metaData);
-    }
-    myMetaData.put(key, metaData);
-  }
-
-  private static synchronized void processMetaData(@Nonnull final IntentionActionMetaData metaData) {
-    final Application app = ApplicationManager.getApplication();
-    if (app.isUnitTestMode() || app.isHeadlessEnvironment()) return;
-
-    final TextDescriptor description = metaData.getDescription();
-    app.executeOnPooledThread(new Runnable(){
-      @Override
-      public void run() {
-        try {
-          SearchableOptionsRegistrar registrar = SearchableOptionsRegistrar.getInstance();
-          if (registrar == null) return;
-          @NonNls String descriptionText = description.getText().toLowerCase();
-          descriptionText = HTML_PATTERN.matcher(descriptionText).replaceAll(" ");
-          final Set<String> words = registrar.getProcessedWordsWithoutStemming(descriptionText);
-          words.addAll(registrar.getProcessedWords(metaData.getFamily()));
-          for (String word : words) {
-            registrar.addOption(word, metaData.getFamily(), metaData.getFamily(), IntentionSettingsConfigurable.HELP_ID, CodeInsightBundle
-                    .message("intention.settings"));
-          }
-        }
-        catch (IOException e) {
-          LOG.error(e);
-        }
-      }
-    });
+    myMetaData.put(new MetaDataKey(metaData.myCategory, metaData.getFamily()), metaData);
   }
 
   public synchronized void unregisterMetaData(@Nonnull IntentionAction intentionAction) {
@@ -194,6 +165,43 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
       if (entry.getValue().getAction() == intentionAction) {
         myMetaData.remove(entry.getKey());
         break;
+      }
+    }
+  }
+
+  public static class IntentionSearchableOptionContributor extends SearchableOptionContributor {
+
+    @Override
+    public void processOptions(@Nonnull SearchableOptionProcessor processor) {
+      for (IntentionActionBean bean : IntentionManager.EP_INTENTION_ACTIONS.getExtensionList()) {
+        String[] categories = bean.getCategories();
+
+        if (categories == null) {
+          continue;
+        }
+        String descriptionDirectoryName = bean.getDescriptionDirectoryName();
+
+        IntentionActionWrapper intentionAction = new IntentionActionWrapper(bean);
+        if (descriptionDirectoryName == null) {
+          descriptionDirectoryName = IntentionManagerImpl.getDescriptionDirectoryName(intentionAction);
+        }
+
+        IntentionActionMetaData data = new IntentionActionMetaData(intentionAction, getClassLoader(intentionAction), categories, descriptionDirectoryName);
+
+        final TextDescriptor description = data.getDescription();
+
+        try {
+          String descriptionText = description.getText().toLowerCase();
+          descriptionText = HTML_PATTERN.matcher(descriptionText).replaceAll(" ");
+          final Set<String> words = processor.getProcessedWordsWithoutStemming(descriptionText);
+          words.addAll(processor.getProcessedWords(data.getFamily()));
+          for (String word : words) {
+            processor.addOption(word, data.getFamily(), data.getFamily(), IntentionSettingsConfigurable.HELP_ID, CodeInsightBundle.message("intention.settings"));
+          }
+        }
+        catch (IOException e) {
+          LOG.error(e);
+        }
       }
     }
   }

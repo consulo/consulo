@@ -17,6 +17,7 @@ package consulo.ui.ex;
 
 import com.intellij.openapi.wm.WindowInfo;
 import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 
@@ -30,5 +31,6 @@ public interface ToolWindowStripeButton extends Disposable {
 
   void apply(@Nonnull WindowInfo windowInfo);
 
+  @RequiredUIAccess
   void updatePresentation();
 }

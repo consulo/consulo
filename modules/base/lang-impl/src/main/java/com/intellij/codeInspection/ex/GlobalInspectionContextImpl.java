@@ -38,7 +38,6 @@ import com.intellij.concurrency.SensitiveProgressWrapper;
 import com.intellij.lang.annotation.ProblemGroup;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.notification.NotificationGroup;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
@@ -73,6 +72,8 @@ import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import gnu.trove.THashSet;
 import org.jdom.Element;
@@ -412,7 +413,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
       }
     };
     while (true) {
-      Disposable disposable = Disposer.newDisposable();
+      Disposable disposable = Disposable.newDisposable();
       ProgressIndicator wrapper = new SensitiveProgressWrapper(progressIndicator);
       wrapper.start();
       ProgressIndicatorUtils.forceWriteActionPriority(wrapper, disposable);

@@ -15,13 +15,11 @@
  */
 package consulo.roots.ui.configuration;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.ui.configuration.*;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.CheckboxTreeNoPolicy;
 import com.intellij.ui.CheckedTreeNode;
 import com.intellij.ui.OnePixelSplitter;
@@ -29,15 +27,19 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleExtension;
+import consulo.module.extension.swing.SwingMutableModuleExtension;
 import consulo.psi.PsiPackageManager;
 import consulo.psi.PsiPackageSupportProvider;
 import consulo.roots.ModifiableModuleRootLayer;
 import consulo.roots.ui.configuration.extension.ExtensionCheckedTreeNode;
 import consulo.roots.ui.configuration.extension.ExtensionTreeCellRenderer;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.Layout;
 import consulo.ui.shared.border.BorderStyle;
@@ -52,8 +54,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author VISTALL
@@ -116,7 +118,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
           // - B
           // -- C
           // when we enable C, ill be calls like A -> B -> C
-          List<CheckedTreeNode> parents = new ArrayList<CheckedTreeNode>();
+          List<CheckedTreeNode> parents = new ArrayList<>();
           TreeNode parent = node.getParent();
           while (parent != null) {
             if (parent instanceof CheckedTreeNode) {
@@ -156,42 +158,37 @@ public class ExtensionEditor extends ModuleElementsEditor {
 
   @Nullable
   @RequiredUIAccess
+  @SuppressWarnings("deprecation")
   private JComponent createConfigurationPanel(final @Nonnull MutableModuleExtension extension) {
     myConfigurablePanelExtension = extension;
-    final Runnable updateOnCheck = new Runnable() {
-      @Override
-      @RequiredUIAccess
-      public void run() {
-        extensionChanged(extension);
-      }
-    };
+    @RequiredUIAccess Runnable updateOnCheck = () -> extensionChanged(extension);
 
-    Disposable uiDisposable = Disposer.newDisposable("module extension: " + extension.getId());
+    Disposable uiDisposable = Disposable.newDisposable("module extension: " + extension.getId());
 
-    @Nullable
-    JComponent configurablePanel;
+    JComponent result = null;
 
-    final consulo.ui.Component component = extension.createConfigurationComponent(uiDisposable, updateOnCheck);
-
-    if (component != null) {
-      if (component instanceof Layout) {
-        component.removeBorders();
-
-        component.addBorders(BorderStyle.EMPTY, null, 5);
-      }
-
-      configurablePanel = (JComponent)TargetAWT.to(component);
+    if (extension instanceof SwingMutableModuleExtension) {
+      result = ((SwingMutableModuleExtension)extension).createConfigurablePanel(uiDisposable, updateOnCheck);
     }
     else {
-      // noinspection deprecation
-      configurablePanel = extension.createConfigurablePanel(uiDisposable, updateOnCheck);
+      Component component = extension.createConfigurationComponent(uiDisposable, updateOnCheck);
+
+      if (component != null) {
+        if (component instanceof Layout) {
+          component.removeBorders();
+
+          component.addBorders(BorderStyle.EMPTY, null, 5);
+        }
+
+        result = (JComponent)TargetAWT.to(component);
+      }
     }
 
-    if(configurablePanel != null) {
-      myExtensionDisposables.put(configurablePanel, uiDisposable);
+    if (result != null) {
+      myExtensionDisposables.put(result, uiDisposable);
     }
 
-    return configurablePanel;
+    return result;
   }
 
   @RequiredUIAccess
@@ -204,9 +201,9 @@ public class ExtensionEditor extends ModuleElementsEditor {
       oldComponent = mySplitter.replaceSecondComponent(createConfigurationPanel(extension));
     }
 
-    if(oldComponent != null) {
+    if (oldComponent != null) {
       Disposable disposable = myExtensionDisposables.remove(oldComponent);
-      if(disposable != null) {
+      if (disposable != null) {
         Disposer.dispose(disposable);
       }
     }

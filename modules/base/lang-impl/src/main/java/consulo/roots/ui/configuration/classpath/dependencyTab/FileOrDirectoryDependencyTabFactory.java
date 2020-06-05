@@ -15,7 +15,7 @@
  */
 package consulo.roots.ui.configuration.classpath.dependencyTab;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import consulo.roots.ModuleRootLayer;

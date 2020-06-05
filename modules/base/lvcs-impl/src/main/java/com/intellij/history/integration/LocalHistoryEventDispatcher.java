@@ -18,7 +18,7 @@ package com.intellij.history.integration;
 import com.intellij.history.core.LocalHistoryFacade;
 import com.intellij.history.core.StoredContent;
 import com.intellij.history.core.tree.Entry;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.command.CommandEvent;
 import com.intellij.openapi.command.CommandListener;
 import consulo.util.dataholder.Key;

@@ -22,12 +22,11 @@ import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.internal.statistic.AbstractApplicationUsagesCollector;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 /**
@@ -60,11 +59,6 @@ public abstract class AbstractRunConfigurationTypeUsagesCollector extends Abstra
         }
       }
     });
-    return ContainerUtil.map2Set(runConfigurationTypes, new Function<String, UsageDescriptor>() {
-      @Override
-      public UsageDescriptor fun(String runConfigurationType) {
-        return new UsageDescriptor(runConfigurationType, 1);
-      }
-    });
+    return ContainerUtil.map2Set(runConfigurationTypes, runConfigurationType -> new UsageDescriptor(runConfigurationType, 1));
   }
 }

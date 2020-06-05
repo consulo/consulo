@@ -16,11 +16,11 @@
 
 package com.intellij.openapi.compiler.options;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 

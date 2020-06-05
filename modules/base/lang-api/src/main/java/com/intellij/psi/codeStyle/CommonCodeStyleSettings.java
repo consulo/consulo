@@ -47,6 +47,7 @@ import static com.intellij.psi.codeStyle.CodeStyleDefaults.*;
  *
  * @author Rustam Vishnyakov
  */
+@SuppressWarnings("unused")
 public class CommonCodeStyleSettings {
   // Dev. notes:
   // - Do not add language-specific options here, use CustomCodeStyleSettings instead.

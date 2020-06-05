@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.roots.impl.libraries;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablePresentation;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.util.SmartList;
+import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;

@@ -18,10 +18,10 @@ package com.intellij.openapi.components.impl;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.StateStorage;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.testFramework.LightPlatformLangTestCase;
 import consulo.components.impl.stores.storage.StateStorageFacade;
 import consulo.components.impl.stores.storage.StateStorageManagerImpl;
+import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

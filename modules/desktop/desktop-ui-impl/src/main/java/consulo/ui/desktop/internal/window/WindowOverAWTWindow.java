@@ -16,6 +16,8 @@
 package consulo.ui.desktop.internal.window;
 
 import consulo.disposer.Disposable;
+import consulo.ui.desktop.internal.DesktopFontImpl;
+import consulo.ui.font.Font;
 import consulo.util.dataholder.Key;
 import consulo.awt.TargetAWT;
 import consulo.awt.impl.ToSwingWindowWrapper;
@@ -115,6 +117,17 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
   @Override
   public boolean isVisible() {
     return myWindow.isVisible();
+  }
+
+  @Nonnull
+  @Override
+  public Font getFont() {
+    return new DesktopFontImpl(myWindow.getFont());
+  }
+
+  @Override
+  public void setFont(@Nonnull Font font) {
+    myWindow.setFont(TargetAWT.to(font));
   }
 
   @RequiredUIAccess

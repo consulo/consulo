@@ -16,18 +16,16 @@
 package com.intellij.internal.statistic;
 
 import com.intellij.internal.statistic.beans.ConvertUsagesUtil;
-import com.intellij.internal.statistic.beans.GroupDescriptor;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.annotations.MapAnnotation;
 import com.intellij.util.xmlb.annotations.Tag;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -36,8 +34,7 @@ import java.util.Set;
  * User: ksafonov
  */
 @Singleton
-@State(name = "UsageTrigger", storages = @Storage(file = StoragePathMacros.APP_CONFIG +
-                                                         "/statistics.application.usages.xml", roamingType = RoamingType.DISABLED))
+@State(name = "UsageTrigger", storages = @Storage(value = "statistics.application.usages.xml", roamingType = RoamingType.DISABLED))
 public class UsageTrigger implements PersistentStateComponent<UsageTrigger.State> {
 
   public static class State {
@@ -67,33 +64,28 @@ public class UsageTrigger implements PersistentStateComponent<UsageTrigger.State
     }
   }
 
+  @Override
   public State getState() {
     return myState;
   }
 
+  @Override
   public void loadState(final State state) {
     myState = state;
   }
 
-
   public static class MyCollector extends UsagesCollector {
-
-    private static final GroupDescriptor GROUP = GroupDescriptor.create("features counts", GroupDescriptor.HIGHER_PRIORITY);
-
+    @Override
     @Nonnull
     public Set<UsageDescriptor> getUsages(@Nullable final Project project) {
       final State state = UsageTrigger.getInstance().getState();
-      return ContainerUtil.map2Set(state.myValues.entrySet(), new Function<Map.Entry<String, Integer>, UsageDescriptor>() {
-        public UsageDescriptor fun(final Map.Entry<String, Integer> e) {
-          return new UsageDescriptor(e.getKey(), e.getValue());
-        }
-      });
+      return ContainerUtil.map2Set(state.myValues.entrySet(), e -> new UsageDescriptor(e.getKey(), e.getValue()));
     }
 
+    @Override
     @Nonnull
-    public GroupDescriptor getGroupId() {
-      return GROUP;
+    public String getGroupId() {
+      return "features counts";
     }
   }
-
 }

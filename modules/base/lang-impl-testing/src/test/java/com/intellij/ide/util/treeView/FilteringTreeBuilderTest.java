@@ -1,12 +1,12 @@
 package com.intellij.ide.util.treeView;
 
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Ref;
 import com.intellij.ui.TreeUIHelper;
 import com.intellij.ui.speedSearch.ElementFilter;
 import com.intellij.ui.treeStructure.*;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeBuilder;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeStructure;
+import consulo.disposer.Disposer;
 import org.jetbrains.concurrency.Promise;
 
 import java.util.LinkedHashMap;

@@ -16,47 +16,31 @@
 package com.intellij.ide.plugins;
 
 import com.intellij.internal.statistic.UsagesCollector;
-import com.intellij.internal.statistic.beans.GroupDescriptor;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Condition;
-import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.container.plugin.IdeaPluginDescriptor;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
+import consulo.container.plugin.PluginManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 import java.util.Set;
 
 public class NonBundledPluginsUsagesCollector extends UsagesCollector {
-  private static final String GROUP_ID = "non-bundled-plugins";
-
   @Override
   @Nonnull
-  public GroupDescriptor getGroupId() {
-    return GroupDescriptor.create(GROUP_ID, GroupDescriptor.HIGHER_PRIORITY);
+  public String getGroupId() {
+    return "non-bundled-plugins";
   }
 
   @Override
   @Nonnull
   public Set<UsageDescriptor> getUsages(@Nullable Project project) {
-    final IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
-    final List<IdeaPluginDescriptor> nonBundledEnabledPlugins = ContainerUtil.filter(plugins, new Condition<IdeaPluginDescriptor>() {
-      @Override
-      public boolean value(final IdeaPluginDescriptor d) {
-        return d.isEnabled() && !PluginIds.isPlatformPlugin(d.getPluginId()) && d.getPluginId() != null;
-      }
-    });
+    final List<PluginDescriptor> plugins = PluginManager.getPlugins();
+    final List<PluginDescriptor> nonBundledEnabledPlugins = ContainerUtil.filter(plugins, d -> d.isEnabled() && !PluginIds.isPlatformPlugin(d.getPluginId()) && d.getPluginId() != null);
 
-    return ContainerUtil.map2Set(nonBundledEnabledPlugins, new Function<IdeaPluginDescriptor, UsageDescriptor>() {
-      @Override
-      public UsageDescriptor fun(IdeaPluginDescriptor descriptor) {
-        return new UsageDescriptor(descriptor.getPluginId().getIdString(), 1);
-      }
-    });
+    return ContainerUtil.map2Set(nonBundledEnabledPlugins, descriptor -> new UsageDescriptor(descriptor.getPluginId().getIdString(), 1));
   }
-
 }

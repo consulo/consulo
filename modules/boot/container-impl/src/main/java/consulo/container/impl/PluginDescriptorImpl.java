@@ -25,7 +25,6 @@ import consulo.util.nodep.map.SimpleMultiMap;
 import consulo.util.nodep.xml.SimpleXmlParsingException;
 import consulo.util.nodep.xml.SimpleXmlReader;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,6 +44,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   private String myName;
   private PluginId myId;
   private String myResourceBundleBaseName;
+  private String myLocalize;
   private String myChangeNotes;
   private String myVersion;
   private String myPlatformVersion;
@@ -107,6 +107,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     }
     myId = idString == null ? null : PluginId.getId(idString);
     myResourceBundleBaseName = StringUtilRt.isEmpty(pluginBean.resourceBundle) ? null : pluginBean.resourceBundle;
+    myLocalize = StringUtilRt.isEmpty(pluginBean.localize) ? null : pluginBean.localize;
 
     myDescriptionChildText = pluginBean.description;
     myChangeNotes = pluginBean.changeNotes;
@@ -322,6 +323,12 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     return myResourceBundleBaseName;
   }
 
+  @Nullable
+  @Override
+  public String getLocalize() {
+    return myLocalize;
+  }
+
   @Override
   public String getCategory() {
     return myCategory;
@@ -435,7 +442,6 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   }
 
   @Override
-  @NonNls
   public String toString() {
     return "PluginDescriptor[name='" + myName + "', classpath='" + myPath + "']";
   }

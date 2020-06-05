@@ -15,8 +15,9 @@
  */
 package com.intellij.util.ui.accessibility;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+
 import javax.annotation.Nonnull;
 
 import java.beans.PropertyChangeListener;

@@ -17,7 +17,6 @@ package com.intellij.openapi.fileTypes;
 
 import com.intellij.internal.statistic.AbstractApplicationUsagesCollector;
 import com.intellij.internal.statistic.CollectUsagesException;
-import com.intellij.internal.statistic.beans.GroupDescriptor;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
@@ -27,8 +26,8 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FileBasedIndex;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,13 +35,10 @@ import java.util.Set;
  * @author Nikolay Matveev
  */
 public class FileTypeUsagesCollector extends AbstractApplicationUsagesCollector {
-
-  private static final String GROUP_ID = "file-type";
-
   @Nonnull
   @Override
-  public GroupDescriptor getGroupId() {
-    return GroupDescriptor.create(GROUP_ID);
+  public String getGroupId() {
+    return "file-type";
   }
 
   @Nonnull
@@ -50,9 +46,6 @@ public class FileTypeUsagesCollector extends AbstractApplicationUsagesCollector 
   public Set<UsageDescriptor> getProjectUsages(@Nonnull final Project project) throws CollectUsagesException {
     final Set<FileType> usedFileTypes = new HashSet<FileType>();
     final FileTypeManager fileTypeManager = FileTypeManager.getInstance();
-    if (fileTypeManager == null) {
-      throw new CollectUsagesException("Cannot get instance of FileTypeManager");
-    }
     final FileType[] registeredFileTypes = fileTypeManager.getRegisteredFileTypes();
     for (final FileType fileType : registeredFileTypes) {
       if (project.isDisposed()) {
@@ -80,7 +73,7 @@ public class FileTypeUsagesCollector extends AbstractApplicationUsagesCollector 
       @Nonnull
       @Override
       public UsageDescriptor fun(FileType fileType) {
-        return new UsageDescriptor(fileType.getName(), 1);
+        return new UsageDescriptor(fileType.getId(), 1);
       }
     });
   }

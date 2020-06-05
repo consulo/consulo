@@ -19,6 +19,7 @@ import com.intellij.openapi.module.Module;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.util.pointers.Named;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -29,8 +30,8 @@ public interface MutableModuleInheritableNamedPointer<T extends Named> extends M
   void set(@Nonnull ModuleInheritableNamedPointer<T> value);
 
   @RequiredReadAction
-  void set(@javax.annotation.Nullable String moduleName, @javax.annotation.Nullable String name);
+  void set(@Nullable String moduleName, @Nullable String name);
 
   @RequiredReadAction
-  void set(@javax.annotation.Nullable Module module, @javax.annotation.Nullable T named);
+  void set(@Nullable Module module, @Nullable T named);
 }

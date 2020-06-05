@@ -16,15 +16,15 @@
 package com.intellij.pom.core.impl;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
+import consulo.disposer.Disposer;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.pom.PomModel;
 import com.intellij.pom.PomModelAspect;

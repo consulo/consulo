@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.components;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.ExtensionsArea;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
+import consulo.disposer.Disposable;
 import consulo.util.dataholder.UserDataHolder;
 import com.intellij.util.messages.MessageBus;
 import consulo.injecting.InjectingContainer;

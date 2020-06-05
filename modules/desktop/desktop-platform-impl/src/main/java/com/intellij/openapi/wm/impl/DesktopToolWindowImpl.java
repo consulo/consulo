@@ -18,7 +18,6 @@ package com.intellij.openapi.wm.impl;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.BusyObject;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
 import com.intellij.openapi.wm.impl.content.DesktopToolWindowContentUi;
@@ -27,6 +26,8 @@ import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.wm.impl.ToolWindowBase;
 
@@ -51,8 +52,8 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
     }
   };
 
-  protected DesktopToolWindowImpl(DesktopToolWindowManagerImpl toolWindowManager, String id, boolean canCloseContent, @Nullable JComponent component) {
-    super(toolWindowManager, id, canCloseContent, component);
+  protected DesktopToolWindowImpl(DesktopToolWindowManagerImpl toolWindowManager, String id, LocalizeValue displayName, boolean canCloseContent, @Nullable JComponent component, boolean avaliable) {
+    super(toolWindowManager, id, displayName, canCloseContent, component, avaliable);
   }
 
   @RequiredUIAccess
@@ -72,7 +73,7 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
 
     DesktopInternalDecorator.installFocusTraversalPolicy(myComponent, new LayoutFocusTraversalPolicy());
 
-    UiNotifyConnector notifyConnector = new UiNotifyConnector(myComponent, new Activatable.Adapter() {
+    UiNotifyConnector notifyConnector = new UiNotifyConnector(myComponent, new Activatable() {
       @Override
       public void showNotify() {
         myShowing.onReady();

@@ -26,12 +26,11 @@ import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryRootsCom
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.LibraryProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 
-import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**

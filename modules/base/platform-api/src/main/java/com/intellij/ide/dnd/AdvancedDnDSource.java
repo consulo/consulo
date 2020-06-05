@@ -16,7 +16,7 @@
 
 package com.intellij.ide.dnd;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 
 /**
  * @author spleaner

@@ -16,6 +16,7 @@
 package com.intellij.openapi.actionSystem;
 
 import consulo.container.PluginException;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import com.intellij.util.ObjectUtil;
 
@@ -25,16 +26,14 @@ import com.intellij.util.ObjectUtil;
 public class ActionGroupStub extends DefaultActionGroup implements ActionStubBase {
   private final String myId;
   private final String myActionClass;
-  private final ClassLoader myClassLoader;
-  private PluginId myPluginId;
+  private final PluginDescriptor myPluginDescriptor;
   private String myIconPath;
   private boolean myPopupDefinedInXml;
 
-  public ActionGroupStub(String id, String actionClass, ClassLoader classLoader, PluginId pluginId) {
+  public ActionGroupStub(String id, String actionClass, PluginDescriptor pluginDescriptor) {
     myId = id;
     myActionClass = actionClass;
-    myClassLoader = classLoader;
-    myPluginId = pluginId;
+    myPluginDescriptor = pluginDescriptor;
   }
 
   public String getActionClass() {
@@ -50,7 +49,7 @@ public class ActionGroupStub extends DefaultActionGroup implements ActionStubBas
   }
 
   public ClassLoader getClassLoader() {
-    return myClassLoader;
+    return myPluginDescriptor.getPluginClassLoader();
   }
 
   @Override
@@ -60,7 +59,7 @@ public class ActionGroupStub extends DefaultActionGroup implements ActionStubBas
 
   @Override
   public PluginId getPluginId() {
-    return myPluginId;
+    return myPluginDescriptor.getPluginId();
   }
 
   @Override
@@ -83,7 +82,7 @@ public class ActionGroupStub extends DefaultActionGroup implements ActionStubBas
     if (children.length > 0) {
       DefaultActionGroup dTarget = ObjectUtil.tryCast(target, DefaultActionGroup.class);
       if(dTarget == null) {
-        throw new PluginException("Action group class must extend DefaultActionGroup for the group to accept children:" + myActionClass, myPluginId);
+        throw new PluginException("Action group class must extend DefaultActionGroup for the group to accept children:" + myActionClass, getPluginId());
       }
 
       for (AnAction action : children) {

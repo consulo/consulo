@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.breakpoints.ui;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;

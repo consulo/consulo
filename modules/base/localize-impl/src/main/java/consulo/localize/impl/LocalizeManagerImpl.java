@@ -29,6 +29,7 @@ import consulo.disposer.Disposable;
 import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeManagerListener;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
@@ -211,6 +212,18 @@ public class LocalizeManagerImpl extends LocalizeManager {
       LOG.error(e);
       return ourDefaultLocale;
     }
+  }
+
+  @Nonnull
+  @Override
+  public LocalizeValue fromStringKey(@Nonnull String localizeKeyInfo) {
+    List<String> values = StringUtil.split(localizeKeyInfo, "@");
+    if(values.size() != 2) {
+      return LocalizeValue.of(localizeKeyInfo);
+    }
+
+    LocalizeKey localizeKey = LocalizeKey.of(values.get(0), values.get(1));
+    return localizeKey.getValue();
   }
 
   @Nonnull

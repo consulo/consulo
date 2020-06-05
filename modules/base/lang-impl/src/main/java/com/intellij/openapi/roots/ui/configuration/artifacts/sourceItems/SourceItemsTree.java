@@ -22,7 +22,6 @@ import com.intellij.ide.dnd.DnDAction;
 import com.intellij.ide.dnd.DnDDragStartBean;
 import com.intellij.ide.dnd.DnDManager;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.ProjectBundle;
@@ -30,7 +29,6 @@ import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorImpl;
 import com.intellij.openapi.roots.ui.configuration.artifacts.SimpleDnDAwareTree;
 import com.intellij.openapi.roots.ui.configuration.artifacts.SourceItemsDraggingObject;
 import com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.actions.*;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingSourceItem;
@@ -39,6 +37,8 @@ import com.intellij.ui.treeStructure.SimpleTreeBuilder;
 import com.intellij.ui.treeStructure.SimpleTreeStructure;
 import com.intellij.ui.treeStructure.WeightBasedComparator;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
@@ -48,7 +48,7 @@ import java.util.List;
 /**
  * @author nik
  */
-public class SourceItemsTree extends SimpleDnDAwareTree implements AdvancedDnDSource, Disposable{
+public class SourceItemsTree extends SimpleDnDAwareTree implements AdvancedDnDSource, Disposable {
   private final ArtifactEditorImpl myArtifactsEditor;
   private final SimpleTreeBuilder myBuilder;
 

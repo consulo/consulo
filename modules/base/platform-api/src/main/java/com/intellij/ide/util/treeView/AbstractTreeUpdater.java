@@ -16,12 +16,12 @@
 
 package com.intellij.ide.util.treeView;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ModalityState;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.ui.treeStructure.treetable.TreeTableTree;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.MergingUpdateQueue;

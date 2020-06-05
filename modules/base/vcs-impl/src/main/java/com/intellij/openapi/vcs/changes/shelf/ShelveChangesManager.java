@@ -17,7 +17,7 @@
 package com.intellij.openapi.vcs.changes.shelf;
 
 import com.intellij.concurrency.JobScheduler;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.impl.LaterInvocator;
@@ -59,6 +59,7 @@ import com.intellij.util.text.CharArrayCharSequence;
 import com.intellij.util.text.UniqueNameGenerator;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.vcsUtil.FilesProgress;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jdom.Parent;

@@ -16,7 +16,7 @@
 package com.intellij.diff;
 
 import com.intellij.diff.requests.DiffRequest;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import consulo.ui.annotation.RequiredUIAccess;
 

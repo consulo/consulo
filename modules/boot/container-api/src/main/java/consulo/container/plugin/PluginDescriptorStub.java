@@ -93,6 +93,12 @@ public abstract class PluginDescriptorStub implements IdeaPluginDescriptor, Plug
     return null;
   }
 
+  @Nullable
+  @Override
+  public String getLocalize() {
+    return null;
+  }
+
   @Override
   public String getCategory() {
     return null;

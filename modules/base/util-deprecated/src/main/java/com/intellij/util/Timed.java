@@ -16,9 +16,9 @@
 
 package com.intellij.util;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.util.concurrency.AppExecutorUtil;
 
 import javax.annotation.Nullable;

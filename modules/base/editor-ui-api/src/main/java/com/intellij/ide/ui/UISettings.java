@@ -15,7 +15,6 @@
  */
 package com.intellij.ide.ui;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
@@ -38,6 +37,7 @@ import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Transient;
 import consulo.annotation.DeprecationInfo;
 import consulo.desktop.util.awt.AntialiasingType;
+import consulo.disposer.Disposable;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

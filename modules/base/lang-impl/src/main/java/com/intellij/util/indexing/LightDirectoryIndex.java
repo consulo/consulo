@@ -15,7 +15,6 @@
  */
 package com.intellij.util.indexing;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileTypes.FileTypeEvent;
 import com.intellij.openapi.fileTypes.FileTypeListener;
@@ -28,6 +27,7 @@ import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.disposer.Disposable;
 import consulo.util.collection.ConcurrentIntObjectMap;
 
 import javax.annotation.Nonnull;

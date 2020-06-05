@@ -18,14 +18,12 @@ package com.intellij.openapi.wm.impl;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.IdeTooltipManager;
 import com.intellij.ide.dnd.DnDAware;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ui.Divider;
 import com.intellij.openapi.ui.Painter;
 import com.intellij.openapi.ui.impl.GlassPaneDialogWrapperPeer;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Weighted;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeGlassPane;
@@ -35,6 +33,8 @@ import com.intellij.util.containers.FactoryMap;
 import com.intellij.util.ui.EmptyClipboardOwner;
 import com.intellij.util.ui.MouseEventAdapter;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
@@ -97,6 +97,7 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, IdeEvent
     super.addNotify();
   }
 
+  @Override
   public boolean dispatch(@Nonnull final AWTEvent e) {
     JRootPane eventRootPane = myRootPane;
 
@@ -404,6 +405,7 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, IdeEvent
     return true;
   }
 
+  @Override
   public void setCursor(Cursor cursor, @Nonnull Object requestor) {
     if (cursor == null) {
       myListener2Cursor.remove(requestor);
@@ -442,11 +444,12 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, IdeEvent
     }
   }
 
+  @Override
   public void addMousePreprocessor(final MouseListener listener, Disposable parent) {
     _addListener(listener, parent);
   }
 
-
+  @Override
   public void addMouseMotionPreprocessor(final MouseMotionListener listener, final Disposable parent) {
     _addListener(listener, parent);
   }
@@ -457,17 +460,15 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, IdeEvent
       updateSortedList();
     }
     activateIfNeeded();
-    Disposer.register(parent, new Disposable() {
-      public void dispose() {
-        UIUtil.invokeLaterIfNeeded(() -> removeListener(listener));
-      }
-    });
+    Disposer.register(parent, () -> UIUtil.invokeLaterIfNeeded(() -> removeListener(listener)));
   }
 
+  @Override
   public void removeMousePreprocessor(final MouseListener listener) {
     removeListener(listener);
   }
 
+  @Override
   public void removeMouseMotionPreprocessor(final MouseMotionListener listener) {
     removeListener(listener);
   }
@@ -532,16 +533,19 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, IdeEvent
     return getNamedPainters("glass");
   }
 
+  @Override
   public void addPainter(final Component component, final Painter painter, final Disposable parent) {
     getPainters().addPainter(painter, component);
     activateIfNeeded();
     Disposer.register(parent, new Disposable() {
+      @Override
       public void dispose() {
         SwingUtilities.invokeLater(() -> removePainter(painter));
       }
     });
   }
 
+  @Override
   public void removePainter(final Painter painter) {
     getPainters().removePainter(painter);
     deactivateIfNeeded();
@@ -562,6 +566,7 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, IdeEvent
     SwingUtilities.invokeLater(() -> deactivateIfNeeded());
   }
 
+  @Override
   public boolean isInModalContext() {
     final Component[] components = getComponents();
     for (Component component : components) {
@@ -573,6 +578,7 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, IdeEvent
     return false;
   }
 
+  @Override
   protected void paintComponent(final Graphics g) {
     getPainters().paint(g);
   }

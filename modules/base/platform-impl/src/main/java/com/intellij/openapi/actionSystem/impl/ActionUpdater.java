@@ -4,7 +4,7 @@ package com.intellij.openapi.actionSystem.impl;
 import com.intellij.concurrency.SensitiveProgressWrapper;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.application.ApplicationManager;
@@ -18,7 +18,7 @@ import com.intellij.openapi.progress.util.ProgressWrapper;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Conditions;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
@@ -235,7 +235,7 @@ class ActionUpdater {
   }
 
   private static void cancelAndRestartOnUserActivity(Promise<?> promise, ProgressIndicator indicator) {
-    Disposable disposable = Disposer.newDisposable("Action Update");
+    Disposable disposable = Disposable.newDisposable("Action Update");
     IdeEventQueue.getInstance().addPostprocessor(e -> {
       if (e instanceof ComponentEvent && !(e instanceof PaintEvent) && (e.getID() & AWTEvent.MOUSE_MOTION_EVENT_MASK) == 0) {
         indicator.cancel();

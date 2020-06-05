@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.vfs.impl.http;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.ex.http.HttpVirtualFileListener;
 import com.intellij.util.EventDispatcher;
+import consulo.disposer.Disposer;
 import gnu.trove.THashMap;
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;

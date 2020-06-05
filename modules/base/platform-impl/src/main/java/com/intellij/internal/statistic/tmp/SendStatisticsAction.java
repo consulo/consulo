@@ -15,25 +15,29 @@
  */
 package com.intellij.internal.statistic.tmp;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.internal.statistic.StatisticsUploadAssistant;
-import com.intellij.internal.statistic.connect.StatisticsResult;
-import com.intellij.internal.statistic.connect.StatisticsService;
-import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.internal.statistic.updater.StatisticsSendManager;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.Alerts;
+import consulo.ui.annotation.RequiredUIAccess;
 
-public class SendStatisticsAction extends AnAction {
+public class SendStatisticsAction extends DumbAwareAction {
 
+  @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
     final Project project = e.getData(CommonDataKeys.PROJECT);
-    if (project != null) {
-      StatisticsService service = StatisticsUploadAssistant.getStatisticsService();
-      StatisticsResult result = service.send();
-      Messages.showMessageDialog(result.getDescription(), "Result", AllIcons.FileTypes.Custom);
+    if (project == null) {
+      return;
     }
+
+    StatisticsSendManager statisticsProjectComponent = ServiceManager.getService(StatisticsSendManager.class);
+
+    statisticsProjectComponent.sendNow();
+
+    Alerts.okInfo("Sended");
   }
 }

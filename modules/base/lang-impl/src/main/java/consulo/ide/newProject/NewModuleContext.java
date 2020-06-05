@@ -15,65 +15,51 @@
  */
 package consulo.ide.newProject;
 
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.newProject.node.NewModuleContextGroup;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * @author VISTALL
  * @since 05.06.14
  */
-public class NewModuleContext {
+public class NewModuleContext extends NewModuleContextGroup  {
+  @Deprecated
   public static final String UGROUPED = "ungrouped";
 
+  @Deprecated
   public static class Group implements Comparable<Group> {
-    private final Set<Item> myItems = new TreeSet<>();
-    private final String myId;
-    private final String myName;
+    private final NewModuleContextGroup myGroup;
 
-    public Group(String id, String name) {
-      myId = id;
-      myName = name;
+    public Group(NewModuleContextGroup group) {
+      myGroup = group;
     }
 
     public void add(String name, Image icon, NewModuleBuilderProcessor<?> processor) {
-      myItems.add(new Item(name, icon, processor));
+      myGroup.add(LocalizeValue.of(name), icon, processor);
     }
 
     public String getName() {
-      return myName;
+      return myGroup.getName().getValue();
     }
 
     public String getId() {
-      return myId;
+      return myGroup.getId();
     }
 
-    @Nonnull
-    public Set<Item> getItems() {
-      return myItems;
+    public Image getImage() {
+      return myGroup.getImage();
     }
 
     @Override
     public int compareTo(@Nonnull Group o) {
-      int weight = getWeight();
-      int oWeight = o.getWeight();
-      if (weight != oWeight) {
-        return oWeight - weight;
-      }
-
-      return getName().compareTo(o.getName());
-    }
-
-    private int getWeight() {
-      return getId().equals(UGROUPED) ? 1 : 100;
+      return 0;
     }
   }
 
+  @Deprecated
   public static class Item implements Comparable<Item> {
     private String myName;
     private Image myIcon;
@@ -99,7 +85,7 @@ public class NewModuleContext {
 
     @Override
     public int compareTo(@Nonnull Item o) {
-      return myName.compareTo(o.myName);
+      return 0;
     }
 
     @Override
@@ -108,26 +94,26 @@ public class NewModuleContext {
     }
   }
 
-  private final Map<String, Group> myGroups = new HashMap<>();
+  public NewModuleContext() {
+    super("", LocalizeValue.empty(), null);
+  }
 
   @Nonnull
   public Group get(@Nonnull String id) {
-    Group group = myGroups.get(id);
-    if (group == null) {
-      throw new IllegalArgumentException("Group with " + id + " is not registered");
+    if(UGROUPED.equals(id)) {
+      return new Group(this);
     }
-    return group;
+    NewModuleContextGroup group = findGroup(id);
+    return new Group(group);
   }
 
   @Nonnull
+  @Deprecated
   public Group createGroup(@Nonnull String id, @Nonnull String name) {
-    return myGroups.computeIfAbsent(id, (s) -> new Group(id, name));
-  }
-
-  @Nonnull
-  public Group[] getGroups() {
-    Group[] groups = myGroups.values().toArray(new Group[myGroups.size()]);
-    ContainerUtil.sort(groups);
-    return groups;
+    if(UGROUPED.equals(id)) {
+      return new Group(this);
+    }
+    NewModuleContextGroup group = addGroup(id, LocalizeValue.of(name));
+    return new Group(group);
   }
 }

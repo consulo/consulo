@@ -15,7 +15,7 @@
  */
 package consulo.compiler.impl;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ui.LightFilePointer;

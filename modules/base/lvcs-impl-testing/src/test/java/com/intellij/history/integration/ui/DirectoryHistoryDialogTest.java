@@ -20,7 +20,7 @@ import com.intellij.history.integration.ui.models.DirectoryHistoryDialogModel;
 import com.intellij.history.integration.ui.models.HistoryDialogModel;
 import com.intellij.history.integration.ui.views.DirectoryChange;
 import com.intellij.history.integration.ui.views.DirectoryHistoryDialog;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 
 import java.io.IOException;
 import java.util.Collections;

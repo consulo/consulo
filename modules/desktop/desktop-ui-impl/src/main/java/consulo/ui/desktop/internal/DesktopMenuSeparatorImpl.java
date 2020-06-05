@@ -15,7 +15,8 @@
  */
 package consulo.ui.desktop.internal;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
+import consulo.ui.font.Font;
 import consulo.util.dataholder.Key;
 import consulo.ui.Component;
 import consulo.ui.MenuSeparator;
@@ -98,6 +99,17 @@ class DesktopMenuSeparatorImpl implements MenuSeparator {
   @Nonnull
   @Override
   public Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Nonnull
+  @Override
+  public Font getFont() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void setFont(@Nonnull Font font) {
     throw new UnsupportedOperationException();
   }
 

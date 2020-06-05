@@ -32,7 +32,7 @@ public interface Button extends Clickable {
   @Nonnull
   static Button create(@Nonnull String text, @Nonnull @RequiredUIAccess ClickListener clickListener) {
     Button button = UIInternal.get()._Components_button(text);
-    button.addListener(ClickListener.class, clickListener);
+    button.addClickListener(clickListener);
     return button;
   }
 

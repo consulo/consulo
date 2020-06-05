@@ -16,10 +16,11 @@
 package com.intellij.openapi.application.impl;
 
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.constraints.Expiration;
 import com.intellij.openapi.project.Project;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 
 import java.util.Collections;

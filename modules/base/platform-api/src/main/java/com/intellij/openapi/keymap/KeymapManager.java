@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.keymap;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
+import consulo.disposer.Disposable;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,8 +42,6 @@ public abstract class KeymapManager {
   public abstract void addKeymapManagerListener(@Nonnull KeymapManagerListener listener);
 
   public abstract void addKeymapManagerListener(@Nonnull KeymapManagerListener listener, @Nonnull Disposable parentDisposable);
-
-  public abstract void addKeymapManagerListener(@Nonnull KeymapManagerListener listener, @Nonnull consulo.disposer.Disposable parentDisposable);
 
   public abstract void removeKeymapManagerListener(@Nonnull KeymapManagerListener listener);
 }

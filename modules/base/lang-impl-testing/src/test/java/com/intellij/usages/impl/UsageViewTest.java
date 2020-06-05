@@ -17,7 +17,6 @@ package com.intellij.usages.impl;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.openapi.vfs.encoding.EncodingManagerImpl;
@@ -30,6 +29,7 @@ import com.intellij.testFramework.LightPlatformCodeInsightTestCase;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usages.*;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposer;
 
 /**
  * User: cdr

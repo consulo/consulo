@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.project;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 
 import java.util.HashMap;
 import java.util.List;

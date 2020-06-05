@@ -64,6 +64,9 @@ public interface PluginDescriptor {
   @Nullable
   String getResourceBundleBaseName();
 
+  @Nullable
+  String getLocalize();
+
   String getCategory();
 
   @Nonnull

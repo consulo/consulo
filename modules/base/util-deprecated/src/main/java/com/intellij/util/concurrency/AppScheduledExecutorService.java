@@ -2,8 +2,8 @@
 package com.intellij.util.concurrency;
 
 import com.intellij.diagnostic.ThreadDumper;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.LowMemoryWatcherManager;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.ReflectionUtil;

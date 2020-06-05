@@ -138,6 +138,12 @@ public class TargetAWTFacadeStub implements TargetAWTFacade {
     return null;
   }
 
+  @Nonnull
+  @Override
+  public Font to(@Nonnull consulo.ui.font.Font font) {
+    throw new UnsupportedOperationException();
+  }
+
   @Override
   public int to(@Nonnull KeyCode code) {
     throw new UnsupportedOperationException();

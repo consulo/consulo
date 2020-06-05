@@ -15,9 +15,10 @@
  */
 package com.intellij.openapi.diff.impl.external;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diff.DiffRequest;
 import com.intellij.openapi.diff.DiffViewer;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 
 import java.awt.*;

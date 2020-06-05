@@ -16,13 +16,14 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.ProjectTopics;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanelImpl;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -40,7 +41,7 @@ public class ClasspathEditor extends ModuleElementsEditor implements ModuleRootL
   public ClasspathEditor(final ModuleConfigurationState state) {
     super(state);
 
-    final Disposable disposable = Disposer.newDisposable();
+    final Disposable disposable = Disposable.newDisposable();
 
     state.getProject().getMessageBus().connect(disposable).subscribe(ProjectTopics.PROJECT_ROOTS, this);
     registerDisposable(disposable);

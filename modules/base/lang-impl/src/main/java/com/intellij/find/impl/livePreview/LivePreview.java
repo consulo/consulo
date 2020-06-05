@@ -7,7 +7,6 @@ import com.intellij.find.FindManager;
 import com.intellij.find.FindModel;
 import com.intellij.find.FindResult;
 import com.intellij.ide.IdeTooltipManager;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -27,7 +26,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.TextRange;
@@ -48,7 +48,7 @@ public class LivePreview implements SearchResults.SearchResultsListener, Selecti
   private static final Key<RangeHighlighter> IN_SELECTION_KEY = Key.create("LivePreview.IN_SELECTION_KEY");
   private static final String EMPTY_STRING_DISPLAY_TEXT = "<Empty string>";
 
-  private final Disposable myDisposable = Disposer.newDisposable("livePreview");
+  private final Disposable myDisposable = Disposable.newDisposable("livePreview");
   private boolean mySuppressedUpdate = false;
 
   private static final Key<Boolean> MARKER_USED = Key.create("LivePreview.MARKER_USED");

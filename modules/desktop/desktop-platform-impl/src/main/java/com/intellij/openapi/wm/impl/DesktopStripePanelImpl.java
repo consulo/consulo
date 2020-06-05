@@ -17,11 +17,11 @@ package com.intellij.openapi.wm.impl;
 
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManagerListener;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.ui.ColorUtil;
@@ -57,7 +57,7 @@ final class DesktopStripePanelImpl extends JPanel {
   private LayoutData myLastLayoutData;
   private boolean myFinishingDrop;
   static final int DROP_DISTANCE_SENSIVITY = 20;
-  private final Disposable myDisposable = Disposer.newDisposable();
+  private final Disposable myDisposable = Disposable.newDisposable();
   private BufferedImage myCachedBg;
 
   DesktopStripePanelImpl(final int anchor, ToolWindowManagerBase manager) {

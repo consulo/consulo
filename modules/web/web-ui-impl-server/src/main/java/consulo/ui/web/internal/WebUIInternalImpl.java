@@ -19,6 +19,7 @@ import com.vaadin.ui.UI;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.font.FontManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.impl.model.ImmutableListModelImpl;
@@ -275,6 +276,12 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Nonnull
   @Override
+  public FontManager _FontManager_get() {
+    return WebFontManagerImpl.ourInstance;
+  }
+
+  @Nonnull
+  @Override
   public Window _Window_modalWindow(String title) {
     WebWindowImpl window = new WebWindowImpl(true);
     window.setTitle(title);
@@ -337,6 +344,11 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public TextBoxWithExtensions _Components_textBoxWithExtensions(String text) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public FoldoutLayout _Layouts_foldout(LocalizeValue titleValue, Component component, boolean show) {
     throw new UnsupportedOperationException();
   }
 }
