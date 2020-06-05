@@ -1634,10 +1634,14 @@ public abstract class DialogWrapper {
    *
    * @throws IllegalStateException if the dialog is invoked not on the event dispatch thread
    */
+  @Deprecated
+  @DeprecationInfo("Use async version")
   public void show() {
     showAndGetOk();
   }
 
+  @Deprecated
+  @DeprecationInfo("Use async version")
   public boolean showAndGet() {
     show();
     return isOK();
