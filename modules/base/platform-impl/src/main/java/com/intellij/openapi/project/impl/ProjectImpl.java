@@ -271,7 +271,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 //    ProfilingUtil.captureCPUSnapshot();
     long time = System.currentTimeMillis() - start;
     LOG.info(getNotLazyServicesCount() + " project components initialized in " + time + " ms");
-    getMessageBus().syncPublisher(ProjectLifecycleListener.TOPIC).projectComponentsInitialized(this);
 
     myProjectManagerListener = new MyProjectManagerListener();
     myManager.addProjectManagerListener(this, myProjectManagerListener);
