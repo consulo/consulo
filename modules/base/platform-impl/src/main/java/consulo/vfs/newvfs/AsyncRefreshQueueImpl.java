@@ -16,11 +16,21 @@
 package consulo.vfs.newvfs;
 
 import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.TransactionId;
+import com.intellij.openapi.vfs.AsyncFileListener;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.newvfs.AsyncEventSupport;
 import com.intellij.openapi.vfs.newvfs.RefreshQueueImpl;
+import com.intellij.openapi.vfs.newvfs.RefreshSessionImpl;
+import com.intellij.openapi.vfs.newvfs.events.VFileCreateEvent;
+import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
+import com.intellij.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
 
 /**
  * @author VISTALL

@@ -103,7 +103,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
     myEventCounter.eventHappened(session);
   }
 
-  private void scheduleAsynchronousPreprocessing(@Nonnull RefreshSessionImpl session, @Nullable TransactionId transaction) {
+  protected void scheduleAsynchronousPreprocessing(@Nonnull RefreshSessionImpl session, @Nullable TransactionId transaction) {
     try {
       myEventProcessingQueue.execute(() -> {
         startRefreshActivity();
@@ -144,7 +144,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
     }
   }
 
-  private void tryProcessingEvents(@Nonnull RefreshSessionImpl session, @Nullable TransactionId transaction) {
+  protected void tryProcessingEvents(@Nonnull RefreshSessionImpl session, @Nullable TransactionId transaction) {
     List<? extends VFileEvent> events = ContainerUtil.filter(session.getEvents(), e -> {
       VirtualFile file = e instanceof VFileCreateEvent ? ((VFileCreateEvent)e).getParent() : e.getFile();
       return file == null || file.isValid();

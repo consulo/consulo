@@ -264,10 +264,10 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   }
 
   @Override
-  public void initNotLazyServices() {
+  public void initNotLazyServices(ProgressIndicator progressIndicator) {
     long start = System.currentTimeMillis();
 //    ProfilingUtil.startCPUProfiling();
-    super.initNotLazyServices();
+    super.initNotLazyServices(progressIndicator);
 //    ProfilingUtil.captureCPUSnapshot();
     long time = System.currentTimeMillis() - start;
     LOG.info(getNotLazyServicesCount() + " project components initialized in " + time + " ms");
@@ -377,10 +377,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
 
     myProjectManagerListener = null;
-
-    if (!application.isDisposed()) {
-      application.getMessageBus().syncPublisher(ProjectLifecycleListener.TOPIC).afterProjectClosed(this);
-    }
 
     super.dispose();
 

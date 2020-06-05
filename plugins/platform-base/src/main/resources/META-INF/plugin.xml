@@ -2686,6 +2686,7 @@
     <cachesInvalidator implementation="com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl$MonitorCachesInvalidator"/>
 
     <applicationService serviceInterface="com.intellij.openapi.project.ProjectManager" serviceImplementation="com.intellij.openapi.project.impl.ProjectManagerImpl"/>
+    <projectService serviceInterface="com.intellij.openapi.module.ModuleManager" serviceImplementation="com.intellij.openapi.module.impl.ModuleManagerComponent" />
     <applicationService serviceInterface="com.intellij.openapi.vfs.pointers.VirtualFilePointerManager" serviceImplementation="com.intellij.openapi.vfs.impl.VirtualFilePointerManagerImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.editor.actionSystem.TypedAction" serviceImplementation="com.intellij.openapi.editor.impl.TypedActionImpl"/>

@@ -24,7 +24,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
-import com.intellij.util.ui.UIUtil;
+import consulo.ui.UIAccess;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -59,9 +60,11 @@ public class RefreshProgress extends ProgressIndicatorBase {
   }
 
   private void updateIndicators(final boolean start) {
+    Application application = Application.get();
+    UIAccess uiAccess = application.getLastUIAccess();
     // wrapping in invokeLater here reduces the number of events posted to EDT in case of multiple IDE frames
-    UIUtil.invokeLaterIfNeeded(() -> {
-      if (ApplicationManager.getApplication().isDisposed()) return;
+    uiAccess.giveIfNeed(() -> {
+      if (application.isDisposed()) return;
 
       WindowManager windowManager = WindowManager.getInstance();
       if (windowManager == null) return;

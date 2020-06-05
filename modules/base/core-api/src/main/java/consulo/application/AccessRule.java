@@ -23,6 +23,7 @@ import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
+import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,6 +34,8 @@ import java.util.concurrent.ExecutorService;
  * @since 2018-04-24
  */
 public final class AccessRule {
+  private static final Logger LOG = Logger.getInstance(AccessRule.class);
+
   public static <E extends Throwable> void read(@RequiredReadAction @Nonnull ThrowableRunnable<E> action) throws E {
     Application.get().runReadAction((ThrowableComputable<Object, E>)() -> {
       action.run();
@@ -62,6 +65,8 @@ public final class AccessRule {
         result.setDone(application.runReadAction(action));
       }
       catch (Throwable throwable) {
+        LOG.error(throwable);
+
         result.rejectWithThrowable(throwable);
       }
     });
@@ -89,6 +94,8 @@ public final class AccessRule {
           result.setDone(application.runWriteActionNoIntentLock(action));
         }
         catch (Throwable throwable) {
+          LOG.error(throwable);
+
           result.rejectWithThrowable(throwable);
         }
       }

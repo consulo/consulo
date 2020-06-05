@@ -320,22 +320,40 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   @Override
-  public void initNotLazyServices() {
+  public void initNotLazyServices(@Nullable ProgressIndicator progressIndicator) {
     try {
       if (myNotLazyStepFinished) {
         throw new IllegalArgumentException("Injector already build");
       }
 
+      if(progressIndicator != null) {
+        progressIndicator.setIndeterminate(false);
+        progressIndicator.setFraction(0);
+      }
+
+      int i = 1;
       for (Class<?> serviceClass : myNotLazyServices) {
-        myCurrentNotLazyServiceClass = serviceClass;
+        try {
+          myCurrentNotLazyServiceClass = serviceClass;
 
-        ProgressIndicator indicator = ProgressManager.getGlobalProgressIndicator();
-        if (indicator != null) {
-          indicator.checkCanceled();
+          if(progressIndicator != null) {
+            progressIndicator.checkCanceled();
+
+            progressIndicator.setFraction(i / (float) myNotLazyServices.size());
+          }
+          else {
+            ProgressIndicator indicator = ProgressManager.getGlobalProgressIndicator();
+            if (indicator != null) {
+              indicator.checkCanceled();
+            }
+          }
+
+          Object component = getComponent(serviceClass);
+          assert component != null;
         }
-
-        Object component = getComponent(serviceClass);
-        assert component != null;
+        finally {
+          i++;
+        }
       }
     }
     finally {

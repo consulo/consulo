@@ -18,6 +18,7 @@ package com.intellij.openapi.components;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.ExtensionsArea;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import consulo.disposer.Disposable;
@@ -38,7 +39,7 @@ import java.util.List;
  * @see Project
  */
 public interface ComponentManager extends UserDataHolder, Disposable, InjectingContainerOwner {
-  default void initNotLazyServices() {
+  default void initNotLazyServices(@Nullable ProgressIndicator progressIndicator) {
     throw new UnsupportedOperationException();
   }
 

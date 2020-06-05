@@ -15,6 +15,7 @@
  */
 package consulo.web.application.impl;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.TransactionId;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -46,7 +47,7 @@ public class WebTransactionGuardImpl extends TransactionGuardEx {
 
   @Override
   public void submitTransaction(@Nonnull Disposable parentDisposable, @Nullable TransactionId expectedContext, @Nonnull Runnable runnable) {
-    runnable.run();
+    Application.get().getLastUIAccess().giveIfNeed(runnable);
   }
 
   @Override

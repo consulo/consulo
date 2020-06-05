@@ -6,14 +6,9 @@ import com.intellij.diagnostic.PerformanceWatcher;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.project.CacheUpdateRunner;
-import com.intellij.openapi.project.DumbModeTask;
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.impl.ProjectLifecycleListener;
+import com.intellij.openapi.project.*;
 import com.intellij.openapi.roots.CollectingContentIterator;
 import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.roots.ModuleRootListener;
@@ -23,8 +18,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.util.messages.MessageBusConnection;
-import javax.annotation.Nonnull;
+import consulo.logging.Logger;
+import consulo.ui.UIAccess;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -99,9 +96,9 @@ public class UnindexedFilesUpdater extends DumbModeTask {
     if (!app.isCommandLine()) {
       long sessionId = VirtualFileManager.getInstance().asyncRefresh(null);
       MessageBusConnection connection = app.getMessageBus().connect();
-      connection.subscribe(ProjectLifecycleListener.TOPIC, new ProjectLifecycleListener() {
+      connection.subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
         @Override
-        public void afterProjectClosed(@Nonnull Project project) {
+        public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
           if (project == myProject) {
             RefreshQueue.getInstance().cancelSession(sessionId);
             connection.disconnect();

@@ -608,7 +608,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
 
   @Override
   protected void assertWriteActionStart() {
-    if (!isWriteAccessAllowed()) {
+    if (!isWriteThread()) {
       assertIsWriteOrDispatchThread("Write access is allowed from event write/dispatch thread only");
     }
   }

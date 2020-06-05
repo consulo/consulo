@@ -51,7 +51,7 @@ public class DefaultProjectFactoryImpl extends DefaultProjectFactory implements 
   @Inject
   public DefaultProjectFactoryImpl(Application application, ProjectManager projectManager) {
     myDefaultProject = new DefaultProjectImpl(projectManager, "", application.isUnitTestMode());
-    myDefaultProject.initNotLazyServices();
+    myDefaultProject.initNotLazyServices(null);
   }
 
   @TestOnly

@@ -21,7 +21,6 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.ActivityTracker;
 import com.intellij.ide.ApplicationLoadListener;
 import com.intellij.ide.StartupProgress;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
@@ -42,7 +41,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.ShutDownTracker;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
@@ -64,9 +66,11 @@ import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.ComponentConfig;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginListenerDescriptor;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.logging.Logger;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.lang.reflect.ReflectionUtil;
@@ -591,7 +595,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   }
 
   protected void assertWriteActionStart() {
-    if (!isWriteAccessAllowed()) {
+    if (!isWriteThread()) {
       throw new IllegalArgumentException("Can't start write action from current thread. Thread: " + Thread.currentThread().getName());
     }
   }
@@ -705,8 +709,8 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   }
 
   public boolean startWriteUI(Class<?> clazz) {
-    if(!EventQueue.isDispatchThread()) {
-      throw new IllegalArgumentException("Current thread is not EDT: " + Thread.currentThread());
+    if(!UIAccess.isUIThread()) {
+      throw new IllegalArgumentException("Current thread is not UI: " + Thread.currentThread());
     }
 
     boolean needUnlock = false;

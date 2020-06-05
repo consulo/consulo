@@ -15,6 +15,7 @@
  */
 package com.intellij.mock;
 
+import com.intellij.openapi.progress.ProgressIndicator;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import consulo.components.impl.stores.IProjectStore;
@@ -37,7 +38,7 @@ public class MockProjectEx  extends MockProject implements ProjectEx {
   }
 
   @Override
-  public void initNotLazyServices() {
+  public void initNotLazyServices(ProgressIndicator progressIndicator) {
   }
 
   @Override

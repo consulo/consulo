@@ -21,12 +21,14 @@ package com.intellij.ui;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.impl.ProjectLifecycleListener;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.util.LowMemoryWatcher;
 import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.Function;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.disposer.Disposable;
+import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -54,9 +56,9 @@ public class DesktopIconDeferrerImpl extends IconDeferrer implements Disposable 
   public DesktopIconDeferrerImpl(Application application) {
     final MessageBusConnection connection = application.getMessageBus().connect();
     connection.subscribe(PsiModificationTracker.TOPIC, this::clear);
-    connection.subscribe(ProjectLifecycleListener.TOPIC, new ProjectLifecycleListener() {
+    connection.subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
       @Override
-      public void afterProjectClosed(@Nonnull Project project) {
+      public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
         clear();
       }
     });

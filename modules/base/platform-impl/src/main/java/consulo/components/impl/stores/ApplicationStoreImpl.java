@@ -72,7 +72,7 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   @Override
   public void load() throws IOException {
     long t = System.currentTimeMillis();
-    myApplication.initNotLazyServices();
+    myApplication.initNotLazyServices(null);
     t = System.currentTimeMillis() - t;
     LOG.info(myApplication.getNotLazyServicesCount() + " application services initialized in " + t + " ms");
   }

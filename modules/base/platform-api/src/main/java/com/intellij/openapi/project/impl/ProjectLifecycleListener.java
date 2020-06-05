@@ -32,15 +32,6 @@ public interface ProjectLifecycleListener {
   default void projectComponentsInitialized(@Nonnull Project project) {
   }
 
-  default void beforeProjectLoaded(@Nonnull Project project) {
-  }
-
-  default void afterProjectClosed(@Nonnull Project project) {
-  }
-
-  default void postStartupActivitiesPassed(@Nonnull Project project) {
-  }
-
   /**
    * @deprecated Use {@link ProjectLifecycleListener}
    */

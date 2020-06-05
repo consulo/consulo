@@ -291,7 +291,6 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
           synchronized (this) {
             myPostStartupActivitiesPassed = true;
           }
-          myProject.getMessageBus().syncPublisher(ProjectLifecycleListener.TOPIC).postStartupActivitiesPassed(myProject);
         }
       }
     });

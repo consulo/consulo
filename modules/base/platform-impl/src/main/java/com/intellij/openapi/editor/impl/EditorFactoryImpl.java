@@ -2,13 +2,11 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.injected.editor.DocumentWindow;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityStateListener;
 import com.intellij.openapi.application.impl.LaterInvocator;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -16,9 +14,7 @@ import com.intellij.openapi.editor.EditorKind;
 import com.intellij.openapi.editor.actionSystem.ActionPlan;
 import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
 import com.intellij.openapi.editor.actionSystem.TypedActionHandlerEx;
-import com.intellij.openapi.editor.colors.EditorColorsListener;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.event.EditorEventMulticaster;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.openapi.editor.event.EditorFactoryListener;
@@ -30,18 +26,21 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.project.impl.ProjectLifecycleListener;
-import consulo.disposer.Disposer;
+import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.text.CharArrayCharSequence;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
+import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.inject.Inject;
 import java.util.List;
 
@@ -56,23 +55,19 @@ public class EditorFactoryImpl extends EditorFactory {
   @Inject
   public EditorFactoryImpl(Application application) {
     MessageBusConnection busConnection = application.getMessageBus().connect();
-    busConnection.subscribe(ProjectLifecycleListener.TOPIC, new ProjectLifecycleListener() {
+    busConnection.subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
       @Override
-      public void beforeProjectLoaded(@Nonnull Project project) {
+      public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
         // validate all editors are disposed after fireProjectClosed() was called, because it's the place where editor should be released
         Disposer.register(project, () -> {
-          final Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-          final boolean isLastProjectClosed = openProjects.length == 0;
-          validateEditorsAreReleased(project, isLastProjectClosed);
+          Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+          boolean isLastProjectClosed = openProjects.length == 0;
+          // EditorTextField.releaseEditorLater defer releasing its editor; invokeLater to avoid false positives about such editors.
+          ApplicationManager.getApplication().invokeLater(() -> validateEditorsAreReleased(project, isLastProjectClosed));
         });
       }
     });
-    busConnection.subscribe(EditorColorsManager.TOPIC, new EditorColorsListener() {
-      @Override
-      public void globalSchemeChange(@Nullable EditorColorsScheme scheme) {
-        refreshAllEditors();
-      }
-    });
+    busConnection.subscribe(EditorColorsManager.TOPIC, scheme -> refreshAllEditors());
 
     LaterInvocator.addModalityStateListener(new ModalityStateListener() {
       @Override

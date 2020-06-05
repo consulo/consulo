@@ -22,6 +22,8 @@ import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.notification.NotificationsManager;
+import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.impl.ModuleManagerComponent;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.impl.LaterInvocator;
@@ -252,8 +254,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
       indicator.setIndeterminate(true);
     }
 
-    myApplication.getMessageBus().syncPublisher(ProjectLifecycleListener.TOPIC).beforeProjectLoaded(project);
-
     boolean succeed = false;
     try {
       if (template != null) {
@@ -262,7 +262,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
       else {
         project.getStateStore().load();
       }
-      project.initNotLazyServices();
+      project.initNotLazyServices(null);
       succeed = true;
     }
     finally {
@@ -908,7 +908,9 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
           initProjectAsync(project, null, progressIndicator);
         }
 
-        prepareProjectWorkspace(conversionResult, project, uiAccess, projectAsyncResult);
+        prepareModules(conversionResult,project, uiAccess, projectAsyncResult).doWhenDone(() -> {
+          prepareProjectWorkspace(conversionResult, project, uiAccess, projectAsyncResult);
+        });
       }
       catch (ProcessCanceledException e) {
         throw e;
@@ -919,6 +921,29 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
         projectAsyncResult.rejectWithThrowable(e);
       }
     });
+  }
+
+  private AsyncResult<Void> prepareModules(ConversionResult conversionResult, Project project, UIAccess uiAccess, AsyncResult<Project> projectAsyncResult) {
+    AsyncResult<Void> result = AsyncResult.undefined();
+
+    Task.Backgroundable.queue(project, "Loading modules...", canCancelProjectLoading(), indicator -> {
+      ModuleManagerComponent moduleManager = (ModuleManagerComponent)ModuleManager.getInstance(project);
+
+      try {
+        moduleManager.loadModules(indicator, result);
+      }
+      catch (ProcessCanceledException e) {
+        throw e;
+      }
+      catch (Throwable e) {
+        LOG.error(e);
+
+        result.rejectWithThrowable(e);
+        projectAsyncResult.rejectWithThrowable(e);
+      }
+    });
+
+    return result;
   }
 
   private void prepareProjectWorkspace(ConversionResult conversionResult, Project project, UIAccess uiAccess, AsyncResult<Project> projectAsyncResult) {
@@ -979,8 +1004,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
   private void initProjectAsync(@Nonnull final ProjectImpl project, @Nullable ProjectImpl template, ProgressIndicator progressIndicator) throws IOException {
     progressIndicator.setText(ProjectBundle.message("loading.components.for", project.getName()));
 
-    Application.get().getMessageBus().syncPublisher(ProjectLifecycleListener.TOPIC).beforeProjectLoaded(project);
-
     boolean succeed = false;
     try {
       if (template != null) {
@@ -989,7 +1012,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
       else {
         project.getStateStore().load();
       }
-      project.initNotLazyServices(/*progressIndicator*/);
+      project.initNotLazyServices(progressIndicator);
       succeed = true;
     }
     catch (Throwable e) {

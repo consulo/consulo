@@ -20,13 +20,15 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import consulo.logging.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.impl.ProjectLifecycleListener;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.application.AccessRule;
+import consulo.container.util.StatCollector;
+import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,7 +41,7 @@ import javax.inject.Singleton;
 @State(name = "ModuleManager", storages = @Storage("modules.xml"))
 @Singleton
 public class ModuleManagerComponent extends ModuleManagerImpl {
-  public static final Logger LOGGER = Logger.getInstance(ModuleManagerComponent.class);
+  public static final Logger LOG = Logger.getInstance(ModuleManagerComponent.class);
 
   private final ProgressManager myProgressManager;
   private final MessageBusConnection myConnection;
@@ -52,22 +54,30 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
     myConnection.setDefaultHandler((event, params) -> cleanCachedStuff());
 
     myConnection.subscribe(ProjectTopics.PROJECT_ROOTS);
-    myConnection.subscribe(ProjectLifecycleListener.TOPIC, new ProjectLifecycleListener() {
-      @Override
-      public void projectComponentsInitialized(@Nonnull final Project project) {
-        long t = System.currentTimeMillis();
-        loadModules(myModuleModel, true);
-        t = System.currentTimeMillis() - t;
-        LOGGER.info(myModuleModel.getModules().length + " module(s) loaded in " + t + " ms");
-      }
-    });
-
   }
 
   @Nonnull
   @Override
   protected ModuleEx createModule(@Nonnull String name, @Nullable String dirUrl, ProgressIndicator progressIndicator) {
     return new ModuleImpl(name, dirUrl, myProject);
+  }
+
+  public void loadModules(@Nonnull ProgressIndicator indicator, AsyncResult<Void> result) {
+    StatCollector stat = new StatCollector();
+
+    stat.markWith("load modules", () -> loadModules(myModuleModel, indicator, true));
+
+    indicator.setIndeterminate(true);
+
+    AccessRule.writeAsync(() -> {
+      stat.markWith("fire modules add", () -> {
+        for (Module module : myModuleModel.myModules) {
+          fireModuleAdded(module);
+        }
+      });
+
+      stat.dump("ModulesManager", LOG::info);
+    }).doWhenDone((Runnable)result::setDone);
   }
 
   @Override
@@ -93,6 +103,10 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
     else {
       runnableWithProgress.run();
     }
+  }
+
+  @Override
+  protected void doFirstModulesLoad() {
   }
 
   @Override

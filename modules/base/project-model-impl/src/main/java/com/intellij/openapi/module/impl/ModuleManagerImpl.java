@@ -17,13 +17,11 @@
 package com.intellij.openapi.module.impl;
 
 import com.intellij.ProjectTopics;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.*;
@@ -37,7 +35,9 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
 import com.intellij.openapi.roots.impl.ModuleRootManagerImpl;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.ModificationTracker;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.StandardFileSystems;
@@ -51,6 +51,7 @@ import com.intellij.util.messages.MessageBus;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessRule;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.module.ModuleDirIsNotExistsException;
@@ -68,8 +69,8 @@ import java.util.*;
 /**
  * @author max
  */
-public abstract class ModuleManagerImpl extends ModuleManager implements ProjectComponent, PersistentStateComponent<Element>, ModificationTracker, Disposable {
-  public static final Logger LOGGER = Logger.getInstance(ModuleManagerImpl.class);
+public abstract class ModuleManagerImpl extends ModuleManager implements PersistentStateComponent<Element>, ModificationTracker, Disposable {
+  private static final Logger LOG = Logger.getInstance(ModuleManagerImpl.class);
 
   public static class ModuleLoadItem {
     private final String myDirUrl;
@@ -155,14 +156,10 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
 
   private boolean myFirstLoad = true;
 
-  @NonNls
   public static final String ELEMENT_MODULES = "modules";
-  @NonNls
   public static final String ELEMENT_MODULE = "module";
 
-  @NonNls
   private static final String ATTRIBUTE_DIRURL = "dirurl";
-  @NonNls
   private static final String ATTRIBUTE_NAME = "name";
 
   private long myModificationCount;
@@ -202,11 +199,6 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
   @Override
   @RequiredWriteAction
   public void loadState(Element state) {
-    boolean firstLoad = myFirstLoad;
-    if (firstLoad) {
-      myFirstLoad = false;
-    }
-
     final Element modules = state.getChild(ELEMENT_MODULES);
     if (modules != null) {
       myModuleLoadItems = new ArrayList<>();
@@ -223,6 +215,14 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     else {
       myModuleLoadItems = Collections.emptyList();
     }
+  }
+
+  @Override
+  public void afterLoadState() {
+    boolean firstLoad = myFirstLoad;
+    if (firstLoad) {
+      myFirstLoad = false;
+    }
 
     // if file changed, load changes
     if (!firstLoad) {
@@ -235,10 +235,17 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
         }
       }
 
-      loadModules(model, false);
+      loadModules(model, null, false);
 
       WriteAction.run(model::commit);
     }
+    else {
+      doFirstModulesLoad();
+    }
+  }
+
+  protected void doFirstModulesLoad() {
+    loadModules(myModuleModel, null, true);
   }
 
   @Nullable
@@ -260,16 +267,29 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     return null;
   }
 
-  protected void loadModules(final ModuleModelImpl moduleModel, boolean firstLoad) {
+  protected void loadModules(final ModuleModelImpl moduleModel, @Nullable ProgressIndicator indicator, boolean firstLoad) {
     if (myModuleLoadItems.isEmpty()) {
       return;
     }
     ModuleGroupInterner groupInterner = new ModuleGroupInterner();
 
-    final ProgressIndicator progressIndicator = myProject.isDefault() ? null : ProgressIndicatorProvider.getGlobalProgressIndicator();
-    if (progressIndicator != null) {
-      progressIndicator.setText("Loading modules...");
-      progressIndicator.setText2("");
+    ProgressIndicator targetIndicator = null;
+    if (indicator == null) {
+      final ProgressIndicator progressIndicator = myProject.isDefault() ? null : ProgressIndicatorProvider.getGlobalProgressIndicator();
+      targetIndicator = progressIndicator;
+      if (progressIndicator != null) {
+        progressIndicator.setText("Loading modules...");
+        progressIndicator.setText2("");
+      }
+    }
+    else {
+      indicator.setText("Loading modules...");
+      indicator.setText2("");
+
+      indicator.setFraction(0);
+      indicator.setIndeterminate(false);
+
+      targetIndicator = indicator;
     }
 
     myFailedModulePaths.clear();
@@ -277,13 +297,18 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
 
     List<ModuleLoadingErrorDescription> errors = new ArrayList<>();
 
+    int count = 1;
     for (ModuleLoadItem moduleLoadItem : myModuleLoadItems) {
-      if (progressIndicator != null) {
-        progressIndicator.checkCanceled();
+      if (targetIndicator != null) {
+        targetIndicator.checkCanceled();
+      }
+
+      if (indicator != null) {
+        indicator.setFraction(count / (float)myModuleLoadItems.size());
       }
 
       try {
-        final Module module = moduleModel.loadModuleInternal(moduleLoadItem, firstLoad, progressIndicator);
+        final Module module = moduleModel.loadModuleInternal(moduleLoadItem, firstLoad, targetIndicator);
         final String[] groups = moduleLoadItem.getGroups();
         if (groups != null) {
           groupInterner.setModuleGroupPath(moduleModel, module, groups); //model should be updated too
@@ -299,6 +324,9 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
       }
       catch (Exception e) {
         errors.add(ModuleLoadingErrorDescription.create(ProjectBundle.message("module.cannot.load.error", moduleLoadItem.getName(), ExceptionUtil.getThrowableText(e)), moduleLoadItem, this));
+      }
+      finally {
+        count++;
       }
     }
     fireErrors(errors);
@@ -503,7 +531,6 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     return myModuleModel.isModuleDependent(module, onModule);
   }
 
-  @Override
   public void projectOpened() {
     fireModulesAdded();
   }
@@ -544,7 +571,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
   }
 
   class ModuleModelImpl implements ModifiableModuleModel {
-    private Set<Module> myModules = new LinkedHashSet<>();
+    protected Set<Module> myModules = new LinkedHashSet<>();
     private Module[] myModulesCache;
 
     private final List<Module> myModulesToDispose = new ArrayList<>();
@@ -568,7 +595,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     }
 
     private void assertWritable() {
-      LOGGER.assertTrue(myIsWritable, "Attempt to modify committed ModifiableModuleModel");
+      LOG.assertTrue(myIsWritable, "Attempt to modify committed ModifiableModuleModel");
     }
 
     @Override
@@ -718,7 +745,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
       myModulesCache = null;
       myModules.add(module);
 
-      module.initNotLazyServices();
+      module.initNotLazyServices(null);
     }
 
     @Override

@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * @author max
  */
-class RefreshSessionImpl extends RefreshSession {
+public class RefreshSessionImpl extends RefreshSession {
   private static final Logger LOG = Logger.getInstance(RefreshSession.class);
 
   private static final AtomicLong ID_COUNTER = new AtomicLong(0);
@@ -227,7 +227,7 @@ class RefreshSessionImpl extends RefreshSession {
   }
 
   @Nonnull
-  List<? extends VFileEvent> getEvents() {
+  public List<? extends VFileEvent> getEvents() {
     return new ArrayList<>(new LinkedHashSet<>(myEvents));
   }
 }

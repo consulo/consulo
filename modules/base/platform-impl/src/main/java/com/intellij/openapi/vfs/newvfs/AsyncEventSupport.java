@@ -54,7 +54,7 @@ public final class AsyncEventSupport {
   }
 
   @Nonnull
-  static List<AsyncFileListener.ChangeApplier> runAsyncListeners(@Nonnull List<? extends VFileEvent> events) {
+  public static List<AsyncFileListener.ChangeApplier> runAsyncListeners(@Nonnull List<? extends VFileEvent> events) {
     if (events.isEmpty()) return Collections.emptyList();
 
     if (LOG.isDebugEnabled()) {
