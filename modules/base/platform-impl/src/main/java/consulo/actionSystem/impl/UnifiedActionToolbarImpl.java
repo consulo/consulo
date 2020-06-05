@@ -68,13 +68,6 @@ public class UnifiedActionToolbarImpl implements ActionToolbar {
 
   @Nonnull
   @Override
-  public JComponent getComponent() {
-    // unsupported UI - just return stub, we don't care
-    return new JPanel();
-  }
-
-  @Nonnull
-  @Override
   public Component getUIComponent() {
     return myComponent;
   }

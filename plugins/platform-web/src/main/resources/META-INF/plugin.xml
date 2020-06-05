@@ -45,7 +45,7 @@
                         serviceImplementation="com.intellij.ui.DummyIconDeferrer"/>
 
     <applicationService serviceInterface="com.intellij.openapi.vfs.newvfs.RefreshQueue"
-                        serviceImplementation="consulo.vfs.newvfs.NewRefreshQueueImpl"/>
+                        serviceImplementation="consulo.vfs.newvfs.AsyncRefreshQueueImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.options.ShowSettingsUtil"
                         serviceImplementation="consulo.web.options.WebShowSettingsUtil"/>

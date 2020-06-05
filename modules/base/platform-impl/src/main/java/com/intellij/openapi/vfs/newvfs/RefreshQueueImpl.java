@@ -24,6 +24,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.jetbrains.ide.PooledThreadExecutor;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.List;
@@ -36,19 +37,25 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 @Singleton
 public class RefreshQueueImpl extends RefreshQueue implements Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.newvfs.RefreshQueueImpl");
+  private static final Logger LOG = Logger.getInstance(RefreshQueueImpl.class);
 
   private final Executor myQueue = AppExecutorUtil.createBoundedApplicationPoolExecutor("RefreshQueue Pool", PooledThreadExecutor.INSTANCE, 1, this);
   private final Executor myEventProcessingQueue = AppExecutorUtil.createBoundedApplicationPoolExecutor("Async Refresh Event Processing", PooledThreadExecutor.INSTANCE, 1, this);
 
   private final ProgressIndicator myRefreshIndicator = RefreshProgress.create(VfsBundle.message("file.synchronize.progress"));
+
   private int myBusyThreads;
   private final TLongObjectHashMap<RefreshSession> mySessions = new TLongObjectHashMap<>();
   private final FrequentEventDetector myEventCounter = new FrequentEventDetector(100, 100, FrequentEventDetector.Level.WARN);
   private final AtomicLong myWriteActionCounter = new AtomicLong();
 
-  public RefreshQueueImpl() {
-    ApplicationManager.getApplication().addApplicationListener(new ApplicationListener() {
+  @Nonnull
+  private final Application myApplication;
+
+  @Inject
+  public RefreshQueueImpl(@Nonnull Application application) {
+    myApplication = application;
+    application.addApplicationListener(new ApplicationListener() {
       @Override
       public void writeActionStarted(@Nonnull Object action) {
         myWriteActionCounter.incrementAndGet();
@@ -61,14 +68,13 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
       queueSession(session, session.getTransaction());
     }
     else {
-      Application app = ApplicationManager.getApplication();
-      if (app.isWriteThread()) {
+      if (myApplication.isWriteThread()) {
         ((TransactionGuardEx)TransactionGuard.getInstance()).assertWriteActionAllowed();
         doScan(session);
         session.fireEvents(session.getEvents(), null);
       }
       else {
-        if (((ApplicationEx)app).holdsReadLock()) {
+        if (((ApplicationEx)myApplication).holdsReadLock()) {
           LOG.error("Do not call synchronous refresh under read lock (except from EDT) - " + "this will cause a deadlock if there are any events to fire.");
           return;
         }
@@ -90,7 +96,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
           scheduleAsynchronousPreprocessing(session, transaction);
         }
         else {
-          TransactionGuard.getInstance().submitTransaction(ApplicationManager.getApplication(), transaction, () -> session.fireEvents(session.getEvents(), null));
+          TransactionGuard.getInstance().submitTransaction(myApplication, transaction, () -> session.fireEvents(session.getEvents(), null));
         }
       }
     });

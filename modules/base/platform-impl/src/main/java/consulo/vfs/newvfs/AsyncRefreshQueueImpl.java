@@ -15,14 +15,23 @@
  */
 package consulo.vfs.newvfs;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.vfs.newvfs.RefreshQueueImpl;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
  * @author VISTALL
  * @since 2018-05-13
+ *
+ * Implementation of {@link RefreshQueueImpl} without sync write version
  */
 @Singleton
-public class NewRefreshQueueImpl extends RefreshQueueImpl {
+public class AsyncRefreshQueueImpl extends RefreshQueueImpl {
+  @Inject
+  public AsyncRefreshQueueImpl(@Nonnull Application application) {
+    super(application);
+  }
 }
