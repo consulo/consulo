@@ -263,6 +263,18 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
     return ModuleScopeProvider.getInstance(module).getModuleScope();
   }
 
+  /**
+   * Returns module scope including sources and tests, excluding libraries and dependencies.
+   *
+   * @param module the module to get the scope.
+   * @param includeTests include tests or not
+   * @return scope including sources and tests(if set includeTests), excluding libraries and dependencies.
+   */
+  @Nonnull
+  public static GlobalSearchScope moduleScope(@Nonnull Module module, boolean includeTests) {
+    return ModuleScopeProvider.getInstance(module).getModuleScope(includeTests);
+  }
+
   @Nonnull
   public static GlobalSearchScope moduleContentScope(@Nonnull Module module) {
     return ModuleScopeProvider.getInstance(module).getModuleContentScope();
