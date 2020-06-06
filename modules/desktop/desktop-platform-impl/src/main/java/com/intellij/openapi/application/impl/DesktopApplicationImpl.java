@@ -25,6 +25,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.progress.impl.CoreProgressManager;
+import com.intellij.openapi.progress.util.PotemkinProgress;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -33,7 +34,10 @@ import com.intellij.openapi.project.impl.ProjectManagerImpl;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MessageDialogBuilder;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.ShutDownTracker;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
@@ -494,7 +498,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
                                                                           @Nullable Project project,
                                                                           @Nullable JComponent parentComponent,
                                                                           @Nonnull Consumer<? super ProgressIndicator> action) {
-    return runProgressWindowAction(title, project, parentComponent, null, action);
+    return runEdtProgressWriteAction(title, project, parentComponent, null, action);
   }
 
   @Override
@@ -502,35 +506,32 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
                                                                        @Nullable Project project,
                                                                        @Nullable JComponent parentComponent,
                                                                        @Nonnull Consumer<? super ProgressIndicator> action) {
-    return runProgressWindowAction(title, project, parentComponent, IdeBundle.message("action.stop"), action);
+    return runEdtProgressWriteAction(title, project, parentComponent, IdeBundle.message("action.stop"), action);
   }
 
-  private boolean runProgressWindowAction(@Nonnull String title,
-                                          @Nullable Project project,
-                                          @Nullable JComponent parentComponent,
-                                          @Nullable @Nls(capitalization = Nls.Capitalization.Title) String cancelText,
-                                          @Nonnull Consumer<? super ProgressIndicator> action) {
-    ProgressWindow progressWindow = new ProgressWindow(true, false, project, parentComponent, cancelText);
-    progressWindow.setTitle(title);
-
-    AppExecutorUtil.getAppExecutorService().execute(() -> {
-      ProgressManager.getInstance().runProcess(() -> {
-        try {
-          acquireWriteIntentLock();
-
-          runWriteActionNoIntentLock(() -> {
-            action.accept(progressWindow);
-
-            return null;
-          });
-        }
-        finally {
-          releaseWriteIntentLock();
-        }
-      }, progressWindow);
+  private boolean runEdtProgressWriteAction(@Nonnull String title,
+                                            @Nullable Project project,
+                                            @Nullable JComponent parentComponent,
+                                            @Nullable @Nls(capitalization = Nls.Capitalization.Title) String cancelText,
+                                            @Nonnull Consumer<? super ProgressIndicator> action) {
+    return runWriteActionWithClass(action.getClass(), () -> {
+      PotemkinProgress indicator = new PotemkinProgress(title, project, parentComponent, cancelText);
+      indicator.runInSwingThread(() -> action.accept(indicator));
+      return !indicator.isCanceled();
     });
+  }
 
-    return !progressWindow.isCanceled();
+  private <T, E extends Throwable> T runWriteActionWithClass(@Nonnull Class<?> clazz, @Nonnull ThrowableComputable<T, E> computable) throws E {
+    boolean needUnlock = startWriteUI(clazz);
+    try {
+      return computable.compute();
+    }
+    finally {
+      endWrite(clazz);
+      if(needUnlock) {
+        releaseWriteIntentLock();
+      }
+    }
   }
 
   @RequiredReadAction

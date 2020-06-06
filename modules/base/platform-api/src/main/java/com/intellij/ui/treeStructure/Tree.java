@@ -16,19 +16,17 @@
 package com.intellij.ui.treeStructure;
 
 import com.intellij.ide.util.treeView.*;
-import com.intellij.openapi.application.Application;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.*;
 import com.intellij.util.ui.*;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
 import consulo.annotation.DeprecationInfo;
-import consulo.application.internal.ApplicationWithIntentWriteLock;
+import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -308,10 +306,6 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
 
   @Override
   protected void paintComponent(Graphics g) {
-    ApplicationWithIntentWriteLock application = (ApplicationWithIntentWriteLock)Application.get();
-
-    application.acquireWriteIntentLock();
-
     if (paintNodes()) {
       g.setColor(getBackground());
       g.fillRect(0, 0, getWidth(), getHeight());
@@ -328,8 +322,6 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
 
     super.paintComponent(g);
     myEmptyText.paint(this, g);
-
-    application.releaseWriteIntentLock();
   }
 
   protected void paintFileColorGutter(final Graphics g) {

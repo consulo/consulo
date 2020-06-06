@@ -427,6 +427,8 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
   public synchronized void setUpdateByTimerEnabled(boolean value) {
     myUpdateByTimerEnabled = value;
     stopProcess(value, "Update by timer change");
+
+    System.out.println(ExceptionUtil.getThrowableText(new Exception("Update by timer change " + value)));
   }
 
   private final AtomicInteger myDisableCount = new AtomicInteger();
