@@ -328,6 +328,11 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
   }
 
   @Nonnull
+  public static GlobalSearchScope moduleContentWithDependenciesScope(@Nonnull Module module) {
+    return ModuleScopeProvider.getInstance(module).getModuleContentWithDependenciesScope();
+  }
+
+  @Nonnull
   public static GlobalSearchScope fileScope(@Nonnull PsiFile psiFile) {
     return new FileScope(psiFile.getProject(), psiFile.getVirtualFile());
   }
