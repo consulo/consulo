@@ -18,7 +18,6 @@ package consulo.moduleImport;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.ide.impl.util.NewOrImportModuleUtil;
-import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.AsyncResult;
@@ -116,7 +115,7 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
       alert.button(Alert.CANCEL, ThreeState.UNSURE);
       alert.asExitButton();
 
-      uiAccess.give(() -> alert.show().notify(askDialogResult));
+      uiAccess.give(() -> alert.showAsync().notify(askDialogResult));
     }
     else {
       askDialogResult.setDone(ThreeState.NO);

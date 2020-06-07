@@ -104,8 +104,8 @@ public interface Alert<V> {
    */
   @RequiredUIAccess
   @Nonnull
-  default AsyncResult<V> show(@Nullable Component component) {
-    return show(TraverseUtil.getWindowAncestor(component));
+  default AsyncResult<V> showAsync(@Nullable Component component) {
+    return showAsync(TraverseUtil.getWindowAncestor(component));
   }
 
   /**
@@ -113,8 +113,8 @@ public interface Alert<V> {
    */
   @RequiredUIAccess
   @Nonnull
-  default AsyncResult<V> show() {
-    return show(null);
+  default AsyncResult<V> showAsync() {
+    return showAsync(null);
   }
 
   /**
@@ -122,5 +122,5 @@ public interface Alert<V> {
    */
   @RequiredUIAccess
   @Nonnull
-  AsyncResult<V> show(@Nullable Window component);
+  AsyncResult<V> showAsync(@Nullable Window component);
 }

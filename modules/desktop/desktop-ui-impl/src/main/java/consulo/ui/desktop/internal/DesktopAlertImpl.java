@@ -204,7 +204,7 @@ class DesktopAlertImpl<V> extends BaseAlert<V> {
   @RequiredUIAccess
   @Nonnull
   @Override
-  public AsyncResult<V> show(@Nullable Window component) {
+  public AsyncResult<V> showAsync(@Nullable Window component) {
     if (myButtons.isEmpty()) {
       throw new UnsupportedOperationException("Buttons empty");
     }

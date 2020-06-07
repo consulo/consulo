@@ -114,7 +114,7 @@ public class ModuleImportProcessor {
     File ioFile = VfsUtilCore.virtualToIoFile(file);
     List<ModuleImportProvider> avaliableProviders = ContainerUtil.filter(providers, provider -> provider.canImport(ioFile));
     if (avaliableProviders.isEmpty()) {
-      Alerts.okError("Cannot import anything from '" + FileUtil.toSystemDependentName(file.getPath()) + "'").show();
+      Alerts.okError("Cannot import anything from '" + FileUtil.toSystemDependentName(file.getPath()) + "'").showAsync();
       result.setRejected();
       return;
     }

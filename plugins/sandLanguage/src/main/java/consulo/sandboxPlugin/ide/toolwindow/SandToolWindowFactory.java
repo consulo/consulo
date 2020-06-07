@@ -25,6 +25,7 @@ import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
+import consulo.ui.Alerts;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 
@@ -47,6 +48,14 @@ public class SandToolWindowFactory implements ToolWindowFactory {
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         Messages.showInfoMessage("Expand All", "Consulo");
+      }
+    });
+
+    ((ToolWindowEx)toolWindow).setTabDoubleClickActions(new AnAction("Edit") {
+      @RequiredUIAccess
+      @Override
+      public void actionPerformed(@Nonnull AnActionEvent e) {
+        Alerts.okInfo("Edit test").showAsync();
       }
     });
 

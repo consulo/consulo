@@ -131,7 +131,7 @@ public class ProjectUtil {
       alert.asExitButton();
 
       AsyncResult<Integer> result = AsyncResult.undefined();
-      uiAccess.give(() -> alert.show().notify(result));
+      uiAccess.give(() -> alert.showAsync().notify(result));
       return result;
     }
 
