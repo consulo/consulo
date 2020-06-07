@@ -17,13 +17,12 @@ package com.intellij.openapi.actionSystem;
 
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.Key;
 import com.intellij.ui.PlaceProvider;
+import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.event.InputEvent;
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -36,7 +35,6 @@ import java.util.Map;
  */
 
 public class AnActionEvent implements PlaceProvider<String> {
-  @NonNls
   private static final String ourInjectedPrefix = "$injected$.";
 
   // normal -> injected keys
@@ -44,7 +42,6 @@ public class AnActionEvent implements PlaceProvider<String> {
   // injected -> normal keys
   private static final Map<Key, Key> ourUnInjectedKeys = new IdentityHashMap<>();
 
-  @NonNls
   @SuppressWarnings("unchecked")
   public static <T> Key<T> injectedId(Key<T> dataId) {
     synchronized (ourInjectedKeys) {
@@ -105,11 +102,11 @@ public class AnActionEvent implements PlaceProvider<String> {
    */
   public AnActionEvent(InputEvent inputEvent,
                        @Nonnull DataContext dataContext,
-                       @Nonnull @NonNls String place,
-                       @Nonnull Presentation presentation,
+                       @Nonnull String place,
+                       @Nullable Presentation presentation,
                        @Nonnull ActionManager actionManager,
                        @JdkConstants.InputEventMask int modifiers) {
-    this(inputEvent, dataContext, place, presentation, actionManager, modifiers, false, false);
+    this(inputEvent, dataContext, place, presentation == null ? new Presentation() : presentation, actionManager, modifiers, false, false);
   }
 
   /**
@@ -119,7 +116,7 @@ public class AnActionEvent implements PlaceProvider<String> {
    */
   public AnActionEvent(InputEvent inputEvent,
                        @Nonnull DataContext dataContext,
-                       @Nonnull @NonNls String place,
+                       @Nonnull String place,
                        @Nonnull Presentation presentation,
                        @Nonnull ActionManager actionManager,
                        @JdkConstants.InputEventMask int modifiers,
@@ -159,7 +156,7 @@ public class AnActionEvent implements PlaceProvider<String> {
 
 
   @Nonnull
-  public static AnActionEvent createFromInputEvent(@Nullable InputEvent event, @Nonnull String place, @Nonnull Presentation presentation, @Nonnull DataContext dataContext) {
+  public static AnActionEvent createFromInputEvent(@Nullable InputEvent event, @Nonnull String place, @Nullable Presentation presentation, @Nonnull DataContext dataContext) {
     return new AnActionEvent(event, dataContext, place, presentation, ActionManager.getInstance(), event == null ? 0 : event.getModifiers());
   }
 
