@@ -1461,6 +1461,7 @@
     <statistics.usagesCollector implementation="com.intellij.internal.statistic.UsageTrigger$MyCollector"/>
     <statistics.usagesCollector implementation="consulo.ide.updateSettings.UpdateChannelUsagesCollector"/>
     <statistics.usagesCollector implementation="consulo.application.impl.SandboxUsagesCollector"/>
+    <statistics.usagesCollector implementation="consulo.bundle.BundleTypeUsagesCollector"/>
 
     <statistics.usagesCollector implementation="com.intellij.internal.statistic.ideSettings.LaFUsagesCollector"/>
 

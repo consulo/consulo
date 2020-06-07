@@ -24,7 +24,6 @@ import com.intellij.util.Consumer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,10 +34,10 @@ import java.util.Collections;
 public abstract class SdkType implements SdkTypeId {
   public static final ExtensionPointName<SdkType> EP_NAME = ExtensionPointName.create("com.intellij.sdkType");
 
-  private final String myName;
+  private final String myId;
 
-  public SdkType(@NonNls String name) {
-    myName = name;
+  public SdkType(@Nonnull String id) {
+    myId = id;
   }
 
   /**
@@ -108,8 +107,14 @@ public abstract class SdkType implements SdkTypeId {
   }
 
   @Override
-  public String getName() {
-    return myName;
+  public final String getName() {
+    return myId;
+  }
+
+  @Nonnull
+  @Override
+  public final String getId() {
+    return myId;
   }
 
   @Nonnull
@@ -124,7 +129,6 @@ public abstract class SdkType implements SdkTypeId {
   }
 
   @Nonnull
-  @NonNls
   public String getHelpTopic() {
     return "preferences.bundles";
   }
@@ -136,19 +140,20 @@ public abstract class SdkType implements SdkTypeId {
 
     final SdkType sdkType = (SdkType)o;
 
-    return myName.equals(sdkType.myName);
+    return myId.equals(sdkType.myId);
   }
 
   @Override
   public int hashCode() {
-    return myName.hashCode();
+    return myId.hashCode();
   }
 
   @Override
   public String toString() {
-    return getName();
+    return getId();
   }
 
+  @Nonnull
   public FileChooserDescriptor getHomeChooserDescriptor() {
     final FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
       @Override

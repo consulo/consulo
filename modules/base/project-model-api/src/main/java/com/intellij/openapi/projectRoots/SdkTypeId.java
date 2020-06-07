@@ -15,14 +15,25 @@
  */
 package com.intellij.openapi.projectRoots;
 
+import consulo.annotation.DeprecationInfo;
 import org.jdom.Element;
+
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * @author yole
  */
 public interface SdkTypeId {
+  @Deprecated
+  @DeprecationInfo("Use #getId()")
   String getName();
+
+  @Nonnull
+  @SuppressWarnings("deprecation")
+  default String getId() {
+    return getName();
+  }
 
   @Nullable
   String getVersionString(Sdk sdk);
