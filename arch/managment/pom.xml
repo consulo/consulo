@@ -191,7 +191,16 @@
         <groupId>org.jdom</groupId>
         <artifactId>jdom-core</artifactId>
         <version>${jdom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jdom</groupId>
+        <artifactId>jdom-xpath-jaxen</artifactId>
+        <version>${jdom.version}</version>
         <exclusions>
+          <exclusion>
+            <groupId>org.jdom</groupId>
+            <artifactId>jdom-core</artifactId>
+          </exclusion>
           <exclusion>
             <groupId>jaxen</groupId>
             <artifactId>jaxen</artifactId>

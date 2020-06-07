@@ -322,5 +322,9 @@
       <groupId>org.yaml</groupId>
       <artifactId>snakeyaml</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.jdom</groupId>
+      <artifactId>jdom-xpath-jaxen</artifactId>
+    </dependency>
   </dependencies>
 </project>

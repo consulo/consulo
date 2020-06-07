@@ -321,5 +321,9 @@
       <groupId>ar.com.hjg</groupId>
       <artifactId>pngj</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.jdom</groupId>
+      <artifactId>jdom-xpath-jaxen</artifactId>
+    </dependency>
   </dependencies>
 </project>
