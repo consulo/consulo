@@ -33,6 +33,6 @@ public class UpdateChannelUsagesCollector extends UsagesCollector {
   @Nonnull
   @Override
   public String getGroupId() {
-    return "update-channel";
+    return "consulo.platform.base:update.channel";
   }
 }

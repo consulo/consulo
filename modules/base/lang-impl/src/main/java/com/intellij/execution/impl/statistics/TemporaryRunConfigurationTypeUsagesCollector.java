@@ -27,7 +27,7 @@ public class TemporaryRunConfigurationTypeUsagesCollector extends AbstractRunCon
   @Nonnull
   @Override
   public String getGroupId() {
-    return "run-configuration-type-temp";
+    return "consulo.platform.base:run.configuration.type.temp";
   }
 
   @Override

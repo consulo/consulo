@@ -27,7 +27,7 @@ public class RunConfigurationTypeUsagesCollector extends AbstractRunConfiguratio
   @Nonnull
   @Override
   public String getGroupId() {
-    return "run-configuration-type";
+    return "consulo.platform.base:run.configuration.type";
   }
 
   @Override

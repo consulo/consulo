@@ -85,7 +85,7 @@ public class UsageTrigger implements PersistentStateComponent<UsageTrigger.State
     @Override
     @Nonnull
     public String getGroupId() {
-      return "features counts";
+      return "consulo.platform.base:features.count";
     }
   }
 }

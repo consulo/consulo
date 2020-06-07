@@ -20,7 +20,6 @@ import com.intellij.internal.statistic.CollectUsagesException;
 import com.intellij.internal.statistic.StatisticsUtilKt;
 import com.intellij.internal.statistic.beans.ConvertUsagesUtil;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.data.MainVcsLogUiProperties;
@@ -65,7 +64,7 @@ public class VcsLogFeaturesCollector extends AbstractApplicationUsagesCollector 
         usages.add(StatisticsUtilKt.getBooleanUsage("ui.textFilter.regex", properties.get(TEXT_FILTER_REGEX)));
         usages.add(StatisticsUtilKt.getBooleanUsage("ui.textFilter.matchCase", properties.get(TEXT_FILTER_MATCH_CASE)));
 
-        for (VcsLogHighlighterFactory factory : Extensions.getExtensions(LOG_HIGHLIGHTER_FACTORY_EP, project)) {
+        for (VcsLogHighlighterFactory factory : LOG_HIGHLIGHTER_FACTORY_EP.getExtensionList(project)) {
           if (factory.showMenuItem()) {
             VcsLogHighlighterProperty property = VcsLogHighlighterProperty.get(factory.getId());
             usages.add(StatisticsUtilKt.getBooleanUsage("ui.highlighter." + ConvertUsagesUtil.ensureProperKey(factory.getId()),
@@ -82,6 +81,6 @@ public class VcsLogFeaturesCollector extends AbstractApplicationUsagesCollector 
   @Nonnull
   @Override
   public String getGroupId() {
-    return "VCS Log Ui Settings";
+    return "consulo.platform.base:vcs.log.ui.settings";
   }
 }

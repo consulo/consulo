@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vcs.statistics;
+package consulo.application.impl;
 
-import com.intellij.internal.statistic.AbstractApplicationUsagesCollector;
+import com.intellij.internal.statistic.CollectUsagesException;
+import com.intellij.internal.statistic.UsagesCollector;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vcs.ProjectLevelVcsManager;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.application.ApplicationProperties;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.Set;
 
-public class VcsUsagesCollector extends AbstractApplicationUsagesCollector {
-  @Override
+/**
+ * @author VISTALL
+ * @since 2020-06-07
+ */
+public class SandboxUsagesCollector extends UsagesCollector {
   @Nonnull
-  public String getGroupId() {
-    return "consulo.platform.base:vcs";
+  @Override
+  public Set<UsageDescriptor> getUsages(@Nullable Project project) throws CollectUsagesException {
+    return Collections.singleton(new UsageDescriptor("is.sandbox", ApplicationProperties.isInSandbox() ? 1 : 0));
   }
 
-  @Override
   @Nonnull
-  public Set<UsageDescriptor> getProjectUsages(@Nonnull Project project) {
-    return ContainerUtil.map2Set(ProjectLevelVcsManager.getInstance(project).getAllActiveVcss(), vcs -> new UsageDescriptor(vcs.getName(), 1));
+  @Override
+  public String getGroupId() {
+    return "consulo.platform.base:sandbox";
   }
 }
-

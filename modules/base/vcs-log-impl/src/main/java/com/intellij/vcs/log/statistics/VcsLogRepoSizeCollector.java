@@ -77,6 +77,6 @@ public class VcsLogRepoSizeCollector extends AbstractApplicationUsagesCollector 
   @Nonnull
   @Override
   public String getGroupId() {
-    return "VCS Log 2";
+    return "consulo.platform.base:vcs.log";
   }
 }

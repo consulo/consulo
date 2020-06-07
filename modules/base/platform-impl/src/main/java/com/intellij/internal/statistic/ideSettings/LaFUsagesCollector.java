@@ -23,13 +23,12 @@ public class LaFUsagesCollector extends UsagesCollector {
     if (!StringUtil.isEmptyOrSpaces(SystemInfo.SUN_DESKTOP)) {
       key += SystemInfo.SUN_DESKTOP + " - ";
     }
-    return laf != null ? Collections.singleton(new UsageDescriptor(key + laf.getName(), 1))
-                       : Collections.<UsageDescriptor>emptySet();
+    return laf != null ? Collections.singleton(new UsageDescriptor(key + laf.getName(), 1)) : Collections.<UsageDescriptor>emptySet();
   }
 
   @Nonnull
   @Override
   public String getGroupId() {
-    return "Look and Feel";
+    return "consulo.platform.desktop:look.and.feel";
   }
 }

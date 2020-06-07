@@ -28,19 +28,19 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
-public class NonBundledPluginsUsagesCollector extends UsagesCollector {
-  @Override
-  @Nonnull
-  public String getGroupId() {
-    return "non-bundled-plugins";
-  }
-
+public class PluginsUsagesCollector extends UsagesCollector {
   @Override
   @Nonnull
   public Set<UsageDescriptor> getUsages(@Nullable Project project) {
     final List<PluginDescriptor> plugins = PluginManager.getPlugins();
-    final List<PluginDescriptor> nonBundledEnabledPlugins = ContainerUtil.filter(plugins, d -> d.isEnabled() && !PluginIds.isPlatformPlugin(d.getPluginId()) && d.getPluginId() != null);
+    final List<PluginDescriptor> enabledPlugins = ContainerUtil.filter(plugins, d -> d.isEnabled() && !PluginIds.isPlatformPlugin(d.getPluginId()));
 
-    return ContainerUtil.map2Set(nonBundledEnabledPlugins, descriptor -> new UsageDescriptor(descriptor.getPluginId().getIdString(), 1));
+    return ContainerUtil.map2Set(enabledPlugins, descriptor -> new UsageDescriptor(descriptor.getPluginId().getIdString(), 1));
+  }
+
+  @Override
+  @Nonnull
+  public String getGroupId() {
+    return "consulo.platform.base:plugins";
   }
 }

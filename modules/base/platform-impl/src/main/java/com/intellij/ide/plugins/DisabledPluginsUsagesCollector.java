@@ -29,7 +29,7 @@ public class DisabledPluginsUsagesCollector extends UsagesCollector {
   @Override
   @Nonnull
   public String getGroupId() {
-    return "disabled-plugins";
+    return "consulo.platform.base:disable.plugins";
   }
 
   @Override

@@ -58,6 +58,6 @@ public class LibraryUsageCollector extends AbstractApplicationUsagesCollector {
   @Nonnull
   @Override
   public String getGroupId() {
-    return "libraries";
+    return "consulo.platform.base:libraries";
   }
 }

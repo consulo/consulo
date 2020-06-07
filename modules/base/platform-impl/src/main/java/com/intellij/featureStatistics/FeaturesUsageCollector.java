@@ -29,7 +29,7 @@ public class FeaturesUsageCollector extends UsagesCollector {
   @Nonnull
   @Override
   public String getGroupId() {
-    return "productivity";
+    return "consulo.platform.base:productivity";
   }
 
   @Nonnull

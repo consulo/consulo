@@ -45,7 +45,7 @@ public abstract class AbstractRunConfigurationTypeUsagesCollector extends Abstra
       public void run() {
         if (project.isDisposed()) return;
         final RunManager runManager = RunManager.getInstance(project);
-        for (RunConfiguration runConfiguration : runManager.getAllConfigurations()) {
+        for (RunConfiguration runConfiguration : runManager.getAllConfigurationsList()) {
           if (runConfiguration != null && isApplicable(runManager, runConfiguration)) {
             final ConfigurationFactory configurationFactory = runConfiguration.getFactory();
             final ConfigurationType configurationType = configurationFactory.getType();

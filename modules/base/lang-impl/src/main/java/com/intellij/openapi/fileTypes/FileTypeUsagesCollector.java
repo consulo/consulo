@@ -38,7 +38,7 @@ public class FileTypeUsagesCollector extends AbstractApplicationUsagesCollector 
   @Nonnull
   @Override
   public String getGroupId() {
-    return "file-type";
+    return "consulo.platform.base:file.type";
   }
 
   @Nonnull

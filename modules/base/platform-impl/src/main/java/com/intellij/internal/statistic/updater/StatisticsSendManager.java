@@ -95,7 +95,7 @@ public class StatisticsSendManager implements Disposable {
       return;
     }
 
-    long oneDayAfterStart = System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1);
+    long oneDayAfterStart = PermanentInstallationID.date() + TimeUnit.DAYS.toMillis(1);
 
     // one day after installation
     if(oneDayAfterStart > PermanentInstallationID.date()) {
