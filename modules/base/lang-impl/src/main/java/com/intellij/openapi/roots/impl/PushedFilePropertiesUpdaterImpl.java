@@ -320,6 +320,9 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
       try {
         result.get();
       }
+      catch (InterruptedException ex) {
+        throw new ProcessCanceledException(ex);
+      }
       catch (Exception ex) {
         LOG.error(ex);
       }
