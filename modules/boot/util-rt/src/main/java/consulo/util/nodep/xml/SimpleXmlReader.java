@@ -36,16 +36,27 @@ import java.util.*;
  * @since 2019-07-17
  */
 public class SimpleXmlReader {
+  private static ThreadLocal<DocumentBuilder> ourDocumentBuilder = new ThreadLocal<DocumentBuilder>() {
+    @Override
+    protected DocumentBuilder initialValue() {
+      DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+      try {
+        return dbFactory.newDocumentBuilder();
+      }
+      catch (ParserConfigurationException e) {
+        throw new RuntimeException(e);
+      }
+    }
+  };
+
   @Nonnull
   public static SimpleXmlElement parse(@Nonnull URL url) throws SimpleXmlParsingException {
     try {
-      DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-      DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-      Document doc = dBuilder.parse(url.toExternalForm());
+      DocumentBuilder builder = ourDocumentBuilder.get();
+      builder.reset();
+
+      Document doc = builder.parse(url.toExternalForm());
       return mapDocument(doc);
-    }
-    catch (ParserConfigurationException e) {
-      throw new SimpleXmlParsingException(e);
     }
     catch (SAXException e) {
       throw new SimpleXmlParsingException(e);
@@ -58,13 +69,11 @@ public class SimpleXmlReader {
   @Nonnull
   public static SimpleXmlElement parse(@Nonnull InputStream stream) throws SimpleXmlParsingException {
     try {
-      DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-      DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-      Document doc = dBuilder.parse(stream);
+      DocumentBuilder builder = ourDocumentBuilder.get();
+      builder.reset();
+      
+      Document doc = builder.parse(stream);
       return mapDocument(doc);
-    }
-    catch (ParserConfigurationException e) {
-      throw new SimpleXmlParsingException(e);
     }
     catch (SAXException e) {
       throw new SimpleXmlParsingException(e);
@@ -77,13 +86,11 @@ public class SimpleXmlReader {
   @Nonnull
   public static SimpleXmlElement parse(@Nonnull File file) throws SimpleXmlParsingException {
     try {
-      DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-      DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-      Document doc = dBuilder.parse(file);
+      DocumentBuilder builder = ourDocumentBuilder.get();
+      builder.reset();
+
+      Document doc = builder.parse(file);
       return mapDocument(doc);
-    }
-    catch (ParserConfigurationException e) {
-      throw new SimpleXmlParsingException(e);
     }
     catch (SAXException e) {
       throw new SimpleXmlParsingException(e);
@@ -96,7 +103,6 @@ public class SimpleXmlReader {
   private static SimpleXmlElement mapDocument(Document doc) {
     Element documentElement = doc.getDocumentElement();
     documentElement.normalize();
-
 
     List<SimpleXmlElement> children = new ArrayList<SimpleXmlElement>();
 

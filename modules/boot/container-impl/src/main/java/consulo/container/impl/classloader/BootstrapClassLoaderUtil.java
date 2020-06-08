@@ -43,7 +43,9 @@ public class BootstrapClassLoaderUtil {
 
     Runnable bootInitialize = stat.mark("boot.classloader.initialize");
 
+    Runnable mark = stat.mark(CONSULO_PLATFORM_BASE + ".initalize");
     PluginDescriptorImpl base = initalizePlatformBase(modulesDirectory, containerLogger);
+    mark.run();
 
     List<PluginDescriptorImpl> descriptors = new ArrayList<PluginDescriptorImpl>();
     descriptors.add(base);
@@ -55,9 +57,11 @@ public class BootstrapClassLoaderUtil {
         continue;
       }
 
+      mark = stat.mark(moduleDirectory.getName() + ".load");
       PluginDescriptorImpl descriptor = PluginDescriptorLoader.loadDescriptor(moduleDirectory, false, true, containerLogger);
 
       if (descriptor == null) {
+        mark.run();
         continue;
       }
 
@@ -72,6 +76,7 @@ public class BootstrapClassLoaderUtil {
       descriptors.add(descriptor);
 
       descriptor.setLoader(loader);
+      mark.run();
     }
 
     PluginHolderModificator.initialize(descriptors);

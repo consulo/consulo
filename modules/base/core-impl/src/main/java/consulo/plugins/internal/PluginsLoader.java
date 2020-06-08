@@ -29,6 +29,7 @@ import consulo.container.impl.*;
 import consulo.container.impl.classloader.Java9ModuleInitializer;
 import consulo.container.impl.classloader.PluginClassLoaderFactory;
 import consulo.container.plugin.*;
+import consulo.container.util.StatCollector;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.reflect.ReflectionUtil;
@@ -249,12 +250,14 @@ public class PluginsLoader {
 
   @Nonnull
   private static List<PluginDescriptorImpl> loadPluginDescriptors(@Nullable StartupProgress progress, boolean isHeadlessMode) {
+    StatCollector stat = new StatCollector();
+
     List<PluginDescriptorImpl> pluginDescriptors = new ArrayList<>();
     for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
       pluginDescriptors.add((PluginDescriptorImpl)descriptor);
     }
 
-    pluginDescriptors.addAll(loadDescriptorsFromPluginPath(progress, isHeadlessMode));
+    pluginDescriptors.addAll(loadDescriptorsFromPluginsPath(progress, isHeadlessMode, stat));
 
     final Map<PluginId, PluginDescriptorImpl> idToDescriptorMap = new THashMap<>();
 
@@ -264,6 +267,7 @@ public class PluginsLoader {
 
     Collections.sort(pluginDescriptors, getPluginDescriptorComparator(idToDescriptorMap));
 
+    stat.dump("Plugins load", getLogger()::info);
     return pluginDescriptors;
   }
 
@@ -273,7 +277,7 @@ public class PluginsLoader {
   }
 
   @Nonnull
-  public static List<PluginDescriptorImpl> loadDescriptorsFromPluginPath(@Nullable StartupProgress progress, boolean isHeadlessMode) {
+  public static List<PluginDescriptorImpl> loadDescriptorsFromPluginsPath(@Nullable StartupProgress progress, boolean isHeadlessMode, StatCollector stat) {
     final List<PluginDescriptorImpl> result = new ArrayList<>();
 
     int pluginsCount = 0;
@@ -283,28 +287,40 @@ public class PluginsLoader {
     }
 
     for (String pluginsPath : pluginsPaths) {
-      loadDescriptors(pluginsPath, result, progress, pluginsCount, isHeadlessMode, false);
+      loadDescriptors(pluginsPath, result, progress, pluginsCount, isHeadlessMode, stat, false);
     }
 
     return result;
   }
 
-  public static void loadDescriptors(String pluginsPath, List<PluginDescriptorImpl> result, @Nullable StartupProgress progress, int pluginsCount, boolean isHeadlessMode, boolean isPreInstalledPath) {
-    loadDescriptors(new File(pluginsPath), result, progress, pluginsCount, isHeadlessMode, isPreInstalledPath);
+  public static void loadDescriptors(String pluginsPath,
+                                     List<PluginDescriptorImpl> result,
+                                     @Nullable StartupProgress progress,
+                                     int pluginsCount,
+                                     boolean isHeadlessMode,
+                                     StatCollector stat,
+                                     boolean isPreInstalledPath) {
+    loadDescriptors(new File(pluginsPath), result, progress, pluginsCount, stat, isHeadlessMode, isPreInstalledPath);
   }
 
   public static void loadDescriptors(@Nonnull File pluginsHome,
                                      List<PluginDescriptorImpl> result,
                                      @Nullable StartupProgress progress,
                                      int pluginsCount,
+                                     StatCollector stat,
                                      boolean isHeadlessMode,
                                      boolean isPreInstalledPath) {
     final File[] files = pluginsHome.listFiles();
     if (files != null) {
       int i = result.size();
       for (File file : files) {
+        Runnable mark = stat.mark(file.getName());
         final PluginDescriptorImpl descriptor = PluginDescriptorLoader.loadDescriptor(file, isHeadlessMode, isPreInstalledPath, C_LOG);
-        if (descriptor == null) continue;
+        if (descriptor == null) {
+          mark.run();
+          continue;
+        }
+
         if (progress != null) {
           progress.showProgress(descriptor.getName(), PLUGINS_PROGRESS_MAX_VALUE * ((float)++i / pluginsCount));
         }
@@ -318,6 +334,7 @@ public class PluginsLoader {
         else {
           result.add(descriptor);
         }
+        mark.run();
       }
     }
   }

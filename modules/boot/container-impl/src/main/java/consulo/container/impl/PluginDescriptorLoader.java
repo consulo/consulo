@@ -22,10 +22,7 @@ import consulo.util.nodep.text.StringUtilRt;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -55,6 +52,20 @@ public class PluginDescriptorLoader {
       if (!libDir.isDirectory()) {
         return null;
       }
+
+      File[] markerFiles = libDir.listFiles(new FileFilter() {
+        @Override
+        public boolean accept(File pathname) {
+          return pathname.getName().endsWith(".jar.marker");
+        }
+      });
+
+      if(markerFiles != null && markerFiles.length == 1) {
+        String simpleJarFile = markerFiles[0].getName().replace(".jar.marker", ".jar");
+        File jarFile = new File(libDir, simpleJarFile);
+        return loadDescriptorFromJar(jarFile, pluginPath, fileName, isHeadlessMode, isPreInstalledPath, containerLogger);
+      }
+
       final File[] files = libDir.listFiles();
       if (files == null || files.length == 0) {
         return null;

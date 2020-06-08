@@ -15,22 +15,19 @@
  */
 package consulo.container.impl;
 
-import consulo.container.plugin.*;
-import consulo.container.plugin.PluginId;
 import consulo.container.impl.parser.*;
+import consulo.container.plugin.*;
 import consulo.util.nodep.SystemInfoRt;
 import consulo.util.nodep.io.FileUtilRt;
-import consulo.util.nodep.text.StringUtilRt;
 import consulo.util.nodep.map.SimpleMultiMap;
+import consulo.util.nodep.text.StringUtilRt;
 import consulo.util.nodep.xml.SimpleXmlParsingException;
 import consulo.util.nodep.xml.SimpleXmlReader;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
