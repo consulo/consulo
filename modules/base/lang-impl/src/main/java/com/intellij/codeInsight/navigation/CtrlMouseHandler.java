@@ -14,6 +14,7 @@ import com.intellij.injected.editor.EditorWindow;
 import com.intellij.lang.documentation.DocumentationProvider;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.application.ApplicationManager;
@@ -457,6 +458,7 @@ public final class CtrlMouseHandler {
   }
 
   @Nullable
+  @RequiredReadAction
   public static Info getInfoAt(@Nonnull Project project, @Nonnull final Editor editor, @Nonnull PsiFile file, int offset, @Nonnull BrowseMode browseMode) {
     PsiElement targetElement = null;
 
@@ -538,33 +540,59 @@ public final class CtrlMouseHandler {
     }
 
     final PsiElement element = GotoDeclarationAction.findElementToShowUsagesOf(editor, offset);
-    if (element instanceof PsiNameIdentifierOwner) {
+    if (element != null) {
       PsiElement identifier = ((PsiNameIdentifierOwner)element).getNameIdentifier();
       if (identifier != null && identifier.isValid()) {
-        return new Info(identifier) {
-          @Nonnull
-          @Override
-          public DocInfo getInfo() {
-            String name = UsageViewUtil.getType(element) + " '" + UsageViewUtil.getShortName(element) + "'";
-            return new DocInfo("Show usages of " + name, null);
-          }
+        DocInfo baseDocInfo = generateInfo(element, element, false);
 
-          @Override
-          public boolean isValid(@Nonnull Document document) {
-            return element.isValid();
-          }
+        if(baseDocInfo != DocInfo.EMPTY && !StringUtil.isEmptyOrSpaces(baseDocInfo.text)) {
+          return new Info(identifier) {
+            @Nonnull
+            @Override
+            public DocInfo getInfo() {
+              StringBuilder builder = new StringBuilder("<small>Show usages of </small><br>");
+              builder.append(baseDocInfo.text);
+              return new DocInfo(builder.toString(), null);
+            }
 
-          @Override
-          public boolean isNavigatable() {
-            return true;
-          }
-        };
+            @Override
+            public boolean isValid(@Nonnull Document document) {
+              return true;
+            }
+
+            @Override
+            public boolean isNavigatable() {
+              return true;
+            }
+          };
+        }
+        else {
+          return new Info(identifier) {
+            @Nonnull
+            @Override
+            public DocInfo getInfo() {
+              String name = UsageViewUtil.getType(element) + " '" + UsageViewUtil.getShortName(element) + "'";
+              return new DocInfo("Show usages of " + name, null);
+            }
+
+            @Override
+            public boolean isValid(@Nonnull Document document) {
+              return element.isValid();
+            }
+
+            @Override
+            public boolean isNavigatable() {
+              return true;
+            }
+          };
+        }
       }
     }
     return null;
   }
 
   @Nonnull
+  @RequiredReadAction
   private static List<PsiElement> resolve(@Nonnull PsiReference ref) {
     // IDEA-56727 try resolve first as in GotoDeclarationAction
     PsiElement resolvedElement = ref.resolve();
