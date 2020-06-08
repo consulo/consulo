@@ -34,12 +34,8 @@ import com.intellij.openapi.fileEditor.impl.EditorHistoryManager;
 import com.intellij.openapi.fileTypes.FileTypeEvent;
 import com.intellij.openapi.fileTypes.FileTypeListener;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileEvent;
 import com.intellij.openapi.vfs.VirtualFileListener;
@@ -50,8 +46,11 @@ import com.intellij.ui.components.JBLoadingPanel;
 import com.intellij.util.FileContentUtilCore;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.JBSwingUtilities;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -86,6 +85,8 @@ public class TextEditorComponent extends JBLoadingPanel implements DataProvider,
    */
   private boolean myValid;
 
+  private final EditorHighlighterUpdater myEditorHighlighterUpdater;
+
   public TextEditorComponent(@Nonnull final Project project, @Nonnull final VirtualFile file, @Nonnull final DesktopTextEditorImpl textEditor) {
     super(new BorderLayout(), textEditor);
 
@@ -108,17 +109,8 @@ public class TextEditorComponent extends JBLoadingPanel implements DataProvider,
     Disposer.register(this, () -> myFile.getFileSystem().removeVirtualFileListener(myVirtualFileListener));
     MessageBusConnection myConnection = project.getMessageBus().connect(this);
     myConnection.subscribe(FileTypeManager.TOPIC, new MyFileTypeListener());
-    myConnection.subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
-      @Override
-      public void enteredDumbMode() {
-        updateHighlighters();
-      }
 
-      @Override
-      public void exitDumbMode() {
-        updateHighlighters();
-      }
-    });
+    myEditorHighlighterUpdater = new EditorHighlighterUpdater(myProject, this, (EditorEx)myEditor, myFile);
   }
 
   private volatile boolean myDisposed;
@@ -234,16 +226,6 @@ public class TextEditorComponent extends JBLoadingPanel implements DataProvider,
   }
 
   /**
-   * Updates editors' highlighters. This should be done when the opened file
-   * changes its file type.
-   */
-  private void updateHighlighters() {
-    if (!myProject.isDisposed() && !myEditor.isDisposed()) {
-      AsyncHighlighterUpdater.updateHighlighters(myProject, myEditor, myFile);
-    }
-  }
-
-  /**
    * Updates frame's status bar: insert/overwrite mode, caret position
    */
   private void updateStatusBar() {
@@ -321,7 +303,6 @@ public class TextEditorComponent extends JBLoadingPanel implements DataProvider,
       // File can be invalid after file type changing. The editor should be removed
       // by the FileEditorManager if it's invalid.
       updateValidProperty();
-      updateHighlighters();
     }
   }
 
@@ -337,7 +318,7 @@ public class TextEditorComponent extends JBLoadingPanel implements DataProvider,
         updateValidProperty();
         if (Comparing.equal(e.getFile(), myFile) &&
             (FileContentUtilCore.FORCE_RELOAD_REQUESTOR.equals(e.getRequestor()) || !Comparing.equal(e.getOldValue(), e.getNewValue()))) {
-          updateHighlighters();
+          myEditorHighlighterUpdater.updateHighlighters();
         }
       }
     }
