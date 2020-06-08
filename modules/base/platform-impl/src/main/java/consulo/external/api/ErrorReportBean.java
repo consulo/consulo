@@ -15,10 +15,9 @@
  */
 package consulo.external.api;
 
-import consulo.container.plugin.PluginId;
 import com.intellij.util.ExceptionUtil;
+import consulo.container.plugin.PluginId;
 import consulo.logging.attachment.Attachment;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -59,6 +58,8 @@ public class ErrorReportBean extends InformationBean {
   private String description;
   private Integer assigneeId;
 
+  public String installationID;
+
   private final Set<AffectedPlugin> affectedPlugins = new TreeSet<>();
 
   private List<AttachmentBean> attachments = Collections.emptyList();
@@ -91,7 +92,7 @@ public class ErrorReportBean extends InformationBean {
     return description;
   }
 
-  public void setDescription(@NonNls String description) {
+  public void setDescription(String description) {
     this.description = description;
   }
 
@@ -120,5 +121,13 @@ public class ErrorReportBean extends InformationBean {
 
   public void setAssigneeId(Integer assigneeId) {
     this.assigneeId = assigneeId;
+  }
+
+  public String getInstallationID() {
+    return installationID;
+  }
+
+  public void setInstallationID(String installationID) {
+    this.installationID = installationID;
   }
 }
