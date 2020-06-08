@@ -22,8 +22,6 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
-import consulo.util.dataholder.Key;
-import consulo.util.dataholder.UserDataHolder;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
@@ -31,6 +29,8 @@ import com.intellij.reference.SoftReference;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ide.impl.DataValidators;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.concurrency.AsyncPromise;
@@ -134,7 +134,7 @@ public abstract class BaseDataManager extends DataManager {
     @Override
     @Nullable
     @SuppressWarnings("unchecked")
-    protected  <T> T doGetData(@Nonnull Key<T> dataId) {
+    protected <T> T doGetData(@Nonnull Key<T> dataId) {
       consulo.ui.Component component = getComponent();
       if (PlatformDataKeys.IS_MODAL_CONTEXT == dataId) {
         if (component == null) {
@@ -157,8 +157,9 @@ public abstract class BaseDataManager extends DataManager {
     }
   }
 
-  protected static final Set<Key> ourSafeKeys =
-          ContainerUtil.newHashSet(CommonDataKeys.PROJECT, CommonDataKeys.EDITOR, PlatformDataKeys.IS_MODAL_CONTEXT, PlatformDataKeys.CONTEXT_COMPONENT, PlatformDataKeys.MODALITY_STATE);
+  protected static final Set<Key> ourSafeKeys = ContainerUtil
+          .newHashSet(CommonDataKeys.PROJECT, CommonDataKeys.EDITOR, PlatformDataKeys.IS_MODAL_CONTEXT, PlatformDataKeys.CONTEXT_COMPONENT, PlatformDataKeys.CONTEXT_UI_COMPONENT,
+                      PlatformDataKeys.MODALITY_STATE);
 
 
   protected final ConcurrentMap<Key, GetDataRule> myDataConstantToRuleMap = new ConcurrentHashMap<>();
@@ -243,7 +244,7 @@ public abstract class BaseDataManager extends DataManager {
   }
 
   @Nullable
-  public  <T> T getDataFromProvider(@Nonnull final DataProvider provider, @Nonnull Key<T> dataId, @Nullable Set<Key> alreadyComputedIds) {
+  public <T> T getDataFromProvider(@Nonnull final DataProvider provider, @Nonnull Key<T> dataId, @Nullable Set<Key> alreadyComputedIds) {
     if (alreadyComputedIds != null && alreadyComputedIds.contains(dataId)) {
       return null;
     }

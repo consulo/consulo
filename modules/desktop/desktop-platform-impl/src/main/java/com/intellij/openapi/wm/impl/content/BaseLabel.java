@@ -15,7 +15,9 @@
  */
 package com.intellij.openapi.wm.impl.content;
 
+import com.intellij.ide.DataManager;
 import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowDataKeys;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.content.Content;
 import com.intellij.util.ui.UIUtil;
@@ -36,6 +38,14 @@ public class BaseLabel extends JLabel {
     myUi = ui;
     setOpaque(false);
     myBold = bold;
+
+    DataManager.registerDataProvider(this, dataId -> {
+      if (dataId == ToolWindowDataKeys.CONTENT) {
+        return getContent();
+      }
+
+      return null;
+    });
   }
 
   @Override

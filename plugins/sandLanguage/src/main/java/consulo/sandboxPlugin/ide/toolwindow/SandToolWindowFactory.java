@@ -16,6 +16,7 @@
 package consulo.sandboxPlugin.ide.toolwindow;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.actions.ToolWindowTabRenameActionBase;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
@@ -25,7 +26,6 @@ import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
-import consulo.ui.Alerts;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 
@@ -51,13 +51,7 @@ public class SandToolWindowFactory implements ToolWindowFactory {
       }
     });
 
-    ((ToolWindowEx)toolWindow).setTabDoubleClickActions(new AnAction("Edit") {
-      @RequiredUIAccess
-      @Override
-      public void actionPerformed(@Nonnull AnActionEvent e) {
-        Alerts.okInfo("Edit test").showAsync();
-      }
-    });
+    ((ToolWindowEx)toolWindow).setTabDoubleClickActions(new ToolWindowTabRenameActionBase("Sand", "Enter new session name"));
 
     ((ToolWindowEx)toolWindow).setTabActions(new AnAction("Add Tab", null, AllIcons.ToolbarDecorator.Add) {
       @RequiredUIAccess
