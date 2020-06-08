@@ -22,16 +22,16 @@ import com.intellij.codeInsight.completion.OffsetKey;
 import com.intellij.codeInsight.completion.OffsetsInFile;
 import com.intellij.codeInsight.template.*;
 import com.intellij.lang.Language;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.event.EditorFactoryAdapter;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.openapi.editor.event.EditorFactoryListener;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.ProperTextRange;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.CachedValueProvider;
@@ -42,6 +42,7 @@ import com.intellij.util.PairProcessor;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.TestOnly;
@@ -55,7 +56,6 @@ import java.util.concurrent.ConcurrentMap;
 
 @Singleton
 public class TemplateManagerImpl extends TemplateManager implements Disposable {
-  private static final TemplateContextType[] ourContextTypes = Extensions.getExtensions(TemplateContextType.EP_NAME);
   private final Project myProject;
   private boolean myTemplateTesting;
 
@@ -501,9 +501,8 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
   }
 
   private static LinkedList<TemplateContextType> buildOrderedContextTypes() {
-    final TemplateContextType[] typeCollection = getAllContextTypes();
     LinkedList<TemplateContextType> userDefinedExtensionsFirst = new LinkedList<>();
-    for (TemplateContextType contextType : typeCollection) {
+    for (TemplateContextType contextType : TemplateContextType.EP_NAME.getExtensionList()) {
       if (contextType.getClass().getName().startsWith(Template.class.getPackage().getName())) {
         userDefinedExtensionsFirst.addLast(contextType);
       }
@@ -512,10 +511,6 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
       }
     }
     return userDefinedExtensionsFirst;
-  }
-
-  public static TemplateContextType[] getAllContextTypes() {
-    return ourContextTypes;
   }
 
   @Override
