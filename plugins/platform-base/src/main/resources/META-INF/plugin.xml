@@ -1730,6 +1730,10 @@
                         serviceImplementation="com.intellij.codeInsight.template.impl.TemplateSettings"/>
     <applicationService serviceInterface="com.intellij.codeInsight.template.impl.ExportableTemplateSettings"
                         serviceImplementation="com.intellij.codeInsight.template.impl.ExportableTemplateSettings"/>
+    <projectService serviceInterface="com.intellij.codeInsight.template.TemplateManager"
+                        serviceImplementation="com.intellij.codeInsight.template.impl.TemplateManagerImpl" />
+    <editorFactoryListener implementation="com.intellij.codeInsight.template.impl.TemplateManagerImpl$MyEditorFactoryListener" />
+
     <applicationService serviceInterface="com.intellij.execution.ui.layout.impl.RunnerLayoutSettings"
                         serviceImplementation="com.intellij.execution.ui.layout.impl.RunnerLayoutSettings"/>
 

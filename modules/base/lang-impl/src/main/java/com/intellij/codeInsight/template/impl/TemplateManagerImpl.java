@@ -24,8 +24,10 @@ import com.intellij.codeInsight.template.*;
 import com.intellij.lang.Language;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.event.EditorFactoryAdapter;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.EditorModificationUtil;
+import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.openapi.editor.event.EditorFactoryListener;
 import com.intellij.openapi.project.Project;
@@ -56,6 +58,23 @@ import java.util.concurrent.ConcurrentMap;
 
 @Singleton
 public class TemplateManagerImpl extends TemplateManager implements Disposable {
+  public static class MyEditorFactoryListener implements EditorFactoryListener {
+    @Override
+    public void editorReleased(@Nonnull EditorFactoryEvent event) {
+      Editor editor = event.getEditor();
+      Project project = editor.getProject();
+      if (project == null || project.isDisposed() || !project.isOpen()) {
+        return;
+      }
+      
+      TemplateState state = getTemplateState(editor);
+      if (state != null) {
+        state.gotoEnd();
+      }
+      clearTemplateState(editor);
+    }
+  }
+
   private final Project myProject;
   private boolean myTemplateTesting;
 
@@ -64,20 +83,6 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
   @Inject
   public TemplateManagerImpl(Project project) {
     myProject = project;
-    final EditorFactoryListener myEditorFactoryListener = new EditorFactoryAdapter() {
-      @Override
-      public void editorReleased(@Nonnull EditorFactoryEvent event) {
-        Editor editor = event.getEditor();
-        if (editor.getProject() != null && editor.getProject() != myProject) return;
-        if (myProject.isDisposed() || !myProject.isOpen()) return;
-        TemplateState state = getTemplateState(editor);
-        if (state != null) {
-          state.gotoEnd();
-        }
-        clearTemplateState(editor);
-      }
-    };
-    EditorFactory.getInstance().addEditorFactoryListener(myEditorFactoryListener, myProject);
   }
 
   @Override
@@ -162,10 +167,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
   }
 
   @Override
-  public void startTemplate(@Nonnull Editor editor,
-                            @Nonnull Template template,
-                            TemplateEditingListener listener,
-                            final PairProcessor<String, String> processor) {
+  public void startTemplate(@Nonnull Editor editor, @Nonnull Template template, TemplateEditingListener listener, final PairProcessor<String, String> processor) {
     startTemplate(editor, null, template, true, listener, processor, null);
   }
 
@@ -215,11 +217,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
   }
 
   @Override
-  public void startTemplate(@Nonnull final Editor editor,
-                            @Nonnull final Template template,
-                            boolean inSeparateCommand,
-                            Map<String, String> predefinedVarValues,
-                            TemplateEditingListener listener) {
+  public void startTemplate(@Nonnull final Editor editor, @Nonnull final Template template, boolean inSeparateCommand, Map<String, String> predefinedVarValues, TemplateEditingListener listener) {
     startTemplate(editor, null, template, inSeparateCommand, listener, null, predefinedVarValues);
   }
 
@@ -244,10 +242,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     }
   }
 
-  private static boolean containsTemplateStartingBefore(Map<TemplateImpl, String> template2argument,
-                                                        int offset,
-                                                        int caretOffset,
-                                                        CharSequence text) {
+  private static boolean containsTemplateStartingBefore(Map<TemplateImpl, String> template2argument, int offset, int caretOffset, CharSequence text) {
     for (TemplateImpl template : template2argument.keySet()) {
       String argument = template2argument.get(template);
       int templateStart = getTemplateStart(template, argument, caretOffset, text);
@@ -269,9 +264,9 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
 
     Map<TemplateImpl, String> template2argument = findMatchingTemplates(file, editor, shortcutChar, TemplateSettings.getInstance());
 
-    List<CustomLiveTemplate> customCandidates = ContainerUtil.findAll(CustomLiveTemplate.EP_NAME.getExtensions(), customLiveTemplate ->
-            shortcutChar == customLiveTemplate.getShortcut() &&
-            (editor.getCaretModel().getCaretCount() <= 1 || supportsMultiCaretMode(customLiveTemplate)));
+    List<CustomLiveTemplate> customCandidates = ContainerUtil.findAll(CustomLiveTemplate.EP_NAME.getExtensions(), customLiveTemplate -> shortcutChar == customLiveTemplate.getShortcut() &&
+                                                                                                                                        (editor.getCaretModel().getCaretCount() <= 1 ||
+                                                                                                                                         supportsMultiCaretMode(customLiveTemplate)));
     if (!customCandidates.isEmpty()) {
       int caretOffset = editor.getCaretModel().getOffset();
       PsiFile fileCopy = insertDummyIdentifierWithCache(file, caretOffset, caretOffset, "").getFile();
@@ -298,15 +293,11 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     return !(customLiveTemplate instanceof CustomLiveTemplateBase) || ((CustomLiveTemplateBase)customLiveTemplate).supportsMultiCaret();
   }
 
-  public static boolean isApplicable(@Nonnull CustomLiveTemplate customLiveTemplate,
-                                     @Nonnull Editor editor,
-                                     @Nonnull PsiFile file) {
+  public static boolean isApplicable(@Nonnull CustomLiveTemplate customLiveTemplate, @Nonnull Editor editor, @Nonnull PsiFile file) {
     return isApplicable(customLiveTemplate, editor, file, false);
   }
 
-  public static boolean isApplicable(@Nonnull CustomLiveTemplate customLiveTemplate,
-                                     @Nonnull Editor editor,
-                                     @Nonnull PsiFile file, boolean wrapping) {
+  public static boolean isApplicable(@Nonnull CustomLiveTemplate customLiveTemplate, @Nonnull Editor editor, @Nonnull PsiFile file, boolean wrapping) {
     return customLiveTemplate.isApplicable(file, CustomTemplateCallback.getOffset(editor), wrapping);
   }
 
@@ -332,10 +323,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     return templateStart;
   }
 
-  public Map<TemplateImpl, String> findMatchingTemplates(final PsiFile file,
-                                                         Editor editor,
-                                                         @Nullable Character shortcutChar,
-                                                         TemplateSettings templateSettings) {
+  public Map<TemplateImpl, String> findMatchingTemplates(final PsiFile file, Editor editor, @Nullable Character shortcutChar, TemplateSettings templateSettings) {
     final Document document = editor.getDocument();
     CharSequence text = document.getCharsSequence();
     final int caretOffset = editor.getCaretModel().getOffset();
@@ -367,9 +355,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
   }
 
   @Nullable
-  public Runnable startNonCustomTemplates(final Map<TemplateImpl, String> template2argument,
-                                          final Editor editor,
-                                          @Nullable final PairProcessor<String, String> processor) {
+  public Runnable startNonCustomTemplates(final Map<TemplateImpl, String> template2argument, final Editor editor, @Nullable final PairProcessor<String, String> processor) {
     final int caretOffset = editor.getCaretModel().getOffset();
     final Document document = editor.getDocument();
     final CharSequence text = document.getCharsSequence();
@@ -391,11 +377,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     };
   }
 
-  private static List<TemplateImpl> findMatchingTemplates(CharSequence text,
-                                                          int caretOffset,
-                                                          @Nullable Character shortcutChar,
-                                                          TemplateSettings settings,
-                                                          boolean hasArgument) {
+  private static List<TemplateImpl> findMatchingTemplates(CharSequence text, int caretOffset, @Nullable Character shortcutChar, TemplateSettings settings, boolean hasArgument) {
     List<TemplateImpl> candidates = Collections.emptyList();
     for (int i = settings.getMaxKeyLength(); i >= 1; i--) {
       int wordStart = caretOffset - i;
@@ -415,10 +397,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     return candidates;
   }
 
-  public void startTemplateWithPrefix(final Editor editor,
-                                      final TemplateImpl template,
-                                      @Nullable final PairProcessor<String, String> processor,
-                                      @Nullable String argument) {
+  public void startTemplateWithPrefix(final Editor editor, final TemplateImpl template, @Nullable final PairProcessor<String, String> processor, @Nullable String argument) {
     final int caretOffset = editor.getCaretModel().getOffset();
     String key = template.getKey();
     int startOffset = caretOffset - key.length();
@@ -611,11 +590,9 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     ProperTextRange editRange = ProperTextRange.create(startOffset, endOffset);
     assertRangeWithinDocument(editRange, file.getViewProvider().getDocument());
 
-    ConcurrentMap<Pair<ProperTextRange, String>, OffsetsInFile> map = CachedValuesManager.getCachedValue(file, () ->
-            CachedValueProvider.Result.create(
-                    ConcurrentFactoryMap.createMap(
-                            key -> copyWithDummyIdentifier(new OffsetsInFile(file), key.first.getStartOffset(), key.first.getEndOffset(), key.second)),
-                    file, file.getViewProvider().getDocument()));
+    ConcurrentMap<Pair<ProperTextRange, String>, OffsetsInFile> map = CachedValuesManager.getCachedValue(file, () -> CachedValueProvider.Result
+            .create(ConcurrentFactoryMap.createMap(key -> copyWithDummyIdentifier(new OffsetsInFile(file), key.first.getStartOffset(), key.first.getEndOffset(), key.second)), file,
+                    file.getViewProvider().getDocument()));
     return map.get(Pair.create(editRange, replacement));
   }
 
