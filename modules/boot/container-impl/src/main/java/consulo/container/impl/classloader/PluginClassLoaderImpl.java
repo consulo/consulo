@@ -19,9 +19,9 @@ import java.util.*;
 /**
  * @author Eugene Zhuravlev
  */
-class IdeaPluginClassLoader extends UrlClassLoader implements PluginClassLoader {
+class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader {
   static {
-    if (registerAsParallelCapable()) markParallelCapable(IdeaPluginClassLoader.class);
+    if (registerAsParallelCapable()) markParallelCapable(PluginClassLoaderImpl.class);
   }
 
   private final ClassLoader[] myParents;
@@ -29,7 +29,7 @@ class IdeaPluginClassLoader extends UrlClassLoader implements PluginClassLoader 
   private final String myPluginVersion;
   private final List<String> myLibDirectories;
 
-  public IdeaPluginClassLoader(@Nonnull List<URL> urls, @Nonnull ClassLoader[] parents, PluginId pluginId, String version, File pluginRoot) {
+  public PluginClassLoaderImpl(@Nonnull List<URL> urls, @Nonnull ClassLoader[] parents, PluginId pluginId, String version, File pluginRoot) {
     super(build().urls(urls).urlsWithProtectionDomain(new HashSet<URL>(urls)).allowLock().useCache());
     myParents = parents;
     myPluginId = pluginId;
@@ -53,7 +53,7 @@ class IdeaPluginClassLoader extends UrlClassLoader implements PluginClassLoader 
 
   private abstract static class ActionWithPluginClassLoader<Result, ParameterType> {
     Result execute(String name,
-                   IdeaPluginClassLoader classloader,
+                   PluginClassLoaderImpl classloader,
                    Set<ClassLoader> visited,
                    ActionWithPluginClassLoader<Result, ParameterType> actionWithPluginClassLoader,
                    ActionWithClassloader<Result, ParameterType> actionWithClassloader,
@@ -63,7 +63,7 @@ class IdeaPluginClassLoader extends UrlClassLoader implements PluginClassLoader 
       return classloader.processResourcesInParents(name, actionWithPluginClassLoader, actionWithClassloader, visited, parameter);
     }
 
-    protected abstract Result doExecute(String name, IdeaPluginClassLoader classloader, ParameterType parameter);
+    protected abstract Result doExecute(String name, PluginClassLoaderImpl classloader, ParameterType parameter);
   }
 
   @Nullable
@@ -78,8 +78,8 @@ class IdeaPluginClassLoader extends UrlClassLoader implements PluginClassLoader 
         continue;
       }
 
-      if (parent instanceof IdeaPluginClassLoader) {
-        Result resource = actionWithPluginClassLoader.execute(name, (IdeaPluginClassLoader)parent, visited, actionWithPluginClassLoader, actionWithClassloader, parameter);
+      if (parent instanceof PluginClassLoaderImpl) {
+        Result resource = actionWithPluginClassLoader.execute(name, (PluginClassLoaderImpl)parent, visited, actionWithPluginClassLoader, actionWithClassloader, parameter);
         if (resource != null) {
           return resource;
         }
@@ -96,7 +96,7 @@ class IdeaPluginClassLoader extends UrlClassLoader implements PluginClassLoader 
   private static final ActionWithPluginClassLoader<Class, Void> loadClassInPluginCL = new ActionWithPluginClassLoader<Class, Void>() {
     @Override
     Class execute(String name,
-                  IdeaPluginClassLoader classloader,
+                  PluginClassLoaderImpl classloader,
                   Set<ClassLoader> visited,
                   ActionWithPluginClassLoader<Class, Void> actionWithPluginClassLoader,
                   ActionWithClassloader<Class, Void> actionWithClassloader,
@@ -105,7 +105,7 @@ class IdeaPluginClassLoader extends UrlClassLoader implements PluginClassLoader 
     }
 
     @Override
-    protected Class doExecute(String name, IdeaPluginClassLoader classloader, Void parameter) {
+    protected Class doExecute(String name, PluginClassLoaderImpl classloader, Void parameter) {
       return null;
     }
   };
@@ -179,7 +179,7 @@ class IdeaPluginClassLoader extends UrlClassLoader implements PluginClassLoader 
 
   private static final ActionWithPluginClassLoader<URL, Void> findResourceInPluginCL = new ActionWithPluginClassLoader<URL, Void>() {
     @Override
-    protected URL doExecute(String name, IdeaPluginClassLoader classloader, Void parameter) {
+    protected URL doExecute(String name, PluginClassLoaderImpl classloader, Void parameter) {
       return classloader.findOwnResource(name);
     }
   };
@@ -208,7 +208,7 @@ class IdeaPluginClassLoader extends UrlClassLoader implements PluginClassLoader 
 
   private static final ActionWithPluginClassLoader<InputStream, Void> getResourceAsStreamInPluginCL = new ActionWithPluginClassLoader<InputStream, Void>() {
     @Override
-    protected InputStream doExecute(String name, IdeaPluginClassLoader classloader, Void parameter) {
+    protected InputStream doExecute(String name, PluginClassLoaderImpl classloader, Void parameter) {
       return classloader.getOwnResourceAsStream(name);
     }
   };
@@ -237,7 +237,7 @@ class IdeaPluginClassLoader extends UrlClassLoader implements PluginClassLoader 
 
   private static final ActionWithPluginClassLoader<Void, List<Enumeration<URL>>> findResourcesInPluginCL = new ActionWithPluginClassLoader<Void, List<Enumeration<URL>>>() {
     @Override
-    protected Void doExecute(String name, IdeaPluginClassLoader classloader, List<Enumeration<URL>> enumerations) {
+    protected Void doExecute(String name, PluginClassLoaderImpl classloader, List<Enumeration<URL>> enumerations) {
       try {
         enumerations.add(classloader.findOwnResources(name));
       }
