@@ -18,7 +18,6 @@ package com.intellij.codeInspection;
 import com.intellij.AbstractBundle;
 import com.intellij.CommonBundle;
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
-import consulo.container.plugin.IdeaPluginDescriptor;
 import com.intellij.lang.LanguageExtensionPoint;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.extensions.ExtensionPointName;
@@ -131,7 +130,7 @@ public class InspectionEP extends LanguageExtensionPoint implements InspectionPr
 
   @Nullable
   private String getLocalizedString(String bundleName, String key) {
-    final String baseName = bundleName != null ? bundleName : bundle == null ? ((IdeaPluginDescriptor)myPluginDescriptor).getResourceBundleBaseName() : bundle;
+    final String baseName = bundleName != null ? bundleName : bundle == null ? myPluginDescriptor.getResourceBundleBaseName() : bundle;
     if (baseName == null || key == null) {
       if (bundleName != null) {
         LOG.warn(implementationClass);

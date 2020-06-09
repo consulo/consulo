@@ -17,13 +17,11 @@ package com.intellij.openapi.keymap.impl.ui;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.actionMacro.ActionMacro;
-import consulo.container.plugin.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.QuickList;
-import consulo.container.plugin.PluginId;
 import com.intellij.openapi.keymap.KeyMapBundle;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapExtension;
@@ -35,6 +33,9 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
+import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 
@@ -67,16 +68,11 @@ public class ActionsTreeUtil {
     Group pluginsGroup = new Group(KeyMapBundle.message("plugins.group.title"), null, null);
     final KeymapManagerEx keymapManager = KeymapManagerEx.getInstanceEx();
     ActionManagerEx managerEx = ActionManagerEx.getInstanceEx();
-    final List<IdeaPluginDescriptor> plugins = new ArrayList<IdeaPluginDescriptor>();
-    Collections.addAll(plugins, PluginManagerCore.getPlugins());
-    Collections.sort(plugins, new Comparator<IdeaPluginDescriptor>() {
-      public int compare(IdeaPluginDescriptor o1, IdeaPluginDescriptor o2) {
-        return o1.getName().compareTo(o2.getName());
-      }
-    });
+    final List<PluginDescriptor> plugins = new ArrayList<>(PluginManager.getPlugins());
+    Collections.sort(plugins, (o1, o2) -> o1.getName().compareTo(o2.getName()));
 
     List<PluginId> collected = new ArrayList<PluginId>();
-    for (IdeaPluginDescriptor plugin : plugins) {
+    for (PluginDescriptor plugin : plugins) {
       collected.add(plugin.getPluginId());
       Group pluginGroup;
       if (plugin.getPluginId().equals(PluginManagerCore.CORE_PLUGIN)) {

@@ -15,14 +15,13 @@
  */
 package consulo.test.light.impl;
 
-import consulo.container.plugin.IdeaPluginDescriptor;
 import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import consulo.container.plugin.PluginId;
 import com.intellij.openapi.extensions.impl.ExtensionPointImpl;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginDescriptorStub;
+import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.injecting.InjectingContainerBuilder;
 
@@ -34,7 +33,7 @@ import java.lang.reflect.Modifier;
  * @since 3/12/19
  */
 public abstract class LightExtensionRegistrator {
-  private static class PluginDescriptorImpl extends PluginDescriptorStub implements IdeaPluginDescriptor, PluginDescriptor {
+  private static class PluginDescriptorImpl extends PluginDescriptorStub implements PluginDescriptor {
     private final ClassLoader myClassLoader;
 
     private PluginDescriptorImpl(ClassLoader classLoader) {

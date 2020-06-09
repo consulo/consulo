@@ -15,13 +15,11 @@
  */
 package com.intellij.openapi.extensions.impl;
 
-import consulo.container.plugin.IdeaPluginDescriptor;
 import com.intellij.openapi.extensions.LoadingOrder;
-import com.intellij.openapi.extensions.PluginAware;
-import consulo.container.plugin.PluginId;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.util.xmlb.XmlSerializer;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
 import consulo.injecting.InjectingProblemException;
 import org.jdom.Element;
 
@@ -53,7 +51,7 @@ public class ExtensionComponentAdapter<T> implements LoadingOrder.Orderable {
     return loadImplementationClass();
   }
 
-  @SuppressWarnings({"unchecked", "deprecation"})
+  @SuppressWarnings("unchecked")
   public T getComponentInstance(Function<Class<T>, T> getUnbindedInstanceFunc) {
     if (myComponentInstance == null) {
       try {
@@ -81,11 +79,6 @@ public class ExtensionComponentAdapter<T> implements LoadingOrder.Orderable {
       catch (Throwable t) {
         PluginId pluginId = myPluginDescriptor != null ? myPluginDescriptor.getPluginId() : null;
         throw new PluginExtensionInitializationException(t.getMessage(), t, pluginId);
-      }
-
-      if (myComponentInstance instanceof PluginAware) {
-        PluginAware pluginAware = (PluginAware)myComponentInstance;
-        pluginAware.setPluginDescriptor((IdeaPluginDescriptor)myPluginDescriptor);
       }
 
       if(myComponentInstance instanceof consulo.extensions.PluginAware) {

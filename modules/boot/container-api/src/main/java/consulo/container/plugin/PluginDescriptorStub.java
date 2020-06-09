@@ -30,7 +30,7 @@ import java.util.List;
  * @author VISTALL
  * @since 2019-07-17
  */
-public abstract class PluginDescriptorStub implements IdeaPluginDescriptor, PluginDescriptor {
+public abstract class PluginDescriptorStub implements PluginDescriptor {
   @Nonnull
   @Override
   public ClassLoader getPluginClassLoader() {

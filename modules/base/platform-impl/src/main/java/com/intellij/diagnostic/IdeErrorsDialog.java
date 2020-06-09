@@ -48,7 +48,6 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.application.ApplicationProperties;
 import consulo.container.PluginException;
-import consulo.container.plugin.IdeaPluginDescriptor;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
@@ -608,7 +607,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
       ErrorReportSubmitter submitter = getSubmitter(throwable);
       if (submitter == null) {
         PluginId pluginId = findPluginId(throwable);
-        IdeaPluginDescriptor plugin = pluginId == null ? null : PluginManager.getPlugin(pluginId);
+        PluginDescriptor plugin = pluginId == null ? null : consulo.container.plugin.PluginManager.findPlugin(pluginId);
         if (plugin == null) {
           // unknown plugin
           myForeignPluginWarningPanel.setVisible(false);

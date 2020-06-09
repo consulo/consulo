@@ -15,9 +15,6 @@
  */
 package org.jetbrains.ide.script;
 
-import consulo.container.plugin.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManagerCore;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.ClassLoaderUtil;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.ThrowableComputable;
@@ -25,6 +22,9 @@ import com.intellij.openapi.util.text.StringHash;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginManager;
+import consulo.logging.Logger;
 import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
@@ -268,7 +268,7 @@ public class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
       }
       if (c == null) {
         boolean first = true;
-        for (IdeaPluginDescriptor descriptor : PluginManagerCore.getPlugins()) {
+        for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
           ClassLoader l = descriptor.getPluginClassLoader();
           if (l == null || l == loader) continue;
           try {

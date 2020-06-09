@@ -44,12 +44,12 @@ public class PluginManagerCore {
   @Deprecated
   @DeprecationInfo("Use consulo.container.plugin.PluginManager#getPlugins()")
   @SuppressWarnings("deprecation")
-  public static IdeaPluginDescriptor[] getPlugins() {
+  public static PluginDescriptor[] getPlugins() {
     List<PluginDescriptor> plugins = PluginManager.getPlugins();
-    IdeaPluginDescriptor[] array = new IdeaPluginDescriptor[plugins.size()];
+    PluginDescriptor[] array = new PluginDescriptor[plugins.size()];
     for (int i = 0; i < plugins.size(); i++) {
       PluginDescriptor pluginDescriptor = plugins.get(i);
-      array[i] = (IdeaPluginDescriptor)pluginDescriptor;
+      array[i] = pluginDescriptor;
     }
     return array;
   }

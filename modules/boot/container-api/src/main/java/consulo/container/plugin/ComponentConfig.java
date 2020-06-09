@@ -35,7 +35,7 @@ public class ComponentConfig {
   public Map<String, String> options = new HashMap<String, String>();
 
   // @Transient
-  public IdeaPluginDescriptor pluginDescriptor;
+  public PluginDescriptor pluginDescriptor;
 
   //@Transient
   public ClassLoader getClassLoader() {

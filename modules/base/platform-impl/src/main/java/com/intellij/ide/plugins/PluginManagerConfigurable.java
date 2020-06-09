@@ -24,7 +24,7 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.SplitterProportionsData;
-import consulo.container.plugin.IdeaPluginDescriptor;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.disposer.Disposer;
 import org.jetbrains.annotations.NonNls;
 
@@ -211,7 +211,7 @@ public class PluginManagerConfigurable implements SearchableConfigurable, Config
     };
   }
 
-  public void select(IdeaPluginDescriptor... descriptors) {
+  public void select(PluginDescriptor... descriptors) {
     myPluginManagerMain.select(descriptors);
   }
 }

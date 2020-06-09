@@ -15,11 +15,12 @@
  */
 package com.intellij.openapi.components.impl;
 
-import consulo.container.plugin.IdeaPluginDescriptor;
-import consulo.container.plugin.PluginListenerDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.BaseComponent;
+import com.intellij.openapi.components.ComponentManager;
+import com.intellij.openapi.components.NamedComponent;
+import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.ExtensionsArea;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
@@ -27,7 +28,9 @@ import com.intellij.openapi.extensions.impl.ExtensionPointImpl;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.impl.MessageBusFactory;
@@ -35,6 +38,7 @@ import com.intellij.util.messages.impl.MessageBusImpl;
 import consulo.application.ApplicationProperties;
 import consulo.container.plugin.ComponentConfig;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginListenerDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -311,11 +315,10 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     LOG.error(ex);
   }
 
-  @SuppressWarnings("deprecation")
   private void registerComponent(ComponentConfig config, PluginDescriptor pluginDescriptor) {
     config.prepareClasses();
 
-    config.pluginDescriptor = (IdeaPluginDescriptor)pluginDescriptor;
+    config.pluginDescriptor = pluginDescriptor;
     myComponentsRegistry.addConfig(config);
   }
 

@@ -35,7 +35,6 @@ import com.intellij.util.ResourceUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
-import consulo.container.plugin.IdeaPluginDescriptor;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.ide.util.URLDictionatyLoader;
 import consulo.logging.Logger;

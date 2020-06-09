@@ -25,7 +25,6 @@ import consulo.application.ApplicationProperties;
 import consulo.container.ExitCodes;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.ComponentConfig;
-import consulo.container.plugin.IdeaPluginDescriptor;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.logging.Logger;
@@ -130,8 +129,8 @@ public class PluginManager extends PluginManagerCore {
   }
 
   @Nullable
-  public static IdeaPluginDescriptor getPlugin(PluginId id) {
-    return (IdeaPluginDescriptor)consulo.container.plugin.PluginManager.findPlugin(id);
+  public static PluginDescriptor getPlugin(PluginId id) {
+    return consulo.container.plugin.PluginManager.findPlugin(id);
   }
 
   @Nullable

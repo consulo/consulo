@@ -7,14 +7,11 @@ import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.codeInsight.folding.impl.FoldingUtil;
 import com.intellij.codeInsight.hint.TooltipController;
-import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.ide.AppLifecycleListener;
 import com.intellij.ide.IdeTooltipManager;
 import com.intellij.ide.PowerSaveMode;
-import consulo.container.plugin.IdeaPluginDescriptor;
 import com.intellij.ide.scratch.ScratchUtil;
 import com.intellij.ide.todo.TodoConfiguration;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.application.*;
@@ -22,21 +19,20 @@ import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.command.CommandEvent;
 import com.intellij.openapi.command.CommandListener;
 import com.intellij.openapi.command.undo.UndoManager;
-import com.intellij.openapi.editor.*;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.EditorFactory;
+import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.actionSystem.DocCommandGroupId;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.editor.ex.EditorEventMulticasterEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import com.intellij.openapi.editor.impl.EditorMouseHoverPopupControl;
-import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
-import consulo.container.plugin.PluginId;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileTypes.FileTypeEvent;
 import com.intellij.openapi.fileTypes.FileTypeListener;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -46,7 +42,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.roots.ModuleRootListener;
-import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.VcsDirtyScopeManager;
@@ -63,7 +58,7 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.vcsUtil.VcsUtil;
-import consulo.container.plugin.PluginManager;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
@@ -593,37 +588,37 @@ public final class DaemonListeners implements Disposable {
     }
   }
 
-  private void removeQuickFixesContributedByPlugin(@Nonnull IdeaPluginDescriptor pluginDescriptor) {
-    for (FileEditor fileEditor : FileEditorManager.getInstance(myProject).getAllEditors()) {
-      if (fileEditor instanceof TextEditor) {
-        Editor editor = ((TextEditor)fileEditor).getEditor();
-        removeHighlightersContributedByPlugin(pluginDescriptor, editor.getMarkupModel().getAllHighlighters());
-        MarkupModel documentMarkupModel = DocumentMarkupModel.forDocument(editor.getDocument(), myProject, false);
-        if (documentMarkupModel != null) {
-          removeHighlightersContributedByPlugin(pluginDescriptor, documentMarkupModel.getAllHighlighters());
-        }
-      }
-    }
-  }
+  //private void removeQuickFixesContributedByPlugin(@Nonnull PluginDescriptor pluginDescriptor) {
+  //  for (FileEditor fileEditor : FileEditorManager.getInstance(myProject).getAllEditors()) {
+  //    if (fileEditor instanceof TextEditor) {
+  //      Editor editor = ((TextEditor)fileEditor).getEditor();
+  //      removeHighlightersContributedByPlugin(pluginDescriptor, editor.getMarkupModel().getAllHighlighters());
+  //      MarkupModel documentMarkupModel = DocumentMarkupModel.forDocument(editor.getDocument(), myProject, false);
+  //      if (documentMarkupModel != null) {
+  //        removeHighlightersContributedByPlugin(pluginDescriptor, documentMarkupModel.getAllHighlighters());
+  //      }
+  //    }
+  //  }
+  //}
 
-  private static void removeHighlightersContributedByPlugin(@Nonnull IdeaPluginDescriptor pluginDescriptor, RangeHighlighter[] highlighters) {
-    for (RangeHighlighter highlighter : highlighters) {
-      HighlightInfo info = HighlightInfo.fromRangeHighlighter(highlighter);
-      if (info == null) continue;
-      List<Pair<HighlightInfo.IntentionActionDescriptor, TextRange>> ranges = info.quickFixActionRanges;
-      if (ranges != null) {
-        ranges.removeIf((pair) -> isContributedByPlugin(pair.first, pluginDescriptor));
-      }
-      List<Pair<HighlightInfo.IntentionActionDescriptor, RangeMarker>> markers = info.quickFixActionMarkers;
-      if (markers != null) {
-        markers.removeIf((pair) -> isContributedByPlugin(pair.first, pluginDescriptor));
-      }
-    }
-  }
+  //private static void removeHighlightersContributedByPlugin(@Nonnull PluginDescriptor pluginDescriptor, RangeHighlighter[] highlighters) {
+  //  for (RangeHighlighter highlighter : highlighters) {
+  //    HighlightInfo info = HighlightInfo.fromRangeHighlighter(highlighter);
+  //    if (info == null) continue;
+  //    List<Pair<HighlightInfo.IntentionActionDescriptor, TextRange>> ranges = info.quickFixActionRanges;
+  //    if (ranges != null) {
+  //      ranges.removeIf((pair) -> isContributedByPlugin(pair.first, pluginDescriptor));
+  //    }
+  //    List<Pair<HighlightInfo.IntentionActionDescriptor, RangeMarker>> markers = info.quickFixActionMarkers;
+  //    if (markers != null) {
+  //      markers.removeIf((pair) -> isContributedByPlugin(pair.first, pluginDescriptor));
+  //    }
+  //  }
+  //}
 
-  private static boolean isContributedByPlugin(@Nonnull HighlightInfo.IntentionActionDescriptor intentionActionDescriptor, @Nonnull IdeaPluginDescriptor descriptor) {
-    IntentionAction action = intentionActionDescriptor.getAction();
-    PluginId pluginId = PluginManager.getPluginId(action.getClass());
-    return descriptor.getPluginId().equals(pluginId);
-  }
+  //private static boolean isContributedByPlugin(@Nonnull HighlightInfo.IntentionActionDescriptor intentionActionDescriptor, @Nonnull PluginDescriptor descriptor) {
+  //  IntentionAction action = intentionActionDescriptor.getAction();
+  //  PluginId pluginId = PluginManager.getPluginId(action.getClass());
+  //  return descriptor.getPluginId().equals(pluginId);
+  //}
 }
