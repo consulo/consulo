@@ -15,15 +15,14 @@
  */
 package com.intellij.dvcs.test;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Condition;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.ui.UIAccess;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 
@@ -122,11 +121,6 @@ public class MockProject implements Project {
   @Override
   public boolean isDisposed() {
     return false;
-  }
-
-  @Override
-  public <T> T[] getExtensions(@Nonnull ExtensionPointName<T> extensionPointName) {
-    throw new UnsupportedOperationException();
   }
 
   @Nonnull

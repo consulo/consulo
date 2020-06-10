@@ -16,14 +16,13 @@
 package com.intellij.openapi.extensions.impl;
 
 import com.intellij.openapi.components.ComponentManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.ExtensionsArea;
-import consulo.container.plugin.PluginId;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.container.impl.parser.ExtensionInfo;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
+import consulo.logging.Logger;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 import gnu.trove.THashMap;
 import org.jdom.Element;
@@ -31,7 +30,7 @@ import org.jdom.Element;
 import javax.annotation.Nonnull;
 import java.util.Map;
 
-public class ExtensionsAreaImpl implements ExtensionsArea {
+public class ExtensionsAreaImpl {
   private static final Logger LOG = Logger.getInstance(ExtensionsAreaImpl.class);
 
   private static final boolean DEBUG_REGISTRATION = false;
@@ -186,7 +185,6 @@ public class ExtensionsAreaImpl implements ExtensionsArea {
     }
   }
 
-  @Override
   @Nonnull
   public <T> ExtensionPointImpl<T> getExtensionPoint(@Nonnull String extensionPointName) {
     //noinspection unchecked
@@ -198,14 +196,12 @@ public class ExtensionsAreaImpl implements ExtensionsArea {
   }
 
   @Nonnull
-  @Override
   @SuppressWarnings({"unchecked"})
   public <T> ExtensionPoint<T> getExtensionPoint(@Nonnull ExtensionPointName<T> extensionPointName) {
     return getExtensionPoint(extensionPointName.getName());
   }
 
   @Nonnull
-  @Override
   public ExtensionPoint[] getExtensionPoints() {
     return myExtensionPoints.values().toArray(new ExtensionPoint[myExtensionPoints.size()]);
   }

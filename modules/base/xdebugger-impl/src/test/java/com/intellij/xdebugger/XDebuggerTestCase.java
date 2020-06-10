@@ -15,6 +15,7 @@
  */
 package com.intellij.xdebugger;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -45,7 +46,7 @@ public abstract class XDebuggerTestCase extends PlatformTestCase {
   }
 
   private static ExtensionPoint<XBreakpointType> getBreakpointTypes() {
-    return Extensions.getRootArea().getExtensionPoint(XBreakpointType.EXTENSION_POINT_NAME);
+    return Application.get().getExtensionPoint(XBreakpointType.EXTENSION_POINT_NAME);
   }
 
   @Override

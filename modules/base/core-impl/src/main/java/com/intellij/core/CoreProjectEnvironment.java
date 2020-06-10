@@ -92,7 +92,6 @@ public class CoreProjectEnvironment {
   }
 
   public <T> void registerProjectExtensionPoint(final ExtensionPointName<T> extensionPointName, final Class<? extends T> aClass) {
-    CoreApplicationEnvironment.registerExtensionPoint(myProject.getExtensionsArea(), extensionPointName, aClass);
   }
 
   public <T> void addProjectExtension(final ExtensionPointName<T> name, final T extension) {

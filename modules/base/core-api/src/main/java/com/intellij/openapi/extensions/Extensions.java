@@ -27,19 +27,6 @@ import javax.annotation.Nullable;
 public class Extensions {
   private Extensions() {
   }
-
-  @Nonnull
-  @Deprecated
-  public static ExtensionsArea getRootArea() {
-    return Application.get().getExtensionsArea();
-  }
-
-  @Nonnull
-  @Deprecated
-  public static ExtensionsArea getArea(@Nullable ComponentManager componentManager) {
-    return componentManager == null ? getRootArea() : componentManager.getExtensionsArea();
-  }
-
   @Nonnull
   @Deprecated
   public static Object[] getExtensions(@NonNls String extensionPointName) {
@@ -64,7 +51,7 @@ public class Extensions {
   @Deprecated
   public static <T> T[] getExtensions(String extensionPointName, @Nullable ComponentManager target) {
     ComponentManager componentManager = target == null ? Application.get() : target;
-    ExtensionPoint<T> extensionPoint = componentManager.getExtensionsArea().getExtensionPoint(extensionPointName);
+    ExtensionPoint<T> extensionPoint = componentManager.getExtensionPoint(ExtensionPointName.create(extensionPointName));
     return extensionPoint.getExtensions();
   }
 

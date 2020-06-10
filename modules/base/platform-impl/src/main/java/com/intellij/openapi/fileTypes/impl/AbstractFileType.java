@@ -5,7 +5,6 @@ import com.intellij.ide.highlighter.FileTypeRegistrator;
 import com.intellij.ide.highlighter.custom.SyntaxTable;
 import com.intellij.ide.highlighter.custom.impl.CustomFileTypeEditor;
 import com.intellij.lang.Commenter;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.fileTypes.ex.ExternalizableFileType;
 import com.intellij.openapi.options.ExternalInfo;
@@ -21,8 +20,8 @@ import com.intellij.util.text.StringTokenizer;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Arrays;
@@ -87,7 +86,7 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
   }
 
   void initSupport() {
-    for (FileTypeRegistrator registrator : Extensions.getRootArea().getExtensionPoint(FileTypeRegistrator.EP_NAME).getExtensions()) {
+    for (FileTypeRegistrator registrator : FileTypeRegistrator.EP_NAME.getExtensionList()) {
       registrator.initFileType(this);
     }
   }

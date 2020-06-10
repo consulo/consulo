@@ -21,6 +21,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.extensions.ExtensionPoint;
+import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
@@ -133,7 +134,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
     new ListSpeedSearch(myList, (Convertor<Object, String>)o -> o instanceof JCheckBox ? ((JCheckBox)o).getText() : null);
     panel.add(ScrollPaneFactory.createScrollPane(myList), BorderLayout.CENTER);
 
-    ExtensionPoint<LanguageExtensionPoint<LineMarkerProvider>> point = Application.get().getExtensionsArea().getExtensionPoint(LineMarkerProviders.EP_NAME);
+    ExtensionPoint<LanguageExtensionPoint<LineMarkerProvider>> point = Application.get().getExtensionPoint(ExtensionPointName.create(LineMarkerProviders.EP_NAME));
     List<LanguageExtensionPoint<LineMarkerProvider>> extensions = point.getExtensionList();
     NullableFunction<LanguageExtensionPoint<LineMarkerProvider>, PluginDescriptor> function = point1 -> {
       LineMarkerProvider instance = point1.getInstance();

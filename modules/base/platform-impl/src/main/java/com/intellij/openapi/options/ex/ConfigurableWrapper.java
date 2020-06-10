@@ -17,7 +17,6 @@ package com.intellij.openapi.options.ex;
 
 import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.options.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ArrayUtil;
@@ -28,8 +27,8 @@ import consulo.options.ProjectConfigurableEP;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
@@ -217,7 +216,7 @@ public class ConfigurableWrapper implements SearchableConfigurable {
         kids = ContainerUtil.mapNotNull(ep.getChildren(), ep1 -> ep1.isAvailable() ? (ConfigurableWrapper)wrapConfigurable(ep1) : null, EMPTY_ARRAY);
       }
       if (ep.childrenEPName != null) {
-        ExtensionPoint<Object> childrenEP = Extensions.getArea(getProject(ep)).getExtensionPoint(ep.childrenEPName);
+        ExtensionPoint<Object> childrenEP = getProject(ep).getExtensionPoint(ExtensionPointName.create(ep.childrenEPName));
         Object[] extensions = childrenEP.getExtensions();
         if (extensions.length > 0) {
           if (extensions[0] instanceof ConfigurableEP) {

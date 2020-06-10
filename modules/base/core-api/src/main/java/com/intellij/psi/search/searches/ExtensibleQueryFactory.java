@@ -16,19 +16,20 @@
 
 package com.intellij.psi.search.searches;
 
-import consulo.disposer.Disposable;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.SimpleSmartExtensionPoint;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.QueryExecutor;
 import com.intellij.util.QueryFactory;
 import com.intellij.util.SmartList;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -50,13 +51,13 @@ public class ExtensibleQueryFactory<Result, Parameters> extends QueryFactory<Res
           @Override
           @Nonnull
           protected ExtensionPoint<QueryExecutor<Result, Parameters>> getExtensionPoint() {
-            @NonNls String epName = ExtensibleQueryFactory.this.getClass().getName();
+            String epName = ExtensibleQueryFactory.this.getClass().getName();
             int pos = epName.lastIndexOf('.');
             if (pos >= 0) {
               epName = epName.substring(pos+1);
             }
             epName = epNamespace + "." + StringUtil.decapitalize(epName);
-            return Extensions.getRootArea().getExtensionPoint(epName);
+            return Application.get().getExtensionPoint(ExtensionPointName.create(epName));
           }
         };
       }

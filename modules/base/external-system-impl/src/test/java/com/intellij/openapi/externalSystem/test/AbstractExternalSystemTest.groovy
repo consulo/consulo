@@ -50,8 +50,7 @@ abstract class AbstractExternalSystemTest extends UsefulTestCase {
     projectDir.mkdirs();
     
     externalSystemManager = new TestExternalSystemManager(project)
-    def area = Application.get().getExtensionsArea();
-    externalSystemManagerEP = area.getExtensionPoint(ExternalSystemManager.EP_NAME)
+    externalSystemManagerEP = Application.get().getExtensionPoint(ExternalSystemManager.EP_NAME)
     //externalSystemManagerEP.registerExtension(externalSystemManager)
   }
 

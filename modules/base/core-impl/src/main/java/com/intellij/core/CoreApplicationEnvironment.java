@@ -29,8 +29,6 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.impl.CoreCommandProcessor;
 import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.extensions.ExtensionsArea;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeExtension;
@@ -228,20 +226,7 @@ public class CoreApplicationEnvironment {
   public <T> void addExtension(@Nonnull ExtensionPointName<T> name, @Nonnull final T extension) {
   }
 
-
-  public static <T> void registerExtensionPoint(@Nonnull ExtensionsArea area,
-                                                @Nonnull ExtensionPointName<T> extensionPointName,
-                                                @Nonnull Class<? extends T> aClass) {
-    final String name = extensionPointName.getName();
-    registerExtensionPoint(area, name, aClass);
-  }
-
-  public static <T> void registerExtensionPoint(@Nonnull ExtensionsArea area, @Nonnull String name, @Nonnull Class<? extends T> aClass) {
-
-  }
-
   public static <T> void registerApplicationExtensionPoint(@Nonnull ExtensionPointName<T> extensionPointName, @Nonnull Class<? extends T> aClass) {
-    registerExtensionPoint(Extensions.getRootArea(), extensionPointName, aClass);
   }
 
   @Nonnull

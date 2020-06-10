@@ -19,8 +19,6 @@ import com.intellij.mock.MockApplicationEx;
 import com.intellij.mock.MockProjectEx;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.extensions.ExtensionsArea;
 import com.intellij.openapi.extensions.LoadingOrder;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.openapi.vfs.encoding.EncodingManagerImpl;
@@ -30,6 +28,7 @@ import javax.annotation.Nonnull;
 /**
  * @author yole
  */
+@Deprecated
 public abstract class PlatformLiteFixture extends UsefulTestCase {
   protected MockProjectEx myProject;
 
@@ -57,36 +56,11 @@ public abstract class PlatformLiteFixture extends UsefulTestCase {
   }
 
   protected <T> void registerExtension(final ExtensionPointName<T> extensionPointName, @Nonnull final T t) {
-    registerExtension(Extensions.getRootArea(), extensionPointName, t);
   }
 
   protected <T> void registerExtension(final ExtensionPointName<T> extensionPointName, @Nonnull final T t, @Nonnull LoadingOrder loadingOrder) {
-    registerExtension(Extensions.getRootArea(), extensionPointName, t, loadingOrder);
-  }
-
-  public <T> void registerExtension(final ExtensionsArea area, final ExtensionPointName<T> name, final T t) {
-    registerExtensionPoint(area, name, (Class<T>)t.getClass());
-
-
-    PsiTestExtensionUtil.registerExtension(area, name, t, myTestRootDisposable);
-  }
-
-  public <T> void registerExtension(final ExtensionsArea area, final ExtensionPointName<T> name, final T t, @Nonnull LoadingOrder loadingOrder) {
-    registerExtensionPoint(area, name, (Class<T>)t.getClass());
-
-
-    PsiTestExtensionUtil.registerExtension(area, name, t, myTestRootDisposable, loadingOrder);
   }
 
   protected <T> void registerExtensionPoint(final ExtensionPointName<T> extensionPointName, final Class<T> aClass) {
-    registerExtensionPoint(Extensions.getRootArea(), extensionPointName, aClass);
-  }
-
-  protected <T> void registerExtensionPoint(final ExtensionsArea area, final ExtensionPointName<T> extensionPointName, final Class<? extends T> aClass) {
-    final String name = extensionPointName.getName();
-    //if (!area.hasExtensionPoint(name)) {
-    //  ExtensionPoint.Kind kind = aClass.isInterface() || (aClass.getModifiers() & Modifier.ABSTRACT) != 0 ? ExtensionPoint.Kind.INTERFACE : ExtensionPoint.Kind.BEAN_CLASS;
-    //  //area.registerExtensionPoint(name, aClass.getName(), kind);
-    //}
   }
 }

@@ -19,29 +19,28 @@
  */
 package com.intellij.openapi.util;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.util.KeyedLazyInstance;
 import com.intellij.util.SmartList;
-import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NonNls;
+import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class KeyedExtensionCollector<T, KeyT> {
   private static final Logger LOG = Logger.getInstance(KeyedExtensionCollector.class);
 
-  private final ConcurrentMap<String, List<T>> myCache = ContainerUtil.newConcurrentMap();
+  private final ConcurrentMap<String, List<T>> myCache = new ConcurrentHashMap<>();
 
   private final ExtensionPointName<? extends KeyedLazyInstance<T>> myEPName;
 
-  public KeyedExtensionCollector(@NonNls @Nonnull String epName) {
+  public KeyedExtensionCollector(@Nonnull String epName) {
     myEPName = ExtensionPointName.create(epName);
   }
 

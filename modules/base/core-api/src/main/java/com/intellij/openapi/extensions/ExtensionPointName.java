@@ -20,7 +20,6 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.ComponentManager;
 import consulo.annotation.DeprecationInfo;
 import consulo.container.plugin.PluginDescriptor;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,11 +35,12 @@ public class ExtensionPointName<T> {
 
   @Deprecated
   @DeprecationInfo("Use #create()")
-  public ExtensionPointName(@NonNls final String name) {
+  public ExtensionPointName(@Nonnull String name) {
     myName = name;
   }
 
-  public static <T> ExtensionPointName<T> create(@NonNls final String name) {
+  @SuppressWarnings("deprecation")
+  public static <T> ExtensionPointName<T> create(@Nonnull String name) {
     return new ExtensionPointName<>(name);
   }
 
@@ -70,7 +70,7 @@ public class ExtensionPointName<T> {
   }
 
   public boolean hasAnyExtensions(@Nonnull ComponentManager manager) {
-    return manager.getExtensionsArea().getExtensionPoint(this).hasAnyExtensions();
+    return manager.getExtensionPoint(this).hasAnyExtensions();
   }
 
   @Nonnull
@@ -114,6 +114,6 @@ public class ExtensionPointName<T> {
   }
 
   public void processWithPluginDescriptor(@Nonnull BiConsumer<? super T, ? super PluginDescriptor> consumer) {
-    Application.get().getExtensionsArea().getExtensionPoint(this).processWithPluginDescriptor(consumer);
+    Application.get().getExtensionPoint(this).processWithPluginDescriptor(consumer);
   }
 }

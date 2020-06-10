@@ -15,11 +15,10 @@
  */
 package com.intellij.mock;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
+import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -93,12 +92,6 @@ public class MockApplicationEx extends MockApplication implements ApplicationEx 
                                                      boolean canBeCanceled,
                                                      Project project) {
     return false;
-  }
-
-  @Nonnull
-  @Override
-  public <T> T[] getExtensions(@Nonnull final ExtensionPointName<T> extensionPointName) {
-    return Extensions.getRootArea().getExtensionPoint(extensionPointName).getExtensions();
   }
 
   @RequiredUIAccess

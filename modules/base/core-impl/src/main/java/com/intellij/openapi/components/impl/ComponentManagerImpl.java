@@ -21,8 +21,8 @@ import com.intellij.openapi.components.BaseComponent;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.components.NamedComponent;
 import com.intellij.openapi.components.ServiceDescriptor;
+import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.ExtensionsArea;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.extensions.impl.ExtensionPointImpl;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
@@ -406,9 +406,14 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   @Nonnull
+  public ExtensionPoint[] getExtensionPoints() {
+    return myExtensionsArea.getExtensionPoints();
+  }
+
+  @Nonnull
   @Override
-  public ExtensionsArea getExtensionsArea() {
-    return myExtensionsArea;
+  public <T> ExtensionPoint<T> getExtensionPoint(@Nonnull ExtensionPointName<T> extensionPointName) {
+    return myExtensionsArea.getExtensionPoint(extensionPointName);
   }
 
   @Override

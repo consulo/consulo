@@ -17,9 +17,8 @@
 package com.intellij.usages.impl;
 
 import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.extensions.ExtensionsArea;
 import com.intellij.openapi.fileEditor.FileEditorLocation;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
@@ -107,8 +106,7 @@ public abstract class UsageNodeTreeBuilderTest extends LightPlatformTestCase {
     UsageViewPresentation presentation = new UsageViewPresentation();
     presentation.setUsagesString("searching for mock usages");
 
-    ExtensionsArea area = Extensions.getRootArea();
-    ExtensionPoint<UsageGroupingRuleProvider> point = area.getExtensionPoint(UsageGroupingRuleProvider.EP_NAME);
+    ExtensionPoint<UsageGroupingRuleProvider> point = Application.get().getExtensionPoint(UsageGroupingRuleProvider.EP_NAME);
     UsageGroupingRuleProvider provider = new UsageGroupingRuleProvider() {
       @Nonnull
       @Override

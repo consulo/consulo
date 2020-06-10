@@ -16,16 +16,16 @@
 package com.intellij.openapi.components;
 
 import com.intellij.openapi.application.Application;
+import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.ExtensionsArea;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
-import consulo.disposer.Disposable;
-import consulo.util.dataholder.UserDataHolder;
 import com.intellij.util.messages.MessageBus;
+import consulo.disposer.Disposable;
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerOwner;
+import consulo.util.dataholder.UserDataHolder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,11 +53,6 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
     throw new UnsupportedOperationException();
   }
 
-  @Nonnull
-  default ExtensionsArea getExtensionsArea() {
-    throw new UnsupportedOperationException();
-  }
-
   /**
    * Gets the component by its interface class.
    *
@@ -80,17 +75,22 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
   @Nonnull
   @Deprecated
   default <T> T[] getExtensions(@Nonnull ExtensionPointName<T> extensionPointName) {
-    return getExtensionsArea().getExtensionPoint(extensionPointName).getExtensions();
+    return getExtensionPoint(extensionPointName).getExtensions();
   }
 
   @Nonnull
   default <T> List<T> getExtensionList(@Nonnull ExtensionPointName<T> extensionPointName) {
-    return getExtensionsArea().getExtensionPoint(extensionPointName).getExtensionList();
+    return getExtensionPoint(extensionPointName).getExtensionList();
+  }
+
+  @Nonnull
+  default <T> ExtensionPoint<T> getExtensionPoint(@Nonnull ExtensionPointName<T> extensionPointName) {
+    throw new UnsupportedOperationException();
   }
 
   @Nullable
   default <T, K extends T> K findExtension(@Nonnull ExtensionPointName<T> extensionPointName, @Nonnull Class<K> extensionClass) {
-    return getExtensionsArea().getExtensionPoint(extensionPointName).findExtension(extensionClass);
+    return getExtensionPoint(extensionPointName).findExtension(extensionClass);
   }
 
   /**

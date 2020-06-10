@@ -15,14 +15,13 @@
  */
 package com.intellij.mock;
 
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.disposer.Disposable;
+import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NonNls;
 
@@ -127,11 +126,6 @@ public class MockProject extends MockComponentManager implements Project {
   @Override
   public AsyncResult<Void> saveAsync(UIAccess uiAccess) {
     return AsyncResult.resolved();
-  }
-
-  @Override
-  public <T> T[] getExtensions(@Nonnull final ExtensionPointName<T> extensionPointName) {
-    return getExtensionsArea().getExtensionPoint(extensionPointName).getExtensions();
   }
 
   public void projectOpened() {
