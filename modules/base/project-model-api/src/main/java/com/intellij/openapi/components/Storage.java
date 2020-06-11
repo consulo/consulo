@@ -24,7 +24,7 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Storage {
-  @NonNls String value() default "";
+  String value() default "";
 
   @Deprecated
   @DeprecationInfo("Use #value()")

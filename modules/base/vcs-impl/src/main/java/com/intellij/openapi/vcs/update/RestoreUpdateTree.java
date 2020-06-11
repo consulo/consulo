@@ -15,30 +15,31 @@
  */
 package com.intellij.openapi.vcs.update;
 
-import com.intellij.openapi.components.ProjectComponent;
+import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectReloadState;
 import com.intellij.openapi.startup.StartupManager;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.JDOMExternalizable;
-import com.intellij.openapi.util.RoamingTypeDisabled;
-import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.changes.committed.CommittedChangesCache;
 import com.intellij.openapi.vcs.ex.ProjectLevelVcsManagerEx;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class RestoreUpdateTree implements ProjectComponent, JDOMExternalizable, RoamingTypeDisabled {
-  private final Project myProject;
+@State(name = "RestoreUpdateTree", storages = @Storage(value = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED))
+public class RestoreUpdateTree implements ProjectComponent, PersistentStateComponent<Element> {
+  public static RestoreUpdateTree getInstance(Project project) {
+    return project.getComponent(RestoreUpdateTree.class);
+  }
 
+  private static final String UPDATE_INFO = "UpdateInfo";
+
+  private final Project myProject;
   private UpdateInfo myUpdateInfo;
-  @NonNls private static final String UPDATE_INFO = "UpdateInfo";
 
   @Inject
   public RestoreUpdateTree(Project project) {
@@ -67,37 +68,30 @@ public class RestoreUpdateTree implements ProjectComponent, JDOMExternalizable, 
     });
   }
 
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "RestoreUpdateTree";
-  }
-
-  @Override
-  public void readExternal(Element element) throws InvalidDataException {
-    Element child = element.getChild(UPDATE_INFO);
-    if (child != null) {
-        UpdateInfo updateInfo = new UpdateInfo(myProject);
-        updateInfo.readExternal(child);
-        myUpdateInfo = updateInfo;
-      }
-  }
-
-  @Override
-  public void writeExternal(Element element) throws WriteExternalException {
-    if (myUpdateInfo != null) {
-      Element child = new Element(UPDATE_INFO);
-      element.addContent(child);
-      myUpdateInfo.writeExternal(child);
-    }
-  }
-
-
-  public static RestoreUpdateTree getInstance(Project project) {
-    return project.getComponent(RestoreUpdateTree.class);
-  }
-
   public void registerUpdateInformation(UpdatedFiles updatedFiles, ActionInfo actionInfo) {
     myUpdateInfo = new UpdateInfo(myProject, updatedFiles, actionInfo);
+  }
+
+  @Nullable
+  @Override
+  public Element getState() {
+    if (myUpdateInfo != null) {
+      Element child = new Element(UPDATE_INFO);
+      myUpdateInfo.writeExternal(child);
+
+      return new Element("state").addContent(child);
+    }
+
+    return null;
+  }
+
+  @Override
+  public void loadState(Element state) {
+    Element child = state.getChild(UPDATE_INFO);
+    if (child != null) {
+      UpdateInfo updateInfo = new UpdateInfo(myProject);
+      updateInfo.readExternal(child);
+      myUpdateInfo = updateInfo;
+    }
   }
 }
