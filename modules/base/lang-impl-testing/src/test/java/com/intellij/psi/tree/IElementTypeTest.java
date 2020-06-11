@@ -29,7 +29,7 @@ public abstract class IElementTypeTest extends LightPlatformCodeInsightFixtureTe
   public void testCount() throws Exception {
     int count = IElementType.getAllocatedTypesCount();
     System.out.println("Preloaded: " + count +" element types");
-    List<LanguageExtensionPoint> extensions = ExtensionPointName.create("com.intellij.lang.parserDefinition").getExtensionList();
+    List<LanguageExtensionPoint> extensions = ExtensionPointName.<LanguageExtensionPoint>create("com.intellij.lang.parserDefinition").getExtensionList();
     System.out.println("ParserDefinitions: " + extensions.size());
 
     THashMap<Language, String> languageMap = new THashMap<Language, String>();
