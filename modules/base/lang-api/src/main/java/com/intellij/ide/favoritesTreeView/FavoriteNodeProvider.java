@@ -37,12 +37,12 @@ import java.util.Collection;
  * @author yole
  */
 public abstract class FavoriteNodeProvider {
-  public static final ExtensionPointName<FavoriteNodeProvider> EP_NAME = new ExtensionPointName<FavoriteNodeProvider>("com.intellij.favoriteNodeProvider");
+  public static final ExtensionPointName<FavoriteNodeProvider> EP_NAME = ExtensionPointName.create("com.intellij.favoriteNodeProvider");
 
   @Nullable
   public abstract Collection<AbstractTreeNode> getFavoriteNodes(DataContext context, final ViewSettings viewSettings);
 
-  @javax.annotation.Nullable
+  @Nullable
   public AbstractTreeNode createNode(final Project project, final Object element, final ViewSettings viewSettings) {
     return null;
   }
@@ -98,7 +98,7 @@ public abstract class FavoriteNodeProvider {
    * @param element
    * @return the URL, or null if the element is not supported by this provider.
    */
-  @javax.annotation.Nullable
+  @Nullable
   @NonNls
   public abstract String getElementUrl(final Object element);
 
@@ -123,7 +123,7 @@ public abstract class FavoriteNodeProvider {
   @Nullable
   public abstract Object[] createPathFromUrl(final Project project, final String url, final String moduleName);
 
-  @javax.annotation.Nullable
+  @Nullable
   public PsiElement getPsiElement(final Object element) {
     if (element instanceof PsiElement) {
       return (PsiElement)element;

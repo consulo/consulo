@@ -40,8 +40,7 @@ import java.util.List;
  */
 public class PsiReferenceProviderBean extends AbstractExtensionPointBean implements KeyedLazyInstance<PsiReferenceProviderBean> {
 
-  public static final ExtensionPointName<PsiReferenceProviderBean> EP_NAME =
-    new ExtensionPointName<PsiReferenceProviderBean>("com.intellij.psi.referenceProvider");
+  public static final ExtensionPointName<PsiReferenceProviderBean> EP_NAME = ExtensionPointName.create("com.intellij.psi.referenceProvider");
 
   @Attribute("language")
   public String language = Language.ANY.getID();

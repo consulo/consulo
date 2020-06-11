@@ -28,7 +28,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import javax.annotation.Nullable;
 
 public interface UsageTypeProvider {
-  ExtensionPointName<UsageTypeProvider> EP_NAME = new ExtensionPointName<UsageTypeProvider>("com.intellij.usageTypeProvider");
+  ExtensionPointName<UsageTypeProvider> EP_NAME = ExtensionPointName.create("com.intellij.usageTypeProvider");
 
   @Nullable
   UsageType getUsageType(PsiElement element);

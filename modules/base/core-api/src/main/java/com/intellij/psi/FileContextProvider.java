@@ -28,7 +28,7 @@ import java.util.Collection;
  */
 public abstract class FileContextProvider {
 
-  private final static ExtensionPointName<FileContextProvider> EP_NAME = new ExtensionPointName<FileContextProvider>("com.intellij.fileContextProvider");
+  private final static ExtensionPointName<FileContextProvider> EP_NAME = ExtensionPointName.create("com.intellij.fileContextProvider");
 
   @Nullable
   public static FileContextProvider getProvider(final @Nonnull PsiFile file) {

@@ -26,11 +26,11 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nullable;
 
 public interface KeymapExtension {
-  @NonNls ExtensionPointName<KeymapExtension> EXTENSION_POINT_NAME = new ExtensionPointName<KeymapExtension>("com.intellij.keymapExtension");
+  ExtensionPointName<KeymapExtension> EXTENSION_POINT_NAME = ExtensionPointName.create("com.intellij.keymapExtension");
 
   @Nullable
   KeymapGroup createGroup(Condition<AnAction> filtered, Project project);

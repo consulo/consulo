@@ -19,7 +19,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import javax.annotation.Nullable;
 
 public interface SelectInTarget {
-  ExtensionPointName<SelectInTarget> EP_NAME = new ExtensionPointName<SelectInTarget>("com.intellij.selectInTarget");
+  ExtensionPointName<SelectInTarget> EP_NAME = ExtensionPointName.create("com.intellij.selectInTarget");
 
   String toString();
 

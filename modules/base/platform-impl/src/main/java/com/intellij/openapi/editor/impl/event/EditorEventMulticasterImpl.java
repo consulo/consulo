@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.impl.event;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.editor.ex.*;
@@ -9,16 +8,17 @@ import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.EditorDocumentPriorities;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.util.EventDispatcher;
+import consulo.disposer.Disposable;
 import kava.beans.PropertyChangeListener;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 public class EditorEventMulticasterImpl implements EditorEventMulticasterEx {
-  private static final ExtensionPointName<EditorMouseListener> MOUSE_EP = new ExtensionPointName<>("com.intellij.editorFactoryMouseListener");
-  private static final ExtensionPointName<EditorMouseMotionListener> MOUSE_MOTION_EP = new ExtensionPointName<>("com.intellij.editorFactoryMouseMotionListener");
-  private static final ExtensionPointName<DocumentListener> DOCUMENT_EP = new ExtensionPointName<>("com.intellij.editorFactoryDocumentListener");
+  private static final ExtensionPointName<EditorMouseListener> MOUSE_EP = ExtensionPointName.create("com.intellij.editorFactoryMouseListener");
+  private static final ExtensionPointName<EditorMouseMotionListener> MOUSE_MOTION_EP = ExtensionPointName.create("com.intellij.editorFactoryMouseMotionListener");
+  private static final ExtensionPointName<DocumentListener> DOCUMENT_EP = ExtensionPointName.create("com.intellij.editorFactoryDocumentListener");
 
   private final EventDispatcher<DocumentListener> myDocumentMulticaster = EventDispatcher.create(DocumentListener.class);
   private final EventDispatcher<PrioritizedInternalDocumentListener> myPrioritizedDocumentMulticaster =

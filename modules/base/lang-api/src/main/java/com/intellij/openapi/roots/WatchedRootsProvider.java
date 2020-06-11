@@ -25,7 +25,7 @@ import java.util.Set;
  * @since 27-Dec-2007
  */
 public interface WatchedRootsProvider {
-  ExtensionPointName<WatchedRootsProvider> EP_NAME = new ExtensionPointName<WatchedRootsProvider>("com.intellij.roots.watchedRootsProvider");
+  ExtensionPointName<WatchedRootsProvider> EP_NAME = ExtensionPointName.create("com.intellij.roots.watchedRootsProvider");
 
   @Nonnull
   Set<String> getRootsToWatch();

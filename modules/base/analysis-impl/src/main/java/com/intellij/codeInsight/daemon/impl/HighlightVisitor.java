@@ -23,7 +23,7 @@ import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
 
 public interface HighlightVisitor {
-  ExtensionPointName<HighlightVisitor> EP_HIGHLIGHT_VISITOR = new ExtensionPointName<HighlightVisitor>("com.intellij.highlightVisitor");
+  ExtensionPointName<HighlightVisitor> EP_HIGHLIGHT_VISITOR = ExtensionPointName.create("com.intellij.highlightVisitor");
 
   boolean suitableForFile(@Nonnull PsiFile file);
   void visit(@Nonnull PsiElement element);
