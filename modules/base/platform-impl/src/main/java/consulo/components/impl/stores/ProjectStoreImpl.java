@@ -30,7 +30,6 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.SmartList;
 import com.intellij.util.messages.MessageBus;
 import consulo.application.AccessRule;
 import consulo.components.impl.stores.storage.ProjectStateStorageManager;
@@ -254,48 +253,9 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
     if (storages.length == 1) {
       return storages;
     }
+
     assert storages.length > 0;
-
-    if (operation == StateStorageOperation.READ) {
-      List<Storage> result = new SmartList<>();
-      for (int i = storages.length - 1; i >= 0; i--) {
-        Storage storage = storages[i];
-        if (storage.scheme() == StorageScheme.DIRECTORY_BASED) {
-          result.add(storage);
-        }
-      }
-
-      for (Storage storage : storages) {
-        if (storage.scheme() == StorageScheme.DEFAULT) {
-          result.add(storage);
-        }
-      }
-
-      return result.toArray(new Storage[result.size()]);
-    }
-    else if (operation == StateStorageOperation.WRITE) {
-      List<Storage> result = new SmartList<>();
-      for (Storage storage : storages) {
-        if (storage.scheme() == StorageScheme.DIRECTORY_BASED) {
-          result.add(storage);
-        }
-      }
-
-      if (!result.isEmpty()) {
-        return result.toArray(new Storage[result.size()]);
-      }
-
-      for (Storage storage : storages) {
-        if (storage.scheme() == StorageScheme.DEFAULT) {
-          result.add(storage);
-        }
-      }
-
-      return result.toArray(new Storage[result.size()]);
-    }
-    else {
-      return new Storage[]{};
-    }
+    return storages;
   }
 
   @Override

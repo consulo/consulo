@@ -17,7 +17,6 @@
 package com.intellij.openapi.components;
 
 import consulo.annotation.DeprecationInfo;
-import org.jetbrains.annotations.NonNls;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -28,10 +27,7 @@ public @interface Storage {
 
   @Deprecated
   @DeprecationInfo("Use #value()")
-  @NonNls String file() default "";
-
-  @Deprecated
-  StorageScheme scheme() default StorageScheme.DEFAULT;
+  String file() default "";
 
   /**
    * If deprecated: Data will be removed on write. And ignored on read if (and only if) new storage exists.

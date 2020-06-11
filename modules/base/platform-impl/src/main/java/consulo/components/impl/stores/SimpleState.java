@@ -44,11 +44,6 @@ public class SimpleState implements State {
     }
 
     @Override
-    public StorageScheme scheme() {
-      return StorageScheme.DIRECTORY_BASED;
-    }
-
-    @Override
     public boolean deprecated() {
       return false;
     }
