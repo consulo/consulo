@@ -84,16 +84,6 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.internal.statistic.persistence.UsageStatisticsPersistenceComponent</interface-class>
-      <implementation-class>com.intellij.internal.statistic.persistence.UsageStatisticsPersistenceComponent</implementation-class>
-    </component>
-
-    <component>
-      <interface-class>com.intellij.internal.statistic.persistence.ApplicationStatisticsPersistenceComponent</interface-class>
-      <implementation-class>com.intellij.internal.statistic.persistence.ApplicationStatisticsPersistenceComponent</implementation-class>
-    </component>
-
-    <component>
       <interface-class>com.intellij.ide.ClipboardSynchronizer</interface-class>
       <implementation-class>com.intellij.ide.ClipboardSynchronizer</implementation-class>
     </component>

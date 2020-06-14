@@ -19,7 +19,6 @@ package com.intellij.internal.statistic.persistence;
 import com.intellij.internal.statistic.beans.ConvertUsagesUtil;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.internal.statistic.configurable.SendPeriod;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ApplicationProperties;
@@ -54,7 +53,7 @@ public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersiste
   private String mySecretKey;
 
   public UsageStatisticsPersistenceComponent() {
-    if (ApplicationProperties.isInSandbox() || ApplicationManager.getApplication().isInternal()) {
+    if (ApplicationProperties.isInSandbox()) {
       myAllowed = false;
     }
   }

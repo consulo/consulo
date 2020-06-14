@@ -38,6 +38,7 @@ import consulo.ui.UIAccess;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.concurrent.Future;
@@ -49,12 +50,12 @@ public class StatisticsSendManager implements Disposable {
 
   private static final int DELAY_IN_MIN = 10;
 
-  private final UsageStatisticsPersistenceComponent myUsageStatisticsComponent;
+  private final Provider<UsageStatisticsPersistenceComponent> myUsageStatisticsComponent;
 
   private Future<?> myFuture;
 
   @Inject
-  private StatisticsSendManager(Application application, UsageStatisticsPersistenceComponent usageStatisticsComponent) {
+  private StatisticsSendManager(Application application, Provider<UsageStatisticsPersistenceComponent> usageStatisticsComponent) {
     myUsageStatisticsComponent = usageStatisticsComponent;
 
     application.getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
@@ -83,7 +84,7 @@ public class StatisticsSendManager implements Disposable {
   }
 
   private void runStatisticsService() {
-    if(!myUsageStatisticsComponent.isAllowed()) {
+    if(!myUsageStatisticsComponent.get().isAllowed()) {
       if (myFuture != null) {
         myFuture.cancel(false);
         myFuture = null;
@@ -102,7 +103,7 @@ public class StatisticsSendManager implements Disposable {
       return;
     }
 
-    if (myUsageStatisticsComponent.isTimeToSend()) {
+    if (myUsageStatisticsComponent.get().isTimeToSend()) {
       runWithDelay();
     }
   }
@@ -110,9 +111,9 @@ public class StatisticsSendManager implements Disposable {
   private void runWithDelay() {
     myFuture = AppExecutorUtil.getAppScheduledExecutorService().schedule((Runnable)() -> {
       try {
-        sendNow();
-
-        myUsageStatisticsComponent.setSentTime(System.currentTimeMillis());
+        UsageStatisticsPersistenceComponent component = myUsageStatisticsComponent.get();
+        
+        sendNow(component);
       }
       finally {
         myFuture = null;
@@ -120,15 +121,18 @@ public class StatisticsSendManager implements Disposable {
     }, DELAY_IN_MIN, TimeUnit.MINUTES);
   }
 
-  public void sendNow() {
-    StatisticsBean bean = SendStatisticsUtil.getBean();
+  public void sendNow(UsageStatisticsPersistenceComponent component) {
+    StatisticsBean bean = SendStatisticsUtil.getBean(component);
 
     if (bean.groups.length == 0) {
+      component.setSentTime(System.currentTimeMillis());
       return;
     }
 
     try {
       WebServiceApiSender.doPost(WebServiceApi.STATISTICS_API, "push", bean);
+
+      component.setSentTime(System.currentTimeMillis());
     }
     catch (IOException e) {
       LOG.warn(e);

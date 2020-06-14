@@ -16,20 +16,11 @@
 
 package com.intellij.internal.statistic.persistence;
 
-import com.intellij.ide.AppLifecycleListener;
-import com.intellij.internal.statistic.AbstractApplicationUsagesCollector;
-import com.intellij.internal.statistic.UsagesCollector;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.HashSet;
-import com.intellij.util.messages.MessageBus;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -41,7 +32,9 @@ import java.util.Set;
 @State(name = "StatisticsApplicationUsages", storages = @Storage(value = "statistics.application.usages.xml", roamingType = RoamingType.DISABLED))
 @Singleton
 public class ApplicationStatisticsPersistenceComponent extends ApplicationStatisticsPersistence implements PersistentStateComponent<Element> {
-  private boolean persistOnClosing = !ApplicationManager.getApplication().isUnitTestMode();
+  public static ApplicationStatisticsPersistenceComponent getInstance() {
+    return ServiceManager.getService(ApplicationStatisticsPersistenceComponent.class);
+  }
 
   private static final String TOKENIZER = ",";
 
@@ -50,13 +43,6 @@ public class ApplicationStatisticsPersistenceComponent extends ApplicationStatis
   private static final String PROJECT_TAG = "project";
   private static final String PROJECT_ID_ATTR = "id";
   private static final String VALUES_ATTR = "values";
-
-  public ApplicationStatisticsPersistenceComponent() {
-  }
-
-  public static ApplicationStatisticsPersistenceComponent getInstance() {
-    return ServiceManager.getService(ApplicationStatisticsPersistenceComponent.class);
-  }
 
   @Override
   public void loadState(final Element element) {
@@ -146,49 +132,5 @@ public class ApplicationStatisticsPersistenceComponent extends ApplicationStatis
         return value > 1 ? key + "=" + value : key;
       }
     }, TOKENIZER);
-  }
-
-  @Override
-  public void afterLoadState() {
-    onAppClosing();
-    onProjectClosing();
-  }
-
-  private void onProjectClosing() {
-    ProjectManager.getInstance().addProjectManagerListener(new ProjectManagerListener() {
-      @Override
-      public void projectClosing(Project project) {
-        if (project != null && project.isInitialized()) {
-          if (persistOnClosing) {
-            doPersistProjectUsages(project);
-          }
-        }
-      }
-    });
-  }
-
-  private static void doPersistProjectUsages(@Nonnull Project project) {
-    if (DumbService.isDumb(project)) return;
-    for (UsagesCollector usagesCollector : UsagesCollector.EP_NAME.getExtensionList()) {
-      if (usagesCollector instanceof AbstractApplicationUsagesCollector) {
-        ((AbstractApplicationUsagesCollector)usagesCollector).persistProjectUsages(project);
-      }
-    }
-  }
-
-  private void onAppClosing() {
-    final MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
-
-    messageBus.connect().subscribe(AppLifecycleListener.TOPIC, new AppLifecycleListener() {
-      @Override
-      public void appClosing() {
-        for (Project project : ProjectManager.getInstance().getOpenProjects()) {
-          if (project.isInitialized()) {
-            doPersistProjectUsages(project);
-          }
-        }
-        persistOnClosing = false;
-      }
-    });
   }
 }

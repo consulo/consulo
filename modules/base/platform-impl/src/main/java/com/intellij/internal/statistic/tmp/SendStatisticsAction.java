@@ -15,16 +15,27 @@
  */
 package com.intellij.internal.statistic.tmp;
 
+import com.intellij.internal.statistic.persistence.UsageStatisticsPersistenceComponent;
 import com.intellij.internal.statistic.updater.StatisticsSendManager;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import consulo.ui.Alerts;
 import consulo.ui.annotation.RequiredUIAccess;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 public class SendStatisticsAction extends DumbAwareAction {
+  private final Provider<UsageStatisticsPersistenceComponent> myUsageStatisticsPersistenceComponent;
+  private final Provider<StatisticsSendManager> myStatisticsSendManager;
+
+  @Inject
+  public SendStatisticsAction(Provider<UsageStatisticsPersistenceComponent> usageStatisticsPersistenceComponent, Provider<StatisticsSendManager> statisticsSendManager) {
+    myUsageStatisticsPersistenceComponent = usageStatisticsPersistenceComponent;
+    myStatisticsSendManager = statisticsSendManager;
+  }
 
   @RequiredUIAccess
   @Override
@@ -34,9 +45,7 @@ public class SendStatisticsAction extends DumbAwareAction {
       return;
     }
 
-    StatisticsSendManager statisticsProjectComponent = ServiceManager.getService(StatisticsSendManager.class);
-
-    statisticsProjectComponent.sendNow();
+    myStatisticsSendManager.get().sendNow(myUsageStatisticsPersistenceComponent.get());
 
     Alerts.okInfo("Sended");
   }

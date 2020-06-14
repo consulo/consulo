@@ -1285,6 +1285,10 @@
                         serviceImplementation="com.intellij.reporting.FreezeLoggerImpl"/>
     <applicationService serviceInterface="com.intellij.featureStatistics.ProductivityFeaturesRegistry"
                         serviceImplementation="com.intellij.featureStatistics.ProductivityFeaturesRegistryImpl"/>
+    <applicationService serviceImplementation="com.intellij.internal.statistic.persistence.ApplicationStatisticsPersistenceComponent" />
+    <applicationService serviceImplementation="com.intellij.internal.statistic.persistence.UsageStatisticsPersistenceComponent" />
+    <applicationService serviceImplementation="consulo.internal.statistic.ApplicationStatisticsListeners" lazy="false" />
+
     <applicationService serviceInterface="com.intellij.internal.psiView.PsiViewerSettings"
                         serviceImplementation="com.intellij.internal.psiView.PsiViewerSettings"/>
     <applicationService serviceInterface="com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceCompletion"

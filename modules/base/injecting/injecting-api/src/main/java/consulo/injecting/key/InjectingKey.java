@@ -16,6 +16,7 @@
 package consulo.injecting.key;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -23,12 +24,15 @@ import javax.annotation.Nonnull;
  */
 public interface InjectingKey<T> {
   @Nonnull
-  static <K> InjectingKey<K> of(@Nonnull Class<K> clazz) {
+  static <K> InjectingKey<K> of(Class<K> clazz) {
+    Objects.requireNonNull(clazz);
     return new SimpleInjectingKey<>(clazz);
   }
 
   @Nonnull
-  static <K> InjectingKey<K> of(@Nonnull String className, @Nonnull ClassLoader classLoader) {
+  static <K> InjectingKey<K> of(String className, ClassLoader classLoader) {
+    Objects.requireNonNull(className);
+    Objects.requireNonNull(classLoader);
     return new LazyInjectingKey<>(className, classLoader);
   }
 

@@ -37,9 +37,7 @@ public class SendStatisticsUtil {
   private static final Logger LOG = Logger.getInstance(SendStatisticsUtil.class);
 
   @Nonnull
-  public static StatisticsBean getBean() {
-    UsageStatisticsPersistenceComponent component = UsageStatisticsPersistenceComponent.getInstance();
-
+  public static StatisticsBean getBean(UsageStatisticsPersistenceComponent component) {
     Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
 
     final Map<String, Set<PatchedUsage>> map = getPatchedUsages(Collections.emptySet(), openProjects);
