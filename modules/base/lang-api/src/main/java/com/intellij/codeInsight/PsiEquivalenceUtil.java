@@ -40,7 +40,7 @@ import java.util.List;
  * @author ven
  */
 public class PsiEquivalenceUtil {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.PsiEquivalenceUtil");
+  private static final Logger LOG = Logger.getInstance(PsiEquivalenceUtil.class);
 
   public static boolean areElementsEquivalent(@Nonnull PsiElement element1,
                                               @Nonnull PsiElement element2,

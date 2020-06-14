@@ -27,7 +27,7 @@ import java.util.List;
 *         Time: 3:42 PM
 */
 public class ContentsLines {
-  private final static Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.actions.ContentsLines");
+  private final static Logger LOG = Logger.getInstance(ContentsLines.class);
 
   private final SplittingIterator mySplittingIterator;
   private final List<Integer> myLinesStartOffsets;

@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 @Singleton
 public class JobLauncherImpl extends JobLauncher {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.concurrency.JobLauncherImpl");
+  private static final Logger LOG = Logger.getInstance(JobLauncherImpl.class);
   static final int CORES_FORK_THRESHOLD = 1;
 
   @Override

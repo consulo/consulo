@@ -38,7 +38,7 @@ public class SharedIndicesData {
   static final boolean ourFileSharedIndicesEnabled = SystemProperties.getBooleanProperty("idea.shared.input.index.enabled", false);
   static final boolean DO_CHECKS = ourFileSharedIndicesEnabled && SystemProperties.getBooleanProperty("idea.shared.input.index.checked", false);
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.indexing.impl.MapReduceIndex");
+  private static final Logger LOG = Logger.getInstance(SharedIndicesData.class);
 
   static {
     if (ourFileSharedIndicesEnabled) {

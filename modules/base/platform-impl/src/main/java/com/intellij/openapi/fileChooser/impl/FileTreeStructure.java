@@ -18,17 +18,16 @@ package com.intellij.openapi.fileChooser.impl;
 
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
-import consulo.logging.Logger;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.fileChooser.ex.FileNodeDescriptor;
 import com.intellij.openapi.fileChooser.ex.RootFileElement;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import consulo.fileTypes.ArchiveFileType;
+import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import consulo.vfs.ArchiveFileSystem;
 
@@ -42,7 +41,7 @@ import java.util.Set;
  * @author Yura Cangea
  */
 public class FileTreeStructure extends AbstractTreeStructure {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.chooser.FileTreeStructure");
+  private static final Logger LOG = Logger.getInstance(FileTreeStructure.class);
 
   private final RootFileElement myRootElement;
   private final FileChooserDescriptor myChooserDescriptor;

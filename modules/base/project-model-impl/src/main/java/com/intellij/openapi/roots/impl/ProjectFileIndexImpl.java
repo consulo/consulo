@@ -42,7 +42,7 @@ import java.util.*;
 
 @Singleton
 public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIndex {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.impl.ProjectFileIndexImpl");
+  private static final Logger LOG = Logger.getInstance(ProjectFileIndexImpl.class);
   private final Project myProject;
 
   @Inject

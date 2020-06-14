@@ -41,7 +41,7 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
   private final InspectionManagerEx myManager;
   private final Set<InspectionTreeNode> myNodesToSuppress = new HashSet<InspectionTreeNode>();
   private final InspectionToolWrapper myToolWrapper;
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.actions.SuppressActionWrapper");
+  private static final Logger LOG = Logger.getInstance(SuppressActionWrapper.class);
 
   public SuppressActionWrapper(@Nonnull final Project project, @Nonnull final InspectionToolWrapper toolWrapper, @Nonnull final TreePath[] paths) {
     super(InspectionsBundle.message("suppress.inspection.problem"), false);

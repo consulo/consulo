@@ -50,7 +50,7 @@ import java.util.*;
  * @author dsl
  */
 public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.util.DirectoryChooserModuleTreeView");
+  private static final Logger LOG = Logger.getInstance(DirectoryChooserModuleTreeView.class);
 
   private final Tree myTree;
   private final List<DirectoryChooser.ItemWrapper>  myItems = new ArrayList<DirectoryChooser.ItemWrapper>();

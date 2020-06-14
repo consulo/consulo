@@ -59,7 +59,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Singleton
 public class PerformanceWatcher implements Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.diagnostic.PerformanceWatcher");
+  private static final Logger LOG = Logger.getInstance(PerformanceWatcher.class);
   private static final int TOLERABLE_LATENCY = 100;
   private final ScheduledFuture<?> myThread;
   private final DateFormat myDateFormat = new SimpleDateFormat("yyyyMMdd-HHmmss");

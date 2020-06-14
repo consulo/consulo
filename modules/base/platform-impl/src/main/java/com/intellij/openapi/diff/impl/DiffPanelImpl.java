@@ -84,7 +84,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSidesContainer {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.DiffPanelImpl");
+  private static final Logger LOG = Logger.getInstance(DiffPanelImpl.class);
 
   private final DiffSplitterI mySplitter;
   private final DiffPanelOuterComponent myPanel;

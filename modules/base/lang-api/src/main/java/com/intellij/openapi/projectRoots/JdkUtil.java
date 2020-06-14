@@ -47,7 +47,7 @@ import java.util.jar.Manifest;
 
 @Deprecated
 public class JdkUtil {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.projectRoots.JdkUtil");
+  private static final Logger LOG = Logger.getInstance(JdkUtil.class);
   private static final String WRAPPER_CLASS = "com.intellij.rt.execution.CommandLineWrapper";
 
   private JdkUtil() {

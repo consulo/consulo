@@ -51,7 +51,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
 public class RefManagerImpl extends RefManager {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.reference.RefManager");
+  private static final Logger LOG = Logger.getInstance(RefManagerImpl.class);
 
   private long myLastUsedMask = 0x0800_0000; // guarded by this
 

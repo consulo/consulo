@@ -40,7 +40,7 @@ import java.util.*;
  * @author Maxim.Mossienko
  */
 public class FileReferenceSet {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet");
+  private static final Logger LOG = Logger.getInstance(FileReferenceSet.class);
 
   private static final FileType[] EMPTY_FILE_TYPES = {};
 

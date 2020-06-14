@@ -50,7 +50,7 @@ import static com.intellij.ui.mac.foundation.Foundation.invoke;
  * User: spLeaner
  */
 public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettingsListener {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ui.mac.MacMainFrameDecorator");
+  private static final Logger LOG = Logger.getInstance(MacMainFrameDecorator.class);
 
   private final FullscreenQueue<Runnable> myFullscreenQueue = new FullscreenQueue<Runnable>();
 

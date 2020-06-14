@@ -109,7 +109,7 @@ import java.util.*;
 public class CompileDriver {
   public static final int DEPENDENCY_FORMAT_VERSION = 55;
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.impl.CompileDriver");
+  private static final Logger LOG = Logger.getInstance(CompileDriver.class);
   // to be used in tests only for debug output
   public static volatile boolean ourDebugMode = false;
 

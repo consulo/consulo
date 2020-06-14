@@ -83,7 +83,7 @@ import java.util.List;
  * Time: 12:46:00 PM
  */
 public class FileTemplateConfigurable implements Configurable, Configurable.NoScroll {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.fileTemplates.impl.FileTemplateConfigurable");
+  private static final Logger LOG = Logger.getInstance(FileTemplateConfigurable.class);
   @NonNls private static final String EMPTY_HTML = "<html></html>";
 
   private JPanel myMainPanel;

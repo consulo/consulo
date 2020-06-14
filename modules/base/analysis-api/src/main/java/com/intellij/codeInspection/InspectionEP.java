@@ -141,7 +141,7 @@ public class InspectionEP extends LanguageExtensionPoint implements InspectionPr
     return CommonBundle.message(resourceBundle, key);
   }
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.InspectionEP");
+  private static final Logger LOG = Logger.getInstance(InspectionEP.class);
 
   @Nonnull
   public InspectionProfileEntry instantiateTool() {

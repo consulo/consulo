@@ -30,7 +30,7 @@ import java.util.Stack;
  * @author Roman Chernyatchik
  */
 public class TestSuiteStack {
-  private static final Logger LOG = Logger.getInstance(TestSuiteStack.class.getName());
+  private static final Logger LOG = Logger.getInstance(TestSuiteStack.class);
 
   @NonNls private static final String EMPTY = "empty";
 

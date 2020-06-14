@@ -73,7 +73,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
   private Map<RefEntity, CommonProblemDescriptor[]> myIgnoredElements;
 
   private Map<RefEntity, CommonProblemDescriptor[]> myOldProblemElements = null;
-  protected static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.ex.DescriptorProviderInspection");
+  protected static final Logger LOG = Logger.getInstance(DefaultInspectionToolPresentation.class);
   private boolean isDisposed;
 
   public DefaultInspectionToolPresentation(@Nonnull InspectionToolWrapper toolWrapper, @Nonnull GlobalInspectionContextImpl context) {

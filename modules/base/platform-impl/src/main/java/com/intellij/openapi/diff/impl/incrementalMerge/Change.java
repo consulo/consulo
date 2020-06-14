@@ -39,7 +39,7 @@ import java.util.Comparator;
  * Change can be applied, then its sides would be equal.
  */
 public abstract class Change {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.incrementalMerge.Change");
+  private static final Logger LOG = Logger.getInstance(Change.class);
 
   public abstract ChangeSide getChangeSide(FragmentSide side);
 

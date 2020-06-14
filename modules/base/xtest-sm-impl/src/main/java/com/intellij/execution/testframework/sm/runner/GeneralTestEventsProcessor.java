@@ -42,7 +42,7 @@ import java.util.List;
  * @author: Roman Chernyatchik
  */
 public abstract class GeneralTestEventsProcessor implements Disposable {
-  private static final Logger LOG = Logger.getInstance(GeneralTestEventsProcessor.class.getName());
+  private static final Logger LOG = Logger.getInstance(GeneralTestEventsProcessor.class);
   protected final SMTRunnerEventsListener myEventPublisher;
   protected final SMTestProxy.SMRootTestProxy myTestsRootProxy;
   protected SMTestLocator myLocator = null;

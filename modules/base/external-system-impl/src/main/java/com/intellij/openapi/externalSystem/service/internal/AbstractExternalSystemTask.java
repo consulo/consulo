@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public abstract class AbstractExternalSystemTask implements ExternalSystemTask {
 
-  private static final Logger LOG = Logger.getInstance("#" + AbstractExternalSystemTask.class.getName());
+  private static final Logger LOG = Logger.getInstance(AbstractExternalSystemTask.class);
 
   private final AtomicReference<ExternalSystemTaskState> myState =
     new AtomicReference<ExternalSystemTaskState>(ExternalSystemTaskState.NOT_STARTED);

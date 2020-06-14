@@ -47,7 +47,7 @@ import java.util.Map;
 @State(name = "DependencyValidationManager", storages = {
         @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/scopes/", stateSplitter = DependencyValidationManagerImpl.ScopesStateSplitter.class)})
 public class DependencyValidationManagerImpl extends DependencyValidationManager {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.packageDependencies.DependencyValidationManagerImpl");
+  private static final Logger LOG = Logger.getInstance(DependencyValidationManagerImpl.class);
 
   private final List<DependencyRule> myRules = new ArrayList<DependencyRule>();
   private final NamedScopeManager myNamedScopeManager;

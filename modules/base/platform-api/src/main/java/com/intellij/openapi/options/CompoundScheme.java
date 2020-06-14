@@ -25,7 +25,7 @@ import java.util.*;
 
 public class CompoundScheme<T extends SchemeElement> implements ExternalizableScheme {
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.options.CompoundScheme");
+  private static final Logger LOG = Logger.getInstance(CompoundScheme.class);
 
   protected String myName;
   private final List<T> myElements = new ArrayList<T>();

@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
  * Date: Jul 26, 2010
  */
 public class RefactoringScopeElementListenerProvider implements RefactoringElementListenerProvider {
-  private static final Logger LOG = Logger.getInstance("#" + RefactoringScopeElementListenerProvider.class.getName());
+  private static final Logger LOG = Logger.getInstance(RefactoringScopeElementListenerProvider.class);
 
   @Override
   public RefactoringElementListener getListener(PsiElement element) {

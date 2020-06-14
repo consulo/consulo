@@ -32,7 +32,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class SharedPsiElementImplUtil {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.SharedPsiElementImplUtil");
+  private static final Logger LOG = Logger.getInstance(SharedPsiElementImplUtil.class);
 
   private SharedPsiElementImplUtil() {
   }

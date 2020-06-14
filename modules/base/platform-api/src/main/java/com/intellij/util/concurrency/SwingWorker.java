@@ -32,7 +32,7 @@ import consulo.logging.Logger;
  * creating it.
  */
 public abstract class SwingWorker {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.concurrency.SwingWorker");
+  private static final Logger LOG = Logger.getInstance(SwingWorker.class);
   private Object value;
   // see getValue(), setValue()
 

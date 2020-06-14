@@ -45,7 +45,7 @@ import java.util.List;
  * Date: Mar 30, 2005
  */
 public class CustomizationUtil {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.ui.customization.CustomizationUtil");
+  private static final Logger LOG = Logger.getInstance(CustomizationUtil.class);
 
   private CustomizationUtil() {
   }

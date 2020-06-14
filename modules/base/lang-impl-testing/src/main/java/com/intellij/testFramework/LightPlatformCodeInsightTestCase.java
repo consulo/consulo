@@ -58,7 +58,7 @@ import java.io.File;
 import java.io.IOException;
 
 public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTestCase {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.testFramework.LightCodeInsightTestCase");
+  private static final Logger LOG = Logger.getInstance(LightPlatformCodeInsightTestCase.class);
 
   protected static Editor myEditor;
   protected static PsiFile myFile;

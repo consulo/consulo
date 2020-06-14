@@ -24,7 +24,7 @@ import com.intellij.psi.meta.PsiMetaOwner;
 import javax.annotation.Nonnull;
 
 public class DescriptiveNameUtil {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.lang.findUsages.DescriptiveNameUtil");
+  private static final Logger LOG = Logger.getInstance(DescriptiveNameUtil.class);
 
   public static String getMetaDataName(final PsiMetaData metaData) {
     final String name = metaData.getName();

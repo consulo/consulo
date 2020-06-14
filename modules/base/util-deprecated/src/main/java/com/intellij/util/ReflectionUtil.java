@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Set;
 
 public class ReflectionUtil {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.ReflectionUtil");
+  private static final Logger LOG = Logger.getInstance(ReflectionUtil.class);
 
   private ReflectionUtil() {
   }

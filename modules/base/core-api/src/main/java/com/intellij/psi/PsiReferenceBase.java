@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  */
 public abstract class PsiReferenceBase<T extends PsiElement> implements PsiReference {
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.PsiReferenceBase");
+  private static final Logger LOG = Logger.getInstance(PsiReferenceBase.class);
 
   protected final T myElement;
   private TextRange myRange;

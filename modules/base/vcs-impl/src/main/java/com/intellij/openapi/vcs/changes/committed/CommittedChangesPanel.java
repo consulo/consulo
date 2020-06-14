@@ -59,7 +59,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvider, Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.committed.CommittedChangesPanel");
+  private static final Logger LOG = Logger.getInstance(CommittedChangesPanel.class);
 
   private final CommittedChangesTreeBrowser myBrowser;
   private final Project myProject;

@@ -106,5 +106,5 @@ public class ExternalOptionHelper {
   private ExternalOptionHelper() {
   }
 
-  private static final Logger logger = Logger.getInstance(ExternalOptionHelper.class.getName());
+  private static final Logger logger = Logger.getInstance(ExternalOptionHelper.class);
 }

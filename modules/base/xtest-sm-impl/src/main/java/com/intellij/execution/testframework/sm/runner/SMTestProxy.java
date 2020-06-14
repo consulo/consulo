@@ -55,7 +55,7 @@ import java.util.List;
 public class SMTestProxy extends AbstractTestProxy {
   public static final Key<String> NODE_ID = Key.create("test.proxy.id");
 
-  private static final Logger LOG = Logger.getInstance(SMTestProxy.class.getName());
+  private static final Logger LOG = Logger.getInstance(SMTestProxy.class);
 
   private final String myName;
   private boolean myIsSuite;

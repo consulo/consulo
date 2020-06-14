@@ -28,7 +28,7 @@ import consulo.fileEditor.impl.EditorWindow;
 import javax.annotation.Nonnull;
 
 abstract class TabNavigationActionBase extends AnAction implements DumbAware {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.actions.TabNavigationActionBase");
+  private static final Logger LOG = Logger.getInstance(TabNavigationActionBase.class);
 
   private final int myDir;
 

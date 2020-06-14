@@ -65,7 +65,7 @@ import java.util.*;
  *         Time: 5:16 PM
  */
 public class TodoCheckinHandlerWorker {
-  private final static Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.checkin.TodoCheckinHandler");
+  private final static Logger LOG = Logger.getInstance(TodoCheckinHandlerWorker.class);
 
   private final Collection<Change> changes;
   private final TodoFilter myTodoFilter;

@@ -46,7 +46,7 @@ import consulo.annotation.access.RequiredWriteAction;
 import java.util.*;
 
 public abstract class PsiPackageBase extends PsiElementBase implements PsiPackage, Queryable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.file.PsiPackageBase");
+  private static final Logger LOG = Logger.getInstance(PsiPackageBase.class);
 
   protected final PsiManager myManager;
   protected final PsiPackageManager myPackageManager;

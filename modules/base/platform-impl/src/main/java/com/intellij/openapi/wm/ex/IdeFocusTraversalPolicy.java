@@ -26,7 +26,7 @@ import javax.swing.text.JTextComponent;
 import java.awt.*;
 
 public class IdeFocusTraversalPolicy extends LayoutFocusTraversalPolicyExt {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy");
+  private static final Logger LOG = Logger.getInstance(IdeFocusTraversalPolicy.class);
 
   protected Component getDefaultComponentImpl(Container focusCycleRoot) {
     if (!(focusCycleRoot instanceof JComponent)) {

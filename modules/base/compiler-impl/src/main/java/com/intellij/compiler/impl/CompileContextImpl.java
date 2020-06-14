@@ -67,7 +67,7 @@ import java.io.File;
 import java.util.*;
 
 public class CompileContextImpl extends UserDataHolderBase implements CompileContextEx {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.impl.CompileContextImpl");
+  private static final Logger LOG = Logger.getInstance(CompileContextImpl.class);
   private final Project myProject;
   private final CompilerTask myTask;
   private final Map<CompilerMessageCategory, Collection<CompilerMessage>> myMessages =

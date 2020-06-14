@@ -43,7 +43,7 @@ import java.io.File;
  * Date: Dec 30, 2003
  */
 public class NamePathComponent extends JPanel {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.util.projectWizard.NamePathComponent");
+  private static final Logger LOG = Logger.getInstance(NamePathComponent.class);
 
   private JTextField myTfName;
   private JTextField myTfPath;

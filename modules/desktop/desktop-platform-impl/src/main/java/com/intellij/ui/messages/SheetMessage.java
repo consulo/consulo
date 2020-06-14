@@ -46,7 +46,7 @@ import static com.intellij.openapi.wm.IdeFocusManager.getGlobalInstance;
  * Created by Denis Fokin
  */
 public class SheetMessage {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ui.messages.SheetMessage");
+  private static final Logger LOG = Logger.getInstance(SheetMessage.class);
 
   private final JDialog myWindow;
   private final Window myParent;

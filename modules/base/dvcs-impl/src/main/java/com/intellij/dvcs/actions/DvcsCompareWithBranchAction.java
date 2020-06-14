@@ -52,7 +52,7 @@ import java.util.List;
  */
 public abstract class DvcsCompareWithBranchAction<T extends Repository> extends DumbAwareAction {
 
-  private static final Logger LOG = Logger.getInstance(DvcsCompareWithBranchAction.class.getName());
+  private static final Logger LOG = Logger.getInstance(DvcsCompareWithBranchAction.class);
 
   @RequiredUIAccess
   @Override

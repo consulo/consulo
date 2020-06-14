@@ -75,7 +75,7 @@ public class CustomActionsSchema implements JDOMExternalizable {
 
   @NonNls
   private static final String GROUP = "group";
-  private static final Logger LOG = Logger.getInstance("#" + CustomActionsSchema.class.getName());
+  private static final Logger LOG = Logger.getInstance(CustomActionsSchema.class);
 
   public CustomActionsSchema() {
     myIdToNameList.add(new Pair(IdeActions.GROUP_MAIN_MENU, ActionsTreeUtil.MAIN_MENU_TITLE));

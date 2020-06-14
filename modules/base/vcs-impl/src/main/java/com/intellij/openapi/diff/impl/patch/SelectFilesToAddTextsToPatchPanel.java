@@ -32,7 +32,7 @@ import java.util.Set;
 
 public class SelectFilesToAddTextsToPatchPanel {
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.patch.SelectFilesToAddTextsToPatchPanel");
+  private static final Logger LOG = Logger.getInstance(SelectFilesToAddTextsToPatchPanel.class);
 
   public static Set<Change> getBig(List<Change> changes) {
     final Set<Change> exclude = new HashSet<>();

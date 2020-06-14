@@ -85,7 +85,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
     }
   }
 
-  public static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.ChangeListManagerImpl");
+  public static final Logger LOG = Logger.getInstance(ChangeListManagerImpl.class);
   private static final String EXCLUDED_CONVERTED_TO_IGNORED_OPTION = "EXCLUDED_CONVERTED_TO_IGNORED";
 
   private final Project myProject;
@@ -333,13 +333,6 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
 
     myUpdater.stop();
     myConflictTracker.stopTracking();
-  }
-
-  @Override
-  @Nonnull
-  @NonNls
-  public String getComponentName() {
-    return "ChangeListManager";
   }
 
   /**

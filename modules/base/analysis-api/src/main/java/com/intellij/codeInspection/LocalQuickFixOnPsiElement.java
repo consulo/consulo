@@ -24,7 +24,7 @@ import com.intellij.psi.SmartPsiElementPointer;
 import javax.annotation.Nonnull;
 
 public abstract class LocalQuickFixOnPsiElement implements LocalQuickFix {
-  protected static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.LocalQuickFixAndIntentionAction");
+  protected static final Logger LOG = Logger.getInstance(LocalQuickFixOnPsiElement.class);
   protected final SmartPsiElementPointer<PsiElement> myStartElement;
   protected final SmartPsiElementPointer<PsiElement> myEndElement;
 

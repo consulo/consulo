@@ -36,7 +36,7 @@ import java.util.*;
  *         Date: 3/22/11
  */
 class FTManager {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.fileTemplates.impl.FTManager");
+  private static final Logger LOG = Logger.getInstance(FTManager.class);
   public static final String DEFAULT_TEMPLATE_EXTENSION = "ft";
   public static final String TEMPLATE_EXTENSION_SUFFIX = "." + DEFAULT_TEMPLATE_EXTENSION;
   private static final String ENCODED_NAME_EXT_DELIMITER = "\u0F0Fext\u0F0F.";

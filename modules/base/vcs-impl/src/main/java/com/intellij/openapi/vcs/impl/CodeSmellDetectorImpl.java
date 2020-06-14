@@ -58,7 +58,7 @@ import java.util.*;
 @Singleton
 public class CodeSmellDetectorImpl extends CodeSmellDetector {
   private final Project myProject;
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.impl.CodeSmellDetectorImpl");
+  private static final Logger LOG = Logger.getInstance(CodeSmellDetectorImpl.class);
 
   @Inject
   public CodeSmellDetectorImpl(final Project project) {

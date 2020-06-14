@@ -42,7 +42,7 @@ import javax.annotation.Nullable;
  * @author Konstantin Bulenkov
  */
 public class RenameLibraryHandler implements RenameHandler, TitledHandler {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.projectView.actions.RenameModuleHandler");
+  private static final Logger LOG = Logger.getInstance(RenameLibraryHandler.class);
 
   @Override
   public boolean isAvailableOnDataContext(DataContext dataContext) {

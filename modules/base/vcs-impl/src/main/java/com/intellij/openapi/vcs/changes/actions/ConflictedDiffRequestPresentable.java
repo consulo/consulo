@@ -43,7 +43,7 @@ import java.util.List;
  * Time: 4:09 PM
  */
 public class ConflictedDiffRequestPresentable implements DiffRequestPresentable {
-  private final static Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.actions.ConflictedDiffRequestPresentable");
+  private final static Logger LOG = Logger.getInstance(ConflictedDiffRequestPresentable.class);
   private final Project myProject;
   private final VirtualFile myFile;
   private final Change myChange;

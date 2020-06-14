@@ -49,7 +49,7 @@ import static com.intellij.patterns.StandardPatterns.not;
  */
 @SuppressWarnings("deprecation")
 public class CompletionData {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.completion.CompletionData");
+  private static final Logger LOG = Logger.getInstance(CompletionData.class);
   public static final ObjectPattern.Capture<Character> NOT_JAVA_ID = not(character().javaIdentifierPart());
   private final List<CompletionVariant> myCompletionVariants = new ArrayList<>();
 

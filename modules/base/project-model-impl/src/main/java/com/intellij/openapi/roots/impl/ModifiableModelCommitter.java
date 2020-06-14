@@ -33,7 +33,7 @@ import consulo.logging.Logger;
 import java.util.*;
 
 public class ModifiableModelCommitter {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.module.impl.ModifiableModelCommitter");
+  private static final Logger LOG = Logger.getInstance(ModifiableModelCommitter.class);
 
   @RequiredWriteAction
   public static void multiCommit(ModifiableRootModel[] rootModels, ModifiableModuleModel moduleModel) {

@@ -31,7 +31,7 @@ import java.util.List;
 public abstract class LocalInspectionTool extends InspectionProfileEntry {
   public static final LocalInspectionTool[] EMPTY_ARRAY = new LocalInspectionTool[0];
 
-  private static final Logger LOG = Logger.getInstance("#" + LocalInspectionTool.class.getName());
+  private static final Logger LOG = Logger.getInstance(LocalInspectionTool.class);
 
   interface LocalDefaultNameProvider extends DefaultNameProvider {
     @Nullable

@@ -71,7 +71,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
   private final AtomicBoolean myProfilesAreInitialized = new AtomicBoolean(false);
   private final SeverityRegistrar mySeverityRegistrar;
 
-  protected static final Logger LOG = Logger.getInstance("#com.intellij.profile.DefaultProfileManager");
+  protected static final Logger LOG = Logger.getInstance(InspectionProfileManagerImpl.class);
 
   public static InspectionProfileManagerImpl getInstanceImpl() {
     return (InspectionProfileManagerImpl)ServiceManager.getService(InspectionProfileManager.class);

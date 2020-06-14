@@ -84,7 +84,7 @@ import java.util.regex.Pattern;
 
 @Singleton
 public class FindManagerImpl extends FindManager {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.find.impl.FindManagerImpl");
+  private static final Logger LOG = Logger.getInstance(FindManagerImpl.class);
 
   private final FindUsagesManager myFindUsagesManager;
   private boolean isFindWasPerformed = false;

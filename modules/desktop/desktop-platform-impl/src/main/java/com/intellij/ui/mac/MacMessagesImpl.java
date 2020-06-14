@@ -51,7 +51,7 @@ import static com.intellij.ui.mac.foundation.Foundation.*;
  */
 @Singleton
 public class MacMessagesImpl extends MacMessages {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ui.mac.MacMessages");
+  private static final Logger LOG = Logger.getInstance(MacMessagesImpl.class);
 
 
   private static class MessageResult {

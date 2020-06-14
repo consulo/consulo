@@ -47,7 +47,7 @@ import java.util.Map;
 @Order(ExternalSystemConstants.BUILTIN_SERVICE_ORDER)
 public class ContentRootDataService implements ProjectDataService<ContentRootData, ContentEntry> {
 
-  private static final Logger LOG = Logger.getInstance(ContentRootDataService.class.getName());
+  private static final Logger LOG = Logger.getInstance(ContentRootDataService.class);
 
   @Nonnull
   @Override

@@ -33,7 +33,7 @@ import java.awt.*;
  * @author dyoma
  */
 public class DiffPanelOptions {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.ex.DiffPanelOptions");
+  private static final Logger LOG = Logger.getInstance(DiffPanelOptions.class);
   private final DiffPanelImpl myDiffPanel;
   private boolean myRequestFocusOnNewContent = true;
   private ShowSourcePolicy myShowSourcePolicy = ShowSourcePolicy.DEFAULT;

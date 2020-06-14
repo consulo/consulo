@@ -29,7 +29,7 @@ import javax.swing.event.HyperlinkEvent;
 import java.util.*;
 
 public abstract class GenericNotifierImpl<T, Key> {
-  private final static Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.impl.GenericNotifier");
+  private final static Logger LOG = Logger.getInstance(GenericNotifierImpl.class);
   protected final Project myProject;
   @Nonnull
   private final String myGroupId; //+- here

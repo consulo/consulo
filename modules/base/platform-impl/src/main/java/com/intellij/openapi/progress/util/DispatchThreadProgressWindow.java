@@ -22,7 +22,7 @@ import com.intellij.openapi.util.SystemInfo;
 import consulo.logging.Logger;
 
 public class DispatchThreadProgressWindow extends ProgressWindow{
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.progress.util.DispatchThreadProgressWindow");
+  private static final Logger LOG = Logger.getInstance(DispatchThreadProgressWindow.class);
 
   private long myLastPumpEventsTime = 0;
   private static final int PUMP_INTERVAL = SystemInfo.isWindows ? 100 : 500;

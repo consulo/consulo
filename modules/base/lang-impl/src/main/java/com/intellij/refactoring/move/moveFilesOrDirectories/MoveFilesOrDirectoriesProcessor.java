@@ -52,7 +52,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MoveFilesOrDirectoriesProcessor extends BaseRefactoringProcessor {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectoriesProcessor");
+  private static final Logger LOG = Logger.getInstance(MoveFilesOrDirectoriesProcessor.class);
 
   protected final PsiElement[] myElementsToMove;
   protected final boolean mySearchForReferences;

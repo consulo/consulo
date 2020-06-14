@@ -43,7 +43,7 @@ import java.awt.event.ActionListener;
 
 public final class SingleConfigurationConfigurable<Config extends RunConfiguration>
   extends SettingsEditorConfigurable<RunnerAndConfigurationSettings> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.execution.impl.SingleConfigurationConfigurable");
+  private static final Logger LOG = Logger.getInstance(SingleConfigurationConfigurable.class);
   private final PlainDocument myNameDocument = new PlainDocument();
   @Nullable private Executor myExecutor;
 

@@ -166,7 +166,7 @@ class IdBitSet implements Cloneable, RandomAccessIntContainer {
       clone.myBitMask = myBitMask.clone();
       return clone;
     } catch (CloneNotSupportedException ex) {
-      Logger.getInstance(getClass().getName()).error(ex);
+      Logger.getInstance(getClass()).error(ex);
       return null;
     }
   }

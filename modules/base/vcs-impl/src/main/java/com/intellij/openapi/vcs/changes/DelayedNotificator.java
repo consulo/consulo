@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 import java.util.Collection;
 
 public class DelayedNotificator implements ChangeListListener {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.DelayedNotificator");
+  private static final Logger LOG = Logger.getInstance(DelayedNotificator.class);
 
   private final EventDispatcher<ChangeListListener> myDispatcher;
   private final ChangeListManagerImpl.Scheduler myScheduler;

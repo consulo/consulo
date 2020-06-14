@@ -42,7 +42,7 @@ import java.util.*;
  */
 public class PatternCompilerImpl<T> implements PatternCompiler<T> {
 
-  private static final Logger LOG = Logger.getInstance(PatternCompilerImpl.class.getName());
+  private static final Logger LOG = Logger.getInstance(PatternCompilerImpl.class);
 
   private final Set<Method> myStaticMethods;
   private final StringInterner myStringInterner = new StringInterner();

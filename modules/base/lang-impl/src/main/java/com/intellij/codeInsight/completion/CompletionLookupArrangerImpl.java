@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class CompletionLookupArrangerImpl extends LookupArranger implements CompletionLookupArranger {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.completion.CompletionLookupArranger");
+  private static final Logger LOG = Logger.getInstance(CompletionLookupArrangerImpl.class);
   private static final Key<PresentationInvariant> PRESENTATION_INVARIANT = Key.create("PRESENTATION_INVARIANT");
   public static final Key<Object> FORCE_MIDDLE_MATCH = Key.create("FORCE_MIDDLE_MATCH");
   private final Comparator<LookupElement> BY_PRESENTATION_COMPARATOR = (o1, o2) -> {

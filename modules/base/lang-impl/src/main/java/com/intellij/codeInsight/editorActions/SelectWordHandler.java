@@ -41,7 +41,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class SelectWordHandler extends EditorActionHandler {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.editorActions.SelectWordHandler");
+  private static final Logger LOG = Logger.getInstance(SelectWordHandler.class);
 
   private final EditorActionHandler myOriginalHandler;
 

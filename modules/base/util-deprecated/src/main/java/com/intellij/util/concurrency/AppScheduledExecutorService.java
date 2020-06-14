@@ -2,12 +2,12 @@
 package com.intellij.util.concurrency;
 
 import com.intellij.diagnostic.ThreadDumper;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.LowMemoryWatcherManager;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -135,7 +135,7 @@ public final class AppScheduledExecutorService extends SchedulingWrapper {
     @Override
     protected void afterExecute(Runnable r, Throwable t) {
       if (t != null) {
-        Logger.getInstance("#com.intellij.util.concurrency.SchedulingWrapper").error("Worker exited due to exception", t);
+        Logger.getInstance(AppScheduledExecutorService.class).error("Worker exited due to exception", t);
       }
     }
 

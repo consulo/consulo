@@ -26,7 +26,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public interface PopupComponent {
-  Logger LOG = Logger.getInstance("#com.intellij.ui.popup.PopupComponent");
+  Logger LOG = Logger.getInstance(PopupComponent.class);
 
   void hide(boolean dispose);
 

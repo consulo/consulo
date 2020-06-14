@@ -33,7 +33,7 @@ import java.util.*;
  * @author nik
  */
 public class KShortestPathsFinder<Node> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.graph.impl.KShortestPathsFinder");
+  private static final Logger LOG = Logger.getInstance(KShortestPathsFinder.class);
   private final Graph<Node> myGraph;
   private final Node myStart;
   private final Node myFinish;

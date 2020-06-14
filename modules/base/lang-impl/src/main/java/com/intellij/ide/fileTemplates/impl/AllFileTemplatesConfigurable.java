@@ -63,7 +63,7 @@ import static com.intellij.ide.fileTemplates.FileTemplateManager.*;
  */
 
 public class AllFileTemplatesConfigurable implements SearchableConfigurable, Configurable.NoMargin, Configurable.NoScroll {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.fileTemplates.impl.AllFileTemplatesConfigurable");
+  private static final Logger LOG = Logger.getInstance(AllFileTemplatesConfigurable.class);
 
   private static final String TEMPLATES_TITLE = IdeBundle.message("tab.filetemplates.templates");
   private static final String INCLUDES_TITLE = IdeBundle.message("tab.filetemplates.includes");

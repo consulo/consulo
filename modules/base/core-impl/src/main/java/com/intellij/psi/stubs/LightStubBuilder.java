@@ -35,7 +35,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public class LightStubBuilder implements StubBuilder {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.stubs.LightStubBuilder");
+  private static final Logger LOG = Logger.getInstance(LightStubBuilder.class);
   public static final ThreadLocal<LighterAST> FORCED_AST = new ThreadLocal<>();
 
   @RequiredReadAction

@@ -57,7 +57,7 @@ import java.util.List;
 public class CommitHelper {
   public static final Key<Object> DOCUMENT_BEING_COMMITTED_KEY = new Key<Object>("DOCUMENT_BEING_COMMITTED");
 
-  private final static Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.ui.CommitHelper");
+  private final static Logger LOG = Logger.getInstance(CommitHelper.class);
   private final Project myProject;
 
   private final ChangeList myChangeList;

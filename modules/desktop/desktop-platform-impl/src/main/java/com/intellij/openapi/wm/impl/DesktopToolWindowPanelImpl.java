@@ -60,7 +60,7 @@ import java.util.List;
  * @author Vladimir Kondratyev
  */
 public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements UISettingsListener, Disposable, ToolWindowPanelImplEx {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.ToolWindowsPane");
+  private static final Logger LOG = Logger.getInstance(DesktopToolWindowPanelImpl.class);
 
   private final DesktopIdeFrameImpl myIdeFrame;
 

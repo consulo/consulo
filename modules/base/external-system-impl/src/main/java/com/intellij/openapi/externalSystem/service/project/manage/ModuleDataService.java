@@ -50,7 +50,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
 
   public static final consulo.util.dataholder.Key<ModuleData> MODULE_DATA_KEY = consulo.util.dataholder.Key.create("MODULE_DATA_KEY");
 
-  private static final Logger LOG = Logger.getInstance(ModuleDataService.class.getName());
+  private static final Logger LOG = Logger.getInstance(ModuleDataService.class);
 
   /**
    * We can't modify project modules (add/remove) until it's initialised, so, we delay that activity. Current constant

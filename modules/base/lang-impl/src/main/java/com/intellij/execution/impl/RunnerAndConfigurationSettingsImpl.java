@@ -37,7 +37,7 @@ import java.util.*;
  * @author dyoma
  */
 public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, Cloneable, RunnerAndConfigurationSettings, Comparable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.execution.impl.RunnerAndConfigurationSettings");
+  private static final Logger LOG = Logger.getInstance(RunnerAndConfigurationSettingsImpl.class);
 
   @NonNls
   private static final String RUNNER_ELEMENT = "RunnerSettings";

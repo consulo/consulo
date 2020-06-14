@@ -46,7 +46,7 @@ import java.util.List;
 
 
 public final class IntentionActionMetaData {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.intention.impl.config.IntentionActionMetaData");
+  private static final Logger LOG = Logger.getInstance(IntentionActionMetaData.class);
   @Nonnull
   private final IntentionAction myAction;
   private final ClassLoader myIntentionLoader;

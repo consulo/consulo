@@ -46,7 +46,7 @@ public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContent
   private final VcsConfiguration myConfiguration;
   private boolean myHaveEmptyContentRevisions;
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.impl.VcsFileStatusProvider");
+  private static final Logger LOG = Logger.getInstance(VcsFileStatusProvider.class);
 
   @Inject
   public VcsFileStatusProvider(final Project project,

@@ -22,7 +22,7 @@ import java.lang.ref.SoftReference;
  * @author ven
  */
 public abstract class BaseCoverageSuite  implements CoverageSuite, JDOMExternalizable {
-  private static final Logger LOG = Logger.getInstance(BaseCoverageSuite.class.getName());
+  private static final Logger LOG = Logger.getInstance(BaseCoverageSuite.class);
 
   @NonNls
   private static final String FILE_PATH = "FILE_PATH";

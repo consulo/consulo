@@ -36,7 +36,7 @@ import javax.annotation.Nonnull;
  * @author max
  */
 public class AnnotationHolderImpl extends SmartList<Annotation> implements AnnotationHolder {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.daemon.impl.AnnotationHolderImpl");
+  private static final Logger LOG = Logger.getInstance(AnnotationHolderImpl.class);
   private final AnnotationSession myAnnotationSession;
 
   private final boolean myBatchMode;

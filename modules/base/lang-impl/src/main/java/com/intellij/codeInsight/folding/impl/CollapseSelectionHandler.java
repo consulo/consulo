@@ -32,7 +32,7 @@ import consulo.ui.annotation.RequiredUIAccess;
  */
 public class CollapseSelectionHandler implements CodeInsightActionHandler {
   private static final String ourPlaceHolderText = "...";
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.folding.impl.CollapseSelectionHandler");
+  private static final Logger LOG = Logger.getInstance(CollapseSelectionHandler.class);
 
   @RequiredUIAccess
   @Override

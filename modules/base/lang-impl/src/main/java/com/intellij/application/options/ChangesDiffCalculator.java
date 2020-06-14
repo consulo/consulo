@@ -49,7 +49,7 @@ import java.util.*;
  * @since 10/14/10 2:44 PM
  */
 public class ChangesDiffCalculator implements Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.application.options.ChangesDiffCalculator");
+  private static final Logger LOG = Logger.getInstance(ChangesDiffCalculator.class);
   private final BaseMarkup myOldMarkup = new BaseMarkup(FragmentSide.SIDE1, this);
   private final ChangesCollector myNewMarkup = new ChangesCollector(this);
   private final TextCompareProcessor myCompareProcessor = new TextCompareProcessor(ComparisonPolicy.DEFAULT);

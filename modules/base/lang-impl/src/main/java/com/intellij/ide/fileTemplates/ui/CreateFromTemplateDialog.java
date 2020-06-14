@@ -45,7 +45,7 @@ import java.util.Map;
 import java.util.Properties;
 
 public class CreateFromTemplateDialog extends DialogWrapper {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.fileTemplates.ui.CreateFromTemplateDialog");
+  private static final Logger LOG = Logger.getInstance(CreateFromTemplateDialog.class);
   @Nonnull
   private final PsiDirectory myDirectory;
   @Nonnull

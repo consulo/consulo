@@ -24,7 +24,7 @@ import javax.swing.*;
 
 public class SettingsEditorWrapper <Src, Dst> extends SettingsEditor<Src> {
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.options.SettingsEditorWrapper");
+  private static final Logger LOG = Logger.getInstance(SettingsEditorWrapper.class);
 
   private final Convertor<Src, Dst> mySrcToDstConvertor;
   private final SettingsEditor<Dst> myWrapped;

@@ -43,7 +43,7 @@ import javax.annotation.Nonnull;
 public class VcsAnnotationCachedProxy implements AnnotationProvider {
   private final VcsHistoryCache myCache;
   private final AbstractVcs myVcs;
-  private final static Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.history.VcsAnnotationCachedProxy");
+  private final static Logger LOG = Logger.getInstance(VcsAnnotationCachedProxy.class);
   private final AnnotationProvider myAnnotationProvider;
 
   public VcsAnnotationCachedProxy(@Nonnull AbstractVcs vcs, @Nonnull AnnotationProvider provider) {

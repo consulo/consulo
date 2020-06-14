@@ -61,7 +61,7 @@ import java.util.List;
  * @author Eugene.Kudelevsky
  */
 public abstract class LogConsoleBase extends AdditionalTabComponent implements LogConsole, LogFilterListener {
-  private static final Logger LOG = Logger.getInstance("com.intellij.diagnostic.logging.LogConsoleImpl");
+  private static final Logger LOG = Logger.getInstance(LogConsoleBase.class);
   @NonNls public static final String APPLYING_FILTER_TITLE = "Applying filter...";
 
   private boolean myDisposed;

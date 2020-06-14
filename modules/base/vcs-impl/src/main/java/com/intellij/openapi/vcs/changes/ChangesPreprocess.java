@@ -30,7 +30,7 @@ import java.util.Map;
  * Time: 6:47 PM
  */
 public class ChangesPreprocess {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.ChangesPreprocess");
+  private static final Logger LOG = Logger.getInstance(ChangesPreprocess.class);
 
   public static List<Change> preprocessChangesRemoveDeletedForDuplicateMoved(List<Change> list) {
     final List<Change> result = new ArrayList<Change>();

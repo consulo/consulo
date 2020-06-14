@@ -42,7 +42,7 @@ import java.util.Set;
  */
 public class ArrangementMatchNodeComponentFactory {
 
-  private static final Logger LOG = Logger.getInstance("#" + ArrangementMatchNodeComponentFactory.class.getName());
+  private static final Logger LOG = Logger.getInstance(ArrangementMatchNodeComponentFactory.class);
 
   @Nonnull
   private final ArrangementStandardSettingsManager mySettingsManager;

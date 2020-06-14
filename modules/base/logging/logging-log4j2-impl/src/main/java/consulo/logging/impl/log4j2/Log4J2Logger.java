@@ -24,7 +24,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ex.ApplicationEx2;
 import consulo.logging.Logger;
 import consulo.platform.impl.action.LastActionTracker;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
@@ -68,7 +67,7 @@ public class Log4J2Logger implements Logger {
   }
 
   @Override
-  public void debug(@NonNls String message, Throwable t) {
+  public void debug(String message, Throwable t) {
     myLogger.debug(message, t);
   }
 
@@ -131,7 +130,7 @@ public class Log4J2Logger implements Logger {
   }
 
   @Override
-  public void warn(@NonNls String message, @Nullable Throwable t) {
+  public void warn(String message, @Nullable Throwable t) {
     myLogger.warn(message, t);
   }
 

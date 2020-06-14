@@ -49,7 +49,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class CreateDesktopEntryAction extends DumbAwareAction {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.actions.CreateDesktopEntryAction");
+  private static final Logger LOG = Logger.getInstance(CreateDesktopEntryAction.class);
 
   public static boolean isAvailable() {
     return SystemInfo.isUnix && SystemInfo.hasXdgOpen();

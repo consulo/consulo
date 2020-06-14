@@ -36,7 +36,7 @@ import java.io.IOException;
  * Represents sub text of other content. Original content should provide not null document.
  */
 public class FragmentContent extends DiffContent {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.FragmentContent");
+  private static final Logger LOG = Logger.getInstance(FragmentContent.class);
   private final DiffContent myOriginal;
   private final FileType myType;
   private final MyDocumentsSynchronizer mySynchonizer;

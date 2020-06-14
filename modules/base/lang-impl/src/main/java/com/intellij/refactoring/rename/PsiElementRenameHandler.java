@@ -54,7 +54,7 @@ import java.util.Arrays;
  * @author Jeka, dsl
  */
 public class PsiElementRenameHandler implements RenameHandler {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.refactoring.rename.PsiElementRenameHandler");
+  private static final Logger LOG = Logger.getInstance(PsiElementRenameHandler.class);
 
   public static final ExtensionPointName<Condition<PsiElement>> VETO_RENAME_CONDITION_EP = ExtensionPointName.create("com.intellij.vetoRenameCondition");
   public static Key<String> DEFAULT_NAME = Key.create("DEFAULT_NAME");

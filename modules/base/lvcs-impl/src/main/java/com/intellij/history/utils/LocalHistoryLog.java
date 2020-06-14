@@ -19,5 +19,5 @@ package com.intellij.history.utils;
 import consulo.logging.Logger;
 
 public class LocalHistoryLog {
-  public static final Logger LOG = Logger.getInstance("#com.intellij.history.utils.LocalHistoryLog");
+  public static final Logger LOG = Logger.getInstance(LocalHistoryLog.class);
 }

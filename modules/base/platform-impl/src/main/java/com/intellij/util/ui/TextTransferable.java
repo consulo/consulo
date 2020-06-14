@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.io.StringReader;
 
 public class TextTransferable implements Transferable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.ui.TextTransferable");
+  private static final Logger LOG = Logger.getInstance(TextTransferable.class);
 
   private final String myHtmlContent;
   private final String myPlainContent;

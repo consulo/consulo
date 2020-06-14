@@ -41,7 +41,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public abstract class GlobalSearchScope extends SearchScope implements ProjectAwareFileFilter {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.search.GlobalSearchScope");
+  private static final Logger LOG = Logger.getInstance(GlobalSearchScope.class);
   @Nullable
   private final Project myProject;
 

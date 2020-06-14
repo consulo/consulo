@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 
 class UpdatingChangeListBuilder implements ChangelistBuilder {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.UpdatingChangeListBuilder");
+  private static final Logger LOG = Logger.getInstance(UpdatingChangeListBuilder.class);
   private final ChangeListWorker myChangeListWorker;
   private final FileHolderComposite myComposite;
   // todo +-

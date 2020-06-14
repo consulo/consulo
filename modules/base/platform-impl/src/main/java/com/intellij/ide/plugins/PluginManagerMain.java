@@ -72,7 +72,7 @@ import static com.intellij.openapi.util.text.StringUtil.isEmptyOrSpaces;
  * @since Dec 25, 2003
  */
 public abstract class PluginManagerMain implements Disposable {
-  public static Logger LOG = Logger.getInstance("#com.intellij.ide.plugins.PluginManagerMain");
+  public static Logger LOG = Logger.getInstance(PluginManagerMain.class);
 
   @NonNls
   private static final String TEXT_SUFFIX = "</body></html>";

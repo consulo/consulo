@@ -23,7 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ShutDownTracker implements Runnable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.util.ShutDownTracker");
+  private static final Logger LOG = Logger.getInstance(ShutDownTracker.class);
   private final List<Thread> myThreads = new ArrayList<Thread>();
   private final LinkedList<Thread> myShutdownThreads = new LinkedList<Thread>();
   private final LinkedList<Runnable> myShutdownTasks = new LinkedList<Runnable>();

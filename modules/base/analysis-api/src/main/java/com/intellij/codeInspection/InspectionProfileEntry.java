@@ -50,7 +50,7 @@ import java.util.Set;
 public abstract class InspectionProfileEntry implements BatchSuppressableTool{
   public static final String GENERAL_GROUP_NAME = InspectionsBundle.message("inspection.general.tools.group.name");
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.InspectionProfileEntry");
+  private static final Logger LOG = Logger.getInstance(InspectionProfileEntry.class);
 
   private static final SkipDefaultValuesSerializationFilters DEFAULT_FILTER = new SkipDefaultValuesSerializationFilters();
   private static Set<String> ourBlackList = null;

@@ -36,7 +36,7 @@ import java.io.UnsupportedEncodingException;
 public abstract class AbstractSyntaxAwareInputStreamTransferableData extends InputStream implements RawTextWithMarkup
 {
 
-  private static final Logger LOG = Logger.getInstance("#" + AbstractSyntaxAwareInputStreamTransferableData.class.getName());
+  private static final Logger LOG = Logger.getInstance(AbstractSyntaxAwareInputStreamTransferableData.class);
 
   protected String myRawText;
   @Nonnull

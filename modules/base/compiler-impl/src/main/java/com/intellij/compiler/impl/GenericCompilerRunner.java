@@ -46,7 +46,7 @@ import java.util.*;
  * @author nik
  */
 public class GenericCompilerRunner {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.impl.GenericCompilerRunner");
+  private static final Logger LOG = Logger.getInstance(GenericCompilerRunner.class);
   private static final Logger FULL_LOG = Logger.getInstance("#com.intellij.full-generic-compiler-log");
   private CompileContext myContext;
   private final boolean myForceCompile;

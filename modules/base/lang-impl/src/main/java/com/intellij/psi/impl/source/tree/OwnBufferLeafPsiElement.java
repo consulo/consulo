@@ -36,7 +36,7 @@ import consulo.logging.Logger;
 import javax.annotation.Nonnull;
 
 public class OwnBufferLeafPsiElement extends LeafElement implements PsiElement {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.tree.LeafPsiElement");
+  private static final Logger LOG = Logger.getInstance(OwnBufferLeafPsiElement.class);
 
   public OwnBufferLeafPsiElement(IElementType type, CharSequence text) {
     super(type, text);

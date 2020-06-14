@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
 import consulo.annotation.access.RequiredWriteAction;
 
 public class AutoIndentLinesHandler extends CodeInsightActionHandler.WriteActionAdapter {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.generation.AutoIndentLinesHandler");
+  private static final Logger LOG = Logger.getInstance(AutoIndentLinesHandler.class);
 
   @RequiredWriteAction
   @Override

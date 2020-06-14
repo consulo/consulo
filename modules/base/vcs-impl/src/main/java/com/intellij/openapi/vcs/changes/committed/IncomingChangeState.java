@@ -22,7 +22,7 @@ import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangesUtil;
 
 public class IncomingChangeState {
-  private static final Logger INCOMING_LOG = Logger.getInstance("#incoming");
+  private static final Logger INCOMING_LOG = Logger.getInstance(IncomingChangeState.class);
 
   private final FileStatus myStatus;
   private final FilePath myPath;

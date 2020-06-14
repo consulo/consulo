@@ -61,7 +61,7 @@ import java.util.List;
 import java.util.Map;
 
 public class PasteHandler extends EditorActionHandler implements EditorTextInsertHandler {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.editorActions.PasteHandler");
+  private static final Logger LOG = Logger.getInstance(PasteHandler.class);
   private static final ExtensionPointName<PasteProvider> EP_NAME = ExtensionPointName.create("com.intellij.customPasteProvider");
 
   private final EditorActionHandler myOriginalHandler;

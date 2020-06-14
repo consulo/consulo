@@ -62,7 +62,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class SurroundWithHandler implements CodeInsightActionHandler {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.generation.surroundWith.SurroundWithHandler");
+  private static final Logger LOG = Logger.getInstance(SurroundWithHandler.class);
   private static final String CHOOSER_TITLE = CodeInsightBundle.message("surround.with.chooser.title");
   public static final TextRange CARET_IS_OK = new TextRange(0, 0);
 

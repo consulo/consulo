@@ -15,10 +15,9 @@
  */
 package consulo.logging;
 
-import consulo.util.nodep.ArrayUtilRt;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.internal.LoggerFactoryInitializer;
-import org.jetbrains.annotations.NonNls;
+import consulo.util.nodep.ArrayUtilRt;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,7 +28,7 @@ import javax.annotation.Nullable;
  */
 public interface Logger {
   @Nonnull
-  public static Logger getInstance(@NonNls String category) {
+  public static Logger getInstance(@Nonnull String category) {
     return LoggerFactoryInitializer.getFactory().getLoggerInstance(category);
   }
 
@@ -56,11 +55,11 @@ public interface Logger {
 
   public abstract boolean isDebugEnabled();
 
-  public abstract void debug(@NonNls String message);
+  public abstract void debug(String message);
 
   public abstract void debug(@Nullable Throwable t);
 
-  public abstract void debug(@NonNls String message, @Nullable Throwable t);
+  public abstract void debug(String message, @Nullable Throwable t);
 
   default void debug(@Nonnull String message, Object... details) {
     if (isDebugEnabled()) {
@@ -77,11 +76,11 @@ public interface Logger {
     info(t.getMessage(), t);
   }
 
-  public abstract void info(@NonNls String message);
+  public abstract void info(String message);
 
-  public abstract void info(@NonNls String message, @Nullable Throwable t);
+  public abstract void info(String message, @Nullable Throwable t);
 
-  default void warn(@NonNls String message) {
+  default void warn(String message) {
     warn(message, null);
   }
 
@@ -89,9 +88,9 @@ public interface Logger {
     warn(t.getMessage(), t);
   }
 
-  public abstract void warn(@NonNls String message, @Nullable Throwable t);
+  public abstract void warn(String message, @Nullable Throwable t);
 
-  default void error(@NonNls String message) {
+  default void error(String message) {
     error(message, new Throwable(), ArrayUtilRt.EMPTY_STRING_ARRAY);
   }
 
@@ -99,19 +98,19 @@ public interface Logger {
     error(String.valueOf(message));
   }
 
-  default void error(@NonNls String message, Attachment... attachments) {
+  default void error(String message, Attachment... attachments) {
     error(message);
   }
 
-  default void error(@NonNls String message, @Nullable Throwable throwable,  Attachment... attachments) {
+  default void error(String message, @Nullable Throwable throwable,  Attachment... attachments) {
     error(message);
   }
 
-  default void error(@NonNls String message, @NonNls String... details) {
+  default void error(String message, String... details) {
     error(message, new Throwable(), details);
   }
 
-  default void error(@NonNls String message, @Nullable Throwable e) {
+  default void error(String message, @Nullable Throwable e) {
     error(message, e, ArrayUtilRt.EMPTY_STRING_ARRAY);
   }
 
@@ -119,11 +118,11 @@ public interface Logger {
     error(t.getMessage(), t, ArrayUtilRt.EMPTY_STRING_ARRAY);
   }
 
-  public abstract void error(@NonNls String message, @Nullable Throwable t, @NonNls @Nonnull String... details);
+  public abstract void error(String message, @Nullable Throwable t, @Nonnull String... details);
 
-  default boolean assertTrue(boolean value, @Nullable @NonNls Object message) {
+  default boolean assertTrue(boolean value, @Nullable Object message) {
     if (!value) {
-      @NonNls String resultMessage = "Assertion failed";
+      String resultMessage = "Assertion failed";
       if (message != null) resultMessage += ": " + message;
       error(resultMessage, new Throwable());
     }

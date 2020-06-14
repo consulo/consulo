@@ -67,7 +67,7 @@ import java.util.Map;
 
 @Singleton
 public class LineStatusTrackerManager implements ProjectComponent, LineStatusTrackerManagerI {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.impl.LineStatusTrackerManager");
+  private static final Logger LOG = Logger.getInstance(LineStatusTrackerManager.class);
 
   @NonNls protected static final String IGNORE_CHANGEMARKERS_KEY = "idea.ignore.changemarkers";
 

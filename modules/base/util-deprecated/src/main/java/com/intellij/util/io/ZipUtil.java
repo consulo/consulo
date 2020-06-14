@@ -33,7 +33,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 public class ZipUtil {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.io.ZipUtil");
+  private static final Logger LOG = Logger.getInstance(ZipUtil.class);
 
   private ZipUtil() {
   }

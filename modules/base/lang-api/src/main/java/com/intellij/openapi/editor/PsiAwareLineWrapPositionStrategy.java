@@ -35,7 +35,7 @@ import javax.annotation.Nonnull;
  */
 public abstract class PsiAwareLineWrapPositionStrategy implements LineWrapPositionStrategy {
 
-  private static final Logger LOG = Logger.getInstance("#" + PsiAwareLineWrapPositionStrategy.class.getName());
+  private static final Logger LOG = Logger.getInstance(PsiAwareLineWrapPositionStrategy.class);
   
   private final TokenSet myEnabledTypes;
   private final boolean  myNonVirtualOnly;

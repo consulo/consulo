@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 
 public abstract class ApplyFilePatchBase<T extends FilePatch> implements ApplyFilePatch {
-  protected final static Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.patch.apply.ApplyFilePatchBase");
+  protected final static Logger LOG = Logger.getInstance(ApplyFilePatchBase.class);
   protected final T myPatch;
 
   public ApplyFilePatchBase(T patch) {

@@ -33,7 +33,7 @@ import java.util.Set;
  * @author peter
  */
 public class KeywordParser {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.highlighter.custom.tokens.KeywordParser");
+  private static final Logger LOG = Logger.getInstance(KeywordParser.class);
   private final List<Set<String>> myKeywordSets = new ArrayList<Set<String>>();
   private final CharTrie myTrie = new CharTrie();
   private final TIntHashSet myHashCodes = new TIntHashSet();

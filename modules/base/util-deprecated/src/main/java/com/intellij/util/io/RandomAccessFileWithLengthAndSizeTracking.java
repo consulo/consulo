@@ -26,7 +26,7 @@ import java.io.RandomAccessFile;
  * Note that sharing policy is the same as RandomAccessFile
  */
 class RandomAccessFileWithLengthAndSizeTracking extends RandomAccessFile {
-  private static final Logger LOG = Logger.getInstance(RandomAccessFileWithLengthAndSizeTracking.class.getName());
+  private static final Logger LOG = Logger.getInstance(RandomAccessFileWithLengthAndSizeTracking.class);
   private static final boolean doAssertions = SystemProperties.getBooleanProperty("idea.do.random.access.wrapper.assertions", false);
 
   private final String myPath;

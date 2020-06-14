@@ -43,7 +43,7 @@ public class PasswordDatabase implements PersistentStateComponent<PasswordDataba
   /**
    * The name of logger
    */
-  private final static Logger LOG = Logger.getInstance(PasswordDatabase.class.getName());
+  private final static Logger LOG = Logger.getInstance(PasswordDatabase.class);
   /**
    * The password database
    */

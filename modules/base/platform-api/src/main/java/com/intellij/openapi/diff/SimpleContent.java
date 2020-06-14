@@ -39,7 +39,7 @@ import java.nio.ByteBuffer;
  * @see #setReadOnly(boolean)
  */
 public class SimpleContent extends DiffContent {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.SimpleContent");
+  private static final Logger LOG = Logger.getInstance(SimpleContent.class);
 
   private final byte[] myOriginalBytes;
   private final String myOriginalText;

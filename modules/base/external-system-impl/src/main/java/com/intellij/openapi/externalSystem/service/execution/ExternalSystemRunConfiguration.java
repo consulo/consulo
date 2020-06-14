@@ -50,7 +50,7 @@ import java.util.List;
  */
 public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
 
-  private static final Logger LOG = Logger.getInstance("#" + ExternalSystemRunConfiguration.class.getName());
+  private static final Logger LOG = Logger.getInstance(ExternalSystemRunConfiguration.class);
 
   private ExternalSystemTaskExecutionSettings mySettings = new ExternalSystemTaskExecutionSettings();
 

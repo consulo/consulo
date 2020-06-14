@@ -42,7 +42,7 @@ import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 
 public class LeafPsiElement extends LeafElement implements PsiElement, NavigationItem {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.tree.LeafPsiElement");
+  private static final Logger LOG = Logger.getInstance(LeafPsiElement.class);
 
   public LeafPsiElement(@Nonnull IElementType type, CharSequence text) {
     super(type, text);

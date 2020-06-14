@@ -8,7 +8,6 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.CaretSpecificDataContext;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
@@ -25,22 +24,23 @@ import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapHelper;
 import com.intellij.openapi.editor.impl.view.EditorPainter;
 import com.intellij.openapi.ide.CopyPasteManager;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.Key;
-import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import com.intellij.util.text.CharArrayUtil;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolderBase;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 
 public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.impl.CaretImpl");
+  private static final Logger LOG = Logger.getInstance(DesktopCaretImpl.class);
   private static final Key<CaretVisualAttributes> VISUAL_ATTRIBUTES_KEY = new Key<>("CaretAttributes");
 
   private final DesktopEditorImpl myEditor;

@@ -38,7 +38,7 @@ import javax.annotation.Nullable;
 
 public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFileEx, PsiElementWithSubtreeChangeNotifier {
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.LightPsiFileImpl");
+  private static final Logger LOG = Logger.getInstance(LightPsiFileImpl.class);
   private PsiFile myOriginalFile = null;
   private boolean myExplicitlySetAsValid = false;
   private boolean myInvalidated = false;

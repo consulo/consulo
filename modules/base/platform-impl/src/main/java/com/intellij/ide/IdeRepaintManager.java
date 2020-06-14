@@ -38,7 +38,7 @@ import java.util.Map;
  */
 @ReviewAfterMigrationToJRE(9)
 public class IdeRepaintManager extends RepaintManager {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.HackyRepaintManager");
+  private static final Logger LOG = Logger.getInstance(IdeRepaintManager.class);
 
   private Map<GraphicsConfiguration, VolatileImage> myImagesMap;
 

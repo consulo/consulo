@@ -50,7 +50,7 @@ import static com.intellij.util.ImageLoader.ImageDesc.Type.SVG;
 import static com.intellij.util.ui.JBUI.ScaleType.PIX_SCALE;
 
 public class ImageLoader implements Serializable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.ImageLoader");
+  private static final Logger LOG = Logger.getInstance(ImageLoader.class);
 
   public static final long CACHED_IMAGE_MAX_SIZE = (long)(SystemProperties.getFloatProperty("ide.cached.image.max.size", 1.5f) * 1024 * 1024);
   private static final ConcurrentMap<String, Image> ourCache = ContainerUtil.createConcurrentSoftValueMap();

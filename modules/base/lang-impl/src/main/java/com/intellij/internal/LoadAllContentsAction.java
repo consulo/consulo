@@ -41,7 +41,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class LoadAllContentsAction extends AnAction implements DumbAware {
-  private static final Logger LOG = Logger.getInstance("com.intellij.internal.LoadAllContentsAction");
+  private static final Logger LOG = Logger.getInstance(LoadAllContentsAction.class);
   public LoadAllContentsAction() {
     super("Load all files content", "Measure FileUtil.loadFile() for all files in the project", null);
   }

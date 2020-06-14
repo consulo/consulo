@@ -9,7 +9,7 @@ import consulo.injecting.InjectingContainer;
  * @author peter
  */
 public class SemContributorEP extends AbstractExtensionPointBean {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.semantic.SemContributorEP");
+  private static final Logger LOG = Logger.getInstance(SemContributorEP.class);
 
   @Attribute("implementation")
   public String implementation;

@@ -129,6 +129,6 @@ public class RecursionDlg extends DialogWrapper {
   private JCheckBox cbSubdirs;
   private final Project project;
 
-  private static final Logger logger = Logger.getInstance(RecursionDlg.class.getName());
+  private static final Logger logger = Logger.getInstance(RecursionDlg.class);
 
 }

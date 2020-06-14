@@ -67,7 +67,7 @@ import java.util.List;
 import java.util.*;
 
 public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implements OccurenceNavigator {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.hierarchy.HierarchyBrowserBaseEx");
+  private static final Logger LOG = Logger.getInstance(HierarchyBrowserBaseEx.class);
 
   @NonNls private static final String HELP_ID = "reference.toolWindows.hierarchy";
 

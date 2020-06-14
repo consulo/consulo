@@ -40,7 +40,7 @@ import javax.annotation.Nonnull;
 
 @SuppressWarnings("deprecation")
 public class DesktopPsiAwareTextEditorProvider extends DesktopTextEditorProvider {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.text.PsiAwareTextEditorProvider");
+  private static final Logger LOG = Logger.getInstance(DesktopPsiAwareTextEditorProvider.class);
   @NonNls
   private static final String FOLDING_ELEMENT = "folding";
 

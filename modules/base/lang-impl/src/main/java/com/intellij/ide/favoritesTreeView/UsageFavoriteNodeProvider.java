@@ -61,7 +61,7 @@ public class UsageFavoriteNodeProvider extends FavoriteNodeProvider {
         return o.getPath();
       }
     });
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.favoritesTreeView.UsageFavoriteNodeProvider");
+  private static final Logger LOG = Logger.getInstance(UsageFavoriteNodeProvider.class);
 
   static {
     final TreeSet<WorkingSetSerializable> usageSet = createSet();

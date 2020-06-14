@@ -76,7 +76,7 @@ import java.util.List;
 
 @Singleton
 public final class DaemonListeners implements Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.daemon.impl.DaemonListeners");
+  private static final Logger LOG = Logger.getInstance(DaemonListeners.class);
 
   private final Project myProject;
   private final DaemonCodeAnalyzerImpl myDaemonCodeAnalyzer;

@@ -23,7 +23,7 @@ import consulo.logging.Logger;
  * @author Dennis.Ushakov
  */
 public abstract class MemberInfoBase<T extends PsiElement> {
-  protected static final Logger LOG = Logger.getInstance("#com.intellij.refactoring.extractSuperclass.MemberInfo");
+  protected static final Logger LOG = Logger.getInstance(MemberInfoBase.class);
   protected T myMember;
   protected boolean isStatic;
   protected String displayName;

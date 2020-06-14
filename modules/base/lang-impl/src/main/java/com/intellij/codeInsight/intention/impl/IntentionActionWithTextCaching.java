@@ -43,7 +43,7 @@ import java.util.function.BiConsumer;
  * @author cdr
  */
 public class IntentionActionWithTextCaching implements Comparable<IntentionActionWithTextCaching>, PossiblyDumbAware, ShortcutProvider {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.intention.impl.IntentionActionWithTextCaching");
+  private static final Logger LOG = Logger.getInstance(IntentionActionWithTextCaching.class);
   private final List<IntentionAction> myOptionIntentions = new ArrayList<>();
   private final List<IntentionAction> myOptionErrorFixes = new ArrayList<>();
   private final List<IntentionAction> myOptionInspectionFixes = new ArrayList<>();

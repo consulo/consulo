@@ -31,7 +31,7 @@ import java.util.Iterator;
  * @author Vladimir Kondratyev
  */
 public class TodoFilter implements Cloneable{
-  private static final Logger LOG=Logger.getInstance("#com.intellij.ide.todo.TodoFilter");
+  private static final Logger LOG=Logger.getInstance(TodoFilter.class);
 
   private String myName;
   // TODO[vova] use array for storing TodoPatterns. Perhaps it's better...

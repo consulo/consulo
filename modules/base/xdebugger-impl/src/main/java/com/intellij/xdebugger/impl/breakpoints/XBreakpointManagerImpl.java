@@ -49,7 +49,7 @@ import java.util.*;
  * @author nik
  */
 public class XBreakpointManagerImpl implements XBreakpointManager, PersistentStateComponent<XBreakpointManagerImpl.BreakpointManagerState> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.xdebugger.impl.breakpoints.XBreakpointManagerImpl");
+  private static final Logger LOG = Logger.getInstance(XBreakpointManagerImpl.class);
   public static final SkipDefaultValuesSerializationFilters SERIALIZATION_FILTER = new SkipDefaultValuesSerializationFilters();
   private final MultiValuesMap<XBreakpointType, XBreakpointBase<?, ?, ?>> myBreakpoints = new MultiValuesMap<>(true);
   private final Map<XBreakpointType, XBreakpointBase<?, ?, ?>> myDefaultBreakpoints = new LinkedHashMap<>();

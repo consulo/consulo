@@ -44,7 +44,7 @@ public class VcsContentAnnotationImpl implements VcsContentAnnotation {
   private final Project myProject;
   private final VcsContentAnnotationSettings mySettings;
   private final ContentAnnotationCache myContentAnnotationCache;
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.contentAnnotation.VcsContentAnnotationImpl");
+  private static final Logger LOG = Logger.getInstance(VcsContentAnnotationImpl.class);
 
   public static VcsContentAnnotation getInstance(final Project project) {
     return ServiceManager.getService(project, VcsContentAnnotation.class);

@@ -77,7 +77,7 @@ import java.util.List;
 import static com.intellij.util.ObjectUtils.notNull;
 
 public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvider {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.history.impl.VcsHistoryDialog");
+  private static final Logger LOG = Logger.getInstance(VcsSelectionHistoryDialog.class);
 
   private static final VcsRevisionNumber LOCAL_REVISION_NUMBER = new VcsRevisionNumber() {
     @Override

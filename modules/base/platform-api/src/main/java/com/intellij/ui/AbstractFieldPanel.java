@@ -37,7 +37,7 @@ import java.util.ArrayList;
  * @author Alexey Kudravtsev
  */
 public abstract class AbstractFieldPanel extends JPanel {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ui.AbstractFieldPanel");
+  private static final Logger LOG = Logger.getInstance(AbstractFieldPanel.class);
   private final JComponent myComponent;
   private Runnable myChangeListener;
   protected ArrayList<JButton> myButtons = new ArrayList<JButton>(1);

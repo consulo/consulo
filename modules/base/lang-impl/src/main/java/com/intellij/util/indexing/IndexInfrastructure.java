@@ -123,7 +123,7 @@ public class IndexInfrastructure {
         return finish();
       }
       finally {
-        Logger.getInstance(getClass().getName()).info("Initialization done: " + (System.nanoTime() - started) / 1000000);
+        Logger.getInstance(getClass()).info("Initialization done: " + (System.nanoTime() - started) / 1000000);
       }
     }
 

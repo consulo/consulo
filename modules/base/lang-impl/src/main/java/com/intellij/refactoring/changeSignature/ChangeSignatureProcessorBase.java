@@ -50,7 +50,7 @@ import java.util.Set;
  * @author Maxim.Medvedev
  */
 public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProcessor {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.refactoring.changeSignature.ChangeSignatureProcessorBase");
+  private static final Logger LOG = Logger.getInstance(ChangeSignatureProcessorBase.class);
 
   protected final ChangeInfo myChangeInfo;
   protected final PsiManager myManager;

@@ -35,7 +35,7 @@ import java.util.*;
 import static com.intellij.util.containers.ContainerUtil.newHashSet;
 
 public class ChangeListsIndexes {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.ChangeListsIndexes");
+  private static final Logger LOG = Logger.getInstance(ChangeListsIndexes.class);
   private final TreeMap<FilePath, FileStatus> myFileToStatus;
   private final Map<FilePath, Pair<VcsKey, VcsRevisionNumber>> myFileToVcs;
 

@@ -33,7 +33,7 @@ import java.io.IOException;
  * Date: 22-Mar-2006
  */
 public class LogFilter implements JDOMExternalizable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.diagnostic.logging.LogFilter");
+  private static final Logger LOG = Logger.getInstance(LogFilter.class);
 
   public String myName;
   public String myIconPath;

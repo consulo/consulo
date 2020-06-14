@@ -21,7 +21,7 @@ import consulo.logging.Logger;
  * @author Dmitry.Shtukenberg
  */
 public final class VariableWidthIntArray implements Cloneable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.containers.VariableWidthIntArray");
+  private static final Logger LOG = Logger.getInstance(VariableWidthIntArray.class);
 
   private int[] intArray = null;
   private short[] shortArray = null;

@@ -56,7 +56,7 @@ import java.util.List;
  * @since 29-May-2006
  */
 public abstract class MasterDetailsComponent implements Configurable, MasterDetails {
-  protected static final Logger LOG = Logger.getInstance("#com.intellij.openapi.ui.MasterDetailsComponent");
+  protected static final Logger LOG = Logger.getInstance(MasterDetailsComponent.class);
 
   protected NamedConfigurable myCurrentConfigurable;
   protected final JBSplitter mySplitter;

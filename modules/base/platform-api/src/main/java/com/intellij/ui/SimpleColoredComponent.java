@@ -59,7 +59,7 @@ import java.util.Locale;
  */
 @SuppressWarnings({"NonPrivateFieldAccessedInSynchronizedContext", "FieldAccessedSynchronizedAndUnsynchronized", "UnusedDeclaration"})
 public class SimpleColoredComponent extends JComponent implements Accessible, ColoredTextContainer {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ui.SimpleColoredComponent");
+  private static final Logger LOG = Logger.getInstance(SimpleColoredComponent.class);
 
   public static final Color SHADOW_COLOR = new JBColor(new Color(250, 250, 250, 140), Gray._0.withAlpha(50));
   public static final Color STYLE_SEARCH_MATCH_BACKGROUND = SHADOW_COLOR; //api compatibility

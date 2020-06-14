@@ -35,7 +35,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.*;
 
 public class AbstractTreeUpdater implements Disposable, Activatable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.util.treeView.AbstractTreeUpdater");
+  private static final Logger LOG = Logger.getInstance(AbstractTreeUpdater.class);
 
   private final LinkedList<TreeUpdatePass> myNodeQueue = new LinkedList<>();
   private final AbstractTreeBuilder myTreeBuilder;

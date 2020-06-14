@@ -35,7 +35,7 @@ import org.jetbrains.annotations.NonNls;
 import java.util.*;
 
 public class ProjectMacrosUtil {
-  private static final Logger LOG = Logger.getInstance("#" + ProjectMacrosUtil.class.getName());
+  private static final Logger LOG = Logger.getInstance(ProjectMacrosUtil.class);
 
   private ProjectMacrosUtil() {
   }

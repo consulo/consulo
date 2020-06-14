@@ -33,7 +33,7 @@ import java.util.Map;
 @DeprecationInfo(value = "Please avoid using this class. Sometimes if u trying load from plugins, 'componentResourcePath' can be duplicated. But files are " +
                          "different, and it provide bug. Use 'ep.getClass().getClassLoader().getResourceAsStream()'", until = "3.0")
 public class DecodeDefaultsUtil {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.application.ex.DecodeDefaultsUtil");
+  private static final Logger LOG = Logger.getInstance(DecodeDefaultsUtil.class);
   private static final Map<String, URL> myResourceCache = Collections.synchronizedMap(new HashMap<String, URL>());
 
   @NonNls private static final String XML_EXTENSION = ".xml";

@@ -41,7 +41,7 @@ import java.util.*;
  * just logic here: do modifications to group of change lists
  */
 public class ChangeListWorker implements ChangeListsWriteOperations {
-  private final static Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.ChangeListWorker");
+  private final static Logger LOG = Logger.getInstance(ChangeListWorker.class);
 
   private final Project myProject;
   private final Map<String, LocalChangeList> myMap;

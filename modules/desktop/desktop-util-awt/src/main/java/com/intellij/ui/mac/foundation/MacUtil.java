@@ -28,7 +28,7 @@ import static com.intellij.ui.mac.foundation.Foundation.*;
  * @author pegov
  */
 public class MacUtil {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ui.mac.foundation.MacUtil");
+  private static final Logger LOG = Logger.getInstance(MacUtil.class);
   public static final String MAC_NATIVE_WINDOW_SHOWING = "MAC_NATIVE_WINDOW_SHOWING";
 
   private MacUtil() {

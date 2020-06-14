@@ -29,7 +29,7 @@ import java.util.*;
  * </ul>
  */
 public class UnsafeWeakList<T> extends AbstractList<T> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.containers.UnsafeWeakList");
+  private static final Logger LOG = Logger.getInstance(UnsafeWeakList.class);
   protected final WeakReferenceArray<T> myArray;
 
   public UnsafeWeakList() {

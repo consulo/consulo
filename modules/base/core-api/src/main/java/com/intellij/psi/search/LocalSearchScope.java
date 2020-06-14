@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Set;
 
 public class LocalSearchScope extends SearchScope {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.search.LocalSearchScope");
+  private static final Logger LOG = Logger.getInstance(LocalSearchScope.class);
 
   private final PsiElement[] myScope;
   private final boolean myIgnoreInjectedPsi;

@@ -66,7 +66,7 @@ import java.util.*;
 public class InspectionProfileImpl extends ProfileEx implements ModifiableModel, InspectionProfile, ExternalizableScheme {
   @NonNls public static final String INSPECTION_TOOL_TAG = "inspection_tool";
   @NonNls public static final String CLASS_TAG = "class";
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.ex.InspectionProfileImpl");
+  private static final Logger LOG = Logger.getInstance(InspectionProfileImpl.class);
   @NonNls private static final String VALID_VERSION = "1.0";
   @NonNls private static final String VERSION_TAG = "version";
   @NonNls private static final String USED_LEVELS = "used_levels";

@@ -33,7 +33,7 @@ import java.awt.event.MouseEvent;
  * @author Vladimir Kondratyev
  */
 public class Splitter extends JPanel implements Splittable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.ui.Splitter");
+  private static final Logger LOG = Logger.getInstance(Splitter.class);
   @NonNls public static final String PROP_PROPORTION = "proportion";
   @NonNls public static final String PROP_ORIENTATION = "orientation";
 

@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author nik
  */
 public class RemoteFileInfo implements RemoteContentProvider.DownloadingCallback {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.impl.http.RemoteFileInfo");
+  private static final Logger LOG = Logger.getInstance(RemoteFileInfo.class);
   private final Object myLock = new Object();
   private final String myUrl;
   private final RemoteFileManagerImpl myManager;

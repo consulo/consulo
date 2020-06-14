@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
  * @author peter
  */
 public class CompletionAutoPopupHandler extends TypedHandlerDelegate {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.editorActions.CompletionAutoPopupHandler");
+  private static final Logger LOG = Logger.getInstance(CompletionAutoPopupHandler.class);
   public static volatile Key<Boolean> ourTestingAutopopup = Key.create("TestingAutopopup");
 
   @Nonnull

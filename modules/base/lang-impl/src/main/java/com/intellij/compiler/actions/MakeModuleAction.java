@@ -26,7 +26,7 @@ import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public class MakeModuleAction extends CompileActionBase {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.actions.MakeModuleAction");
+  private static final Logger LOG = Logger.getInstance(MakeModuleAction.class);
 
   @RequiredUIAccess
   protected void doAction(DataContext dataContext, Project project) {

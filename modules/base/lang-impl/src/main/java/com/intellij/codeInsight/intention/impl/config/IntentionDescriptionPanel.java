@@ -48,7 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IntentionDescriptionPanel {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.intention.impl.config.IntentionDescriptionPanel");
+  private static final Logger LOG = Logger.getInstance(IntentionDescriptionPanel.class);
   private JPanel myPanel;
 
   private JPanel myAfterPanel;

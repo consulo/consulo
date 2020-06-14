@@ -40,7 +40,7 @@ import java.awt.*;
  * @author nik
  */
 public class XQuickEvaluateHandler extends QuickEvaluateHandler {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.xdebugger.impl.evaluate.quick.XQuickEvaluateHandler");
+  private static final Logger LOG = Logger.getInstance(XQuickEvaluateHandler.class);
 
   @Override
   public boolean isEnabled(@Nonnull final Project project) {

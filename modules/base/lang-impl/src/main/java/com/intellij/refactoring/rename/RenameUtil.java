@@ -53,7 +53,7 @@ import consulo.logging.Logger;
 import java.util.*;
 
 public class RenameUtil {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.refactoring.rename.RenameUtil");
+  private static final Logger LOG = Logger.getInstance(RenameUtil.class);
 
   private RenameUtil() {
   }

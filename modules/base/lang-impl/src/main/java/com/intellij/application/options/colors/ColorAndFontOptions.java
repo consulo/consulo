@@ -176,7 +176,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
   private boolean myApplyCompleted = false;
   private boolean myDisposeCompleted = false;
   private final Disposable myDisposable = Disposable.newDisposable();
-  private static final Logger LOG = Logger.getInstance("#com.intellij.application.options.colors.ColorAndFontOptions");
+  private static final Logger LOG = Logger.getInstance(ColorAndFontOptions.class);
 
   @Override
   public boolean isModified() {

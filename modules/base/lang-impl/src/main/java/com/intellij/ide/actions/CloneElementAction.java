@@ -26,7 +26,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.refactoring.copy.CopyHandler;
 
 public class CloneElementAction extends CopyElementAction {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.actions.CloneElementAction");
+  private static final Logger LOG = Logger.getInstance(CloneElementAction.class);
 
   @Override
   protected void doCopy(PsiElement[] elements, PsiDirectory defaultTargetDirectory) {

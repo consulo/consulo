@@ -55,7 +55,7 @@ import java.util.List;
  * @author mike
  */
 public class StorageUtil {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.components.impl.stores.StorageUtil");
+  private static final Logger LOG = Logger.getInstance(StorageUtil.class);
 
   private static final byte[] XML_PROLOG = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>".getBytes(CharsetToolkit.UTF8_CHARSET);
 

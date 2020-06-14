@@ -52,7 +52,7 @@ import java.awt.event.ActionListener;
  * @author nik
  */
 public class RemoteFilePanel implements PropertyChangeListener {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.http.RemoteFilePanel");
+  private static final Logger LOG = Logger.getInstance(RemoteFilePanel.class);
   @NonNls private static final String ERROR_CARD = "error";
   @NonNls private static final String DOWNLOADING_CARD = "downloading";
   @NonNls private static final String EDITOR_CARD = "editor";

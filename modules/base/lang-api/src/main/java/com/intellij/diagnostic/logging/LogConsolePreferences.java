@@ -80,7 +80,7 @@ public class LogConsolePreferences extends LogFilterRegistrar {
   @NonNls public final static Pattern EXCEPTION_PATTERN = Pattern.compile(".*at .*");
 
   private final List<LogFilterListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
-  private static final Logger LOG = Logger.getInstance("#" + LogConsolePreferences.class.getName());
+  private static final Logger LOG = Logger.getInstance(LogConsolePreferences.class);
 
   public static LogConsolePreferences getInstance(Project project) {
     return ServiceManager.getService(project, LogConsolePreferences.class);

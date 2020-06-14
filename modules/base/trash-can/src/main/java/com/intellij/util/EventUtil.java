@@ -25,7 +25,7 @@ import java.lang.reflect.Proxy;
 import java.util.EventListener;
 
 public class EventUtil {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.EventUtil");
+  private static final Logger LOG = Logger.getInstance(EventUtil.class);
 
   public static <T extends EventListener> T createWeakListener(final Class<T> listenerClass, T listener) {
     final WeakReference reference = new WeakReference(listener);

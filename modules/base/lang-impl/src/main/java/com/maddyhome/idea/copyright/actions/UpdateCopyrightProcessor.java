@@ -34,7 +34,7 @@ import com.maddyhome.idea.copyright.psi.UpdatePsiFileCopyright;
 import consulo.logging.Logger;
 
 public class UpdateCopyrightProcessor extends AbstractFileProcessor {
-  private static final Logger logger = Logger.getInstance(UpdateCopyrightProcessor.class.getName());
+  private static final Logger logger = Logger.getInstance(UpdateCopyrightProcessor.class);
 
   public static final String TITLE = "Update Copyright";
   public static final String MESSAGE = "Updating copyrights...";

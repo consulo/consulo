@@ -41,7 +41,7 @@ import java.util.concurrent.TimeUnit;
  * own inner synchronization
  */
 public class UpdateRequestsQueue {
-  private final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.UpdateRequestsQueue");
+  private final Logger LOG = Logger.getInstance(UpdateRequestsQueue.class);
   private static final String ourHeavyLatchOptimization = "vcs.local.changes.track.heavy.latch";
   private final Project myProject;
   private ChangeListManagerImpl.Scheduler myScheduler;

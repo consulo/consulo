@@ -40,7 +40,7 @@ import javax.swing.tree.TreeNode;
 import java.util.*;
 
 public abstract class InspectionRVContentProvider {
-  private static final Logger LOG = Logger.getInstance("#" + InspectionRVContentProvider.class.getName());
+  private static final Logger LOG = Logger.getInstance(InspectionRVContentProvider.class);
   private final Project myProject;
 
   public InspectionRVContentProvider(@Nonnull Project project) {

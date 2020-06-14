@@ -34,7 +34,7 @@ import java.net.URL;
  * @author nik
  */
 public class DefaultRemoteContentProvider extends RemoteContentProvider {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.impl.http.DefaultRemoteContentProvider");
+  private static final Logger LOG = Logger.getInstance(DefaultRemoteContentProvider.class);
   private static final int CONNECT_TIMEOUT = 60 * 1000;
   private static final int READ_TIMEOUT = 60 * 1000;
 

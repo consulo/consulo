@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, RootProvider {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.impl.impl.LibraryImpl");
+  private static final Logger LOG = Logger.getInstance(LibraryImpl.class);
   @NonNls
   public static final String LIBRARY_NAME_ATTR = "name";
   @NonNls

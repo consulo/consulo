@@ -58,7 +58,7 @@ import java.util.Map;
 @State(name = "CopyrightManager", storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/copyright/", stateSplitter = CopyrightManager.CopyrightStateSplitter.class)})
 @Singleton
 public class CopyrightManager implements PersistentStateComponent<Element> {
-  private static final Logger LOG = Logger.getInstance(CopyrightManager.class.getName());
+  private static final Logger LOG = Logger.getInstance(CopyrightManager.class);
   @NonNls
   private static final String COPYRIGHT = "copyright";
   @NonNls

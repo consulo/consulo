@@ -40,7 +40,7 @@ import java.util.*;
 
 public class PlaybackRunner {
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ui.debugger.extensions.PlaybackRunner");
+  private static final Logger LOG = Logger.getInstance(PlaybackRunner.class);
 
   private Robot myRobot;
 

@@ -28,7 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 
 class PageSizes {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeEditor.printing.PageSizes");
+  private static final Logger LOG = Logger.getInstance(PageSizes.class);
   private static ArrayList myPageSizes = null;
   private static HashMap myNamesToPageSizes = null;
   private static final double MM_TO_INCH = 1/25.4;

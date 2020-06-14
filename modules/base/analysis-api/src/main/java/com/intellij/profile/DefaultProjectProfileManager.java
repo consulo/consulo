@@ -43,7 +43,7 @@ import java.util.Map;
  * Date: 30-Nov-2005
  */
 public abstract class DefaultProjectProfileManager extends ProjectProfileManager implements PersistentStateComponent<Element> {
-  protected static final Logger LOG = Logger.getInstance("#com.intellij.profile.DefaultProjectProfileManager");
+  protected static final Logger LOG = Logger.getInstance(DefaultProjectProfileManager.class);
 
   @NonNls
   public static final String SCOPES = "scopes";

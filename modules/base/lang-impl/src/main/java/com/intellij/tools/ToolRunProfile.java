@@ -45,7 +45,7 @@ import javax.annotation.Nonnull;
  *         Date: Mar 30, 2005
  */
 public class ToolRunProfile implements ModuleRunProfile{
-  private static final Logger LOG = Logger.getInstance("#com.intellij.tools.ToolRunProfile");
+  private static final Logger LOG = Logger.getInstance(ToolRunProfile.class);
   private final Tool myTool;
   private final DataContext myContext;
   private final GeneralCommandLine myCommandLine;

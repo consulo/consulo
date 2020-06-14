@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public abstract class InterruptibleActivity {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.util.process.InterruptibleActivity");
+  private static final Logger LOG = Logger.getInstance(InterruptibleActivity.class);
 
   private volatile boolean myIsTouched = true;
   private final long myTimeout;

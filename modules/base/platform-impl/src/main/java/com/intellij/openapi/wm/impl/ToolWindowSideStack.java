@@ -27,7 +27,7 @@ import java.util.Stack;
  * @author Vladimir Kondratyev
  */
 public final class ToolWindowSideStack {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.SideStack");
+  private static final Logger LOG = Logger.getInstance(ToolWindowSideStack.class);
   private final Stack myStack;
 
   public ToolWindowSideStack() {

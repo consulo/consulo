@@ -38,7 +38,7 @@ import java.awt.*;
 import java.awt.event.ComponentEvent;
 
 public class PopupUtil {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.ui.popup.util.PopupUtil");
+  private static final Logger LOG = Logger.getInstance(PopupUtil.class);
 
   private PopupUtil() {
   }

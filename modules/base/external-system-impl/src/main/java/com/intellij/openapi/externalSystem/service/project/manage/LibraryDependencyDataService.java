@@ -51,7 +51,7 @@ import static com.intellij.openapi.externalSystem.model.ProjectKeys.MODULE;
 @Order(ExternalSystemConstants.BUILTIN_SERVICE_ORDER)
 public class LibraryDependencyDataService extends AbstractDependencyDataService<LibraryDependencyData, LibraryOrderEntry> {
 
-  private static final Logger LOG = Logger.getInstance("#" + LibraryDependencyDataService.class.getName());
+  private static final Logger LOG = Logger.getInstance(LibraryDependencyDataService.class);
 
   @Nonnull
   @Override

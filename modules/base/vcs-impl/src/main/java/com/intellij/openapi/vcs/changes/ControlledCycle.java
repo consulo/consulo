@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ControlledCycle {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.ControlledCycle");
+  private static final Logger LOG = Logger.getInstance(ControlledCycle.class);
 
   private final Alarm mySimpleAlarm;
   // this interval is also to check for not initialized paths, so it is rather small

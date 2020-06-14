@@ -45,7 +45,7 @@ import static com.intellij.openapi.vcs.changes.committed.IncomingChangeState.Sta
  * @author yole
  */
 public class ChangesCacheFile {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.committed.ChangesCacheFile");
+  private static final Logger LOG = Logger.getInstance(ChangesCacheFile.class);
   private static final int VERSION = 7;
 
   private final File myPath;

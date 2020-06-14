@@ -42,7 +42,7 @@ import java.util.*;
 import static com.intellij.openapi.vfs.VirtualFileVisitor.VisitorException;
 
 public class VfsUtilCore {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.VfsUtilCore");
+  private static final Logger LOG = Logger.getInstance(VfsUtilCore.class);
 
   private static final String MAILTO = "mailto";
 

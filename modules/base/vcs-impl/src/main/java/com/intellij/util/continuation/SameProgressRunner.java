@@ -34,7 +34,7 @@ import com.intellij.util.concurrency.Semaphore;
 public class SameProgressRunner extends GeneralRunner {
   private final Thread myInitThread;
   private final Semaphore mySemaphore;
-  private final static Logger LOG = Logger.getInstance("#com.intellij.util.continuation.SameProgressRunner");
+  private final static Logger LOG = Logger.getInstance(SameProgressRunner.class);
 
   public SameProgressRunner(Project project, boolean cancellable, final String commonName) {
     super(project, cancellable);

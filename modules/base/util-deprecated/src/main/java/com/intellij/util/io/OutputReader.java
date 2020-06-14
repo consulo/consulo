@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 public abstract class OutputReader extends BaseOutputReader {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.io.OutputReader");
+  private static final Logger LOG = Logger.getInstance(OutputReader.class);
 
   private final Semaphore myReadFullySemaphore = new Semaphore();
 

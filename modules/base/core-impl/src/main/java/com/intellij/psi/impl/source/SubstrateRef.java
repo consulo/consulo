@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
  * @author peter
  */
 public abstract class SubstrateRef {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.SubstrateRef");
+  private static final Logger LOG = Logger.getInstance(SubstrateRef.class);
 
   @Nonnull
   public abstract ASTNode getNode();

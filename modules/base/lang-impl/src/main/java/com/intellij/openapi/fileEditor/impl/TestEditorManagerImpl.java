@@ -58,7 +58,7 @@ import java.util.List;
 import java.util.Map;
 
 final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.idea.test.TestEditorManagerImpl");
+  private static final Logger LOG = Logger.getInstance(TestEditorManagerImpl.class);
 
   private final TestEditorSplitter myTestEditorSplitter = new TestEditorSplitter();
 

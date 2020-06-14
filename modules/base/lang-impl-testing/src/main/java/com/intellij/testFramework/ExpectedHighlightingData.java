@@ -59,7 +59,7 @@ import java.util.regex.Pattern;
  * @author cdr
  */
 public class ExpectedHighlightingData {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.testFramework.ExpectedHighlightingData");
+  private static final Logger LOG = Logger.getInstance(ExpectedHighlightingData.class);
 
   @NonNls private static final String ERROR_MARKER = "error";
   @NonNls private static final String WARNING_MARKER = "warning";

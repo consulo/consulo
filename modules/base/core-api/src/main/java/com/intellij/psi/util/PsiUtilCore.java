@@ -61,7 +61,7 @@ import java.util.List;
  * @author yole
  */
 public class PsiUtilCore {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.util.PsiUtilCore");
+  private static final Logger LOG = Logger.getInstance(PsiUtilCore.class);
   public static final PsiElement NULL_PSI_ELEMENT = new NullPsiElement();
   private static class NullPsiElement implements PsiElement {
     @Override

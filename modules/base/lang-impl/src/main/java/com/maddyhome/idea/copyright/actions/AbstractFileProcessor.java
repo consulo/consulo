@@ -348,5 +348,5 @@ public abstract class AbstractFileProcessor {
     }.execute();
   }
 
-  private static final Logger logger = Logger.getInstance(AbstractFileProcessor.class.getName());
+  private static final Logger logger = Logger.getInstance(AbstractFileProcessor.class);
 }

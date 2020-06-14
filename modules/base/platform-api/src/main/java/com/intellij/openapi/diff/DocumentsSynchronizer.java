@@ -28,7 +28,7 @@ import kava.beans.PropertyChangeListener;
 import javax.annotation.Nonnull;
 
 abstract class DocumentsSynchronizer {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.DocumentsSynchonizer");
+  private static final Logger LOG = Logger.getInstance(DocumentsSynchronizer.class);
   private Document myOriginal = null;
   private Document myCopy = null;
   private final Project myProject;

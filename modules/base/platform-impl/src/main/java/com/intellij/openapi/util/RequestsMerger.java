@@ -35,7 +35,7 @@ import java.util.Map;
  * - if request had been submitted while refresh action was in progress, new refresh action is initiated right after first refresh action finishes
  */
 public class RequestsMerger {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.RequestsMerger");
+  private static final Logger LOG = Logger.getInstance(RequestsMerger.class);
 
   private final MyWorker myWorker;
 

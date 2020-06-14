@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.vcs.impl;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -28,14 +27,11 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.startup.StartupManager;
-import consulo.disposer.Disposer;
-import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusListener;
 import com.intellij.openapi.vcs.FileStatusManager;
@@ -45,8 +41,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
-import javax.annotation.Nonnull;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.awt.*;
@@ -65,13 +63,6 @@ public class FileStatusManagerImpl extends FileStatusManager implements ProjectC
   private final Project myProject;
   private final List<FileStatusListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   private FileStatusProvider myFileStatusProvider;
-  private final NotNullLazyValue<FileStatusProvider[]> myExtensions = new NotNullLazyValue<FileStatusProvider[]>() {
-    @Nonnull
-    @Override
-    protected FileStatusProvider[] compute() {
-      return Extensions.getExtensions(FileStatusProvider.EP_NAME, myProject);
-    }
-  };
 
   private static class FileStatusNull implements FileStatus {
     private static final FileStatus INSTANCE = new FileStatusNull();
@@ -142,7 +133,7 @@ public class FileStatusManagerImpl extends FileStatusManager implements ProjectC
   }
 
   public FileStatus calcStatus(@Nonnull final VirtualFile virtualFile) {
-    for (FileStatusProvider extension : myExtensions.getValue()) {
+    for (FileStatusProvider extension : FileStatusProvider.EP_NAME.getExtensionList(myProject)) {
       final FileStatus status = extension.getFileStatus(virtualFile);
       if (status != null) {
         return status;
@@ -166,11 +157,6 @@ public class FileStatusManagerImpl extends FileStatusManager implements ProjectC
     myCachedStatuses.clear();
   }
 
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "FileStatusManager";
-  }
 
   @Override
   public void addFileStatusListener(@Nonnull FileStatusListener listener) {

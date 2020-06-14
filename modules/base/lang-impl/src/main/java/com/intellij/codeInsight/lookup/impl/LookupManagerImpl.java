@@ -35,7 +35,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class LookupManagerImpl extends LookupManager {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.lookup.impl.LookupManagerImpl");
+  private static final Logger LOG = Logger.getInstance(LookupManagerImpl.class);
   private final Project myProject;
   private LookupImpl myActiveLookup = null;
   private Editor myActiveLookupEditor = null;

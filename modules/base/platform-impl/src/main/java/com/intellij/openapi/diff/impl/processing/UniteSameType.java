@@ -25,7 +25,7 @@ import consulo.logging.Logger;
 import javax.annotation.Nonnull;
 
 class UniteSameType implements DiffCorrection {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.processing.UniteSameType");
+  private static final Logger LOG = Logger.getInstance(UniteSameType.class);
   public static final DiffCorrection INSTANCE = new UniteSameType();
   @Override
   public DiffFragment[] correct(DiffFragment[] fragments) {

@@ -45,7 +45,7 @@ import javax.swing.*;
  * Time: 3:13 PM
  */
 public abstract class AbstractRefreshablePanel<T> implements RefreshablePanel<Change> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.AbstractRefreshablePanel");
+  private static final Logger LOG = Logger.getInstance(AbstractRefreshablePanel.class);
   protected final Ticket myTicket;
   private final DetailsPanel myDetailsPanel;
   private final GenericDetailsLoader<Ticket, T> myDetailsLoader;

@@ -36,7 +36,7 @@ import javax.swing.*;
  * The generic password dialog. Use it to ask a password from user with option to remember it.
  */
 public class PasswordSafePromptDialog extends DialogWrapper {
-  private static final Logger LOG = Logger.getInstance(PasswordSafePromptDialog.class.getName());
+  private static final Logger LOG = Logger.getInstance(PasswordSafePromptDialog.class);
 
   private final PasswordPromptComponent myComponent;
 

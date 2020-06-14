@@ -29,7 +29,7 @@ import java.util.Map;
 public class LayeredLexer extends DelegateLexer {
   public static ThreadLocal<Boolean> ourDisableLayersFlag = new ThreadLocal<Boolean>();
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.lexer.LayeredLexer");
+  private static final Logger LOG = Logger.getInstance(LayeredLexer.class);
   private static final int IN_LAYER_STATE = 1024; // TODO: Other value?
   private static final int IN_LAYER_LEXER_FINISHED_STATE = 2048;
 

@@ -48,7 +48,7 @@ import java.nio.charset.Charset;
 import java.util.*;
 
 public class VfsUtil extends VfsUtilCore {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.VfsUtil");
+  private static final Logger LOG = Logger.getInstance(VfsUtil.class);
 
   public static void saveText(@Nonnull VirtualFile file, @Nonnull String text) throws IOException {
     Charset charset = file.getCharset();

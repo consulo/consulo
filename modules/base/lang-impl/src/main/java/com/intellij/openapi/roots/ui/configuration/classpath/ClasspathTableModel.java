@@ -33,7 +33,7 @@ import java.util.List;
 * @author nik
 */
 class ClasspathTableModel extends AbstractTableModel implements ItemRemovable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.ui.configuration.classpath.ClasspathTableModel");
+  private static final Logger LOG = Logger.getInstance(ClasspathTableModel.class);
   public static final String EXPORT_COLUMN_NAME = ProjectBundle.message("modules.order.export.export.column");
   private static final String SCOPE_COLUMN_NAME = ProjectBundle.message("modules.order.export.scope.column");
   public static final int EXPORT_COLUMN = 0;

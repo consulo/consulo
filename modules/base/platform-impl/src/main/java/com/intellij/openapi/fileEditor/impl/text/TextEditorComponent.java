@@ -62,7 +62,7 @@ import java.awt.*;
  * @author Vladimir Kondratyev
  */
 public class TextEditorComponent extends JBLoadingPanel implements DataProvider, Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.text.TextEditorComponent");
+  private static final Logger LOG = Logger.getInstance(TextEditorComponent.class);
 
   private final Project myProject;
   @Nonnull

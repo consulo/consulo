@@ -69,7 +69,7 @@ public class FileUtil extends FileUtilRt {
     }
   };
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.util.io.FileUtil");
+  private static final Logger LOG = Logger.getInstance(FileUtil.class);
 
   @Nonnull
   public static String join(@Nonnull final String... parts) {

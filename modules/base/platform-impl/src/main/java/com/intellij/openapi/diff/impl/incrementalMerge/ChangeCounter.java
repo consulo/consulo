@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class ChangeCounter implements ChangeList.Listener {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.incrementalMerge.ChangeCounter");
+  private static final Logger LOG = Logger.getInstance(ChangeCounter.class);
   private static final Key<ChangeCounter> ourKey = Key.create("ChangeCounter");
   private final MergeList myMergeList;
   private final List<Listener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();

@@ -35,7 +35,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @SuppressWarnings("SSBasedInspection")
 public class LaterInvocator {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.application.impl.LaterInvocator");
+  private static final Logger LOG = Logger.getInstance(LaterInvocator.class);
   private static final boolean DEBUG = LOG.isDebugEnabled();
 
   private static final Object LOCK = new Object();

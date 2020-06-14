@@ -40,7 +40,7 @@ import java.util.Map;
 @Singleton
 public class ProjectDataManager {
 
-  private static final Logger LOG = Logger.getInstance("#" + ProjectDataManager.class.getName());
+  private static final Logger LOG = Logger.getInstance(ProjectDataManager.class);
 
   @Nonnull
   private final NotNullLazyValue<Map<Key<?>, List<ProjectDataService<?, ?>>>> myServices =

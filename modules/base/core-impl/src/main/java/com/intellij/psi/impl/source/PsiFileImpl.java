@@ -53,7 +53,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileEx, PsiFileWithStubSupport, Queryable, PsiElementWithSubtreeChangeNotifier, Cloneable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.PsiFileImpl");
+  private static final Logger LOG = Logger.getInstance(PsiFileImpl.class);
   static final String STUB_PSI_MISMATCH = "stub-psi mismatch";
   private static final AtomicFieldUpdater<PsiFileImpl, FileTrees> ourTreeUpdater = AtomicFieldUpdater.forFieldOfType(PsiFileImpl.class, FileTrees.class);
 

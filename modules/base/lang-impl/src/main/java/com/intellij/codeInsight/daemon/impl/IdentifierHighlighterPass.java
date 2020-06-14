@@ -51,7 +51,7 @@ import java.util.*;
  * @author yole
  */
 public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.daemon.impl.IdentifierHighlighterPass");
+  private static final Logger LOG = Logger.getInstance(IdentifierHighlighterPass.class);
 
   private final PsiFile myFile;
   private final Editor myEditor;

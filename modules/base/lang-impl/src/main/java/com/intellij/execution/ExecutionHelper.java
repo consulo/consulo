@@ -73,7 +73,7 @@ import java.util.List;
  * @date: Oct 4, 2007
  */
 public class ExecutionHelper {
-  private static final Logger LOG = Logger.getInstance(ExecutionHelper.class.getName());
+  private static final Logger LOG = Logger.getInstance(ExecutionHelper.class);
 
   private ExecutionHelper() {
   }

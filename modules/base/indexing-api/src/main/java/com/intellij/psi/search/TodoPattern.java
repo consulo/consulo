@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
  * @author Vladimir Kondratyev
  */
 public class TodoPattern implements Cloneable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.search.TodoPattern");
+  private static final Logger LOG = Logger.getInstance(TodoPattern.class);
 
   private IndexPattern myIndexPattern;
 

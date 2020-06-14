@@ -46,7 +46,7 @@ import java.util.*;
  */
 @Singleton
 public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements ProjectComponent, Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.VcsDirtyScopeManagerImpl");
+  private static final Logger LOG = Logger.getInstance(VcsDirtyScopeManagerImpl.class);
 
   private final Project myProject;
   private final ChangeListManager myChangeListManager;

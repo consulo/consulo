@@ -58,7 +58,7 @@ import java.util.*;
  * @author nik
  */
 public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactBuildTarget, ArtifactCompilerCompileItem, String, VirtualFilePersistentState, ArtifactPackagingItemOutputState> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.packaging.impl.compiler.ArtifactsCompilerInstance");
+  private static final Logger LOG = Logger.getInstance(ArtifactsCompilerInstance.class);
   public static final Logger FULL_LOG = Logger.getInstance("#com.intellij.full-artifacts-compiler-log");
   private ArtifactsProcessingItemsBuilderContext myBuilderContext;
 

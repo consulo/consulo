@@ -78,7 +78,7 @@ public class ConsoleHistoryController {
 
   private static final Key<ConsoleHistoryController> CONTROLLER_KEY = Key.create("CONTROLLER_KEY");
 
-  private static final Logger LOG = Logger.getInstance("com.intellij.execution.console.ConsoleHistoryController");
+  private static final Logger LOG = Logger.getInstance(ConsoleHistoryController.class);
 
   private final static Map<String, ConsoleHistoryModel> ourModels = FactoryMap.createMap(k -> new ConsoleHistoryModel(null), ContainerUtil::createConcurrentWeakValueMap);
 

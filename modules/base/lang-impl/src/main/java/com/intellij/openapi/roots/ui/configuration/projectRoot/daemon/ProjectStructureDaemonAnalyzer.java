@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author nik
  */
 public class ProjectStructureDaemonAnalyzer implements Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.ui.configuration.projectRoot.validation.ProjectStructureDaemonAnalyzer");
+  private static final Logger LOG = Logger.getInstance(ProjectStructureDaemonAnalyzer.class);
   private final Map<ProjectStructureElement, ProjectStructureProblemsHolderImpl> myProblemHolders = new HashMap<ProjectStructureElement, ProjectStructureProblemsHolderImpl>();
   private final MultiValuesMap<ProjectStructureElement, ProjectStructureElementUsage> mySourceElement2Usages = new MultiValuesMap<ProjectStructureElement, ProjectStructureElementUsage>();
   private final MultiValuesMap<ProjectStructureElement, ProjectStructureElementUsage> myContainingElement2Usages = new MultiValuesMap<ProjectStructureElement, ProjectStructureElementUsage>();

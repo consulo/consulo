@@ -44,7 +44,7 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
     return EP_NAME.findExtension(LibraryDataService.class);
   }
 
-  private static final Logger LOG = Logger.getInstance(LibraryDataService.class.getName());
+  private static final Logger LOG = Logger.getInstance(LibraryDataService.class);
 
   @Nonnull
   private final ExternalLibraryPathTypeMapper myLibraryPathTypeMapper;

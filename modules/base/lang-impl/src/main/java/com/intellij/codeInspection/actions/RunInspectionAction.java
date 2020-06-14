@@ -50,7 +50,7 @@ import java.util.Arrays;
  * @author Konstantin Bulenkov
  */
 public class RunInspectionAction extends GotoActionBase {
-  private static final Logger LOGGER = Logger.getInstance("#" + RunInspectionAction.class.getName());
+  private static final Logger LOGGER = Logger.getInstance(RunInspectionAction.class);
 
   public RunInspectionAction() {
     getTemplatePresentation().setText(IdeBundle.message("goto.inspection.action.text"));

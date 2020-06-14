@@ -36,7 +36,7 @@ public class SelectFromListDialog extends DialogWrapper {
   private final JList myList = new JBList(myModel);
   private final JPanel myMainPanel = new JPanel(new BorderLayout());
   
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.ui.SelectFromListDialog");
+  private static final Logger LOG = Logger.getInstance(SelectFromListDialog.class);
 
   public SelectFromListDialog(Project project,
                               Object[] objects,

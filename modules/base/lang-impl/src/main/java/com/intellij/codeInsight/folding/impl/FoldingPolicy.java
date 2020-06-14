@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class FoldingPolicy {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.folding.impl.FoldingPolicy");
+  private static final Logger LOG = Logger.getInstance(FoldingPolicy.class);
 
   private static final GenericElementSignatureProvider GENERIC_PROVIDER = new GenericElementSignatureProvider();
 

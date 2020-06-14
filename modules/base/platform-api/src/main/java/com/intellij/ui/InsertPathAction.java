@@ -33,7 +33,7 @@ import java.awt.event.MouseListener;
 import java.io.File;
 
 public class InsertPathAction extends AnAction {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ui.InsertPathAction");
+  private static final Logger LOG = Logger.getInstance(InsertPathAction.class);
   protected final JTextComponent myTextField;
   protected static final CustomShortcutSet CTRL_F = new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_DOWN_MASK));
   protected final FileChooserDescriptor myDescriptor;

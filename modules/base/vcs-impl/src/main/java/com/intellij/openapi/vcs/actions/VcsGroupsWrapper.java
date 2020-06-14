@@ -29,7 +29,7 @@ import java.util.*;
 
 public class VcsGroupsWrapper extends DefaultActionGroup implements DumbAware {
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.actions.DefaultActionGroup");
+  private static final Logger LOG = Logger.getInstance(VcsGroupsWrapper.class);
 
   private final PresentationFactory myPresentationFactory = new PresentationFactory();
   private AnAction[] myChildren;

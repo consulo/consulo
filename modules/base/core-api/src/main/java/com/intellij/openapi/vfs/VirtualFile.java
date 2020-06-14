@@ -112,7 +112,7 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
   public @interface PropName {
   }
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.VirtualFile");
+  private static final Logger LOG = Logger.getInstance(VirtualFile.class);
   private static final Key<byte[]> BOM_KEY = Key.create("BOM");
   private static final Key<Charset> CHARSET_KEY = Key.create("CHARSET");
 

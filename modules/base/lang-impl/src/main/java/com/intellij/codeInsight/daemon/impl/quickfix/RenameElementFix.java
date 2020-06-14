@@ -35,7 +35,7 @@ import javax.annotation.Nullable;
  * @author ven
  */
 public class RenameElementFix extends LocalQuickFixAndIntentionActionOnPsiElement {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.daemon.impl.quickfix.RenameFileFix");
+  private static final Logger LOG = Logger.getInstance(RenameElementFix.class);
 
   private final String myNewName;
   private final String myText;

@@ -58,7 +58,7 @@ import java.util.Set;
 
 @Singleton
 public class CreatePatchCommitExecutor extends LocalCommitExecutor implements ProjectComponent, JDOMExternalizable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.patch.CreatePatchCommitExecutor");
+  private static final Logger LOG = Logger.getInstance(CreatePatchCommitExecutor.class);
 
   private final Project myProject;
   private final ChangeListManager myChangeListManager;

@@ -54,7 +54,7 @@ import java.util.Map;
  * Author: msk
  */
 public abstract class GotoActionBase extends AnAction {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.actions.GotoActionBase");
+  private static final Logger LOG = Logger.getInstance(GotoActionBase.class);
 
   protected static Class myInAction = null;
   private static final Map<Class, Pair<String, Integer>> ourLastStrings = ContainerUtil.newHashMap();

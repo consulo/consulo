@@ -49,7 +49,7 @@ import java.util.*;
  * @see com.intellij.execution.process.OSProcessHandler
  */
 public class GeneralCommandLine implements UserDataHolder {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.execution.configurations.GeneralCommandLine");
+  private static final Logger LOG = Logger.getInstance(GeneralCommandLine.class);
 
   /**
    * Determines the scope of a parent environment passed to a child process.

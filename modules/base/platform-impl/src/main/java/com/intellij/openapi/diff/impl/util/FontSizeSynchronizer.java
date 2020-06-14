@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class FontSizeSynchronizer {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.util.FontSizeSynchronizer");
+  private static final Logger LOG = Logger.getInstance(FontSizeSynchronizer.class);
   private final Collection<Editor> myEditors = new HashSet<Editor>();
   private final MyFontSizeListener myFontSizeListener = new MyFontSizeListener();
   private int myLastFontSize = -1;

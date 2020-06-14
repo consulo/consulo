@@ -56,7 +56,7 @@ import java.util.*;
 
 @Singleton
 public class PostprocessReformattingAspect implements PomModelAspect {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.PostprocessReformattingAspect");
+  private static final Logger LOG = Logger.getInstance(PostprocessReformattingAspect.class);
   private final Project myProject;
   private final PsiManager myPsiManager;
   private final TreeAspect myTreeAspect;

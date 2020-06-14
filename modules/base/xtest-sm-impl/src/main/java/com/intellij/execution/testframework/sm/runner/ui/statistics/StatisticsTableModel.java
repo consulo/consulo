@@ -32,7 +32,7 @@ import java.util.List;
  * @author Roman Chernyatchik
  */
 public class StatisticsTableModel extends ListTableModel<SMTestProxy> {
-  private static final Logger LOG = Logger.getInstance(StatisticsTableModel.class.getName());
+  private static final Logger LOG = Logger.getInstance(StatisticsTableModel.class);
 
   private SMTestProxy myCurrentSuite;
 

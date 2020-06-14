@@ -47,7 +47,7 @@ import java.util.List;
  * @author max
  */
 public abstract class OptionTreeWithPreviewPanel extends CustomizableLanguageCodeStylePanel {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.application.options.CodeStyleSpacesPanel");
+  private static final Logger LOG = Logger.getInstance(OptionTreeWithPreviewPanel.class);
   protected JTree myOptionsTree;
   protected final ArrayList<BooleanOptionKey> myKeys = new ArrayList<>();
   protected final JPanel myPanel = new JPanel(new GridBagLayout());

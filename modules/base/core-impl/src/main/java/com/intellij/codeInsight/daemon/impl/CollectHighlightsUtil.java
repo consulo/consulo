@@ -35,7 +35,7 @@ import java.util.List;
 public class CollectHighlightsUtil {
   public static final ExtensionPointName<Condition<PsiElement>> EP_NAME = ExtensionPointName.create("com.intellij.elementsToHighlightFilter");
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.daemon.impl.CollectHighlightsUtil");
+  private static final Logger LOG = Logger.getInstance(CollectHighlightsUtil.class);
 
   private CollectHighlightsUtil() { }
 

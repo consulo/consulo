@@ -61,7 +61,7 @@ import java.util.List;
  * @author Alexander Lobas
  */
 public abstract class PropertyTable extends JBTable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.designer.propertyTable.PropertyTable");
+  private static final Logger LOG = Logger.getInstance(PropertyTable.class);
   private static final Comparator<String> GROUP_COMPARATOR = new Comparator<String>() {
     @Override
     public int compare(String o1, String o2) {

@@ -77,7 +77,7 @@ import java.util.List;
 import java.util.*;
 
 public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListener, TypeSafeDataProvider {
-  private static final Logger LOG = Logger.getInstance(IdeErrorsDialog.class.getName());
+  private static final Logger LOG = Logger.getInstance(IdeErrorsDialog.class);
   private final boolean myInternalMode;
   @NonNls
   private static final String ACTIVE_TAB_OPTION = IdeErrorsDialog.class.getName() + "activeTab";

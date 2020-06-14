@@ -23,7 +23,7 @@ import com.intellij.openapi.util.TextRange;
 import javax.annotation.Nonnull;
 
 class SimpleChange extends Change implements DiffRangeMarker.RangeInvalidListener{
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.incrementalMerge.Change");
+  private static final Logger LOG = Logger.getInstance(SimpleChange.class);
   private ChangeType myType;
   private final SimpleChangeSide[] mySides;
   private final ChangeList myChangeList;

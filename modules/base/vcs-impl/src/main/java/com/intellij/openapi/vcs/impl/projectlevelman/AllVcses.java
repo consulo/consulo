@@ -34,7 +34,7 @@ import java.util.*;
 
 @Singleton
 public class AllVcses implements AllVcsesI, Disposable {
-  private final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.impl.projectlevelman.AllVcses");
+  private final Logger LOG = Logger.getInstance(AllVcses.class);
   private final Map<String, AbstractVcs> myVcses;
 
   private final Object myLock;

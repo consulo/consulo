@@ -42,7 +42,7 @@ public class ScopeToolState {
   private HighlightDisplayLevel myLevel;
 
   private JComponent myAdditionalConfigPanel;
-  private static final Logger LOG = Logger.getInstance("#" + ScopeToolState.class.getName());
+  private static final Logger LOG = Logger.getInstance(ScopeToolState.class);
 
   public ScopeToolState(@Nonnull NamedScope scope, @Nonnull InspectionToolWrapper toolWrapper, boolean enabled, @Nonnull HighlightDisplayLevel level) {
     this(scope.getName(), toolWrapper, enabled, level);

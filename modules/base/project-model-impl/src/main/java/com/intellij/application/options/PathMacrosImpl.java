@@ -36,7 +36,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 @State(name = "PathMacrosImpl", storages = @Storage(value = "path.macros.xml", roamingType = RoamingType.DISABLED))
 @Singleton
 public class PathMacrosImpl extends PathMacros implements PersistentStateComponent<Element> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.application.options.PathMacrosImpl");
+  private static final Logger LOG = Logger.getInstance(PathMacrosImpl.class);
   private final Map<String, String> myLegacyMacros = new HashMap<>();
   private final Map<String, String> myMacros = new HashMap<>();
   private int myModificationStamp = 0;

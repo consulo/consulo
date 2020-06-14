@@ -49,7 +49,7 @@ import javax.annotation.Nullable;
  * @author yole
  */
 public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectoryContainer> implements RenameHandler, TitledHandler {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.refactoring.rename.DirectoryAsPackageRenameHandler");
+  private static final Logger LOG = Logger.getInstance(DirectoryAsPackageRenameHandlerBase.class);
 
   protected abstract VirtualFile[] occursInPackagePrefixes(T aPackage);
 

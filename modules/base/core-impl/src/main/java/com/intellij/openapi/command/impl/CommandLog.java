@@ -18,5 +18,5 @@ package com.intellij.openapi.command.impl;
 import consulo.logging.Logger;
 
 public class CommandLog {
-  public static final Logger LOG = Logger.getInstance("#" + CommandLog.class.getPackage().getName());
+  public static final Logger LOG = Logger.getInstance(CommandLog.class.getPackage().getName());
 }

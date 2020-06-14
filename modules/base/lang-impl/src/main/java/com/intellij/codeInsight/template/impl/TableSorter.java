@@ -48,7 +48,7 @@ import java.util.Date;
 import java.util.Vector;
 
 public class TableSorter extends TableMap {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.template.impl.TableSorter");
+  private static final Logger LOG = Logger.getInstance(TableSorter.class);
 
   int indexes[];
   Vector sortingColumns = new Vector();

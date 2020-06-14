@@ -47,7 +47,7 @@ import java.io.FileFilter;
 import java.util.*;
 
 public class CompilerUtil {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.impl.CompilerUtil");
+  private static final Logger LOG = Logger.getInstance(CompilerUtil.class);
 
   public static String quotePath(String path) {
     if(path != null && path.indexOf(' ') != -1) {

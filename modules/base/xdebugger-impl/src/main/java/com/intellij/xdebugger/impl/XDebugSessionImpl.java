@@ -82,7 +82,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author nik
  */
 public class XDebugSessionImpl implements XDebugSession {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.xdebugger.impl.XDebugSessionImpl");
+  private static final Logger LOG = Logger.getInstance(XDebugSessionImpl.class);
   public static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.toolWindowGroup("Debugger messages", ToolWindowId.DEBUG,
                                                                                                false);
   private XDebugProcess myDebugProcess;

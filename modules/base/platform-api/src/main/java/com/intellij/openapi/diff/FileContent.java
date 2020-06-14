@@ -33,7 +33,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class FileContent extends DiffContent {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.FileContent");
+  private static final Logger LOG = Logger.getInstance(FileContent.class);
   @Nonnull
   private final VirtualFile myFile;
   private Document myDocument;

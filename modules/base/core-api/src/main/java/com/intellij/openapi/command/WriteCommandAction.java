@@ -34,7 +34,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.command.WriteCommandAction");
+  private static final Logger LOG = Logger.getInstance(WriteCommandAction.class);
 
   private static final String DEFAULT_COMMAND_NAME = "Undefined";
   private static final String DEFAULT_GROUP_ID = null;

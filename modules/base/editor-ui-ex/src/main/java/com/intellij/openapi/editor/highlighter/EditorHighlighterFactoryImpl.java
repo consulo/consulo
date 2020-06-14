@@ -34,7 +34,7 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class EditorHighlighterFactoryImpl extends EditorHighlighterFactory {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.highlighter.EditorHighlighterFactoryImpl");
+  private static final Logger LOG = Logger.getInstance(EditorHighlighterFactoryImpl.class);
 
   @Nonnull
   @Override

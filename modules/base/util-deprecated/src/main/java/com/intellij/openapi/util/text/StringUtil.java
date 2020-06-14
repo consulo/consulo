@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
 //TeamCity inherits StringUtil: do not add private constructors!!!
 @SuppressWarnings({"UtilityClassWithoutPrivateConstructor", "MethodOverridesStaticMethodOfSuperclass"})
 public class StringUtil extends StringUtilRt {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.util.text.StringUtil");
+  private static final Logger LOG = Logger.getInstance(StringUtil.class);
 
   @NonNls private static final String VOWELS = "aeiouy";
   @NonNls private static final Pattern EOL_SPLIT_KEEP_SEPARATORS = Pattern.compile("(?<=(\r\n|\n))|(?<=\r)(?=[^\n])");

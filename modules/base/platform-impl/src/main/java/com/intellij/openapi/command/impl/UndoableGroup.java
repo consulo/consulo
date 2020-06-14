@@ -39,7 +39,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 class UndoableGroup {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.command.impl.UndoableGroup");
+  private static final Logger LOG = Logger.getInstance(UndoableGroup.class);
 
   private final String myCommandName;
   private final boolean myGlobal;

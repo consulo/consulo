@@ -47,7 +47,7 @@ import java.util.*;
  * @author Vladimir Kondratyev
  */
 public class KeymapImpl implements Keymap, ExternalizableScheme {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.keymap.KeymapImpl");
+  private static final Logger LOG = Logger.getInstance(KeymapImpl.class);
 
   @NonNls private static final String KEY_MAP = "keymap";
   @NonNls private static final String KEYBOARD_SHORTCUT = "keyboard-shortcut";

@@ -49,7 +49,7 @@ public abstract class FileWatcherTest extends PlatformLangTestCase {
   private static final int INTER_RESPONSE_DELAY = 500;  // time to wait for a next event in a sequence
   private static final int NATIVE_PROCESS_DELAY = 60000;  // time to wait for a native watcher response
 
-  private static Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.impl.local.FileWatcher");
+  private static Logger LOG = Logger.getInstance(FileWatcher.class);
 
   private FileWatcher myWatcher;
   private LocalFileSystem myFileSystem;

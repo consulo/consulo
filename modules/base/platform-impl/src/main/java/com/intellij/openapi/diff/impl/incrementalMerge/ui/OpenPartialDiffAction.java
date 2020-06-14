@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 
 class OpenPartialDiffAction extends AnAction implements DumbAware {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.incrementalMerge.ui.OpenPartialDiffAction");
+  private static final Logger LOG = Logger.getInstance(OpenPartialDiffAction.class);
   private final int myLeftIndex;
   private final int myRightIndex;
 

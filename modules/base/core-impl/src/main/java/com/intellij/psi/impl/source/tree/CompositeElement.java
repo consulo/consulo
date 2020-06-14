@@ -47,7 +47,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class CompositeElement extends TreeElement {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.tree.CompositeElement");
+  private static final Logger LOG = Logger.getInstance(CompositeElement.class);
   public static final CompositeElement[] EMPTY_ARRAY = new CompositeElement[0];
 
   private TreeElement firstChild;

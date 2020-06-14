@@ -49,7 +49,7 @@ import java.util.Objects;
  * @param <Value> Value of node descriptor
  */
 public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value> implements ValidateableNode, StatePreservingNavigatable {
-  private static final Logger LOG = Logger.getInstance(AbstractPsiBasedNode.class.getName());
+  private static final Logger LOG = Logger.getInstance(AbstractPsiBasedNode.class);
 
   protected AbstractPsiBasedNode(final Project project, @Nonnull Value value, final ViewSettings viewSettings) {
     super(project, value, viewSettings);

@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.markup.RangeHighlighter;
 import consulo.logging.Logger;
 
 public class CurrentLineMarker implements CaretListener {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.CurrentLineMarker");
+  private static final Logger LOG = Logger.getInstance(CurrentLineMarker.class);
   private Editor myEditor;
   private RangeHighlighter myHighlighter = null;
   public static final int LAYER = HighlighterLayer.CARET_ROW + 1;

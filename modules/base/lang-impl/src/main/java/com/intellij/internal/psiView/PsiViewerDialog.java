@@ -100,7 +100,7 @@ import java.util.regex.Pattern;
 public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disposable {
   private static final String REFS_CACHE = "References Resolve Cache";
   private static final Color SELECTION_BG_COLOR = new JBColor(new Color(0x009999), new Color(0, 80, 80));
-  private static final Logger LOG = Logger.getInstance("#com.intellij.internal.psiView.PsiViewerDialog");
+  private static final Logger LOG = Logger.getInstance(PsiViewerDialog.class);
   private final Project myProject;
 
   private JPanel myPanel;

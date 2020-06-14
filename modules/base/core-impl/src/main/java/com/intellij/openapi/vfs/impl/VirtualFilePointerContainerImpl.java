@@ -34,7 +34,7 @@ import java.util.function.Predicate;
  * @author dsl
  */
 public class VirtualFilePointerContainerImpl implements VirtualFilePointerContainer, Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.pointers.VirtualFilePointerContainer");
+  private static final Logger LOG = Logger.getInstance(VirtualFilePointerContainerImpl.class);
   private static final int UNINITIALIZED = -1;
   @Nonnull
   private final ConcurrentList<VirtualFilePointer> myList = ContainerUtil.createConcurrentList();

@@ -37,7 +37,7 @@ import java.util.Collection;
 import java.util.Map;
 
 public class PackageSetChooserCombo extends ComponentWithBrowseButton<JComponent> {
-  private static final Logger LOG = Logger.getInstance("#" + PackageSetChooserCombo.class.getName());
+  private static final Logger LOG = Logger.getInstance(PackageSetChooserCombo.class);
 
   private final Project myProject;
 

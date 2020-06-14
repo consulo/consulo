@@ -34,7 +34,7 @@ import java.util.concurrent.*;
  * {@link #cancelAllRequests()} and {@link #cancelRequest(Runnable)} allow to cancel already scheduled requests.
  */
 public class Alarm implements Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.Alarm");
+  private static final Logger LOG = Logger.getInstance(Alarm.class);
 
   private volatile boolean myDisposed;
 

@@ -66,7 +66,7 @@ import java.net.URL;
 public class ExportTestResultsAction extends DumbAwareAction {
   private static final String ID = "ExportTestResults";
 
-  private static final Logger LOG = Logger.getInstance(ExportTestResultsAction.class.getName());
+  private static final Logger LOG = Logger.getInstance(ExportTestResultsAction.class);
 
   private TestFrameworkRunningModel myModel;
   private String myToolWindowId;

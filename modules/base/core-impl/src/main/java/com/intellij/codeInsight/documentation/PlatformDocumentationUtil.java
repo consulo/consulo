@@ -31,7 +31,7 @@ import java.util.regex.PatternSyntaxException;
 
 public class PlatformDocumentationUtil {
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.documentation.PlatformDocumentationUtil");
+  private static final Logger LOG = Logger.getInstance(PlatformDocumentationUtil.class);
 
   private static final @NonNls Pattern ourLtFixupPattern = Pattern.compile("<([^/^\\w^!])");
   private static final @NonNls Pattern ourToQuote = Pattern.compile("[\\\\\\.\\^\\$\\?\\*\\+\\|\\)\\}\\]\\{\\(\\[]");

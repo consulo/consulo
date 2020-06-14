@@ -22,7 +22,6 @@ import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.codeInsight.editorActions.emacs.EmacsProcessingHandler;
 import com.intellij.codeInsight.editorActions.emacs.LanguageEmacsExtension;
 import com.intellij.lang.LanguageFormatting;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
@@ -35,12 +34,14 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
-import javax.annotation.Nonnull;
+import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
 
 public class EmacsStyleIndentAction extends BaseCodeInsightAction implements DumbAware {
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.generation.actions.EmacsStyleIndentAction");
+  private static final Logger LOG = Logger.getInstance(EmacsStyleIndentAction.class);
 
   @Nonnull
   @Override

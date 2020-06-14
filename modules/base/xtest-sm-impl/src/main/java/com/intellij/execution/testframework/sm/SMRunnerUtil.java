@@ -28,7 +28,7 @@ import java.awt.event.ActionEvent;
  * @author Roman Chernyatchik
  */
 public class SMRunnerUtil {
-  private static final Logger LOG = Logger.getInstance(SMRunnerUtil.class.getName());
+  private static final Logger LOG = Logger.getInstance(SMRunnerUtil.class);
 
   private SMRunnerUtil() {
   }

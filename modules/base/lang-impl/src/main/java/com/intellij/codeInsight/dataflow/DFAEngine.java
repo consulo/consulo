@@ -22,7 +22,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import java.util.*;
 
 public class DFAEngine<E> {
-  private static final Logger LOG = Logger.getInstance(DFAEngine.class.getName());
+  private static final Logger LOG = Logger.getInstance(DFAEngine.class);
   private static final double TIME_LIMIT = 10e9; // In nanoseconds, 10e9 = 1 sec
 
   private final Instruction[] myFlow;

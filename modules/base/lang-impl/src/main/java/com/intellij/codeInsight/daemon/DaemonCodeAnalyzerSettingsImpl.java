@@ -37,7 +37,7 @@ import javax.inject.Singleton;
 @Singleton
 @State(name = "DaemonCodeAnalyzerSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/editor.codeinsight.xml")})
 public class DaemonCodeAnalyzerSettingsImpl extends DaemonCodeAnalyzerSettings implements PersistentStateComponent<Element>, Cloneable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings");
+  private static final Logger LOG = Logger.getInstance(DaemonCodeAnalyzerSettingsImpl.class);
   @NonNls
   private static final String ROOT_TAG = "root";
   @NonNls

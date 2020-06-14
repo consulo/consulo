@@ -182,7 +182,7 @@ public class PersistentHashMapValueStorage {
 
       long currentLength = myFile.length();
       if (currentLength > mySize) {  // if real file length (unexpectedly) increases
-        Logger.getInstance(getClass().getName()).info("Avoided PSHM corruption due to write failure:" + myPath);
+        Logger.getInstance(getClass()).info("Avoided PSHM corruption due to write failure:" + myPath);
         mySize = currentLength;  // volatile write
       }
     }

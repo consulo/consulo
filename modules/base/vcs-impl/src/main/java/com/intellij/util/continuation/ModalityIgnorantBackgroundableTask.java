@@ -34,7 +34,7 @@ import javax.swing.*;
  * Time: 12:14 PM
  */
 public abstract class ModalityIgnorantBackgroundableTask extends Task.Backgroundable {
-  private final static Logger LOG = Logger.getInstance("#com.intellij.util.continuation.ModalityIgnorantBackgroundableTask");
+  private final static Logger LOG = Logger.getInstance(ModalityIgnorantBackgroundableTask.class);
   private Consumer<Task.Backgroundable> myRunner;
   private int myCnt;
 

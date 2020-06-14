@@ -72,7 +72,7 @@ public class SeverityEditorDialog extends DialogWrapper {
   private final ColorAndFontDescriptionPanel myOptionsPanel = new ColorAndFontDescriptionPanel();
 
   private SeverityBasedTextAttributes myCurrentSelection;
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.ex.SeverityEditorDialog");
+  private static final Logger LOG = Logger.getInstance(SeverityEditorDialog.class);
   private final SeverityRegistrar mySeverityRegistrar;
   private final CardLayout myCard;
   private final JPanel myRightPanel;

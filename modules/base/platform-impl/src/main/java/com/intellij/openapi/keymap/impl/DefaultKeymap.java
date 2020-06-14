@@ -37,7 +37,7 @@ import java.util.List;
  */
 @Singleton
 public class DefaultKeymap {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.keymap.impl.DefaultKeymap");
+  private static final Logger LOG = Logger.getInstance(DefaultKeymap.class);
 
   @NonNls
   private static final String KEY_MAP = "keymap";

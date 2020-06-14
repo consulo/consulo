@@ -28,7 +28,7 @@ import consulo.logging.Logger;
 import javax.annotation.Nonnull;
 
 class VirtualFilePointerImpl implements VirtualFilePointer {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.impl.VirtualFilePointerImpl");
+  private static final Logger LOG = Logger.getInstance(VirtualFilePointerImpl.class);
 
   private static final boolean TRACE_CREATION = LOG.isDebugEnabled() || ApplicationManager.getApplication().isUnitTestMode();
 

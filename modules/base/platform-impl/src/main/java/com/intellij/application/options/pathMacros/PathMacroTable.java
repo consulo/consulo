@@ -37,7 +37,7 @@ import java.util.List;
  *  @author dsl
  */
 public class PathMacroTable extends Table {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.application.options.pathMacros.PathMacroTable");
+  private static final Logger LOG = Logger.getInstance(PathMacroTable.class);
   private final PathMacros myPathMacros = PathMacros.getInstance();
   private final MyTableModel myTableModel = new MyTableModel();
   private static final int NAME_COLUMN = 0;

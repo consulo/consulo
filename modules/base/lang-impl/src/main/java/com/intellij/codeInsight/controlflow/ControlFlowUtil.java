@@ -29,7 +29,7 @@ import java.util.Arrays;
  * @author oleg
  */
 public class ControlFlowUtil {
-  private static final Logger LOG = Logger.getInstance(ControlFlowUtil.class.getName());
+  private static final Logger LOG = Logger.getInstance(ControlFlowUtil.class);
 
   private ControlFlowUtil() {
   }

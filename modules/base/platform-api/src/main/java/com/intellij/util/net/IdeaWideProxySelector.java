@@ -39,7 +39,7 @@ import java.util.regex.Pattern;
  * @since 1/30/13
  */
 public class IdeaWideProxySelector extends ProxySelector {
-  private final static Logger LOG = Logger.getInstance("#com.intellij.util.net.IdeaWideProxySelector");
+  private final static Logger LOG = Logger.getInstance(IdeaWideProxySelector.class);
 
   private final HttpConfigurable myHttpConfigurable;
   private final AtomicReference<ProxySelector> myPacProxySelector = new AtomicReference<ProxySelector>();

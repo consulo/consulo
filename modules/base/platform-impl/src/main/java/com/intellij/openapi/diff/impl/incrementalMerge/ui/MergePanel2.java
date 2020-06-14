@@ -72,7 +72,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 public class MergePanel2 implements DiffViewer {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.incrementalMerge.ui.MergePanel2");
+  private static final Logger LOG = Logger.getInstance(MergePanel2.class);
   private final DiffPanelOuterComponent myPanel;
   private DiffRequest myData;
   private MergeList myMergeList;

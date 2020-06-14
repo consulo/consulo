@@ -32,7 +32,7 @@ import java.util.List;
  * in cmdline, add rcov runner script, etc. Without groups it would be harder to parse abstract list of arguments
  */
 public class ParamsGroup implements Cloneable {
-  private static final Logger LOG = Logger.getInstance(ParamsGroup.class.getName());
+  private static final Logger LOG = Logger.getInstance(ParamsGroup.class);
 
   private String myGroupId;
   private ParametersList myGroupParams = new ParametersList();

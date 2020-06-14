@@ -16,17 +16,17 @@
 package com.intellij.util.io;
 
 import com.intellij.openapi.Forceable;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.SLRUMap;
 import com.intellij.util.containers.ShareableKey;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.Closeable;
 import java.io.File;
 import java.io.Flushable;
@@ -40,7 +40,7 @@ import java.util.List;
  * @author jeka
  */
 public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx<Data>, Forceable, Closeable {
-  protected static final Logger LOG = Logger.getInstance("#com.intellij.util.io.PersistentEnumerator");
+  protected static final Logger LOG = Logger.getInstance(PersistentEnumeratorBase.class);
   protected static final int NULL_ID = 0;
 
   private static final int META_DATA_OFFSET = 4;

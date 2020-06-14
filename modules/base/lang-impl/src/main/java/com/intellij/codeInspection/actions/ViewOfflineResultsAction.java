@@ -67,7 +67,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class ViewOfflineResultsAction extends AnAction implements DumbAware {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.actions.ViewOfflineResultsAction");
+  private static final Logger LOG = Logger.getInstance(ViewOfflineResultsAction.class);
   @NonNls private static final String XML_EXTENSION = "xml";
 
   @Override

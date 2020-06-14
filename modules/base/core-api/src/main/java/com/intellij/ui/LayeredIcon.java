@@ -30,7 +30,7 @@ import java.util.Arrays;
 @Deprecated
 @DeprecationInfo("Desktop only")
 public class LayeredIcon extends JBUI.CachingScalableJBIcon<LayeredIcon> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ui.LayeredIcon");
+  private static final Logger LOG = Logger.getInstance(LayeredIcon.class);
   private final Icon[] myIcons;
   private Icon[] myScaledIcons;
   private final boolean[] myDisabledLayers;

@@ -23,7 +23,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 public class WeakReferenceArray<T> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.containers.WeakReferenceArray");
+  private static final Logger LOG = Logger.getInstance(WeakReferenceArray.class);
 
   static final int MINIMUM_CAPACITY = 5;
   private final ReferenceQueue<T> myQueue = new TReferenceQueue<T>();

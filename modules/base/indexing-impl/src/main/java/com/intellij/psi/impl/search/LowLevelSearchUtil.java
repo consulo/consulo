@@ -48,7 +48,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 public class LowLevelSearchUtil {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.search.LowLevelSearchUtil");
+  private static final Logger LOG = Logger.getInstance(LowLevelSearchUtil.class);
 
   // TRUE/FALSE -> injected psi has been discovered and processor returned true/false;
   // null -> there were nothing injected found

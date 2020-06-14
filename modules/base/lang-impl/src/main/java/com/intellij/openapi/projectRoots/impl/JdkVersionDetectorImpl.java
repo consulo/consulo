@@ -30,7 +30,7 @@ import java.util.concurrent.Future;
 @Singleton
 @Deprecated
 public class JdkVersionDetectorImpl extends JdkVersionDetector {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.projectRoots.impl.SdkVersionUtil");
+  private static final Logger LOG = Logger.getInstance(JdkVersionDetectorImpl.class);
   private static final NotNullFunction<Runnable, Future<?>> ACTION_RUNNER = new NotNullFunction<Runnable, Future<?>>() {
     @Override
     public Future<?> fun(Runnable runnable) {

@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.impl.RangeMarkerImpl");
+  private static final Logger LOG = Logger.getInstance(RangeMarkerImpl.class);
 
   @Nonnull
   private final Object myDocumentOrFile; // either VirtualFile (if any) or DocumentEx if no file associated

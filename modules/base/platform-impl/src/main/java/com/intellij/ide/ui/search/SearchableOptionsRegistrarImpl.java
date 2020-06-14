@@ -71,7 +71,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
     }
   };
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.ui.search.SearchableOptionsRegistrarImpl");
+  private static final Logger LOG = Logger.getInstance(SearchableOptionsRegistrarImpl.class);
   public static final int LOAD_FACTOR = 20;
 
   private static final Pattern REG_EXP = Pattern.compile("[\\W&&[^-]]+");

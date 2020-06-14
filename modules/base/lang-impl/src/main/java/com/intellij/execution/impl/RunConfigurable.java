@@ -127,7 +127,7 @@ class RunConfigurable extends BaseConfigurable {
   private JPanel myWholePanel;
   private final StorageAccessors myProperties = StorageAccessors.createGlobal("RunConfigurable");
   private Configurable mySelectedConfigurable = null;
-  private static final Logger LOG = Logger.getInstance("#com.intellij.execution.impl.RunConfigurable");
+  private static final Logger LOG = Logger.getInstance(RunConfigurable.class);
   private final JTextField myRecentsLimit = new JTextField("5", 2);
   private final JCheckBox myConfirmation = new JCheckBox(ExecutionBundle.message("rerun.confirmation.checkbox"), true);
   private final List<Pair<UnnamedConfigurable, JComponent>> myAdditionalSettings = new ArrayList<Pair<UnnamedConfigurable, JComponent>>();

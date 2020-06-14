@@ -33,7 +33,7 @@ import java.util.List;
 import static com.intellij.psi.codeStyle.CommonCodeStyleSettings.IndentOptions;
 
 public class IndentOptionsDetectorImpl implements IndentOptionsDetector {
-  private static Logger LOG = Logger.getInstance("#com.intellij.psi.codeStyle.CommonCodeStyleSettings.IndentOptionsDetector");
+  private static Logger LOG = Logger.getInstance(IndentOptionsDetectorImpl.class);
 
   private static final double RATE_THRESHOLD = 0.8;
   private static final int MAX_INDENT_TO_DETECT = 8;

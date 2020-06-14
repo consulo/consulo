@@ -56,7 +56,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author Alexander Lobas
  */
 public class Notification {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.notification.Notification");
+  private static final Logger LOG = Logger.getInstance(Notification.class);
   private static final Key<Notification> KEY = Key.create("Notification");
 
   public final String id;

@@ -48,7 +48,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class PsiFileFactoryImpl extends PsiFileFactory {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.PsiFileFactoryImpl");
+  private static final Logger LOG = Logger.getInstance(PsiFileFactoryImpl.class);
   private final PsiManager myManager;
 
   @Inject

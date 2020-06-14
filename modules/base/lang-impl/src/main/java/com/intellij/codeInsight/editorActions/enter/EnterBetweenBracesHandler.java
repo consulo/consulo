@@ -36,7 +36,7 @@ import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;
 
 public class EnterBetweenBracesHandler extends EnterHandlerDelegateAdapter {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.editorActions.enter.EnterBetweenBracesHandler");
+  private static final Logger LOG = Logger.getInstance(EnterBetweenBracesHandler.class);
 
   @Override
   public Result preprocessEnter(@Nonnull final PsiFile file, @Nonnull final Editor editor, @Nonnull final Ref<Integer> caretOffsetRef, @Nonnull final Ref<Integer> caretAdvance,

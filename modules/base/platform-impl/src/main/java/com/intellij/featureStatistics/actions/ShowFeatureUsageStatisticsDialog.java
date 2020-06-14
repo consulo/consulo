@@ -49,7 +49,7 @@ import java.util.Comparator;
 import java.util.Date;
 
 public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.featureStatistics.actions.ShowFeatureUsageStatisticsDialog");
+  private static final Logger LOG = Logger.getInstance(ShowFeatureUsageStatisticsDialog.class);
   private static final Comparator<FeatureDescriptor> DISPLAY_NAME_COMPARATOR = new Comparator<FeatureDescriptor>() {
     public int compare(FeatureDescriptor fd1, FeatureDescriptor fd2) {
       return fd1.getDisplayName().compareTo(fd2.getDisplayName());

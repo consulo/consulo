@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * Unlike the existing {@link ScheduledThreadPoolExecutor}, this pool can be unbounded if the {@code backendExecutorService} is.
  */
 class SchedulingWrapper implements ScheduledExecutorService {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.concurrency.SchedulingWrapper");
+  private static final Logger LOG = Logger.getInstance(SchedulingWrapper.class);
   private final AtomicBoolean shutdown = new AtomicBoolean();
   @Nonnull
   final ExecutorService backendExecutorService;

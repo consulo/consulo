@@ -37,7 +37,7 @@ import java.net.URL;
  *         Date: 9/28/11
  */
 public abstract class InspectionToolWrapper<T extends InspectionProfileEntry, E extends InspectionEP> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.ex.InspectionToolWrapper");
+  private static final Logger LOG = Logger.getInstance(InspectionToolWrapper.class);
 
   protected T myTool;
   protected final E myEP;

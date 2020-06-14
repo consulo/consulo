@@ -78,7 +78,7 @@ import java.util.concurrent.TimeUnit;
 
 @Singleton
 public class ShelveChangesManager implements ProjectComponent, JDOMExternalizable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.shelf.ShelveChangesManager");
+  private static final Logger LOG = Logger.getInstance(ShelveChangesManager.class);
   @NonNls
   private static final String ELEMENT_CHANGELIST = "changelist";
   @NonNls

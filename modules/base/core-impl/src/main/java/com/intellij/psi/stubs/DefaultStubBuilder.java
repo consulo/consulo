@@ -34,7 +34,7 @@ import javax.annotation.Nullable;
  * @author max
  */
 public class DefaultStubBuilder implements StubBuilder {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.stubs.DefaultStubBuilder");
+  private static final Logger LOG = Logger.getInstance(DefaultStubBuilder.class);
 
   @RequiredReadAction
   @Override

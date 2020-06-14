@@ -40,7 +40,7 @@ import java.util.Map;
  * Note: this works only on Unix, on Windows regular processes are used instead.
  */
 public class PtyCommandLine extends GeneralCommandLine {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.execution.configurations.PtyCommandLine");
+  private static final Logger LOG = Logger.getInstance(PtyCommandLine.class);
   private static final String RUN_PROCESSES_WITH_PTY = "run.processes.with.pty";
 
   public static boolean isEnabled() {

@@ -65,7 +65,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Singleton
 public class PsiSearchHelperImpl implements PsiSearchHelper {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.search.PsiSearchHelperImpl");
+  private static final Logger LOG = Logger.getInstance(PsiSearchHelperImpl.class);
   private final PsiManagerEx myManager;
   private final DumbService myDumbService;
 

@@ -40,7 +40,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class BlockSupportImpl extends BlockSupport {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.text.BlockSupportImpl");
+  private static final Logger LOG = Logger.getInstance(BlockSupportImpl.class);
 
   @Override
   public void reparseRange(@Nonnull PsiFile file, int startOffset, int endOffset, @Nonnull CharSequence newText) throws IncorrectOperationException {

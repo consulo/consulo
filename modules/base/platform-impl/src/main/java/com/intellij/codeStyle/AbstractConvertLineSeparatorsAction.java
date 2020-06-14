@@ -41,7 +41,7 @@ import java.io.IOException;
  * @author Nikolai Matveev
  */
 public abstract class AbstractConvertLineSeparatorsAction extends AnAction {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeStyle.AbstractConvertLineSeparatorsAction");
+  private static final Logger LOG = Logger.getInstance(AbstractConvertLineSeparatorsAction.class);
 
   @Nonnull
   private final String mySeparator;

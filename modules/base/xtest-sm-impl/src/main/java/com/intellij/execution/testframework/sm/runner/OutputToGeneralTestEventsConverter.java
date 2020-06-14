@@ -27,7 +27,7 @@ import static com.intellij.execution.testframework.sm.runner.GeneralToSMTRunnerE
  * @author Roman Chernyatchik
  */
 public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer {
-  private static final Logger LOG = Logger.getInstance(OutputToGeneralTestEventsConverter.class.getName());
+  private static final Logger LOG = Logger.getInstance(OutputToGeneralTestEventsConverter.class);
   private static final boolean USE_CYCLE_BUFFER = ConsoleBuffer.useCycleBuffer();
 
   private final MyServiceMessageVisitor myServiceMessageVisitor;

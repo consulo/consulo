@@ -31,7 +31,7 @@ import consulo.logging.Logger;
 import javax.annotation.Nonnull;
 
 public class TogglePopupHintsAction extends AnAction {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.actions.TogglePopupHintsAction");
+  private static final Logger LOG = Logger.getInstance(TogglePopupHintsAction.class);
 
   private static PsiFile getTargetFile(@Nonnull DataContext dataContext) {
     Project project = dataContext.getData(CommonDataKeys.PROJECT);

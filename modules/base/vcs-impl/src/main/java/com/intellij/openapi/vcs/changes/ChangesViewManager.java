@@ -23,7 +23,6 @@ import com.intellij.ide.CommonActionsManager;
 import com.intellij.ide.TreeExpander;
 import com.intellij.ide.actions.ContextHelpAction;
 import com.intellij.ide.dnd.DnDEvent;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -53,13 +52,13 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
@@ -79,7 +78,7 @@ import static java.util.stream.Collectors.toList;
 @Singleton
 public class ChangesViewManager implements ChangesViewI, ProjectComponent, PersistentStateComponent<ChangesViewManager.State> {
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.ChangesViewManager");
+  private static final Logger LOG = Logger.getInstance(ChangesViewManager.class);
 
   @Nonnull
   private final ChangesListView myView;
@@ -183,12 +182,6 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
     myView.removeTreeSelectionListener(myTsl);
     myDisposed = true;
     myRepaintAlarm.cancelAllRequests();
-  }
-
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "ChangesViewManager";
   }
 
   private JComponent createChangeViewComponent() {

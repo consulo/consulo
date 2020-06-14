@@ -22,7 +22,7 @@ public class RenameProjectAction extends DumbAwareAction {
     super(RefactoringBundle.message("rename.project.action.title"), RefactoringBundle.message("renames.project"), null);
   }
 
-  private static final Logger LOG = Logger.getInstance("#" + RenameProjectAction.class.getName());
+  private static final Logger LOG = Logger.getInstance(RenameProjectAction.class);
 
   @Override
   public void update(AnActionEvent e) {

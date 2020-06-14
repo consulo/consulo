@@ -44,7 +44,7 @@ import java.util.List;
 @Deprecated
 @DeprecationInfo("Use com.intellij.psi.impl.PsiElementBase")
 public abstract class PsiElementBase extends UserDataHolderBase implements NavigatablePsiElement {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.extapi.psi.PsiElementBase");
+  private static final Logger LOG = Logger.getInstance(PsiElementBase.class);
 
   @Override
   public PsiElement copy() {

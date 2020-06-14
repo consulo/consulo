@@ -50,7 +50,7 @@ import java.util.List;
 public class ChangeDiffRequestPresentable implements DiffRequestPresentable {
   private final Project myProject;
   private final Change myChange;
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.actions.ChangeDiffRequestPresentable");
+  private static final Logger LOG = Logger.getInstance(ChangeDiffRequestPresentable.class);
   // I don't like that much
   private boolean myIgnoreDirectoryFlag;
 

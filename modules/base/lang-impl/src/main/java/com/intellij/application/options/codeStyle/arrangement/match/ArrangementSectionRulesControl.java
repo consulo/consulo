@@ -51,7 +51,7 @@ public class ArrangementSectionRulesControl extends ArrangementMatchingRulesCont
   @Nonnull
   public static final Key<ArrangementSectionRulesControl> KEY = Key.create("Arrangement.Rule.Match.Control");
   @Nonnull
-  private static final Logger LOG = Logger.getInstance("#" + ArrangementSectionRulesControl.class.getName());
+  private static final Logger LOG = Logger.getInstance(ArrangementSectionRulesControl.class);
   @Nonnull
   private final ArrangementColorsProvider myColorsProvider;
   @Nonnull

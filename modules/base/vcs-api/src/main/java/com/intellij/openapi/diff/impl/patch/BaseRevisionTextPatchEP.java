@@ -42,7 +42,7 @@ public class BaseRevisionTextPatchEP implements PatchEP {
   public final static Key<Boolean> ourPutBaseRevisionTextKey = Key.create("com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP.ourPutBaseRevisionTextKey");
   public static final Key<List<FilePath>> ourBaseRevisionPaths = Key.create("com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP.ourBaseRevisionPaths");
   public static final Key<Map<String, String>> ourStoredTexts = Key.create("com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP.ourStoredTexts");
-  private final static Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP");
+  private final static Logger LOG = Logger.getInstance(BaseRevisionTextPatchEP.class);
 
   private final Project myProject;
   private final ChangeListManager myChangeListManager;

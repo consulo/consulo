@@ -38,7 +38,7 @@ import java.io.File;
  */
 public final class ScriptRunnerUtil {
 
-  private static final Logger LOG = Logger.getInstance("com.intellij.execution.process.ScriptRunnerUtil");
+  private static final Logger LOG = Logger.getInstance(ScriptRunnerUtil.class);
 
   public static final Condition<Key> STDOUT_OUTPUT_KEY_FILTER = new Condition<Key>() {
     @Override

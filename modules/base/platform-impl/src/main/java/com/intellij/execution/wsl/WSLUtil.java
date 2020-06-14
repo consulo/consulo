@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  * - file system is unavailable form windows (for now at least)
  */
 public class WSLUtil {
-  public static final Logger LOG = Logger.getInstance("#com.intellij.execution.wsl");
+  public static final Logger LOG = Logger.getInstance(WSLUtil.class);
 
   /**
    * this listener is a hack for https://github.com/Microsoft/BashOnWindows/issues/2592

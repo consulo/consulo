@@ -27,7 +27,7 @@ import consulo.logging.Logger;
  * @author yole
  */
 public class EditorActionHandlerBean extends AbstractExtensionPointBean {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.actionSystem.EditorActionHandlerBean");
+  private static final Logger LOG = Logger.getInstance(EditorActionHandlerBean.class);
 
   public static final ExtensionPointName<EditorActionHandlerBean> EP_NAME = ExtensionPointName.create("com.intellij.editorActionHandler");
 

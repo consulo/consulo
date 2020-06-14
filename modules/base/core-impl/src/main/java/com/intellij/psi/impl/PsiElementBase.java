@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class PsiElementBase extends UserDataHolderBase implements NavigatablePsiElement {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.PsiElementBase");
+  private static final Logger LOG = Logger.getInstance(PsiElementBase.class);
 
   @RequiredReadAction
   @Override

@@ -34,7 +34,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class TextCompareProcessor {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.processing.Processor");
+  private static final Logger LOG = Logger.getInstance(TextCompareProcessor.class);
   @Nonnull
   private final ComparisonPolicy myComparisonPolicy;
   @Nonnull

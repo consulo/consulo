@@ -33,7 +33,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ParametersList implements Cloneable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.execution.configurations.ParametersList");
+  private static final Logger LOG = Logger.getInstance(ParametersList.class);
 
   private static final Pattern PROPERTY_PATTERN = Pattern.compile("-D(\\S+?)=(.+)");
 

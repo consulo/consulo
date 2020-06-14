@@ -20,7 +20,7 @@ import com.intellij.openapi.command.undo.UndoableAction;
 import consulo.logging.Logger;
 
 class NonUndoableAction implements UndoableAction {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.command.undo.NonUndoableAction");
+  private static final Logger LOG = Logger.getInstance(NonUndoableAction.class);
 
   private final DocumentReference[] myRefs;
   private final boolean myGlobal;

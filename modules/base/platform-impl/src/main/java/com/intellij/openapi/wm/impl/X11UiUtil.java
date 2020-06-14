@@ -35,7 +35,7 @@ import java.lang.reflect.Method;
 import static com.intellij.util.ArrayUtil.newLongArray;
 
 public class X11UiUtil {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.X11UiUtil");
+  private static final Logger LOG = Logger.getInstance(X11UiUtil.class);
 
   private static final int True = 1;
   private static final int False = 0;

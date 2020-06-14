@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  */
 @Deprecated
 public class MockProject extends MockComponentManager implements Project {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.mock.MockProject");
+  private static final Logger LOG = Logger.getInstance(MockProject.class);
   private VirtualFile myBaseDir;
 
   public MockProject(MockComponentManager parent, @Nonnull Disposable parentDisposable) {

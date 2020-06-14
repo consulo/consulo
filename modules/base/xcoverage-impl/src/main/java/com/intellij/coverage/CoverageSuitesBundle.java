@@ -37,7 +37,7 @@ public class CoverageSuitesBundle {
   private CachedValue<GlobalSearchScope> myCachedValue;
 
   private SoftReference<ProjectData> myData = new SoftReference<ProjectData>(null);
-  private static final Logger LOG = Logger.getInstance("#" + CoverageSuitesBundle.class.getName());
+  private static final Logger LOG = Logger.getInstance(CoverageSuitesBundle.class);
 
   public CoverageSuitesBundle(CoverageSuite suite) {
     this(new CoverageSuite[]{suite});

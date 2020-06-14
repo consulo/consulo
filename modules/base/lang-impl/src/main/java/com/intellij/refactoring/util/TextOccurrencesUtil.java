@@ -43,7 +43,7 @@ import javax.annotation.Nonnull;
 import java.util.Collection;
 
 public class TextOccurrencesUtil {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.refactoring.util.TextOccurrencesUtil");
+  private static final Logger LOG = Logger.getInstance(TextOccurrencesUtil.class);
 
   private TextOccurrencesUtil() {
   }

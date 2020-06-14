@@ -45,7 +45,7 @@ import java.util.List;
 public class HyperlinkLabel extends HighlightableComponent {
   private static final TextAttributes BOLD_ATTRIBUTES = new TextAttributes(UIUtil.getLabelTextForeground(), null, null, null, Font.BOLD);
 
-  private static final Logger LOG = Logger.getInstance(HyperlinkLabel.class.getName());
+  private static final Logger LOG = Logger.getInstance(HyperlinkLabel.class);
 
   private HighlightedText myHighlightedText;
   private final List<HyperlinkListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();

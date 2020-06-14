@@ -38,7 +38,7 @@ import java.io.IOException;
  * Time: 1:58 PM
  */
 public class UsageSerializable implements WorkingSetSerializable<UsageInfo, InvalidUsageNoteNode> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.favoritesTreeView.UsageSerializable");
+  private static final Logger LOG = Logger.getInstance(UsageSerializable.class);
   private final static String separator = "<>";
 
   @Override

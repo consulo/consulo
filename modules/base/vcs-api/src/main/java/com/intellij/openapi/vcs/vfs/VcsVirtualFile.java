@@ -37,7 +37,7 @@ import java.nio.charset.Charset;
  * author: lesya
  */
 public class VcsVirtualFile extends AbstractVcsVirtualFile {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.vfs.VcsVirtualFile");
+  private static final Logger LOG = Logger.getInstance(VcsVirtualFile.class);
 
   private byte[] myContent;
   private final VcsFileRevision myFileRevision;

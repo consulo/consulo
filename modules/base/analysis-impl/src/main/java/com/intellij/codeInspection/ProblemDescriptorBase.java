@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
 import consulo.annotation.access.RequiredReadAction;
 
 public class ProblemDescriptorBase extends CommonProblemDescriptorImpl implements ProblemDescriptor {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.ex.ProblemDescriptorImpl");
+  private static final Logger LOG = Logger.getInstance(ProblemDescriptorBase.class);
 
   @Nonnull
   private final SmartPsiElementPointer myStartSmartPointer;

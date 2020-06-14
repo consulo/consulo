@@ -54,7 +54,7 @@ import java.util.*;
 @Singleton
 @State(name = "FileTemplateManagerImpl", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 public class FileTemplateManagerImpl extends FileTemplateManager implements PersistentStateComponent<FileTemplateManagerImpl.State> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.fileTemplates.impl.FileTemplateManagerImpl");
+  private static final Logger LOG = Logger.getInstance(FileTemplateManagerImpl.class);
 
   private final State myState = new State();
   private final FileTypeManagerEx myTypeManager;

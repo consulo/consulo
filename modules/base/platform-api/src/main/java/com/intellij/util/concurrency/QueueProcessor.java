@@ -41,7 +41,7 @@ import java.util.Map;
  * @param <T> type of queue elements.
  */
 public class QueueProcessor<T> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.concurrency.QueueProcessor");
+  private static final Logger LOG = Logger.getInstance(QueueProcessor.class);
   public static enum ThreadToUse {
     AWT,
     POOLED

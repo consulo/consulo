@@ -59,7 +59,7 @@ import java.util.Set;
  * @author Konstantin Bulenkov
  */
 public class LookupCellRenderer implements ListCellRenderer {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.lookup.impl.LookupCellRenderer");
+  private static final Logger LOG = Logger.getInstance(LookupCellRenderer.class);
   //TODO[kb]: move all these awesome constants to Editor's Fonts & Colors settings
   private Icon myEmptyIcon = JBUI.scale(EmptyIcon.create(5));
   private final Font myNormalFont;

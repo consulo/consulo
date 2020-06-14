@@ -41,7 +41,7 @@ import java.util.concurrent.Future;
 import java.util.function.Predicate;
 
 public class VcsInitialization implements Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.impl.VcsInitialization");
+  private static final Logger LOG = Logger.getInstance(VcsInitialization.class);
 
   private final List<Pair<VcsInitObject, Runnable>> myList = new ArrayList<>();
   private final Object myLock = new Object();

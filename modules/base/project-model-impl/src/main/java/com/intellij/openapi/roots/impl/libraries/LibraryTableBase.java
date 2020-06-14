@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public abstract class LibraryTableBase implements PersistentStateComponent<Element>, LibraryTable, Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.impl.libraries.LibraryTableBase");
+  private static final Logger LOG = Logger.getInstance(LibraryTableBase.class);
   private final EventDispatcher<Listener> myDispatcher = EventDispatcher.create(Listener.class);
   private LibraryModel myModel = new LibraryModel();
   private boolean myFirstLoad = true;

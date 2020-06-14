@@ -77,9 +77,9 @@ import static java.awt.event.MouseEvent.MOUSE_PRESSED;
  * @author Anton Katilin
  */
 public class IdeEventQueue extends EventQueue {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.IdeEventQueue");
+  private static final Logger LOG = Logger.getInstance(IdeEventQueue.class);
 
-  private static final Logger FOCUS_AWARE_RUNNABLES_LOG = Logger.getInstance("#com.intellij.ide.IdeEventQueue.runnables");
+  private static final Logger FOCUS_AWARE_RUNNABLES_LOG = Logger.getInstance(IdeEventQueue.class.getName() + ".runnables");
 
   private static TransactionGuardEx ourTransactionGuard;
   private static ProgressManager ourProgressManager;

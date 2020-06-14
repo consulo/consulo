@@ -51,7 +51,7 @@ import java.util.List;
  * @author nik
  */
 public class LibrariesContainerFactory {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesContainerFactory");
+  private static final Logger LOG = Logger.getInstance(LibrariesContainerFactory.class);
   private static final Library[] EMPTY_LIBRARIES_ARRAY = new Library[0];
 
   private LibrariesContainerFactory() {

@@ -24,7 +24,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nullable;
 
 public class DiffContentFactory {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.ex.DiffContentFactory");
+  private static final Logger LOG = Logger.getInstance(DiffContentFactory.class);
 
   private DiffContentFactory() {}
 

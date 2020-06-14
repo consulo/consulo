@@ -61,7 +61,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class LossyEncodingInspection extends LocalInspectionTool {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.LossyEncodingInspection");
+  private static final Logger LOG = Logger.getInstance(LossyEncodingInspection.class);
 
   private static final LocalQuickFix CHANGE_ENCODING_FIX = new ChangeEncodingFix();
   private static final LocalQuickFix RELOAD_ENCODING_FIX = new ReloadInAnotherEncodingFix();

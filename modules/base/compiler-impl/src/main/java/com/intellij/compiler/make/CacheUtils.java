@@ -41,7 +41,7 @@ import java.util.Set;
  * Time: 6:32:32 PM
  */
 public class CacheUtils {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.make.CacheUtils");
+  private static final Logger LOG = Logger.getInstance(CacheUtils.class);
 
   public static String getMethodSignature(String name, String descriptor) {
     final StringBuilder builder = StringBuilderSpinAllocator.alloc();

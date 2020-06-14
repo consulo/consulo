@@ -27,7 +27,7 @@ import consulo.logging.Logger;
 import java.util.Iterator;
 
 public class MergeSearchHelper {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.incrementalMerge.MergeSearchHelper");
+  private static final Logger LOG = Logger.getInstance(MergeSearchHelper.class);
   private static final Key[] ourMergeListKeys = new Key[]{Key.create("leftMergeSearchHelper"),
                                                     Key.create("centerMergeSearchHelper"),
                                                     Key.create("rightMergeSearchHelper")};

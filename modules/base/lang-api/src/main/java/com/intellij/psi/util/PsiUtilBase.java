@@ -46,7 +46,7 @@ import java.util.*;
 import java.util.List;
 
 public class PsiUtilBase extends PsiUtilCore {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.util.PsiUtilBase");
+  private static final Logger LOG = Logger.getInstance(PsiUtilBase.class);
   public static final Comparator<Language> LANGUAGE_COMPARATOR = new Comparator<Language>() {
     @Override
     public int compare(@Nonnull Language o1, @Nonnull Language o2) {

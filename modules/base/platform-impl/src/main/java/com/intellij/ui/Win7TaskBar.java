@@ -32,7 +32,7 @@ import consulo.awt.TargetAWT;
  * @author Alexander Lobas
  */
 class Win7TaskBar {
-  private static final Logger LOG = Logger.getInstance("Win7TaskBar");
+  private static final Logger LOG = Logger.getInstance(Win7TaskBar.class);
 
   private static final int TaskBarList_Methods = 21;
   private static final int TaskBarList_SetProgressValue = 9;

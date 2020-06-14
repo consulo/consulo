@@ -68,7 +68,7 @@ import java.util.concurrent.TimeUnit;
 @State(name = "CommittedChangesCache", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
 @Singleton
 public class CommittedChangesCache implements PersistentStateComponent<CommittedChangesCache.State> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.committed.CommittedChangesCache");
+  private static final Logger LOG = Logger.getInstance(CommittedChangesCache.class);
 
   private final Project myProject;
   private final MessageBus myBus;

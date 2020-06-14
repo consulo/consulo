@@ -67,7 +67,7 @@ import java.util.Collections;
 import java.util.Set;
 
 public class GotoDeclarationAction extends BaseCodeInsightAction implements CodeInsightActionHandler, DumbAware {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.navigation.actions.GotoDeclarationAction");
+  private static final Logger LOG = Logger.getInstance(GotoDeclarationAction.class);
 
   @Nonnull
   @Override

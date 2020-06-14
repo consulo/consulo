@@ -76,7 +76,7 @@ import java.util.*;
 @Deprecated
 @DeprecationInfo("Only desktop")
 public abstract class DesktopEditorComposite implements EditorComposite {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.EditorComposite");
+  private static final Logger LOG = Logger.getInstance(DesktopEditorComposite.class);
 
   /**
    * File for which composite is created

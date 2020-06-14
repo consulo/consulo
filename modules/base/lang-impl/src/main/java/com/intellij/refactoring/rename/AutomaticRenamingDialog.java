@@ -55,7 +55,7 @@ import java.util.List;
  * @author dsl
  */
 public class AutomaticRenamingDialog extends DialogWrapper {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.refactoring.rename.AutomaticRenamingDialog");
+  private static final Logger LOG = Logger.getInstance(AutomaticRenamingDialog.class);
   private static final int CHECK_COLUMN = 0;
   private static final int OLD_NAME_COLUMN = 1;
   private static final int NEW_NAME_COLUMN = 2;

@@ -18,7 +18,6 @@ package com.intellij.ui.breadcrumbs;
 import com.intellij.ide.IdeTooltipManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ReadAction;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
@@ -28,10 +27,11 @@ import com.intellij.ui.UIBundle;
 import com.intellij.ui.components.breadcrumbs.Breadcrumbs;
 import com.intellij.ui.components.breadcrumbs.Crumb;
 import com.intellij.util.concurrency.AppExecutorUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.logging.Logger;
 import org.jetbrains.concurrency.Promise;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -45,7 +45,7 @@ import java.util.concurrent.TimeoutException;
  * @author Sergey.Malenkov
  */
 final class PsiBreadcrumbs extends Breadcrumbs {
-  private final static Logger LOG = Logger.getInstance("#com.intellij.xml.breadcrumbs.PsiBreadcrumbs");
+  private final static Logger LOG = Logger.getInstance(PsiBreadcrumbs.class);
   private final Map<Crumb, Promise<String>> scheduledTooltipTasks = new HashMap<>();
   boolean above = EditorSettingsExternalizable.getInstance().isBreadcrumbsAbove();
 

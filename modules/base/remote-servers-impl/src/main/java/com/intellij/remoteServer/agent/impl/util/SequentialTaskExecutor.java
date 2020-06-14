@@ -15,7 +15,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class SequentialTaskExecutor {
 
-  private static final Logger LOG = Logger.getInstance("#" + SequentialTaskExecutor.class.getName());
+  private static final Logger LOG = Logger.getInstance(SequentialTaskExecutor.class);
 
   private BlockingQueue<Runnable> myTasks;
 

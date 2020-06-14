@@ -25,7 +25,7 @@ import java.util.Arrays;
 import java.util.Locale;
 
 public class StringSearcher {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.text.StringSearcher");
+  private static final Logger LOG = Logger.getInstance(StringSearcher.class);
 
   private final String myPattern;
   private final char[] myPatternArray;

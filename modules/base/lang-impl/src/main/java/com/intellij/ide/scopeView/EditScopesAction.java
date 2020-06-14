@@ -31,7 +31,7 @@ import consulo.logging.Logger;
  * Date: 27-Jan-2006
  */
 public class EditScopesAction extends AnAction implements DumbAware {
-  private static final Logger LOG = Logger.getInstance("com.intellij.ide.scopeView.EditScopesAction");
+  private static final Logger LOG = Logger.getInstance(EditScopesAction.class);
 
   public EditScopesAction() {
     getTemplatePresentation().setIcon(AllIcons.Ide.LocalScope);

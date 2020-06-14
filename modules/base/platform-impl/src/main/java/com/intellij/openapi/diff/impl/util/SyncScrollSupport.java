@@ -34,7 +34,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class SyncScrollSupport implements Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.util.SyncScrollSupport");
+  private static final Logger LOG = Logger.getInstance(SyncScrollSupport.class);
   private boolean myDuringVerticalScroll = false;
   @Nonnull
   private final ArrayList<ScrollListener> myScrollers = new ArrayList<ScrollListener>();

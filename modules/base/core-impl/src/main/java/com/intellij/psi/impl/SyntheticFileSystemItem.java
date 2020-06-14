@@ -5,7 +5,6 @@ package com.intellij.psi.impl;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -14,14 +13,15 @@ import com.intellij.psi.search.PsiElementProcessor;
 import com.intellij.psi.search.PsiFileSystemItemProcessor;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import consulo.annotation.access.RequiredWriteAction;
-
 public abstract class SyntheticFileSystemItem extends PsiElementBase implements PsiFileSystemItem {
-  public static final Logger LOG = Logger.getInstance("#" + SyntheticFileSystemItem.class.getPackage().getName());
+  public static final Logger LOG = Logger.getInstance(SyntheticFileSystemItem.class);
 
   protected final Project myProject;
   protected final PsiManager myManager;

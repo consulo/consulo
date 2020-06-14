@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  * On a click opens specified file in an editor and positions caret to the given offset.
  */
 public class NavigationLinkHandler extends TooltipLinkHandler {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.hint.NavigationLinkHandler");
+  private static final Logger LOG = Logger.getInstance(NavigationLinkHandler.class);
 
   @Override
   public boolean handleLink(@Nonnull final String refSuffix, @Nonnull final Editor editor) {

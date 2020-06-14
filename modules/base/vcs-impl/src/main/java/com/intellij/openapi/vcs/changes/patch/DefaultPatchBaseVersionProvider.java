@@ -42,7 +42,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DefaultPatchBaseVersionProvider {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.patch.DefaultPatchBaseVersionProvider");
+  private static final Logger LOG = Logger.getInstance(DefaultPatchBaseVersionProvider.class);
   private final static Pattern ourTsPattern = Pattern.compile("\\(date ([0-9]+)\\)");
 
   private final Project myProject;

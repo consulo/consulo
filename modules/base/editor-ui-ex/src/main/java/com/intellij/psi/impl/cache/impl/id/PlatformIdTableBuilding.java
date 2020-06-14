@@ -98,7 +98,7 @@ public abstract class PlatformIdTableBuilding {
     assert editorHighlighter instanceof LexerEditorHighlighter;
     final boolean b = ((LexerEditorHighlighter)editorHighlighter).checkContentIsEqualTo(chars);
     if (!b) {
-      final Logger logger = Logger.getInstance(IdTableBuilding.class.getName());
+      final Logger logger = Logger.getInstance(PlatformIdTableBuilding.class);
       logger.warn("Unexpected mismatch of editor highlighter content with indexing content");
     }
     return b;

@@ -75,7 +75,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DialogWrapperPeerImpl extends DialogWrapperPeer {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.ui.DialogWrapper");
+  private static final Logger LOG = Logger.getInstance(DialogWrapperPeerImpl.class);
 
   private final DialogWrapper myWrapper;
   private AbstractDialog myDialog;

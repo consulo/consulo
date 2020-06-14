@@ -34,7 +34,7 @@ import java.util.Objects;
  * @author yole
  */
 public class CompletionInitializationUtil {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.completion.CompletionServiceUtil");
+  private static final Logger LOG = Logger.getInstance(CompletionInitializationUtil.class);
 
   static CompletionInitializationContextImpl createCompletionInitializationContext(@Nonnull Project project,
                                                                                    @Nonnull Editor editor,

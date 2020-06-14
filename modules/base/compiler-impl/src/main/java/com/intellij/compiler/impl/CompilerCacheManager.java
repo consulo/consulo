@@ -42,7 +42,7 @@ import java.util.Map;
  */
 @Singleton
 public class CompilerCacheManager implements Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.impl.CompilerCacheManager");
+  private static final Logger LOG = Logger.getInstance(CompilerCacheManager.class);
   private final Map<Compiler, Object> myCompilerToCacheMap = new HashMap<Compiler, Object>();
   private final Map<GenericCompiler<?,?,?>, GenericCompilerCache<?,?,?>> myGenericCachesMap = new HashMap<GenericCompiler<?,?,?>, GenericCompilerCache<?,?,?>>();
   private final List<Disposable> myCacheDisposables = new ArrayList<Disposable>();

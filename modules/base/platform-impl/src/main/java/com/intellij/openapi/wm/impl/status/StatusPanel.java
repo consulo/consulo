@@ -50,7 +50,7 @@ import java.awt.event.MouseEvent;
  * @author peter
  */
 class StatusPanel extends JPanel {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.status.StatusPanel");
+  private static final Logger LOG = Logger.getInstance(StatusPanel.class);
   private Notification myCurrentNotification;
   private int myTimeStart;
   private boolean myDirty;

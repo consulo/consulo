@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  * @author Eugene Zhuravlev
  */
 public class LowMemoryWatcher {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.util.LowMemoryWatcher");
+  private static final Logger LOG = Logger.getInstance(LowMemoryWatcher.class);
 
   public enum LowMemoryWatcherType {
     ALWAYS,

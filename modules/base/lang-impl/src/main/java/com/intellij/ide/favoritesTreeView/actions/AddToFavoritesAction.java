@@ -48,7 +48,7 @@ import java.util.Collections;
  * Date: Feb 15, 2005
  */
 public class AddToFavoritesAction extends AnAction {
-  private static final Logger LOG = Logger.getInstance("com.intellij.ide.favoritesTreeView.actions.AddToFavoritesAction");
+  private static final Logger LOG = Logger.getInstance(AddToFavoritesAction.class);
 
   private final String myFavoritesListName;
 

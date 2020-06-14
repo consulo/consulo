@@ -21,7 +21,7 @@ import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 
 public class ContextLogger {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.util.ContextLogger");
+  private static final Logger LOG = Logger.getInstance(ContextLogger.class);
   private final Logger myLogger;
   private final Context myInfo;
   private boolean myFirstError = true;

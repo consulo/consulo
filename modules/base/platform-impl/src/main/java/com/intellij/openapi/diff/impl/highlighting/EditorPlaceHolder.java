@@ -36,7 +36,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
 
 class EditorPlaceHolder extends DiffMarkup implements DiffVersionComponent {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.highlighting.EditorWrapper");
+  private static final Logger LOG = Logger.getInstance(EditorPlaceHolder.class);
   private EditorEx myEditor;
   private DiffContent myContent;
   private final FragmentSide mySide;

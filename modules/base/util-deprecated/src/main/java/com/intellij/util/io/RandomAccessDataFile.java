@@ -27,7 +27,7 @@ import java.io.*;
 import java.nio.ByteBuffer;
 
 public class RandomAccessDataFile implements Forceable, Closeable {
-  protected static final Logger LOG = Logger.getInstance("#com.intellij.util.io.RandomAccessDataFile");
+  protected static final Logger LOG = Logger.getInstance(RandomAccessDataFile.class);
 
   private final static OpenChannelsCache ourCache = new OpenChannelsCache(150, "rw");
   private static int ourFilesCount = 0;

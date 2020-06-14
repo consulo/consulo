@@ -43,7 +43,7 @@ import java.util.*;
  * @author max
  */
 public class ProjectRootManagerImpl extends ProjectRootManagerEx {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.projectRoots.impl.ProjectRootManagerImpl");
+  private static final Logger LOG = Logger.getInstance(ProjectRootManagerImpl.class);
 
   protected final Project myProject;
 

@@ -44,7 +44,7 @@ import java.util.concurrent.Future;
 import static java.util.Collections.unmodifiableMap;
 
 public class EnvironmentUtil {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.EnvironmentUtil");
+  private static final Logger LOG = Logger.getInstance(EnvironmentUtil.class);
 
   private static final int SHELL_ENV_READING_TIMEOUT = 20000;
 

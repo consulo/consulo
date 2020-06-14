@@ -36,7 +36,7 @@ public class PasswordSafeImpl extends PasswordSafe {
   /**
    * The logger instance
    */
-  private static final Logger LOG = Logger.getInstance(PasswordSafeImpl.class.getName());
+  private static final Logger LOG = Logger.getInstance(PasswordSafeImpl.class);
   /**
    * The current settings
    */

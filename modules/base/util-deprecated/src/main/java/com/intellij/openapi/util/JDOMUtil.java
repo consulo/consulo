@@ -89,7 +89,7 @@ public class JDOMUtil {
 
   @SuppressWarnings("UtilityClassWithoutPrivateConstructor")
   private static class LoggerHolder {
-    private static final Logger ourLogger = Logger.getInstance("#com.intellij.openapi.util.JDOMUtil");
+    private static final Logger ourLogger = Logger.getInstance(JDOMUtil.class);
   }
 
   private static Logger getLogger() {

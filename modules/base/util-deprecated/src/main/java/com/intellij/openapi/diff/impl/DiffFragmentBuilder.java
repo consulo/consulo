@@ -58,7 +58,7 @@ import java.util.List;
  */
 public class DiffFragmentBuilder {
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.DiffFragmentBuilder");
+  private static final Logger LOG = Logger.getInstance(DiffFragmentBuilder.class);
 
   @Nonnull
   private final DiffString[] mySource1;

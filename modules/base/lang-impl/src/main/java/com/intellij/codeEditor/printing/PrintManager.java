@@ -46,7 +46,7 @@ import java.awt.print.*;
 import java.util.List;
 
 class PrintManager {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeEditor.printing.PrintManager");
+  private static final Logger LOG = Logger.getInstance(PrintManager.class);
 
   public static void executePrint(DataContext dataContext) {
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);

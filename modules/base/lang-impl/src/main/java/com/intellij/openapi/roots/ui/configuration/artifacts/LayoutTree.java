@@ -50,7 +50,7 @@ import java.util.List;
 * @author nik
 */
 public class LayoutTree extends SimpleDnDAwareTree implements AdvancedDnDSource {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.ui.configuration.artifacts.LayoutTree");
+  private static final Logger LOG = Logger.getInstance(LayoutTree.class);
   private final ArtifactEditorImpl myArtifactsEditor;
 
   public LayoutTree(ArtifactEditorImpl artifactsEditor) {

@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 public final class FileStatusMap implements Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.daemon.impl.FileStatusMap");
+  private static final Logger LOG = Logger.getInstance(FileStatusMap.class);
   public static final String CHANGES_NOT_ALLOWED_DURING_HIGHLIGHTING = "PSI/document/model changes are not allowed during highlighting";
   private final Project myProject;
   private final Map<Document, FileStatus> myDocumentToStatusMap = ContainerUtil.createWeakMap(); // all dirty if absent

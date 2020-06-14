@@ -45,7 +45,7 @@ import static com.intellij.openapi.localVcs.UpToDateLineNumberProvider.ABSENT_LI
 
 @SuppressWarnings({"MethodMayBeStatic", "FieldAccessedSynchronizedAndUnsynchronized"})
 public abstract class LineStatusTrackerBase {
-  protected static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.ex.LineStatusTracker");
+  protected static final Logger LOG = Logger.getInstance(LineStatusTrackerBase.class);
 
   // all variables should be modified in EDT and under LOCK
   // read access allowed from EDT or while holding LOCK

@@ -46,7 +46,7 @@ import consulo.logging.Logger;
 import java.util.Comparator;
 
 public class InspectionResultsViewComparator implements Comparator {
-  private static final Logger LOG = Logger.getInstance("#" + InspectionResultsViewComparator.class.getName());
+  private static final Logger LOG = Logger.getInstance(InspectionResultsViewComparator.class);
 
   @Override
   public int compare(Object o1, Object o2) {

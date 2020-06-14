@@ -47,7 +47,7 @@ import java.util.function.Consumer;
  * @see ProgressManager#run(Task)
  */
 public abstract class Task implements TaskInfo, Progressive {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.progress.Task");
+  private static final Logger LOG = Logger.getInstance(Task.class);
 
   protected final Project myProject;
   protected String myTitle;

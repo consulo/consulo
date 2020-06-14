@@ -54,7 +54,7 @@ import java.util.concurrent.Callable;
  * @author Gregory.Shrago
  */
 public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
-  public static final Logger LOG = Logger.getInstance("#" + RemoteProcessSupport.class);
+  public static final Logger LOG = Logger.getInstance(RemoteProcessSupport.class);
 
   private final Class<EntryPoint> myValueClass;
   private final HashMap<Pair<Target, Parameters>, Info> myProcMap = new HashMap<Pair<Target, Parameters>, Info>();

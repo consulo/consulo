@@ -103,7 +103,7 @@ import static java.text.MessageFormat.format;
 
 @Singleton
 public class AbstractVcsHelperImpl extends AbstractVcsHelper {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.impl.AbstractVcsHelperImpl");
+  private static final Logger LOG = Logger.getInstance(AbstractVcsHelperImpl.class);
 
   private Consumer<VcsException> myCustomHandler = null;
 

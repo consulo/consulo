@@ -35,7 +35,7 @@ import javax.annotation.Nonnull;
 @Deprecated
 @DeprecationInfo("Desktop only")
 public class DesktopEditorWithProviderComposite extends DesktopEditorComposite implements EditorWithProviderComposite {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.EditorWithProviderComposite");
+  private static final Logger LOG = Logger.getInstance(DesktopEditorWithProviderComposite.class);
   private FileEditorProvider[] myProviders;
 
   public DesktopEditorWithProviderComposite(@Nonnull VirtualFile file, @Nonnull FileEditor[] editors, @Nonnull FileEditorProvider[] providers, @Nonnull FileEditorManagerEx fileEditorManager) {

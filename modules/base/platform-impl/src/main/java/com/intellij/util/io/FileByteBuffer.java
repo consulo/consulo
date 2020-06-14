@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 public class FileByteBuffer {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.io.FileByteBuffer");
+  private static final Logger LOG = Logger.getInstance(FileByteBuffer.class);
   
   private final RandomAccessFile myFile;
 

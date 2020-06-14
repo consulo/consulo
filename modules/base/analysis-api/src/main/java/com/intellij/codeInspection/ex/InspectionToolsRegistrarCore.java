@@ -24,7 +24,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 public class InspectionToolsRegistrarCore {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.ex.InspectionToolsRegistrarCore");
+  private static final Logger LOG = Logger.getInstance(InspectionToolsRegistrarCore.class);
   static Object instantiateTool(@Nonnull Class<?> toolClass) {
     try {
       Constructor<?> constructor = toolClass.getDeclaredConstructor(ArrayUtil.EMPTY_CLASS_ARRAY);

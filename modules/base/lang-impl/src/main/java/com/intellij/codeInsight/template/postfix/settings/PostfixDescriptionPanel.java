@@ -32,7 +32,7 @@ import java.awt.*;
 import java.io.IOException;
 
 public class PostfixDescriptionPanel implements Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.intention.impl.config.IntentionDescriptionPanel");
+  private static final Logger LOG = Logger.getInstance(PostfixDescriptionPanel.class);
   private JPanel myPanel;
 
   private JPanel myAfterPanel;

@@ -38,7 +38,7 @@ import java.util.Arrays;
  * @author max
  */
 public class BinaryDiffTool implements DiffTool {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.external.BinaryDiffTool");
+  private static final Logger LOG = Logger.getInstance(BinaryDiffTool.class);
   public static final DiffTool INSTANCE = new BinaryDiffTool();
 
   public void show(final DiffRequest data) {

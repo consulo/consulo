@@ -93,7 +93,7 @@ public abstract class NamedConfigurable<T> implements Configurable {
       myOptionsPanel.add(myOptionsComponent, BorderLayout.CENTER);
     }
     else {
-      Logger.getInstance(getClass().getName()).error("Options component is null for "+getClass());
+      Logger.getInstance(getClass()).error("Options component is null for "+getClass());
     }
     updateName();
     return myWholePanel;

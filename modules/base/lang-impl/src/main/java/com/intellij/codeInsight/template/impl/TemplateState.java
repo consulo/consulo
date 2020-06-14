@@ -74,7 +74,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class TemplateState implements Disposable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.template.impl.TemplateState");
+  private static final Logger LOG = Logger.getInstance(TemplateState.class);
   private Project myProject;
   private Editor myEditor;
 

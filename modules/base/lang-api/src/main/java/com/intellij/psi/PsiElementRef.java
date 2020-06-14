@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  * @author peter
  */
 public final class PsiElementRef<T extends PsiElement> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.PsiElementRef");
+  private static final Logger LOG = Logger.getInstance(PsiElementRef.class);
   private volatile PsiRefColleague<T> myColleague;
 
   public PsiElementRef(PsiRefColleague<T> colleague) {

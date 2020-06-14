@@ -27,7 +27,7 @@ import com.intellij.profile.codeInspection.ui.header.InspectionToolsConfigurable
 import consulo.logging.Logger;
 
 public class ProjectInspectionToolsConfigurable extends InspectionToolsConfigurable {
-  private static final Logger LOG = Logger.getInstance("#" + ProjectInspectionToolsConfigurable.class);
+  private static final Logger LOG = Logger.getInstance(ProjectInspectionToolsConfigurable.class);
   public ProjectInspectionToolsConfigurable(InspectionProfileManager profileManager, InspectionProjectProfileManager projectProfileManager) {
     super(projectProfileManager, profileManager);
   }

@@ -17,7 +17,7 @@ import java.util.List;
  */
 public abstract class PathReferenceProviderBase implements PathReferenceProvider {
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.paths.PathReferenceProviderBase");
+  private static final Logger LOG = Logger.getInstance(PathReferenceProviderBase.class);
 
   @Override
   public boolean createReferences(@Nonnull final PsiElement psiElement, final @Nonnull List<PsiReference> references, final boolean soft) {

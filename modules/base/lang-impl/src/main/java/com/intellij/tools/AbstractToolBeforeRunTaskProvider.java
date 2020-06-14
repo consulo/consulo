@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
  * @author traff
  */
 public abstract class AbstractToolBeforeRunTaskProvider<T extends AbstractToolBeforeRunTask> extends BeforeRunTaskProvider<T> {
-  protected static final Logger LOG = Logger.getInstance("#" + ToolBeforeRunTaskProvider.class.getName());
+  protected static final Logger LOG = Logger.getInstance(AbstractToolBeforeRunTaskProvider.class);
 
   @Override
   public Image getIcon() {

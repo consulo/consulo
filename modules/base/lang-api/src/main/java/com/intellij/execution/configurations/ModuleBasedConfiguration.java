@@ -38,7 +38,7 @@ import java.util.Set;
  * to determine the run classpath.
  */
 public abstract class ModuleBasedConfiguration<ConfigurationModule extends RunConfigurationModule> extends LocatableConfigurationBase implements Cloneable, ModuleRunConfiguration {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.execution.configurations.ModuleBasedConfiguration");
+  private static final Logger LOG = Logger.getInstance(ModuleBasedConfiguration.class);
   private final ConfigurationModule myModule;
   @NonNls
   protected static final String TO_CLONE_ELEMENT_NAME = "toClone";

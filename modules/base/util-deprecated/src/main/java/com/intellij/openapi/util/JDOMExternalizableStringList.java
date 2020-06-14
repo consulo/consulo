@@ -25,7 +25,7 @@ import java.util.Collection;
 
 @SuppressWarnings({"HardCodedStringLiteral"})
 public class JDOMExternalizableStringList extends ArrayList<String> implements JDOMExternalizable {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.util.JDOMExternalizableStringList");
+  private static final Logger LOG = Logger.getInstance(JDOMExternalizableStringList.class);
 
   private static final String ATTR_LIST = "list";
   private static final String ATTR_LISTSIZE = "size";

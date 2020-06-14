@@ -46,7 +46,7 @@ public class InspectionProfileConvertor {
   @NonNls public static final String OLD_HIGHTLIGHTING_SETTINGS_PROFILE = "EditorHighlightingSettings";
   @NonNls public static final String OLD_DEFAUL_PROFILE = "OldDefaultProfile";
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettingsConvertor");
+  private static final Logger LOG = Logger.getInstance(InspectionProfileConvertor.class);
 
   @NonNls private static final String INSPECTIONS_TAG = "inspections";
   @NonNls private static final String NAME_ATT = "name";

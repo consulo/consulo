@@ -28,7 +28,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class PackageSetFactoryImpl extends PackageSetFactory {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.search.scope.packageSet.PackageSetFactoryImpl");
+  private static final Logger LOG = Logger.getInstance(PackageSetFactoryImpl.class);
 
   @Override
   public PackageSet compile(String text) throws ParsingException {

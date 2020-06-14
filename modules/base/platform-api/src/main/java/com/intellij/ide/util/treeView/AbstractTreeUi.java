@@ -50,7 +50,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
 
 public class AbstractTreeUi {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.util.treeView.AbstractTreeBuilder");
+  private static final Logger LOG = Logger.getInstance(AbstractTreeUi.class);
   protected JTree myTree;// protected for TestNG
 
   private DefaultTreeModel myTreeModel;

@@ -51,7 +51,7 @@ public class NewMappings implements Disposable {
 
   public static final Comparator<VcsDirectoryMapping> MAPPINGS_COMPARATOR = Comparator.comparing(VcsDirectoryMapping::getDirectory);
 
-  private final static Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.impl.projectlevelman.NewMappings");
+  private final static Logger LOG = Logger.getInstance(NewMappings.class);
   private final Object myLock;
 
   // vcs to mappings

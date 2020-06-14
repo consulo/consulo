@@ -39,7 +39,7 @@ import java.util.Map;
  * @author peter
  */
 class VirtualFileGistImpl<Data> implements VirtualFileGist<Data> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.gist.VirtualFileGist");
+  private static final Logger LOG = Logger.getInstance(VirtualFileGistImpl.class);
   private static final int ourInternalVersion = 2;
 
   @Nonnull

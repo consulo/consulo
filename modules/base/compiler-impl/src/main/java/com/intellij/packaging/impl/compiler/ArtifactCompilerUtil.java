@@ -50,7 +50,7 @@ import java.util.zip.ZipFile;
  * @author nik
  */
 public class ArtifactCompilerUtil {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.packaging.impl.compiler.ArtifactCompilerUtil");
+  private static final Logger LOG = Logger.getInstance(ArtifactCompilerUtil.class);
 
   private ArtifactCompilerUtil() {
   }

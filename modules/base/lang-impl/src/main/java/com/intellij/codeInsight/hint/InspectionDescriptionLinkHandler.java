@@ -34,7 +34,7 @@ import javax.annotation.Nonnull;
  * @author peter
  */
 public class InspectionDescriptionLinkHandler extends TooltipLinkHandler {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.hint.InspectionDescriptionLinkHandler");
+  private static final Logger LOG = Logger.getInstance(InspectionDescriptionLinkHandler.class);
 
   @Override
   public String getDescription(@Nonnull final String refSuffix, @Nonnull final Editor editor) {

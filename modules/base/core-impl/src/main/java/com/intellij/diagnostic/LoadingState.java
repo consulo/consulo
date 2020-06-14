@@ -31,7 +31,7 @@ public enum LoadingState {
 
   @Nonnull
   static Logger getLogger() {
-    return Logger.getInstance("#com.intellij.diagnostic.LoadingState");
+    return Logger.getInstance(LoadingState.class);
   }
 
   //@ApiStatus.Internal

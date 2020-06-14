@@ -40,7 +40,7 @@ import java.awt.*;
  */
 public class ActionTracer implements UiDebuggerExtension, AnActionListener {
 
-  private final Logger LOG = Logger.getInstance("ActionTracer");
+  private final Logger LOG = Logger.getInstance(ActionTracer.class);
   
   private JTextArea myText;
   private JPanel myComponent;

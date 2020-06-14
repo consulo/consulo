@@ -45,7 +45,7 @@ public class FavoritesProjectViewPane extends AbstractProjectViewPane {
   private final ProjectView myProjectView;
   private final FavoritesManager myFavoritesManager;
   private final FavoritesListener myFavoritesListener;
-  private static final Logger LOG = Logger.getInstance("#" + FavoritesProjectViewPane.class.getName());
+  private static final Logger LOG = Logger.getInstance(FavoritesProjectViewPane.class);
 
   protected FavoritesProjectViewPane(final Project project, ProjectView projectView, FavoritesManager favoritesManager) {
     super(project);

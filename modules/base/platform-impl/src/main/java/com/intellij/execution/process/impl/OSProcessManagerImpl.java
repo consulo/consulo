@@ -40,7 +40,7 @@ import java.util.List;
  */
 @Singleton
 public class OSProcessManagerImpl extends OSProcessManager {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.execution.process.impl.OSProcessManagerImpl");
+  private static final Logger LOG = Logger.getInstance(OSProcessManagerImpl.class);
 
   @Override
   public boolean killProcessTree(@Nonnull Process process) {

@@ -71,7 +71,7 @@ import java.util.List;
  * Date: Mar 17, 2005
  */
 public class CustomizableActionsPanel {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.ui.customization.CustomizableActionsPanel");
+  private static final Logger LOG = Logger.getInstance(CustomizableActionsPanel.class);
 
   private JButton myEditIconButton;
   private JButton myRemoveActionButton;

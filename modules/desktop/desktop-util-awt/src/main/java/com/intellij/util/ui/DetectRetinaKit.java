@@ -21,7 +21,7 @@ public final class DetectRetinaKit {
   @Nonnull
   // cannot be static because logging maybe not configured yet
   private static Logger getLogger() {
-    return Logger.getInstance("#com.intellij.util.ui.DetectRetinaKit");
+    return Logger.getInstance(DetectRetinaKit.class);
   }
 
   /**
