@@ -27,7 +27,7 @@ import java.util.*;
 public class Comparing {
   private Comparing() { }
 
-  public static <T> boolean equal(@Nullable T arg1, @javax.annotation.Nullable T arg2) {
+  public static <T> boolean equal(@Nullable T arg1, @Nullable T arg2) {
     if (arg1 == arg2) return true;
     if (arg1 == null || arg2 == null) {
       return false;
@@ -54,11 +54,11 @@ public class Comparing {
     return equal(s1, s2, true);
   }
 
-  public static boolean equal(@Nullable String arg1, @javax.annotation.Nullable String arg2) {
+  public static boolean equal(@Nullable String arg1, @Nullable String arg2) {
     return arg1 == null ? arg2 == null : arg1.equals(arg2);
   }
 
-  public static boolean equal(@javax.annotation.Nullable CharSequence s1, @javax.annotation.Nullable CharSequence s2, boolean caseSensitive) {
+  public static boolean equal(@Nullable CharSequence s1, @Nullable CharSequence s2, boolean caseSensitive) {
     if (s1 == s2) return true;
     if (s1 == null || s2 == null) return false;
 
@@ -91,7 +91,7 @@ public class Comparing {
     }
   }
 
-  public static boolean strEqual(@javax.annotation.Nullable String arg1, @javax.annotation.Nullable String arg2) {
+  public static boolean strEqual(@Nullable String arg1, @Nullable String arg2) {
     return strEqual(arg1, arg2, true);
   }
 
@@ -134,7 +134,7 @@ public class Comparing {
   }
 
   @SuppressWarnings("MethodNamesDifferingOnlyByCase")
-  public static int hashcode(@javax.annotation.Nullable Object obj) {
+  public static int hashcode(@Nullable Object obj) {
     return obj == null ? 0 : obj.hashCode();
   }
 
@@ -162,7 +162,7 @@ public class Comparing {
     return o1 < o2 ? -1 : o1 == o2 ? 0 : 1;
   }
 
-  public static int compare(@Nullable byte[] o1, @javax.annotation.Nullable byte[] o2) {
+  public static int compare(@Nullable byte[] o1, @Nullable byte[] o2) {
     if (o1 == o2) return 0;
     if (o1 == null) return 1;
     if (o2 == null) return -1;
@@ -178,14 +178,14 @@ public class Comparing {
     return 0;
   }
 
-  public static <T extends Comparable<T>> int compare(@javax.annotation.Nullable T o1, @javax.annotation.Nullable T o2) {
+  public static <T extends Comparable<T>> int compare(@Nullable T o1, @Nullable T o2) {
     if (o1 == o2) return 0;
     if (o1 == null) return -1;
     if (o2 == null) return 1;
     return o1.compareTo(o2);
   }
 
-  public static <T> int compare(@javax.annotation.Nullable T o1, @javax.annotation.Nullable T o2, @Nonnull Comparator<T> notNullComparator) {
+  public static <T> int compare(@Nullable T o1, @Nullable T o2, @Nonnull Comparator<T> notNullComparator) {
     if (o1 == o2) return 0;
     if (o1 == null) return -1;
     if (o2 == null) return 1;
