@@ -67,5 +67,7 @@
     <xdebugger.attachDebuggerProvider implementation="consulo.sandboxPlugin.ide.debugger.attach.SandAttachToProcessProvider" />
 
     <runConfigurationsSettings implementation="consulo.sandboxPlugin.ide.run.SandRunConfigurationsSettings" />
+
+    <webSocketAccepter implementation="consulo.sandboxPlugin.webSocket.TestWebSocketAccepter" />
   </extensions>
 </consulo-plugin>

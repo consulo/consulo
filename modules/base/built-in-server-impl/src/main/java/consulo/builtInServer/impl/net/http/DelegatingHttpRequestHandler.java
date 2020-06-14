@@ -1,19 +1,20 @@
 package consulo.builtInServer.impl.net.http;
 
 import com.intellij.openapi.application.Application;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.ThrowableNotNullFunction;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.builtInServer.http.HttpRequestHandler;
 import consulo.builtInServer.http.Responses;
 import consulo.builtInServer.http.util.HttpRequestUtil;
+import consulo.builtInServer.impl.net.websocket.WebSocketHandler;
+import consulo.logging.Logger;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.http.FullHttpRequest;
-import io.netty.handler.codec.http.HttpResponse;
-import io.netty.handler.codec.http.QueryStringDecoder;
+import io.netty.handler.codec.http.*;
+import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
+import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 import org.apache.commons.imaging.ImageFormats;
@@ -47,6 +48,16 @@ final class DelegatingHttpRequestHandler extends DelegatingHttpRequestHandlerBas
       prevHandlerAttribute.set(null);
     }
 
+    HttpHeaders headers = request.headers();
+    if ("Upgrade".equalsIgnoreCase(headers.get(HttpHeaderNames.CONNECTION)) && "WebSocket".equalsIgnoreCase(headers.get(HttpHeaderNames.UPGRADE))) {
+
+      // adding new handler to the existing pipeline to handle WebSocket Messages
+      context.pipeline().replace(this, "websocketHandler", new WebSocketHandler());
+      // do the Handshake to upgrade connection from HTTP to WebSocket protocol
+      handleHandshake(context, request);
+      return true;
+    }
+
     for (HttpRequestHandler handler : HttpRequestHandler.EP_NAME.getExtensionList()) {
       try {
         if (checkAndProcess.fun(handler)) {
@@ -72,6 +83,21 @@ final class DelegatingHttpRequestHandler extends DelegatingHttpRequestHandlerBas
     }
 
     return false;
+  }
+
+  private void handleHandshake(ChannelHandlerContext ctx, HttpRequest req) {
+    WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(getWebSocketURL(req), null, true);
+    WebSocketServerHandshaker handshaker = wsFactory.newHandshaker(req);
+    if (handshaker == null) {
+      WebSocketServerHandshakerFactory.sendUnsupportedVersionResponse(ctx.channel());
+    }
+    else {
+      handshaker.handshake(ctx.channel(), req);
+    }
+  }
+
+  private String getWebSocketURL(HttpRequest req) {
+    return "ws://" + req.headers().get("Host") + req.uri();
   }
 
   @Override

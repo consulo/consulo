@@ -17,6 +17,7 @@
   <extensionPoints>
     <extensionPoint name="customPortServerManager" interface="consulo.builtInServer.custom.CustomPortServerManager"/>
     <extensionPoint name="binaryRequestHandler" interface="consulo.builtInServer.binary.BinaryRequestHandler"/>
+    <extensionPoint name="webSocketAccepter" interface="consulo.builtInServer.websocket.WebSocketAccepter"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
