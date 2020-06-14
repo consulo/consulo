@@ -133,4 +133,13 @@ public interface Logger {
   default boolean assertTrue(boolean value) {
     return value || assertTrue(false, null);
   }
+
+  /**
+   * Set level to logger. Not guaranteed action - some loggers can ignore method invoke
+   *
+   * WARNING: Can be called only from platform - or will throw error
+   */
+  default void setLevel(@Nonnull LoggerLevel level) throws IllegalAccessException {
+    // nothing by default
+  }
 }

@@ -16,7 +16,6 @@
 package consulo.logging.internal;
 
 import consulo.logging.Logger;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
 
@@ -42,7 +41,7 @@ public class DefaultLogger implements Logger {
   }
 
   @Override
-  public void debug(@NonNls String message, Throwable t) {
+  public void debug(String message, Throwable t) {
   }
 
   @Override
@@ -69,6 +68,6 @@ public class DefaultLogger implements Logger {
   }
 
   @Override
-  public void warn(@NonNls String message, Throwable t) {
+  public void warn(String message, Throwable t) {
   }
 }

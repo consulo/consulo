@@ -19,12 +19,20 @@ import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
-import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ex.ApplicationEx2;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginIds;
+import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
+import consulo.logging.LoggerLevel;
 import consulo.platform.impl.action.LastActionTracker;
+import consulo.util.lang.ControlFlowException;
+import consulo.util.lang.reflect.ReflectionUtil;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.LoggerContext;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
@@ -35,9 +43,11 @@ import java.util.function.Supplier;
 public class Log4J2Logger implements Logger {
   private static Supplier<String> ourApplicationInfoProvider = getIdeaInfoProvider();
 
+  private final LoggerContext myLoggerContext;
   private final org.apache.logging.log4j.Logger myLogger;
 
-  Log4J2Logger(org.apache.logging.log4j.Logger logger) {
+  Log4J2Logger(LoggerContext loggerContext, org.apache.logging.log4j.Logger logger) {
+    myLoggerContext = loggerContext;
     myLogger = logger;
   }
 
@@ -73,9 +83,9 @@ public class Log4J2Logger implements Logger {
 
   @Override
   public void error(String message, @Nullable Throwable t, String... details) {
-    if (t instanceof ProcessCanceledException) {
+    if (t instanceof ControlFlowException) {
       myLogger.error(new Throwable("Do not log ProcessCanceledException").initCause(t));
-      throw (ProcessCanceledException)t;
+      throw (RuntimeException)t;
     }
 
     if (t != null && t.getClass().getName().contains("ReparsedSuccessfullyException")) {
@@ -132,6 +142,45 @@ public class Log4J2Logger implements Logger {
   @Override
   public void warn(String message, @Nullable Throwable t) {
     myLogger.warn(message, t);
+  }
+
+  @Override
+  public void setLevel(@Nonnull LoggerLevel level) throws IllegalAccessException {
+    Class callerClass = ReflectionUtil.findCallerClass(1);
+    if (callerClass == null) {
+      throw new IllegalAccessException("There not caller class");
+    }
+
+    PluginDescriptor plugin = PluginManager.getPlugin(callerClass);
+    if (plugin == null || !PluginIds.isPlatformPlugin(plugin.getPluginId())) {
+      throw new IllegalAccessException("Plugin is not platform: " + plugin);
+    }
+
+    org.apache.logging.log4j.core.Logger logger = myLoggerContext.getLogger(myLogger.getName());
+
+    Level newLevel;
+    switch (level) {
+
+      case INFO:
+        newLevel = Level.INFO;
+        break;
+      case WARNING:
+        newLevel = Level.WARN;
+        break;
+      case ERROR:
+        newLevel = Level.ERROR;
+        break;
+      case DEBUG:
+        newLevel = Level.DEBUG;
+        break;
+      case TRACE:
+        newLevel = Level.TRACE;
+        break;
+      default:
+        throw new IllegalArgumentException("Wrong level: " + level);
+    }
+
+    logger.setLevel(newLevel);
   }
 
   private static Supplier<String> getIdeaInfoProvider() {
