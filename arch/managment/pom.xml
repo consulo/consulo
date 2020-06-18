@@ -297,6 +297,7 @@
         <groupId>cglib</groupId>
         <artifactId>cglib-nodep</artifactId>
         <version>${cglib.version}</version>
+        <optional>true</optional>
       </dependency>
       <dependency>
         <groupId>dk.brics.automaton</groupId>
