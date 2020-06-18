@@ -15,8 +15,7 @@
  */
 package net.sf.cglib.proxy;
 
-import consulo.container.classloader.PluginClassLoader;
-import consulo.container.impl.PluginHolderModificator;
+import consulo.util.advandedProxy.ClassLoaderPreferer;
 import consulo.util.lang.reflect.ReflectionUtil;
 import net.sf.cglib.asm.$ClassVisitor;
 import net.sf.cglib.asm.$Label;
@@ -355,33 +354,7 @@ class AdvancedEnhancer extends AbstractClassGenerator {
 
   @Override
   protected ClassLoader getDefaultClassLoader() {
-    int maxIndex = -1;
-    ClassLoader bestLoader = null;
-    ClassLoader nonPluginLoader = null;
-    if (interfaces != null && interfaces.length > 0) {
-      for (final Class anInterface : interfaces) {
-        final ClassLoader loader = anInterface.getClassLoader();
-        if (loader instanceof PluginClassLoader) {
-          final int order = PluginHolderModificator.getPluginLoadOrder(((PluginClassLoader)loader).getPluginId());
-          if (maxIndex < order) {
-            maxIndex = order;
-            bestLoader = loader;
-          }
-        }
-        else if (nonPluginLoader == null) {
-          nonPluginLoader = loader;
-        }
-      }
-    }
-    ClassLoader superLoader = null;
-    if (superclass != null) {
-      superLoader = superclass.getClassLoader();
-      if (superLoader instanceof PluginClassLoader && maxIndex < PluginHolderModificator.getPluginLoadOrder(((PluginClassLoader)superLoader).getPluginId())) {
-        return superLoader;
-      }
-    }
-    if (bestLoader != null) return bestLoader;
-    return superLoader == null ? nonPluginLoader : superLoader;
+    return ClassLoaderPreferer.preferClassLoader(superclass, interfaces);
   }
 
   private static Signature rename(Signature sig, int index) {

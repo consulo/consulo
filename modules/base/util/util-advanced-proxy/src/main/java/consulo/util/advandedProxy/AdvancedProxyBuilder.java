@@ -19,7 +19,9 @@ import consulo.util.collection.ArrayUtil;
 import net.sf.cglib.proxy.AdvancedProxy;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.InvocationHandler;
+import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -27,7 +29,8 @@ import java.util.Objects;
  * @since 2020-06-18
  */
 public class AdvancedProxyBuilder<T> {
-  public static <K> AdvancedProxyBuilder<K> create(@Nonnull Class<K> superClass) {
+  @Nonnull
+  public static <K> AdvancedProxyBuilder<K> create(@Nullable Class<K> superClass) {
     return new AdvancedProxyBuilder<>(superClass);
   }
 
@@ -39,7 +42,7 @@ public class AdvancedProxyBuilder<T> {
 
   private boolean myInterceptObjectMethods = true;
 
-  private AdvancedProxyBuilder(@Nonnull Class<T> superClass) {
+  private AdvancedProxyBuilder(@Nullable Class<T> superClass) {
     mySuperClass = superClass;
   }
 
@@ -53,6 +56,11 @@ public class AdvancedProxyBuilder<T> {
   public AdvancedProxyBuilder<T> withInterfaces(@Nonnull Class... interfaces) {
     myInterfaces = interfaces;
     return this;
+  }
+
+  @Nonnull
+  public AdvancedProxyBuilder<T> withInterfaces(@Nonnull Collection<Class> interfaces) {
+    return withInterfaces(interfaces.toArray(ArrayUtil.EMPTY_CLASS_ARRAY));
   }
 
   @Nonnull
