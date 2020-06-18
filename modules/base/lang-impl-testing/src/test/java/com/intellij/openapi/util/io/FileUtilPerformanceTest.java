@@ -17,6 +17,7 @@ package com.intellij.openapi.util.io;
 
 import com.intellij.testFramework.PlatformTestUtil;
 import com.intellij.util.ThrowableRunnable;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -28,6 +29,7 @@ public class FileUtilPerformanceTest {
   private String mySimpleTestPath = "file.txt";
 
   @Test
+  @Ignore
   public void toCanonicalPath() throws Exception {
     assertEquals(myCanonicalPath, FileUtil.toCanonicalPath(myTestPath));
 
@@ -43,6 +45,7 @@ public class FileUtilPerformanceTest {
   }
 
   @Test
+  @Ignore
   public void toCanonicalPathSimple() throws Exception {
     assertEquals(mySimpleTestPath, FileUtil.toCanonicalPath(mySimpleTestPath));
 
@@ -58,6 +61,7 @@ public class FileUtilPerformanceTest {
   }
 
   @Test
+  @Ignore
   public void isAncestor() throws Exception {
     assertTrue(FileUtil.isAncestor(myTestPath, myCanonicalPath, false));
 
