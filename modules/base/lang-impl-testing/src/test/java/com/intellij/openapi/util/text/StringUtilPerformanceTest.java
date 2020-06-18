@@ -18,6 +18,7 @@ package com.intellij.openapi.util.text;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.testFramework.PlatformTestUtil;
 import com.intellij.util.ThrowableRunnable;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Random;
@@ -28,6 +29,7 @@ public class StringUtilPerformanceTest {
   private static final String TEST_STRING = "0123456789abcdefghijklmnopqrstuvwxyz";
 
   @Test
+  @Ignore
   public void containsAnyChar() throws Exception {
     assertTrue(StringUtil.containsAnyChar(TEST_STRING, Integer.toString(new Random().nextInt())));
 
