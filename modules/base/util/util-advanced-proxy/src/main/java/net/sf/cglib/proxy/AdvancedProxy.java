@@ -1,6 +1,6 @@
 package net.sf.cglib.proxy;
 
-import consulo.annotation.UsedInPlugin;
+import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.Maps;
@@ -17,7 +17,9 @@ import java.util.Map;
 /**
  * @author peter
  */
-@UsedInPlugin
+@Deprecated
+@DeprecationInfo("Use AdvancedProxyBuilder")
+@SuppressWarnings("deprecation")
 public class AdvancedProxy {
   private static final Logger LOG = Logger.getInstance(AdvancedProxy.class);
   public static Method FINALIZE_METHOD;
