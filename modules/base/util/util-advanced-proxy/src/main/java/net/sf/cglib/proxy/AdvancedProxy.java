@@ -1,7 +1,7 @@
 package net.sf.cglib.proxy;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.logging.Logger;
+import consulo.util.advandedProxy.ObjectMethods;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.Maps;
 import consulo.util.lang.ControlFlowException;
@@ -21,24 +21,10 @@ import java.util.Map;
 @DeprecationInfo("Use AdvancedProxyBuilder")
 @SuppressWarnings("deprecation")
 public class AdvancedProxy {
-  private static final Logger LOG = Logger.getInstance(AdvancedProxy.class);
-  public static Method FINALIZE_METHOD;
-  public static Method EQUALS_METHOD;
-  public static Method HASHCODE_METHOD;
-  public static Method TOSTRING_METHOD;
-
-  static {
-    try {
-      FINALIZE_METHOD = Object.class.getDeclaredMethod("finalize");
-      EQUALS_METHOD = Object.class.getDeclaredMethod("equals", Object.class);
-      HASHCODE_METHOD = Object.class.getDeclaredMethod("hashCode");
-      TOSTRING_METHOD = Object.class.getDeclaredMethod("toString");
-    }
-    catch (NoSuchMethodException e) {
-      LOG.error(e);
-    }
-  }
-
+  public static final Method FINALIZE_METHOD = ObjectMethods.FINALIZE_METHOD;
+  public static final Method EQUALS_METHOD = ObjectMethods.EQUALS_METHOD;
+  public static final Method HASHCODE_METHOD = ObjectMethods.HASHCODE_METHOD;
+  public static final Method TOSTRING_METHOD = ObjectMethods.TOSTRING_METHOD;
 
   private static final Map<ProxyDescription, Factory> ourFactories = Maps.newConcurrentWeakValueMap();
   private static final CallbackFilter NO_OBJECT_METHODS_FILTER = new CallbackFilter() {
