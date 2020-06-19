@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.swing.plaf.FontUIResource;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 
@@ -81,7 +82,7 @@ public class ProjectViewPane extends AbstractProjectViewPSIPane {
 
         if (Registry.is("bigger.font.in.project.view")) {
           Font font = getFont();
-          setFont(font.deriveFont(font.getSize() + 1f));
+          setFont(new FontUIResource(font.deriveFont(font.getSize() + 1f)));
         }
       }
 
@@ -132,7 +133,7 @@ public class ProjectViewPane extends AbstractProjectViewPSIPane {
     }
   }
 
-  private class ProjectViewPaneTreeStructure extends ProjectTreeStructure{
+  private class ProjectViewPaneTreeStructure extends ProjectTreeStructure {
     public ProjectViewPaneTreeStructure() {
       super(ProjectViewPane.this.myProject, ID);
     }
