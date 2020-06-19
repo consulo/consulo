@@ -19,8 +19,8 @@ import com.intellij.openapi.actionSystem.ActionButtonComponent;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.ui.ColorUtil;
+import com.intellij.ui.paint.RectanglePainter2D;
 import com.intellij.util.ui.GraphicsUtil;
-import com.intellij.util.ui.JBUI;
 import consulo.ide.ui.laf.intellij.ActionButtonUI;
 
 import javax.swing.*;
@@ -43,7 +43,7 @@ public class ModernActionButtonUI extends ActionButtonUI {
     g.setColor(state == ActionButtonComponent.POPPED || state == ActionButtonComponent.PUSHED
                ? ModernUIUtil.getSelectionBackground()
                : ModernUIUtil.getBorderColor(button));
-    g.drawRect(0, 0, size.width - JBUI.scale(1), size.height - JBUI.scale(1));
+    RectanglePainter2D.DRAW.paint((Graphics2D)g, 0, 0, size.getWidth(), size.getHeight());
     config.restore();
   }
 
@@ -51,7 +51,7 @@ public class ModernActionButtonUI extends ActionButtonUI {
   protected void paintBackground(ActionButton button, Graphics g, Dimension size, int state) {
     if (state == ActionButtonComponent.PUSHED) {
       g.setColor(ColorUtil.toAlpha(ModernUIUtil.getSelectionBackground(), 100));
-      g.fillRect(JBUI.scale(1), JBUI.scale(1), size.width - JBUI.scale(2), size.height - JBUI.scale(2));
+      RectanglePainter2D.FILL.paint((Graphics2D)g, 0, 0, size.getWidth(), size.getHeight());
     }
   }
 }
