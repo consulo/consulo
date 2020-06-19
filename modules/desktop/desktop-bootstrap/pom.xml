@@ -39,6 +39,34 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven.compile.plugin}</version>
+        <configuration>
+          <compilerId>eclipse</compilerId>
+          <source>${java.level}</source>
+          <target>${java.level}</target>
+          <showDeprecation>true</showDeprecation>
+          <showWarnings>true</showWarnings>
+          <fork>true</fork>
+          <meminitial>2048</meminitial>
+          <maxmem>4096</maxmem>
+        </configuration>
+        <!--workaround for java 9-->
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-archiver</artifactId>
+            <version>2.4.4</version>
+          </dependency>
+          <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-compiler-eclipse</artifactId>
+            <version>2.8.4</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
         <groupId>consulo.maven</groupId>
         <artifactId>java9-maven-plugin</artifactId>
         <version>1.0-SNAPSHOT</version>
