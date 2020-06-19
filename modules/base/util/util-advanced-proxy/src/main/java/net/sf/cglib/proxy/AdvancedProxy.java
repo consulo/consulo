@@ -2,12 +2,12 @@ package net.sf.cglib.proxy;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.util.advandedProxy.ObjectMethods;
+import consulo.util.advandedProxy.ProxyHelper;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.Maps;
 import consulo.util.lang.ControlFlowException;
 import net.sf.cglib.core.CodeGenerationException;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -90,7 +90,7 @@ public class AdvancedProxy {
       final ProxyDescription key = new ProxyDescription(superClass, interfaces);
       Factory factory = ourFactories.get(key);
       if (factory != null) {
-        return (T)factory.newInstance(getConstructorParameterTypes(factory.getClass(), constructorArgs), constructorArgs, callbacks);
+        return (T)factory.newInstance(ProxyHelper.getConstructorParameterTypes(factory.getClass(), constructorArgs), constructorArgs, callbacks);
       }
 
       AdvancedEnhancer e = new AdvancedEnhancer();
@@ -99,7 +99,7 @@ public class AdvancedProxy {
       e.setCallbackFilter(interceptObjectMethods ? WITH_OBJECT_METHODS_FILTER : NO_OBJECT_METHODS_FILTER);
       if (superClass != null) {
         e.setSuperclass(superClass);
-        factory = (Factory)e.create(getConstructorParameterTypes(superClass, constructorArgs), constructorArgs);
+        factory = (Factory)e.create(ProxyHelper.getConstructorParameterTypes(superClass, constructorArgs), constructorArgs);
       }
       else {
         assert constructorArgs.length == 0;
@@ -132,25 +132,6 @@ public class AdvancedProxy {
       }
       throw new RuntimeException(e);
     }
-  }
-
-  private static Class[] getConstructorParameterTypes(final Class aClass, final Object... constructorArgs) {
-    if (constructorArgs.length == 0) return ArrayUtil.EMPTY_CLASS_ARRAY;
-
-    loop: for (final Constructor constructor : aClass.getDeclaredConstructors()) {
-      final Class[] parameterTypes = constructor.getParameterTypes();
-      if (parameterTypes.length == constructorArgs.length) {
-        for (int i = 0; i < parameterTypes.length; i++) {
-          Class parameterType = parameterTypes[i];
-          final Object constructorArg = constructorArgs[i];
-          if (!parameterType.isInstance(constructorArg) && constructorArg != null) {
-            continue loop;
-          }
-        }
-        return constructor.getParameterTypes();
-      }
-    }
-    throw new AssertionError("Cannot find constructor for arguments: " + Arrays.asList(constructorArgs));
   }
 
   private static class ProxyDescription {

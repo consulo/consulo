@@ -17,15 +17,18 @@ package consulo.util.advandedProxy;
 
 import consulo.container.classloader.PluginClassLoader;
 import consulo.container.impl.PluginHolderModificator;
+import consulo.util.collection.ArrayUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.Constructor;
+import java.util.Arrays;
 
 /**
  * @author VISTALL
  * @since 2020-06-18
  */
-public class ClassLoaderPreferer {
+public final class ProxyHelper {
   /**
    * @return base classloader based on superclass and interfaces
    */
@@ -58,10 +61,31 @@ public class ClassLoaderPreferer {
     }
     if (bestLoader != null) return bestLoader;
     if (superLoader == null) {
-      return nonPluginLoader == null ? ClassLoaderPreferer.class.getClassLoader() : nonPluginLoader;
+      return nonPluginLoader == null ? ProxyHelper.class.getClassLoader() : nonPluginLoader;
     }
     else {
       return superLoader;
     }
+  }
+
+  @Nonnull
+  public static Class[] getConstructorParameterTypes(final Class aClass, final Object... constructorArgs) {
+    if (constructorArgs.length == 0) return ArrayUtil.EMPTY_CLASS_ARRAY;
+
+    loop:
+    for (final Constructor constructor : aClass.getDeclaredConstructors()) {
+      final Class[] parameterTypes = constructor.getParameterTypes();
+      if (parameterTypes.length == constructorArgs.length) {
+        for (int i = 0; i < parameterTypes.length; i++) {
+          Class parameterType = parameterTypes[i];
+          final Object constructorArg = constructorArgs[i];
+          if (!parameterType.isInstance(constructorArg) && constructorArg != null) {
+            continue loop;
+          }
+        }
+        return constructor.getParameterTypes();
+      }
+    }
+    throw new AssertionError("Cannot find constructor for arguments: " + Arrays.asList(constructorArgs));
   }
 }

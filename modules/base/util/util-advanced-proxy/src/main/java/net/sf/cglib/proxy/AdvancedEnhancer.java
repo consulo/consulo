@@ -15,7 +15,7 @@
  */
 package net.sf.cglib.proxy;
 
-import consulo.util.advandedProxy.ClassLoaderPreferer;
+import consulo.util.advandedProxy.ProxyHelper;
 import consulo.util.lang.reflect.ReflectionUtil;
 import net.sf.cglib.asm.$ClassVisitor;
 import net.sf.cglib.asm.$Label;
@@ -354,7 +354,7 @@ class AdvancedEnhancer extends AbstractClassGenerator {
 
   @Override
   protected ClassLoader getDefaultClassLoader() {
-    return ClassLoaderPreferer.preferClassLoader(superclass, interfaces);
+    return ProxyHelper.preferClassLoader(superclass, interfaces);
   }
 
   private static Signature rename(Signature sig, int index) {

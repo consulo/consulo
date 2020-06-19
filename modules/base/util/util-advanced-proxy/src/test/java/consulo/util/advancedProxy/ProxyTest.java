@@ -198,11 +198,34 @@ public class ProxyTest extends Assert {
   @Test
   public void testDefaultInterfaceMethods() {
     DefaultImpl defaultImpl = AdvancedProxyBuilder.create(DefaultImpl.class).withInterfaces(InterfaceWithDefaultMethods.class).withInvocationHandler((proxy, method, args) -> {
-      throw new IllegalArgumentException("should not never called");
+      throw new IllegalArgumentException("should not never called. Method: " + method);
     }).build();
 
     ((InterfaceWithDefaultMethods)defaultImpl).test();
 
     assertEquals("foo", ((InterfaceWithDefaultMethods)defaultImpl).foo());
+  }
+
+  public static class SomeBaseClassWithArguments {
+    private final String myA;
+    private final String myB;
+
+    public SomeBaseClassWithArguments(String a, String b) {
+      myA = a;
+      myB = b;
+    }
+
+    public SomeBaseClassWithArguments(String a) {
+      myA = a;
+      myB = "error";
+    }
+  }
+
+  @Test
+  public void testArgumentsCall() {
+    SomeBaseClassWithArguments proxy = AdvancedProxyBuilder.create(SomeBaseClassWithArguments.class).withSuperConstructorArguments("a", "b").withInvocationHandler((o, method, args) -> null).build();
+
+    assertEquals(proxy.myA, "a");
+    assertEquals(proxy.myB, "b");
   }
 }
