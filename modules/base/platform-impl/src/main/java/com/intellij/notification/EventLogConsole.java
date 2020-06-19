@@ -167,7 +167,7 @@ class EventLogConsole {
         globalScheme.setDelegate(EditorColorsManager.getInstance().getGlobalScheme());
         editor.reinitSettings();
       }
-    }, myProjectModel::dispose);
+    }, myProjectModel);
     editor.setColorsScheme(ConsoleViewUtil.updateConsoleColorScheme(editor.createBoundColorSchemeDelegate(globalScheme)));
   }
 
