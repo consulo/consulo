@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,31 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.find;
+package com.intellij.find.editorHeaderActions;
 
-import consulo.util.dataholder.Key;
+import com.intellij.find.FindModel;
 
-import javax.annotation.Nonnull;
-
-public interface SearchSession {
-  Key<SearchSession> KEY = Key.create("search.replace.session");
-  String INCORRECT_REGEX_MESSAGE = "Incorrect regular expression";
-
-  @Nonnull
-  FindModel getFindModel();
-
-  @Nonnull
-  SearchReplaceComponent getComponent();
-
-  boolean hasMatches();
-
-  void searchForward();
-
-  void searchBackward();
-
-  void close();
-
-  default boolean isSearchInProgress() {
-    return false;
+public class ToggleAnywhereAction extends EditorHeaderSetSearchContextAction {
+  public ToggleAnywhereAction() {
+    super("Anywhere", FindModel.SearchContext.ANY);
   }
 }

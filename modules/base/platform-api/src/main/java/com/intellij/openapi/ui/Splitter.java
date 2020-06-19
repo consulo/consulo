@@ -1,26 +1,12 @@
-/*
- * Copyright 2000-2015 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.ui;
 
-import com.intellij.icons.AllIcons;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.FocusWatcher;
-import com.intellij.ui.ClickListener;
-import com.intellij.ui.UIBundle;
-import consulo.logging.Logger;
+import com.intellij.util.MathUtil;
+import com.intellij.util.ui.EmptyIcon;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,9 +19,13 @@ import java.awt.event.MouseEvent;
  * @author Vladimir Kondratyev
  */
 public class Splitter extends JPanel implements Splittable {
+  private static final Icon SplitGlueH = EmptyIcon.create(6, 17);
+  private static final Icon SplitGlueV = EmptyIcon.create(17, 6);
   private static final Logger LOG = Logger.getInstance(Splitter.class);
-  @NonNls public static final String PROP_PROPORTION = "proportion";
-  @NonNls public static final String PROP_ORIENTATION = "orientation";
+  @NonNls
+  public static final String PROP_PROPORTION = "proportion";
+  @NonNls
+  public static final String PROP_ORIENTATION = "orientation";
 
   private int myDividerWidth;
   /**
@@ -52,7 +42,7 @@ public class Splitter extends JPanel implements Splittable {
    * /-------/
    */
   private boolean myVerticalSplit;
-  private boolean myHonorMinimumSize = false;
+  private boolean myHonorMinimumSize;
   private final float myMinProp;
   private final float myMaxProp;
 
@@ -65,8 +55,26 @@ public class Splitter extends JPanel implements Splittable {
   private final FocusWatcher myFocusWatcher;
   private boolean myShowDividerIcon;
   private boolean myShowDividerControls;
-  private boolean mySkipNextLayouting;
+  private boolean mySkipNextLayout;
   private static final Rectangle myNullBounds = new Rectangle();
+
+  public enum LackOfSpaceStrategy {
+    SIMPLE_RATIO, //default
+    HONOR_THE_FIRST_MIN_SIZE,
+    HONOR_THE_SECOND_MIN_SIZE
+  }
+
+  @Nonnull
+  private LackOfSpaceStrategy myLackOfSpaceStrategy = LackOfSpaceStrategy.SIMPLE_RATIO;
+
+  public enum DividerPositionStrategy {
+    KEEP_PROPORTION, //default
+    KEEP_FIRST_SIZE,
+    KEEP_SECOND_SIZE
+  }
+
+  @Nonnull
+  private DividerPositionStrategy myDividerPositionStrategy = DividerPositionStrategy.KEEP_PROPORTION;
 
 
   /**
@@ -88,7 +96,7 @@ public class Splitter extends JPanel implements Splittable {
   /**
    * Creates split with specified orientation and proportion.
    *
-   * @param vertical If true, components are displayed above one another. If false, components are displayed side by side.
+   * @param vertical   If true, components are displayed above one another. If false, components are displayed side by side.
    * @param proportion The initial proportion of the splitter (between 0.0f and 1.0f).
    */
   public Splitter(boolean vertical, float proportion) {
@@ -148,13 +156,30 @@ public class Splitter extends JPanel implements Splittable {
     myHonorMinimumSize = honorMinimumSize;
   }
 
+  public void setLackOfSpaceStrategy(@Nonnull LackOfSpaceStrategy strategy) {
+    myLackOfSpaceStrategy = strategy;
+  }
+
+  @Nonnull
+  public LackOfSpaceStrategy getLackOfSpaceStrategy() {
+    return myLackOfSpaceStrategy;
+  }
+
+  public void setDividerPositionStrategy(@Nonnull DividerPositionStrategy dividerPositionStrategy) {
+    myDividerPositionStrategy = dividerPositionStrategy;
+  }
+
+  @Nonnull
+  public DividerPositionStrategy getDividerPositionStrategy() {
+    return myDividerPositionStrategy;
+  }
+
   /**
    * This is temporary solution for UIDesigner. <b>DO NOT</b> use it from code.
    *
-   * @see #setFirstComponent(JComponent)
-   * @see #setSecondComponent(JComponent)
-   * @deprecated
+   * @deprecated use {@link #setFirstComponent(JComponent)} and {@link #setSecondComponent(JComponent)}
    */
+  @Deprecated
   @Override
   public Component add(Component comp) {
     final int childCount = getComponentCount();
@@ -182,8 +207,7 @@ public class Splitter extends JPanel implements Splittable {
 
   @Override
   public boolean isVisible() {
-    return super.isVisible() &&
-           (myFirstComponent != null && myFirstComponent.isVisible() || mySecondComponent != null && mySecondComponent.isVisible());
+    return super.isVisible() && (myFirstComponent != null && myFirstComponent.isVisible() || mySecondComponent != null && mySecondComponent.isVisible());
   }
 
   @Override
@@ -215,10 +239,8 @@ public class Splitter extends JPanel implements Splittable {
       final Dimension firstPrefSize = myFirstComponent.getPreferredSize();
       final Dimension secondPrefSize = mySecondComponent.getPreferredSize();
       return isVertical()
-             ? new Dimension(Math.max(firstPrefSize.width, secondPrefSize.width),
-                             firstPrefSize.height + dividerWidth + secondPrefSize.height)
-             : new Dimension(firstPrefSize.width + dividerWidth + secondPrefSize.width,
-                             Math.max(firstPrefSize.height, secondPrefSize.height));
+             ? new Dimension(Math.max(firstPrefSize.width, secondPrefSize.width), firstPrefSize.height + dividerWidth + secondPrefSize.height)
+             : new Dimension(firstPrefSize.width + dividerWidth + secondPrefSize.width, Math.max(firstPrefSize.height, secondPrefSize.height));
     }
 
     if (myFirstComponent != null && myFirstComponent.isVisible()) { // only first component is visible
@@ -231,14 +253,56 @@ public class Splitter extends JPanel implements Splittable {
 
     return super.getPreferredSize();
   }
-  public void skipNextLayouting() {
-    mySkipNextLayouting = true;
+
+  public void skipNextLayout() {
+    mySkipNextLayout = true;
+  }
+
+  @Override
+  public void reshape(int x, int y, int w, int h) {
+    if (myDividerPositionStrategy != DividerPositionStrategy.KEEP_PROPORTION &&
+        !isNull(myFirstComponent) &&
+        myFirstComponent.isVisible() &&
+        !isNull(mySecondComponent) &&
+        mySecondComponent.isVisible() &&
+        ((myVerticalSplit && h > 2 * getDividerWidth()) || (!myVerticalSplit && w > 2 * getDividerWidth())) &&
+        ((myVerticalSplit && h != getHeight()) || (!myVerticalSplit && w != getWidth()))) {
+      int total = myVerticalSplit ? h : w;
+      if (myDividerPositionStrategy == DividerPositionStrategy.KEEP_FIRST_SIZE) {
+        myProportion = getProportionForFirstSize(myVerticalSplit ? myFirstComponent.getHeight() : myFirstComponent.getWidth(), total);
+      }
+      else if (myDividerPositionStrategy == DividerPositionStrategy.KEEP_SECOND_SIZE) {
+        myProportion = getProportionForSecondSize(myVerticalSplit ? mySecondComponent.getHeight() : mySecondComponent.getWidth(), total);
+      }
+    }
+    super.reshape(x, y, w, h);
+  }
+
+  protected final float getProportionForFirstSize(int firstSize, int totalSize) {
+    checkSize(firstSize);
+    checkTotalSize(totalSize);
+    return (float)firstSize / (totalSize - getDividerWidth());
+  }
+
+  protected final float getProportionForSecondSize(int secondSize, int totalSize) {
+    checkSize(secondSize);
+    checkTotalSize(totalSize);
+    return (float)(totalSize - getDividerWidth() - secondSize) / (totalSize - getDividerWidth());
+  }
+
+  private static void checkSize(int size) {
+    if (size < 0) throw new IllegalArgumentException("size is negative: " + size);
+  }
+
+  private void checkTotalSize(int totalSize) {
+    int d = getDividerWidth();
+    if (totalSize <= d) throw new IllegalArgumentException("divider width >= total size: " + d + " >= " + totalSize);
   }
 
   @Override
   public void doLayout() {
-    if (mySkipNextLayouting) {
-      mySkipNextLayouting = false;
+    if (mySkipNextLayout) {
+      mySkipNextLayout = false;
       return;
     }
     int width = getWidth();
@@ -270,8 +334,18 @@ public class Splitter extends JPanel implements Splittable {
           double mSize2 = isVertical() ? mySecondComponent.getMinimumSize().getHeight() : mySecondComponent.getMinimumSize().getWidth();
 
           if (size1 + size2 < mSize1 + mSize2) {
-            double proportion = mSize1 / (mSize1 + mSize2);
-            size1 = proportion * total;
+            switch (myLackOfSpaceStrategy) {
+              case SIMPLE_RATIO:
+                double proportion = mSize1 / (mSize1 + mSize2);
+                size1 = proportion * total;
+                break;
+              case HONOR_THE_FIRST_MIN_SIZE:
+                size1 = mSize1;
+                break;
+              case HONOR_THE_SECOND_MIN_SIZE:
+                size1 = total - mSize2 - d;
+                break;
+            }
           }
           else {
             if (size1 < mSize1) {
@@ -285,7 +359,7 @@ public class Splitter extends JPanel implements Splittable {
         }
       }
 
-      int iSize1 = (int)Math.round(Math.floor(size1));
+      int iSize1 = (int)Math.round(size1);
       int iSize2 = total - iSize1 - d;
 
       if (isVertical()) {
@@ -302,39 +376,39 @@ public class Splitter extends JPanel implements Splittable {
       myFirstComponent.setBounds(firstRect);
       myDivider.setBounds(dividerRect);
       mySecondComponent.setBounds(secondRect);
-      myFirstComponent.revalidate();
-      mySecondComponent.revalidate();
+      //myFirstComponent.revalidate();
+      //mySecondComponent.revalidate();
     }
     else if (!isNull(myFirstComponent) && myFirstComponent.isVisible()) { // only first component is visible
       hideNull(mySecondComponent);
       myDivider.setVisible(false);
       myFirstComponent.setBounds(0, 0, width, height);
-      myFirstComponent.revalidate();
+      //myFirstComponent.revalidate();
     }
     else if (!isNull(mySecondComponent) && mySecondComponent.isVisible()) { // only second component is visible
       hideNull(myFirstComponent);
       myDivider.setVisible(false);
       mySecondComponent.setBounds(0, 0, width, height);
-      mySecondComponent.revalidate();
+      //mySecondComponent.revalidate();
     }
     else { // both components are null or invisible
       myDivider.setVisible(false);
       if (myFirstComponent != null) {
         myFirstComponent.setBounds(0, 0, 0, 0);
-        myFirstComponent.revalidate();
+        //myFirstComponent.revalidate();
       }
       else {
         hideNull(myFirstComponent);
       }
       if (mySecondComponent != null) {
         mySecondComponent.setBounds(0, 0, 0, 0);
-        mySecondComponent.revalidate();
+        //mySecondComponent.revalidate();
       }
       else {
         hideNull(mySecondComponent);
       }
     }
-    myDivider.revalidate();
+    //myDivider.revalidate();
   }
 
   static boolean isNull(Component component) {
@@ -369,6 +443,7 @@ public class Splitter extends JPanel implements Splittable {
     return myProportion;
   }
 
+  @Override
   public void setProportion(float proportion) {
     if (myProportion == proportion) {
       return;
@@ -397,8 +472,9 @@ public class Splitter extends JPanel implements Splittable {
   }
 
   /**
-   * @return <code>true</code> if splitter has vertical orientation, <code>false</code> otherwise
+   * @return {@code true} if splitter has vertical orientation, {@code false} otherwise
    */
+  @Override
   public boolean getOrientation() {
     return myVerticalSplit;
   }
@@ -411,8 +487,9 @@ public class Splitter extends JPanel implements Splittable {
   }
 
   /**
-   * @param verticalSplit <code>true</code> means that splitter will have vertical split
+   * @param verticalSplit {@code true} means that splitter will have vertical split
    */
+  @Override
   public void setOrientation(boolean verticalSplit) {
     boolean changed = myVerticalSplit != verticalSplit;
     myVerticalSplit = verticalSplit;
@@ -427,10 +504,8 @@ public class Splitter extends JPanel implements Splittable {
   }
 
   /**
-   * Sets component which is located as the "first" splitted area. The method doesn't validate and
-   * repaint the splitter. If there is already
-   *
-   * @param component
+   * Sets component which is located as the "first" split area. The method doesn't validate and
+   * repaint the splitter if there is one already.
    */
   public void setFirstComponent(@Nullable JComponent component) {
     if (myFirstComponent != component) {
@@ -458,51 +533,38 @@ public class Splitter extends JPanel implements Splittable {
   }
 
   /**
-   * Sets component which is located as the "second" splitted area. The method doesn't validate and
+   * Sets component which is located as the "second" split area. The method doesn't validate and
    * repaint the splitter.
-   *
-   * @param component
    */
   public void setSecondComponent(@Nullable JComponent component) {
     replaceSecondComponent(component);
   }
 
-  /**
-   * Sets component which is located as the "second" splitted area. The method doesn't validate and
-   * repaint the splitter.
-   *
-   * @param component
-   * @return old component if replaced
-   */
-  @Nullable
-  public JComponent replaceSecondComponent(@Nullable JComponent component) {
-    if (mySecondComponent != component) {
-      JComponent oldComponent = mySecondComponent;
-      if (oldComponent != null) {
-        remove(oldComponent);
+  public JComponent replaceSecondComponent(@javax.annotation.Nullable JComponent component) {
+    JComponent old = mySecondComponent;
+
+    if (old != component) {
+      if (old != null) {
+        remove(old);
       }
-
       mySecondComponent = component;
-
       if (mySecondComponent != null) {
         super.add(mySecondComponent);
       }
       revalidate();
       repaint();
-
-      return oldComponent;
+      return old;
     }
     else {
-      // return null due component not changed
       return null;
     }
   }
 
+  @Override
   public float getMinProportion(boolean first) {
-    JComponent component = first? myFirstComponent : mySecondComponent;
+    JComponent component = first ? myFirstComponent : mySecondComponent;
     if (isHonorMinimumSize()) {
-      if (component != null && myFirstComponent != null && myFirstComponent.isVisible() && mySecondComponent != null &&
-          mySecondComponent.isVisible()) {
+      if (component != null && myFirstComponent != null && myFirstComponent.isVisible() && mySecondComponent != null && mySecondComponent.isVisible()) {
         if (isVertical()) {
           return (float)component.getMinimumSize().height / (float)(getHeight() - getDividerWidth());
         }
@@ -544,82 +606,18 @@ public class Splitter extends JPanel implements Splittable {
       setOrientation(myVerticalSplit);
     }
 
+    @Override
     public void setOrientation(boolean isVerticalSplit) {
       removeAll();
 
-      setCursor(isVertical() ?
-                Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR) :
-                Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
+      setCursor(isVertical() ? Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR) : Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
 
       if (!myShowDividerControls && !myShowDividerIcon) {
         return;
       }
 
-      Icon glueIcon = isVerticalSplit ? AllIcons.General.SplitGlueV : AllIcons.General.SplitGlueH;
-      add(new JLabel(glueIcon), new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-                                                       new Insets(0, 0, 0, 0), 0, 0));
-
-      if (myShowDividerControls && false) {
-        int glueFill = isVerticalSplit ? GridBagConstraints.VERTICAL : GridBagConstraints.HORIZONTAL;
-        int xMask = isVerticalSplit ? 1 : 0;
-        int yMask = isVerticalSplit ? 0 : 1;
-        int leftInsetArrow = 0;
-        int leftInsetIcon = 1;
-
-        JLabel splitDownlabel = new JLabel(isVerticalSplit ? AllIcons.General.SplitDown : AllIcons.General.SplitRight);
-        splitDownlabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        splitDownlabel.setToolTipText(isVerticalSplit ? UIBundle.message("splitter.down.tooltip.text") : UIBundle
-                .message("splitter.right.tooltip.text"));
-        new ClickListener() {
-          @Override
-          public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
-            setProportion(1.0f - getMinProportion(false));
-            return true;
-          }
-        }.installOn(splitDownlabel);
-
-        add(splitDownlabel, new GridBagConstraints(isVerticalSplit ? 1 : 0, isVerticalSplit ? 0 : 5, 1, 1, 0, 0, GridBagConstraints.CENTER,
-                                                   GridBagConstraints.NONE, new Insets(0, leftInsetArrow, 0, 0), 0, 0));
-        //
-        add(new JLabel(glueIcon),
-            new GridBagConstraints(2 * xMask, 2 * yMask, 1, 1, 0, 0, GridBagConstraints.CENTER, glueFill,
-                                   new Insets(0, leftInsetIcon, 0, 0), 0, 0));
-        JLabel splitCenterlabel =
-                new JLabel(isVerticalSplit ? AllIcons.General.SplitCenterV : AllIcons.General.SplitCenterH);
-        splitCenterlabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        splitCenterlabel.setToolTipText(UIBundle.message("splitter.center.tooltip.text"));
-        new ClickListener() {
-          @Override
-          public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
-            setProportion(.5f);
-            return true;
-          }
-        }.installOn(splitCenterlabel);
-
-        add(splitCenterlabel, new GridBagConstraints(3 * xMask, 3 * yMask, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-                                                     new Insets(0, leftInsetArrow, 0, 0), 0, 0));
-        add(new JLabel(glueIcon),
-            new GridBagConstraints(4 * xMask, 4 * yMask, 1, 1, 0, 0, GridBagConstraints.CENTER, glueFill,
-                                   new Insets(0, leftInsetIcon, 0, 0), 0, 0));
-        //
-        JLabel splitUpLabel = new JLabel(isVerticalSplit ? AllIcons.General.SplitUp : AllIcons.General.SplitLeft);
-        splitUpLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        splitUpLabel.setToolTipText(isVerticalSplit ? UIBundle.message("splitter.up.tooltip.text") : UIBundle
-                .message("splitter.left.tooltip.text"));
-        new ClickListener() {
-          @Override
-          public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
-            setProportion(getMinProportion(true));
-            return true;
-          }
-        }.installOn(splitUpLabel);
-
-        add(splitUpLabel, new GridBagConstraints(isVerticalSplit ? 5 : 0, isVerticalSplit ? 0 : 1, 1, 1, 0, 0, GridBagConstraints.CENTER,
-                                                 GridBagConstraints.NONE, new Insets(0, leftInsetArrow, 0, 0), 0, 0));
-        add(new JLabel(glueIcon), new GridBagConstraints(6 * xMask, 6 * yMask, 1, 1, 0, 0,
-                                                         isVerticalSplit ? GridBagConstraints.WEST : GridBagConstraints.SOUTH, glueFill,
-                                                         new Insets(0, leftInsetIcon, 0, 0), 0, 0));
-      }
+      Icon glueIcon = isVerticalSplit ? SplitGlueV : SplitGlueH;
+      add(new JLabel(glueIcon), new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE, JBUI.emptyInsets(), 0, 0));
 
       revalidate();
       repaint();
@@ -634,17 +632,13 @@ public class Splitter extends JPanel implements Splittable {
         float proportion;
         if (isVertical()) {
           if (getHeight() > 0) {
-            proportion = Math.min(1.0f, Math.max(.0f, Math
-                    .min(Math.max(getMinProportion(true), (float)myPoint.y / (float)Splitter.this.getHeight()),
-                         1 - getMinProportion(false))));
+            proportion = MathUtil.clamp(MathUtil.clamp((float)myPoint.y / (float)Splitter.this.getHeight(), getMinProportion(true), 1 - getMinProportion(false)), .0f, 1.0f);
             setProportion(proportion);
           }
         }
         else {
           if (getWidth() > 0) {
-            proportion = Math.min(1.0f, Math.max(.0f, Math
-                    .min(Math.max(getMinProportion(true), (float)myPoint.x / (float)Splitter.this.getWidth()),
-                         1 - getMinProportion(false))));
+            proportion = MathUtil.clamp(MathUtil.clamp((float)myPoint.x / (float)Splitter.this.getWidth(), getMinProportion(true), 1 - getMinProportion(false)), .0f, 1.0f);
             setProportion(proportion);
           }
         }
@@ -655,9 +649,7 @@ public class Splitter extends JPanel implements Splittable {
     protected void processMouseEvent(MouseEvent e) {
       super.processMouseEvent(e);
       if (e.getID() == MouseEvent.MOUSE_CLICKED) {
-        if (mySwitchOrientationEnabled
-            && e.getClickCount() == 1
-            && SwingUtilities.isLeftMouseButton(e) && (SystemInfo.isMac ? e.isMetaDown() : e.isControlDown())) {
+        if (mySwitchOrientationEnabled && e.getClickCount() == 1 && SwingUtilities.isLeftMouseButton(e) && (SystemInfo.isMac ? e.isMetaDown() : e.isControlDown())) {
           Splitter.this.setOrientation(!Splitter.this.getOrientation());
         }
         if (myResizeEnabled && e.getClickCount() == 2) {
@@ -666,18 +658,18 @@ public class Splitter extends JPanel implements Splittable {
       }
     }
 
+    @Override
     public void setResizeEnabled(boolean resizeEnabled) {
       myResizeEnabled = resizeEnabled;
       if (!myResizeEnabled) {
         setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
       }
       else {
-        setCursor(isVertical() ?
-                  Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR) :
-                  Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
+        setCursor(isVertical() ? Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR) : Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
       }
     }
 
+    @Override
     public void setSwitchOrientationEnabled(boolean switchOrientationEnabled) {
       mySwitchOrientationEnabled = switchOrientationEnabled;
     }

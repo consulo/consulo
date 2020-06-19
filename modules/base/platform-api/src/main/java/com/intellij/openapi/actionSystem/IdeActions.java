@@ -115,7 +115,10 @@ public interface IdeActions {
 
   @NonNls
   String ACTION_EDITOR_REFORMAT = "ReformatCode";
-
+  @NonNls
+  String ACTION_REPLACE = "Replace";
+  @NonNls
+  String ACTION_TOGGLE_FIND_IN_SELECTION_ONLY = "ToggleFindInSelection";
 
   @NonNls
   String ACTION_COMMENT_LINE = "CommentByLineComment";

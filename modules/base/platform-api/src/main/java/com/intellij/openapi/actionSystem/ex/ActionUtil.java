@@ -16,7 +16,6 @@
 package com.intellij.openapi.actionSystem.ex;
 
 import com.intellij.ide.DataManager;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.TransactionGuard;
@@ -28,6 +27,7 @@ import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -35,6 +35,7 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.PausesStat;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -44,6 +45,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,9 +53,12 @@ import java.util.function.Predicate;
 
 public class ActionUtil {
   private static final Logger LOG = Logger.getInstance(ActionUtil.class);
-  @NonNls private static final String WAS_ENABLED_BEFORE_DUMB = "WAS_ENABLED_BEFORE_DUMB";
-  @NonNls public static final String WOULD_BE_ENABLED_IF_NOT_DUMB_MODE = "WOULD_BE_ENABLED_IF_NOT_DUMB_MODE";
-  @NonNls private static final String WOULD_BE_VISIBLE_IF_NOT_DUMB_MODE = "WOULD_BE_VISIBLE_IF_NOT_DUMB_MODE";
+  @NonNls
+  private static final String WAS_ENABLED_BEFORE_DUMB = "WAS_ENABLED_BEFORE_DUMB";
+  @NonNls
+  public static final String WOULD_BE_ENABLED_IF_NOT_DUMB_MODE = "WOULD_BE_ENABLED_IF_NOT_DUMB_MODE";
+  @NonNls
+  private static final String WOULD_BE_VISIBLE_IF_NOT_DUMB_MODE = "WOULD_BE_VISIBLE_IF_NOT_DUMB_MODE";
 
   private ActionUtil() {
   }
@@ -163,10 +168,10 @@ public class ActionUtil {
     try {
       boolean enabled = checkModuleExtensions(action, e);
       //FIXME [VISTALL] hack
-      if(enabled && action instanceof ActionGroup) {
+      if (enabled && action instanceof ActionGroup) {
         presentation.setEnabledAndVisible(true);
       }
-      else if(!enabled) {
+      else if (!enabled) {
         presentation.setEnabledAndVisible(enabled);
       }
 
@@ -464,6 +469,30 @@ public class ActionUtil {
       }
     }
   }
+
+  @Nullable
+  public static ShortcutSet getMnemonicAsShortcut(@Nonnull AnAction action) {
+    int mnemonic = KeyEvent.getExtendedKeyCodeForChar(action.getTemplatePresentation().getMnemonic());
+    if (mnemonic != KeyEvent.VK_UNDEFINED) {
+      KeyboardShortcut ctrlAltShortcut = new KeyboardShortcut(KeyStroke.getKeyStroke(mnemonic, InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK), null);
+      KeyboardShortcut altShortcut = new KeyboardShortcut(KeyStroke.getKeyStroke(mnemonic, InputEvent.ALT_DOWN_MASK), null);
+      CustomShortcutSet shortcutSet;
+      if (SystemInfo.isMac) {
+        if (Registry.is("ide.mac.alt.mnemonic.without.ctrl")) {
+          shortcutSet = new CustomShortcutSet(ctrlAltShortcut, altShortcut);
+        }
+        else {
+          shortcutSet = new CustomShortcutSet(ctrlAltShortcut);
+        }
+      }
+      else {
+        shortcutSet = new CustomShortcutSet(altShortcut);
+      }
+      return shortcutSet;
+    }
+    return null;
+  }
+
   @Nonnull
   public static ActionListener createActionListener(@Nonnull AnAction action, @Nonnull Component component, @Nonnull String place) {
     return e -> invokeAction(action, component, place, null, null);

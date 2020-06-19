@@ -16,12 +16,13 @@
 package com.intellij.find.editorHeaderActions;
 
 import com.intellij.find.SearchSession;
+import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ui.JBUI;
+import com.intellij.ui.scale.JBUIScale;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,15 +44,15 @@ public class StatusTextAction extends DumbAwareAction implements CustomComponent
   }
 
   @Override
-  public JComponent createCustomComponent(Presentation presentation) {
-    JLabel label = new JLabel() {
-      @Override
-      public Font getFont() {
-        Font font = super.getFont();
-        return font != null ? font.deriveFont(Font.BOLD) : null;
-      }
-    };
-    label.setBorder(JBUI.Borders.empty(2, 20, 0, 20));
+  public JComponent createCustomComponent(Presentation presentation, String place) {
+    JLabel label = new JLabel();
+    //noinspection HardCodedStringLiteral
+    label.setText("9888 results");
+    Dimension size = label.getPreferredSize();
+    size.height = Math.max(size.height, JBUIScale.scale(ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE.getHeight()));
+    label.setPreferredSize(size);
+    label.setText(null);
+    label.setHorizontalAlignment(SwingConstants.CENTER);
     return label;
   }
 }

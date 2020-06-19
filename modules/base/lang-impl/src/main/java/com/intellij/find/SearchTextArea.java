@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2015 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.find;
 
 import com.intellij.featureStatistics.FeatureUsageTracker;
@@ -21,117 +7,119 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
+import com.intellij.openapi.editor.EditorCopyPasteHelper;
+import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.DocumentAdapter;
-import com.intellij.ui.Gray;
-import com.intellij.ui.JBColor;
-import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
+import com.intellij.ui.components.JBTextArea;
 import com.intellij.ui.components.panels.NonOpaquePanel;
+import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.ui.JBDimension;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginManager;
-import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
-import net.miginfocom.swing.MigLayout;
-
 import javax.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 import javax.swing.event.DocumentEvent;
-import javax.swing.plaf.TextUI;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.PlainDocument;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.awt.event.InputEvent.*;
 import static javax.swing.ScrollPaneConstants.*;
 
-public class SearchTextArea extends NonOpaquePanel implements PropertyChangeListener, FocusListener {
+public class SearchTextArea extends JPanel implements PropertyChangeListener {
+  public static final String JUST_CLEARED_KEY = "JUST_CLEARED";
   public static final KeyStroke NEW_LINE_KEYSTROKE = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, (SystemInfo.isMac ? META_DOWN_MASK : CTRL_DOWN_MASK) | SHIFT_DOWN_MASK);
   private final JTextArea myTextArea;
   private final boolean mySearchMode;
-  private final boolean myInfoMode;
-  private final JLabel myInfoLabel;
-  private JPanel myIconsPanel = null;
-  private ActionButton myNewLineButton;
-  private ActionButton myClearButton;
-  private JBScrollPane myScrollPane;
+  private final JPanel myIconsPanel = new NonOpaquePanel();
+  private final ActionButton myNewLineButton;
+  private final ActionButton myClearButton;
+  private final NonOpaquePanel myExtraActionsPanel = new NonOpaquePanel();
+  private final JBScrollPane myScrollPane;
   private final ActionButton myHistoryPopupButton;
-  private final SearchTextAreaLafHelper myHelper;
   private boolean myMultilineEnabled = true;
 
+  @Deprecated
   public SearchTextArea(boolean searchMode) {
-    this(new JTextArea(), searchMode, false);
+    this(new JBTextArea(), searchMode);
   }
 
+  @Deprecated
   public SearchTextArea(@Nonnull JTextArea textArea, boolean searchMode, boolean infoMode) {
-    this(textArea, searchMode, infoMode, false);
+    this(textArea, searchMode);
   }
 
+  @Deprecated
   public SearchTextArea(@Nonnull JTextArea textArea, boolean searchMode, boolean infoMode, boolean allowInsertTabInMultiline) {
+    this(textArea, searchMode);
+  }
+
+  public SearchTextArea(@Nonnull JTextArea textArea, boolean searchMode) {
     myTextArea = textArea;
     mySearchMode = searchMode;
-    myInfoMode = infoMode;
+    updateFont();
+
     myTextArea.addPropertyChangeListener("background", this);
     myTextArea.addPropertyChangeListener("font", this);
-    myTextArea.addFocusListener(this);
-    myTextArea.registerKeyboardAction(e -> {
-      if (allowInsertTabInMultiline && myTextArea.getText().contains("\n")) {
-        if (myTextArea.isEditable() && myTextArea.isEnabled()) {
-          myTextArea.replaceSelection("\t");
-        }
-        else {
-          UIManager.getLookAndFeel().provideErrorFeedback(myTextArea);
-        }
-      }
-      else {
-        myTextArea.transferFocus();
-      }
-    }, KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), WHEN_FOCUSED);
-
-    myTextArea.registerKeyboardAction(e -> myTextArea.transferFocusBackward(), KeyStroke.getKeyStroke(KeyEvent.VK_TAB, SHIFT_DOWN_MASK), WHEN_FOCUSED);
+    DumbAwareAction.create(event -> myTextArea.transferFocus()).registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0)), myTextArea);
+    DumbAwareAction.create(event -> myTextArea.transferFocusBackward()).registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, SHIFT_DOWN_MASK)), myTextArea);
     KeymapUtil.reassignAction(myTextArea, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), NEW_LINE_KEYSTROKE, WHEN_FOCUSED);
     myTextArea.setDocument(new PlainDocument() {
       @Override
       public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
         if (getProperty("filterNewlines") == Boolean.TRUE && str.indexOf('\n') >= 0) {
-          str = StringUtil.replace(str, "\n", "");
+          str = StringUtil.replace(str, "\n", " ");
         }
         if (!StringUtil.isEmpty(str)) super.insertString(offs, str, a);
       }
     });
+    if (Registry.is("ide.find.field.trims.pasted.text", false)) {
+      myTextArea.getDocument().putProperty(EditorCopyPasteHelper.TRIM_TEXT_ON_PASTE_KEY, Boolean.TRUE);
+    }
     myTextArea.getDocument().addDocumentListener(new DocumentAdapter() {
       @Override
-      protected void textChanged(DocumentEvent e) {
+      protected void textChanged(@Nonnull DocumentEvent e) {
+        if (e.getType() == DocumentEvent.EventType.INSERT) {
+          myTextArea.putClientProperty(JUST_CLEARED_KEY, null);
+        }
+        int rows = Math.min(Registry.get("ide.find.max.rows").asInteger(), myTextArea.getLineCount());
+        myTextArea.setRows(Math.max(1, Math.min(25, rows)));
         updateIconsLayout();
       }
     });
     myTextArea.setOpaque(false);
     myScrollPane = new JBScrollPane(myTextArea, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_AS_NEEDED) {
       @Override
-      public Dimension getPreferredSize() {
-        Dimension d = super.getPreferredSize();
-        TextUI ui = myTextArea.getUI();
-        if (ui != null) {
-          d.height = Math.min(d.height, ui.getPreferredSize(myTextArea).height);
-        }
-        return d;
+      protected void setupCorners() {
+        super.setupCorners();
+        setBorder(JBUI.Borders.empty(2, 0, 2, 2));
+      }
+
+      @Override
+      public void updateUI() {
+        super.updateUI();
+        setBorder(JBUI.Borders.empty(2, 0, 2, 2));
       }
     };
     myTextArea.setBorder(new Border() {
@@ -141,14 +129,14 @@ public class SearchTextArea extends NonOpaquePanel implements PropertyChangeList
 
       @Override
       public Insets getBorderInsets(Component c) {
-        if (SystemInfo.isMac && !UIUtil.isUnderDarcula()) {
-          return new JBInsets(3, 0, 3, 0);
+        if (SystemInfo.isMac) {
+          return new JBInsets(3, 0, 2, 0);
         }
         else {
-          int bottom = (StringUtil.getLineBreakCount(myTextArea.getText()) > 0) ? 2 : UIUtil.isUnderDarcula() ? 2 : 1;
+          int bottom = (StringUtil.getLineBreakCount(myTextArea.getText()) > 0) ? 2 : UIUtil.isUnderDarcula() ? 1 : 0;
           int top = myTextArea.getFontMetrics(myTextArea.getFont()).getHeight() <= 16 ? 2 : 1;
-          if (JBUI.isUsrHiDPI()) {
-            bottom = 2;
+          if (JBUIScale.isUsrHiDPI()) {
+            bottom = 0;
             top = 2;
           }
           return new JBInsets(top, 0, bottom, 0);
@@ -160,42 +148,53 @@ public class SearchTextArea extends NonOpaquePanel implements PropertyChangeList
         return false;
       }
     });
-    myScrollPane.getVerticalScrollBar().setBackground(UIUtil.TRANSPARENT_COLOR);
     myScrollPane.getViewport().setBorder(null);
     myScrollPane.getViewport().setOpaque(false);
-    myScrollPane.setBorder(JBUI.Borders.emptyRight(2));
     myScrollPane.setOpaque(false);
 
-    myInfoLabel = new JBLabel(UIUtil.ComponentStyle.SMALL);
-    myInfoLabel.setForeground(JBColor.GRAY);
-
-    myHelper = createHelper();
-
-    myHistoryPopupButton = createButton(new ShowHistoryAction());
-    myClearButton = createButton(new ClearAction());
-    myNewLineButton = createButton(new NewLineAction());
-    myNewLineButton.setVisible(searchMode);
-    myIconsPanel = new NonOpaquePanel();
+    myHistoryPopupButton = new MyActionButton(new ShowHistoryAction(), false);
+    myClearButton = new MyActionButton(new ClearAction(), false);
+    myNewLineButton = new MyActionButton(new NewLineAction(), false);
 
     updateLayout();
   }
 
-  protected void updateLayout() {
-    setBorder(myHelper.getBorder());
-    setLayout(new MigLayout(myHelper.getLayoutConstraints()));
-    removeAll();
-    add(myHistoryPopupButton, myHelper.getHistoryButtonConstraints());
-    add(myScrollPane, "ay top, growx, pushx");
-    //TODO combine icons/info modes
-    if (myInfoMode) {
-      add(myInfoLabel, "gapright " + JBUI.scale(4));
-    }
-    add(myIconsPanel, myHelper.getIconsPanelConstraints());
-    updateIconsLayout();
+  @Override
+  public void updateUI() {
+    super.updateUI();
+    updateFont();
+    setBackground(UIUtil.getTextFieldBackground());
   }
 
-  protected boolean isNewLineAvailable() {
-    return Registry.is("ide.find.show.add.newline.hint") && myMultilineEnabled;
+  private void updateFont() {
+    if (myTextArea != null) {
+      if (Registry.is("ide.find.use.editor.font", false)) {
+        myTextArea.setFont(EditorUtil.getEditorFont());
+      }
+      else {
+        myTextArea.setFont(UIManager.getFont("TextField.font"));
+      }
+    }
+  }
+
+  protected void updateLayout() {
+    JPanel historyButtonWrapper = new NonOpaquePanel(new BorderLayout());
+    historyButtonWrapper.setBorder(JBUI.Borders.emptyTop(1));
+    historyButtonWrapper.add(myHistoryPopupButton, BorderLayout.NORTH);
+    JPanel iconsPanelWrapper = new NonOpaquePanel(new BorderLayout());
+    iconsPanelWrapper.setBorder(JBUI.Borders.emptyTop(1));
+    JPanel p = new NonOpaquePanel(new BorderLayout());
+    p.add(myIconsPanel, BorderLayout.NORTH);
+    iconsPanelWrapper.add(p, BorderLayout.WEST);
+    iconsPanelWrapper.add(myExtraActionsPanel, BorderLayout.CENTER);
+
+    removeAll();
+    setLayout(new BorderLayout(JBUIScale.scale(3), 0));
+    setBorder(JBUI.Borders.empty(SystemInfo.isLinux ? JBUI.scale(2) : JBUI.scale(1)));
+    add(historyButtonWrapper, BorderLayout.WEST);
+    add(myScrollPane, BorderLayout.CENTER);
+    add(iconsPanelWrapper, BorderLayout.EAST);
+    updateIconsLayout();
   }
 
   private void updateIconsLayout() {
@@ -204,32 +203,49 @@ public class SearchTextArea extends NonOpaquePanel implements PropertyChangeList
     }
 
     boolean showClearIcon = !StringUtil.isEmpty(myTextArea.getText());
-    boolean showNewLine = isNewLineAvailable();
-    boolean wrongVisibility = ((myClearButton.getParent() != null) != showClearIcon) || ((myNewLineButton.getParent() != null) != showNewLine);
+    boolean showNewLine = myMultilineEnabled;
+    boolean wrongVisibility = ((myClearButton.getParent() == null) == showClearIcon) || ((myNewLineButton.getParent() == null) == showNewLine);
 
-    LayoutManager layout = myIconsPanel.getLayout();
-    boolean wrongLayout = !(layout instanceof GridLayout);
     boolean multiline = StringUtil.getLineBreakCount(myTextArea.getText()) > 0;
-    boolean wrongPositioning = !wrongLayout && (((GridLayout)layout).getRows() > 1) != multiline;
-    if (wrongLayout || wrongVisibility || wrongPositioning) {
+    if (wrongVisibility) {
       myIconsPanel.removeAll();
-      int rows = multiline && showClearIcon && showNewLine ? 2 : 1;
-      int columns = !multiline && showClearIcon && showNewLine ? 2 : 1;
-      myIconsPanel.setLayout(new GridLayout(rows, columns, 8, 8));
-      if (!multiline && showNewLine) {
-        myIconsPanel.add(myNewLineButton);
+      myIconsPanel.setLayout(new BorderLayout());
+      myIconsPanel.add(myClearButton, BorderLayout.CENTER);
+      myIconsPanel.add(myNewLineButton, BorderLayout.EAST);
+      myIconsPanel.setPreferredSize(myIconsPanel.getPreferredSize());
+      if (!showClearIcon) myIconsPanel.remove(myClearButton);
+      if (!showNewLine) myIconsPanel.remove(myNewLineButton);
+      myIconsPanel.revalidate();
+      myIconsPanel.repaint();
+    }
+    myScrollPane.setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    myScrollPane.setVerticalScrollBarPolicy(multiline ? VERTICAL_SCROLLBAR_AS_NEEDED : VERTICAL_SCROLLBAR_NEVER);
+    myScrollPane.getHorizontalScrollBar().setVisible(multiline);
+    myScrollPane.revalidate();
+    doLayout();
+  }
+
+  public List<Component> setExtraActions(AnAction... actions) {
+    myExtraActionsPanel.removeAll();
+    myExtraActionsPanel.setBorder(JBUI.Borders.empty());
+    ArrayList<Component> addedButtons = new ArrayList<>();
+    if (actions != null && actions.length > 0) {
+      JPanel buttonsGrid = new NonOpaquePanel(new GridLayout(1, actions.length, 0, 0));
+      for (AnAction action : actions) {
+        ActionButton button = new MyActionButton(action, true);
+        addedButtons.add(button);
+        buttonsGrid.add(button);
       }
-      if (showClearIcon) {
-        myIconsPanel.add(myClearButton);
-      }
-      if (multiline && showNewLine) {
-        myIconsPanel.add(myNewLineButton);
-      }
-      myIconsPanel.setBorder(myHelper.getIconsPanelBorder(rows));
-      myScrollPane.setHorizontalScrollBarPolicy(multiline ? HORIZONTAL_SCROLLBAR_AS_NEEDED : HORIZONTAL_SCROLLBAR_NEVER);
-      myScrollPane.setVerticalScrollBarPolicy(multiline ? VERTICAL_SCROLLBAR_AS_NEEDED : VERTICAL_SCROLLBAR_NEVER);
-      myScrollPane.revalidate();
-      doLayout();
+      myExtraActionsPanel.setLayout(new BorderLayout());
+      myExtraActionsPanel.add(buttonsGrid, BorderLayout.NORTH);
+      myExtraActionsPanel.setBorder(new CompoundBorder(JBUI.Borders.customLine(JBUI.CurrentTheme.CustomFrameDecorations.separatorForeground(), 0, 1, 0, 0), JBUI.Borders.emptyLeft(4)));
+    }
+    return addedButtons;
+  }
+
+  public void updateExtraActions() {
+    for (ActionButton button : UIUtil.findComponentsOfType(myExtraActionsPanel, ActionButton.class)) {
+      button.update();
     }
   }
 
@@ -248,22 +264,16 @@ public class SearchTextArea extends NonOpaquePanel implements PropertyChangeList
     myMultilineEnabled = enabled;
     myTextArea.getDocument().putProperty("filterNewlines", myMultilineEnabled ? null : Boolean.TRUE);
     if (!myMultilineEnabled) {
+      myTextArea.getInputMap().put(KeyStroke.getKeyStroke("shift UP"), "selection-begin-line");
+      myTextArea.getInputMap().put(KeyStroke.getKeyStroke("shift DOWN"), "selection-end-line");
       myTextArea.addKeyListener(myEnterRedispatcher);
     }
     else {
+      myTextArea.getInputMap().put(KeyStroke.getKeyStroke("shift UP"), "selection-up");
+      myTextArea.getInputMap().put(KeyStroke.getKeyStroke("shift DOWN"), "selection-down");
       myTextArea.removeKeyListener(myEnterRedispatcher);
     }
     updateIconsLayout();
-  }
-
-  @Nonnull
-  public JPanel getIconsPanel() {
-    return myIconsPanel;
-  }
-
-  @Nonnull
-  public JBScrollPane getScrollPane() {
-    return myScrollPane;
   }
 
   @Nonnull
@@ -286,131 +296,72 @@ public class SearchTextArea extends NonOpaquePanel implements PropertyChangeList
     }
   }
 
-  @Override
-  public void focusGained(FocusEvent e) {
-    myNewLineButton.setVisible(true);
-    repaint();
-  }
-
-  @Override
-  public void focusLost(FocusEvent e) {
-    myNewLineButton.setVisible(mySearchMode);
-    repaint();
-  }
-
+  @Deprecated
   public void setInfoText(String info) {
-    myInfoLabel.setText(info);
-  }
-
-  private static Color enabledBorderColor = new JBColor(Gray._196, Gray._100);
-  private static Color disabledBorderColor = Gray._83;
-
-  @Override
-  public void paint(Graphics graphics) {
-    Graphics2D g = (Graphics2D)graphics.create();
-    try {
-      g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-      g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
-      myHelper.paint(g);
-    }
-    finally {
-      g.dispose();
-    }
-    super.paint(graphics);
-
-    if (UIUtil.isUnderGTKLookAndFeel()) {
-      graphics.setColor(myTextArea.getBackground());
-      Rectangle bounds = myScrollPane.getViewport().getBounds();
-      if (myScrollPane.getVerticalScrollBar().isVisible()) {
-        bounds.width -= myScrollPane.getVerticalScrollBar().getWidth();
-      }
-      bounds = SwingUtilities.convertRectangle(myScrollPane.getViewport()/*myTextArea*/, bounds, this);
-      JBInsets.addTo(bounds, new JBInsets(2, 2, -1, -1));
-      ((Graphics2D)graphics).draw(bounds);
-    }
   }
 
   private class ShowHistoryAction extends DumbAwareAction {
 
-    public ShowHistoryAction() {
-      super((mySearchMode ? "Search" : "Replace") + " History", (mySearchMode ? "Search" : "Replace") + " history", myHelper.getShowHistoryIcon());
-
-      KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_DOWN_MASK);
-      registerCustomShortcutSet(new CustomShortcutSet(new KeyboardShortcut(stroke, null)), myTextArea);
+    ShowHistoryAction() {
+      super(FindBundle.message(mySearchMode ? "find.search.history" : "find.replace.history"), FindBundle.message(mySearchMode ? "find.search.history" : "find.replace.history"),
+            AllIcons.Actions.SearchWithHistory);
+      registerCustomShortcutSet(KeymapUtil.getActiveKeymapShortcuts("ShowSearchHistory"), myTextArea);
     }
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       FeatureUsageTracker.getInstance().triggerFeatureUsed("find.recent.search");
       FindInProjectSettings findInProjectSettings = FindInProjectSettings.getInstance(e.getProject());
       String[] recent = mySearchMode ? findInProjectSettings.getRecentFindStrings() : findInProjectSettings.getRecentReplaceStrings();
-      String title = "Recent " + (mySearchMode ? "Searches" : "Replaces");
-      JBList historyList = new JBList((Object[])ArrayUtil.reverseArray(recent));
-      Utils.showCompletionPopup(SearchTextArea.this, historyList, title, myTextArea, null);
+      JBList<String> historyList = new JBList<>(ArrayUtil.reverseArray(recent));
+      Utils.showCompletionPopup(SearchTextArea.this, historyList, null, myTextArea, null);
     }
   }
 
-  private static ActionButton createButton(AnAction action) {
-    Presentation presentation = action.getTemplatePresentation();
-    Dimension d = new JBDimension(16, 16);
-    ActionButton button = new ActionButton(action, presentation, ActionPlaces.UNKNOWN, d) {
-      @Override
-      protected DataContext getDataContext() {
-        return DataManager.getInstance().getDataContext(this);
-      }
-    };
-    //TODO [VISTALL] unsupported button.setLook(new InplaceActionButtonLook());
-    button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    button.updateIcon();
-    return button;
-  }
-
   private class ClearAction extends DumbAwareAction {
-    public ClearAction() {
-      super(null, null, myHelper.getClearIcon());
+    ClearAction() {
+      super(AllIcons.Actions.Close);
+      getTemplatePresentation().setHoveredIcon(AllIcons.Actions.CloseHovered);
     }
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+      myTextArea.putClientProperty(JUST_CLEARED_KEY, !myTextArea.getText().isEmpty());
       myTextArea.setText("");
     }
   }
 
   private class NewLineAction extends DumbAwareAction {
-    public NewLineAction() {
-      super(null, "New line (" + KeymapUtil.getKeystrokeText(NEW_LINE_KEYSTROKE) + ")", AllIcons.Actions.SearchNewLine);
+    NewLineAction() {
+      super(FindBundle.message("find.new.line"), null, AllIcons.Actions.SearchNewLine);
+      setShortcutSet(new CustomShortcutSet(NEW_LINE_KEYSTROKE));
+      getTemplatePresentation().setHoveredIcon(AllIcons.Actions.SearchNewLineHover);
     }
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       new DefaultEditorKit.InsertBreakAction().actionPerformed(new ActionEvent(myTextArea, 0, "action"));
     }
   }
 
-  @Nonnull
-  private SearchTextAreaLafHelper createHelper() {
-    String ui = null;
-    if (UIUtil.isUnderAquaLookAndFeel()) {
-      ui = "com.intellij.find.MacSearchTextAreaLafHelper";
+  private static class MyActionButton extends ActionButton {
+
+    private MyActionButton(@Nonnull AnAction action, boolean focusable) {
+      super(action, action.getTemplatePresentation().clone(), ActionPlaces.UNKNOWN, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
+
+      setFocusable(focusable);
+      updateIcon();
+
+      setDecorateButtons(false);
+      setMinimalMode(true);
     }
 
-    if (ui == null) {
-      ui = "com.intellij.find.DefaultSearchTextAreaLafHelper";
-    }
-    try {
-      // it's desktop - if not it's and errror anyway
-      PluginDescriptor platformPlugin = PluginManager.findPlugin(Platform.current().getPluginId());
-      assert platformPlugin != null;
-      Class<?> aClass = Class.forName(ui, true, platformPlugin.getPluginClassLoader());
-      Constructor<?> constructor = aClass.getDeclaredConstructor(SearchTextArea.class);
-      constructor.setAccessible(true);
-      return (SearchTextAreaLafHelper)constructor.newInstance(this);
-    }
-    catch (Exception e) {
-      throw new Error(e);
+    @Override
+    protected DataContext getDataContext() {
+      return DataManager.getInstance().getDataContext(this);
     }
   }
 }

@@ -1,15 +1,16 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.actionSystem;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.FunctionUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * A default implementation of {@link ActionGroup}. Provides the ability
@@ -26,6 +27,10 @@ import java.util.*;
  * @see com.intellij.ide.actions.SmartPopupActionGroup
  */
 public class DefaultActionGroup extends ActionGroup {
+  public static DefaultActionGroup createFlatGroup(@Nonnull Supplier< String> shortName) {
+    return new DefaultActionGroup(shortName.get(), false);
+  }
+
   private static final Logger LOG = Logger.getInstance(DefaultActionGroup.class);
   private static final String CANT_ADD_ITSELF = "Cannot add a group to itself: ";
   private static final String CANT_ADD_ACTION_TWICE = "Cannot add an action twice: ";

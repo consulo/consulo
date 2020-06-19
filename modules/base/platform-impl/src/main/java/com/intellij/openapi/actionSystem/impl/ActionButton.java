@@ -398,6 +398,13 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
     }
   }
 
+  public void update() {
+    AnActionEvent e = AnActionEvent.createFromInputEvent(null, myPlace, myPresentation, getDataContext(), false, true);
+    ActionUtil.performDumbAwareUpdate(LaterInvocator.isInModalContext(), myAction, e, false);
+    updateToolTipText();
+    updateIcon();
+  }
+
   @Override
   public AnAction getAction() {
     return myAction;

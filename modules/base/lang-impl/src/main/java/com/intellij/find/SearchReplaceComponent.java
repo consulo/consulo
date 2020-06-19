@@ -1,58 +1,50 @@
-/*
- * Copyright 2000-2015 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.find;
 
-import com.intellij.find.editorHeaderActions.ContextAwareShortcutProvider;
-import com.intellij.find.editorHeaderActions.ShowMoreOptions;
-import com.intellij.find.editorHeaderActions.Utils;
-import com.intellij.find.editorHeaderActions.VariantsCompletionAction;
+import com.intellij.find.editorHeaderActions.*;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.impl.EditorHeaderComponent;
 import com.intellij.openapi.keymap.KeymapUtil;
+import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Splitter;
+import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.BooleanGetter;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.ui.DocumentAdapter;
-import com.intellij.ui.LightColors;
-import com.intellij.ui.OnePixelSplitter;
-import com.intellij.ui.SearchTextField;
+import com.intellij.ui.*;
+import com.intellij.ui.components.JBTextArea;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.components.panels.Wrapper;
+import com.intellij.ui.mac.TouchbarDataKeys;
 import com.intellij.ui.speedSearch.SpeedSearchSupply;
+import com.intellij.util.BooleanFunction;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-
+import consulo.util.dataholder.Key;
+import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
+
+import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
+import static java.awt.event.InputEvent.META_DOWN_MASK;
 
 public class SearchReplaceComponent extends EditorHeaderComponent implements DataProvider {
   private final EventDispatcher<Listener> myEventDispatcher = EventDispatcher.create(Listener.class);
@@ -67,13 +59,17 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
   private final JPanel myRightPanel;
 
   private final DefaultActionGroup mySearchFieldActions;
-  private final ActionToolbarImpl mySearchActionsToolbar1;
-  private final ActionToolbarImpl mySearchActionsToolbar2;
+  private final ActionToolbarImpl mySearchActionsToolbar;
+  private final List<AnAction> myEmbeddedSearchActions = new ArrayList<>();
+  private final List<Component> myExtraSearchButtons = new ArrayList<>();
+  @Nonnull
   private final ActionToolbarImpl.PopupStateModifier mySearchToolbar1PopupStateModifier;
 
   private final DefaultActionGroup myReplaceFieldActions;
-  private final ActionToolbarImpl myReplaceActionsToolbar1;
-  private final ActionToolbarImpl myReplaceActionsToolbar2;
+  private final ActionToolbarImpl myReplaceActionsToolbar;
+  private final List<AnAction> myEmbeddedReplaceActions = new ArrayList<>();
+  private final List<Component> myExtraReplaceButtons = new ArrayList<>();
+
   private final JPanel myReplaceToolbarWrapper;
 
   private final Project myProject;
@@ -85,7 +81,11 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
   private final DataProvider myDataProviderDelegate;
 
   private boolean myMultilineMode;
+  @Nonnull
   private String myStatusText = "";
+  @Nonnull
+  private Color myStatusColor = UIUtil.getLabelForeground();
+  private DefaultActionGroup myTouchbarActions;
 
   @Nonnull
   public static Builder buildFor(@Nullable Project project, @Nonnull JComponent component) {
@@ -110,6 +110,27 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
     myReplaceFieldActions = replaceFieldActions;
     myReplaceAction = replaceAction;
     myCloseAction = closeAction;
+
+    for (AnAction child : searchToolbar2Actions.getChildren(null)) {
+      if (child instanceof Embeddable) {
+        myEmbeddedSearchActions.add(child);
+        ShortcutSet shortcutSet = ActionUtil.getMnemonicAsShortcut(child);
+        if (shortcutSet != null) child.registerCustomShortcutSet(shortcutSet, this);
+      }
+    }
+    for (AnAction action : myEmbeddedSearchActions) {
+      searchToolbar2Actions.remove(action);
+    }
+    for (AnAction child : replaceToolbar2Actions.getChildren(null)) {
+      if (child instanceof Embeddable) {
+        myEmbeddedReplaceActions.add(child);
+        ShortcutSet shortcutSet = ActionUtil.getMnemonicAsShortcut(child);
+        if (shortcutSet != null) child.registerCustomShortcutSet(shortcutSet, this);
+      }
+    }
+    for (AnAction action : myEmbeddedReplaceActions) {
+      replaceToolbar2Actions.remove(action);
+    }
 
     mySearchToolbar1PopupStateModifier = new ActionToolbarImpl.PopupStateModifier() {
       @Override
@@ -137,52 +158,57 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
         myReplaceTextComponent = unwrapTextComponent(wrapped);
       }
     };
+    myReplaceFieldWrapper.setBorder(JBUI.Borders.emptyTop(1));
 
-    myLeftPanel = new NonOpaquePanel(new BorderLayout());
-    myLeftPanel.add(mySearchFieldWrapper, BorderLayout.NORTH);
-    myLeftPanel.add(myReplaceFieldWrapper, BorderLayout.CENTER);
+    myLeftPanel = new JPanel(new GridBagLayout());
+    myLeftPanel.setBackground(JBColor.border());
+    GridBagConstraints constraints = new GridBagConstraints();
+    constraints.gridx = 0;
+    constraints.gridy = 0;
+    constraints.fill = GridBagConstraints.BOTH;
+    constraints.weightx = 1;
+    constraints.weighty = 1;
+    myLeftPanel.add(mySearchFieldWrapper, constraints);
+    constraints.gridy++;
+    myLeftPanel.add(myReplaceFieldWrapper, constraints);
+    myLeftPanel.setBorder(JBUI.Borders.customLine(JBColor.border(), 0, 0, 0, 1));
 
-    mySearchActionsToolbar1 = createSearchToolbar1(searchToolbar1Actions);
-    Wrapper searchToolbarWrapper1 = new NonOpaquePanel(new BorderLayout());
-    searchToolbarWrapper1.add(mySearchActionsToolbar1, BorderLayout.WEST);
-    mySearchActionsToolbar2 = createSearchToolbar2(searchToolbar2Actions);
-    Wrapper searchToolbarWrapper2 = new Wrapper(mySearchActionsToolbar2);
-    mySearchActionsToolbar2.setBorder(JBUI.Borders.emptyLeft(16));
-    JPanel searchPair = new NonOpaquePanel(new BorderLayout()).setVerticalSizeReferent(mySearchFieldWrapper);
-    searchPair.add(searchToolbarWrapper1, BorderLayout.WEST);
-    searchPair.add(searchToolbarWrapper2, BorderLayout.CENTER);
+    searchToolbar1Actions.addAll(searchToolbar2Actions.getChildren(null));
+    replaceToolbar1Actions.addAll(replaceToolbar2Actions.getChildren(null));
 
-    myReplaceActionsToolbar1 = createReplaceToolbar1(replaceToolbar1Actions);
-    Wrapper replaceToolbarWrapper1 = new Wrapper(myReplaceActionsToolbar1).setVerticalSizeReferent(myReplaceFieldWrapper);
-    myReplaceActionsToolbar2 = createReplaceToolbar2(replaceToolbar2Actions);
-    Wrapper replaceToolbarWrapper2 = new Wrapper(myReplaceActionsToolbar2).setVerticalSizeReferent(myReplaceFieldWrapper);
-    myReplaceActionsToolbar2.setBorder(JBUI.Borders.emptyLeft(16));
+    mySearchActionsToolbar = createSearchToolbar1(searchToolbar1Actions);
+    mySearchActionsToolbar.setForceShowFirstComponent(true);
+    JPanel searchPair = new NonOpaquePanel(new BorderLayout());
+    searchPair.add(mySearchActionsToolbar, BorderLayout.CENTER);
+
+    myReplaceActionsToolbar = createReplaceToolbar1(replaceToolbar1Actions);
+    myReplaceActionsToolbar.setBorder(JBUI.Borders.empty());
+    Wrapper replaceToolbarWrapper1 = new Wrapper(myReplaceActionsToolbar);
     myReplaceToolbarWrapper = new NonOpaquePanel(new BorderLayout());
     myReplaceToolbarWrapper.add(replaceToolbarWrapper1, BorderLayout.WEST);
-    myReplaceToolbarWrapper.add(replaceToolbarWrapper2, BorderLayout.CENTER);
+    myReplaceToolbarWrapper.setBorder(JBUI.Borders.emptyTop(3));
 
-    searchToolbarWrapper1.setHorizontalSizeReferent(replaceToolbarWrapper1);
-
-    JLabel closeLabel = new JLabel(null, AllIcons.Actions.Cross, SwingConstants.RIGHT);
-    closeLabel.setBorder(JBUI.Borders.empty(5));
-    closeLabel.setVerticalAlignment(SwingConstants.TOP);
+    JLabel closeLabel = new JLabel(null, AllIcons.Actions.Close, SwingConstants.RIGHT);
+    closeLabel.setBorder(JBUI.Borders.empty(2));
     closeLabel.addMouseListener(new MouseAdapter() {
       @Override
       public void mousePressed(final MouseEvent e) {
         close();
       }
     });
-    closeLabel.setToolTipText("Close search bar (Escape)");
-    searchPair.add(new Wrapper.North(closeLabel), BorderLayout.EAST);
+    closeLabel.setToolTipText(FindBundle.message("tooltip.close.search.bar.escape"));
+    searchPair.add(new Wrapper(closeLabel), BorderLayout.EAST);
 
-    myRightPanel = new NonOpaquePanel(new BorderLayout());
-    myRightPanel.add(searchPair, BorderLayout.NORTH);
-    myRightPanel.add(myReplaceToolbarWrapper, BorderLayout.CENTER);
+    myRightPanel = new NonOpaquePanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, false));
+    myRightPanel.add(searchPair);
+    myRightPanel.add(myReplaceToolbarWrapper);
 
-    OnePixelSplitter splitter = new OnePixelSplitter(false, .25F);
+    OnePixelSplitter splitter = new OnePixelSplitter(false, .33F);
+    myRightPanel.setBorder(JBUI.Borders.emptyLeft(6));
     splitter.setFirstComponent(myLeftPanel);
     splitter.setSecondComponent(myRightPanel);
     splitter.setHonorComponentsMinimumSize(true);
+    splitter.setLackOfSpaceStrategy(Splitter.LackOfSpaceStrategy.HONOR_THE_SECOND_MIN_SIZE);
     splitter.setAndLoadSplitterProportionKey("FindSplitterProportion");
     splitter.setOpaque(false);
     splitter.getDivider().setOpaque(false);
@@ -192,10 +218,21 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
 
     // it's assigned after all action updates so that actions don't get access to uninitialized components
     myDataProviderDelegate = dataProvider;
-
-    setFocusCycleRoot(true);
-
-    setFocusTraversalPolicy(new LayoutFocusTraversalPolicy());
+    // A workaround to suppress editor-specific TabAction
+    new DumbAwareAction() {
+      @Override
+      public void actionPerformed(@Nonnull AnActionEvent e) {
+        Component focusOwner = IdeFocusManager.getInstance(myProject).getFocusOwner();
+        if (UIUtil.isAncestor(SearchReplaceComponent.this, focusOwner)) focusOwner.transferFocus();
+      }
+    }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0)), this);
+    new DumbAwareAction() {
+      @Override
+      public void actionPerformed(@Nonnull AnActionEvent e) {
+        Component focusOwner = IdeFocusManager.getInstance(myProject).getFocusOwner();
+        if (UIUtil.isAncestor(SearchReplaceComponent.this, focusOwner)) focusOwner.transferFocusBackward();
+      }
+    }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK)), this);
   }
 
   public void resetUndoRedoActions() {
@@ -214,9 +251,11 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
   }
 
   public void requestFocusInTheSearchFieldAndSelectContent(Project project) {
-    mySearchTextComponent.setSelectionStart(0);
-    mySearchTextComponent.setSelectionEnd(mySearchTextComponent.getText().length());
+    mySearchTextComponent.selectAll();
     IdeFocusManager.getInstance(project).requestFocus(mySearchTextComponent, true);
+    if (myReplaceTextComponent != null) {
+      myReplaceTextComponent.selectAll();
+    }
   }
 
   public void setStatusText(@Nonnull String status) {
@@ -226,6 +265,11 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
   @Nonnull
   public String getStatusText() {
     return myStatusText;
+  }
+
+  @Nonnull
+  public Color getStatusColor() {
+    return myStatusColor;
   }
 
   public void replace() {
@@ -242,27 +286,27 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
 
   public void setRegularBackground() {
     mySearchTextComponent.setBackground(UIUtil.getTextFieldBackground());
+    myStatusColor = UIUtil.getLabelForeground();
   }
 
   public void setNotFoundBackground() {
     mySearchTextComponent.setBackground(LightColors.RED);
-  }
-
-  @Override
-  public Insets getInsets() {
-    Insets insets = super.getInsets();
-    if (UIUtil.isUnderGTKLookAndFeel() || UIUtil.isUnderNimbusLookAndFeel()) {
-      insets.top += 1;
-      insets.bottom += 2;
-    }
-    return insets;
+    myStatusColor = UIUtil.getErrorForeground();
   }
 
   @Nullable
   @Override
-  public Object getData(@Nonnull Key<?> dataId) {
+  public Object getData(@Nonnull @NonNls Key dataId) {
     if (SpeedSearchSupply.SPEED_SEARCH_CURRENT_QUERY == dataId) {
       return mySearchTextComponent.getText();
+    }
+    if (TouchbarDataKeys.ACTIONS_KEY == dataId) {
+      if (myTouchbarActions == null) {
+        myTouchbarActions = new DefaultActionGroup();
+        myTouchbarActions.add(new PrevOccurrenceAction());
+        myTouchbarActions.add(new NextOccurrenceAction());
+      }
+      return myTouchbarActions;
     }
     return myDataProviderDelegate != null ? myDataProviderDelegate.getData(dataId) : null;
   }
@@ -283,7 +327,7 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
     boolean stateChanged = multiline != myMultilineMode;
     myMultilineMode = multiline;
     if (stateChanged) {
-      multilineStateChanged();
+      myEventDispatcher.getMulticaster().multilineStateChanged();
     }
   }
 
@@ -299,25 +343,15 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
 
 
   private void updateSearchComponent(@Nonnull String textToSet) {
-    final int oldCaretPosition = mySearchTextComponent != null ? mySearchTextComponent.getCaretPosition() : 0;
-    boolean wasNull = mySearchTextComponent == null;
     if (!updateTextComponent(true)) {
-      if (!mySearchTextComponent.getText().equals(textToSet)) {
-        mySearchTextComponent.setText(textToSet);
-      }
+      replaceTextInTextComponentEnsuringSelection(textToSet, mySearchTextComponent);
       return;
     }
 
-    if (!mySearchTextComponent.getText().equals(textToSet)) {
-      mySearchTextComponent.setText(textToSet);
-      if (wasNull) {
-        mySearchTextComponent.selectAll();
-      }
-    }
     mySearchTextComponent.getDocument().addDocumentListener(new DocumentAdapter() {
       @Override
-      protected void textChanged(DocumentEvent e) {
-        ApplicationManager.getApplication().invokeLater(() -> searchFieldDocumentChanged());
+      protected void textChanged(@Nonnull DocumentEvent e) {
+        ApplicationManager.getApplication().invokeLater(() -> myEventDispatcher.getMulticaster().searchFieldDocumentChanged());
       }
     });
 
@@ -332,29 +366,38 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
           addTextToRecent(mySearchTextComponent);
         }
       }
-    }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, SystemInfo.isMac ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK), JComponent.WHEN_FOCUSED);
-    if (!wasNull) {
-      ApplicationManager.getApplication().invokeLater(() -> mySearchTextComponent.setCaretPosition(Math.min(oldCaretPosition, mySearchTextComponent.getText().length())));
-    }
+    }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, SystemInfo.isMac ? META_DOWN_MASK : CTRL_DOWN_MASK), JComponent.WHEN_FOCUSED);
+    // make sure Enter is consumed by search text field, even if 'next occurrence' action is disabled
+    // this is needed to e.g. avoid triggering a default button in containing dialog (see IDEA-128057)
+    mySearchTextComponent.registerKeyboardAction(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+      }
+    }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), WHEN_FOCUSED);
 
     new VariantsCompletionAction(mySearchTextComponent); // It registers a shortcut set automatically on construction
   }
 
+  private static void replaceTextInTextComponentEnsuringSelection(@Nonnull String textToSet, JTextComponent component) {
+    String existingText = component.getText();
+    if (!existingText.equals(textToSet)) {
+      component.setText(textToSet);
+      // textToSet should be selected even if we have no selection before (if we have the selection then setText will remain it)
+      if (component.getSelectionStart() == component.getSelectionEnd()) component.selectAll();
+    }
+  }
+
   private void updateReplaceComponent(@Nonnull String textToSet) {
     if (!updateTextComponent(false)) {
-      String existingText = myReplaceTextComponent.getText();
-      if (!existingText.equals(textToSet)) {
-        myReplaceTextComponent.setText(textToSet);
-        if (existingText.length() == 0) myReplaceTextComponent.selectAll();
-      }
+      replaceTextInTextComponentEnsuringSelection(textToSet, myReplaceTextComponent);
       return;
     }
     myReplaceTextComponent.setText(textToSet);
 
     myReplaceTextComponent.getDocument().addDocumentListener(new DocumentAdapter() {
       @Override
-      protected void textChanged(DocumentEvent e) {
-        ApplicationManager.getApplication().invokeLater(() -> replaceFieldDocumentChanged());
+      protected void textChanged(@Nonnull DocumentEvent e) {
+        ApplicationManager.getApplication().invokeLater(() -> myEventDispatcher.getMulticaster().replaceFieldDocumentChanged());
       }
     });
 
@@ -373,37 +416,30 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
     boolean needToResetReplaceFocus = myReplaceTextComponent != null && myReplaceTextComponent.hasFocus();
     updateSearchComponent(findText);
     updateReplaceComponent(replaceText);
-    if (replaceMode) {
-      if (myReplaceFieldWrapper.getParent() == null) {
-        myLeftPanel.add(myReplaceFieldWrapper, BorderLayout.CENTER);
-      }
-      if (myReplaceToolbarWrapper.getParent() == null) {
-        myRightPanel.add(myReplaceToolbarWrapper, BorderLayout.CENTER);
-      }
-      if (needToResetReplaceFocus) {
-        myReplaceTextComponent.requestFocusInWindow();
-      }
-    }
-    else {
-      if (myReplaceFieldWrapper.getParent() != null) {
-        myLeftPanel.remove(myReplaceFieldWrapper);
-      }
-      if (myReplaceToolbarWrapper.getParent() != null) {
-        myRightPanel.remove(myReplaceToolbarWrapper);
-      }
-    }
+    myReplaceFieldWrapper.setVisible(replaceMode);
+    myReplaceToolbarWrapper.setVisible(replaceMode);
+    if (needToResetReplaceFocus) myReplaceTextComponent.requestFocusInWindow();
     if (needToResetSearchFocus) mySearchTextComponent.requestFocusInWindow();
     updateBindings();
     updateActions();
+    List<Component> focusOrder = new ArrayList<>();
+    focusOrder.add(mySearchTextComponent);
+    focusOrder.add(myReplaceTextComponent);
+    focusOrder.addAll(myExtraSearchButtons);
+    focusOrder.addAll(myExtraReplaceButtons);
+    setFocusCycleRoot(true);
+    setFocusTraversalPolicy(new ListFocusTraversalPolicy(focusOrder));
     revalidate();
     repaint();
   }
 
   public void updateActions() {
-    mySearchActionsToolbar1.updateActionsImmediately();
-    mySearchActionsToolbar2.updateActionsImmediately();
-    myReplaceActionsToolbar1.updateActionsImmediately();
-    myReplaceActionsToolbar2.updateActionsImmediately();
+    mySearchActionsToolbar.updateActionsImmediately();
+    myReplaceActionsToolbar.updateActionsImmediately();
+    JComponent textComponent = mySearchFieldWrapper.getTargetComponent();
+    if (textComponent instanceof SearchTextArea) ((SearchTextArea)textComponent).updateExtraActions();
+    textComponent = myReplaceFieldWrapper.getTargetComponent();
+    if (textComponent instanceof SearchTextArea) ((SearchTextArea)textComponent).updateExtraActions();
   }
 
   public void addTextToRecent(@Nonnull JTextComponent textField) {
@@ -430,16 +466,32 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
     if (oldComponent != null) return false;
     final MyTextComponentWrapper wrapper = search ? mySearchFieldWrapper : myReplaceFieldWrapper;
 
-    final JTextArea textComponent;
-    SearchTextArea textArea = new SearchTextArea(search);
-    textComponent = textArea.getTextArea();
+    final JBTextArea textComponent = new JBTextArea();
     textComponent.setRows(isMultiline() ? 2 : 1);
+    textComponent.setColumns(12);
+    if (search) {
+      textComponent.getAccessibleContext().setAccessibleName(FindBundle.message("find.search.accessible.name"));
+    }
+    else {
+      textComponent.getAccessibleContext().setAccessibleName(FindBundle.message("find.replace.accessible.name"));
+    }
+    SearchTextArea textArea = new SearchTextArea(textComponent, search);
+    if (search) {
+      myExtraSearchButtons.clear();
+      myExtraSearchButtons.addAll(textArea.setExtraActions(myEmbeddedSearchActions.toArray(AnAction.EMPTY_ARRAY)));
+    }
+    else {
+      myExtraReplaceButtons.clear();
+      myExtraReplaceButtons.addAll(textArea.setExtraActions(myEmbeddedReplaceActions.toArray(AnAction.EMPTY_ARRAY)));
+    }
+    // Display empty text only when focused
+    textComponent.putClientProperty("StatusVisibleFunction", (BooleanFunction<JTextComponent>)(c -> c.getText().isEmpty() && c.isFocusOwner()));
 
     wrapper.setContent(textArea);
 
     UIUtil.addUndoRedoActions(textComponent);
 
-    textComponent.putClientProperty("AuxEditorComponent", Boolean.TRUE);
+    textComponent.putClientProperty(UIUtil.HIDE_EDITOR_FROM_DATA_CONTEXT_PROPERTY, Boolean.TRUE);
     textComponent.setBackground(UIUtil.getTextFieldBackground());
     textComponent.addFocusListener(new FocusListener() {
       @Override
@@ -452,43 +504,16 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
         textComponent.repaint();
       }
     });
-    installCloseOnEscapeAction(textComponent);
+    new CloseAction() {
+      @Override
+      public void actionPerformed(@Nonnull AnActionEvent e) {
+        close();
+      }
+    }.registerCustomShortcutSet(KeymapUtil.getActiveKeymapShortcuts(IdeActions.ACTION_EDITOR_ESCAPE), textArea);
     return true;
   }
 
-  private void searchFieldDocumentChanged() {
-    if (mySearchTextComponent instanceof JTextArea) {
-      adjustRows((JTextArea)mySearchTextComponent);
-    }
-    myEventDispatcher.getMulticaster().searchFieldDocumentChanged();
-  }
-
-  private void replaceFieldDocumentChanged() {
-    if (myReplaceTextComponent instanceof JTextArea) {
-      adjustRows((JTextArea)myReplaceTextComponent);
-    }
-    myEventDispatcher.getMulticaster().replaceFieldDocumentChanged();
-  }
-
-  private void multilineStateChanged() {
-    myEventDispatcher.getMulticaster().multilineStateChanged();
-  }
-
-  private static void adjustRows(@Nonnull JTextArea area) {
-    area.setRows(Math.max(2, Math.min(3, StringUtil.countChars(area.getText(), '\n') + 1)));
-  }
-
-  private void installCloseOnEscapeAction(@Nonnull JTextComponent c) {
-    ActionListener action = new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        close();
-      }
-    };
-    c.registerKeyboardAction(action, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_FOCUSED);
-    if (KeymapUtil.isEmacsKeymap()) {
-      c.registerKeyboardAction(action, KeyStroke.getKeyStroke(KeyEvent.VK_G, InputEvent.CTRL_MASK), JComponent.WHEN_FOCUSED);
-    }
+  private abstract static class CloseAction extends DumbAwareAction {
   }
 
   private void installReplaceOnEnterAction(@Nonnull JTextComponent c) {
@@ -503,12 +528,10 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
 
   private void updateBindings() {
     updateBindings(mySearchFieldActions, mySearchFieldWrapper);
-    updateBindings(mySearchActionsToolbar1, mySearchFieldWrapper);
-    updateBindings(mySearchActionsToolbar2, mySearchFieldWrapper);
+    updateBindings(mySearchActionsToolbar, mySearchFieldWrapper);
 
     updateBindings(myReplaceFieldActions, myReplaceFieldWrapper);
-    updateBindings(myReplaceActionsToolbar1, myReplaceToolbarWrapper);
-    updateBindings(myReplaceActionsToolbar2, myReplaceToolbarWrapper);
+    updateBindings(myReplaceActionsToolbar, myReplaceToolbarWrapper);
   }
 
   private void updateBindings(@Nonnull DefaultActionGroup group, @Nonnull JComponent shortcutHolder) {
@@ -516,7 +539,7 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
   }
 
   private void updateBindings(@Nonnull ActionToolbarImpl toolbar, @Nonnull JComponent shortcutHolder) {
-    updateBindings(toolbar.getActions(true), shortcutHolder);
+    updateBindings(toolbar.getActions(), shortcutHolder);
   }
 
   private void updateBindings(@Nonnull List<? extends AnAction> actions, @Nonnull JComponent shortcutHolder) {
@@ -539,17 +562,18 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
   @Nonnull
   private ActionToolbarImpl createSearchToolbar1(@Nonnull DefaultActionGroup group) {
     ActionToolbarImpl toolbar = createToolbar(group);
-    toolbar.setForceMinimumSize(true);
-    toolbar.setReservePlaceAutoPopupIcon(false);
     toolbar.setSecondaryButtonPopupStateModifier(mySearchToolbar1PopupStateModifier);
-    toolbar.setSecondaryActionsTooltip("More Options(" + ShowMoreOptions.SHORT_CUT + ")");
+    toolbar.setSecondaryActionsTooltip(FindBundle.message("find.popup.show.filter.popup"));
+    toolbar.setSecondaryActionsIcon(AllIcons.General.Filter);
+    toolbar.setNoGapMode();
+
+    KeyboardShortcut keyboardShortcut = ActionManager.getInstance().getKeyboardShortcut("ShowFilterPopup");
+    if (keyboardShortcut != null) {
+      toolbar.setSecondaryActionsShortcut(KeymapUtil.getShortcutText(keyboardShortcut));
+    }
+
     new ShowMoreOptions(toolbar, mySearchFieldWrapper);
     return toolbar;
-  }
-
-  @Nonnull
-  private ActionToolbarImpl createSearchToolbar2(@Nonnull DefaultActionGroup group) {
-    return createToolbar(group);
   }
 
   @Nonnull
@@ -561,24 +585,13 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
   }
 
   @Nonnull
-  private ActionToolbarImpl createReplaceToolbar2(@Nonnull DefaultActionGroup group) {
-    return createToolbar(group);
-  }
-
-  @Nonnull
   private ActionToolbarImpl createToolbar(@Nonnull ActionGroup group) {
-    return tweakToolbar((ActionToolbarImpl)ActionManager.getInstance().createActionToolbar(ActionPlaces.EDITOR_TOOLBAR, group, true));
-  }
-
-  @Nonnull
-  private ActionToolbarImpl tweakToolbar(@Nonnull ActionToolbarImpl toolbar) {
+    ActionToolbarImpl toolbar = (ActionToolbarImpl)ActionManager.getInstance().createActionToolbar(ActionPlaces.EDITOR_TOOLBAR, group, true);
     toolbar.setTargetComponent(this);
     toolbar.setLayoutPolicy(ActionToolbar.AUTO_LAYOUT_POLICY);
-    toolbar.setBorder(null);
     Utils.setSmallerFontForChildren(toolbar);
     return toolbar;
   }
-
 
   public interface Listener extends EventListener {
     void searchFieldDocumentChanged();
@@ -588,6 +601,7 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
     void multilineStateChanged();
   }
 
+  @SuppressWarnings("HardCodedStringLiteral")
   public static class Builder {
     private final Project myProject;
     private final JComponent myTargetComponent;
@@ -597,14 +611,14 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
     private Runnable myReplaceAction;
     private Runnable myCloseAction;
 
-    private DefaultActionGroup mySearchActions = new DefaultActionGroup("search bar 1", false);
-    private DefaultActionGroup myExtraSearchActions = new DefaultActionGroup("search bar 2", false);
-    private DefaultActionGroup mySearchFieldActions = new DefaultActionGroup("search field actions", false);
+    private final DefaultActionGroup mySearchActions = DefaultActionGroup.createFlatGroup(() -> "search bar 1");
+    private final DefaultActionGroup myExtraSearchActions = DefaultActionGroup.createFlatGroup(() -> "search bar 2");
+    private final DefaultActionGroup mySearchFieldActions = DefaultActionGroup.createFlatGroup(() -> "search field actions");
     private BooleanGetter mySearchToolbarModifiedFlagGetter = BooleanGetter.FALSE;
 
-    private DefaultActionGroup myReplaceActions = new DefaultActionGroup("replace bar 1", false);
-    private DefaultActionGroup myExtraReplaceActions = new DefaultActionGroup("replace bar 1", false);
-    private DefaultActionGroup myReplaceFieldActions = new DefaultActionGroup("replace field actions", false);
+    private final DefaultActionGroup myReplaceActions = DefaultActionGroup.createFlatGroup(() -> "replace bar 1");
+    private final DefaultActionGroup myExtraReplaceActions = DefaultActionGroup.createFlatGroup(() -> "replace bar 1");
+    private final DefaultActionGroup myReplaceFieldActions = DefaultActionGroup.createFlatGroup(() -> "replace field actions");
 
     private Builder(@Nullable Project project, @Nonnull JComponent component) {
       myProject = project;
@@ -630,25 +644,25 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
     }
 
     @Nonnull
-    public Builder addSearchFieldActions(@Nonnull AnAction... actions) {
+    public Builder addSearchFieldActions(AnAction... actions) {
       mySearchFieldActions.addAll(actions);
       return this;
     }
 
     @Nonnull
-    public Builder addReplaceFieldActions(@Nonnull AnAction... actions) {
+    public Builder addReplaceFieldActions(AnAction... actions) {
       myReplaceFieldActions.addAll(actions);
       return this;
     }
 
     @Nonnull
-    public Builder addPrimarySearchActions(@Nonnull AnAction... actions) {
+    public Builder addPrimarySearchActions(AnAction... actions) {
       mySearchActions.addAll(actions);
       return this;
     }
 
     @Nonnull
-    public Builder addSecondarySearchActions(@Nonnull AnAction... actions) {
+    public Builder addSecondarySearchActions(AnAction... actions) {
       for (AnAction action : actions) {
         mySearchActions.addAction(action).setAsSecondary(true);
       }
@@ -662,19 +676,19 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
     }
 
     @Nonnull
-    public Builder addExtraSearchActions(@Nonnull AnAction... actions) {
+    public Builder addExtraSearchActions(AnAction... actions) {
       myExtraSearchActions.addAll(actions);
       return this;
     }
 
     @Nonnull
-    public Builder addPrimaryReplaceActions(@Nonnull AnAction... actions) {
+    public Builder addPrimaryReplaceActions(AnAction... actions) {
       myReplaceActions.addAll(actions);
       return this;
     }
 
     @Nonnull
-    public Builder addExtraReplaceAction(@Nonnull AnAction... actions) {
+    public Builder addExtraReplaceAction(AnAction... actions) {
       myExtraReplaceActions.addAll(actions);
       return this;
     }

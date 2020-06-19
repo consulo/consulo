@@ -15,14 +15,16 @@
  */
 package com.intellij.find.editorHeaderActions;
 
+import com.intellij.find.FindBundle;
 import com.intellij.find.FindModel;
 import com.intellij.find.FindSettings;
 import com.intellij.find.SearchSession;
+import com.intellij.icons.AllIcons;
 import javax.annotation.Nonnull;
 
-public class ToggleRegex extends EditorHeaderToggleAction {
+public class ToggleRegex extends EditorHeaderToggleAction implements Embeddable {
   public ToggleRegex() {
-    super("Re&gex");
+    super(FindBundle.message("find.regex"), AllIcons.Actions.Regex, AllIcons.Actions.RegexHovered, AllIcons.Actions.RegexSelected);
   }
 
   @Override

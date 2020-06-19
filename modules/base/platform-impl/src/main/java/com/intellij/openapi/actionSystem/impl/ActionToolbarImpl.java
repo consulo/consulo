@@ -12,13 +12,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import com.intellij.openapi.ui.popup.*;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.awt.TargetAWT;
-import consulo.logging.Logger;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.shared.Size;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.WindowManager;
@@ -33,12 +26,20 @@ import com.intellij.ui.switcher.QuickActionProvider;
 import com.intellij.util.ui.*;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ide.base.BaseDataManager;
+import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
+import consulo.ui.shared.Size;
+import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.MagicConstant;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.concurrency.CancellablePromise;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -56,6 +57,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
 
   private static final Set<ActionToolbarImpl> ourToolbars = new LinkedHashSet<>();
   private static final String RIGHT_ALIGN_KEY = "RIGHT_ALIGN";
+  private static final String SECONDARY_SHORTCUT = "SecondaryActions.shortcut";
 
   //static {
   //  JBUIScale.addUserScaleChangeListener(__ -> {
@@ -130,6 +132,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
   private JComponent myTargetComponent;
   private boolean myReservePlaceAutoPopupIcon = true;
   private boolean myShowSeparatorTitles;
+  private boolean myNoGapMode;//if true secondary actions button would be layout side-by-side with other buttons
 
   public ActionToolbarImpl(@Nonnull String place, @Nonnull final ActionGroup actionGroup, boolean horizontal) {
     this(place, actionGroup, horizontal, false, false);
@@ -541,7 +544,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
           if (inside) {
             if (eachComp == mySecondaryActionsButton) {
               assert isLast;
-              if (sizeToFit.width != Integer.MAX_VALUE) {
+              if (sizeToFit.width != Integer.MAX_VALUE && !myNoGapMode) {
                 eachBound.x = sizeToFit.width - insets.right - eachBound.width;
                 eachX = (int)eachBound.getMaxX() - insets.left;
               }
@@ -1315,15 +1318,23 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
   }
 
   @Override
-  public void setSecondaryActionsIcon(consulo.ui.image.Image icon) {
+  public void setSecondaryActionsIcon(Image icon) {
     setSecondaryActionsIcon(icon, false);
   }
 
   @Override
-  public void setSecondaryActionsIcon(consulo.ui.image.Image icon, boolean hideDropdownIcon) {
+  public void setSecondaryActionsIcon(Image icon, boolean hideDropdownIcon) {
     Presentation presentation = mySecondaryActions.getTemplatePresentation();
     presentation.setIcon(icon);
     presentation.putClientProperty(ActionButton.HIDE_DROPDOWN_ICON, hideDropdownIcon ? Boolean.TRUE : null);
+  }
+
+  public void setSecondaryActionsShortcut(@Nonnull String secondaryActionsShortcut) {
+    mySecondaryActions.getTemplatePresentation().putClientProperty(SECONDARY_SHORTCUT, secondaryActionsShortcut);
+  }
+
+  public void setNoGapMode() {
+    myNoGapMode = true;
   }
 
   @Nonnull
