@@ -15,20 +15,22 @@
  */
 package consulo.components.impl.stores;
 
-import consulo.container.PluginException;
 import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.RoamingType;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
-import consulo.container.plugin.ComponentConfig;
-import consulo.logging.Logger;
-import consulo.container.plugin.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.RoamingTypeDisabled;
-import org.jetbrains.annotations.NonNls;
+import consulo.container.PluginException;
+import consulo.container.plugin.ComponentConfig;
+import consulo.container.plugin.PluginId;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Map;
 
 /**
@@ -38,7 +40,6 @@ import java.util.Map;
 public class StateComponentInfo<T> {
   private static final Logger LOGGER = Logger.getInstance(StateComponentInfo.class);
 
-  @NonNls
   private static final String OPTION_WORKSPACE = "workspace";
 
   @Nullable

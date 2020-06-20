@@ -54,7 +54,7 @@ public abstract class ModuleManager {
    */
   @Nonnull
   @RequiredWriteAction
-  public abstract Module newModule(@Nonnull @NonNls String name, @Nonnull @NonNls String dirPath);
+  public abstract Module newModule(@Nonnull String name, @Nonnull String dirPath);
 
   /**
    * Disposes of the specified module and removes it from the project.
@@ -81,7 +81,7 @@ public abstract class ModuleManager {
    */
   @Nullable
   @RequiredReadAction
-  public abstract Module findModuleByName(@NonNls @Nonnull String name);
+  public abstract Module findModuleByName(@Nonnull String name);
 
   /**
    * Returns the list of modules sorted by dependency (the modules which do not depend

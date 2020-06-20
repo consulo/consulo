@@ -168,14 +168,10 @@ final class StateMap {
   private static byte[] archiveState(@Nonnull Element state) {
     BufferExposingByteArrayOutputStream byteOut = new BufferExposingByteArrayOutputStream();
     try {
-      OutputStreamWriter writer = new OutputStreamWriter(new SnappyOutputStream(byteOut), CharsetToolkit.UTF8_CHARSET);
-      try {
+      try (OutputStreamWriter writer = new OutputStreamWriter(new SnappyOutputStream(byteOut), CharsetToolkit.UTF8_CHARSET)) {
         XMLOutputter xmlOutputter = JDOMUtil.newXmlOutputter();
         xmlOutputter.setFormat(XML_FORMAT);
         xmlOutputter.output(state, writer);
-      }
-      finally {
-        writer.close();
       }
     }
     catch (IOException e) {
@@ -184,7 +180,7 @@ final class StateMap {
     return ArrayUtil.realloc(byteOut.getInternalBuffer(), byteOut.size());
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public Element getStateAndArchive(@Nonnull String key) {
     Object state = states.get(key);
     if (!(state instanceof Element)) {
@@ -210,10 +206,7 @@ final class StateMap {
         }
       }
     }
-    catch (IOException e) {
-      throw new StateStorageException(e);
-    }
-    catch (JDOMException e) {
+    catch (IOException | JDOMException e) {
       throw new StateStorageException(e);
     }
   }
@@ -236,7 +229,7 @@ final class StateMap {
     return JDOMUtil.writeParent(element, "\n");
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public Object remove(@Nonnull String key) {
     return states.remove(key);
   }

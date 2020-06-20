@@ -21,7 +21,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.components.PathMacroManager;
-import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.PersistentStateComponentWithModificationTracker;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.*;
@@ -69,7 +69,7 @@ import java.util.*;
 /**
  * @author max
  */
-public abstract class ModuleManagerImpl extends ModuleManager implements PersistentStateComponent<Element>, ModificationTracker, Disposable {
+public abstract class ModuleManagerImpl extends ModuleManager implements PersistentStateComponentWithModificationTracker<Element>, ModificationTracker, Disposable {
   private static final Logger LOG = Logger.getInstance(ModuleManagerImpl.class);
 
   public static class ModuleLoadItem {
@@ -185,6 +185,11 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Persist
 
   @Override
   public long getModificationCount() {
+    return myModificationCount;
+  }
+
+  @Override
+  public long getStateModificationCount() {
     return myModificationCount;
   }
 
@@ -437,7 +442,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Persist
   @Override
   @Nonnull
   @RequiredWriteAction
-  public Module newModule(@Nonnull @NonNls String name, @Nonnull @NonNls String dirPath) {
+  public Module newModule(@Nonnull String name, @Nonnull String dirPath) {
     myModificationCount++;
     final ModifiableModuleModel modifiableModel = getModifiableModel();
     final Module module = modifiableModel.newModule(name, dirPath);

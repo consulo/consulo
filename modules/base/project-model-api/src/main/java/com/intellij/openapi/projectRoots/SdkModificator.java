@@ -4,8 +4,9 @@ package com.intellij.openapi.projectRoots;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.util.collection.ArrayUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -39,7 +40,7 @@ public interface SdkModificator {
 
   @Nonnull
   default String[] getUrls(@Nonnull OrderRootType rootType) {
-    return ContainerUtil.map(getRoots(rootType), file -> file.getUrl(), ArrayUtilRt.EMPTY_STRING_ARRAY);
+    return ContainerUtil.map(getRoots(rootType), file -> file.getUrl(), ArrayUtil.EMPTY_STRING_ARRAY);
   }
 
   void addRoot(@Nonnull VirtualFile root, @Nonnull OrderRootType rootType);

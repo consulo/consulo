@@ -18,19 +18,19 @@ package consulo.components.impl.stores;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StateStorage.SaveSession;
-import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ArrayUtilRt;
+import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.SmartHashSet;
 import com.intellij.util.messages.MessageBus;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.component.PersistentStateComponentWithUIState;
 import consulo.components.impl.stores.storage.StateStorageManager.ExternalizationSession;
+import consulo.logging.Logger;
 import consulo.ui.UIAccess;
-import gnu.trove.THashMap;
+import consulo.util.collection.ArrayUtil;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -38,6 +38,7 @@ import javax.annotation.Nullable;
 import javax.inject.Provider;
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class ComponentStoreImpl implements IComponentStore {
@@ -50,7 +51,9 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     }
   }
 
-  private final Map<String, StateComponentInfo<?>> myComponents = Collections.synchronizedMap(new THashMap<>());
+  private final Map<String, StateComponentInfo<?>> myComponents = new ConcurrentHashMap<>();
+  private final Map<String, Long> myComponentsModificationCount = ConcurrentFactoryMap.createMap(k -> -1L);
+
   private final List<SettingsSavingComponent> mySettingsSavingComponents = new CopyOnWriteArrayList<>();
 
   private final Provider<ApplicationDefaultStoreCache> myApplicationDefaultStoreCache;
@@ -86,7 +89,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   public final void save(@Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
     ExternalizationSession externalizationSession = myComponents.isEmpty() ? null : getStateStorageManager().startExternalization();
     if (externalizationSession != null) {
-      String[] names = ArrayUtilRt.toStringArray(myComponents.keySet());
+      String[] names = ArrayUtil.toStringArray(myComponents.keySet());
       Arrays.sort(names);
       for (String name : names) {
         StateComponentInfo<?> componentInfo = myComponents.get(name);
@@ -112,7 +115,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   public void saveAsync(@Nonnull UIAccess uiAccess, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
     ExternalizationSession externalizationSession = myComponents.isEmpty() ? null : getStateStorageManager().startExternalization();
     if (externalizationSession != null) {
-      String[] names = ArrayUtilRt.toStringArray(myComponents.keySet());
+      String[] names = ArrayUtil.toStringArray(myComponents.keySet());
       Arrays.sort(names);
       for (String name : names) {
         StateComponentInfo<?> componentInfo = myComponents.get(name);
@@ -153,6 +156,21 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   @SuppressWarnings({"unchecked", "RequiredXAction"})
   private <T> void commitComponentInsideSingleUIWriteThread(@Nonnull StateComponentInfo<T> componentInfo, @Nonnull ExternalizationSession session) {
     PersistentStateComponent<T> component = componentInfo.getComponent();
+
+    long countToSet = -1;
+    if(component instanceof PersistentStateComponentWithModificationTracker) {
+      long count = ((PersistentStateComponentWithModificationTracker<T>)component).getStateModificationCount();
+
+      long oldCount = myComponentsModificationCount.get(componentInfo.getName());
+
+      if(count == oldCount) {
+        LOG.info("Skiping component " + componentInfo.getName() + " - no modification");
+        return;
+      }
+
+      countToSet = count;
+    }
+
     T state;
     if(component instanceof PersistentStateComponentWithUIState) {
       PersistentStateComponentWithUIState<T, Object> uiComponent = (PersistentStateComponentWithUIState<T, Object>)component;
@@ -162,9 +180,14 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     else {
       state = component.getState();
     }
+
     if (state != null) {
       Storage[] storageSpecs = getComponentStorageSpecs(component, componentInfo.getState(), StateStorageOperation.WRITE);
       session.setState(storageSpecs, component, componentInfo.getName(), state);
+
+      if(countToSet != -1) {
+        myComponentsModificationCount.put(componentInfo.getName(), countToSet);
+      }
     }
   }
 
@@ -222,15 +245,27 @@ public abstract class ComponentStoreImpl implements IComponentStore {
 
     if (state != null) {
       component.loadState(state);
+
+      storeModificationCountAfterLoad(component, componentInfo);
     }
     else {
       T defaultState = loadDefaultState(componentInfo, component, stateClass);
       if (defaultState != null) {
         component.loadState(defaultState);
+
+        storeModificationCountAfterLoad(component, componentInfo);
       }
     }
 
     validateUnusedMacros(name, true);
+  }
+
+  private <T> void storeModificationCountAfterLoad(PersistentStateComponent<T> component, @Nonnull StateComponentInfo<T> componentInfo) {
+    if (component instanceof PersistentStateComponentWithModificationTracker) {
+      long modCount = ((PersistentStateComponentWithModificationTracker<T>)component).getStateModificationCount();
+
+      myComponentsModificationCount.put(componentInfo.getName(), modCount);
+    }
   }
 
   @Nullable
