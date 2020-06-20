@@ -80,7 +80,7 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
 
   @Override
   public Image getIcon(int flags) {
-    return AllIcons.General.InspectionsOff;
+    return AllIcons.General.InspectionsTrafficOff;
   }
 
   private String myText = "";

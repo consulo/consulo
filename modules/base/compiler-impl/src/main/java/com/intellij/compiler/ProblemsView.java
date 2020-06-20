@@ -17,11 +17,16 @@ package com.intellij.compiler;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowId;
+import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.pom.Navigatable;
+import com.intellij.ui.content.Content;
+import com.intellij.ui.content.ContentManager;
 import com.intellij.util.ArrayUtil;
 import consulo.ui.annotation.RequiredUIAccess;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +34,30 @@ import java.util.StringTokenizer;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: 9/18/12
+ * Date: 9/18/12
  */
 public abstract class ProblemsView {
   @Nonnull
   public static ProblemsView getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, ProblemsView.class);
+  }
+
+  public static void showCurrentFileProblems(@Nonnull Project project) {
+    ToolWindow window = getToolWindow(project);
+    if (window == null) return; // does not exist
+    selectContent(window.getContentManager(), 0);
+    window.setAvailable(true, null);
+    window.activate(null, true);
+  }
+
+  @Nullable
+  public static ToolWindow getToolWindow(@Nullable Project project) {
+    return project == null || project.isDisposed() ? null : ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.MESSAGES_WINDOW);
+  }
+
+  private static void selectContent(@Nonnull ContentManager manager, int index) {
+    Content content = manager.getContent(index);
+    if (content != null) manager.setSelectedContent(content);
   }
 
   public abstract void clearOldMessages();
@@ -55,7 +78,7 @@ public abstract class ProblemsView {
   public abstract void selectFirstMessage();
 
   public abstract void setProgress(String text, float fraction);
-  
+
   public abstract void setProgress(String text);
 
   public abstract void clearProgress();

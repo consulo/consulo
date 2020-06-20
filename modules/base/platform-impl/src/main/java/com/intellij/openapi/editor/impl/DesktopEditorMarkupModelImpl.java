@@ -38,8 +38,6 @@ import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.fileEditor.impl.EditorWindowHolder;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.Balloon;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.DisposerUtil;
 import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.util.registry.Registry;
@@ -54,7 +52,10 @@ import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
-import consulo.editor.impl.DesktopEditorErrorPanel;
+import consulo.desktop.editor.impl.DesktopEditorAnalyzeStatusPanel;
+import consulo.desktop.editor.impl.DesktopEditorErrorPanel;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 import gnu.trove.THashSet;
 import gnu.trove.TIntIntHashMap;
@@ -86,23 +87,26 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
   private ErrorStripeRenderer myErrorStripeRenderer;
   private final List<ErrorStripeListener> myErrorMarkerListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
-  private DesktopEditorErrorPanel myErrorPanel;
+  private final DesktopEditorErrorPanel myErrorPanel;
 
   @Nonnull
   private ErrorStripTooltipRendererProvider myTooltipRendererProvider = new BasicTooltipRendererProvider();
 
-  private int myMinMarkHeight = JBUI.scale(3);
+  private int myMinMarkHeight = JBUI.scale(2);
 
   private LightweightHint myEditorPreviewHint = null;
   private final EditorFragmentRenderer myEditorFragmentRenderer;
   private int myRowAdjuster = 0;
   private int myWheelAccumulator = 0;
 
+  private DesktopEditorAnalyzeStatusPanel myStatusPanel;
+
   DesktopEditorMarkupModelImpl(@Nonnull DesktopEditorImpl editor) {
     super(editor.getDocument());
     myEditor = editor;
     myEditorFragmentRenderer = new EditorFragmentRenderer();
-    myErrorPanel = new DesktopEditorErrorPanel(editor, this);
+    myStatusPanel = new DesktopEditorAnalyzeStatusPanel(this);
+    myErrorPanel = new DesktopEditorErrorPanel(editor, myStatusPanel, this);
   }
 
   @Override
@@ -110,22 +114,15 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
     return myMinMarkHeight;
   }
 
-  public void repaintVerticalScrollBar() {
-    myEditor.getVerticalScrollBar().repaint();
-  }
-
   void recalcEditorDimensions() {
-    if(myErrorPanel != null) {
+    if (myErrorPanel != null) {
       myErrorPanel.recalcEditorDimensions();
     }
   }
 
+  @Override
   public void repaintTrafficLightIcon() {
-    DesktopEditorErrorPanel errorPanel = getErrorPanel();
-    if (errorPanel != null) {
-      errorPanel.repaint();
-      errorPanel.repaintTrafficTooltip();
-    }
+    myStatusPanel.repaintTrafficLightIcon();
   }
 
   public void mouseWheelMoved(MouseWheelEvent e) {
@@ -305,22 +302,17 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
 
   @Override
   public void setErrorStripeVisible(boolean val) {
+    myErrorPanel.setPopupHandler(null);
     if (val) {
-      if (myErrorPanel != null) {
-        myErrorPanel.setPopupHandler(null);
-      }
-
-      myErrorPanel = new DesktopEditorErrorPanel(myEditor, this);
       myEditor.getPanel().add(myErrorPanel, myEditor.getVerticalScrollbarOrientation() == EditorEx.VERTICAL_SCROLLBAR_LEFT ? BorderLayout.WEST : BorderLayout.EAST);
     }
-    else if (myErrorPanel != null) {
+    else {
       myEditor.getPanel().remove(myErrorPanel);
-      myErrorPanel = null;
     }
   }
 
   @Nullable
-  private DesktopEditorErrorPanel getErrorPanel() {
+  public DesktopEditorErrorPanel getErrorPanel() {
     return myErrorPanel;
   }
 
@@ -361,8 +353,6 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
     myErrorStripeRenderer = renderer;
     //try to not cancel tooltips here, since it is being called after every writeAction, even to the console
     //HintManager.getInstance().getTooltipController().cancelTooltips();
-
-    repaintVerticalScrollBar();
   }
 
   @RequiredUIAccess
@@ -385,13 +375,16 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
     if (myErrorStripeRenderer instanceof Disposable) {
       Disposer.dispose((Disposable)myErrorStripeRenderer);
     }
+
+    Disposer.dispose(myStatusPanel);
+
     myErrorStripeRenderer = null;
     super.dispose();
   }
 
   // startOffset == -1 || endOffset == -1 means whole document
   void repaint(int startOffset, int endOffset) {
-    if(myErrorPanel != null) {
+    if (myErrorPanel != null) {
       myErrorPanel.repaint(startOffset, endOffset);
     }
   }

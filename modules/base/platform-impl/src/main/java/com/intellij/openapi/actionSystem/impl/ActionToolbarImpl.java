@@ -36,10 +36,10 @@ import consulo.ui.image.Image;
 import consulo.ui.shared.Size;
 import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.MagicConstant;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.concurrency.CancellablePromise;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -159,8 +159,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
       }
     };
 
-    setLayout(new BorderLayout());
-    setOrientation(horizontal ? SwingConstants.HORIZONTAL : SwingConstants.VERTICAL);
+    setOrientation(horizontal ? ActionToolbar.HORIZONTAL_ORIENTATION : ActionToolbar.VERTICAL_ORIENTATION);
 
     mySecondaryActions.getTemplatePresentation().setIcon(AllIcons.General.GearPlain);
     mySecondaryActions.setPopup(true);
@@ -282,7 +281,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
     boolean isLastElementSeparator = false;
     final List<AnAction> rightAligned = new ArrayList<>();
     for (int i = 0; i < actions.size(); i++) {
-      final AnAction action = actions.get(i);
+      AnAction action = actions.get(i);
       if (action instanceof RightAlignedToolbarAction) {
         rightAligned.add(action);
         continue;
@@ -298,16 +297,16 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
       if (action instanceof AnSeparator) {
         if (isLastElementSeparator) continue;
         if (i > 0 && i < actions.size() - 1) {
-          add(new MySeparator(myShowSeparatorTitles ? ((AnSeparator)action).getText() : null));
+          add(SEPARATOR_CONSTRAINT, new MySeparator(myShowSeparatorTitles ? ((AnSeparator)action).getText() : null));
           isLastElementSeparator = true;
           continue;
         }
       }
       else if (action instanceof CustomComponentAction) {
-        add(getCustomComponent(action));
+        add(CUSTOM_COMPONENT_CONSTRAINT, getCustomComponent(action));
       }
       else {
-        add(createToolbarButton(action));
+        add(ACTION_BUTTON_CONSTRAINT, createToolbarButton(action));
       }
       isLastElementSeparator = false;
     }

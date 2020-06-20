@@ -36,7 +36,7 @@ public class ModernActionButtonUI extends ActionButtonUI {
   }
 
   @Override
-  protected void paintBorder(ActionButton button, Graphics g, Dimension size, int state) {
+  public void paintBorder(ActionButton button, Graphics g, Dimension size, int state) {
     if (state == ActionButtonComponent.NORMAL && !button.isBackgroundSet()) return;
 
     final GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
@@ -48,7 +48,7 @@ public class ModernActionButtonUI extends ActionButtonUI {
   }
 
   @Override
-  protected void paintBackground(ActionButton button, Graphics g, Dimension size, int state) {
+  public void paintBackground(ActionButton button, Graphics g, Dimension size, int state) {
     if (state == ActionButtonComponent.PUSHED) {
       g.setColor(ColorUtil.toAlpha(ModernUIUtil.getSelectionBackground(), 100));
       RectanglePainter2D.FILL.paint((Graphics2D)g, 0, 0, size.getWidth(), size.getHeight());

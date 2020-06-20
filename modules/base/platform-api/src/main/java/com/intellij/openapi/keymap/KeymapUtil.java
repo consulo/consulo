@@ -25,12 +25,13 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.registry.RegistryValue;
 import com.intellij.openapi.util.registry.RegistryValueListener;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposer;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -224,6 +225,17 @@ public class KeymapUtil {
     else {
       return keyModifiersText + "+";
     }
+  }
+
+  /**
+   * @param actionId action to find the shortcut for
+   * @return first keyboard shortcut that activates given action in active keymap; null if not found
+   */
+  @Nullable
+  public static Shortcut getPrimaryShortcut(@Nullable String actionId) {
+    KeymapManager keymapManager = KeymapManager.getInstance();
+    if (keymapManager == null || actionId == null) return null;
+    return ArrayUtil.getFirstElement(keymapManager.getActiveKeymap().getShortcuts(actionId));
   }
 
   @Nonnull

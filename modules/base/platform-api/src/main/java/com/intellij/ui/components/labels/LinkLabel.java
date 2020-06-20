@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2016 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.components.labels;
 
 import com.intellij.icons.AllIcons;
@@ -25,13 +11,16 @@ import com.intellij.util.ui.JBRectangle;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+import consulo.ui.migration.SwingImageRef;
 import gnu.trove.THashSet;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.accessibility.AccessibleAction;
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -50,7 +39,7 @@ public class LinkLabel<T> extends JLabel {
 
   private boolean myIsLinkActive;
 
-  private String myVisitedLinksKey;
+  private final String myVisitedLinksKey;
   private Icon myHoveringIcon;
   private Icon myInactiveIcon;
 
@@ -65,29 +54,44 @@ public class LinkLabel<T> extends JLabel {
     this(text, icon, null, null, null);
   }
 
+  public LinkLabel(String text, @Nullable Image icon) {
+    this(text, TargetAWT.to(icon), null, null, null);
+  }
+
   public LinkLabel(String text, @Nullable Icon icon, @Nullable LinkListener<T> aListener) {
     this(text, icon, aListener, null, null);
   }
 
+  public LinkLabel(String text, @Nullable SwingImageRef icon) {
+    this(text, icon, null, null, null);
+  }
+
+  public LinkLabel(String text, @Nullable SwingImageRef icon, @Nullable LinkListener<T> aListener) {
+    this(text, icon, aListener, null, null);
+  }
+
+  public LinkLabel(String text, @Nullable Image icon, @Nullable LinkListener<T> aListener) {
+    this(text, TargetAWT.to(icon), aListener, null, null);
+  }
+
   @Nonnull
   public static LinkLabel<?> create(@Nullable String text, @Nullable Runnable action) {
-    return new LinkLabel<>(text, null, action == null ? null : new LinkListener<Object>() {
-      @Override
-      public void linkSelected(LinkLabel source, Object linkData) {
-        action.run();
-      }
-    }, null, null);
+    return new LinkLabel<>(text, null, action == null ? null : (__, ___) -> action.run(), null, null);
   }
 
   public LinkLabel(String text, @Nullable Icon icon, @Nullable LinkListener<T> aListener, @Nullable T aLinkData) {
     this(text, icon, aListener, aLinkData, null);
   }
 
-  public LinkLabel(String text,
-                   @Nullable Icon icon,
-                   @Nullable LinkListener<T> aListener,
-                   @Nullable T aLinkData,
-                   @Nullable String aVisitedLinksKey) {
+  public LinkLabel(String text, @Nullable SwingImageRef icon, @Nullable LinkListener<T> aListener, @Nullable T aLinkData) {
+    this(text, icon, aListener, aLinkData, null);
+  }
+
+  public LinkLabel(String text, @Nullable Image icon, @Nullable LinkListener<T> aListener, @Nullable T aLinkData) {
+    this(text, TargetAWT.to(icon), aListener, aLinkData, null);
+  }
+
+  public LinkLabel(String text, @Nullable Icon icon, @Nullable LinkListener<T> aListener, @Nullable T aLinkData, @Nullable String aVisitedLinksKey) {
     super(text, icon, SwingConstants.LEFT);
     setOpaque(false);
     // Note: Ideally, we should be focusable by default in all cases, however,
@@ -169,6 +173,7 @@ public class LinkLabel<T> extends JLabel {
     return myVisitedLinksKey != null && ourVisitedLinks.contains(myVisitedLinksKey);
   }
 
+  @Override
   protected void paintComponent(Graphics g) {
     setForeground(getTextColor());
     super.paintComponent(g);
@@ -182,37 +187,19 @@ public class LinkLabel<T> extends JLabel {
         g.drawLine(bounds.x, lineY, bounds.x + bounds.width, lineY);
       }
 
-      if (isFocusOwner()){
+      if (isFocusOwner()) {
         g.setColor(UIUtil.getTreeSelectionBorderColor());
-        Rectangle bounds = getTextBounds();
-        // JLabel draws the text relative to the baseline. So, we must ensure
-        // we draw the dotted rectangle relative to that same baseline.
-        FontMetrics fm = getFontMetrics(getFont());
-        int baseLine = getUI().getBaseline(this, getWidth(), getHeight());
-        int textY = baseLine - fm.getLeading() - fm.getAscent();
-        int textHeight = fm.getHeight();
-        UIUtil.drawDottedRectangle(g, bounds.x, textY, bounds.x + bounds.width - 1, textY + textHeight - 1);
+        UIUtil.drawLabelDottedRectangle(this, g, getTextBounds());
       }
     }
   }
 
   @Nonnull
   protected Rectangle getTextBounds() {
-    final Dimension size = getPreferredSize();
-    Icon icon = getIcon();
-    final Point point = new Point(0, 0);
-    final Insets insets = getInsets();
-    if (icon != null) {
-      point.x += getIconTextGap();
-      point.x += icon.getIconWidth();
+    if (textR.isEmpty()) {
+      updateLayoutRectangles();
     }
-    point.x += insets.left;
-    point.y += insets.top;
-    size.width -= point.x;
-    size.width -= insets.right;
-    size.height -= insets.bottom;
-
-    return new Rectangle(point, size);
+    return textR;
   }
 
   protected Color getTextColor() {
@@ -223,10 +210,12 @@ public class LinkLabel<T> extends JLabel {
     myPaintUnderline = paintUnderline;
   }
 
+  @Override
   public void removeNotify() {
     super.removeNotify();
-    if (ScreenUtil.isStandardAddRemoveNotify(this))
+    if (ScreenUtil.isStandardAddRemoveNotify(this)) {
       disableUnderline();
+    }
   }
 
   private void setActive(boolean isActive) {
@@ -243,25 +232,7 @@ public class LinkLabel<T> extends JLabel {
   private final JBRectangle viewR = new JBRectangle();
 
   protected boolean isInClickableArea(Point pt) {
-    iconR.clear();
-    textR.clear();
-    final Insets insets = getInsets(null);
-    viewR.x = insets.left;
-    viewR.y = insets.top;
-    viewR.width = getWidth() - (insets.left + insets.right);
-    viewR.height = getHeight() - (insets.top + insets.bottom);
-    SwingUtilities.layoutCompoundLabel(this,
-                                       getFontMetrics(getFont()),
-                                       getText(),
-                                       isEnabled() ? getIcon() : getDisabledIcon(),
-                                       getVerticalAlignment(),
-                                       getHorizontalAlignment(),
-                                       getVerticalTextPosition(),
-                                       getHorizontalTextPosition(),
-                                       viewR,
-                                       iconR,
-                                       textR,
-                                       getIconTextGap());
+    updateLayoutRectangles();
     if (getIcon() != null) {
       iconR.width += getIconTextGap(); //todo[kb] icon at right?
       if (iconR.contains(pt)) {
@@ -271,8 +242,27 @@ public class LinkLabel<T> extends JLabel {
     return textR.contains(pt);
   }
 
+  private void updateLayoutRectangles() {
+    iconR.clear();
+    textR.clear();
+    final Insets insets = getInsets(null);
+    viewR.x = insets.left;
+    viewR.y = insets.top;
+    viewR.width = getWidth() - (insets.left + insets.right);
+    viewR.height = getHeight() - (insets.top + insets.bottom);
+    SwingUtilities
+            .layoutCompoundLabel(this, getFontMetrics(getFont()), getText(), isEnabled() ? getIcon() : getDisabledIcon(), getVerticalAlignment(), getHorizontalAlignment(), getVerticalTextPosition(),
+                                 getHorizontalTextPosition(), viewR, iconR, textR, getIconTextGap());
+  }
+
+  //for GUI tests
+  public Point getTextRectangleCenter() {
+    isInClickableArea(new Point(0, 0)); //to update textR before clicking
+    return new Point(textR.x + textR.width / 2, textR.y + textR.height / 2);
+  }
+
   private void enableUnderline() {
-    setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    UIUtil.setCursor(this, Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     myUnderline = true;
     if (myHoveringIcon != null) {
       super.setIcon(myHoveringIcon);
@@ -286,7 +276,7 @@ public class LinkLabel<T> extends JLabel {
   }
 
   private void disableUnderline() {
-    setCursor(Cursor.getDefaultCursor());
+    UIUtil.setCursor(this, Cursor.getDefaultCursor());
     myUnderline = false;
     super.setIcon(myInactiveIcon);
     setStatusBarText(null);
@@ -299,10 +289,6 @@ public class LinkLabel<T> extends JLabel {
     for (Project project : projects) {
       StatusBar.Info.set(statusBarText, project);
     }
-  }
-
-  public static void clearVisitedHistory() {
-    ourVisitedLinks.clear();
   }
 
   protected Color getVisited() {
@@ -334,21 +320,24 @@ public class LinkLabel<T> extends JLabel {
   }
 
   private class MyMouseHandler extends MouseAdapter implements MouseMotionListener {
+    @Override
     public void mousePressed(MouseEvent e) {
-      if (isInClickableArea(e.getPoint())) {
+      if (isEnabled() && isInClickableArea(e.getPoint())) {
         setActive(true);
       }
     }
 
+    @Override
     public void mouseReleased(MouseEvent e) {
-      if (myIsLinkActive && isInClickableArea(e.getPoint())) {
+      if (isEnabled() && myIsLinkActive && isInClickableArea(e.getPoint())) {
         doClick(e);
       }
       setActive(false);
     }
 
+    @Override
     public void mouseMoved(MouseEvent e) {
-      if (isInClickableArea(e.getPoint())) {
+      if (isEnabled() && isInClickableArea(e.getPoint())) {
         enableUnderline();
       }
       else {
@@ -356,10 +345,12 @@ public class LinkLabel<T> extends JLabel {
       }
     }
 
+    @Override
     public void mouseExited(MouseEvent e) {
       disableUnderline();
     }
 
+    @Override
     public void mouseDragged(MouseEvent e) {
     }
   }
@@ -402,7 +393,8 @@ public class LinkLabel<T> extends JLabel {
       if (i == 0) {
         doClick();
         return true;
-      } else {
+      }
+      else {
         return false;
       }
     }

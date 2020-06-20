@@ -9,7 +9,6 @@ import com.intellij.codeInsight.intention.impl.IntentionHintComponent;
 import com.intellij.diagnostic.ThreadDumper;
 import com.intellij.ide.PowerSaveMode;
 import com.intellij.lang.annotation.HighlightSeverity;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -36,8 +35,6 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
@@ -50,15 +47,18 @@ import com.intellij.util.*;
 import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import java.util.*;
@@ -192,7 +192,8 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
     final FileEditorManager manager = FileEditorManager.getInstance(project);
     for (FileEditor fileEditor : manager.getEditors(vFile)) {
       if (fileEditor instanceof TextEditor) {
-        FileLevelIntentionComponent component = new FileLevelIntentionComponent(info.getDescription(), info.getSeverity(), info.getGutterIconRenderer(), info.quickFixActionRanges, project, psiFile, ((TextEditor)fileEditor).getEditor(), info.getToolTip());
+        FileLevelIntentionComponent component = new FileLevelIntentionComponent(info.getDescription(), info.getSeverity(), info.getGutterIconRenderer(), info.quickFixActionRanges, project, psiFile,
+                                                                                ((TextEditor)fileEditor).getEditor(), info.getToolTip());
         manager.addTopComponent(fileEditor, component);
         List<HighlightInfo> fileLevelInfos = fileEditor.getUserData(FILE_LEVEL_HIGHLIGHTS);
         if (fileLevelInfos == null) {
@@ -337,12 +338,20 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
         });
       }
       if (progress.isRunning() && !progress.isCanceled()) {
-        throw new RuntimeException("Highlighting still running after " + (System.currentTimeMillis() - start) / 1000 + " seconds." +
-                                   " Still submitted passes: " + myPassExecutorService.getAllSubmittedPasses() +
-                                   " ForkJoinPool.commonPool(): " + ForkJoinPool.commonPool() + "\n" +
-                                   ", ForkJoinPool.commonPool() active thread count: " + ForkJoinPool.commonPool().getActiveThreadCount() +
-                                   ", ForkJoinPool.commonPool() has queued submissions: " + ForkJoinPool.commonPool().hasQueuedSubmissions() +
-                                   "\n" + ThreadDumper.dumpThreadsToString());
+        throw new RuntimeException("Highlighting still running after " +
+                                   (System.currentTimeMillis() - start) / 1000 +
+                                   " seconds." +
+                                   " Still submitted passes: " +
+                                   myPassExecutorService.getAllSubmittedPasses() +
+                                   " ForkJoinPool.commonPool(): " +
+                                   ForkJoinPool.commonPool() +
+                                   "\n" +
+                                   ", ForkJoinPool.commonPool() active thread count: " +
+                                   ForkJoinPool.commonPool().getActiveThreadCount() +
+                                   ", ForkJoinPool.commonPool() has queued submissions: " +
+                                   ForkJoinPool.commonPool().hasQueuedSubmissions() +
+                                   "\n" +
+                                   ThreadDumper.dumpThreadsToString());
       }
 
       HighlightingSessionImpl session = (HighlightingSessionImpl)HighlightingSessionImpl.getOrCreateHighlightingSession(file, progress, null);
@@ -520,15 +529,10 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
   }
 
   @Nonnull
-  public List<TextEditorHighlightingPass> getPassesToShowProgressFor(Document document) {
-    List<TextEditorHighlightingPass> allPasses = myPassExecutorService.getAllSubmittedPasses();
-    List<TextEditorHighlightingPass> result = new ArrayList<>(allPasses.size());
-    for (TextEditorHighlightingPass pass : allPasses) {
-      if (pass.getDocument() == document || pass.getDocument() == null) {
-        result.add(pass);
-      }
-    }
-    return result;
+  public List<ProgressableTextEditorHighlightingPass> getPassesToShowProgressFor(@Nonnull Document document) {
+    List<HighlightingPass> allPasses = myPassExecutorService.getAllSubmittedPasses();
+    return allPasses.stream().map(p -> p instanceof ProgressableTextEditorHighlightingPass ? (ProgressableTextEditorHighlightingPass)p : null).filter(p -> p != null && p.getDocument() == document)
+            .sorted(Comparator.comparingInt(p -> p.getId())).collect(Collectors.toList());
   }
 
   boolean isAllAnalysisFinished(@Nonnull PsiFile file) {
@@ -729,8 +733,9 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
 
       final Collection<FileEditor> activeEditors = dca.getSelectedEditors();
       boolean updateByTimerEnabled = dca.isUpdateByTimerEnabled();
-      PassExecutorService.log(dca.getUpdateProgress(), null, "Update Runnable. myUpdateByTimerEnabled:", updateByTimerEnabled, " something disposed:", PowerSaveMode.isEnabled() || !myProject.isInitialized(),
-                              " activeEditors:", activeEditors);
+      PassExecutorService
+              .log(dca.getUpdateProgress(), null, "Update Runnable. myUpdateByTimerEnabled:", updateByTimerEnabled, " something disposed:", PowerSaveMode.isEnabled() || !myProject.isInitialized(),
+                   " activeEditors:", activeEditors);
       if (!updateByTimerEnabled) return;
 
       if (activeEditors.isEmpty()) return;

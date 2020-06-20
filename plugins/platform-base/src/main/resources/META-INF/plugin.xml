@@ -1657,9 +1657,6 @@
                             order="after compileBeforeRunNoErrorCheck"/>
     <stepsBeforeRunProvider implementation="com.intellij.execution.impl.RunConfigurationBeforeRunProvider"/>
 
-    <hectorComponentProvider implementation="com.intellij.codeInsight.daemon.impl.ImportPopupHectorComponentProvider"/>
-
-
     <usageFilteringRuleProvider implementation="com.intellij.usages.impl.ImportUsageFilteringRuleProvider"/>
     <applicationService serviceInterface="com.intellij.usages.impl.ImportFilteringUsageViewSetting"
                         serviceImplementation="com.intellij.usages.impl.ImportFilteringUsageViewSetting"/>
@@ -2372,8 +2369,6 @@
     <applicationService serviceImplementation="com.intellij.codeInsight.documentation.QuickDocOnMouseOverManager"/>
     <postStartupActivity implementation="com.intellij.codeInsight.documentation.QuickDocOnMouseOverStartupActivity"/>
 
-    <hectorComponentProvider implementation="com.intellij.codeInsight.daemon.PowerSaveHectorProvider"/>
-
     <copyPastePostProcessor implementation="com.intellij.codeInsight.editorActions.CopyPasteIndentProcessor"/>
     <statistics.usagesCollector implementation="com.intellij.execution.impl.statistics.RunConfigurationTypeUsagesCollector"/>
     <statistics.usagesCollector implementation="com.intellij.execution.impl.statistics.TemporaryRunConfigurationTypeUsagesCollector"/>
@@ -2723,8 +2718,6 @@
 
     <projectService serviceImplementation="com.intellij.ide.util.gotoByName.SearchEverywhereConfiguration"/>
     <projectService serviceInterface="com.intellij.ide.actions.searcheverywhere.SearchEverywhereManager" serviceImplementation="com.intellij.ide.actions.searcheverywhere.SearchEverywhereManagerImpl"/>
-
-    <statusBarWidgetProvider implementation="com.intellij.openapi.wm.impl.status.TogglePopupHintsPanelProvider"/>
 
     <fileBreadcrumbsCollector implementation="com.intellij.ui.breadcrumbs.PsiFileBreadcrumbsCollector"/>
 

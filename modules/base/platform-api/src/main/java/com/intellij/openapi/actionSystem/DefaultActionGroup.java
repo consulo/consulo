@@ -31,6 +31,10 @@ public class DefaultActionGroup extends ActionGroup {
     return new DefaultActionGroup(shortName.get(), false);
   }
 
+  public static DefaultActionGroup createPopupGroup(@Nonnull Supplier<String> shortName) {
+    return new DefaultActionGroup(shortName.get(), true);
+  }
+
   private static final Logger LOG = Logger.getInstance(DefaultActionGroup.class);
   private static final String CANT_ADD_ITSELF = "Cannot add a group to itself: ";
   private static final String CANT_ADD_ACTION_TWICE = "Cannot add an action twice: ";

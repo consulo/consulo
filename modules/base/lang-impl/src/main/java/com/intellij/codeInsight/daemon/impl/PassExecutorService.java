@@ -534,14 +534,13 @@ final class PassExecutorService implements Disposable {
   }
 
   @Nonnull
-  List<TextEditorHighlightingPass> getAllSubmittedPasses() {
-    List<TextEditorHighlightingPass> result = new ArrayList<>(mySubmittedPasses.size());
+  List<HighlightingPass> getAllSubmittedPasses() {
+    List<HighlightingPass> result = new ArrayList<>(mySubmittedPasses.size());
     for (ScheduledPass scheduledPass : mySubmittedPasses.keySet()) {
       if (!scheduledPass.myUpdateProgress.isCanceled()) {
         result.add(scheduledPass.myPass);
       }
     }
-    sortById(result);
     return result;
   }
 

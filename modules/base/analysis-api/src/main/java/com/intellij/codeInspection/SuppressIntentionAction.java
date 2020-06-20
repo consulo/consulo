@@ -21,7 +21,6 @@
 package com.intellij.codeInspection;
 
 import com.intellij.codeInsight.intention.IntentionAction;
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.CaretModel;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -41,7 +40,7 @@ public abstract class SuppressIntentionAction implements Iconable, IntentionActi
 
   @Override
   public Image getIcon(int flags) {
-    return AllIcons.General.InspectionsOff;
+    return null;
   }
 
   @Override

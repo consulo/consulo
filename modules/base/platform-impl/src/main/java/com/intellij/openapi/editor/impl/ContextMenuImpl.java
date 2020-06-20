@@ -9,24 +9,21 @@ import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ui.TimerUtil;
+import consulo.desktop.editor.impl.DesktopEditorPanelLayer;
 import consulo.disposer.Disposable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * @author spleaner
  */
-public final class ContextMenuImpl extends JPanel implements Disposable {
-  @NonNls
+public final class ContextMenuImpl extends JPanel implements Disposable, DesktopEditorPanelLayer {
   public static final String ACTION_GROUP = "EditorContextBarMenu";
+
   private final JComponent myComponent;
-  private final JLayeredPane myLayeredPane;
   private ActionGroup myActionGroup;
   private boolean myVisible = false;
   private boolean myShow = false;
@@ -36,10 +33,9 @@ public final class ContextMenuImpl extends JPanel implements Disposable {
   private boolean myDisposed;
   private ActionToolbar myActionToolbar;
 
-  public ContextMenuImpl(JLayeredPane layeredPane, @Nonnull final JScrollPane container, @Nonnull final DesktopEditorImpl editor) {
-    setLayout(new BorderLayout(0, 0));
+  public ContextMenuImpl(@Nonnull final JScrollPane container, @Nonnull final DesktopEditorImpl editor) {
+    setLayout(new BorderLayout());
     myEditor = editor;
-    myLayeredPane = layeredPane;
 
     final ActionManager actionManager = ActionManager.getInstance();
 
@@ -106,65 +102,53 @@ public final class ContextMenuImpl extends JPanel implements Disposable {
       myTimer.stop();
     }
 
-    myTimer = TimerUtil.createNamedTimer("Restart context menu", 500, new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (myDisposed) return;
+    myTimer = TimerUtil.createNamedTimer("Restart context menu", 500, e -> {
+      if (myDisposed) return;
 
-        if (myTimer != null && myTimer.isRunning()) myTimer.stop();
+      if (myTimer != null && myTimer.isRunning()) myTimer.stop();
 
-        myActionToolbar.updateActionsImmediately();
-        if (((Container)myActionToolbar).getComponentCount() == 0) {
-          myShow = false;
-          return;
-        }
-
-        myTimer = TimerUtil.createNamedTimer("Restart context menu now", 50, new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent e1) {
-            if (myShow) {
-              if (myVisible) {
-                scheduleHide();
-                return;
-              }
-
-              if (myLayeredPane.getIndexOf(ContextMenuImpl.this) == -1) {
-                myCurrentOpacity = 0;
-                myLayeredPane.add(ContextMenuImpl.this, JLayeredPane.POPUP_LAYER);
-                ContextMenuImpl.this.setVisible(true);
-                myLayeredPane.revalidate();
-              }
-
-              myCurrentOpacity += 20;
-              if (myCurrentOpacity >= 100) {
-                myCurrentOpacity = 100;
-                myVisible = true;
-                myTimer.stop();
-
-                scheduleHide();
-              }
-            }
-            else {
-              if (!myVisible) {
-                if (myTimer != null && myTimer.isRunning()) myTimer.stop();
-                return;
-              }
-
-              myCurrentOpacity -= 20;
-              if (myCurrentOpacity <= 0) {
-                myCurrentOpacity = 0;
-                myVisible = false;
-                myLayeredPane.remove(ContextMenuImpl.this);
-                myLayeredPane.repaint();
-              }
-            }
-            repaint();
-          }
-        });
-
-        myTimer.setRepeats(true);
-        myTimer.start();
+      myActionToolbar.updateActionsImmediately();
+      if (((Container)myActionToolbar).getComponentCount() == 0) {
+        myShow = false;
+        return;
       }
+
+      myTimer = TimerUtil.createNamedTimer("Restart context menu now", 50, e1 -> {
+        if (myShow) {
+          if (myVisible) {
+            scheduleHide();
+            return;
+          }
+
+          ContextMenuImpl.this.setVisible(true);
+
+          myCurrentOpacity += 20;
+          if (myCurrentOpacity >= 100) {
+            myCurrentOpacity = 100;
+            myVisible = true;
+            myTimer.stop();
+
+            scheduleHide();
+          }
+        }
+        else {
+          if (!myVisible) {
+            if (myTimer != null && myTimer.isRunning()) myTimer.stop();
+            return;
+          }
+
+          myCurrentOpacity -= 20;
+          if (myCurrentOpacity <= 0) {
+            myCurrentOpacity = 0;
+            myVisible = false;
+            setVisible(false);
+          }
+        }
+        repaint();
+      });
+
+      myTimer.setRepeats(true);
+      myTimer.start();
     });
 
     myTimer.setRepeats(false);
@@ -187,22 +171,19 @@ public final class ContextMenuImpl extends JPanel implements Disposable {
       myTimer.stop();
     }
 
-    myTimer = TimerUtil.createNamedTimer("Hide context menu", 1500, new ActionListener() {
-      @Override
-      public void actionPerformed(final ActionEvent e) {
-        if (myDisposed) return;
+    myTimer = TimerUtil.createNamedTimer("Hide context menu", 1500, e -> {
+      if (myDisposed) return;
 
-        if (myComponent.isVisible()) {
-          final PointerInfo pointerInfo = MouseInfo.getPointerInfo();
-          if (pointerInfo != null) {
-            final Point location = pointerInfo.getLocation();
-            SwingUtilities.convertPointFromScreen(location, myComponent);
-            if (!myComponent.getBounds().contains(location)) {
-              toggleContextToolbar(false);
-            }
-            else {
-              scheduleHide();
-            }
+      if (myComponent.isVisible()) {
+        final PointerInfo pointerInfo = MouseInfo.getPointerInfo();
+        if (pointerInfo != null) {
+          final Point location = pointerInfo.getLocation();
+          SwingUtilities.convertPointFromScreen(location, myComponent);
+          if (!myComponent.getBounds().contains(location)) {
+            toggleContextToolbar(false);
+          }
+          else {
+            scheduleHide();
           }
         }
       }
@@ -225,6 +206,11 @@ public final class ContextMenuImpl extends JPanel implements Disposable {
     contextMenuPanel.add(toolbarComponent);
 
     return contextMenuPanel;
+  }
+
+  @Override
+  public int getPositionYInLayer() {
+    return 50;
   }
 
   private static class ContextMenuPanel extends JPanel {

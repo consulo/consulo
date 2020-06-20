@@ -16,6 +16,7 @@
 package com.intellij.openapi.util;
 
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 /**
  * Compute-once keep-forever lazy value.
@@ -66,6 +67,17 @@ public abstract class NotNullLazyValue<T> {
       @Override
       protected T compute() {
         return value.create();
+      }
+    };
+  }
+
+  @Nonnull
+  public static <T> NotNullLazyValue<T> createValue(@Nonnull final Supplier<T> value) {
+    return new NotNullLazyValue<T>() {
+      @Nonnull
+      @Override
+      protected T compute() {
+        return value.get();
       }
     };
   }

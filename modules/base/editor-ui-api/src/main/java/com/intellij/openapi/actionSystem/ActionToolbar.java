@@ -67,6 +67,26 @@ public interface ActionToolbar {
   Size NAVBAR_MINIMUM_BUTTON_SIZE = new Size(20, 20);
 
   /**
+   * Constraint that's passed to <code>Container.add</code> when ActionButton is added to the toolbar.
+   */
+  String ACTION_BUTTON_CONSTRAINT = "Constraint.ActionButton";
+
+  /**
+   * Constraint that's passed to <code>Container.add</code> when a custom component is added to the toolbar.
+   */
+  String CUSTOM_COMPONENT_CONSTRAINT = "Constraint.CustomComponent";
+
+  /**
+   * Constraint that's passed to <code>Container.add</code> when a Separator is added to the toolbar.
+   */
+  String SEPARATOR_CONSTRAINT = "Constraint.Separator";
+
+  /**
+   * Constraint that's passed to <code>Container.add</code> when a secondary action is added to the toolbar.
+   */
+  String SECONDARY_ACTION_CONSTRAINT = "Constraint.SecondaryAction";
+
+  /**
    * @return component which represents the tool bar on UI
    */
   @Nonnull

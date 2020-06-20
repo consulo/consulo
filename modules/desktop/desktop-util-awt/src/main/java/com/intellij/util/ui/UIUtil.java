@@ -16,7 +16,6 @@
 package com.intellij.util.ui;
 
 import com.intellij.BundleBase;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.registry.Registry;
@@ -35,6 +34,7 @@ import consulo.desktop.util.awt.AllIconsHack;
 import consulo.desktop.util.awt.MorphColor;
 import consulo.desktop.util.awt.StringHtmlUtil;
 import consulo.desktop.util.awt.laf.BuildInLookAndFeel;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.style.StyleManager;
@@ -42,9 +42,9 @@ import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.Timer;
 import javax.swing.*;
@@ -614,6 +614,47 @@ public class UIUtil {
     final Rectangle stringBounds = font.getStringBounds(string, frc).getBounds();
 
     return (int)(centerY - stringBounds.height / 2.0 - stringBounds.y);
+  }
+
+  public static void drawLabelDottedRectangle(final @Nonnull JLabel label, final @Nonnull Graphics g) {
+    drawLabelDottedRectangle(label, g, null);
+  }
+
+  public static void drawLabelDottedRectangle(final @Nonnull JLabel label, final @Nonnull Graphics g, @Nullable Rectangle bounds) {
+    if (bounds == null) {
+      bounds = getLabelTextBounds(label);
+    }
+    // JLabel draws the text relative to the baseline. So, we must ensure
+    // we draw the dotted rectangle relative to that same baseline.
+    FontMetrics fm = label.getFontMetrics(label.getFont());
+    int baseLine = label.getUI().getBaseline(label, label.getWidth(), label.getHeight());
+    int textY = baseLine - fm.getLeading() - fm.getAscent();
+    int textHeight = fm.getHeight();
+    drawDottedRectangle(g, bounds.x, textY, bounds.x + bounds.width - 1, textY + textHeight - 1);
+  }
+
+  @Nonnull
+  public static Rectangle getLabelTextBounds(final @Nonnull JLabel label) {
+    final Dimension size = label.getPreferredSize();
+    Icon icon = label.getIcon();
+    final Point point = new Point(0, 0);
+    final Insets insets = label.getInsets();
+    if (icon != null) {
+      if (label.getHorizontalTextPosition() == SwingConstants.TRAILING) {
+        point.x += label.getIconTextGap();
+        point.x += icon.getIconWidth();
+      }
+      else if (label.getHorizontalTextPosition() == SwingConstants.LEADING) {
+        size.width -= icon.getIconWidth();
+      }
+    }
+    point.x += insets.left;
+    point.y += insets.top;
+    size.width -= point.x;
+    size.width -= insets.right;
+    size.height -= insets.bottom;
+
+    return new Rectangle(point, size);
   }
 
   /**

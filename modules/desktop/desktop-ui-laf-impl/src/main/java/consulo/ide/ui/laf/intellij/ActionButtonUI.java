@@ -39,7 +39,7 @@ import java.awt.event.KeyEvent;
  *
  * Code extract from {@link com.intellij.openapi.actionSystem.impl.ActionButton}
  */
-public class ActionButtonUI extends ComponentUI {
+public class ActionButtonUI extends ComponentUI implements consulo.actionSystem.impl.ActionButtonUI {
   private static final Color ALPHA_20 = Gray._0.withAlpha(20);
   private static final Color ALPHA_30 = Gray._0.withAlpha(30);
   private static final Color ALPHA_40 = Gray._0.withAlpha(40);
@@ -118,11 +118,12 @@ public class ActionButtonUI extends ComponentUI {
     int state = c.getPopState();
 
     paintBackground(c, g, c.getSize(), state);
-    paintBorder(c, g, c.getSize(), state);
+    if(!c.isWithoutBorder()) {
+      paintBorder(c, g, c.getSize(), state);
+    }
     paintIcon(g, c, c.getIcon());
 
     if (c.shallPaintDownArrow()) {
-
       int x = JBUI.scale(5);
       int y = JBUI.scale(4);
 
@@ -135,7 +136,7 @@ public class ActionButtonUI extends ComponentUI {
     }
   }
 
-  protected void paintBorder(ActionButton button, Graphics g, Dimension size, int state) {
+  public void paintBorder(ActionButton button, Graphics g, Dimension size, int state) {
     if (state == ActionButtonComponent.NORMAL && !button.isBackgroundSet()) return;
 
     if (UIUtil.isUnderAquaLookAndFeel()) {
@@ -154,7 +155,7 @@ public class ActionButtonUI extends ComponentUI {
     }
   }
 
-  protected void paintBackground(ActionButton button, Graphics g, Dimension size, int state) {
+  public void paintBackground(ActionButton button, Graphics g, Dimension size, int state) {
     if (state == ActionButtonComponent.NORMAL && !button.isBackgroundSet()) return;
 
     if (UIUtil.isUnderAquaLookAndFeel()) {

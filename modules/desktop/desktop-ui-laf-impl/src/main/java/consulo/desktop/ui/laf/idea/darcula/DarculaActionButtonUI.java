@@ -36,7 +36,7 @@ public class DarculaActionButtonUI extends ActionButtonUI {
   }
 
   @Override
-  protected void paintBackground(ActionButton button, Graphics g, Dimension size, int state) {
+  public void paintBackground(ActionButton button, Graphics g, Dimension size, int state) {
     if (state == ActionButtonComponent.NORMAL && !button.isBackgroundSet()) return;
 
     Rectangle rect = new Rectangle(button.getSize());
@@ -59,7 +59,7 @@ public class DarculaActionButtonUI extends ActionButtonUI {
   }
 
   @Override
-  protected void paintBorder(ActionButton button, Graphics g, Dimension size, int state) {
+  public void paintBorder(ActionButton button, Graphics g, Dimension size, int state) {
     if (state == ActionButtonComponent.NORMAL && !button.isBackgroundSet()) return;
 
     Rectangle rect = new Rectangle(button.getSize());

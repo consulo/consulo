@@ -72,6 +72,10 @@ public class AllIcons {
     public static final SwingImageRef FileStatus = IconLoader.getIcon("/actions/fileStatus.png"); // 16x16
     public static final SwingImageRef Filter_small = IconLoader.getIcon("/actions/filter_small.png"); // 16x16
     public static final SwingImageRef Find = IconLoader.getIcon("/actions/find.png"); // 16x16
+
+
+    public static final Image FindAndShowNextMatchesSmall = IconLoader.getIcon("/actions/findAndShowNextMatchesSmall.svg");
+    public static final Image FindAndShowPrevMatchesSmall = IconLoader.getIcon("/actions/findAndShowPrevMatchesSmall.svg");
     public static final SwingImageRef FindPlain = IconLoader.getIcon("/actions/findPlain.png"); // 16x16
     public static final SwingImageRef FindWhite = IconLoader.getIcon("/actions/findWhite.png"); // 16x16
     public static final SwingImageRef ForceRefresh = IconLoader.getIcon("/actions/forceRefresh.png"); // 16x16
@@ -490,13 +494,14 @@ public class AllIcons {
     public static final SwingImageRef Information = IconLoader.getIcon("/general/information.png"); // 16x16
     public static final SwingImageRef InformationDialog = IconLoader.getIcon("/general/informationDialog.png"); // 32x32
     public static final SwingImageRef InheritedMethod = IconLoader.getIcon("/general/inheritedMethod.png"); // 11x14
-    public static final SwingImageRef InspectionsError = IconLoader.getIcon("/general/inspectionsError.png"); // 14x14
-    public static final SwingImageRef InspectionsEye = IconLoader.getIcon("/general/inspectionsEye.png"); // 14x14
-    public static final SwingImageRef InspectionsOff = IconLoader.getIcon("/general/inspectionsOff.png"); // 16x16
-    public static final SwingImageRef InspectionsOK = IconLoader.getIcon("/general/inspectionsOK.png"); // 14x14
-    public static final SwingImageRef InspectionsPause = IconLoader.getIcon("/general/inspectionsPause.png"); // 14x14
-    public static final SwingImageRef InspectionsTrafficOff = IconLoader.getIcon("/general/inspectionsTrafficOff.png"); // 14x14
-    public static final SwingImageRef InspectionsTypos = IconLoader.getIcon("/general/inspectionsTypos.png"); // 14x14
+    public static final SwingImageRef InspectionsError = IconLoader.getIcon("/general/inspectionsError.svg"); // 14x14
+    public static final SwingImageRef InspectionsEye = IconLoader.getIcon("/general/inspectionsEye.svg"); // 14x14
+    public static final SwingImageRef InspectionsOK = IconLoader.getIcon("/general/inspectionsOK.svg"); // 14x14
+    public static final SwingImageRef InspectionsPause = IconLoader.getIcon("/general/inspectionsPause.svg"); // 14x14
+    public static final SwingImageRef InspectionsTrafficOff = IconLoader.getIcon("/general/inspectionsTrafficOff.svg"); // 14x14
+    public static final SwingImageRef InspectionsPowerSaveMode = IconLoader.getIcon("/general/inspectionsPowerSaveMode.svg"); // 14x14
+    public static final SwingImageRef InspectionsTypos = IconLoader.getIcon("/general/inspectionsTypos.svg"); // 14x14
+    public static final Image LinkDropTriangle = IconLoader.getIcon("/general/linkDropTriangle.svg");
     public static final SwingImageRef Jdk = IconLoader.getIcon("/general/jdk.png"); // 16x16
     public static final SwingImageRef Youtube = IconLoader.getIcon("/general/youtube.png"); // 32x32
     public static final SwingImageRef KeyboardShortcut = IconLoader.getIcon("/general/keyboardShortcut.png"); // 13x13

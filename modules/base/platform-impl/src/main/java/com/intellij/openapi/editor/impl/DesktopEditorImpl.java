@@ -7,7 +7,6 @@ import com.intellij.diagnostic.Dumpable;
 import com.intellij.ide.*;
 import com.intellij.ide.dnd.DnDManager;
 import com.intellij.ide.ui.UISettings;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
@@ -54,7 +53,6 @@ import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.ui.*;
-import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.ui.components.JBScrollBar;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.mac.MacGestureSupportForEditor;
@@ -69,8 +67,12 @@ import com.intellij.util.ui.*;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.application.TransactionGuardEx;
+import consulo.desktop.editor.impl.DesktopEditorLayeredPanel;
+import consulo.desktop.editor.impl.StatusComponentContainer;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.disposer.TraceableDisposable;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
@@ -90,7 +92,6 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.ScrollBarUI;
 import javax.swing.plaf.ScrollPaneUI;
-import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
@@ -106,7 +107,6 @@ import java.awt.geom.Point2D;
 import java.awt.im.InputMethodRequests;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.text.CharacterIterator;
@@ -150,7 +150,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   private final EditorComponentImpl myEditorComponent;
   @Nonnull
   private final EditorGutterComponentImpl myGutterComponent;
-  private final consulo.disposer.TraceableDisposable myTraceableDisposable = consulo.disposer.TraceableDisposable.newTraceDisposable(true);
+  private final TraceableDisposable myTraceableDisposable = TraceableDisposable.newTraceDisposable(true);
   private final FocusModeModel myFocusModeModel;
   private volatile long myLastTypedActionTimestamp = -1;
   private String myLastTypedAction;
@@ -337,7 +337,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
   public final boolean myDisableRtl = Registry.is("editor.disable.rtl");
   public final Object myFractionalMetricsHintValue = Registry.is("editor.text.fractional.metrics") ? RenderingHints.VALUE_FRACTIONALMETRICS_ON : RenderingHints.VALUE_FRACTIONALMETRICS_OFF;
-  final EditorView myView;
+  public final EditorView myView;
 
   private boolean myCharKeyPressed;
   private boolean myNeedToSelectPreviousChar;
@@ -365,6 +365,8 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   private final EditorKind myKind;
 
   private boolean myScrollingToCaret;
+
+  private StatusComponentContainer myStatusComponentContainer = new StatusComponentContainer();
 
   DesktopEditorImpl(@Nonnull Document document, boolean viewer, @Nullable Project project, @Nonnull EditorKind kind) {
     assertIsDispatchThread();
@@ -999,14 +1001,14 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   /**
    * To be called when editor was not disposed while it should
    */
-  void throwEditorNotDisposedError(@NonNls @Nonnull final String msg) {
+  void throwEditorNotDisposedError(@Nonnull final String msg) {
     myTraceableDisposable.throwObjectNotDisposedError(msg);
   }
 
   /**
    * In case of "editor not disposed error" use {@link #throwEditorNotDisposedError(String)}
    */
-  public void throwDisposalError(@NonNls @Nonnull String msg) {
+  public void throwDisposalError(@Nonnull String msg) {
     myTraceableDisposable.throwDisposalError(msg);
   }
 
@@ -1075,38 +1077,14 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     myEditorComponent.setTransferHandler(new MyTransferHandler());
     myEditorComponent.setAutoscrolls(false); // we have our own auto-scrolling code
 
-    if (mayShowToolbar()) {
-      JLayeredPane layeredPane = new JBLayeredPane() {
-        @Override
-        public void doLayout() {
-          final Component[] components = getComponents();
-          final Rectangle r = getBounds();
-          for (Component c : components) {
-            if (c instanceof JScrollPane) {
-              c.setBounds(0, 0, r.width, r.height);
-            }
-            else {
-              final Dimension d = c.getPreferredSize();
-              int rightInsets = getVerticalScrollBar().getWidth() + (isMirrored() ? myGutterComponent.getWidth() : 0);
-              c.setBounds(r.width - d.width - rightInsets - 20, 20, d.width, d.height);
-            }
-          }
-        }
-
-        @Override
-        public Dimension getPreferredSize() {
-          return myScrollPane.getPreferredSize();
-        }
-      };
-
-      layeredPane.add(myScrollPane, JLayeredPane.DEFAULT_LAYER);
-      myPanel.add(layeredPane);
-
-      new ContextMenuImpl(layeredPane, myScrollPane, this);
+    DesktopEditorLayeredPanel layeredPanel = new DesktopEditorLayeredPanel(this);
+    layeredPanel.setMainPanel(myScrollPane);
+    if(mayShowToolbar()) {
+      layeredPanel.addLayerPanel(new ContextMenuImpl(myScrollPane, this));
     }
-    else {
-      myPanel.add(myScrollPane);
-    }
+    layeredPanel.addLayerPanel(myStatusComponentContainer.getPanel());
+
+    myPanel.add(layeredPanel.getPanel(), BorderLayout.CENTER);
 
     myEditorComponent.addKeyListener(new KeyListener() {
       @Override
@@ -1207,6 +1185,11 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
   private boolean mayShowToolbar() {
     return !isEmbeddedIntoDialogWrapper() && !isOneLineMode() && ContextMenuImpl.mayShowToolbar(myDocument);
+  }
+
+  @Override
+  public void setStatusComponent(@Nonnull JComponent component) {
+    myStatusComponentContainer.setComponent(component);
   }
 
   @Override
@@ -3052,9 +3035,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     }
   }
 
-  private static final Field decrButtonField = ReflectionUtil.getDeclaredField(BasicScrollBarUI.class, "decrButton");
-  private static final Field incrButtonField = ReflectionUtil.getDeclaredField(BasicScrollBarUI.class, "incrButton");
-
   class MyScrollBar extends JBScrollBar implements IdeGlassPane.TopComponent {
     private Consumer<Graphics> myRepaintCallback;
 
@@ -3254,7 +3234,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   }
 
   @Nonnull
-  MyScrollBar getVerticalScrollBar() {
+  public MyScrollBar getVerticalScrollBar() {
     return myVerticalScrollBar;
   }
 

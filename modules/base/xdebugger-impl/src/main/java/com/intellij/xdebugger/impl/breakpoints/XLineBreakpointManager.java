@@ -20,6 +20,7 @@ import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diff.impl.DiffUtil;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -29,7 +30,6 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.editor.markup.MarkupEditorFilterFactory;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditor;
@@ -57,8 +57,8 @@ import com.intellij.xdebugger.impl.XSourcePositionImpl;
 import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
 import consulo.disposer.Disposer;
 import gnu.trove.TIntHashSet;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.Collections;
@@ -250,7 +250,7 @@ public class XLineBreakpointManager {
     }
   }
 
-  private class MyEditorMouseListener extends EditorMouseAdapter {
+  private class MyEditorMouseListener implements EditorMouseListener {
     @Override
     public void mousePressed(EditorMouseEvent e) {
       myDragDetected = false;
@@ -264,7 +264,7 @@ public class XLineBreakpointManager {
           mouseEvent.isMetaDown() ||
           mouseEvent.isControlDown() ||
           mouseEvent.getButton() != MouseEvent.BUTTON1 ||
-          MarkupEditorFilterFactory.createIsDiffFilter().avaliableIn(editor) ||
+          DiffUtil.isDiffEditor(editor) ||
           !isInsideGutter(e, editor) ||
           ConsoleViewUtil.isConsoleViewEditor(editor) ||
           !isFromMyProject(editor) ||

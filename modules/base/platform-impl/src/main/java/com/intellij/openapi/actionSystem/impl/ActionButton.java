@@ -78,6 +78,8 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
   private boolean myMinimalMode;
   private boolean myDecorateButtons;
 
+  private boolean myWithoutBorder;
+
   @Deprecated
   @DeprecationInfo("Use constructor with Size parameter")
   public ActionButton(AnAction action, Presentation presentation, String place, @Nonnull Dimension minimumSize) {
@@ -119,6 +121,14 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
     putClientProperty(UIUtil.CENTER_TOOLTIP_DEFAULT, Boolean.TRUE);
 
     updateUI();
+  }
+
+  public boolean isWithoutBorder() {
+    return myWithoutBorder;
+  }
+
+  public void setWithoutBorder(boolean withoutBorder) {
+    myWithoutBorder = withoutBorder;
   }
 
   public boolean shallPaintDownArrow() {

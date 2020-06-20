@@ -15,15 +15,17 @@
  */
 package com.intellij.openapi.util;
 
+import java.util.function.Supplier;
+
 /**
  * @author dsl
  */
-public interface Factory<T> {
-  Factory NULL_FACTORY = new Factory() {
-    public Object create() {
-      return null;
-    }
-  };
+public interface Factory<T> extends Supplier<T> {
+  Factory NULL_FACTORY = () -> null;
 
   T create();
+
+  default T get() {
+    return create();
+  }
 }

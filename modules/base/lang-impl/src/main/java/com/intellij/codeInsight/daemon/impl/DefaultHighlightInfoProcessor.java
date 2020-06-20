@@ -8,8 +8,8 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
-import com.intellij.openapi.editor.impl.DesktopEditorMarkupModelImpl;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.project.DumbService;
@@ -20,9 +20,9 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.Alarm;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +65,7 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
   }
 
   static void repaintErrorStripeAndIcon(@Nonnull Editor editor, @Nonnull Project project) {
-    DesktopEditorMarkupModelImpl markup = (DesktopEditorMarkupModelImpl)editor.getMarkupModel();
+    EditorMarkupModel markup = (EditorMarkupModel)editor.getMarkupModel();
     markup.repaintTrafficLightIcon();
     ErrorStripeUpdateManager.getInstance(project).repaintErrorStripePanel(editor);
   }

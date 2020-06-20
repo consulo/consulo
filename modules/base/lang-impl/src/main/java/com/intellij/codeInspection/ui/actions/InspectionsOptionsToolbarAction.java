@@ -41,7 +41,7 @@ public class InspectionsOptionsToolbarAction extends AnAction {
   private final InspectionResultsView myView;
 
   public InspectionsOptionsToolbarAction(final InspectionResultsView view) {
-    super(getToolOptions(null), getToolOptions(null), AllIcons.General.InspectionsOff);
+    super(getToolOptions(null), getToolOptions(null), AllIcons.General.InspectionsTrafficOff);
     myView = view;
   }
 

@@ -1,26 +1,12 @@
-/*
- * Copyright 2000-2011 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.ui;
 
 import gnu.trove.TIntDoubleHashMap;
 import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntObjectHashMap;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 
 /**
@@ -54,8 +40,7 @@ import java.awt.*;
  * </pre>
  * Note that every call of {@link #nextLine()} or {@link #next()} resets settings to the defaults for the corresponding column.
  */
-@SuppressWarnings({"JavaDoc"})
-public class GridBag extends GridBagConstraints {
+public final class GridBag extends GridBagConstraints {
   private int myDefaultAnchor = anchor;
   @Nonnull
   private final TIntIntHashMap myDefaultColumnAnchors = new TIntIntHashMap();
@@ -81,7 +66,7 @@ public class GridBag extends GridBagConstraints {
   @Nullable
   private Insets myDefaultInsets = insets;
   @Nonnull
-  private final TIntObjectHashMap<Insets> myDefaultColumnInsets = new TIntObjectHashMap<Insets>();
+  private final TIntObjectHashMap<Insets> myDefaultColumnInsets = new TIntObjectHashMap<>();
 
   public GridBag() {
     gridx = gridy = -1;
@@ -216,11 +201,31 @@ public class GridBag extends GridBagConstraints {
 
 
   /**
-   * @see #insets(java.awt.Insets)
+   * @see #insets(Insets)
    */
   @Nonnull
   public GridBag insets(int top, int left, int bottom, int right) {
-    return insets(new Insets(top, left, bottom, right));
+    return insets(JBUI.insets(top, left, bottom, right));
+  }
+
+  @Nonnull
+  public GridBag insetTop(int top) {
+    return insets(JBUI.insets(top, -1, -1, -1));
+  }
+
+  @Nonnull
+  public GridBag insetBottom(int bottom) {
+    return insets(JBUI.insets(-1, -1, bottom, -1));
+  }
+
+  @Nonnull
+  public GridBag insetLeft(int left) {
+    return insets(JBUI.insets(-1, left, -1, -1));
+  }
+
+  @Nonnull
+  public GridBag insetRight(int right) {
+    return insets(JBUI.insets(-1, -1, -1, right));
   }
 
   /**
@@ -400,7 +405,7 @@ public class GridBag extends GridBagConstraints {
 
   @Nonnull
   public GridBag setDefaultInsets(int top, int left, int bottom, int right) {
-    return setDefaultInsets(new Insets(top, left, bottom, right));
+    return setDefaultInsets(JBUI.insets(top, left, bottom, right));
   }
 
   public GridBag setDefaultInsets(@Nullable Insets insets) {
@@ -415,7 +420,7 @@ public class GridBag extends GridBagConstraints {
 
   @Nonnull
   public GridBag setDefaultInsets(int column, int top, int left, int bottom, int right) {
-    return setDefaultInsets(column, new Insets(top, left, bottom, right));
+    return setDefaultInsets(column, JBUI.insets(top, left, bottom, right));
   }
 
   @Nonnull

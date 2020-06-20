@@ -48,7 +48,6 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     public int CUSTOM_SOFT_WRAP_INDENT = 0;
     public boolean IS_VIRTUAL_SPACE = false;
     public boolean IS_CARET_INSIDE_TABS;
-    @NonNls
     public String STRIP_TRAILING_SPACES = STRIP_TRAILING_SPACES_CHANGED;
     public boolean IS_ENSURE_NEWLINE_AT_EOF = false;
     public boolean SHOW_QUICK_DOC_ON_MOUSE_OVER_ELEMENT = false;
@@ -62,6 +61,7 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     public boolean IS_FOLDING_OUTLINE_SHOWN = true;
     public boolean SHOW_BREADCRUMBS = true;
     public boolean SHOW_BREADCRUMBS_ABOVE = false;
+    public boolean SHOW_INSPECTION_WIDGET = true;
 
     public boolean SMART_HOME = true;
 
@@ -656,5 +656,13 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
 
   public void setKeepTrailingSpacesOnCaretLine(boolean keep) {
     myOptions.KEEP_TRAILING_SPACE_ON_CARET_LINE = keep;
+  }
+
+  public boolean isShowInspectionWidget() {
+    return myOptions.SHOW_INSPECTION_WIDGET;
+  }
+
+  public void setShowInspectionWidget(boolean show) {
+    myOptions.SHOW_INSPECTION_WIDGET = show;
   }
 }

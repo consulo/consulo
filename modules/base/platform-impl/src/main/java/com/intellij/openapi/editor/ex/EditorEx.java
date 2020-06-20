@@ -358,4 +358,8 @@ public interface EditorEx extends Editor {
    * currently set custom cursors, one of them will be used (it is unspecified, which one).
    */
   void setCustomCursor(@Nonnull Object requestor, @Nullable Cursor cursor);
+
+  default void setStatusComponent(@Nonnull JComponent component) {
+    // nothing
+  }
 }
