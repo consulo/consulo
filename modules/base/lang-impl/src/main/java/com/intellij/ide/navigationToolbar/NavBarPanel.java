@@ -32,7 +32,6 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.customization.CustomActionsSchema;
 import com.intellij.ide.ui.customization.CustomizationUtil;
 import com.intellij.ide.util.DeleteHandler;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
@@ -43,8 +42,6 @@ import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.AsyncResult;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
@@ -63,6 +60,10 @@ import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.ui.popup.PopupOwner;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ui.accessibility.ScreenReader;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -186,6 +187,25 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
   public void setUI(PanelUI ui) {
     getNavBarUI().clearItems();
     super.setUI(ui);
+  }
+
+  public boolean isFocused() {
+    if (allowNavItemsFocus()) {
+      return UIUtil.isFocusAncestor(this);
+    }
+    else {
+      return hasFocus();
+    }
+  }
+
+  /**
+   * Navigation bar entry point to determine if the keyboard/focus behavior should be
+   * compatible with screen readers. This additional level of indirection makes it
+   * easier to figure out the various locations in the various navigation bar components
+   * that enable screen reader friendly behavior.
+   */
+  protected boolean allowNavItemsFocus() {
+    return ScreenReader.isActive();
   }
 
   public NavBarUpdateQueue getUpdateQueue() {

@@ -24,10 +24,6 @@ import java.awt.*;
  * @author Konstantin Bulenkov
  */
 public class DarculaNavBarUI extends CommonNavBarUI {
-  @Override
-  public void doPaintNavBarPanel(Graphics2D g, Rectangle r, boolean mainToolbarVisible, boolean undocked) {
-  }
-
   @Nullable
   @Override
   public Color getForeground(boolean selected, boolean focused, boolean inactive) {

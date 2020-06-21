@@ -750,6 +750,7 @@ public class AllIcons {
     public static final SwingImageRef SharedScope = IconLoader.getIcon("/ide/sharedScope.png"); // 16x16
     public static final SwingImageRef Statusbar_arrows = IconLoader.getIcon("/ide/statusbar_arrows.png"); // 7x10
     public static final SwingImageRef UpDown = IconLoader.getIcon("/ide/upDown.png"); // 16x16
+    public static final SwingImageRef NavBarSeparator = IconLoader.getIcon("/ide/navBarSeparator.svg"); // 16x16
 
   }
 
