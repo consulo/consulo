@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.project.impl;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.ProjectManager;
 import org.jdom.Element;
 
@@ -29,8 +30,8 @@ public class DefaultProjectImpl extends ProjectImpl {
 
   private Element myStateElement;
 
-  DefaultProjectImpl(@Nonnull ProjectManager manager, @Nonnull String filePath, boolean optimiseTestLoadSpeed) {
-    super(manager, filePath, optimiseTestLoadSpeed, TEMPLATE_PROJECT_NAME, false);
+  DefaultProjectImpl(@Nonnull Application application, @Nonnull ProjectManager manager, @Nonnull String filePath, boolean optimiseTestLoadSpeed) {
+    super(application, manager, filePath, optimiseTestLoadSpeed, TEMPLATE_PROJECT_NAME, false);
   }
 
   @Nullable

@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.module;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -66,6 +67,11 @@ public interface Module extends ComponentManager, Disposable, Named {
    */
   @Nonnull
   Project getProject();
+
+  @Nonnull
+  default Application getApplication() {
+    return getProject().getApplication();
+  }
 
   /**
    * Returns the name of this module.

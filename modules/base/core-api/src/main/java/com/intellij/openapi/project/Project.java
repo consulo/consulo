@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.project;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -28,6 +29,12 @@ import javax.annotation.Nullable;
  */
 public interface Project extends ComponentManager {
   String DIRECTORY_STORE_FOLDER = ".consulo";
+
+  /**
+   * @return project annotation
+   */
+  @Nonnull
+  Application getApplication();
 
   /**
    * Returns a name ot the project. For a directory-based project it's an arbitrary string specified by user at project creation

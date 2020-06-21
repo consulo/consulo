@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.command.impl;
 
+import com.intellij.openapi.application.Application;
 import consulo.container.plugin.ComponentConfig;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
@@ -49,6 +50,12 @@ public class DummyProject extends UserDataHolderBase implements Project {
   @Override
   public VirtualFile getProjectFile() {
     return null;
+  }
+
+  @Nonnull
+  @Override
+  public Application getApplication() {
+    throw new UnsupportedOperationException();
   }
 
   @Override

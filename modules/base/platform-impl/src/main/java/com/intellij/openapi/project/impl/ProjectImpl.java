@@ -17,8 +17,7 @@ package com.intellij.openapi.project.impl;
 
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
@@ -54,7 +53,6 @@ import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -73,6 +71,8 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   public static final String NAME_FILE = ".name";
 
+  @Nonnull
+  private final ApplicationEx myApplication;
   private final ProjectManager myManager;
   @Nonnull
   private final String myDirPath;
@@ -90,13 +90,14 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   private final List<ProjectComponent> myProjectComponents = new CopyOnWriteArrayList<>();
 
-  protected ProjectImpl(@Nonnull ProjectManager manager, @Nonnull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName, boolean noUIThread) {
-    super(ApplicationManager.getApplication(), "Project " + (projectName == null ? dirPath : projectName), ExtensionAreaId.PROJECT);
+  protected ProjectImpl(@Nonnull Application application, @Nonnull ProjectManager manager, @Nonnull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName, boolean noUIThread) {
+    super(application, "Project " + (projectName == null ? dirPath : projectName), ExtensionAreaId.PROJECT);
+    myApplication = (ApplicationEx)application;
     myDirPath = dirPath;
 
     putUserData(CREATION_TIME, System.nanoTime());
 
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
+    if (myApplication.isUnitTestMode()) {
       putUserData(CREATION_TRACE, DebugUtil.currentStackTrace());
     }
 
@@ -119,6 +120,12 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   @Nullable
   public String getCreationTrace() {
     return getUserData(CREATION_TRACE);
+  }
+
+  @Override
+  @Nonnull
+  public Application getApplication() {
+    return myApplication;
   }
 
   @Nullable
@@ -230,14 +237,12 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     return myName;
   }
 
-  @NonNls
   @Override
   public String getPresentableUrl() {
     return getStateStore().getPresentableUrl();
   }
 
   @Nonnull
-  @NonNls
   @Override
   public String getLocationHash() {
     String str = getPresentableUrl();
@@ -278,7 +283,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   @Override
   public void save() {
-    if (ApplicationManagerEx.getApplicationEx().isDoNotSave()) {
+    if (myApplication.isDoNotSave()) {
       // no need to save
       return;
     }
@@ -311,7 +316,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
     finally {
       mySavingInProgress.set(false);
-      ApplicationManager.getApplication().getMessageBus().syncPublisher(ProjectSaved.TOPIC).saved(this);
+      myApplication.getMessageBus().syncPublisher(ProjectSaved.TOPIC).saved(this);
     }
   }
 
@@ -322,7 +327,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   }
 
   private void saveAsyncImpl(@Nonnull UIAccess uiAccess) {
-    if (ApplicationManagerEx.getApplicationEx().isDoNotSave()) {
+    if (myApplication.isDoNotSave()) {
       // no need to save
       return;
     }
@@ -357,18 +362,17 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
     finally {
       mySavingInProgress.set(false);
-      ApplicationManager.getApplication().getMessageBus().syncPublisher(ProjectSaved.TOPIC).saved(this);
+      myApplication.getMessageBus().syncPublisher(ProjectSaved.TOPIC).saved(this);
     }
   }
 
   @RequiredUIAccess
   @Override
   public void dispose() {
-    Application application = Application.get();
-    assert application.isWriteAccessAllowed();  // dispose must be under write action
+    assert myApplication.isWriteAccessAllowed();  // dispose must be under write action
 
     // can call dispose only via com.intellij.ide.impl.ProjectUtil.closeAndDispose()
-    LOG.assertTrue(application.isUnitTestMode() || !ProjectManagerEx.getInstanceEx().isProjectOpened(this));
+    LOG.assertTrue(myApplication.isUnitTestMode() || !ProjectManagerEx.getInstanceEx().isProjectOpened(this));
 
     LOG.assertTrue(!isDisposed());
     if (myProjectManagerListener != null) {
@@ -425,7 +429,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     return false;
   }
 
-  @NonNls
   @Override
   public String toString() {
     return "Project" +

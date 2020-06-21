@@ -15,6 +15,7 @@
  */
 package com.intellij.mock;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Condition;
@@ -38,6 +39,12 @@ public class MockProject extends MockComponentManager implements Project {
 
   public MockProject(MockComponentManager parent, @Nonnull Disposable parentDisposable) {
     super(parent, parentDisposable);
+  }
+
+  @Nonnull
+  @Override
+  public Application getApplication() {
+    return Application.get();
   }
 
   @Override

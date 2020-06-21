@@ -19,15 +19,14 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.DefaultProjectFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import consulo.disposer.Disposer;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 
@@ -40,7 +39,7 @@ import java.io.IOException;
 /**
  * @author yole
  */
-@State(name = "ProjectManager", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/project.default.xml")})
+@State(name = "ProjectManager", storages = @Storage("project.default.xml"))
 @Singleton
 public class DefaultProjectFactoryImpl extends DefaultProjectFactory implements PersistentStateComponent<Element>, Disposable {
   private static final Logger LOG = Logger.getInstance(DefaultProjectFactoryImpl.class);
@@ -49,8 +48,8 @@ public class DefaultProjectFactoryImpl extends DefaultProjectFactory implements 
   private boolean myDefaultProjectWasDisposed = false;
 
   @Inject
-  public DefaultProjectFactoryImpl(Application application, ProjectManager projectManager) {
-    myDefaultProject = new DefaultProjectImpl(projectManager, "", application.isUnitTestMode());
+  public DefaultProjectFactoryImpl(@Nonnull Application application, @Nonnull ProjectManager projectManager) {
+    myDefaultProject = new DefaultProjectImpl(application, projectManager, "", application.isUnitTestMode());
     myDefaultProject.initNotLazyServices(null);
   }
 

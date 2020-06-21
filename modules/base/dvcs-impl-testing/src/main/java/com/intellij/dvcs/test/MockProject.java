@@ -15,6 +15,7 @@
  */
 package com.intellij.dvcs.test;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Condition;
@@ -36,6 +37,12 @@ public class MockProject implements Project {
 
   public MockProject(String projectDir) {
     myProjectDir = projectDir;
+  }
+
+  @Nonnull
+  @Override
+  public Application getApplication() {
+    throw new UnsupportedOperationException();
   }
 
   @Nonnull

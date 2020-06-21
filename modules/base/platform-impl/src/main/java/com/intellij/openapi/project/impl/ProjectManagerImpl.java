@@ -22,15 +22,14 @@ import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.notification.NotificationsManager;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.impl.ModuleManagerComponent;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.impl.ModuleManagerComponent;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.project.*;
 import com.intellij.openapi.project.ex.ProjectEx;
@@ -52,6 +51,7 @@ import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.messages.MessageBus;
+import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.awt.TargetAWT;
@@ -60,16 +60,16 @@ import consulo.components.impl.stores.StorageUtil;
 import consulo.components.impl.stores.storage.StateStorageBase;
 import consulo.components.impl.stores.storage.StateStorageManager;
 import consulo.components.impl.stores.storage.VfsFileBasedStorage;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.start.WelcomeFrameManager;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
 import gnu.trove.THashSet;
 import org.jdom.JDOMException;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -126,10 +126,11 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
 
     MessageBus messageBus = application.getMessageBus();
 
-    myExcludeRootsCache = new ExcludeRootsCache(messageBus.connect());
-    messageBus.connect().subscribe(TOPIC, new ProjectManagerListener() {
+    MessageBusConnection connection = messageBus.connect();
+    myExcludeRootsCache = new ExcludeRootsCache(connection);
+    connection.subscribe(TOPIC, new ProjectManagerListener() {
       @Override
-      public void projectOpened(Project project, UIAccess uiAccess) {
+      public void projectOpened(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
         project.getMessageBus().connect(project).subscribe(StateStorage.STORAGE_TOPIC, (event, storage) -> projectStorageFileChanged(event, storage, project));
 
         myDeprecatedListenerDispatcher.getMulticaster().projectOpened(project, uiAccess);
@@ -140,7 +141,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
       }
 
       @Override
-      public void projectClosed(Project project, UIAccess uiAccess) {
+      public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
         myDeprecatedListenerDispatcher.getMulticaster().projectClosed(project, uiAccess);
 
         for (ProjectManagerListener listener : getListeners(project)) {
@@ -152,7 +153,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
       }
 
       @Override
-      public void projectClosing(Project project) {
+      public void projectClosing(@Nonnull Project project) {
         myDeprecatedListenerDispatcher.getMulticaster().projectClosing(project);
 
         for (ProjectManagerListener listener : getListeners(project)) {
@@ -160,7 +161,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
         }
       }
     });
-
     virtualFileManager.addVirtualFileManagerListener(new VirtualFileManagerAdapter() {
       @Override
       public void beforeRefreshStart(boolean asynchronous) {
@@ -230,7 +230,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
     }
   }
 
-  @NonNls
+  @Nonnull
   private static String message(Throwable e) {
     String message = e.getMessage();
     if (message != null) return message;
@@ -279,7 +279,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
 
   @Nonnull
   private ProjectImpl createProject(@Nullable String projectName, @Nonnull String dirPath, boolean isDefault, boolean isOptimiseTestLoadSpeed, boolean noUICall) {
-    return new ProjectImpl(this, new File(dirPath).getAbsolutePath(), isOptimiseTestLoadSpeed, projectName, noUICall);
+    return new ProjectImpl(myApplication, this, new File(dirPath).getAbsolutePath(), isOptimiseTestLoadSpeed, projectName, noUICall);
   }
 
   @Override

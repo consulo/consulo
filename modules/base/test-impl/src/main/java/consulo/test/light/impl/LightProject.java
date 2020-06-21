@@ -15,16 +15,16 @@
  */
 package consulo.test.light.impl;
 
-import consulo.container.plugin.PluginListenerDescriptor;
-import com.intellij.openapi.components.ComponentManager;
-import com.intellij.openapi.extensions.impl.ExtensionAreaId;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
+import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.MultiMap;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.container.plugin.PluginListenerDescriptor;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.ui.UIAccess;
 
@@ -37,16 +37,25 @@ import javax.annotation.Nullable;
  */
 public class LightProject extends ComponentManagerImpl implements Project {
   @Nonnull
+  private final Application myApplication;
+  @Nonnull
   private final String myName;
   @Nonnull
   private final LightExtensionRegistrator myRegistrator;
 
-  public LightProject(@Nullable ComponentManager parent, @Nonnull String name, @Nonnull LightExtensionRegistrator registrator) {
-    super(parent, name, ExtensionAreaId.PROJECT, false);
+  public LightProject(@Nonnull Application application, @Nonnull String name, @Nonnull LightExtensionRegistrator registrator) {
+    super(application, name, ExtensionAreaId.PROJECT, false);
+    myApplication = application;
     myName = name;
     myRegistrator = registrator;
 
     buildInjectingContainer();
+  }
+
+  @Nonnull
+  @Override
+  public Application getApplication() {
+    return myApplication;
   }
 
   @Override
