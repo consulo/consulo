@@ -69,7 +69,7 @@ public abstract class StructureAwareNavBarModelExtension extends AbstractNavBarM
   @Override
   @RequiredReadAction
   public PsiElement getLeafElement(@Nonnull DataContext dataContext) {
-    if (UISettings.getInstance().SNOW_MEMBERS_IN_NAVIGATION_BAR) {
+    if (UISettings.getInstance().getShowMembersInNavigationBar()) {
       PsiFile psiFile = dataContext.getData(CommonDataKeys.PSI_FILE);
       Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
       if (psiFile == null || editor == null) return null;
@@ -90,7 +90,7 @@ public abstract class StructureAwareNavBarModelExtension extends AbstractNavBarM
   @Override
   @RequiredReadAction
   public boolean processChildren(Object object, Object rootElement, Processor<Object> processor) {
-    if (UISettings.getInstance().SNOW_MEMBERS_IN_NAVIGATION_BAR) {
+    if (UISettings.getInstance().getShowMembersInNavigationBar()) {
       if (object instanceof PsiElement) {
         if (((PsiElement)object).getLanguage() == getLanguage()) {
           StructureViewModel model = buildStructureViewModel(((PsiElement)object).getContainingFile(), null);
