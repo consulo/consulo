@@ -16,12 +16,12 @@
 package com.intellij.util;
 
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotation.DeprecationInfo;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotation.DeprecationInfo;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -137,7 +137,7 @@ public class CommonProcessors {
   }
 
   public abstract static class FindProcessor<T> implements Processor<T> {
-    private T myValue = null;
+    private T myValue;
 
     public boolean isFound() {
       return myValue != null;
@@ -148,16 +148,37 @@ public class CommonProcessors {
       return myValue;
     }
 
+    @Nullable
+    public T reset() {
+      T prev = myValue;
+      myValue = null;
+      return prev;
+    }
+
     @Override
     public boolean process(T t) {
       if (accept(t)) {
         myValue = t;
         return false;
       }
-      else return true;
+      return true;
     }
 
     protected abstract boolean accept(T t);
+  }
+
+  public static class FindFirstAndOnlyProcessor<T> extends FindFirstProcessor<T> {
+
+    @Override
+    public boolean process(T t) {
+      boolean firstFound = getFoundValue() != null;
+      boolean result = super.process(t);
+      if (!result) {
+        if (firstFound) reset();
+        return !firstFound;
+      }
+      return true;
+    }
   }
 
   public static class FindFirstProcessor<T> extends FindProcessor<T> {

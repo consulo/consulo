@@ -19,7 +19,10 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.List;
 
 public interface StructureViewExtension {
 
@@ -28,6 +31,10 @@ public interface StructureViewExtension {
   Class<? extends PsiElement> getType();
 
   StructureViewTreeElement[] getChildren(PsiElement parent);
+
   @Nullable
   Object getCurrentEditorElement(Editor editor, PsiElement parent);
+
+  default void filterChildren(@Nonnull Collection<StructureViewTreeElement> baseChildren, @Nonnull List<StructureViewTreeElement> extensionChildren) {
+  }
 }

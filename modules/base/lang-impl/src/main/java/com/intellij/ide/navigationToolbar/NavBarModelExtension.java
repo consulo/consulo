@@ -20,14 +20,26 @@
  */
 package com.intellij.ide.navigationToolbar;
 
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
-import javax.annotation.Nullable;
+import com.intellij.util.Processor;
+import consulo.util.dataholder.Key;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 
+/**
+ * The interface has a default implementation ({@link DefaultNavBarExtension}) which is normally registered as last.
+ * That means that custom implementations are called before the default one - with the exception of {@link #adjustElement(PsiElement)}
+ * method, for which the order is reverse.
+ *
+ * @author anna
+ */
 public interface NavBarModelExtension {
   ExtensionPointName<NavBarModelExtension> EP_NAME = ExtensionPointName.create("com.intellij.navbar");
 
@@ -35,10 +47,37 @@ public interface NavBarModelExtension {
   String getPresentableText(Object object);
 
   @Nullable
-  PsiElement getParent(PsiElement psiElement);
+  default String getPresentableText(Object object, boolean forPopup) {
+    return getPresentableText(object);
+  }
+
+  @Nullable
+  PsiElement getParent(@Nonnull PsiElement psiElement);
 
   @Nullable
   PsiElement adjustElement(PsiElement psiElement);
 
   Collection<VirtualFile> additionalRoots(Project project);
+
+  @Nullable
+  default Object getData(@Nonnull Key<?> dataId, @Nonnull DataProvider provider) {
+    return null;
+  }
+
+  @Nullable
+  default String getPopupMenuGroup(@Nonnull DataProvider provider) {
+    return null;
+  }
+
+  default PsiElement getLeafElement(@Nonnull DataContext dataContext) {
+    return null;
+  }
+
+  default boolean processChildren(Object object, Object rootElement, Processor<Object> processor) {
+    return true;
+  }
+
+  default boolean normalizeChildren() {
+    return true;
+  }
 }

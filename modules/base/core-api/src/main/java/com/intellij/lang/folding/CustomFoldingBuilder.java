@@ -26,9 +26,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.containers.hash.HashSet;
 import consulo.annotation.access.RequiredReadAction;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -216,6 +216,11 @@ public abstract class CustomFoldingBuilder extends FoldingBuilderEx implements P
    */
   protected boolean isCustomFoldingCandidate(ASTNode node) {
     return node.getPsi() instanceof PsiComment;
+  }
+
+  public final boolean isCustomFoldingCandidate(@Nonnull PsiElement element) {
+    ASTNode node = element.getNode();
+    return node != null && isCustomFoldingCandidate(node);
   }
 
   /**
