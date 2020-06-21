@@ -22,21 +22,20 @@ import com.intellij.openapi.options.ex.WholeWestSingleConfigurableEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Couple;
-import javax.annotation.Nonnull;
-
 import consulo.ui.annotation.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.awt.*;
 
 public class EditConfigurationsDialog extends WholeWestSingleConfigurableEditor implements RunConfigurable.RunDialogBase {
   protected Executor myExecutor;
 
   public EditConfigurationsDialog(final Project project) {
-    super(project, new RunConfigurable(project));
+    super(project, new RunConfigurable(project), "com.intellij.execution.impl.EditConfigurationsDialog");
     getConfigurable().setRunDialog(this);
     setTitle(ExecutionBundle.message("run.debug.dialog.title"));
-    setHorizontalStretch(1.3F);
   }
 
   @Override
@@ -66,8 +65,8 @@ public class EditConfigurationsDialog extends WholeWestSingleConfigurableEditor 
   }
 
   @Override
-  protected String getDimensionServiceKey() {
-    return "#com.intellij.execution.impl.EditConfigurationsDialog";
+  public Dimension getDefaultSize() {
+    return new Dimension(750, 500);
   }
 
   @Nullable

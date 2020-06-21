@@ -18,7 +18,6 @@ package com.intellij.openapi.options.ex;
 import com.intellij.CommonBundle;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
@@ -280,10 +279,5 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
     super.dispose();
     myConfigurable.disposeUIResources();
     myConfigurable = null;
-  }
-
-  @Override
-  public void show() {
-    TransactionGuard.getInstance().submitTransactionAndWait(super::show);
   }
 }

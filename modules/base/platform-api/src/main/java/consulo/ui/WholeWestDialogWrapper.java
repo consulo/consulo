@@ -125,7 +125,6 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
     }
 
     String dimensionKey = getDimensionKey();
-
     if (dimensionKey != null) {
       final Project projectGuess = DataManager.getInstance().getDataContext(rightComponent).getData(CommonDataKeys.PROJECT);
       WindowStateService stateService = projectGuess == null ? WindowStateService.getInstance() : WindowStateService.getInstance(projectGuess);

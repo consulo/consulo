@@ -40,8 +40,7 @@ public class EditRunConfigurationsAction extends AnAction {
       //setup template project configurations
       project = ProjectManager.getInstance().getDefaultProject();
     }
-    final EditConfigurationsDialog dialog = new EditConfigurationsDialog(project);
-    dialog.show();
+    new EditConfigurationsDialog(project).showAsync();
   }
 
   @RequiredUIAccess
