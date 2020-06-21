@@ -19,7 +19,6 @@ import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.ui.UIAccess;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,7 +27,7 @@ import javax.annotation.Nullable;
  * Project interface class.
  */
 public interface Project extends ComponentManager {
-  @NonNls String DIRECTORY_STORE_FOLDER = ".consulo";
+  String DIRECTORY_STORE_FOLDER = ".consulo";
 
   /**
    * Returns a name ot the project. For a directory-based project it's an arbitrary string specified by user at project creation
@@ -37,7 +36,6 @@ public interface Project extends ComponentManager {
    * @return project name
    */
   @Nonnull
-  @NonNls
   String getName();
 
   /**
@@ -56,14 +54,13 @@ public interface Project extends ComponentManager {
    *
    * @return a path to a project base directory, or <code>null</code> for default project
    */
-  @NonNls
   String getBasePath();
 
   /**
    * Returns project descriptor file:
    * <ul>
-   *   <li><code>path/to/project/project.ipr</code> - for file-based projects</li>
-   *   <li><code>path/to/project/.consulo/misc.xml</code> - for directory-based projects</li>
+   * <li><code>path/to/project/project.ipr</code> - for file-based projects</li>
+   * <li><code>path/to/project/.consulo/misc.xml</code> - for directory-based projects</li>
    * </ul>
    * Returns <code>null</code> for default project.
    *
@@ -79,7 +76,6 @@ public interface Project extends ComponentManager {
    * @return project descriptor file, or empty string for default project
    */
   @Nonnull
-  @NonNls
   String getProjectFilePath();
 
   /**
@@ -91,14 +87,13 @@ public interface Project extends ComponentManager {
    * @return presentable project path
    */
   @Nullable
-  @NonNls
   String getPresentableUrl();
 
   /**
    * <p>Returns a workspace file:
    * <ul>
-   *   <li><code>path/to/project/project.iws</code> - for file-based projects</li>
-   *   <li><code>path/to/project/.consulo/workspace.xml</code> - for directory-based ones</li>
+   * <li><code>path/to/project/project.iws</code> - for file-based projects</li>
+   * <li><code>path/to/project/.consulo/workspace.xml</code> - for directory-based ones</li>
    * </ul>
    * Returns <code>null</code> for default project.
    *
@@ -108,7 +103,6 @@ public interface Project extends ComponentManager {
   VirtualFile getWorkspaceFile();
 
   @Nonnull
-  @NonNls
   String getLocationHash();
 
   void save();
