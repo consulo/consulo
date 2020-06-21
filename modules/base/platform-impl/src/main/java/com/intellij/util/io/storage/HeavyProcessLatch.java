@@ -2,10 +2,10 @@
 package com.intellij.util.io.storage;
 
 import com.intellij.codeInsight.daemon.DaemonBundle;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.EventDispatcher;
+import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

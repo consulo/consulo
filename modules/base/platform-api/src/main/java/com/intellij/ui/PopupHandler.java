@@ -23,7 +23,9 @@ import com.intellij.openapi.application.ApplicationManager;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
+import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -57,17 +59,38 @@ public abstract class PopupHandler extends MouseAdapter {
     }
   }
 
-  public static void installPopupHandler(JComponent component, @NonNls String groupId, String place) {
-    ActionGroup group = (ActionGroup)ActionManager.getInstance().getAction(groupId);
-    installPopupHandler(component, group, place, ActionManager.getInstance());
+  public static void installPopupHandler(JComponent component, @NonNls String groupId, @NonNls String place) {
+    ActionManager actionManager = ActionManager.getInstance();
+    ActionGroup group = (ActionGroup)actionManager.getAction(groupId);
+    installPopupHandler(component, group, place, actionManager);
   }
 
-  public static MouseListener installPopupHandler(JComponent component, @Nonnull final ActionGroup group, final String place, final ActionManager actionManager) {
-    if (ApplicationManager.getApplication() == null) return new MouseAdapter(){};
+  @Nonnull
+  public static MouseListener installPopupHandler(JComponent component, @Nonnull ActionGroup group, @NonNls String place) {
+    return installPopupHandler(component, group, place, ActionManager.getInstance());
+  }
+
+  @Nonnull
+  public static MouseListener installPopupHandler(JComponent component, @Nonnull ActionGroup group, @NonNls String place, ActionManager actionManager) {
+    return installPopupHandler(component, group, place, actionManager, null);
+  }
+
+  @Nonnull
+  public static MouseListener installPopupHandler(@Nonnull JComponent component,
+                                                  @Nonnull ActionGroup group,
+                                                  @NonNls String place,
+                                                  @Nonnull ActionManager actionManager,
+                                                  @Nullable PopupMenuListener menuListener) {
+    if (ApplicationManager.getApplication() == null) return new MouseAdapter() {
+    };
     PopupHandler popupHandler = new PopupHandler() {
+      @Override
       public void invokePopup(Component comp, int x, int y) {
-        final ActionPopupMenu popupMenu = actionManager.createActionPopupMenu(place, group);
-        popupMenu.getComponent().show(comp, x, y);
+        ActionPopupMenu popupMenu = actionManager.createActionPopupMenu(place, group);
+        popupMenu.setTargetComponent(component);
+        JPopupMenu menu = popupMenu.getComponent();
+        if (menuListener != null) menu.addPopupMenuListener(menuListener);
+        menu.show(comp, x, y);
       }
     };
     component.addMouseListener(popupHandler);

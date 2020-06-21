@@ -1157,4 +1157,16 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
       throw new UnsupportedOperationException();
     }
   }
+
+  protected class AccessibleSimpleColoredComponent extends JComponent.AccessibleJComponent {
+    @Override
+    public String getAccessibleName() {
+      return getCharSequence(false).toString();
+    }
+
+    @Override
+    public AccessibleRole getAccessibleRole() {
+      return AccessibleRole.LABEL;
+    }
+  }
 }

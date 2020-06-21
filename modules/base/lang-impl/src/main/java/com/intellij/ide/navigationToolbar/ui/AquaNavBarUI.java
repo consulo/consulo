@@ -31,11 +31,6 @@ public class AquaNavBarUI extends AbstractNavBarUI {
   }
 
   @Override
-  public boolean isDrawMacShadow(boolean selected, boolean focused) {
-    return !selected;
-  }
-
-  @Override
   public void doPaintWrapperPanel(Graphics2D g, Rectangle bounds, boolean mainToolbarVisible) {
     UIUtil.drawGradientHToolbarBackground(g, bounds.width, bounds.height);
   }
