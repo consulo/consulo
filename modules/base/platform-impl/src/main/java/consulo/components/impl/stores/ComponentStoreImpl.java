@@ -164,7 +164,6 @@ public abstract class ComponentStoreImpl implements IComponentStore {
       long oldCount = myComponentsModificationCount.get(componentInfo.getName());
 
       if(count == oldCount) {
-        LOG.info("Skiping component " + componentInfo.getName() + " - no modification");
         return;
       }
 
