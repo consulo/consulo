@@ -79,6 +79,8 @@ public class DesktopEditorErrorPanel extends JComponent implements UISettingsLis
     mySmallIconVisible = !EditorSettingsExternalizable.getInstance().isShowInspectionWidget();
 
     updateUI();
+
+    uiSettingsChanged(UISettings.getInstance());
   }
 
   @Nonnull
@@ -242,14 +244,19 @@ public class DesktopEditorErrorPanel extends JComponent implements UISettingsLis
   @Override
   public void updateUI() {
     setUI(DesktopEditorErrorPanelUI.createUI(this));
-
-    setBorder(JBUI.Borders.customLine(JBColor.border(), 1, 0, 0, 0));
   }
 
   @Override
   public void uiSettingsChanged(UISettings source) {
-    if (!UISettings.getInstance().SHOW_EDITOR_TOOLTIP) {
+    if (!source.SHOW_EDITOR_TOOLTIP) {
       hideMyEditorPreviewHint();
+    }
+
+    if(source.EDITOR_TAB_PLACEMENT == UISettings.PLACEMENT_EDITOR_TAB_NONE) {
+      setBorder(JBUI.Borders.customLine(JBColor.border(), 1, 0, 0, 0));
+    }
+    else {
+      setBorder(JBUI.Borders.empty());
     }
   }
 
