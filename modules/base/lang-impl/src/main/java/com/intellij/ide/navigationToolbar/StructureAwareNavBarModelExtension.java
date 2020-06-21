@@ -135,7 +135,7 @@ public abstract class StructureAwareNavBarModelExtension extends AbstractNavBarM
     for (TreeElement child : childrenFromNodeAndProviders(root)) {
       if(child instanceof StructureViewTreeElement) {
         if(Comparing.equal(((StructureViewTreeElement)child).getValue(), psiElement)) {
-          return ObjectUtil.tryCast(((StructureViewTreeElement)child).getValue(), PsiElement.class);
+          return ObjectUtil.tryCast(root.getValue(), PsiElement.class);
         }
         PsiElement target = findParentInModel((StructureViewTreeElement)child, psiElement);
         if(target != null) {
