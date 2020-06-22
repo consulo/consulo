@@ -303,6 +303,8 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
   @Override
   public void setErrorStripeVisible(boolean val) {
     myErrorPanel.setPopupHandler(null);
+
+    myStatusPanel.setTrafficLightIconVisible(val);
     if (val) {
       myEditor.getPanel().add(myErrorPanel, myEditor.getVerticalScrollbarOrientation() == EditorEx.VERTICAL_SCROLLBAR_LEFT ? BorderLayout.WEST : BorderLayout.EAST);
     }

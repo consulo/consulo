@@ -786,7 +786,6 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
     myModel = model;
     myEditor = (DesktopEditorImpl)model.getEditor();
     myStatusUpdates = new MergingUpdateQueue(getClass().getName(), 50, true, MergingUpdateQueue.ANY_COMPONENT, this);
-    trafficLightVisible = true;
 
     AnAction nextErrorAction = createAction("GotoNextError", AllIcons.Actions.FindAndShowNextMatchesSmall);
     AnAction prevErrorAction = createAction("GotoPreviousError", AllIcons.Actions.FindAndShowPrevMatchesSmall);
