@@ -323,6 +323,14 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
       catch (InterruptedException ex) {
         throw new ProcessCanceledException(ex);
       }
+      catch (ProcessCanceledException ex) {
+        Exception creationTrace = ex.getCreationTrace();
+        if(creationTrace != null) {
+          LOG.error(new Exception("Process canceled,", creationTrace));
+        }
+
+        throw ex;
+      }
       catch (Exception ex) {
         LOG.error(ex);
       }

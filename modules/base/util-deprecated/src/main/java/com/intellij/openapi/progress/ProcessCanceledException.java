@@ -20,9 +20,27 @@ import com.intellij.openapi.diagnostic.ControlFlowException;
 import javax.annotation.Nullable;
 
 public class ProcessCanceledException extends RuntimeException implements ControlFlowException {
-  public ProcessCanceledException() { }
+  private static final boolean ourDebugCreationTrace = Boolean.getBoolean("consulo.debug.creationg.trace");
+
+  private final Exception myCreationTrace;
+
+  public ProcessCanceledException() {
+    this(null);
+  }
 
   public ProcessCanceledException(@Nullable Throwable cause) {
     super(cause);
+
+    if (ourDebugCreationTrace) {
+      myCreationTrace = new Exception();
+    }
+    else {
+      myCreationTrace = null;
+    }
+  }
+
+  @Nullable
+  public Exception getCreationTrace() {
+    return myCreationTrace;
   }
 }
