@@ -16,19 +16,18 @@
 
 package com.intellij.application.options.colors;
 
-import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
-import com.intellij.codeInsight.daemon.impl.TrafficLightRenderer;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
+import com.intellij.openapi.editor.markup.ErrorStripeRenderer;
 import com.intellij.util.EventDispatcher;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.swing.*;
 import java.awt.*;
 
 public class FontEditorPreview implements PreviewPanel{
@@ -65,19 +64,21 @@ public class FontEditorPreview implements PreviewPanel{
   }
 
   static void installTrafficLights(@Nonnull EditorEx editor) {
-    TrafficLightRenderer renderer = new TrafficLightRenderer(null, null) {
-      @Nonnull
-      @Override
-      protected DaemonCodeAnalyzerStatus getDaemonCodeAnalyzerStatus(@Nonnull SeverityRegistrar severityRegistrar) {
-        DaemonCodeAnalyzerStatus status = new DaemonCodeAnalyzerStatus();
-        status.errorAnalyzingFinished = true;
-        status.errorCount = new int[]{1, 2};
-        return status;
-      }
-    };
-    Disposer.register((Disposable)editor.getCaretModel(), renderer);
-    ((EditorMarkupModel)editor.getMarkupModel()).setErrorStripeRenderer(renderer);
+    ((EditorMarkupModel)editor.getMarkupModel()).setErrorStripeRenderer(new DumbTrafficLightRenderer());
     ((EditorMarkupModel)editor.getMarkupModel()).setErrorStripeVisible(true);
+  }
+
+  private static class DumbTrafficLightRenderer implements ErrorStripeRenderer {
+    @Override
+    public void paint(@Nonnull Component c, Graphics g, @Nonnull Rectangle r) {
+      Icon icon = AllIcons.General.InspectionsOK;
+      icon.paintIcon(c, g, r.x, r.y);
+    }
+
+    @Override
+    public int getSquareSize() {
+      return AllIcons.General.InspectionsOK.getIconHeight();
+    }
   }
 
   static Editor createPreviewEditor(String text, int column, int line, int selectedLine, ColorAndFontOptions options, boolean editable) {
