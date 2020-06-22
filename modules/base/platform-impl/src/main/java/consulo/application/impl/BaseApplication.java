@@ -373,7 +373,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @Nonnull
   @Override
   public Future<?> executeOnPooledThread(@Nonnull final Runnable action) {
-    return myThreadExecutorsService.submit(new CallableAsRunnable(action));
+    return myThreadExecutorsService.submit(new RunnableAsCallable(action));
   }
 
   @Nonnull
