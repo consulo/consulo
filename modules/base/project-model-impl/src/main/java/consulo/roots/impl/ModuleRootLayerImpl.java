@@ -339,8 +339,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @SuppressWarnings("unchecked")
   @RequiredReadAction
   public void createMutableExtensions(@Nullable ModuleRootLayerImpl layer) {
-    ModuleExtensionProviderEP[] providers = ModuleExtensionProviders.getProviders();
-    myExtensions = new ModuleExtension[providers.length];
+    List<ModuleExtensionProviderEP> providers = ModuleExtensionProviders.getProviders();
+    myExtensions = new ModuleExtension[providers.size()];
     for (ModuleExtensionProviderEP providerEP : providers) {
       MutableModuleExtension mutable = providerEP.createMutable(this);
       if (mutable == null) {
@@ -425,7 +425,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
 
   @SuppressWarnings("unchecked")
   public boolean areExtensionsChanged(@Nonnull ModuleRootLayerImpl original) {
-    for (int i = 0; i < ModuleExtensionProviders.getProviders().length; i++) {
+    for (int i = 0; i < ModuleExtensionProviders.getProviders().size(); i++) {
       MutableModuleExtension selfExtension = getExtension0(i);
       ModuleExtension originalExtension = original.getExtension0(i);
 

@@ -25,7 +25,7 @@ import java.util.function.Supplier;
  *
  * @author peter
  */
-public abstract class NotNullLazyValue<T> {
+public abstract class NotNullLazyValue<T> implements Supplier<T> {
   private static final RecursionGuard ourGuard = RecursionManager.createGuard("NotNullLazyValue");
   private T myValue;
 
@@ -43,6 +43,11 @@ public abstract class NotNullLazyValue<T> {
       }
     }
     return result;
+  }
+
+  @Override
+  public T get() {
+    return getValue();
   }
 
   public boolean isComputed() {

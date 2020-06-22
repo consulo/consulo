@@ -20,7 +20,6 @@ import com.intellij.CommonBundle;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.openapi.util.NullableFactory;
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Tag;
 import consulo.injecting.InjectingContainerOwner;
@@ -90,15 +89,15 @@ public abstract class ConfigurableEP<T extends UnnamedConfigurable> extends Abst
   @Attribute("provider")
   public String providerClass;
 
-  private final AtomicNotNullLazyValue<NullableFactory<T>> myFactory;
+  private final AtomicNotNullLazyValue<ConfigrableFactory<T>> myFactory;
   protected InjectingContainerOwner myContainerOwner;
 
   protected ConfigurableEP(InjectingContainerOwner containerOwner) {
     myContainerOwner = containerOwner;
-    myFactory = new AtomicNotNullLazyValue<NullableFactory<T>>() {
+    myFactory = new AtomicNotNullLazyValue<ConfigrableFactory<T>>() {
       @Nonnull
       @Override
-      protected NullableFactory<T> compute() {
+      protected ConfigrableFactory<T> compute() {
         if (providerClass != null) {
           return new InstanceFromProviderFactory();
         }
@@ -129,7 +128,11 @@ public abstract class ConfigurableEP<T extends UnnamedConfigurable> extends Abst
     return getDisplayName();
   }
 
-  private class InstanceFromProviderFactory extends AtomicNotNullLazyValue<ConfigurableProvider> implements NullableFactory<T> {
+  private interface ConfigrableFactory<K extends UnnamedConfigurable> {
+    K create();
+  }
+
+  private class InstanceFromProviderFactory extends AtomicNotNullLazyValue<ConfigurableProvider> implements ConfigrableFactory<T> {
     @Override
     public T create() {
       return (T)getValue().createConfigurable();
@@ -147,7 +150,7 @@ public abstract class ConfigurableEP<T extends UnnamedConfigurable> extends Abst
     }
   }
 
-  private class NewInstanceFactory extends NotNullLazyValue<Class<? extends T>> implements NullableFactory<T> {
+  private class NewInstanceFactory extends NotNullLazyValue<Class<? extends T>> implements ConfigrableFactory<T> {
     @Override
     public T create() {
       return instantiate(getValue(), myContainerOwner.getInjectingContainer());
@@ -165,7 +168,7 @@ public abstract class ConfigurableEP<T extends UnnamedConfigurable> extends Abst
     }
   }
 
-  private class ImplementationFactory extends AtomicNotNullLazyValue<T> implements NullableFactory<T> {
+  private class ImplementationFactory extends AtomicNotNullLazyValue<T> implements ConfigrableFactory<T> {
     @Override
     public T create() {
       return compute();

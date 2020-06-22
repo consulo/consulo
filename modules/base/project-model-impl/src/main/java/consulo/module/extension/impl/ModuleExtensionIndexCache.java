@@ -18,9 +18,8 @@ package consulo.module.extension.impl;
 import com.intellij.util.ArrayUtil;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
-import gnu.trove.THashMap;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 
 /**
@@ -28,53 +27,55 @@ import java.util.Map;
  * @since 25-Nov-16.
  */
 public class ModuleExtensionIndexCache {
-  private static final Map<Class<?>, int[]> ourClassCache = new THashMap<>();
+  private static volatile Map<Class<?>, int[]> ourClassCache;
 
   @Nonnull
   public static int[] get(@Nonnull Class<?> clazz) {
+    if (ourClassCache == null) {
+      throw new IllegalArgumentException("Calling #get() without initializing.");
+    }
+
     int[] ints = ourClassCache.get(clazz);
     return ints == null ? ArrayUtil.EMPTY_INT_ARRAY : ints;
   }
 
-  public static void put(@Nonnull Class<?> clazz, int index) {
-    put0(clazz, index);
+  public static void putMap(@Nonnull Map<Class<?>, int[]> map) {
+    ourClassCache = map;
   }
 
-  private static void put0(Class<?> clazz, int index) {
+  public static void putToMap(@Nonnull Map<Class<?>, int[]> map, @Nonnull Class<?> clazz, int index) {
+    putToMap0(map, clazz, index);
+  }
+
+  private static void putToMap0(@Nonnull Map<Class<?>, int[]> map, Class<?> clazz, int index) {
     Class temp = clazz;
 
     do {
-      if (temp == ModuleExtensionWithSdkImpl.class ||
-          temp == ModuleExtensionImpl.class ||
-          temp == ModuleExtension.class ||
-          temp == ModuleExtensionWithSdk.class) {
+      if (temp == ModuleExtensionWithSdkImpl.class || temp == ModuleExtensionImpl.class || temp == ModuleExtension.class || temp == ModuleExtensionWithSdk.class) {
         break;
       }
 
-      putImpl(temp, index);
+      putToMapImpl(map, temp, index);
 
       Class[] interfaces = temp.getInterfaces();
       for (Class intef : interfaces) {
-        put0(intef, index);
+        putToMap0(map, intef, index);
       }
     }
     while ((temp = temp.getSuperclass()) != null);
   }
 
-  private static void putImpl(Class<?> temp, int index) {
-    if (temp == ModuleExtensionWithSdkImpl.class ||
-        temp == ModuleExtensionImpl.class ||
-        temp == ModuleExtension.class ||
-        temp == ModuleExtensionWithSdk.class) {
+  private static void putToMapImpl(@Nonnull Map<Class<?>, int[]> map, Class<?> temp, int index) {
+    if (temp == ModuleExtensionWithSdkImpl.class || temp == ModuleExtensionImpl.class || temp == ModuleExtension.class || temp == ModuleExtensionWithSdk.class) {
       return;
     }
 
-    int[] ints = ourClassCache.get(temp);
+    int[] ints = map.get(temp);
     if (ints == null) {
-      ourClassCache.put(temp, new int[]{index});
+      map.put(temp, new int[]{index});
     }
     else {
-      ourClassCache.put(temp, ArrayUtil.append(ints, index));
+      map.put(temp, ArrayUtil.append(ints, index));
     }
   }
 }

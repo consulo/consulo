@@ -17,19 +17,30 @@
 package com.intellij.openapi.util;
 
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 /**
  * @author peter
  */
 public abstract class AtomicNotNullLazyValue<T> extends NotNullLazyValue<T> {
-  @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
   @Nonnull
-  public static <T> AtomicNotNullLazyValue<T> createValue(@Nonnull final NotNullFactory<T> value) {
-    return new AtomicNotNullLazyValue<T>() {
+  public static <K> AtomicNotNullLazyValue<K> createValue(@Nonnull final NotNullFactory<K> value) {
+    return new AtomicNotNullLazyValue<K>() {
       @Nonnull
       @Override
-      protected T compute() {
+      protected K compute() {
         return value.create();
+      }
+    };
+  }
+
+  @Nonnull
+  public static <K> AtomicNotNullLazyValue<K> createValue(@Nonnull final Supplier<K> value) {
+    return new AtomicNotNullLazyValue<K>() {
+      @Nonnull
+      @Override
+      protected K compute() {
+        return value.get();
       }
     };
   }

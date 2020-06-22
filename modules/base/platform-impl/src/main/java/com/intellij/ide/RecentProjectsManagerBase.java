@@ -100,7 +100,7 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
   protected RecentProjectsManagerBase(@Nonnull Application application) {
     MessageBusConnection connection = application.getMessageBus().connect();
     connection.subscribe(AppLifecycleListener.TOPIC, new MyAppLifecycleListener());
-    if (!ApplicationManager.getApplication().isHeadlessEnvironment()) {
+    if (!application.isHeadlessEnvironment()) {
       connection.subscribe(ProjectManager.TOPIC, new MyProjectListener());
     }
   }
@@ -462,10 +462,10 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
           forceNewFrame = false;
         }
       }
+
       for (String openPath : openPaths) {
         if (isValidProjectPath(openPath)) {
           ProjectUtil.openAsync(openPath, null, forceNewFrame, UIAccess.current());
-          break;
         }
       }
     }

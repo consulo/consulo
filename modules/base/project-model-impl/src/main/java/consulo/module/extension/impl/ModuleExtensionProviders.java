@@ -16,15 +16,18 @@
 package consulo.module.extension.impl;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import com.intellij.openapi.util.NotNullLazyValue;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionProviderEP;
 import consulo.module.extension.MutableModuleExtension;
-import gnu.trove.THashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -33,37 +36,31 @@ import java.util.Map;
 public class ModuleExtensionProviders {
   private static final ExtensionPointName<ModuleExtensionProviderEP> EP_NAME = ExtensionPointName.create("com.intellij.moduleExtensionProvider");
 
-  private static final NotNullLazyValue<ModuleExtensionProviderEP[]> ourExtensions = new NotNullLazyValue<ModuleExtensionProviderEP[]>() {
-    @Nonnull
-    @Override
-    protected ModuleExtensionProviderEP[] compute() {
-      ModuleExtensionProviderEP[] extensions = EP_NAME.getExtensions();
-      for (ModuleExtensionProviderEP extension : extensions) {
-        Class<ModuleExtension> immutableClass = extension.getImmutableClass();
-        if (immutableClass != null) {
-          ModuleExtensionIndexCache.put(immutableClass, extension.getInternalIndex());
-        }
-
-        Class<MutableModuleExtension> mutableClass = extension.getMutableClass();
-        if (mutableClass != null) {
-          ModuleExtensionIndexCache.put(mutableClass, extension.getInternalIndex());
-        }
+  private static final Supplier<List<ModuleExtensionProviderEP>> ourExtensions = AtomicNotNullLazyValue.createValue(() -> {
+    List<ModuleExtensionProviderEP> extensions = EP_NAME.getExtensionList();
+    Map<Class<?>, int[]> map = new HashMap<>();
+    for (ModuleExtensionProviderEP extension : extensions) {
+      Class<ModuleExtension> immutableClass = extension.getImmutableClass();
+      if (immutableClass != null) {
+        ModuleExtensionIndexCache.putToMap(map, immutableClass, extension.getInternalIndex());
       }
-      return extensions;
-    }
-  };
 
-  private static NotNullLazyValue<Map<String, ModuleExtensionProviderEP>> ourAllExtensionsValue = new NotNullLazyValue<Map<String, ModuleExtensionProviderEP>>() {
-    @Nonnull
-    @Override
-    protected Map<String, ModuleExtensionProviderEP> compute() {
-      Map<String, ModuleExtensionProviderEP> map = new THashMap<>();
-      for (ModuleExtensionProviderEP ep : getProviders()) {
-        map.put(ep.key, ep);
+      Class<MutableModuleExtension> mutableClass = extension.getMutableClass();
+      if (mutableClass != null) {
+        ModuleExtensionIndexCache.putToMap(map, mutableClass, extension.getInternalIndex());
       }
-      return map;
     }
-  };
+    ModuleExtensionIndexCache.putMap(map);
+    return extensions;
+  });
+
+  private static Supplier<Map<String, ModuleExtensionProviderEP>> ourAllExtensionsValue = NotNullLazyValue.createValue(() -> {
+    Map<String, ModuleExtensionProviderEP> map = new HashMap<>();
+    for (ModuleExtensionProviderEP ep : getProviders()) {
+      map.put(ep.key, ep);
+    }
+    return map;
+  });
 
   @Nonnull
   public static String getEpName() {
@@ -71,12 +68,12 @@ public class ModuleExtensionProviders {
   }
 
   @Nonnull
-  public static ModuleExtensionProviderEP[] getProviders() {
-    return ourExtensions.getValue();
+  public static List<ModuleExtensionProviderEP> getProviders() {
+    return ourExtensions.get();
   }
 
   @Nullable
   public static ModuleExtensionProviderEP findProvider(@Nonnull String id) {
-    return ourAllExtensionsValue.getValue().get(id);
+    return ourAllExtensionsValue.get().get(id);
   }
 }

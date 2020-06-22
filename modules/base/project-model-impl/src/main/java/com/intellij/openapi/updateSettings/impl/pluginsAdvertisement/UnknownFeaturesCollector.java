@@ -18,10 +18,9 @@ package com.intellij.openapi.updateSettings.impl.pluginsAdvertisement;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,16 +28,10 @@ import java.util.Set;
  * User: anna
  */
 @Singleton
-@State(
-  name = "UnknownFeatures",
-  storages = {
-    @Storage(
-      file = StoragePathMacros.WORKSPACE_FILE
-    )}
-)
+@State(name = "UnknownFeatures", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 public class UnknownFeaturesCollector implements PersistentStateComponent<Element> {
-  @NonNls private static final String FEATURE_ID = "featureType";
-  @NonNls private static final String IMPLEMENTATION_NAME = "implementationName";
+  private static final String FEATURE_ID = "featureType";
+  private static final String IMPLEMENTATION_NAME = "implementationName";
 
   private final Set<UnknownExtension> myUnknownExtensions = new HashSet<>();
   private final Set<UnknownExtension> myIgnoredUnknownExtensions = new HashSet<>();
@@ -85,8 +78,7 @@ public class UnknownFeaturesCollector implements PersistentStateComponent<Elemen
   public void loadState(Element state) {
     myIgnoredUnknownExtensions.clear();
     for (Element element : state.getChildren()) {
-      myIgnoredUnknownExtensions.add(
-        new UnknownExtension(element.getAttributeValue(FEATURE_ID), element.getAttributeValue(IMPLEMENTATION_NAME)));
+      myIgnoredUnknownExtensions.add(new UnknownExtension(element.getAttributeValue(FEATURE_ID), element.getAttributeValue(IMPLEMENTATION_NAME)));
     }
   }
 }
