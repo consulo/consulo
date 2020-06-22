@@ -34,10 +34,8 @@ import com.intellij.util.SystemProperties;
 import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;
-
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class ProjectViewProjectNode extends AbstractProjectNode {
@@ -107,12 +105,7 @@ public class ProjectViewProjectNode extends AbstractProjectNode {
       userHome = null;
     }
 
-    Collections.sort(roots, new java.util.Comparator<VirtualFile>() {
-      @Override
-      public int compare(VirtualFile o1, VirtualFile o2) {
-        return o1.getPath().compareTo(o2.getPath());
-      }
-    });
+    Collections.sort(roots, (o1, o2) -> o1.getPath().compareTo(o2.getPath()));
 
     Iterator<VirtualFile> it = roots.iterator();
     VirtualFile current = it.next();
@@ -136,22 +129,20 @@ public class ProjectViewProjectNode extends AbstractProjectNode {
   }
 
   @Override
-  protected AbstractTreeNode createModuleGroup(final Module module)
-    throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+  protected AbstractTreeNode createModuleGroup(final Module module) {
     final VirtualFile[] roots = ModuleRootManager.getInstance(module).getContentRoots();
     if (roots.length == 1) {
       final PsiDirectory psi = PsiManager.getInstance(myProject).findDirectory(roots[0]);
       if (psi != null) {
-        return createTreeNode(PsiDirectoryNode.class, myProject, psi, getSettings());
+        return new PsiDirectoryNode(myProject, psi, getSettings());
       }
     }
 
-    return createTreeNode(ProjectViewModuleNode.class, getProject(), module, getSettings());
+    return new ProjectViewModuleNode(getProject(), module, getSettings());
   }
 
   @Override
-  protected AbstractTreeNode createModuleGroupNode(final ModuleGroup moduleGroup)
-    throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-    return createTreeNode(ProjectViewModuleGroupNode.class, getProject(), moduleGroup, getSettings());
+  protected AbstractTreeNode createModuleGroupNode(final ModuleGroup moduleGroup) {
+    return new ProjectViewModuleGroupNode(getProject(), moduleGroup, getSettings());
   }
 }

@@ -33,7 +33,6 @@ import consulo.logging.Logger;
 import gnu.trove.THashMap;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public abstract class AbstractProjectNode extends ProjectViewNode<Project> {
@@ -78,11 +77,9 @@ public abstract class AbstractProjectNode extends ProjectViewNode<Project> {
     return result;
   }
 
-  protected abstract AbstractTreeNode createModuleGroup(final Module module)
-    throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException;
+  protected abstract AbstractTreeNode createModuleGroup(final Module module);
 
-  protected abstract AbstractTreeNode createModuleGroupNode(final ModuleGroup moduleGroup)
-    throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException;
+  protected abstract AbstractTreeNode createModuleGroupNode(final ModuleGroup moduleGroup);
 
   @Override
   public void update(PresentationData presentation) {
@@ -99,7 +96,6 @@ public abstract class AbstractProjectNode extends ProjectViewNode<Project> {
   public boolean contains(@Nonnull VirtualFile file) {
     ProjectFileIndex index = ProjectRootManager.getInstance(getProject()).getFileIndex();
     final VirtualFile baseDir = getProject().getBaseDir();
-    return index.isInContent(file) || index.isInLibraryClasses(file) || index.isInLibrarySource(file) ||
-           (baseDir != null && VfsUtil.isAncestor(baseDir, file, false));
+    return index.isInContent(file) || index.isInLibraryClasses(file) || index.isInLibrarySource(file) || (baseDir != null && VfsUtil.isAncestor(baseDir, file, false));
   }
-  }
+}

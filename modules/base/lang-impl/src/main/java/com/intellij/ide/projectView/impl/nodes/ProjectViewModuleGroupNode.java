@@ -26,8 +26,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;
 
-import java.lang.reflect.InvocationTargetException;
-
 /**
  * User: anna
  * Date: Feb 22, 2005
@@ -42,23 +40,20 @@ public class ProjectViewModuleGroupNode extends ModuleGroupNode {
   }
 
   @Override
-  protected AbstractTreeNode createModuleNode(Module module)
-    throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+  protected AbstractTreeNode createModuleNode(Module module) {
     final VirtualFile[] roots = ModuleRootManager.getInstance(module).getContentRoots();
     if (roots.length == 1) {
       final PsiDirectory psi = PsiManager.getInstance(myProject).findDirectory(roots[0]);
       if (psi != null) {
-        return createTreeNode(PsiDirectoryNode.class, myProject, psi, getSettings());
+        return new PsiDirectoryNode(myProject, psi, getSettings());
       }
     }
 
-    return createTreeNode(ProjectViewModuleNode.class, getProject(), module, getSettings());
+    return new ProjectViewModuleNode(getProject(), module, getSettings());
   }
 
   @Override
   protected ModuleGroupNode createModuleGroupNode(ModuleGroup moduleGroup) {
     return new ProjectViewModuleGroupNode(getProject(), moduleGroup, getSettings());
   }
-
-
 }

@@ -17,7 +17,6 @@ package com.intellij.ide.projectView;
 
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.progress.ProcessCanceledException;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
@@ -29,12 +28,17 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.psi.util.PsiUtilBase;
+import consulo.annotation.DeprecationInfo;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A node in the project view tree.
@@ -42,7 +46,7 @@ import java.util.*;
  * @see TreeStructureProvider#modify(AbstractTreeNode, Collection, ViewSettings)
  */
 
-public abstract class ProjectViewNode <Value> extends AbstractTreeNode<Value> implements RootsProvider {
+public abstract class ProjectViewNode<Value> extends AbstractTreeNode<Value> implements RootsProvider {
   private static final Logger LOG = Logger.getInstance(ProjectViewNode.class);
 
   private final ViewSettings mySettings;
@@ -83,11 +87,10 @@ public abstract class ProjectViewNode <Value> extends AbstractTreeNode<Value> im
     return mySettings;
   }
 
+  @Deprecated
   @Nonnull
-  public static List<AbstractTreeNode> wrap(Collection objects,
-                                            Project project,
-                                            Class<? extends AbstractTreeNode> nodeClass,
-                                            ViewSettings settings) {
+  @SuppressWarnings("deprecation")
+  public static List<AbstractTreeNode> wrap(Collection objects, Project project, Class<? extends AbstractTreeNode> nodeClass, ViewSettings settings) {
     try {
       List<AbstractTreeNode> result = new ArrayList<>(objects.size());
       for (Object object : objects) {
@@ -104,14 +107,11 @@ public abstract class ProjectViewNode <Value> extends AbstractTreeNode<Value> im
     }
   }
 
+  @Deprecated
+  @DeprecationInfo("Use new <class>() expression")
   @SuppressWarnings("unchecked")
-  public static AbstractTreeNode createTreeNode(Class<? extends AbstractTreeNode> nodeClass,
-                                                Project project,
-                                                Object value,
-                                                ViewSettings settings) throws NoSuchMethodException,
-                                                                              InstantiationException,
-                                                                              IllegalAccessException,
-                                                                              InvocationTargetException {
+  public static AbstractTreeNode createTreeNode(Class<? extends AbstractTreeNode> nodeClass, Project project, Object value, ViewSettings settings)
+          throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
     Object[] parameters = new Object[]{project, value, settings};
     for (Constructor<? extends AbstractTreeNode> constructor : (Constructor<? extends AbstractTreeNode>[])nodeClass.getConstructors()) {
       if (constructor.getParameterTypes().length != 3) continue;
@@ -146,7 +146,8 @@ public abstract class ProjectViewNode <Value> extends AbstractTreeNode<Value> im
           break;
         }
       }
-    } else {
+    }
+    else {
       mayContain = true;
     }
 
@@ -168,14 +169,17 @@ public abstract class ProjectViewNode <Value> extends AbstractTreeNode<Value> im
 
     if (value instanceof RootsProvider) {
       return ((RootsProvider)value).getRoots();
-    } else if (value instanceof PsiFile) {
+    }
+    else if (value instanceof PsiFile) {
       PsiFile vFile = ((PsiFile)value).getContainingFile();
       if (vFile != null && vFile.getVirtualFile() != null) {
         return Collections.singleton(vFile.getVirtualFile());
       }
-    } else if (value instanceof VirtualFile) {
+    }
+    else if (value instanceof VirtualFile) {
       return Collections.singleton(((VirtualFile)value));
-    } else if (value instanceof PsiFileSystemItem) {
+    }
+    else if (value instanceof PsiFileSystemItem) {
       return Collections.singleton(((PsiFileSystemItem)value).getVirtualFile());
     }
 
@@ -192,8 +196,7 @@ public abstract class ProjectViewNode <Value> extends AbstractTreeNode<Value> im
       public boolean value(final VirtualFile virtualFile) {
         return contains(virtualFile)
                // in case of flattened packages, when package node a.b.c contains error file, node a.b might not.
-               && (getValue() instanceof PsiElement && Comparing.equal(PsiUtilBase.getVirtualFile((PsiElement)getValue()), virtualFile) ||
-                   someChildContainsFile(virtualFile));
+               && (getValue() instanceof PsiElement && Comparing.equal(PsiUtilBase.getVirtualFile((PsiElement)getValue()), virtualFile) || someChildContainsFile(virtualFile));
       }
     });
   }
@@ -228,6 +231,7 @@ public abstract class ProjectViewNode <Value> extends AbstractTreeNode<Value> im
    * sorting for such objects. And default comparison will be applied only if nodes are equal
    * from custom comparator's point of view. Also comparison will be applied only if both objects
    * have not null comparable keys.
+   *
    * @return Comparable object.
    */
   @Nullable
@@ -241,6 +245,7 @@ public abstract class ProjectViewNode <Value> extends AbstractTreeNode<Value> im
    * sorting for such objects. And default comparison will be applied only if nodes are equal
    * from custom comparator's point of view. Also comparison will be applied only if both objects
    * have not null comparable keys.
+   *
    * @return Comparable object.
    */
   @Nullable

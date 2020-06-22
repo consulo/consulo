@@ -29,10 +29,9 @@ import com.intellij.psi.PsiManager;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
-import javax.annotation.Nonnull;
 import consulo.roots.ContentFolderScopes;
 
-import java.lang.reflect.InvocationTargetException;
+import javax.annotation.Nonnull;
 import java.util.*;
 
 public class PackageViewProjectNode extends AbstractProjectNode {
@@ -45,7 +44,7 @@ public class PackageViewProjectNode extends AbstractProjectNode {
   public Collection<AbstractTreeNode> getChildren() {
     if (getSettings().isShowModules()) {
       final List<Module> allModules = new ArrayList<Module>(Arrays.asList(ModuleManager.getInstance(getProject()).getModules()));
-      for (Iterator<Module> it = allModules.iterator(); it.hasNext();) {
+      for (Iterator<Module> it = allModules.iterator(); it.hasNext(); ) {
         final Module module = it.next();
         final VirtualFile[] sourceRoots = ModuleRootManager.getInstance(module).getContentFolderFiles(ContentFolderScopes.productionAndTest());
         if (sourceRoots.length == 0) {
@@ -101,16 +100,13 @@ public class PackageViewProjectNode extends AbstractProjectNode {
   }
 
   @Override
-  protected AbstractTreeNode createModuleGroup(final Module module) throws
-                                                                    InvocationTargetException,
-                                                                    NoSuchMethodException, InstantiationException, IllegalAccessException {
-    return createTreeNode(PackageViewModuleNode.class, getProject(), module, getSettings());
+  protected AbstractTreeNode createModuleGroup(final Module module) {
+    return new PackageViewModuleNode(getProject(), module, getSettings());
   }
 
   @Override
-  protected AbstractTreeNode createModuleGroupNode(final ModuleGroup moduleGroup)
-    throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-    return createTreeNode(PackageViewModuleGroupNode.class, getProject(),  moduleGroup, getSettings());
+  protected AbstractTreeNode createModuleGroupNode(final ModuleGroup moduleGroup) {
+    return new PackageViewModuleGroupNode(getProject(), moduleGroup, getSettings());
   }
 
   @Override

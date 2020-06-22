@@ -37,7 +37,6 @@ import consulo.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public abstract class ModuleGroupNode extends ProjectViewNode<ModuleGroup> implements DropTargetNode {
@@ -51,7 +50,7 @@ public abstract class ModuleGroupNode extends ProjectViewNode<ModuleGroup> imple
     this(project, (ModuleGroup)value, viewSettings);
   }
 
-  protected abstract AbstractTreeNode createModuleNode(Module module) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException;
+  protected abstract AbstractTreeNode createModuleNode(Module module);
 
   protected abstract ModuleGroupNode createModuleGroupNode(ModuleGroup moduleGroup);
 
