@@ -668,7 +668,6 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
         }
       }
       Component component = Box.createHorizontalGlue();
-      component.setBackground(JBColor.RED);
       panel.add(component, gc.next().fillCellHorizontally().weightx(1.0));
 
       controller.fillHectorPanels(panel, gc);
