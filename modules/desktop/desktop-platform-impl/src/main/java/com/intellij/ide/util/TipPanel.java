@@ -15,24 +15,21 @@
  */
 package com.intellij.ide.util;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.application.ApplicationNamesInfo;
+import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBDimension;
 
-import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.List;
 
-public class TipPanel extends JPanel {
+public class TipPanel extends JPanel implements DialogWrapper.DoNotAskOption {
   private static final int DEFAULT_WIDTH = 400;
   private static final int DEFAULT_HEIGHT = 200;
 
@@ -42,33 +39,11 @@ public class TipPanel extends JPanel {
 
   public TipPanel() {
     setLayout(new BorderLayout());
-    JLabel jlabel = new JLabel(AllIcons.General.Tip);
-    jlabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
-    JLabel label1 = new JLabel(IdeBundle.message("label.did.you.know"));
-    Font font = label1.getFont();
-    label1.setFont(font.deriveFont(Font.PLAIN, font.getSize() + 4));
-    JPanel jpanel = new JPanel();
-    jpanel.setLayout(new BorderLayout());
-    jpanel.add(jlabel, BorderLayout.WEST);
-    jpanel.add(label1, BorderLayout.CENTER);
-    jpanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
-    add(jpanel, BorderLayout.NORTH);
     myBrowser = TipUIUtil.createTipBrowser();
-    JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myBrowser);
+    JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myBrowser, true);
     add(scrollPane, BorderLayout.CENTER);
 
     JPanel southPanel = new JPanel(new BorderLayout());
-    JCheckBox showOnStartCheckBox = new JCheckBox(IdeBundle.message("checkbox.show.tips.on.startup"), true);
-    showOnStartCheckBox.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
-    final GeneralSettings settings = GeneralSettings.getInstance();
-    showOnStartCheckBox.setSelected(settings.isShowTipsOnStartup());
-    showOnStartCheckBox.addItemListener(new ItemListener() {
-      @Override
-      public void itemStateChanged(@Nonnull ItemEvent e) {
-        settings.setShowTipsOnStartup(e.getStateChange() == ItemEvent.SELECTED);
-      }
-    });
-    southPanel.add(showOnStartCheckBox, BorderLayout.WEST);
 
     myPoweredByLabel = new JBLabel();
     myPoweredByLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -130,5 +105,30 @@ public class TipPanel extends JPanel {
     }
 
     setTip(tip, lastTip, myBrowser, settings);
+  }
+
+  @Override
+  public boolean isToBeShown() {
+    return !GeneralSettings.getInstance().isShowTipsOnStartup();
+  }
+
+  @Override
+  public void setToBeShown(boolean toBeShown, int exitCode) {
+    GeneralSettings.getInstance().setShowTipsOnStartup(!toBeShown);
+  }
+
+  @Override
+  public boolean canBeHidden() {
+    return true;
+  }
+
+  @Override
+  public boolean shouldSaveOptionsOnCancel() {
+    return true;
+  }
+
+  @Override
+  public String getDoNotShowMessage() {
+    return IdeBundle.message("checkbox.show.tips.on.startup");
   }
 }

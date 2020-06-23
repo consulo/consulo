@@ -15,35 +15,30 @@
  */
 package com.intellij.ide;
 
-import com.intellij.ide.util.TipDialog;
-import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
-import com.intellij.openapi.wm.ToolWindowManager;
-import consulo.platform.Platform;
+import consulo.ide.tipOfDay.TipOfDayManager;
 import consulo.ui.UIAccess;
-import javax.annotation.Nonnull;
 
-public class TipOfTheDayManager implements StartupActivity, DumbAware {
-  private boolean myVeryFirstProjectOpening = true;
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+
+public class TipOfTheDayStartupActivity implements StartupActivity.DumbAware {
+  private final TipOfDayManager myManager;
+  private final GeneralSettings myGeneralSettings;
+
+  @Inject
+  public TipOfTheDayStartupActivity(TipOfDayManager manager, GeneralSettings generalSettings) {
+    myManager = manager;
+    myGeneralSettings = generalSettings;
+  }
 
   @Override
   public void runActivity(@Nonnull UIAccess uiAccess, @Nonnull Project project) {
-    if (!myVeryFirstProjectOpening || !GeneralSettings.getInstance().isShowTipsOnStartup()) {
+    if (!myGeneralSettings.isShowTipsOnStartup()) {
       return;
     }
 
-    myVeryFirstProjectOpening = false;
-
-    Platform.runIfDesktopPlatform(() -> {
-      ToolWindowManager.getInstance(project).invokeLater(() -> {
-        if (project.isDisposed()) return;
-        ToolWindowManager.getInstance(project).invokeLater(() -> {
-          if (project.isDisposed()) return;
-
-          new TipDialog().show();
-        });
-      });
-    });
+    myManager.scheduleShow(uiAccess, project);
   }
 }

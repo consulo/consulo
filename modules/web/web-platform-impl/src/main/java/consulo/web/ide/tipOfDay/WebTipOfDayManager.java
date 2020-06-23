@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.actions;
+package consulo.web.ide.tipOfDay;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.project.Project;
 import consulo.ide.tipOfDay.TipOfDayManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
+import javax.inject.Singleton;
 
-public class ShowTipsAction extends AnAction implements DumbAware {
-  private final TipOfDayManager myManager;
+/**
+ * @author VISTALL
+ * @since 2020-06-23
+ */
+@Singleton
+public class WebTipOfDayManager implements TipOfDayManager {
+  @Override
+  public void scheduleShow(@Nonnull UIAccess uiAccess, @Nonnull Project project) {
 
-  @Inject
-  public ShowTipsAction(TipOfDayManager manager) {
-    myManager = manager;
   }
 
   @RequiredUIAccess
   @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    myManager.show();
+  public void show() {
+    
   }
 }
