@@ -387,10 +387,6 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
     }
 
     g2d.drawLine(x, y, x + w - 1, y);
-
-    if (!vertical) {
-      drawShadow(g2d, x, w, y + h);
-    }
   }
 
   protected void paintLastGhost(Graphics2D g2d) {
@@ -490,15 +486,7 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
     if (!vertical) {
       g.setColor(Gray._210);
       g.drawLine(x, rectangle.y, x + rectangle.width, rectangle.y);
-
-      drawShadow(g, rectangle.x, rectangle.width, rectangle.y + rectangle.height);
     }
-  }
-
-  protected static void drawShadow(Graphics2D g, int x, int w, int shadowBottom) {
-    int shadowTop = shadowBottom - JBUI.scale(ACTIVE_TAB_SHADOW_HEIGHT);
-    g.setPaint(UIUtil.getGradientPaint(x, shadowTop, new Color(0, 0, 0, 0), x, shadowBottom, new Color(0, 0, 0, 30)));
-    g.fillRect(x, shadowTop, w, JBUI.scale(ACTIVE_TAB_SHADOW_HEIGHT));
   }
 
   public void paintChildren(JBTabsImpl tabs, Graphics g) {

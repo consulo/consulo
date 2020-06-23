@@ -33,8 +33,6 @@ public class MacEditorTabsUI extends IntelliJEditorTabsUI {
     return new MacEditorTabsUI();
   }
 
-  private static final int ACTIVE_TAB_SHADOW_HEIGHT = 3;
-
   @Override
   public void doPaintInactiveImpl(Graphics2D g2d,
                                   Rectangle effectiveBounds,
@@ -66,16 +64,6 @@ public class MacEditorTabsUI extends IntelliJEditorTabsUI {
     }
 
     g2d.drawLine(x, y, x + w - 1, y);
-
-    if (!vertical) {
-      drawShadow(g2d, x, w, y + h);
-    }
-  }
-
-  protected static void drawShadow(Graphics2D g, int x, int w, int shadowBottom) {
-    int shadowTop = shadowBottom - ACTIVE_TAB_SHADOW_HEIGHT;
-    g.setPaint(UIUtil.getGradientPaint(x, shadowTop, new Color(0, 0, 0, 0), x, shadowBottom, new Color(0, 0, 0, 30)));
-    g.fillRect(x, shadowTop, w, ACTIVE_TAB_SHADOW_HEIGHT);
   }
 
   @Override
@@ -94,8 +82,6 @@ public class MacEditorTabsUI extends IntelliJEditorTabsUI {
     if (!vertical) {
       g.setColor(Gray._210);
       g.drawLine(x, rectangle.y, x + rectangle.width, rectangle.y);
-
-      drawShadow(g, rectangle.x, rectangle.width, rectangle.y + rectangle.height);
     }
   }
 

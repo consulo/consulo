@@ -44,10 +44,12 @@ public class AllIcons {
     public static final SwingImageRef Clear = IconLoader.getIcon("/actions/clear.png"); // 16x16
     public static final SwingImageRef Clean = IconLoader.getIcon("/actions/clean.png"); // 16x16
     public static final SwingImageRef CleanLight = IconLoader.getIcon("/actions/cleanLight.png"); // 16x16
-    public static final SwingImageRef Close = IconLoader.getIcon("/actions/close.png"); // 16x16
-    public static final SwingImageRef CloseHovered = IconLoader.getIcon("/actions/closeHovered.png"); // 16x16
-    public static final SwingImageRef CloseNew = IconLoader.getIcon("/actions/closeNew.png"); // 16x16
-    public static final SwingImageRef CloseNewHovered = IconLoader.getIcon("/actions/closeNewHovered.png"); // 16x16
+    public static final SwingImageRef Close = IconLoader.getIcon("/actions/close.svg"); // 16x16
+    public static final SwingImageRef CloseHovered = IconLoader.getIcon("/actions/closeHovered.svg"); // 16x16
+    @Deprecated
+    public static final SwingImageRef CloseNew = Close; // 16x16
+    @Deprecated
+    public static final SwingImageRef CloseNewHovered = CloseHovered; // 16x16
     public static final SwingImageRef Collapseall = IconLoader.getIcon("/actions/collapseall.png"); // 16x16
     public static final SwingImageRef Commit = IconLoader.getIcon("/actions/commit.svg"); // 16x16
     public static final SwingImageRef Compile = IconLoader.getIcon("/actions/compile.png"); // 16x16
