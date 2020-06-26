@@ -510,7 +510,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     myEditorComponent = new EditorComponentImpl(this);
     myVerticalScrollBar = (MyScrollBar)myScrollPane.getVerticalScrollBar();
     if (shouldScrollBarBeOpaque()) myVerticalScrollBar.setOpaque(true);
-    myPanel = new JPanel();
+    myPanel = new JPanel(new BorderLayout());
 
     UIUtil.putClientProperty(myPanel, UIUtil.NOT_IN_HIERARCHY_COMPONENTS, (Iterable<JComponent>)() -> {
       JComponent component = getPermanentHeaderComponent();
@@ -1061,8 +1061,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   }
 
   private void initComponent() {
-    myPanel.setLayout(new BorderLayout());
-
     myPanel.add(myHeaderPanel, BorderLayout.NORTH);
 
     myGutterComponent.setOpaque(true);

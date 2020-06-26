@@ -31,7 +31,7 @@ import java.awt.*;
 public class DesktopEditorLayeredPanel {
   private final DesktopEditorImpl myEditor;
 
-  private JBLayeredPane myLayeredPane;
+  private final JBLayeredPane myLayeredPane;
 
   private int myLayerPosition = JLayeredPane.POPUP_LAYER;
 
@@ -56,6 +56,11 @@ public class DesktopEditorLayeredPanel {
             component.setBounds(0, 0, bounds.width, bounds.height);
           }
         }
+      }
+
+      @Override
+      public Dimension getPreferredSize() {
+        return myEditor.getScrollPane().getPreferredSize();
       }
     };
   }
