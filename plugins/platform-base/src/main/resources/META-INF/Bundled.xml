@@ -37,6 +37,7 @@
     <bundledKeymap file="/keymap/JBuilderKeymap"/>
 
     <bundledColorScheme path="/colorSchemes/Default.xml"/>
+    <bundledColorScheme path="/colorSchemes/IDEA.xml"/>
     <bundledColorScheme path="/colorSchemes/Consulo Light.xml"/>
     <bundledColorScheme path="/colorSchemes/Darcula.xml"/>
     <bundledColorScheme path="/colorSchemes/all_hallows_eve.xml"/>
