@@ -8,7 +8,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.ArrayUtilRt;
 import consulo.util.dataholder.UserDataHolderEx;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author gregsh
@@ -26,7 +28,7 @@ public class MockUpdateParameterInfoContext implements UpdateParameterInfoContex
     this(editor, file, null);
   }
 
-  public MockUpdateParameterInfoContext(@Nonnull Editor editor, @Nonnull PsiFile file, Object @Nullable [] items) {
+  public MockUpdateParameterInfoContext(@Nonnull Editor editor, @Nonnull PsiFile file, @Nullable Object[] items) {
     myEditor = editor;
     myFile = file;
     myItems = items == null ? ArrayUtilRt.EMPTY_OBJECT_ARRAY : items;
