@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2011 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.testFramework.utils.parameterInfo;
 
 import com.intellij.lang.parameterInfo.UpdateParameterInfoContext;
@@ -20,36 +6,58 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.util.ArrayUtil;
+import com.intellij.util.ArrayUtilRt;
+import consulo.util.dataholder.UserDataHolderEx;
 import javax.annotation.Nonnull;
 
 /**
-* @author gregsh
-*/
+ * @author gregsh
+ */
 public class MockUpdateParameterInfoContext implements UpdateParameterInfoContext {
   private final Editor myEditor;
   private final PsiFile myFile;
   private PsiElement myParameterOwner;
   private Object myHighlightedParameter;
   private int myCurrentParameter;
+  private final Object[] myItems;
+  private final boolean[] myCompEnabled;
 
   public MockUpdateParameterInfoContext(@Nonnull Editor editor, @Nonnull PsiFile file) {
-    myEditor = editor;
-    myFile = file;
+    this(editor, file, null);
   }
 
-  public void removeHint() {}
+  public MockUpdateParameterInfoContext(@Nonnull Editor editor, @Nonnull PsiFile file, Object @Nullable [] items) {
+    myEditor = editor;
+    myFile = file;
+    myItems = items == null ? ArrayUtilRt.EMPTY_OBJECT_ARRAY : items;
+    myCompEnabled = items == null ? null : new boolean[items.length];
+  }
 
+  @Override
+  public void removeHint() {
+  }
+
+  @Override
   public void setParameterOwner(PsiElement o) {
     myParameterOwner = o;
   }
 
-  public PsiElement getParameterOwner() { return myParameterOwner; }
+  @Override
+  public PsiElement getParameterOwner() {
+    return myParameterOwner;
+  }
 
+  @Override
   public void setHighlightedParameter(Object parameter) {
     myHighlightedParameter = parameter;
   }
 
+  @Override
+  public Object getHighlightedParameter() {
+    return myHighlightedParameter;
+  }
+
+  @Override
   public void setCurrentParameter(int index) {
     myCurrentParameter = index;
   }
@@ -58,30 +66,69 @@ public class MockUpdateParameterInfoContext implements UpdateParameterInfoContex
     return myCurrentParameter;
   }
 
-  public boolean isUIComponentEnabled(int index) { return false; }
+  @Override
+  public boolean isUIComponentEnabled(int index) {
+    return myCompEnabled != null && myCompEnabled[index];
+  }
 
-  public void setUIComponentEnabled(int index, boolean b) {}
+  @Override
+  public void setUIComponentEnabled(int index, boolean b) {
+    if (myCompEnabled != null) {
+      myCompEnabled[index] = b;
+    }
+  }
 
+  @Override
   public int getParameterListStart() {
     return myEditor.getCaretModel().getOffset();
   }
 
+  @Override
   public Object[] getObjectsToView() {
-    return ArrayUtil.EMPTY_OBJECT_ARRAY;
+    return myItems;
   }
 
+  @Override
+  public boolean isPreservedOnHintHidden() {
+    return false;
+  }
+
+  @Override
+  public void setPreservedOnHintHidden(boolean value) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public boolean isInnermostContext() {
+    return false;
+  }
+
+  @Override
+  public boolean isSingleParameterInfo() {
+    return false;
+  }
+
+  @Override
+  public UserDataHolderEx getCustomContext() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   public Project getProject() {
     return myFile.getProject();
   }
 
+  @Override
   public PsiFile getFile() {
     return myFile;
   }
 
+  @Override
   public int getOffset() {
     return myEditor.getCaretModel().getOffset();
   }
 
+  @Override
   @Nonnull
   public Editor getEditor() {
     return myEditor;
