@@ -17,25 +17,20 @@
 package com.intellij.lang.parameterInfo;
 
 import com.intellij.psi.PsiElement;
-import consulo.annotation.UsedInPlugin;
+
+import javax.annotation.Nullable;
 
 public interface CreateParameterInfoContext extends ParameterInfoContext {
-  @UsedInPlugin
-  @javax.annotation.Nullable
+  @Nullable
   Object[] getItemsToShow();
 
-  @UsedInPlugin
   void setItemsToShow(Object[] items);
 
-  @UsedInPlugin
   void showHint(PsiElement element, int offset, ParameterInfoHandler handler);
 
-  @UsedInPlugin
   int getParameterListStart();
 
-  @javax.annotation.Nullable
   Object getHighlightedElement();
 
-  @UsedInPlugin
   void setHighlightedElement(Object elements);
 }

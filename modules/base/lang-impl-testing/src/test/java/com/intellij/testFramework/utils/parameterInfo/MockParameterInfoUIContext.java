@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ public class MockParameterInfoUIContext<T extends PsiElement> implements Paramet
   private boolean enabled;
   private String text;
   private int highlightStart;
+  private int highlightEnd;
   private final T myFunction;
   private int parameterIndex;
 
@@ -40,7 +41,13 @@ public class MockParameterInfoUIContext<T extends PsiElement> implements Paramet
                                              final Color background) {
     text = _text;
     highlightStart = highlightStartOffset;
+    highlightEnd = highlightEndOffset;
     return _text;
+  }
+
+  @Override
+  public void setupRawUIComponentPresentation(String htmlText) {
+    text = htmlText;
   }
 
   @Override
@@ -68,6 +75,16 @@ public class MockParameterInfoUIContext<T extends PsiElement> implements Paramet
   }
 
   @Override
+  public boolean isSingleOverload() {
+    return false;
+  }
+
+  @Override
+  public boolean isSingleParameterInfo() {
+    return false;
+  }
+
+  @Override
   public Color getDefaultParameterColor() {
     return null;
   }
@@ -78,5 +95,9 @@ public class MockParameterInfoUIContext<T extends PsiElement> implements Paramet
 
   public int getHighlightStart() {
     return highlightStart;
+  }
+
+  public int getHighlightEnd() {
+    return highlightEnd;
   }
 }

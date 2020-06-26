@@ -106,7 +106,7 @@ public class AsyncPromise<T> implements CancellablePromise<T>, InternalPromiseUt
 
   @Nonnull
   @Override
-  public Promise<T> onSuccess(@Nonnull Consumer<? super T> handler) {
+  public CancellablePromise<T> onSuccess(@Nonnull Consumer<? super T> handler) {
     return new AsyncPromise<>(f.whenComplete((value, exception) -> {
       if (exception == null && !InternalPromiseUtil.isHandlerObsolete(handler)) {
         try {
@@ -123,7 +123,7 @@ public class AsyncPromise<T> implements CancellablePromise<T>, InternalPromiseUt
 
   @Nonnull
   @Override
-  public Promise<T> onError(@Nonnull Consumer<Throwable> rejected) {
+  public CancellablePromise<T> onError(@Nonnull Consumer<Throwable> rejected) {
     hasErrorHandler.set(true);
     return new AsyncPromise<>(f.whenComplete((value, exception) -> {
       if (exception != null) {
@@ -138,7 +138,7 @@ public class AsyncPromise<T> implements CancellablePromise<T>, InternalPromiseUt
 
   @Nonnull
   @Override
-  public Promise<T> onProcessed(@Nonnull Consumer<? super T> processed) {
+  public CancellablePromise<T> onProcessed(@Nonnull Consumer<? super T> processed) {
     hasErrorHandler.set(true);
     return new AsyncPromise<>(f.whenComplete((value, exception) -> {
       if (!InternalPromiseUtil.isHandlerObsolete(processed)) {

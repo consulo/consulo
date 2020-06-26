@@ -25,11 +25,11 @@ import com.intellij.openapi.editor.Inlay;
 import com.intellij.openapi.editor.impl.FontInfo;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.ui.GraphicsConfig;
+import com.intellij.util.Alarm;
+import com.intellij.util.ui.GraphicsUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
-import com.intellij.util.Alarm;
-import com.intellij.util.ui.GraphicsUtil;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -39,6 +39,7 @@ import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 @Singleton
@@ -58,6 +59,11 @@ public class ParameterHintsPresentationManager implements Disposable {
 
   public boolean isParameterHint(@Nonnull Inlay inlay) {
     return inlay.getRenderer() instanceof MyRenderer;
+  }
+
+  public List<Inlay> getParameterHintsInRange(@Nonnull Editor editor, int startOffset, int endOffset) {
+    //noinspection unchecked
+    return (java.util.List)editor.getInlayModel().getInlineElementsInRange(startOffset, endOffset, MyRenderer.class);
   }
 
   public String getHintText(@Nonnull Inlay inlay) {

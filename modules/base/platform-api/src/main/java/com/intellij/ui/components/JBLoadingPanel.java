@@ -15,16 +15,17 @@
  */
 package com.intellij.ui.components;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.ui.LoadingDecorator;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.components.panels.NonOpaquePanel;
+import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.AsyncProcessIcon;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposable;
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;
@@ -42,18 +43,34 @@ public class JBLoadingPanel extends JPanel {
   }
 
   public JBLoadingPanel(@Nullable LayoutManager manager, @Nonnull Disposable parent, int startDelayMs) {
-    super(new BorderLayout());
-    myPanel = manager == null ? new JPanel() : new JPanel(manager);
-    myPanel.setOpaque(false);
-    myDecorator = new LoadingDecorator(myPanel, parent, startDelayMs) {
+    this(manager, panel -> new LoadingDecorator(panel, parent, startDelayMs) {
       @Override
       protected NonOpaquePanel customizeLoadingLayer(JPanel parent, JLabel text, AsyncProcessIcon icon) {
         final NonOpaquePanel panel = super.customizeLoadingLayer(parent, text, icon);
         customizeStatusText(text);
         return panel;
       }
-    };
+    });
+  }
+
+  public JBLoadingPanel(@Nullable LayoutManager manager, @Nonnull NotNullFunction<? super JPanel, ? extends LoadingDecorator> createLoadingDecorator) {
+    super(new BorderLayout());
+    myPanel = manager == null ? new JPanel() : new JPanel(manager);
+    myPanel.setOpaque(false);
+    myPanel.setFocusable(false);
+    myDecorator = createLoadingDecorator.fun(myPanel);
     super.add(myDecorator.getComponent(), BorderLayout.CENTER);
+  }
+
+  @Override
+  public void setLayout(LayoutManager mgr) {
+    if (!(mgr instanceof BorderLayout)) {
+      throw new IllegalArgumentException(String.valueOf(mgr));
+    }
+    super.setLayout(mgr);
+    if (myDecorator != null) {
+      super.add(myDecorator.getComponent(), BorderLayout.CENTER);
+    }
   }
 
   public static void customizeStatusText(JLabel text) {
@@ -108,6 +125,7 @@ public class JBLoadingPanel extends JPanel {
 
   @Override
   public void add(Component comp, Object constraints) {
+
     myPanel.add(comp, constraints);
   }
 

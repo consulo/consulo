@@ -545,4 +545,7 @@ public interface IdeActions {
 
   String ACTION_MARK_ALL_NOTIFICATIONS_AS_READ = "MarkNotificationsAsRead";
   String ACTION_SWITCHER = "Switcher";
+
+  String ACTION_METHOD_OVERLOAD_SWITCH_UP = "MethodOverloadSwitchUp";
+  String ACTION_METHOD_OVERLOAD_SWITCH_DOWN = "MethodOverloadSwitchDown";
 }

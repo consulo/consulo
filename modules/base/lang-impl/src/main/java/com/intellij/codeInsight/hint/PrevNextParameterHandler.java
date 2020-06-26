@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 
 package com.intellij.codeInsight.hint;
 
+import com.intellij.codeInsight.actions.CodeInsightEditorAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Caret;
@@ -27,7 +29,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author ven
@@ -39,25 +40,22 @@ public class PrevNextParameterHandler extends EditorActionHandler {
 
   private final boolean myIsNextParameterHandler;
 
-  @RequiredUIAccess
   @Override
   protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+    if (!ParameterInfoController.existsForEditor(editor)) return false;
+
     Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) return false;
-
-    PsiDocumentManager.getInstance(project).commitAllDocuments();
 
     PsiElement exprList = getExpressionList(editor, caret.getOffset(), project);
     if (exprList == null) return false;
 
     int lbraceOffset = exprList.getTextRange().getStartOffset();
-    return ParameterInfoController.isAlreadyShown(editor, lbraceOffset) &&
-           ParameterInfoController.hasPrevOrNextParameter(editor, lbraceOffset, myIsNextParameterHandler);
+    return ParameterInfoController.findControllerAtOffset(editor, lbraceOffset) != null && ParameterInfoController.hasPrevOrNextParameter(editor, lbraceOffset, myIsNextParameterHandler);
   }
 
-  @RequiredUIAccess
   @Override
-  protected void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
+  protected void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
     int offset = caret != null ? caret.getOffset() : editor.getCaretModel().getOffset();
     PsiElement exprList = getExpressionList(editor, offset, dataContext);
     if (exprList != null) {
@@ -76,5 +74,12 @@ public class PrevNextParameterHandler extends EditorActionHandler {
   private static PsiElement getExpressionList(@Nonnull Editor editor, int offset, @Nonnull Project project) {
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     return file != null ? ParameterInfoController.findArgumentList(file, offset, -1) : null;
+  }
+
+  public static void commitDocumentsIfNeeded(@Nonnull AnActionEvent e) {
+    Editor editor = e.getData(CommonDataKeys.EDITOR);
+    if (editor != null && ParameterInfoController.existsForEditor(editor)) {
+      CodeInsightEditorAction.beforeActionPerformedUpdate(e);
+    }
   }
 }

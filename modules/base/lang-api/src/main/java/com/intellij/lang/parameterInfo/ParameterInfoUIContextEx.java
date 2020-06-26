@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2019 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,31 +17,35 @@
 package com.intellij.lang.parameterInfo;
 
 import com.intellij.util.Function;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.EnumSet;
 
 /**
  * Richer interface for describing a popup hint contents.
- * User: dcheryasov
- * Date: Sep 6, 2008
+ *
+ * @author dcheryasov
  */
 public interface ParameterInfoUIContextEx extends ParameterInfoUIContext {
 
   /**
    * Set the contents and formatting of a one-line, multi-formatted popup hint.
-   * @param texts pieces ot text to be put together, each individually formattable.
-   * @param flags a set of Flags; flags[i] describes formatting of texts[i].
+   *
+   * @param texts      pieces ot text to be put together, each individually formattable.
+   * @param flags      a set of Flags; flags[i] describes formatting of texts[i].
    * @param background background color of the hint.
    */
   String setupUIComponentPresentation(String[] texts, EnumSet<Flag>[] flags, Color background);
 
   enum Flag {
-    HIGHLIGHT, DISABLE, STRIKEOUT // more to come
+    HIGHLIGHT,
+    DISABLE,
+    STRIKEOUT
   }
 
   /**
-   * Escape function for convert custom tags to html.
+   * @param escapeFunction Escape function to convert custom tags to HTML.
    */
-  void setEscapeFunction(@javax.annotation.Nullable Function<String, String> escapeFunction);
+  void setEscapeFunction(@Nullable Function<? super String, String> escapeFunction);
 }

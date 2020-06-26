@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package org.jetbrains.concurrency.internal;
 
+import org.jetbrains.concurrency.CancellablePromise;
 import org.jetbrains.concurrency.Promise;
 import org.jetbrains.concurrency.internal.InternalPromiseUtil.PromiseValue;
 
@@ -24,7 +25,7 @@ public class DonePromise<T> extends InternalPromiseUtil.BasePromise<T> {
 
   @Nonnull
   @Override
-  public Promise<T> onSuccess(@Nonnull Consumer<? super T> handler) {
+  public CancellablePromise<T> onSuccess(@Nonnull Consumer<? super T> handler) {
     if (value.error != null) {
       return this;
     }
@@ -37,7 +38,7 @@ public class DonePromise<T> extends InternalPromiseUtil.BasePromise<T> {
 
   @Nonnull
   @Override
-  public Promise<T> processed(@Nonnull Promise<? super T> child) {
+  public CancellablePromise<T> processed(@Nonnull Promise<? super T> child) {
     if (child instanceof InternalPromiseUtil.PromiseImpl) {
       //noinspection unchecked
       ((InternalPromiseUtil.PromiseImpl<T>)child)._setValue(value);
@@ -51,7 +52,7 @@ public class DonePromise<T> extends InternalPromiseUtil.BasePromise<T> {
 
   @Nonnull
   @Override
-  public Promise<T> onProcessed(@Nonnull Consumer<? super T> handler) {
+  public CancellablePromise<T> onProcessed(@Nonnull Consumer<? super T> handler) {
     if (value.error == null) {
       onSuccess(handler);
     }
@@ -63,7 +64,7 @@ public class DonePromise<T> extends InternalPromiseUtil.BasePromise<T> {
 
   @Nonnull
   @Override
-  public Promise<T> onError(@Nonnull Consumer<Throwable> handler) {
+  public CancellablePromise<T> onError(@Nonnull Consumer<Throwable> handler) {
     if (value.error != null && !isHandlerObsolete(handler)) {
       handler.accept(value.error);
     }

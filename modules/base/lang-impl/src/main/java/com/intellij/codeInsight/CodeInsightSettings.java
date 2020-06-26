@@ -76,6 +76,7 @@ public class CodeInsightSettings implements PersistentStateComponent<Element>, C
   public boolean AUTOCOMPLETE_COMMON_PREFIX = true;
   public boolean SHOW_STATIC_AFTER_INSTANCE = false;
 
+  public boolean SHOW_PARAMETER_NAME_HINTS_ON_COMPLETION;
   public boolean SHOW_FULL_SIGNATURES_IN_PARAMETER_INFO = false;
 
   @OptionTag("SMART_BACKSPACE") // explicit name makes it work also for obfuscated private field's name
