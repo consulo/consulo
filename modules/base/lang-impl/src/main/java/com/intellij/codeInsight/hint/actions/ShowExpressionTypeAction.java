@@ -20,22 +20,37 @@ import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.codeInsight.hint.ShowExpressionTypeHandler;
 import com.intellij.lang.Language;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
+import com.intellij.util.ui.accessibility.ScreenReader;
+import consulo.ui.annotation.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
+import java.awt.event.KeyEvent;
 
 public class ShowExpressionTypeAction extends BaseCodeInsightAction implements DumbAware {
+  private boolean myRequestFocus = false;
+
   public ShowExpressionTypeAction() {
     setEnabledInModalContext(true);
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void beforeActionPerformedUpdate(@Nonnull AnActionEvent e) {
+    super.beforeActionPerformedUpdate(e);
+    // The tooltip gets the focus if using a screen reader and invocation through a keyboard shortcut.
+    myRequestFocus = ScreenReader.isActive() && (e.getInputEvent() instanceof KeyEvent);
   }
 
   @Nonnull
   @Override
   protected CodeInsightActionHandler getHandler() {
-    return new ShowExpressionTypeHandler();
+    return new ShowExpressionTypeHandler(myRequestFocus);
   }
 
   @Override
@@ -43,5 +58,4 @@ public class ShowExpressionTypeAction extends BaseCodeInsightAction implements D
     Language language = PsiUtilCore.getLanguageAtOffset(file, editor.getCaretModel().getOffset());
     return !ShowExpressionTypeHandler.getHandlers(project, language, file.getViewProvider().getBaseLanguage()).isEmpty();
   }
-
 }

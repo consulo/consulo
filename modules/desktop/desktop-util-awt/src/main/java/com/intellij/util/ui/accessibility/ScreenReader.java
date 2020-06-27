@@ -105,11 +105,6 @@ public class ScreenReader {
    */
   public static void addPropertyChangeListener(@Nonnull final String propertyName, @Nonnull Disposable parent, @Nonnull final PropertyChangeListener listener) {
     PCS.addPropertyChangeListener(propertyName, listener);
-    Disposer.register(parent, new Disposable() {
-      @Override
-      public void dispose() {
-        PCS.removePropertyChangeListener(propertyName, listener);
-      }
-    });
+    Disposer.register(parent, () -> PCS.removePropertyChangeListener(propertyName, listener));
   }
 }
