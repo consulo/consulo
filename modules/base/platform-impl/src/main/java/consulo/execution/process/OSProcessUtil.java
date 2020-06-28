@@ -31,6 +31,19 @@ import java.util.List;
  * @since 31-Jan-17
  */
 public class OSProcessUtil {
+  public static int getCurrentProcessId() {
+    int pid;
+
+    if (SystemInfo.isWindows) {
+      pid = WinProcessManager.getCurrentProcessId();
+    }
+    else {
+      pid = UnixProcessManager.getCurrentProcessId();
+    }
+
+    return pid;
+  }
+
   public static int getProcessID(@Nonnull Process process) {
     if (SystemInfo.isWindows) {
       try {

@@ -15,21 +15,21 @@
  */
 package com.intellij.notification;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.ui.MessageType;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author peter
  */
 public final class NotificationGroup {
   private static final Logger LOG = Logger.getInstance(NotificationGroup.class);
-  private static final Map<String, NotificationGroup> ourRegisteredGroups = ContainerUtil.newConcurrentMap();
+  private static final Map<String, NotificationGroup> ourRegisteredGroups = new ConcurrentHashMap<>();
 
   @Nonnull
   private final String myDisplayId;

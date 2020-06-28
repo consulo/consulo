@@ -343,7 +343,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
     }
 
     boolean actions = !notification.getActions().isEmpty();
-    boolean showFullContent = layoutData.showFullContent || notification instanceof NotificationActionProvider;
+    boolean showFullContent = layoutData.showFullContent || notification instanceof NotificationFullContent;
 
     Color foregroundR = Gray._0;
     Color foregroundD = Gray._191;
@@ -740,6 +740,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
         }
         showPopup(link, group);
       });
+      Notification.setDataProvider(notification, action);
       action.setVisible(false);
       actionPanel.add(action);
     }

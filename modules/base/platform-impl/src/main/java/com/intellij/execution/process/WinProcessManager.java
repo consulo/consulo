@@ -20,7 +20,12 @@ import static com.intellij.util.ObjectUtils.assertNotNull;
 public class WinProcessManager {
   private static final Logger LOG = Logger.getInstance(WinProcessManager.class);
 
-  private WinProcessManager() { }
+  private WinProcessManager() {
+  }
+
+  public static int getCurrentProcessId() {
+    return Kernel32.INSTANCE.GetCurrentProcessId();
+  }
 
   public static int getProcessId(Process process) {
     String processClassName = process.getClass().getName();
@@ -80,7 +85,9 @@ public class WinProcessManager {
     return false;
   }
 
-  /** @deprecated to be removed in IDEA 2018 */
+  /**
+   * @deprecated to be removed in IDEA 2018
+   */
   public static int getProcessPid(Process process) {
     return getProcessId(process);
   }

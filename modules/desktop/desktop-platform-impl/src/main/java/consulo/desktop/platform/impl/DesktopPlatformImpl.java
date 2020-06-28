@@ -15,6 +15,7 @@
  */
 package consulo.desktop.platform.impl;
 
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.win32.WindowsElevationUtil;
 import consulo.platform.PlatformBase;
 import consulo.ui.desktop.internal.image.DesktopImageOverIconImpl;
@@ -57,6 +58,10 @@ class DesktopPlatformImpl extends PlatformBase {
 
   @Override
   public boolean isUnderRoot() {
+    // this is correct ?
+    if (SystemInfo.isUnix && "root".equals(System.getenv("USER"))) {
+      return true;
+    }
     return WindowsElevationUtil.isUnderElevation();
   }
 }

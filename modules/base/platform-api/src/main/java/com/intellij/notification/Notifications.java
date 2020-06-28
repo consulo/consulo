@@ -18,11 +18,13 @@ package com.intellij.notification;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.util.Alarm;
 import com.intellij.util.messages.Topic;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 
 /**
@@ -47,13 +49,10 @@ public interface Notifications {
     public static void register(@Nonnull final String group_id, @Nonnull final NotificationDisplayType defaultDisplayType) {
       if (ApplicationManager.getApplication().isUnitTestMode()) return;
       //noinspection SSBasedInspection
-      SwingUtilities.invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          Application app = ApplicationManager.getApplication();
-          if (!app.isDisposed()) {
-            app.getMessageBus().syncPublisher(TOPIC).register(group_id, defaultDisplayType);
-          }
+      SwingUtilities.invokeLater(() -> {
+        Application app = ApplicationManager.getApplication();
+        if (!app.isDisposed()) {
+          app.getMessageBus().syncPublisher(TOPIC).register(group_id, defaultDisplayType);
         }
       });
     }
@@ -67,12 +66,7 @@ public interface Notifications {
         doNotify(notification, project);
       }
       else {
-        UIUtil.invokeLaterIfNeeded(new Runnable() {
-          @Override
-          public void run() {
-            doNotify(notification, project);
-          }
-        });
+        UIUtil.invokeLaterIfNeeded(() -> doNotify(notification, project));
       }
     }
 
@@ -80,11 +74,24 @@ public interface Notifications {
       if (project != null && !project.isDisposed()) {
         project.getMessageBus().syncPublisher(TOPIC).notify(notification);
       } else {
-        Application app = ApplicationManager.getApplication();
+        Application app = Application.get();
         if (!app.isDisposed()) {
           app.getMessageBus().syncPublisher(TOPIC).notify(notification);
         }
       }
+    }
+
+    public static void notifyAndHide(@Nonnull final Notification notification) {
+      notifyAndHide(notification, null);
+    }
+
+    public static void notifyAndHide(@Nonnull final Notification notification, @Nullable Project project) {
+      notify(notification);
+      Alarm alarm = new Alarm(project == null ? Application.get() : project);
+      alarm.addRequest(() -> {
+        notification.expire();
+        Disposer.dispose(alarm);
+      }, 5000);
     }
   }
 }

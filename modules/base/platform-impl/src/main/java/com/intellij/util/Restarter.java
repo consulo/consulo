@@ -19,13 +19,13 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.sun.jna.WString;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.win32.StdCallLibrary;
 import consulo.application.ApplicationProperties;
 import consulo.container.boot.ContainerPathManager;
+import consulo.execution.process.OSProcessUtil;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -104,21 +104,28 @@ public class Restarter {
     }
   }
 
-  private static void restartOnWindows(@Nonnull final String... beforeRestart) throws IOException {
-    Kernel32 kernel32 = (Kernel32)Native.loadLibrary("kernel32", Kernel32.class);
-    Shell32 shell32 = (Shell32)Native.loadLibrary("shell32", Shell32.class);
+  /**
+   * @return full path to consulo.exe or consulo64.exe
+   */
+  @Nonnull
+  public static String getExecutableOnWindows() {
+    if (SystemInfo.is64Bit) {
+      return "consulo64.exe";
+    }
+    else {
+      return "consulo.exe";
+    }
+  }
 
-    final int pid = kernel32.GetCurrentProcessId();
-    final IntByReference argc = new IntByReference();
-    Pointer argv_ptr = shell32.CommandLineToArgvW(kernel32.GetCommandLineW(), argc);
-    final String[] argv = argv_ptr.getWideStringArray(0, argc.getValue());
-    kernel32.LocalFree(argv_ptr);
+  private static void restartOnWindows(@Nonnull final String... beforeRestart) throws IOException {
+    String executableOnWindows = getExecutableOnWindows();
+
+    final int pid = OSProcessUtil.getCurrentProcessId();
 
     doScheduleRestart(new File(ContainerPathManager.get().getBinPath(), "restarter.exe"), ContainerPathManager.get().getAppHomeDirectory(), commands -> {
       Collections.addAll(commands, String.valueOf(pid), String.valueOf(beforeRestart.length));
       Collections.addAll(commands, beforeRestart);
-      Collections.addAll(commands, String.valueOf(argc.getValue()));
-      Collections.addAll(commands, argv);
+      Collections.addAll(commands, executableOnWindows);
     });
 
     // Since the process ID is passed through the command line, we want to make sure that we don't exit before the "restarter"
@@ -154,8 +161,7 @@ public class Restarter {
 
   public static File createTempExecutable(File executable) throws IOException {
     String ext = FileUtilRt.getExtension(executable.getName());
-    File copy =
-            FileUtilRt.createTempFile(FileUtilRt.getNameWithoutExtension(executable.getName()), StringUtil.isEmptyOrSpaces(ext) ? ".tmp" : ("." + ext), false);
+    File copy = FileUtilRt.createTempFile(FileUtilRt.getNameWithoutExtension(executable.getName()), StringUtil.isEmptyOrSpaces(ext) ? ".tmp" : ("." + ext), false);
     FileUtilRt.copy(executable, copy);
     if (!copy.setExecutable(executable.canExecute())) throw new IOException("Cannot make file executable: " + copy);
     return copy;

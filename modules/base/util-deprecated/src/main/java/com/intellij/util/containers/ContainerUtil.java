@@ -3007,6 +3007,17 @@ public class ContainerUtil extends ContainerUtilRt {
     return true;
   }
 
+  public static <K, V> boolean any(Map<K, V> map, java.util.function.Predicate<Map.Entry<K, V>> predicate) {
+    if (map.isEmpty()) return false;
+
+    for (Map.Entry<K, V> element : map.entrySet()) {
+      if (predicate.test(element)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   /**
    * Returns the only item from the collection or null if collection is empty or contains more than one item
    *

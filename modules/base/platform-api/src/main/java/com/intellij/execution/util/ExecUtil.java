@@ -26,6 +26,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.container.boot.ContainerPathManager;
+import consulo.platform.Platform;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -182,7 +183,7 @@ public class ExecUtil {
 
   @Nonnull
   private static GeneralCommandLine sudoCommand(@Nonnull GeneralCommandLine commandLine, @Nonnull String prompt) throws ExecutionException, IOException {
-    if (SystemInfo.isUnix && "root".equals(System.getenv("USER"))) {
+    if(Platform.current().isUnderRoot()) {
       return commandLine;
     }
 
@@ -287,6 +288,11 @@ public class ExecUtil {
     public UnsupportedSystemException() {
       super("Unsupported OS/desktop: " + SystemInfo.OS_NAME + '/' + SystemInfo.SUN_DESKTOP);
     }
+  }
+
+  @Nonnull
+  public static ProcessOutput execAndGetOutput(@Nonnull GeneralCommandLine commandLine, int timeoutInMilliseconds) throws ExecutionException {
+    return new CapturingProcessHandler(commandLine).runProcess(timeoutInMilliseconds);
   }
 
   // deprecated stuff

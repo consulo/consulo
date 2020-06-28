@@ -59,6 +59,15 @@ public class Notification {
   private static final Logger LOG = Logger.getInstance(Notification.class);
   private static final Key<Notification> KEY = Key.create("Notification");
 
+  /**
+   * Which actions to keep and which to show under the "Actions" dropdown link if actions do not fit horizontally
+   * into the width of the notification.
+   */
+  public enum CollapseActionsDirection {
+    KEEP_LEFTMOST,
+    KEEP_RIGHTMOST
+  }
+
   public final String id;
 
   private final String myGroupId;
@@ -71,6 +80,7 @@ public class Notification {
   private NotificationListener myListener;
   private String myDropDownText;
   private List<AnAction> myActions;
+  private CollapseActionsDirection myCollapseActionsDirection = CollapseActionsDirection.KEEP_RIGHTMOST;
 
   private AtomicReference<Boolean> myExpired = Atomics.newReference(false);
   private Runnable myWhenExpired;
@@ -273,6 +283,15 @@ public class Notification {
   public Notification setDropDownText(@Nonnull String dropDownText) {
     myDropDownText = dropDownText;
     return this;
+  }
+
+  @Nonnull
+  public CollapseActionsDirection getCollapseActionsDirection() {
+    return myCollapseActionsDirection;
+  }
+
+  public void setCollapseActionsDirection(@Nonnull CollapseActionsDirection collapseActionsDirection) {
+    myCollapseActionsDirection = collapseActionsDirection;
   }
 
   @Nonnull

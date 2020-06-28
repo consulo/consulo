@@ -128,7 +128,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
    * Subclasses should override this method to provide a custom binary to run.
    */
   @Nullable
-  protected File getExecutable() {
+  public static File getExecutable() {
     String execPath = System.getProperty(PROPERTY_WATCHER_EXECUTABLE_PATH);
     if (execPath != null) return new File(execPath);
 

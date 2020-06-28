@@ -224,6 +224,9 @@
     <projectService serviceInterface="com.intellij.openapi.wm.ToolWindowManager" serviceImplementation="com.intellij.openapi.wm.impl.DesktopToolWindowManagerImpl" lazy="false"/>
     <projectService serviceInterface="consulo.wm.ProjectIdeFocusManager" serviceImplementation="com.intellij.openapi.wm.impl.DesktopIdeFocusManagerImpl" lazy="false"/>
 
+    <backgroundPostStartupActivity implementation="com.intellij.diagnostic.WindowsDefenderCheckerActivity" />
+    <applicationService serviceImplementation="com.intellij.diagnostic.WindowsDefenderChecker" />
+
     <uiDecorator implementation="consulo.ide.ui.impl.mac.MacAquaUIDecorator"/>
     <uiDecorator implementation="consulo.ide.ui.impl.DefaultUIDecorator" order="last"/>
   </extensions>
