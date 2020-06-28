@@ -1,88 +1,26 @@
-/*
- * Copyright 2000-2015 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.codeStyle;
 
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.Function;
-import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.text.NameUtilCore;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-public class NameUtil {
-  private static final Function<String,String> LOWERCASE_MAPPING = new Function<String, String>() {
-    @Override
-    public String fun(final String s) {
-      return s.toLowerCase();
-    }
-  };
+public final class NameUtil {
   private static final int MAX_LENGTH = 40;
 
-  private NameUtil() {}
-
-  @Nonnull
-  public static List<String> nameToWordsLowerCase(@Nonnull String name){
-    return ContainerUtil.map(nameToWords(name), LOWERCASE_MAPPING);
+  private NameUtil() {
   }
 
   @Nonnull
-  public static String[] nameToWords(@Nonnull String name){
-    List<String> array = new ArrayList<String>();
-    int index = 0;
-
-    while(index < name.length()){
-      int wordStart = index;
-      int upperCaseCount = 0;
-      int lowerCaseCount = 0;
-      int digitCount = 0;
-      int specialCount = 0;
-      while(index < name.length()){
-        char c = name.charAt(index);
-        if (Character.isDigit(c)){
-          if (upperCaseCount > 0 || lowerCaseCount > 0 || specialCount > 0) break;
-          digitCount++;
-        }
-        else if (Character.isUpperCase(c)){
-          if (lowerCaseCount > 0 || digitCount > 0 || specialCount > 0) break;
-          upperCaseCount++;
-        }
-        else if (Character.isLowerCase(c)){
-          if (digitCount > 0 || specialCount > 0) break;
-          if (upperCaseCount > 1) {
-            index--;
-            break;
-          }
-          lowerCaseCount++;
-        }
-        else{
-          if (upperCaseCount > 0 || lowerCaseCount > 0 || digitCount > 0) break;
-          specialCount++;
-        }
-        index++;
-      }
-      String word = name.substring(wordStart, index);
-      if (!StringUtil.isEmptyOrSpaces(word)) {
-        array.add(word);
-      }
-    }
-    return ArrayUtil.toStringArray(array);
+  public static List<String> nameToWordsLowerCase(@Nonnull String name) {
+    return Arrays.stream(NameUtilCore.nameToWords(name)).map(StringUtil::toLowerCase).collect(Collectors.toList());
   }
 
   @Nonnull
@@ -91,12 +29,7 @@ public class NameUtil {
   }
 
   @Nonnull
-  public static String buildRegexp(@Nonnull String pattern,
-                                   int exactPrefixLen,
-                                   boolean allowToUpper,
-                                   boolean allowToLower,
-                                   boolean lowerCaseWords,
-                                   boolean forCompletion) {
+  public static String buildRegexp(@Nonnull String pattern, int exactPrefixLen, boolean allowToUpper, boolean allowToLower, boolean lowerCaseWords, boolean forCompletion) {
     final int eol = pattern.indexOf('\n');
     if (eol != -1) {
       pattern = pattern.substring(0, eol);
@@ -232,40 +165,17 @@ public class NameUtil {
     return buffer.toString();
   }
 
-  /**
-   * Splits an identifier into words, separated with underscores or upper-case characters
-   * (camel-case).
-   *
-   * @param name the identifier to split.
-   * @return the array of strings into which the identifier has been split.
-   */
   @Nonnull
-  public static String[] splitNameIntoWords(@Nonnull String name) {
-    final String[] underlineDelimited = name.split("_");
-    List<String> result = new ArrayList<String>();
-    for (String word : underlineDelimited) {
-      addAllWords(word, result);
-    }
-    return ArrayUtil.toStringArray(result);
-  }
-
-  @Nonnull
-  public static List<String> getSuggestionsByName(@Nonnull String name,
-                                                  @Nonnull String prefix,
-                                                  @Nonnull String suffix,
-                                                  boolean upperCaseStyle,
-                                                  boolean preferLongerNames,
-                                                  boolean isArray) {
-    ArrayList<String> answer = new ArrayList<String>();
-    String[] words = nameToWords(name);
+  public static List<String> getSuggestionsByName(@Nonnull String name, @Nonnull String prefix, @Nonnull String suffix, boolean upperCaseStyle, boolean preferLongerNames, boolean isArray) {
+    ArrayList<String> answer = new ArrayList<>();
+    String[] words = NameUtilCore.nameToWords(name);
 
     for (int step = 0; step < words.length; step++) {
       int wordCount = preferLongerNames ? words.length - step : step + 1;
 
       String startWord = words[words.length - wordCount];
       char c = startWord.charAt(0);
-      if( c == '_' || !Character.isJavaIdentifierStart( c ) )
-      {
+      if (c == '_' || !Character.isJavaIdentifierStart(c)) {
         continue;
       }
 
@@ -276,14 +186,7 @@ public class NameUtil {
   }
 
   @Nonnull
-  private static String compoundSuggestion(@Nonnull String prefix,
-                                           boolean upperCaseStyle,
-                                           @Nonnull String[] words,
-                                           int wordCount,
-                                           @Nonnull String startWord,
-                                           char c,
-                                           boolean isArray,
-                                           boolean skip_) {
+  private static String compoundSuggestion(@Nonnull String prefix, boolean upperCaseStyle, @Nonnull String[] words, int wordCount, @Nonnull String startWord, char c, boolean isArray, boolean skip_) {
     StringBuilder buffer = new StringBuilder();
 
     buffer.append(prefix);
@@ -293,7 +196,7 @@ public class NameUtil {
     }
     else {
       if (prefix.isEmpty() || StringUtil.endsWithChar(prefix, '_')) {
-        startWord = startWord.toLowerCase();
+        startWord = StringUtil.toLowerCase(startWord);
       }
       else {
         startWord = Character.toUpperCase(c) + startWord.substring(1);
@@ -312,7 +215,7 @@ public class NameUtil {
       }
       else {
         if (prevWord.charAt(prevWord.length() - 1) == '_') {
-          word = word.toLowerCase();
+          word = StringUtil.toLowerCase(word);
         }
 
         if (skip_) {
@@ -335,79 +238,48 @@ public class NameUtil {
     return suggestion;
   }
 
-  static boolean isWordStart(char p) {
-    return Character.isUpperCase(p) || Character.isDigit(p);
+  @Nonnull
+  public static String[] splitNameIntoWords(@Nonnull String name) {
+    return NameUtilCore.splitNameIntoWords(name);
   }
 
-  static int nextWord(@Nonnull String text, int start) {
-    if (!Character.isLetterOrDigit(text.charAt(start))) {
-      return start + 1;
-    }
-
-    int i = start;
-    while (i < text.length() && Character.isDigit(text.charAt(i))) i++;
-    if (i > start) {
-      // digits form a separate hump
-      return i;
-    }
-
-    while (i < text.length() && Character.isUpperCase(text.charAt(i))) i++;
-
-    if (i > start + 1) {
-      // several consecutive uppercase letter form a hump
-      if (i == text.length() || !Character.isLetter(text.charAt(i))) {
-        return i;
-      }
-      return i - 1;
-    }
-
-    while (i < text.length() && Character.isLetter(text.charAt(i)) && !Character.isUpperCase(text.charAt(i))) i++;
-    return i;
-  }
-
-  private static void addAllWords(@Nonnull String text, @Nonnull List<String> result) {
-    int start = 0;
-    while (start < text.length()) {
-      int next = nextWord(text, start);
-      result.add(text.substring(start, next));
-      start = next;
-    }
+  @Nonnull
+  public static String[] nameToWords(@Nonnull String name) {
+    return NameUtilCore.nameToWords(name);
   }
 
   /**
-   * @deprecated use com.intellij.util.text.Matcher
+   * @deprecated use {@link com.intellij.util.text.Matcher}
    */
+  @Deprecated
   public interface Matcher {
     boolean matches(@Nonnull String name);
   }
 
-  @SuppressWarnings("UnusedDeclaration")
-  @Deprecated
-  @Nonnull
-  public static com.intellij.util.text.Matcher buildCompletionMatcher(@Nonnull String pattern, int exactPrefixLen, boolean allowToUpper, boolean allowToLower) {
-    MatchingCaseSensitivity options = !allowToLower && !allowToUpper ? MatchingCaseSensitivity.ALL : exactPrefixLen > 0 ? MatchingCaseSensitivity.FIRST_LETTER : MatchingCaseSensitivity.NONE;
-    return buildMatcher(pattern, options);
-  }
-
-  @Nonnull
   public static com.intellij.util.text.Matcher buildMatcher(@Nonnull String pattern, int exactPrefixLen, boolean allowToUpper, boolean allowToLower) {
     MatchingCaseSensitivity options = !allowToLower && !allowToUpper ? MatchingCaseSensitivity.ALL : exactPrefixLen > 0 ? MatchingCaseSensitivity.FIRST_LETTER : MatchingCaseSensitivity.NONE;
     return buildMatcher(pattern, options);
   }
 
-  @SuppressWarnings("UnusedParameters")
+  /**
+   * @deprecated Parameter {@code lowerCaseWords} is ignored, same as {@link #buildMatcher(String, int, boolean, boolean)} )}
+   */
   @Deprecated
   @Nonnull
-  public static com.intellij.util.text.Matcher buildMatcher(@Nonnull String pattern, int exactPrefixLen, boolean allowToUpper, boolean allowToLower, boolean lowerCaseWords) {
-    MatchingCaseSensitivity options = !allowToLower && !allowToUpper ? MatchingCaseSensitivity.ALL : exactPrefixLen > 0 ? MatchingCaseSensitivity.FIRST_LETTER : MatchingCaseSensitivity.NONE;
-    return buildMatcher(pattern, options);
+  public static com.intellij.util.text.Matcher buildMatcher(@Nonnull String pattern,
+                                                            int exactPrefixLen,
+                                                            boolean allowToUpper,
+                                                            boolean allowToLower,
+                                                            @SuppressWarnings("unused") boolean lowerCaseWords) {
+    return buildMatcher(pattern, exactPrefixLen, allowToUpper, allowToLower);
   }
 
   public static class MatcherBuilder {
     private final String pattern;
     private String separators = "";
     private MatchingCaseSensitivity caseSensitivity = MatchingCaseSensitivity.NONE;
-    private boolean typoTolerant = Registry.is("ide.completion.typo.tolerance");
+    private boolean typoTolerant = false;
+    private boolean preferStartMatches = false;
 
     public MatcherBuilder(String pattern) {
       this.pattern = pattern;
@@ -428,8 +300,14 @@ public class NameUtil {
       return this;
     }
 
+    public MatcherBuilder preferringStartMatches() {
+      preferStartMatches = true;
+      return this;
+    }
+
     public MinusculeMatcher build() {
-      return typoTolerant ? FixingLayoutTypoTolerantMatcher.create(pattern, caseSensitivity, separators) : new FixingLayoutMatcher(pattern, caseSensitivity, separators);
+      MinusculeMatcher matcher = typoTolerant ? FixingLayoutTypoTolerantMatcher.create(pattern, caseSensitivity, separators) : new FixingLayoutMatcher(pattern, caseSensitivity, separators);
+      return preferStartMatches ? new PreferStartMatchMatcherWrapper(matcher) : matcher;
     }
   }
 
@@ -449,17 +327,12 @@ public class NameUtil {
 
   @Nonnull
   public static String capitalizeAndUnderscore(@Nonnull String name) {
-    return splitWords(name, '_', new Function<String, String>() {
-      @Override
-      public String fun(String s) {
-        return StringUtil.toUpperCase(s);
-      }
-    });
+    return splitWords(name, '_', StringUtil::toUpperCase);
   }
 
   @Nonnull
-  public static String splitWords(@Nonnull String text, char separator, @Nonnull Function<String, String> transformWord) {
-    final String[] words = nameToWords(text);
+  public static String splitWords(@Nonnull String text, char separator, @Nonnull Function<? super String, String> transformWord) {
+    final String[] words = NameUtilCore.nameToWords(text);
     boolean insertSeparator = false;
     final StringBuilder buf = new StringBuilder();
     for (String word : words) {
@@ -470,16 +343,19 @@ public class NameUtil {
       }
       if (insertSeparator) {
         buf.append(separator);
-      } else {
+      }
+      else {
         insertSeparator = true;
       }
-      buf.append(transformWord.fun(word));
+      buf.append(transformWord.apply(word));
     }
     return buf.toString();
 
   }
 
   public enum MatchingCaseSensitivity {
-    NONE, FIRST_LETTER, ALL
+    NONE,
+    FIRST_LETTER,
+    ALL
   }
 }

@@ -3061,6 +3061,12 @@ public class ContainerUtil extends ContainerUtilRt {
             // nothing group already started
           }
         }
+        else if (i == 1) {
+          // second value not equal first - eat first as single group
+          consumer.accept(Collections.singletonList(prev));
+
+          startIndex = i;
+        }
         else if (startIndex == -1) {
           // if group not started - start fake group
           // it will eat by groupper, or return as prev

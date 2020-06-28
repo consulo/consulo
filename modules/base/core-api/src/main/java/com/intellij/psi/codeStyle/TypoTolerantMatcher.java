@@ -1,4 +1,4 @@
-// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+// Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.codeStyle;
 
 import com.intellij.openapi.util.Pair;
@@ -488,9 +488,6 @@ class TypoTolerantMatcher extends MinusculeMatcher {
           }
           break;
         }
-        if (isUppercasePatternVsLowercaseNameChar(patternIndex + i, nameIndex + i, errorState) && shouldProhibitCaseMismatch(patternIndex + i, nameIndex + i, errorState)) {
-          break;
-        }
         i++;
       }
       return new Fragment(i, errorState);
@@ -564,17 +561,6 @@ class TypoTolerantMatcher extends MinusculeMatcher {
     private FList<TextRange> findUppercaseMatchFurther(int patternIndex, int nameIndex, @Nonnull ErrorState errorState) {
       int nextWordStart = indexOfWordStart(patternIndex, nameIndex, errorState);
       return matchWildcards(patternIndex, nextWordStart, errorState.deriveFrom(patternIndex));
-    }
-
-    private boolean shouldProhibitCaseMismatch(int patternIndex, int nameIndex, @Nonnull ErrorState errorState) {
-      // at least three consecutive uppercase letters shouldn't match lowercase
-      if (myHasHumps && patternIndex >= 2 && isUpperCase(patternIndex - 1, errorState) && isUpperCase(patternIndex - 2, errorState)) {
-        // but if there's a lowercase after them, it can match (in case shift was released a bit later)
-        if (nameIndex + 1 == myName.length() || patternIndex + 1 < patternLength(errorState) && !isLowerCase(patternIndex + 1, errorState)) {
-          return true;
-        }
-      }
-      return false;
     }
 
     private boolean isFirstCharMatching(int nameIndex, int patternIndex, @Nonnull ErrorState errorState) {
@@ -737,7 +723,7 @@ class TypoTolerantMatcher extends MinusculeMatcher {
       return errors;
     }
 
-    private boolean processErrors(int start, int end, Processor<Pair<Integer, Error>> processor) {
+    private boolean processErrors(int start, int end, Processor<? super Pair<Integer, Error>> processor) {
       if (myBase != null && start < myDeriveIndex) {
         if (!myBase.processErrors(start, myDeriveIndex, processor)) {
           return false;
@@ -903,9 +889,9 @@ class TypoTolerantMatcher extends MinusculeMatcher {
     }
   }
 
-  @Nonnull
   @Contract(pure = true)
-  public static char[] insert(@Nonnull char[] array, int index, char value) {
+  @Nonnull
+  public static char [] insert(@Nonnull char [] array, int index, char value) {
     char[] result = new char[array.length + 1];
     System.arraycopy(array, 0, result, 0, index);
     result[index] = value;

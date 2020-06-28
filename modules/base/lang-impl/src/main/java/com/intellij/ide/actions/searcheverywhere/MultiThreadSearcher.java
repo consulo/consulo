@@ -3,15 +3,15 @@ package com.intellij.ide.actions.searcheverywhere;
 
 import com.intellij.concurrency.SensitiveProgressWrapper;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import consulo.logging.Logger;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.Condition;
@@ -261,8 +261,13 @@ class MultiThreadSearcher implements SESearcher {
     private final int myNewLimit;
     private volatile boolean hasMore;
 
-    ShowMoreResultsAccumulator(Map<? extends SearchEverywhereContributor<?>, Collection<SearchEverywhereFoundElementInfo>> alreadyFound, SEResultsEqualityProvider equalityProvider,
-                               SearchEverywhereContributor<?> contributor, int newLimit, Listener listener, Executor notificationExecutor, ProgressIndicator progressIndicator) {
+    ShowMoreResultsAccumulator(Map<? extends SearchEverywhereContributor<?>, Collection<SearchEverywhereFoundElementInfo>> alreadyFound,
+                               SEResultsEqualityProvider equalityProvider,
+                               SearchEverywhereContributor<?> contributor,
+                               int newLimit,
+                               Listener listener,
+                               Executor notificationExecutor,
+                               ProgressIndicator progressIndicator) {
       super(new ConcurrentHashMap<>(alreadyFound), equalityProvider, listener, notificationExecutor, progressIndicator);
       myExpandedContributor = contributor;
       myNewLimit = newLimit;
@@ -321,7 +326,9 @@ class MultiThreadSearcher implements SESearcher {
     private volatile boolean mySearchFinished = false;
 
     FullSearchResultsAccumulator(Map<? extends SearchEverywhereContributor<?>, Integer> contributorsAndLimits,
-                                 SEResultsEqualityProvider equalityProvider, Listener listener, Executor notificationExecutor,
+                                 SEResultsEqualityProvider equalityProvider,
+                                 Listener listener,
+                                 Executor notificationExecutor,
                                  ProgressIndicator progressIndicator) {
       super(contributorsAndLimits.entrySet().stream().collect(Collectors.toMap(entry -> entry.getKey(), entry -> new ArrayList<>(entry.getValue()))), equalityProvider, listener, notificationExecutor,
             progressIndicator);

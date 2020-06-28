@@ -144,7 +144,8 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
 
   @Nonnull
   public static MinusculeMatcher getQualifiedNameMatcher(@Nonnull String pattern) {
-    return NameUtil.buildMatcher("*" + StringUtil.replace(StringUtil.replace(pattern, "\\", "*\\*"), "/", "*/*"), NameUtil.MatchingCaseSensitivity.NONE);
+    pattern = "*" + StringUtil.replace(StringUtil.replace(pattern, "\\", "*\\*"), "/", "*/*");
+    return NameUtil.buildMatcher(pattern).withCaseSensitivity(NameUtil.MatchingCaseSensitivity.NONE).preferringStartMatches().build();
   }
 
   @Nonnull
@@ -158,7 +159,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
       String path = FileUtil.toSystemIndependentName(ChooseByNamePopup.getTransformedPattern(pattern, myModel));
       VirtualFile vFile = LocalFileSystem.getInstance().findFileByPathIfCached(path);
       if (vFile != null) {
-        ProjectFileIndex index = ProjectFileIndex.SERVICE.getInstance(myProject);
+        ProjectFileIndex index = ProjectFileIndex.getInstance(myProject);
         if (index.isInContent(vFile) || index.isInLibrary(vFile)) {
           return PsiUtilCore.findFileSystemItem(myProject, vFile);
         }
