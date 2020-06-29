@@ -2,6 +2,7 @@
 <scheme name="Default" default_scheme="true" version="1">
   <option name="LINE_SPACING" value="1"/>
   <option name="CONSOLE_FONT_NAME" value="Monospaced"/>
+  <option name="CONSOLE_FONT_SIZE" value="12"/>
   <option name="EDITOR_LIGATURES" value="true"/>
   <option name="EDITOR_FONT_NAME" value="Fira Code"/>
   <option name="EDITOR_FONT_SIZE" value="12"/>
