@@ -176,7 +176,7 @@ public class ProgressIndicatorUtils {
     // (can happen when processing multiple VFS events or writing multiple files on save)
 
     CompletableFuture<?> future = new CompletableFuture<>();
-    Application application = ApplicationManager.getApplication();
+    Application application = Application.get();
     application.invokeLater(() -> {
       if (application.isDisposed() || progressIndicator.isCanceled() || future.isCancelled()) {
         future.complete(null);
@@ -193,7 +193,6 @@ public class ProgressIndicatorUtils {
         }
       };
       application.addApplicationListener(listener, listenerDisposable);
-      application.addApplicationListener(listener);
       future.whenComplete((BiConsumer<Object, Throwable>)(o, throwable) -> Disposer.dispose(listenerDisposable));
       try {
         executor.execute(new Runnable() {
