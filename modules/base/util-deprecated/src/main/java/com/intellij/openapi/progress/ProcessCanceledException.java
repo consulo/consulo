@@ -19,28 +19,25 @@ import com.intellij.openapi.diagnostic.ControlFlowException;
 
 import javax.annotation.Nullable;
 
+/**
+ * An exception indicating that the currently running operation was terminated and should finish as soon as possible.
+ * Normally this exception should not be caught, swallowed, logged or handled in any way.
+ * It should be rethrown so that the infrastructure could handle it correctly.
+ * This exception can happen during almost any IDE activity, e.g. any PSI query,
+ * {@link com.intellij.openapi.extensions.ExtensionPointName#getExtensions},
+ * {@link com.intellij.openapi.actionSystem.AnAction#update}, etc.<p></p>
+ *
+ * @see com.intellij.openapi.progress.ProgressIndicator#checkCanceled()
+ * @see <a href="https://www.jetbrains.org/intellij/sdk/docs/basics/architectural_overview/general_threading_rules.html">General Threading Rules</a>
+ */
 public class ProcessCanceledException extends RuntimeException implements ControlFlowException {
-  private static final boolean ourDebugCreationTrace = Boolean.getBoolean("consulo.debug.creationg.trace");
-
-  private final Exception myCreationTrace;
-
   public ProcessCanceledException() {
-    this(null);
   }
 
   public ProcessCanceledException(@Nullable Throwable cause) {
     super(cause);
-
-    if (ourDebugCreationTrace) {
-      myCreationTrace = new Exception();
+    if (cause instanceof ProcessCanceledException) {
+      throw new IllegalArgumentException("Must not self-wrap ProcessCanceledException: ", cause);
     }
-    else {
-      myCreationTrace = null;
-    }
-  }
-
-  @Nullable
-  public Exception getCreationTrace() {
-    return myCreationTrace;
   }
 }

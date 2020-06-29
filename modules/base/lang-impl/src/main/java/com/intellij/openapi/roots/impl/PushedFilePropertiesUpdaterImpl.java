@@ -31,6 +31,7 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater {
@@ -323,13 +324,13 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
       catch (InterruptedException ex) {
         throw new ProcessCanceledException(ex);
       }
-      catch (ProcessCanceledException ex) {
-        Exception creationTrace = ex.getCreationTrace();
-        if(creationTrace != null) {
-          LOG.error(new Exception("Process canceled,", creationTrace));
+      catch (ExecutionException ex) {
+        Throwable cause = ex.getCause();
+        if(cause instanceof ProcessCanceledException) {
+          throw (ProcessCanceledException)cause;
         }
 
-        throw ex;
+        LOG.error(ex);
       }
       catch (Exception ex) {
         LOG.error(ex);
