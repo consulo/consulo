@@ -20,6 +20,7 @@ import com.intellij.ide.SelectInContext;
 import com.intellij.ide.SelectInManager;
 import com.intellij.ide.StandardTargetWeights;
 import com.intellij.ide.projectView.impl.ProjectViewPane;
+import com.intellij.ide.scratch.ScratchUtil;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
@@ -58,7 +59,7 @@ public class ProjectPaneSelectInTarget extends ProjectViewSelectInTarget impleme
         return true;
       }
 
-      return Comparing.equal(vFile.getParent(), myProject.getBaseDir());
+      return Comparing.equal(vFile.getParent(), myProject.getBaseDir()) || ScratchUtil.isScratch(vFile);
     }
 
     return false;
