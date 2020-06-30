@@ -5,6 +5,7 @@ import com.intellij.find.FindBundle;
 import com.intellij.find.FindModel;
 import com.intellij.find.findInProject.FindInProjectManager;
 import com.intellij.find.ngrams.TrigramIndex;
+import com.intellij.lang.cacheBuilder.CacheBuilderRegistry;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ReadAction;
@@ -248,6 +249,7 @@ class FindInProjectTask {
 
     final ProjectFileIndex fileIndex = ProjectFileIndex.SERVICE.getInstance(myProject);
     final boolean hasTrigrams = hasTrigrams(myStringToFindInIndices);
+    CacheBuilderRegistry cacheBuilderRegistry = CacheBuilderRegistry.getInstance();
 
     class EnumContentIterator implements ContentIterator {
       private final Set<VirtualFile> myFiles = new CompactVirtualFileSet();
@@ -282,7 +284,7 @@ class FindInProjectTask {
             if (hasTrigrams) {
               return TrigramIndex.isIndexable(fileType) && fileBasedIndex.isIndexingCandidate(file, TrigramIndex.INDEX_ID);
             }
-            return IdIndex.isIndexable(fileType) && fileBasedIndex.isIndexingCandidate(file, IdIndex.NAME);
+            return IdIndex.isIndexable(cacheBuilderRegistry, fileType) && fileBasedIndex.isIndexingCandidate(file, IdIndex.NAME);
           }
         });
         return true;

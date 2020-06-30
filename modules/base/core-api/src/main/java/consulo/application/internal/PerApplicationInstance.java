@@ -19,12 +19,13 @@ import com.intellij.openapi.application.Application;
 import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;
+import javax.inject.Provider;
 
 /**
  * @author VISTALL
  * @since 2019-06-27
  */
-public class PerApplicationInstance<V> {
+public final class PerApplicationInstance<V> implements Provider<V> {
   @Nonnull
   public static <T> PerApplicationInstance<T> of(@Nonnull Class<T> clazz) {
     return new PerApplicationInstance<>(clazz);
@@ -38,6 +39,7 @@ public class PerApplicationInstance<V> {
     myTargetClass = targetClass;
   }
 
+  @Override
   @Nonnull
   public V get() {
     V oldValue = myValue;
@@ -47,11 +49,7 @@ public class PerApplicationInstance<V> {
         if (oldValue == null) {
           Application application = Application.get();
           V newValue = application.getInjectingContainer().getInstance(myTargetClass);
-
-          Disposer.register(application, () -> {
-            myValue = null;
-          });
-
+          Disposer.register(application, () -> myValue = null);
           myValue = newValue;
           return newValue;
         }

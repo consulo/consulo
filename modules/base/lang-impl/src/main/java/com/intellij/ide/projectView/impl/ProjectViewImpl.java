@@ -123,6 +123,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   private boolean myExtensionsLoaded = false;
   @Nonnull
   private final Project myProject;
+  @Nonnull
+  private final ProjectViewSharedSettings myProjectViewSharedSettings;
 
   // + options
   private final Map<String, Boolean> myFlattenPackages = new THashMap<>();
@@ -214,8 +216,9 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   private ContentManager myContentManager;
 
   @Inject
-  public ProjectViewImpl(@Nonnull Project project, final FileEditorManager fileEditorManager, final ToolWindowManager toolWindowManager) {
+  public ProjectViewImpl(@Nonnull Project project, FileEditorManager fileEditorManager, ToolWindowManager toolWindowManager, @Nonnull ProjectViewSharedSettings projectViewSharedSettings) {
     myProject = project;
+    myProjectViewSharedSettings = projectViewSharedSettings;
 
     constructUi();
 
@@ -1470,8 +1473,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     return Registry.is("ide.projectView.globalOptions");
   }
 
-  ProjectViewSharedSettings getGlobalOptions() {
-    return ProjectViewSharedSettings.getInstance();
+  public ProjectViewSharedSettings getGlobalOptions() {
+    return myProjectViewSharedSettings;
   }
 
   @Override

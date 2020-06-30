@@ -17,9 +17,9 @@ import com.intellij.util.indexing.*;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.InlineKeyDescriptor;
 import com.intellij.util.io.KeyDescriptor;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -30,10 +30,9 @@ import java.util.Map;
  * @author Eugene Zhuravlev
  */
 public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> implements DocumentChangeDependentIndex {
-  @NonNls
   public static final ID<IdIndexEntry, Integer> NAME = ID.create("IdIndex");
 
-  private final FileBasedIndex.InputFilter myInputFilter = (project, file) -> isIndexable(file.getFileType());
+  private final FileBasedIndex.InputFilter myInputFilter;
 
   public static final boolean ourSnapshotMappingsEnabled = SystemProperties.getBooleanProperty("idea.index.snapshot.mappings.enabled", true);
 
@@ -73,6 +72,15 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> impl
       return Collections.emptyMap();
     }
   };
+
+  protected final CacheBuilderRegistry myCacheBuilderRegistry;
+
+  @Inject
+  public IdIndex(CacheBuilderRegistry cacheBuilderRegistry) {
+    myCacheBuilderRegistry = cacheBuilderRegistry;
+
+    myInputFilter = (project, file) -> isIndexable(myCacheBuilderRegistry, file.getFileType());
+  }
 
   @Override
   public int getVersion() {
@@ -114,11 +122,11 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> impl
     return myInputFilter;
   }
 
-  public static boolean isIndexable(FileType fileType) {
+  public static boolean isIndexable(@Nonnull CacheBuilderRegistry cacheBuilderRegistry, FileType fileType) {
     return fileType instanceof LanguageFileType ||
            fileType instanceof CustomSyntaxTableFileType ||
            IdTableBuilding.isIdIndexerRegistered(fileType) ||
-           CacheBuilderRegistry.getInstance().getCacheBuilder(fileType) != null;
+           cacheBuilderRegistry.getCacheBuilder(fileType) != null;
   }
 
   @Override

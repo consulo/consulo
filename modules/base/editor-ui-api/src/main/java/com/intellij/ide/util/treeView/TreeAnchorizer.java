@@ -15,11 +15,12 @@
  */
 package com.intellij.ide.util.treeView;
 
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import consulo.application.internal.PerApplicationInstance;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Provider;
 import java.util.Collection;
 import java.util.List;
 
@@ -31,8 +32,11 @@ import java.util.List;
  * @author peter
  */
 public class TreeAnchorizer {
+  private static final Provider<TreeAnchorizer> ourInstance = PerApplicationInstance.of(TreeAnchorizer.class);
+
+  @Nonnull
   public static TreeAnchorizer getService() {
-    return ServiceManager.getService(TreeAnchorizer.class);
+    return ourInstance.get();
   }
 
   public Object createAnchor(Object element) {

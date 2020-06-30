@@ -18,6 +18,8 @@ package com.intellij.lang.cacheBuilder;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileTypes.FileType;
+import consulo.annotation.DeprecationInfo;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -30,6 +32,8 @@ import javax.annotation.Nullable;
  */
 public abstract class CacheBuilderRegistry {
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use injecting provider")
   public static CacheBuilderRegistry getInstance() {
     return ServiceManager.getService(CacheBuilderRegistry.class);
   }

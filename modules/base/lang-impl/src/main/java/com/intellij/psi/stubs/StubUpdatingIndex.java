@@ -23,7 +23,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectUtil;
+import com.intellij.openapi.project.ProjectLocator;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
@@ -42,7 +42,7 @@ import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import javax.inject.Inject;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -60,14 +60,14 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
 
   public static final ID<Integer, SerializedStubTree> INDEX_ID = ID.create("Stubs");
 
-  private static final FileBasedIndex.InputFilter INPUT_FILTER = (project, file) -> canHaveStub(project, file);
+  private final FileBasedIndex.InputFilter myInputFilter;
 
-  public static boolean canHaveStub(@Nonnull VirtualFile file) {
-    return canHaveStub(null, file);
+  public static boolean canHaveStub(@Nonnull ProjectLocator projectLocator, @Nonnull VirtualFile file) {
+    return canHaveStub(projectLocator, null, file);
   }
 
-  public static boolean canHaveStub(@Nullable Project project, @Nonnull VirtualFile file) {
-    FileType fileType = SubstitutedFileType.substituteFileType(file, file.getFileType(), project == null ? ProjectUtil.guessProjectForFile(file) : project);
+  public static boolean canHaveStub(@Nonnull ProjectLocator projectLocator, @Nullable Project project, @Nonnull VirtualFile file) {
+    FileType fileType = SubstitutedFileType.substituteFileType(file, file.getFileType(), project == null ? projectLocator.guessProjectForFile(file) : project);
     if (fileType instanceof LanguageFileType) {
       final Language l = ((LanguageFileType)fileType).getLanguage();
       final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(l);
@@ -90,6 +90,15 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
     }
     final BinaryFileStubBuilder builder = BinaryFileStubBuilders.INSTANCE.forFileType(fileType);
     return builder != null && builder.acceptsFile(file);
+  }
+
+  private final ProjectLocator myProjectLocator;
+
+  @Inject
+  public StubUpdatingIndex(ProjectLocator projectLocator) {
+    myProjectLocator = projectLocator;
+
+    myInputFilter = (project, file) -> canHaveStub(myProjectLocator, project, file);
   }
 
   @Nonnull
@@ -239,7 +248,7 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
   @Nonnull
   @Override
   public FileBasedIndex.InputFilter getInputFilter() {
-    return INPUT_FILTER;
+    return myInputFilter;
   }
 
   @Override

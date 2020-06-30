@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.impl.cache.impl.id;
 
+import com.intellij.lang.cacheBuilder.CacheBuilderRegistry;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.util.Comparing;
@@ -9,6 +10,7 @@ import com.intellij.util.indexing.CustomInputsIndexFileBasedIndexExtension;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataInputOutputUtil;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -20,6 +22,11 @@ import java.util.Collection;
 public class IdIndexImpl extends IdIndex implements CustomInputsIndexFileBasedIndexExtension<IdIndexEntry> {
   private static final ThreadLocalCachedIntArray spareBufferLocal = new ThreadLocalCachedIntArray();
 
+  @Inject
+  public IdIndexImpl(CacheBuilderRegistry cacheBuilderRegistry) {
+    super(cacheBuilderRegistry);
+  }
+
   @Override
   public int getVersion() {
     FileType[] types = FileTypeRegistry.getInstance().getRegisteredFileTypes();
@@ -27,7 +34,7 @@ public class IdIndexImpl extends IdIndex implements CustomInputsIndexFileBasedIn
 
     int version = super.getVersion();
     for (FileType fileType : types) {
-      if (!isIndexable(fileType)) continue;
+      if (!isIndexable(myCacheBuilderRegistry, fileType)) continue;
       IdIndexer indexer = IdTableBuilding.getFileTypeIndexer(fileType);
       if (indexer == null) continue;
       version = version * 31 + (indexer.getVersion() ^ indexer.getClass().getName().hashCode());

@@ -27,14 +27,8 @@ import javax.inject.Singleton;
  *         from kotlin by @author Konstantin Bulenkov
  */
 @Singleton
-@State(name = "ProjectViewSharedSettings",
-        storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/projectView.xml"))
+@State(name = "ProjectViewSharedSettings", storages = @Storage("projectView.xml"))
 public class ProjectViewSharedSettings implements PersistentStateComponent<ProjectViewSharedSettings> {
-  @Nonnull
-  public static ProjectViewSharedSettings getInstance() {
-    return ServiceManager.getService(ProjectViewSharedSettings.class);
-  }
-
   private boolean myFlattenPackages = false;
   private boolean myShowMembers = false;
   private boolean mySortByType = false;

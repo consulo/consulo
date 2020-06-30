@@ -21,7 +21,6 @@ import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.AlphaComparator;
 import com.intellij.ide.util.treeView.NodeDescriptor;
-import com.intellij.openapi.project.Project;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -63,9 +62,6 @@ public class GroupByTypeComparator implements Comparator<NodeDescriptor> {
     }
 
     if (descriptor1 instanceof ProjectViewNode && descriptor2 instanceof ProjectViewNode) {
-      final Project project = descriptor1.getProject();
-      final ProjectView projectView = ProjectView.getInstance(project);
-
       ProjectViewNode node1 = (ProjectViewNode)descriptor1;
       ProjectViewNode node2 = (ProjectViewNode)descriptor2;
 
@@ -76,7 +72,7 @@ public class GroupByTypeComparator implements Comparator<NodeDescriptor> {
         if (result != 0) return result;
       }
 
-      boolean isFoldersOnTop = !(projectView instanceof ProjectViewImpl && !((ProjectViewImpl)projectView).isFoldersAlwaysOnTop());
+      boolean isFoldersOnTop = !(myProjectView instanceof ProjectViewImpl && !((ProjectViewImpl)myProjectView).isFoldersAlwaysOnTop());
       if (isFoldersOnTop) {
         int typeWeight1 = node1.getTypeSortWeight(isSortByType());
         int typeWeight2 = node2.getTypeSortWeight(isSortByType());

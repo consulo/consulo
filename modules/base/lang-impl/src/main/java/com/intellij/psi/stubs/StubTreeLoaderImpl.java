@@ -17,13 +17,10 @@ package com.intellij.psi.stubs;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.project.*;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.project.NoAccessDuringPsiEvents;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.RecursionManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
@@ -36,6 +33,7 @@ import com.intellij.util.indexing.*;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.List;
@@ -48,6 +46,13 @@ import java.util.Map;
 public class StubTreeLoaderImpl extends StubTreeLoader {
   private static final Logger LOG = Logger.getInstance(StubTreeLoaderImpl.class);
   private static volatile boolean ourStubReloadingProhibited;
+
+  private final ProjectLocator myProjectLocator;
+
+  @Inject
+  public StubTreeLoaderImpl(ProjectLocator projectLocator) {
+    myProjectLocator = projectLocator;
+  }
 
   @Override
   @Nullable
@@ -230,7 +235,7 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
 
   @Override
   public boolean canHaveStub(VirtualFile file) {
-    return StubUpdatingIndex.canHaveStub(file);
+    return StubUpdatingIndex.canHaveStub(myProjectLocator, file);
   }
 
   @Override
