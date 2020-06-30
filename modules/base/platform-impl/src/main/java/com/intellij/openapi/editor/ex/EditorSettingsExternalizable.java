@@ -20,7 +20,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.ComponentSettings;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 import org.intellij.lang.annotations.MagicConstant;
@@ -142,9 +141,6 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
   public @interface StripTrailingSpaces {
   }
 
-  @NonNls
-  public static final String DEFAULT_FONT_NAME = "Courier";
-
   public static EditorSettingsExternalizable getInstance() {
     if (ApplicationManager.getApplication().isDisposed()) {
       return new EditorSettingsExternalizable();
@@ -172,7 +168,6 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
   public void loadState(OptionSet state) {
     myOptions = state;
     parseRawSoftWraps();
-    ComponentSettings.getInstance().setSmoothScrollingEnabled(isSmoothScrolling());
   }
 
   private void parseRawSoftWraps() {
