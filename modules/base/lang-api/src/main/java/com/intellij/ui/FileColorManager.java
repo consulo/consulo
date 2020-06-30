@@ -63,9 +63,9 @@ public abstract class FileColorManager {
 
   public abstract boolean isColored(@Nonnull String scopeName, final boolean shared);
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract Color getRendererBackground(VirtualFile file);
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract Color getRendererBackground(PsiFile file);
 }

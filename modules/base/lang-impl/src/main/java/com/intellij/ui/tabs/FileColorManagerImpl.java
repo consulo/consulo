@@ -18,35 +18,31 @@ package com.intellij.ui.tabs;
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.components.StoragePathMacros;
-import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.FileColorManager;
-import com.intellij.ui.LightColors;
-import com.intellij.util.containers.hash.LinkedHashMap;
+import com.intellij.ui.JBColor;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author spleaner
  * @author Konstantin Bulenkov
  */
 @Singleton
-@State(
-  name = "FileColors",
-  storages = {@Storage( file = StoragePathMacros.WORKSPACE_FILE)})
+@State(name = "FileColors", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 public class FileColorManagerImpl extends FileColorManager implements PersistentStateComponent<Element> {
   public static final String FC_ENABLED = "FileColorsEnabled";
   public static final String FC_TABS_ENABLED = "FileColorsForTabsEnabled";
@@ -55,25 +51,14 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
   private final FileColorsModel myModel;
   private FileColorSharedConfigurationManager mySharedConfigurationManager;
 
-  private static final Map<String, Color> ourDefaultColors;
-  private static final Map<String, Color> ourDefaultDarkColors;
-
-  static {
-    ourDefaultColors = new LinkedHashMap<String, Color>();
-    ourDefaultColors.put("Blue", new Color(0xdcf0ff));
-    ourDefaultColors.put("Green", new Color(231, 250, 219));
-    ourDefaultColors.put("Orange", new Color(246, 224, 202));
-    ourDefaultColors.put("Rose", new Color(242, 206, 202));
-    ourDefaultColors.put("Violet", new Color(222, 213, 241));
-    ourDefaultColors.put("Yellow", new Color(255, 255, 228));
-    ourDefaultDarkColors = new LinkedHashMap<String, Color>();
-    ourDefaultDarkColors.put("Blue", new Color(0x2B3557));
-    ourDefaultDarkColors.put("Green", new Color(0x2A3B2C));
-    ourDefaultDarkColors.put("Orange", new Color(0x823B1C));
-    ourDefaultDarkColors.put("Rose", new Color(0x542F3A));
-    ourDefaultDarkColors.put("Violet", new Color(0x4f4056));
-    ourDefaultDarkColors.put("Yellow", new Color(0x494539));
-  }
+  private static final Map<String, Color> ourDefaultColors = ContainerUtil.<String, Color>immutableMapBuilder()
+    .put("Blue", JBColor.namedColor("FileColor.Blue", new JBColor(0xeaf6ff, 0x4f556b)))
+    .put("Green", JBColor.namedColor("FileColor.Green", new JBColor(0xeffae7, 0x49544a)))
+    .put("Orange", JBColor.namedColor("FileColor.Orange", new JBColor(0xf6e9dc, 0x806052)))
+    .put("Rose", JBColor.namedColor("FileColor.Rose", new JBColor(0xf2dcda, 0x6e535b)))
+    .put("Violet", JBColor.namedColor("FileColor.Violet", new JBColor(0xe6e0f1, 0x534a57)))
+    .put("Yellow", JBColor.namedColor("FileColor.Yellow", new JBColor(0xffffe4, 0x4f4b41)))
+    .build();
 
   @Inject
   public FileColorManagerImpl(@Nonnull final Project project) {
@@ -127,33 +112,14 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
     PropertiesComponent.getInstance().setValue(FC_PROJECT_VIEW_ENABLED, Boolean.toString(enabled));
   }
 
-  public Element getState(final boolean shared) {
-    Element element = new Element("state");
-    //if (!shared) {
-    //  element.setAttribute("enabled", Boolean.toString(myEnabled));
-    //  element.setAttribute("enabledForTabs", Boolean.toString(myEnabledForTabs));
-    //}
-
-    myModel.save(element, shared);
-    //if (!shared) {
-    //  final boolean exists = findConfigurationByName(NonProjectFilesScope.NAME, myModel.getLocalConfigurations()) != null;
-    //  if (myEnabledForNonProject && !exists) {
-    //    myEnabledForNonProject = false;
-    //  } else if (!myEnabledForNonProject && exists) {
-    //    myEnabledForNonProject = true;
-    //  }
-    //
-    //  element.setAttribute("showNonProject", Boolean.toString(myEnabledForNonProject));
-    //}
-
-    return element;
+  public Element getState(final boolean isProjectLevel) {
+    return myModel.save(isProjectLevel);
   }
 
   @Override
-  @SuppressWarnings({"MethodMayBeStatic"})
   @Nullable
   public Color getColor(@Nonnull final String name) {
-    final Color color = UIUtil.isUnderDarcula() ? ourDefaultDarkColors.get(name) : ourDefaultColors.get(name);
+    final Color color = ourDefaultColors.get(name);
     return color == null ? ColorUtil.fromHex(name, null) : color;
   }
 
@@ -163,28 +129,11 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
     return getState(false);
   }
 
-  @SuppressWarnings({"AutoUnboxing"})
-  void loadState(Element state, final boolean shared) {
-    if (!shared) {
-      //final String enabled = state.getAttributeValue("enabled");
-      //myEnabled = enabled == null ? true : Boolean.valueOf(enabled);
-      //
-      //final String enabledForTabs = state.getAttributeValue("enabledForTabs");
-      //myEnabledForTabs = enabledForTabs == null ? true : Boolean.valueOf(enabledForTabs);
-
-      //final String showNonProject = state.getAttributeValue("showNonProject");
-      //myEnabledForNonProject = showNonProject == null ? true : Boolean.valueOf(showNonProject);
-    }
-
-    myModel.load(state, shared);
-    //final List<FileColorConfiguration> local = myModel.getLocalConfigurations();
-    //if (!shared && myEnabledForNonProject && findConfigurationByName(NonProjectFilesScope.NAME, local) == null) {
-    //  local.add(new FileColorConfiguration(NonProjectFilesScope.NAME, NonProjectFilesScope.DEFAULT_COLOR));
-    //}
+  void loadState(Element state, final boolean isProjectLevel) {
+    myModel.load(state, isProjectLevel);
   }
 
   @Override
-  @SuppressWarnings({"MethodMayBeStatic"})
   public Collection<String> getColorNames() {
     final Set<String> names = ourDefaultColors.keySet();
     final List<String> sorted = new ArrayList<String>(names);
@@ -193,7 +142,6 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
   }
 
   @Override
-  @SuppressWarnings({"AutoUnboxing"})
   public void loadState(Element state) {
     initProjectLevelConfigurations();
     loadState(state, false);
@@ -220,11 +168,8 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
       if (fileColor != null) return fileColor;
     }
 
-    final VirtualFile vFile = file.getVirtualFile();
-    if (vFile == null) return null;
-
-    //todo[kb] slightly_green for darcula
-    return FileEditorManager.getInstance(myProject).isFileOpen(vFile) && !UIUtil.isUnderDarcula() ? LightColors.SLIGHTLY_GREEN : null;
+    //return FileEditorManager.getInstance(myProject).isFileOpen(vFile) && !UIUtil.isUnderDarcula() ? LightColors.SLIGHTLY_GREEN : null;
+    return null;
   }
 
   @Override
@@ -240,18 +185,20 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
   @Nullable
   public Color getFileColor(@Nonnull final VirtualFile file) {
     initProjectLevelConfigurations();
-    if(!file.isValid()) {
+    if (!file.isValid()) {
       return null;
     }
     final PsiFile psiFile = PsiManager.getInstance(getProject()).findFile(file);
     if (psiFile != null) {
       return getFileColor(psiFile);
-    } else {
+    }
+    else {
       final String colorName = myModel.getColor(file, getProject());
       return colorName == null ? null : getColor(colorName);
     }
   }
 
+  @Override
   @Nullable
   public Color getScopeColor(@Nonnull String scopeName) {
     initProjectLevelConfigurations();
@@ -262,7 +209,7 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
 
   @Override
   public boolean isShared(@Nonnull final String scopeName) {
-    return myModel.isShared(scopeName);
+    return myModel.isProjectLevel(scopeName);
   }
 
   FileColorsModel getModel() {
@@ -270,7 +217,7 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
   }
 
   boolean isShared(FileColorConfiguration configuration) {
-    return myModel.isShared(configuration);
+    return myModel.isProjectLevel(configuration);
   }
 
   @Override

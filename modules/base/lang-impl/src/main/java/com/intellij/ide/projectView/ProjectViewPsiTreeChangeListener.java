@@ -16,7 +16,6 @@
 
 package com.intellij.ide.projectView;
 
-import com.intellij.ide.scratch.ScratchProjectViewPane;
 import com.intellij.ide.scratch.ScratchUtil;
 import com.intellij.ide.util.treeView.AbstractTreeUpdater;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
@@ -24,8 +23,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiModificationTracker;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import static com.intellij.util.ObjectUtils.notNull;
@@ -100,7 +99,7 @@ public abstract class ProjectViewPsiTreeChangeListener extends PsiTreeChangeAdap
           if (parent == null) break;
         }
       }
-      else if (parent instanceof PsiDirectory && ScratchProjectViewPane.isScratchesMergedIntoProjectTab() && ScratchUtil.isScratch(((PsiDirectory)parent).getVirtualFile())) {
+      else if (parent instanceof PsiDirectory && ScratchUtil.isScratch(((PsiDirectory)parent).getVirtualFile())) {
         addSubtreeToUpdateByRoot();
         break;
       }

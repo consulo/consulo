@@ -15,22 +15,22 @@
  */
 package com.intellij.ide.scratch;
 
-import com.intellij.ide.util.treeView.AbstractTreeBuilder;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageUtil;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.disposer.Disposable;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author gregsh
@@ -41,27 +41,19 @@ public abstract class RootType {
 
   public static final ExtensionPointName<RootType> ROOT_EP = ExtensionPointName.create("com.intellij.scratch.rootType");
 
+  @Nonnull
+  public static List<RootType> getAllRootTypes() {
+    return ROOT_EP.getExtensionList();
+  }
+
   @Nullable
   public static RootType forFile(@Nullable VirtualFile file) {
     return ScratchFileService.getInstance().getRootType(file);
   }
 
   @Nonnull
-  public static RootType[] getAllRootIds() {
-    return Extensions.getExtensions(ROOT_EP);
-  }
-
-  @Nonnull
-  public static RootType findById(@Nonnull String id) {
-    for (RootType type : getAllRootIds()) {
-      if (id.equals(type.getId())) return type;
-    }
-    throw new AssertionError(id);
-  }
-
-  @Nonnull
   public static <T extends RootType> T findByClass(Class<T> aClass) {
-    return ROOT_EP.findExtension(aClass);
+    return ROOT_EP.findExtensionOrFail(aClass);
   }
 
   private final String myId;
@@ -128,7 +120,6 @@ public abstract class RootType {
     return false;
   }
 
-  public void registerTreeUpdater(@Nonnull Project project, @Nonnull AbstractTreeBuilder builder) {
+  public void registerTreeUpdater(@Nonnull Project project, @Nonnull Disposable disposable, @Nonnull Runnable onUpdate) {
   }
-
 }

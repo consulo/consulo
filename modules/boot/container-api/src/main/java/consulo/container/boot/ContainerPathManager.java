@@ -32,6 +32,7 @@ public abstract class ContainerPathManager {
   private static final String PLUGINS_FOLDER = "plugins";
   private static final String BIN_FOLDER = "bin";
   private static final String OPTIONS_FOLDER = "options";
+  private static final String SCRATCHES_FOLDER = "scratches";
 
   @Nonnull
   public static ContainerPathManager get() {

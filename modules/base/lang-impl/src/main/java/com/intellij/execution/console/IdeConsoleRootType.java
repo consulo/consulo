@@ -16,6 +16,7 @@
 package com.intellij.execution.console;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -23,10 +24,11 @@ import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.ObjectUtils;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
@@ -36,7 +38,7 @@ import javax.inject.Inject;
 public class IdeConsoleRootType extends ConsoleRootType {
   @Inject
   IdeConsoleRootType() {
-    super("ide", "IDE Scripting");
+    super("ide", ApplicationNamesInfo.getInstance().getProductName() + " Consoles");
   }
 
   @Nonnull
@@ -47,24 +49,14 @@ public class IdeConsoleRootType extends ConsoleRootType {
   @Nullable
   @Override
   public Image substituteIcon(@Nonnull Project project, @Nonnull VirtualFile file) {
-    FileType fileType = FileTypeManager.getInstance().getFileTypeByFileName(file.getName());
-    if (fileType == UnknownFileType.INSTANCE || fileType == PlainTextFileType.INSTANCE) {
-      return AllIcons.Debugger.ToolConsole;
-    }
-    //Icon icon = TargetAWT.to(fileType.getIcon());
-    //Icon subscript = ((ScalableIcon)AllIcons.Debugger.ToolConsole).scale(.5f);
-    //LayeredIcon icons = new LayeredIcon(2);
-    //icons.setIcon(icon, 0);
-    //icons.setIcon(subscript, 1, 8, 8);
-    //return icons;
-    Image icon = fileType.getIcon();
-    assert icon != null;
-    return ImageEffects.transparent(icon, .8f);
+    if (file.isDirectory()) return null;
+    FileType fileType = FileTypeManager.getInstance().getFileTypeByFileName(file.getNameSequence());
+    Image icon = fileType == UnknownFileType.INSTANCE || fileType == PlainTextFileType.INSTANCE ? AllIcons.Debugger.Console : ObjectUtils.notNull(fileType.getIcon(), AllIcons.Debugger.Console);
+    return ImageEffects.layered(icon, AllIcons.Nodes.RunnableMark);
   }
 
   @Override
   public void fileOpened(@Nonnull VirtualFile file, @Nonnull FileEditorManager source) {
     RunIdeConsoleAction.configureConsole(file, source);
   }
-
 }

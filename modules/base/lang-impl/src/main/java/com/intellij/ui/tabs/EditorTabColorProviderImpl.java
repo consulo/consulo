@@ -17,10 +17,9 @@
 package com.intellij.ui.tabs;
 
 import com.intellij.openapi.fileEditor.impl.EditorTabColorProvider;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
 import com.intellij.ui.FileColorManager;
 
 import javax.annotation.Nonnull;
@@ -30,14 +29,13 @@ import java.awt.*;
 /**
  * @author spleaner
  */
-public class EditorTabColorProviderImpl implements EditorTabColorProvider {
+public class EditorTabColorProviderImpl implements EditorTabColorProvider, DumbAware {
 
   @Override
   @Nullable
   public Color getEditorTabColor(Project project, VirtualFile file) {
-    final FileColorManager colorManager = FileColorManagerImpl.getInstance(project);
-    final PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
-    return psiFile != null && colorManager.isEnabledForTabs() ? colorManager.getFileColor(psiFile) : null;
+    FileColorManager colorManager = FileColorManager.getInstance(project);
+    return colorManager.isEnabledForTabs() ? colorManager.getFileColor(file) : null;
   }
 
   @Nullable

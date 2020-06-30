@@ -19,6 +19,7 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import consulo.util.dataholder.Key;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 
 /**
@@ -50,7 +51,7 @@ public interface TreeStructureProvider {
    * @return the data object, or null if no data object can be returned by this provider.
    * @see com.intellij.openapi.actionSystem.DataProvider
    */
-  @javax.annotation.Nullable
+  @Nullable
   default Object getData(Collection<AbstractTreeNode> selected, Key<?> dataKey) {
     return null;
   }

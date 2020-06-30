@@ -38,12 +38,14 @@ public class ScratchUtil {
   }
 
   /**
-   * Returns true if a file is in one of scratch roots: scratch, console, etc.
+   * Returns true if a file or a directory is in one of scratch roots: scratch, console, etc.
+   *
    * @see RootType
    * @see ScratchFileService
    */
   public static boolean isScratch(@Nullable VirtualFile file) {
-    return file != null && file.getFileType() == ScratchFileType.INSTANCE;
+    RootType rootType = RootType.forFile(file);
+    return rootType != null && !rootType.isHidden();
   }
 
   public static void updateFileExtension(@Nonnull Project project, @Nullable VirtualFile file) throws IOException {

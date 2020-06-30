@@ -186,6 +186,9 @@ public abstract class ProjectViewNode<Value> extends AbstractTreeNode<Value> imp
     return Collections.emptyList();
   }
 
+  protected static Collection<VirtualFile> getDefaultRootsFor(@Nullable VirtualFile file) {
+    return file != null ? Collections.singleton(file) : Collections.emptySet();
+  }
 
   @Override
   protected boolean hasProblemFileBeneath() {

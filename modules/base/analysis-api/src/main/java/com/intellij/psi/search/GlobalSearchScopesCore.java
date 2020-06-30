@@ -30,7 +30,11 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.scope.packageSet.*;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.swing.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -95,6 +99,12 @@ public class GlobalSearchScopesCore {
         return psiFile != null && packageSet.contains(psiFile, holder);
       }
       return false;
+    }
+
+    @Nullable
+    @Override
+    public Icon getIcon() {
+      return TargetAWT.to(mySet.getIcon());
     }
 
     @Nonnull

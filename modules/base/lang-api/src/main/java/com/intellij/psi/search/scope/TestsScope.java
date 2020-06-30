@@ -37,4 +37,9 @@ public class TestsScope extends NamedScope {
       }
     });
   }
+
+  @Override
+  public String getDefaultColorName() {
+    return "Green";
+  }
 }

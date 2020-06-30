@@ -15,16 +15,31 @@
  */
 package com.intellij.psi.search.scope.packageSet;
 
-import javax.annotation.Nullable;
+import com.intellij.icons.AllIcons;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class NamedScope {
   private final String myName;
+  @Nonnull
+  private final Image myIcon;
   private final PackageSet myValue;
 
-  public NamedScope(@Nonnull String name, @Nullable PackageSet value) {
+  public NamedScope(@Nonnull String name, @Nonnull Image icon, @Nullable PackageSet value) {
     myName = name;
+    myIcon = icon;
     myValue = value;
+  }
+
+  public NamedScope(@Nonnull String name, @Nullable PackageSet value) {
+    this(name, AllIcons.Ide.LocalScope, value);
+  }
+
+  @Nonnull
+  public Image getIcon() {
+    return myIcon;
   }
 
   @Nonnull
@@ -32,13 +47,18 @@ public class NamedScope {
     return myName;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public PackageSet getValue() {
     return myValue;
   }
 
   public NamedScope createCopy() {
-    return new NamedScope(myName, myValue != null ? myValue.createCopy() : null);
+    return new NamedScope(myName, myIcon, myValue != null ? myValue.createCopy() : null);
+  }
+
+  @Nullable
+  public String getDefaultColorName() {
+    return null;
   }
 
   public static class UnnamedScope extends NamedScope {

@@ -32,10 +32,9 @@ public interface CustomScopesProvider {
   @Nonnull
   List<NamedScope> getCustomScopes();
 
-
   @Nonnull
   default List<NamedScope> getFilteredScopes() {
-    CustomScopesFilter[] filters = CustomScopesFilter.EP_NAME.getExtensions();
+    List<CustomScopesFilter> filters = CustomScopesFilter.EP_NAME.getExtensionList();
     return ContainerUtil.filter(getCustomScopes(), scope -> {
       for (CustomScopesFilter filter : filters) {
         if (filter.excludeScope(scope)) return false;

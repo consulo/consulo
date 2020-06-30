@@ -45,11 +45,24 @@ import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 
 public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements NavigatableWithText {
-  public PsiDirectoryNode(Project project, PsiDirectory value, ViewSettings viewSettings) {
+  private final PsiFileSystemItemFilter myFilter;
+
+  public PsiDirectoryNode(Project project, @Nonnull PsiDirectory value, ViewSettings viewSettings) {
+    this(project, value, viewSettings, null);
+  }
+
+  public PsiDirectoryNode(Project project, @Nonnull PsiDirectory value, ViewSettings viewSettings, @Nullable PsiFileSystemItemFilter filter) {
     super(project, value, viewSettings);
+    myFilter = filter;
+  }
+
+  @Nullable
+  public PsiFileSystemItemFilter getFilter() {
+    return myFilter;
   }
 
   @Override
