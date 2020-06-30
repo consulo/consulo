@@ -20,12 +20,13 @@ import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;
 import javax.inject.Provider;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 2019-06-27
  */
-public final class PerApplicationInstance<V> implements Provider<V> {
+public final class PerApplicationInstance<V> implements Provider<V>, Supplier<V> {
   @Nonnull
   public static <T> PerApplicationInstance<T> of(@Nonnull Class<T> clazz) {
     return new PerApplicationInstance<>(clazz);

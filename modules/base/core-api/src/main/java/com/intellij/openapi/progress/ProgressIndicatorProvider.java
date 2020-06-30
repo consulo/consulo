@@ -30,10 +30,13 @@ public abstract class ProgressIndicatorProvider {
 
   protected abstract void doCheckCanceled() throws ProcessCanceledException;
 
+  public void checkForCanceled() throws ProcessCanceledException {
+    doCheckCanceled();
+  }
+
   @Nullable
   public static ProgressIndicator getGlobalProgressIndicator() {
-    ProgressManager instance = ProgressManager.ourInstance;
-    return instance == null ? null : instance.getProgressIndicator();
+    return ProgressManager.getInstance().getProgressIndicator();
   }
 
   /**

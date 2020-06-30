@@ -1,24 +1,23 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.fileTypes;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.CachedSingletonsRegistry;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.Topic;
+import consulo.application.internal.PerApplicationInstance;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Manages the relationship between filenames and {@link FileType} instances.
  */
 public abstract class FileTypeManager extends FileTypeRegistry {
-  private static FileTypeManager ourInstance = CachedSingletonsRegistry.markCachedField(FileTypeManager.class);
+  private static Supplier<FileTypeManager> ourInstance = PerApplicationInstance.of(FileTypeManager.class);
 
   @Nonnull
   public static final Topic<FileTypeListener> TOPIC = new Topic<>("File types change", FileTypeListener.class);
@@ -28,12 +27,9 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    *
    * @return the instance of FileTypeManager
    */
+  @Nonnull
   public static FileTypeManager getInstance() {
-    if (ourInstance == null) {
-      Application app = ApplicationManager.getApplication();
-      ourInstance = app != null ? app.getComponent(FileTypeManager.class) : new MockFileTypeManager();
-    }
-    return ourInstance;
+    return ourInstance.get();
   }
 
   /**

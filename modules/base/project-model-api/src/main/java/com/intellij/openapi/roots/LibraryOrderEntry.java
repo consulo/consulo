@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
  *  @author dsl
  */
 public interface LibraryOrderEntry extends ExportableOrderEntry, OrderEntryWithTracking {
-  @javax.annotation.Nullable
+  @Nullable
   Library getLibrary();
   
   boolean isModuleLevel();

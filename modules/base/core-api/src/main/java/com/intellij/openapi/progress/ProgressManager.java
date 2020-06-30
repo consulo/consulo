@@ -15,11 +15,10 @@
  */
 package com.intellij.openapi.progress;
 
-import com.intellij.openapi.application.CachedSingletonsRegistry;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.ThrowableComputable;
+import consulo.application.internal.PerApplicationInstance;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
@@ -27,18 +26,14 @@ import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public abstract class ProgressManager extends ProgressIndicatorProvider {
-  static ProgressManager ourInstance = CachedSingletonsRegistry.markCachedField(ProgressManager.class);
+  static Supplier<ProgressManager> ourInstance = PerApplicationInstance.of(ProgressManager.class);
 
   @Nonnull
-  @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
   public static ProgressManager getInstance() {
-    ProgressManager result = ourInstance;
-    if (result == null) {
-      ourInstance = result = ServiceManager.getService(ProgressManager.class);
-    }
-    return result;
+    return ourInstance.get();
   }
 
   public abstract boolean hasProgressIndicator();
@@ -211,12 +206,8 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
     getInstance().indicatorCanceled(indicator);
   }
 
-  @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
   public static void checkCanceled() throws ProcessCanceledException {
-    ProgressManager instance = ourInstance;
-    if (instance != null) {
-      instance.doCheckCanceled();
-    }
+    getInstance().doCheckCanceled();
   }
 
   /**

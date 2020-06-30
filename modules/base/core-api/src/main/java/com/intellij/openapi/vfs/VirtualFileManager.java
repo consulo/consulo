@@ -15,16 +15,17 @@
  */
 package com.intellij.openapi.vfs;
 
-import consulo.disposer.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.messages.Topic;
+import consulo.application.internal.PerApplicationInstance;
+import consulo.disposer.Disposable;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 /**
  * Manages virtual file systems.
@@ -34,12 +35,9 @@ import javax.annotation.Nullable;
 public abstract class VirtualFileManager implements ModificationTracker {
   public static final Topic<BulkFileListener> VFS_CHANGES = new Topic<>("NewVirtualFileSystem changes", BulkFileListener.class);
 
-  public static final ModificationTracker VFS_STRUCTURE_MODIFICATIONS = new ModificationTracker() {
-    @Override
-    public long getModificationCount() {
-      return getInstance().getStructureModificationCount();
-    }
-  };
+  public static final ModificationTracker VFS_STRUCTURE_MODIFICATIONS = () -> getInstance().getStructureModificationCount();
+
+  private static final Supplier<VirtualFileManager> ourInstance = PerApplicationInstance.of(VirtualFileManager.class);
 
   /**
    * Gets the instance of <code>VirtualFileManager</code>.
@@ -48,7 +46,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
    */
   @Nonnull
   public static VirtualFileManager getInstance() {
-    return ApplicationManager.getApplication().getComponent(VirtualFileManager.class);
+    return ourInstance.get();
   }
 
   /**
