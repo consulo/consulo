@@ -42,6 +42,7 @@ import javax.inject.Singleton;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -51,13 +52,17 @@ import java.util.concurrent.ConcurrentMap;
 @Singleton
 public class PsiPackageManagerImpl extends PsiPackageManager implements Disposable {
   private final Project myProject;
+  private final ProjectFileIndex myProjectFileIndex;
+  private final PsiManager myPsiManager;
   private final DirectoryIndex myDirectoryIndex;
 
-  private Map<Class<? extends ModuleExtension>, ConcurrentMap<String, Object>> myPackageCache = ContainerUtil.newConcurrentMap();
+  private final Map<Class<? extends ModuleExtension>, ConcurrentMap<String, Object>> myPackageCache = new ConcurrentHashMap<>();
 
   @Inject
-  public PsiPackageManagerImpl(Project project, DirectoryIndex directoryIndex) {
+  public PsiPackageManagerImpl(Project project, ProjectFileIndex projectFileIndex, PsiManager psiManager, DirectoryIndex directoryIndex) {
     myProject = project;
+    myProjectFileIndex = projectFileIndex;
+    myPsiManager = psiManager;
     myDirectoryIndex = directoryIndex;
 
     VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileListener() {
@@ -112,7 +117,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
 
     Object valueForInsert = ObjectUtil.notNull(newPackage, ObjectUtil.NULL);
 
-    myPackageCache.computeIfAbsent(extensionClass, aClass -> ContainerUtil.newConcurrentMap()).putIfAbsent(qualifiedName, valueForInsert);
+    myPackageCache.computeIfAbsent(extensionClass, aClass -> new ConcurrentHashMap<>()).putIfAbsent(qualifiedName, valueForInsert);
 
     return newPackage;
   }
@@ -154,10 +159,9 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
       return null;
     }
 
-    PsiManager psiManager = PsiManager.getInstance(myProject);
     for (PsiPackageSupportProvider p : PsiPackageSupportProvider.EP_NAME.getExtensionList()) {
       if (p.isSupported(extension) && p.acceptVirtualFile(moduleForFile, virtualFile)) {
-        return p.createPackage(psiManager, this, extensionClass, qualifiedName);
+        return p.createPackage(myPsiManager, this, extensionClass, qualifiedName);
       }
     }
     return null;
@@ -166,17 +170,15 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
   private PsiPackage createPackageFromLibrary(@Nonnull VirtualFile virtualFile,
                                               @Nonnull Class<? extends ModuleExtension> extensionClass,
                                               @Nonnull String qualifiedName) {
-    ProjectFileIndex fileIndexFacade = ProjectFileIndex.getInstance(myProject);
-    PsiManager psiManager = PsiManager.getInstance(myProject);
-    if (fileIndexFacade.isInLibraryClasses(virtualFile)) {
-      List<OrderEntry> orderEntriesForFile = fileIndexFacade.getOrderEntriesForFile(virtualFile);
+    if (myProjectFileIndex.isInLibraryClasses(virtualFile)) {
+      List<OrderEntry> orderEntriesForFile = myProjectFileIndex.getOrderEntriesForFile(virtualFile);
       for (OrderEntry orderEntry : orderEntriesForFile) {
         Module ownerModule = orderEntry.getOwnerModule();
         ModuleExtension extension = ModuleUtilCore.getExtension(ownerModule, extensionClass);
         if (extension != null) {
           for (PsiPackageSupportProvider p : PsiPackageSupportProvider.EP_NAME.getExtensionList()) {
             if (p.isSupported(extension)) {
-              return p.createPackage(psiManager, this, extensionClass, qualifiedName);
+              return p.createPackage(myPsiManager, this, extensionClass, qualifiedName);
             }
           }
         }
@@ -216,7 +218,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
       if (aPackage != null) return aPackage;
     }
     else {
-      List<OrderEntry> orderEntriesForFile = ProjectFileIndex.getInstance(myProject).getOrderEntriesForFile(directory);
+      List<OrderEntry> orderEntriesForFile = myProjectFileIndex.getOrderEntriesForFile(directory);
       for (OrderEntry orderEntry : orderEntriesForFile) {
         Module ownerModule = orderEntry.getOwnerModule();
         return findForModule(packageName, ownerModule);

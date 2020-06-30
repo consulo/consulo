@@ -34,7 +34,7 @@ public class ProductionContentFolderTypeProvider extends ContentFolderTypeProvid
 
   @Nonnull
   public static ProductionContentFolderTypeProvider getInstance() {
-    return EP_NAME.findExtension(ProductionContentFolderTypeProvider.class);
+    return EP_NAME.findExtensionOrFail(ProductionContentFolderTypeProvider.class);
   }
 
   public ProductionContentFolderTypeProvider() {

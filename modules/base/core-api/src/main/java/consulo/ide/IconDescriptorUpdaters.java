@@ -16,6 +16,7 @@
 package consulo.ide;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -123,13 +124,15 @@ public class IconDescriptorUpdaters {
   @Nonnull
   @RequiredReadAction
   public static Image getIconWithoutCache(@Nonnull PsiElement element, int flags) {
+    Project project = element.getProject();
     IconDescriptor iconDescriptor = new IconDescriptor(null);
-    IconDescriptorUpdater.EP_NAME.composite().updateIcon(iconDescriptor, element, flags);
+    IconDescriptorUpdater.EP_NAME.composite(project).updateIcon(iconDescriptor, element, flags);
     return iconDescriptor.toIcon();
   }
 
   @RequiredReadAction
   public static void processExistingDescriptor(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags) {
-    IconDescriptorUpdater.EP_NAME.composite().updateIcon(iconDescriptor, element, flags);
+    Project project = element.getProject();
+    IconDescriptorUpdater.EP_NAME.composite(project).updateIcon(iconDescriptor, element, flags);
   }
 }

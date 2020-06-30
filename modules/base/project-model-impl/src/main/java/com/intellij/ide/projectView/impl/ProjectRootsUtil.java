@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
 
 /**
  * @author anna
- *         Date: 17-Jan-2008
+ * Date: 17-Jan-2008
  */
 public class ProjectRootsUtil {
   public static boolean isSourceRoot(final PsiDirectory psiDirectory) {
@@ -85,14 +85,18 @@ public class ProjectRootsUtil {
 
   @Nullable
   public static ContentFolder findContentFolderForDirectory(@Nonnull VirtualFile virtualFile, final Project project) {
-    final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+    return findContentFolderForDirectory(ProjectRootManager.getInstance(project).getFileIndex(), virtualFile);
+  }
+
+  @Nullable
+  public static ContentFolder findContentFolderForDirectory(@Nonnull ProjectFileIndex projectFileIndex, @Nonnull VirtualFile virtualFile) {
     final Module module = projectFileIndex.getModuleForFile(virtualFile);
     if (module == null) {
       return null;
     }
 
     ContentFolder contentFolder = projectFileIndex.getContentFolder(virtualFile);
-    if(contentFolder == null) {
+    if (contentFolder == null) {
       return null;
     }
     return virtualFile.equals(contentFolder.getFile()) ? contentFolder : null;
@@ -112,7 +116,10 @@ public class ProjectRootsUtil {
   }
 
   public static boolean isModuleContentRoot(@Nonnull final VirtualFile directoryFile, final Project project) {
-    final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+    return isModuleContentRoot(ProjectRootManager.getInstance(project).getFileIndex(), directoryFile);
+  }
+
+  public static boolean isModuleContentRoot(@Nonnull ProjectFileIndex projectFileIndex, @Nonnull VirtualFile directoryFile) {
     final VirtualFile contentRootForFile = projectFileIndex.getContentRootForFile(directoryFile);
     return directoryFile.equals(contentRootForFile);
   }
@@ -121,7 +128,7 @@ public class ProjectRootsUtil {
     return psiDirectory.getVirtualFile().equals(psiDirectory.getProject().getBaseDir());
   }
 
-  public static boolean isOutsideSourceRoot(@javax.annotation.Nullable PsiFile psiFile) {
+  public static boolean isOutsideSourceRoot(@Nullable PsiFile psiFile) {
     if (psiFile == null) return false;
     if (psiFile instanceof PsiCodeFragment) return false;
     final VirtualFile file = psiFile.getVirtualFile();

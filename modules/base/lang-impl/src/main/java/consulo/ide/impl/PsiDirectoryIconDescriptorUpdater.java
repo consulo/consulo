@@ -17,7 +17,6 @@ package consulo.ide.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -35,46 +34,57 @@ import consulo.ui.image.Image;
 import consulo.vfs.ArchiveFileSystem;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 /**
  * @author VISTALL
  * @since 09-Jan-17
  */
 public class PsiDirectoryIconDescriptorUpdater implements IconDescriptorUpdater {
+  private final ProjectFileIndex myProjectFileIndex;
+  private final ProjectRootManager myProjectRootManager;
+  private final PsiPackageManager myPsiPackageManager;
+
+  @Inject
+  public PsiDirectoryIconDescriptorUpdater(ProjectFileIndex projectFileIndex, ProjectRootManager projectRootManager, PsiPackageManager psiPackageManager) {
+    myProjectFileIndex = projectFileIndex;
+    myProjectRootManager = projectRootManager;
+    myPsiPackageManager = psiPackageManager;
+  }
+
   @RequiredReadAction
   @Override
   public void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags) {
     if (element instanceof PsiDirectory) {
       PsiDirectory psiDirectory = (PsiDirectory)element;
       VirtualFile virtualFile = psiDirectory.getVirtualFile();
-      Project project = psiDirectory.getProject();
 
-      Image symbolIcon = null;
+      Image symbolIcon;
       if (virtualFile.getFileSystem() instanceof ArchiveFileSystem) {
         if (virtualFile.getParent() == null) {
           symbolIcon = AllIcons.Nodes.PpJar;
         }
         else {
-          PsiPackage psiPackage = PsiPackageManager.getInstance(project).findAnyPackage(psiDirectory);
+          PsiPackage psiPackage = myPsiPackageManager.findAnyPackage(virtualFile);
           symbolIcon = psiPackage != null ? AllIcons.Nodes.Package : AllIcons.Nodes.TreeClosed;
         }
       }
-      else if (ProjectRootsUtil.isModuleContentRoot(virtualFile, project)) {
+      else if (ProjectRootsUtil.isModuleContentRoot(myProjectFileIndex, virtualFile)) {
         symbolIcon = AllIcons.Nodes.Module;
       }
       else {
-        boolean ignored = ProjectRootManager.getInstance(project).getFileIndex().isExcluded(virtualFile);
+        boolean ignored = myProjectRootManager.getFileIndex().isExcluded(virtualFile);
         if (ignored) {
           symbolIcon = AllIcons.Modules.ExcludeRoot;
         }
         else {
-          ContentFolder contentFolder = ProjectRootsUtil.findContentFolderForDirectory(virtualFile, project);
+          ContentFolder contentFolder = ProjectRootsUtil.findContentFolderForDirectory(myProjectFileIndex, virtualFile);
           if (contentFolder != null) {
             symbolIcon = contentFolder.getType().getIcon(contentFolder.getProperties());
           }
           else {
-            ContentFolderTypeProvider contentFolderTypeForFile = ProjectFileIndex.getInstance(project).getContentFolderTypeForFile(virtualFile);
-            symbolIcon = contentFolderTypeForFile != null ? contentFolderTypeForFile.getChildDirectoryIcon(psiDirectory) : AllIcons.Nodes.TreeClosed;
+            ContentFolderTypeProvider contentFolderTypeForFile = myProjectFileIndex.getContentFolderTypeForFile(virtualFile);
+            symbolIcon = contentFolderTypeForFile != null ? contentFolderTypeForFile.getChildDirectoryIcon(psiDirectory, myPsiPackageManager) : AllIcons.Nodes.TreeClosed;
           }
         }
       }

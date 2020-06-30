@@ -24,7 +24,6 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.MultiValuesMap;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VfsUtilCore;
@@ -40,10 +39,10 @@ import javax.inject.Singleton;
 import java.util.*;
 
 @Singleton
-@State(name = "ReadonlyStatusHandler", storages = {@Storage(StoragePathMacros.WORKSPACE_FILE)})
+@State(name = "ReadonlyStatusHandler", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements PersistentStateComponent<ReadonlyStatusHandlerImpl.State> {
   private final Project myProject;
-  private final WritingAccessProvider[] myAccessProviders;
+  private final List<WritingAccessProvider> myAccessProviders;
 
   public static class State {
     public boolean SHOW_DIALOG = true;
@@ -84,12 +83,7 @@ public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements 
     files = VfsUtilCore.toVirtualFileArray(realFiles);
 
     for (final WritingAccessProvider accessProvider : myAccessProviders) {
-      Collection<VirtualFile> denied = ContainerUtil.filter(files, new Condition<VirtualFile>() {
-        @Override
-        public boolean value(final VirtualFile virtualFile) {
-          return !accessProvider.isPotentiallyWritable(virtualFile);
-        }
-      });
+      Collection<VirtualFile> denied = ContainerUtil.filter(files, virtualFile -> !accessProvider.isPotentiallyWritable(virtualFile));
 
       if (denied.isEmpty()) {
         denied = accessProvider.requestWriting(files);

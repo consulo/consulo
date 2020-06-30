@@ -16,9 +16,10 @@
 package consulo.ide;
 
 import com.intellij.psi.PsiElement;
-import javax.annotation.Nonnull;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.extensions.CompositeExtensionPointName;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,7 +27,7 @@ import consulo.extensions.CompositeExtensionPointName;
  */
 public interface IconDescriptorUpdater {
   CompositeExtensionPointName<IconDescriptorUpdater> EP_NAME =
-          CompositeExtensionPointName.applicationPoint("com.intellij.iconDescriptorUpdater", IconDescriptorUpdater.class);
+          CompositeExtensionPointName.projectPoint("com.intellij.iconDescriptorUpdater", IconDescriptorUpdater.class);
 
   @RequiredReadAction
   void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags);

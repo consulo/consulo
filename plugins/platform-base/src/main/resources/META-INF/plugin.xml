@@ -196,7 +196,7 @@
 
     <extensionPoint name="tipAndTrick" beanClass="com.intellij.ide.util.TipAndTrickBean"/>
 
-    <extensionPoint name="iconDescriptorUpdater" interface="consulo.ide.IconDescriptorUpdater"/>
+    <extensionPoint name="iconDescriptorUpdater" interface="consulo.ide.IconDescriptorUpdater" area="PROJECT"/>
 
     <extensionPoint name="customizableActionGroupProvider" interface="com.intellij.ide.ui.customization.CustomizableActionGroupProvider"/>
 

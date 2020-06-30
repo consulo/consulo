@@ -64,14 +64,21 @@ public abstract class ContentFolderTypeProvider {
   @Nullable
   @RequiredReadAction
   public final Image getChildDirectoryIcon(@Nullable PsiDirectory psiDirectory) {
+    return getChildDirectoryIcon(psiDirectory, null);
+  }
+
+  @Nullable
+  @RequiredReadAction
+  public final Image getChildDirectoryIcon(@Nullable PsiDirectory psiDirectory, @Nullable PsiPackageManager oldPsiPackageManager) {
     Image packageIcon = getChildPackageIcon();
-    if(packageIcon == null) {
+    if (packageIcon == null) {
       return getChildDirectoryIcon();
     }
 
-    if(psiDirectory != null) {
-      PsiPackage anyPackage = PsiPackageManager.getInstance(psiDirectory.getProject()).findAnyPackage(psiDirectory);
-      if(anyPackage != null) {
+    if (psiDirectory != null) {
+      PsiPackageManager psiPackageManager = oldPsiPackageManager == null ? PsiPackageManager.getInstance(psiDirectory.getProject()) : oldPsiPackageManager;
+      PsiPackage anyPackage = psiPackageManager.findAnyPackage(psiDirectory);
+      if (anyPackage != null) {
         return packageIcon;
       }
       else {
@@ -101,7 +108,7 @@ public abstract class ContentFolderTypeProvider {
     }
 
     IconDescriptor iconDescriptor = new IconDescriptor(getIcon());
-    for (ContentFolderPropertyProvider propertyProvider : ContentFolderPropertyProvider.EP_NAME.getExtensions()) {
+    for (ContentFolderPropertyProvider propertyProvider : ContentFolderPropertyProvider.EP_NAME.getExtensionList()) {
       Object value = propertyProvider.getKey().get(map);
       if(value == null) {
         continue;
@@ -144,8 +151,8 @@ public abstract class ContentFolderTypeProvider {
 
   @Nonnull
   public static List<ContentFolderTypeProvider> filter(@Nonnull Predicate<ContentFolderTypeProvider> predicate){
-    List<ContentFolderTypeProvider> providers = new ArrayList<ContentFolderTypeProvider>();
-    for (ContentFolderTypeProvider contentFolderTypeProvider : EP_NAME.getExtensions()) {
+    List<ContentFolderTypeProvider> providers = new ArrayList<>();
+    for (ContentFolderTypeProvider contentFolderTypeProvider : EP_NAME.getExtensionList()) {
       if(predicate.apply(contentFolderTypeProvider)) {
         providers.add(contentFolderTypeProvider);
       }
@@ -155,7 +162,7 @@ public abstract class ContentFolderTypeProvider {
 
   @Nullable
   public static ContentFolderTypeProvider byId(String attributeValue) {
-    for (ContentFolderTypeProvider contentFolderTypeProvider : EP_NAME.getExtensions()) {
+    for (ContentFolderTypeProvider contentFolderTypeProvider : EP_NAME.getExtensionList()) {
       if (Comparing.equal(attributeValue, contentFolderTypeProvider.getId())) {
         return contentFolderTypeProvider;
       }

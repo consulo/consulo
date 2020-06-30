@@ -226,6 +226,12 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
   }
 
   public static class FilePresentation implements IconDescriptorUpdater, EditorTabTitleProvider {
+    private ScratchFileService myScratchFileService;
+
+    @Inject
+    public FilePresentation(ScratchFileService scratchFileService) {
+      myScratchFileService = scratchFileService;
+    }
 
     @RequiredReadAction
     @Override
@@ -235,7 +241,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
         if (virtualFile == null) {
           return;
         }
-        RootType rootType = ScratchFileService.getInstance().getRootType(virtualFile);
+        RootType rootType = myScratchFileService.getRootType(virtualFile);
         if (rootType == null) return;
         iconDescriptor.setMainIcon(rootType.substituteIcon(element.getProject(), virtualFile));
       }
@@ -245,7 +251,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
     @Nullable
     @Override
     public String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file) {
-      RootType rootType = ScratchFileService.getInstance().getRootType(file);
+      RootType rootType = myScratchFileService.getRootType(file);
       if (rootType == null) return null;
       return rootType.substituteName(project, file);
     }

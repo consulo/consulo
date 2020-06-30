@@ -19,7 +19,6 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.presentation.VirtualFilePresentation;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Iconable;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.WritingAccessProvider;
@@ -29,10 +28,10 @@ import com.intellij.ui.IconDeferrer;
 import com.intellij.util.AnyIconKey;
 import com.intellij.util.BitUtil;
 import com.intellij.util.NullableFunction;
-import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,45 +41,41 @@ import javax.annotation.Nullable;
  * @since 20-Nov-16.
  */
 public class VfsIconUtil {
-  private static NullableFunction<AnyIconKey<VirtualFile>, Image> ourVirtualFileIconFunc = new NullableFunction<AnyIconKey<VirtualFile>, Image>() {
-    @Override
-    @RequiredReadAction
-    public Image fun(final AnyIconKey<VirtualFile> key) {
-      final VirtualFile file = key.getObject();
-      final int flags = key.getFlags();
-      Project project = key.getProject();
+  private static final NullableFunction<AnyIconKey<VirtualFile>, Image> ourVirtualFileIconFunc = key -> {
+    final VirtualFile file = key.getObject();
+    final int flags = key.getFlags();
+    Project project = key.getProject();
 
-      if (!file.isValid() || project != null && (project.isDisposed() || !wasEverInitialized(project))) return null;
+    if (!file.isValid() || project != null && (project.isDisposed() || !wasEverInitialized(project))) return null;
 
-      boolean processedDescriptors = false;
-      // disable on webservice native icon
-      IconDescriptor iconDescriptor = new IconDescriptor(VirtualFilePresentation.getIcon(file));
+    boolean processedDescriptors = false;
+    // disable on webservice native icon
+    IconDescriptor iconDescriptor = new IconDescriptor(VirtualFilePresentation.getIcon(file));
 
-      if (project != null) {
-        PsiManager manager = PsiManager.getInstance(project);
-        final PsiElement element = file.isDirectory() ? manager.findDirectory(file) : manager.findFile(file);
-        if (element != null) {
-          IconDescriptorUpdaters.processExistingDescriptor(iconDescriptor, element, flags);
-          processedDescriptors = true;
-        }
+    if (project != null) {
+      PsiManager manager = PsiManager.getInstance(project);
+      final PsiElement element = file.isDirectory() ? manager.findDirectory(file) : manager.findFile(file);
+      if (element != null) {
+        IconDescriptorUpdaters.processExistingDescriptor(iconDescriptor, element, flags);
+        processedDescriptors = true;
       }
-
-      // if descriptors not processed - we need add layer icon obviously
-      if (!processedDescriptors && file.is(VFileProperty.SYMLINK)) {
-        iconDescriptor.addLayerIcon(AllIcons.Nodes.Symlink);
-      }
-
-      if (BitUtil.isSet(flags, Iconable.ICON_FLAG_READ_STATUS)) {
-        final boolean isLocked = !file.isWritable() || !WritingAccessProvider.isPotentiallyWritable(file, project);
-        if (isLocked) {
-          iconDescriptor.addLayerIcon(AllIcons.Nodes.Locked);
-        }
-      }
-
-      Image icon = iconDescriptor.toIcon();
-      Iconable.LastComputedIcon.put(file, icon, flags);
-      return icon;
     }
+
+    // if descriptors not processed - we need add layer icon obviously
+    if (!processedDescriptors && file.is(VFileProperty.SYMLINK)) {
+      iconDescriptor.addLayerIcon(AllIcons.Nodes.Symlink);
+    }
+
+    if (BitUtil.isSet(flags, Iconable.ICON_FLAG_READ_STATUS)) {
+      final boolean isLocked = !file.isWritable() || !WritingAccessProvider.isPotentiallyWritable(file, project);
+      if (isLocked) {
+        iconDescriptor.addLayerIcon(AllIcons.Nodes.Locked);
+      }
+    }
+
+    Image icon = iconDescriptor.toIcon();
+    Iconable.LastComputedIcon.put(file, icon, flags);
+    return icon;
   };
 
   private static final Key<Boolean> PROJECT_WAS_EVER_INITIALIZED = Key.create("iconDeferrer:projectWasEverInitialized");

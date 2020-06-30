@@ -16,34 +16,44 @@
 package consulo.compiler;
 
 import com.intellij.icons.AllIcons;
-import consulo.ide.IconDescriptor;
-import consulo.ide.IconDescriptorUpdater;
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import javax.annotation.Nonnull;
+import com.intellij.psi.util.PsiUtilCore;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.ide.IconDescriptor;
+import consulo.ide.IconDescriptorUpdater;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 /**
  * @author VISTALL
  * @since 1:20/19.07.13
  */
 public class CompilerIconDescriptorUpdater implements IconDescriptorUpdater {
+  private final FileIndexFacade myFileIndexFacade;
+  private final CompilerManager myCompilerManager;
+
+  @Inject
+  public CompilerIconDescriptorUpdater(FileIndexFacade fileIndexFacade, CompilerManager compilerManager) {
+    myFileIndexFacade = fileIndexFacade;
+    myCompilerManager = compilerManager;
+  }
+
   @RequiredReadAction
   @Override
   public void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags) {
-    Project project = element.getProject();
-    final PsiFile containingFile = element.getContainingFile();
-    VirtualFile vFile = containingFile == null ? null : containingFile.getVirtualFile();
+    VirtualFile vFile = PsiUtilCore.getVirtualFile(element);
 
-    if (vFile != null && isExcluded(vFile, project)) {
+    if (vFile != null && myFileIndexFacade.isInSource(vFile) && myCompilerManager.isExcludedFromCompilation(vFile)) {
       iconDescriptor.addLayerIcon(AllIcons.Nodes.ExcludedFromCompile);
     }
   }
 
+  @Deprecated
   public static boolean isExcluded(final VirtualFile vFile, final Project project) {
     return vFile != null &&
            FileIndexFacade.getInstance(project).isInSource(vFile) &&

@@ -34,7 +34,6 @@ public class LockedIconDescriptorUpdater implements IconDescriptorUpdater {
   @Override
   public void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags) {
     if (BitUtil.isSet(flags, Iconable.ICON_FLAG_READ_STATUS)) {
-
       VirtualFile file = PsiUtilCore.getVirtualFile(element);
       final boolean isLocked = !element.isWritable() || !WritingAccessProvider.isPotentiallyWritable(file, element.getProject());
 

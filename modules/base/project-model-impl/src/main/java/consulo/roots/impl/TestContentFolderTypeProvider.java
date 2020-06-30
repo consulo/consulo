@@ -33,7 +33,7 @@ public class TestContentFolderTypeProvider extends ContentFolderTypeProvider {
 
   @Nonnull
   public static TestContentFolderTypeProvider getInstance() {
-    return EP_NAME.findExtension(TestContentFolderTypeProvider.class);
+    return EP_NAME.findExtensionOrFail(TestContentFolderTypeProvider.class);
   }
 
   public TestContentFolderTypeProvider() {
