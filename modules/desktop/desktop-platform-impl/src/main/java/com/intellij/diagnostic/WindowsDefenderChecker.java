@@ -13,16 +13,16 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.impl.local.NativeFileWatcherImpl;
-import com.intellij.util.Restarter;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.container.boot.ContainerPathManager;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -109,7 +109,7 @@ public class WindowsDefenderChecker {
   @Nonnull
   protected List<File> getProcessesToCheck() {
     List<File> result = new ArrayList<>();
-    File ideStarter = new File(ContainerPathManager.get().getAppHomeDirectory(), Restarter.getExecutableOnWindows());
+    File ideStarter = new File(ContainerPathManager.get().getAppHomeDirectory(), getExecutableOnWindows());
     if (ideStarter.exists()) {
       result.add(ideStarter);
     }
@@ -118,6 +118,19 @@ public class WindowsDefenderChecker {
       result.add(fsNotifier);
     }
     return result;
+  }
+
+  /**
+   * @return full path to consulo.exe or consulo64.exe
+   */
+  @Nonnull
+  private static String getExecutableOnWindows() {
+    if (SystemInfo.is64Bit) {
+      return "consulo64.exe";
+    }
+    else {
+      return "consulo.exe";
+    }
   }
 
   private static Boolean isWindowsDefenderActive() {
