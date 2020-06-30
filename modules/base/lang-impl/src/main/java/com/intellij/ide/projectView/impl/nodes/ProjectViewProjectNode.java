@@ -23,19 +23,13 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import com.intellij.util.SystemProperties;
 import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 public class ProjectViewProjectNode extends AbstractProjectNode {
@@ -50,7 +44,7 @@ public class ProjectViewProjectNode extends AbstractProjectNode {
   public Collection<AbstractTreeNode> getChildren() {
     List<VirtualFile> topLevelContentRoots = BaseProjectViewDirectoryHelper.getTopLevelRoots(myProject);
 
-    Set<Module> modules = new LinkedHashSet<Module>(topLevelContentRoots.size());
+    Set<Module> modules = new LinkedHashSet<>(topLevelContentRoots.size());
 
     Project project = getProject();
 
@@ -63,12 +57,6 @@ public class ProjectViewProjectNode extends AbstractProjectNode {
 
     ArrayList<AbstractTreeNode> nodes = new ArrayList<>();
     final PsiManager psiManager = PsiManager.getInstance(project);
-
-    /*
-    for (VirtualFile root : reduceRoots(topLevelContentRoots)) {
-      nodes.add(new PsiDirectoryNode(getProject(), psiManager.findDirectory(root), getSettings()));
-    }
-    */
 
     nodes.addAll(modulesAndGroups(modules.toArray(new Module[modules.size()])));
 
@@ -92,40 +80,6 @@ public class ProjectViewProjectNode extends AbstractProjectNode {
     }
 
     return nodes;
-  }
-
-  private static List<VirtualFile> reduceRoots(List<VirtualFile> roots) {
-    if (roots.isEmpty()) return Collections.emptyList();
-
-    String userHome;
-    try {
-      userHome = FileUtil.toSystemIndependentName(new File(SystemProperties.getUserHome()).getCanonicalPath());
-    }
-    catch (IOException e) {
-      userHome = null;
-    }
-
-    Collections.sort(roots, (o1, o2) -> o1.getPath().compareTo(o2.getPath()));
-
-    Iterator<VirtualFile> it = roots.iterator();
-    VirtualFile current = it.next();
-
-    List<VirtualFile> reducedRoots = new ArrayList<VirtualFile>();
-    while (it.hasNext()) {
-      VirtualFile next = it.next();
-      VirtualFile common = VfsUtil.getCommonAncestor(current, next);
-
-      if (common == null || common.getParent() == null || Comparing.equal(common.getPath(), userHome)) {
-        reducedRoots.add(current);
-        current = next;
-      }
-      else {
-        current = common;
-      }
-    }
-
-    reducedRoots.add(current);
-    return reducedRoots;
   }
 
   @Override

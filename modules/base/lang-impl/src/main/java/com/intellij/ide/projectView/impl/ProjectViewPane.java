@@ -10,14 +10,21 @@ import com.intellij.ide.projectView.BaseProjectTreeBuilder;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.nodes.BaseProjectViewDirectoryHelper;
 import com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode;
+import com.intellij.ide.scratch.ScratchUtil;
 import com.intellij.ide.util.treeView.AbstractTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.AbstractTreeUpdater;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.registry.Registry;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import consulo.util.dataholder.KeyWithDefaultValue;
+import consulo.util.lang.Comparing;
+import consulo.vfs.ArchiveFileSystem;
+import consulo.vfs.util.ArchiveVfsUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -163,17 +170,22 @@ public class ProjectViewPane extends AbstractProjectViewPSIPane {
     return null;
   }
 
-  //public static boolean canBeSelectedInProjectView(@NotNull Project project, @NotNull VirtualFile file) {
-  //  final VirtualFile archiveFile;
-  //
-  //  if (file.getFileSystem() instanceof ArchiveFileSystem) archiveFile = ((ArchiveFileSystem)file.getFileSystem()).getLocalByEntry(file);
-  //  else archiveFile = null;
-  //
-  //  ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
-  //  return (archiveFile != null && index.getContentRootForFile(archiveFile, false) != null) ||
-  //         index.getContentRootForFile(file, false) != null ||
-  //         index.isInLibrary(file) ||
-  //         Comparing.equal(file.getParent(), project.getBaseDir()) ||
-  //         ScratchProjectViewPane.isScratchesMergedIntoProjectTab() && ScratchUtil.isScratch(file);
-  //}
+  public static boolean canBeSelectedInProjectView(@Nonnull Project project, @Nonnull VirtualFile file) {
+    final VirtualFile archiveFile;
+
+    if (file.getFileSystem() instanceof ArchiveFileSystem) {
+      archiveFile = ArchiveVfsUtil.getVirtualFileForArchive(file);
+    }
+    else {
+      archiveFile = null;
+    }
+
+    ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
+    return (archiveFile != null && index.getContentRootForFile(archiveFile, false) != null) ||
+           index.getContentRootForFile(file, false) != null ||
+           index.isInLibrary(file) ||
+           Comparing.equal(file.getParent(), project.getBaseDir()) ||
+           ScratchUtil.isScratch(file);
+  }
+
 }

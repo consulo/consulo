@@ -19,15 +19,13 @@ import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.ModuleGroup;
+import com.intellij.ide.projectView.impl.ProjectViewPane;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.logging.Logger;
 import gnu.trove.THashMap;
@@ -94,8 +92,6 @@ public abstract class AbstractProjectNode extends ProjectViewNode<Project> {
 
   @Override
   public boolean contains(@Nonnull VirtualFile file) {
-    ProjectFileIndex index = ProjectRootManager.getInstance(getProject()).getFileIndex();
-    final VirtualFile baseDir = getProject().getBaseDir();
-    return index.isInContent(file) || index.isInLibraryClasses(file) || index.isInLibrarySource(file) || (baseDir != null && VfsUtil.isAncestor(baseDir, file, false));
+    return ProjectViewPane.canBeSelectedInProjectView(myProject, file);
   }
 }
