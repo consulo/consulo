@@ -567,9 +567,6 @@ public final class DocumentationManager extends DockablePopupManager<Documentati
       }
       return false;
     }, component);
-    if (myEditor != null && Registry.is("editor.new.mouse.hover.popups")) {
-      EditorMouseHoverPopupControl.disablePopupsWhileShowing(myEditor, component);
-    }
   }
 
   static String getTitle(@Nonnull PsiElement element, boolean isShort) {

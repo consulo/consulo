@@ -2,18 +2,16 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.project.Project;
+import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import com.intellij.util.ui.update.Activatable;
-import com.intellij.util.ui.update.UiNotifyConnector;
-import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
-
-import java.awt.*;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -24,9 +22,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 @Singleton
 public class EditorMouseHoverPopupControl {
+  @Nonnull
+  public static EditorMouseHoverPopupControl getInstance() {
+    return ServiceManager.getService(EditorMouseHoverPopupControl.class);
+  }
+
   private static final Logger LOG = Logger.getInstance(EditorMouseHoverPopupControl.class);
   private static final Key<Integer> MOUSE_TRACKING_DISABLED_COUNT = Key.create("MOUSE_TRACKING_DISABLED_COUNT");
-  private final Collection<Runnable> ourListeners = new CopyOnWriteArrayList<>();
+  private final Collection<Runnable> myListeners = new CopyOnWriteArrayList<>();
 
   public static void disablePopups(@Nonnull Editor editor) {
     setTrackingDisabled(editor, true);
@@ -44,6 +47,14 @@ public class EditorMouseHoverPopupControl {
     setTrackingDisabled(document, false);
   }
 
+  public static void disablePopups(@Nonnull Project project) {
+    setTrackingDisabled(project, true);
+  }
+
+  public static void enablePopups(@Nonnull Project project) {
+    setTrackingDisabled(project, false);
+  }
+
   private static void setTrackingDisabled(@Nonnull UserDataHolder holder, boolean value) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     Integer userData = holder.getUserData(MOUSE_TRACKING_DISABLED_COUNT);
@@ -56,38 +67,20 @@ public class EditorMouseHoverPopupControl {
     if ((userData == null) != (count == 0)) {
       EditorMouseHoverPopupControl instance = getInstance();
       if (instance != null) {
-        instance.ourListeners.forEach(Runnable::run);
+        instance.myListeners.forEach(Runnable::run);
       }
     }
   }
 
   public static boolean arePopupsDisabled(@Nonnull Editor editor) {
     ApplicationManager.getApplication().assertIsDispatchThread();
+    Project project = editor.getProject();
     return editor.getUserData(MOUSE_TRACKING_DISABLED_COUNT) != null ||
            editor.getDocument().getUserData(MOUSE_TRACKING_DISABLED_COUNT) != null ||
-           editor.getComponent().getClientProperty(DesktopEditorImpl.IGNORE_MOUSE_TRACKING) != null; /* remove this clause in 2020.1 */
-  }
-
-  public static EditorMouseHoverPopupControl getInstance() {
-    return ApplicationManager.getApplication().getComponent(EditorMouseHoverPopupControl.class);
+           project != null && project.getUserData(MOUSE_TRACKING_DISABLED_COUNT) != null;
   }
 
   public void addListener(@Nonnull Runnable listener) {
-    ourListeners.add(listener);
-  }
-
-  public static void disablePopupsWhileShowing(@Nonnull Editor editor, @Nonnull Component popupComponent) {
-    new UiNotifyConnector.Once(popupComponent, new Activatable.Adapter() {
-      @Override
-      public void showNotify() {
-        EditorMouseHoverPopupControl.disablePopups(editor);
-        new UiNotifyConnector.Once(popupComponent, new Adapter() {
-          @Override
-          public void hideNotify() {
-            EditorMouseHoverPopupControl.enablePopups(editor);
-          }
-        });
-      }
-    });
+    myListeners.add(listener);
   }
 }

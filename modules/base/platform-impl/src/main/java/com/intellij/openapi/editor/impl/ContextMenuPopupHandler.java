@@ -9,10 +9,9 @@ import com.intellij.openapi.actionSystem.ActionPopupMenu;
 import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.ex.EditorPopupHandler;
 import com.intellij.util.ObjectUtils;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
@@ -33,11 +32,9 @@ public abstract class ContextMenuPopupHandler implements EditorPopupHandler {
       MouseEvent e = event.getMouseEvent();
       final Component c = e.getComponent();
       if (c != null && c.isShowing()) {
-        JPopupMenu popupComponent = popupMenu.getComponent();
-        EditorMouseHoverPopupControl.disablePopupsWhileShowing(event.getEditor(), popupComponent);
-        popupComponent.show(c, e.getX(), e.getY());
-        event.consume();
+        popupMenu.getComponent().show(c, e.getX(), e.getY());
       }
+      event.consume();
     }
     return true;
   }
