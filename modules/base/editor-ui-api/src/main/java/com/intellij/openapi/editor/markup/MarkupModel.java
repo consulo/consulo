@@ -18,6 +18,7 @@ package com.intellij.openapi.editor.markup;
 import com.intellij.openapi.editor.Document;
 import consulo.util.dataholder.UserDataHolder;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Provides services for highlighting ranges of text in a document, painting markers on the
@@ -56,7 +57,7 @@ public interface MarkupModel extends UserDataHolder {
   RangeHighlighter addRangeHighlighter(int startOffset,
                                        int endOffset,
                                        int layer,
-                                       @javax.annotation.Nullable TextAttributes textAttributes,
+                                       @Nullable TextAttributes textAttributes,
                                        @Nonnull HighlighterTargetArea targetArea);
 
   /**
@@ -72,7 +73,7 @@ public interface MarkupModel extends UserDataHolder {
    * @return the highlighter instance.
    */
   @Nonnull
-  RangeHighlighter addLineHighlighter(int line, int layer, @javax.annotation.Nullable TextAttributes textAttributes);
+  RangeHighlighter addLineHighlighter(int line, int layer, @Nullable TextAttributes textAttributes);
 
   /**
    * Removes the specified highlighter instance.
