@@ -65,5 +65,7 @@
 
     <projectService serviceInterface="com.intellij.compiler.CompilerWorkspaceConfiguration"
                     serviceImplementation="com.intellij.compiler.CompilerWorkspaceConfiguration"/>
+
+    <macro implementation="com.intellij.ide.macro.OutputPathMacro" />
   </extensions>
 </consulo-plugin>

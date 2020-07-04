@@ -21,34 +21,33 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ConvertingIterator;
 import com.intellij.util.containers.Convertor;
-import com.intellij.util.containers.HashMap;
 import consulo.ide.macro.ModuleProductionOutputDirPathMacro;
 import consulo.ide.macro.ModuleProfileNameMacro;
 import consulo.ide.macro.ModuleTestOutputDirPathMacro;
 import gnu.trove.THashMap;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import java.io.File;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 @Singleton
 public final class MacroManager {
-  private final HashMap<String, Macro> myMacrosMap = new HashMap<String, Macro>();
-
+  @Nonnull
   public static MacroManager getInstance() {
     return ServiceManager.getService(MacroManager.class);
   }
+
+  private final List<Macro> myPredefinedMacroes = new ArrayList<>();
 
   public MacroManager() {
     registerMacro(new SourcepathMacro());
@@ -85,6 +84,9 @@ public final class MacroManager {
     registerMacro(new LineNumberMacro());
     registerMacro(new ColumnNumberMacro());
 
+    registerMacro(new ClasspathMacro());
+    registerMacro(new ClasspathEntryMacro());
+
     registerMacro(new SelectedTextMacro());
     registerMacro(new SelectionStartLineMacro());
     registerMacro(new SelectionStartColumnMacro());
@@ -99,17 +101,19 @@ public final class MacroManager {
       registerMacro(new FileRelativeDirMacro2());
       registerMacro(new FileRelativePathMacro2());
     }
-    for (Macro macro : Extensions.getExtensions(Macro.EP_NAME)) {
+
+    for (Macro macro : Macro.EP_NAME.getExtensionList()) {
       registerMacro(macro);
     }
   }
 
   private void registerMacro(Macro macro) {
-    myMacrosMap.put(macro.getName(), macro);
+    myPredefinedMacroes.add(macro);
   }
 
+  @Nonnull
   public Collection<Macro> getMacros() {
-    return myMacrosMap.values();
+    return ContainerUtil.concat(myPredefinedMacroes, Macro.EP_NAME.getExtensionList());
   }
 
   public void cacheMacrosPreview(DataContext dataContext) {
@@ -174,7 +178,7 @@ public final class MacroManager {
           int j = str.indexOf(macroNameWithParamEnd, i + macroNameWithParamStart.length());
           if(j > i) {
             String param = str.substring(i + macroNameWithParamStart.length(), j);
-            if(toReplace == null) toReplace = new THashMap<String, String>();
+            if(toReplace == null) toReplace = new THashMap<>();
             String expanded = macro.expand(dataContext, param);
             if (expanded == null) {
               expanded = "";
@@ -196,18 +200,14 @@ public final class MacroManager {
   }
 
   public String expandSilentMarcos(String str, boolean firstQueueExpand, DataContext dataContext) throws Macro.ExecutionCancelledException {
-    final Convertor<Macro, Macro> convertor = new Convertor<Macro, Macro>() {
-      @Override
-      public Macro convert(Macro macro) {
-        if (macro instanceof PromptingMacro) {
-          return new Macro.Silent(macro, "");
-        }
-        return macro;
+    final Convertor<Macro, Macro> convertor = macro -> {
+      if (macro instanceof PromptingMacro) {
+        return new Macro.Silent(macro, "");
       }
+      return macro;
     };
     return expandMacroSet(
       str, firstQueueExpand, dataContext, ConvertingIterator.create(getMacros().iterator(), convertor)
     );
   }
-
 }

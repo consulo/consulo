@@ -20,13 +20,13 @@ import com.intellij.ide.macro.MacroManager;
 import com.intellij.openapi.application.PathMacroFilter;
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.components.PathMacroMap;
-import com.intellij.util.containers.ContainerUtilRt;
 import consulo.application.options.PathMacrosService;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -43,18 +43,17 @@ public class PathMacrosCollectorImpl extends PathMacroMap {
   public static Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, @Nonnull final PathMacros pathMacros) {
     final PathMacrosCollectorImpl collector = new PathMacrosCollectorImpl();
     collector.substitute(root, true, false, filter);
-    final HashSet<String> result = new HashSet<String>(collector.myMacroMap.keySet());
+    final HashSet<String> result = new HashSet<>(collector.myMacroMap.keySet());
     result.removeAll(pathMacros.getSystemMacroNames());
     result.removeAll(pathMacros.getLegacyMacroNames());
     for (Macro macro : MacroManager.getInstance().getMacros()) {
       result.remove(macro.getName());
     }
-    result.removeAll(MacroManager.getInstance().getMacros());
     result.removeAll(pathMacros.getIgnoredMacroNames());
     return result;
   }
 
-  private final Map<String, String> myMacroMap = ContainerUtilRt.newLinkedHashMap();
+  private final Map<String, String> myMacroMap = new LinkedHashMap<>();
   private final Matcher myMatcher;
 
   private PathMacrosCollectorImpl() {
