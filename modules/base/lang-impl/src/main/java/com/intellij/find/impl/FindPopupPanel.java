@@ -845,7 +845,10 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
     final DefaultTableModel model = new DefaultTableModel() {
       private String firstResultPath;
 
-      private final Comparator<Vector<UsageInfoAdapter>> COMPARATOR = (v1, v2) -> {
+      private final Comparator COMPARATOR = (o1, o2) -> {
+        Vector<UsageInfoAdapter> v1 = (Vector<UsageInfoAdapter>) o1;
+        Vector<UsageInfoAdapter> v2 = (Vector<UsageInfoAdapter>) o2;
+
         UsageInfoAdapter u1 = v1.get(0);
         UsageInfoAdapter u2 = v2.get(0);
         String u2Path = u2.getPath();
