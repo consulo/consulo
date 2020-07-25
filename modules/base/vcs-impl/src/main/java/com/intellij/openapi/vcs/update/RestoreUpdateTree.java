@@ -16,24 +16,48 @@
 package com.intellij.openapi.vcs.update;
 
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectReloadState;
-import com.intellij.openapi.startup.StartupManager;
+import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.changes.committed.CommittedChangesCache;
 import com.intellij.openapi.vcs.ex.ProjectLevelVcsManagerEx;
+import consulo.ui.UIAccess;
 import org.jdom.Element;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 @Singleton
 @State(name = "RestoreUpdateTree", storages = @Storage(value = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED))
-public class RestoreUpdateTree implements ProjectComponent, PersistentStateComponent<Element> {
+public class RestoreUpdateTree implements PersistentStateComponent<Element> {
+  @Nonnull
   public static RestoreUpdateTree getInstance(Project project) {
-    return project.getComponent(RestoreUpdateTree.class);
+    return ServiceManager.getService(project, RestoreUpdateTree.class);
+  }
+
+  public static class MyStartUpActivity implements StartupActivity.DumbAware {
+    @Override
+    public void runActivity(@Nonnull UIAccess uiAccess, @Nonnull Project project) {
+      RestoreUpdateTree restoreUpdateTree = RestoreUpdateTree.getInstance(project);
+      UpdateInfo updateInfo = restoreUpdateTree.myUpdateInfo;
+
+      if (updateInfo != null && !updateInfo.isEmpty() && ProjectReloadState.getInstance(project).isAfterAutomaticReload()) {
+        ActionInfo actionInfo = updateInfo.getActionInfo();
+        if (actionInfo != null) {
+          ProjectLevelVcsManagerEx.getInstanceEx(project).showUpdateProjectInfo(updateInfo.getFileInformation(), VcsBundle.message("action.display.name.update"), actionInfo, false);
+
+          CommittedChangesCache.getInstance(project).refreshIncomingChangesAsync();
+        }
+        restoreUpdateTree.myUpdateInfo = null;
+      }
+      else {
+        restoreUpdateTree.myUpdateInfo = null;
+      }
+    }
   }
 
   private static final String UPDATE_INFO = "UpdateInfo";
@@ -44,28 +68,6 @@ public class RestoreUpdateTree implements ProjectComponent, PersistentStateCompo
   @Inject
   public RestoreUpdateTree(Project project) {
     myProject = project;
-  }
-
-  @Override
-  public void projectOpened() {
-    StartupManager.getInstance(myProject).registerPostStartupActivity(new DumbAwareRunnable() {
-      @Override
-      public void run() {
-        if (myUpdateInfo != null && !myUpdateInfo.isEmpty() && ProjectReloadState.getInstance(myProject).isAfterAutomaticReload()) {
-          ActionInfo actionInfo = myUpdateInfo.getActionInfo();
-          if (actionInfo != null) {
-            ProjectLevelVcsManagerEx.getInstanceEx(myProject).showUpdateProjectInfo(myUpdateInfo.getFileInformation(),
-                                                                                    VcsBundle.message("action.display.name.update"), actionInfo,
-                                                                                    false);
-            CommittedChangesCache.getInstance(myProject).refreshIncomingChangesAsync();
-          }
-          myUpdateInfo = null;
-        }
-        else {
-          myUpdateInfo = null;
-        }
-      }
-    });
   }
 
   public void registerUpdateInformation(UpdatedFiles updatedFiles, ActionInfo actionInfo) {

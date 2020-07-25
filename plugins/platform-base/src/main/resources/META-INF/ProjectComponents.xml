@@ -167,11 +167,6 @@
       <skipForDefaultProject/>
     </component>
     <component>
-      <implementation-class>com.intellij.openapi.vcs.update.RestoreUpdateTree</implementation-class>
-      <option name="workspace" value="true"/>
-      <skipForDefaultProject/>
-    </component>
-    <component>
       <interface-class>com.intellij.openapi.vcs.changes.ChangeListManager</interface-class>
       <implementation-class>com.intellij.openapi.vcs.changes.ChangeListManagerImpl</implementation-class>
     </component>
