@@ -26,6 +26,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.StandardProgressIndicator;
 import com.intellij.openapi.progress.WrappedProgressIndicator;
 import org.jetbrains.annotations.Contract;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -42,12 +43,10 @@ public class ProgressWrapper extends AbstractProgressIndicatorBase implements Wr
     myCheckCanceledForMe = checkCanceledForMe;
   }
 
-
   @Override
   public final void cancel() {
     super.cancel();
   }
-
 
   @Override
   public final boolean isCanceled() {
@@ -75,5 +74,13 @@ public class ProgressWrapper extends AbstractProgressIndicatorBase implements Wr
   public static ProgressIndicator unwrap(ProgressIndicator indicator) {
     return indicator instanceof ProgressWrapper ?
            ((ProgressWrapper)indicator).getOriginalProgressIndicator() : indicator;
+  }
+
+  @Nonnull
+  public static ProgressIndicator unwrapAll(@Nonnull ProgressIndicator indicator) {
+    while (indicator instanceof ProgressWrapper) {
+      indicator = ((ProgressWrapper)indicator).getOriginalProgressIndicator();
+    }
+    return indicator;
   }
 }

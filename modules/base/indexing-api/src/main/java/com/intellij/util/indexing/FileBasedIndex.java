@@ -8,16 +8,18 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Consumer;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Processor;
+import com.intellij.util.SystemProperties;
 import consulo.application.internal.PerApplicationInstance;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +48,11 @@ public abstract class FileBasedIndex {
    */
   @Nullable
   public abstract VirtualFile getFileBeingCurrentlyIndexed();
+
+  @Nullable
+  public DumbModeAccessType getCurrentDumbModeAccessType() {
+    throw new UnsupportedOperationException();
+  }
 
   public abstract void registerIndexableSet(@Nonnull IndexableFileSet set, @Nullable Project project);
 
@@ -122,6 +129,27 @@ public abstract class FileBasedIndex {
   public abstract void requestReindex(@Nonnull VirtualFile file);
 
   public abstract <K, V> boolean getFilesWithKey(@Nonnull ID<K, V> indexId, @Nonnull Set<? extends K> dataKeys, @Nonnull Processor<? super VirtualFile> processor, @Nonnull GlobalSearchScope filter);
+
+  /**
+   * Executes command and allow its to have an index access in dumb mode.
+   * Inside the command it's safe to call index related stuff and
+   * {@link com.intellij.openapi.project.IndexNotReadyException} are not expected to be happen here.
+   *
+   * <p> In smart mode, the behavior is similar to direct command execution
+   *
+   * @param command            - a command to execute
+   * @param dumbModeAccessType - defines in which manner command should be executed. Does a client expect only reliable data
+   */
+  public void ignoreDumbMode(@Nonnull Runnable command, @Nonnull DumbModeAccessType dumbModeAccessType) {
+    ignoreDumbMode(dumbModeAccessType, () -> {
+      command.run();
+      return null;
+    });
+  }
+
+  public <T, E extends Throwable> T ignoreDumbMode(@Nonnull DumbModeAccessType dumbModeAccessType, @Nonnull ThrowableComputable<T, E> computable) throws E {
+    throw new UnsupportedOperationException();
+  }
 
   /**
    * It is guaranteed to return data which is up-to-date within the given project.
@@ -203,4 +231,10 @@ public abstract class FileBasedIndex {
    */
   @Deprecated
   public static final boolean ourEnableTracingOfKeyHashToVirtualFileMapping = true;
+
+  private static final boolean ourDisableIndexAccessDuringDumbMode = SystemProperties.getBooleanProperty("idea.disable.index.access.during.dumb.mode", false);
+
+  public static boolean isIndexAccessDuringDumbModeEnabled() {
+    return !ourDisableIndexAccessDuringDumbMode;
+  }
 }

@@ -1,15 +1,15 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.application;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.Contract;
-import javax.annotation.Nonnull;
 import org.jetbrains.concurrency.CancellablePromise;
 
+import javax.annotation.Nonnull;
 import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;

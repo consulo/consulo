@@ -17,7 +17,6 @@
 package com.intellij.find;
 
 import com.intellij.CommonBundle;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.PropertyKey;
 
 import java.lang.ref.Reference;
@@ -30,7 +29,7 @@ import java.util.ResourceBundle;
 public class FindBundle {
   private static Reference<ResourceBundle> ourBundle;
 
-  @NonNls private static final String BUNDLE = "messages.FindBundle";
+  public static final String BUNDLE = "messages.FindBundle";
 
   private FindBundle() {
   }

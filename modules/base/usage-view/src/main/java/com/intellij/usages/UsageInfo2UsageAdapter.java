@@ -53,7 +53,8 @@ import java.util.List;
  * @author max
  */
 public class UsageInfo2UsageAdapter
-        implements UsageInModule, UsageInLibrary, UsageInFile, PsiElementUsage, MergeableUsage, Comparable<UsageInfo2UsageAdapter>, RenameableUsage, TypeSafeDataProvider, UsagePresentation {
+        implements UsageInModule, UsageInfoAdapter, UsageInLibrary, UsageInFile, PsiElementUsage, MergeableUsage, Comparable<UsageInfo2UsageAdapter>, RenameableUsage, TypeSafeDataProvider,
+                   UsagePresentation {
   public static final NotNullFunction<UsageInfo, Usage> CONVERTER = UsageInfo2UsageAdapter::new;
   private static final Comparator<UsageInfo> BY_NAVIGATION_OFFSET = Comparator.comparingInt(UsageInfo::getNavigationOffset);
 
@@ -243,7 +244,8 @@ public class UsageInfo2UsageAdapter
     return new OpenFileDescriptor(getProject(), file, range == null ? getNavigationOffset() : range.getStartOffset());
   }
 
-  int getNavigationOffset() {
+  @Override
+  public int getNavigationOffset() {
     Document document = getDocument();
     if (document == null) return -1;
     int offset = getUsageInfo().getNavigationOffset();
@@ -330,6 +332,13 @@ public class UsageInfo2UsageAdapter
     return getUsageInfo().getFile();
   }
 
+  @Override
+  @Nonnull
+  public String getPath() {
+    return getFile().getPath();
+  }
+
+  @Override
   public int getLine() {
     return myLineNumber;
   }
@@ -407,6 +416,7 @@ public class UsageInfo2UsageAdapter
     }
   }
 
+  @Override
   @Nonnull
   public UsageInfo[] getMergedInfos() {
     Object infos = myMergedUsageInfos;

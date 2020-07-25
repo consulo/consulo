@@ -15,13 +15,12 @@
  */
 package com.intellij.find.impl;
 
-import consulo.logging.Logger;
-
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Generates a replacement string for search/replace operation using regular expressions.
@@ -32,10 +31,8 @@ import java.util.regex.Matcher;
  * Instances of this class are not safe for use by multiple concurrent threads, just as {@link Matcher} instances are.
  */
 public class RegExReplacementBuilder {
-  private static final Logger LOGGER = Logger.getInstance(RegExReplacementBuilder.class);
-
   @Nonnull
-  private final Matcher myMatcher;
+  private final MatchGroupContainer myMatcher;
 
   private String myTemplate;
   private int myCursor;
@@ -43,7 +40,53 @@ public class RegExReplacementBuilder {
   private List<CaseConversionRegion> myConversionRegions;
 
   public RegExReplacementBuilder(@Nonnull Matcher matcher) {
-    myMatcher = matcher;
+    myMatcher = new MatchGroupContainer() {
+      @Override
+      public String group(String name) {
+        return matcher.group(name);
+      }
+
+      @Override
+      public String group(int num) {
+        return matcher.group(num);
+      }
+
+      @Override
+      public int groupCount() {
+        return matcher.groupCount();
+      }
+    };
+  }
+
+  private RegExReplacementBuilder(@Nonnull Pattern pattern) {
+    myMatcher = new MatchGroupContainer() {
+      @Override
+      public String group(String name) {
+        return "";
+      }
+
+      @Override
+      public String group(int group) {
+        if (group < 0 || group > groupCount()) throw new IllegalArgumentException("No group " + group);
+        return "";
+      }
+
+      @Override
+      public int groupCount() {
+        return pattern.matcher("").groupCount();
+      }
+    };
+  }
+
+  /**
+   * Validates the replacement template. This doesn't check currently whether group names actually exist.
+   *
+   * @param pattern  current pattern
+   * @param template replacement template
+   * @throws IllegalArgumentException if template is malformed
+   */
+  public static void validate(Pattern pattern, String template) throws IllegalArgumentException {
+    new RegExReplacementBuilder(pattern).createReplacement(template);
   }
 
   /**
@@ -60,9 +103,11 @@ public class RegExReplacementBuilder {
       char nextChar = myTemplate.charAt(myCursor++);
       if (nextChar == '\\') {
         processEscapedChar();
-      } else if (nextChar == '$') {
+      }
+      else if (nextChar == '$') {
         processGroupValue();
-      } else {
+      }
+      else {
         myReplacement.append(nextChar);
       }
     }
@@ -72,7 +117,7 @@ public class RegExReplacementBuilder {
   private void resetState() {
     myCursor = 0;
     myReplacement = new StringBuilder();
-    myConversionRegions = new ArrayList<CaseConversionRegion>();
+    myConversionRegions = new ArrayList<>();
   }
 
   private void processEscapedChar() {
@@ -81,15 +126,20 @@ public class RegExReplacementBuilder {
     nextChar = myTemplate.charAt(myCursor++);
     switch (nextChar) {
       case 'n':
-        myReplacement.append('\n'); break;
+        myReplacement.append('\n');
+        break;
       case 'r':
-        myReplacement.append('\r'); break;
+        myReplacement.append('\r');
+        break;
       case 'b':
-        myReplacement.append('\b');  break;
+        myReplacement.append('\b');
+        break;
       case 't':
-        myReplacement.append('\t'); break;
+        myReplacement.append('\t');
+        break;
       case 'f':
-        myReplacement.append('\f'); break;
+        myReplacement.append('\f');
+        break;
       case 'x':
         if (myCursor + 4 <= myTemplate.length()) {
           try {
@@ -97,14 +147,25 @@ public class RegExReplacementBuilder {
             myCursor += 4;
             myReplacement.append((char)code);
           }
-          catch (NumberFormatException ignored) {}
+          catch (NumberFormatException ignored) {
+          }
         }
         break;
-      case 'l': startConversionForCharacter(false); break;
-      case 'u': startConversionForCharacter(true); break;
-      case 'L': startConversionForRegion(false); break;
-      case 'U': startConversionForRegion(true); break;
-      case 'E': resetConversionState(); break;
+      case 'l':
+        startConversionForCharacter(false);
+        break;
+      case 'u':
+        startConversionForCharacter(true);
+        break;
+      case 'L':
+        startConversionForRegion(false);
+        break;
+      case 'U':
+        startConversionForRegion(true);
+        break;
+      case 'E':
+        resetConversionState();
+        break;
       default:
         myReplacement.append(nextChar);
     }
@@ -122,7 +183,8 @@ public class RegExReplacementBuilder {
         if (isLatinLetter(nextChar) || isDigit(nextChar)) {
           gsb.append(nextChar);
           myCursor++;
-        } else {
+        }
+        else {
           break;
         }
       }
@@ -134,7 +196,8 @@ public class RegExReplacementBuilder {
       }
       myCursor++;
       group = myMatcher.group(gname);
-    } else {
+    }
+    else {
       // The first number is always a group
       int refNum = (int)nextChar - '0';
       if (refNum < 0 || refNum > 9) throw new IllegalArgumentException("Illegal group reference");
@@ -222,11 +285,11 @@ public class RegExReplacementBuilder {
   }
 
   private static boolean isLatinLetter(int ch) {
-    return ((ch-'a')|('z'-ch)) >= 0 || ((ch-'A')|('Z'-ch)) >= 0;
+    return ((ch - 'a') | ('z' - ch)) >= 0 || ((ch - 'A') | ('Z' - ch)) >= 0;
   }
 
   private static boolean isDigit(int ch) {
-    return ((ch-'0')|('9'-ch)) >= 0;
+    return ((ch - '0') | ('9' - ch)) >= 0;
   }
 
   private static class CaseConversionRegion {
@@ -239,5 +302,13 @@ public class RegExReplacementBuilder {
       this.end = end;
       this.toUpperCase = toUpperCase;
     }
+  }
+
+  interface MatchGroupContainer {
+    String group(String name);
+
+    String group(int num);
+
+    int groupCount();
   }
 }

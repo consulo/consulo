@@ -10,21 +10,21 @@ import com.intellij.openapi.application.constraints.Expiration;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.concurrency.AsyncPromise;
 import org.jetbrains.concurrency.CancellablePromise;
 import org.jetbrains.concurrency.Promises;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
@@ -40,6 +40,9 @@ import java.util.function.Consumer;
 @VisibleForTesting
 public class NonBlockingReadActionImpl<T> extends ExpirableConstrainedExecution<NonBlockingReadActionImpl<T>> implements NonBlockingReadAction<T> {
   private static final Logger LOG = Logger.getInstance(NonBlockingReadActionImpl.class);
+  private static final Executor SYNC_DUMMY_EXECUTOR = __ -> {
+    throw new UnsupportedOperationException();
+  };
 
   private final
   @Nullable

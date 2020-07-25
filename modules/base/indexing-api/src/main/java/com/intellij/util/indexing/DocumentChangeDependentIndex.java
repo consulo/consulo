@@ -6,7 +6,6 @@ package com.intellij.util.indexing;
  * <p>
  * Note, every {@link FileBasedIndexExtension} where {@link FileBasedIndexExtension#dependsOnFileContent()} returns false is treated as document change dependent.
  */
-//@ApiStatus.Experimental
 public interface DocumentChangeDependentIndex {
 
 }

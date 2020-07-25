@@ -57,8 +57,8 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -115,6 +115,20 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
       return true;
     };
     return processElementsWithWord(occurrenceProcessor, searchScope, identifier, UsageSearchContext.IN_COMMENTS, true);
+  }
+
+  @Override
+  public boolean processCandidateFilesForText(@Nonnull GlobalSearchScope scope, short searchContext, boolean caseSensitively, @Nonnull String text, @Nonnull Processor<? super VirtualFile> processor) {
+    List<IdIndexEntry> entries = getWordEntries(text, caseSensitively);
+    if (entries.isEmpty()) return true;
+
+    Condition<Integer> contextMatches = matchContextCondition(searchContext);
+    return processFilesContainingAllKeys(myManager.getProject(), scope, contextMatches, entries, processor);
+  }
+
+  @Nonnull
+  private static Condition<Integer> matchContextCondition(short searchContext) {
+    return context -> (context & searchContext) != 0;
   }
 
   @Override
@@ -1000,7 +1014,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
                                                        @Nonnull final GlobalSearchScope scope,
                                                        @Nullable final Condition<Integer> checker,
                                                        @Nonnull final Collection<IdIndexEntry> keys,
-                                                       @Nonnull final Processor<VirtualFile> processor) {
+                                                       @Nonnull final Processor<? super VirtualFile> processor) {
     final FileIndexFacade index = FileIndexFacade.getInstance(project);
     return DumbService.getInstance(project).runReadActionInSmartMode(
             () -> FileBasedIndex.getInstance().processFilesContainingAllKeys(IdIndex.NAME, keys, scope, checker,

@@ -770,6 +770,7 @@
 
     <extensionPoint name="hectorComponentProvider" interface="com.intellij.openapi.editor.HectorComponentPanelsProvider"
                     area="PROJECT"/>
+    <extensionPoint name="findInProjectSearchEngine" interface="com.intellij.find.FindInProjectSearchEngine"/>
 
     <extensionPoint name="runDashboardContributor"
                     interface="com.intellij.execution.dashboard.RunDashboardContributor"/>
@@ -2738,6 +2739,8 @@
     <applicationService serviceImplementation="com.intellij.execution.wsl.WSLDistributionService"/>
 
     <applicationService serviceImplementation="com.intellij.internal.statistic.updater.StatisticsSendManager" lazy="false"/>
+
+    <findInProjectSearchEngine implementation="com.intellij.find.impl.IdeaIndexBasedFindInProjectSearchEngine"/>
   </extensions>
 
   <applicationListeners>

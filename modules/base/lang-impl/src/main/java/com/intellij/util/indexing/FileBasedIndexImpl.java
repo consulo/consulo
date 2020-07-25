@@ -9,7 +9,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationGroup;
 import com.intellij.notification.NotificationType;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.impl.LaterInvocator;
@@ -72,6 +71,7 @@ import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import consulo.container.boot.ContainerPathManager;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.util.collection.IntObjectMap;
@@ -80,9 +80,9 @@ import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TIntHashSet;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.lang.ref.SoftReference;
@@ -108,6 +108,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
   static final Logger LOG = Logger.getInstance(FileBasedIndexImpl.class);
   private static final String CORRUPTION_MARKER_NAME = "corruption.marker";
   private static final NotificationGroup NOTIFICATIONS = new NotificationGroup("Indexing", NotificationDisplayType.BALLOON, false);
+  private static final ThreadLocal<Stack<DumbModeAccessType>> ourDumbModeAccessTypeStack = ThreadLocal.withInitial(() -> new Stack<>());
 
   private final List<ID<?, ?>> myIndicesForDirectories = new SmartList<>();
 
@@ -730,7 +731,9 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     if (filter == GlobalSearchScope.EMPTY_SCOPE) {
       return;
     }
-    if (ActionUtil.isDumbMode(project)) {
+
+    boolean dumbModeAccessRestricted = ourDumbModeAccessTypeStack.get().isEmpty();
+    if (dumbModeAccessRestricted && ActionUtil.isDumbMode(project)) {
       handleDumbMode(project);
     }
 
@@ -1698,6 +1701,13 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     return file != null ? file : ourFileToBeIndexed.get();
   }
 
+  @Override
+  @Nullable
+  public DumbModeAccessType getCurrentDumbModeAccessType() {
+    Stack<DumbModeAccessType> dumbModeAccessTypeStack = ourDumbModeAccessTypeStack.get();
+    return dumbModeAccessTypeStack.isEmpty() ? null : dumbModeAccessTypeStack.peek();
+  }
+
   private class VirtualFileUpdateTask extends UpdateTask<VirtualFile> {
     @Override
     void doProcess(VirtualFile item, Project project) {
@@ -2574,6 +2584,25 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     }
     else {
       return extension instanceof PsiDependentIndex;
+    }
+  }
+
+  @Override
+  public <T, E extends Throwable> T ignoreDumbMode(@Nonnull DumbModeAccessType dumbModeAccessType, @Nonnull ThrowableComputable<T, E> computable) throws E {
+    assert ApplicationManager.getApplication().isReadAccessAllowed();
+    if (FileBasedIndex.isIndexAccessDuringDumbModeEnabled()) {
+      Stack<DumbModeAccessType> dumbModeAccessTypeStack = ourDumbModeAccessTypeStack.get();
+      dumbModeAccessTypeStack.push(dumbModeAccessType);
+      try {
+        return computable.compute();
+      }
+      finally {
+        DumbModeAccessType type = dumbModeAccessTypeStack.pop();
+        assert dumbModeAccessType == type;
+      }
+    }
+    else {
+      return computable.compute();
     }
   }
 }
