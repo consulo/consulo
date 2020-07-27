@@ -61,8 +61,8 @@ class VelocityWrapper {
 
       Velocity.setProperty(RuntimeConstants.INPUT_ENCODING, FileTemplate.ourEncoding);
       Velocity.setProperty(RuntimeConstants.PARSER_POOL_SIZE, 3);
-      Velocity.setProperty(RuntimeConstants.RESOURCE_LOADER, "includes");
-      Velocity.setProperty("includes.resource.loader.instance", new ResourceLoader() {
+      Velocity.setProperty(RuntimeConstants.RESOURCE_LOADERS, "includes");
+      Velocity.setProperty("resource.loader.includes.instance", new ResourceLoader() {
         @Override
         public void init(ExtProperties extProperties) {
         }
