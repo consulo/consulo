@@ -17,13 +17,15 @@ package com.intellij.openapi.actionSystem;
 
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.util.Comparing;
-import consulo.util.dataholder.Key;
 import com.intellij.util.SmartFMap;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.StringUtil;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 import org.jetbrains.annotations.NonNls;
@@ -31,6 +33,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -43,54 +46,44 @@ import java.util.Set;
 public final class Presentation implements Cloneable {
   /**
    * Defines tool tip for button at tool bar or text for element at menu
-   * value: String
+   * value: LocalizeValue
    */
-  @NonNls
   public static final String PROP_TEXT = "text";
   /**
    * value: Integer
    */
-  @NonNls
   public static final String PROP_MNEMONIC_KEY = "mnemonicKey";
   /**
    * value: Integer
    */
-  @NonNls
   public static final String PROP_MNEMONIC_INDEX = "mnemonicIndex";
   /**
    * value: String
    */
-  @NonNls
   public static final String PROP_DESCRIPTION = "description";
   /**
    * value: Icon
    */
-  @NonNls
   public static final String PROP_ICON = "icon";
   /**
    * value: Icon
    */
-  @NonNls
   public static final String PROP_DISABLED_ICON = "disabledIcon";
   /**
    * value: Icon
    */
-  @NonNls
   public static final String PROP_SELECTED_ICON = "selectedIcon";
   /**
    * value: Icon
    */
-  @NonNls
   public static final String PROP_HOVERED_ICON = "hoveredIcon";
   /**
    * value: Boolean
    */
-  @NonNls
   public static final String PROP_VISIBLE = "visible";
   /**
    * The actual value is a Boolean.
    */
-  @NonNls
   public static final String PROP_ENABLED = "enabled";
 
   public static final double DEFAULT_WEIGHT = 0;
@@ -102,17 +95,18 @@ public final class Presentation implements Cloneable {
   @Nullable
   private PropertyChangeSupport myChangeSupport;
   private String myText;
-  private String myDescription;
-  // TODO [VISTALL] migrate to UI image
-  private Icon myIcon;
-  private Icon myDisabledIcon;
-  private Icon myHoveredIcon;
-  private Icon mySelectedIcon;
+  private LocalizeValue myDescriptionValue = LocalizeValue.empty();
   private int myMnemonic;
   private int myDisplayedMnemonicIndex = -1;
   private boolean myVisible = true;
   private boolean myEnabled = true;
   private double myWeight = DEFAULT_WEIGHT;
+
+  // TODO [VISTALL] migrate to UI image
+  private Icon myIcon;
+  private Icon myDisabledIcon;
+  private Icon myHoveredIcon;
+  private Icon mySelectedIcon;
 
   public Presentation() {
   }
@@ -241,14 +235,27 @@ public final class Presentation implements Cloneable {
     return text;
   }
 
+  @Nonnull
   public String getDescription() {
-    return myDescription;
+    return myDescriptionValue.getValue();
   }
 
-  public void setDescription(String description) {
-    String oldDescription = myDescription;
-    myDescription = description;
-    fireObjectPropertyChange(PROP_DESCRIPTION, oldDescription, myDescription);
+  @Nonnull
+  public LocalizeValue getDescriptionValue() {
+    return myDescriptionValue;
+  }
+
+  @Deprecated
+  @DeprecationInfo("Use #setDescriptionValue() with localize value parameter")
+  public void setDescription(@Nullable String description) {
+    LocalizeValue value = StringUtil.isEmpty(description) ? LocalizeValue.empty() : LocalizeValue.of(description);
+    setDescriptionValue(value);
+  }
+
+  public void setDescriptionValue(@Nonnull LocalizeValue descriptionValue) {
+    LocalizeValue oldDescription = myDescriptionValue;
+    myDescriptionValue = descriptionValue;
+    fireObjectPropertyChange(PROP_DESCRIPTION, oldDescription, myDescriptionValue);
   }
 
   public Icon getIcon() {
@@ -351,24 +358,29 @@ public final class Presentation implements Cloneable {
 
   @Override
   public Presentation clone() {
-    try {
-      Presentation clone = (Presentation)super.clone();
-      clone.myChangeSupport = null;
-      return clone;
-    }
-    catch (CloneNotSupportedException e) {
-      throw new RuntimeException(e);
-    }
+    Presentation copy = new Presentation();
+    copy.copyFrom(this);
+    return copy;
   }
 
   public void copyFrom(Presentation presentation) {
     setText(presentation.getTextWithMnemonic(), presentation.myDisplayedMnemonicIndex > -1);
-    setDescription(presentation.getDescription());
+    setDescriptionValue(presentation.getDescriptionValue());
     setIcon(presentation.getIcon());
     setDisabledIcon(presentation.getDisabledIcon());
     setHoveredIcon(presentation.getHoveredIcon());
     setVisible(presentation.isVisible());
     setEnabled(presentation.isEnabled());
+
+    if (!myUserMap.equals(presentation.myUserMap)) {
+      Set<String> allKeys = new HashSet<>(presentation.myUserMap.keySet());
+      allKeys.addAll(myUserMap.keySet());
+      if (!allKeys.isEmpty()) {
+        for (String key : allKeys) {
+          putClientProperty(key, presentation.getClientProperty(key));
+        }
+      }
+    }
   }
 
   @Nullable
@@ -408,7 +420,7 @@ public final class Presentation implements Cloneable {
 
   @Override
   public String toString() {
-    return myText + " (" + myDescription + ")";
+    return myText + " (" + myDescriptionValue + ")";
   }
 
   public boolean isEnabledAndVisible() {

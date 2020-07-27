@@ -26,6 +26,7 @@ import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.util.FieldAccessor;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.ReflectionUtil;
+import consulo.localize.LocalizeValue;
 import consulo.ui.SwingUIDecorator;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
@@ -278,7 +279,7 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
     // add and select one value
     revalidateValue();
     updateSize();
-    updateTooltipText(presentation.getDescription());
+    updateTooltipText(presentation.getDescriptionValue());
   }
 
   private void revalidateValue() {
@@ -363,7 +364,7 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
         updateSize();
       }
       else if (Presentation.PROP_DESCRIPTION.equals(propertyName)) {
-        updateTooltipText((String)evt.getNewValue());
+        updateTooltipText((LocalizeValue)evt.getNewValue());
       }
       else if (Presentation.PROP_ICON.equals(propertyName)) {
         updateSize();
@@ -377,8 +378,8 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
     }
   }
 
-  private void updateTooltipText(String description) {
-    String tooltip = KeymapUtil.createTooltipText(description, myComboBoxAction);
+  private void updateTooltipText(@Nonnull LocalizeValue description) {
+    String tooltip = KeymapUtil.createTooltipText(description.getValue(), myComboBoxAction);
     setToolTipText(!tooltip.isEmpty() ? tooltip : null);
   }
 

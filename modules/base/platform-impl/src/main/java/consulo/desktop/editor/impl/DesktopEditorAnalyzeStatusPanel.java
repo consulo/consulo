@@ -424,13 +424,8 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
     @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
-      StatusButton uiComponent = (StatusButton)e.getPresentation().getClientProperty(COMPONENT_KEY);
+      Presentation presentation = e.getPresentation();
 
-      if (uiComponent == null) {
-        return;
-      }
-
-      Presentation presentation = uiComponent.presentation;
       if (analyzerStatus != null) {
         List<StatusItem> newStatus = analyzerStatus.getExpandedStatus();
         Icon newIcon = analyzerStatus.getIcon();

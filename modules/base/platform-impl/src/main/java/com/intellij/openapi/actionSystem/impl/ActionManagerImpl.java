@@ -44,6 +44,7 @@ import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
 import consulo.disposer.Disposer;
 import consulo.extensions.ListOfElementsEP;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.impl.action.LastActionTracker;
 import consulo.ui.image.Image;
@@ -282,13 +283,13 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   }
 
   @Nonnull
-  private static String computeDescription(LocalizeHelper localizeHelper, String id, String elementType, String descriptionValue) {
+  private static LocalizeValue computeDescription(LocalizeHelper localizeHelper, String id, String elementType, String descriptionValue) {
     if(!StringUtil.isEmpty(descriptionValue)) {
-      return descriptionValue;
+      return LocalizeValue.of(descriptionValue);
     }
 
     final String key = elementType + "." + id + ".description";
-    return localizeHelper.getText(key);
+    return localizeHelper.getValue(key);
   }
 
   @Nonnull
@@ -605,7 +606,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
       Presentation presentation = new Presentation();
       presentation.setText(text);
-      presentation.setDescription(computeDescription(localizeHelper, id, ACTION_ELEMENT_NAME, descriptionValue));
+      presentation.setDescriptionValue(computeDescription(localizeHelper, id, ACTION_ELEMENT_NAME, descriptionValue));
       return presentation;
     });
 
@@ -736,10 +737,10 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
       }
 
       // description
-      String description = computeDescription(localizeHelper, id, GROUP_ELEMENT_NAME, element.getAttributeValue(DESCRIPTION));
+      LocalizeValue description = computeDescription(localizeHelper, id, GROUP_ELEMENT_NAME, element.getAttributeValue(DESCRIPTION));
       // don't override value which was set in API with empty value from xml descriptor
-      if (!StringUtil.isEmpty(description) || presentation.getDescription() == null) {
-        presentation.setDescription(description);
+      if (description != LocalizeValue.empty() || presentation.getDescriptionValue() == LocalizeValue.empty()) {
+        presentation.setDescriptionValue(description);
       }
 
       // icon

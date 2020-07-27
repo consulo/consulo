@@ -20,6 +20,7 @@ import com.intellij.CommonBundle;
 import com.intellij.idea.ActionsBundle;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.localize.LocalizeKey;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
@@ -53,8 +54,8 @@ public interface LocalizeHelper {
 
     @Nonnull
     @Override
-    public String getText(String key) {
-      return LocalizeKey.of(myLocalize, key).getValue().getValue();
+    public LocalizeValue getValue(@Nonnull String key) {
+      return LocalizeKey.of(myLocalize, key).getValue();
     }
   }
 
@@ -78,6 +79,12 @@ public interface LocalizeHelper {
 
       return CommonBundle.message(myResourceBundle, key);
     }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getValue(@Nonnull String key) {
+      return LocalizeValue.of(getText(key));
+    }
   }
 
   public static class FallbackLocalizeHelper implements LocalizeHelper {
@@ -88,8 +95,19 @@ public interface LocalizeHelper {
     public String getText(String key) {
       return StringUtil.notNullize(ActionsBundle.message(key), key);
     }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getValue(@Nonnull String key) {
+      return LocalizeValue.of(getText(key));
+    }
   }
 
   @Nonnull
-  String getText(String key);
+  default String getText(String key) {
+    return getValue(key).getValue();
+  }
+
+  @Nonnull
+  LocalizeValue getValue(@Nonnull String key);
 }
