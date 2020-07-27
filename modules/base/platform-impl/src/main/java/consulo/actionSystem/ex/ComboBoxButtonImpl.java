@@ -204,6 +204,13 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
       }
     }
 
+    public void updateArrowState(boolean visible) {
+      JButton button = arrowButton.get(myDelegateUI);
+      if (button != null) {
+        button.setVisible(visible);
+      }
+    }
+
     @Override
     public void uninstallUI(JComponent c) {
       myDelegateUI.uninstallUI(c);
@@ -389,10 +396,11 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
 
     ComboBoxUI delegate = (ComboBoxUI)UIManager.getUI(this);
 
-    setUI(factory.create(delegate, this));
+    HackyComboBoxUI ui = factory.create(delegate, this);
 
-    // refresh state
-    setLikeButton(myOnClickListener);
+    setUI(ui);
+
+    ui.updateArrowState(myOnClickListener == null);
 
     SwingUIDecorator.apply(SwingUIDecorator::decorateToolbarComboBox, this);
   }
@@ -405,5 +413,10 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
 
   private void setLikeButton(@Nullable Runnable onClick) {
     myOnClickListener = onClick;
+
+    ComboBoxUI ui = getUI();
+    if(ui instanceof HackyComboBoxUI) {
+      ((HackyComboBoxUI)ui).updateArrowState(onClick == null);
+    }
   }
 }
