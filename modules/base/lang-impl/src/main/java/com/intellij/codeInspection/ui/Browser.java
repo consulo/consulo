@@ -359,7 +359,7 @@ class Browser extends JPanel {
     assert toolWrapper != null;
     final GlobalInspectionContextImpl context = myView.getGlobalInspectionContext();
     if (refEntity instanceof RefElement){
-      PsiElement element = ((RefElement)refEntity).getElement();
+      PsiElement element = ((RefElement)refEntity).getPsiElement();
       if (element == null) return toolWrapper;
       InspectionProfileWrapper profileWrapper = InspectionProjectProfileManagerImpl.getInstanceImpl(context.getProject()).getProfileWrapper();
       toolWrapper = profileWrapper.getInspectionTool(toolWrapper.getShortName(), element);
@@ -485,7 +485,7 @@ class Browser extends JPanel {
     final QuickFix[] fixes = descriptor.getFixes();
     if (fixes != null && fixes.length > idx && fixes[idx] != null) {
       if (element instanceof RefElement) {
-        PsiElement psiElement = ((RefElement)element).getElement();
+        PsiElement psiElement = ((RefElement)element).getPsiElement();
         if (psiElement != null && psiElement.isValid()) {
           if (!FileModificationService.getInstance().preparePsiElementForWrite(psiElement)) return;
           performFix(element, descriptor, idx, fixes[idx]);

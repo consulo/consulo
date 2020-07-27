@@ -140,7 +140,7 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
       descriptor = descriptionNode.getDescriptor();
     }
     PsiElement element =
-            descriptor instanceof ProblemDescriptor ? ((ProblemDescriptor)descriptor).getPsiElement() : refElement != null ? refElement.getElement() : null;
+            descriptor instanceof ProblemDescriptor ? ((ProblemDescriptor)descriptor).getPsiElement() : refElement != null ? refElement.getPsiElement() : null;
     return Pair.create(element, descriptor);
   }
 

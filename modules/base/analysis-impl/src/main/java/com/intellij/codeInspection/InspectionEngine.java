@@ -219,7 +219,7 @@ public class InspectionEngine {
             @Override
             public void addProblemElement(@javax.annotation.Nullable RefEntity refEntity, @Nonnull CommonProblemDescriptor... commonProblemDescriptors) {
               if (!(refEntity instanceof RefElement)) return;
-              PsiElement element = ((RefElement)refEntity).getElement();
+              PsiElement element = ((RefElement)refEntity).getPsiElement();
               convertToProblemDescriptors(element, commonProblemDescriptors, descriptors);
             }
 

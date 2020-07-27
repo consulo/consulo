@@ -106,11 +106,11 @@ public class OfflineProblemDescriptor {
     myParentFQName = parentFQName;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public RefEntity getRefElement(final RefManager refManager) {
     final RefEntity refElement = refManager.getReference(myType, myFQName);
     if (refElement instanceof RefElement) {
-      final PsiElement element = ((RefElement)refElement).getElement();
+      final PsiElement element = ((RefElement)refElement).getPsiElement();
       if (element != null && element.isValid()) {
         PsiDocumentManager.getInstance(element.getProject()).commitAllDocuments();
       }

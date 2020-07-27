@@ -88,7 +88,7 @@ public class OfflineProblemDescriptorNode extends ProblemDescriptionNode {
     final RefEntity element = getElement();
     if (myToolWrapper instanceof LocalInspectionToolWrapper) {
       if (element instanceof RefElement) {
-        final PsiElement psiElement = ((RefElement)element).getElement();
+        final PsiElement psiElement = ((RefElement)element).getPsiElement();
         if (psiElement != null) {
           PsiFile containingFile = psiElement.getContainingFile();
           final ProblemsHolder holder = new ProblemsHolder(inspectionManager, containingFile, false);
@@ -127,7 +127,7 @@ public class OfflineProblemDescriptorNode extends ProblemDescriptionNode {
     }
     final List<String> hints = offlineProblemDescriptor.getHints();
     if (element instanceof RefElement) {
-      final PsiElement psiElement = ((RefElement)element).getElement();
+      final PsiElement psiElement = ((RefElement)element).getPsiElement();
       if (psiElement == null) return null;
       ProblemDescriptor descriptor = inspectionManager.createProblemDescriptor(psiElement, offlineProblemDescriptor.getDescription(),
                                                                                (LocalQuickFix)null,

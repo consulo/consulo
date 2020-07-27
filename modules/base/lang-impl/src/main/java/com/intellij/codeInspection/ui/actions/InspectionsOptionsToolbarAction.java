@@ -116,7 +116,7 @@ public class InspectionsOptionsToolbarAction extends AnAction {
 
         final PsiElement psiElement;
         if (selectedElements.length > 0 && selectedElements[0] instanceof RefElement) {
-          psiElement = ((RefElement)selectedElements[0]).getElement();
+          psiElement = ((RefElement)selectedElements[0]).getPsiElement();
         }
         else {
           psiElement = null;
@@ -154,7 +154,7 @@ public class InspectionsOptionsToolbarAction extends AnAction {
           final InspectionProjectProfileManager profileManager = InspectionProjectProfileManager.getInstance(project);
           for (RefEntity selectedElement : selectedElements) {
             if (selectedElement instanceof RefElement) {
-              final PsiElement element = ((RefElement)selectedElement).getElement();
+              final PsiElement element = ((RefElement)selectedElement).getPsiElement();
               files.add(element);
             }
           }

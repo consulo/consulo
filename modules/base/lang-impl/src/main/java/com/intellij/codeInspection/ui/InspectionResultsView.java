@@ -378,7 +378,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
     ApplicationManager.getApplication().runReadAction(new Runnable() {
       @Override
       public void run() {
-        PsiElement psiElement = refElement.getElement();
+        PsiElement psiElement = refElement.getPsiElement();
         if (psiElement != null) {
           final PsiFile containingFile = psiElement.getContainingFile();
           if (containingFile != null) {
@@ -635,7 +635,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
 
       if (!item.isValid()) return null;
 
-      PsiElement psiElement = item instanceof RefElement ? ((RefElement)item).getElement() : null;
+      PsiElement psiElement = item instanceof RefElement ? ((RefElement)item).getPsiElement() : null;
       if (psiElement == null) return null;
 
       final CommonProblemDescriptor problem = refElementNode.getProblem();
@@ -700,7 +700,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
     RefEntity[] refElements = myTree.getSelectedElements();
     List<PsiElement> psiElements = new ArrayList<PsiElement>();
     for (RefEntity refElement : refElements) {
-      PsiElement psiElement = refElement instanceof RefElement ? ((RefElement)refElement).getElement() : null;
+      PsiElement psiElement = refElement instanceof RefElement ? ((RefElement)refElement).getPsiElement() : null;
       if (psiElement != null && psiElement.isValid()) {
         psiElements.add(psiElement);
       }
@@ -782,7 +782,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
     for (RefEntity selectedElement : selectedElements) {
       if (selectedElement instanceof RefElement) {
         final RefElement refElement = (RefElement)selectedElement;
-        final PsiElement element = refElement.getElement();
+        final PsiElement element = refElement.getPsiElement();
         if (element != null) {
           profiles.add(profileManager.getInspectionProfile());
         }

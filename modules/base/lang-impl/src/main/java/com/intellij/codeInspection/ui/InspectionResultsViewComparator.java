@@ -142,7 +142,7 @@ public class InspectionResultsViewComparator implements Comparator {
 
   private static int compareEntity(final RefEntity entity, final PsiElement element) {
     if (entity instanceof RefElement) {
-      final PsiElement psiElement = ((RefElement)entity).getElement();
+      final PsiElement psiElement = ((RefElement)entity).getPsiElement();
       if (psiElement != null && element != null) {
         return PsiUtilCore.compareElementsByPosition(psiElement, element);
       }
@@ -159,7 +159,7 @@ public class InspectionResultsViewComparator implements Comparator {
 
   private static int compareEntities(final RefEntity entity1, final RefEntity entity2) {
     if (entity1 instanceof RefElement && entity2 instanceof RefElement) {
-      return PsiUtilCore.compareElementsByPosition(((RefElement)entity1).getElement(), ((RefElement)entity2).getElement());
+      return PsiUtilCore.compareElementsByPosition(((RefElement)entity1).getPsiElement(), ((RefElement)entity2).getPsiElement());
     }
     if (entity1 != null && entity2 != null) {
       return entity1.getName().compareToIgnoreCase(entity2.getName());
@@ -171,7 +171,7 @@ public class InspectionResultsViewComparator implements Comparator {
   private static int compareLineNumbers(final Object userObject, final OfflineProblemDescriptor descriptor) {
     if (userObject instanceof RefElement) {
       final RefElement refElement = (RefElement)userObject;
-      final PsiElement psiElement = refElement.getElement();
+      final PsiElement psiElement = refElement.getPsiElement();
       if (psiElement != null) {
         Document document = PsiDocumentManager.getInstance(psiElement.getProject()).getDocument(psiElement.getContainingFile());
         if (document != null) {

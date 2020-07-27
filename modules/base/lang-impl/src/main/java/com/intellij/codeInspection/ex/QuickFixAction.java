@@ -217,7 +217,7 @@ public class QuickFixAction extends AnAction {
   private static Set<VirtualFile> getReadOnlyFiles(@Nonnull RefEntity[] refElements) {
     Set<VirtualFile> readOnlyFiles = new THashSet<VirtualFile>();
     for (RefEntity refElement : refElements) {
-      PsiElement psiElement = refElement instanceof RefElement ? ((RefElement)refElement).getElement() : null;
+      PsiElement psiElement = refElement instanceof RefElement ? ((RefElement)refElement).getPsiElement() : null;
       if (psiElement == null || psiElement.getContainingFile() == null) continue;
       readOnlyFiles.add(psiElement.getContainingFile().getVirtualFile());
     }
@@ -235,8 +235,8 @@ public class QuickFixAction extends AnAction {
         if (o1 instanceof RefElement && o2 instanceof RefElement) {
           RefElement r1 = (RefElement)o1;
           RefElement r2 = (RefElement)o2;
-          final PsiElement element1 = r1.getElement();
-          final PsiElement element2 = r2.getElement();
+          final PsiElement element1 = r1.getPsiElement();
+          final PsiElement element2 = r2.getPsiElement();
           final PsiFile containingFile1 = element1.getContainingFile();
           final PsiFile containingFile2 = element2.getContainingFile();
           if (containingFile1 == containingFile2) {
@@ -278,7 +278,7 @@ public class QuickFixAction extends AnAction {
   private static void refreshViews(@Nonnull Project project, @Nonnull RefEntity[] refElements, @Nonnull InspectionToolWrapper toolWrapper) {
     final Set<PsiElement> ignoredElements = new HashSet<PsiElement>();
     for (RefEntity element : refElements) {
-      final PsiElement psiElement = element instanceof RefElement ? ((RefElement)element).getElement() : null;
+      final PsiElement psiElement = element instanceof RefElement ? ((RefElement)element).getPsiElement() : null;
       if (psiElement != null && psiElement.isValid()) {
         ignoredElements.add(psiElement);
       }
