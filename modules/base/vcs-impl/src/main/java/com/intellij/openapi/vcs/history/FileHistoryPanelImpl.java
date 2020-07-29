@@ -25,8 +25,6 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.WriteCommandAction;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColorsListener;
@@ -43,7 +41,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.PanelWithActionsAndCloseButton;
 import com.intellij.openapi.ui.Splitter;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Clock;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Getter;
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.*;
@@ -75,11 +76,14 @@ import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.StatusText;
 import com.intellij.util.ui.TableViewModel;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
@@ -88,8 +92,8 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * author: lesya
@@ -110,7 +114,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
   private final DiffFromHistoryHandler myDiffHandler;
   @Nonnull
   private final FilePath myFilePath;
-  @javax.annotation.Nullable
+  @Nullable
   private final VcsRevisionNumber myStartingRevision;
   @Nonnull
   private final AsynchConsumer<VcsHistorySession> myHistoryPanelRefresh;
@@ -127,9 +131,9 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
   private final DetailsPanel myDetails;
   @Nonnull
   private final DualView myDualView;
-  @javax.annotation.Nullable
+  @Nullable
   private final JComponent myAdditionalDetails;
-  @javax.annotation.Nullable
+  @Nullable
   private final Consumer<VcsFileRevision> myRevisionSelectionListener;
   private VcsHistorySession myHistorySession;
   private VcsFileRevision myBottomRevisionForShowDiff;
@@ -151,7 +155,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
 
   public FileHistoryPanelImpl(@Nonnull AbstractVcs vcs,
                               @Nonnull FilePath filePath,
-                              @javax.annotation.Nullable VcsRevisionNumber startingRevision,
+                              @Nullable VcsRevisionNumber startingRevision,
                               VcsHistorySession session,
                               VcsHistoryProvider provider,
                               ContentManager contentManager,
@@ -180,7 +184,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
     myRevisionSelectionListener = components.getRevisionListener();
 
     final DualViewColumnInfo[] columns = createColumnList(myProject, provider, components.getColumns());
-    @NonNls String storageKey = "FileHistory." + provider.getClass().getName();
+    String storageKey = "FileHistory." + provider.getClass().getName();
     final HistoryAsTreeProvider treeHistoryProvider = myHistorySession.getHistoryAsTreeProvider();
     if (treeHistoryProvider != null) {
       myDualView = new DualView(new TreeNodeOnVcsRevision(null, treeHistoryProvider.createTreeOn(myHistorySession.getRevisionList())),
@@ -312,7 +316,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
   @Nonnull
   private DualViewColumnInfo[] createColumnList(@Nonnull Project project,
                                                 @Nonnull VcsHistoryProvider provider,
-                                                @javax.annotation.Nullable ColumnInfo[] additionalColumns) {
+                                                @Nullable ColumnInfo[] additionalColumns) {
     ArrayList<DualViewColumnInfo> columns = new ArrayList<>();
     columns.add(new RevisionColumnInfo(myRevisionsInOrderComparator));
     if (!provider.isDateOmittable()) columns.add(new DateColumnInfo());
@@ -320,12 +324,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
     ArrayList<DualViewColumnInfo> additionalColumnInfo = new ArrayList<>();
     if (additionalColumns != null) {
       for (ColumnInfo additionalColumn : additionalColumns) {
-        additionalColumnInfo.add(new FileHistoryColumnWrapper(additionalColumn) {
-          @Override
-          protected DualView getDualView() {
-            return myDualView;
-          }
-        });
+        additionalColumnInfo.add(new TreeNodeColumnInfoWrapper(additionalColumn));
       }
     }
     columns.addAll(additionalColumnInfo);
@@ -578,7 +577,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
     }
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private Change[] getChanges() {
     final VcsFileRevision[] revisions = getSelectedRevisions();
 
@@ -615,7 +614,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
     return myDualView.getSelection();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private VcsFileRevision getFirstSelectedRevision() {
     List<TreeNodeOnVcsRevision> selection = getSelection();
     if (selection.isEmpty()) return null;
@@ -646,7 +645,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
     return myFilePath;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public VirtualFile getVirtualFile() {
     return myFilePath.getVirtualFile();
   }
@@ -784,7 +783,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
     }
 
     @Override
-    protected void customizeCellRenderer(JTable table, @javax.annotation.Nullable Object value, boolean selected, boolean hasFocus, int row, int column) {
+    protected void customizeCellRenderer(JTable table, @Nullable Object value, boolean selected, boolean hasFocus, int row, int column) {
       setToolTipText(myTooltipText);
       if (selected || hasFocus) {
         setBackground(table.getSelectionBackground());
@@ -918,7 +917,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
       }
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     @Override
     public byte[] getContentAsBytes() throws VcsException {
       try {
@@ -1332,7 +1331,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
       setShortcutSet(ActionManager.getInstance().getAction("Annotate").getShortcutSet());
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     @Override
     protected Editor getEditor(@Nonnull AnActionEvent e) {
       VirtualFile virtualFile = getVirtualFile();
@@ -1351,7 +1350,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
       return null;
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     @Override
     protected AbstractVcs getVcs(@Nonnull AnActionEvent e) {
       return myVcs;
@@ -1369,7 +1368,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
       return file;
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     @Override
     protected VcsFileRevision getFileRevision(@Nonnull AnActionEvent e) {
       VcsFileRevision revision = e.getData(VcsDataKeys.VCS_FILE_REVISION);
@@ -1454,6 +1453,17 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
     public void setSelected(AnActionEvent e, boolean state) {
       getConfiguration().SHOW_FILE_HISTORY_DETAILS = state;
       setupDetails();
+    }
+  }
+
+  private class TreeNodeColumnInfoWrapper<T extends Comparable<T>> extends FileHistoryColumnWrapper<T> {
+    TreeNodeColumnInfoWrapper(@Nonnull ColumnInfo<VcsFileRevision, T> additionalColumn) {
+      super(additionalColumn);
+    }
+
+    @Override
+    protected DualView getDualView() {
+      return myDualView;
     }
   }
 }

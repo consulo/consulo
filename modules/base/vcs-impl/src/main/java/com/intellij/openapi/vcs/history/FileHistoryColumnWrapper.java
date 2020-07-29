@@ -90,7 +90,11 @@ abstract class FileHistoryColumnWrapper<T> extends DualViewColumnInfo<TreeNodeOn
 
   @Nullable
   private String getMaxValue(@Nonnull String columnHeader) {
-    TableView table = getDualView().getFlatView();
+    DualView dualView = getDualView();
+    if(dualView == null) {
+      return columnHeader + "ww";
+    }
+    TableView table = dualView.getFlatView();
     if (table.getRowCount() == 0) return null;
     final Enumeration<TableColumn> columns = table.getColumnModel().getColumns();
     int idx = 0;
