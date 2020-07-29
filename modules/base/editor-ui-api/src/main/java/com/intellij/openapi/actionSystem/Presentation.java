@@ -36,6 +36,8 @@ import javax.swing.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The presentation of an action in a specific place in the user interface.
@@ -94,10 +96,10 @@ public final class Presentation implements Cloneable {
 
   @Nullable
   private PropertyChangeSupport myChangeSupport;
-  private String myText;
+
+  private LocalizeValue myTextValue = LocalizeValue.empty();
   private LocalizeValue myDescriptionValue = LocalizeValue.empty();
-  private int myMnemonic;
-  private int myDisplayedMnemonicIndex = -1;
+
   private boolean myVisible = true;
   private boolean myEnabled = true;
   private double myWeight = DEFAULT_WEIGHT;
@@ -108,11 +110,19 @@ public final class Presentation implements Cloneable {
   private Icon myHoveredIcon;
   private Icon mySelectedIcon;
 
+  private static final Pattern MNEMONIC = Pattern.compile(" ?\\(_?[A-Z]\\)");
+
   public Presentation() {
   }
 
+  public Presentation(@Nonnull LocalizeValue textValue) {
+    myTextValue = textValue;
+  }
+
+  @Deprecated
+  @DeprecationInfo("Use #Presentation(LocalizeValue)")
   public Presentation(String text) {
-    myText = text;
+    this(LocalizeValue.of(text));
   }
 
   public void addPropertyChangeListener(PropertyChangeListener l) {
@@ -148,7 +158,27 @@ public final class Presentation implements Cloneable {
 
   @Nullable
   public String getText() {
-    return myText;
+    String text = StringUtil.nullize(myTextValue.getValue());
+    if(text == null) {
+      return null;
+    }
+
+    Matcher matcher = MNEMONIC.matcher(text);
+    return matcher.replaceAll("");
+  }
+
+  @Nullable
+  public String getTextWithMnemonic() {
+    return StringUtil.nullize(myTextValue.getValue());
+  }
+
+  public void setTextValue(@Nonnull LocalizeValue textValue) {
+    myTextValue = textValue;
+  }
+
+  @Nonnull
+  public LocalizeValue getTextValue() {
+    return myTextValue;
   }
 
   public void setText(@Nullable String text, boolean mayContainMnemonic) {
@@ -210,13 +240,6 @@ public final class Presentation implements Cloneable {
 
   public void setText(String text) {
     setText(text, true);
-  }
-
-  public String getTextWithMnemonic() {
-    if (myText != null && myDisplayedMnemonicIndex > -1) {
-      return myText.substring(0, myDisplayedMnemonicIndex) + "_" + myText.substring(myDisplayedMnemonicIndex);
-    }
-    return myText;
   }
 
   public void restoreTextWithMnemonic(Presentation presentation) {
@@ -298,11 +321,11 @@ public final class Presentation implements Cloneable {
   }
 
   public int getMnemonic() {
-    return myMnemonic;
+    throw new UnsupportedOperationException(); // todo removed that
   }
 
   public int getDisplayedMnemonicIndex() {
-    return myDisplayedMnemonicIndex;
+    throw new UnsupportedOperationException(); // todo removed that
   }
 
   public boolean isVisible() {
@@ -364,7 +387,7 @@ public final class Presentation implements Cloneable {
   }
 
   public void copyFrom(Presentation presentation) {
-    setText(presentation.getTextWithMnemonic(), presentation.myDisplayedMnemonicIndex > -1);
+    setTextValue(presentation.getTextValue());
     setDescriptionValue(presentation.getDescriptionValue());
     setIcon(presentation.getIcon());
     setDisabledIcon(presentation.getDisabledIcon());
@@ -394,11 +417,11 @@ public final class Presentation implements Cloneable {
   }
 
   @Nullable
-  public Object getClientProperty(@NonNls @Nonnull String key) {
+  public Object getClientProperty(@Nonnull String key) {
     return myUserMap.get(key);
   }
 
-  public void putClientProperty(@NonNls @Nonnull String key, @Nullable Object value) {
+  public void putClientProperty(@Nonnull String key, @Nullable Object value) {
     Object oldValue = myUserMap.get(key);
     if (Comparing.equal(oldValue, value)) return;
     myUserMap = value == null ? myUserMap.minus(key) : myUserMap.plus(key, value);
@@ -420,7 +443,7 @@ public final class Presentation implements Cloneable {
 
   @Override
   public String toString() {
-    return myText + " (" + myDescriptionValue + ")";
+    return getText() + " (" + myDescriptionValue + ")";
   }
 
   public boolean isEnabledAndVisible() {

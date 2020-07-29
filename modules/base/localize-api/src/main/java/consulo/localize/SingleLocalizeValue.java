@@ -37,6 +37,11 @@ class SingleLocalizeValue implements LocalizeValue {
   }
 
   @Override
+  public long getModificationCount() {
+    return 0;
+  }
+
+  @Override
   public String toString() {
     return getValue();
   }

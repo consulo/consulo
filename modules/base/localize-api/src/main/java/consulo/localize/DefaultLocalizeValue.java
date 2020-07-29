@@ -29,7 +29,7 @@ final class DefaultLocalizeValue implements LocalizeValue {
 
   private String myText;
 
-  private int myModificationCount = -1;
+  private long myModificationCount = -1;
 
   DefaultLocalizeValue(LocalizeKey localizeKey, Object... args) {
     myLocalizeKey = localizeKey;
@@ -43,6 +43,11 @@ final class DefaultLocalizeValue implements LocalizeValue {
     }
 
     return myLocalizeManager;
+  }
+
+  @Override
+  public long getModificationCount() {
+    return myModificationCount;
   }
 
   @Nonnull

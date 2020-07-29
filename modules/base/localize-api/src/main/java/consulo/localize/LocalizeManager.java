@@ -82,7 +82,7 @@ public abstract class LocalizeManager {
 
   public abstract void addListener(@Nonnull LocalizeManagerListener listener, @Nonnull Disposable disposable);
 
-  public abstract int getModificationCount();
+  public abstract long getModificationCount();
 
   @Nonnull
   public abstract String formatText(String unformattedText, Object... arg);

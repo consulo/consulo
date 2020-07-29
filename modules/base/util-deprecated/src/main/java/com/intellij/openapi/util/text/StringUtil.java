@@ -3331,6 +3331,11 @@ public class StringUtil extends StringUtilRt {
     return pos;
   }
 
+  @Contract(value = "null -> null; !null->!null", pure = true)
+  public static String internEmptyString(String s) {
+    return s == null ? null : s.isEmpty() ? "" : s;
+  }
+
   private static boolean isWhitespaceOrTab(char c) {
     return c == ' ' || c == '\t';
   }

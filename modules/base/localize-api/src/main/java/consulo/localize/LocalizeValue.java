@@ -34,4 +34,6 @@ public interface LocalizeValue {
 
   @Nonnull
   String getValue();
+
+  long getModificationCount();
 }
