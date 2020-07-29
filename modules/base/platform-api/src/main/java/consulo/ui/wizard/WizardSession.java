@@ -15,6 +15,8 @@
  */
 package consulo.ui.wizard;
 
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +26,8 @@ import java.util.List;
  * @since 2019-08-20
  */
 public final class WizardSession<CONTEXT> {
+  private static final Logger LOG = Logger.getInstance(WizardSession.class);
+
   private final List<WizardStep<CONTEXT>> mySteps;
   private final CONTEXT myContext;
 
@@ -136,7 +140,7 @@ public final class WizardSession<CONTEXT> {
 
   public void dispose() {
     if (!myFinished) {
-      throw new IllegalArgumentException("not finished");
+      LOG.error("Wizard is not finished, but want to be dispose");
     }
 
     for (WizardStep<CONTEXT> step : mySteps) {
