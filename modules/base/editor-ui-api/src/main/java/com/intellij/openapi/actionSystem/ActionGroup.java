@@ -41,10 +41,19 @@ public abstract class ActionGroup extends AnAction {
     }
 
     @Nonnull
+    public Builder addAdd(@Nonnull List<? extends AnAction> items) {
+      myActions.addAll(items);
+      return this;
+    }
+
+    @Nonnull
     public Builder addSeparator() {
       return add(AnSeparator.create());
     }
 
+    public int size() {
+      return myActions.size();
+    }
 
     @Nonnull
     public abstract ActionGroup build();
