@@ -22,7 +22,6 @@ import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.impl.content.DesktopToolWindowContentUi;
 import com.intellij.ui.DoubleClickListener;
 import com.intellij.ui.PopupHandler;
@@ -35,8 +34,8 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.desktop.util.awt.MorphColor;
 import consulo.disposer.Disposable;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.SwingUIDecorator;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.wm.impl.ToolWindowManagerBase;
 
@@ -99,15 +98,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
     }
 
     private Image getHideIcon(ToolWindow toolWindow) {
-      ToolWindowAnchor anchor = toolWindow.getAnchor();
-      if (anchor == ToolWindowAnchor.BOTTOM) {
-        return AllIcons.General.HideDownPart;
-      }
-      else if (anchor == ToolWindowAnchor.RIGHT) {
-        return AllIcons.General.HideRightPart;
-      }
-
-      return AllIcons.General.HideLeftPart;
+      return AllIcons.General.HideToolWindow;
     }
   }
 
@@ -252,12 +243,6 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
   @Override
   public Dimension getPreferredSize() {
     Dimension size = super.getPreferredSize();
-    return new Dimension(size.width, TabsUtil.getTabsHeight() + JBUI.scale(TabsUtil.TAB_VERTICAL_PADDING) * 2);
-  }
-
-  @Override
-  public Dimension getMinimumSize() {
-    Dimension size = super.getMinimumSize();
     return new Dimension(size.width, TabsUtil.getTabsHeight() + JBUI.scale(TabsUtil.TAB_VERTICAL_PADDING) * 2);
   }
 }

@@ -70,7 +70,6 @@ public class CommonActionsManagerImpl extends CommonActionsManager {
   public AnAction createCollapseAllHeaderAction(JTree tree) {
     AnAction action = createCollapseAllAction(new DefaultTreeExpander(tree), tree);
     action.getTemplatePresentation().setIcon(AllIcons.General.CollapseAll);
-    action.getTemplatePresentation().setHoveredIcon(AllIcons.General.CollapseAllHover);
     return action;
   }
 

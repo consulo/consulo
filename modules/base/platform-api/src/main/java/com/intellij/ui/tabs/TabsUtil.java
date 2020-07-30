@@ -18,8 +18,6 @@ package com.intellij.ui.tabs;
 import com.intellij.util.ui.JBUI;
 import consulo.annotation.DeprecationInfo;
 
-import javax.swing.*;
-
 /**
  * @author pegov
  */
@@ -34,10 +32,6 @@ public class TabsUtil {
   }
 
   public static int getTabsHeight() {
-    return new JLabel("XXX").getPreferredSize().height +
-           JBUI.scale(2) +
-           JBUI.scale(TAB_VERTICAL_PADDING) * 2 +
-           JBUI.scale(TABS_BORDER) * 2;
+    return JBUI.scale(24);
   }
-
 }

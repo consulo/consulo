@@ -355,7 +355,6 @@ public class LightToolWindow extends JPanel {
     public GearAction() {
       Presentation presentation = getTemplatePresentation();
       presentation.setIcon(AllIcons.General.Gear);
-      presentation.setHoveredIcon(AllIcons.General.GearHover);
     }
 
     @Override
@@ -376,14 +375,7 @@ public class LightToolWindow extends JPanel {
     public HideAction() {
       Presentation presentation = getTemplatePresentation();
       presentation.setText(UIBundle.message("tool.window.hide.action.name"));
-      if (isLeft()) {
-        presentation.setIcon(AllIcons.General.HideLeftPart);
-        presentation.setHoveredIcon(AllIcons.General.HideLeftPartHover);
-      }
-      else {
-        presentation.setIcon(AllIcons.General.HideRightPart);
-        presentation.setHoveredIcon(AllIcons.General.HideRightPartHover);
-      }
+      presentation.setIcon(AllIcons.General.HideToolWindow);
     }
 
     @Override

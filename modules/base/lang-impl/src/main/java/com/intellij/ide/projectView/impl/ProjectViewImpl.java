@@ -764,7 +764,6 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     }, getComponent());
 
     collapseAllAction.getTemplatePresentation().setIcon(AllIcons.General.CollapseAll);
-    collapseAllAction.getTemplatePresentation().setHoveredIcon(AllIcons.General.CollapseAllHover);
     titleActions.add(collapseAllAction);
 
     getCurrentProjectViewPane().addToolbarActionsImpl(myActionGroup);
@@ -2032,7 +2031,6 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   private class ScrollFromSourceAction extends AnAction implements DumbAware {
     private ScrollFromSourceAction() {
       super("Scroll from Source", "Select the file open in the active editor", AllIcons.General.Locate);
-      getTemplatePresentation().setHoveredIcon(AllIcons.General.LocateHover);
     }
 
     @RequiredUIAccess
