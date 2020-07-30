@@ -24,7 +24,7 @@ import consulo.testFramework.MockApplicationTestCase;
  * By: Alexander.Chernikov
  * When: 10.10.2006, 20:19:35
  */
-public class PresentationTest extends MockApplicationTestCase {
+public abstract class PresentationTest extends MockApplicationTestCase {
 
   private final String[] inputTextsUnderscores =
           new String[]{"No mnemonic", "_First char", "S_econd char", "Pre-last and not unique ch_ar", "Last cha_r", "Too late_", "Do__uble", "Dou_&ble", "Complete double__", "Complete double_&",
