@@ -17,7 +17,6 @@ package consulo.actionSystem.impl;
 
 import com.intellij.AbstractBundle;
 import com.intellij.CommonBundle;
-import com.intellij.idea.ActionsBundle;
 import consulo.annotation.DeprecationInfo;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.localize.LocalizeKey;
@@ -88,19 +87,11 @@ public interface LocalizeHelper {
     }
   }
 
-  public static class FallbackLocalizeHelper implements LocalizeHelper {
+  public static class FallbackLocalizeHelper extends DefaultLocalizeHelper {
     private static final FallbackLocalizeHelper INSTANCE = new FallbackLocalizeHelper();
 
-    @Nonnull
-    @Override
-    public String getText(String key) {
-      return StringUtil.notNullize(ActionsBundle.message(key), key);
-    }
-
-    @Nonnull
-    @Override
-    public LocalizeValue getValue(@Nonnull String key) {
-      return LocalizeValue.of(getText(key));
+    public FallbackLocalizeHelper() {
+      super("consulo.platform.base.ActionLocalize");
     }
   }
 

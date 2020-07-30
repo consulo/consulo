@@ -34,11 +34,13 @@ import java.util.Map;
 class LocalizeFileState {
   private static final Logger LOG = Logger.getInstance(LocalizeFileState.class);
 
+  private final String myId;
   private URL myFileUrl;
 
   private volatile Map<String, LocalizeKeyText> myTexts;
 
   public LocalizeFileState(String id, URL fileUrl) {
+    myId = id;
     myFileUrl = fileUrl;
   }
 
@@ -56,8 +58,10 @@ class LocalizeFileState {
   }
 
   @Nonnull
-  private static Map<String, LocalizeKeyText> loadTexts(URL fileUrl) {
+  private Map<String, LocalizeKeyText> loadTexts(URL fileUrl) {
     Map<String, LocalizeKeyText> map = new HashMap<>();
+
+    long time = System.currentTimeMillis();
 
     Yaml yaml = new Yaml();
     try (InputStream stream = fileUrl.openStream()) {
@@ -76,6 +80,7 @@ class LocalizeFileState {
       LOG.error(e);
     }
 
+    LOG.info(myId + " parsed in " + (System.currentTimeMillis() - time) + " ms. Size: " + map.size());
     return map;
   }
 }
