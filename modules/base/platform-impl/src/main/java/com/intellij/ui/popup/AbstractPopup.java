@@ -44,6 +44,7 @@ import com.intellij.util.ui.*;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import consulo.application.TransactionGuardEx;
 import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
@@ -283,9 +284,9 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
       }
 
       if (pinCallback != null) {
-        Icon icon =
+        Image icon =
                 ToolWindowManagerEx.getInstanceEx(myProject != null ? myProject : ProjectUtil.guessCurrentProject((JComponent)myOwner)).getLocationIcon(ToolWindowId.FIND, AllIcons.General.Pin_tab);
-        myCaption.setButtonComponent(new InplaceButton(new IconButton(IdeBundle.message("show.in.find.window.button.name"), icon), e -> pinCallback.process(this)), JBUI.Borders.empty(4));
+        myCaption.setButtonComponent(new InplaceButton(new IconButton(IdeBundle.message("show.in.find.window.button.name"), TargetAWT.to(icon)), e -> pinCallback.process(this)), JBUI.Borders.empty(4));
       }
       else if (cancelButton != null) {
         myCaption.setButtonComponent(new InplaceButton(cancelButton, e -> cancel()), JBUI.Borders.empty(4));

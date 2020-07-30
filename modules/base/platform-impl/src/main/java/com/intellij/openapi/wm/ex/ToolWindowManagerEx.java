@@ -101,9 +101,5 @@ public abstract class ToolWindowManagerEx extends ToolWindowManager {
   public String getLastActiveToolWindowId(@Nullable Condition<javax.swing.JComponent> condition) {
     return null;
   }
-
-  public Icon getLocationIcon(String toolWindowId, Image defaultPinImage) {
-    return AllIcons.General.AutohideOff;
-  }
   // endregion
 }

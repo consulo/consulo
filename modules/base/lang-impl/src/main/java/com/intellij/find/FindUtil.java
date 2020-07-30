@@ -22,7 +22,10 @@ import com.intellij.codeInsight.hint.HintUtil;
 import com.intellij.find.findUsages.PsiElement2UsageTargetAdapter;
 import com.intellij.find.impl.FindInProjectUtil;
 import com.intellij.find.replaceInProject.ReplaceInProjectManager;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.*;
@@ -50,7 +53,6 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.JDOMUtil;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
@@ -62,10 +64,12 @@ import com.intellij.usages.*;
 import com.intellij.usages.impl.UsageViewImpl;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -245,12 +249,13 @@ public class FindUtil {
     }
 
     model.setReplaceState(false);
-    model.setFindAllEnabled(PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument()) != null);
+    PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+    model.setFindAllEnabled(psiFile != null);
 
     findManager.showFindDialog(model, () -> {
       if (model.isFindAll()) {
         findManager.setFindNextModel(model);
-        findAllAndShow(project, editor, model);
+        findAllAndShow(project, psiFile, model);
         return;
       }
 
@@ -290,20 +295,26 @@ public class FindUtil {
   }
 
   @Nullable
-  public static List<Usage> findAll(@Nonnull Project project, @Nonnull Editor editor, @Nonnull FindModel findModel) {
-    final Document document = editor.getDocument();
-    final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
-    if (psiFile == null) return null;
+  static List<Usage> findAll(@Nonnull Project project, @Nonnull PsiFile psiFile, @Nonnull FindModel findModel) {
+    if (project.isDisposed()) {
+      return null;
+    }
+    psiFile = (PsiFile)psiFile.getNavigationElement();
+    if (psiFile == null) {
+      return null;
+    }
+    Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);
+    if (document == null) return null;
 
     CharSequence text = document.getCharsSequence();
     int textLength = document.getTextLength();
-    final List<Usage> usages = new ArrayList<>();
     FindManager findManager = FindManager.getInstance(project);
     findModel.setForward(true); // when find all there is no diff in direction
 
     int offset = 0;
-    VirtualFile virtualFile = getVirtualFile(editor);
+    VirtualFile virtualFile = psiFile.getVirtualFile();
 
+    final List<Usage> usages = new ArrayList<>();
     while (offset < textLength) {
       FindResult result = findManager.findString(text, offset, findModel, virtualFile);
       if (!result.isStringFound()) break;
@@ -321,12 +332,26 @@ public class FindUtil {
     return usages;
   }
 
-  public static void findAllAndShow(@Nonnull Project project, @Nonnull Editor editor, @Nonnull FindModel findModel) {
-    List<Usage> usages = findAll(project, editor, findModel);
+  static void findAllAndShow(@Nonnull Project project, @Nonnull PsiFile psiFile, @Nonnull FindModel findModel) {
+    findModel.setCustomScope(true);
+    findModel.setProjectScope(false);
+    findModel.setCustomScopeName("File " + psiFile.getName());
+    List<Usage> usages = findAll(project, psiFile, findModel);
     if (usages == null) return;
     final UsageTarget[] usageTargets = {new FindInProjectUtil.StringUsageTarget(project, findModel)};
     final UsageViewPresentation usageViewPresentation = FindInProjectUtil.setupViewPresentation(false, findModel);
-    UsageViewManager.getInstance(project).showUsages(usageTargets, usages.toArray(new Usage[usages.size()]), usageViewPresentation);
+    UsageView view = UsageViewManager.getInstance(project).showUsages(usageTargets, usages.toArray(Usage.EMPTY_ARRAY), usageViewPresentation);
+    view.setRerunAction(new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        findAllAndShow(project, psiFile, findModel);
+      }
+
+      @Override
+      public boolean isEnabled() {
+        return !project.isDisposed() && psiFile.isValid();
+      }
+    });
   }
 
   public static void searchBack(Project project, FileEditor fileEditor, @Nullable DataContext dataContext) {

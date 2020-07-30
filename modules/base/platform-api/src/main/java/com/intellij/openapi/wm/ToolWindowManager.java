@@ -131,6 +131,11 @@ public abstract class ToolWindowManager {
 
   public abstract void setMaximized(@Nonnull ToolWindow wnd, boolean maximized);
 
+  @Nonnull
+  public Image getLocationIcon(@Nonnull String toolWindowId, @Nonnull Image fallbackImage) {
+    return fallbackImage;
+  }
+
   // region AWT & Swing dependency
 
   /**
