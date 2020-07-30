@@ -16,12 +16,13 @@
 
 package com.intellij.execution.actions;
 
-import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.impl.EditConfigurationsDialog;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ExecutionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public class EditRunConfigurationsAction extends AnAction {
@@ -48,9 +49,12 @@ public class EditRunConfigurationsAction extends AnAction {
   public void update(final AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     presentation.setEnabled(true);
+
     if (ActionPlaces.RUN_CONFIGURATIONS_COMBOBOX.equals(e.getPlace())) {
-      presentation.setText(ExecutionBundle.message("edit.configuration.action"));
-      presentation.setDescription(presentation.getText());
+      LocalizeValue textValue = ExecutionLocalize.editConfigurationAction();
+
+      presentation.setTextValue(textValue);
+      presentation.setDescriptionValue(textValue.map(Presentation.NO_MNEMONIC));
     }
   }
 }

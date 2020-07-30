@@ -17,6 +17,7 @@ package com.intellij.ide.ui.customization;
 
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.util.text.TextWithMnemonic;
 import consulo.logging.Logger;
 import com.intellij.openapi.keymap.impl.ui.Group;
 import com.intellij.openapi.util.Pair;
@@ -55,7 +56,7 @@ public class CustomizationUtil {
        return group;
      }
     String text = group.getTemplatePresentation().getText();
-    final int mnemonic = group.getTemplatePresentation().getMnemonic();
+    final int mnemonic = TextWithMnemonic.parse(group.getTemplatePresentation().getTextWithMnemonic()).getMnemonic();
     if (text != null) {
       for (int i = 0; i < text.length(); i++) {
         if (Character.toUpperCase(text.charAt(i)) == mnemonic) {

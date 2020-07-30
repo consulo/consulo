@@ -91,7 +91,7 @@ public class ActionButtonUI extends ComponentUI implements consulo.actionSystem.
   }
 
   private int getMnemonicCharIndex(ActionButton button, AnAction action, String text) {
-    final int mnemonicIndex = button.getPresentation().getDisplayedMnemonicIndex();
+    final int mnemonicIndex = button.getDisplayedMnemonicIndex();
     if (mnemonicIndex != -1) {
       return mnemonicIndex;
     }

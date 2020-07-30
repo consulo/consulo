@@ -68,17 +68,11 @@ public class PresentationTest extends MockApplicationTestCase {
       Presentation p = new Presentation();
       p.setText(inputTextsUnderscores[i]);
       assertEquals(menuTexts[i], p.getText());
-      assertEquals(mnemonics[i], p.getMnemonic());
-      assertEquals(indeces[i], p.getDisplayedMnemonicIndex());
       assertEquals(fullMenuTexts[i], p.getTextWithMnemonic());
 
       p.setText(inputTextsAmpersands[i]);
       assertEquals(menuTexts[i], p.getText());
-      assertEquals(mnemonics[i], p.getMnemonic());
-      assertEquals(indeces[i], p.getDisplayedMnemonicIndex());
       assertEquals(fullMenuTexts[i], p.getTextWithMnemonic());
-
-      assertTrue(menuTexts[i].length() > p.getDisplayedMnemonicIndex());
     }
   }
 }

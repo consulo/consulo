@@ -64,7 +64,7 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
 
   @Nonnull
   public JBPopup createPopup(@Nonnull JComponent component, @Nonnull DataContext context, @Nonnull Runnable onDispose) {
-    DefaultActionGroup group = createPopupActionGroup(component, context);
+    ActionGroup group = createPopupActionGroup(component, context);
 
     ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(getPopupTitle(), group, context, false, shouldShowDisabledActions(), false, onDispose, getMaxRows(), getPreselectCondition());
     popup.setMinimumSize(new Dimension(getMinWidth(), getMinHeight()));
@@ -98,10 +98,10 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
   }
 
   @Nonnull
-  protected abstract DefaultActionGroup createPopupActionGroup(JComponent button);
+  protected abstract ActionGroup createPopupActionGroup(JComponent button);
 
   @Nonnull
-  protected DefaultActionGroup createPopupActionGroup(JComponent button, @Nonnull DataContext dataContext) {
+  protected ActionGroup createPopupActionGroup(JComponent button, @Nonnull DataContext dataContext) {
     return createPopupActionGroup(button);
   }
 

@@ -39,6 +39,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.util.text.TextWithMnemonic;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -976,7 +977,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
       {
         getTemplatePresentation().setHoveredIcon(hoveredIcon);
         getTemplatePresentation().setSelectedIcon(selectedIcon);
-        int mnemonic = KeyEvent.getExtendedKeyCodeForChar(getTemplatePresentation().getMnemonic());
+        int mnemonic = KeyEvent.getExtendedKeyCodeForChar(TextWithMnemonic.parse(getTemplatePresentation().getTextWithMnemonic()).getMnemonic());
         if (mnemonic != KeyEvent.VK_UNDEFINED) {
           setShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(mnemonic, SystemInfo.isMac ? ALT_DOWN_MASK | CTRL_DOWN_MASK : ALT_DOWN_MASK)));
           registerCustomShortcutSet(getShortcutSet(), FindPopupPanel.this);

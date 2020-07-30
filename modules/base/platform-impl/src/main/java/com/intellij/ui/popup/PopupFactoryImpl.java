@@ -21,6 +21,7 @@ import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.EmptyRunnable;
+import com.intellij.openapi.util.text.TextWithMnemonic;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.wm.WindowManager;
@@ -388,7 +389,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
 
   private static boolean itemsHaveMnemonics(final List<? extends ActionItem> items) {
     for (ActionItem item : items) {
-      if (item.getAction().getTemplatePresentation().getMnemonic() != 0) return true;
+      if (TextWithMnemonic.parse(item.getAction().getTemplatePresentation().getTextWithMnemonic()).getMnemonic() != 0) return true;
     }
 
     return false;

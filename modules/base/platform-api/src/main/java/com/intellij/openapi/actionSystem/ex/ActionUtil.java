@@ -30,12 +30,14 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.util.text.TextWithMnemonic;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.PausesStat;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -397,9 +399,9 @@ public class ActionUtil {
     p1.setSelectedIcon(ObjectUtils.chooseNotNull(p1.getSelectedIcon(), p2.getSelectedIcon()));
     p1.setHoveredIcon(ObjectUtils.chooseNotNull(p1.getHoveredIcon(), p2.getHoveredIcon()));
     if (StringUtil.isEmpty(p1.getText())) {
-      p1.setText(p2.getTextWithMnemonic(), p2.getDisplayedMnemonicIndex() >= 0);
+      p1.setTextValue(p2.getTextValue());
     }
-    p1.setDescription(ObjectUtils.chooseNotNull(p1.getDescription(), p2.getDescription()));
+    p1.setDescriptionValue(p1.getDescriptionValue() == LocalizeValue.empty() ? p2.getDescriptionValue() : p1.getDescriptionValue());
     ShortcutSet ss1 = a1.getShortcutSet();
     if (ss1 == null || ss1 == CustomShortcutSet.EMPTY) {
       a1.copyShortcutFrom(a2);
@@ -472,7 +474,7 @@ public class ActionUtil {
 
   @Nullable
   public static ShortcutSet getMnemonicAsShortcut(@Nonnull AnAction action) {
-    int mnemonic = KeyEvent.getExtendedKeyCodeForChar(action.getTemplatePresentation().getMnemonic());
+    int mnemonic = KeyEvent.getExtendedKeyCodeForChar(TextWithMnemonic.parse(action.getTemplatePresentation().getTextWithMnemonic()).getMnemonic());
     if (mnemonic != KeyEvent.VK_UNDEFINED) {
       KeyboardShortcut ctrlAltShortcut = new KeyboardShortcut(KeyStroke.getKeyStroke(mnemonic, InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK), null);
       KeyboardShortcut altShortcut = new KeyboardShortcut(KeyStroke.getKeyStroke(mnemonic, InputEvent.ALT_DOWN_MASK), null);

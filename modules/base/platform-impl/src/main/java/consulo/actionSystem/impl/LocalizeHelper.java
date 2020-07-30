@@ -18,6 +18,7 @@ package consulo.actionSystem.impl;
 import com.intellij.AbstractBundle;
 import com.intellij.CommonBundle;
 import com.intellij.idea.ActionsBundle;
+import consulo.annotation.DeprecationInfo;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeValue;
@@ -104,6 +105,8 @@ public interface LocalizeHelper {
   }
 
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use #getValue()")
   default String getText(String key) {
     return getValue(key).getValue();
   }

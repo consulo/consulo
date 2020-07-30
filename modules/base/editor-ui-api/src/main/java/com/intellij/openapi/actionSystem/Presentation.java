@@ -15,12 +15,13 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.text.TextWithMnemonic;
 import com.intellij.util.SmartFMap;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;
+import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
@@ -28,7 +29,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,6 +36,7 @@ import javax.swing.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,21 +47,15 @@ import java.util.regex.Pattern;
  * @see ActionPlaces
  */
 public final class Presentation implements Cloneable {
+  public static final BiFunction<LocalizeManager, String, String> NO_MNEMONIC = (localizeManager, text) -> TextWithMnemonic.parse(text).getText();
+
   /**
    * Defines tool tip for button at tool bar or text for element at menu
    * value: LocalizeValue
    */
   public static final String PROP_TEXT = "text";
   /**
-   * value: Integer
-   */
-  public static final String PROP_MNEMONIC_KEY = "mnemonicKey";
-  /**
-   * value: Integer
-   */
-  public static final String PROP_MNEMONIC_INDEX = "mnemonicIndex";
-  /**
-   * value: String
+   * value: LocalizeValue
    */
   public static final String PROP_DESCRIPTION = "description";
   /**
@@ -181,71 +176,37 @@ public final class Presentation implements Cloneable {
     return myTextValue;
   }
 
-  public void setText(@Nullable String text, boolean mayContainMnemonic) {
-    int oldMnemonic = myMnemonic;
-    int oldDisplayedMnemonicIndex = myDisplayedMnemonicIndex;
-    String oldText = myText;
-    myMnemonic = 0;
-    myDisplayedMnemonicIndex = -1;
-
-    if (text != null) {
+  @Deprecated
+  @DeprecationInfo("Use #setTextValue() with localize value parameter")
+  public void setText(@Nullable String text,  boolean mayContainMnemonic) {
+    if(text != null) {
       if (text.indexOf(UIUtil.MNEMONIC) >= 0) {
         text = text.replace(UIUtil.MNEMONIC, '&');
       }
 
-      if (mayContainMnemonic) {
-        StringBuilder plainText = new StringBuilder();
-        int backShift = 0;
-        for (int i = 0; i < text.length(); i++) {
-          char ch = text.charAt(i);
-          if (myMnemonic == 0 && (ch == '_' || ch == '&')) {
-            //noinspection AssignmentToForLoopParameter
-            i++;
-            if (i >= text.length()) break;
-            ch = text.charAt(i);
-            if (ch != '_' && ch != '&') {
-              if (UISettings.getInstance().getDisableMnemonicsInControls()) {
-                myMnemonic = 0;
-                myDisplayedMnemonicIndex = -1;
-              }
-              else {
-                myMnemonic = Character.toUpperCase(ch);  // mnemonics are case insensitive
-                myDisplayedMnemonicIndex = i - 1 - backShift;
-              }
-            }
-            else {
-              backShift++;
-            }
-          }
-          plainText.append(ch);
-        }
-        myText = plainText.length() == 0 ? "" : plainText.toString();
+      if(mayContainMnemonic) {
+        setTextValue(LocalizeValue.of(text));
       }
       else {
-        myText = text.isEmpty() ? "" : text;
+        Matcher matcher = MNEMONIC.matcher(text);
+        String textNoMnemonic = matcher.replaceAll("");
+
+        setTextValue(LocalizeValue.of(textNoMnemonic));
       }
     }
     else {
-      myText = null;
-    }
-
-    fireObjectPropertyChange(PROP_TEXT, oldText, myText);
-    if (myMnemonic != oldMnemonic) {
-      fireObjectPropertyChange(PROP_MNEMONIC_KEY, oldMnemonic, myMnemonic);
-    }
-    if (myDisplayedMnemonicIndex != oldDisplayedMnemonicIndex) {
-      fireObjectPropertyChange(PROP_MNEMONIC_INDEX, oldDisplayedMnemonicIndex, myDisplayedMnemonicIndex);
+      setTextValue(LocalizeValue.empty());
     }
   }
 
+  @Deprecated
+  @DeprecationInfo("Use #setTextValue() with localize value parameter")
   public void setText(String text) {
     setText(text, true);
   }
 
-  public void restoreTextWithMnemonic(Presentation presentation) {
-    setText(presentation.getTextWithMnemonic());
-  }
-
+  @Deprecated
+  @DeprecationInfo("Must be reviewed usage of this method, since changed logic for action presentation mnemonic")
   public static String restoreTextWithMnemonic(@Nullable String text, final int mnemonic) {
     if (text == null) {
       return null;
@@ -318,14 +279,6 @@ public final class Presentation implements Cloneable {
 
   public void setSelectedIcon(@Nullable final Image hoveredIcon) {
     setSelectedIcon(TargetAWT.to(hoveredIcon));
-  }
-
-  public int getMnemonic() {
-    throw new UnsupportedOperationException(); // todo removed that
-  }
-
-  public int getDisplayedMnemonicIndex() {
-    throw new UnsupportedOperationException(); // todo removed that
   }
 
   public boolean isVisible() {

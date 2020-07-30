@@ -16,7 +16,7 @@
 <consulo-plugin>
   <id>com.intellij</id>
   <name>Platform: base</name>
-  <resource-bundle>messages.ActionsBundle</resource-bundle>
+  <localize>consulo.platform.base.ActionLocalize</localize>
 
   <import path="/META-INF/Actions.xml"/>
   <import path="/META-INF/Diff.xml"/>

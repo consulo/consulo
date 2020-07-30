@@ -26,6 +26,7 @@ import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.util.text.TextWithMnemonic;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBDimension;
 import com.intellij.util.ui.JBUI;
@@ -33,6 +34,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;
+import consulo.localize.LocalizeValue;
 import consulo.ui.shared.Size;
 import consulo.util.dataholder.Key;
 import kava.beans.PropertyChangeEvent;
@@ -80,6 +82,8 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
 
   private boolean myWithoutBorder;
 
+  private int myDisplayedMnemonicIndex = -1;
+
   @Deprecated
   @DeprecationInfo("Use constructor with Size parameter")
   public ActionButton(AnAction action, Presentation presentation, String place, @Nonnull Dimension minimumSize) {
@@ -120,7 +124,17 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
 
     putClientProperty(UIUtil.CENTER_TOOLTIP_DEFAULT, Boolean.TRUE);
 
+    updateMnemonic(presentation.getTextValue());
+
     updateUI();
+  }
+
+  public int getDisplayedMnemonicIndex() {
+    return myDisplayedMnemonicIndex;
+  }
+
+  public void setDisplayedMnemonicIndex(int displayedMnemonicIndex) {
+    myDisplayedMnemonicIndex = displayedMnemonicIndex;
   }
 
   public boolean isWithoutBorder() {
@@ -420,9 +434,16 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
     return myAction;
   }
 
+  protected void updateMnemonic(@Nonnull LocalizeValue localizeValue) {
+    TextWithMnemonic textWithMnemonic = TextWithMnemonic.parse(localizeValue.getValue());
+
+    setDisplayedMnemonicIndex(textWithMnemonic.getMnemonicIndex());
+  }
+
   protected void presentationPropertyChanded(PropertyChangeEvent e) {
     String propertyName = e.getPropertyName();
     if (Presentation.PROP_TEXT.equals(propertyName)) {
+      updateMnemonic((LocalizeValue)e.getNewValue());
       updateToolTipText();
     }
     else if (Presentation.PROP_ENABLED.equals(propertyName)) {

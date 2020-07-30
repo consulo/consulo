@@ -243,7 +243,7 @@ public class LocalizeManagerImpl extends LocalizeManager {
       return value;
     }
 
-    LOG.error("Can't find localize value: " + key + ", current locale: " + myCurrentLocale);
+    LOG.warn("Can't find localize value: " + key + ", current locale: " + myCurrentLocale);
     return key.toString();
   }
 

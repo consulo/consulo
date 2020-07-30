@@ -5,10 +5,15 @@ import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * An immutable object which represents a text string with mnemonic character.
  */
 public final class TextWithMnemonic {
+  private static final TextWithMnemonic ourNull = new TextWithMnemonic("", -1);
+
   @NotNull
   private final String myText;
   private final int myMnemonicIndex;
@@ -119,9 +124,13 @@ public final class TextWithMnemonic {
    * @param text text to parse
    * @return TextWithMnemonic object which corresponds to the parsed text.
    */
-  @NotNull
+  @Nonnull
   @Contract(pure = true)
-  public static TextWithMnemonic parse(@NotNull String text) {
+  public static TextWithMnemonic parse(@Nullable String text) {
+    if(StringUtil.isEmpty(text)) {
+      return ourNull;
+    }
+
     if (text.indexOf(UIUtil.MNEMONIC) >= 0) {
       text = text.replace(UIUtil.MNEMONIC, '&');
     }

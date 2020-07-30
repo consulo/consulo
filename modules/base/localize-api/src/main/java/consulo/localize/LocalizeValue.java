@@ -16,12 +16,14 @@
 package consulo.localize;
 
 import javax.annotation.Nonnull;
+import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 2019-04-11
  */
-public interface LocalizeValue {
+public interface LocalizeValue extends Supplier<String> {
   @Nonnull
   static LocalizeValue empty() {
     return SingleLocalizeValue.ourEmpty;
@@ -32,8 +34,29 @@ public interface LocalizeValue {
     return new SingleLocalizeValue(text);
   }
 
+  @Override
+  @Nonnull
+  default String get() {
+    return getValue();
+  }
+
   @Nonnull
   String getValue();
 
   long getModificationCount();
+
+  @Nonnull
+  default LocalizeValue map(@Nonnull BiFunction<LocalizeManager, String, String> mapper) {
+    return new MapLocalizeValue(this, mapper);
+  }
+
+  @Nonnull
+  default LocalizeValue toUpperCase() {
+    return map(DefaultMapFunctions.TO_UPPER_CASE);
+  }
+
+  @Nonnull
+  default LocalizeValue toLowerCase() {
+    return map(DefaultMapFunctions.TO_LOWER_CASE);
+  }
 }

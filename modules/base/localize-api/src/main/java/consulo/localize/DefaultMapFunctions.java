@@ -15,27 +15,14 @@
  */
 package consulo.localize;
 
-import javax.annotation.Nonnull;
+import java.util.function.BiFunction;
 
 /**
  * @author VISTALL
- * @since 2020-05-20
+ * @since 2020-07-30
  */
-final class DefaultLocalizeValue extends BaseLocalizeValue {
-  private final LocalizeKey myLocalizeKey;
+class DefaultMapFunctions {
+  static final BiFunction<LocalizeManager, String, String> TO_UPPER_CASE = (localizeManager, s) -> s.toUpperCase(localizeManager.getLocale());
 
-  DefaultLocalizeValue(@Nonnull LocalizeKey localizeKey) {
-    this(localizeKey, ourEmptyArgs);
-  }
-
-  DefaultLocalizeValue(@Nonnull LocalizeKey localizeKey, @Nonnull Object... args) {
-    super(args);
-    myLocalizeKey = localizeKey;
-  }
-
-  @Nonnull
-  @Override
-  protected String getUnformattedText(@Nonnull LocalizeManager localizeManager) {
-    return localizeManager.getUnformattedText(myLocalizeKey);
-  }
+  static final BiFunction<LocalizeManager, String, String> TO_LOWER_CASE = (localizeManager, s) -> s.toLowerCase(localizeManager.getLocale());
 }

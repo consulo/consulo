@@ -1022,7 +1022,6 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
     public AnalyzeAction(AnAction analyze) {
       super(analyze.getTemplatePresentation().getText());
-      putValue(Action.MNEMONIC_KEY, analyze.getTemplatePresentation().getMnemonic());
       myAnalyze = analyze;
     }
 
