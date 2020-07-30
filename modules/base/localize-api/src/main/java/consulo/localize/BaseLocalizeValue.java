@@ -79,7 +79,7 @@ abstract class BaseLocalizeValue implements LocalizeValue {
 
     myText = newText;
     myModificationCount = manager.getModificationCount();
-    return unformattedText;
+    return newText;
   }
 
   @Nonnull
