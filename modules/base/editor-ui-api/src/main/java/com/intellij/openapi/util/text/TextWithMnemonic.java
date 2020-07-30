@@ -3,9 +3,8 @@ package com.intellij.openapi.util.text;
 
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 
 /**
@@ -14,11 +13,11 @@ import javax.annotation.Nullable;
 public final class TextWithMnemonic {
   private static final TextWithMnemonic ourNull = new TextWithMnemonic("", -1);
 
-  @NotNull
+  @Nonnull
   private final String myText;
   private final int myMnemonicIndex;
 
-  private TextWithMnemonic(@NotNull String text, int mnemonicIndex) {
+  private TextWithMnemonic(@Nonnull String text, int mnemonicIndex) {
     myText = StringUtil.internEmptyString(text);
     myMnemonicIndex = mnemonicIndex;
   }
@@ -26,7 +25,7 @@ public final class TextWithMnemonic {
   /**
    * @return plain text without mnemonic
    */
-  @NotNull
+  @Nonnull
   public String getText() {
     return myText;
   }
@@ -80,7 +79,7 @@ public final class TextWithMnemonic {
    * @param textToAppend text to append. Appended text is treated as a plain text, without mnemonic, so mnemonic position is unchanged.
    * @return TextWithMnemonic object which text is the concatenation of this object text and supplied text.
    */
-  public TextWithMnemonic append(@NotNull String textToAppend) {
+  public TextWithMnemonic append(@Nonnull String textToAppend) {
     return new TextWithMnemonic(myText + textToAppend, myMnemonicIndex);
   }
 
@@ -92,7 +91,7 @@ public final class TextWithMnemonic {
    * @return TextWithMnemonic object. The resulting mnemonic position could be adjusted if the mnemonic was located after the replacement.
    * If the mnemonic was inside the target text then it's dropped. Returns this object if the target text was not found.
    */
-  public TextWithMnemonic replaceFirst(@NotNull String target, @NotNull String replacement) {
+  public TextWithMnemonic replaceFirst(@Nonnull String target, @Nonnull String replacement) {
     int index = myText.indexOf(target);
     if (index == -1) {
       return this;
@@ -108,9 +107,9 @@ public final class TextWithMnemonic {
    * @param text a plain text to create a TextWithMnemonic object from
    * @return new TextWithMnemonic object which has no mnemonic
    */
-  @NotNull
+  @Nonnull
   @Contract(pure = true)
-  public static TextWithMnemonic fromPlainText(@NotNull String text) {
+  public static TextWithMnemonic fromPlainText(@Nonnull String text) {
     return new TextWithMnemonic(text, -1);
   }
 
