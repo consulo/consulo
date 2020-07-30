@@ -22,6 +22,7 @@ import com.intellij.openapi.actionSystem.impl.actionholder.ActionRef;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.text.TextWithMnemonic;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.StatusBar;
@@ -30,10 +31,12 @@ import com.intellij.util.ui.UIUtil;
 import consulo.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.awt.TargetAWT;
 import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
+import consulo.localize.LocalizeValue;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
@@ -53,6 +56,8 @@ public final class ActionMenu extends JMenu {
   private final boolean myTopLevel;
 
   private Component[] myMenuComponents;
+
+  private LocalizeValue myTextValue = LocalizeValue.empty();
 
   public ActionMenu(final DataContext context,
                     @Nonnull final String place,
@@ -136,6 +141,26 @@ public final class ActionMenu extends JMenu {
         setBorder(BorderFactory.createEmptyBorder(newInsets.top, newInsets.left, newInsets.bottom, newInsets.right));
       }
     }
+
+    updateTextAndMnemonic(null);
+  }
+
+  private void updateTextAndMnemonic(@Nullable LocalizeValue newTextValue) {
+    // first initialization
+    if(myTextValue == null) {
+      return;
+    }
+
+    if(newTextValue != null) {
+      myTextValue = newTextValue;
+    }
+
+    String value = myTextValue.getValue();
+    TextWithMnemonic textWithMnemonic = TextWithMnemonic.parse(value);
+
+    setText(textWithMnemonic.getText());
+    setDisplayedMnemonicIndex(textWithMnemonic.getMnemonicIndex());
+    setMnemonic(textWithMnemonic.getMnemonic());
   }
 
   @Override
@@ -152,10 +177,8 @@ public final class ActionMenu extends JMenu {
 
     setVisible(myPresentation.isVisible());
     setEnabled(myPresentation.isEnabled());
-    setText(myPresentation.getText());
+    updateTextAndMnemonic(myPresentation.getTextValue());
     updateIcon();
-
-    setMnemonicEnabled(myMnemonicEnabled);
   }
 
   private void addStubItem() {
@@ -166,8 +189,8 @@ public final class ActionMenu extends JMenu {
 
   public void setMnemonicEnabled(boolean enable) {
     myMnemonicEnabled = enable;
-    setMnemonic(myPresentation.getMnemonic());
-    setDisplayedMnemonicIndex(myPresentation.getDisplayedMnemonicIndex());
+
+    updateTextAndMnemonic(null);
   }
 
   @Override
@@ -342,14 +365,8 @@ public final class ActionMenu extends JMenu {
       else if (Presentation.PROP_ENABLED.equals(name)) {
         setEnabled(myPresentation.isEnabled());
       }
-      else if (Presentation.PROP_MNEMONIC_KEY.equals(name)) {
-        setMnemonic(myPresentation.getMnemonic());
-      }
-      else if (Presentation.PROP_MNEMONIC_INDEX.equals(name)) {
-        setDisplayedMnemonicIndex(myPresentation.getDisplayedMnemonicIndex());
-      }
       else if (Presentation.PROP_TEXT.equals(name)) {
-        setText(myPresentation.getText());
+        updateTextAndMnemonic((LocalizeValue)e.getNewValue());
       }
       else if (Presentation.PROP_ICON.equals(name) || Presentation.PROP_DISABLED_ICON.equals(name)) {
         updateIcon();

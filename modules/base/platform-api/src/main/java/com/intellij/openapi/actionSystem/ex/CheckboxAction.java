@@ -18,6 +18,7 @@ package com.intellij.openapi.actionSystem.ex;
 
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.util.text.TextWithMnemonic;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
 
@@ -45,11 +46,13 @@ public abstract class CheckboxAction extends ToggleAction implements CustomCompo
   public JComponent createCustomComponent(Presentation presentation, @Nonnull String place) {
     // this component cannot be stored right here because of action system architecture:
     // one action can be shown on multiple toolbars simultaneously
-    JCheckBox checkBox = new JCheckBox(presentation.getText());
+    TextWithMnemonic textWithMnemonic = TextWithMnemonic.parse(presentation.getTextValue().getValue());
+
+    JCheckBox checkBox = new JCheckBox(textWithMnemonic.getText());
     checkBox.setOpaque(false);
     checkBox.setToolTipText(presentation.getDescription());
-    checkBox.setMnemonic(presentation.getMnemonic());
-    checkBox.setDisplayedMnemonicIndex(presentation.getDisplayedMnemonicIndex());
+    checkBox.setMnemonic(textWithMnemonic.getMnemonic());
+    checkBox.setDisplayedMnemonicIndex(textWithMnemonic.getMnemonicIndex());
 
     checkBox.addActionListener(new ActionListener() {
       @Override

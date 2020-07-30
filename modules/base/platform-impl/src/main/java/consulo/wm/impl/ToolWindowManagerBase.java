@@ -39,7 +39,6 @@ import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
 import com.intellij.openapi.wm.impl.commands.InvokeLaterCmd;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.EventDispatcher;
-import com.intellij.util.ObjectUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.component.PersistentStateComponentWithUIState;
@@ -49,8 +48,8 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.condition.ModuleExtensionCondition;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.*;
 import consulo.ui.image.Image;
 import consulo.ui.shared.Rectangle2D;
@@ -1149,7 +1148,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     info.setActive(false);
     info.setVisible(false);
 
-    LocalizeValue displayNameNonnull = ObjectUtil.notNull(displayName, LocalizeValue.of(id));
+    LocalizeValue displayNameNonnull = displayName == null ? LocalizeValue.of(id) : displayName;
 
     // Create decorator
     ToolWindowEx toolWindow = createToolWindow(id, displayNameNonnull, canCloseContent, component, shouldBeAvailable);

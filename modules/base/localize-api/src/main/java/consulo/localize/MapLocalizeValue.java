@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,33 +16,26 @@
 package consulo.localize;
 
 import javax.annotation.Nonnull;
+import java.util.function.BiFunction;
 
 /**
  * @author VISTALL
- * @since 09-Nov-17
+ * @since 2020-07-30
  */
-class SingleLocalizeValue implements LocalizeValue {
-  static final SingleLocalizeValue ourEmpty = new SingleLocalizeValue("");
+final class MapLocalizeValue extends BaseLocalizeValue {
+  private final LocalizeValue myDelegate;
+  private final BiFunction<LocalizeManager, String, String> myMapper;
 
-  private final String myValue;
-
-  SingleLocalizeValue(String value) {
-    myValue = value;
+  MapLocalizeValue(LocalizeValue delegate, BiFunction<LocalizeManager, String, String> mapper) {
+    super(ourEmptyArgs);
+    myDelegate = delegate;
+    myMapper = mapper;
   }
 
   @Nonnull
   @Override
-  public String getValue() {
-    return myValue;
-  }
-
-  @Override
-  public long getModificationCount() {
-    return 0;
-  }
-
-  @Override
-  public String toString() {
-    return getValue();
+  protected String getUnformattedText(@Nonnull LocalizeManager localizeManager) {
+    String value = myDelegate.getValue();
+    return myMapper.apply(localizeManager, value);
   }
 }

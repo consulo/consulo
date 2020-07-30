@@ -6,6 +6,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.util.text.TextWithMnemonic;
 import consulo.ide.base.BaseDataManager;
 import javax.annotation.Nonnull;
 
@@ -67,10 +68,12 @@ class ButtonToolbarImpl extends JPanel {
     private final AnAction myAction;
 
     ActionJButton(final AnAction action) {
-      super(action.getTemplatePresentation().getText());
       myAction = action;
-      setMnemonic(action.getTemplatePresentation().getMnemonic());
-      setDisplayedMnemonicIndex(action.getTemplatePresentation().getDisplayedMnemonicIndex());
+      TextWithMnemonic textWithMnemonic = TextWithMnemonic.parse(action.getTemplatePresentation().getTextValue().getValue());
+
+      setText(textWithMnemonic.getText());
+      setMnemonic(textWithMnemonic.getMnemonic());
+      setDisplayedMnemonicIndex(textWithMnemonic.getMnemonicIndex());
 
       addActionListener(new ActionListener() {
         @Override

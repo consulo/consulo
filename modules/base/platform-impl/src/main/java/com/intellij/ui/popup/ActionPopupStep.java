@@ -6,6 +6,7 @@ import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.impl.PresentationFactory;
 import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.text.TextWithMnemonic;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.StatusText;
 import com.intellij.util.ui.UIUtil;
@@ -80,7 +81,7 @@ public class ActionPopupStep implements ListPopupStepEx<PopupFactoryImpl.ActionI
                                                                              int defaultOptionIndex,
                                                                              @Nullable PresentationFactory presentationFactory) {
     List<PopupFactoryImpl.ActionItem> items = createActionItems(actionGroup, dataContext, showNumbers, useAlphaAsNumbers, showDisabledActions, honorActionMnemonics, actionPlace, presentationFactory);
-    boolean enableMnemonics = showNumbers || honorActionMnemonics && items.stream().anyMatch(actionItem -> actionItem.getAction().getTemplatePresentation().getMnemonic() != 0);
+    boolean enableMnemonics = showNumbers || honorActionMnemonics && items.stream().anyMatch(actionItem -> TextWithMnemonic.parse(actionItem.getAction().getTemplatePresentation().getTextWithMnemonic()).getMnemonic() != 0);
 
     return new ActionPopupStep(items, title, contextSupplier, actionPlace, enableMnemonics,
                                preselectCondition != null ? preselectCondition : action -> defaultOptionIndex >= 0 && defaultOptionIndex < items.size() && items.get(defaultOptionIndex).getAction().equals(action),

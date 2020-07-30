@@ -7,6 +7,7 @@ import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import com.intellij.openapi.actionSystem.impl.PresentationFactory;
 import com.intellij.openapi.actionSystem.impl.Utils;
 import com.intellij.openapi.util.IconLoader;
+import com.intellij.openapi.util.text.TextWithMnemonic;
 import com.intellij.ui.SizedIcon;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.EmptyIcon;
@@ -143,7 +144,8 @@ class ActionStepBuilder {
         myCurrentNumber++;
       }
       else if (myHonorActionMnemonics) {
-        text = restoreTextWithMnemonic(text, action.getTemplatePresentation().getMnemonic());
+        TextWithMnemonic textWithMnemonic = TextWithMnemonic.parse(action.getTemplatePresentation().getTextWithMnemonic());
+        text = restoreTextWithMnemonic(text, textWithMnemonic.getMnemonic());
       }
 
       boolean hideIcon = Boolean.TRUE.equals(presentation.getClientProperty(MenuItemPresentationFactory.HIDE_ICON));

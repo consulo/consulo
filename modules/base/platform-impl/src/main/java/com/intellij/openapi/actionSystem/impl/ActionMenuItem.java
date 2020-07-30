@@ -29,6 +29,7 @@ import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.text.TextWithMnemonic;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.SizedIcon;
 import com.intellij.ui.plaf.gtk.GtkMenuItemUI;
@@ -38,11 +39,13 @@ import com.intellij.util.ui.UIUtil;
 import consulo.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.MenuItemUI;
 import java.awt.*;
@@ -66,6 +69,8 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
   private final boolean myEnableMnemonics;
   private final boolean myToggleable;
   private boolean myToggled;
+
+  private LocalizeValue myTextValue = LocalizeValue.empty();
 
   public ActionMenuItem(final AnAction action,
                         final Presentation presentation,
@@ -107,12 +112,7 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
    */
   @Override
   public void fireActionPerformed(final ActionEvent event) {
-    TransactionGuard.submitTransaction(ApplicationManager.getApplication(), new Runnable() {
-      @Override
-      public void run() {
-        ActionMenuItem.super.fireActionPerformed(event);
-      }
-    });
+    TransactionGuard.submitTransaction(ApplicationManager.getApplication(), () -> ActionMenuItem.super.fireActionPerformed(event));
   }
 
   @Override
@@ -144,13 +144,7 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
   private void init() {
     setVisible(myPresentation.isVisible());
     setEnabled(myPresentation.isEnabled());
-    setMnemonic(myEnableMnemonics ? myPresentation.getMnemonic() : 0);
-    setText(myPresentation.getText());
-    final int mnemonicIndex = myEnableMnemonics ? myPresentation.getDisplayedMnemonicIndex() : -1;
-
-    if (getText() != null && mnemonicIndex >= 0 && mnemonicIndex < getText().length()) {
-      setDisplayedMnemonicIndex(mnemonicIndex);
-    }
+    updateTextAndMnemonic(myPresentation.getTextValue());
 
     AnAction action = myAction.getAction();
     updateIcon(action);
@@ -165,6 +159,24 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
         setAcceleratorFromShortcuts(shortcutSet.getShortcuts());
       }
     }
+  }
+
+  private void updateTextAndMnemonic(@Nullable LocalizeValue textValue) {
+    // first initialization
+    if(myTextValue == null) {
+      return;
+    }
+
+    if(textValue != null) {
+      myTextValue = textValue;
+    }
+
+    String value = myTextValue.getValue();
+    TextWithMnemonic textWithMnemonic = TextWithMnemonic.parse(value);
+
+    setText(textWithMnemonic.getText());
+    setDisplayedMnemonicIndex(myEnableMnemonics ? textWithMnemonic.getMnemonicIndex() : -1);
+    setMnemonic(myEnableMnemonics ? textWithMnemonic.getMnemonic() : 0);
   }
 
   private void setAcceleratorFromShortcuts(final Shortcut[] shortcuts) {
@@ -338,14 +350,8 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
           setEnabled(myPresentation.isEnabled());
           updateIcon(myAction.getAction());
         }
-        else if (Presentation.PROP_MNEMONIC_KEY.equals(name)) {
-          setMnemonic(myPresentation.getMnemonic());
-        }
-        else if (Presentation.PROP_MNEMONIC_INDEX.equals(name)) {
-          setDisplayedMnemonicIndex(myPresentation.getDisplayedMnemonicIndex());
-        }
         else if (Presentation.PROP_TEXT.equals(name)) {
-          setText(myPresentation.getText());
+          updateTextAndMnemonic(myPresentation.getTextValue());
         }
         else if (Presentation.PROP_ICON.equals(name) || Presentation.PROP_DISABLED_ICON.equals(name) || SELECTED.equals(name)) {
           updateIcon(myAction.getAction());
@@ -356,12 +362,9 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
         if (queueForDispose) {
           // later since we cannot remove property listeners inside event processing
           //noinspection SSBasedInspection
-          SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-              if (getParent() == null) {
-                uninstallSynchronizer();
-              }
+          SwingUtilities.invokeLater(() -> {
+            if (getParent() == null) {
+              uninstallSynchronizer();
             }
           });
         }

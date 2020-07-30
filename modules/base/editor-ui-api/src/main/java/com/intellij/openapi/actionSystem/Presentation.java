@@ -15,12 +15,13 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.text.TextWithMnemonic;
 import com.intellij.util.SmartFMap;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;
+import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
@@ -28,7 +29,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,6 +36,9 @@ import javax.swing.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The presentation of an action in a specific place in the user interface.
@@ -44,21 +47,15 @@ import java.util.Set;
  * @see ActionPlaces
  */
 public final class Presentation implements Cloneable {
+  public static final BiFunction<LocalizeManager, String, String> NO_MNEMONIC = (localizeManager, text) -> TextWithMnemonic.parse(text).getText();
+
   /**
    * Defines tool tip for button at tool bar or text for element at menu
    * value: LocalizeValue
    */
   public static final String PROP_TEXT = "text";
   /**
-   * value: Integer
-   */
-  public static final String PROP_MNEMONIC_KEY = "mnemonicKey";
-  /**
-   * value: Integer
-   */
-  public static final String PROP_MNEMONIC_INDEX = "mnemonicIndex";
-  /**
-   * value: String
+   * value: LocalizeValue
    */
   public static final String PROP_DESCRIPTION = "description";
   /**
@@ -94,10 +91,10 @@ public final class Presentation implements Cloneable {
 
   @Nullable
   private PropertyChangeSupport myChangeSupport;
-  private String myText;
+
+  private LocalizeValue myTextValue = LocalizeValue.empty();
   private LocalizeValue myDescriptionValue = LocalizeValue.empty();
-  private int myMnemonic;
-  private int myDisplayedMnemonicIndex = -1;
+
   private boolean myVisible = true;
   private boolean myEnabled = true;
   private double myWeight = DEFAULT_WEIGHT;
@@ -108,11 +105,19 @@ public final class Presentation implements Cloneable {
   private Icon myHoveredIcon;
   private Icon mySelectedIcon;
 
+  private static final Pattern MNEMONIC = Pattern.compile(" ?\\(_?[A-Z]\\)");
+
   public Presentation() {
   }
 
+  public Presentation(@Nonnull LocalizeValue textValue) {
+    myTextValue = textValue;
+  }
+
+  @Deprecated
+  @DeprecationInfo("Use #Presentation(LocalizeValue)")
   public Presentation(String text) {
-    myText = text;
+    this(LocalizeValue.of(text));
   }
 
   public void addPropertyChangeListener(PropertyChangeListener l) {
@@ -148,81 +153,60 @@ public final class Presentation implements Cloneable {
 
   @Nullable
   public String getText() {
-    return myText;
+    String text = StringUtil.nullize(myTextValue.getValue());
+    if(text == null) {
+      return null;
+    }
+
+    Matcher matcher = MNEMONIC.matcher(text);
+    return matcher.replaceAll("");
   }
 
-  public void setText(@Nullable String text, boolean mayContainMnemonic) {
-    int oldMnemonic = myMnemonic;
-    int oldDisplayedMnemonicIndex = myDisplayedMnemonicIndex;
-    String oldText = myText;
-    myMnemonic = 0;
-    myDisplayedMnemonicIndex = -1;
+  @Nullable
+  public String getTextWithMnemonic() {
+    return StringUtil.nullize(myTextValue.getValue());
+  }
 
-    if (text != null) {
+  public void setTextValue(@Nonnull LocalizeValue textValue) {
+    myTextValue = textValue;
+  }
+
+  @Nonnull
+  public LocalizeValue getTextValue() {
+    return myTextValue;
+  }
+
+  @Deprecated
+  @DeprecationInfo("Use #setTextValue() with localize value parameter")
+  public void setText(@Nullable String text,  boolean mayContainMnemonic) {
+    if(text != null) {
       if (text.indexOf(UIUtil.MNEMONIC) >= 0) {
         text = text.replace(UIUtil.MNEMONIC, '&');
       }
 
-      if (mayContainMnemonic) {
-        StringBuilder plainText = new StringBuilder();
-        int backShift = 0;
-        for (int i = 0; i < text.length(); i++) {
-          char ch = text.charAt(i);
-          if (myMnemonic == 0 && (ch == '_' || ch == '&')) {
-            //noinspection AssignmentToForLoopParameter
-            i++;
-            if (i >= text.length()) break;
-            ch = text.charAt(i);
-            if (ch != '_' && ch != '&') {
-              if (UISettings.getInstance().getDisableMnemonicsInControls()) {
-                myMnemonic = 0;
-                myDisplayedMnemonicIndex = -1;
-              }
-              else {
-                myMnemonic = Character.toUpperCase(ch);  // mnemonics are case insensitive
-                myDisplayedMnemonicIndex = i - 1 - backShift;
-              }
-            }
-            else {
-              backShift++;
-            }
-          }
-          plainText.append(ch);
-        }
-        myText = plainText.length() == 0 ? "" : plainText.toString();
+      if(mayContainMnemonic) {
+        setTextValue(LocalizeValue.of(text));
       }
       else {
-        myText = text.isEmpty() ? "" : text;
+        Matcher matcher = MNEMONIC.matcher(text);
+        String textNoMnemonic = matcher.replaceAll("");
+
+        setTextValue(LocalizeValue.of(textNoMnemonic));
       }
     }
     else {
-      myText = null;
-    }
-
-    fireObjectPropertyChange(PROP_TEXT, oldText, myText);
-    if (myMnemonic != oldMnemonic) {
-      fireObjectPropertyChange(PROP_MNEMONIC_KEY, oldMnemonic, myMnemonic);
-    }
-    if (myDisplayedMnemonicIndex != oldDisplayedMnemonicIndex) {
-      fireObjectPropertyChange(PROP_MNEMONIC_INDEX, oldDisplayedMnemonicIndex, myDisplayedMnemonicIndex);
+      setTextValue(LocalizeValue.empty());
     }
   }
 
+  @Deprecated
+  @DeprecationInfo("Use #setTextValue() with localize value parameter")
   public void setText(String text) {
     setText(text, true);
   }
 
-  public String getTextWithMnemonic() {
-    if (myText != null && myDisplayedMnemonicIndex > -1) {
-      return myText.substring(0, myDisplayedMnemonicIndex) + "_" + myText.substring(myDisplayedMnemonicIndex);
-    }
-    return myText;
-  }
-
-  public void restoreTextWithMnemonic(Presentation presentation) {
-    setText(presentation.getTextWithMnemonic());
-  }
-
+  @Deprecated
+  @DeprecationInfo("Must be reviewed usage of this method, since changed logic for action presentation mnemonic")
   public static String restoreTextWithMnemonic(@Nullable String text, final int mnemonic) {
     if (text == null) {
       return null;
@@ -297,14 +281,6 @@ public final class Presentation implements Cloneable {
     setSelectedIcon(TargetAWT.to(hoveredIcon));
   }
 
-  public int getMnemonic() {
-    return myMnemonic;
-  }
-
-  public int getDisplayedMnemonicIndex() {
-    return myDisplayedMnemonicIndex;
-  }
-
   public boolean isVisible() {
     return myVisible;
   }
@@ -364,7 +340,7 @@ public final class Presentation implements Cloneable {
   }
 
   public void copyFrom(Presentation presentation) {
-    setText(presentation.getTextWithMnemonic(), presentation.myDisplayedMnemonicIndex > -1);
+    setTextValue(presentation.getTextValue());
     setDescriptionValue(presentation.getDescriptionValue());
     setIcon(presentation.getIcon());
     setDisabledIcon(presentation.getDisabledIcon());
@@ -394,11 +370,11 @@ public final class Presentation implements Cloneable {
   }
 
   @Nullable
-  public Object getClientProperty(@NonNls @Nonnull String key) {
+  public Object getClientProperty(@Nonnull String key) {
     return myUserMap.get(key);
   }
 
-  public void putClientProperty(@NonNls @Nonnull String key, @Nullable Object value) {
+  public void putClientProperty(@Nonnull String key, @Nullable Object value) {
     Object oldValue = myUserMap.get(key);
     if (Comparing.equal(oldValue, value)) return;
     myUserMap = value == null ? myUserMap.minus(key) : myUserMap.plus(key, value);
@@ -420,7 +396,7 @@ public final class Presentation implements Cloneable {
 
   @Override
   public String toString() {
-    return myText + " (" + myDescriptionValue + ")";
+    return getText() + " (" + myDescriptionValue + ")";
   }
 
   public boolean isEnabledAndVisible() {

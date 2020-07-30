@@ -41,7 +41,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -64,7 +64,7 @@ public class LocalizeManagerImpl extends LocalizeManager {
 
   private final EventDispatcher<LocalizeManagerListener> myEventDispatcher = EventDispatcher.create(LocalizeManagerListener.class);
 
-  private AtomicInteger myModificationCount = new AtomicInteger();
+  private AtomicLong myModificationCount = new AtomicLong();
 
   public void initialize() {
     List<PluginDescriptor> pluginDescriptors = PluginManager.getPlugins();
@@ -198,7 +198,7 @@ public class LocalizeManagerImpl extends LocalizeManager {
   }
 
   @Override
-  public int getModificationCount() {
+  public long getModificationCount() {
     return myModificationCount.get();
   }
 
@@ -243,7 +243,7 @@ public class LocalizeManagerImpl extends LocalizeManager {
       return value;
     }
 
-    LOG.error("Can't find localize value: " + key + ", current locale: " + myCurrentLocale);
+    LOG.warn("Can't find localize value: " + key + ", current locale: " + myCurrentLocale);
     return key.toString();
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,34 +15,14 @@
  */
 package consulo.localize;
 
-import javax.annotation.Nonnull;
+import java.util.function.BiFunction;
 
 /**
  * @author VISTALL
- * @since 09-Nov-17
+ * @since 2020-07-30
  */
-class SingleLocalizeValue implements LocalizeValue {
-  static final SingleLocalizeValue ourEmpty = new SingleLocalizeValue("");
+class DefaultMapFunctions {
+  static final BiFunction<LocalizeManager, String, String> TO_UPPER_CASE = (localizeManager, s) -> s.toUpperCase(localizeManager.getLocale());
 
-  private final String myValue;
-
-  SingleLocalizeValue(String value) {
-    myValue = value;
-  }
-
-  @Nonnull
-  @Override
-  public String getValue() {
-    return myValue;
-  }
-
-  @Override
-  public long getModificationCount() {
-    return 0;
-  }
-
-  @Override
-  public String toString() {
-    return getValue();
-  }
+  static final BiFunction<LocalizeManager, String, String> TO_LOWER_CASE = (localizeManager, s) -> s.toLowerCase(localizeManager.getLocale());
 }

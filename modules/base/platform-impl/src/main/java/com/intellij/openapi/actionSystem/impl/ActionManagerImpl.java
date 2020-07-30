@@ -293,12 +293,12 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   }
 
   @Nonnull
-  private static String computeActionText(LocalizeHelper localizeHelper, String id, String elementType, String textValue) {
+  private static LocalizeValue computeActionText(LocalizeHelper localizeHelper, String id, String elementType, String textValue) {
     if(!StringUtil.isEmptyOrSpaces(textValue)) {
-      return textValue;
+      return LocalizeValue.of(textValue);
     }
     String key = elementType + "." + id + "." + TEXT_ATTR_NAME;
-    return localizeHelper.getText(key);
+    return localizeHelper.getValue(key);
   }
 
   private static boolean checkRelativeToAction(final String relativeToActionId, @Nonnull final Anchor anchor, @Nonnull final String actionName, @Nullable final PluginId pluginId) {
@@ -602,10 +602,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     String descriptionValue = element.getAttributeValue(DESCRIPTION);
 
     ActionStub stub = new ActionStub(className, id, plugin, iconPath, () -> {
-      String text = computeActionText(localizeHelper, id, ACTION_ELEMENT_NAME, textValue);
-
       Presentation presentation = new Presentation();
-      presentation.setText(text);
+      presentation.setTextValue(computeActionText(localizeHelper, id, ACTION_ELEMENT_NAME, textValue));
       presentation.setDescriptionValue(computeDescription(localizeHelper, id, ACTION_ELEMENT_NAME, descriptionValue));
       return presentation;
     });
@@ -730,10 +728,10 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
       processModuleExtensionOptions(element, group);
 
       // text
-      String text = computeActionText(localizeHelper, id, GROUP_ELEMENT_NAME, element.getAttributeValue(TEXT_ATTR_NAME));
+      LocalizeValue textValue = computeActionText(localizeHelper, id, GROUP_ELEMENT_NAME, element.getAttributeValue(TEXT_ATTR_NAME));
       // don't override value which was set in API with empty value from xml descriptor
-      if (!StringUtil.isEmpty(text) || presentation.getText() == null) {
-        presentation.setText(text);
+      if (textValue != LocalizeValue.empty() || presentation.getText() == null) {
+        presentation.setTextValue(textValue);
       }
 
       // description

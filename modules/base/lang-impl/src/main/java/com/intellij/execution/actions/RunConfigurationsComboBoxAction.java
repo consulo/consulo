@@ -37,6 +37,8 @@ import com.intellij.util.IconUtil;
 import com.intellij.util.ui.EmptyIcon;
 import consulo.actionSystem.ex.ComboBoxButton;
 import consulo.awt.TargetAWT;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ExecutionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -59,7 +61,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
     Presentation presentation = e.getPresentation();
     Project project = e.getData(CommonDataKeys.PROJECT);
     if (ActionPlaces.isMainMenuOrActionSearch(e.getPlace())) {
-      presentation.setDescription(ExecutionBundle.message("choose.run.configuration.action.description"));
+      presentation.setDescriptionValue(ExecutionLocalize.chooseRunConfigurationActionDescription());
     }
     try {
       if (project == null || project.isDisposed() || !project.isInitialized()) {
@@ -92,7 +94,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
       setConfigurationIcon(presentation, settings, project);
     }
     else {
-      presentation.setText("Add Configuration...");
+      presentation.setTextValue(ExecutionLocalize.runComboBoxAddConfiguration());
       presentation.putClientProperty(ComboBoxButton.LIKE_BUTTON, (Runnable)() -> {
         ActionManager.getInstance().getAction(IdeActions.ACTION_EDIT_RUN_CONFIGURATIONS).actionPerformed(AnActionEvent.createFromDataContext("", null, DataManager.getInstance().getDataContext()));
       });
@@ -136,8 +138,8 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
 
   @Override
   @Nonnull
-  public DefaultActionGroup createPopupActionGroup(JComponent button) {
-    final DefaultActionGroup allActionsGroup = new DefaultActionGroup();
+  public ActionGroup createPopupActionGroup(JComponent button) {
+    final ActionGroup.Builder allActionsGroup = ActionGroup.newImmutableBuilder();
     final Project project = DataManager.getInstance().getDataContext(button).getData(CommonDataKeys.PROJECT);
     if (project != null) {
       final RunManagerEx runManager = RunManagerEx.getInstanceEx(project);
@@ -174,7 +176,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         allActionsGroup.addSeparator();
       }
     }
-    return allActionsGroup;
+    return allActionsGroup.build();
   }
 
   private static class SaveTemporaryAction extends DumbAwareAction {
@@ -210,8 +212,10 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         disable(presentation);
       }
       else {
-        presentation.setText(ExecutionBundle.message("save.temporary.run.configuration.action.name", settings.getName()));
-        presentation.setDescription(presentation.getText());
+        LocalizeValue textValue = ExecutionLocalize.saveTemporaryRunConfigurationActionName(settings.getName());
+
+        presentation.setTextValue(textValue);
+        presentation.setDescriptionValue(textValue.map(Presentation.NO_MNEMONIC));
         presentation.setVisible(true);
         presentation.setEnabled(true);
       }
