@@ -3,11 +3,13 @@ package com.intellij.openapi.actionSystem.impl;
 
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.actionSystem.ex.TopApplicationMenuUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.concurrency.CancellablePromise;
 
@@ -25,17 +27,19 @@ import java.util.List;
 public class Utils {
   private static final Logger LOG = Logger.getInstance(Utils.class);
   @NonNls
-  public static final String NOTHING_HERE = "Nothing here";
+  public static final LocalizeValue NOTHING_HERE = LocalizeValue.of("Nothing here");
   public static final AnAction EMPTY_MENU_FILLER = new AnAction(NOTHING_HERE) {
 
     {
       getTemplatePresentation().setEnabled(false);
     }
 
+    @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
     }
 
+    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
       e.getPresentation().setEnabled(false);

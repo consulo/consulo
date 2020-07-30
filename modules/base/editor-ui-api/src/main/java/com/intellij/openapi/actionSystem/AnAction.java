@@ -23,8 +23,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
-import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
@@ -82,6 +82,17 @@ public abstract class AnAction implements PossiblyDumbAware {
     };
   }
 
+  @Nonnull
+  public static AnAction create(@Nonnull LocalizeValue text, @Nullable LocalizeValue description, @Nullable Image image, @RequiredUIAccess @Nonnull Consumer<AnActionEvent> actionPerformed) {
+    return new AnAction(text, description, image) {
+      @RequiredUIAccess
+      @Override
+      public void actionPerformed(@Nonnull AnActionEvent e) {
+        actionPerformed.accept(e);
+      }
+    };
+  }
+
   public static final AnAction[] EMPTY_ARRAY = new AnAction[0];
 
   public static ArrayFactory<AnAction> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new AnAction[count];
@@ -105,7 +116,7 @@ public abstract class AnAction implements PossiblyDumbAware {
   }
 
   public AnAction(Image icon) {
-    this(null, null, icon);
+    this(LocalizeValue.empty(), LocalizeValue.empty(), icon);
   }
 
   /**
@@ -138,7 +149,7 @@ public abstract class AnAction implements PossiblyDumbAware {
   }
 
   public AnAction(SwingImageRef icon) {
-    this(null, null, icon);
+    this(LocalizeValue.empty(), LocalizeValue.empty(), icon);
   }
 
   public AnAction(@Nullable String text, @Nullable String description, @Nullable SwingImageRef icon) {
@@ -160,6 +171,21 @@ public abstract class AnAction implements PossiblyDumbAware {
     Presentation presentation = getTemplatePresentation();
     presentation.setText(text);
     presentation.setDescription(description);
+    presentation.setIcon(icon);
+  }
+
+  public AnAction(@Nonnull LocalizeValue text) {
+    this(text, LocalizeValue.empty(), null);
+  }
+
+  public AnAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    this(text, description, null);
+  }
+
+  public AnAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    Presentation presentation = getTemplatePresentation();
+    presentation.setTextValue(text);
+    presentation.setDescriptionValue(description);
     presentation.setIcon(icon);
   }
 

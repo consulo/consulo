@@ -23,6 +23,7 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.text.TextWithMnemonic;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.CollectionListModel;
@@ -646,7 +647,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
 
   public static class ActionItem implements ShortcutProvider {
     private final AnAction myAction;
-    private String myText;
+    private LocalizeValue myTextValue;
     private final boolean myIsEnabled;
     private final Icon myIcon;
     private final Icon mySelectedIcon;
@@ -655,7 +656,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
     private final String myDescription;
 
     ActionItem(@Nonnull AnAction action,
-               @Nonnull String text,
+               @Nonnull LocalizeValue textValue,
                @Nullable String description,
                boolean enabled,
                @Nullable Icon icon,
@@ -663,7 +664,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
                final boolean prependWithSeparator,
                String separatorText) {
       myAction = action;
-      myText = text;
+      myTextValue = textValue;
       myIsEnabled = enabled;
       myIcon = icon;
       mySelectedIcon = selectedIcon;
@@ -671,8 +672,8 @@ public class PopupFactoryImpl extends JBPopupFactory {
       mySeparatorText = separatorText;
       myDescription = description;
       myAction.getTemplatePresentation().addPropertyChangeListener(evt -> {
-        if (evt.getPropertyName() == Presentation.PROP_TEXT) {
-          myText = myAction.getTemplatePresentation().getText();
+        if (evt.getPropertyName().equals(Presentation.PROP_TEXT)) {
+          myTextValue = myAction.getTemplatePresentation().getTextValue();
         }
       });
     }
@@ -683,8 +684,8 @@ public class PopupFactoryImpl extends JBPopupFactory {
     }
 
     @Nonnull
-    public String getText() {
-      return myText;
+    public LocalizeValue getText() {
+      return myTextValue;
     }
 
     @Nullable
@@ -716,7 +717,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
 
     @Override
     public String toString() {
-      return myText;
+      return myTextValue.getValue();
     }
   }
 }

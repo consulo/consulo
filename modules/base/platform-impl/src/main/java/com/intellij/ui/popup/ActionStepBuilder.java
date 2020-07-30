@@ -7,19 +7,17 @@ import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import com.intellij.openapi.actionSystem.impl.PresentationFactory;
 import com.intellij.openapi.actionSystem.impl.Utils;
 import com.intellij.openapi.util.IconLoader;
-import com.intellij.openapi.util.text.TextWithMnemonic;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.SizedIcon;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.EmptyIcon;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import consulo.localize.LocalizeValue;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.intellij.openapi.actionSystem.Presentation.restoreTextWithMnemonic;
 
 class ActionStepBuilder {
   private final List<PopupFactoryImpl.ActionItem> myListModel;
@@ -129,9 +127,10 @@ class ActionStepBuilder {
   private void appendAction(@Nonnull AnAction action) {
     Presentation presentation = myPresentationFactory.getPresentation(action);
     boolean enabled = presentation.isEnabled();
+    LocalizeValue textValue = presentation.getTextValue().map(Presentation.NO_MNEMONIC);
     if ((myShowDisabled || enabled) && presentation.isVisible()) {
-      String text = presentation.getText();
       if (myShowNumbers) {
+        String text = presentation.getText();
         if (myCurrentNumber < 9) {
           text = "&" + (myCurrentNumber + 1) + ". " + text;
         }
@@ -142,10 +141,11 @@ class ActionStepBuilder {
           text = "&" + (char)('A' + myCurrentNumber - 10) + ". " + text;
         }
         myCurrentNumber++;
+
+        textValue = LocalizeValue.of(StringUtil.notNullize(text));
       }
       else if (myHonorActionMnemonics) {
-        TextWithMnemonic textWithMnemonic = TextWithMnemonic.parse(action.getTemplatePresentation().getTextWithMnemonic());
-        text = restoreTextWithMnemonic(text, textWithMnemonic.getMnemonic());
+        textValue = presentation.getTextValue();
       }
 
       boolean hideIcon = Boolean.TRUE.equals(presentation.getClientProperty(MenuItemPresentationFactory.HIDE_ICON));
@@ -154,7 +154,7 @@ class ActionStepBuilder {
       Icon disabledIcon = hideIcon ? null : presentation.getDisabledIcon();
 
       if (icon == null && selectedIcon == null) {
-        @NonNls final String actionId = ActionManager.getInstance().getId(action);
+        final String actionId = ActionManager.getInstance().getId(action);
         if (actionId != null && actionId.startsWith("QuickList.")) {
           //icon =  null; // AllIcons.Actions.QuickList;
         }
@@ -176,8 +176,8 @@ class ActionStepBuilder {
 
       if (icon == null) icon = selectedIcon != null ? selectedIcon : myEmptyIcon;
       boolean prependSeparator = (!myListModel.isEmpty() || mySeparatorText != null) && myPrependWithSeparator;
-      assert text != null : action + " has no presentation";
-      myListModel.add(new PopupFactoryImpl.ActionItem(action, text, (String)presentation.getClientProperty(JComponent.TOOL_TIP_TEXT_KEY), enabled, icon, selectedIcon, prependSeparator, mySeparatorText));
+      assert textValue != LocalizeValue.empty() : action + " has no presentation";
+      myListModel.add(new PopupFactoryImpl.ActionItem(action, textValue, (String)presentation.getClientProperty(JComponent.TOOL_TIP_TEXT_KEY), enabled, icon, selectedIcon, prependSeparator, mySeparatorText));
       myPrependWithSeparator = false;
       mySeparatorText = null;
     }

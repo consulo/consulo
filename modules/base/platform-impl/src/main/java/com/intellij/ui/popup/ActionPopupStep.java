@@ -139,7 +139,7 @@ public class ActionPopupStep implements ListPopupStepEx<PopupFactoryImpl.ActionI
   @Override
   @Nonnull
   public String getTextFor(final PopupFactoryImpl.ActionItem value) {
-    return value.getText();
+    return value.getText().getValue();
   }
 
   @Nullable

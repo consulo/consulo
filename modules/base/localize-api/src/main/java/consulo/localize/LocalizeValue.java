@@ -31,6 +31,9 @@ public interface LocalizeValue extends Supplier<String> {
 
   @Nonnull
   static LocalizeValue of(@Nonnull String text) {
+    if(text.length() == 0) {
+      return empty();
+    }
     return new SingleLocalizeValue(text);
   }
 
