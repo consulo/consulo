@@ -1,0 +1,727 @@
+no.module.defined.error.message:
+  text: No module defined
+module.does.not.exist.error.message:
+  text: Module ''{0}'' does not exist
+no.jdk.for.module.error.message:
+  text: No sdk for module ''{0}''
+no.module.extension.error.message:
+  text: No module extension ''{0}'' for module ''{1}''
+no.sdk.for.module.extension.error.message:
+  text: No sdk for module extension ''{0}'' for module ''{1}''
+jdk.is.bad.configured.error.message:
+  text: '''''{0}'''' is bad configured'
+class.not.found.in.module.error.message:
+  text: Class ''{0}'' not found in module ''{1}''
+package.not.found.error.message:
+  text: Package ''{0}'' not found
+jdk.not.configured.error.message:
+  text: Sdk ''{0}'' not configured
+project.has.no.jdk.error.message:
+  text: Project has no SDK
+some.modules.has.circular.dependency.error.message:
+  text: Some modules has circular dependency.
+project.has.no.jdk.configured.error.message:
+  text: Project has no JDK configured.
+run.configuration.stop.action.name:
+  text: Stop
+warning.common.title:
+  text: Warning
+run.configuration.error.dialog.title:
+  text: Run Configuration Error
+no.jdk.specified..error.message:
+  text: No JDK specified
+home.directory.not.specified.for.jdk.error.message:
+  text: Home directory is not specified for JDK
+run.configuration.pause.output.action.name:
+  text: Pause Output
+main.class.is.not.specified.error.message:
+  text: Main class is not specified
+close.tab.action.name:
+  text: Close
+run.configuration.show.command.line.action.name:
+  text: Show command line
+searching.test.progress.title:
+  text: Searching For Tests...
+create.run.configuration.action.name:
+  text: Create Run Configuration
+create.run.configuration.for.item.action.name:
+  text: Create ''{0}''
+create.run.configuration.for.item.dialog.title:
+  text: 'Create Run/Debug Configuration: ''''{0}'''''
+edit.configuration.action:
+  text: '&Edit Configurations'
+save.temporary.run.configuration.action.name:
+  text: '&Save ''''{0}'''' Configuration'
+choose.run.configuration.action.description:
+  text: Open run/debug configurations dropdown
+perform.action.with.context.configuration.action.name:
+  text: '{0} context configuration'
+error.common.title:
+  text: Error
+error.running.configuration.message:
+  text: Error running {0}
+select.applet.policy.file.dialog.title:
+  text: Select applet policy file
+choose.html.file.dialog.title:
+  text: Choose HTML File
+html.file.not.specified.error.message:
+  text: Html file not specified
+jre.not.valid.error.message:
+  text: '''''{0}'''' is not valid JRE home'
+applet.configuration.description:
+  text: Java Applet configuration
+applet.configuration.name:
+  text: Java Applet
+run.configuration.norunner.selected.label:
+  text: No runner selected
+run.configuration.configuration.tab.title:
+  text: Configuration
+run.configuration.startup.connection.rab.title:
+  text: Startup/Connection
+add.new.run.configuration.acrtion.name:
+  text: Add New Configuration
+add.new.run.configuration.action.name:
+  text: Add New ''{0}'' Configuration
+remove.run.configuration.action.name:
+  text: Remove Configuration
+no.parameters:
+  text: No parameters
+run.configuration.edit.default.configuration.settings.text:
+  text: Edit Defaults
+run.configuration.edit.default.configuration.settings.description:
+  text: Edit defaults settings
+run.configuration.create.folder.text:
+  text: Create New Folder
+run.configuration.create.folder.description:
+  text: Create new folder
+run.configuration.create.folder.description.move:
+  text: Move into new folder
+run.configuration.rename.folder:
+  text: Rename folder ''{0}''
+run.configuration.rename.folder.disclaimer:
+  text: 'Note: empty folders won''t be saved'
+default.settings.editor.dialog.title:
+  text: Default Settings
+clear.all.from.console.action.name:
+  text: Clear All
+copy.selected.content.action.name:
+  text: Copy Selected Content
+copy.content.action.name:
+  text: Copy Content
+run.debug.dialog.title:
+  text: Run/Debug Configurations
+run.configuration.display.settings.checkbox:
+  text: Display settings &before launching
+run.configurable.display.name:
+  text: Run
+apply.action.name:
+  text: '&Apply'
+invalid.data.dialog.title:
+  text: Invalid Data
+template.settings.configurable.display.name:
+  text: Template Settings
+default.run.configuration.name:
+  text: <unnamed>
+process.is.running.dialog.title:
+  text: Process ''{0}'' Is Running
+button.disconnect:
+  text: Disconnect
+button.terminate:
+  text: Terminate
+disconnect.process.confirmation.text:
+  text: Do you want to disconnect from the process ''{0}''?
+terminate.process.confirmation.text:
+  text: Do you want to terminate the process ''{0}''?
+terminate.after.disconnect.checkbox:
+  text: Terminate the process after disconnect
+copy.configuration.action.name:
+  text: Copy Configuration
+junit.configuration.display.name:
+  text: JUnit
+junit.configuration.description:
+  text: JUnit test configuration
+no.junit.error.message:
+  text: No junit.jar
+no.junit.in.scope.error.message:
+  text: No junit.jar in {0}
+junit.not.found.in.module.error.message:
+  text: JUnit not found in module ''{0}''
+cannot.browse.test.inheritors.dialog.title:
+  text: Can't Browse TestCase Inheritors
+seaching.test.progress.title:
+  text: Searching For Tests...
+configuration.not.speficied.message:
+  text: Configuration test type not specified
+test.in.scope.presentable.text:
+  text: Tests in ''{0}''
+all.tests.scope.presentable.text:
+  text: All Tests
+module.does.not.exists:
+  text: Module ''{0}'' does not exist in project ''{1}''
+select.working.directory.message:
+  text: Select working directory
+set.class.name.message:
+  text: Set class name first
+cannot.browse.method.dialog.title:
+  text: Cannot Browse Methods
+class.does.not.exists.error.message:
+  text: Class {0} does not exist
+choose.package.dialog.title:
+  text: Choose Package
+choose.test.class.dialog.title:
+  text: Choose Test Class
+choose.test.method.dialog.title:
+  text: Choose Test Method
+test.cases.count.message:
+  text: '{0} test case(s)'
+diff.content.expected.title:
+  text: Expected
+diff.content.expected.for.file.title:
+  text: 'Expected :'
+diff.content.actual.title:
+  text: Actual
+junit.actual.text.label:
+  text: 'Actual   :'
+junit.click.to.see.diff.link:
+  text: <Click to see difference>
+output.tab.title:
+  text: Output
+statistics.tab.title:
+  text: Statistics
+test.not.started.progress.text:
+  text: Tests were not started
+starting.jvm.progress.text:
+  text: Starting JVM...
+instantiating.tests.progress.text:
+  text: Instantiating tests...
+next.faled.test.action.name:
+  text: Next Failed Test
+prev.faled.test.action.name:
+  text: Previous Failed Test
+junit.runing.info.memory.available.kb.message:
+  text: '{0} kb.'
+junit.runing.info.memory.available.mb.message:
+  text: '{0} Mb.'
+junit.runing.info.time.sec.message:
+  text: '{0} s'
+junit.runing.info.total.label:
+  text: 'Total:'
+junit.runing.info.starting.label:
+  text: Starting...
+junit.runing.info.running.label:
+  text: Running
+junit.runing.info.passed.label:
+  text: Passed
+junit.runing.info.terminated.label:
+  text: Terminated
+junit.runing.info.assertion.tree.node:
+  text: Assertion
+junit.runing.info.error.tree.node:
+  text: Error
+junit.runing.info.ignored.label:
+  text: Ignored
+junit.runing.info.ignored.console.message:
+  text: Test ''{0}.{1}'' ignored
+junit.runing.info.left.to.run.count.tree.node:
+  text: 'Left: {0}'
+junit.runing.info.failed.count.message:
+  text: F:{0}
+junit.runing.info.errors.count.message:
+  text: E:{0}
+junit.runing.info.passed.count.message:
+  text: P:{0}
+junit.runing.info.ignored.count.message:
+  text: I:{0}
+junit.runing.info.status.completed.from.total.failed:
+  text: '{0} of {1}    Failed: {2}'
+junit.runing.info.status.completed.from.total:
+  text: '{0} of {1}'
+junit.runing.info.status.running.number.with.name:
+  text: 'Running: {0}      {1}'
+junit.runing.info.failed.to.start.error.message:
+  text: Failed to start
+junit.runing.info.tests.failed.label:
+  text: Tests Failed
+junit.runing.info.tests.passed.label:
+  text: Tests Passed
+tests.passed.with.warnings.message:
+  text: Tests passed (with warnings)
+junit.run.hide.passed.action.name:
+  text: Hide Passed
+junit.run.hide.ignored.action.name:
+  text: Hide Ignored
+junit.run.hide.passed.action.description:
+  text: Hide passed tests
+junit.runing.info.track.test.action.name:
+  text: Track Running Test
+junit.runing.info.sort.alphabetically.action.name:
+  text: Sort Alphabetically
+junit.runing.info.sort.alphabetically.action.description:
+  text: Sort tests or suites alphabetically
+junit.runing.info.track.test.action.description:
+  text: Select currently running test in tree
+junit.runing.info.collapse.test.action.name:
+  text: Collapse all test suites
+junit.runing.info.expand.test.action.name:
+  text: Expand all test suites
+junit.runing.info.select.first.failed.action.name:
+  text: Select First Failed Test When Finished
+junit.runing.info.include.non.started.in.rerun.failed.action.name:
+  text: Include Non-Started Tests into Rerun Failed
+junit.runing.info.scroll.to.stacktrace.action.name:
+  text: Scroll to Stacktrace
+junit.runing.info.scroll.to.stacktrace.action.description:
+  text: Scroll console to beginning of assertion or exception stacktrace
+junit.runing.info.open.source.at.exception.action.name:
+  text: Open Source at Exception
+junit.runing.info.open.source.at.exception.action.description:
+  text: Go to line which caused exception when opening test source
+junit.all.tests.passed.label:
+  text: All Tests Passed
+junit.tests.in.progress.label:
+  text: Tests in Progress
+junit.auto.scroll.to.source.action.name:
+  text: Auto Scroll to Source
+junit.open.text.in.editor.action.name:
+  text: Open selected test in editor
+run.configuration.java.vm.parameters.label:
+  text: '&VM options:'
+run.configuration.program.parameters:
+  text: 'Program a&rguments:'
+run.configuration.working.directory.label:
+  text: '&Working directory:'
+run.configuration.use.alternate.jre.checkbox:
+  text: 'Use alternative &JRE:'
+run.configuration.select.alternate.jre.label:
+  text: Select Alternative JRE
+run.configuration.select.jre.dir.label:
+  text: Select directory with JRE to run with
+run.configuration.arguments.help.panel.copy.action.name:
+  text: Copy
+terminating.process.progress.title:
+  text: Terminating ''{0}''
+terminating.process.progress.kill:
+  text: Kill process
+waiting.for.vm.detach.progress.text:
+  text: Waiting for process detach
+restart.error.message.title:
+  text: Restart Error
+rerun.configuration.action.name:
+  text: Rerun ''{0}''
+stop.configuration.action.name:
+  text: Stop ''{0}''
+stop.all:
+  text: Stop All ({0}}
+rerun.singleton.confirmation.message:
+  text: |-
+    ''{0}'' is single-instance run configuration.
+    Are you sure you want to stop {1, choice, 1#the running one|2#{1, number} running instances}?
+rerun.confirmation.button.text:
+  text: Stop and Rerun
+incompatible.configuration.is.running.dialog.title:
+  text: Incompatible Configuration{0, choice, 1# Is|2#s Are} Running
+rerun.confirmation.checkbox:
+  text: Confirm rerun with process termination or if is not compatible with another
+stop.incompatible.confirmation.message:
+  text: |-
+    ''{0}'' run configuration is not compatible with {2, choice, 1#currently running {1} configuration.|2#following running configurations:
+    {1}}
+    Are you sure you want to stop {2, choice, 1#incompatible running instance|2#{2, number} incompatible running instances}?
+stop.incompatible.confirmation.button.text:
+  text: Stop incompatible
+run.configuration.dump.threads.action.name:
+  text: Dump Threads
+run.configuration.exit.action.name:
+  text: Exit
+run.error.message.title:
+  text: Run Error
+default.runner.start.action.text:
+  text: R&un
+remote.debug.configuration.description:
+  text: Remote debug configuration
+remote.debug.configuration.display.name:
+  text: Remote
+show.running.list.action.name:
+  text: Show Running List
+show.running.list.action.description:
+  text: Show list of Run Configurations running at the moment
+show.running.list.balloon.title:
+  text: Running List
+show.running.list.balloon.nothing:
+  text: Nothing to show
+show.running.list.balloon.hint:
+  text: Click to navigate
+run.configuration.no.name:
+  text: <No Name>
+applet.configuration.url.label:
+  text: '&URL'
+applet.configuration.applet.class.border:
+  text: Applet Class
+applet.configuration.applet.parameters.label:
+  text: Applet Parameters
+applet.configuration.applet.class.option:
+  text: '&Applet class'
+applet.configuration.applet.class.label:
+  text: 'Applet &class:'
+button.remove:
+  text: '&Remove'
+button.add:
+  text: '&Add'
+applet.configuration.height.label:
+  text: '&Height:'
+applet.configuration.width.label:
+  text: '&Width:'
+applet.configuration.url.html.file.label:
+  text: 'URL/HTML &file:'
+applet.configuration.url.border:
+  text: URL
+applet.configuration.vm.parameters.for.appletviewer.label:
+  text: '&VM options for appletviewer:'
+applet.configuration.policy.file.label:
+  text: '&Policy file:'
+applet.configuration.parameter.name.column:
+  text: Name
+applet.configuration.parameter.value.column:
+  text: Value
+class.not.specified.error.message:
+  text: Class not specified.
+failed.to.generate.wrapper.error.message:
+  text: Failed to generate temporary html wrapper for applet class
+application.configuration.use.classpath.and.jdk.of.module.label:
+  text: 'Use classpath of m&odule:'
+application.configuration.main.class.label:
+  text: 'Main &class:'
+jre.path.is.not.valid.jre.home.error.mesage:
+  text: '''''{0}'''' is not valid JRE home'
+main.method.not.found.in.class.error.message:
+  text: Main method not found in class {0}
+no.user.process.input.error.message:
+  text: No process input
+fix.run.configuration.problem.button:
+  text: Fix
+class.isnt.test.class.error.message:
+  text: '{0} isn''''t test class'
+class.isnt.inheritor.of.testcase.error.message:
+  text: '{0} isn''''t inheritor of TestCase'
+junit.jar.not.found.in.module.class.path.error.message:
+  text: junit.jar not found in module ''{0}'' class path.
+method.name.not.specified.error.message:
+  text: Method name not specified
+test.method.doesnt.exist.error.message:
+  text: Test method ''{0}'' doesn''t exist
+no.tests.found.in.package.error.message:
+  text: No tests found in the package ''{0}''
+package.does.not.exist.error.message:
+  text: Package ''{0}'' does not exist
+choose.main.class.dialog.title:
+  text: Choose Main Class
+choose.applet.class.dialog.title:
+  text: Choose Applet Class
+junit.configuration.test.runner.parameters.label:
+  text: 'Test runner pa&rams:'
+junit.configuration.test.border:
+  text: Test
+junit.configuration.across.module.dependencies.radio:
+  text: Across modu&le dependencies
+junit.configuration.in.single.module.radio:
+  text: In s&ingle module
+junit.configuration.in.whole.project.radio:
+  text: In &whole project
+junit.configuration.search.for.tests.label:
+  text: 'Search for tests:'
+junit.configuration.package.label:
+  text: 'Packa&ge:'
+junit.configuration.method.label:
+  text: 'M&ethod:'
+junit.configuration.class.label:
+  text: '&Class:'
+junit.configuration.configure.junit.test.label:
+  text: 'Test:'
+junit.configuration.test.method.radio:
+  text: Test Method
+junit.configuration.test.class.radio:
+  text: Test Class
+junit.configuration.class.radio:
+  text: C&lass
+junit.configuration.method.radio:
+  text: Me&thod
+jnit.configuration.all.tests.in.package.radio:
+  text: All Tests in Package
+junit.configuration.all.in.package.radio:
+  text: All in &Package
+no.jdk.specified.for.module.warning.text:
+  text: No JDK specified for module ''{0}''
+module.not.specified.error.text:
+  text: Module not specified
+module.is.unloaded.from.project.error.text:
+  text: Module ''{0}'' is unloaded from the project
+module.doesn.t.exist.in.project.error.text:
+  text: Module ''{0}'' doesn''t exist in project
+run.configuration.unnamed.name.prefix:
+  text: Unnamed
+no.applet.class.specified.error.message:
+  text: No applet class specified
+no.main.class.specified.error.text:
+  text: No main class specified
+action.name.save.configuration:
+  text: Save Configuration
+empty.run.configuration.panel.text.label1:
+  text: Press the
+empty.run.configuration.panel.text.label2:
+  text: <html><a href="add{1}"><img src="{0}" border="0"></a></html>
+empty.run.configuration.panel.text.label3:
+  text: button to create a new {0} based on default settings
+default.package.presentable.name:
+  text: <default>
+default.package.configuration.name:
+  text: default package
+no.test.class.specified.error.text:
+  text: No test class specified
+edit.run.configuration.run.configuration.name.label:
+  text: '&Name:'
+default.junit.configuration.name:
+  text: <no-name>
+strings.equal.failed.dialog.title:
+  text: Comparison Failure
+junit.runing.info.test.column.name:
+  text: Test
+junit.runing.info.time.elapsed.column.name:
+  text: Time elapsed
+junit.runing.info.usage.delta.column.name:
+  text: Usage Delta
+junit.runing.info.usage.before.column.name:
+  text: Usage Before
+junit.runing.info.usage.after.column.name:
+  text: Usage After
+junit.runing.info.results.column.name:
+  text: Results
+junit.runing.info.loading.tree.node.text:
+  text: loading
+remote.configuration.settings.border:
+  text: Settings
+remote.configuration.transport.label:
+  text: 'Transport:'
+remote.configuration.listen.radio:
+  text: Listen
+remote.configuration.attach.radio:
+  text: Attach
+remote.configuration.debugger.mode.label:
+  text: 'Debugger mode:'
+remote.configuration.shared.memory.radio:
+  text: Shared memory
+remote.configuration.socket.radio:
+  text: Socket
+remote.configuration.shared.memory.address.label:
+  text: 'Shared memory address:'
+remote.configuration.port.label:
+  text: 'Port:'
+remote.configuration.host.label:
+  text: 'Host:'
+remote.configuration.remote.debugging.allows.you.to.connect.idea.to.a.running.jvm.label:
+  text: '&Command line arguments for running remote JVM'
+standard.runner.description:
+  text: Run selected configuration
+environment.variables.helper.use.arguments.label:
+  text: <html><body>Use the following command line arguments for running remote JVM</body></html>
+environment.variables.helper.use.arguments.jdk13.label:
+  text: <html><body>For JDK 1.3.x or earlier</body></html>
+environment.variables.helper.use.arguments.jdk14.label:
+  text: <html><body>For JDK 1.4.x</body></html>
+select.run.configuration.for.item.action.name:
+  text: Select ''{0}''
+save.run.configuration.for.item.action.name:
+  text: Save ''{0}''
+junit.runing.info.status.done.count:
+  text: 'Done: {0}'
+junit.runing.info.status.terminated.count:
+  text: 'Terminated: {0}'
+junit.runing.info.tests.in.progress.done.tree.node:
+  text: 'Tests in Progress: Done'
+junit.runing.info.tests.in.progress.terminated.tre.node:
+  text: 'Tests in Progress: Terminated'
+delete.confirmation.dialog.title:
+  text: Delete Confirmation
+move.up.action.name:
+  text: Move Up
+move.down.action.name:
+  text: Move Down
+memory.available.message:
+  text: '{0} Kb'
+enable.coverage.with.emma:
+  text: Record code &coverage information
+merge.coverage.data:
+  text: '&Merge gathered coverage with suite chosen below'
+record.coverage.filters.title:
+  text: Packages and classes to record coverage data
+coverage.tab.title:
+  text: Code Coverage
+show.swing.inspector:
+  text: '&Enable capturing form snapshots'
+show.swing.inspector.disabled:
+  text: '&Enable capturing form snapshots (requires JRE 5.0 or higher)'
+before.run.property.make:
+  text: Make
+run.configuration.store.place.option:
+  text: '&Share'
+run.configuration.singleton:
+  text: Single &instance only
+run.configuration.default.type.description:
+  text: configuration
+run.configuration.error.no.jdk.specified:
+  text: No JDK specified
+run.configuration.cannot.find.vm.executable:
+  text: Cannot find VM executable
+logs.tab.title:
+  text: Logs
+logs.show.console.on.stdout:
+  text: Show console when standard out changes
+logs.show.console.on.stderr:
+  text: Show console when standard error changes
+before.launch.panel.title:
+  text: '&Before launch'
+before.launch.panel.empty:
+  text: There are no tasks to run before launch
+before.launch.panel.cyclic_dependency_warning:
+  text: |-
+    ''{0}'' has already configured to be launched before {1}.
+    Such cyclic dependencies are not allowed.
+before.launch.run.another.configuration.choose:
+  text: Choose Configuration to Execute
+before.launch.run.another.configuration:
+  text: Run Another Configuration
+before.launch.run.certain.configuration:
+  text: Run ''{0}''
+before.launch.run.unknown.task:
+  text: Unknown task
+action.name.save.as.configuration:
+  text: Save As
+default.junit.config.name.all.in.module:
+  text: All in {0}
+default.junit.config.name.all.in.package.in.module:
+  text: '{0} in {1}'
+down.the.stack.trace:
+  text: Down the stack trace
+up.the.stack.trace:
+  text: Up the stack trace
+configuration.action.chooser.title:
+  text: Choose configuration type to run
+env.vars.checkbox.title:
+  text: '&Include parent environment variables'
+before.launch.compile.step:
+  text: Make
+before.launch.compile.step.no.error.check:
+  text: Make, no error check
+execute.before.run.debug.dialog.title:
+  text: Execute {0} Before Run/Debug
+export.test.results.filename:
+  text: Test Results - {0}
+export.test.results.succeeded:
+  text: <html>Test results exported successfully to <a href="#a">{0}</a></html>
+export.test.results.failed:
+  text: 'Test results export failed: {0}'
+export.test.results.custom.template.chooser.title:
+  text: Choose Custom Template
+export.test.results.output.folder.chooser.title:
+  text: Choose Output Folder
+export.test.results.custom.template.path.empty:
+  text: User-defined tempate path is empty
+export.test.results.custom.template.not.found:
+  text: User-defined tempate file ''{0}'' is not found
+export.test.results.task.name:
+  text: Exporting test results
+export.test.results.open.editor:
+  text: O&pen exported file in editor
+export.test.results.open.browser:
+  text: O&pen exported file in browser
+export.test.results.dialog.title:
+  text: Export Test Results
+export.test.results.output.path.empty:
+  text: Output path is empty
+export.test.results.output.filename.empty:
+  text: Output file name is empty
+export.test.results.footer:
+  text: Generated by {0} on {1}
+export.test.results.file.exists.message:
+  text: |-
+    File ''{0}'' already exists.
+    Do you want to overwrite it?
+export.test.results.file.exists.title:
+  text: Export Test Results
+configuration.edit.before.run:
+  text: Show this page
+configuration.singleton:
+  text: Check no other instances are running
+failed.to.create.output.file:
+  text: Failed to create output file ''{0}''
+script.execution.timeout:
+  text: Script execution took more than {0} seconds.
+junit.configuration.configure.junit.test.kind.label:
+  text: '&Test kind:'
+environment.variables.dialog.title:
+  text: Environment Variables
+environment.variables.system.dialog.title:
+  text: System Environment
+environment.variables.component.title:
+  text: '&Environment variables'
+env.vars.show.system:
+  text: Show
+sm.test.runner.magnitude.completed.failed.title:
+  text: Completed
+sm.test.runner.magnitude.passed.title:
+  text: Passed
+sm.test.runner.magnitude.skipped.failed.title:
+  text: Skipped
+sm.test.runner.magnitude.not.run.failed.title:
+  text: Not run
+sm.test.runner.magnitude.running.failed.title:
+  text: Running...
+sm.test.runner.magnitude.terminated.failed.title:
+  text: Terminated
+sm.test.runner.magnitude.ignored.failed.title:
+  text: Ignored
+sm.test.runner.magnitude.assertion.failed.title:
+  text: Assertion failed
+sm.test.runner.magnitude.testerror.title:
+  text: Error
+run.dashboard.empty.selection.message:
+  text: Select run configuration in tree to view details
+run.dashboard.not.started.configuration.message:
+  text: Run configuration not started
+run.dashboard.group.by.type.action.name:
+  text: Group by Type
+run.dashboard.group.by.status.action.name:
+  text: Group by Status
+run.dashboard.group.by.folder.action.name:
+  text: Group by Folder
+run.dashboard.run.action.name:
+  text: (Re)run
+run.dashboard.run.action.description:
+  text: (Re)run selected run configuration(s)
+run.dashboard.debug.action.name:
+  text: (Re)run in Debug Mode
+run.dashboard.debug.action.description:
+  text: (Re)run selected run configuration(s) in Debug Mode
+run.dashboard.stop.action.name:
+  text: Stop
+run.dashboard.stop.action.description:
+  text: Stop selected run configuration(s)
+run.dashboard.edit.configuration.action.name:
+  text: Edit Configuration
+run.dashboard.edit.configuration.dialog.title:
+  text: Edit Run Configuration
+run.dashboard.remove.configuration.action.name:
+  text: Remove Run Configuration
+run.dashboard.remove.configuration.action.description:
+  text: Remove Run Configuration(s)
+run.dashboard.remove.configuration.dialog.title:
+  text: Remove Run Configuration
+run.dashboard.remove.configuration.dialog.message:
+  text: Are you sure to remove selected run configuration(s)?
+run.dashboard.started.group.name:
+  text: Started
+run.dashboard.stopped.group.name:
+  text: Stopped
+run.dashboard.failed.group.name:
+  text: Failed
+run.combo.box.add.configuration:
+  text: Add Configuration...
