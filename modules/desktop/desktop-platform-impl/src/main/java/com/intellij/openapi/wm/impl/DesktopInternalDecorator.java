@@ -18,7 +18,6 @@ package com.intellij.openapi.wm.impl;
 import com.intellij.ide.actions.ResizeToolWindowAction;
 import com.intellij.ide.actions.ToggleToolbarAction;
 import com.intellij.idea.ActionsBundle;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbService;
@@ -26,8 +25,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Comparing;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.*;
@@ -36,9 +33,13 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.UIBundle;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.content.Content;
+import com.intellij.ui.paint.LinePainter2D;
 import com.intellij.util.EventDispatcher;
-import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ui.JBUI;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ui.ex.ToolWindowInternalDecorator;
+import consulo.util.dataholder.Key;
 import consulo.wm.impl.ToolWindowManagerBase;
 import org.jetbrains.annotations.NonNls;
 
@@ -296,48 +297,43 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
 
     @Override
     public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int width, final int height) {
-      if (UIUtil.isUnderDarcula()) {
-        g.setColor(Gray._40);
-        doPaintBorder(c, g, x, y, width, height);
-      }
-      else {
-        g.setColor(SystemInfo.isMac && UIUtil.isUnderIntelliJLaF() ? Gray.xC9 : Gray._155);
-        doPaintBorder(c, g, x, y, width, height);
-      }
+      g.setColor(JBColor.border());
+      doPaintBorder(c, g, x, y, width, height);
     }
 
     private void doPaintBorder(Component c, Graphics g, int x, int y, int width, int height) {
       Insets insets = getBorderInsets(c);
 
+      Graphics2D graphics2D = (Graphics2D)g;
       if (insets.top > 0) {
-        UIUtil.drawLine(g, x, y + insets.top - 1, x + width - 1, y + insets.top - 1);
-        UIUtil.drawLine(g, x, y + insets.top, x + width - 1, y + insets.top);
+        LinePainter2D.paint(graphics2D, x, y + insets.top - 1, x + width - 1, y + insets.top - 1);
+        LinePainter2D.paint(graphics2D, x, y + insets.top, x + width - 1, y + insets.top);
       }
 
       if (insets.left > 0) {
-        UIUtil.drawLine(g, x, y, x, y + height);
-        UIUtil.drawLine(g, x + 1, y, x + 1, y + height);
+        LinePainter2D.paint(graphics2D, x, y, x, y + height);
+        LinePainter2D.paint(graphics2D, x + 1, y, x + 1, y + height);
       }
 
       if (insets.right > 0) {
-        UIUtil.drawLine(g, x + width - 1, y + insets.top, x + width - 1, y + height);
-        UIUtil.drawLine(g, x + width, y + insets.top, x + width, y + height);
+        LinePainter2D.paint(graphics2D, x + width - 1, y + insets.top, x + width - 1, y + height);
+        LinePainter2D.paint(graphics2D, x + width, y + insets.top, x + width, y + height);
       }
 
       if (insets.bottom > 0) {
-        UIUtil.drawLine(g, x, y + height - 1, x + width, y + height - 1);
-        UIUtil.drawLine(g, x, y + height, x + width, y + height);
+        LinePainter2D.paint(graphics2D, x, y + height - 1, x + width, y + height - 1);
+        LinePainter2D.paint(graphics2D, x, y + height, x + width, y + height);
       }
     }
 
     @Override
     public Insets getBorderInsets(final Component c) {
-      if (myProject == null) return new Insets(0, 0, 0, 0);
+      if (myProject == null) return JBUI.emptyInsets();
       ToolWindowManager toolWindowManager =  ToolWindowManager.getInstance(myProject);
       if (!(toolWindowManager instanceof ToolWindowManagerBase)
           || !((ToolWindowManagerBase)toolWindowManager).isToolWindowRegistered(myInfo.getId())
           || myWindow.getType() == ToolWindowType.FLOATING) {
-        return new Insets(0, 0, 0, 0);
+        return JBUI.emptyInsets();
       }
       ToolWindowAnchor anchor = myWindow.getAnchor();
       Component component = myWindow.getComponent();

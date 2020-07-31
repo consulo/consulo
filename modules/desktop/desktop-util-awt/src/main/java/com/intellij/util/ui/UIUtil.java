@@ -42,9 +42,9 @@ import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.Timer;
 import javax.swing.*;
@@ -321,9 +321,8 @@ public class UIUtil {
   private static final Color UNFOCUSED_SELECTION_COLOR = Gray._212;
   private static final Color ACTIVE_HEADER_COLOR = new Color(160, 186, 213);
   private static final Color INACTIVE_HEADER_COLOR = Gray._128;
-  private static final Color BORDER_COLOR = Color.LIGHT_GRAY;
 
-  public static final Color CONTRAST_BORDER_COLOR = new JBColor(0x9b9b9b, 0x282828);
+  public static final Color CONTRAST_BORDER_COLOR = JBColor.namedColor("Borders.ContrastBorderColor", new JBColor(0xC9C9C9, 0x323232));
 
   public static final Color AQUA_SEPARATOR_FOREGROUND_COLOR = Gray._190;
   public static final Color AQUA_SEPARATOR_BACKGROUND_COLOR = Gray._240;
@@ -2403,7 +2402,7 @@ public class UIUtil {
   }
 
   public static Color getBorderColor() {
-    return new JBColor(BORDER_COLOR, Gray._50);
+    return JBColor.border();
   }
 
   public static Font getTitledBorderFont() {

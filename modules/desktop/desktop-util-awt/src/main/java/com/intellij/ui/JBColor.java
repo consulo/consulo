@@ -332,12 +332,6 @@ public class JBColor extends Color {
   }
 
   public static Color border() {
-    return new JBColor(new NotNullProducer<Color>() {
-      @Nonnull
-      @Override
-      public Color produce() {
-        return UIUtil.getBorderColor();
-      }
-    });
+    return namedColor("Borders.color", new JBColor(Gray._192, Gray._50));
   }
 }

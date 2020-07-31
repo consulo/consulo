@@ -15,17 +15,16 @@
  */
 package com.intellij.openapi.ui;
 
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.Weighted;
 import com.intellij.openapi.wm.IdeGlassPane;
 import com.intellij.openapi.wm.IdeGlassPaneUtil;
-import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.OnePixelSplitter;
 import com.intellij.util.Producer;
 import com.intellij.util.ui.JBUI;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,7 +35,10 @@ import java.awt.event.MouseEvent;
  * @author Konstantin Bulenkov
  */
 public class OnePixelDivider extends Divider {
-  public static final Color BACKGROUND = new JBColor(Gray.xC5, Gray.x51);
+  public static final Color BACKGROUND = new JBColor(() -> {
+    final Color bg = UIManager.getColor("OnePixelDivider.background");
+    return bg != null ? bg : JBColor.border();
+  });
 
   private boolean myVertical;
   private Splittable mySplitter;
