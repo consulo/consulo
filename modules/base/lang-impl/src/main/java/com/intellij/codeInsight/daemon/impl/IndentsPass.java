@@ -30,6 +30,9 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
+import com.intellij.openapi.editor.impl.view.EditorPainter;
+import com.intellij.openapi.editor.impl.view.VisualLinesIterator;
 import com.intellij.openapi.editor.markup.CustomHighlighterRenderer;
 import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.MarkupModel;
@@ -39,19 +42,20 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
+import com.intellij.ui.paint.LinePainter2D;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.containers.IntStack;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.lang.util.LanguageVersionUtil;
-import javax.annotation.Nonnull;
+import consulo.util.dataholder.Key;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -74,11 +78,9 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
     if (startOffset >= doc.getTextLength()) return;
 
     final int endOffset = highlighter.getEndOffset();
-    final int endLine = doc.getLineNumber(endOffset);
 
     int off;
     int startLine = doc.getLineNumber(startOffset);
-    IndentGuideDescriptor descriptor = editor.getIndentsModel().getDescriptor(startLine, endLine);
 
     final CharSequence chars = doc.getCharsSequence();
     do {
@@ -91,15 +93,6 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
 
     final VisualPosition startPosition = editor.offsetToVisualPosition(off);
     int indentColumn = startPosition.column;
-
-    // It's considered that indent guide can cross not only white space but comments, javadoc etc. Hence, there is a possible
-    // case that the first indent guide line is, say, single-line comment where comment symbols ('//') are located at the first
-    // visual column. We need to calculate correct indent guide column then.
-    int lineShift = 1;
-    if (indentColumn <= 0 && descriptor != null) {
-      indentColumn = descriptor.indentLevel;
-      lineShift = 0;
-    }
     if (indentColumn <= 0) return;
 
     final FoldingModel foldingModel = editor.getFoldingModel();
@@ -121,12 +114,14 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
       selected = false;
     }
 
-    Point start = editor.visualPositionToXY(new VisualPosition(startPosition.line + lineShift, indentColumn));
+    int lineHeight = editor.getLineHeight();
+    Point start = editor.visualPositionToXY(startPosition);
+    start.y += lineHeight;
     final VisualPosition endPosition = editor.offsetToVisualPosition(endOffset);
-    Point end = editor.visualPositionToXY(new VisualPosition(endPosition.line, endPosition.column));
+    Point end = editor.visualPositionToXY(endPosition);
     int maxY = end.y;
     if (endPosition.line == editor.offsetToVisualPosition(doc.getTextLength()).line) {
-      maxY += editor.getLineHeight();
+      maxY += lineHeight;
     }
 
     Rectangle clip = g.getClipBounds();
@@ -137,6 +132,9 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
       maxY = Math.min(maxY, clip.y + clip.height);
     }
 
+    if (start.y >= maxY) return;
+
+    int targetX = Math.max(0, start.x + EditorPainter.getIndentGuideShift(editor));
     final EditorColorsScheme scheme = editor.getColorsScheme();
     g.setColor(scheme.getColor(selected ? EditorColors.SELECTED_INDENT_GUIDE_COLOR : EditorColors.INDENT_GUIDE_COLOR));
 
@@ -154,39 +152,36 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
     // We want to use the following approach then:
     //     1. Show only active indent if it crosses soft wrap-introduced text;
     //     2. Show indent as is if it doesn't intersect with soft wrap-introduced text;
-    if (selected) {
-      g.drawLine(start.x + 2, start.y, start.x + 2, maxY - 1);
+    List<? extends SoftWrap> softWraps = ((EditorEx)editor).getSoftWrapModel().getRegisteredSoftWraps();
+    if (selected || softWraps.isEmpty()) {
+      LinePainter2D.paint((Graphics2D)g, targetX, start.y, targetX, maxY - 1);
     }
     else {
-      int y = start.y;
-      int newY = start.y;
-      SoftWrapModel softWrapModel = editor.getSoftWrapModel();
-      int lineHeight = editor.getLineHeight();
-      for (int i = Math.max(0, startLine + lineShift); i < endLine && newY < maxY; i++) {
-        List<? extends SoftWrap> softWraps = softWrapModel.getSoftWrapsForLine(i);
-        int logicalLineHeight = softWraps.size() * lineHeight;
-        if (i > startLine + lineShift) {
-          logicalLineHeight += lineHeight; // We assume that initial 'y' value points just below the target line.
-        }
-        if (!softWraps.isEmpty() && softWraps.get(0).getIndentInColumns() < indentColumn) {
-          if (y < newY || i > startLine + lineShift) { // There is a possible case that soft wrap is located on indent start line.
-            g.drawLine(start.x + 2, y, start.x + 2, newY + lineHeight - 1);
-          }
-          newY += logicalLineHeight;
-          y = newY;
-        }
-        else {
-          newY += logicalLineHeight;
-        }
-
-        FoldRegion foldRegion = foldingModel.getCollapsedRegionAtOffset(doc.getLineEndOffset(i));
-        if (foldRegion != null && foldRegion.getEndOffset() < doc.getTextLength()) {
-          i = doc.getLineNumber(foldRegion.getEndOffset());
-        }
+      int startY = start.y;
+      int startVisualLine = startPosition.line + 1;
+      if (clip != null && startY < clip.y) {
+        startY = clip.y;
+        startVisualLine = editor.yToVisualLine(clip.y);
       }
-
-      if (y < maxY) {
-        g.drawLine(start.x + 2, y, start.x + 2, maxY - 1);
+      VisualLinesIterator it = new VisualLinesIterator((DesktopEditorImpl)editor, startVisualLine);
+      while (!it.atEnd()) {
+        int currY = it.getY();
+        if (currY >= startY) {
+          if (currY >= maxY) break;
+          if (it.startsWithSoftWrap()) {
+            SoftWrap softWrap = softWraps.get(it.getStartOrPrevWrapIndex());
+            if (softWrap.getIndentInColumns() < indentColumn) {
+              if (startY < currY) {
+                LinePainter2D.paint((Graphics2D)g, targetX, startY, targetX, currY - 1);
+              }
+              startY = currY + lineHeight;
+            }
+          }
+        }
+        it.advance();
+      }
+      if (startY < maxY) {
+        LinePainter2D.paint((Graphics2D)g, targetX, startY, targetX, maxY - 1);
       }
     }
   };

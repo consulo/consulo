@@ -32,10 +32,12 @@ import com.intellij.util.Processor;
 import com.intellij.util.containers.PeekableIterator;
 import com.intellij.util.containers.PeekableIteratorWrapper;
 import com.intellij.util.text.CharArrayUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.TFloatArrayList;
 import gnu.trove.TIntObjectHashMap;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -99,6 +101,10 @@ public class EditorPainter implements TextDrawingCallback {
            (Registry.is("editor.show.right.margin.in.read.only.files") || editor.getDocument().isWritable());
   }
 
+  public static int getIndentGuideShift(@Nonnull Editor editor) {
+    return -Session.getTabGap(Session.getWhiteSpaceScale(editor)) / 2;
+  }
+
   private static class Session {
     private final EditorView myView;
     private final DesktopEditorImpl myEditor;
@@ -126,6 +132,7 @@ public class EditorPainter implements TextDrawingCallback {
     private final Color myBackgroundColor;
     private final int myMarginColumns;
     private final List<Consumer<Graphics2D>> myTextDrawingTasks = new ArrayList<>();
+    private final JBUI.ScaleContext myScaleContext;
     private MarginPositions myMarginPositions;
 
     private Session(EditorView view, Graphics2D g) {
@@ -152,6 +159,7 @@ public class EditorPainter implements TextDrawingCallback {
       myDefaultBackgroundColor = myEditor.getColorsScheme().getDefaultBackground();
       myBackgroundColor = myEditor.getBackgroundColor();
       myMarginColumns = myEditor.getSettings().getRightMargin(myEditor.getProject());
+      myScaleContext = JBUI.ScaleContext.create(myGraphics);
     }
 
     private void paint() {
@@ -263,7 +271,7 @@ public class EditorPainter implements TextDrawingCallback {
       myMarginPositions = calculateMarginWidths ? new MarginPositions(Math.min(myEndVisualLine, lineCount - 1) - myStartVisualLine + 2) : null;
       final LineWhitespacePaintingStrategy whitespacePaintingStrategy = new LineWhitespacePaintingStrategy(myEditor.getSettings());
       boolean paintAllSoftWraps = myEditor.getSettings().isAllSoftWrapsShown();
-      float whiteSpaceScale = ((float)myEditor.getColorsScheme().getEditorFontSize()) / FontPreferences.DEFAULT_FONT_SIZE;
+      float whiteSpaceScale = getWhiteSpaceScale(myEditor);
       final BasicStroke whiteSpaceStroke = new BasicStroke(calcFeatureSize(1, whiteSpaceScale));
 
       PeekableIterator<Caret> caretIterator = null;
@@ -641,14 +649,14 @@ public class EditorPainter implements TextDrawingCallback {
           int endX = (int)fragment.offsetToX(x, startOffset, isRtl ? baseStartOffset - i - 1 : baseStartOffset + i + 1);
 
           if (c == ' ') {
-            float size = 2 * scale;
-            myTextDrawingTasks.add((g) -> {
-              // making center point lie exactly between pixels
-              //noinspection IntegerDivisionInFloatingPointContext
-              CachingPainter.paint(g, (startX + endX) / 2 - size / 2, yToUse + 1 - myAscent + myLineHeight / 2 - size / 2, size, size, _g -> {
+            // making center point lie at the center of device pixel
+            float dotX = roundToPixelCenter((startX + endX) / 2.) - scale / 2;
+            float dotY = roundToPixelCenter(yToUse + 1 - myAscent + myLineHeight / 2.) - scale / 2;
+            myTextDrawingTasks.add(g -> {
+              CachingPainter.paint(g, dotX, dotY, scale, scale, _g -> {
                 _g.setColor(color);
                 _g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                _g.fill(new Ellipse2D.Float(0, 0, size, size));
+                _g.fill(new Ellipse2D.Float(0, 0, scale, scale));
               }, ourCachedDot, color);
             });
           }
@@ -664,7 +672,7 @@ public class EditorPainter implements TextDrawingCallback {
           else if (c == '\u3000') { // ideographic space
             int charHeight = myView.getCharHeight();
             int strokeWidth = Math.round(stroke.getLineWidth());
-            myTextDrawingTasks.add((g) -> {
+            myTextDrawingTasks.add(g -> {
               g.setColor(color);
               g.setStroke(stroke);
               g.drawRect(startX + JBUIScale.scale(2) + strokeWidth / 2, yToUse - charHeight + strokeWidth / 2, endX - startX - JBUIScale.scale(4) - (strokeWidth - 1), charHeight - (strokeWidth - 1));
@@ -682,6 +690,15 @@ public class EditorPainter implements TextDrawingCallback {
 
     private static int getTabGap(float scale) {
       return calcFeatureSize(5, scale);
+    }
+
+    private static float getWhiteSpaceScale(@NotNull Editor editor) {
+      return ((float)editor.getColorsScheme().getEditorFontSize()) / FontPreferences.DEFAULT_FONT_SIZE;
+    }
+
+    private float roundToPixelCenter(double value) {
+      double devPixel = 1 / PaintUtil.devValue(1, myScaleContext);
+      return (float)(PaintUtil.alignToInt(value, myScaleContext, PaintUtil.RoundingMode.FLOOR, null) + devPixel / 2);
     }
 
     private void collectExtensions(int visualLine, int offset) {

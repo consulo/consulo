@@ -5,8 +5,8 @@ package com.intellij.openapi.editor.impl.view;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.function.Consumer;
 
