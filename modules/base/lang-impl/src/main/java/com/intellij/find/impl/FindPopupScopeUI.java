@@ -19,6 +19,8 @@ import com.intellij.find.FindModel;
 import com.intellij.find.FindSettings;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.util.Pair;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 
 import javax.annotation.*;
 import javax.swing.*;
@@ -47,10 +49,10 @@ public interface FindPopupScopeUI {
 
   class ScopeType {
     public final String name;
-    public final String text;
-    public final Icon icon;
+    public final LocalizeValue text;
+    public final Image icon;
 
-    public ScopeType(String name, String text, Icon icon) {
+    public ScopeType(@Nonnull String name, @Nonnull LocalizeValue text, @Nullable Image icon) {
       this.name = name;
       this.text = text;
       this.icon = icon;

@@ -23,6 +23,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.shared.Size;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -59,8 +60,8 @@ public class ActionButtonWithText extends ActionButton {
     return (getIcon() instanceof EmptyIcon || getIcon() == null) ? 0 : JBUI.scale(ICON_TEXT_SPACE);
   }
 
+  @Nonnull
   public String getText() {
-    final String text = myPresentation.getText();
-    return text != null ? text : "";
+    return myLastComputedText;
   }
 }

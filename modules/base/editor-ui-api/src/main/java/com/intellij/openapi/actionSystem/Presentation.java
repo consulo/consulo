@@ -37,8 +37,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiFunction;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * The presentation of an action in a specific place in the user interface.
@@ -105,8 +103,6 @@ public final class Presentation implements Cloneable {
   private Icon myHoveredIcon;
   private Icon mySelectedIcon;
 
-  private static final Pattern MNEMONIC = Pattern.compile(" ?\\(_?[A-Z]\\)");
-
   public Presentation() {
   }
 
@@ -153,13 +149,7 @@ public final class Presentation implements Cloneable {
 
   @Nullable
   public String getText() {
-    String text = StringUtil.nullize(myTextValue.getValue());
-    if(text == null) {
-      return null;
-    }
-
-    Matcher matcher = MNEMONIC.matcher(text);
-    return matcher.replaceAll("");
+    return StringUtil.nullize(myTextValue.map(NO_MNEMONIC).getValue());
   }
 
   @Nullable
@@ -184,14 +174,12 @@ public final class Presentation implements Cloneable {
         text = text.replace(UIUtil.MNEMONIC, '&');
       }
 
+      LocalizeValue value = LocalizeValue.of(text);
       if(mayContainMnemonic) {
-        setTextValue(LocalizeValue.of(text));
+        setTextValue(value);
       }
       else {
-        Matcher matcher = MNEMONIC.matcher(text);
-        String textNoMnemonic = matcher.replaceAll("");
-
-        setTextValue(LocalizeValue.of(textNoMnemonic));
+        setTextValue(value.map(NO_MNEMONIC));
       }
     }
     else {
@@ -263,6 +251,14 @@ public final class Presentation implements Cloneable {
     Icon oldDisabledIcon = myDisabledIcon;
     myDisabledIcon = icon;
     fireObjectPropertyChange(PROP_DISABLED_ICON, oldDisabledIcon, myDisabledIcon);
+  }
+
+  public void setDisabledIcon(@Nullable SwingImageRef icon) {
+    setDisabledIcon(TargetAWT.to(icon));
+  }
+
+  public void setDisabledIcon(@Nullable Image icon) {
+    setDisabledIcon(TargetAWT.to(icon));
   }
 
   public Icon getHoveredIcon() {

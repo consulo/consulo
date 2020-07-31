@@ -83,6 +83,7 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
   private boolean myWithoutBorder;
 
   private int myDisplayedMnemonicIndex = -1;
+  protected String myLastComputedText = "";
 
   @Deprecated
   @DeprecationInfo("Use constructor with Size parameter")
@@ -124,7 +125,7 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
 
     putClientProperty(UIUtil.CENTER_TOOLTIP_DEFAULT, Boolean.TRUE);
 
-    updateMnemonic(presentation.getTextValue());
+    updateTextAndMnemonic(presentation.getTextValue());
 
     updateUI();
   }
@@ -434,8 +435,10 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
     return myAction;
   }
 
-  protected void updateMnemonic(@Nonnull LocalizeValue localizeValue) {
+  protected void updateTextAndMnemonic(@Nonnull LocalizeValue localizeValue) {
     TextWithMnemonic textWithMnemonic = TextWithMnemonic.parse(localizeValue.getValue());
+
+    myLastComputedText = textWithMnemonic.getText();
 
     setDisplayedMnemonicIndex(textWithMnemonic.getMnemonicIndex());
   }
@@ -443,7 +446,7 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
   protected void presentationPropertyChanded(PropertyChangeEvent e) {
     String propertyName = e.getPropertyName();
     if (Presentation.PROP_TEXT.equals(propertyName)) {
-      updateMnemonic((LocalizeValue)e.getNewValue());
+      updateTextAndMnemonic((LocalizeValue)e.getNewValue());
       updateToolTipText();
     }
     else if (Presentation.PROP_ENABLED.equals(propertyName)) {
@@ -494,7 +497,7 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
         if (name == null) {
           name = ActionButton.this.getToolTipText();
           if (name == null) {
-            name = ActionButton.this.myPresentation.getText();
+            name = ActionButton.this.myLastComputedText;
             if (name == null) {
               name = super.getAccessibleName();
             }

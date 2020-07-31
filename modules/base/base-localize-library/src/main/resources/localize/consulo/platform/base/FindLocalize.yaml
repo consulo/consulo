@@ -1,0 +1,351 @@
+find.progress.stop.title:
+  text: Stop
+find.progress.searching.message:
+  text: Searching in {0}...
+find.progress.stop.background.button:
+  text: Stop background search
+find.replace.dialog.title:
+  text: Replace
+find.search.string.not.found.message:
+  text: '"{0}" not found'
+find.search.again.from.top.hotkey.message:
+  text: '{0}, press {1} to search from the top'
+find.search.again.from.top.action.message:
+  text: '{0}, perform "Find Next" again to search from the top'
+find.search.again.from.bottom.hotkey.message:
+  text: '{0}, press {1} to search from the bottom'
+find.search.again.from.bottom.action.message:
+  text: '{0}, perform "Find Previous" again to search from the bottom'
+select.next.occurence.not.found.message:
+  text: Not found, try again to search from top
+find.no.usages.at.cursor.error:
+  text: "Cannot search for usages. \nPosition to an element to find usages for, and try again."
+find.what.group:
+  text: Find
+find.what.usages.checkbox:
+  text: '&Usages'
+find.what.methods.usages.checkbox:
+  text: Usages of &methods
+find.what.fields.usages.checkbox:
+  text: Usages of &fields
+find.what.implementing.classes.checkbox:
+  text: '&Implementing classes'
+find.what.derived.interfaces.checkbox:
+  text: '&Derived interfaces'
+find.what.derived.classes.checkbox:
+  text: '&Derived classes'
+find.what.implementing.methods.checkbox:
+  text: '&Implementing methods'
+find.what.overriding.methods.checkbox:
+  text: Over&riding methods
+find.what.implicit.to.string.checkbox:
+  text: I&mplicit calls
+find.what.usages.of.classes.and.interfaces:
+  text: Usages of &classes and interfaces
+find.dialog.find.button:
+  text: Find
+find.popup.find.button:
+  text: Open in Find Window
+find.popup.replace.all.button:
+  text: Replace &All
+find.popup.replace.selected.button:
+  text: Replace{0,choice,0#|1#|2# {0} Occurrences}
+find.usages.in.file.dialog.title:
+  text: Find Usages in File
+find.usages.dialog.title:
+  text: Find Usages
+find.open.in.new.tab.checkbox:
+  text: Open results in new ta&b
+find.open.in.new.tab.action:
+  text: Open Results in New Ta&b
+find.options.group:
+  text: General
+find.options.search.for.text.occurrences.checkbox:
+  text: Search for text &occurrences
+find.options.skip.results.tab.with.one.usage.checkbox:
+  text: S&kip results tab with one usage
+find.options.skip.results.tab.with.one.usage.action:
+  text: S&kip Results Tab with One Usage
+find.options.skip.results.tab.with.one.occurrence.checkbox:
+  text: S&kip results tab when only one occurrence is found
+find.options.include.overloaded.methods.checkbox:
+  text: Include o&verloaded methods
+find.scope.label:
+  text: '&Scope'
+find.searched.elements.have.been.changed.error:
+  text: |-
+    Searched elements have been changed.
+    Cannot search for usages.
+cannot.search.for.usages.title:
+  text: Cannot Search for Usages
+find.super.method.warning.action.verb:
+  text: to find usages of
+find.parameter.usages.in.overriding.methods.prompt:
+  text: Do you want to search usages of parameter ''{0}'' in overriding methods?
+find.parameter.usages.in.overriding.methods.title:
+  text: Search in Overriding Methods
+find.field.accessors.prompt:
+  text: Do you want to search for accessors of ''{0}''?
+find.field.accessors.title:
+  text: Search Accessors
+find.pointcut.applications.not.found.title:
+  text: Information
+find.usages.of.element.in.scope.panel.title:
+  text: '{0} of {1} in {2}'
+find.usages.of.element.tab.name:
+  text: '{0} of {1}'
+recent.find.usages.action.description:
+  text: <html><body>{0} ''<b>{1}</b>'' in {2}</body></html>
+recent.find.usages.action.popup:
+  text: '{0} ''''{1}'''' in {2}'
+recent.find.usages.action.title:
+  text: Recent Find Usages
+recent.find.usages.action.nothing:
+  text: No Recent Find Usages Entries
+find.usages.panel.title.separator:
+  text: or
+find.usages.panel.title.usages:
+  text: Usages
+find.usages.panel.title.overloaded.methods.usages:
+  text: Overloaded Methods Usages
+find.usages.panel.title.derived.classes:
+  text: Derived Classes
+find.usages.panel.title.derived.interfaces:
+  text: Derived Interfaces
+find.usages.panel.title.implementing.classes:
+  text: Implementing Classes
+find.usages.panel.title.implementing.methods:
+  text: Implementing Methods
+find.usages.panel.title.overriding.methods:
+  text: Overriding Methods
+find.usages.of.element_type.element_name.not.found.message:
+  text: Usages of {0} {1} not found
+find.searching.for.references.to.class.progress:
+  text: Searching for references to class {0}...
+find.usage.view.no.usages.text:
+  text: No usages found
+find.replace.in.project.dialog.title:
+  text: Replace in Path
+find.replace.text.dialog.title:
+  text: Replace Text
+find.in.path.dialog.title:
+  text: Find in Path
+find.text.dialog.title:
+  text: Find Text
+find.button:
+  text: Find
+find.all.button:
+  text: Find &All
+find.text.to.find.label:
+  text: 'Text to &find:'
+find.replace.with.label:
+  text: 'Replace &with:'
+find.filter.file.name.group:
+  text: File name filter
+find.filter.file.mask.checkbox:
+  text: File mas&k(s)
+find.context.combo.label:
+  text: 'Conte&xt: '
+find.context.anywhere.scope.label:
+  text: Anywhere
+find.context.in.comments.scope.label:
+  text: In Comments
+find.context.in.literals.scope.label:
+  text: In String Literals
+find.context.except.comments.scope.label:
+  text: Except Comments
+find.context.except.literals.scope.label:
+  text: Except String Literals
+find.context.except.comments.and.literals.scope.label:
+  text: Except Comments and String Literals
+find.context.presentation.scope.label:
+  text: ' ({0})'
+find.directory.not.found.error:
+  text: Directory is not found
+find.invalid.regular.expression.error:
+  text: 'Bad pattern "{0}": {1}'
+find.empty.match.regular.expression.error:
+  text: Regular expression matches empty string
+find.empty.search.text.error:
+  text: No search text entered
+find.filter.invalid.file.mask.error:
+  text: Bad file mask "{0}"
+find.filter.empty.file.mask.error:
+  text: Empty file mask
+find.options.case.sensitive:
+  text: '&Case sensitive'
+find.options.replace.preserve.case:
+  text: Pr&eserve case
+find.options.whole.words.only:
+  text: Whole wo&rds only (may be faster)
+find.options.string.literals.only:
+  text: S&tring literals only
+find.options.comments.only:
+  text: Comm&ents only
+find.options.regular.expressions:
+  text: Re&gular expression
+find.direction.group:
+  text: Direction
+find.direction.forward.radio:
+  text: F&orward
+find.direction.backward.radio:
+  text: '&Backward'
+find.scope.group:
+  text: Scope
+find.scope.whole.project.radio:
+  text: W&hole project
+find.scope.all.projects.radio:
+  text: All &projects
+find.scope.module.radio:
+  text: '&Module:'
+find.scope.project.radio:
+  text: Pro&ject
+find.scope.directory.radio:
+  text: 'Direct&ory:'
+find.scope.directory.recursive.checkbox:
+  text: Recursivel&y
+find.recursively.hint:
+  text: Search recursively in subdirectories
+find.scope.global.radio:
+  text: '&Global'
+find.scope.selected.text.radio:
+  text: '&Selected text'
+find.origin.group:
+  text: Origin
+find.origin.from.cursor.radio:
+  text: Fro&m cursor
+find.origin.entire.scope.radio:
+  text: E&ntire scope
+find.searching.for.string.in.file.progress:
+  text: Searching for ''{0}'' in {1}...
+find.searching.for.string.in.file.occurrences.progress:
+  text: '{0,choice,0#No|1#{0}} {0,choice,0#occurrences|1#occurrence|2#occurrences} found so far'
+find.excessive.total.size.prompt:
+  text: Occurrences in files of total size {0} found. {1} may become unresponsive or even fail with OutOfMemoryError if you continue. Continue?
+find.progress.search.completed:
+  text: Search completed
+find.scope.project.title:
+  text: Project
+find.scope.module.title:
+  text: Module ''{0}''
+find.scope.directory.title:
+  text: Directory {0}
+find.scope.files.with.mask:
+  text: with mask ''{0}''
+find.replace.invalid.replacement.string:
+  text: 'You have entered malformed replacement string: ''''{0}'''''
+find.replace.invalid.replacement.string.title:
+  text: Replace Error
+find.highlight.no.more.highlights.found:
+  text: No more highlights found
+find.scope.all.project.classes:
+  text: All Project Classes
+find.usage.view.tab.text:
+  text: Occurrences of ''{0}''{1}
+find.usage.view.toolwindow.title:
+  text: Occurrences of ''{0}'' in {1}{2}
+find.usage.view.usages.text:
+  text: occurrences of ''{0}''
+find.selection.only:
+  text: In Selection
+progress.text.scanning.non.indexed.files:
+  text: Scanning non-indexed files...
+progress.text.scanning.indexed.files:
+  text: Scanning indexed files...
+notification.title.regular.expression.failed.to.match:
+  text: Regular expression failed to match
+notification.content.one.or.more.malformed.replacement.strings:
+  text: One or more malformed replacement strings
+notification.find.usages.is.not.available.during.indexing:
+  text: Find usages is not available during indexing
+progress.title.finding.usages:
+  text: Finding Usages
+message.file.masks.should.be.comma.separated:
+  text: File masks should be comma-separated
+empty.text.searching:
+  text: Searching...
+label.use.0.and.1.to.select.usages:
+  text: Use {0} and {1} to select usages
+progress.title.updating.usage.view:
+  text: Updating Usage View...
+find.replace.occurrences.found.in.read.only.files.status:
+  text: Occurrences found in read-only files
+find.replace.select.on.editor.command:
+  text: Select on Editor
+find.replace.found.usage.title:
+  text: Replace Usage {0} of {1} Found - {2}
+find.replace.command:
+  text: Replace
+find.replace.all.action:
+  text: Replace &All
+find.replace.selected.action:
+  text: '&Replace{0,choice,0#|1#|2# {0} Occurrences}'
+find.replace.this.file.action:
+  text: Replace All in This &File
+find.replace.skip.this.file.action:
+  text: '&Skip This File'
+find.replace.all.confirmation:
+  text: <html><body>Replace {0} occurrences of ''{1}''<br>across {2} files with ''{3}''?
+find.replace.all.confirmation.title:
+  text: Replace All
+find.replace.occurrences.in.read.only.files.prompt:
+  text: |-
+    Occurrences found in read-only files.
+    The operation will not affect them.
+    Continue anyway?
+find.replace.occurrences.in.read.only.files.title:
+  text: Read-only Files Found
+find.scope.custom.radio:
+  text: 'Cu&stom:'
+find.usages.ambiguous.title:
+  text: Find Usages Of
+0.occurrences.replaced:
+  text: '{0,choice,0#No|1#{0}} {0,choice,0#occurrences|1#occurrence|2#occurrences} replaced'
+found.occurrences:
+  text: Found Occurrences
+occurrence:
+  text: occurrence
+results.options.group:
+  text: Result options
+find.new.line:
+  text: New Line
+find.search.accessible.name:
+  text: Search
+find.replace.accessible.name:
+  text: Replace
+find.popup.found.element.accesible.name:
+  text: '{0} in {1}'
+tooltip.close.search.bar.escape:
+  text: Close search bar (Escape)
+button.exclude:
+  text: Exclude
+button.include:
+  text: Include
+link.click.to.highlight:
+  text: Click to highlight
+find.case.sensitive:
+  text: Match &Case
+find.popup.case.sensitive:
+  text: Match &case
+find.whole.words:
+  text: W&ords
+find.regex:
+  text: Rege&x
+find.popup.whole.words:
+  text: W&ords
+find.popup.regex:
+  text: Rege&x
+find.popup.filemask:
+  text: 'File mas&k:'
+find.popup.scope.project:
+  text: In &Project
+find.popup.scope.module:
+  text: '&Module'
+find.popup.scope.directory:
+  text: '&Directory'
+find.popup.scope.scope:
+  text: '&Scope'
+find.popup.show.filter.popup:
+  text: Show Filter Popup
+find.popup.show.tab.options:
+  text: Show Tab Options

@@ -1,12 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.actionSystem;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
 import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 
 /**
@@ -38,6 +39,10 @@ public abstract class ToggleAction extends AnAction implements Toggleable {
   public ToggleAction(@Nullable @Nls(capitalization = Nls.Capitalization.Title) final String text,
                       @Nullable @Nls(capitalization = Nls.Capitalization.Sentence) final String description,
                       @Nullable final Image icon) {
+    super(text, description, icon);
+  }
+
+  public ToggleAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable final Image icon) {
     super(text, description, icon);
   }
 

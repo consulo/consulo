@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.find.impl;
 
-import com.intellij.find.FindBundle;
 import com.intellij.find.FindModel;
 import com.intellij.find.FindSettings;
 import com.intellij.ide.util.scopeChooser.ScopeChooserCombo;
@@ -24,11 +23,11 @@ import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.Functions;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.EmptyIcon;
 import consulo.disposer.Disposer;
+import consulo.platform.base.localize.FindLocalize;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -36,10 +35,10 @@ import java.awt.event.ActionListener;
 import java.util.Arrays;
 
 class FindPopupScopeUIImpl implements FindPopupScopeUI {
-  static final ScopeType PROJECT = new ScopeType("Project", FindBundle.message("find.popup.scope.project"), EmptyIcon.ICON_0);
-  static final ScopeType MODULE = new ScopeType("Module", FindBundle.message("find.popup.scope.module"), EmptyIcon.ICON_0);
-  static final ScopeType DIRECTORY = new ScopeType("Directory", FindBundle.message("find.popup.scope.directory"), EmptyIcon.ICON_0);
-  static final ScopeType SCOPE = new ScopeType("Scope", FindBundle.message("find.popup.scope.scope"), EmptyIcon.ICON_0);
+  static final ScopeType PROJECT = new ScopeType("Project", FindLocalize.findPopupScopeProject(), Image.empty(0));
+  static final ScopeType MODULE = new ScopeType("Module", FindLocalize.findPopupScopeModule(), Image.empty(0));
+  static final ScopeType DIRECTORY = new ScopeType("Directory", FindLocalize.findPopupScopeDirectory(), Image.empty(0));
+  static final ScopeType SCOPE = new ScopeType("Scope", FindLocalize.findPopupScopeScope(), Image.empty(0));
 
   @Nonnull
   private final FindUIHelper myHelper;

@@ -74,6 +74,7 @@ import com.intellij.util.ui.*;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.Contract;
@@ -1621,7 +1622,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
     private final FindPopupScopeUI.ScopeType myScope;
 
     MySelectScopeToggleAction(FindPopupScopeUI.ScopeType scope) {
-      super(scope.text, null, scope.icon);
+      super(scope.text, LocalizeValue.empty(), scope.icon);
       getTemplatePresentation().setHoveredIcon(scope.icon);
       getTemplatePresentation().setDisabledIcon(scope.icon);
       myScope = scope;
