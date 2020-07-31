@@ -15,133 +15,18 @@
  */
 package consulo.ide.ui.laf.darcula;
 
-import com.intellij.ui.Gray;
-import com.intellij.util.ui.UIUtil;
 import consulo.ide.ui.laf.JBEditorTabsUI;
-import consulo.ide.ui.laf.intellij.IntelliJEditorTabsUI;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * @author VISTALL
  * @since 15-Jun-17
  */
-public class DarculaEditorTabsUI extends IntelliJEditorTabsUI {
+public class DarculaEditorTabsUI extends consulo.desktop.ui.laf.idea.darcula.DarculaEditorTabsUI {
+  @Nonnull
   public static JBEditorTabsUI createUI(JComponent c) {
     return new DarculaEditorTabsUI();
-  }
-
-  @Override
-  public void doPaintInactiveImpl(Graphics2D g2d,
-                                  Rectangle effectiveBounds,
-                                  int x,
-                                  int y,
-                                  int w,
-                                  int h,
-                                  Color tabColor,
-                                  int row,
-                                  int column,
-                                  boolean vertical) {
-    if (tabColor != null) {
-      g2d.setColor(tabColor);
-      g2d.fillRect(x, y, w, h);
-    }
-    else {
-      g2d.setPaint(UIUtil.getControlColor());
-      g2d.fillRect(x, y, w, h);
-    }
-
-    g2d.setColor(Gray._0.withAlpha(10));
-    g2d.drawRect(x, y, w - 1, h - 1);
-  }
-
-  @Override
-  public void doPaintBackground(Graphics2D g, Rectangle clip, boolean vertical, Rectangle rectangle) {
-    g.setColor(UIUtil.getPanelBackground());
-    g.fill(clip);
-
-    g.setColor(new Color(0, 0, 0, 80));
-    g.fill(clip);
-
-    final int x = rectangle.x;
-    final int y = rectangle.y;
-    final int h = rectangle.height;
-    g.setPaint(UIUtil.getGradientPaint(x, y, Gray._78.withAlpha(160), x, y + h, Gray._78.withAlpha(120)));
-    final int w = rectangle.width;
-    g.fillRect(x, rectangle.y, w, h + (vertical ? 1 : 0));
-
-    if (!vertical) {
-      g.setColor(Gray._78);
-      g.drawLine(x, rectangle.y, x + w, rectangle.y);
-    }
-  }
-
-  @Override
-  public void paintSelectionAndBorderImpl(Graphics2D g2d,
-                                          Rectangle rect,
-                                          IntelliJEditorTabsUI.ShapeInfo selectedShape,
-                                          Insets insets,
-                                          Color tabColor,
-                                          boolean horizontalTabs) {
-    Insets i = selectedShape.path.transformInsets(insets);
-    int _x = rect.x;
-    int _y = rect.y;
-    int _height = rect.height;
-    if (!horizontalTabs) {
-      g2d.setColor(new Color(0, 0, 0, 45));
-      g2d.draw(selectedShape.labelPath
-                       .transformLine(i.left, selectedShape.labelPath.getMaxY() - selectedShape.labelPath.deltaY(4), selectedShape.path.getMaxX(),
-                                      selectedShape.labelPath.getMaxY() - selectedShape.labelPath.deltaY(4)));
-
-      g2d.setColor(new Color(0, 0, 0, 15));
-      g2d.draw(selectedShape.labelPath
-                       .transformLine(i.left, selectedShape.labelPath.getMaxY() - selectedShape.labelPath.deltaY(5), selectedShape.path.getMaxX(),
-                                      selectedShape.labelPath.getMaxY() - selectedShape.labelPath.deltaY(5)));
-    }
-
-    if (tabColor != null) {
-      g2d.setColor(tabColor);
-      g2d.fill(selectedShape.fillPath.getShape());
-
-      g2d.setPaint(UIUtil.getGradientPaint(_x, _y, Gray._255.withAlpha(50), _x, _y + _height, Gray._255.withAlpha(0)));
-    }
-    else {
-      g2d.setPaint(UIUtil.getGradientPaint(_x, _y, Gray._85, _x, _y + _height, Gray._60));
-    }
-
-    g2d.fill(selectedShape.fillPath.getShape());
-
-    g2d.setColor(Gray._135.withAlpha(90));
-    g2d.draw(selectedShape.fillPath.getShape());
-
-    // fix right side due to swing stupidity (fill & draw will occupy different shapes)
-    g2d.draw(selectedShape.labelPath.transformLine(selectedShape.labelPath.getMaxX() - selectedShape.labelPath.deltaX(1),
-                                                   selectedShape.labelPath.getY() + selectedShape.labelPath.deltaY(1),
-                                                   selectedShape.labelPath.getMaxX() - selectedShape.labelPath.deltaX(1),
-                                                   selectedShape.labelPath.getMaxY() - selectedShape.labelPath.deltaY(4)));
-
-    if (!horizontalTabs) {
-      // side shadow
-      g2d.setColor(Gray._0.withAlpha(30));
-      g2d.draw(selectedShape.labelPath.transformLine(selectedShape.labelPath.getMaxX() + selectedShape.labelPath.deltaX(1),
-                                                     selectedShape.labelPath.getY() + selectedShape.labelPath.deltaY(1),
-                                                     selectedShape.labelPath.getMaxX() + selectedShape.labelPath.deltaX(1),
-                                                     selectedShape.labelPath.getMaxY() - selectedShape.labelPath.deltaY(4)));
-
-
-      g2d.draw(selectedShape.labelPath.transformLine(selectedShape.labelPath.getX() - selectedShape.labelPath.deltaX(horizontalTabs ? 2 : 1),
-                                                     selectedShape.labelPath.getY() + selectedShape.labelPath.deltaY(1),
-                                                     selectedShape.labelPath.getX() - selectedShape.labelPath.deltaX(horizontalTabs ? 2 : 1),
-                                                     selectedShape.labelPath.getMaxY() - selectedShape.labelPath.deltaY(4)));
-    }
-
-    g2d.setColor(new Color(0, 0, 0, 50));
-    g2d.draw(selectedShape.labelPath.transformLine(i.left, selectedShape.labelPath.getMaxY(), selectedShape.path.getMaxX(), selectedShape.labelPath.getMaxY()));
-  }
-
-  @Override
-  public Color getBackground() {
-    return new Color(0x3C3F41);
   }
 }

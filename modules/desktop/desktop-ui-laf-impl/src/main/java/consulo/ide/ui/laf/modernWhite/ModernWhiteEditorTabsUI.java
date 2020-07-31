@@ -15,134 +15,17 @@
  */
 package consulo.ide.ui.laf.modernWhite;
 
-import com.intellij.ui.ColorUtil;
-import com.intellij.ui.Gray;
-import com.intellij.util.ui.UIUtil;
 import consulo.ide.ui.laf.JBEditorTabsUI;
-import consulo.ide.ui.laf.intellij.IntelliJEditorTabsUI;
+import consulo.ide.ui.laf.mac.MacEditorTabsUI;
 
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * @author VISTALL
  * @since 15-Jun-17
  */
-public class ModernWhiteEditorTabsUI extends IntelliJEditorTabsUI {
+public class ModernWhiteEditorTabsUI extends MacEditorTabsUI {
   public static JBEditorTabsUI createUI(JComponent c) {
     return new ModernWhiteEditorTabsUI();
-  }
-
-  @Override
-  public void doPaintInactiveImpl(Graphics2D g2d,
-                                  Rectangle effectiveBounds,
-                                  int x,
-                                  int y,
-                                  int w,
-                                  int h,
-                                  Color tabColor,
-                                  int row,
-                                  int column,
-                                  boolean vertical) {
-    g2d.setColor(Gray._255);
-    g2d.fillRect(x, y, w, h);
-
-    if (tabColor != null) {
-      g2d.setColor(ColorUtil.toAlpha(tabColor, 200));
-      g2d.fillRect(x, y, w, h);
-    }
-
-    g2d.setColor(Gray._150.withAlpha(100));
-    g2d.fillRect(x, y, w, h);
-
-    // Push top row under the navbar or toolbar and have a blink over previous row shadow for 2nd and subsequent rows.
-    if (row == 0) {
-      g2d.setColor(Gray._200.withAlpha(200));
-    }
-    else {
-      g2d.setColor(Gray._255.withAlpha(100));
-    }
-
-    g2d.drawLine(x, y, x + w - 1, y);
-  }
-
-  @Override
-  public void doPaintBackground(Graphics2D g, Rectangle clip, boolean vertical, Rectangle rectangle) {
-    g.setColor(UIUtil.getPanelBackground());
-    g.fill(clip);
-
-    g.setColor(new Color(0, 0, 0, 80));
-    g.fill(clip);
-
-    final int x = rectangle.x;
-    final int y = rectangle.y;
-    g.setPaint(new Color(255, 255, 255, 160));
-    g.fillRect(x, rectangle.y, rectangle.width, rectangle.height + (vertical ? 1 : 0));
-
-    if (!vertical) {
-      g.setColor(Gray._210);
-      g.drawLine(x, rectangle.y, x + rectangle.width, rectangle.y);
-    }
-  }
-
-  protected static Color multiplyColor(Color c) {
-    return new Color(c.getRed() * c.getRed() / 255, c.getGreen() * c.getGreen() / 255, c.getBlue() * c.getBlue() / 255);
-  }
-
-  public void paintSelectionAndBorderImpl(Graphics2D g2d,
-                                          Rectangle rect,
-                                          IntelliJEditorTabsUI.ShapeInfo selectedShape,
-                                          Insets insets,
-                                          Color tabColor,
-                                          boolean horizontalTabs) {
-    Insets i = selectedShape.path.transformInsets(insets);
-
-    if (!horizontalTabs) {
-      g2d.setColor(new Color(0, 0, 0, 45));
-      g2d.draw(selectedShape.labelPath
-                       .transformLine(i.left, selectedShape.labelPath.getMaxY() - selectedShape.labelPath.deltaY(4), selectedShape.path.getMaxX(),
-                                      selectedShape.labelPath.getMaxY() - selectedShape.labelPath.deltaY(4)));
-
-      g2d.setColor(new Color(0, 0, 0, 15));
-      g2d.draw(selectedShape.labelPath
-                       .transformLine(i.left, selectedShape.labelPath.getMaxY() - selectedShape.labelPath.deltaY(5), selectedShape.path.getMaxX(),
-                                      selectedShape.labelPath.getMaxY() - selectedShape.labelPath.deltaY(5)));
-    }
-
-    tabColor = tabColor != null ? tabColor : Gray._255;
-    g2d.setColor(multiplyColor(tabColor));
-    g2d.fill(selectedShape.fillPath.getShape());
-
-    g2d.setColor(Gray._255.withAlpha(180));
-    g2d.draw(selectedShape.fillPath.getShape());
-
-    // fix right side due to swing stupidity (fill & draw will occupy different shapes)
-    g2d.draw(selectedShape.labelPath.transformLine(selectedShape.labelPath.getMaxX() - selectedShape.labelPath.deltaX(1),
-                                                   selectedShape.labelPath.getY() + selectedShape.labelPath.deltaY(1),
-                                                   selectedShape.labelPath.getMaxX() - selectedShape.labelPath.deltaX(1),
-                                                   selectedShape.labelPath.getMaxY() - selectedShape.labelPath.deltaY(4)));
-
-    if (!horizontalTabs) {
-      // side shadow
-      g2d.setColor(Gray._0.withAlpha(30));
-      g2d.draw(selectedShape.labelPath.transformLine(selectedShape.labelPath.getMaxX() + selectedShape.labelPath.deltaX(1),
-                                                     selectedShape.labelPath.getY() + selectedShape.labelPath.deltaY(1),
-                                                     selectedShape.labelPath.getMaxX() + selectedShape.labelPath.deltaX(1),
-                                                     selectedShape.labelPath.getMaxY() - selectedShape.labelPath.deltaY(4)));
-
-
-      g2d.draw(selectedShape.labelPath.transformLine(selectedShape.labelPath.getX() - selectedShape.labelPath.deltaX(horizontalTabs ? 2 : 1),
-                                                     selectedShape.labelPath.getY() + selectedShape.labelPath.deltaY(1),
-                                                     selectedShape.labelPath.getX() - selectedShape.labelPath.deltaX(horizontalTabs ? 2 : 1),
-                                                     selectedShape.labelPath.getMaxY() - selectedShape.labelPath.deltaY(4)));
-    }
-
-    g2d.setColor(new Color(0, 0, 0, 50));
-    g2d.draw(selectedShape.labelPath.transformLine(i.left, selectedShape.labelPath.getMaxY(), selectedShape.path.getMaxX(), selectedShape.labelPath.getMaxY()));
-  }
-
-  @Override
-  public Color getBackground() {
-    return Gray._142;
   }
 }
