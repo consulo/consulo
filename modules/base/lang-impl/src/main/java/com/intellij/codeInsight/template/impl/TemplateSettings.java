@@ -22,6 +22,7 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.options.BaseSchemeProcessor;
 import com.intellij.openapi.options.SchemesManager;
 import com.intellij.openapi.options.SchemesManagerFactory;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMUtil;
@@ -443,7 +444,7 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
 
   private void loadBundledLiveTemplateSets() {
     try {
-      for (BundleLiveTemplateSetEP it : BundleLiveTemplateSetEP.EP_NAME.getExtensions()) {
+      for (BundleLiveTemplateSetEP it : BundleLiveTemplateSetEP.EP_NAME.getExtensionList()) {
         ClassLoader loaderForClass = it.getLoaderForClass();
         InputStream inputStream = loaderForClass.getResourceAsStream(it.path + ".xml");
         if (inputStream != null) {
@@ -460,6 +461,9 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
         }
       }
     }
+    catch (ProcessCanceledException e) {
+      throw e;
+    }
     catch (Exception e) {
       LOG.error(e);
     }
@@ -469,7 +473,7 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
   @SuppressWarnings("deprecation")
   private void loadDefaultLiveTemplates() {
     try {
-      for (DefaultLiveTemplatesProvider provider : DefaultLiveTemplatesProvider.EP_NAME.getExtensions()) {
+      for (DefaultLiveTemplatesProvider provider : DefaultLiveTemplatesProvider.EP_NAME.getExtensionList()) {
         for (String defTemplate : provider.getDefaultLiveTemplateFiles()) {
           readDefTemplate(provider, defTemplate, true);
         }
@@ -484,6 +488,9 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
         catch (AbstractMethodError ignore) {
         }
       }
+    }
+    catch (ProcessCanceledException e) {
+      throw e;
     }
     catch (Exception e) {
       LOG.error(e);
