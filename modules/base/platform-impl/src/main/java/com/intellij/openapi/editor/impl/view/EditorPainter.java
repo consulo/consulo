@@ -23,6 +23,7 @@ import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.paint.EffectPainter;
 import com.intellij.ui.paint.LinePainter2D;
+import com.intellij.ui.paint.PaintUtil;
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.ObjectUtil;
@@ -35,9 +36,9 @@ import com.intellij.util.ui.UIUtil;
 import gnu.trove.TFloatArrayList;
 import gnu.trove.TIntObjectHashMap;
 import org.jetbrains.annotations.Contract;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.*;
@@ -652,19 +653,13 @@ public class EditorPainter implements TextDrawingCallback {
             });
           }
           else if (c == '\t') {
-            int tabLineHeight = calcFeatureSize(4, scale);
-            int tabLineWidth = Math.min(endX - startX, calcFeatureSize(3, scale));
-            int xToUse = Math.min(endX - tabLineWidth, startX + tabLineWidth);
-            myTextDrawingTasks.add((g) -> {
+            double strokeWidth = Math.max(scale, PaintUtil.devPixel(myGraphics));
+            int yMid = yToUse - myView.getCharHeight() / 2;
+            int tabEndX = Math.max(startX + 1, endX - getTabGap(scale));
+            myTextDrawingTasks.add(g -> {
               g.setColor(color);
-              g.setStroke(stroke);
-              Object oldHint = g.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
-              g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-              g.drawLine(xToUse, yToUse, xToUse + tabLineWidth, yToUse - tabLineHeight);
-              g.drawLine(xToUse, yToUse - tabLineHeight * 2, xToUse + tabLineWidth, yToUse - tabLineHeight);
-              g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, oldHint);
+              LinePainter2D.paint(g, startX, yMid, tabEndX, yMid, LinePainter2D.StrokeType.INSIDE, strokeWidth);
             });
-            restoreStroke = true;
           }
           else if (c == '\u3000') { // ideographic space
             int charHeight = myView.getCharHeight();
@@ -683,6 +678,10 @@ public class EditorPainter implements TextDrawingCallback {
           g.setStroke(defaultStroke);
         });
       }
+    }
+
+    private static int getTabGap(float scale) {
+      return calcFeatureSize(5, scale);
     }
 
     private void collectExtensions(int visualLine, int offset) {
