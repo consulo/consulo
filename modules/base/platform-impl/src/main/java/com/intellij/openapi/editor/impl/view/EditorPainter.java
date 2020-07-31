@@ -37,7 +37,6 @@ import com.intellij.util.ui.UIUtil;
 import gnu.trove.TFloatArrayList;
 import gnu.trove.TIntObjectHashMap;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -692,7 +691,7 @@ public class EditorPainter implements TextDrawingCallback {
       return calcFeatureSize(5, scale);
     }
 
-    private static float getWhiteSpaceScale(@NotNull Editor editor) {
+    private static float getWhiteSpaceScale(@Nonnull Editor editor) {
       return ((float)editor.getColorsScheme().getEditorFontSize()) / FontPreferences.DEFAULT_FONT_SIZE;
     }
 
