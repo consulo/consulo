@@ -56,8 +56,8 @@ public class DesktopTabImpl implements Tab {
     @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
-      e.getPresentation().setIcon(AllIcons.Actions.CloseNew);
-      e.getPresentation().setHoveredIcon(AllIcons.Actions.CloseNewHovered);
+      e.getPresentation().setIcon(AllIcons.Actions.Close);
+      e.getPresentation().setHoveredIcon(AllIcons.Actions.CloseHovered);
       e.getPresentation().setText("Close.");
     }
   }

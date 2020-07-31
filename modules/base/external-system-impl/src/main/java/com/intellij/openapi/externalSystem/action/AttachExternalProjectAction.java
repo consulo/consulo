@@ -27,7 +27,6 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.externalSystem.util.ExternalSystemBundle;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.SystemInfoRt;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -53,7 +52,7 @@ public class AttachExternalProjectAction extends AnAction implements DumbAware {
       e.getPresentation().setDescription(ExternalSystemBundle.message("action.attach.external.project.description", name));
     }
 
-    e.getPresentation().setIcon(SystemInfoRt.isMac ? AllIcons.ToolbarDecorator.Mac.Add : AllIcons.ToolbarDecorator.Add);
+    e.getPresentation().setIcon(AllIcons.General.Add);
   }
 
   @RequiredUIAccess

@@ -134,8 +134,8 @@ public class WebTabbedLayoutImpl extends UIComponentWithVaadinComponent<WebTabbe
         tabState.myItemSegments = tab.getItem().myItemSegments;
         BiConsumer<Tab, Component> closeHandler = tab.getCloseHandler();
         if (closeHandler != null) {
-          tabState.myCloseButton = WebImageUrlCache.map(AllIcons.Actions.CloseNew).getState();
-          tabState.myCloseHoverButton = WebImageUrlCache.map(AllIcons.Actions.CloseNewHovered).getState();
+          tabState.myCloseButton = WebImageUrlCache.map(AllIcons.Actions.Close).getState();
+          tabState.myCloseHoverButton = WebImageUrlCache.map(AllIcons.Actions.CloseHovered).getState();
         }
 
         tabStates.add(tabState);

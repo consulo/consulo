@@ -1888,16 +1888,16 @@
             icon="AllIcons.Actions.Edit"/>
     <action id="Arrangement.Rule.Match.Condition.Move.Up"
             class="com.intellij.application.options.codeStyle.arrangement.action.MoveArrangementMatchingRuleUpAction"
-            icon="AllIcons.ToolbarDecorator.MoveUp"/>
+            icon="AllIcons.Actions.MoveUp"/>
     <action id="Arrangement.Rule.Match.Condition.Move.Down"
             class="com.intellij.application.options.codeStyle.arrangement.action.MoveArrangementMatchingRuleDownAction"
-            icon="AllIcons.ToolbarDecorator.MoveDown"/>
+            icon="AllIcons.Actions.MoveDown"/>
     <action id="Arrangement.Rule.Group.Condition.Move.Up"
             class="com.intellij.application.options.codeStyle.arrangement.action.MoveArrangementGroupingRuleUpAction"
-            icon="AllIcons.ToolbarDecorator.MoveUp"/>
+            icon="AllIcons.Actions.MoveUp"/>
     <action id="Arrangement.Rule.Group.Condition.Move.Down"
             class="com.intellij.application.options.codeStyle.arrangement.action.MoveArrangementGroupingRuleDownAction"
-            icon="AllIcons.ToolbarDecorator.MoveDown"/>
+            icon="AllIcons.Actions.MoveDown"/>
 
     <group id="Arrangement.Rule.Match.Control.Context.Menu">
       <reference ref="Arrangement.Rule.Add"/>

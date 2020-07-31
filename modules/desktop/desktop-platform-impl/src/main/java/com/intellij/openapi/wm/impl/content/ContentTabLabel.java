@@ -40,7 +40,7 @@ class ContentTabLabel extends BaseLabel {
   private static final int DEFAULT_HORIZONTAL_INSET = JBUI.scale(12);
   protected static final int ICONS_GAP = JBUI.scale(3);
 
-  private final ActiveIcon myCloseIcon = new ActiveIcon(AllIcons.Actions.CloseNewHovered, AllIcons.Actions.CloseNew);
+  private final ActiveIcon myCloseIcon = new ActiveIcon(AllIcons.Actions.CloseHovered, AllIcons.Actions.Close);
   private final Content myContent;
   private final TabContentLayout myLayout;
 

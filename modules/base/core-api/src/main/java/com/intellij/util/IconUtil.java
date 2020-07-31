@@ -18,7 +18,6 @@ package com.intellij.util;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.ScalableIcon;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.RowIcon;
@@ -122,64 +121,64 @@ public class IconUtil {
   }
 
   public static SwingImageRef getAddIcon() {
-    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.Add : AllIcons.ToolbarDecorator.Add;
+    return AllIcons.General.Add;
   }
 
   public static SwingImageRef getRemoveIcon() {
-    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.Remove : AllIcons.ToolbarDecorator.Remove;
+    return AllIcons.General.Remove;
   }
 
   public static SwingImageRef getMoveUpIcon() {
-    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.MoveUp : AllIcons.ToolbarDecorator.MoveUp;
+    return AllIcons.Actions.MoveUp;
   }
 
   public static SwingImageRef getMoveDownIcon() {
-    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.MoveDown : AllIcons.ToolbarDecorator.MoveDown;
+    return  AllIcons.Actions.MoveDown;
   }
 
   public static SwingImageRef getEditIcon() {
-    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.Edit : AllIcons.ToolbarDecorator.Edit;
+    return AllIcons.Actions.Edit;
   }
 
   public static SwingImageRef getAddClassIcon() {
-    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.AddClass : AllIcons.ToolbarDecorator.AddClass;
+    return AllIcons.ToolbarDecorator.AddClass;
   }
 
   public static SwingImageRef getAddPatternIcon() {
-    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.AddPattern : AllIcons.ToolbarDecorator.AddPattern;
+    return AllIcons.ToolbarDecorator.AddPattern;
   }
 
   @Deprecated
   @DeprecationInfo("Use task icons")
   public static SwingImageRef getAddJiraPatternIcon() {
-    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.AddJira : AllIcons.ToolbarDecorator.AddJira;
+    return AllIcons.ToolbarDecorator.AddJira;
   }
 
   @Deprecated
   @DeprecationInfo("Use task icons")
   public static SwingImageRef getAddYouTrackPatternIcon() {
-    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.AddYouTrack : AllIcons.ToolbarDecorator.AddYouTrack;
+    return AllIcons.ToolbarDecorator.AddYouTrack;
   }
 
   public static SwingImageRef getAddBlankLineIcon() {
-    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.AddBlankLine : AllIcons.ToolbarDecorator.AddBlankLine;
+    return AllIcons.ToolbarDecorator.AddBlankLine;
   }
 
   public static SwingImageRef getAddPackageIcon() {
-    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.AddPackage : AllIcons.ToolbarDecorator.AddPackage;
+    return AllIcons.ToolbarDecorator.AddPackage;
   }
 
   public static SwingImageRef getAddLinkIcon() {
-    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.AddLink : AllIcons.ToolbarDecorator.AddLink;
+    return AllIcons.ToolbarDecorator.AddLink;
   }
 
   public static SwingImageRef getAddFolderIcon() {
-    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.AddFolder : AllIcons.ToolbarDecorator.AddFolder;
+    return AllIcons.ToolbarDecorator.AddFolder;
   }
 
   @Nonnull
   public static consulo.ui.image.Image getAnalyzeIcon() {
-    return SystemInfo.isMac ? AllIcons.ToolbarDecorator.Mac.Analyze : AllIcons.ToolbarDecorator.Analyze;
+    return AllIcons.ToolbarDecorator.Analyze;
   }
 
   public static void paintInCenterOf(@Nonnull Component c, Graphics g, Icon icon) {

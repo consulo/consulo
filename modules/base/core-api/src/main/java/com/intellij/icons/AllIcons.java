@@ -53,7 +53,7 @@ public class AllIcons {
     public static final SwingImageRef Collapseall = IconLoader.getIcon("/actions/collapseall.png"); // 16x16
     public static final SwingImageRef Commit = IconLoader.getIcon("/actions/commit.svg"); // 16x16
     public static final SwingImageRef Compile = IconLoader.getIcon("/actions/compile.png"); // 16x16
-    public static final SwingImageRef Copy = IconLoader.getIcon("/actions/copy.png"); // 16x16
+    public static final SwingImageRef Copy = IconLoader.getIcon("/actions/copy.svg"); // 16x16
     public static final SwingImageRef CreateFromUsage = IconLoader.getIcon("/actions/createFromUsage.png"); // 16x16
     public static final SwingImageRef CreatePatch = IconLoader.getIcon("/actions/createPatch.png"); // 16x16
     public static final SwingImageRef Cross = IconLoader.getIcon("/actions/cross.png"); // 12x12
@@ -63,23 +63,20 @@ public class AllIcons {
     public static final SwingImageRef Down = IconLoader.getIcon("/actions/down.png"); // 16x16
     public static final SwingImageRef Download = IconLoader.getIcon("/actions/download.png"); // 16x16
     public static final SwingImageRef Dump = IconLoader.getIcon("/actions/dump.png"); // 16x16
-    public static final SwingImageRef Edit = IconLoader.getIcon("/actions/edit.png"); // 14x14
+    public static final SwingImageRef Edit = IconLoader.getIcon("/actions/edit.svg"); // 14x14
     public static final SwingImageRef EditSource = IconLoader.getIcon("/actions/editSource.png"); // 16x16
     public static final SwingImageRef ErDiagram = IconLoader.getIcon("/actions/erDiagram.png"); // 16x16
-    public static final SwingImageRef Exclude = IconLoader.getIcon("/actions/exclude.png"); // 14x14
+    public static final SwingImageRef Exclude = General.Remove; // 14x14
     public static final SwingImageRef Execute = IconLoader.getIcon("/actions/execute.png"); // 16x16
     public static final SwingImageRef Exit = IconLoader.getIcon("/actions/exit.png"); // 16x16
     public static final SwingImageRef Expandall = IconLoader.getIcon("/actions/expandall.png"); // 16x16
     public static final SwingImageRef Export = IconLoader.getIcon("/actions/export.png"); // 16x16
     public static final SwingImageRef FileStatus = IconLoader.getIcon("/actions/fileStatus.png"); // 16x16
     public static final SwingImageRef Filter_small = IconLoader.getIcon("/actions/filter_small.png"); // 16x16
-    public static final SwingImageRef Find = IconLoader.getIcon("/actions/find.png"); // 16x16
-
-
     public static final Image FindAndShowNextMatchesSmall = IconLoader.getIcon("/actions/findAndShowNextMatchesSmall.svg");
     public static final Image FindAndShowPrevMatchesSmall = IconLoader.getIcon("/actions/findAndShowPrevMatchesSmall.svg");
-    public static final SwingImageRef FindPlain = IconLoader.getIcon("/actions/findPlain.png"); // 16x16
-    public static final SwingImageRef FindWhite = IconLoader.getIcon("/actions/findWhite.png"); // 16x16
+    public static final SwingImageRef Find = IconLoader.getIcon("/actions/find.svg"); // 16x16
+    public static final SwingImageRef FindPlain = Find; // 16x16
     public static final SwingImageRef ForceRefresh = IconLoader.getIcon("/actions/forceRefresh.png"); // 16x16
     public static final SwingImageRef Forward = IconLoader.getIcon("/actions/forward.png"); // 16x16
     public static final SwingImageRef GC = IconLoader.getIcon("/actions/gc.png"); // 16x16
@@ -111,9 +108,9 @@ public class AllIcons {
     public static final SwingImageRef More = IconLoader.getIcon("/actions/more.svg");
     public static final SwingImageRef Move_to_button_top = IconLoader.getIcon("/actions/move-to-button-top.png"); // 11x12
     public static final SwingImageRef Move_to_button = IconLoader.getIcon("/actions/move-to-button.png"); // 11x10
-    public static final SwingImageRef MoveDown = IconLoader.getIcon("/actions/moveDown.png"); // 14x14
+    public static final SwingImageRef MoveDown = IconLoader.getIcon("/actions/moveDown.svg"); // 14x14
     public static final SwingImageRef MoveToAnotherChangelist = IconLoader.getIcon("/actions/moveToAnotherChangelist.png"); // 16x16
-    public static final SwingImageRef MoveUp = IconLoader.getIcon("/actions/moveUp.png"); // 14x14
+    public static final SwingImageRef MoveUp = IconLoader.getIcon("/actions/moveUp.svg"); // 14x14
     public static final SwingImageRef New = IconLoader.getIcon("/actions/new.png"); // 16x16
     public static final SwingImageRef NewFolder = IconLoader.getIcon("/actions/newFolder.png"); // 16x16
     public static final SwingImageRef Nextfile = IconLoader.getIcon("/actions/nextfile.png"); // 16x16
@@ -414,7 +411,7 @@ public class AllIcons {
     public static final SwingImageRef LayoutEditorOnly = IconLoader.getIcon("/general/layoutEditorOnly.png"); // 16x16
     public static final SwingImageRef LayoutEditorPreview = IconLoader.getIcon("/general/layoutEditorPreview.png"); // 16x16
     public static final SwingImageRef LayoutPreviewOnly = IconLoader.getIcon("/general/layoutPreviewOnly.png"); // 16x16
-    public static final SwingImageRef Add = IconLoader.getIcon("/general/add.png"); // 16x16
+    public static final SwingImageRef Add = IconLoader.getIcon("/general/add.svg"); // 16x16
     public static final SwingImageRef AddFavoritesList = IconLoader.getIcon("/general/addFavoritesList.png"); // 16x16
     public static final SwingImageRef AddJdk = IconLoader.getIcon("/general/addJdk.png"); // 16x16
     public static final SwingImageRef ArrowDown = IconLoader.getIcon("/general/arrowDown.png"); // 7x6
@@ -522,7 +519,7 @@ public class AllIcons {
     public static final SwingImageRef ProjectTab = IconLoader.getIcon("/general/projectTab.png"); // 16x16
     public static final SwingImageRef QuestionDialog = IconLoader.getIcon("/general/questionDialog.png"); // 32x32
     public static final SwingImageRef ReadHelp = IconLoader.getIcon("/general/readHelp.png"); // 32x32
-    public static final SwingImageRef Remove = IconLoader.getIcon("/general/remove.png"); // 16x16
+    public static final SwingImageRef Remove = IconLoader.getIcon("/general/remove.svg"); // 16x16
     public static final SwingImageRef Recursive = IconLoader.getIcon("/general/recursive.png"); // 16x16
     public static final SwingImageRef Reset = IconLoader.getIcon("/general/reset.png"); // 16x16
     public static final SwingImageRef Run = IconLoader.getIcon("/general/run.png"); // 7x10
@@ -1081,7 +1078,6 @@ public class AllIcons {
   }
 
   public static class ToolbarDecorator {
-    public static final SwingImageRef Add = IconLoader.getIcon("/toolbarDecorator/add.png"); // 14x14
     public static final SwingImageRef AddBlankLine = IconLoader.getIcon("/toolbarDecorator/addBlankLine.png"); // 16x16
     public static final SwingImageRef AddClass = IconLoader.getIcon("/toolbarDecorator/addClass.png"); // 16x16
     public static final SwingImageRef AddFolder = IconLoader.getIcon("/toolbarDecorator/addFolder.png"); // 16x16
@@ -1093,34 +1089,8 @@ public class AllIcons {
     public static final SwingImageRef AddRemoteDatasource = IconLoader.getIcon("/toolbarDecorator/addRemoteDatasource.png"); // 16x16
     public static final SwingImageRef AddYouTrack = IconLoader.getIcon("/toolbarDecorator/addYouTrack.png"); // 16x16
     public static final SwingImageRef Analyze = IconLoader.getIcon("/toolbarDecorator/analyze.png"); // 14x14
-    public static final SwingImageRef Edit = IconLoader.getIcon("/toolbarDecorator/edit.png"); // 14x14
     public static final SwingImageRef Export = IconLoader.getIcon("/toolbarDecorator/export.png"); // 16x16
     public static final SwingImageRef Import = IconLoader.getIcon("/toolbarDecorator/import.png"); // 16x16
-
-    public static class Mac {
-      public static final SwingImageRef Add = IconLoader.getIcon("/toolbarDecorator/mac/add.png"); // 14x14
-      public static final SwingImageRef AddBlankLine = IconLoader.getIcon("/toolbarDecorator/mac/addBlankLine.png"); // 16x16
-      public static final SwingImageRef AddClass = IconLoader.getIcon("/toolbarDecorator/mac/addClass.png"); // 16x16
-      public static final SwingImageRef AddFolder = IconLoader.getIcon("/toolbarDecorator/mac/addFolder.png"); // 16x16
-      public static final SwingImageRef AddIcon = IconLoader.getIcon("/toolbarDecorator/mac/addIcon.png"); // 16x16
-      public static final SwingImageRef AddJira = IconLoader.getIcon("/toolbarDecorator/mac/addJira.png"); // 16x16
-      public static final SwingImageRef AddLink = IconLoader.getIcon("/toolbarDecorator/mac/addLink.png"); // 16x16
-      public static final SwingImageRef AddPackage = IconLoader.getIcon("/toolbarDecorator/mac/addPackage.png"); // 16x16
-      public static final SwingImageRef AddPattern = IconLoader.getIcon("/toolbarDecorator/mac/addPattern.png"); // 16x16
-      public static final SwingImageRef AddRemoteDatasource = IconLoader.getIcon("/toolbarDecorator/mac/addRemoteDatasource.png"); // 16x16
-      public static final SwingImageRef AddYouTrack = IconLoader.getIcon("/toolbarDecorator/mac/addYouTrack.png"); // 16x16
-      public static final SwingImageRef Analyze = IconLoader.getIcon("/toolbarDecorator/mac/analyze.png"); // 14x14
-      public static final SwingImageRef Edit = IconLoader.getIcon("/toolbarDecorator/mac/edit.png"); // 14x14
-      public static final SwingImageRef MoveDown = IconLoader.getIcon("/toolbarDecorator/mac/moveDown.png"); // 14x14
-      public static final SwingImageRef MoveUp = IconLoader.getIcon("/toolbarDecorator/mac/moveUp.png"); // 14x14
-      public static final SwingImageRef Remove = IconLoader.getIcon("/toolbarDecorator/mac/remove.png"); // 14x14
-
-    }
-
-    public static final SwingImageRef MoveDown = IconLoader.getIcon("/toolbarDecorator/moveDown.png"); // 14x14
-    public static final SwingImageRef MoveUp = IconLoader.getIcon("/toolbarDecorator/moveUp.png"); // 14x14
-    public static final SwingImageRef Remove = IconLoader.getIcon("/toolbarDecorator/remove.png"); // 14x14
-
   }
 
   public static class Toolwindows {

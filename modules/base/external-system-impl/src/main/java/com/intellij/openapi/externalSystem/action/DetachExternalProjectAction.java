@@ -28,12 +28,10 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.util.containers.ContainerUtilRt;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -46,7 +44,7 @@ public class DetachExternalProjectAction extends AnAction implements DumbAware {
   public DetachExternalProjectAction() {
     getTemplatePresentation().setText(ExternalSystemBundle.message("action.detach.external.project.text", "external"));
     getTemplatePresentation().setDescription(ExternalSystemBundle.message("action.detach.external.project.description"));
-    getTemplatePresentation().setIcon(SystemInfoRt.isMac ? AllIcons.ToolbarDecorator.Mac.Remove : AllIcons.ToolbarDecorator.Remove);
+    getTemplatePresentation().setIcon(AllIcons.General.Remove);
   }
 
   @RequiredUIAccess

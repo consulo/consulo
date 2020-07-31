@@ -53,7 +53,7 @@ public class SandToolWindowFactory implements ToolWindowFactory {
 
     ((ToolWindowEx)toolWindow).setTabDoubleClickActions(new ToolWindowTabRenameActionBase("Sand", "Enter new session name"));
 
-    ((ToolWindowEx)toolWindow).setTabActions(new AnAction("Add Tab", null, AllIcons.ToolbarDecorator.Add) {
+    ((ToolWindowEx)toolWindow).setTabActions(new AnAction("Add Tab", null, AllIcons.General.Add) {
       @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
