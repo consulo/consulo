@@ -20,14 +20,15 @@ import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManagerListener;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.Gray;
 import com.intellij.ui.ScreenUtil;
+import com.intellij.ui.paint.LinePainter2D;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.wm.impl.ToolWindowManagerBase;
 
@@ -58,7 +59,6 @@ final class DesktopStripePanelImpl extends JPanel {
   private boolean myFinishingDrop;
   static final int DROP_DISTANCE_SENSIVITY = 20;
   private final Disposable myDisposable = Disposable.newDisposable();
-  private BufferedImage myCachedBg;
 
   DesktopStripePanelImpl(final int anchor, ToolWindowManagerBase manager) {
     super(new GridBagLayout());
@@ -74,76 +74,66 @@ final class DesktopStripePanelImpl extends JPanel {
     @Override
     public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
       Insets insets = ((JComponent)c).getInsets();
+      g.setColor(UIUtil.CONTRAST_BORDER_COLOR);
+      drawBorder((Graphics2D)g, x, y, width, height, insets);
+    }
 
-      if (UIUtil.isUnderDarcula()) {
-        g.setColor(Gray._40);
-        drawBorder(g, x, y, width, height, insets);
+    private static void drawBorder(Graphics2D g, int x, int y, int width, int height, Insets insets) {
+      if (insets.top == 1) {
+        LinePainter2D.paint(g, x, y, x + width, y);
       }
-      else {
-        g.setColor(UIUtil.getPanelBackground());
-        drawBorder(g, x, y, width, height, insets);
-        g.setColor(Gray._155);
-        drawBorder(g, x, y, width, height, insets);
+      if (insets.right == 1) {
+        LinePainter2D.paint(g, x + width - 1, y, x + width - 1, y + height);
+      }
+      if (insets.left == 1) {
+        LinePainter2D.paint(g, x, y, x, y + height);
+      }
+      if (insets.bottom == 1) {
+        LinePainter2D.paint(g, x, y + height - 1, x + width, y + height - 1);
+      }
+
+      if (!UIUtil.isUnderDarcula()) {
+        return;
+      }
+
+      Color c = g.getColor();
+      if (insets.top == 2) {
+        g.setColor(c);
+        LinePainter2D.paint(g, x, y, x + width, y);
+        g.setColor(Gray._85);
+        LinePainter2D.paint(g, x, y + 1, x + width, y + 1);
+      }
+      if (insets.right == 2) {
+        g.setColor(Gray._85);
+        LinePainter2D.paint(g, x + width - 1, y, x + width - 1, y + height);
+        g.setColor(c);
+        LinePainter2D.paint(g, x + width - 2, y, x + width - 2, y + height);
+      }
+      if (insets.left == 2) {
+        g.setColor(Gray._85);
+        LinePainter2D.paint(g, x + 1, y, x + 1, y + height);
+        g.setColor(c);
+        LinePainter2D.paint(g, x, y, x, y + height);
       }
     }
 
-    private static void drawBorder(Graphics g, int x, int y, int width, int height, Insets insets) {
-      if (insets.top == 1) g.drawLine(x, y, x + width, y);
-      if (insets.right == 1) g.drawLine(x + width - 1, y, x + width - 1, y + height);
-      if (insets.left == 1) g.drawLine(x, y, x, y + height);
-      if (insets.bottom == 1) g.drawLine(x, y + height - 1, x + width, y + height - 1);
-
-      if (UIUtil.isUnderDarcula()) {
-        final Color c = g.getColor();
-        if (insets.top == 2) {
-          g.setColor(c);
-          g.drawLine(x, y, x + width, y);
-          g.setColor(Gray._85);
-          g.drawLine(x, y + 1, x + width, y + 1);
-        }
-        if (insets.right == 2) {
-          g.setColor(Gray._85);
-          g.drawLine(x + width - 1, y, x + width - 1, y + height);
-          g.setColor(c);
-          g.drawLine(x + width - 2, y, x + width - 2, y + height);
-        }
-        if (insets.left == 2) {
-          g.setColor(Gray._85);
-          g.drawLine(x + 1, y, x + 1, y + height);
-          g.setColor(c);
-          g.drawLine(x, y, x, y + height);
-        }
-        if (insets.bottom == 2) {
-          //do nothing
-        }
-      }
-    }
-
+    @SuppressWarnings("UseDPIAwareInsets")
     @Override
     public Insets getBorderInsets(Component c) {
       DesktopStripePanelImpl stripe = (DesktopStripePanelImpl)c;
       ToolWindowAnchor anchor = stripe.getAnchor();
-
-      Insets result = new Insets(0, 0, 0, 0);
-      final int off = UIUtil.isUnderDarcula() ? 1 : 0;
       if (anchor == ToolWindowAnchor.LEFT) {
-        result.top = 1;
-        result.right = 1 + off;
+        return new Insets(1, 0, 0, 1);
       }
       else if (anchor == ToolWindowAnchor.RIGHT) {
-        result.left = 1 + off;
-        result.top = 1;
+        return new Insets(1, 1, 0, 0);
       }
       else if (anchor == ToolWindowAnchor.TOP) {
-        result.bottom = 0;
-        //result.bottom = 1;
-        result.top = 1;
+        return new Insets(1, 0, 0, 0);
       }
       else {
-        result.top = 1 + off;
+        return new Insets(1, 0, 0, 0);
       }
-
-      return result;
     }
 
     @Override
@@ -575,32 +565,6 @@ final class DesktopStripePanelImpl extends JPanel {
         break;
     }
     return getClass().getName() + " " + anchor;
-  }
-
-  private BufferedImage getCachedImage() {
-    if (myCachedBg == null) {
-      ToolWindowAnchor anchor = getAnchor();
-      Rectangle bounds = getBounds();
-      BufferedImage bg;
-      if (anchor == ToolWindowAnchor.LEFT || anchor == ToolWindowAnchor.RIGHT) {
-        bg = (BufferedImage)createImage(bounds.width, 50);
-        Graphics2D graphics = bg.createGraphics();
-        graphics.setPaint(UIUtil.getGradientPaint(0, 0, new Color(0, 0, 0, 10), bounds.width, 0, new Color(0, 0, 0, 0)));
-        graphics.fillRect(0, 0, bounds.width, 50);
-        graphics.dispose();
-      }
-      else {
-        bg = (BufferedImage)createImage(50, bounds.height);
-        Graphics2D graphics = bg.createGraphics();
-        graphics.setPaint(UIUtil.getGradientPaint(0, 0, new Color(0, 0, 0, 0), 0, bounds.height, new Color(0, 0, 0, 10)));
-        graphics.fillRect(0, 0, 50, bounds.height);
-        graphics.dispose();
-      }
-
-      myCachedBg = bg;
-    }
-
-    return myCachedBg;
   }
 
   @Override

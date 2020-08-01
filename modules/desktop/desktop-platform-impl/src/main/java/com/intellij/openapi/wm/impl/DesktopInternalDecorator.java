@@ -101,9 +101,38 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
       }
     };
 
-    init(dumbAware);
+    enableEvents(AWTEvent.COMPONENT_EVENT_MASK);
+
+    final JPanel contentPane = new JPanel(new BorderLayout());
+    installFocusTraversalPolicy(contentPane, new LayoutFocusTraversalPolicy());
+    contentPane.add(myHeader, BorderLayout.NORTH);
+
+    JPanel innerPanel = new JPanel(new BorderLayout());
+    JComponent toolWindowComponent = myToolWindow.getComponent();
+    if (!dumbAware) {
+      toolWindowComponent = DumbService.getInstance(myProject).wrapGently(toolWindowComponent, myProject);
+    }
+    innerPanel.add(toolWindowComponent, BorderLayout.CENTER);
+
+    final NonOpaquePanel inner = new NonOpaquePanel(innerPanel);
+
+    contentPane.add(inner, BorderLayout.CENTER);
+    add(contentPane, BorderLayout.CENTER);
+    if (SystemInfo.isMac) {
+      setBackground(new JBColor(Gray._200, Gray._90));
+    }
+
+    // Add listeners
+    registerKeyboardAction(new ActionListener() {
+      @Override
+      public void actionPerformed(final ActionEvent e) {
+        ToolWindowManager.getInstance(myProject).activateEditorComponent();
+      }
+    }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
     apply(info);
+
+    setBorder(new InnerPanelBorder(myToolWindow));
   }
 
   @Override
@@ -163,7 +192,6 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     }
 
     myToolWindow.getContentUI().setType(myInfo.getContentUiType());
-    setBorder(new InnerPanelBorder(myToolWindow));
   }
 
   @javax.annotation.Nullable
@@ -244,37 +272,6 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
 
   private void fireVisibleOnPanelChanged(final boolean visibleOnPanel) {
     myDispatcher.getMulticaster().visibleStripeButtonChanged(this, visibleOnPanel);
-  }
-
-  private void init(boolean dumbAware) {
-    enableEvents(AWTEvent.COMPONENT_EVENT_MASK);
-
-    final JPanel contentPane = new JPanel(new BorderLayout());
-    installFocusTraversalPolicy(contentPane, new LayoutFocusTraversalPolicy());
-    contentPane.add(myHeader, BorderLayout.NORTH);
-
-    JPanel innerPanel = new JPanel(new BorderLayout());
-    JComponent toolWindowComponent = myToolWindow.getComponent();
-    if (!dumbAware) {
-      toolWindowComponent = DumbService.getInstance(myProject).wrapGently(toolWindowComponent, myProject);
-    }
-    innerPanel.add(toolWindowComponent, BorderLayout.CENTER);
-
-    final NonOpaquePanel inner = new NonOpaquePanel(innerPanel);
-
-    contentPane.add(inner, BorderLayout.CENTER);
-    add(contentPane, BorderLayout.CENTER);
-    if (SystemInfo.isMac) {
-      setBackground(new JBColor(Gray._200, Gray._90));
-    }
-
-    // Add listeners
-    registerKeyboardAction(new ActionListener() {
-      @Override
-      public void actionPerformed(final ActionEvent e) {
-        ToolWindowManager.getInstance(myProject).activateEditorComponent();
-      }
-    }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
   }
 
   @Override
