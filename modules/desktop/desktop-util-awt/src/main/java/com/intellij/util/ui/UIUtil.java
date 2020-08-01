@@ -30,6 +30,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.containers.JBTreeTraverser;
 import consulo.annotation.DeprecationInfo;
+import consulo.desktop.awt.util.DarkThemeCalculator;
 import consulo.desktop.util.awt.AllIconsHack;
 import consulo.desktop.util.awt.MorphColor;
 import consulo.desktop.util.awt.StringHtmlUtil;
@@ -37,7 +38,6 @@ import consulo.desktop.util.awt.laf.BuildInLookAndFeel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.ui.style.StyleManager;
 import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
@@ -95,9 +95,9 @@ import java.util.regex.Pattern;
 @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
 public class UIUtil {
   @Deprecated
-  @DeprecationInfo("StyleManager.get().getCurrentStyle().isDark()")
+  @DeprecationInfo("StyleManager.get().getCurrentStyle().isDark(), and don't call this method inside swing paint code")
   public static boolean isUnderDarkTheme() {
-    return StyleManager.get().getCurrentStyle().isDark();
+    return DarkThemeCalculator.isDark();
   }
 
   public static final Key<Iterable<? extends Component>> NOT_IN_HIERARCHY_COMPONENTS = Key.create("NOT_IN_HIERARCHY_COMPONENTS");
