@@ -329,9 +329,7 @@ public class JBUI {
 
     public static class Popup {
       public static Color borderColor(boolean active) {
-        return active
-               ? JBColor.namedColor("Popup.borderColor", JBColor.namedColor("Popup.Border.color", 0x808080))
-               : JBColor.namedColor("Popup.inactiveBorderColor", JBColor.namedColor("Popup.inactiveBorderColor", 0xaaaaaa));
+        return JBColor.border();
       }
 
       public static Color headerBackground(boolean active) {
