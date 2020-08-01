@@ -145,6 +145,8 @@ public abstract class UIInternal {
 
   public abstract Image _ImageEffects_canvas(int width, int height, Consumer<Canvas2D> consumer);
 
+  public abstract Image _ImageEffects_withText(Image baseImage, String text);
+
   public abstract Image _ImageEffects_resize(Image original, int width, int height);
 
   public abstract MenuItem _MenuItem_create(String text);

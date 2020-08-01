@@ -15,6 +15,7 @@
  */
 package consulo.ui.desktop.internal;
 
+import com.intellij.ui.scale.JBUIScale;
 import consulo.awt.TargetAWT;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Button;
@@ -106,6 +107,15 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Override
   public Image _ImageEffects_canvas(int width, int height, Consumer<Canvas2D> consumer) {
     return new DesktopCanvasImageImpl(width, height, consumer);
+  }
+
+  @Override
+  public Image _ImageEffects_withText(Image baseImage, String text) {
+    DesktopImageWithTextImpl withText = new DesktopImageWithTextImpl(text, new JLabel(), JBUIScale.scaleFontSize(6f));
+    DesktopLayeredImageImpl image = new DesktopLayeredImageImpl(2);
+    image.setIcon(TargetAWT.to(baseImage), 0);
+    image.setIcon(TargetAWT.to(withText), 1, SwingConstants.SOUTH_EAST);
+    return image;
   }
 
   @Override

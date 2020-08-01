@@ -33,13 +33,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.SizedIcon;
 import com.intellij.ui.components.panels.NonOpaquePanel;
-import com.intellij.util.IconUtil;
 import com.intellij.util.ui.EmptyIcon;
 import consulo.actionSystem.ex.ComboBoxButton;
-import consulo.awt.TargetAWT;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ExecutionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -105,15 +105,14 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
 
   private static void setConfigurationIcon(final Presentation presentation, final RunnerAndConfigurationSettings settings, final Project project) {
     try {
-      Icon icon = TargetAWT.to(RunManagerEx.getInstanceEx(project).getConfigurationIcon(settings));
+      Image icon = RunManagerEx.getInstanceEx(project).getConfigurationIcon(settings);
       ExecutionManagerImpl executionManager = ExecutionManagerImpl.getInstance(project);
       List<RunContentDescriptor> runningDescriptors = executionManager.getRunningDescriptors(s -> s == settings);
       if (runningDescriptors.size() == 1) {
-        icon = ExecutionUtil.getLiveIndicator(icon);
+        icon = ExecutionUtil.getIconWithLiveIndicator(icon);
       }
-      // FIXME [VISTALL] not supported by UI framework
-      if (runningDescriptors.size() > 1) {
-        icon = IconUtil.addText(icon, String.valueOf(runningDescriptors.size()));
+      else if (runningDescriptors.size() > 1) {
+        icon = ImageEffects.withText(icon, String.valueOf(runningDescriptors.size()));
       }
       presentation.setIcon(icon);
     }

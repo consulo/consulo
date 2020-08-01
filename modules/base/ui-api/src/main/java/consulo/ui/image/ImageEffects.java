@@ -84,6 +84,15 @@ public final class ImageEffects {
     return UIInternal.get()._ImageEffects_canvas(width, height, consumer);
   }
 
+  /**
+   * Create image, where text will paint in lower right corner.
+   * FIXME [VISTALL] This is temporary method, since canvas method can't paint text good
+   */
+  @Nonnull
+  public static Image withText(@Nonnull Image baseImage, @Nonnull String text) {
+    return UIInternal.get()._ImageEffects_withText(baseImage, text);
+  }
+
   @Nonnull
   public static Image colorFilled(int width, int heght, @Nonnull ColorValue colorValue) {
     return canvas(width, heght, ctx -> {

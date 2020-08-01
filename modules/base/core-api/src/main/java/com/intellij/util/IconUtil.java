@@ -362,6 +362,8 @@ public class IconUtil {
   }
 
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use ImageEffects#withText")
   public static Icon textToIcon(final String text, final Component component, final float fontSize) {
     final Font font = JBFont.create(JBUI.Fonts.label().deriveFont(fontSize));
     FontMetrics metrics = component.getFontMetrics(font);
@@ -394,6 +396,9 @@ public class IconUtil {
     };
   }
 
+  @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use ImageEffects#withText")
   public static Icon addText(@Nonnull Icon base, @Nonnull String text) {
     LayeredIcon icon = new LayeredIcon(2);
     icon.setIcon(base, 0);

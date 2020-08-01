@@ -32,15 +32,16 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.reference.SoftReference;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.popup.list.GroupedItemsListRenderer;
-import com.intellij.util.IconUtil;
 import consulo.awt.TargetAWT;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
+import consulo.util.lang.ref.SoftReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -58,10 +59,11 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
            ActionPlaces.NAVIGATION_BAR_TOOLBAR.equals(e.getPlace());
   }
 
+  @RequiredUIAccess
   @Override
   public void update(final AnActionEvent e) {
     boolean enable = false;
-    Icon icon = getTemplatePresentation().getIcon();
+    Image icon = TargetAWT.from(getTemplatePresentation().getIcon());
     String description = getTemplatePresentation().getDescription();
     Presentation presentation = e.getPresentation();
     if (isPlaceGlobal(e)) {
@@ -86,7 +88,7 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
       }
       enable = todoSize > 0;
       if (todoSize > 1) {
-        icon = IconUtil.addText(icon, String.valueOf(todoSize));
+        icon = ImageEffects.withText(icon, String.valueOf(todoSize));
       }
     }
     else {
@@ -118,6 +120,7 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
     presentation.setDescription(description);
   }
 
+  @RequiredUIAccess
   @Override
   public void actionPerformed(final AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();

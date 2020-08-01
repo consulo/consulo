@@ -25,27 +25,26 @@ import com.intellij.execution.runners.ExecutionUtil;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.icons.AllIcons;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.Application;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.*;
 import com.intellij.openapi.util.Trinity;
-import com.intellij.util.IconUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.messages.MessageBusConnection;
-import consulo.awt.TargetAWT;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.disposer.Disposable;
+import consulo.logging.Logger;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.swing.*;
 import java.util.*;
 
 @Singleton
@@ -249,7 +248,8 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable
       presentation.setText(text);
     }
 
-    private Icon getInformativeIcon(Project project, final RunnerAndConfigurationSettings selectedConfiguration) {
+    @Nonnull
+    private Image getInformativeIcon(Project project, final RunnerAndConfigurationSettings selectedConfiguration) {
       final ExecutionManagerImpl executionManager = ExecutionManagerImpl.getInstance(project);
 
       List<RunContentDescriptor> runningDescriptors = executionManager.getRunningDescriptors(s -> s == selectedConfiguration);
@@ -262,15 +262,14 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable
         return AllIcons.Actions.Restart;
       }
       if (runningDescriptors.isEmpty()) {
-        return TargetAWT.to(myExecutor.getIcon());
+        return myExecutor.getIcon();
       }
 
       if (runningDescriptors.size() == 1) {
-        return TargetAWT.to(ExecutionUtil.getIconWithLiveIndicator(myExecutor.getIcon()));
+        return ExecutionUtil.getIconWithLiveIndicator(myExecutor.getIcon());
       }
       else {
-        // FIXME [VISTALL] not supported by UI framework
-        return IconUtil.addText(TargetAWT.to(myExecutor.getIcon()), String.valueOf(runningDescriptors.size()));
+        return ImageEffects.withText(myExecutor.getIcon(), String.valueOf(runningDescriptors.size()));
       }
     }
 

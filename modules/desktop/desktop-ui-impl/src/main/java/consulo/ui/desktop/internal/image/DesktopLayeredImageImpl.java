@@ -27,11 +27,14 @@ import java.util.Arrays;
  * @author VISTALL
  * @since 11-Sep-17
  */
-@SuppressWarnings("deprecation")
 public class DesktopLayeredImageImpl extends LayeredIcon implements Image {
   @Nonnull
   public static Icon[] remap(Image[] icons) {
     return Arrays.stream(icons).map(TargetAWT::to).toArray(Icon[]::new);
+  }
+
+  public DesktopLayeredImageImpl(int layerCount) {
+    super(layerCount);
   }
 
   public DesktopLayeredImageImpl(@Nonnull Image... images) {

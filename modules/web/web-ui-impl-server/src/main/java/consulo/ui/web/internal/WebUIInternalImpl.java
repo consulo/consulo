@@ -227,6 +227,11 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
+  public Image _ImageEffects_withText(Image baseImage, String text) {
+    return baseImage;
+  }
+
+  @Override
   public Image _ImageEffects_resize(Image original, int width, int height) {
     return new WebResizeImageImpl(original, width, height);
   }
