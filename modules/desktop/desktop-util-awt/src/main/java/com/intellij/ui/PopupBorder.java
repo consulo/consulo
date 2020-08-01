@@ -18,8 +18,9 @@ package com.intellij.ui;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.paint.RectanglePainter;
 import com.intellij.util.ui.JBUI;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 
@@ -38,7 +39,8 @@ public interface PopupBorder extends Border {
 
     @Nonnull
     public static PopupBorder create(boolean active, boolean windowWithShadow) {
-      PopupBorder border = SystemInfo.isMac && windowWithShadow ? createEmpty() : new BaseBorder(true, CaptionPanel.getBorderColor(true), CaptionPanel.getBorderColor(false));
+      boolean visible = !(SystemInfo.isMac && windowWithShadow) || UIManager.getBoolean("Popup.paintBorder") == Boolean.TRUE;
+      PopupBorder border = new BaseBorder(visible, JBUI.CurrentTheme.Popup.borderColor(true), JBUI.CurrentTheme.Popup.borderColor(false));
       border.setActive(active);
       return border;
     }

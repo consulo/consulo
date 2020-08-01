@@ -18,6 +18,7 @@ import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.injected.editor.EditorWindow;
 import com.intellij.lang.LangBundle;
 import com.intellij.lang.injection.InjectedLanguageManager;
+import com.intellij.util.ui.JBUI;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
@@ -142,7 +143,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
 
     myList.setFocusable(false);
     myList.setFixedCellWidth(50);
-    myList.setBorder(null);
+    myList.setBorder(JBUI.Borders.empty());
 
     // a new top level frame just got the focus. This is important to prevent screen readers
     // from announcing the title of the top level frame when the list is shown (or hidden),

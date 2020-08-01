@@ -798,7 +798,6 @@ public class HintManagerImpl extends HintManager {
       hintInfo.setAwtTooltip(true).setHighlighterType(true);
     }
 
-
     hintInfo.initStyleFrom(hint.getComponent());
     if (showByBalloon) {
       hintInfo.setBorderColor(new JBColor(Color.gray, Gray._140));

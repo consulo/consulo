@@ -70,10 +70,10 @@ public class LookupCellRenderer implements ListCellRenderer {
   public static final Color BACKGROUND_COLOR = MorphColor.of(UIUtil::getPanelBackground);
   public static final Color FOREGROUND_COLOR = JBColor.foreground();
   private static final Color GRAYED_FOREGROUND_COLOR = new JBColor(Gray._160, Gray._110);
-  private static final Color SELECTED_BACKGROUND_COLOR = new Color(0, 82, 164);
   public static final Color SELECTED_NON_FOCUSED_BACKGROUND_COLOR = new JBColor(0x6e8ea2, 0x55585a);
   public static final Color SELECTED_FOREGROUND_COLOR = MorphColor.of(() -> (UIUtil.isUnderDarkTheme() ? JBColor.foreground() : JBColor.WHITE));
   private static final Color SELECTED_GRAYED_FOREGROUND_COLOR = MorphColor.of((() -> (UIUtil.isUnderDarkTheme()) ? JBColor.foreground() : JBColor.WHITE));
+  private static final Color NON_FOCUSED_MASK_COLOR = JBColor.namedColor("CompletionPopup.nonFocusedMask", Gray._0.withAlpha(0));
 
   static final Color PREFIX_FOREGROUND_COLOR = new JBColor(0xb000b0, 0xd17ad6);
   private static final Color SELECTED_PREFIX_FOREGROUND_COLOR = new JBColor(0xf9eccc, 0xd17ad6);
@@ -130,7 +130,7 @@ public class LookupCellRenderer implements ListCellRenderer {
     myIsSelected = isSelected;
     final LookupElement item = (LookupElement)value;
     final Color foreground = getForegroundColor(isSelected);
-    final Color background = nonFocusedSelection ? SELECTED_NON_FOCUSED_BACKGROUND_COLOR : isSelected ? SELECTED_BACKGROUND_COLOR : BACKGROUND_COLOR;
+    final Color background = nonFocusedSelection ? UIUtil.getListSelectionBackground(false) : isSelected ? UIUtil.getListSelectionBackground(true) : BACKGROUND_COLOR;
 
     int allowedWidth = list.getWidth() - calcSpacing(myNameComponent, myEmptyIcon) - calcSpacing(myTailComponent, null) - calcSpacing(myTypeLabel, null);
 
@@ -500,10 +500,10 @@ public class LookupCellRenderer implements ListCellRenderer {
     @Override
     public void paint(Graphics g) {
       super.paint(g);
-      if (!myLookup.isFocused() && myLookup.isCompletion()) {
+      if (NON_FOCUSED_MASK_COLOR.getAlpha() > 0 && !myLookup.isFocused() && myLookup.isCompletion()) {
         g = g.create();
         try {
-          g.setColor(ColorUtil.withAlpha(BACKGROUND_COLOR, .4));
+          g.setColor(NON_FOCUSED_MASK_COLOR);
           g.fillRect(0, 0, getWidth(), getHeight());
         }
         finally {
