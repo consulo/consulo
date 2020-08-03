@@ -17,29 +17,26 @@ package com.intellij.ide.customize;
 
 import com.intellij.CommonBundle;
 import com.intellij.ide.ui.LafManager;
-import consulo.ide.ui.laf.LafWithColorScheme;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.IconUtil;
-import com.intellij.util.ui.UIUtil;
+import consulo.ide.ui.laf.LafWithColorScheme;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
-
   private static final String DARCULA = "Darcula";
   private static final String INTELLIJ = "IntelliJ";
-  private boolean myInitial = true;
   private boolean myColumnMode;
   private JLabel myPreviewLabel;
-  private Map<String, Icon> myLafNames = new LinkedHashMap<String, Icon>();
+  private Map<String, Icon> myLafNames = new LinkedHashMap<>();
 
   public CustomizeUIThemeStepPanel() {
     setLayout(new BorderLayout(10, 10));
@@ -71,12 +68,7 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
         radioButton.setSelected(true);
         defaultLafName = lafName;
       }
-      final JPanel panel = createBigButtonPanel(new BorderLayout(10, 10), radioButton, new Runnable() {
-        @Override
-        public void run() {
-          applyLaf(lafName, CustomizeUIThemeStepPanel.this);
-        }
-      });
+      final JPanel panel = createBigButtonPanel(new BorderLayout(10, 10), radioButton, () -> applyLaf(lafName, CustomizeUIThemeStepPanel.this));
       panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
       panel.add(radioButton, BorderLayout.NORTH);
       final JLabel label = new JLabel(myColumnMode ? IconUtil.scale(icon, .2) : icon) {
@@ -101,8 +93,6 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
       add(buttonsPanel, BorderLayout.WEST);
       add(myPreviewLabel, BorderLayout.CENTER);
     }
-    applyLaf(defaultLafName, this);
-    myInitial = false;
   }
 
   @Override
@@ -131,31 +121,21 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
   private void applyLaf(String lafName, Component component) {
     UIManager.LookAndFeelInfo info = getLookAndFeelInfo(lafName);
     if (info == null) return;
-    try {
-      UIManager.setLookAndFeel(info.getClassName());
 
-      if (!myInitial) {
-        LafManager.getInstance().setCurrentLookAndFeel(info);
-        if(info instanceof LafWithColorScheme) {
-          EditorColorsManager editorColorsManager = EditorColorsManager.getInstance();
-          EditorColorsScheme scheme = editorColorsManager.getScheme(((LafWithColorScheme)info).getColorSchemeName());
-          if(scheme != null) {
-            editorColorsManager.setGlobalScheme(scheme);
-          }
-        }
-      }
-      Window window = SwingUtilities.getWindowAncestor(component);
-      if (window != null) {
-        window.setBackground(new Color(UIUtil.getPanelBackground().getRGB()));
-        SwingUtilities.updateComponentTreeUI(window);
-      }
-      if (myColumnMode) {
-        myPreviewLabel.setIcon(myLafNames.get(lafName));
-        myPreviewLabel.setBorder(BorderFactory.createLineBorder(UIManager.getColor("Label.foreground")));
+    LafManager.getInstance().setCurrentLookAndFeel(info);
+
+    LafManager.getInstance().setCurrentLookAndFeel(info);
+    if (info instanceof LafWithColorScheme) {
+      EditorColorsManager editorColorsManager = EditorColorsManager.getInstance();
+      EditorColorsScheme scheme = editorColorsManager.getScheme(((LafWithColorScheme)info).getColorSchemeName());
+      if (scheme != null) {
+        editorColorsManager.setGlobalScheme(scheme);
       }
     }
-    catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-      e.printStackTrace();
+
+    if (myColumnMode) {
+      myPreviewLabel.setIcon(myLafNames.get(lafName));
+      myPreviewLabel.setBorder(BorderFactory.createLineBorder(UIManager.getColor("Label.foreground")));
     }
   }
 

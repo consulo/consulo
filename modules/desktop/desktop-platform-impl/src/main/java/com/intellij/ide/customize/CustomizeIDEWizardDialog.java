@@ -23,8 +23,9 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.JBCardLayout;
 import com.intellij.util.containers.MultiMap;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.ide.customize.CustomizeDownloadAndStartStepPanel;
-import consulo.ide.customize.CustomizeSelectTemplateStepPanel;
+import consulo.desktop.startup.customize.CustomizeDownloadAndStartStepPanel;
+import consulo.desktop.startup.customize.CustomizePluginTemplatesStepPanel;
+import consulo.desktop.startup.customize.PluginTemplate;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -33,6 +34,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionListener {
   private static final String BUTTONS = "BUTTONS";
@@ -44,7 +46,7 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
   private final JBCardLayout myCardLayout = new JBCardLayout();
   protected final List<AbstractCustomizeWizardStep> mySteps = new ArrayList<AbstractCustomizeWizardStep>();
   private final MultiMap<String, PluginDescriptor> myPluginDescriptors;
-  private final MultiMap<String, String> myPredefinedTemplateSets;
+  private final Map<String, PluginTemplate> myPredefinedTemplateSets;
   private int myIndex = 0;
   private final JLabel myNavigationLabel = new JLabel();
   private final JLabel myHeaderLabel = new JLabel();
@@ -53,7 +55,7 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
   private final JPanel myButtonWrapper = new JPanel(myButtonWrapperLayout);
   private JPanel myContentPanel;
 
-  public CustomizeIDEWizardDialog(MultiMap<String, PluginDescriptor> pluginDescriptors, MultiMap<String, String> predefinedTemplateSets) {
+  public CustomizeIDEWizardDialog(MultiMap<String, PluginDescriptor> pluginDescriptors, Map<String, PluginTemplate> predefinedTemplateSets) {
     super(null);
     myPluginDescriptors = pluginDescriptors;
     myPredefinedTemplateSets = predefinedTemplateSets;
@@ -88,8 +90,7 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
       mySteps.add(new CustomizeKeyboardSchemeStepPanel());
     }
 
-    CustomizeSelectTemplateStepPanel templateStepPanel =
-            myPredefinedTemplateSets.isEmpty() ? null : new CustomizeSelectTemplateStepPanel(myPredefinedTemplateSets);
+    CustomizePluginTemplatesStepPanel templateStepPanel = myPredefinedTemplateSets.isEmpty() ? null : new CustomizePluginTemplatesStepPanel(myPredefinedTemplateSets);
     CustomizePluginsStepPanel pluginsStepPanel = null;
     if (!myPluginDescriptors.isEmpty()) {
 

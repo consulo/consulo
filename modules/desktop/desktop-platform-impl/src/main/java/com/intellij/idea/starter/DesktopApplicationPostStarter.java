@@ -43,7 +43,7 @@ import consulo.container.impl.classloader.PluginLoadStatistics;
 import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
 import consulo.desktop.start.splash.DesktopSplash;
-import consulo.ide.customize.FirstStartCustomizeUtil;
+import consulo.desktop.startup.customize.FirstStartCustomizeUtil;
 import consulo.logging.Logger;
 import consulo.plugins.internal.PluginsInitializeInfo;
 import consulo.start.CommandLineArgs;
@@ -126,7 +126,7 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
       }
     }, ModalityState.NON_MODAL);
 
-    if (newConfigFolder && !ApplicationProperties.isInSandbox()) {
+    if(Boolean.getBoolean("consulo.first.start.testing") || newConfigFolder && !ApplicationProperties.isInSandbox()) {
       FirstStartCustomizeUtil.show(true);
     }
 

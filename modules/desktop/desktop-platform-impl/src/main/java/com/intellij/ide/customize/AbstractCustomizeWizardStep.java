@@ -18,8 +18,8 @@ package com.intellij.ide.customize;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.ColorUtil;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
@@ -37,26 +37,39 @@ public abstract class AbstractCustomizeWizardStep extends JPanel {
 
   @Nonnull
   protected static Color getSelectionBackground() {
-    return ColorUtil.mix(UIUtil.getListSelectionBackground(), UIUtil.getLabelBackground(), UIUtil.isUnderDarcula() ? .5 : .75);
+    return ColorUtil.mix(UIUtil.getListSelectionBackground(true), UIUtil.getLabelBackground(), UIUtil.isUnderDarcula() ? .5 : .75);
   }
 
   protected static JPanel createBigButtonPanel(LayoutManager layout, final JToggleButton anchorButton, final Runnable action) {
+    return createBigButtonPanel(layout, anchorButton, false, action);
+  }
+
+  protected static JPanel createBigButtonPanel(LayoutManager layout, final JToggleButton anchorButton, boolean allowInverse, final Runnable action) {
     final JPanel panel = new JPanel(layout) {
       @Override
       public Color getBackground() {
-        return anchorButton.isSelected() ? getSelectionBackground() : super.getBackground();
+        if (anchorButton.isSelected()) {
+          return getSelectionBackground();
+        }
+        return super.getBackground();
       }
     };
     panel.setOpaque(anchorButton.isSelected());
     new ClickListener() {
       @Override
       public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
-        anchorButton.setSelected(true);
+        if (allowInverse) {
+          anchorButton.setSelected(!anchorButton.isSelected());
+        }
+        else {
+          anchorButton.setSelected(true);
+        }
         return true;
       }
     }.installOn(panel);
     anchorButton.addItemListener(new ItemListener() {
       boolean curState = anchorButton.isSelected();
+
       @Override
       public void itemStateChanged(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED && curState != anchorButton.isSelected()) {

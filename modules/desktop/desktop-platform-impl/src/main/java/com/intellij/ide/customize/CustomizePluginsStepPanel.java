@@ -22,7 +22,7 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.ide.customize.CustomizeSelectTemplateStepPanel;
+import consulo.desktop.startup.customize.CustomizePluginTemplatesStepPanel;
 import gnu.trove.THashSet;
 
 import javax.annotation.Nonnull;
@@ -38,10 +38,10 @@ import java.util.Set;
 public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
 
   private final MultiMap<String, PluginDescriptor> myPluginDescriptors;
-  private final CustomizeSelectTemplateStepPanel myTemplateStepPanel;
+  private final CustomizePluginTemplatesStepPanel myTemplateStepPanel;
   private final CheckedTreeNode myRoot;
 
-  public CustomizePluginsStepPanel(MultiMap<String, PluginDescriptor> pluginDescriptors, @Nullable CustomizeSelectTemplateStepPanel templateStepPanel) {
+  public CustomizePluginsStepPanel(MultiMap<String, PluginDescriptor> pluginDescriptors, @Nullable CustomizePluginTemplatesStepPanel templateStepPanel) {
     myPluginDescriptors = pluginDescriptors;
     myTemplateStepPanel = templateStepPanel;
     setLayout(new BorderLayout());
@@ -95,7 +95,7 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
     });
     checkboxTree.setRootVisible(false);
     TreeUtil.expandAll(checkboxTree);
-    add(ScrollPaneFactory.createScrollPane(checkboxTree, true), BorderLayout.CENTER);
+    add(ScrollPaneFactory.createScrollPane(checkboxTree), BorderLayout.CENTER);
   }
 
   private void collectDeepDependencies(Set<String> deepDependencies, PluginDescriptor ideaPluginDescriptor) {
@@ -191,11 +191,11 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
 
   @Override
   public String getHTMLHeader() {
-    return "<html><body><h2>Select Plugins For Download</h2></body></html>";
+    return "<html><body><h2>Select plugins ford download</h2></body></html>";
   }
 
   @Override
   public String getHTMLFooter() {
-    return null;
+    return "Plugin list amplified by plugin templates";
   }
 }

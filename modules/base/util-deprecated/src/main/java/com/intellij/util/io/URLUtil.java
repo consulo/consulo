@@ -28,10 +28,7 @@ import gnu.trove.TIntArrayList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.net.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -55,7 +52,8 @@ public class URLUtil {
 
   public static final String LOCALHOST_URI_PATH_PREFIX = "localhost/";
 
-  private URLUtil() { }
+  private URLUtil() {
+  }
 
   /**
    * @return if false, then the line contains no URL; if true, then more heavy {@link #URL_PATTERN} check should be used.
@@ -285,9 +283,7 @@ public class URLUtil {
     if (matcher.matches()) {
       try {
         String content = matcher.group(4);
-        return ";base64".equalsIgnoreCase(matcher.group(3))
-               ? Base64.decode(content)
-               : content.getBytes(CharsetToolkit.UTF8_CHARSET);
+        return ";base64".equalsIgnoreCase(matcher.group(3)) ? Base64.decode(content) : content.getBytes(CharsetToolkit.UTF8_CHARSET);
       }
       catch (IllegalArgumentException e) {
         return null;
@@ -326,7 +322,12 @@ public class URLUtil {
 
   @Nonnull
   public static URL getJarEntryURL(@Nonnull File file, @Nonnull String pathInJar) throws MalformedURLException {
-    String fileURL = StringUtil.replace(file.toURI().toASCIIString(), "!", "%21");
+    return getJarEntryURL(file.toURI(), pathInJar);
+  }
+
+  @Nonnull
+  public static URL getJarEntryURL(@Nonnull URI file, @Nonnull String pathInJar) throws MalformedURLException {
+    String fileURL = StringUtil.replace(file.toASCIIString(), "!", "%21");
     return new URL(JAR_PROTOCOL + ':' + fileURL + JAR_SEPARATOR + StringUtil.trimLeading(pathInJar, '/'));
   }
 
@@ -375,8 +376,7 @@ public class URLUtil {
         return prefix + ":///" + suffix;
       }
     }
-    else if (SystemInfoRt.isWindows && (index + 3) < url.length() && url.charAt(index + 3) == '/' &&
-             url.regionMatches(0, URLUtil.FILE_PROTOCOL_PREFIX, 0, FILE_PROTOCOL_PREFIX.length())) {
+    else if (SystemInfoRt.isWindows && (index + 3) < url.length() && url.charAt(index + 3) == '/' && url.regionMatches(0, URLUtil.FILE_PROTOCOL_PREFIX, 0, FILE_PROTOCOL_PREFIX.length())) {
       // file:///C:/test/file.js -> file://C:/test/file.js
       for (int i = index + 4; i < url.length(); i++) {
         char c = url.charAt(i);

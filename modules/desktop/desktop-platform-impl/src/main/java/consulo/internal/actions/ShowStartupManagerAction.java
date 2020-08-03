@@ -16,7 +16,7 @@
 package consulo.internal.actions;
 
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ide.customize.FirstStartCustomizeUtil;
+import consulo.desktop.startup.customize.FirstStartCustomizeUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 

@@ -318,9 +318,8 @@ public class UIUtil {
 
   public static Key<Integer> KEEP_BORDER_SIDES = Key.create("keepBorderSides");
 
-  private static final Color UNFOCUSED_SELECTION_COLOR = Gray._212;
-  private static final Color ACTIVE_HEADER_COLOR = new Color(160, 186, 213);
-  private static final Color INACTIVE_HEADER_COLOR = Gray._128;
+  private static final Color ACTIVE_HEADER_COLOR = JBColor.namedColor("HeaderColor.active", 0xa0bad5);
+  private static final Color INACTIVE_HEADER_COLOR = JBColor.namedColor("HeaderColor.inactive", Gray._128);
 
   public static final Color CONTRAST_BORDER_COLOR = JBColor.namedColor("Borders.ContrastBorderColor", new JBColor(0xC9C9C9, 0x323232));
 
@@ -2394,7 +2393,7 @@ public class UIUtil {
   }
 
   public static Color getHeaderActiveColor() {
-    return ACTIVE_HEADER_COLOR;
+    return JBUI.CurrentTheme.Focus.focusColor();
   }
 
   public static Color getHeaderInactiveColor() {

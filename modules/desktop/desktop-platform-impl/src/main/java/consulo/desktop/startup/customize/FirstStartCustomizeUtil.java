@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.customize;
+package consulo.desktop.startup.customize;
 
 import com.intellij.ide.customize.CustomizeIDEWizardDialog;
 import com.intellij.ide.plugins.RepositoryHelper;
@@ -25,21 +25,26 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.DownloadUtil;
+import com.intellij.util.io.URLUtil;
+import com.intellij.util.io.UnsyncByteArrayInputStream;
 import com.intellij.util.ui.UIUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.logging.Logger;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
+import consulo.util.lang.StringUtil;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.List;
+import java.net.URL;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -48,9 +53,11 @@ import java.util.zip.ZipInputStream;
  * @since 27.11.14
  */
 public class FirstStartCustomizeUtil {
-  public static final Logger LOGGER = Logger.getInstance(FirstStartCustomizeUtil.class);
+  private static final Logger LOG = Logger.getInstance(FirstStartCustomizeUtil.class);
 
-  private static final String TEMPLATES_URL = "https://github.com/consulo/consulo-firststart-templates/archive/2.0.zip";
+  private static final String TEMPLATES_URL = "https://codeload.github.com/consulo/consulo-firststart-templates/zip/master";
+
+  private static final int IMAGE_SIZE = 100;
 
   public static void show(boolean initLaf) {
     if (initLaf) {
@@ -73,22 +80,26 @@ public class FirstStartCustomizeUtil {
       @Nullable
       @Override
       protected JComponent createCenterPanel() {
-        return new JLabel("Connecting to plugin manager");
+        return new JLabel("Connecting to plugin repository");
       }
     };
 
     Application.get().executeOnPooledThread(() -> {
       MultiMap<String, PluginDescriptor> pluginDescriptors = new MultiMap<>();
-      MultiMap<String, String> predefinedTemplateSets = new MultiMap<>();
+      Map<String, PluginTemplate> predefinedTemplateSets = new TreeMap<>();
       try {
         List<PluginDescriptor> ideaPluginDescriptors = RepositoryHelper.loadOnlyPluginsFromRepository(null, UpdateSettings.getInstance().getChannel());
-        for (PluginDescriptor ideaPluginDescriptor : ideaPluginDescriptors) {
-          pluginDescriptors.putValue(ideaPluginDescriptor.getCategory(), ideaPluginDescriptor);
+        for (PluginDescriptor pluginDescriptor : ideaPluginDescriptors) {
+          String category = pluginDescriptor.getCategory();
+          if (StringUtil.isEmptyOrSpaces(category)) {
+            category = "Uncategorized";
+          }
+          pluginDescriptors.putValue(category, pluginDescriptor);
         }
         loadPredefinedTemplateSets(predefinedTemplateSets);
       }
       catch (Exception e) {
-        LOGGER.warn(e);
+        LOG.warn(e);
       }
 
       UIUtil.invokeLaterIfNeeded(() -> {
@@ -99,8 +110,7 @@ public class FirstStartCustomizeUtil {
     downloadDialog.show();
   }
 
-  public static void loadPredefinedTemplateSets(MultiMap<String, String> predefinedTemplateSets) {
-
+  public static void loadPredefinedTemplateSets(Map<String, PluginTemplate> predefinedTemplateSets) {
     String systemPath = ContainerPathManager.get().getSystemPath();
 
     File customizeDir = new File(systemPath, "startCustomization");
@@ -113,6 +123,9 @@ public class FirstStartCustomizeUtil {
 
       DownloadUtil.downloadContentToFile(null, TEMPLATES_URL, zipFile);
 
+      Map<String, byte[]> datas = new HashMap<>();
+      Map<String, URL> images = new HashMap<>();
+      
       try (ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(zipFile))) {
         ZipEntry e;
         while ((e = zipInputStream.getNextEntry()) != null) {
@@ -120,24 +133,41 @@ public class FirstStartCustomizeUtil {
             continue;
           }
 
-          byte[] bytes = FileUtil.loadBytes(zipInputStream, (int)e.getSize());
-
+          boolean isSvg = false;
           String name = e.getName();
-          if (name.endsWith(".xml")) {
-            Document document = JDOMUtil.loadDocument(bytes);
+          if (name.endsWith(".xml") || (isSvg = name.endsWith(".svg"))) {
+            byte[] bytes = FileUtil.loadBytes(zipInputStream, (int)e.getSize());
 
-            String onlyFileName = onlyFileName(e);
-            readPredefinePluginSet(document, FileUtilRt.getNameWithoutExtension(onlyFileName), predefinedTemplateSets);
+            String templateName = FileUtilRt.getNameWithoutExtension(onlyFileName(e));
+            if(isSvg) {
+              images.put(templateName, URLUtil.getJarEntryURL(zipFile, name.replace(" ", "%20")));
+            }
+            else {
+              datas.put(templateName, bytes);
+            }
           }
         }
-
       }
-      catch (JDOMException e) {
-        LOGGER.warn(e);
+
+      for (Map.Entry<String, byte[]> entry : datas.entrySet()) {
+        try {
+          String name = entry.getKey();
+
+          Document document = JDOMUtil.loadDocument(new UnsyncByteArrayInputStream(entry.getValue()));
+
+          URL imageUrl = images.get(name);
+
+          Image image = imageUrl == null ? Image.empty(IMAGE_SIZE) : ImageEffects.resize(Image.fromUrl(imageUrl), IMAGE_SIZE, IMAGE_SIZE);
+          
+          readPredefinePluginSet(document, name, image, predefinedTemplateSets);
+        }
+        catch (Exception e) {
+          LOG.warn(e);
+        }
       }
     }
     catch (IOException e) {
-      LOGGER.warn(e);
+      LOG.warn(e);
     }
   }
 
@@ -152,19 +182,29 @@ public class FirstStartCustomizeUtil {
     }
   }
 
-  private static void readPredefinePluginSet(Document document, String setName, MultiMap<String, String> map) {
-    for (Element element : document.getRootElement().getChildren()) {
+  private static void readPredefinePluginSet(Document document, String setName, Image image, Map<String, PluginTemplate> map) {
+    Set<String> pluginIds = new HashSet<>();
+    Element rootElement = document.getRootElement();
+    String description = rootElement.getChildTextTrim("description");
+    for (Element element : rootElement.getChildren("plugin")) {
       String id = element.getAttributeValue("id");
-      map.putValue(setName, id);
+      if(id == null) {
+        continue;
+      }
+      
+      pluginIds.add(id);
     }
+    int row = Integer.parseInt(rootElement.getAttributeValue("row", "0"));
+    int col = Integer.parseInt(rootElement.getAttributeValue("col", "0"));
+    PluginTemplate template = new PluginTemplate(pluginIds, description, image, row, col);
+    map.put(setName, template);
   }
 
   private static void initLaf() {
     try {
       UIManager.setLookAndFeel(new IntelliJLaf());
     }
-    catch (Exception e) {
-      e.printStackTrace();
+    catch (Exception ignored) {
     }
   }
 }
