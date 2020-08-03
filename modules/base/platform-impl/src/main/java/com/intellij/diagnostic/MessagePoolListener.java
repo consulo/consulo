@@ -18,9 +18,9 @@ package com.intellij.diagnostic;
 import java.util.EventListener;
 
 public interface MessagePoolListener extends EventListener {
-
   void newEntryAdded();
-  void poolCleared();
-  void entryWasRead();
 
+  void poolCleared();
+
+  void entryWasRead();
 }

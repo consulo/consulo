@@ -26,6 +26,12 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class MessagePool {
+  public enum State {
+    NoErrors,
+    ReadErrors,
+    UnreadErrors
+  }
+
   private static final int MAX_POOL_SIZE_FOR_FATALS = 100;
 
   private final List<AbstractMessage> myIdeFatals = new ArrayList<AbstractMessage>();
@@ -69,6 +75,15 @@ public class MessagePool {
       if (!message.isRead()) return true;
     }
     return false;
+  }
+
+  @Nonnull
+  public State getState() {
+    if (myIdeFatals.isEmpty()) return State.NoErrors;
+    for (AbstractMessage message : myIdeFatals) {
+      if (!message.isRead()) return State.UnreadErrors;
+    }
+    return State.ReadErrors;
   }
 
   public List<AbstractMessage> getFatalErrors(boolean aIncludeReadMessages, boolean aIncludeSubmittedMessages) {

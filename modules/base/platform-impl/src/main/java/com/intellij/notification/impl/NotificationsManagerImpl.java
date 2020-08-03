@@ -81,8 +81,10 @@ import java.util.List;
  */
 @Singleton
 public class NotificationsManagerImpl extends NotificationsManager {
-  public static final Color FILL_COLOR = new JBColor(Gray._242, new Color(78, 80, 82));
-  public static final Color BORDER_COLOR = new JBColor(Gray._178.withAlpha(205), new Color(86, 90, 92, 205));
+  public static final Color DEFAULT_TEXT_COLOR = new JBColor(Gray._0, Gray._191);
+  private static final Color TEXT_COLOR = JBColor.namedColor("Notification.foreground", DEFAULT_TEXT_COLOR);
+  public static final Color FILL_COLOR = JBColor.namedColor("Notification.background", new JBColor(Gray._242, new Color(78, 80, 82)));
+  public static final Color BORDER_COLOR = JBColor.namedColor("Notification.borderColor", new JBColor(Gray._178.withAlpha(205), new Color(86, 90, 92, 205)));
 
   public NotificationsManagerImpl() {
     ApplicationManager.getApplication().getMessageBus().connect().subscribe(Notifications.TOPIC, new MyNotificationListener(null));
@@ -335,6 +337,10 @@ public class NotificationsManagerImpl extends NotificationsManager {
     }
     layoutDataRef.set(layoutData);
 
+    if (layoutData.textColor == null) {
+      layoutData.textColor = TEXT_COLOR;
+    }
+
     if (layoutData.fillColor == null) {
       layoutData.fillColor = FILL_COLOR;
     }
@@ -345,9 +351,6 @@ public class NotificationsManagerImpl extends NotificationsManager {
     boolean actions = !notification.getActions().isEmpty();
     boolean showFullContent = layoutData.showFullContent || notification instanceof NotificationFullContent;
 
-    Color foregroundR = Gray._0;
-    Color foregroundD = Gray._191;
-    final Color foreground = new JBColor(foregroundR, foregroundD);
 
     final JEditorPane text = new JEditorPane() {
       @Override
@@ -394,7 +397,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
     };
     kit.getStyleSheet().addRule("a {color: " + ColorUtil.toHtmlColor(JBUI.CurrentTheme.Link.linkColor()) + "}");
     text.setEditorKit(kit);
-    text.setForeground(foreground);
+    text.setForeground(layoutData.textColor);
 
     final HyperlinkListener listener = NotificationsUtil.wrapListener(notification);
     if (listener != null) {
@@ -409,8 +412,8 @@ public class NotificationsManagerImpl extends NotificationsManager {
       style = prefSize > BalloonLayoutConfiguration.MaxFullContentWidth() ? BalloonLayoutConfiguration.MaxFullContentWidthStyle() : null;
     }
 
-    String textR = NotificationsUtil.buildHtml(notification, style, true, foregroundR, fontStyle);
-    String textD = NotificationsUtil.buildHtml(notification, style, true, foregroundD, fontStyle);
+    String textR = NotificationsUtil.buildHtml(notification, style, true, layoutData.textColor, fontStyle);
+    String textD = NotificationsUtil.buildHtml(notification, style, true, layoutData.textColor, fontStyle);
     LafHandler lafHandler = new LafHandler(text, textR, textD);
     layoutData.lafHandler = lafHandler;
 
@@ -555,15 +558,12 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
     if (notification.hasTitle()) {
       String titleStyle = StringUtil.defaultIfEmpty(fontStyle, "") + "white-space:nowrap;";
-      String titleR = NotificationsUtil.buildHtml(notification, titleStyle, false, foregroundR, null);
-      String titleD = NotificationsUtil.buildHtml(notification, titleStyle, false, foregroundD, null);
+      String titleR = NotificationsUtil.buildHtml(notification, titleStyle, false, layoutData.textColor, null);
+      String titleD = NotificationsUtil.buildHtml(notification, titleStyle, false, layoutData.textColor, null);
       JLabel title = new JLabel();
       lafHandler.setTitle(title, titleR, titleD);
       title.setOpaque(false);
-      if (UIUtil.isUnderNimbusLookAndFeel()) {
-        title.setBackground(UIUtil.TRANSPARENT_COLOR);
-      }
-      title.setForeground(foreground);
+      title.setForeground(layoutData.textColor);
       centerPanel.add(title, BorderLayout.NORTH);
     }
 

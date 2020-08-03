@@ -18,9 +18,9 @@ package com.intellij.ui;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +29,14 @@ import java.util.List;
  * @author Alexander Lobas
  */
 public class BalloonLayoutData {
+  @Nonnull
+  public static BalloonLayoutData createEmpty() {
+    BalloonLayoutData layoutData = new BalloonLayoutData();
+    layoutData.groupId = "";
+    layoutData.showSettingButton = false;
+    return layoutData;
+  }
+
   public String groupId;
   public String id;
   public MergeInfo mergeData;
@@ -59,6 +67,7 @@ public class BalloonLayoutData {
 
   public long fadeoutTime;
 
+  public Color textColor;
   public Color fillColor;
   public Color borderColor;
 

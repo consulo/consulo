@@ -2,12 +2,12 @@ package com.intellij.diagnostic.errordialog;
 
 import com.intellij.diagnostic.DiagnosticBundle;
 import com.intellij.openapi.application.ApplicationNamesInfo;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.SystemInfo;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -22,8 +22,8 @@ public class DisablePluginWarningDialog extends DialogWrapper {
   public static final int DISABLE_AND_RESTART_EXIT_CODE = NEXT_USER_EXIT_CODE;
   private final boolean myRestartCapable;
 
-  public DisablePluginWarningDialog(Component c, String pluginName, boolean hasDependants, boolean restartCapable) {
-    super(c, false);
+  public DisablePluginWarningDialog(Project project, String pluginName, boolean hasDependants, boolean restartCapable) {
+    super(project, false);
     myRestartCapable = restartCapable;
     myPromptLabel.setText(
       DiagnosticBundle.message(hasDependants ? "error.dialog.disable.plugin.prompt.dependants" : "error.dialog.disable.plugin.prompt",

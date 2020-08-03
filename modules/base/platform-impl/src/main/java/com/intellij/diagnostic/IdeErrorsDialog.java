@@ -57,7 +57,6 @@ import consulo.logging.attachment.Attachment;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SimpleReference;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -79,7 +78,6 @@ import java.util.*;
 public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListener, TypeSafeDataProvider {
   private static final Logger LOG = Logger.getInstance(IdeErrorsDialog.class);
   private final boolean myInternalMode;
-  @NonNls
   private static final String ACTIVE_TAB_OPTION = IdeErrorsDialog.class.getName() + "activeTab";
   public static Key<String> CURRENT_TRACE_KEY = Key.create("current_stack_trace_key");
 
@@ -115,10 +113,12 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
   @Nullable
   private AnalyzeAction myAnalyzeAction;
   private boolean myMute;
+  private final Project myProject;
 
-  public IdeErrorsDialog(MessagePool messagePool, @Nullable LogMessage defaultMessage) {
-    super(JOptionPane.getRootFrame(), false);
+  public IdeErrorsDialog(MessagePool messagePool, @Nullable Project project, @Nullable LogMessage defaultMessage) {
+    super(project, true);
     myMessagePool = messagePool;
+    myProject = project;
     myInternalMode = ApplicationProperties.isInSandbox();
     setTitle(DiagnosticBundle.message("error.list.title"));
     init();
@@ -238,11 +238,13 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
     }
 
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       goForward();
     }
 
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       Presentation presentation = e.getPresentation();
@@ -259,11 +261,13 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
       }
     }
 
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       goBack();
     }
 
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       Presentation presentation = e.getPresentation();
@@ -424,7 +428,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     });
 
     Application app = ApplicationManager.getApplication();
-    DisablePluginWarningDialog d = new DisablePluginWarningDialog(getRootPane(), plugin.getName(), hasDependants.get(), app.isRestartCapable());
+    DisablePluginWarningDialog d = new DisablePluginWarningDialog(myProject, plugin.getName(), hasDependants.get(), app.isRestartCapable());
     d.show();
     switch (d.getExitCode()) {
       case CANCEL_EXIT_CODE:
@@ -721,7 +725,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
       return throwable.getMessage();
     }
     else {
-      return new StringBuffer().append(message.getMessage()).append("\n").append(message.getThrowableText()).toString();
+      return message.getMessage() + "\n" + message.getThrowableText();
     }
   }
 
@@ -742,6 +746,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     }
   }
 
+  @RequiredUIAccess
   @Override
   public JComponent getPreferredFocusedComponent() {
     final int selectedIndex = myTabs.getSelectedIndex();
@@ -1009,7 +1014,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     }
   }
 
-  private static String md5(String buffer, @NonNls String key) throws NoSuchAlgorithmException {
+  private static String md5(String buffer, String key) throws NoSuchAlgorithmException {
     MessageDigest md5 = MessageDigest.getInstance("MD5");
     md5.update(buffer.getBytes());
     byte[] code = md5.digest(key.getBytes());
