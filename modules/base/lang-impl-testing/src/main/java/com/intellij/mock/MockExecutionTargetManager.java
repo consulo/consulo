@@ -19,6 +19,8 @@ import com.intellij.execution.DefaultExecutionTarget;
 import com.intellij.execution.ExecutionTarget;
 import com.intellij.execution.ExecutionTargetManager;
 import com.intellij.execution.RunnerAndConfigurationSettings;
+import consulo.annotation.access.RequiredReadAction;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -28,23 +30,27 @@ import java.util.List;
 public class MockExecutionTargetManager extends ExecutionTargetManager {
   private ExecutionTarget myTarget = DefaultExecutionTarget.INSTANCE;
 
+  @RequiredReadAction
   @Nonnull
   @Override
   public ExecutionTarget getActiveTarget() {
     return myTarget;
   }
 
+  @RequiredReadAction
   @Override
   public void setActiveTarget(@Nonnull ExecutionTarget target) {
     myTarget = target;
   }
 
+  @RequiredReadAction
   @Nonnull
   @Override
   public List<ExecutionTarget> getTargetsFor(@Nullable RunnerAndConfigurationSettings settings) {
     return Collections.singletonList(DefaultExecutionTarget.INSTANCE);
   }
 
+  @RequiredReadAction
   @Override
   public void update() {
   }

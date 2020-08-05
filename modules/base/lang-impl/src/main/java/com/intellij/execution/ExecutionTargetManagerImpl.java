@@ -15,25 +15,31 @@
  */
 package com.intellij.execution;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.*;
-import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ReadAction;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
 @State(name = "ExecutionTargetManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 @Singleton
 public class ExecutionTargetManagerImpl extends ExecutionTargetManager implements PersistentStateComponent<Element> {
+  @Nonnull
+  private final Application myApplication;
   @Nonnull
   private final Project myProject;
   @Nonnull
@@ -45,8 +51,23 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
   private String mySavedActiveTargetId;
 
   @Inject
-  public ExecutionTargetManagerImpl(@Nonnull Project project) {
+  public ExecutionTargetManagerImpl(@Nonnull Application application, @Nonnull Project project) {
+    myApplication = application;
     myProject = project;
+
+    project.getMessageBus().connect().subscribe(RunManagerListener.TOPIC, new RunManagerListener() {
+      @Override
+      public void runConfigurationChanged(@Nonnull RunnerAndConfigurationSettings settings) {
+        if (settings == RunManager.getInstance(myProject).getSelectedConfiguration()) {
+          updateActiveTarget(settings);
+        }
+      }
+
+      @Override
+      public void runConfigurationSelected(@Nullable RunnerAndConfigurationSettings selected) {
+        ReadAction.run(() -> updateActiveTarget(selected));
+      }
+    });
   }
 
   @Override
@@ -69,27 +90,11 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
     }
   }
 
-  @Override
-  public void afterLoadState() {
-    myProject.getMessageBus().connect().subscribe(RunManagerListener.TOPIC, new RunManagerListener() {
-      @Override
-      public void runConfigurationChanged(@Nonnull RunnerAndConfigurationSettings settings) {
-        if (settings == RunManager.getInstance(myProject).getSelectedConfiguration()) {
-          updateActiveTarget(settings);
-        }
-      }
-
-      @Override
-      public void runConfigurationSelected(@Nullable RunnerAndConfigurationSettings selected) {
-        updateActiveTarget(selected);
-      }
-    });
-  }
-
+  @RequiredReadAction
   @Nonnull
   @Override
   public ExecutionTarget getActiveTarget() {
-    ApplicationManager.getApplication().assertReadAccessAllowed();
+    myApplication.assertReadAccessAllowed();
     synchronized (myActiveTargetLock) {
       if (myActiveTarget == null) {
         updateActiveTarget();
@@ -98,9 +103,10 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
     }
   }
 
+  @RequiredUIAccess
   @Override
   public void setActiveTarget(@Nonnull ExecutionTarget target) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    myApplication.assertIsDispatchThread();
     synchronized (myActiveTargetLock) {
       updateActiveTarget(RunManager.getInstance(myProject).getSelectedConfiguration(), target);
     }
@@ -152,14 +158,15 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
     return null;
   }
 
+  @RequiredReadAction
   @Nonnull
   @Override
   public List<ExecutionTarget> getTargetsFor(@Nullable RunnerAndConfigurationSettings settings) {
-    ApplicationManager.getApplication().assertReadAccessAllowed();
+    myApplication.assertReadAccessAllowed();
     if (settings == null) return Collections.emptyList();
 
-    List<ExecutionTarget> result = new ArrayList<ExecutionTarget>();
-    for (ExecutionTargetProvider eachTargetProvider : Extensions.getExtensions(ExecutionTargetProvider.EXTENSION_NAME)) {
+    List<ExecutionTarget> result = new ArrayList<>();
+    for (ExecutionTargetProvider eachTargetProvider : ExecutionTargetProvider.EXTENSION_NAME.getExtensionList()) {
       for (ExecutionTarget eachTarget : eachTargetProvider.getTargets(myProject, settings)) {
         if (canRun(settings, eachTarget)) result.add(eachTarget);
       }
@@ -167,9 +174,10 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
     return Collections.unmodifiableList(result);
   }
 
+  @RequiredUIAccess
   @Override
   public void update() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    myApplication.assertIsDispatchThread();
     updateActiveTarget();
   }
 }

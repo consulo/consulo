@@ -19,6 +19,9 @@ import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.Topic;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.ui.annotation.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -54,7 +57,7 @@ public abstract class ExecutionTargetManager {
     return result;
   }
 
-  public static boolean canRun(@javax.annotation.Nullable RunnerAndConfigurationSettings settings, @javax.annotation.Nullable ExecutionTarget target) {
+  public static boolean canRun(@Nullable RunnerAndConfigurationSettings settings, @Nullable ExecutionTarget target) {
     return settings != null && target != null && settings.canRunOn(target) && target.canRun(settings);
   }
 
@@ -67,12 +70,16 @@ public abstract class ExecutionTargetManager {
   }
 
   @Nonnull
+  @RequiredReadAction
   public abstract ExecutionTarget getActiveTarget();
 
+  @RequiredUIAccess
   public abstract void setActiveTarget(@Nonnull ExecutionTarget target);
 
   @Nonnull
+  @RequiredReadAction
   public abstract List<ExecutionTarget> getTargetsFor(@Nullable RunnerAndConfigurationSettings settings);
 
+  @RequiredUIAccess
   public abstract void update();
 }
