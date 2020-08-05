@@ -51,7 +51,12 @@ public abstract class RunManager {
    * @return all registered configuration types.
    */
   @Nonnull
-  public abstract ConfigurationType[] getConfigurationFactories();
+  public List<ConfigurationType> getConfigurationFactories() {
+    return getConfigurationFactories(true);
+  }
+
+  @Nonnull
+  public abstract List<ConfigurationType> getConfigurationFactories(boolean includeUnknown);
 
   /**
    * Returns the list of all configurations of a specified type.

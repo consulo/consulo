@@ -254,7 +254,7 @@ class RunConfigurable extends BaseConfigurable {
       }
     });
     final RunManagerEx manager = getRunManager();
-    final ConfigurationType[] factories = manager.getConfigurationFactories();
+    final List<ConfigurationType> factories = manager.getConfigurationFactories();
     for (ConfigurationType type : factories) {
       final List<RunnerAndConfigurationSettings> configurations = manager.getConfigurationSettingsList(type);
       if (!configurations.isEmpty()) {
@@ -282,7 +282,7 @@ class RunConfigurable extends BaseConfigurable {
 
     // add defaults
     final DefaultMutableTreeNode defaults = new DefaultMutableTreeNode(DEFAULTS);
-    final ConfigurationType[] configurationTypes = RunManagerImpl.getInstanceImpl(myProject).getConfigurationFactories();
+    final List<ConfigurationType> configurationTypes = RunManagerImpl.getInstanceImpl(myProject).getConfigurationFactories();
     for (final ConfigurationType type : configurationTypes) {
       if (!(type instanceof UnknownConfigurationType)) {
         ConfigurationFactory[] configurationFactories = type.getConfigurationFactories();
@@ -695,8 +695,8 @@ class RunConfigurable extends BaseConfigurable {
     updateActiveConfigurationFromSelected();
 
     final RunManagerImpl manager = getRunManager();
-    final ConfigurationType[] types = manager.getConfigurationFactories();
-    List<ConfigurationType> configurationTypes = new ArrayList<ConfigurationType>();
+    final List<ConfigurationType> types = manager.getConfigurationFactories();
+    List<ConfigurationType> configurationTypes = new ArrayList<>();
     for (int i = 0; i < myRoot.getChildCount(); i++) {
       final DefaultMutableTreeNode node = (DefaultMutableTreeNode)myRoot.getChildAt(i);
       Object userObject = node.getUserObject();
@@ -1171,7 +1171,7 @@ class RunConfigurable extends BaseConfigurable {
     }
 
     private void showAddPopup(final boolean showApplicableTypesOnly) {
-      ConfigurationType[] allTypes = getRunManager().getConfigurationFactories(false);
+      List<ConfigurationType> allTypes = getRunManager().getConfigurationFactories(false);
       final List<ConfigurationType> configurationTypes = getTypesToShow(showApplicableTypesOnly, allTypes);
       Collections.sort(configurationTypes, new Comparator<ConfigurationType>() {
         @Override
@@ -1179,7 +1179,7 @@ class RunConfigurable extends BaseConfigurable {
           return type1.getDisplayName().compareToIgnoreCase(type2.getDisplayName());
         }
       });
-      final int hiddenCount = allTypes.length - configurationTypes.size();
+      final int hiddenCount = allTypes.size() - configurationTypes.size();
       if (hiddenCount > 0) {
         configurationTypes.add(HIDDEN_ITEMS_STUB);
       }
@@ -1266,9 +1266,9 @@ class RunConfigurable extends BaseConfigurable {
       popup.showUnderneathOf(myToolbarDecorator.getActionsPanel());
     }
 
-    private List<ConfigurationType> getTypesToShow(boolean showApplicableTypesOnly, ConfigurationType[] allTypes) {
+    private List<ConfigurationType> getTypesToShow(boolean showApplicableTypesOnly, List<ConfigurationType> allTypes) {
       if (showApplicableTypesOnly) {
-        List<ConfigurationType> applicableTypes = new ArrayList<ConfigurationType>();
+        List<ConfigurationType> applicableTypes = new ArrayList<>();
         for (ConfigurationType type : allTypes) {
           if (isApplicable(type)) {
             applicableTypes.add(type);
@@ -1276,7 +1276,7 @@ class RunConfigurable extends BaseConfigurable {
         }
         return applicableTypes;
       }
-      return new ArrayList<ConfigurationType>(Arrays.asList(allTypes));
+      return new ArrayList<ConfigurationType>(allTypes);
     }
 
     private boolean isApplicable(ConfigurationType type) {

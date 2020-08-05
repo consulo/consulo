@@ -29,16 +29,20 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootAdapter;
 import com.intellij.openapi.roots.ModuleRootEvent;
+import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.util.JDOMExternalizableStringList;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.IconDeferrer;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import consulo.disposer.Disposable;
+import consulo.execution.impl.ConfigurationTypeCache;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import consulo.util.ProjectPropertiesComponent;
@@ -46,7 +50,6 @@ import consulo.util.dataholder.Key;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -59,9 +62,14 @@ import java.util.*;
 public class RunManagerImpl extends RunManagerEx implements PersistentStateComponent<Element>, Disposable {
   private static final Logger LOG = Logger.getInstance(RunManagerImpl.class);
 
-  private final Project myProject;
+  protected static final String CONFIGURATION = "configuration";
+  protected static final String RECENT = "recent_temporary";
+  protected static final String NAME_ATTR = "name";
+  protected static final String SELECTED_ATTR = "selected";
+  private static final String METHOD = "method";
+  private static final String OPTION = "option";
 
-  private final Map<String, ConfigurationType> myTypesByName = new LinkedHashMap<>();
+  private final Project myProject;
 
   private final Map<String, RunnerAndConfigurationSettings> myTemplateConfigurationsMap = new TreeMap<>();
   private final Map<String, RunnerAndConfigurationSettings> myConfigurations = new LinkedHashMap<>(); // template configurations are not included here
@@ -79,32 +87,21 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   private final Map<String, Long> myIconCheckTimes = new HashMap<>();
   private final Map<String, Long> myIconCalcTime = Collections.synchronizedMap(new HashMap<String, Long>());
 
-  @NonNls
-  protected static final String CONFIGURATION = "configuration";
-  protected static final String RECENT = "recent_temporary";
-  private ConfigurationType[] myTypes;
   private final RunManagerConfig myConfig;
-  @NonNls
-  protected static final String NAME_ATTR = "name";
-  @NonNls
-  protected static final String SELECTED_ATTR = "selected";
-  @NonNls
-  private static final String METHOD = "method";
-  @NonNls
-  private static final String OPTION = "option";
 
   private List<Element> myUnknownElements = null;
   private final JDOMExternalizableStringList myOrder = new JDOMExternalizableStringList();
   private final ArrayList<RunConfiguration> myRecentlyUsedTemporaries = new ArrayList<>();
   private boolean myOrdered = true;
 
+  private ConfigurationTypeCache myTypeCache;
+
   @Inject
   public RunManagerImpl(@Nonnull Project project, @Nonnull ProjectPropertiesComponent propertiesComponent) {
     myConfig = new RunManagerConfig(propertiesComponent);
     myProject = project;
 
-    initializeConfigurationTypes(ConfigurationType.CONFIGURATION_TYPE_EP.getExtensions());
-    myProject.getMessageBus().connect(myProject).subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
+    myProject.getMessageBus().connect(myProject).subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         RunnerAndConfigurationSettings configuration = getSelectedConfiguration();
@@ -115,20 +112,15 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     });
   }
 
-  // separate method needed for tests
-  public final void initializeConfigurationTypes(@Nonnull final ConfigurationType[] factories) {
-    Arrays.sort(factories, (o1, o2) -> o1.getDisplayName().compareTo(o2.getDisplayName()));
-
-    final ArrayList<ConfigurationType> types = new ArrayList<>(Arrays.asList(factories));
-    types.add(UnknownConfigurationType.INSTANCE);
-    myTypes = types.toArray(new ConfigurationType[types.size()]);
-
-    for (final ConfigurationType type : factories) {
-      myTypesByName.put(type.getId(), type);
+  @Nonnull
+  private ConfigurationTypeCache typeCache() {
+    ConfigurationTypeCache typeCache = myTypeCache;
+    if(typeCache == null) {
+      ConfigurationTypeCache cache = new ConfigurationTypeCache(ConfigurationType.CONFIGURATION_TYPE_EP.getExtensionList());
+      myTypeCache = cache;
+      return cache;
     }
-
-    final UnknownConfigurationType broken = UnknownConfigurationType.INSTANCE;
-    myTypesByName.put(broken.getId(), broken);
+    return typeCache;
   }
 
   @Override
@@ -170,26 +162,21 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     return myConfig;
   }
 
-  @Override
   @Nonnull
-  public ConfigurationType[] getConfigurationFactories() {
-    return myTypes.clone();
-  }
-
-  public ConfigurationType[] getConfigurationFactories(final boolean includeUnknown) {
-    final ConfigurationType[] configurationTypes = myTypes.clone();
-    if (!includeUnknown) {
-      final List<ConfigurationType> types = new ArrayList<>();
-      for (ConfigurationType configurationType : configurationTypes) {
-        if (!(configurationType instanceof UnknownConfigurationType)) {
-          types.add(configurationType);
-        }
-      }
-
-      return types.toArray(new ConfigurationType[types.size()]);
+  @Override
+  public List<ConfigurationType> getConfigurationFactories(final boolean includeUnknown) {
+    if(includeUnknown) {
+      return typeCache().getTypes();
     }
 
-    return configurationTypes;
+    final List<ConfigurationType> types = new ArrayList<>();
+    for (ConfigurationType configurationType : typeCache().getTypes()) {
+      if (!(configurationType instanceof UnknownConfigurationType)) {
+        types.add(configurationType);
+      }
+    }
+
+    return types;
   }
 
   /**
@@ -800,8 +787,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   // used by MPS, don't delete
   public void clearAll() {
     clear(true);
-    myTypesByName.clear();
-    initializeConfigurationTypes(new ConfigurationType[0]);
+    myTypeCache = new ConfigurationTypeCache(Collections.emptyList());
   }
 
   private void clear(boolean allConfigurations) {
@@ -891,52 +877,20 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   }
 
   @Nullable
-  public ConfigurationType getConfigurationType(final String typeName) {
-    return myTypesByName.get(typeName);
-  }
-
-  @Nullable
   public ConfigurationFactory getFactory(final String typeName, String factoryName) {
     return getFactory(typeName, factoryName, false);
   }
 
   @Nullable
   public ConfigurationFactory getFactory(final String typeName, String factoryName, boolean checkUnknown) {
-    final ConfigurationType type = myTypesByName.get(typeName);
+    final ConfigurationType type = typeCache().getConfigurationType(typeName);
     if (type == null && checkUnknown && typeName != null) {
       UnknownFeaturesCollector.getInstance(myProject).registerUnknownFeature(ConfigurationType.CONFIGURATION_TYPE_EP.getName(), typeName);
     }
     if (factoryName == null) {
       factoryName = type != null ? type.getConfigurationFactories()[0].getName() : null;
     }
-    return findFactoryOfTypeNameByName(typeName, factoryName);
-  }
-
-
-  @Nullable
-  private ConfigurationFactory findFactoryOfTypeNameByName(final String typeName, final String factoryName) {
-    ConfigurationType type = myTypesByName.get(typeName);
-    if (type == null) {
-      type = myTypesByName.get(UnknownConfigurationType.NAME);
-    }
-
-    return findFactoryOfTypeByName(type, factoryName);
-  }
-
-  @Nullable
-  private static ConfigurationFactory findFactoryOfTypeByName(final ConfigurationType type, final String factoryName) {
-    if (factoryName == null) return null;
-
-    if (type instanceof UnknownConfigurationType) {
-      return type.getConfigurationFactories()[0];
-    }
-
-    final ConfigurationFactory[] factories = type.getConfigurationFactories();
-    for (final ConfigurationFactory factory : factories) {
-      if (factoryName.equals(factory.getName())) return factory;
-    }
-
-    return null;
+    return typeCache().findFactoryOfTypeNameByName(typeName, factoryName);
   }
 
   @Override
@@ -1278,7 +1232,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   }
 
   private void fireRunConfigurationSelected() {
-    getEventPublisher().runConfigurationSelected();
+    getEventPublisher().runConfigurationSelected(getSelectedConfiguration());
   }
 
   @Override

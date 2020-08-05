@@ -218,11 +218,6 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.execution.RunManager</interface-class>
-      <implementation-class>com.intellij.execution.impl.RunManagerImpl</implementation-class>
-      <loadForDefaultProject/>
-    </component>
-    <component>
       <interface-class>com.intellij.execution.ExecutionTargetManager</interface-class>
       <implementation-class>com.intellij.execution.ExecutionTargetManagerImpl</implementation-class>
       <loadForDefaultProject/>

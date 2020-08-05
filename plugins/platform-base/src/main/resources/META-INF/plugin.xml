@@ -2745,6 +2745,8 @@
     <projectService serviceImplementation="com.intellij.openapi.vcs.update.RestoreUpdateTree"/>
 
     <postStartupActivity implementation="com.intellij.openapi.vcs.update.RestoreUpdateTree$MyStartUpActivity"/>
+
+    <projectService serviceInterface="com.intellij.execution.RunManager" serviceImplementation="com.intellij.execution.impl.RunManagerImpl" />
   </extensions>
 
   <applicationListeners>

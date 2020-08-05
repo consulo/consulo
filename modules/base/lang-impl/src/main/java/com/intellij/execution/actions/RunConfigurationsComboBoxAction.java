@@ -156,7 +156,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         allActionsGroup.addSeparator();
       }
 
-      final ConfigurationType[] types = runManager.getConfigurationFactories();
+      final List<ConfigurationType> types = runManager.getConfigurationFactories();
       for (ConfigurationType type : types) {
         final DefaultActionGroup actionGroup = new DefaultActionGroup();
         Map<String, List<RunnerAndConfigurationSettings>> structure = runManager.getStructure(type);

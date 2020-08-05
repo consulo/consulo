@@ -21,8 +21,8 @@ import java.util.Map;
 public class MockRunManager extends RunManagerEx {
   @Nonnull
   @Override
-  public ConfigurationType[] getConfigurationFactories() {
-    return new ConfigurationType[0];
+  public List<ConfigurationType> getConfigurationFactories(boolean includeUnknown) {
+    return Collections.emptyList();
   }
 
   @Nonnull

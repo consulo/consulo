@@ -80,8 +80,8 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
       }
 
       @Override
-      public void runConfigurationSelected() {
-        updateActiveTarget();
+      public void runConfigurationSelected(@Nullable RunnerAndConfigurationSettings selected) {
+        updateActiveTarget(selected);
       }
     });
   }

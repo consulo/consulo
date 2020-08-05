@@ -28,6 +28,8 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 
+import java.util.List;
+
 public class DumpConfigurationTypesAction extends AnAction implements DumbAware {
   public DumpConfigurationTypesAction() {
     super("Dump Configurations");
@@ -36,8 +38,7 @@ public class DumpConfigurationTypesAction extends AnAction implements DumbAware 
   @Override
   public void actionPerformed(AnActionEvent e) {
     final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
-    final ConfigurationType[] factories =
-      RunManager.getInstance(project).getConfigurationFactories();
+    final List<ConfigurationType> factories = RunManager.getInstance(project).getConfigurationFactories();
     for (ConfigurationType factory : factories) {
       System.out.println(factory.getDisplayName() + " : " + factory.getId());
     }

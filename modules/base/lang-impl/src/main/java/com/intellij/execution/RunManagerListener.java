@@ -16,13 +16,23 @@
 package com.intellij.execution;
 
 import com.intellij.util.messages.Topic;
+import consulo.annotation.DeprecationInfo;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.EventListener;
 
 public interface RunManagerListener extends EventListener {
   Topic<RunManagerListener> TOPIC = new Topic<>("RunManager", RunManagerListener.class);
 
+  @SuppressWarnings("deprecation")
+  default void runConfigurationSelected(@Nullable RunnerAndConfigurationSettings settings) {
+    runConfigurationSelected();
+  }
+
+  @Deprecated
+  @DeprecationInfo("Use #runConfigurationSelected(RunnerAndConfigurationSettings)")
   default void runConfigurationSelected() {
   }
 
