@@ -30,6 +30,6 @@ public class ShowStartupManagerAction extends AnAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    FirstStartCustomizeUtil.show(false);
+    FirstStartCustomizeUtil.showDialog(false);
   }
 }

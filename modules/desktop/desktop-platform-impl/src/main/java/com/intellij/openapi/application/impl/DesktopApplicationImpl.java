@@ -35,7 +35,6 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MessageDialogBuilder;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.text.StringUtil;
@@ -60,6 +59,7 @@ import consulo.start.CommandLineArgs;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.AWTUIAccessImpl;
+import consulo.util.lang.ref.SimpleReference;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.TestOnly;
 import sun.awt.AWTAccessor;
@@ -102,7 +102,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     }
   };
 
-  public DesktopApplicationImpl(boolean isHeadless, @Nonnull Ref<? extends StartupProgress> splashRef) {
+  public DesktopApplicationImpl(boolean isHeadless, @Nonnull SimpleReference<? extends StartupProgress> splashRef) {
     super(splashRef);
 
     ApplicationManager.setApplication(this);
@@ -112,7 +112,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     myIsInternal = ApplicationProperties.isInternal();
 
     String debugDisposer = System.getProperty("idea.disposer.debug");
-    consulo.disposer.Disposer.setDebugMode((myIsInternal || "on".equals(debugDisposer)) && !"off".equals(debugDisposer));
+    Disposer.setDebugMode((myIsInternal || "on".equals(debugDisposer)) && !"off".equals(debugDisposer));
 
     myHeadlessMode = isHeadless;
 
@@ -120,7 +120,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     myGatherStatistics = LOG.isDebugEnabled() || isInternal();
 
     if (!isHeadless) {
-      consulo.disposer.Disposer.register(this, Disposable.newDisposable(), "ui");
+      Disposer.register(this, Disposable.newDisposable(), "ui");
 
       StartupUtil.addExternalInstanceListener(commandLineArgs -> {
         LOG.info("ApplicationImpl.externalInstanceListener invocation");
@@ -148,7 +148,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
       AppScheduledExecutorService service = (AppScheduledExecutorService)AppExecutorUtil.getAppScheduledExecutorService();
       Thread thread = service.getPeriodicTasksThread();
       AWTAutoShutdown.getInstance().notifyThreadBusy(thread); // needed for EDT not to exit suddenly
-      consulo.disposer.Disposer.register(this, () -> {
+      Disposer.register(this, () -> {
         AWTAutoShutdown.getInstance().notifyThreadFree(thread); // allow for EDT to exit - needed for Upsource
       });
       return Thread.currentThread();
@@ -192,9 +192,9 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
         }
       }
     }
-    runWriteAction(() -> consulo.disposer.Disposer.dispose(DesktopApplicationImpl.this));
+    runWriteAction(() -> Disposer.dispose(DesktopApplicationImpl.this));
 
-    consulo.disposer.Disposer.assertIsEmpty();
+    Disposer.assertIsEmpty();
     return true;
   }
 

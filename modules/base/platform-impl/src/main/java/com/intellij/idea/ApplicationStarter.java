@@ -15,21 +15,25 @@
  */
 package com.intellij.idea;
 
-import com.intellij.idea.starter.ApplicationPostStarter;
+import com.intellij.ide.StartupProgress;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.util.ReflectionUtil;
 import consulo.application.TransactionGuardEx;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.util.StatCollector;
+import consulo.localize.LocalizeManager;
+import consulo.localize.impl.LocalizeManagerImpl;
 import consulo.logging.Logger;
+import consulo.plugins.internal.PluginsInitializeInfo;
+import consulo.plugins.internal.PluginsLoader;
 import consulo.start.CommandLineArgs;
+import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.Constructor;
+import javax.annotation.Nullable;
 
-public class ApplicationStarter {
+public abstract class ApplicationStarter {
   private static final Logger LOG = Logger.getInstance(ApplicationStarter.class);
 
   private static ApplicationStarter ourInstance;
@@ -44,38 +48,49 @@ public class ApplicationStarter {
   }
 
   private final CommandLineArgs myArgs;
-  private final Class<? extends ApplicationPostStarter> myPostStarterClass;
   private boolean myPerformProjectLoad = true;
-  private ApplicationPostStarter myPostStarter;
 
-  public ApplicationStarter(@Nonnull Class<? extends ApplicationPostStarter> postStarterClass, @Nonnull CommandLineArgs args) {
-    myPostStarterClass = postStarterClass;
+  protected final SimpleReference<StartupProgress> mySplashRef = SimpleReference.create();
+
+  protected PluginsInitializeInfo myPluginsInitializeInfo;
+
+  public ApplicationStarter(@Nonnull CommandLineArgs args) {
     LOG.assertTrue(ourInstance == null);
     //noinspection AssignmentToStaticFieldFromInstanceMethod
     ourInstance = this;
 
     myArgs = args;
 
-    patchSystem(false);
-
-    myPostStarter = createPostStarter();
-
-    myPostStarter.initApplication(false, args);
-  }
-
-  protected void patchSystem(boolean headless) {
+    initApplication(false, args);
   }
 
   @Nonnull
-  private ApplicationPostStarter createPostStarter() {
-    try {
-      Constructor<? extends ApplicationPostStarter> constructor = myPostStarterClass.getConstructor(ApplicationStarter.class);
-      constructor.setAccessible(true);
-      return ReflectionUtil.createInstance(constructor, this);
+  protected abstract Application createApplication(boolean isHeadlessMode, SimpleReference<StartupProgress> splashRef, CommandLineArgs args);
+
+  protected abstract void main(StatCollector stat, Runnable appInitalizeMark, ApplicationEx app, boolean newConfigFolder, @Nonnull CommandLineArgs args);
+
+  public boolean needStartInTransaction() {
+    return false;
+  }
+
+  @Nullable
+  public abstract StartupProgress createSplash(CommandLineArgs args);
+
+  protected void initApplication(boolean isHeadlessMode, CommandLineArgs args) {
+    StartupProgress splash = createSplash(args);
+    if (splash != null) {
+      mySplashRef.set(splash);
     }
-    catch (NoSuchMethodException e) {
-      throw new Error(e);
-    }
+
+    PluginsLoader.setVersionChecker();
+
+    myPluginsInitializeInfo = PluginsLoader.initPlugins(splash, isHeadlessMode);
+
+    LocalizeManagerImpl localizeManager = (LocalizeManagerImpl)LocalizeManager.getInstance();
+
+    localizeManager.initialize();
+
+    createApplication(isHeadlessMode, mySplashRef, args);
   }
 
   public void run(StatCollector stat, Runnable appInitalizeMark, boolean newConfigFolder) {
@@ -83,14 +98,12 @@ public class ApplicationStarter {
       ApplicationEx app = (ApplicationEx)Application.get();
       app.load(ContainerPathManager.get().getOptionsPath());
 
-      if (myPostStarter.needStartInTransaction()) {
-        ((TransactionGuardEx)TransactionGuard.getInstance()).performUserActivity(() -> myPostStarter.main(stat, appInitalizeMark, app, newConfigFolder, myArgs));
+      if (needStartInTransaction()) {
+        ((TransactionGuardEx)TransactionGuard.getInstance()).performUserActivity(() -> main(stat, appInitalizeMark, app, newConfigFolder, myArgs));
       }
       else {
-        myPostStarter.main(stat, appInitalizeMark, app, newConfigFolder, myArgs);
+        main(stat, appInitalizeMark, app, newConfigFolder, myArgs);
       }
-
-      myPostStarter = null;
 
       ourLoaded = true;
     }

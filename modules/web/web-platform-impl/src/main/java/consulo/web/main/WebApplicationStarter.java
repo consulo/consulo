@@ -17,12 +17,11 @@ package consulo.web.main;
 
 import com.intellij.ide.StartupProgress;
 import com.intellij.idea.ApplicationStarter;
-import com.intellij.idea.starter.ApplicationPostStarter;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.util.Ref;
 import consulo.container.util.StatCollector;
 import consulo.start.CommandLineArgs;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.web.application.impl.WebApplicationImpl;
 import consulo.web.application.impl.WebStartupProgressImpl;
 
@@ -30,14 +29,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Used via reflection
  *
  * @author VISTALL
  * @since 15-May-16
  */
-public class WebPostStarter extends ApplicationPostStarter {
-  public WebPostStarter(ApplicationStarter applicationStarter) {
-    super(applicationStarter);
+public class WebApplicationStarter extends ApplicationStarter {
+  public WebApplicationStarter(@Nonnull CommandLineArgs args) {
+    super(args);
   }
 
   @Nullable
@@ -48,7 +46,7 @@ public class WebPostStarter extends ApplicationPostStarter {
 
   @Nonnull
   @Override
-  protected Application createApplication(boolean isHeadlessMode, Ref<StartupProgress> splashRef, CommandLineArgs args) {
+  protected Application createApplication(boolean isHeadlessMode, SimpleReference<StartupProgress> splashRef, CommandLineArgs args) {
     return new WebApplicationImpl(splashRef);
   }
 
@@ -72,10 +70,5 @@ public class WebPostStarter extends ApplicationPostStarter {
 
       SwingUtilities.invokeLater(() -> application.saveSettings());
     }, 1, 5, TimeUnit.MINUTES); */
-  }
-
-  @Override
-  public boolean needStartInTransaction() {
-    return false;
   }
 }

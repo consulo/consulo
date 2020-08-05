@@ -32,9 +32,6 @@ public interface AppLifecycleListener {
   default void projectOpenFailed() {
   }
 
-  default void appFrameCreated(final CommandLineArgs commandLineArgs, @Nonnull boolean willOpenProject) {
-  }
-
   /**
    * Fired before saving settings and before final 'can exit?' check. App may end up not closing if some of the 'can exit?' listeners
    * return false.

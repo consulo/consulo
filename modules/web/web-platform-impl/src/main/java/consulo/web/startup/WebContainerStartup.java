@@ -28,7 +28,7 @@ import consulo.container.util.StatCollector;
 import consulo.disposer.Disposer;
 import consulo.ui.web.servlet.UIIconServlet;
 import consulo.ui.web.servlet.UIServlet;
-import consulo.web.main.WebPostStarter;
+import consulo.web.main.WebApplicationStarter;
 import consulo.web.servlet.RootUIBuilder;
 import consulo.web.start.WebImportantFolderLocker;
 import org.eclipse.jetty.server.Server;
@@ -96,13 +96,14 @@ public class WebContainerStartup implements ContainerStartup {
   }
 
   private void startApplication(@Nonnull StatCollector stat, @Nonnull String[] args) {
+    PluginManager.installExceptionHandler();
+
     Runnable appInitializeMark = stat.mark(StatCollector.APP_INITIALIZE);
 
     StartupUtil.prepareAndStart(args, WebImportantFolderLocker::new, (newConfigFolder, commandLineArgs) -> {
-      ApplicationStarter app = new ApplicationStarter(WebPostStarter.class, commandLineArgs);
+      ApplicationStarter app = new WebApplicationStarter(commandLineArgs);
 
       AppExecutorUtil.getAppExecutorService().execute(() -> {
-        PluginManager.installExceptionHandler();
         app.run(stat, appInitializeMark, newConfigFolder);
       });
     });

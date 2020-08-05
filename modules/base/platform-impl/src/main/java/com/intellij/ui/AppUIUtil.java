@@ -30,7 +30,6 @@ import com.intellij.util.JBHiDPIScaledImage;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.ui.style.StyleManager;
-import org.jetbrains.annotations.NonNls;
 import sun.awt.AWTAccessor;
 
 import javax.annotation.Nonnull;
@@ -136,7 +135,7 @@ public class AppUIUtil {
     registerFont("/fonts/FiraCode-Retina.ttf");
   }
 
-  private static void registerFont(@NonNls String name) {
+  private static void registerFont(String name) {
     try {
       URL url = AppUIUtil.class.getResource(name);
       if (url == null) {

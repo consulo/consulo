@@ -10,7 +10,6 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Ref;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.impl.BaseApplication;
 import consulo.disposer.Disposer;
@@ -18,6 +17,7 @@ import consulo.injecting.InjectingContainerBuilder;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.web.application.WebApplication;
 import consulo.web.application.WebSession;
 
@@ -47,7 +47,7 @@ public class WebApplicationImpl extends BaseApplication implements WebApplicatio
     }
   };
 
-  public WebApplicationImpl(@Nonnull Ref<? extends StartupProgress> splash) {
+  public WebApplicationImpl(@Nonnull SimpleReference<? extends StartupProgress> splash) {
     super(splash);
 
     ApplicationManager.setApplication(this);

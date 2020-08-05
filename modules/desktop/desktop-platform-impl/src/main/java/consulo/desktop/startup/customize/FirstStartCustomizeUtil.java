@@ -32,6 +32,7 @@ import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.lang.StringUtil;
@@ -59,7 +60,8 @@ public class FirstStartCustomizeUtil {
 
   private static final int IMAGE_SIZE = 100;
 
-  public static void show(boolean initLaf) {
+  @RequiredUIAccess
+  public static void showDialog(boolean initLaf) {
     if (initLaf) {
       initLaf();
     }
@@ -107,7 +109,7 @@ public class FirstStartCustomizeUtil {
         new CustomizeIDEWizardDialog(pluginDescriptors, predefinedTemplateSets).show();
       });
     });
-    downloadDialog.show();
+    downloadDialog.showAsync();
   }
 
   public static void loadPredefinedTemplateSets(Map<String, PluginTemplate> predefinedTemplateSets) {

@@ -20,9 +20,8 @@ import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.DesktopImportantFolderLocker;
 import com.intellij.idea.StartupUtil;
-import com.intellij.idea.starter.DesktopApplicationPostStarter;
 import com.intellij.idea.starter.DesktopApplicationStarter;
-import com.intellij.ui.AppUIUtil;
+import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.bootstrap.concurrent.IdeaForkJoinWorkerThreadFactory;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.boot.ContainerStartup;
@@ -31,7 +30,6 @@ import consulo.logging.Logger;
 import consulo.vfs.impl.mediator.FileSystemMediatorOverride;
 
 import javax.annotation.Nonnull;
-import javax.swing.*;
 import java.io.IOException;
 import java.util.Map;
 
@@ -77,6 +75,8 @@ public class DesktopContainerStartup implements ContainerStartup {
 
     Runnable runnable = () -> {
       try {
+        PluginManager.installExceptionHandler();
+
         start(stat, appInitializeMark, args);
       }
       catch (Throwable t) {
@@ -116,15 +116,9 @@ public class DesktopContainerStartup implements ContainerStartup {
     // InternalLoggerFactory.setDefaultFactory(ApplicationInternalLoggerFactory.INSTANCE);
 
     StartupUtil.prepareAndStart(args, DesktopImportantFolderLocker::new, (newConfigFolder, commandLineArgs) -> {
-      AppUIUtil.updateWindowIcon(JOptionPane.getRootFrame(), false);
-      AppUIUtil.registerBundledFonts();
+      ApplicationStarter app = new DesktopApplicationStarter(commandLineArgs);
 
-      ApplicationStarter app = new DesktopApplicationStarter(DesktopApplicationPostStarter.class, commandLineArgs);
-
-      SwingUtilities.invokeLater(() -> {
-        PluginManager.installExceptionHandler();
-        app.run(stat, appInitalizeMark, newConfigFolder);
-      });
+      AppExecutorUtil.getAppExecutorService().execute(() -> app.run(stat, appInitalizeMark, newConfigFolder));
     });
   }
 }

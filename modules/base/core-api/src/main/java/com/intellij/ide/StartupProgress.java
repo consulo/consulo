@@ -16,6 +16,7 @@
 package com.intellij.ide;
 
 import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author Dmitry Avdeev
@@ -31,6 +32,7 @@ public interface StartupProgress extends Disposable {
    */
   void showProgress(String message, float progress);
 
+  @RequiredUIAccess
   default void dispose() {
   }
 }

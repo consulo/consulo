@@ -57,7 +57,6 @@ public class MacDockDelegate implements SystemDockImpl.Delegate {
   @Override
   public void updateRecentProjectsMenu() {
     RecentProjectsManager projectsManager = RecentProjectsManager.getInstance();
-    if (projectsManager == null) return;
     final AnAction[] recentProjectActions = projectsManager.getRecentProjectsActions(false);
     recentProjectsMenu.removeAll();
 

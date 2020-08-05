@@ -42,7 +42,6 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
@@ -73,6 +72,7 @@ import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.reflect.ReflectionUtil;
 import org.jetbrains.ide.PooledThreadExecutor;
 
@@ -176,9 +176,9 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   private static final int ourDumpThreadsOnLongWriteActionWaiting = Integer.getInteger("dump.threads.on.long.write.action.waiting", 0);
 
   @Nonnull
-  protected final Ref<? extends StartupProgress> mySplashRef;
+  protected final SimpleReference<? extends StartupProgress> mySplashRef;
 
-  protected final consulo.disposer.Disposable myLastDisposable = consulo.disposer.Disposable.newDisposable(); // will be disposed last
+  protected final Disposable myLastDisposable = Disposable.newDisposable(); // will be disposed last
   private final EventDispatcher<ApplicationListener> myDispatcher = EventDispatcher.create(ApplicationListener.class);
 
   private final ExecutorService myThreadExecutorsService = PooledThreadExecutor.INSTANCE;
@@ -200,7 +200,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   private final AtomicBoolean mySaveSettingsIsInProgress = new AtomicBoolean(false);
 
-  public BaseApplication(@Nonnull Ref<? extends StartupProgress> splashRef) {
+  public BaseApplication(@Nonnull SimpleReference<? extends StartupProgress> splashRef) {
     super(null, "Application", ExtensionAreaId.APPLICATION);
     mySplashRef = splashRef;
     myStartTime = System.currentTimeMillis();
