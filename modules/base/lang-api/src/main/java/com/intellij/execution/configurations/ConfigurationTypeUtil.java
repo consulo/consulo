@@ -29,7 +29,7 @@ public class ConfigurationTypeUtil {
 
   @Nonnull
   public static <T extends ConfigurationType> T findConfigurationType(@Nonnull Class<T> configurationTypeClass) {
-    List<ConfigurationType> extensionList = ConfigurationType.CONFIGURATION_TYPE_EP.getExtensionList();
+    List<ConfigurationType> extensionList = ConfigurationType.EP_NAME.getExtensionList();
     for (ConfigurationType type : extensionList) {
       if (configurationTypeClass.isInstance(type)) {
         //noinspection unchecked
@@ -45,7 +45,7 @@ public class ConfigurationTypeUtil {
 
   @Nullable
   public static ConfigurationType findConfigurationType(String configurationId) {
-    for (ConfigurationType type : ConfigurationType.CONFIGURATION_TYPE_EP.getExtensionList()) {
+    for (ConfigurationType type : ConfigurationType.EP_NAME.getExtensionList()) {
       if (type.getId().equals(configurationId)) {
         return type;
       }

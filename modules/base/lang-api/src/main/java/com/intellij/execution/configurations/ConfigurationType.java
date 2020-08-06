@@ -16,6 +16,7 @@
 package com.intellij.execution.configurations;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -27,7 +28,11 @@ import javax.annotation.Nullable;
  * @see ConfigurationTypeBase
  */
 public interface ConfigurationType {
-  ExtensionPointName<ConfigurationType> CONFIGURATION_TYPE_EP = ExtensionPointName.create("com.intellij.configurationType");
+  ExtensionPointName<ConfigurationType> EP_NAME = ExtensionPointName.create("com.intellij.configurationType");
+
+  @Deprecated
+  @DeprecationInfo("Use #EP_NAME")
+  ExtensionPointName<ConfigurationType> CONFIGURATION_TYPE_EP = EP_NAME;
 
   /**
    * Returns the display name of the configuration type. This is used, for example, to represent the configuration type in the run

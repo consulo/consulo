@@ -70,7 +70,7 @@ class PreferredProducerFind {
   @SuppressWarnings("deprecation")
   private static List<RuntimeConfigurationProducer> findAllProducers(Location location, ConfigurationContext context) {
     //todo load configuration types if not already loaded
-    ConfigurationType.CONFIGURATION_TYPE_EP.getExtensionList();
+    ConfigurationType.EP_NAME.getExtensionList();
     final List<RuntimeConfigurationProducer> configurationProducers = RuntimeConfigurationProducer.RUNTIME_CONFIGURATION_PRODUCER.getExtensionList();
     final ArrayList<RuntimeConfigurationProducer> producers = new ArrayList<>();
     for (final RuntimeConfigurationProducer prototype : configurationProducers) {

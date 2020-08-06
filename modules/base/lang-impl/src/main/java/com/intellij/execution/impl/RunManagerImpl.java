@@ -116,7 +116,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   private ConfigurationTypeCache typeCache() {
     ConfigurationTypeCache typeCache = myTypeCache;
     if(typeCache == null) {
-      ConfigurationTypeCache cache = new ConfigurationTypeCache(ConfigurationType.CONFIGURATION_TYPE_EP.getExtensionList());
+      ConfigurationTypeCache cache = new ConfigurationTypeCache(ConfigurationType.EP_NAME.getExtensionList());
       myTypeCache = cache;
       return cache;
     }
@@ -885,7 +885,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   public ConfigurationFactory getFactory(final String typeName, String factoryName, boolean checkUnknown) {
     final ConfigurationType type = typeCache().getConfigurationType(typeName);
     if (type == null && checkUnknown && typeName != null) {
-      UnknownFeaturesCollector.getInstance(myProject).registerUnknownFeature(ConfigurationType.CONFIGURATION_TYPE_EP.getName(), typeName);
+      UnknownFeaturesCollector.getInstance(myProject).registerUnknownFeature(ConfigurationType.EP_NAME.getName(), typeName);
     }
     if (factoryName == null) {
       factoryName = type != null ? type.getConfigurationFactories()[0].getName() : null;
