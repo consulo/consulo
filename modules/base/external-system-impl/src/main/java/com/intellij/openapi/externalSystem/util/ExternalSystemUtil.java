@@ -589,7 +589,7 @@ public class ExternalSystemUtil {
         final Ref<Boolean> result = new Ref<Boolean>(false);
         final Disposable disposable = Disposable.newDisposable();
 
-        project.getMessageBus().connect(disposable).subscribe(ExecutionManager.EXECUTION_TOPIC, new ExecutionAdapter() {
+        project.getMessageBus().connect(disposable).subscribe(ExecutionManager.EXECUTION_TOPIC, new ExecutionListener() {
           public void processStartScheduled(final String executorIdLocal, final ExecutionEnvironment environmentLocal) {
             if (executorId.equals(executorIdLocal) && environment.equals(environmentLocal)) {
               targetDone.down();
