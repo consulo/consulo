@@ -76,6 +76,8 @@
     <module>modules/base/external-storage-impl</module>
     <module>modules/base/external-system-api</module>
     <module>modules/base/external-system-impl</module>
+    <module>modules/base/external-tools-api</module>
+    <module>modules/base/external-tools-impl</module>
     <module>modules/base/graph-api</module>
     <module>modules/base/graph-impl</module>
     <module>modules/base/indexing-api</module>

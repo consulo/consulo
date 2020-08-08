@@ -140,7 +140,16 @@
       <artifactId>consulo-util-dataholder</artifactId>
       <version>${project.version}</version>
     </dependency>
-
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-external-tools-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-external-tools-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-util-rt</artifactId>

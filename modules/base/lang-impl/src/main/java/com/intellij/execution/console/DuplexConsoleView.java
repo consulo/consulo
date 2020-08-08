@@ -15,7 +15,6 @@
  */
 package com.intellij.execution.console;
 
-import com.google.common.collect.Lists;
 import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.filters.Filter;
 import com.intellij.execution.filters.HyperlinkInfo;
@@ -31,19 +30,19 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.actions.ScrollToTheEndToolbarAction;
 import com.intellij.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
 import com.intellij.openapi.project.DumbAware;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -217,7 +216,7 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
   @Nonnull
   @Override
   public AnAction[] createConsoleActions() {
-    List<AnAction> actions = Lists.newArrayList();
+    List<AnAction> actions = new ArrayList<>();
     actions.addAll(
             mergeConsoleActions(Arrays.asList(myPrimaryConsoleView.createConsoleActions()), Arrays.asList(mySecondaryConsoleView.createConsoleActions())));
     actions.add(mySwitchConsoleAction);

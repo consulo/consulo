@@ -52,7 +52,7 @@ import java.util.List;
  * @since 23:16/06.10.13
  */
 public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsChangeTask {
-  public static final Logger LOGGER = Logger.getInstance(BackgroundTaskByVfsChangeTaskImpl.class);
+  private static final Logger LOGGER = Logger.getInstance(BackgroundTaskByVfsChangeTaskImpl.class);
 
   private final Project myProject;
   private final BackgroundTaskByVfsParameters myParameters;

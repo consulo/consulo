@@ -17,7 +17,6 @@
 package com.intellij.tools;
 
 import com.intellij.CommonBundle;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.PropertyKey;
 
 import java.lang.ref.Reference;
@@ -30,7 +29,7 @@ import java.util.ResourceBundle;
 public class ToolsBundle {
   private static Reference<ResourceBundle> ourBundle;
 
-  @NonNls private static final String BUNDLE = "messages.ToolsBundle";
+  private static final String BUNDLE = "messages.ToolsBundle";
 
   private ToolsBundle() {
   }

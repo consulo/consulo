@@ -1,13 +1,11 @@
 package com.intellij.webcore.packaging;
 
-import com.google.common.collect.Lists;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.ActivityTracker;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
@@ -22,9 +20,10 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.StatusText;
 import com.intellij.util.ui.UIUtil;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -34,8 +33,8 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class InstalledPackagesPanel extends JPanel {
@@ -392,7 +391,7 @@ public class InstalledPackagesPanel extends JPanel {
     onUpdateStarted();
     final Application application = ApplicationManager.getApplication();
     application.executeOnPooledThread(() -> {
-      Collection<InstalledPackage> packages = Lists.newArrayList();
+      Collection<InstalledPackage> packages = new ArrayList<>();
       try {
         packages = packageManagementService.getInstalledPackages();
       }

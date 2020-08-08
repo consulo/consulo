@@ -19,12 +19,11 @@ import com.intellij.execution.BeforeRunTask;
 import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
 import com.intellij.openapi.actionSystem.DataContext;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.AsyncResult;
-import consulo.util.dataholder.Key;
+import consulo.logging.Logger;
 import consulo.ui.UIAccess;
+import consulo.util.dataholder.Key;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,7 +34,7 @@ import java.util.List;
  */
 public abstract class AbstractToolBeforeRunTask<ToolBeforeRunTask extends AbstractToolBeforeRunTask, T extends Tool>
   extends BeforeRunTask<ToolBeforeRunTask> {
-  @NonNls private final static String ACTION_ID_ATTRIBUTE = "actionId";
+  private final static String ACTION_ID_ATTRIBUTE = "actionId";
   private static final Logger LOG = Logger.getInstance(AbstractToolBeforeRunTask.class);
   protected String myToolActionId;
 

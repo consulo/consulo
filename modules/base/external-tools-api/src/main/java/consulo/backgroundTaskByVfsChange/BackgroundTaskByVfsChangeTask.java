@@ -17,26 +17,45 @@ package consulo.backgroundTaskByVfsChange;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.SmartList;
+import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.util.pointers.Named;
 
 import javax.annotation.Nonnull;
-
-import java.util.Collections;
-import java.util.List;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 01.05.14
+ * @since 22:47/06.10.13
  */
-public class BackgroundTaskByVfsChangeProviders {
+public interface BackgroundTaskByVfsChangeTask extends Named {
+  boolean isEnabled();
+
+  void setEnabled(boolean enabled);
+
   @Nonnull
-  public static List<BackgroundTaskByVfsChangeProvider> getProviders(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
-    List<BackgroundTaskByVfsChangeProvider> providers = new SmartList<BackgroundTaskByVfsChangeProvider>();
-    for (BackgroundTaskByVfsChangeProvider provider : BackgroundTaskByVfsChangeProvider.EP_NAME.getExtensions()) {
-      if (provider.validate(project, virtualFile)) {
-        providers.add(provider);
-      }
-    }
-    return providers.isEmpty() ? Collections.<BackgroundTaskByVfsChangeProvider>emptyList() : providers;
-  }
+  String getProviderName();
+
+  @Nullable
+  BackgroundTaskByVfsChangeProvider getProvider();
+
+  @Nonnull
+  VirtualFilePointer getVirtualFilePointer();
+
+  @Nonnull
+  BackgroundTaskByVfsParameters getParameters();
+
+  @Nonnull
+  @RequiredReadAction
+  String[] getGeneratedFilePaths();
+
+  @Nonnull
+  @RequiredReadAction
+  VirtualFile[] getGeneratedFiles();
+
+  @Nonnull
+  Project getProject();
+
+  @Nonnull
+  BackgroundTaskByVfsChangeTask clone();
 }

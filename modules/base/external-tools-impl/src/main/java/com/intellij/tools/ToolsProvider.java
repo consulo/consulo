@@ -15,9 +15,9 @@
  */
 package com.intellij.tools;
 
-import com.google.common.collect.Lists;
 import com.intellij.openapi.extensions.ExtensionPointName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,8 +29,8 @@ public abstract class ToolsProvider {
   public abstract List<Tool> getTools();
 
   public static List<Tool> getAllTools() {
-    List<Tool> result = Lists.newArrayList();
-    for (ToolsProvider provider : EP_NAME.getExtensions()) {
+    List<Tool> result = new ArrayList<>();
+    for (ToolsProvider provider : EP_NAME.getExtensionList()) {
       result.addAll(provider.getTools());
     }
 

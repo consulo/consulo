@@ -22,8 +22,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.ArrayUtil;
-import javax.annotation.Nonnull;
 import consulo.annotation.access.RequiredReadAction;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

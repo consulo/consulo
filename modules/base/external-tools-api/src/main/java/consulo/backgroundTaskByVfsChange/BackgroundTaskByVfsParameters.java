@@ -17,6 +17,7 @@ package consulo.backgroundTaskByVfsChange;
 
 import com.intellij.execution.CommonProgramRunConfigurationParameters;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -28,9 +29,9 @@ public interface BackgroundTaskByVfsParameters extends CommonProgramRunConfigura
   @Nonnull
   String getExePath();
 
-  void setOutPath(@javax.annotation.Nullable String path);
+  void setOutPath(@Nullable String path);
 
-  @javax.annotation.Nullable
+  @Nullable
   String getOutPath();
 
   void set(@Nonnull BackgroundTaskByVfsParameters parameters);

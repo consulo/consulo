@@ -17,44 +17,25 @@ package consulo.backgroundTaskByVfsChange;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
-import consulo.util.pointers.Named;
+
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import consulo.annotation.access.RequiredReadAction;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author VISTALL
- * @since 22:47/06.10.13
+ * @since 01.05.14
  */
-public interface BackgroundTaskByVfsChangeTask extends Named {
-  boolean isEnabled();
-
-  void setEnabled(boolean enabled);
-
+public class BackgroundTaskByVfsChangeProviders {
   @Nonnull
-  String getProviderName();
-
-  @Nullable
-  BackgroundTaskByVfsChangeProvider getProvider();
-
-  @Nonnull
-  VirtualFilePointer getVirtualFilePointer();
-
-  @Nonnull
-  BackgroundTaskByVfsParameters getParameters();
-
-  @Nonnull
-  @RequiredReadAction
-  String[] getGeneratedFilePaths();
-
-  @Nonnull
-  @RequiredReadAction
-  VirtualFile[] getGeneratedFiles();
-
-  @Nonnull
-  Project getProject();
-
-  @Nonnull
-  BackgroundTaskByVfsChangeTask clone();
+  public static List<BackgroundTaskByVfsChangeProvider> getProviders(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
+    List<BackgroundTaskByVfsChangeProvider> providers = new ArrayList<>();
+    for (BackgroundTaskByVfsChangeProvider provider : BackgroundTaskByVfsChangeProvider.EP_NAME.getExtensionList()) {
+      if (provider.validate(project, virtualFile)) {
+        providers.add(provider);
+      }
+    }
+    return providers.isEmpty() ? Collections.<BackgroundTaskByVfsChangeProvider>emptyList() : providers;
+  }
 }

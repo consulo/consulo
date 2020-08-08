@@ -44,7 +44,7 @@ import javax.annotation.Nonnull;
  * @author Eugene Zhuravlev
  *         Date: Mar 30, 2005
  */
-public class ToolRunProfile implements ModuleRunProfile{
+public class ToolRunProfile implements ModuleRunProfile {
   private static final Logger LOG = Logger.getInstance(ToolRunProfile.class);
   private final Tool myTool;
   private final DataContext myContext;
