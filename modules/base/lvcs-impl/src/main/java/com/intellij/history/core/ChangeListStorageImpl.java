@@ -31,9 +31,9 @@ import com.intellij.util.Consumer;
 import com.intellij.util.io.storage.AbstractStorage;
 import consulo.container.boot.ContainerPathManager;
 import gnu.trove.TIntHashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.event.HyperlinkEvent;
 import java.io.DataInputStream;
 import java.io.File;
@@ -68,8 +68,7 @@ public class ChangeListStorageImpl implements ChangeListStorage {
     boolean timestampMismatch = result.getFSTimestamp() != fsTimestamp;
     if (versionMismatch || timestampMismatch) {
       if (versionMismatch) {
-        LocalHistoryLog.LOG.info(MessageFormat.format(
-          "local history version mismatch (was: {0}, expected: {1}), rebuilding...", storedVersion, VERSION));
+        LocalHistoryLog.LOG.info(MessageFormat.format("local history version mismatch (was: {0}, expected: {1}), rebuilding...", storedVersion, VERSION));
       }
       if (timestampMismatch) LocalHistoryLog.LOG.info("FS has been rebuild, rebuilding local history...");
       result.dispose();
@@ -103,10 +102,16 @@ public class ChangeListStorageImpl implements ChangeListStorage {
     }
 
     LocalHistoryLog.LOG.error("Local history is broken" +
-                              "(version:" + VERSION +
-                              ",current timestamp:" + DateFormat.getDateTimeInstance().format(timestamp) +
-                              ",storage timestamp:" + DateFormat.getDateTimeInstance().format(storageTimestamp) +
-                              ",vfs timestamp:" + DateFormat.getDateTimeInstance().format(vfsTimestamp) + ")\n" + message, e);
+                              "(version:" +
+                              VERSION +
+                              ",current timestamp:" +
+                              DateFormat.getDateTimeInstance().format(timestamp) +
+                              ",storage timestamp:" +
+                              DateFormat.getDateTimeInstance().format(storageTimestamp) +
+                              ",vfs timestamp:" +
+                              DateFormat.getDateTimeInstance().format(vfsTimestamp) +
+                              ")\n" +
+                              message, e);
 
     myStorage.dispose();
     try {
@@ -123,30 +128,24 @@ public class ChangeListStorageImpl implements ChangeListStorage {
 
 
   public static void notifyUser(String message) {
-    final String logFile = ContainerPathManager.get().getLogPath();
+    final File logFile = ContainerPathManager.get().getLogPath();
     /*String createIssuePart = "<br>" +
                              "<br>" +
                              "Please attach log files from <a href=\"file\">" + logFile + "</a><br>" +
                              "to the <a href=\"url\">YouTrack issue</a>";*/
-    Notifications.Bus.notify(new Notification(Notifications.SYSTEM_MESSAGES_GROUP_ID,
-                                              "Local History is broken",
-                                              message /*+ createIssuePart*/,
-                                              NotificationType.ERROR,
-                                              new NotificationListener() {
-                                                @Override
-                                                public void hyperlinkUpdate(@Nonnull Notification notification,
-                                                                            @Nonnull HyperlinkEvent event) {
-                                                  if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                                                    if ("url".equals(event.getDescription())) {
-                                                      BrowserUtil.launchBrowser("http://youtrack.jetbrains.net/issue/IDEA-71270");
-                                                    }
-                                                    else {
-                                                      File file = new File(logFile);
-                                                      ShowFilePathAction.openFile(file);
-                                                    }
-                                                  }
-                                                }
-                                              }), null);
+    Notifications.Bus.notify(new Notification(Notifications.SYSTEM_MESSAGES_GROUP_ID, "Local History is broken", message /*+ createIssuePart*/, NotificationType.ERROR, new NotificationListener() {
+      @Override
+      public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
+        if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+          if ("url".equals(event.getDescription())) {
+            BrowserUtil.browse("http://youtrack.jetbrains.net/issue/IDEA-71270");
+          }
+          else {
+            ShowFilePathAction.openFile(logFile);
+          }
+        }
+      }
+    }), null);
   }
 
   public synchronized void close() {
@@ -178,10 +177,24 @@ public class ChangeListStorageImpl implements ChangeListStorage {
           Pair<Long, Integer> lastOS = myStorage.getOffsetAndSize(lastRecord);
           long lastRecordTimestamp = myStorage.getTimestamp(lastRecord);
 
-          message = "invalid record is: " + prevId + " offset: " + prevOS.first + " size: " + prevOS.second
-                    + " (created " + DateFormat.getDateTimeInstance().format(prevRecordTimestamp) + ") "
-                    + "last record is: " + lastRecord + " offset: " + lastOS.first + " size: " + lastOS.second
-                    + " (created " + DateFormat.getDateTimeInstance().format(lastRecordTimestamp) + ")";
+          message = "invalid record is: " +
+                    prevId +
+                    " offset: " +
+                    prevOS.first +
+                    " size: " +
+                    prevOS.second +
+                    " (created " +
+                    DateFormat.getDateTimeInstance().format(prevRecordTimestamp) +
+                    ") " +
+                    "last record is: " +
+                    lastRecord +
+                    " offset: " +
+                    lastOS.first +
+                    " size: " +
+                    lastOS.second +
+                    " (created " +
+                    DateFormat.getDateTimeInstance().format(lastRecordTimestamp) +
+                    ")";
         }
         catch (Exception e1) {
           message = "cannot retrieve more debug info: " + e1.getMessage();

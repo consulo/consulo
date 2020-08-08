@@ -137,8 +137,8 @@ public abstract class ContainerPathManager {
   }
 
   @Nonnull
-  public String getLogPath() {
-    return getSystemPath() + File.separatorChar + "logs";
+  public File getLogPath() {
+    return new File(getSystemPath(), "logs");
   }
 
   @Nonnull

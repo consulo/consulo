@@ -61,7 +61,7 @@ public class DesktopContainerPathManager extends ContainerPathManager {
   private static String ourSystemPath;
   private static String ourConfigPath;
   private static String ourScratchPath;
-  private static String ourLogPath;
+  private static File ourLogPath;
 
   private static String ourInstallPluginsPath;
   private static String[] ourPluginsPaths;
@@ -309,16 +309,17 @@ public class DesktopContainerPathManager extends ContainerPathManager {
     return new File(indexRoot);
   }
 
+  @Override
   @Nonnull
-  public String getLogPath() {
+  public File getLogPath() {
     if (ourLogPath != null) return ourLogPath;
 
     if (System.getProperty(PROPERTY_LOG_PATH) != null) {
-      ourLogPath = getAbsolutePath(trimPathQuotes(System.getProperty(PROPERTY_LOG_PATH)));
+      ourLogPath = getAbsoluteFile(trimPathQuotes(System.getProperty(PROPERTY_LOG_PATH)));
     }
     else if (System.getProperty(PROPERTY_SYSTEM_PATH) != null) {
       // if system path overridden, use another logic for logs
-      ourLogPath = getSystemPath() + File.separatorChar + "logs";
+      ourLogPath = new File(getSystemPath(), "logs");
     }
     else {
       ourLogPath = DefaultPaths.getInstance().getLocalLogsDir();
@@ -399,6 +400,14 @@ public class DesktopContainerPathManager extends ContainerPathManager {
       path = getUserHome() + path.substring(1);
     }
     return new File(path).getAbsolutePath();
+  }
+
+  @Nonnull
+  private static File getAbsoluteFile(String path) {
+    if (path.startsWith("~/") || path.startsWith("~\\")) {
+      path = getUserHome() + path.substring(1);
+    }
+    return new File(path);
   }
 
   private static String trimPathQuotes(String path) {

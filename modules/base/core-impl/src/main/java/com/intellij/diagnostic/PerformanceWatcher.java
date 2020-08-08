@@ -16,7 +16,6 @@
 package com.intellij.diagnostic;
 
 import com.intellij.concurrency.JobScheduler;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
@@ -30,6 +29,7 @@ import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ApplicationProperties;
 import consulo.container.boot.ContainerPathManager;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
@@ -91,7 +91,8 @@ public class PerformanceWatcher implements Disposable {
   @Inject
   public PerformanceWatcher(ContainerPathManager containerPathManager) {
     myContainerPathManager = containerPathManager;
-    myCurHangLogDir = mySessionLogDir = new File(ContainerPathManager.get().getLogPath() + "/threadDumps-" + myDateFormat.format(new Date()) + "-" + ApplicationInfo.getInstance().getBuild().asString());
+    myCurHangLogDir =
+    mySessionLogDir = new File(ContainerPathManager.get().getLogPath(), "/threadDumps-" + myDateFormat.format(new Date()) + "-" + ApplicationInfo.getInstance().getBuild().asString());
     myPublisher = ApplicationManager.getApplication().getMessageBus().syncPublisher(IdePerformanceListener.TOPIC);
     myThread = JobScheduler.getScheduler().scheduleWithFixedDelay((Runnable)() -> samplePerformance(), SAMPLING_INTERVAL_MS, SAMPLING_INTERVAL_MS, TimeUnit.MILLISECONDS);
 
@@ -112,7 +113,7 @@ public class PerformanceWatcher implements Disposable {
         }
       });
 
-      ApplicationManager.getApplication().executeOnPooledThread((Runnable)() -> deleteOldThreadDumps());
+      ApplicationManager.getApplication().executeOnPooledThread((Runnable)this::deleteOldThreadDumps);
 
       for (MemoryPoolMXBean bean : ManagementFactory.getMemoryPoolMXBeans()) {
         if ("Code Cache".equals(bean.getName())) {
@@ -147,7 +148,7 @@ public class PerformanceWatcher implements Disposable {
   }
 
   private void deleteOldThreadDumps() {
-    File allLogsDir = new File(myContainerPathManager.getLogPath());
+    File allLogsDir = myContainerPathManager.getLogPath();
     if (allLogsDir.isDirectory()) {
       final String[] dirs = allLogsDir.list(new FilenameFilter() {
         @Override
@@ -324,9 +325,14 @@ public class PerformanceWatcher implements Disposable {
     }
 
     public void logResponsivenessSinceCreation(@Nonnull String activityName) {
-      LOG.info(activityName + " took " + (System.currentTimeMillis() - myStartMillis) + "ms" +
-               "; general responsiveness: " + myGeneralApdex.summarizePerformanceSince(myStartGeneralSnapshot) +
-               "; EDT responsiveness: " + mySwingApdex.summarizePerformanceSince(myStartSwingSnapshot));
+      LOG.info(activityName +
+               " took " +
+               (System.currentTimeMillis() - myStartMillis) +
+               "ms" +
+               "; general responsiveness: " +
+               myGeneralApdex.summarizePerformanceSince(myStartGeneralSnapshot) +
+               "; EDT responsiveness: " +
+               mySwingApdex.summarizePerformanceSince(myStartSwingSnapshot));
     }
 
   }

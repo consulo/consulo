@@ -118,8 +118,8 @@ public abstract class DefaultPaths {
 
     @Nonnull
     @Override
-    public String getLocalLogsDir() {
-      return SystemProperties.getUserHome() + "/Library/Logs/" + ourDefaultPrefix;
+    public File getLocalLogsDir() {
+      return new File(SystemProperties.getUserHome() + "/Library/Logs/" + ourDefaultPrefix);
     }
   }
 
@@ -182,8 +182,8 @@ public abstract class DefaultPaths {
   public abstract String getLocalSettingsDir();
 
   @Nonnull
-  public String getLocalLogsDir() {
-    return getLocalSettingsDir() + File.separatorChar + "logs";
+  public File getLocalLogsDir() {
+    return new File(getLocalSettingsDir(), "logs");
   }
 
   /**

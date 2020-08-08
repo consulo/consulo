@@ -77,9 +77,9 @@ public class Log4J2LoggerFactory implements LoggerFactory {
       String text = FileUtil.loadTextAndClose(Log4J2LoggerFactory.class.getResourceAsStream(fileRef));
       text = StringUtil.replace(text, SYSTEM_MACRO, StringUtil.replace(ContainerPathManager.get().getSystemPath(), "\\", "\\\\"));
       text = StringUtil.replace(text, APPLICATION_MACRO, StringUtil.replace(ContainerPathManager.get().getHomePath(), "\\", "\\\\"));
-      text = StringUtil.replace(text, LOG_DIR_MACRO, StringUtil.replace(ContainerPathManager.get().getLogPath(), "\\", "\\\\"));
+      text = StringUtil.replace(text, LOG_DIR_MACRO, StringUtil.replace(ContainerPathManager.get().getLogPath().getAbsolutePath(), "\\", "\\\\"));
 
-      File file = new File(ContainerPathManager.get().getLogPath());
+      File file = ContainerPathManager.get().getLogPath();
       if (!file.mkdirs() && !file.exists()) {
         System.err.println("Cannot create log directory: " + file);
       }
