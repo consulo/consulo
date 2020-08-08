@@ -2624,3 +2624,5 @@ action.Scratch.ChangeLanguage.text:
   text: Change File Language
 action.Scratch.ChangeLanguage.description:
   text: Change File Language
+show.log.in.action.text:
+  text: Show Log in {0}

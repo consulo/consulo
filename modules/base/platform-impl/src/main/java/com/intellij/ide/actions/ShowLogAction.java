@@ -20,6 +20,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.DumbAware;
 import consulo.container.boot.ContainerPathManager;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -41,11 +42,6 @@ public class ShowLogAction extends AnAction implements DumbAware {
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     presentation.setVisible(ShowFilePathAction.isSupported());
-    presentation.setText(getActionName());
-  }
-
-  @Nonnull
-  public static String getActionName() {
-    return "Show Log in " + ShowFilePathAction.getFileManagerName();
+    presentation.setTextValue(ActionLocalize.showLogInActionText(ShowFilePathAction.getFileManagerName()));
   }
 }
