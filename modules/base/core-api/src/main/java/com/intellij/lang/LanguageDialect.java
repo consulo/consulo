@@ -15,11 +15,14 @@
  */
 package com.intellij.lang;
 
-import org.jetbrains.annotations.NonNls;
+import consulo.annotation.DeprecationInfo;
+
 import javax.annotation.Nonnull;
 
+@Deprecated
+@DeprecationInfo("See consulo.lang.LanguageVersion")
 public abstract class LanguageDialect extends Language {
-  public LanguageDialect(@NonNls @Nonnull String id, @Nonnull Language baseLanguage) {
+  public LanguageDialect(@Nonnull String id, @Nonnull Language baseLanguage) {
     super(baseLanguage, id, "");
   }
 }
