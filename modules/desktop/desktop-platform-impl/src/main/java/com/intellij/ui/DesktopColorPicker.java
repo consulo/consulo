@@ -16,9 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.ui.LafManager;
 import com.intellij.ide.util.PropertiesComponent;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
@@ -29,6 +27,10 @@ import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
+import consulo.ui.desktop.internal.window.JDialogAsUIWindow;
+import consulo.ui.desktop.internal.window.JFrameAsUIWindow;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -81,14 +83,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
   private final JLabel myR_after = new JLabel("");
   private final JLabel myG_after = new JLabel("");
   private final JLabel myB_after = new JLabel("");
-  private final JComboBox myFormat = new JComboBox(new String[]{"RGB", "HSB"}) {
-    @Override
-    public Dimension getPreferredSize() {
-      Dimension size = super.getPreferredSize();
-      if (UIUtil.isUnderWindowsLookAndFeel()) size.width += JBUI.scale(10);
-      return size;
-    }
-  };
+  private final JComboBox myFormat = new JComboBox(new String[]{"RGB", "HSB"});
 
   public DesktopColorPicker(@Nonnull Disposable parent, @Nullable Color color, boolean enableOpacity) {
     this(parent, color, true, enableOpacity, new ColorPickerListener[0], false);
@@ -164,11 +159,8 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
 
   private JTextField createColorField(boolean hex) {
     final NumberDocument doc = new NumberDocument(hex);
-    int lafFix = UIUtil.isUnderWindowsLookAndFeel() || UIUtil.isUnderDarcula() ? 1 : 0;
-    UIManager.LookAndFeelInfo info = LafManager.getInstance().getCurrentLookAndFeel();
-    if (info != null && (info.getName().startsWith("IDEA") || info.getName().equals("Windows Classic"))) lafFix = 1;
-    final JTextField field = new JTextField(doc, "", (hex ? 5 : 2) + lafFix);
-    field.setSize(JBUI.scale(50), -1);
+    final JTextField field = new JTextField("");
+    field.setDocument(doc);
     doc.setSource(field);
     field.getDocument().addDocumentListener(this);
     field.addFocusListener(new FocusAdapter() {
@@ -1085,13 +1077,13 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
       if (myPickerFrame == null) {
         Window owner = SwingUtilities.getWindowAncestor(myParent);
         if (owner instanceof Dialog) {
-          myPickerFrame = new JDialog((Dialog)owner);
+          myPickerFrame = new JDialogAsUIWindow(TargetAWT.from(owner), false);
         }
         else if (owner instanceof Frame) {
-          myPickerFrame = new JDialog((Frame)owner);
+          myPickerFrame = new JDialogAsUIWindow(TargetAWT.from(owner), false);
         }
         else {
-          myPickerFrame = new JDialog(new JFrame());
+          myPickerFrame = new JDialogAsUIWindow(new JFrameAsUIWindow().toUIWindow(), false);
         }
 
         myPickerFrame.addMouseListener(new MouseAdapter() {
