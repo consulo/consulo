@@ -93,20 +93,6 @@ public class Patches {
    */
   public static final boolean JDK_BUG_ID_8007219 = SystemInfo.isMac && SystemInfo.isJavaVersionAtLeast(7, 0, 0) && !SystemInfo.isJavaVersionAtLeast(8, 0, 0);
 
-  /**
-   * Marker field to find all usages of the reflective access to JDK 7-specific methods
-   * which need to be changed when migrated to JDK 7
-   */
-  public static final boolean USE_REFLECTION_TO_ACCESS_JDK7 = true;
-
-  /**
-   * Marker field to find all usages of the reflective access to JDK 7-specific methods
-   * which need to be changed when migrated to JDK 8
-   */
-  @Deprecated
-  @DeprecationInfo("Use @ReviewAfterMigrationToJRE(8)")
-  public static final boolean USE_REFLECTION_TO_ACCESS_JDK8 = true;
-
   @Deprecated
   @DeprecationInfo("Use @ReviewAfterMigrationToJRE(9)")
   public static final boolean USE_REFLECTION_TO_ACCESS_JDK9 = true;

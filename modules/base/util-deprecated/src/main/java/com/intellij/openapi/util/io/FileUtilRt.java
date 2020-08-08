@@ -1,22 +1,21 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.util.io;
 
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.text.StringUtilRt;
-import com.intellij.util.ArrayUtilRt;
 import consulo.logging.Logger;
+import consulo.util.collection.ArrayUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -32,16 +31,8 @@ public class FileUtilRt {
   private static final int MAX_FILE_IO_ATTEMPTS = 10;
   private static final boolean USE_FILE_CHANNELS = "true".equalsIgnoreCase(System.getProperty("idea.fs.useChannels"));
 
-  public static final FileFilter ALL_FILES = new FileFilter() {
-    public boolean accept(File file) {
-      return true;
-    }
-  };
-  public static final FileFilter ALL_DIRECTORIES = new FileFilter() {
-    public boolean accept(File file) {
-      return file.isDirectory();
-    }
-  };
+  public static final FileFilter ALL_FILES = file -> true;
+  public static final FileFilter ALL_DIRECTORIES = file -> file.isDirectory();
 
   public static final int THREAD_LOCAL_BUFFER_LENGTH = 1024 * 20;
   protected static final ThreadLocal<byte[]> BUFFER = new ThreadLocal<byte[]>() {
@@ -72,139 +63,6 @@ public class FileUtilRt {
     String resolveSymlinksAndCanonicalize(@Nonnull String path, char separatorChar, boolean removeLastSlash);
 
     boolean isSymlink(@Nonnull CharSequence path);
-  }
-
-  /* NIO-reflection initialization placed in a separate class for lazy loading */
-  //@ReviseWhenPortedToJDK("7")
-  private static final class NIOReflect {
-    static final boolean IS_AVAILABLE;
-
-    static Object toPath(File file) throws InvocationTargetException, IllegalAccessException {
-      return ourFileToPathMethod.invoke(file);
-    }
-
-    static void deleteRecursively(Object path) throws InvocationTargetException, IllegalAccessException {
-      try {
-        ourFilesWalkMethod.invoke(null, path, ourDeletionVisitor);
-      }
-      catch (InvocationTargetException e) {
-        if (!ourNoSuchFileExceptionClass.isInstance(e.getCause())) {
-          throw e;
-        }
-      }
-    }
-
-    private static Method ourFilesDeleteIfExistsMethod;
-    private static Method ourFilesWalkMethod;
-    private static Method ourFileToPathMethod;
-    private static Method ourPathToFileMethod;
-    private static Method ourAttributesIsOtherMethod;
-    private static Object ourDeletionVisitor;
-    private static Class<?> ourNoSuchFileExceptionClass;
-    private static Class<?> ourAccessDeniedExceptionClass;
-
-    static {
-      boolean initSuccess = false;
-      try {
-        final Class<?> pathClass = Class.forName("java.nio.file.Path");
-        final Class<?> visitorClass = Class.forName("java.nio.file.FileVisitor");
-        final Class<?> filesClass = Class.forName("java.nio.file.Files");
-        ourNoSuchFileExceptionClass = Class.forName("java.nio.file.NoSuchFileException");
-        ourAccessDeniedExceptionClass = Class.forName("java.nio.file.AccessDeniedException");
-
-        ourFileToPathMethod = Class.forName("java.io.File").getMethod("toPath");
-        ourPathToFileMethod = pathClass.getMethod("toFile");
-        ourFilesWalkMethod = filesClass.getMethod("walkFileTree", pathClass, visitorClass);
-        ourAttributesIsOtherMethod = Class.forName("java.nio.file.attribute.BasicFileAttributes").getDeclaredMethod("isOther");
-        ourFilesDeleteIfExistsMethod = filesClass.getMethod("deleteIfExists", pathClass);
-
-        final Object Result_Continue = Class.forName("java.nio.file.FileVisitResult").getDeclaredField("CONTINUE").get(null);
-        final Object Result_Skip = Class.forName("java.nio.file.FileVisitResult").getDeclaredField("SKIP_SUBTREE").get(null);
-
-        ourDeletionVisitor = Proxy.newProxyInstance(FileUtilRt.class.getClassLoader(), new Class[]{visitorClass}, new InvocationHandler() {
-          public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            if (args.length == 2) {
-              final Object second = args[1];
-              if (second instanceof Throwable) {
-                throw (Throwable)second;
-              }
-              final String methodName = method.getName();
-              if ("visitFile".equals(methodName) || "postVisitDirectory".equals(methodName)) {
-                performDelete(args[0]);
-              }
-              else if (SystemInfoRt.isWindows && "preVisitDirectory".equals(methodName)) {
-                boolean notDirectory = false;
-                try {
-                  notDirectory = Boolean.TRUE.equals(ourAttributesIsOtherMethod.invoke(second));
-                }
-                catch (Throwable ignored) {
-                }
-                if (notDirectory) {
-                  performDelete(args[0]);
-                  return Result_Skip;
-                }
-              }
-            }
-            return Result_Continue;
-          }
-
-          private void performDelete(final Object fileObject) throws IOException {
-            Boolean result = doIOOperation(new RepeatableIOOperation<Boolean, RuntimeException>() {
-              public Boolean execute(boolean lastAttempt) {
-                try {
-                  //Files.deleteIfExists(file);
-                  ourFilesDeleteIfExistsMethod.invoke(null, fileObject);
-                  return Boolean.TRUE;
-                }
-                catch (InvocationTargetException e) {
-                  final Throwable cause = e.getCause();
-                  if (!(cause instanceof IOException)) {
-                    return Boolean.FALSE;
-                  }
-                  if (ourAccessDeniedExceptionClass.isInstance(cause)) {
-                    // file is read-only: fallback to standard java.io API
-                    try {
-                      final File file = (File)ourPathToFileMethod.invoke(fileObject);
-                      if (file == null) {
-                        return Boolean.FALSE;
-                      }
-                      if (file.delete() || !file.exists()) {
-                        return Boolean.TRUE;
-                      }
-                    }
-                    catch (Throwable ignored) {
-                      return Boolean.FALSE;
-                    }
-                  }
-                }
-                catch (IllegalAccessException e) {
-                  return Boolean.FALSE;
-                }
-                return lastAttempt ? Boolean.FALSE : null;
-              }
-            });
-            if (!Boolean.TRUE.equals(result)) {
-              throw new IOException("Failed to delete " + fileObject) {
-                @Override
-                public synchronized Throwable fillInStackTrace() {
-                  return this; // optimization: the stacktrace is not needed: the exception is used to terminate tree walking and to pass the result
-                }
-              };
-            }
-          }
-        });
-        initSuccess = true;
-      }
-      catch (Throwable ignored) {
-        logger().info("Was not able to detect NIO API");
-        ourFileToPathMethod = null;
-        ourFilesWalkMethod = null;
-        ourFilesDeleteIfExistsMethod = null;
-        ourDeletionVisitor = null;
-        ourNoSuchFileExceptionClass = null;
-      }
-      IS_AVAILABLE = initSuccess;
-    }
   }
 
   /**
@@ -533,7 +391,7 @@ public class FileUtilRt {
     private static final Queue<String> ourFilesToDelete = createFilesToDelete();
 
     private static Queue<String> createFilesToDelete() {
-      final ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue<String>();
+      final ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue<>();
       Runtime.getRuntime().addShutdownHook(new Thread("FileUtil deleteOnExit") {
         @Override
         public void run() {
@@ -741,23 +599,15 @@ public class FileUtilRt {
   @Nonnull
   public static char[] loadFileText(@Nonnull File file, @Nullable String encoding) throws IOException {
     InputStream stream = new FileInputStream(file);
-    @SuppressWarnings("ImplicitDefaultCharsetUsage") Reader reader = encoding == null ? new InputStreamReader(stream) : new InputStreamReader(stream, encoding);
-    try {
+    try (Reader reader = encoding == null ? new InputStreamReader(stream) : new InputStreamReader(stream, encoding)) {
       return loadText(reader, (int)file.length());
-    }
-    finally {
-      reader.close();
     }
   }
 
   @Nonnull
   public static char[] loadFileText(@Nonnull File file, @Nonnull Charset encoding) throws IOException {
-    Reader reader = new InputStreamReader(new FileInputStream(file), encoding);
-    try {
+    try (Reader reader = new InputStreamReader(new FileInputStream(file), encoding)) {
       return loadText(reader, (int)file.length());
-    }
-    finally {
-      reader.close();
     }
   }
 
@@ -797,18 +647,10 @@ public class FileUtilRt {
 
   @Nonnull
   public static List<String> loadLines(@Nonnull String path, @Nullable String encoding) throws IOException {
-    InputStream stream = new FileInputStream(path);
-    try {
-      @SuppressWarnings("ImplicitDefaultCharsetUsage") BufferedReader reader = new BufferedReader(encoding == null ? new InputStreamReader(stream) : new InputStreamReader(stream, encoding));
-      try {
+    try (InputStream stream = new FileInputStream(path)) {
+      try (BufferedReader reader = new BufferedReader(encoding == null ? new InputStreamReader(stream) : new InputStreamReader(stream, encoding))) {
         return loadLines(reader);
       }
-      finally {
-        reader.close();
-      }
-    }
-    finally {
-      stream.close();
     }
   }
 
@@ -836,7 +678,7 @@ public class FileUtilRt {
   @Nonnull
   public static byte[] loadBytes(@Nonnull InputStream stream, int length) throws IOException {
     if (length == 0) {
-      return ArrayUtilRt.EMPTY_BYTE_ARRAY;
+      return ArrayUtil.EMPTY_BYTE_ARRAY;
     }
     byte[] bytes = new byte[length];
     int count = 0;
@@ -881,54 +723,105 @@ public class FileUtilRt {
   }
 
   /**
-   * <b>IMPORTANT</b>: the method is not symlinks- or junction-aware when invoked on Java 6 or earlier.
-   *
    * @param file file or directory to delete
    * @return true if the file did not exist or was successfully deleted
    */
   public static boolean delete(@Nonnull File file) {
-    if (NIOReflect.IS_AVAILABLE) {
-      try {
-        deleteRecursivelyNIO(NIOReflect.toPath(file));
-        return true;
-      }
-      catch (IOException e) {
-        return false;
-      }
-      catch (Exception e) {
-        logger().info(e);
-        return false;
-      }
-    }
-    else {
-      return deleteRecursively(file);
-    }
-  }
-
-  static void deleteRecursivelyNIO(@Nonnull Object path) throws IOException {
     try {
-      NIOReflect.deleteRecursively(path);
-    }
-    catch (InvocationTargetException e) {
-      Throwable cause = e.getCause();
-      if (cause instanceof IOException) {
-        throw (IOException)cause;
-      }
+      deleteRecursivelyNIO2(file.toPath());
+      return true;
     }
     catch (Exception e) {
       logger().info(e);
+      return false;
     }
   }
 
-  private static boolean deleteRecursively(@Nonnull File file) {
-    File[] files = file.listFiles();
-    if (files != null) {
-      for (File child : files) {
-        if (!deleteRecursively(child)) return false;
-      }
+  /**
+   * @param file file or directory to delete
+   * @return true if the file did not exist or was successfully deleted
+   */
+  public static boolean delete(@Nonnull Path path) {
+    try {
+      deleteRecursivelyNIO2(path);
+      return true;
+    }
+    catch (Exception e) {
+      logger().info(e);
+      return false;
+    }
+  }
+
+  static void deleteRecursivelyNIO2(Path path) throws IOException {
+    if (Files.isRegularFile(path)) {
+      performDeleteNIO2(path);
+      return;
     }
 
-    return deleteFile(file);
+    Files.walkFileTree(path, new FileVisitor<Path>() {
+      @Override
+      public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+        if (SystemInfo.isWindows) {
+          boolean notDirectory = attrs.isOther();
+
+          if (notDirectory) {
+            performDeleteNIO2(dir);
+            return FileVisitResult.SKIP_SUBTREE;
+          }
+        }
+        return FileVisitResult.CONTINUE;
+      }
+
+      @Override
+      public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+        performDeleteNIO2(file);
+
+        return FileVisitResult.CONTINUE;
+      }
+
+      @Override
+      public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+        performDeleteNIO2(dir);
+
+        return FileVisitResult.CONTINUE;
+      }
+
+      @Override
+      public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+        return FileVisitResult.CONTINUE;
+      }
+    });
+  }
+
+  static void performDeleteNIO2(Path path) throws IOException {
+    Boolean result = doIOOperation(lastAttempt -> {
+      try {
+        Files.deleteIfExists(path);
+        return Boolean.TRUE;
+      }
+      catch (IOException e) {
+        // file is read-only: fallback to standard java.io API
+        if (e instanceof AccessDeniedException) {
+          File file = path.toFile();
+          if (file == null) {
+            return Boolean.FALSE;
+          }
+          if (file.delete() || !file.exists()) {
+            return Boolean.TRUE;
+          }
+        }
+      }
+      return lastAttempt ? Boolean.FALSE : null;
+    });
+
+    if (!Boolean.TRUE.equals(result)) {
+      throw new IOException("Failed to delete " + path) {
+        @Override
+        public synchronized Throwable fillInStackTrace() {
+          return this; // optimization: the stacktrace is not needed: the exception is used to terminate tree walking and to pass the result
+        }
+      };
+    }
   }
 
   public interface RepeatableIOOperation<T, E extends Throwable> {
@@ -953,11 +846,15 @@ public class FileUtilRt {
   }
 
   protected static boolean deleteFile(@Nonnull final File file) {
-    Boolean result = doIOOperation(new RepeatableIOOperation<Boolean, RuntimeException>() {
-      public Boolean execute(boolean lastAttempt) {
-        if (file.delete() || !file.exists()) return Boolean.TRUE;
-        else if (lastAttempt) return Boolean.FALSE;
-        else return null;
+    Boolean result = doIOOperation(lastAttempt -> {
+      if (file.delete() || !file.exists()) {
+        return Boolean.TRUE;
+      }
+      else if (lastAttempt) {
+        return Boolean.FALSE;
+      }
+      else {
+        return null;
       }
     });
     return Boolean.TRUE.equals(result);
@@ -998,18 +895,10 @@ public class FileUtilRt {
       return;
     }
 
-    FileOutputStream fos = new FileOutputStream(toFile);
-    try {
-      FileInputStream fis = new FileInputStream(fromFile);
-      try {
+    try (FileOutputStream fos = new FileOutputStream(toFile)) {
+      try (FileInputStream fis = new FileInputStream(fromFile)) {
         copy(fis, fos);
       }
-      finally {
-        fis.close();
-      }
-    }
-    finally {
-      fos.close();
     }
 
     long timeStamp = fromFile.lastModified();
@@ -1023,18 +912,10 @@ public class FileUtilRt {
 
   public static void copy(@Nonnull InputStream inputStream, @Nonnull OutputStream outputStream) throws IOException {
     if (USE_FILE_CHANNELS && inputStream instanceof FileInputStream && outputStream instanceof FileOutputStream) {
-      final FileChannel fromChannel = ((FileInputStream)inputStream).getChannel();
-      try {
-        final FileChannel toChannel = ((FileOutputStream)outputStream).getChannel();
-        try {
+      try (FileChannel fromChannel = ((FileInputStream)inputStream).getChannel()) {
+        try (FileChannel toChannel = ((FileOutputStream)outputStream).getChannel()) {
           fromChannel.transferTo(0, Long.MAX_VALUE, toChannel);
         }
-        finally {
-          toChannel.close();
-        }
-      }
-      finally {
-        fromChannel.close();
       }
     }
     else {
@@ -1077,16 +958,9 @@ public class FileUtilRt {
   }
 
   private interface CharComparingStrategy {
-    CharComparingStrategy IDENTITY = new CharComparingStrategy() {
-      public boolean charsEqual(char ch1, char ch2) {
-        return ch1 == ch2;
-      }
-    };
-    CharComparingStrategy CASE_INSENSITIVE = new CharComparingStrategy() {
-      public boolean charsEqual(char ch1, char ch2) {
-        return StringUtilRt.charsEqualIgnoreCase(ch1, ch2);
-      }
-    };
+    CharComparingStrategy IDENTITY = (ch1, ch2) -> ch1 == ch2;
+
+    CharComparingStrategy CASE_INSENSITIVE = (ch1, ch2) -> StringUtilRt.charsEqualIgnoreCase(ch1, ch2);
 
     boolean charsEqual(char ch1, char ch2);
   }

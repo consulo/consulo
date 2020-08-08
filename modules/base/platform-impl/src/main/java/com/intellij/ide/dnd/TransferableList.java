@@ -15,9 +15,7 @@
  */
 package com.intellij.ide.dnd;
 
-import com.intellij.Patches;
 import javax.annotation.Nonnull;
-
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -31,20 +29,8 @@ import java.util.List;
  */
 abstract public class TransferableList<T> implements Transferable {
   private static final DataFlavor LIST_DATA_FLAVOR = new DataFlavor(List.class, "Transferable List");
-  private static final DataFlavor ALL_HTML_DATA_FLAVOR = initHtmlDataFlavor("all"); // JDK7: DataFlavor.allHtmlFlavor
-  private static final DataFlavor PART_HTML_DATA_FLAVOR = initHtmlDataFlavor("fragment"); // JDK7: DataFlavor.fragmentHtmlFlavor
-
-  private static DataFlavor initHtmlDataFlavor(String type) {
-    // some constants were added in JDK 7 without @since 1.7 tag
-    // http://bugs.openjdk.java.net/browse/JDK-7075105
-    assert Patches.USE_REFLECTION_TO_ACCESS_JDK7;
-    try {
-      return new DataFlavor("text/html; class=java.lang.String;document=" + type + ";charset=Unicode");
-    }
-    catch (Exception exception) {
-      return null;
-    }
-  }
+  private static final DataFlavor ALL_HTML_DATA_FLAVOR = DataFlavor.allHtmlFlavor;
+  private static final DataFlavor PART_HTML_DATA_FLAVOR = DataFlavor.fragmentHtmlFlavor;
 
   private final List<T> myList;
 

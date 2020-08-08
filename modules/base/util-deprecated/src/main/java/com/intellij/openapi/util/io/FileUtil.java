@@ -16,8 +16,6 @@
 package com.intellij.openapi.util.io;
 
 import com.intellij.CommonBundle;
-import com.intellij.Patches;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
@@ -28,6 +26,7 @@ import com.intellij.util.containers.Convertor;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.text.FilePathHashingStrategy;
 import com.intellij.util.text.StringFactory;
+import consulo.logging.Logger;
 import gnu.trove.TObjectHashingStrategy;
 import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.Contract;
@@ -46,10 +45,6 @@ import java.util.regex.Pattern;
 
 @SuppressWarnings({"UtilityClassWithoutPrivateConstructor", "MethodOverridesStaticMethodOfSuperclass"})
 public class FileUtil extends FileUtilRt {
-  static {
-    if (!Patches.USE_REFLECTION_TO_ACCESS_JDK7) throw new RuntimeException("Please migrate FileUtilRt to JDK8");
-  }
-
   public static final String ASYNC_DELETE_EXTENSION = ".__del__";
 
   public static final int REGEX_PATTERN_FLAGS = SystemInfo.isFileSystemCaseSensitive ? 0 : Pattern.CASE_INSENSITIVE;
@@ -175,15 +170,15 @@ public class FileUtil extends FileUtilRt {
    */
   public static <T> Collection<T> removeAncestors(final Collection<T> files, final Convertor<T, String> convertor, final PairProcessor<T, T> removeProcessor) {
     if (files.isEmpty()) return files;
-    final TreeMap<String, T> paths = new TreeMap<String, T>();
+    final TreeMap<String, T> paths = new TreeMap<>();
     for (T file : files) {
       final String path = convertor.convert(file);
       assert path != null;
       final String canonicalPath = toCanonicalPath(path);
       paths.put(canonicalPath, file);
     }
-    final List<Map.Entry<String, T>> ordered = new ArrayList<Map.Entry<String, T>>(paths.entrySet());
-    final List<T> result = new ArrayList<T>(ordered.size());
+    final List<Map.Entry<String, T>> ordered = new ArrayList<>(paths.entrySet());
+    final List<T> result = new ArrayList<>(ordered.size());
     result.add(ordered.get(0).getValue());
     for (int i = 1; i < ordered.size(); i++) {
       final Map.Entry<String, T> entry = ordered.get(i);
@@ -297,7 +292,7 @@ public class FileUtil extends FileUtilRt {
       total += n;
       if (count == chars.length) {
         if (buffers == null) {
-          buffers = new ArrayList<char[]>();
+          buffers = new ArrayList<>();
         }
         buffers.add(chars);
         int newLength = Math.min(1024 * 1024, chars.length * 2);
@@ -330,7 +325,7 @@ public class FileUtil extends FileUtilRt {
       total += n;
       if (count == bytes.length) {
         if (buffers == null) {
-          buffers = new ArrayList<byte[]>();
+          buffers = new ArrayList<>();
         }
         buffers.add(bytes);
         int newLength = Math.min(1024 * 1024, bytes.length * 2);
@@ -356,7 +351,7 @@ public class FileUtil extends FileUtilRt {
 
   @Nonnull
   public static Future<Void> asyncDelete(@Nonnull Collection<File> files) {
-    List<File> tempFiles = new ArrayList<File>();
+    List<File> tempFiles = new ArrayList<>();
     for (File file : files) {
       final File tempFile = renameToTempFileOrDelete(file);
       if (tempFile != null) {
@@ -366,11 +361,11 @@ public class FileUtil extends FileUtilRt {
     if (!tempFiles.isEmpty()) {
       return startDeletionThread(tempFiles.toArray(new File[tempFiles.size()]));
     }
-    return new FixedFuture<Void>(null);
+    return new FixedFuture<>(null);
   }
 
   private static Future<Void> startDeletionThread(@Nonnull final File... tempFiles) {
-    final RunnableFuture<Void> deleteFilesTask = new FutureTask<Void>(new Runnable() {
+    final RunnableFuture<Void> deleteFilesTask = new FutureTask<>(new Runnable() {
       @Override
       public void run() {
         final Thread currentThread = Thread.currentThread();
@@ -1110,7 +1105,7 @@ public class FileUtil extends FileUtilRt {
   }
 
   public static boolean processFilesRecursively(@Nonnull File root, @Nonnull Processor<File> processor, @Nullable final Processor<File> directoryFilter) {
-    final LinkedList<File> queue = new LinkedList<File>();
+    final LinkedList<File> queue = new LinkedList<>();
     queue.add(root);
     while (!queue.isEmpty()) {
       final File file = queue.removeFirst();
@@ -1139,7 +1134,7 @@ public class FileUtil extends FileUtilRt {
 
   @Nonnull
   public static List<File> findFilesByMask(@Nonnull Pattern pattern, @Nonnull File dir) {
-    final ArrayList<File> found = new ArrayList<File>();
+    final ArrayList<File> found = new ArrayList<>();
     final File[] files = dir.listFiles();
     if (files != null) {
       for (File file : files) {
@@ -1156,7 +1151,7 @@ public class FileUtil extends FileUtilRt {
 
   @Nonnull
   public static List<File> findFilesOrDirsByMask(@Nonnull Pattern pattern, @Nonnull File dir) {
-    final ArrayList<File> found = new ArrayList<File>();
+    final ArrayList<File> found = new ArrayList<>();
     final File[] files = dir.listFiles();
     if (files != null) {
       for (File file : files) {
@@ -1422,7 +1417,7 @@ public class FileUtil extends FileUtilRt {
 
   @Nonnull
   public static List<String> splitPath(@Nonnull String path) {
-    ArrayList<String> list = new ArrayList<String>();
+    ArrayList<String> list = new ArrayList<>();
     int index = 0;
     int nextSeparator;
     while ((nextSeparator = path.indexOf(File.separatorChar, index)) != -1) {
