@@ -18,12 +18,12 @@ package com.intellij.psi;
 import com.intellij.lang.Language;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileTypes.FileType;
-import consulo.util.dataholder.UserDataHolder;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
+import consulo.util.dataholder.UserDataHolder;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 import java.util.Set;
 
@@ -88,6 +88,14 @@ public interface FileViewProvider extends Cloneable, UserDataHolder {
 	 */
 	@Nonnull
 	Set<Language> getLanguages();
+
+	/**
+	 * Check if given language is supported.
+	 * Implementations may provide more effective way to check without getting all languages.
+	 */
+	default boolean hasLanguage(@Nonnull Language language) {
+		return getLanguages().contains(language);
+	}
 
 	/**
 	 * @param target target language
