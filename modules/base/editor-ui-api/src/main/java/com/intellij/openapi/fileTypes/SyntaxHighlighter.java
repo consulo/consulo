@@ -15,28 +15,24 @@
  */
 package com.intellij.openapi.fileTypes;
 
+import com.intellij.lang.Language;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.KeyedFactoryEPBean;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.tree.IElementType;
 import javax.annotation.Nonnull;
 
 /**
  * Controls the syntax highlighting of a file.
  *
- * @see com.intellij.openapi.fileTypes.SyntaxHighlighterFactory#getSyntaxHighlighter(com.intellij.openapi.project.Project, com.intellij.openapi.vfs.VirtualFile)
- * @see com.intellij.openapi.fileTypes.SyntaxHighlighterFactory#getSyntaxHighlighter(com.intellij.lang.Language, com.intellij.openapi.project.Project, com.intellij.openapi.vfs.VirtualFile)
+ * @see SyntaxHighlighterFactory#getSyntaxHighlighter(Project, VirtualFile)
+ * @see SyntaxHighlighterFactory#getSyntaxHighlighter(Language, Project, VirtualFile)
  */
 public interface SyntaxHighlighter {
   ExtensionPointName<KeyedFactoryEPBean> EP_NAME = ExtensionPointName.create("com.intellij.syntaxHighlighter");
-
-  /**
-   * @see com.intellij.openapi.fileTypes.SyntaxHighlighterFactory#getSyntaxHighlighter(com.intellij.openapi.project.Project, com.intellij.openapi.vfs.VirtualFile)
-   * @see com.intellij.openapi.fileTypes.SyntaxHighlighterFactory#getSyntaxHighlighter(com.intellij.lang.Language, com.intellij.openapi.project.Project, com.intellij.openapi.vfs.VirtualFile)
-   * @deprecated
-   */
-  @Deprecated SyntaxHighlighterProvider PROVIDER = new FileTypeExtensionFactory<SyntaxHighlighterProvider>(SyntaxHighlighterProvider.class, EP_NAME).get();
 
   /**
    * Returns the lexer used for highlighting the file. The lexer is invoked incrementally when the file is changed, so it must be
@@ -55,5 +51,5 @@ public interface SyntaxHighlighter {
    * @return The array of text attribute keys.
    */
   @Nonnull
-  TextAttributesKey[] getTokenHighlights(IElementType tokenType);
+  TextAttributesKey[] getTokenHighlights(@Nonnull IElementType tokenType);
 }

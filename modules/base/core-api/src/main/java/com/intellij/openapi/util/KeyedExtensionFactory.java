@@ -17,6 +17,7 @@ package com.intellij.openapi.util;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.KeyedFactoryEPBean;
+import consulo.annotation.DeprecationInfo;
 import consulo.injecting.InjectingContainerOwner;
 
 import javax.annotation.Nonnull;
@@ -41,11 +42,13 @@ public abstract class KeyedExtensionFactory<T, KeyT> {
   }
 
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Please don't use this method. It has not explicit logic about creating 'T' value")
   public T get() {
-    final List<KeyedFactoryEPBean> epBeans = myEpName.getExtensionList();
     InvocationHandler handler = new InvocationHandler() {
       @Override
       public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        final List<KeyedFactoryEPBean> epBeans = myEpName.getExtensionList();
         //noinspection unchecked
         KeyT keyArg = (KeyT)args[0];
         String key = getKey(keyArg);

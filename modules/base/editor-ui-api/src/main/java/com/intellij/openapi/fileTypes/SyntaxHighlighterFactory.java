@@ -22,19 +22,24 @@ package com.intellij.openapi.fileTypes;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class SyntaxHighlighterFactory {
   public static final SyntaxHighlighterLanguageFactory LANGUAGE_FACTORY = new SyntaxHighlighterLanguageFactory();
 
+  private static final SyntaxHighlighterProvider PROVIDER = new FileTypeExtensionFactory<>(SyntaxHighlighterProvider.class, SyntaxHighlighter.EP_NAME).get();
+
   /**
    * Returns syntax highlighter for the given language.
-   * @param lang a {@code Language} to get highlighter for
-   * @param project might be necessary to gather various project settings from
+   *
+   * @param lang        a {@code Language} to get highlighter for
+   * @param project     might be necessary to gather various project settings from
    * @param virtualFile might be necessary to collect file specific settings
    * @return {@code SyntaxHighlighter} interface implementation for the given file type
    */
-  public static SyntaxHighlighter getSyntaxHighlighter(@Nonnull Language lang, @javax.annotation.Nullable Project project, @javax.annotation.Nullable final VirtualFile virtualFile) {
+  public static SyntaxHighlighter getSyntaxHighlighter(@Nonnull Language lang, @Nullable Project project, @Nullable final VirtualFile virtualFile) {
     return LANGUAGE_FACTORY.forLanguage(lang).getSyntaxHighlighter(project, virtualFile);
   }
 
@@ -42,14 +47,15 @@ public abstract class SyntaxHighlighterFactory {
    * Returns syntax highlighter for the given file type.
    * Note: it is recommended to use {@link #getSyntaxHighlighter(Language, Project, VirtualFile)} in most cases,
    * and use this method only when you are do not know the language you use.
-   * @param fileType a file type to use to select appropriate highlighter
-   * @param project might be necessary to gather various project settings from
+   *
+   * @param fileType    a file type to use to select appropriate highlighter
+   * @param project     might be necessary to gather various project settings from
    * @param virtualFile might be necessary to collect file specific settings
    * @return {@code SyntaxHighlighter} interface implementation for the given file type
    */
-  @javax.annotation.Nullable
-  public static SyntaxHighlighter getSyntaxHighlighter(final FileType fileType, final @javax.annotation.Nullable Project project, final @javax.annotation.Nullable VirtualFile virtualFile) {
-    return SyntaxHighlighter.PROVIDER.create(fileType, project, virtualFile);
+  @Nullable
+  public static SyntaxHighlighter getSyntaxHighlighter(final FileType fileType, final @Nullable Project project, final @Nullable VirtualFile virtualFile) {
+    return PROVIDER.create(fileType, project, virtualFile);
   }
 
   /**
@@ -59,10 +65,10 @@ public abstract class SyntaxHighlighterFactory {
    * <p/>
    * Default implementation doesn't highlight anything.
    *
-   * @param project might be necessary to gather various project settings from.
+   * @param project     might be necessary to gather various project settings from.
    * @param virtualFile might be necessary to collect file specific settings
    * @return <code>SyntaxHighlighter</code> interface implementation for this particular language.
    */
   @Nonnull
-  public abstract SyntaxHighlighter getSyntaxHighlighter(@javax.annotation.Nullable Project project, @javax.annotation.Nullable VirtualFile virtualFile);
+  public abstract SyntaxHighlighter getSyntaxHighlighter(@Nullable Project project, @Nullable VirtualFile virtualFile);
 }
