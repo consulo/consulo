@@ -21,7 +21,6 @@ import com.intellij.lexer.Lexer;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.Couple;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiWhiteSpace;
@@ -30,6 +29,7 @@ import com.intellij.psi.templateLanguages.OuterLanguageElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IStrongWhitespaceHolderElementType;
 import com.intellij.psi.tree.TokenSet;
+import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -272,6 +272,11 @@ public class TreeUtil {
         super.visitNode(element);
       }
     });
+  }
+
+  @Nullable
+  public static LeafElement nextLeaf(@Nonnull final LeafElement node) {
+    return nextLeaf(node, null);
   }
 
   @Nullable
