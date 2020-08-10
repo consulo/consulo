@@ -16,10 +16,9 @@
 package com.intellij.packaging.artifacts;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author nik
@@ -28,7 +27,7 @@ public abstract class ArtifactPropertiesProvider {
   public static final ExtensionPointName<ArtifactPropertiesProvider> EP_NAME = ExtensionPointName.create("com.intellij.packaging.artifactPropertiesProvider");
   private final String myId;
 
-  protected ArtifactPropertiesProvider(@Nonnull @NonNls String id) {
+  protected ArtifactPropertiesProvider(@Nonnull String id) {
     myId = id;
   }
 
@@ -44,7 +43,7 @@ public abstract class ArtifactPropertiesProvider {
   public abstract ArtifactProperties<?> createProperties(@Nonnull ArtifactType artifactType);
 
   @Nullable
-  public static ArtifactPropertiesProvider findById(@Nonnull @NonNls String id) {
+  public static ArtifactPropertiesProvider findById(@Nonnull String id) {
     for (ArtifactPropertiesProvider provider : EP_NAME.getExtensionList()) {
       if (provider.getId().equals(id)) {
         return provider;

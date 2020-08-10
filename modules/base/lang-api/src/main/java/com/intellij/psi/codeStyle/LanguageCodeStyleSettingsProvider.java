@@ -5,15 +5,14 @@ import com.intellij.application.options.CodeStyleBean;
 import com.intellij.application.options.IndentOptionsEditor;
 import com.intellij.lang.Language;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -103,7 +102,7 @@ public abstract class LanguageCodeStyleSettingsProvider extends CodeStyleSetting
   @Nonnull
   public static Language[] getLanguagesWithCodeStyleSettings() {
     final ArrayList<Language> languages = new ArrayList<>();
-    for (LanguageCodeStyleSettingsProvider provider : Extensions.getExtensions(EP_NAME)) {
+    for (LanguageCodeStyleSettingsProvider provider : EP_NAME.getExtensionList()) {
       languages.add(provider.getLanguage());
     }
     return languages.toArray(new Language[0]);
@@ -126,7 +125,7 @@ public abstract class LanguageCodeStyleSettingsProvider extends CodeStyleSetting
 
   @Nullable
   public static Language getLanguage(String langName) {
-    for (LanguageCodeStyleSettingsProvider provider : Extensions.getExtensions(EP_NAME)) {
+    for (LanguageCodeStyleSettingsProvider provider : EP_NAME.getExtensionList()) {
       String name = provider.getLanguageName();
       if (name == null) name = provider.getLanguage().getDisplayName();
       if (langName.equals(name)) {
@@ -171,7 +170,7 @@ public abstract class LanguageCodeStyleSettingsProvider extends CodeStyleSetting
 
   @Nullable
   public static LanguageCodeStyleSettingsProvider forLanguage(final Language language) {
-    for (LanguageCodeStyleSettingsProvider provider : Extensions.getExtensions(EP_NAME)) {
+    for (LanguageCodeStyleSettingsProvider provider : EP_NAME.getExtensionList()) {
       if (provider.getLanguage().equals(language)) {
         return provider;
       }
@@ -288,8 +287,8 @@ public abstract class LanguageCodeStyleSettingsProvider extends CodeStyleSetting
    * @return A list of providers implementing {@link #createSettingsPage(CodeStyleSettings, CodeStyleSettings)}
    */
   public static List<LanguageCodeStyleSettingsProvider> getSettingsPagesProviders() {
-    List<LanguageCodeStyleSettingsProvider> settingsPagesProviders = ContainerUtil.newArrayList();
-    for (LanguageCodeStyleSettingsProvider provider : Extensions.getExtensions(EP_NAME)) {
+    List<LanguageCodeStyleSettingsProvider> settingsPagesProviders = new ArrayList<>();
+    for (LanguageCodeStyleSettingsProvider provider : EP_NAME.getExtensionList()) {
       try {
         provider.getClass().getDeclaredMethod("createSettingsPage", CodeStyleSettings.class, CodeStyleSettings.class);
         settingsPagesProviders.add(provider);

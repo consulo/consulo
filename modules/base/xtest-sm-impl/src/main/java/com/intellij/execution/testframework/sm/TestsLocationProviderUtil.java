@@ -18,7 +18,6 @@ package com.intellij.execution.testframework.sm;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -29,6 +28,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.text.StringTokenizer;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,7 +45,7 @@ public class TestsLocationProviderUtil {
   private TestsLocationProviderUtil() {
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static String extractPath(@Nonnull final String locationUrl) {
     final int index = locationUrl.indexOf(PROTOCOL_SEPARATOR);
     if (index >= 0) {
@@ -152,7 +152,7 @@ public class TestsLocationProviderUtil {
     return filesInfo;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private static VirtualFile getByFullPath(String filePath) {
     final VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(filePath);
     if (fileByPath != null) {

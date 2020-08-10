@@ -15,13 +15,12 @@
  */
 package com.intellij.packageDependencies;
 
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.scope.TestsScope;
 import com.intellij.psi.search.scope.packageSet.CustomScopesProviderEx;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class TestScopeProvider extends CustomScopesProviderEx {
   private TestsScope myTestsScope = new TestsScope();
 
   public static TestScopeProvider getInstance(Project project) {
-    return Extensions.findExtension(CUSTOM_SCOPES_PROVIDER, project, TestScopeProvider.class);
+    return CUSTOM_SCOPES_PROVIDER.findExtensionOrFail(project, TestScopeProvider.class);
   }
 
   @Override

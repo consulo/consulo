@@ -58,24 +58,12 @@ public class Extensions {
   @Nonnull
   @Deprecated
   public static <T, U extends T> U findExtension(@Nonnull ExtensionPointName<T> extensionPointName, @Nonnull Class<U> extClass) {
-    for (T t : getExtensions(extensionPointName)) {
-      if (extClass.isInstance(t)) {
-        //noinspection unchecked
-        return (U)t;
-      }
-    }
-    throw new IllegalArgumentException("could not find extension implementation " + extClass);
+    return extensionPointName.findExtensionOrFail(extClass);
   }
 
   @Nonnull
   @Deprecated
-  public static <T, U extends T> U findExtension(@Nonnull ExtensionPointName<T> extensionPointName, ComponentManager areaInstance, @Nonnull Class<U> extClass) {
-    for (T t : getExtensions(extensionPointName, areaInstance)) {
-      if (extClass.isInstance(t)) {
-        //noinspection unchecked
-        return (U)t;
-      }
-    }
-    throw new IllegalArgumentException("could not find extension implementation " + extClass);
+  public static <T, U extends T> U findExtension(@Nonnull ExtensionPointName<T> extensionPointName, ComponentManager componentManager, @Nonnull Class<U> extClass) {
+    return extensionPointName.findExtensionOrFail(componentManager, extClass);
   }
 }

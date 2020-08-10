@@ -15,14 +15,15 @@
  */
 package com.intellij.util.indexing;
 
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
 import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -31,10 +32,10 @@ import java.util.Set;
 public class AdditionalIndexableFileSet implements IndexableFileSet {
   private volatile Set<VirtualFile> cachedFiles;
   private volatile Set<VirtualFile> cachedDirectories;
-  private volatile IndexableSetContributor[] myExtensions;
+  private volatile List<IndexableSetContributor> myExtensions;
 
   public AdditionalIndexableFileSet(IndexableSetContributor... extensions) {
-    myExtensions = extensions;
+    myExtensions = extensions == null ? null : Arrays.asList(extensions);
   }
 
   private Set<VirtualFile> getDirectories() {
@@ -46,10 +47,10 @@ public class AdditionalIndexableFileSet implements IndexableFileSet {
   }
 
   private THashSet<VirtualFile> collectFilesAndDirectories() {
-    THashSet<VirtualFile> files = new THashSet<VirtualFile>();
-    THashSet<VirtualFile> directories = new THashSet<VirtualFile>();
+    THashSet<VirtualFile> files = new THashSet<>();
+    THashSet<VirtualFile> directories = new THashSet<>();
     if (myExtensions == null) {
-      myExtensions = Extensions.getExtensions(IndexableSetContributor.EP_NAME);
+      myExtensions = IndexableSetContributor.EP_NAME.getExtensionList();
     }
     for (IndexableSetContributor provider : myExtensions) {
       for (VirtualFile file : provider.getAdditionalRootsToIndex()) {

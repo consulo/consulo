@@ -42,7 +42,7 @@ public class DefaultScopesProvider extends CustomScopesProviderEx {
   private final List<NamedScope> myScopes;
 
   public static DefaultScopesProvider getInstance(Project project) {
-    return Extensions.findExtension(CUSTOM_SCOPES_PROVIDER, project, DefaultScopesProvider.class);
+    return CUSTOM_SCOPES_PROVIDER.findExtensionOrFail(project, DefaultScopesProvider.class);
   }
 
   @Inject

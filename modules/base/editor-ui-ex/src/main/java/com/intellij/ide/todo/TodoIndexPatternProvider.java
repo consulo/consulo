@@ -15,7 +15,6 @@
  */
 package com.intellij.ide.todo;
 
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.psi.search.IndexPattern;
 import com.intellij.psi.search.IndexPatternProvider;
 import javax.annotation.Nonnull;

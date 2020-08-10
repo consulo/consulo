@@ -53,7 +53,7 @@ public class SelectInAction extends AnAction implements DumbAware {
   }
 
   private static void invoke(DataContext dataContext, SelectInContext context) {
-    final List<SelectInTarget> targetVector = Arrays.asList(getSelectInManager(context.getProject()).getTargets());
+    final List<SelectInTarget> targetVector = getSelectInManager(context.getProject()).getTargets();
     ListPopup popup;
     if (targetVector.isEmpty()) {
       DefaultActionGroup group = new DefaultActionGroup();

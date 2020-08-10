@@ -22,7 +22,6 @@
  */
 package com.intellij.openapi.diff.impl.patch;
 
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -53,8 +52,8 @@ public class UnifiedDiffWriter {
   }
 
   public static void write(@Nullable Project project, Collection<FilePatch> patches, Writer writer, final String lineSeparator,
-                           @javax.annotation.Nullable final CommitContext commitContext) throws IOException {
-    final PatchEP[] extensions = project == null ? new PatchEP[0] : Extensions.getExtensions(PatchEP.EP_NAME, project);
+                           @Nullable final CommitContext commitContext) throws IOException {
+    final PatchEP[] extensions = project == null ? new PatchEP[0] : PatchEP.EP_NAME.getExtensions(project);
     write(project, patches, writer, lineSeparator, extensions, commitContext);
   }
 

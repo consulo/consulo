@@ -17,7 +17,6 @@ package com.intellij.xdebugger;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.PlatformTestCase;
 import com.intellij.util.xmlb.annotations.Attribute;

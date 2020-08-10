@@ -17,9 +17,7 @@ package com.intellij.psi.codeStyle.arrangement;
 
 import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
 import com.intellij.lang.Language;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.codeStyle.arrangement.match.*;
@@ -31,13 +29,14 @@ import com.intellij.psi.codeStyle.arrangement.std.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.text.CharArrayUtil;
+import consulo.logging.Logger;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
-import static com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens.Modifier.*;
+import static com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens.Modifier.MODIFIER_AS_TYPE;
 
 /**
  * @author Denis Zhdanov
@@ -293,7 +292,7 @@ public class ArrangementUtil {
                                                         @Nonnull ArrangementStandardSettingsManager settingsManager)
           throws IllegalArgumentException
   {
-    for (ArrangementUiComponent.Factory factory : Extensions.getExtensions(ArrangementUiComponent.Factory.EP_NAME)) {
+    for (ArrangementUiComponent.Factory factory : ArrangementUiComponent.Factory.EP_NAME.getExtensionList()) {
       ArrangementUiComponent result = factory.build(role, tokens, colorsProvider, settingsManager);
       if (result != null) {
         return result;
@@ -304,7 +303,7 @@ public class ArrangementUtil {
 
   @Nonnull
   public static List<CompositeArrangementSettingsToken> flatten(@Nonnull CompositeArrangementSettingsToken base) {
-    List<CompositeArrangementSettingsToken> result = ContainerUtilRt.newArrayList();
+    List<CompositeArrangementSettingsToken> result = new ArrayList<>();
     Queue<CompositeArrangementSettingsToken> toProcess = ContainerUtilRt.newLinkedList(base);
     while (!toProcess.isEmpty()) {
       CompositeArrangementSettingsToken token = toProcess.remove();

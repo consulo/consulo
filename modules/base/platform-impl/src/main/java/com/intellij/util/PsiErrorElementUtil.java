@@ -62,8 +62,7 @@ public class PsiErrorElementUtil {
 
   private static boolean hasErrorElements(@Nonnull final PsiElement element) {
     if (element instanceof PsiErrorElement) {
-      HighlightErrorFilter[] errorFilters = Extensions.getExtensions(HighlightErrorFilter.EP_NAME, element.getProject());
-      for (HighlightErrorFilter errorFilter : errorFilters) {
+      for (HighlightErrorFilter errorFilter : HighlightErrorFilter.EP_NAME.getExtensionList(element.getProject())) {
         if (!errorFilter.shouldHighlightErrorElement((PsiErrorElement)element)) {
           return false;
         }

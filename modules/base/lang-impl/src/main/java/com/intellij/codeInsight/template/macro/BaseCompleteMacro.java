@@ -18,19 +18,19 @@ package com.intellij.codeInsight.template.macro;
 
 import com.intellij.codeInsight.lookup.*;
 import com.intellij.codeInsight.template.*;
-import com.intellij.codeInsight.template.Result;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.impl.TemplateState;
-import com.intellij.openapi.application.*;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 
 public abstract class BaseCompleteMacro extends Macro {
@@ -136,7 +136,7 @@ public abstract class BaseCompleteMacro extends Macro {
         return;
       }
 
-      for(TemplateCompletionProcessor processor: Extensions.getExtensions(TemplateCompletionProcessor.EP_NAME)) {
+      for(TemplateCompletionProcessor processor: TemplateCompletionProcessor.EP_NAME.getExtensionList()) {
         if (!processor.nextTabOnItemSelected(myContext, item)) {
           return;
         }

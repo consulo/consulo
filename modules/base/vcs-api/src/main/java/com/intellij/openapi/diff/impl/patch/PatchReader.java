@@ -22,7 +22,6 @@
  */
 package com.intellij.openapi.diff.impl.patch;
 
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.text.LineTokenizer;
@@ -30,9 +29,9 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -78,13 +77,13 @@ public class PatchReader {
     return getTextPatches();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public CharSequence getBaseRevision(final Project project, final String relativeFilePath) {
     final Map<String, Map<String, CharSequence>> map = myAdditionalInfoParser.getResultMap();
     if (! map.isEmpty()) {
       final Map<String, CharSequence> inner = map.get(relativeFilePath);
       if (inner != null) {
-        final BaseRevisionTextPatchEP baseRevisionTextPatchEP = Extensions.findExtension(PatchEP.EP_NAME, project, BaseRevisionTextPatchEP.class);
+        final BaseRevisionTextPatchEP baseRevisionTextPatchEP = PatchEP.EP_NAME.findExtension(project, BaseRevisionTextPatchEP.class);
         if (baseRevisionTextPatchEP != null) {
           return inner.get(baseRevisionTextPatchEP.getName());
         }
@@ -351,7 +350,7 @@ public class PatchReader {
       return curPatch;
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     private PatchHunk readNextHunkUnified(ListIterator<String> iterator) throws PatchSyntaxException {
       String curLine = null;
       int numIncrements = 0;
@@ -646,7 +645,7 @@ public class PatchReader {
     }
   }
 
-  public static boolean isPatchContent(@javax.annotation.Nullable String content) {
+  public static boolean isPatchContent(@Nullable String content) {
     if (content == null) return false;
     List<String> lines = LineTokenizer.tokenizeIntoList(content, false);
     final ListIterator<String> iterator = lines.listIterator();

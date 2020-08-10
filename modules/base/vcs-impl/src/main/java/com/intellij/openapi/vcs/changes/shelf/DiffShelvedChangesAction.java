@@ -203,8 +203,7 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
               final Getter<CharSequence> baseContentGetter = new Getter<CharSequence>() {
                 @Override
                 public CharSequence get() {
-                  BaseRevisionTextPatchEP baseRevisionTextPatchEP =
-                          Extensions.findExtension(PatchEP.EP_NAME, project, BaseRevisionTextPatchEP.class);
+                  BaseRevisionTextPatchEP baseRevisionTextPatchEP = PatchEP.EP_NAME.findExtensionOrFail(project, BaseRevisionTextPatchEP.class);
                   return baseRevisionTextPatchEP.provideContent(relativePath, commitContext);
                 }
               };

@@ -16,22 +16,23 @@
 package com.intellij.openapi.options.colors.pages;
 
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.options.colors.ColorSettingsPages;
 import com.intellij.openapi.util.Pair;
+
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Singleton
 public class ColorSettingsPagesImpl extends ColorSettingsPages {
-  private final List<ColorSettingsPage> myPages = new ArrayList<ColorSettingsPage>();
+  private final List<ColorSettingsPage> myPages = new ArrayList<>();
   private boolean myExtensionsLoaded = false;
-  private Map<TextAttributesKey, Pair<ColorSettingsPage, AttributesDescriptor>> myKeyToDescriptorMap =
-    new HashMap<TextAttributesKey, Pair<ColorSettingsPage, AttributesDescriptor>>();
+  private Map<TextAttributesKey, Pair<ColorSettingsPage, AttributesDescriptor>> myKeyToDescriptorMap = new HashMap<TextAttributesKey, Pair<ColorSettingsPage, AttributesDescriptor>>();
 
   @Override
   public void registerPage(ColorSettingsPage page) {
@@ -42,7 +43,7 @@ public class ColorSettingsPagesImpl extends ColorSettingsPages {
   public ColorSettingsPage[] getRegisteredPages() {
     if (!myExtensionsLoaded) {
       myExtensionsLoaded = true;
-      Collections.addAll(myPages, Extensions.getExtensions(ColorSettingsPage.EP_NAME));
+      myPages.addAll(ColorSettingsPage.EP_NAME.getExtensionList());
     }
     return myPages.toArray(new ColorSettingsPage[myPages.size()]);
   }

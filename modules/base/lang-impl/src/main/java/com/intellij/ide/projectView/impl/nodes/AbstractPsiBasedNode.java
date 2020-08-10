@@ -14,9 +14,7 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.ValidateableNode;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
@@ -33,10 +31,11 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.AstLoadingFilter;
 import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdaters;
+import consulo.logging.Logger;
 import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -162,7 +161,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
       updateImpl(data);
       data.setIcon(patchIcon(myProject, data.getIcon(), getVirtualFile()));
 
-      for (ProjectViewNodeDecorator decorator : Extensions.getExtensions(ProjectViewNodeDecorator.EP_NAME, myProject)) {
+      for (ProjectViewNodeDecorator decorator : ProjectViewNodeDecorator.EP_NAME.getExtensionList(myProject)) {
         decorator.decorate(AbstractPsiBasedNode.this, data);
       }
     });

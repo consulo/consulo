@@ -27,8 +27,6 @@ import com.intellij.ide.projectView.impl.ModuleGroup;
 import com.intellij.ide.projectView.impl.nodes.*;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.actionSystem.*;
-import consulo.logging.Logger;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -37,8 +35,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiTreeUtil;
-import javax.annotation.Nonnull;
+import consulo.logging.Logger;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -77,7 +76,7 @@ public class AddToFavoritesAction extends AnAction {
     Module moduleContext = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
 
     Collection<AbstractTreeNode> nodesToAdd = null;
-    for (FavoriteNodeProvider provider : Extensions.getExtensions(FavoriteNodeProvider.EP_NAME, project)) {
+    for (FavoriteNodeProvider provider : FavoriteNodeProvider.EP_NAME.getExtensionList(project)) {
       nodesToAdd = provider.getFavoriteNodes(dataContext, ViewSettings.DEFAULT);
       if (nodesToAdd != null) {
         break;
@@ -140,7 +139,7 @@ public class AddToFavoritesAction extends AnAction {
                                            ViewSettings favoritesConfig) {
     if (project == null) return Collections.emptyList();
     ArrayList<AbstractTreeNode> result = new ArrayList<AbstractTreeNode>();
-    for (FavoriteNodeProvider provider : Extensions.getExtensions(FavoriteNodeProvider.EP_NAME, project)) {
+    for (FavoriteNodeProvider provider : FavoriteNodeProvider.EP_NAME.getExtensionList(project)) {
       final AbstractTreeNode treeNode = provider.createNode(project, object, favoritesConfig);
       if (treeNode != null) {
         result.add(treeNode);

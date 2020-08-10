@@ -18,12 +18,10 @@ package com.intellij.dvcs.cherrypick;
 import com.google.common.collect.Lists;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsKey;
@@ -42,7 +40,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.util.*;
 
 @Singleton
@@ -89,12 +86,7 @@ public class VcsCherryPickManager {
 
   @Nullable
   public VcsCherryPicker getCherryPickerFor(@Nonnull final VcsKey key) {
-    return ContainerUtil.find(Extensions.getExtensions(VcsCherryPicker.EXTENSION_POINT_NAME, myProject), new Condition<VcsCherryPicker>() {
-      @Override
-      public boolean value(VcsCherryPicker picker) {
-        return picker.getSupportedVcs().equals(key);
-      }
-    });
+    return ContainerUtil.find(VcsCherryPicker.EXTENSION_POINT_NAME.getExtensionList(myProject), picker -> picker.getSupportedVcs().equals(key));
   }
 
   private class CherryPickingTask extends Task.Backgroundable {

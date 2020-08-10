@@ -16,7 +16,6 @@
 
 package com.intellij.psi;
 
-import com.intellij.openapi.extensions.Extensions;
 import javax.annotation.Nonnull;
 
 /**
@@ -27,7 +26,7 @@ public class ElementDescriptionUtil {
 
   @Nonnull
   public static String getElementDescription(@Nonnull PsiElement element, @Nonnull ElementDescriptionLocation location) {
-    for(ElementDescriptionProvider provider: Extensions.getExtensions(ElementDescriptionProvider.EP_NAME)) {
+    for(ElementDescriptionProvider provider: ElementDescriptionProvider.EP_NAME.getExtensionList()) {
       String result = provider.getElementDescription(element, location);
       if (result != null) {
         return result;

@@ -20,10 +20,8 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.fileTemplates.*;
 import com.intellij.ide.util.PropertiesComponent;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
@@ -33,13 +31,14 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Comparing;
-import consulo.disposer.Disposer;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.TabbedPaneWrapper;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.TestOnly;
@@ -51,8 +50,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 import java.text.MessageFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 import static com.intellij.ide.fileTemplates.FileTemplateManager.*;
 
@@ -205,8 +204,8 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
 
     final List<FileTemplateTab> allTabs = new ArrayList<>(Arrays.asList(myTemplatesList, myIncludesList, myCodeTemplatesList));
 
-    final FileTemplateGroupDescriptorFactory[] factories = Extensions.getExtensions(FileTemplateGroupDescriptorFactory.EP_NAME);
-    if (factories.length != 0) {
+    List<FileTemplateGroupDescriptorFactory> factories = FileTemplateGroupDescriptorFactory.EP_NAME.getExtensionList();
+    if (!factories.isEmpty()) {
       myOtherTemplatesList = new FileTemplateTabAsTree(OTHER_TITLE) {
         @Override
         public void onTemplateSelected() {
@@ -460,7 +459,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
   }
 
   private static boolean isInternalTemplateName(final String templateName) {
-    for (InternalTemplateBean bean : Extensions.getExtensions(InternalTemplateBean.EP_NAME)) {
+    for (InternalTemplateBean bean : InternalTemplateBean.EP_NAME.getExtensionList()) {
       if (Comparing.strEqual(templateName, bean.name)) {
         return true;
       }

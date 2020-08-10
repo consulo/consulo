@@ -15,10 +15,10 @@
  */
 package com.intellij.psi.search.scope.packageSet;
 
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Iterator;
 import java.util.List;
@@ -28,13 +28,13 @@ import java.util.List;
  * Date: 3/14/12
  */
 public abstract class CustomScopesProviderEx implements CustomScopesProvider {
-  @javax.annotation.Nullable
+  @Nullable
   public NamedScope getCustomScope(String name) {
     final List<NamedScope> predefinedScopes = getCustomScopes();
     return findPredefinedScope(name, predefinedScopes);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static NamedScope findPredefinedScope(String name, List<NamedScope> predefinedScopes) {
     for (NamedScope scope : predefinedScopes) {
       if (name.equals(scope.getName())) return scope;

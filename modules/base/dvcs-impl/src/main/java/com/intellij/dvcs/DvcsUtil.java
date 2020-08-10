@@ -24,7 +24,6 @@ import com.intellij.ide.file.BatchFileChangeListener;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -162,7 +161,7 @@ public class DvcsUtil {
   /**
    * Returns the currently selected file, based on which VcsBranch or StatusBar components will identify the current repository root.
    */
-  @javax.annotation.Nullable
+  @Nullable
   public static VirtualFile getSelectedFile(@Nonnull Project project) {
     StatusBar statusBar = WindowManager.getInstance().getStatusBar(project);
     final FileEditor fileEditor = StatusBarUtil.getCurrentFileEditor(project, statusBar);
@@ -266,9 +265,9 @@ public class DvcsUtil {
     return tryLoadFileOrReturn(file, defaultValue, null);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Contract("_ , !null, _ -> !null")
-  public static String tryLoadFileOrReturn(@Nonnull final File file, @javax.annotation.Nullable String defaultValue, @Nullable String encoding) {
+  public static String tryLoadFileOrReturn(@Nonnull final File file, @Nullable String defaultValue, @Nullable String encoding) {
     try {
       return tryLoadFile(file, encoding);
     }
@@ -310,7 +309,7 @@ public class DvcsUtil {
     }
   }
 
-  public static void ensureAllChildrenInVfs(@javax.annotation.Nullable VirtualFile dir) {
+  public static void ensureAllChildrenInVfs(@Nullable VirtualFile dir) {
     if (dir != null) {
       //noinspection unchecked
       VfsUtilCore.processFilesRecursively(dir, Processor.TRUE);
@@ -324,10 +323,10 @@ public class DvcsUtil {
     }
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static <T extends Repository> T guessRepositoryForFile(@Nonnull Project project,
                                                                 @Nonnull RepositoryManager<T> manager,
-                                                                @javax.annotation.Nullable VirtualFile file,
+                                                                @Nullable VirtualFile file,
                                                                 @Nullable String defaultRootPathValue) {
     T repository = manager.getRepositoryForRoot(guessVcsRoot(project, file));
     return repository != null ? repository : manager.getRepositoryForRoot(guessRootForVcs(project, manager.getVcs(), defaultRootPathValue));
@@ -344,7 +343,7 @@ public class DvcsUtil {
   }
 
   @Nullable
-  private static VirtualFile guessRootForVcs(@Nonnull Project project, @javax.annotation.Nullable AbstractVcs vcs, @Nullable String defaultRootPathValue) {
+  private static VirtualFile guessRootForVcs(@Nonnull Project project, @Nullable AbstractVcs vcs, @Nullable String defaultRootPathValue) {
     if (project.isDisposed()) return null;
     LOG.debug("Guessing vcs root...");
     ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
@@ -419,7 +418,7 @@ public class DvcsUtil {
     return validRepositories;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private static VirtualFile getVcsRootForLibraryFile(@Nonnull Project project, @Nonnull VirtualFile file) {
     ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
     // for a file inside .jar/.zip consider the .jar/.zip file itself
@@ -461,7 +460,7 @@ public class DvcsUtil {
   }
 
   @Nullable
-  public static VirtualFile guessVcsRoot(@Nonnull Project project, @javax.annotation.Nullable VirtualFile file) {
+  public static VirtualFile guessVcsRoot(@Nonnull Project project, @Nullable VirtualFile file) {
     VirtualFile root = null;
     if (file != null) {
       root = ProjectLevelVcsManager.getInstance(project).getVcsRootFor(file);
@@ -493,14 +492,9 @@ public class DvcsUtil {
     return groupedCommits;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static PushSupport getPushSupport(@Nonnull final AbstractVcs vcs) {
-    return ContainerUtil.find(Extensions.getExtensions(PushSupport.PUSH_SUPPORT_EP, vcs.getProject()), new Condition<PushSupport>() {
-      @Override
-      public boolean value(final PushSupport support) {
-        return support.getVcs().equals(vcs);
-      }
-    });
+    return ContainerUtil.find(PushSupport.PUSH_SUPPORT_EP.getExtensionList(vcs.getProject()), (Condition<PushSupport>)support -> support.getVcs().equals(vcs));
   }
 
   @Nonnull

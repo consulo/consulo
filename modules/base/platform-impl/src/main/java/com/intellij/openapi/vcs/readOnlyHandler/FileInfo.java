@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.vcs.readOnlyHandler;
 
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ListWithSelection;
@@ -28,7 +27,7 @@ class FileInfo {
     myFile = file;
     myHandleType.add(HandleType.USE_FILE_SYSTEM);
     myHandleType.selectFirst();
-    for(HandleTypeFactory factory: Extensions.getExtensions(HandleTypeFactory.EP_NAME, project)) {
+    for(HandleTypeFactory factory: HandleTypeFactory.EP_NAME.getExtensionList(project)) {
       final HandleType handleType = factory.createHandleType(file);
       if (handleType != null) {
         myHandleType.add(handleType);

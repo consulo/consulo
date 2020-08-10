@@ -266,16 +266,14 @@ public class ApplyPatchAction extends DumbAwareAction {
                                                      @Nonnull final VirtualFile file,
                                                      @javax.annotation.Nullable final CommitContext commitContext) {
     final FilePatch patchBase = patch.getPatch();
-    return ApplicationManager.getApplication().runWriteAction(
-            new Computable<ApplyFilePatch.Result>() {
+    return ApplicationManager.getApplication().runWriteAction(new Computable<ApplyFilePatch.Result>() {
               @Override
               public ApplyFilePatch.Result compute() {
                 try {
                   return patch.apply(file, context, project, VcsUtil.getFilePath(file), new Getter<CharSequence>() {
                     @Override
                     public CharSequence get() {
-                      final BaseRevisionTextPatchEP baseRevisionTextPatchEP =
-                              Extensions.findExtension(PatchEP.EP_NAME, project, BaseRevisionTextPatchEP.class);
+                      final BaseRevisionTextPatchEP baseRevisionTextPatchEP = PatchEP.EP_NAME.findExtensionOrFail(project, BaseRevisionTextPatchEP.class);
                       final String path = ObjectUtils.chooseNotNull(patchBase.getBeforeName(), patchBase.getAfterName());
                       return baseRevisionTextPatchEP.provideContent(path, commitContext);
                     }

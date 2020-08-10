@@ -16,15 +16,14 @@
 package com.intellij.packageDependencies;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.changes.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.scope.packageSet.*;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -37,7 +36,7 @@ public class ChangeListsScopesProvider extends CustomScopesProviderEx {
   private Project myProject;
 
   public static ChangeListsScopesProvider getInstance(Project project) {
-    return Extensions.findExtension(CUSTOM_SCOPES_PROVIDER, project, ChangeListsScopesProvider.class);
+    return CUSTOM_SCOPES_PROVIDER.findExtensionOrFail(project, ChangeListsScopesProvider.class);
   }
 
   @Inject

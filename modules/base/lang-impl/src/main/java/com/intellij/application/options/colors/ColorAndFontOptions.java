@@ -37,15 +37,12 @@ import com.intellij.openapi.editor.colors.impl.EditorColorsSchemeImpl;
 import com.intellij.openapi.editor.colors.impl.ReadOnlyColorsScheme;
 import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.options.*;
 import com.intellij.openapi.options.colors.*;
 import com.intellij.openapi.options.newEditor.OptionsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Comparing;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Weighted;
 import com.intellij.openapi.vcs.FileStatus;
@@ -60,6 +57,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -72,8 +71,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 
 public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract {
@@ -437,7 +436,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
         }
       });
     }
-    Collections.addAll(extensions, Extensions.getExtensions(ColorAndFontPanelFactory.EP_NAME));
+    extensions.addAll(ColorAndFontPanelFactory.EP_NAME.getExtensionList());
     result.addAll(extensions);
     result.add(new DiffColorsPageFactory());
     result.add(new FileStatusColorsPageFactory());
@@ -571,7 +570,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     for (ColorSettingsPage page : pages) {
       initDescriptions(page, descriptions, scheme);
     }
-    for (ColorAndFontDescriptorsProvider provider : Extensions.getExtensions(ColorAndFontDescriptorsProvider.EP_NAME)) {
+    for (ColorAndFontDescriptorsProvider provider : ColorAndFontDescriptorsProvider.EP_NAME.getExtensionList()) {
       initDescriptions(provider, descriptions, scheme);
     }
   }

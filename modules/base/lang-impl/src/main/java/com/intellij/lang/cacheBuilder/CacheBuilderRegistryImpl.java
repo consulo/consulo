@@ -16,14 +16,11 @@
 
 package com.intellij.lang.cacheBuilder;
 
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.FileType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author yole

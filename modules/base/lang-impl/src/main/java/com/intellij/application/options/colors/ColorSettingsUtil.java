@@ -20,15 +20,14 @@ import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.SeveritiesProvider;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.options.OptionsBundle;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorAndFontDescriptorsProvider;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.HashMap;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -64,7 +63,7 @@ public class ColorSettingsUtil {
     // the first registered page implementing InspectionColorSettingsPage
     // gets the inspection attribute descriptors added to its list
     if (!(provider instanceof InspectionColorSettingsPage)) return false;
-    for(ColorSettingsPage settingsPage: Extensions.getExtensions(ColorSettingsPage.EP_NAME)) {
+    for(ColorSettingsPage settingsPage: ColorSettingsPage.EP_NAME.getExtensionList()) {
       if (settingsPage == provider) break;
       if (settingsPage instanceof InspectionColorSettingsPage) return false;
     }
@@ -81,7 +80,7 @@ public class ColorSettingsUtil {
     descriptors.add(new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.server.problems"), CodeInsightColors.GENERIC_SERVER_ERROR_OR_WARNING));
     descriptors.add(new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.server.duplicate"), CodeInsightColors.DUPLICATE_FROM_SERVER));
 
-    for (SeveritiesProvider provider : Extensions.getExtensions(SeveritiesProvider.EP_NAME)) {
+    for (SeveritiesProvider provider : SeveritiesProvider.EP_NAME.getExtensionList()) {
       for (HighlightInfoType highlightInfoType : provider.getSeveritiesHighlightInfoTypes()) {
         final TextAttributesKey attributesKey = highlightInfoType.getAttributesKey();
         descriptors.add(new AttributesDescriptor(toDisplayName(attributesKey), attributesKey));

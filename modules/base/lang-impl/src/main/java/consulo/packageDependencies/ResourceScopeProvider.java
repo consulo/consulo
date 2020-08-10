@@ -15,13 +15,12 @@
  */
 package consulo.packageDependencies;
 
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
-import consulo.psi.search.scope.ResourcesScope;
 import com.intellij.psi.search.scope.packageSet.CustomScopesProviderEx;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
-import javax.annotation.Nonnull;
+import consulo.psi.search.scope.ResourcesScope;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class ResourceScopeProvider extends CustomScopesProviderEx {
   private ResourcesScope myResourcesScope = new ResourcesScope();
 
   public static ResourceScopeProvider getInstance(Project project) {
-    return Extensions.findExtension(CUSTOM_SCOPES_PROVIDER, project, ResourceScopeProvider.class);
+    return CUSTOM_SCOPES_PROVIDER.findExtensionOrFail(project, ResourceScopeProvider.class);
   }
 
   @Override

@@ -16,76 +16,55 @@
 package com.intellij.ide;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 @Singleton
-public class SelectInManager  {
+public class SelectInManager {
+  public static class SelectInTargetComparator implements Comparator<SelectInTarget> {
+    public static final SelectInTargetComparator INSTANCE = new SelectInTargetComparator();
+
+    @Override
+    public int compare(final SelectInTarget o1, final SelectInTarget o2) {
+      if (o1.getWeight() < o2.getWeight()) return -1;
+      if (o1.getWeight() > o2.getWeight()) return 1;
+      return 0;
+    }
+  }
+
+  public static final String PROJECT = IdeBundle.message("select.in.project");
+  public static final String PACKAGES = IdeBundle.message("select.in.packages");
+  public static final String ASPECTS = IdeBundle.message("select.in.aspects");
+  public static final String COMMANDER = IdeBundle.message("select.in.commander");
+  public static final String FAVORITES = IdeBundle.message("select.in.favorites");
+  public static final String NAV_BAR = IdeBundle.message("select.in.nav.bar");
+  public static final String SCOPE = IdeBundle.message("select.in.scope");
+
+  public static SelectInManager getInstance(Project project) {
+    return ServiceManager.getService(project, SelectInManager.class);
+  }
+
   private final Project myProject;
-  private final List<SelectInTarget> myTargets = new ArrayList<SelectInTarget>();
-  private boolean myLoadedExtensions = false;
-  @NonNls public static final String PROJECT = IdeBundle.message("select.in.project");
-  @NonNls public static final String PACKAGES = IdeBundle.message("select.in.packages");
-  @NonNls public static final String ASPECTS = IdeBundle.message("select.in.aspects");
-  @NonNls public static final String COMMANDER = IdeBundle.message("select.in.commander");
-  @NonNls public static final String FAVORITES = IdeBundle.message("select.in.favorites");
-  @NonNls public static final String NAV_BAR = IdeBundle.message("select.in.nav.bar");
-  @NonNls public static final String SCOPE = IdeBundle.message("select.in.scope");
 
   @Inject
   public SelectInManager(final Project project) {
     myProject = project;
   }
 
-  /**
-   * "Select In" targets should be registered as extension points ({@link com.intellij.ide.SelectInTarget#EP_NAME}).
-   */
-  @Deprecated
-  public void addTarget(SelectInTarget target) {
-    myTargets.add(target);
-  }
-
-  public void removeTarget(SelectInTarget target) {
-    myTargets.remove(target);
-  }
-
-  public SelectInTarget[] getTargets() {
-    checkLoadExtensions();
-    SelectInTarget[] targets = myTargets.toArray(new SelectInTarget[myTargets.size()]);
-    Arrays.sort(targets, new SelectInTargetComparator());
-
-    if (DumbService.getInstance(myProject).isDumb()) {
-      final List<SelectInTarget> awareList = (List)ContainerUtil.findAll(targets, DumbAware.class);
-      return awareList.toArray(new SelectInTarget[awareList.size()]);
+  @Nonnull
+  public List<SelectInTarget> getTargets() {
+    List<SelectInTarget> targets = DumbService.getDumbAwareExtensions(myProject, SelectInTarget.EP_NAME);
+    if(targets.isEmpty()) {
+      return Collections.emptyList();
     }
-
+    targets.sort(SelectInTargetComparator.INSTANCE);
     return targets;
-  }
-
-  private void checkLoadExtensions() {
-    if (!myLoadedExtensions) {
-      myLoadedExtensions = true;
-      Collections.addAll(myTargets, Extensions.getExtensions(SelectInTarget.EP_NAME, myProject));
-    }
-  }
-
-  public static SelectInManager getInstance(Project project) {
-    return ServiceManager.getService(project, SelectInManager.class);
-  }
-
-  public static class SelectInTargetComparator implements Comparator<SelectInTarget> {
-    public int compare(final SelectInTarget o1, final SelectInTarget o2) {
-      if (o1.getWeight() < o2.getWeight()) return -1;
-      if (o1.getWeight() > o2.getWeight()) return 1;
-      return 0;
-    }
   }
 }

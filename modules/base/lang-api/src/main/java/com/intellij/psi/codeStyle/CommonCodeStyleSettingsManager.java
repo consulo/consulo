@@ -16,13 +16,12 @@
 package com.intellij.psi.codeStyle;
 
 import com.intellij.lang.Language;
-import consulo.logging.Logger;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
 import gnu.trove.THashMap;
 import org.jdom.Content;
 import org.jdom.Element;
@@ -116,8 +115,7 @@ class CommonCodeStyleSettingsManager {
 
 
   private void initNonReadSettings() {
-    final LanguageCodeStyleSettingsProvider[] providers = Extensions.getExtensions(LanguageCodeStyleSettingsProvider.EP_NAME);
-    for (final LanguageCodeStyleSettingsProvider provider : providers) {
+    for (final LanguageCodeStyleSettingsProvider provider : LanguageCodeStyleSettingsProvider.EP_NAME.getExtensionList()) {
       Language target = provider.getLanguage();
       if (!myCommonSettingsMap.containsKey(target)) {
         CommonCodeStyleSettings initialSettings = safelyGetDefaults(provider);

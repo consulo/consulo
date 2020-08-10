@@ -1,14 +1,13 @@
 package com.intellij.coverage;
 
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
@@ -92,8 +91,8 @@ public class CoverageOptionsConfigurable implements SearchableConfigurable, Conf
     return panel;
   }
 
-  private CoverageOptions[] getExtensions() {
-    return Extensions.getExtensions(CoverageOptions.EP_NAME, myProject);
+  private List<CoverageOptions> getExtensions() {
+    return CoverageOptions.EP_NAME.getExtensionList(myProject);
   }
 
   @Override

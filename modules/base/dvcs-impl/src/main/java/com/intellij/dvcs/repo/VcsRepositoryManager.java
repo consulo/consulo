@@ -15,8 +15,6 @@
  */
 package com.intellij.dvcs.repo;
 
-import consulo.disposer.Disposable;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.util.BackgroundTaskUtil;
 import com.intellij.openapi.project.Project;
@@ -29,12 +27,16 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.Topic;
+import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
@@ -59,8 +61,6 @@ public class VcsRepositoryManager implements Disposable, VcsListener {
   private final Map<VirtualFile, Repository> myRepositories = ContainerUtil.newHashMap();
   @Nonnull
   private final Map<VirtualFile, Repository> myExternalRepositories = ContainerUtil.newHashMap();
-  @Nonnull
-  private final List<VcsRepositoryCreator> myRepositoryCreators;
 
   private volatile boolean myDisposed;
 
@@ -75,7 +75,6 @@ public class VcsRepositoryManager implements Disposable, VcsListener {
   public VcsRepositoryManager(@Nonnull Project project, @Nonnull ProjectLevelVcsManager vcsManager) {
     myProject = project;
     myVcsManager = vcsManager;
-    myRepositoryCreators = Arrays.asList(Extensions.getExtensions(VcsRepositoryCreator.EXTENSION_POINT_NAME, project));
     myProject.getMessageBus().connect().subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, this);
   }
 
@@ -263,7 +262,7 @@ public class VcsRepositoryManager implements Disposable, VcsListener {
   @Nullable
   private VcsRepositoryCreator getRepositoryCreator(@Nullable final AbstractVcs vcs) {
     if (vcs == null) return null;
-    return ContainerUtil.find(myRepositoryCreators, creator -> creator.getVcsKey().equals(vcs.getKeyInstanceMethod()));
+    return ContainerUtil.find(VcsRepositoryCreator.EXTENSION_POINT_NAME.getExtensionList(myProject), creator -> creator.getVcsKey().equals(vcs.getKeyInstanceMethod()));
   }
 
   @Nonnull

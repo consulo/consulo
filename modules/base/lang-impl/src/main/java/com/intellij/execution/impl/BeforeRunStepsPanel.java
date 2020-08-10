@@ -25,17 +25,16 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.util.Condition;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.containers.hash.HashSet;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -232,7 +231,7 @@ class BeforeRunStepsPanel extends JPanel {
       return false;
     }
     Set<Key> activeProviderKeys = getActiveProviderKeys();
-    final BeforeRunTaskProvider<BeforeRunTask>[] providers = Extensions.getExtensions(BeforeRunTaskProvider.EP_NAME, myRunConfiguration.getProject());
+    final List<BeforeRunTaskProvider<BeforeRunTask>> providers = BeforeRunTaskProvider.EP_NAME.getExtensionList(myRunConfiguration.getProject());
     for (final BeforeRunTaskProvider<BeforeRunTask> provider : providers) {
       if (provider.createTask(myRunConfiguration) != null) {
         if (!checkOnlyAddAction) {

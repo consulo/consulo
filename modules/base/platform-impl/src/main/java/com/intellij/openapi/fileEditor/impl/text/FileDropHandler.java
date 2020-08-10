@@ -20,7 +20,6 @@ import com.intellij.openapi.editor.CustomFileDropHandler;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorDropHandler;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
@@ -58,7 +57,7 @@ public class FileDropHandler implements EditorDropHandler {
     if (project != null) {
       final List<File> fileList = FileCopyPasteUtil.getFileList(t);
       if (fileList != null) {
-        boolean dropResult = ContainerUtil.process(Extensions.getExtensions(CustomFileDropHandler.CUSTOM_DROP_HANDLER_EP, project),
+        boolean dropResult = ContainerUtil.process(CustomFileDropHandler.CUSTOM_DROP_HANDLER_EP.getExtensionList(project),
                                                    handler -> !(handler.canHandle(t, myEditor) && handler.handleDrop(t, myEditor, project)));
         if (!dropResult) return;
 

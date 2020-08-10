@@ -17,10 +17,9 @@
 package com.intellij.psi;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 
 /**
@@ -32,7 +31,7 @@ public abstract class FileContextProvider {
 
   @Nullable
   public static FileContextProvider getProvider(final @Nonnull PsiFile file) {
-    for (FileContextProvider provider: Extensions.getExtensions(EP_NAME, file.getProject())) {
+    for (FileContextProvider provider : EP_NAME.getExtensionList(file.getProject())) {
       if (provider.isAvailable(file)) {
         return provider;
       }
