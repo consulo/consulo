@@ -233,23 +233,15 @@ class RunConfigurable extends BaseConfigurable {
           }
           if (shared != null) {
             consulo.ui.image.Image icon = TargetAWT.from(getIcon());
-            Image templateIcon = AllIcons.Nodes.TreeClosed;
-            Image rightIcon = AllIcons.Nodes.Symlink;
-            int markRightWidthAppend = rightIcon.getWidth() / 2;
 
-            final Boolean finalShared = shared;
-            setIcon(ImageEffects.canvas(templateIcon.getWidth() + markRightWidthAppend, templateIcon.getHeight(), ctx -> {
-              ctx.drawImage(icon, 0, 0);
-
-              if(finalShared) {
-                ctx.setGlobalAlpha(.6f);
-                ctx.drawImage(rightIcon, 8, 0);
-              }
-            }));
-            setIconTextGap(0);
-          } else {
-            setIconTextGap(2);
+            if(shared) {
+              setIcon(ImageEffects.layered(icon, AllIcons.Nodes.Symlink));
+            }
+            else {
+              setIcon(icon);
+            }
           }
+          setIconTextGap(2);
         }
       }
     });
