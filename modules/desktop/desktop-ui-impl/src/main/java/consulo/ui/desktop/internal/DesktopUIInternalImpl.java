@@ -119,6 +119,11 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
+  public Image _ImageEffects_colorize(Image baseImage, ColorValue colorValue) {
+    return new DesktopColorizeImageImpl(TargetAWT.to(baseImage), colorValue);
+  }
+
+  @Override
   public Image _ImageEffects_resize(Image original, int width, int height) {
     return new DesktopResizeImageImpl(TargetAWT.to(original), width, height);
   }

@@ -20,7 +20,6 @@ import com.intellij.codeInspection.DeprecationUtil;
 import com.intellij.codeInspection.InspectionProfile;
 import com.intellij.codeInspection.InspectionsBundle;
 import com.intellij.lang.annotation.HighlightSeverity;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
@@ -29,12 +28,13 @@ import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.psi.PsiElement;
+import consulo.logging.Logger;
+import consulo.ui.image.Image;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -217,7 +217,8 @@ public interface HighlightInfoType {
   }
 
   interface Iconable {
-    Icon getIcon();
+    @Nullable
+    Image getIcon();
   }
 
   interface UpdateOnTypingSuppressible {

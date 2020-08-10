@@ -19,6 +19,7 @@ import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.profile.codeInspection.ui.SingleInspectionProfilePanel;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -64,7 +65,7 @@ public class ScopesAndSeveritiesHintTable extends JBTable {
                                                      final int column) {
         super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         final HighlightDisplayLevel level = (HighlightDisplayLevel)value;
-        setIcon(level.getIcon());
+        setIcon(TargetAWT.to(level.getIcon()));
         setText(SingleInspectionProfilePanel.renderSeverity(level.getSeverity()));
         setOpaque(false);
         UIUtil.applyStyle(UIUtil.ComponentStyle.SMALL, this);

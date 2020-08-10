@@ -31,28 +31,29 @@ import com.intellij.util.concurrency.AtomicFieldUpdater;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
+import consulo.ui.image.Image;
 import gnu.trove.TIntFunction;
 import gnu.trove.TObjectIntHashMap;
 import gnu.trove.TObjectIntProcedure;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * User: anna
  * Date: 24-Feb-2006
  */
 public class SeverityRegistrar implements JDOMExternalizable, Comparator<HighlightSeverity> {
-  @NonNls private static final String INFO_TAG = "info";
-  @NonNls private static final String COLOR_ATTRIBUTE = "color";
-  private final Map<String, SeverityBasedTextAttributes> myMap = ContainerUtil.newConcurrentMap();
-  private final Map<String, Color> myRendererColors = ContainerUtil.newConcurrentMap();
+ private static final String INFO_TAG = "info";
+  private static final String COLOR_ATTRIBUTE = "color";
+
+  private final Map<String, SeverityBasedTextAttributes> myMap = new ConcurrentHashMap<>();
+  private final Map<String, Color> myRendererColors = new ConcurrentHashMap<>();
   public static final Topic<Runnable> SEVERITIES_CHANGED_TOPIC =
           Topic.create("SEVERITIES_CHANGED_TOPIC", Runnable.class, Topic.BroadcastDirection.TO_PARENT);
   @Nonnull
@@ -61,7 +62,7 @@ public class SeverityRegistrar implements JDOMExternalizable, Comparator<Highlig
   private volatile OrderMap myOrderMap;
   private JDOMExternalizableStringList myReadOrder;
 
-  private static final Map<String, HighlightInfoType> STANDARD_SEVERITIES = ContainerUtil.newConcurrentMap();
+  private static final Map<String, HighlightInfoType> STANDARD_SEVERITIES = new ConcurrentHashMap<>();
 
   public SeverityRegistrar(@Nonnull MessageBus messageBus) {
     myMessageBus = messageBus;
@@ -280,7 +281,8 @@ public class SeverityRegistrar implements JDOMExternalizable, Comparator<Highlig
     return list;
   }
 
-  public Icon getRendererIconByIndex(int i) {
+  @Nullable
+  public Image getRendererIconByIndex(int i) {
     final HighlightSeverity severity = getSeverityByIndex(i);
     HighlightDisplayLevel level = HighlightDisplayLevel.find(severity);
     if (level != null) {

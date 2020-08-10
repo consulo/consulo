@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,19 +20,18 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 12-Oct-17
+ * @since 2020-08-09
  */
-public interface ColorValue {
-  @Nonnull
-  static ColorValue lazy(@Nonnull Supplier<? extends ColorValue> getter) {
-    return new LazyColorValue(getter);
+class LazyColorValue implements ColorValue {
+  private Supplier<? extends ColorValue> myColorSupplier;
+
+  LazyColorValue(Supplier<? extends ColorValue> colorSupplier) {
+    myColorSupplier = colorSupplier;
   }
 
   @Nonnull
-  RGBColor toRGB();
-
-  @Nonnull
-  default ColorValue withAlpha(float value) {
-    return new WithAlphaColorValue(this, value);
+  @Override
+  public RGBColor toRGB() {
+    return myColorSupplier.get().toRGB();
   }
 }

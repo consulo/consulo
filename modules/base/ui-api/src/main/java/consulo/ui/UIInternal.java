@@ -147,6 +147,10 @@ public abstract class UIInternal {
 
   public abstract Image _ImageEffects_withText(Image baseImage, String text);
 
+  public Image _ImageEffects_colorize(Image baseImage, ColorValue colorValue) {
+    throw new UnsupportedOperationException();
+  }
+
   public abstract Image _ImageEffects_resize(Image original, int width, int height);
 
   public abstract MenuItem _MenuItem_create(String text);

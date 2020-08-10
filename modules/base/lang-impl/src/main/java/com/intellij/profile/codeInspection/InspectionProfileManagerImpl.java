@@ -29,7 +29,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.options.BaseSchemeProcessor;
 import com.intellij.openapi.options.SchemesManager;
 import com.intellij.openapi.options.SchemesManagerFactory;
@@ -42,6 +41,7 @@ import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.profile.Profile;
 import com.intellij.util.ArrayUtil;
 import consulo.logging.Logger;
+import consulo.ui.image.Image;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.TestOnly;
@@ -50,7 +50,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -143,15 +142,15 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
   }
 
   public static void registerProvidedSeverities() {
-    for (SeveritiesProvider provider : Extensions.getExtensions(SeveritiesProvider.EP_NAME)) {
+    SeveritiesProvider.EP_NAME.forEachExtensionSafe(provider -> {
       for (HighlightInfoType t : provider.getSeveritiesHighlightInfoTypes()) {
         HighlightSeverity highlightSeverity = t.getSeverity(null);
         SeverityRegistrar.registerStandard(t, highlightSeverity);
         TextAttributesKey attributesKey = t.getAttributesKey();
-        Icon icon = t instanceof HighlightInfoType.Iconable ? ((HighlightInfoType.Iconable)t).getIcon() : null;
+        Image icon = t instanceof HighlightInfoType.Iconable ? ((HighlightInfoType.Iconable)t).getIcon() : null;
         HighlightDisplayLevel.registerSeverity(highlightSeverity, attributesKey, icon);
       }
-    }
+    });
   }
 
   @Override

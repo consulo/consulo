@@ -43,8 +43,10 @@ import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
+import consulo.ui.image.Image;
 import consulo.util.lang.DeprecatedMethodException;
 import gnu.trove.TIntArrayList;
 
@@ -63,7 +65,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
   private final Document myDocument;
   private final DaemonCodeAnalyzerImpl myDaemonCodeAnalyzer;
   private final SeverityRegistrar mySeverityRegistrar;
-  private Icon icon;
+  private Image icon;
   String statistics;
   String statusLabel;
   String statusExtraLine;
@@ -264,7 +266,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
   @Override
   public void paint(@Nonnull Component c, Graphics g, @Nonnull Rectangle r) {
     DaemonCodeAnalyzerStatus status = getDaemonCodeAnalyzerStatus(mySeverityRegistrar);
-    Icon icon = getIcon(status);
+    Icon icon = TargetAWT.to(getIcon(status));
     icon.paintIcon(c, g, r.x, r.y);
   }
 
@@ -274,9 +276,9 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
   }
 
   @Nonnull
-  private Icon getIcon(@Nonnull DaemonCodeAnalyzerStatus status) {
+  private Image getIcon(@Nonnull DaemonCodeAnalyzerStatus status) {
     updatePanel(status);
-    Icon icon = this.icon;
+    Image icon = this.icon;
     if (PowerSaveMode.isEnabled() || status.reasonWhySuspended != null || status.reasonWhyDisabled != null || status.errorAnalyzingFinished) {
       return icon;
     }
@@ -323,7 +325,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
     }
 
     int lastNotNullIndex = ArrayUtil.lastIndexOfNot(status.errorCount, 0);
-    Icon icon = lastNotNullIndex == -1 ? AllIcons.General.InspectionsOK : mySeverityRegistrar.getRendererIconByIndex(lastNotNullIndex);
+    Image icon = lastNotNullIndex == -1 ? AllIcons.General.InspectionsOK : mySeverityRegistrar.getRendererIconByIndex(lastNotNullIndex);
 
     if (status.errorAnalyzingFinished) {
       boolean isDumb = DumbService.isDumb(myProject);
@@ -384,7 +386,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
     else {
       DaemonCodeAnalyzerStatus status = getDaemonCodeAnalyzerStatus(mySeverityRegistrar);
       List<StatusItem> statusItems = new ArrayList<>();
-      Icon mainIcon = null;
+      Image mainIcon = null;
 
       String title = "";
       String details = "";
@@ -409,7 +411,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
             name = StringUtil.pluralize(name);
           }
 
-          Icon icon = mySeverityRegistrar.getRendererIconByIndex(i);
+          Image icon = mySeverityRegistrar.getRendererIconByIndex(i);
           statusItems.add(new StatusItem(Integer.toString(count), icon, name));
 
           if (mainIcon == null) {

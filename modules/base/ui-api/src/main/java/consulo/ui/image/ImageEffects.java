@@ -94,6 +94,11 @@ public final class ImageEffects {
   }
 
   @Nonnull
+  public static Image colorize(@Nonnull Image baseImage, @Nonnull ColorValue colorValue) {
+    return UIInternal.get()._ImageEffects_colorize(baseImage, colorValue);
+  }
+
+  @Nonnull
   public static Image colorFilled(int width, int heght, @Nonnull ColorValue colorValue) {
     return canvas(width, heght, ctx -> {
       ctx.setFillStyle(colorValue);

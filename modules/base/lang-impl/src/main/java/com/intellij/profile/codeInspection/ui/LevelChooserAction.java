@@ -27,7 +27,6 @@ import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.profile.codeInspection.SeverityProvider;
-import com.intellij.profile.codeInspection.ui.table.SeverityRenderer;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -99,7 +98,7 @@ public abstract class LevelChooserAction extends ComboBoxAction implements DumbA
     myChosen = severity;
     final Presentation templatePresentation = getTemplatePresentation();
     templatePresentation.setText(SingleInspectionProfilePanel.renderSeverity(severity));
-    templatePresentation.setIcon(SeverityRenderer.getIcon(HighlightDisplayLevel.find(severity)));
+    templatePresentation.setIcon(HighlightDisplayLevel.find(severity).getIcon());
   }
 
   private class HighlightSeverityAction extends DumbAwareAction {
@@ -113,7 +112,7 @@ public abstract class LevelChooserAction extends ComboBoxAction implements DumbA
       mySeverity = severity;
       final Presentation presentation = getTemplatePresentation();
       presentation.setText(SingleInspectionProfilePanel.renderSeverity(severity));
-      presentation.setIcon(SeverityRenderer.getIcon(HighlightDisplayLevel.find(severity)));
+      presentation.setIcon(HighlightDisplayLevel.find(severity).getIcon());
     }
 
     @Override

@@ -23,13 +23,13 @@ import com.intellij.openapi.ui.popup.LightweightWindowEvent;
 import com.intellij.profile.codeInspection.SeverityProvider;
 import com.intellij.profile.codeInspection.ui.LevelChooserAction;
 import com.intellij.profile.codeInspection.ui.SingleInspectionProfilePanel;
-import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.ColorIcon;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.util.EventObject;
@@ -40,7 +40,7 @@ import java.util.SortedSet;
  */
 public class SeverityRenderer extends ComboBoxTableRenderer<SeverityState> {
   private final Runnable myOnClose;
-  private Icon myDisabledIcon;
+  private final Image myDisabledIcon;
 
   public SeverityRenderer(final SeverityState[] values, @Nullable final Runnable onClose) {
     super(values);
@@ -49,21 +49,8 @@ public class SeverityRenderer extends ComboBoxTableRenderer<SeverityState> {
   }
 
   public static SeverityRenderer create(final InspectionProfileImpl inspectionProfile, @Nullable final Runnable onClose) {
-    final SortedSet<HighlightSeverity> severities =
-            LevelChooserAction.getSeverities(((SeverityProvider)inspectionProfile.getProfileManager()).getOwnSeverityRegistrar());
-    return new SeverityRenderer(ContainerUtil.map2Array(severities, new SeverityState[severities.size()], new Function<HighlightSeverity, SeverityState>() {
-      @Override
-      public SeverityState fun(HighlightSeverity severity) {
-        return new SeverityState(severity, true, false);
-      }
-    }), onClose);
-  }
-
-  public static Icon getIcon(@Nonnull HighlightDisplayLevel level) {
-    Icon icon = level.getIcon();
-    return icon instanceof HighlightDisplayLevel.ColoredIcon
-           ? new ColorIcon(icon.getIconWidth(), ((HighlightDisplayLevel.ColoredIcon)icon).getColor())
-           : icon;
+    final SortedSet<HighlightSeverity> severities = LevelChooserAction.getSeverities(((SeverityProvider)inspectionProfile.getProfileManager()).getOwnSeverityRegistrar());
+    return new SeverityRenderer(ContainerUtil.map2Array(severities, new SeverityState[severities.size()], severity -> new SeverityState(severity, true, false)), onClose);
   }
 
   @Override
@@ -71,7 +58,7 @@ public class SeverityRenderer extends ComboBoxTableRenderer<SeverityState> {
     super.customizeComponent(value, table, isSelected);
     setPaintArrow(value.isEnabledForEditing());
     setEnabled(!value.isDisabled());
-    setDisabledIcon(myDisabledIcon);
+    setDisabledIcon(TargetAWT.to(myDisabledIcon));
   }
 
   @Override
@@ -81,7 +68,7 @@ public class SeverityRenderer extends ComboBoxTableRenderer<SeverityState> {
 
   @Override
   protected Icon getIconFor(@Nonnull final SeverityState value) {
-    return getIcon(HighlightDisplayLevel.find(value.getSeverity()));
+    return TargetAWT.to(HighlightDisplayLevel.find(value.getSeverity()).getIcon());
   }
 
   @Override

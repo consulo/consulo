@@ -16,31 +16,23 @@
 package com.intellij.profile.codeInspection.ui.inspectionsTree;
 
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
-import com.intellij.codeHighlighting.HighlightDisplayLevel.ColoredIcon;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.profile.codeInspection.ui.ScopeOrderComparator;
-import com.intellij.ui.JBColor;
-import com.intellij.util.ui.JBUI;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.annotation.Nullable;
 import java.util.*;
-import java.util.List;
 
 /**
  * @author Dmitry Batkovich
  */
-public class MultiScopeSeverityIcon implements Icon {
-  private final LinkedHashMap<String, HighlightDisplayLevel> myScopeToAverageSeverityMap;
-  private final String myDefaultScopeName;
-
-  public MultiScopeSeverityIcon(final Map<String, HighlightSeverity> scopeToAverageSeverityMap,
-                                final String defaultScopeName,
-                                final InspectionProfileImpl inspectionProfile) {
-    myDefaultScopeName = defaultScopeName;
+public class MultiScopeSeverityIcon {
+  @Nullable
+  public static Image create(final Map<String, HighlightSeverity> scopeToAverageSeverityMap, final String defaultScopeName, final InspectionProfileImpl inspectionProfile) {
     final List<String> sortedScopeNames = new ArrayList<String>(scopeToAverageSeverityMap.keySet());
-    myScopeToAverageSeverityMap = new LinkedHashMap<String, HighlightDisplayLevel>();
+    LinkedHashMap<String, HighlightDisplayLevel> myScopeToAverageSeverityMap = new LinkedHashMap<>();
     Collections.sort(sortedScopeNames, new ScopeOrderComparator(inspectionProfile));
     sortedScopeNames.remove(defaultScopeName);
     sortedScopeNames.add(defaultScopeName);
@@ -55,42 +47,12 @@ public class MultiScopeSeverityIcon implements Icon {
       }
       myScopeToAverageSeverityMap.put(scopeName, level);
     }
-  }
 
-  private static JBColor getMixedSeverityColor() {
-    return JBColor.DARK_GRAY;
-  }
-
-  public String getDefaultScopeName() {
-    return myDefaultScopeName;
-  }
-
-  public LinkedHashMap<String, HighlightDisplayLevel> getScopeToAverageSeverityMap() {
-    return myScopeToAverageSeverityMap;
-  }
-
-  @Override
-  public void paintIcon(final Component c, final Graphics g, final int i, final int j) {
-    final int partWidth = getIconWidth() / myScopeToAverageSeverityMap.size();
-
-    final Collection<HighlightDisplayLevel> values = myScopeToAverageSeverityMap.values();
-    int idx = 0;
-    for (final HighlightDisplayLevel level : values) {
-      final Icon icon = level.getIcon();
-      g.setColor(icon instanceof ColoredIcon ? ((ColoredIcon)icon).getColor() : getMixedSeverityColor());
-      final int x = i + partWidth * idx;
-      g.fillRect(x, j, partWidth, getIconHeight());
-      idx++;
+    if (myScopeToAverageSeverityMap.size() == 1) {
+      HighlightDisplayLevel firstItem = ContainerUtil.getFirstItem(myScopeToAverageSeverityMap.values());
+      assert firstItem != null;
+      return firstItem.getIcon();
     }
-  }
-
-  @Override
-  public int getIconWidth() {
-    return JBUI.scale(12);
-  }
-
-  @Override
-  public int getIconHeight() {
-    return getIconWidth();
+    return null;
   }
 }

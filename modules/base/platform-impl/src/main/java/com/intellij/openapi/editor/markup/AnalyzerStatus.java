@@ -17,12 +17,11 @@ package com.intellij.openapi.editor.markup;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.GridBag;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +35,7 @@ import java.util.function.Supplier;
  * from kotlin
  */
 public class AnalyzerStatus {
-  public static final NotNullLazyValue<AnalyzerStatus> DEFAULT = NotNullLazyValue.createValue(() -> new AnalyzerStatus(EmptyIcon.ICON_0, null, null, () -> new UIController() {
+  public static final NotNullLazyValue<AnalyzerStatus> DEFAULT = NotNullLazyValue.createValue(() -> new AnalyzerStatus(consulo.ui.image.Image.empty(0), null, null, () -> new UIController() {
     @Override
     public boolean enableToolbar() {
       return false;
@@ -103,7 +102,7 @@ public class AnalyzerStatus {
            Objects.equals(a.passes, b.passes);
   }
 
-  private final Icon myIcon;
+  private final consulo.ui.image.Image myIcon;
   private final String myTitle;
   private final String myDetails;
 
@@ -118,7 +117,7 @@ public class AnalyzerStatus {
 
   private NotNullLazyValue<UIController> myControllerValue;
 
-  public AnalyzerStatus(Icon icon, String title, String details, Supplier<UIController> controllerCreator) {
+  public AnalyzerStatus(consulo.ui.image.Image icon, String title, String details, Supplier<UIController> controllerCreator) {
     myIcon = icon;
     myTitle = title;
     myDetails = details;
@@ -177,7 +176,7 @@ public class AnalyzerStatus {
     return this;
   }
 
-  public Icon getIcon() {
+  public Image getIcon() {
     return myIcon;
   }
 

@@ -15,23 +15,17 @@
  */
 package com.intellij.profile.codeInspection.ui.inspectionsTree;
 
-import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import com.intellij.codeInspection.ex.ScopeToolState;
 import com.intellij.codeInspection.ex.ToolsImpl;
-import com.intellij.ide.IdeTooltip;
-import com.intellij.ide.IdeTooltipManager;
 import com.intellij.lang.annotation.HighlightSeverity;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ModalityState;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.profile.codeInspection.ui.InspectionsAggregationUtil;
-import com.intellij.profile.codeInspection.ui.SingleInspectionProfilePanel;
 import com.intellij.profile.codeInspection.ui.ToolDescriptors;
 import com.intellij.profile.codeInspection.ui.table.ScopesAndSeveritiesTable;
 import com.intellij.profile.codeInspection.ui.table.ThreeStateCheckBoxRenderer;
@@ -45,8 +39,12 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.TextTransferable;
-import javax.annotation.Nonnull;
+import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
+import consulo.logging.Logger;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -54,11 +52,12 @@ import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-import java.awt.*;
 import java.awt.datatransfer.Transferable;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.*;
-import java.util.List;
 
 /**
  * @author Dmitry Batkovich
@@ -88,37 +87,6 @@ public class InspectionsConfigTreeTable extends TreeTable {
     isEnabledColumn.setMaxWidth(JBUI.scale(20 + getAdditionalPadding()));
     isEnabledColumn.setCellRenderer(new ThreeStateCheckBoxRenderer());
     isEnabledColumn.setCellEditor(new ThreeStateCheckBoxRenderer());
-
-    addMouseMotionListener(new MouseAdapter() {
-      @Override
-      public void mouseMoved(final MouseEvent e) {
-        final Point point = e.getPoint();
-        final int column = columnAtPoint(point);
-        if (column != SEVERITIES_COLUMN) {
-          return;
-        }
-        final int row = rowAtPoint(point);
-        final Object maybeIcon = getModel().getValueAt(row, column);
-        if (maybeIcon instanceof MultiScopeSeverityIcon) {
-          final MultiScopeSeverityIcon icon = (MultiScopeSeverityIcon)maybeIcon;
-          final LinkedHashMap<String, HighlightDisplayLevel> scopeToAverageSeverityMap =
-                  icon.getScopeToAverageSeverityMap();
-          final JComponent component;
-          if (scopeToAverageSeverityMap.size() == 1 &&
-              icon.getDefaultScopeName().equals(ContainerUtil.getFirstItem(scopeToAverageSeverityMap.keySet()))) {
-            final HighlightDisplayLevel level = ContainerUtil.getFirstItem(scopeToAverageSeverityMap.values());
-            final JLabel label = new JLabel();
-            label.setIcon(level.getIcon());
-            label.setText(SingleInspectionProfilePanel.renderSeverity(level.getSeverity()));
-            component = label;
-          } else {
-            component = new ScopesAndSeveritiesHintTable(scopeToAverageSeverityMap, icon.getDefaultScopeName());
-          }
-          IdeTooltipManager.getInstance().show(
-                  new IdeTooltip(InspectionsConfigTreeTable.this, point, component), false);
-        }
-      }
-    });
 
     new DoubleClickListener() {
       @Override
@@ -244,6 +212,10 @@ public class InspectionsConfigTreeTable extends TreeTable {
       final InspectionConfigTreeNode treeNode = (InspectionConfigTreeNode)node;
       final List<HighlightDisplayKey> inspectionsKeys = InspectionsAggregationUtil.getInspectionsKeys(treeNode);
       if (column == SEVERITIES_COLUMN) {
+        if(treeNode.getGroupName() != null) {
+          return null;
+        }
+
         final MultiColoredHighlightSeverityIconSink sink = new MultiColoredHighlightSeverityIconSink();
         for (final HighlightDisplayKey selectedInspectionsNode : inspectionsKeys) {
           final String toolId = selectedInspectionsNode.toString();
@@ -252,7 +224,7 @@ public class InspectionsConfigTreeTable extends TreeTable {
                      mySettings.getInspectionProfile().getNonDefaultTools(toolId, mySettings.getProject()));
           }
         }
-        return sink.constructIcon(mySettings.getInspectionProfile());
+        return TargetAWT.to(sink.constructIcon(mySettings.getInspectionProfile()));
       } else if (column == IS_ENABLED_COLUMN) {
         return isEnabled(inspectionsKeys);
       }
@@ -420,7 +392,7 @@ public class InspectionsConfigTreeTable extends TreeTable {
 
     private String myDefaultScopeName;
 
-    public Icon constructIcon(final InspectionProfileImpl inspectionProfile) {
+    public Image constructIcon(final InspectionProfileImpl inspectionProfile) {
       final Map<String, HighlightSeverity> computedSeverities = computeSeverities(inspectionProfile);
 
       if (computedSeverities == null) {
@@ -436,7 +408,7 @@ public class InspectionsConfigTreeTable extends TreeTable {
       }
       return allScopesHasMixedSeverity
              ? ScopesAndSeveritiesTable.MIXED_FAKE_LEVEL.getIcon()
-             : new MultiScopeSeverityIcon(computedSeverities, myDefaultScopeName, inspectionProfile);
+             : MultiScopeSeverityIcon.create(computedSeverities, myDefaultScopeName, inspectionProfile);
     }
 
     @Nullable
@@ -513,16 +485,14 @@ public class InspectionsConfigTreeTable extends TreeTable {
       if (!state.isEnabled()) {
         return;
       }
-      final Icon icon = state.getLevel().getIcon();
       final String scopeName = state.getScopeName();
-      if (icon instanceof HighlightDisplayLevel.ColoredIcon) {
-        final SeverityAndOccurrences severityAndOccurrences = myScopeToAverageSeverityMap.get(scopeName);
-        final String inspectionName = state.getTool().getShortName();
-        if (severityAndOccurrences == null) {
-          myScopeToAverageSeverityMap.put(scopeName, new SeverityAndOccurrences().incOccurrences(inspectionName, state.getLevel().getSeverity()));
-        } else {
-          severityAndOccurrences.incOccurrences(inspectionName, state.getLevel().getSeverity());
-        }
+      final SeverityAndOccurrences severityAndOccurrences = myScopeToAverageSeverityMap.get(scopeName);
+      final String inspectionName = state.getTool().getShortName();
+      if (severityAndOccurrences == null) {
+        myScopeToAverageSeverityMap.put(scopeName, new SeverityAndOccurrences().incOccurrences(inspectionName, state.getLevel().getSeverity()));
+      }
+      else {
+        severityAndOccurrences.incOccurrences(inspectionName, state.getLevel().getSeverity());
       }
     }
   }

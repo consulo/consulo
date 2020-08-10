@@ -20,6 +20,8 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.ComponentManager;
 import consulo.annotation.DeprecationInfo;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.logging.Logger;
+import consulo.util.PluginExceptionUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,6 +33,8 @@ import java.util.function.Consumer;
  * @author mike
  */
 public class ExtensionPointName<T> {
+  private static final Logger LOG = Logger.getInstance(ExtensionPointName.class);
+
   private final String myName;
 
   @Deprecated
@@ -108,12 +112,25 @@ public class ExtensionPointName<T> {
   }
 
   public void forEachExtensionSafe(@Nonnull Consumer<T> consumer) {
-    for (T value : getExtensionList()) {
-      consumer.accept(value);
-    }
+    forEachExtensionSafe(Application.get(), consumer);
+  }
+
+  public void forEachExtensionSafe(@Nonnull ComponentManager manager, @Nonnull Consumer<T> consumer) {
+    processWithPluginDescriptor(manager, (value, pluginDescriptor) -> {
+      try {
+        consumer.accept(value);
+      }
+      catch (Throwable e) {
+        PluginExceptionUtil.logPluginError(LOG, e.getMessage(), e, value.getClass());
+      }
+    });
+  }
+
+  public void processWithPluginDescriptor(@Nonnull ComponentManager manager, @Nonnull BiConsumer<? super T, ? super PluginDescriptor> consumer) {
+    manager.getExtensionPoint(this).processWithPluginDescriptor(consumer);
   }
 
   public void processWithPluginDescriptor(@Nonnull BiConsumer<? super T, ? super PluginDescriptor> consumer) {
-    Application.get().getExtensionPoint(this).processWithPluginDescriptor(consumer);
+    processWithPluginDescriptor(Application.get(), consumer);
   }
 }

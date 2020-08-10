@@ -23,7 +23,6 @@ import com.intellij.codeInspection.ex.ScopeToolState;
 import com.intellij.ide.DataManager;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.actionSystem.DataContext;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
@@ -39,10 +38,11 @@ import com.intellij.util.Function;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.EditableModel;
-import com.intellij.util.ui.EmptyIcon;
+import consulo.logging.Logger;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -50,8 +50,8 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author Dmitry Batkovich
@@ -60,8 +60,7 @@ public class ScopesAndSeveritiesTable extends JBTable {
   private final static Logger LOG = Logger.getInstance(ScopesAndSeveritiesTable.class);
 
   public static final HighlightSeverity MIXED_FAKE_SEVERITY = new HighlightSeverity("Mixed", -1);
-  @SuppressWarnings("UnusedDeclaration")
-  public static final HighlightDisplayLevel MIXED_FAKE_LEVEL = new HighlightDisplayLevel(MIXED_FAKE_SEVERITY, EmptyIcon.create(12));
+  public static final HighlightDisplayLevel MIXED_FAKE_LEVEL = new HighlightDisplayLevel(MIXED_FAKE_SEVERITY, Image.empty(HighlightDisplayLevel.getEmptyIconDim()));
 
   private final static int SCOPE_ENABLED_COLUMN = 0;
   private final static int SCOPE_NAME_COLUMN = 1;

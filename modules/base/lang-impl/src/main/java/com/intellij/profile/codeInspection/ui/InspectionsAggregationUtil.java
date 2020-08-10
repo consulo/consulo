@@ -17,7 +17,6 @@ package com.intellij.profile.codeInspection.ui;
 
 import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.profile.codeInspection.ui.inspectionsTree.InspectionConfigTreeNode;
-import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Queue;
 import gnu.trove.THashSet;
@@ -32,12 +31,7 @@ import java.util.Set;
  */
 public class InspectionsAggregationUtil {
   public static List<HighlightDisplayKey> getInspectionsKeys(final InspectionConfigTreeNode node) {
-    return ContainerUtil.map(getInspectionsNodes(node), new Function<InspectionConfigTreeNode, HighlightDisplayKey>() {
-      @Override
-      public HighlightDisplayKey fun(final InspectionConfigTreeNode node) {
-        return node.getKey();
-      }
-    });
+    return ContainerUtil.map(getInspectionsNodes(node), InspectionConfigTreeNode::getKey);
   }
 
   public static List<InspectionConfigTreeNode> getInspectionsNodes(final InspectionConfigTreeNode node) {

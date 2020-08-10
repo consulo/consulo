@@ -19,6 +19,7 @@ package com.intellij.codeInspection.ui;
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.project.Project;
+import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 
@@ -27,7 +28,7 @@ import javax.swing.*;
  * User: anna
  * Date: Mar 15, 2005
  */
-public class InspectionSeverityGroupNode extends InspectionTreeNode{
+public class InspectionSeverityGroupNode extends InspectionTreeNode {
 
   private final HighlightDisplayLevel myLevel;
   private final Project myProject;
@@ -40,7 +41,7 @@ public class InspectionSeverityGroupNode extends InspectionTreeNode{
 
   @Override
   public Icon getIcon() {
-    return myLevel.getIcon();
+    return TargetAWT.to(myLevel.getIcon());
   }
 
   @Override

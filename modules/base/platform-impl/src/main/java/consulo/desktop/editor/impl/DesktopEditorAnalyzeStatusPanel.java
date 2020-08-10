@@ -63,6 +63,7 @@ import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.actionSystem.impl.ActionButtonUI;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -361,8 +362,8 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
       }
     }
 
-    private JLabel createStyledLabel(@Nullable String text, @Nullable Icon icon, int alignment) {
-      JLabel label = new JLabel(text, icon, alignment) {
+    private JLabel createStyledLabel(@Nullable String text, @Nullable Image icon, int alignment) {
+      JLabel label = new JLabel(text, TargetAWT.to(icon), alignment) {
         @Override
         protected void paintComponent(Graphics graphics) {
           Graphics2D g2 = (Graphics2D)graphics.create();
@@ -428,7 +429,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
       if (analyzerStatus != null) {
         List<StatusItem> newStatus = analyzerStatus.getExpandedStatus();
-        Icon newIcon = analyzerStatus.getIcon();
+        Image newIcon = analyzerStatus.getIcon();
 
         if (!hasAnalyzed || analyzerStatus.getAnalyzingType() != AnalyzingType.EMPTY) {
           if (newStatus.isEmpty()) {

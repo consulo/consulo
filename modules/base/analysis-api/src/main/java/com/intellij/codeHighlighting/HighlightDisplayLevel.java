@@ -22,43 +22,41 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.ui.JBColor;
-import com.intellij.util.IconUtil;
-import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.HashMap;
-import com.intellij.util.ui.ColorIcon;
 import com.intellij.util.ui.JBUI;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
+import consulo.ui.shared.ColorValue;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
 
 public class HighlightDisplayLevel {
-  private static final Map<HighlightSeverity, HighlightDisplayLevel> ourMap = new HashMap<HighlightSeverity, HighlightDisplayLevel>();
+  private static final Map<HighlightSeverity, HighlightDisplayLevel> ourMap = new HashMap<>();
 
   public static final HighlightDisplayLevel GENERIC_SERVER_ERROR_OR_WARNING =
           new HighlightDisplayLevel(HighlightSeverity.GENERIC_SERVER_ERROR_OR_WARNING, createBoxIcon(CodeInsightColors.GENERIC_SERVER_ERROR_OR_WARNING));
 
   public static final HighlightDisplayLevel ERROR = new HighlightDisplayLevel(HighlightSeverity.ERROR, createErrorIcon(CodeInsightColors.ERRORS_ATTRIBUTES));
 
-  public static final HighlightDisplayLevel WARNING =
-          new HighlightDisplayLevel(HighlightSeverity.WARNING, createErrorIcon(CodeInsightColors.WARNINGS_ATTRIBUTES));
+  public static final HighlightDisplayLevel WARNING = new HighlightDisplayLevel(HighlightSeverity.WARNING, createErrorIcon(CodeInsightColors.WARNINGS_ATTRIBUTES));
 
-  private static final Icon DO_NOT_SHOW_KEY = createBoxIcon(TextAttributesKey.createTextAttributesKey("DO_NOT_SHOW"));
+  private static final Image DO_NOT_SHOW_KEY = createBoxIcon(TextAttributesKey.createTextAttributesKey("DO_NOT_SHOW"));
   public static final HighlightDisplayLevel DO_NOT_SHOW = new HighlightDisplayLevel(HighlightSeverity.INFORMATION, DO_NOT_SHOW_KEY);
   /**
    * use #WEAK_WARNING instead
    */
   @Deprecated
   public static final HighlightDisplayLevel INFO = new HighlightDisplayLevel(HighlightSeverity.INFO, DO_NOT_SHOW.getIcon());
-  public static final HighlightDisplayLevel WEAK_WARNING =
-          new HighlightDisplayLevel(HighlightSeverity.WEAK_WARNING, createErrorIcon(CodeInsightColors.WEAK_WARNING_ATTRIBUTES));
+  public static final HighlightDisplayLevel WEAK_WARNING = new HighlightDisplayLevel(HighlightSeverity.WEAK_WARNING, createErrorIcon(CodeInsightColors.WEAK_WARNING_ATTRIBUTES));
 
   public static final HighlightDisplayLevel NON_SWITCHABLE_ERROR = new HighlightDisplayLevel(HighlightSeverity.ERROR);
 
-  private Icon myIcon;
+  @Nullable
+  private Image myIcon;
   private final HighlightSeverity mySeverity;
 
   @Nullable
@@ -77,7 +75,7 @@ public class HighlightDisplayLevel {
     return ourMap.get(severity);
   }
 
-  public HighlightDisplayLevel(@Nonnull HighlightSeverity severity, @Nonnull Icon icon) {
+  public HighlightDisplayLevel(@Nonnull HighlightSeverity severity, @Nullable Image icon) {
     this(severity);
     myIcon = icon;
     ourMap.put(mySeverity, this);
@@ -86,7 +84,6 @@ public class HighlightDisplayLevel {
   public HighlightDisplayLevel(@Nonnull HighlightSeverity severity) {
     mySeverity = severity;
   }
-
 
   @Override
   public String toString() {
@@ -98,7 +95,8 @@ public class HighlightDisplayLevel {
     return mySeverity.getName();
   }
 
-  public Icon getIcon() {
+  @Nullable
+  public Image getIcon() {
     return myIcon;
   }
 
@@ -107,8 +105,8 @@ public class HighlightDisplayLevel {
     return mySeverity;
   }
 
-  public static void registerSeverity(@Nonnull HighlightSeverity severity, final TextAttributesKey key, @javax.annotation.Nullable Icon icon) {
-    Icon severityIcon = icon != null ? icon : createBoxIcon(key);
+  public static void registerSeverity(@Nonnull HighlightSeverity severity, final TextAttributesKey key, @Nullable Image icon) {
+    Image severityIcon = icon != null ? icon : createBoxIcon(key);
     final HighlightDisplayLevel level = ourMap.get(severity);
     if (level == null) {
       new HighlightDisplayLevel(severity, severityIcon);
@@ -118,75 +116,33 @@ public class HighlightDisplayLevel {
     }
   }
 
+  @Nonnull
+  private static ColorValue buildColorValue(@Nonnull TextAttributesKey key) {
+    return ColorValue.lazy(() -> {
+      final EditorColorsManager manager = EditorColorsManager.getInstance();
+      TextAttributes attributes = manager.getGlobalScheme().getAttributes(key);
+      Color stripe = attributes.getErrorStripeColor();
+      if (stripe != null) return TargetAWT.from(stripe);
+      return TargetAWT.from(attributes.getEffectColor());
+    });
+  }
+
   public static int getEmptyIconDim() {
     return JBUI.scale(14);
   }
 
-  public static Icon createBoxIcon(@Nonnull TextAttributesKey key) {
-    return new SingleColorIcon(key);
+  @Nonnull
+  public static Image createBoxIcon(@Nonnull TextAttributesKey key) {
+    return ImageEffects.colorFilled(getEmptyIconDim(), getEmptyIconDim(), buildColorValue(key));
   }
 
   @Nonnull
-  private static Icon createErrorIcon(@Nonnull TextAttributesKey textAttributesKey) {
-    return new SingleColorIcon(textAttributesKey) {
-      @Override
-      public void paintIcon(Component c, Graphics g, int x, int y) {
-        IconUtil.colorize(AllIcons.General.InspectionsError, getColor()).paintIcon(c, g, x, y);
-      }
-    };
+  private static Image createErrorIcon(@Nonnull TextAttributesKey textAttributesKey) {
+    return ImageEffects.colorize(AllIcons.General.InspectionsError, buildColorValue(textAttributesKey));
   }
 
   @Nonnull
-  public static Icon createIconByMask(final Color renderColor) {
-    return new MyColorIcon(getEmptyIconDim(), renderColor);
-  }
-
-  private static class MyColorIcon extends ColorIcon implements ColoredIcon {
-    public MyColorIcon(int size, @Nonnull Color color) {
-      super(size, color);
-    }
-
-    @Override
-    public Color getColor() {
-      return getIconColor();
-    }
-  }
-
-  public interface ColoredIcon {
-    Color getColor();
-  }
-
-  public static class SingleColorIcon extends ColorIcon implements Icon, ColoredIcon {
-    private final TextAttributesKey myKey;
-
-    public SingleColorIcon(final TextAttributesKey key) {
-      super(getEmptyIconDim(), JBColor.GRAY, false);
-      myKey = key;
-    }
-
-    @Override
-    public Color getIconColor() {
-      return getColor();
-    }
-
-    @Override
-    @Nonnull
-    public Color getColor() {
-      return ObjectUtil.notNull(getColorInner(), JBColor.GRAY);
-    }
-
-    @Nullable
-    public Color getColorInner() {
-      final EditorColorsManager manager = EditorColorsManager.getInstance();
-      if (manager != null) {
-        TextAttributes attributes = manager.getGlobalScheme().getAttributes(myKey);
-        Color stripe = attributes.getErrorStripeColor();
-        if (stripe != null) return stripe;
-        return attributes.getEffectColor();
-      }
-      TextAttributes defaultAttributes = myKey.getDefaultAttributes();
-      if (defaultAttributes == null) defaultAttributes = TextAttributes.ERASE_MARKER;
-      return defaultAttributes.getErrorStripeColor();
-    }
+  public static Image createIconByMask(final Color renderColor) {
+    return ImageEffects.colorFilled(getEmptyIconDim(), getEmptyIconDim(), TargetAWT.from(renderColor));
   }
 }

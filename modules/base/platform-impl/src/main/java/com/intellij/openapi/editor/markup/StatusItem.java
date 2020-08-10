@@ -15,8 +15,9 @@
  */
 package com.intellij.openapi.editor.markup;
 
+import consulo.ui.image.Image;
+
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.Objects;
 
 /**
@@ -26,24 +27,24 @@ import java.util.Objects;
  */
 public final class StatusItem {
   private final String myText;
-  private final Icon myIcon;
+  private final Image myIcon;
   private final String myType;
 
   public StatusItem(String text) {
     this(text, null, null);
   }
 
-  public StatusItem(String text, @Nullable Icon icon) {
+  public StatusItem(String text, @Nullable Image icon) {
     this(text, icon, null);
   }
 
-  public StatusItem(String text, @Nullable Icon icon, @Nullable String type) {
+  public StatusItem(String text, @Nullable Image icon, @Nullable String type) {
     myText = text;
     myIcon = icon;
     myType = type;
   }
 
-  public Icon getIcon() {
+  public Image getIcon() {
     return myIcon;
   }
 
