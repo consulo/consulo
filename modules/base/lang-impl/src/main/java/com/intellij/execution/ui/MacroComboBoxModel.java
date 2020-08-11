@@ -15,7 +15,6 @@
  */
 package com.intellij.execution.ui;
 
-import com.intellij.execution.util.ProgramParametersConfigurator;
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.components.PathMacroUtil;
 import com.intellij.util.SmartList;
@@ -71,8 +70,8 @@ final class MacroComboBoxModel extends AbstractListModel<String> implements Comb
       list.add("$" + name + "$");
     }
     if (withModuleDir) {
-      list.add("$" + PathMacroUtil.MODULE_DIR_MACRO_NAME + "$");
-      list.add(ProgramParametersConfigurator.MODULE_WORKING_DIR);
+      list.add(PathMacroUtil.MODULE_DIR_MACRO);
+      list.add(PathMacroUtil.MODULE_WORKING_DIR);
     }
     return list;
   }

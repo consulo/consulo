@@ -31,17 +31,16 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.EnvironmentUtil;
 import com.intellij.util.PathUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.SystemIndependent;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ProgramParametersConfigurator {
   private static final ExtensionPointName<WorkingDirectoryProvider> WORKING_DIRECTORY_PROVIDER_EP_NAME = ExtensionPointName.create("com.intellij.module.workingDirectoryProvider");
-  public static final String MODULE_WORKING_DIR = "%MODULE_WORKING_DIR%";
 
   public void configureConfiguration(SimpleProgramParameters parameters, CommonProgramRunConfigurationParameters configuration) {
     Project project = configuration.getProject();
@@ -73,13 +72,21 @@ public class ProgramParametersConfigurator {
     }
     workingDirectory = expandPath(workingDirectory, module, project);
     if (!FileUtil.isAbsolute(workingDirectory) && defaultWorkingDir != null) {
-      if (("$" + PathMacroUtil.MODULE_DIR_MACRO_NAME + "$").equals(workingDirectory)) {
+      if (PathMacroUtil.MODULE_DIR_MACRO.equals(workingDirectory)) {
+        if(module != null) {
+          String moduleDirPath = module.getModuleDirPath();
+          if(moduleDirPath != null) {
+            return moduleDirPath;
+          }
+        }
         return defaultWorkingDir;
       }
 
-      if (module != null && MODULE_WORKING_DIR.equals(workingDirectory)) {
-        String workingDir = getDefaultWorkingDir(module);
-        if (workingDir != null) return workingDir;
+      if (PathMacroUtil.MODULE_WORKING_DIR.equals(workingDirectory)) {
+        if(module != null) {
+          String workingDir = getDefaultWorkingDir(module);
+          if (workingDir != null) return workingDir;
+        }
       }
       workingDirectory = defaultWorkingDir + "/" + workingDirectory;
     }
@@ -93,7 +100,7 @@ public class ProgramParametersConfigurator {
 
   @Nullable
   protected String getDefaultWorkingDir(@Nonnull Module module) {
-    for (WorkingDirectoryProvider provider : WORKING_DIRECTORY_PROVIDER_EP_NAME.getExtensions()) {
+    for (WorkingDirectoryProvider provider : WORKING_DIRECTORY_PROVIDER_EP_NAME.getExtensionList()) {
       @SystemIndependent String path = provider.getWorkingDirectoryPath(module);
       if (path != null) return path;
     }

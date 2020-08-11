@@ -20,7 +20,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.HashMap;
 import consulo.container.boot.ContainerPathManager;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -29,18 +28,20 @@ import java.util.Map;
  * @author nik
  */
 public class PathMacroUtil {
-  @NonNls public static final String PROJECT_DIR_MACRO_NAME = "PROJECT_DIR";
-  @NonNls public static final String MODULE_DIR_MACRO_NAME = "MODULE_DIR";
-  @NonNls public static final String APPLICATION_HOME_DIR = "APPLICATION_HOME_DIR";
-  @NonNls public static final String USER_HOME_NAME = "USER_HOME";
-
+  public static final String PROJECT_DIR_MACRO_NAME = "PROJECT_DIR";
+  public static final String MODULE_DIR_MACRO_NAME = "MODULE_DIR";
+  public static final String MODULE_DIR_MACRO = "$" + MODULE_DIR_MACRO_NAME + "$";
+  public static final String APPLICATION_HOME_DIR = "APPLICATION_HOME_DIR";
+  public static final String USER_HOME_NAME = "USER_HOME";
+  public static final String MODULE_WORKING_DIR_NAME = "MODULE_WORKING_DIR";
+  public static final String MODULE_WORKING_DIR = "$" + MODULE_WORKING_DIR_NAME + "$";
 
   public static String getUserHomePath() {
     return StringUtil.trimEnd(FileUtil.toSystemIndependentName(SystemProperties.getUserHome()), "/");
   }
 
   public static Map<String, String> getGlobalSystemMacros() {
-    final Map<String, String> map = new HashMap<String, String>();
+    final Map<String, String> map = new HashMap<>();
     map.put(APPLICATION_HOME_DIR, getApplicationHomeDirPath());
     map.put(USER_HOME_NAME, getUserHomePath());
     return map;
