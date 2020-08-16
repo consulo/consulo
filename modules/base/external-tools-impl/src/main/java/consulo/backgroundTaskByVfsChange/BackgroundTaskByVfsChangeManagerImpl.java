@@ -20,9 +20,7 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ActionCallback;
-import consulo.disposer.Disposable;
-import consulo.util.dataholder.Key;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileEvent;
 import com.intellij.openapi.vfs.VirtualFileListener;
@@ -31,13 +29,15 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.xmlb.XmlSerializer;
 import consulo.backgroundTaskByVfsChange.ui.BackgroundTaskByVfsChangeManageDialog;
+import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -168,7 +168,7 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
 
     BackgroundTaskByVfsChangeTaskImpl task = (BackgroundTaskByVfsChangeTaskImpl)tasks.get(index);
 
-    ActionCallback callback = new ActionCallback();
+    AsyncResult<Void> callback = AsyncResult.undefined();
     callback.doWhenProcessed(() -> call(indicator, file, tasks, index + 1));
     indicator.setText2("Task: " + task.getName());
     task.run(callback);

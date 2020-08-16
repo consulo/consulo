@@ -22,11 +22,11 @@ import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.process.CapturingProcessHandler;
 import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
-import com.intellij.openapi.application.WriteAction;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.ExpandMacroToPathMap;
-import consulo.logging.Logger;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtilRt;
@@ -40,6 +40,8 @@ import com.intellij.tools.ToolProcessAdapter;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.logging.Logger;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -104,7 +106,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
   @Nullable
   private static BackgroundTaskByVfsChangeProvider findProviderByName(String name) {
     BackgroundTaskByVfsChangeProvider temp = null;
-    for (BackgroundTaskByVfsChangeProvider backgroundTaskByVfsChangeProvider : BackgroundTaskByVfsChangeProvider.EP_NAME.getExtensions()) {
+    for (BackgroundTaskByVfsChangeProvider backgroundTaskByVfsChangeProvider : BackgroundTaskByVfsChangeProvider.EP_NAME.getExtensionList()) {
       if (Comparing.equal(name, backgroundTaskByVfsChangeProvider.getTemplateName())) {
         temp = backgroundTaskByVfsChangeProvider;
         break;
@@ -113,8 +115,10 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
     return temp;
   }
 
-  public void run(@Nonnull final ActionCallback actionCallback) {
+  public void run(@Nonnull final AsyncResult<Void> actionCallback) {
     try {
+      UIAccess uiAccess = Application.get().getLastUIAccess();
+
       final ExpandMacroToPathMap expandMacroToPathMap = createExpandMacroToPathMap();
 
       GeneralCommandLine commandLine = new GeneralCommandLine();
@@ -142,7 +146,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
 
           final VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(substitute);
           if (fileByPath != null) {
-            WriteAction.run(() -> fileByPath.refresh(false, true));
+            uiAccess.give(() -> ProgressManager.getInstance().runProcessWithProgressSynchronously(() -> fileByPath.refresh(false, true), "Refreshing Files...", false, myProject));
           }
         }
       });
