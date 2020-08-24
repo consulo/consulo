@@ -144,7 +144,7 @@ class ActionStepBuilder {
 
         textValue = LocalizeValue.of(StringUtil.notNullize(text));
       }
-      else if (myHonorActionMnemonics) {
+      else if (myHonorActionMnemonics || presentation.isDisabledMnemonic()) {
         textValue = presentation.getTextValue();
       }
 

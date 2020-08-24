@@ -392,7 +392,12 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
 
     @Override
     protected JComponent createItemComponent() {
-      myTextLabel = new ErrorLabel();
+      myTextLabel = new ErrorLabel() {
+        @Override
+        public void setText(String text) {
+          super.setText(text);
+        }
+      };
       myTextLabel.setOpaque(true);
       myTextLabel.setBorder(JBUI.Borders.empty(1));
 
