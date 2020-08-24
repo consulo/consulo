@@ -15,15 +15,12 @@
  */
 package com.intellij.util;
 
-import org.jetbrains.annotations.NonNls;
-
-@Deprecated
 public class IncorrectOperationException extends consulo.util.lang.IncorrectOperationException {
   public IncorrectOperationException() {
     super();
   }
 
-  public IncorrectOperationException(@NonNls String message) {
+  public IncorrectOperationException(String message) {
     super(message);
   }
 
@@ -31,12 +28,7 @@ public class IncorrectOperationException extends consulo.util.lang.IncorrectOper
     super(t);
   }
 
-  public IncorrectOperationException(@NonNls String message, Throwable t) {
+  public IncorrectOperationException(String message, Throwable t) {
     super(message, t);
-  }
-
-  /** @deprecated use {@link #IncorrectOperationException(String, Throwable)} (to be removed in IDEA 16) */
-  public IncorrectOperationException(@NonNls String message, Exception e) {
-    super(message, e);
   }
 }
