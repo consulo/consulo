@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.ide.ui.AntialiasingTypeUtil;
+import com.intellij.ide.ui.DesktopAntialiasingTypeUtil;
 import com.intellij.util.ui.FontInfo;
 import javax.annotation.Nonnull;
 
@@ -46,7 +46,7 @@ public class FontInfoRenderer extends ColoredListCellRenderer<Object> {
 
   @Override
   protected void applyAdditionalHints(@Nonnull Graphics2D g) {
-    g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, AntialiasingTypeUtil.getKeyForCurrentScope(isEditorFont()));
+    g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, DesktopAntialiasingTypeUtil.getKeyForCurrentScope(isEditorFont()));
   }
 
   protected Integer getFontSize() {

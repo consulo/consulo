@@ -16,9 +16,12 @@
 package consulo.ui.desktop.internal;
 
 import com.intellij.ui.ColoredListCellRenderer;
+import consulo.awt.TargetAWT;
 import consulo.awt.impl.TargetAWTFacadeImpl;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ItemPresentation;
 import consulo.ui.TextAttribute;
+import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -37,21 +40,28 @@ class DesktopItemPresentationImpl<E> implements ItemPresentation {
   }
 
   @Override
-  public void setIcon(@Nullable Image icon) {
-    myRenderer.setIcon(icon);
-  }
-
-  @Override
   public void clearText() {
     Icon icon = myRenderer.getIcon();
-
     myRenderer.clear();
-
     myRenderer.setIcon(icon);
   }
 
+  @Nonnull
   @Override
-  public void append(@Nonnull String text, @Nonnull TextAttribute textAttribute) {
-    myRenderer.append(text, TargetAWTFacadeImpl.from(textAttribute));
+  public ItemPresentation withFont(@Nonnull Font font) {
+    myRenderer.setFont(TargetAWT.to(font));
+    return this;
+  }
+
+  @Nonnull
+  @Override
+  public ItemPresentation withIcon(@Nullable Image icon) {
+    myRenderer.setIcon(icon);
+    return this;
+  }
+
+  @Override
+  public void append(@Nonnull LocalizeValue text, @Nonnull TextAttribute textAttribute) {
+    myRenderer.append(text.get(), TargetAWTFacadeImpl.from(textAttribute));
   }
 }

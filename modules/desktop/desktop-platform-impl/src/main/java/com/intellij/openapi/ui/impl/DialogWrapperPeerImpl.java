@@ -18,7 +18,7 @@ package com.intellij.openapi.ui.impl;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.impl.TypeSafeDataProviderAdapter;
-import com.intellij.ide.ui.AntialiasingTypeUtil;
+import com.intellij.ide.ui.DesktopAntialiasingTypeUtil;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.Application;
@@ -889,7 +889,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
           myOpened = true;
           final DialogWrapper activeWrapper = getActiveWrapper();
           for (JComponent c : UIUtil.uiTraverser(e.getWindow()).filter(JComponent.class)) {
-            GraphicsUtil.setAntialiasingType(c, AntialiasingTypeUtil.getAntialiasingTypeForSwingComponent());
+            GraphicsUtil.setAntialiasingType(c, DesktopAntialiasingTypeUtil.getAntialiasingTypeForSwingComponent());
           }
           if (activeWrapper == null) {
             myFocusedCallback.setRejected();

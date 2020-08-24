@@ -142,7 +142,7 @@ public class ModuleImportProcessor {
     ComboBox<ModuleImportProvider> box = ComboBox.create(providers);
     box.setRender((render, index, item) -> {
       assert item != null;
-      render.setIcon(item.getIcon());
+      render.withIcon(item.getIcon());
       render.append(item.getName());
     });
     box.setValueByIndex(0);

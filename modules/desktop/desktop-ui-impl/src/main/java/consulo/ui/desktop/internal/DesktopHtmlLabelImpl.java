@@ -15,6 +15,7 @@
  */
 package consulo.ui.desktop.internal;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.HtmlLabel;
 
 /**
@@ -22,7 +23,7 @@ import consulo.ui.HtmlLabel;
  * @since 12-Jun-16
  */
 class DesktopHtmlLabelImpl extends DesktopLabelImpl implements HtmlLabel {
-  public DesktopHtmlLabelImpl(String text) {
-    super("<html><body>" + text + "</body></html>");
+  public DesktopHtmlLabelImpl(LocalizeValue localizeValue) {
+    super(localizeValue.map((localizeManager, value) -> "<html><body>" + value + "</body></html>"));
   }
 }

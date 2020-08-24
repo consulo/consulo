@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 public interface HorizontalLayout extends Layout {
   @Nonnull
   static HorizontalLayout create() {
-    return create(0);
+    return create(5);
   }
 
   @Nonnull

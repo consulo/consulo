@@ -19,6 +19,7 @@ import com.intellij.util.EventDispatcher;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleChangeListener;
 import consulo.ui.style.StyleManager;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -26,19 +27,10 @@ import javax.annotation.Nonnull;
  * @since 05-Nov-17
  */
 public abstract class StyleManagerImpl implements StyleManager {
-  private volatile StyleImpl myCurrentStyle;
-
   private EventDispatcher<StyleChangeListener> myEventDispatcher = EventDispatcher.create(StyleChangeListener.class);
 
-  @Nonnull
-  @Override
-  public Style getCurrentStyle() {
-    return myCurrentStyle;
-  }
-
-  @Override
-  public void setCurrentStyle(@Nonnull Style style) {
-    myCurrentStyle = (StyleImpl)style;
+  protected void fireStyleChanged(@Nonnull Style oldStyle, @Nonnull Style newStyle) {
+    myEventDispatcher.getMulticaster().styleChanged(oldStyle, newStyle);
   }
 
   @Nonnull

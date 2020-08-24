@@ -16,16 +16,15 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.fileChooser.FileTextField;
-import com.intellij.openapi.ui.ComboBoxWithWidePopup;
+import com.intellij.openapi.ui.ComboBox;
 
 import javax.swing.*;
 import javax.swing.event.DocumentListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TextFieldWithHistory extends ComboBoxWithWidePopup {
+public class TextFieldWithHistory extends ComboBox<String> {
   private int myHistorySize = 5;
   private final MyModel myModel;
 
@@ -33,12 +32,6 @@ public class TextFieldWithHistory extends ComboBoxWithWidePopup {
     myModel = new MyModel();
     setModel(myModel);
     setEditable(true);
-  }
-
-  // API compatibility with 7.0.1
-  @SuppressWarnings({"UnusedDeclaration"})
-  public TextFieldWithHistory(boolean cropList) {
-    this();
   }
 
   public void addDocumentListener(DocumentListener listener) {
@@ -111,7 +104,7 @@ public class TextFieldWithHistory extends ComboBoxWithWidePopup {
     super.setPopupVisible(v);
   }
 
-  public class MyModel extends AbstractListModel implements ComboBoxModel{
+  public class MyModel extends AbstractListModel implements ComboBoxModel {
     private List<String> myFullList = new ArrayList<String>();
 
     private Object mySelectedItem;
@@ -164,12 +157,6 @@ public class TextFieldWithHistory extends ComboBoxWithWidePopup {
     public void setItems(List<String> aList) {
       myFullList = new ArrayList<String>(aList);
       fireContentsChanged();
-    }
-  }
-
-  protected static class TextFieldWithProcessing extends JTextField {
-    public void processKeyEvent(KeyEvent e) {
-      super.processKeyEvent(e);
     }
   }
 }

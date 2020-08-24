@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,12 @@
  */
 package consulo.ui;
 
-import consulo.localize.LocalizeValue;
-
-import javax.annotation.Nonnull;
-
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 2020-08-23
  */
-public interface HtmlLabel extends Label {
-  @Nonnull
-  @Deprecated
-  static HtmlLabel create(@Nonnull String html) {
-    return create(LocalizeValue.of(html));
-  }
-
-  @Nonnull
-  static HtmlLabel create(@Nonnull LocalizeValue html) {
-    return UIInternal.get()._Components_htmlLabel(html);
-  }
+public enum AntialiasingType {
+  SUBPIXEL,
+  GREYSCALE,
+  OFF
 }

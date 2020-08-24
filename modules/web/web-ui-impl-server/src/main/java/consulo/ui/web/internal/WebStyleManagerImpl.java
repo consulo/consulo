@@ -15,11 +15,10 @@
  */
 package consulo.ui.web.internal;
 
+import consulo.ui.impl.style.StyleManagerImpl;
 import consulo.ui.style.Style;
-import consulo.ui.style.StyleChangeListener;
-import consulo.ui.style.StyleManager;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,7 +26,7 @@ import java.util.List;
  * @author VISTALL
  * @since 15-Sep-17
  */
-public class WebStyleManagerImpl implements StyleManager {
+public class WebStyleManagerImpl extends StyleManagerImpl {
   public static final WebStyleManagerImpl ourInstance = new WebStyleManagerImpl();
 
   private Style myCurrentStyle = new WebStyleImpl("Default");
@@ -46,12 +45,8 @@ public class WebStyleManagerImpl implements StyleManager {
 
   @Override
   public void setCurrentStyle(@Nonnull Style style) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Nonnull
-  @Override
-  public Runnable addChangeListener(@Nonnull StyleChangeListener listener) {
-    return null;
+    Style oldStyle = myCurrentStyle;
+    myCurrentStyle = style;
+    fireStyleChanged(style, style);
   }
 }

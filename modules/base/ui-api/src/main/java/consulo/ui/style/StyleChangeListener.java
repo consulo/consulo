@@ -24,5 +24,5 @@ import java.util.EventListener;
  * @since 05-Nov-17
  */
 public interface StyleChangeListener extends EventListener {
-  void styleChanged(@Nonnull Style newStyle);
+  void styleChanged(@Nonnull Style oldStyle, @Nonnull Style newStyle);
 }

@@ -15,6 +15,8 @@
  */
 package consulo.ui.web.internal;
 
+import consulo.localize.LocalizeValue;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -26,7 +28,7 @@ public class WebLabelImpl extends WebLabelBase<WebLabelImpl.Vaadin> {
 
   }
 
-  public WebLabelImpl(String text) {
+  public WebLabelImpl(LocalizeValue text) {
     super(text);
   }
 

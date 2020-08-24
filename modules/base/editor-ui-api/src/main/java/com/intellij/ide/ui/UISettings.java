@@ -36,8 +36,8 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Transient;
 import consulo.annotation.DeprecationInfo;
-import consulo.desktop.util.awt.AntialiasingType;
 import consulo.disposer.Disposable;
+import consulo.ui.AntialiasingType;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -193,7 +193,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   public boolean SHOW_TABS_TOOLTIPS = true;
   public boolean SHOW_DIRECTORY_FOR_NON_UNIQUE_FILENAMES = true;
   public boolean NAVIGATE_TO_PREVIEW = false;
-  public boolean SMOOTH_SCROLLING = SystemInfo.isMac && (SystemInfo.isJetBrainsJvm || SystemInfo.IS_AT_LEAST_JAVA9);
+  public boolean SMOOTH_SCROLLING = true;
   public boolean PIN_FIND_IN_PATH_POPUP = false;
 
   public int RECENT_LOCATIONS_LIMIT = 25;
@@ -337,7 +337,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     UISettings uiSettings = getInstanceOrNull();
 
     if (uiSettings != null) {
-      g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, AntialiasingTypeUtil.getKeyForCurrentScope(false));
+      g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, DesktopAntialiasingTypeUtil.getKeyForCurrentScope(false));
     }
     else {
       g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
@@ -586,11 +586,27 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     return SHOW_MEMBERS_IN_NAVIGATION_BAR;
   }
 
+  public boolean getAnimatedScrolling() {
+    return !SystemInfo.isMac || !SystemInfo.isJetBrainsJvm;
+  }
+
+  public int getAnimatedScrollingDuration() {
+    if(SystemInfo.isWindows) return 200;
+    if(SystemInfo.isMac) return 50;
+    return 150;
+  }
+
+  public int getAnimatedScrollingCurvePoints() {
+    if (SystemInfo.isWindows) return 1684366536;
+    if (SystemInfo.isMac) return 845374563;
+    return 729434056;
+  }
+
   /**
    * @see #setupComponentAntialiasing(JComponent)
    */
   public static void setupComponentAntialiasing(JComponent component) {
-    GraphicsUtil.setAntialiasingType(component, AntialiasingTypeUtil.getAntialiasingTypeForSwingComponent());
+    GraphicsUtil.setAntialiasingType(component, DesktopAntialiasingTypeUtil.getAntialiasingTypeForSwingComponent());
   }
 
   public static void setupEditorAntialiasing(JComponent component) {

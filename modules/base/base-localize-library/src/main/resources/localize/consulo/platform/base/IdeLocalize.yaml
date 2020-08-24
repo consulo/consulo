@@ -1360,7 +1360,7 @@ group.ui.options:
 checkbox.show.icons.in.quick.navigation:
   text: Show icons in quick navigation
 checkbox.override.default.laf.fonts:
-  text: 'Override default fonts by (not recommended):'
+  text: 'Use custom font:'
 label.override.laf.font:
   text: 'Font:'
 label.font.name:
@@ -1368,11 +1368,11 @@ label.font.name:
 label.font.size:
   text: 'Size:'
 combobox.look.and.feel:
-  text: 'Theme:'
+  text: 'Theme'
 checkboox.cyclic.scrolling.in.lists:
   text: Cyclic scrolling in list
 checkbox.position.cursor.on.default.button:
-  text: <html>Automatically position mouse cursor on default button</html>
+  text: Automatically position mouse cursor on default button
 checkbox.use.antialiased.font.in.editor:
   text: Use anti-aliased font
 idea.dark.look.and.feel:

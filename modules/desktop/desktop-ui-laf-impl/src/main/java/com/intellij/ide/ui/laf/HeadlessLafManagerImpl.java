@@ -19,14 +19,35 @@ package com.intellij.ide.ui.laf;
 import com.intellij.ide.ui.LafManager;
 import com.intellij.ide.ui.LafManagerListener;
 import consulo.disposer.Disposable;
+import consulo.ui.style.Style;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * User: anna
  * Date: 17-May-2006
  */
 public class HeadlessLafManagerImpl extends LafManager {
+  @Nonnull
+  @Override
+  public List<Style> getStyles() {
+    return Collections.emptyList();
+  }
+
+  @Override
+  public void setCurrentStyle(@Nonnull Style style) {
+    
+  }
+
+  @Nonnull
+  @Override
+  public Style getCurrentStyle() {
+    return null;
+  }
+
   @Override
   public UIManager.LookAndFeelInfo[] getInstalledLookAndFeels() {
     return new UIManager.LookAndFeelInfo[0];

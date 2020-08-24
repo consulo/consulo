@@ -34,6 +34,8 @@ public abstract class BranchActionGroup extends ActionGroup implements DumbAware
     myHoveredIcon = new LayeredIcon(TargetAWT.to(DvcsImplIcons.FavoriteOnHover), TargetAWT.to(DvcsImplIcons.NotFavoriteOnHover));
     getTemplatePresentation().setIcon(myIcon);
     getTemplatePresentation().setHoveredIcon(myHoveredIcon);
+    getTemplatePresentation().setDisabledMnemonic(true);
+
     updateIcons();
   }
 

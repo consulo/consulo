@@ -29,10 +29,8 @@ import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.image.*;
 import consulo.ui.desktop.internal.layout.*;
-import consulo.ui.desktop.internal.textBox.DesktopIntBoxImpl;
-import consulo.ui.desktop.internal.textBox.DesktopTextBoxImpl;
-import consulo.ui.desktop.internal.textBox.DesktopTextBoxWithExpandAction;
-import consulo.ui.desktop.internal.textBox.DesktopTextBoxWithExtensions;
+import consulo.ui.desktop.internal.style.DesktopStyleManagerImpl;
+import consulo.ui.desktop.internal.textBox.*;
 import consulo.ui.font.FontManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
@@ -216,8 +214,8 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public VerticalLayout _Layouts_vertical() {
-    return new DesktopVerticalLayoutImpl();
+  public VerticalLayout _Layouts_vertical(int vGap) {
+    return new DesktopVerticalLayoutImpl(vGap);
   }
 
   @Override
@@ -256,12 +254,12 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public Label _Components_label(String text) {
+  public Label _Components_label(LocalizeValue text) {
     return new DesktopLabelImpl(text);
   }
 
   @Override
-  public HtmlLabel _Components_htmlLabel(String html) {
+  public HtmlLabel _Components_htmlLabel(LocalizeValue html) {
     return new DesktopHtmlLabelImpl(html);
   }
 
@@ -321,11 +319,6 @@ public class DesktopUIInternalImpl extends UIInternal {
     return new DesktopColorBoxImpl(colorValue);
   }
 
-  @Override
-  public <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model) {
-    throw new UnsupportedOperationException();
-  }
-
   @RequiredUIAccess
   @Nonnull
   @Override
@@ -336,6 +329,11 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Override
   public boolean _UIAccess_isUIThread() {
     return SwingUtilities.isEventDispatchThread();
+  }
+
+  @Override
+  public TextBoxWithHistory _Components_textBoxWithHistory(String text) {
+    return new DesktopTextBoxWithHistoryImpl(text);
   }
 
   @Override

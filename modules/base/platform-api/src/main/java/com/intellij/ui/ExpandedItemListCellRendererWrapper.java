@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.ide.ui.AntialiasingTypeUtil;
+import com.intellij.ide.ui.DesktopAntialiasingTypeUtil;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
@@ -36,7 +36,7 @@ public class ExpandedItemListCellRendererWrapper<T> implements ListCellRenderer<
 
   @Override
   public Component getListCellRendererComponent(JList<? extends T> list, T value, int index, boolean isSelected, boolean cellHasFocus) {
-    GraphicsUtil.setAntialiasingType(list, AntialiasingTypeUtil.getAntialiasingTypeForSwingComponent());
+    GraphicsUtil.setAntialiasingType(list, DesktopAntialiasingTypeUtil.getAntialiasingTypeForSwingComponent());
     Component result = myWrappee.getListCellRendererComponent(list, UIUtil.htmlInjectionGuard(value), index, isSelected, cellHasFocus);
     if (!myHandler.getExpandedItems().contains(index)) return result;
     Rectangle bounds = result.getBounds();

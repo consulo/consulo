@@ -15,9 +15,10 @@
  */
 package consulo.ui.style;
 
+import consulo.ui.AntialiasingType;
 import consulo.ui.UIInternal;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -36,8 +37,14 @@ public interface StyleManager {
   @Nonnull
   Style getCurrentStyle();
 
-  void setCurrentStyle(@Nonnull Style style);
+  void setCurrentStyle(@Nonnull Style newStyle);
 
   @Nonnull
   Runnable addChangeListener(@Nonnull StyleChangeListener listener);
+
+  default void refreshAntialiasingType(@Nonnull AntialiasingType antialiasingType) {
+  }
+
+  default void refreshUI() {
+  }
 }

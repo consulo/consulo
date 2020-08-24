@@ -80,6 +80,10 @@ public final class Presentation implements Cloneable {
    * The actual value is a Boolean.
    */
   public static final String PROP_ENABLED = "enabled";
+  /**
+   * value: Boolean
+   */
+  public static final String PROP_DISABLED_MNEMONIC = "disabledMnemonic";
 
   public static final double DEFAULT_WEIGHT = 0;
   public static final double HIGHER_WEIGHT = 42;
@@ -95,6 +99,7 @@ public final class Presentation implements Cloneable {
 
   private boolean myVisible = true;
   private boolean myEnabled = true;
+  private boolean myDisabledMnemonic;
   private double myWeight = DEFAULT_WEIGHT;
 
   // TODO [VISTALL] migrate to UI image
@@ -149,6 +154,9 @@ public final class Presentation implements Cloneable {
 
   @Nullable
   public String getText() {
+    if(myDisabledMnemonic) {
+      return StringUtil.nullize(myTextValue.getValue());
+    }
     return StringUtil.nullize(myTextValue.map(NO_MNEMONIC).getValue());
   }
 
@@ -314,6 +322,16 @@ public final class Presentation implements Cloneable {
     setVisible(enabled);
   }
 
+  public void setDisabledMnemonic(boolean disabledMnemonic) {
+    boolean oldDisabledMnemonic = myDisabledMnemonic;
+    myDisabledMnemonic = disabledMnemonic;
+    fireBooleanPropertyChange(PROP_DISABLED_MNEMONIC, oldDisabledMnemonic, myDisabledMnemonic);
+  }
+
+  public boolean isDisabledMnemonic() {
+    return myDisabledMnemonic;
+  }
+
   private void fireBooleanPropertyChange(String propertyName, boolean oldValue, boolean newValue) {
     PropertyChangeSupport support = myChangeSupport;
     if (oldValue != newValue && support != null) {
@@ -343,6 +361,7 @@ public final class Presentation implements Cloneable {
     setHoveredIcon(presentation.getHoveredIcon());
     setVisible(presentation.isVisible());
     setEnabled(presentation.isEnabled());
+    setDisabledMnemonic(presentation.isDisabledMnemonic());
 
     if (!myUserMap.equals(presentation.myUserMap)) {
       Set<String> allKeys = new HashSet<>(presentation.myUserMap.keySet());

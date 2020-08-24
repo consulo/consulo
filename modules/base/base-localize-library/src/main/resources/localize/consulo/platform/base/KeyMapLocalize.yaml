@@ -1,0 +1,182 @@
+mouse.shortcut.label:
+  text: Click here to enter mouse shortcut
+prefix.key.pressed.message:
+  text: Prefix Key Pressed.
+key.maps.name:
+  text: Key maps
+action.column.name:
+  text: Action
+shortcuts.column.name:
+  text: Shortcuts
+main.menu.action.title:
+  text: Main menu
+main.toolbar.title:
+  text: Main Toolbar
+editor.popup.menu.title:
+  text: Editor Popup Menu
+editor.tab.popup.menu.title:
+  text: Editor Tab Popup Menu
+favorites.popup.title:
+  text: Favorites View Popup Menu
+project.view.popup.menu.title:
+  text: Project View Popup Menu
+commender.view.popup.menu.title:
+  text: Commander View Popup Menu
+j2ee.view.popup.menu.title:
+  text: Java EE View Popup Menu
+all.actions.group.title:
+  text: All Actions
+plugins.group.title:
+  text: Plug-ins
+version.control.group.title:
+  text: Version Control Systems
+debugger.actions.group.title:
+  text: Debugger Actions
+editor.actions.group.title:
+  text: Editor Actions
+ant.targets.group.title:
+  text: Ant Targets
+macros.group.title:
+  text: Macros
+quick.lists.group.title:
+  text: Quick Lists
+other.group.title:
+  text: Other
+no.quick.lists:
+  text: No quick lists
+edit.quick.list.dialog.title:
+  text: Edit Quick List
+keyboard.shortcut.dialog.title:
+  text: Enter Keyboard Shortcut
+enable.second.keystroke.check.box:
+  text: 'Enable:'
+first.stroke.panel.title:
+  text: First Stroke
+second.stroke.panel.title:
+  text: Second Stroke
+shortcut.preview.ide.border.factory.title:
+  text: Shortcut Preview
+conflicts.ide.border.factory.title:
+  text: Conflicts
+action.description.ide.border.factory.title:
+  text: Action Description
+keymaps.border.factory.title:
+  text: 'Keymaps:'
+quick.lists.ide.border.factory.title:
+  text: Quick lists
+no.conflict.info.message:
+  text: No conflicts
+assigned.to.info.message:
+  text: Assigned to {0}
+keymap.display.name:
+  text: Keymap
+keymap.parent.display.name:
+  text: Invisible keymap group parent
+based.on.keymap.label:
+  text: 'Based on keymap: {0}'
+shortcuts.keymap.label:
+  text: Shortc&uts
+shortcuts.keymap.no.shortcuts:
+  text: No shortcuts
+add.keymap.label:
+  text: A&dd
+remove.keymap.label:
+  text: Remo&ve
+unnamed.list.display.name:
+  text: unnamed
+copy.keymap.button:
+  text: '&Copy'
+delete.keymap.button:
+  text: De&lete
+use.non.english.keyboard.layout.support:
+  text: la&yout support
+parent.keymap.label:
+  text: 'Parent keymap:'
+disable.mnemonic.in.menu.check.box:
+  text: Disable mnemonics in &menu
+add.keyboard.shortcut.button:
+  text: Add &Keyboard Shortcut...
+add.mouse.shortcut.button:
+  text: Add &Mouse Shortcut...
+remove.shortcut.button:
+  text: '&Remove'
+conflict.shortcut.dialog.message:
+  text: The shortcut is already assigned to other actions. Do you want to remove other assignments?
+conflict.shortcut.dialog.title:
+  text: Warning
+conflict.shortcut.dialog.remove.button:
+  text: Remove
+conflict.shortcut.dialog.leave.button:
+  text: Leave
+conflict.shortcut.dialog.cancel.button:
+  text: Cancel
+editor.shortcut:
+  text: Editor {0}
+keymap.no.name:
+  text: <No name>
+mouse.shortcut.dialog.title:
+  text: Enter Mouse Shortcut
+mouse.shortcut.dialog.single.click.radio:
+  text: Single Click
+mouse.shortcut.dialog.double.click.radio:
+  text: Double Click
+mouse.shortcut.dialog.click.count.border:
+  text: Click Count
+mouse.shortcut.dialog.click.pad.border:
+  text: Click Pad
+mouse.shortcut.dialog.shortcut.preview.border:
+  text: Shortcut Preview
+mouse.shortcut.dialog.conflicts.border:
+  text: Conflicts
+mouse.shortcut.dialog.no.conflicts.area:
+  text: No conflicts
+mouse.shortcut.dialog.assigned.to.area:
+  text: Assigned to {0}
+mouse.shortcut.dialog.side.buttons.with.double.click:
+  text: Double Click is not supported for Button {0}
+actions.tree.external.tools.group:
+  text: External Tools
+new.keymap.name:
+  text: '{0} copy'
+new.indexed.keymap.name:
+  text: '{0} copy {1}'
+delete.keymap.dialog.message:
+  text: Do you want to delete the keymap?
+delete.keymap.dialog.title:
+  text: Warning
+keymap.noname.presentable.name:
+  text: <unnamed>
+quick.list.panel.move.down.button:
+  text: Move &Down
+quick.list.panel.move.up.button:
+  text: Move &Up
+quick.list.panel.add.separator.button:
+  text: Add Separator
+quick.list.panel.description.label:
+  text: 'Description:'
+quick.list.panel.display.name.label:
+  text: 'Display name:'
+no.actions:
+  text: No actions
+mouse.click.shortcut.text:
+  text: '{0}Button{1} Click'
+mouse.double.click.shortcut.text:
+  text: '{0}Button{1} Double-Click'
+configuration.all.keymaps.should.have.non.empty.names.error.message:
+  text: All keymaps should have non empty names
+configuration.all.keymaps.should.have.unique.names.error.message:
+  text: All keymaps should have unique names
+filter.clear.action.text:
+  text: Clear Filtering
+filter.settings.popup.title:
+  text: Filter Settings
+filter.enable.second.stroke.checkbox:
+  text: Enable
+filter.first.stroke.input:
+  text: 'First Stroke:'
+filter.second.stroke.input:
+  text: 'Second Stroke:'
+filter.shortcut.action.text:
+  text: Find Actions by Shortcut
+disable.mnemonic.in.controls.check.box:
+  text: Disable mnemonics in controls

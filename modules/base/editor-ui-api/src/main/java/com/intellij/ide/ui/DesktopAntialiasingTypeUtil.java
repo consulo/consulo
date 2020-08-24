@@ -15,27 +15,28 @@
  */
 package com.intellij.ide.ui;
 
-import consulo.desktop.util.awt.AntialiasingType;
+import consulo.desktop.util.awt.DesktopAntialiasingType;
+import consulo.ui.AntialiasingType;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
 
-public class AntialiasingTypeUtil {
+public class DesktopAntialiasingTypeUtil {
   @Nonnull
-  public static AntialiasingType getAntialiasingTypeForSwingComponent() {
+  public static DesktopAntialiasingType getAntialiasingTypeForSwingComponent() {
     UISettings uiSettings = UISettings.getInstanceOrNull();
     if (uiSettings != null) {
       AntialiasingType type = uiSettings.IDE_AA_TYPE;
-      if (type != null) return type;
+      if (type != null) return DesktopAntialiasingType.from(type);
     }
-    return AntialiasingType.GREYSCALE;
+    return DesktopAntialiasingType.GREYSCALE;
   }
 
   public static Object getKeyForCurrentScope(boolean inEditor) {
     UISettings uiSettings = UISettings.getInstanceOrNull();
     if (uiSettings != null) {
       AntialiasingType type = inEditor ? uiSettings.EDITOR_AA_TYPE : uiSettings.IDE_AA_TYPE;
-      if (type != null) return type.getHint();
+      if (type != null) return DesktopAntialiasingType.from(type).getHint();
     }
     return RenderingHints.VALUE_TEXT_ANTIALIAS_ON;
   }

@@ -15,6 +15,7 @@
  */
 package consulo.ui.web.internal;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -24,28 +25,27 @@ import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 2019-02-19
  */
 public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends UIComponentWithVaadinComponent<V> implements Label {
-  public WebLabelBase(String text) {
+  public WebLabelBase(LocalizeValue text) {
     setText(text);
   }
 
   @Nonnull
   @Override
-  public String getText() {
-    return getVaadinComponent().getCaption();
+  public LocalizeValue getText() {
+    return getVaadinComponent().getTextValue();
   }
 
-  @Nonnull
   @RequiredUIAccess
+  @Nonnull
   @Override
-  public Label setText(@Nonnull String text) {
-    getVaadinComponent().setCaption(text);
+  public Label setText(@Nonnull LocalizeValue text) {
+    getVaadinComponent().setTextValue(text);
     return this;
   }
 
@@ -76,7 +76,7 @@ public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends U
 
   @Nonnull
   @Override
-  public Label setForeground(@Nonnull Supplier<ColorValue> colorValueSupplier) {
+  public Label setForeground(@Nonnull ColorValue colorValue) {
     return this;
   }
 

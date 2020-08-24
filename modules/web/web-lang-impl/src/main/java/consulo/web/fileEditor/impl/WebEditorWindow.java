@@ -203,7 +203,7 @@ public class WebEditorWindow extends EditorWindowBase implements EditorWindow {
         tab.setCloseHandler((thisTab, component) -> {
           myEditors.remove(editor);
         });
-        tab.setIcon(VfsIconUtil.getIcon(editor.getFile(), 0, myManager.getProject()));
+        tab.withIcon(VfsIconUtil.getIcon(editor.getFile(), 0, myManager.getProject()));
         myEditors.put(editor, tab);
       }
       else {

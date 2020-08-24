@@ -15,17 +15,15 @@
  */
 package consulo.ui.desktop.internal;
 
-import consulo.disposer.Disposable;
-import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.components.JBList;
 import consulo.awt.impl.FromSwingComponentWrapper;
+import consulo.disposer.Disposable;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.model.ListModel;
 
 import javax.annotation.Nonnull;
-import javax.swing.*;
 
 /**
  * @author VISTALL
@@ -53,13 +51,7 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
     DesktopComboBoxModelWrapper<E> wrapper = new DesktopComboBoxModelWrapper<>(model);
 
     myComponent = new MyJBList<>(wrapper);
-    myComponent.setCellRenderer(new ColoredListCellRenderer<E>() {
-      @Override
-      protected void customizeCellRenderer(@Nonnull JList<? extends E> list, E value, int index, boolean selected, boolean hasFocus) {
-        DesktopItemPresentationImpl<E> render = new DesktopItemPresentationImpl<>(this);
-        myRender.render(render, index, value);
-      }
-    });
+    myComponent.setCellRenderer(new DesktopListRender<>(() -> myRender));
   }
 
   @Nonnull

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,35 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.layout;
-
-import consulo.ui.*;
-import consulo.ui.annotation.RequiredUIAccess;
+package consulo.ui;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author VISTALL
- * @since 11-Jun-16
+ * @since 2020-08-24
  */
-public interface VerticalLayout extends Layout {
+public interface TextBoxWithHistory extends TextBox {
   @Nonnull
-  static VerticalLayout create() {
-    return create(5);
+  static TextBoxWithHistory create() {
+    return create(null);
   }
 
   @Nonnull
-  static VerticalLayout create(int vGap) {
-    return UIInternal.get()._Layouts_vertical(vGap);
+  static TextBoxWithHistory create(@Nullable String text) {
+    return UIInternal.get()._Components_textBoxWithHistory(text);
   }
 
   @Nonnull
-  @RequiredUIAccess
-  default VerticalLayout add(@Nonnull PseudoComponent component) {
-    return add(component.getComponent());
+  default TextBoxWithHistory setHistory(@Nonnull String... history) {
+    return setHistory(Arrays.asList(history));
   }
 
   @Nonnull
-  @RequiredUIAccess
-  VerticalLayout add(@Nonnull Component component);
+  TextBoxWithHistory setHistory(@Nonnull List<String> history);
 }

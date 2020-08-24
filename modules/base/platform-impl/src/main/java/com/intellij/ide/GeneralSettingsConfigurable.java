@@ -77,7 +77,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
 
     @RequiredUIAccess
     public MyComponent() {
-      myRootLayout = VerticalLayout.create();
+      myRootLayout = VerticalLayout.create(0);
 
       VerticalLayout startupOrShutdownLayout = VerticalLayout.create();
       startupOrShutdownLayout.add(myChkReopenLastProject = CheckBox.create(IdeLocalize.checkboxReopenLastProjectOnStartup()));

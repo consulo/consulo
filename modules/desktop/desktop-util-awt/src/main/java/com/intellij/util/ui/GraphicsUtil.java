@@ -19,7 +19,7 @@ import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.SystemInfo;
 import consulo.annotation.ReviewAfterMigrationToJRE;
 import consulo.awt.hacking.JComponentHacking;
-import consulo.desktop.util.awt.AntialiasingType;
+import consulo.desktop.util.awt.DesktopAntialiasingType;
 import consulo.desktop.util.awt.laf.PreJava9UIUtil;
 
 import javax.annotation.Nonnull;
@@ -128,7 +128,7 @@ public class GraphicsUtil {
   }
 
   @ReviewAfterMigrationToJRE(9)
-  public static void setAntialiasingType(@Nonnull JComponent list, AntialiasingType type) {
+  public static void setAntialiasingType(@Nonnull JComponent list, DesktopAntialiasingType type) {
     if(SystemInfo.IS_AT_LEAST_JAVA9) {
       list.putClientProperty(RenderingHints.KEY_TEXT_ANTIALIASING, type.getHint());
       list.putClientProperty(RenderingHints.KEY_TEXT_LCD_CONTRAST, UIUtil.getLcdContrastValue());
@@ -141,5 +141,11 @@ public class GraphicsUtil {
         list.putClientProperty(PreJava9UIUtil.AA_TEXT_PROPERTY_KEY(), null);
       }
     }
+  }
+
+  @ReviewAfterMigrationToJRE(9)
+  public static void setAntialiasingType(@Nonnull JComponent list, consulo.ui.AntialiasingType uiType) {
+    DesktopAntialiasingType type = DesktopAntialiasingType.from(uiType);
+    setAntialiasingType(list, type);
   }
 }

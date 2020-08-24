@@ -16,6 +16,7 @@
 package consulo.ui.desktop.internal.layout;
 
 import com.intellij.openapi.ui.VerticalFlowLayout;
+import com.intellij.util.ui.JBUI;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
@@ -27,8 +28,8 @@ import javax.annotation.Nonnull;
  * @since 11-Jun-16
  */
 public class DesktopVerticalLayoutImpl extends DesktopLayoutBase implements VerticalLayout {
-  public DesktopVerticalLayoutImpl() {
-    initDefaultPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, false));
+  public DesktopVerticalLayoutImpl(int vGap) {
+    initDefaultPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, JBUI.scale(vGap), true, false));
   }
 
   @RequiredUIAccess

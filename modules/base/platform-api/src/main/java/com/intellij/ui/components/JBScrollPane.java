@@ -15,13 +15,15 @@
  */
 package com.intellij.ui.components;
 
-import consulo.util.dataholder.Key;
+import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.wm.IdeGlassPane;
+import com.intellij.ui.ComponentUtil;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ReflectionUtil;
-import com.intellij.util.ui.ButtonlessScrollBarUI;
-import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.*;
+import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,12 +32,17 @@ import javax.swing.border.LineBorder;
 import javax.swing.plaf.ScrollBarUI;
 import javax.swing.plaf.ScrollPaneUI;
 import javax.swing.plaf.basic.BasicScrollBarUI;
+import javax.swing.plaf.basic.BasicScrollPaneUI;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.lang.reflect.Field;
 
 public class JBScrollPane extends JScrollPane {
+  private static final Logger LOG = Logger.getInstance(JBScrollPane.class);
+
   /**
    * Supposed to be used as a client property key for scrollbar and indicates if this scrollbar should be ignored
    * when insets for {@code JScrollPane's} content are being calculated.
@@ -96,6 +103,56 @@ public class JBScrollPane extends JScrollPane {
       return null;
     }}
 
+  private static final class JBMouseWheelListener implements MouseWheelListener {
+
+    private final MouseWheelListener myDelegate;
+    private MouseWheelSmoothScroll mySmoothScroll;
+    private TouchScroll myTouchScroll;
+
+    private JBMouseWheelListener(MouseWheelListener delegate) {
+      this.myDelegate = delegate;
+    }
+
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent event) {
+      boolean isScrollEvent = isScrollEvent(event);
+      boolean isScrollPaneEvent = event.getSource() instanceof JScrollPane;
+      if (isScrollEvent && isScrollPaneEvent) {
+        JScrollPane pane = (JScrollPane)event.getSource();
+        JScrollBar bar = event.isShiftDown() ? pane.getHorizontalScrollBar() : pane.getVerticalScrollBar();
+
+        boolean isWheelScrollEnabled = pane.isWheelScrollingEnabled();
+        boolean isBarVisible = bar != null && bar.isVisible();
+        boolean isAdjustedDeltaZero = bar instanceof JBScrollBar && ((JBScrollBar)bar).getDeltaAdjusted(event) == 0.0;
+
+        if (isWheelScrollEnabled && isBarVisible && !isAdjustedDeltaZero) {
+          if (TouchScrollUtil.isTouchScroll(event)) {
+            if (myTouchScroll == null) {
+              myTouchScroll = TouchScroll.create();
+            }
+            myTouchScroll.processMouseWheelEvent(event, myDelegate::mouseWheelMoved);
+          }
+          else if (UISettings.getShadowInstance().getAnimatedScrolling()) {
+            if (mySmoothScroll == null) {
+              mySmoothScroll = MouseWheelSmoothScroll.create(() -> {
+                return ScrollSettings.isEligibleFor(pane);
+              });
+            }
+            mySmoothScroll.processMouseWheelEvent(event, myDelegate::mouseWheelMoved);
+          }
+          else if (!(bar instanceof JBScrollBar && ((JBScrollBar)bar).handleMouseWheelEvent(event))) {
+            myDelegate.mouseWheelMoved(event);
+          }
+        }
+
+        if (!event.isConsumed()) {
+          // try to process a mouse wheel event by outer scroll pane
+          MouseEventAdapter.redispatch(event, ComponentUtil.getParentOfType((Class<? extends JScrollPane>)JScrollPane.class, pane.getParent()));
+        }
+      }
+    }
+  }
+
   /**
    * Indicates whether the specified event is not consumed and does not have unexpected modifiers.
    *
@@ -114,6 +171,9 @@ public class JBScrollPane extends JScrollPane {
 
   private int myViewportBorderWidth = -1;
   private boolean myHasOverlayScrollbars;
+
+  private ScrollSource myScrollSource = ScrollSource.UNKNOWN;
+  private double myWheelRotation;
 
   public JBScrollPane(int viewportWidth) {
     init(false);
@@ -178,11 +238,37 @@ public class JBScrollPane extends JScrollPane {
   public void setUI(ScrollPaneUI ui) {
     super.setUI(ui);
     updateViewportBorder();
+    if (ui instanceof BasicScrollPaneUI) {
+      try {
+        Field field = BasicScrollPaneUI.class.getDeclaredField("mouseScrollListener");
+        field.setAccessible(true);
+        Object value = field.get(ui);
+        if (value instanceof MouseWheelListener) {
+          MouseWheelListener oldListener = (MouseWheelListener)value;
+          MouseWheelListener newListener = new JBMouseWheelListener(oldListener);
+          field.set(ui, newListener);
+          // replace listener if field updated successfully
+          removeMouseWheelListener(oldListener);
+          addMouseWheelListener(newListener);
+        }
+      }
+      catch (Exception exception) {
+        LOG.warn(exception);
+      }
+    }
   }
 
   @Override
   public boolean isOptimizedDrawingEnabled() {
-    return !myHasOverlayScrollbars;
+    return isOptimizedDrawingEnabledFor(getVerticalScrollBar()) && isOptimizedDrawingEnabledFor(getHorizontalScrollBar());
+  }
+
+  /**
+   * Returns {@code false} for visible translucent scroll bars, or {@code true} otherwise.
+   * It is needed to repaint translucent scroll bars on viewport repainting.
+   */
+  private static boolean isOptimizedDrawingEnabledFor(JScrollBar bar) {
+    return bar == null || !bar.isVisible() || (bar.isOpaque() && bar.isOptimizedDrawingEnabled());
   }
 
   private void updateViewportBorder() {
@@ -209,6 +295,11 @@ public class JBScrollPane extends JScrollPane {
   @Override
   protected JViewport createViewport() {
     return new JBViewport();
+  }
+
+  int getInitialDelay(boolean valueIsAdjusting) {
+    ScrollSource source = valueIsAdjusting ? ScrollSource.SCROLLBAR : myScrollSource;
+    return source.getInterpolationDelay(myWheelRotation);
   }
 
   @SuppressWarnings("deprecation")

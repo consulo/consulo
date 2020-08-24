@@ -34,10 +34,16 @@ public interface TextBox extends ValueComponent<String>, ValidableComponent<Stri
   }
 
   @Nonnull
-  TextBox setPlaceholder(@Nullable String text);
+  default TextBox setPlaceholder(@Nullable String text) {
+    // unwarranted action
+    return this;
+  }
 
   @Nonnull
-  TextBox setVisibleLength(int columns);
+  default TextBox setVisibleLength(int columns) {
+    // unwarranted action
+    return this;
+  }
 
   void selectAll();
 }

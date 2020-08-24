@@ -100,6 +100,10 @@ public interface ComboBox<E> extends ValueComponent<E> {
 
   void setRender(@Nonnull ListItemRender<E> render);
 
+  default void setTextRender(@Nonnull Function<E, String> stringFuc) {
+    setRender((render, index, item) -> render.append(stringFuc.apply(item)));
+  }
+
   void setValueByIndex(int index);
 
   @RequiredUIAccess

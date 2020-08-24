@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.ex.util;
 
-import com.intellij.ide.ui.AntialiasingTypeUtil;
+import com.intellij.ide.ui.DesktopAntialiasingTypeUtil;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
@@ -40,7 +40,7 @@ public class EditorUIUtil {
     int lcdContrastValue = UIUtil.getLcdContrastValue();
 
     g2d.setRenderingHint(RenderingHints.KEY_TEXT_LCD_CONTRAST, lcdContrastValue);
-    g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, AntialiasingTypeUtil.getKeyForCurrentScope(true));
+    g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, DesktopAntialiasingTypeUtil.getKeyForCurrentScope(true));
 
     UISettings.setupFractionalMetrics(g2d);
   }

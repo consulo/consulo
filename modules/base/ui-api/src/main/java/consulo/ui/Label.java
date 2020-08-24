@@ -15,14 +15,15 @@
  */
 package consulo.ui;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.HorizontalAlignment;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -31,22 +32,35 @@ import java.util.function.Supplier;
 public interface Label extends Component {
   @Nonnull
   static Label create() {
-    return create("");
+    return create(LocalizeValue.empty());
   }
 
   @Nonnull
+  @Deprecated
   static Label create(@Nullable String text) {
-    Label label = UIInternal.get()._Components_label(text);
+    return create(LocalizeValue.of(StringUtil.notNullize(text)));
+  }
+
+  @Nonnull
+  static Label create(@Nonnull LocalizeValue value) {
+    Label label = UIInternal.get()._Components_label(value);
     label.setHorizontalAlignment(HorizontalAlignment.LEFT);
     return label;
   }
 
   @Nonnull
-  String getText();
+  LocalizeValue getText();
 
   @RequiredUIAccess
   @Nonnull
-  Label setText(@Nonnull String text);
+  @Deprecated
+  default Label setText(@Nonnull String text) {
+    return setText(LocalizeValue.of(text));
+  }
+
+  @RequiredUIAccess
+  @Nonnull
+  Label setText(@Nonnull LocalizeValue text);
 
   @Nullable
   String getTooltipText();
@@ -60,12 +74,8 @@ public interface Label extends Component {
   @Nonnull
   HorizontalAlignment getHorizontalAlignment();
 
-  default Label setForeground(@Nonnull ColorValue colorValue) {
-    return setForeground(() -> colorValue);
-  }
-
   @Nonnull
-  Label setForeground(@Nonnull Supplier<ColorValue> colorValueSupplier);
+  Label setForeground(@Nonnull ColorValue colorValue);
 
   @Nonnull
   Label setImage(@Nullable Image icon);

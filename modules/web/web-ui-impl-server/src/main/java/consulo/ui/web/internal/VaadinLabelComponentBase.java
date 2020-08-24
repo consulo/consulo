@@ -15,6 +15,7 @@
  */
 package consulo.ui.web.internal;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.shared.HorizontalAlignment;
 import consulo.ui.web.internal.base.VaadinComponent;
 import consulo.web.gwt.shared.ui.state.LabelState;
@@ -27,6 +28,12 @@ import javax.annotation.Nonnull;
  */
 public abstract class VaadinLabelComponentBase extends VaadinComponent {
   private HorizontalAlignment myHorizontalAlignment = HorizontalAlignment.LEFT;
+  private LocalizeValue myTextValue = LocalizeValue.empty();
+
+  public void setTextValue(LocalizeValue textValue) {
+    myTextValue = textValue;
+    markAsDirty();
+  }
 
   public void setHorizontalAlignment(@Nonnull HorizontalAlignment horizontalAlignment) {
     myHorizontalAlignment = horizontalAlignment;
@@ -34,8 +41,19 @@ public abstract class VaadinLabelComponentBase extends VaadinComponent {
     markAsDirty();
   }
 
+  public LocalizeValue getTextValue() {
+    return myTextValue;
+  }
+
   public HorizontalAlignment getHorizontalAlignment() {
     return myHorizontalAlignment;
+  }
+
+  @Override
+  public void beforeClientResponse(boolean initial) {
+    super.beforeClientResponse(initial);
+
+    getState().caption = myTextValue.getValue();
   }
 
   @Override

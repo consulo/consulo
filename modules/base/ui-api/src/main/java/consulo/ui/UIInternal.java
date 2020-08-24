@@ -82,7 +82,7 @@ public abstract class UIInternal {
 
   public abstract WrappedLayout _Layouts_wrapped();
 
-  public abstract VerticalLayout _Layouts_vertical();
+  public abstract VerticalLayout _Layouts_vertical(int vGap);
 
   public abstract SwipeLayout _Layouts_swipe();
 
@@ -100,13 +100,17 @@ public abstract class UIInternal {
 
   public abstract HorizontalLayout _Layouts_horizontal(int gapInPixesl);
 
-  public abstract Label _Components_label(String text);
+  public abstract Label _Components_label(LocalizeValue text);
 
-  public abstract HtmlLabel _Components_htmlLabel(String html);
+  public abstract HtmlLabel _Components_htmlLabel(LocalizeValue html);
 
   public abstract <E> ComboBox<E> _Components_comboBox(ListModel<E> model);
 
   public abstract TextBox _Components_textBox(String text);
+
+  public TextBoxWithHistory _Components_textBoxWithHistory(String text) {
+    throw new UnsupportedOperationException();
+  }
 
   public abstract ProgressBar _Components_progressBar();
 
@@ -125,7 +129,9 @@ public abstract class UIInternal {
 
   public abstract ColorBox _Components_colorBox(@Nullable ColorValue colorValue);
 
-  public abstract <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model);
+  public <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model) {
+    throw new UnsupportedOperationException();
+  }
 
   public abstract Image _Image_fromUrl(URL url);
 

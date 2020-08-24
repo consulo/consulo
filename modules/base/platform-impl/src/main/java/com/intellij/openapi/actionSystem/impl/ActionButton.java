@@ -436,11 +436,17 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
   }
 
   protected void updateTextAndMnemonic(@Nonnull LocalizeValue localizeValue) {
-    TextWithMnemonic textWithMnemonic = TextWithMnemonic.parse(localizeValue.getValue());
+    boolean disabledMnemonic = myPresentation.isDisabledMnemonic();
 
-    myLastComputedText = textWithMnemonic.getText();
-
-    setDisplayedMnemonicIndex(textWithMnemonic.getMnemonicIndex());
+    if(disabledMnemonic) {
+      myLastComputedText = localizeValue.getValue();
+      setDisplayedMnemonicIndex(-1);
+    }
+    else {
+      TextWithMnemonic textWithMnemonic = TextWithMnemonic.parse(localizeValue.getValue());
+      myLastComputedText = textWithMnemonic.getText();
+      setDisplayedMnemonicIndex(textWithMnemonic.getMnemonicIndex());
+    }
   }
 
   protected void presentationPropertyChanded(PropertyChangeEvent e) {

@@ -30,6 +30,8 @@ import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.editor.EditorFactory;
+import com.intellij.openapi.editor.colors.EditorColorsManager;
+import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.JBPopupMenu;
@@ -53,7 +55,6 @@ import com.intellij.ui.plaf.beg.IdeaMenuUI;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ReflectionUtil;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.desktop.impl.ui.LookAndFeelProvider;
@@ -63,6 +64,7 @@ import consulo.desktop.util.awt.laf.GTKPlusUIUtil;
 import consulo.disposer.Disposable;
 import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.ide.ui.laf.GTKPlusEAPDescriptor;
+import consulo.ide.ui.laf.LafWithColorScheme;
 import consulo.ide.ui.laf.mac.MacButtonlessScrollbarUI;
 import consulo.ide.ui.laf.mac.MacEditorTabsUI;
 import consulo.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
@@ -70,9 +72,10 @@ import consulo.ide.ui.laf.modernWhite.ModernWhiteLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.NativeModernWhiteLookAndFeelInfo;
 import consulo.localize.LocalizeManager;
 import consulo.logging.Logger;
+import consulo.ui.desktop.internal.style.DesktopStyleImpl;
+import consulo.ui.style.Style;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -101,39 +104,33 @@ import java.util.*;
 public final class LafManagerImpl extends LafManager implements Disposable, PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(LafManagerImpl.class);
 
-  @NonNls
   private static final String ELEMENT_LAF = "laf";
-
   private static final String ELEMENT_LOCALE = "locale";
-
-  @NonNls
   private static final String ATTRIBUTE_CLASS_NAME = "class-name";
 
-  @NonNls
   private static final String GNOME_THEME_PROPERTY_NAME = "gnome.Net/ThemeName";
 
-  @NonNls
   private static final String[] ourFileChooserTextKeys =
           {"FileChooser.viewMenuLabelText", "FileChooser.newFolderActionLabelText", "FileChooser.listViewActionLabelText", "FileChooser.detailsViewActionLabelText",
                   "FileChooser.refreshActionLabelText"};
 
-  @NonNls
   private static final String[] ourOptionPaneIconKeys = {"OptionPane.errorIcon", "OptionPane.informationIcon", "OptionPane.warningIcon", "OptionPane.questionIcon"};
 
   private final EventDispatcher<LafManagerListener> myListenerList = EventDispatcher.create(LafManagerListener.class);
 
-  private final UIManager.LookAndFeelInfo[] myLaFs;
-  private UIManager.LookAndFeelInfo myCurrentLaf;
-  private final HashMap<UIManager.LookAndFeelInfo, HashMap<String, Object>> myStoredDefaults = new HashMap<>();
+  private final List<DesktopStyleImpl> myStyles;
+  private DesktopStyleImpl myCurrentStyle;
+
   private PropertyChangeListener myThemeChangeListener = null;
 
+  private final Map<UIManager.LookAndFeelInfo, HashMap<String, Object>> myStoredDefaults = new HashMap<>();
   private final LocalizeManager myLocalizeManager;
 
   @Inject
   LafManagerImpl() {
     myLocalizeManager = LocalizeManager.getInstance();
 
-    List<UIManager.LookAndFeelInfo> lafList = ContainerUtil.newArrayList();
+    List<UIManager.LookAndFeelInfo> lafList = new ArrayList<>();
 
     lafList.add(new IntelliJLookAndFeelInfo());
 
@@ -154,9 +151,13 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
       provider.register(lafList::add);
     }
 
-    myLaFs = lafList.toArray(new UIManager.LookAndFeelInfo[lafList.size()]);
+    myStyles = new ArrayList<>(lafList.size());
 
-    myCurrentLaf = getDefaultLaf();
+    for (UIManager.LookAndFeelInfo lookAndFeelInfo : lafList) {
+      myStyles.add(new DesktopStyleImpl(lookAndFeelInfo));
+    }
+
+    myCurrentStyle = getDefaultStyle();
   }
 
   @Override
@@ -165,7 +166,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
   }
 
   @Override
-  public void addLafManagerListener(LafManagerListener l, consulo.disposer.Disposable disposable) {
+  public void addLafManagerListener(LafManagerListener l, Disposable disposable) {
     myListenerList.addListener(l, disposable);
   }
 
@@ -180,8 +181,8 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
 
   @Override
   public void afterLoadState() {
-    if (myCurrentLaf != null) {
-      final UIManager.LookAndFeelInfo laf = findLaf(myCurrentLaf.getClassName());
+    if (myCurrentStyle != null) {
+      final DesktopStyleImpl laf = findStyleByClassName(myCurrentStyle.getLookAndFeelInfo().getClassName());
       if (laf != null) {
         setCurrentLookAndFeel(laf, false);
       }
@@ -232,30 +233,29 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
       myLocalizeManager.setLocale(myLocalizeManager.parseLocale(localeText), false);
     }
 
-    UIManager.LookAndFeelInfo laf = findLaf(className);
+    DesktopStyleImpl styleFromXml = className == null ? null : findStyleByClassName(className);
     // If LAF is undefined (wrong class name or something else) we have set default LAF anyway.
-    if (laf == null) {
-      laf = getDefaultLaf();
+    if (styleFromXml == null) {
+      styleFromXml = getDefaultStyle();
     }
 
-    if (myCurrentLaf != null && !laf.getClassName().equals(myCurrentLaf.getClassName())) {
-      setCurrentLookAndFeel(laf);
+    if (myCurrentStyle != null && !styleFromXml.equals(myCurrentStyle)) {
+      setCurrentStyle(styleFromXml);
       updateUI();
     }
 
-    myCurrentLaf = laf;
+    myCurrentStyle = styleFromXml;
   }
 
   @Override
   public Element getState() {
     Element element = new Element("state");
-    if (myCurrentLaf != null) {
-      String className = myCurrentLaf.getClassName();
-      if (className != null) {
-        Element child = new Element(ELEMENT_LAF);
-        child.setAttribute(ATTRIBUTE_CLASS_NAME, className);
-        element.addContent(child);
-      }
+    if (myCurrentStyle != null) {
+      String className = myCurrentStyle.getClassName();
+
+      Element child = new Element(ELEMENT_LAF);
+      child.setAttribute(ATTRIBUTE_CLASS_NAME, className);
+      element.addContent(child);
     }
 
     if(!myLocalizeManager.isDefaultLocale()) {
@@ -267,24 +267,33 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     return element;
   }
 
+  @Nonnull
+  @Override
+  public List<Style> getStyles() {
+    return Collections.unmodifiableList(myStyles);
+  }
+
+  @Nonnull
+  @Override
+  public Style getCurrentStyle() {
+    return myCurrentStyle;
+  }
+
+  @Nonnull
   @Override
   public UIManager.LookAndFeelInfo[] getInstalledLookAndFeels() {
-    return myLaFs.clone();
+    return myStyles.stream().map(DesktopStyleImpl::getLookAndFeelInfo).toArray(UIManager.LookAndFeelInfo[]::new);
   }
 
   @Override
   public UIManager.LookAndFeelInfo getCurrentLookAndFeel() {
-    return myCurrentLaf;
+    return myCurrentStyle.getLookAndFeelInfo();
   }
 
-  /**
-   * @return default LookAndFeelInfo for the running OS. For Win32 and
-   * Linux the method returns Alloy LAF or IDEA LAF if first not found, for Mac OS X it returns Aqua
-   * RubyMine uses Native L&F for linux as well
-   */
-  private UIManager.LookAndFeelInfo getDefaultLaf() {
+  @Nonnull
+  private DesktopStyleImpl getDefaultStyle() {
     // Default
-    UIManager.LookAndFeelInfo ideaLaf = findLaf(IntelliJLaf.class.getName());
+    DesktopStyleImpl ideaLaf = findStyleByClassName(IntelliJLaf.class.getName());
     if (ideaLaf != null) {
       return ideaLaf;
     }
@@ -296,28 +305,38 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
    * will be returned.
    */
   @Nullable
-  private UIManager.LookAndFeelInfo findLaf(@Nullable String className) {
-    if (className == null) {
-      return null;
-    }
-    for (UIManager.LookAndFeelInfo laf : myLaFs) {
-      if (Comparing.equal(laf.getClassName(), className)) {
-        return laf;
+  private DesktopStyleImpl findStyleByClassName(@Nonnull String className) {
+    for (DesktopStyleImpl style : myStyles) {
+      UIManager.LookAndFeelInfo lookAndFeelInfo = style.getLookAndFeelInfo();
+
+      if (Comparing.equal(lookAndFeelInfo.getClassName(), className)) {
+        return style;
       }
     }
     return null;
   }
 
   @Override
-  public void setCurrentLookAndFeel(UIManager.LookAndFeelInfo lookAndFeelInfo) {
-    setCurrentLookAndFeel(lookAndFeelInfo, true);
+  public void setCurrentLookAndFeel(@Nonnull UIManager.LookAndFeelInfo lookAndFeelInfo) {
+    DesktopStyleImpl style = findStyleByClassName(lookAndFeelInfo.getClassName());
+    LOG.assertTrue(style != null, "Class not found : " + lookAndFeelInfo.getClassName());
+    setCurrentLookAndFeel(style, true);
   }
 
-  private void setCurrentLookAndFeel(UIManager.LookAndFeelInfo lookAndFeelInfo, boolean fire) {
-    if (findLaf(lookAndFeelInfo.getClassName()) == null) {
-      LOG.error("unknown LookAndFeel : " + lookAndFeelInfo);
+  @Override
+  public void setCurrentStyle(@Nonnull Style currentStyle) {
+    DesktopStyleImpl desktopStyle = (DesktopStyleImpl)currentStyle;
+    setCurrentLookAndFeel(desktopStyle, true);
+  }
+
+  private void setCurrentLookAndFeel(DesktopStyleImpl style, boolean fire) {
+    if (findStyleByClassName(style.getClassName()) == null) {
+      LOG.error("unknown LookAndFeel : " + style);
       return;
     }
+
+    UIManager.LookAndFeelInfo lookAndFeelInfo = style.getLookAndFeelInfo();
+
     try {
       JBColor.resetDark();
 
@@ -345,6 +364,14 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
       }
 
       if (fire) {
+        if (lookAndFeelInfo instanceof LafWithColorScheme) {
+          EditorColorsManager editorColorsManager = EditorColorsManager.getInstance();
+          EditorColorsScheme editorColorsScheme = editorColorsManager.getScheme(((LafWithColorScheme)lookAndFeelInfo).getColorSchemeName());
+          if (editorColorsScheme != null) {
+            editorColorsManager.setGlobalScheme(editorColorsScheme);
+          }
+        }
+
         fireUpdate();
       }
     }
@@ -353,7 +380,8 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
       Messages.showMessageDialog(IdeBundle.message("error.cannot.set.look.and.feel", lookAndFeelInfo.getName(), e.getMessage()), CommonBundle.getErrorTitle(), Messages.getErrorIcon());
       return;
     }
-    myCurrentLaf = lookAndFeelInfo;
+
+    myCurrentStyle = style;
   }
 
   public static void installMacOSXFonts(UIDefaults defaults) {

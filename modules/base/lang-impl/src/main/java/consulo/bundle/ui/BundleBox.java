@@ -274,16 +274,16 @@ public class BundleBox implements PseudoComponent {
 
     myOriginalComboBox.setRender((render, index, value) -> {
       if (value instanceof InvalidBundleBoxItem) {
-        render.setIcon(AllIcons.Toolbar.Unknown);
+        render.withIcon(AllIcons.Toolbar.Unknown);
         render.append(value.getBundleName(), TextAttribute.ERROR);
       }
       else if (value instanceof CustomBundleBoxItem) {
-        render.setIcon(((CustomBundleBoxItem)value).getIcon());
+        render.withIcon(((CustomBundleBoxItem)value).getIcon());
         render.append(((CustomBundleBoxItem)value).getPresentableName());
       }
       else if (value instanceof ModuleExtensionBundleBoxItem) {
         ModuleExtensionBundleBoxItem extensionSdkComboBoxItem = (ModuleExtensionBundleBoxItem)value;
-        render.setIcon(AllIcons.Nodes.Module);
+        render.withIcon(AllIcons.Nodes.Module);
         render.append(extensionSdkComboBoxItem.getModule().getName(), TextAttribute.REGULAR_BOLD);
 
         final String sdkName = extensionSdkComboBoxItem.getBundleName();
@@ -292,11 +292,11 @@ public class BundleBox implements PseudoComponent {
         }
       }
       else if (value instanceof InvalidModuleBundleBoxItem) {
-        render.setIcon(AllIcons.Nodes.Module);
+        render.withIcon(AllIcons.Nodes.Module);
         render.append(((InvalidModuleBundleBoxItem)value).getModuleName(), TextAttribute.ERROR_BOLD);
       }
       else if (value == null || value instanceof NullBundleBoxItem) {
-        render.setIcon(ObjectUtil.notNull(nullIcon, AllIcons.Ide.EmptyFatalError));
+        render.withIcon(ObjectUtil.notNull(nullIcon, AllIcons.Ide.EmptyFatalError));
         String name = ObjectUtil.notNull(nullItemName, ProjectBundle.message("sdk.combo.box.item"));
         render.append(name, TextAttribute.REGULAR);
       }
@@ -304,7 +304,7 @@ public class BundleBox implements PseudoComponent {
         Sdk sdk = value.getBundle();
         String sdkName = value.getBundleName();
         assert sdkName != null;
-        render.setIcon(sdk == null ? AllIcons.Toolbar.Unknown : SdkUtil.getIcon(sdk));
+        render.withIcon(sdk == null ? AllIcons.Toolbar.Unknown : SdkUtil.getIcon(sdk));
         render.append(sdkName, sdk == null ? TextAttribute.ERROR : TextAttribute.REGULAR);
         String version = sdk == null ? null : sdk.getVersionString();
         if (version != null) {

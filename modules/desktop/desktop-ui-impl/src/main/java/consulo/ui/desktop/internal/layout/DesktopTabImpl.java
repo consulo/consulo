@@ -21,7 +21,9 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.ui.tabs.TabInfo;
 import consulo.awt.TargetAWT;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
+import consulo.ui.ItemPresentation;
 import consulo.ui.Tab;
 import consulo.ui.TextAttribute;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -82,9 +84,11 @@ public class DesktopTabImpl implements Tab {
     return myTabInfo;
   }
 
+  @Nonnull
   @Override
-  public void setIcon(@Nullable Image image) {
+  public ItemPresentation withIcon(@Nullable Image image) {
     myTabInfo.setIcon(image);
+    return this;
   }
 
   @Override
@@ -93,10 +97,10 @@ public class DesktopTabImpl implements Tab {
   }
 
   @Override
-  public void append(@Nonnull String text, @Nonnull TextAttribute textAttribute) {
+  public void append(@Nonnull LocalizeValue text, @Nonnull TextAttribute textAttribute) {
     String oldText = myTabInfo.getText();
 
-    myTabInfo.setText(StringUtil.notNullize(oldText) + text);
+    myTabInfo.setText(StringUtil.notNullize(oldText) + text.getValue());
   }
 
   @Override

@@ -15,6 +15,7 @@
  */
 package consulo.ui.util;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.PseudoComponent;
@@ -29,6 +30,8 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 05-Nov-16
  */
+@Deprecated
+@DeprecationInfo("See LabeledBuilder")
 public class LabeledComponents {
   @RequiredUIAccess
   public static Component left(@Nonnull String text, @Nonnull Component component) {

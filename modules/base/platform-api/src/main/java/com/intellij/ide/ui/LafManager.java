@@ -16,22 +16,36 @@
 
 package com.intellij.ide.ui;
 
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.ServiceManager;
 import consulo.disposer.Disposable;
+import consulo.ui.style.Style;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
+import java.util.List;
 
 /**
  * User: anna
  * Date: 17-May-2006
  */
 public abstract class LafManager {
+  @Nonnull
   public static LafManager getInstance(){
-    return ApplicationManager.getApplication().getComponent(LafManager.class);
+    return ServiceManager.getService(LafManager.class);
   }
 
+  @Nonnull
+  public abstract List<Style> getStyles();
+
+  public abstract void setCurrentStyle(@Nonnull Style style);
+
+  @Nonnull
+  public abstract Style getCurrentStyle();
+
+  @Nonnull
   public abstract UIManager.LookAndFeelInfo[] getInstalledLookAndFeels();
 
+  @Nonnull
   public abstract UIManager.LookAndFeelInfo getCurrentLookAndFeel();
 
   @Deprecated
@@ -39,7 +53,7 @@ public abstract class LafManager {
     return true;
   }
 
-  public abstract void setCurrentLookAndFeel(UIManager.LookAndFeelInfo lookAndFeelInfo);
+  public abstract void setCurrentLookAndFeel(@Nonnull UIManager.LookAndFeelInfo lookAndFeelInfo);
 
   public abstract void updateUI();
 

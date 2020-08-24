@@ -50,7 +50,6 @@ public final class ActionMenu extends JMenu {
   private final ActionRef<ActionGroup> myGroup;
   private final PresentationFactory myPresentationFactory;
   private final Presentation myPresentation;
-  private boolean myMnemonicEnabled;
   private MenuItemSynchronizer myMenuItemSynchronizer;
   private StubItem myStubItem;  // A PATCH!!! Do not remove this code, otherwise you will lose all keyboard navigation in JMenuBar.
   private final boolean myTopLevel;
@@ -58,6 +57,9 @@ public final class ActionMenu extends JMenu {
   private Component[] myMenuComponents;
 
   private LocalizeValue myTextValue = LocalizeValue.empty();
+
+  private boolean myComponentMnemonicEnabled;
+  private boolean myPresentationMnemonicDisabled;
 
   public ActionMenu(final DataContext context,
                     @Nonnull final String place,
@@ -70,7 +72,7 @@ public final class ActionMenu extends JMenu {
     myGroup = ActionRef.fromAction(group);
     myPresentationFactory = presentationFactory;
     myPresentation = myPresentationFactory.getPresentation(group);
-    myMnemonicEnabled = enableMnemonics;
+    myComponentMnemonicEnabled = enableMnemonics;
     myTopLevel = topLevel;
 
     updateUI();
@@ -142,10 +144,12 @@ public final class ActionMenu extends JMenu {
       }
     }
 
-    updateTextAndMnemonic(null);
+    updateTextAndMnemonic(null, myPresentation != null && myPresentation.isDisabledMnemonic());
   }
 
-  private void updateTextAndMnemonic(@Nullable LocalizeValue newTextValue) {
+  private void updateTextAndMnemonic(@Nullable LocalizeValue newTextValue, boolean disableMnemonic) {
+    myPresentationMnemonicDisabled = disableMnemonic;
+
     // first initialization
     if(myTextValue == null) {
       return;
@@ -177,7 +181,7 @@ public final class ActionMenu extends JMenu {
 
     setVisible(myPresentation.isVisible());
     setEnabled(myPresentation.isEnabled());
-    updateTextAndMnemonic(myPresentation.getTextValue());
+    updateTextAndMnemonic(myPresentation.getTextValue(), myPresentation.isDisabledMnemonic());
     updateIcon();
   }
 
@@ -188,19 +192,26 @@ public final class ActionMenu extends JMenu {
   }
 
   public void setMnemonicEnabled(boolean enable) {
-    myMnemonicEnabled = enable;
+    myComponentMnemonicEnabled = enable;
 
-    updateTextAndMnemonic(null);
+    updateTextAndMnemonic(null, myPresentation.isDisabledMnemonic());
   }
 
   @Override
   public void setDisplayedMnemonicIndex(final int index) throws IllegalArgumentException {
-    super.setDisplayedMnemonicIndex(myMnemonicEnabled ? index : -1);
+    super.setDisplayedMnemonicIndex(isMnemonicEnabled() ? index : -1);
   }
 
   @Override
   public void setMnemonic(int mnemonic) {
-    super.setMnemonic(myMnemonicEnabled ? mnemonic : 0);
+    super.setMnemonic(isMnemonicEnabled() ? mnemonic : 0);
+  }
+
+  private boolean isMnemonicEnabled() {
+    if(myPresentationMnemonicDisabled) {
+      return false;
+    }
+    return myComponentMnemonicEnabled;
   }
 
   private void updateIcon() {
@@ -349,7 +360,7 @@ public final class ActionMenu extends JMenu {
       mayContextBeInvalid = true;
     }
 
-    Utils.fillMenu(myGroup.getAction(), menu, myMnemonicEnabled, myPresentationFactory, context, myPlace, true, mayContextBeInvalid, LaterInvocator.isInModalContext());
+    Utils.fillMenu(myGroup.getAction(), menu, isMnemonicEnabled(), myPresentationFactory, context, myPlace, true, mayContextBeInvalid, LaterInvocator.isInModalContext());
   }
 
   private class MenuItemSynchronizer implements PropertyChangeListener {
@@ -366,7 +377,10 @@ public final class ActionMenu extends JMenu {
         setEnabled(myPresentation.isEnabled());
       }
       else if (Presentation.PROP_TEXT.equals(name)) {
-        updateTextAndMnemonic((LocalizeValue)e.getNewValue());
+        updateTextAndMnemonic((LocalizeValue)e.getNewValue(), Boolean.FALSE);
+      }
+      else if (Presentation.PROP_DISABLED_MNEMONIC.equals(name)) {
+        updateTextAndMnemonic(null, (Boolean)e.getNewValue());
       }
       else if (Presentation.PROP_ICON.equals(name) || Presentation.PROP_DISABLED_ICON.equals(name)) {
         updateIcon();

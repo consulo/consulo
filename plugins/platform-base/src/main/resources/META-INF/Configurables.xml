@@ -35,10 +35,10 @@
                              parentId="general"
                              key="title.customizations" bundle="messages.IdeBundle"/>
 
-    <applicationConfigurable instance="com.intellij.ide.ui.AppearanceConfigurable"
+    <applicationConfigurable instance="consulo.options.AppearanceConfigurable"
                              id="appearance"
                              parentId="general"
-                             displayName="UI"/>
+                             displayName="Appearance"/>
 
     <applicationConfigurable id="editor"
                              displayName="Editor"

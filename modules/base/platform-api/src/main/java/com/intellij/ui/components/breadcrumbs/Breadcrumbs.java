@@ -30,7 +30,7 @@ import java.util.Collection;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
-import static com.intellij.ide.ui.AntialiasingTypeUtil.getKeyForCurrentScope;
+import static com.intellij.ide.ui.DesktopAntialiasingTypeUtil.getKeyForCurrentScope;
 import static java.util.stream.Collectors.toList;
 import static javax.swing.SwingConstants.*;
 import static javax.swing.SwingUtilities.isLeftMouseButton;

@@ -63,7 +63,7 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public VerticalLayout _Layouts_vertical() {
+  public VerticalLayout _Layouts_vertical(int vGap) {
     return new WebVerticalLayoutImpl();
   }
 
@@ -109,12 +109,12 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public Label _Components_label(String text) {
+  public Label _Components_label(LocalizeValue text) {
     return new WebLabelImpl(text);
   }
 
   @Override
-  public HtmlLabel _Components_htmlLabel(String html) {
+  public HtmlLabel _Components_htmlLabel(LocalizeValue html) {
     return new WebHtmlLabelImpl(html);
   }
 
