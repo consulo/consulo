@@ -17,11 +17,19 @@ package consulo.test.impl.ui;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
+import consulo.ui.Button;
+import consulo.ui.Component;
+import consulo.ui.Label;
+import consulo.ui.Menu;
+import consulo.ui.MenuBar;
+import consulo.ui.MenuItem;
+import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.font.FontManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.layout.*;
+import consulo.ui.migration.SwingImageRef;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
 import consulo.ui.shared.ColorValue;
@@ -30,6 +38,7 @@ import consulo.ui.style.StyleManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.net.URL;
 import java.util.Collection;
 import java.util.List;
@@ -42,6 +51,33 @@ import java.util.function.Supplier;
  * @since 2020-08-24
  */
 public class TestUIInternal extends UIInternal {
+  private static final SwingImageRef ourDummyRef = new SwingImageRef() {
+    @Override
+    public int getHeight() {
+      return 0;
+    }
+
+    @Override
+    public int getWidth() {
+      return 0;
+    }
+
+    @Override
+    public void paintIcon(java.awt.Component c, Graphics g, int x, int y) {
+
+    }
+
+    @Override
+    public int getIconWidth() {
+      return 0;
+    }
+
+    @Override
+    public int getIconHeight() {
+      return 0;
+    }
+  };
+
   @Override
   public CheckBox _Components_checkBox() {
     return null;
@@ -165,57 +201,57 @@ public class TestUIInternal extends UIInternal {
 
   @Override
   public Image _Image_fromUrl(URL url) {
-    return null;
+    return ourDummyRef;
   }
 
   @Override
   public Image _Image_fromBytes(byte[] bytes, int width, int height) {
-    return null;
+    return ourDummyRef;
   }
 
   @Override
   public Image _Image_lazy(Supplier<Image> imageSupplier) {
-    return null;
+    return ourDummyRef;
   }
 
   @Override
   public Image _ImageEffects_layered(Image[] images) {
-    return null;
+    return ourDummyRef;
   }
 
   @Override
   public Image _ImageEffects_transparent(@Nonnull Image original, float alpha) {
-    return null;
+    return ourDummyRef;
   }
 
   @Override
   public Image _ImageEffects_grayed(@Nonnull Image original) {
-    return null;
+    return ourDummyRef;
   }
 
   @Override
   public Image _ImageEffects_appendRight(@Nonnull Image i0, @Nonnull Image i1) {
-    return null;
+    return ourDummyRef;
   }
 
   @Override
   public Image _ImageEffects_empty(int width, int height) {
-    return null;
+    return ourDummyRef;
   }
 
   @Override
   public Image _ImageEffects_canvas(int width, int height, Consumer<Canvas2D> consumer) {
-    return null;
+    return ourDummyRef;
   }
 
   @Override
   public Image _ImageEffects_withText(Image baseImage, String text) {
-    return null;
+    return ourDummyRef;
   }
 
   @Override
   public Image _ImageEffects_resize(Image original, int width, int height) {
-    return null;
+    return ourDummyRef;
   }
 
   @Override
