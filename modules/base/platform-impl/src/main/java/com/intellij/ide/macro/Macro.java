@@ -59,16 +59,16 @@ public abstract class Macro {
   /**
    * @return never null
    */
-  static String getPath(VirtualFile file) {
+  public static String getPath(VirtualFile file) {
     return file.getPath().replace('/', File.separatorChar);
   }
 
-  static File getIOFile(VirtualFile file) {
+  public static File getIOFile(VirtualFile file) {
     return new File(getPath(file));
   }
 
   @Nullable
-  protected static VirtualFile getVirtualDirOrParent(DataContext dataContext) {
+  public static VirtualFile getVirtualDirOrParent(DataContext dataContext) {
     VirtualFile vFile = dataContext.getData(PlatformDataKeys.VIRTUAL_FILE);
     if (vFile != null && !vFile.isDirectory()) {
       vFile = vFile.getParent();
