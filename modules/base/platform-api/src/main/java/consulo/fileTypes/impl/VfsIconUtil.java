@@ -104,4 +104,12 @@ public class VfsIconUtil {
 
     return IconDeferrer.getInstance().defer(icon, new AnyIconKey<>(file, project, flags), ourVirtualFileIconFunc);
   }
+
+  @Nullable
+  public static Image getIconNoDefer(@Nonnull final VirtualFile file, @Iconable.IconFlags final int flags, @Nullable final Project project) {
+    if(project == null || !wasEverInitialized(project)) {
+      return VirtualFilePresentation.getIcon(file);
+    }
+    return ourVirtualFileIconFunc.apply(new AnyIconKey<>(file, project, flags));
+  }
 }

@@ -41,7 +41,6 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.impl.file.PsiPackageHelper;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.PathUtil;
-import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -103,9 +102,6 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
             data.addText(" (source root)",  SimpleTextAttributes.GRAY_ATTRIBUTES);
           }
         }
-
-        setupIcon(data, psiDirectory);
-
         return;
       }
     }
@@ -125,13 +121,6 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
     else {
       data.setLocationString(BaseProjectViewDirectoryHelper.getLocationString(psiDirectory));
     }
-
-    setupIcon(data, psiDirectory);
-  }
-
-  protected void setupIcon(PresentationData data, PsiDirectory psiDirectory) {
-    final VirtualFile virtualFile = psiDirectory.getVirtualFile();
-    data.setIcon(VfsIconUtil.getIcon(virtualFile, 0, myProject));
   }
 
   @Override

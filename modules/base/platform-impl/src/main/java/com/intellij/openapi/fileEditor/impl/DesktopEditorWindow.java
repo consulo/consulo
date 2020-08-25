@@ -877,8 +877,7 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
       return UnknownFileType.INSTANCE.getIcon();
     }
 
-    final Image baseIcon = VfsIconUtil.getIcon(file, Iconable.ICON_FLAG_READ_STATUS, getManager().getProject());
-
+    final Image baseIcon = VfsIconUtil.getIconNoDefer(file, Iconable.ICON_FLAG_READ_STATUS, getManager().getProject());
     int count = 1;
 
     final Image pinIcon;

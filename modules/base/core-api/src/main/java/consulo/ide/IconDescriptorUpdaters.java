@@ -16,14 +16,12 @@
 package consulo.ide;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.presentation.VirtualFilePresentation;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.SmartPointerManager;
-import com.intellij.psi.SmartPsiElementPointer;
+import com.intellij.psi.*;
 import com.intellij.ui.IconDeferrer;
 import com.intellij.util.NullableFunction;
 import consulo.annotation.access.RequiredReadAction;
@@ -108,14 +106,15 @@ public class IconDescriptorUpdaters {
 
   @Nonnull
   private static Image computeBaseIcon(@Nonnull PsiElement element) {
+    if(element instanceof PsiFileSystemItem) {
+      return VirtualFilePresentation.getIcon(((PsiFileSystemItem)element).getVirtualFile());
+    }
+
     PsiFile containingFile = element.getContainingFile();
     if (containingFile != null) {
       VirtualFile virtualFile = containingFile.getVirtualFile();
       if (virtualFile != null) {
-        Image icon = virtualFile.getFileType().getIcon();
-        if (icon != null) {
-          return icon;
-        }
+        return virtualFile.getFileType().getIcon();
       }
     }
     return AllIcons.Nodes.NodePlaceholder;

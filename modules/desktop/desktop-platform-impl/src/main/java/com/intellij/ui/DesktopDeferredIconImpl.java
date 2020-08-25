@@ -19,12 +19,12 @@
  */
 package com.intellij.ui;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.intellij.ide.PowerSaveMode;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.tabs.impl.TabLabel;
@@ -38,6 +38,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
+import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,7 +48,8 @@ import javax.swing.plaf.basic.BasicTreeUI;
 import java.awt.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DesktopDeferredIconImpl<T>> implements DeferredIcon, RetrievableIcon, consulo.ui.image.Image {
   private static final consulo.ui.image.Image EMPTY_ICON = Image.empty(16);
@@ -60,7 +62,7 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
   private volatile consulo.ui.image.Image myScaledDelegateIcon;
   private Function<T, consulo.ui.image.Image> myEvaluator;
   private volatile boolean myIsScheduled;
-  private T myParam;
+  private final T myParam;
 
   private final boolean myNeedReadAction;
   private boolean myDone;
@@ -68,7 +70,7 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
   private long myLastCalcTime;
   private long myLastTimeSpent;
 
-  private static final Executor ourIconsCalculatingExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor("ourIconsCalculating pool", 1);
+  private static final ExecutorService ourIconCalculatingExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor("OurIconCalculating Pool", 1);
 
   private final IconListener<T> myEvalListener;
 
@@ -167,14 +169,20 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
     if (isDone() || myIsScheduled || PowerSaveMode.isEnabled()) {
       return;
     }
+
+    scheduleEvaluation(c, x, y);
+  }
+
+  @VisibleForTesting
+  Future<?> scheduleEvaluation(Component c, int x, int y) {
     myIsScheduled = true;
 
     final Component target = getTarget(c);
     final Component paintingParent = SwingUtilities.getAncestorOfClass(PaintingParent.class, c);
     final Rectangle paintingParentRec = paintingParent == null ? null : ((PaintingParent)paintingParent).getChildRec(c);
-    ourIconsCalculatingExecutor.execute(() -> {
+    return ourIconCalculatingExecutor.submit(() -> {
       int oldWidth = myScaledDelegateIcon.getWidth();
-      final Ref<Image> evaluated = Ref.create();
+      final SimpleReference<Image> evaluated = SimpleReference.create();
 
       final long startTime = System.currentTimeMillis();
       if (myNeedReadAction) {
@@ -277,7 +285,6 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
     myDone = true;
     if (!myAutoUpdatable) {
       myEvaluator = null;
-      myParam = null;
     }
   }
 
@@ -434,6 +441,14 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
     return icon instanceof DesktopDeferredIconImpl &&
            Comparing.equal(myParam, ((DesktopDeferredIconImpl)icon).myParam) &&
            equalIcons(myScaledDelegateIcon, ((DesktopDeferredIconImpl)icon).myScaledDelegateIcon);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if(obj instanceof Image) {
+      return equalIcons(this, (Image)obj);
+    }
+    return false;
   }
 
   @Override

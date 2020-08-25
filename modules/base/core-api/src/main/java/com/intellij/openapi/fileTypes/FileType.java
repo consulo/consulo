@@ -70,7 +70,6 @@ public interface FileType extends Named {
    */
 
   @Nonnull
-  @NonNls
   String getDefaultExtension();
 
   /**
@@ -79,7 +78,7 @@ public interface FileType extends Named {
    * @return The icon instance, or null if no icon should be shown.
    */
 
-  @Nullable
+  @Nonnull
   Image getIcon();
 
   /**

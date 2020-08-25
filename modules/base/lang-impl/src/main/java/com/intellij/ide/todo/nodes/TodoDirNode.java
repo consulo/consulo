@@ -49,17 +49,6 @@ public final class TodoDirNode extends PsiDirectoryNode {
     data.setPresentableText(newName);
   }
 
-  @Override
-  protected void setupIcon(PresentationData data, PsiDirectory psiDirectory) {
-    final VirtualFile virtualFile = psiDirectory.getVirtualFile();
-    if (ProjectRootsUtil.isModuleContentRoot(virtualFile, psiDirectory.getProject())) {
-      data.setIcon(IconDescriptorUpdaters.getIcon(psiDirectory, 0));
-    }
-    else {
-      super.setupIcon(data, psiDirectory);
-    }
-  }
-
   private TodoTreeStructure getStructure() {
     return myBuilder.getTodoTreeStructure();
   }

@@ -52,6 +52,7 @@ import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -475,6 +476,15 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
     @Override
     public float getScale() {
       return 1f;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if(obj instanceof CachedImageIcon) {
+        CachedImageIcon other = (CachedImageIcon)obj;
+        return myUrl.equals(other.myUrl) && Arrays.equals(myFilters, other.myFilters);
+      }
+      return super.equals(obj);
     }
 
     @Nonnull

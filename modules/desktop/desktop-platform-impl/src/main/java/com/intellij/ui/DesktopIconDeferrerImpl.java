@@ -24,6 +24,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.util.LowMemoryWatcher;
+import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.newvfs.BulkFileListener;
+import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.Function;
 import com.intellij.util.messages.MessageBusConnection;
@@ -35,6 +38,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @Singleton
@@ -46,7 +50,7 @@ public class DesktopIconDeferrerImpl extends IconDeferrer implements Disposable 
   private final Map<Object, Image> myIconsCache = new LinkedHashMap<Object, Image>() {
     @Override
     protected boolean removeEldestEntry(Map.Entry<Object, Image> eldest) {
-      return size() > 100;
+      return size() > 1000;
     }
   };
 
@@ -55,6 +59,12 @@ public class DesktopIconDeferrerImpl extends IconDeferrer implements Disposable 
   @Inject
   public DesktopIconDeferrerImpl(Application application) {
     final MessageBusConnection connection = application.getMessageBus().connect();
+    connection.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
+      @Override
+      public void after(@Nonnull List<? extends VFileEvent> events) {
+        clear();
+      }
+    });
     connection.subscribe(PsiModificationTracker.TOPIC, this::clear);
     connection.subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
       @Override

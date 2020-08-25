@@ -25,11 +25,9 @@ public class VirtualFilePresentation {
     if (icon != null) {
       return icon;
     }
-    if (vFile.isDirectory() && vFile.isInLocalFileSystem()) {
+    if (vFile.isDirectory())  {
       return AllIcons.Nodes.Folder;
     }
-    Image fileTypeIcon = vFile.getFileType().getIcon();
-    assert fileTypeIcon != null;
-    return fileTypeIcon;
+    return vFile.getFileType().getIcon();
   }
 }
