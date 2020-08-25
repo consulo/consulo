@@ -16,7 +16,6 @@
 package consulo.test.impl.ui;
 
 import consulo.localize.LocalizeValue;
-import consulo.ui.*;
 import consulo.ui.Button;
 import consulo.ui.Component;
 import consulo.ui.Label;
@@ -24,6 +23,7 @@ import consulo.ui.Menu;
 import consulo.ui.MenuBar;
 import consulo.ui.MenuItem;
 import consulo.ui.Window;
+import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.font.FontManager;
 import consulo.ui.image.Image;
@@ -33,7 +33,6 @@ import consulo.ui.migration.SwingImageRef;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
 import consulo.ui.shared.ColorValue;
-import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
 
 import javax.annotation.Nonnull;
@@ -120,11 +119,6 @@ public class TestUIInternal extends UIInternal {
 
   @Override
   public LabeledLayout _Layouts_labeled(LocalizeValue label) {
-    return null;
-  }
-
-  @Override
-  public TableLayout _Layouts_table(StaticPosition fillOption) {
     return null;
   }
 

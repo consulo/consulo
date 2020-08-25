@@ -94,7 +94,9 @@ public abstract class UIInternal {
 
   public abstract LabeledLayout _Layouts_labeled(LocalizeValue label);
 
-  public abstract TableLayout _Layouts_table(StaticPosition fillOption);
+  public TableLayout _Layouts_table(StaticPosition fillOption) {
+    throw new UnsupportedOperationException();
+  }
 
   public abstract ScrollLayout _ScrollLayout_create(Component component);
 

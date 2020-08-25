@@ -100,7 +100,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public TableLayout _Layouts_table(StaticPosition fillOption) {
-    throw new UnsupportedOperationException();
+    return new WebTableLayoutImpl(fillOption);
   }
 
   @Override
@@ -126,6 +126,11 @@ public class WebUIInternalImpl extends UIInternal {
   @Override
   public TextBox _Components_textBox(String text) {
     return new WebTextBoxImpl(text);
+  }
+
+  @Override
+  public TextBoxWithHistory _Components_textBoxWithHistory(String text) {
+    return new WebTextBoxWithHistoryImpl(text);
   }
 
   @Override

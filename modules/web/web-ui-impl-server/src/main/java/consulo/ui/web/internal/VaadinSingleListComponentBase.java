@@ -89,9 +89,7 @@ public abstract class VaadinSingleListComponentBase<E> extends VaadinComponent {
     }
     else {
       final int i = myModel.indexOf(value);
-      if (i == -1) {
-        throw new IndexOutOfBoundsException();
-      }
+      // -1 - value not found
       getState().mySelectedIndex = i;
     }
 
