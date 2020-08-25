@@ -143,10 +143,15 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
 
     installScrollingActions();
 
+    JPanel top = new JPanel(new BorderLayout());
+    top.setOpaque(false);
+    top.add(topLeftPanel, BorderLayout.WEST);
+    top.add(settingsPanel, BorderLayout.EAST);
+    top.setBorder(JBUI.Borders.customLine(UIUtil.getBorderColor(), 0, 0, 1, 0));
+
     JPanel topPanel = new JPanel(new BorderLayout());
     topPanel.setOpaque(false);
-    topPanel.add(topLeftPanel, BorderLayout.WEST);
-    topPanel.add(settingsPanel, BorderLayout.EAST);
+    topPanel.add(top, BorderLayout.NORTH);
     topPanel.add(TargetAWT.to(mySearchField), BorderLayout.SOUTH);
 
     WindowMoveListener moveListener = new WindowMoveListener(this);
