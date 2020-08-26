@@ -15,6 +15,7 @@
  */
 package consulo.desktop.ui.laf.idea.darcula;
 
+import com.intellij.ui.ColorUtil;
 import com.intellij.ui.Gray;
 import com.intellij.util.ui.UIUtil;
 import consulo.ide.ui.laf.JBEditorTabsUI;
@@ -37,7 +38,7 @@ public class DarculaEditorTabsUI extends MacEditorTabsUI {
   @Override
   public void doPaintInactiveImpl(Graphics2D g2d, Rectangle effectiveBounds, int x, int y, int w, int h, Color tabColor, int row, int column, boolean vertical) {
     if (tabColor != null) {
-      g2d.setColor(tabColor);
+      g2d.setColor(ColorUtil.toAlpha(tabColor, 150));
       g2d.fillRect(x, y, w, h);
     }
     else {
@@ -45,7 +46,7 @@ public class DarculaEditorTabsUI extends MacEditorTabsUI {
       g2d.fillRect(x, y, w, h);
     }
 
-    g2d.setColor(Gray._0.withAlpha(10));
+    g2d.setColor(Gray._0.withAlpha(20));
     g2d.drawRect(x, y, w - 1, h - 1);
   }
 
@@ -53,13 +54,13 @@ public class DarculaEditorTabsUI extends MacEditorTabsUI {
   @Override
   protected Color prepareColorForTab(@Nullable Color c) {
     if(c == null) {
-      return Gray._60;
+      return Gray._85;
     }
     return c;
   }
 
   @Override
   public Color getBackground() {
-    return new Color(0x3C3F41);
+    return UIUtil.getPanelBackground();
   }
 }
