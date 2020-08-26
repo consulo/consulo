@@ -16,25 +16,25 @@
 package consulo.components.impl.stores.storage;
 
 import com.intellij.openapi.components.StateStorageException;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.SystemProperties;
+import com.intellij.util.io.UnsyncByteArrayInputStream;
+import consulo.logging.Logger;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectObjectProcedure;
-import org.iq80.snappy.SnappyInputStream;
-import org.iq80.snappy.SnappyOutputStream;
+import net.jpountz.lz4.LZ4BlockInputStream;
+import net.jpountz.lz4.LZ4BlockOutputStream;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -168,7 +168,7 @@ final class StateMap {
   private static byte[] archiveState(@Nonnull Element state) {
     BufferExposingByteArrayOutputStream byteOut = new BufferExposingByteArrayOutputStream();
     try {
-      try (OutputStreamWriter writer = new OutputStreamWriter(new SnappyOutputStream(byteOut), CharsetToolkit.UTF8_CHARSET)) {
+      try (OutputStreamWriter writer = new OutputStreamWriter(new LZ4BlockOutputStream(byteOut), CharsetToolkit.UTF8_CHARSET)) {
         XMLOutputter xmlOutputter = JDOMUtil.newXmlOutputter();
         xmlOutputter.setFormat(XML_FORMAT);
         xmlOutputter.output(state, writer);
@@ -196,8 +196,7 @@ final class StateMap {
     InputStream in = null;
     try {
       try {
-        in = new SnappyInputStream(new ByteArrayInputStream(state));
-        //noinspection ConstantConditions
+        in = new LZ4BlockInputStream(new UnsyncByteArrayInputStream(state));
         return JDOMUtil.loadDocument(in).detachRootElement();
       }
       finally {

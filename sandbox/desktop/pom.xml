@@ -269,10 +269,6 @@
       <artifactId>oro</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.iq80.snappy</groupId>
-      <artifactId>snappy</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.lz4</groupId>
       <artifactId>lz4-java</artifactId>
     </dependency>

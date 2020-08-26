@@ -53,12 +53,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.iq80.snappy</groupId>
-      <artifactId>snappy</artifactId>
-      <optional>true</optional>
-    </dependency>
-    
-    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>jre9-stub</artifactId>
       <version>${project.version}</version>

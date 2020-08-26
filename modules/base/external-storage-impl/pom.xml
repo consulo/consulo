@@ -43,8 +43,8 @@
     </dependency>
 
     <dependency>
-      <groupId>org.iq80.snappy</groupId>
-      <artifactId>snappy</artifactId>
+      <groupId>org.lz4</groupId>
+      <artifactId>lz4-java</artifactId>
       <optional>true</optional>
     </dependency>
   </dependencies>

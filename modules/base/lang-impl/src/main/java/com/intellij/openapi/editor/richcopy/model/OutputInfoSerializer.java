@@ -17,8 +17,8 @@ package com.intellij.openapi.editor.richcopy.model;
 
 import com.intellij.util.io.CompactDataInput;
 import com.intellij.util.io.CompactDataOutput;
-import org.iq80.snappy.SnappyInputStream;
-import org.iq80.snappy.SnappyOutputStream;
+import net.jpountz.lz4.LZ4BlockInputStream;
+import net.jpountz.lz4.LZ4BlockOutputStream;
 
 import java.io.IOException;
 
@@ -38,7 +38,7 @@ public class OutputInfoSerializer {
     private int myCurrentOffset;
 
     public OutputStream(java.io.OutputStream stream) throws IOException {
-      myUnderlyingOutputStream = new SnappyOutputStream(stream);
+      myUnderlyingOutputStream = new LZ4BlockOutputStream(stream);
       myOutputStream = new CompactDataOutput(myUnderlyingOutputStream);
     }
 
@@ -90,7 +90,7 @@ public class OutputInfoSerializer {
     private int myCurrentOffset;
 
     public InputStream(java.io.InputStream stream) throws IOException {
-      myUnderlyingInputStream = new SnappyInputStream(stream);
+      myUnderlyingInputStream = new LZ4BlockInputStream(stream);
       myInputStream = new CompactDataInput(myUnderlyingInputStream);
     }
 
