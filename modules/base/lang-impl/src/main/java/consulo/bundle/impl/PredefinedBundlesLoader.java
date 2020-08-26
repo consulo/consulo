@@ -26,7 +26,9 @@ import com.intellij.openapi.projectRoots.impl.SdkTableImpl;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.SystemProperties;
 import consulo.bundle.PredefinedBundlesProvider;
+import consulo.bundle.SdkPointerManager;
 import consulo.logging.Logger;
+import consulo.module.bundle.SdkPointerManagerImpl;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -40,11 +42,6 @@ import java.util.List;
  */
 public class PredefinedBundlesLoader extends PreloadingActivity {
   private static final Logger LOG = Logger.getInstance(PredefinedBundlesLoader.class);
-
-  @Inject
-  public PredefinedBundlesLoader(Provider<SdkTable> sdkTable) {
-    mySdkTable = sdkTable;
-  }
 
   private static class ContextImpl implements PredefinedBundlesProvider.Context {
     private final List<Sdk> myBundles = new ArrayList<>();
@@ -72,6 +69,13 @@ public class PredefinedBundlesLoader extends PreloadingActivity {
   }
 
   private final Provider<SdkTable> mySdkTable;
+  private final Provider<SdkPointerManager> mySdkPointerManager;
+
+  @Inject
+  public PredefinedBundlesLoader(Provider<SdkTable> sdkTable, Provider<SdkPointerManager> sdkPointerManager) {
+    mySdkTable = sdkTable;
+    mySdkPointerManager = sdkPointerManager;
+  }
 
   @Override
   public void preload(@Nonnull ProgressIndicator indicator) {
@@ -99,6 +103,7 @@ public class PredefinedBundlesLoader extends PreloadingActivity {
       }
 
       ((SdkTableImpl)sdkTable).addSdksUnsafe(bundles);
+      ((SdkPointerManagerImpl)mySdkPointerManager.get()).updatePointers(bundles);
     }
   }
 }

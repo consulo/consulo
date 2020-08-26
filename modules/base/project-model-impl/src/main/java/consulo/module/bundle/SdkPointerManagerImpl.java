@@ -15,15 +15,19 @@
  */
 package consulo.module.bundle;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.projectRoots.SdkTable;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.projectRoots.Sdk;
-import consulo.bundle.SdkTableListener;
+import com.intellij.openapi.projectRoots.SdkTable;
 import consulo.bundle.SdkPointerManager;
+import consulo.bundle.SdkTableListener;
 import consulo.util.pointers.NamedPointerManagerImpl;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -31,8 +35,13 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class SdkPointerManagerImpl extends NamedPointerManagerImpl<Sdk> implements SdkPointerManager {
-  public SdkPointerManagerImpl() {
-    ApplicationManager.getApplication().getMessageBus().connect().subscribe(SdkTable.SDK_TABLE_TOPIC, new SdkTableListener.Adapter() {
+  @Nonnull
+  private final Provider<SdkTable> mySdkTableProvider;
+
+  @Inject
+  public SdkPointerManagerImpl(@Nonnull Application application, @Nonnull Provider<SdkTable> sdkTableProvider) {
+    mySdkTableProvider = sdkTableProvider;
+    application.getMessageBus().connect().subscribe(SdkTable.SDK_TABLE_TOPIC, new SdkTableListener.Adapter() {
       @Override
       public void sdkAdded(@Nonnull Sdk sdk) {
         updatePointers(sdk);
@@ -53,6 +62,12 @@ public class SdkPointerManagerImpl extends NamedPointerManagerImpl<Sdk> implemen
   @Nullable
   @Override
   protected Sdk findByName(@Nonnull String name) {
-    return SdkTable.getInstance().findSdk(name);
+    return mySdkTableProvider.get().findSdk(name);
+  }
+
+  public void updatePointers(@Nonnull List<? extends Sdk> sdks) {
+    for (Sdk sdk : sdks) {
+      updatePointers(sdk);
+    }
   }
 }
