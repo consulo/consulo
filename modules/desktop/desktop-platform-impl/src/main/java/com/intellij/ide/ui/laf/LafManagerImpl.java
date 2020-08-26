@@ -184,7 +184,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     if (myCurrentStyle != null) {
       final DesktopStyleImpl laf = findStyleByClassName(myCurrentStyle.getLookAndFeelInfo().getClassName());
       if (laf != null) {
-        setCurrentLookAndFeel(laf, false);
+        setCurrentStyle(laf, false, false);
       }
     }
 
@@ -240,7 +240,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     }
 
     if (myCurrentStyle != null && !styleFromXml.equals(myCurrentStyle)) {
-      setCurrentStyle(styleFromXml);
+      setCurrentStyle(styleFromXml, false, true);
       updateUI();
     }
 
@@ -320,16 +320,16 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
   public void setCurrentLookAndFeel(@Nonnull UIManager.LookAndFeelInfo lookAndFeelInfo) {
     DesktopStyleImpl style = findStyleByClassName(lookAndFeelInfo.getClassName());
     LOG.assertTrue(style != null, "Class not found : " + lookAndFeelInfo.getClassName());
-    setCurrentLookAndFeel(style, true);
+    setCurrentStyle(style, true, true);
   }
 
   @Override
   public void setCurrentStyle(@Nonnull Style currentStyle) {
-    DesktopStyleImpl desktopStyle = (DesktopStyleImpl)currentStyle;
-    setCurrentLookAndFeel(desktopStyle, true);
+    DesktopStyleImpl style = (DesktopStyleImpl)currentStyle;
+    setCurrentStyle(style, true, true);
   }
 
-  private void setCurrentLookAndFeel(DesktopStyleImpl style, boolean fire) {
+  private void setCurrentStyle(DesktopStyleImpl style, boolean wantChangeScheme, boolean fire) {
     if (findStyleByClassName(style.getClassName()) == null) {
       LOG.error("unknown LookAndFeel : " + style);
       return;
@@ -363,7 +363,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
         installMacOSXFonts(UIManager.getLookAndFeelDefaults());
       }
 
-      if (fire) {
+      if(wantChangeScheme) {
         if (lookAndFeelInfo instanceof LafWithColorScheme) {
           EditorColorsManager editorColorsManager = EditorColorsManager.getInstance();
           EditorColorsScheme editorColorsScheme = editorColorsManager.getScheme(((LafWithColorScheme)lookAndFeelInfo).getColorSchemeName());
@@ -371,7 +371,9 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
             editorColorsManager.setGlobalScheme(editorColorsScheme);
           }
         }
+      }
 
+      if (fire) {
         fireUpdate();
       }
     }
