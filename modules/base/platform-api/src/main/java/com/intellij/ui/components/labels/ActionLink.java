@@ -18,15 +18,14 @@ package com.intellij.ui.components.labels;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import consulo.ui.image.Image;
-import consulo.util.dataholder.Key;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -36,7 +35,6 @@ import java.awt.event.InputEvent;
  * @author Konstantin Bulenkov
  */
 public class ActionLink extends LinkLabel implements DataProvider {
-  private static final EmptyIcon ICON = new EmptyIcon(0, 12);
   private final AnAction myAction;
   private String myPlace = ActionPlaces.UNKNOWN;
   private InputEvent myEvent;
@@ -45,7 +43,7 @@ public class ActionLink extends LinkLabel implements DataProvider {
   private Color myNormalColor;
 
   public ActionLink(String text, @Nonnull AnAction action) {
-    this(text, ICON, action);
+    this(text, Image.empty(0, 12), action);
   }
 
   public ActionLink(String text, Image icon, @Nonnull AnAction action) {
