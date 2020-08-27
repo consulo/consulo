@@ -24,6 +24,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.font.FontManager;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageState;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.layout.*;
 import consulo.ui.model.ListModel;
@@ -203,4 +204,9 @@ public abstract class UIInternal {
   public abstract TextBoxWithExtensions _Components_textBoxWithExtensions(String text);
 
   public abstract FoldoutLayout _Layouts_foldout(LocalizeValue titleValue, Component component, boolean show);
+
+  @Nonnull
+  public <S> Image _Image_stated(ImageState<S> state, Function<S, Image> funcCall) {
+    throw new UnsupportedOperationException();
+  }
 }

@@ -33,6 +33,7 @@ import consulo.ui.desktop.internal.style.DesktopStyleManagerImpl;
 import consulo.ui.desktop.internal.textBox.*;
 import consulo.ui.font.FontManager;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageState;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.impl.model.ImmutableListModelImpl;
 import consulo.ui.impl.model.MutableListModelImpl;
@@ -349,5 +350,11 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Override
   public FoldoutLayout _Layouts_foldout(LocalizeValue titleValue, Component component, boolean show) {
     return new DesktopFoldoutLayoutImpl(titleValue, component, show);
+  }
+
+  @Nonnull
+  @Override
+  public <S> Image _Image_stated(ImageState<S> state, Function<S, Image> funcCall) {
+    return new DesktopStatedImageImpl<>(state, funcCall);
   }
 }

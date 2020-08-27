@@ -19,6 +19,7 @@ import consulo.ui.UIInternal;
 import javax.annotation.Nonnull;
 
 import java.net.URL;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -49,6 +50,16 @@ public interface Image {
   @Nonnull
   static Image lazy(@Nonnull Supplier<Image> imageSupplier) {
     return UIInternal.get()._Image_lazy(imageSupplier);
+  }
+
+  @Nonnull
+  static <S> Image stated(@Nonnull ImageState<S> state, @Nonnull Function<S, Image> funcCall) {
+    return UIInternal.get()._Image_stated(state, funcCall);
+  }
+
+  @Nonnull
+  static Image empty() {
+    return empty(0);
   }
 
   @Nonnull

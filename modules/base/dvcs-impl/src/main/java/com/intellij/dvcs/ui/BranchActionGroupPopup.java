@@ -15,6 +15,7 @@ import com.intellij.openapi.ui.popup.LightweightWindowEvent;
 import com.intellij.openapi.ui.popup.ListPopupStep;
 import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.util.Condition;
+import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.WindowStateService;
 import com.intellij.openapi.util.text.StringUtil;
@@ -542,21 +543,21 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
 
   private static abstract class MyToolbarButton extends JButton {
 
-    private MyToolbarButton(@Nullable String text, @Nullable Icon icon, @Nullable Icon rolloverIcon) {
+    private MyToolbarButton(@Nullable String text, @Nullable Image icon, @Nullable Image rolloverIcon) {
       setBorder(JBUI.Borders.empty(0, 2));
       setBorderPainted(false);
       setContentAreaFilled(false);
       setOpaque(false);
       setRolloverEnabled(true);
-      Icon regularIcon = chooseNotNull(icon, EmptyIcon.ICON_0);
-      setIcon(regularIcon);
+      Image regularIcon = chooseNotNull(icon, Image.empty());
+      setIcon(TargetAWT.to(regularIcon));
       setToolTipText(text);
-      setRolloverIcon(chooseNotNull(rolloverIcon, regularIcon));
+      setRolloverIcon(TargetAWT.to(chooseNotNull(rolloverIcon, regularIcon)));
       update();
       setUI(new BasicButtonUI());
     }
 
-    MyToolbarButton(@Nullable String text, @Nullable Icon icon, @Nullable Icon rolloverIcon, @Nonnull ActionListener buttonListener) {
+    MyToolbarButton(@Nullable String text, @Nullable Image icon, @Nullable Image rolloverIcon, @Nonnull ActionListener buttonListener) {
       this(text, icon, rolloverIcon);
       addActionListener(buttonListener);
     }

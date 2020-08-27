@@ -17,34 +17,32 @@ package com.intellij.dvcs.ui;
 
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.ui.LayeredIcon;
-import com.intellij.util.ui.EmptyIcon;
-import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageState;
 import icons.DvcsImplIcons;
+
+import javax.annotation.Nonnull;
 
 public abstract class BranchActionGroup extends ActionGroup implements DumbAware {
 
   private boolean myIsFavorite;
-  private final LayeredIcon myIcon;
-  private final LayeredIcon myHoveredIcon;
+
+  private ImageState<Boolean> myIconState = new ImageState<>(Boolean.FALSE);
 
   public BranchActionGroup() {
     super("", true);
-    myIcon = new LayeredIcon(TargetAWT.to(DvcsImplIcons.Favorite), EmptyIcon.ICON_16);
-    myHoveredIcon = new LayeredIcon(TargetAWT.to(DvcsImplIcons.FavoriteOnHover), TargetAWT.to(DvcsImplIcons.NotFavoriteOnHover));
-    getTemplatePresentation().setIcon(myIcon);
-    getTemplatePresentation().setHoveredIcon(myHoveredIcon);
-    getTemplatePresentation().setDisabledMnemonic(true);
+    setIcons(DvcsImplIcons.Favorite, Image.empty(Image.DEFAULT_ICON_SIZE), DvcsImplIcons.Favorite, DvcsImplIcons.NotFavoriteOnHover);
+  }
+
+  protected void setIcons(@Nonnull Image favorite, @Nonnull Image notFavorite, @Nonnull Image favoriteOnHover, @Nonnull Image notFavoriteOnHover) {
+    getTemplatePresentation().setIcon(Image.stated(myIconState, it -> it ? favorite : notFavorite));
+    getTemplatePresentation().setSelectedIcon(Image.stated(myIconState, it -> it ? favoriteOnHover : notFavoriteOnHover));
 
     updateIcons();
   }
 
   private void updateIcons() {
-    myIcon.setLayerEnabled(0, myIsFavorite);
-    myHoveredIcon.setLayerEnabled(0, myIsFavorite);
-
-    myIcon.setLayerEnabled(1, !myIsFavorite);
-    myHoveredIcon.setLayerEnabled(1, !myIsFavorite);
+    myIconState.setState(myIsFavorite);
   }
 
   public boolean isFavorite() {
