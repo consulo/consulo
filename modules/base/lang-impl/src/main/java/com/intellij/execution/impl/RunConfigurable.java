@@ -529,7 +529,7 @@ class RunConfigurable extends BaseConfigurable {
     panel.setBorder(new EmptyBorder(7, 10, 0, 0));
     panel.add(new JLabel("Press the"));
 
-    ActionLink addIcon = new ActionLink("", TargetAWT.to(ADD_ICON), myAddAction);
+    ActionLink addIcon = new ActionLink("", IconUtil.getAddIcon(), myAddAction);
     addIcon.setBorder(new EmptyBorder(0, 5, 0, 5));
     panel.add(addIcon);
 

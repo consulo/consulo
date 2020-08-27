@@ -18,6 +18,7 @@ package com.intellij.ui.components.labels;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
+import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.UIUtil;
@@ -47,11 +48,11 @@ public class ActionLink extends LinkLabel implements DataProvider {
     this(text, ICON, action);
   }
 
-  public ActionLink(String text, Icon icon, @Nonnull AnAction action) {
+  public ActionLink(String text, Image icon, @Nonnull AnAction action) {
     this(text, icon, action, null);
   }
 
-  public ActionLink(String text, Icon icon, @Nonnull AnAction action, @Nullable final Runnable onDone) {
+  public ActionLink(String text, Image icon, @Nonnull AnAction action, @Nullable final Runnable onDone) {
     super(text, icon);
     setListener(new LinkListener() {
       @Override
