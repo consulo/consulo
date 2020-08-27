@@ -43,6 +43,7 @@ import consulo.ide.welcomeScreen.BaseWelcomeScreenPanel;
 import consulo.ide.welcomeScreen.WelcomeScreenConstants;
 import consulo.desktop.start.splash.AnimatedLogoLabel;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
 import consulo.ui.style.StyleManager;
 
 import javax.accessibility.AccessibleContext;
@@ -156,7 +157,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
     return panel;
   }
 
-  private JComponent createActionLink(final String text, final String groupId, Icon icon, boolean focusListOnLeft) {
+  private JComponent createActionLink(final String text, final String groupId, Image icon, boolean focusListOnLeft) {
     final Ref<ActionLink> ref = new Ref<>(null);
     AnAction action = new AnAction() {
       @RequiredUIAccess
@@ -174,7 +175,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
     return panel;
   }
 
-  private JComponent createActionLink(String text, Icon icon, Ref<ActionLink> ref, AnAction action) {
+  private JComponent createActionLink(String text, Image icon, Ref<ActionLink> ref, AnAction action) {
     ActionLink link = new ActionLink(text, icon, action);
     ref.set(link);
     // Don't allow focus, as the containing panel is going to focusable.
